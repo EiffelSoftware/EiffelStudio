@@ -1,5 +1,10 @@
--- Error when the creation type of an instruction is a formal
--- generic parameter
+indexing
+
+	description: 
+		"Error when the creation type of an instruction %
+		%is a formal generic parameter.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC1 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 1
 
-end
+end -- class VGCC1

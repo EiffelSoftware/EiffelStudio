@@ -1,4 +1,9 @@
--- Error for frozen and deferred feature
+indexing
+
+	description: 
+		"rror for frozen and deferred feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VFFD4 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 	
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 4;
 
-end
+end -- class VFFD4

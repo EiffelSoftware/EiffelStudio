@@ -1,7 +1,11 @@
--- Error for violation of constrained genericity validity rule
+indexing
+
+	description: 
+		"Error for violation of constrained genericity validity rule.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTGG -- It should be VTCG
-
 
 inherit
 
@@ -10,16 +14,15 @@ inherit
 			build_explain
 		end
 	
-feature 
+feature -- Properties
+
+	code: STRING is "VTCG";
+			-- Error code
 
 	error_list: LINKED_LIST [CONSTRAINT_INFO];
 			-- Error description list
 
-	set_error_list (e: like error_list) is
-			-- Assign `e' to `error_list'.
-		do
-			error_list := e;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -35,7 +38,12 @@ feature
 			end;
 		end;
 
-	code: STRING is "VTCG";
-			-- Error code
+feature {COMPILER_EXPORTER} -- Setting
 
-end
+	set_error_list (e: like error_list) is
+			-- Assign `e' to `error_list'.
+		do
+			error_list := e;
+		end;
+
+end -- class VTGG

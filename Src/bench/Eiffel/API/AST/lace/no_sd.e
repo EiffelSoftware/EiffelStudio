@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class NO_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_no
 		end
 
-feature
+feature -- Properties
 
 	is_no: BOOLEAN is
 			-- is the option value `no' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class NO_SD

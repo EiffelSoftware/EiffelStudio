@@ -1,5 +1,10 @@
--- Error when a specified type of a creation instruction doesn't
--- conform to the type of the target to create
+indexing
+
+	description: 
+		"Error when a specified type of a creation instruction doesn't %
+		%conform to the type of the target to create.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC31 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VGCC31

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of expanded class type.";
+	description: 
+		"AST representation of expanded class type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -23,7 +24,7 @@ inherit
 			dump, set, is_deep_equal, simple_format
 		end;
 
-feature
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -39,6 +40,8 @@ feature
 		do
 		end;
 
+feature -- Access
+
 	is_deep_equal (other: TYPE): BOOLEAN is
 		local
 			o: like Current
@@ -46,6 +49,8 @@ feature
 			o ?= other;
 			Result := o /= Void and then basic_is_deep_equal (other)
 		end;
+
+feature -- Output
 
 	dump: STRING is
 			-- Dumped trace
@@ -55,7 +60,7 @@ feature
 			Result.append (basic_dump);
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,4 +1,9 @@
--- Error when an old expression is not an expression: i.e procedure
+indexing
+
+	description: 
+		"Error when an old expression is not an expression: i.e procedure.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VAOL2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VAOL2

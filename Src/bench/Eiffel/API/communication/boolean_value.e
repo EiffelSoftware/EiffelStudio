@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing a boolean.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BOOLEAN_VALUE
 
 inherit

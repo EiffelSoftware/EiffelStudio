@@ -1,6 +1,7 @@
 indexing
 
-	description: "Binary arithmetic operation";
+	description: 
+		"AST representation of a binary arithmetic operation.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -14,7 +15,7 @@ inherit
 			operator_is_keyword 
 		end
 
-feature
+feature -- Properties
 
 	balanced: BOOLEAN is
 			-- Is the current binary operation subject to the balancing

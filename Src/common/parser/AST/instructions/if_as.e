@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a conditional instruction";
+	description: 
+		"AST representation of a conditional instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 	
 	INSTRUCTION_AS
 
-feature -- Attributes
+feature -- Properties
 
 	condition: EXPR_AS;
 			-- Conditional expression
@@ -24,7 +25,7 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Else part
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -37,7 +38,7 @@ feature -- Initialization
 			condition_exists: condition /= Void;
 		end;
 
-feature -- Equivalence 
+feature -- Comparison 
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent with Current?
@@ -72,7 +73,7 @@ feature -- Equivalence
 			end
  	   end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text

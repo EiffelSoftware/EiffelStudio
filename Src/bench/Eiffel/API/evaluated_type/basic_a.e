@@ -1,4 +1,9 @@
--- Actual type for simple types
+indexing
+
+	description: 
+		"Actual type for simple types.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class BASIC_A
 
@@ -86,4 +91,4 @@ feature {COMPILER_EXPORTER}
 		do
 		end;
 
-end
+end -- class BASIC_A

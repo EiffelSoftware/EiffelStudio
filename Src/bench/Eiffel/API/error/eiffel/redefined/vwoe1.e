@@ -1,4 +1,9 @@
--- Error when bad conformance on first argument of an infix function
+indexing
+
+	description: 
+		"Error when bad conformance on first argument of an infix function.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWOE1 
 
@@ -6,10 +11,10 @@ inherit
 
 	VWOE
 		redefine
-			build_explain
+			build_explain, is_defined
 		end
 	
-feature
+feature -- Properties
 
 	formal_type: TYPE_A;
 			-- Formal argument type
@@ -17,22 +22,26 @@ feature
 	actual_type: TYPE_A;
 			-- Actual type of the argument in the call
 
-	set_formal_type (t: TYPE_A) is
-			-- Assign `t' to `formal_type'.
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			formal_type := t;
+			Result := is_class_defined and then
+				is_feature_defined and then
+				formal_type /= Void and then
+				actual_type /= Void
+		ensure then
+			valid_formal_type: formal_type /= Void;
+			valid_actual_type: actual_type /= Void;
 		end;
 
-	set_actual_type (t: TYPE_A) is
-			-- Assign `t' to `actual_type'
-		do
-			actual_type := t;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `ow'.
-        do
+			-- Build specific explanation explain for current error
+			-- in `ow'.
+		do
 			ow.put_string ("Formal type: ");
 			formal_type.append_to (ow);
 			ow.put_string ("%NActual type: ");
@@ -40,4 +49,22 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_formal_type (t: TYPE_A) is
+			-- Assign `t' to `formal_type'.
+		require
+			valid_t: t /= Void
+		do
+			formal_type := t;
+		end;
+
+	set_actual_type (t: TYPE_A) is
+			-- Assign `t' to `actual_type'
+		require
+			valid_t: t /= Void
+		do
+			actual_type := t;
+		end;
+
+end -- class VWOE1

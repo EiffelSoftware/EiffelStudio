@@ -1,4 +1,9 @@
--- Error for invalid assignment attempt for bits
+indexing
+
+	description: 
+		"Error for invalid assignment attempt for bits.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VNCB 
 
@@ -9,9 +14,9 @@ inherit
 			code
 		end;
 	
-feature 
+feature -- Property
 
 	code: STRING is "VNCB";
 			-- Error code
 
-end
+end -- class VNCB

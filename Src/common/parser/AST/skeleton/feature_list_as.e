@@ -1,15 +1,17 @@
+indexing
+
+	description: 
+		"List of feature names.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class FEATURE_LIST_AS
 
 inherit
 
 	FEATURE_SET_AS
 
-feature -- Attributes
-
-	features: EIFFEL_LIST [FEATURE_NAME];
-			-- List of feature names
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -17,7 +19,12 @@ feature -- Initialization
 			features ?= yacc_arg (0);
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	features: EIFFEL_LIST [FEATURE_NAME];
+			-- List of feature names
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,4 +1,9 @@
--- Error when two clusters have the same path
+indexing
+
+	description: 
+		"Error when two clusters have the same path.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD28
 
@@ -6,14 +11,11 @@ inherit
 
 	CLUSTER_ERROR
 
-feature
+feature -- Property
 
 	second_cluster_name: STRING;
 
-	set_second_cluster_name (s: STRING) is
-		do
-			second_cluster_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -25,4 +27,11 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {CLUSTER_SD} -- Setting
+
+	set_second_cluster_name (s: STRING) is
+		do
+			second_cluster_name := s;
+		end;
+
+end -- class VD28

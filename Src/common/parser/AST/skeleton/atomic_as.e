@@ -1,6 +1,7 @@
 indexing
 
-	description: "Atomic node: strings, integers, reals etc.";
+	description: 
+		"AST representation of a node: strings, integers, reals etc.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature
+feature -- Properties
 
 	is_unique: BOOLEAN is
 			-- Is the terminal a unique constant ?
@@ -36,7 +37,13 @@ feature
 			-- Do nothing
 		end;
 
-feature -- Type check and dead code removal
+feature -- Output
+
+	string_value: STRING is
+		deferred
+		end;
+
+feature {COMPILER_EXPORTER, INTERVAL_AS} -- Type check and dead code removal
 
 	good_integer: BOOLEAN is
 			-- Is the atomic a good integer bound for multi-branch ?
@@ -53,12 +60,6 @@ feature -- Type check and dead code removal
 	record_dependances is
 			-- Record the dependances
 		do
-		end;
-
-feature -- Output
-
-	string_value: STRING is
-		deferred
 		end;
 
 end -- class ATOMIC_AS

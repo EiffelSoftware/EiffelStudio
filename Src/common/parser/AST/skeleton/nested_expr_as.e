@@ -1,8 +1,8 @@
 indexing
 
 	description:
-			"Abstract description of a nested call `target.message' where %
-			%the target is a parenthesized expression.";
+		"AST representation of a nested call `target.message' where %
+		%the target is a parenthesized expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -12,15 +12,7 @@ inherit
 
 	CALL_AS
 
-feature -- Attributes
-
-	target: EXPR_AS;
-			-- Target of the call
-
-	message: CALL_AS;
-			-- Message send to the target
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initilization
@@ -32,7 +24,15 @@ feature -- Initialization
 			message_exists: message /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	target: EXPR_AS;
+			-- Target of the call
+
+	message: CALL_AS;
+			-- Message send to the target
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 		-- Reconstitute text.

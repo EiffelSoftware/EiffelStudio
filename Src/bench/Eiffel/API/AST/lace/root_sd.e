@@ -1,11 +1,9 @@
--- Root					: LEX_ROOT Name Cluster_mark Creation_procedure
---						 ;
--- Cluster_mark			: /* empty */
---						 | LEX_LEFT_PARAM Name LEX_RIGHT_PARAM
---						 ;
--- Creation_procedure		: /* empty */
---						 | LEX_COLUMN Name
---						 ;
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ROOT_SD
 
@@ -23,21 +21,7 @@ inherit
 			valid_reference_class, is_class
 		end
 
-feature -- Attributes
-
-	root_name: ID_SD;
-			-- Root class name
-
-	cluster_mark: ID_SD;
-			-- Cluster where the root class is
-
-	creation_procedure_name: ID_SD;
-			-- Creation procedure
-
-	file_name: STRING;
-			-- Updated by `adapt'
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -53,6 +37,39 @@ feature -- Initialization
 				creation_procedure_name.to_lower;
 			end;
 		end;
+
+feature -- Properties
+
+	root_name: ID_SD;
+			-- Root class name
+
+	cluster_mark: ID_SD;
+			-- Cluster where the root class is
+
+	creation_procedure_name: ID_SD;
+			-- Creation procedure
+
+	file_name: STRING;
+			-- Updated by `adapt'
+
+feature -- Access
+
+	is_class: BOOLEAN is
+		do
+			Result := True
+		end;
+
+	valid_reference_class (reference_class: E_CLASS): BOOLEAN is
+		do
+			Result := True
+		end;
+
+	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+		do
+			Result := System.root_class.compiled_eclass
+		end
+
+feature {COMPILER_EXPORTER}
 
 	compile_all_classes: BOOLEAN is
 			-- Is the root class NONE, i.e. all the classes must be
@@ -152,21 +169,4 @@ feature {NONE}
 			Result.append ("none")
 		end;
 
-feature -- stoning
-
-	is_class: BOOLEAN is
-		do
-			Result := True
-		end;
-
-	valid_reference_class (reference_class: E_CLASS): BOOLEAN is
-		do
-			Result := True
-		end;
-
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
-		do
-			Result := System.root_class.compiled_eclass
-		end
-
-end
+end -- class ROOT_SD

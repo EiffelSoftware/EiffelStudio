@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for string constants.";
+	description: 
+		"AST representation for string constants.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -8,19 +9,11 @@ class STRING_AS
 
 inherit
 
-	COMPARABLE
-		undefine
-			is_equal
-		end;
+	PART_COMPARABLE;
 	ATOMIC_AS;
 	CHARACTER_ROUTINES
 
-feature -- Attributes
-
-	value: STRING;
-			-- Integer value
-
-feature -- Initilization
+feature {NONE} -- Initilization
 
 	set is
 			-- Yacc initialization
@@ -30,7 +23,26 @@ feature -- Initilization
 			value_exists: value /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	value: STRING;
+			-- Integer value
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := value < other.value
+		end;
+
+feature -- Output
+
+	string_value: STRING is
+		do
+			Result := eiffel_string (value)
+		end
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -40,17 +52,7 @@ feature -- Simple formatting
 			ctxt.put_text_item_without_tabs (ti_Double_quote);
 		end;
 
-	string_value: STRING is
-		do
-			Result := eiffel_string (value)
-		end
-
-feature 
-
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			--Result := value_i.str_val < other.value_i.str_val 
-		end;
+feature {INFIX_AS} 
 
 	set_value (s: STRING) is
 		do

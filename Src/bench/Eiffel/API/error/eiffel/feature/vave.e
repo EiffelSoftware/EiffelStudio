@@ -1,4 +1,9 @@
--- Error for variant loop of bad type
+indexing
+
+	description: 
+		"Error for variant loop of bad type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VAVE 
 
@@ -28,4 +33,4 @@ feature
 			ow.new_line;
 		end;
 
-end
+end -- class VAVE

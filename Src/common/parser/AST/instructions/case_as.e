@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description ao an alternative of a multi_branch instruction";
+	description: 
+		"AST representation ao an alternative of a multi_branch instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	interval: EIFFEL_LIST [INTERVAL_AS];
-			-- Interval of the alternative
-
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
-			-- Compound
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -29,7 +22,15 @@ feature -- Initialization
 			interval_exists: interval /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	interval: EIFFEL_LIST [INTERVAL_AS];
+			-- Interval of the alternative
+
+	compound: EIFFEL_LIST [INSTRUCTION_AS];
+			-- Compound
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

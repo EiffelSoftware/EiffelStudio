@@ -1,4 +1,9 @@
--- Syntax error when a string extension is bad
+indexing
+
+	description: 
+		"Syntax error when a string extension is bad.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STRING_EXTENSION
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "invalid character code after percent"
         end
 
-end
+end -- class STRING_EXTENSION

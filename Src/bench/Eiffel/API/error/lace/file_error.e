@@ -1,4 +1,9 @@
--- error in a file in a cluster
+indexing
+
+	description: 
+		"Error in a file in a cluster.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class FILE_ERROR
 
@@ -6,16 +11,12 @@ inherit
 
 	CLUSTER_ERROR
 
-feature
+feature -- Property
 
 	file_name: STRING;
 			-- File name involved
 
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
-		do
-			file_name := s;
-		end;
+feature -- Output
 
 	put_file_name (ow: OUTPUT_WINDOW) is
 		do
@@ -30,5 +31,12 @@ feature
 			put_file_name (ow);
 		end;
 
+feature {AST_LACE, COMPILER_EXPORTER} -- Setting
 
-end
+	set_file_name (s: STRING) is
+			-- Assign `s' to `file_name'.
+		do
+			file_name := s;
+		end;
+
+end -- class FILE_ERROR

@@ -1,4 +1,9 @@
--- Interval has values of bad type
+indexing
+
+	description: 
+		"Interval has values of bad type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VOMB2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VOMB2

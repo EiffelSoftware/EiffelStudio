@@ -1,4 +1,9 @@
--- Error when a prefixed feature has arguments
+indexing
+
+	description: 
+		"Error when a prefixed feature has arguments.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VFFD5 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 5;
 
-end
+end -- class VFFD5

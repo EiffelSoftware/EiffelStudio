@@ -1,4 +1,9 @@
--- Error for a non-boolean expression
+indexing
+
+	description: 
+		"Error for a non-boolean expression.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class VWBE 
 
@@ -9,21 +14,18 @@ inherit
 			build_explain
 		end;
 	
-feature 
+feature -- Properties
 
 	code: STRING is "VWBE";
 			-- Error code
 
 	type: TYPE_A;
 
-	set_type (t: TYPE_A) is
-		do
-			type := t;
-		end;
-
 	where: STRING is
 		deferred
 		end;
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -33,5 +35,11 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
 
+	set_type (t: TYPE_A) is
+		do
+			type := t;
+		end;
+
+end -- class VWBE

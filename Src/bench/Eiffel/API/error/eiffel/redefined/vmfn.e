@@ -1,4 +1,9 @@
--- Name clash of features
+indexing
+
+	description: 
+		"Name clash of features.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VMFN 
 
@@ -6,32 +11,35 @@ inherit
 	
 	EIFFEL_ERROR
 		redefine
-			build_explain
+			build_explain, is_defined
 		end
 
-feature
+feature -- Properties
 
-	a_feature: FEATURE_I;
+	a_feature: E_FEATURE;
 			-- Feature implemented in the class of id `class_id'
 			-- responsible for the name clash
 
-	other_feature: FEATURE_I;
+	other_feature: E_FEATURE;
 			-- Inherited feature
 
-	set_a_feature (f: FEATURE_I) is
-			-- Assign `f' to `a_feature'.
-		do
-			a_feature := f;
-		end;
-
-	set_other_feature (f: FEATURE_I) is
-			-- Assign `f' to `other_feature'.
-		do
-			other_feature := f;
-		end;
 
 	code: STRING is "VMFN";
 			-- Error code
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := is_class_defined and then
+				a_feature /= Void and then
+				other_feature /= Void
+		ensure then
+			valid_a_feature: Result implies a_feature /= Void;
+			valid_other_feature: Result implies other_feature /= Void
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -48,4 +56,22 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_a_feature (f: FEATURE_I) is
+			-- Assign `f' to `a_feature'.
+		require
+			valid_f: f /= Void
+		do
+			a_feature := f.api_feature;
+		end;
+
+	set_other_feature (f: FEATURE_I) is
+			-- Assign `f' to `other_feature'.
+		require
+			valid_f: f /= Void
+		do
+			other_feature := f.api_feature;
+		end;
+
+end -- class VMFN

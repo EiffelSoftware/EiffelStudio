@@ -1,4 +1,10 @@
--- Error for violation of the constrained genericity rule by a parent type
+indexing
+
+	description: 
+		"Error for violation of the constrained genericity %
+		%rule by a parent type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTGG4 
 
@@ -9,25 +15,18 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	parent_type: CL_TYPE_A;
 			-- Parent type involved in the error
 
-	set_parent_type (p: CL_TYPE_A) is
-			-- Assign `p' to `parent_type'.
-		do
-			parent_type := p;
-		end;
-
 	error_list: LINKED_LIST [CONSTRAINT_INFO];
 			-- Error description list
 
-	set_error_list (e: like error_list) is
-			-- Assign `e' to `error_list'.
-		do
-			error_list := e;
-		end;
+	code: STRING is "VTCG";
+			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -46,7 +45,18 @@ feature
 			end;
 		end;
 
-	code: STRING is "VTCG";
-			-- Error code
+feature {COMPILER_EXPORTER} -- Setting
 
-end
+	set_error_list (e: like error_list) is
+			-- Assign `e' to `error_list'.
+		do
+			error_list := e;
+		end;
+
+	set_parent_type (p: CL_TYPE_A) is
+			-- Assign `p' to `parent_type'.
+		do
+			parent_type := p;
+		end;
+
+end -- class VTGG4

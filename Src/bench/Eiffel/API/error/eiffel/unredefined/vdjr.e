@@ -1,4 +1,9 @@
--- Error for join rule when argument number is not the same
+indexing
+
+	description: 
+		"Error for join rule when argument number is not the same.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDJR 
 
@@ -6,33 +11,39 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain
+			build_explain, is_defined
 		end;
+	SHARED_WORKBENCH
 
-feature
+feature -- Properties
 
-	old_feature: FEATURE_I;
+	old_feature: E_FEATURE;
 			-- Inherited feature
 
-	new_feature: FEATURE_I;
+	new_feature: E_FEATURE;
 			-- Joined feature
 
 	code: STRING is "VDJR";
 			-- Error code
 
-	init (old_feat, new_feat: FEATURE_I) is
-			-- Initialization
-		require
-			not (old_feat = Void or else new_feat = Void);
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			old_feature := old_feat;
-			new_feature := new_feat;
-			class_c := System.current_class;
-		end;
+			Result := is_class_defined and then
+				old_feature /= Void and then
+				new_feature /= Void
+		ensure then
+			valid_old_feature: Result implies old_feature /= Void;
+			valid_new_feature: Result implies new_feature /= Void
+		end
+
+feature -- Output
 
 	print_signatures (ow: OUTPUT_WINDOW) is
 		local
-			oclass, nclass: CLASS_C
+			oclass, nclass: E_CLASS
 		do
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;
@@ -53,4 +64,16 @@ feature
 			print_signatures (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	init (old_feat, new_feat: FEATURE_I) is
+			-- Initialization
+		require
+			not (old_feat = Void or else new_feat = Void);
+		do
+			old_feature := old_feat.api_feature;
+			new_feature := new_feat.api_feature;
+			e_class := System.current_class.e_class;
+		end;
+
+end -- class VDJR

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for NONE type.";
+	description: 
+		"AST representation for NONE type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 
-feature
+feature -- Output
 
 	dump: STRING is "NONE";
 			-- Dumped trace

@@ -1,5 +1,10 @@
--- Error when a feature name in an undefining clause is not a final name
--- of the associated parent
+indexing
+
+	description: 
+		"Error when a feature name in an undefining clause is not %
+		%a final name of the associated parent.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDUS1 
 
@@ -10,10 +15,12 @@ inherit
 			code, build_explain
 		end
 	
-feature 
+feature -- Properties
 
 	code: STRING is "VDUS";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -24,4 +31,4 @@ feature
 			ow.new_line;
 		end;
 
-end 
+end -- class VDUS1

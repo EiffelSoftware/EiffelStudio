@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of the content of a feature.";
+	description: 	
+		"AST representation of the content of a feature.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Conveniences
+feature -- Properties
 
 	is_constant: BOOLEAN is
 			-- is the current content a constant content ?
@@ -50,6 +51,8 @@ feature -- Conveniences
 			-- Do nothing
 		end;
 
+feature -- Access
+
 	has_assertion: BOOLEAN is
 			-- Has the content pre- or postcondition(s) ?
 		do
@@ -67,8 +70,6 @@ feature -- Conveniences
 		deferred
 		end;
 
-feature -- Status report
-
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does the current content has instruction `i'?
 		deferred
@@ -79,7 +80,7 @@ feature -- Status report
 		deferred
 		end;
 
-feature -- Type check and byte code
+feature {BODY_AS} -- Type check and byte code
 
 	check_local_names is
 			-- Check conflicts between local names and feature names

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of an `ensure' structure.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ENSURE_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			simple_put_clause_keywords
 		end
 
-feature
+feature -- Properties
 
 	is_then: BOOLEAN is
 			-- Is the assertion list an ensure then part ?
@@ -15,7 +22,7 @@ feature
 			-- Do nothing
 		end;
 
-feature 
+feature {NONE}
 	
 	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
 			-- Append keyword "ensure".

@@ -1,4 +1,9 @@
--- Error for a feature call: type mismatch one one argument
+indexing
+
+	description: 
+		"Error for a feature call: type mismatch one one argument.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VUAR2 
 
@@ -9,7 +14,7 @@ inherit
 			build_explain, subcode
 		end
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
@@ -23,6 +28,26 @@ feature
 
 	actual_type: TYPE_A;
 			-- Actual type of the call
+
+feature -- Output
+
+	build_explain (ow: OUTPUT_WINDOW) is
+			-- Build specific explanation image for current error
+			-- in `ow'.
+		do
+			print_called_feature (ow);
+			ow.put_string ("Argument name: ");
+			ow.put_string (argument_name);
+			ow.put_string ("%NArgument position: ");
+			ow.put_int (argument_position);
+			ow.put_string ("%NActual argument type: ");
+			actual_type.append_to (ow);
+			ow.put_string ("%NFormal argument type: ");
+			formal_type.append_to (ow);
+			ow.new_line;
+		end;
+
+feature {COMPILER_EXPORTER} -- Setting
 
 	set_argument_name (n: STRING) is
 			-- Assign `n' to `argument_name'.
@@ -47,21 +72,4 @@ feature
 			actual_type := a;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
-			-- Build specific explanation image for current error
-			-- in `ow'.
-		do
-			print_called_feature (ow);
-			ow.put_string ("Argument name: ");
-			ow.put_string (argument_name);
-			ow.put_string ("%NArgument position: ");
-			ow.put_int (argument_position);
-			ow.put_string ("%NActual argument type: ");
-			actual_type.append_to (ow);
-			ow.put_string ("%NFormal argument type: ");
-			formal_type.append_to (ow);
-			ow.new_line;
-		end;
-
-end
-
+end -- class VUAR2

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract class for unary expression";
+	description: 
+		"AST representation of unary expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	expr: EXPR_AS;
-			-- Expression
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,10 @@ feature -- Initialization
 			expr_exists: expr /= Void;
 		end;
 
-feature 
+feature -- Properties
+
+	expr: EXPR_AS;
+			-- Expression
 
 	prefix_feature_name: STRING is
 			-- Internal name of the prefixed feature
@@ -46,7 +45,7 @@ feature
 			Result := false;
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

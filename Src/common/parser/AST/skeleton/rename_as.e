@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a renaming pair.";
+	description: 
+		"AST representation of a renaming pair.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	old_name: FEATURE_NAME;
-			-- Name of the renamed feature
-
-	new_name: FEATURE_NAME;
-			-- New name
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,7 +23,15 @@ feature -- Initialization
 			new_name_exists: new_name /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	old_name: FEATURE_NAME;
+			-- Name of the renamed feature
+
+	new_name: FEATURE_NAME;
+			-- New name
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -42,7 +43,7 @@ feature -- Simple formatting
 			ctxt.format_ast (new_name);
 		end;
 
-feature -- Replication
+feature {COMPILER_EXPORTER} -- Replication
 
 	set_old_name (o: like old_name) is
 		do

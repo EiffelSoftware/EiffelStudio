@@ -1,10 +1,15 @@
--- Node for id
+indexing
+
+	description: 
+		"Node for id.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ID_SD
 
 inherit
 
-	ATOMIC_SD
+	AST_LACE
 		undefine
 			copy, out, is_equal, setup, consistent
 		redefine
@@ -17,19 +22,11 @@ inherit
 			set as string_set
 		end
 
-creation
+creation {ROOT_SD, ID_SD, YACC_LACE}
 
 	make
 
-feature
-
-	pass_address (n: INTEGER) is
-			-- Eiffel-Yacc interface
-		do
-			c_get_address (n, $Current, $set);
-			getid_create ($make);
-			getid_area ($to_c)
-		end;
+feature {NONE} -- Initialization 
 
 	set is
 			-- Append `s' and put current value in hash table.
@@ -38,10 +35,18 @@ feature
 		do
 			s ?= yacc_arg (0);
 			append (s);
-			start_position := yacc_int_arg (0);
-			end_position := yacc_int_arg (1);
 		ensure then
 			not_empty: not empty;
+		end;
+
+feature {YACC_LACE}
+
+	pass_address (n: INTEGER) is
+			-- Eiffel-Yacc interface
+		do
+			c_get_address (n, $Current, $set);
+			getid_create ($make);
+			getid_area ($to_c)
 		end;
 
 feature {NONE} -- Externals
@@ -56,4 +61,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+end -- class ID_SD

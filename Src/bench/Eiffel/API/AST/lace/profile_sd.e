@@ -19,7 +19,7 @@ feature -- Properties
 			Result := "profile"
 		end;
 
-feature -- Update
+feature {COMPILER_EXPORTER} -- Update
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -67,4 +67,4 @@ feature -- Update
 			end;
 		end;
 
-end -- class PROFILE_SD
+end -- class PROFILE_SD 

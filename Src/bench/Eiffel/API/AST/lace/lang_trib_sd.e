@@ -1,8 +1,9 @@
--- Language_contrib        : /* empty */
---                         | Language_name LEX_COLUMN File_list
---
--- Language_name           : /* empty */
---                         | Name
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LANG_TRIB_SD
 
@@ -13,15 +14,7 @@ inherit
 			adapt
 		end
 
-feature -- Attributes
-
-	language_name: LANGUAGE_NAME_SD;
-			-- Language name
-
-	file_names: LACE_LIST [ID_SD];
-			-- File names
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -32,7 +25,15 @@ feature -- Initialization
 			language_name_exists: language_name /= Void;
 		end;
 
-feature -- Lace compilation
+feature -- Properties
+
+	language_name: LANGUAGE_NAME_SD;
+			-- Language name
+
+	file_names: LACE_LIST [ID_SD];
+			-- File names
+
+feature {COMPILER_EXPORTER} -- Lace compilation
 
 	adapt is
 			-- External analysis
@@ -54,4 +55,4 @@ feature -- Lace compilation
 			end;
 		end;
 
-end
+end -- class LANG_TRIB_SD

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract class for Eiffel types.";
+	description: 
+		"AST representation for Eiffel types.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Access
+feature -- Properties
 
 	has_like: BOOLEAN is
 			-- Is the type an anchored type ?
@@ -22,13 +23,6 @@ feature -- Access
 			-- Is the type void (procedure type) ?
 		do
 			-- Do nothing
-		end;
-
-	same_as (other: TYPE): BOOLEAN is
-			-- Is `other' the same as Current ?
-			--|Note: implemented only for descendants of TYPE_A
-		do
-			-- Do nothing: implemented only for descendants of TYPE_A
 		end;
 
 	is_like_current: BOOLEAN is
@@ -46,6 +40,14 @@ feature -- Access
 			--| the same (problem detected for LIKE_FEATURE). Xavier
 		do
 			Result := deep_equal (Current, other)
+		end;
+
+feature -- Comparison
+
+	same_as (other: TYPE): BOOLEAN is
+			-- Is `other' the same as Current ?
+			--|Note: implemented only for descendants of TYPE_A
+		do
 		end;
 
 feature -- Output

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Abstract class for an Eiffel feature name: id or %
+		"AST representation for an Eiffel feature name: id or %
 		%infix/prefix notation.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 			is_feature
 		end
 
-feature -- Conveniences
+feature -- Properties
 
 	is_frozen: BOOLEAN;
 			-- Is the name of the feature frozen ?
@@ -47,28 +47,31 @@ feature -- Conveniences
 			Result := True
 		end;
 
-feature -- Internal name computing
-
-	infix "<" (other: FEATURE_NAME): BOOLEAN is
-		deferred
-		end;
-
 	internal_name: ID_AS is
 			-- Internal name used by the compiler
 		deferred
 		end;
 
-	clickable_name: STRING is
-			-- Feature name representing AST 
-		do
-			Result := internal_name
+feature -- Comparison
+
+	infix "<" (other: FEATURE_NAME): BOOLEAN is
+		deferred
 		end;
 
-	temp_name: ID_AS is
-			-- Buffer for internal name evaluation
-		once
-			!!Result.make (25);
+feature {AST_EIFFEL} -- Output
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			if is_frozen then
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
+			end;
+			ctxt.prepare_for_feature (internal_name, void);
+			ctxt.put_normal_feature;
 		end;
+
+feature {COMPILER_EXPORTER}
 
 	set_name (s: STRING) is
 		require
@@ -79,6 +82,24 @@ feature -- Internal name computing
 	set_is_frozen (b: BOOLEAN) is
 		do
 			is_frozen := b;
+		end;
+
+feature {FEATURE_AS} -- Formatting
+
+	offset: INTEGER is
+		do
+			if is_frozen then
+					--| offset for frozen routines
+				Result := 7
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	temp_name: ID_AS is
+			-- Buffer for internal name evaluation
+		once
+			!!Result.make (25);
 		end;
 
 	code_table: HASH_TABLE [STRING, STRING] is
@@ -103,29 +124,6 @@ feature -- Internal name computing
 			Result.put ("power", "^");
 			Result.put ("and_then", "and then");
 			Result.put ("or_else", "or else");
-		end
-
-feature -- Simple formatting
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			ctxt.prepare_for_feature (internal_name, void);
-			ctxt.put_normal_feature;
-		end;
-
-feature -- Formatting
-
-	offset: INTEGER is
-		do
-			if is_frozen then
-					--| offset for frozen routines
-				Result := 7
-			end
 		end
 
 end -- class FEATURE_NAME

@@ -1,5 +1,10 @@
--- Error when the compiler find a redefinition of a frozen feature
--- or a constant-attribute
+indexing
+
+	description: 
+		"Error when the compiler find a redefinition of a frozen feature %
+		%or a constant-attribute";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRS2 
 	
@@ -7,33 +12,37 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end
 	
-feature 
+feature -- Properties
 
 	feature_name: STRING;
 			-- Feature name involved
 
-	parent: CLASS_C;
+	parent: E_CLASS;
 			-- Parent class involving the non-valid
 			-- redefinition
-
-	set_feature_name (fn: STRING) is
-			-- Assign `fn' to `feature_name'.
-		do
-			feature_name := fn;
-		end;
-
-	set_parent (p: CLASS_C) is
-		do
-			parent := p;
-		end;
 
 	code: STRING is "VDRS";
 			-- Error code
 
 	subcode: INTEGER is 2;
+
+feature -- Access
+
+    is_defined: BOOLEAN is
+            -- Is the error fully defined?
+        do
+			Result := is_class_defined and then
+				parent /= Void and then
+				feature_name /= Void
+		ensure then
+			valid_parent: Result implies parent /= Void;
+			valid_feature_name: Result implies feature_name /= Void
+        end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -46,4 +55,19 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_feature_name (fn: STRING) is
+			-- Assign `fn' to `feature_name'.
+		do
+			feature_name := fn;
+		end;
+
+	set_parent (p: CLASS_C) is
+		require
+			valid_p: p /= Void
+		do
+			parent := p.e_class;
+		end;
+
+end -- class VDRS2

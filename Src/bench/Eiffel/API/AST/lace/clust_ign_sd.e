@@ -1,5 +1,9 @@
--- Cluster_ignore          : Name LEX_COLUMN LEX_IGNORE
---                         ;
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLUST_IGN_SD
 
@@ -10,7 +14,7 @@ inherit
 			adapt
 		end
 
-feature
+feature {NONE} -- Initialization 
 
 	set is
 		do
@@ -18,6 +22,8 @@ feature
 			cluster_name.to_lower
 		end;
 		
+feature {COMPILER_EXPORTER}
+
 	adapt is
 			-- Cluster adaptation
 		local
@@ -32,4 +38,4 @@ feature
 			end;
 		end;
 	
-end
+end -- class CLUST_IGN_SD

@@ -1,4 +1,9 @@
--- Error for bad character recognition
+indexing
+
+	description: 
+		"Error for bad character recognition.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BAD_CHARACTER
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message
@@ -21,4 +26,4 @@ feature
 			Result := "invalid character"
 		end
 
-end
+end -- class BAD_CHARACTER

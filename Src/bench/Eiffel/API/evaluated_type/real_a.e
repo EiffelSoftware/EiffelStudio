@@ -1,4 +1,9 @@
--- Actual type for real type
+indexing
+
+	description: 
+		"Actual type for real type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class REAL_A
 
@@ -85,4 +90,4 @@ feature {COMPILER_EXPORTER}
 			Result := other.is_real;
 		end;
 
-end
+end -- class REAL_A

@@ -1,4 +1,9 @@
--- Error on type of a constant feature
+indexing
+
+	description: 
+		"Error on type of a constant feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VQMC 
 
@@ -9,21 +14,17 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	feature_name: STRING;
 			-- Constant name
 			-- [Note that the class id where the constant is written is
 			-- `class_id'.]
 
-	set_feature_name (i: STRING) is
-			-- Assign `i' to `feature_name'.
-		do
-			feature_name := i;
-		end;
-
 	code: STRING is "VQMC";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -32,4 +33,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_name (i: STRING) is
+			-- Assign `i' to `feature_name'.
+		do
+			feature_name := i;
+		end;
+
+end -- class VQMC

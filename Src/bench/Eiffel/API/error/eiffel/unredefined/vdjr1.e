@@ -1,4 +1,9 @@
--- Error for join rule when the types are not the same
+indexing
+
+	description: 
+		"Error for join rule when the types are not the same.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDJR1 
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Properties
 
 	type: TYPE_A;
 			-- Type of `new_feature'
@@ -17,17 +22,7 @@ feature
 	old_type: TYPE_A;
 			-- Type of `old_feature'
 
-	set_type (t: TYPE_A) is
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
-
-	set_old_type (t: TYPE_A) is
-			-- Assign `t' to `old_type'.
-		do
-			old_type := t;
-		end;
+feature -- Output
 
 	print_types (ow: OUTPUT_WINDOW) is
 		do
@@ -45,4 +40,18 @@ feature
 			print_signatures (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_type (t: TYPE_A) is
+			-- Assign `t' to `type'.
+		do
+			type := t;
+		end;
+
+	set_old_type (t: TYPE_A) is
+			-- Assign `t' to `old_type'.
+		do
+			old_type := t;
+		end;
+
+end -- class VDJR1

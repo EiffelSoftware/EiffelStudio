@@ -1,4 +1,9 @@
--- Error when there are entities with the same name
+indexing
+
+	description: 
+		"Error when there are entities with the same name.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VREG 
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end;
 	
-feature 
+feature -- Properties
 
 	entity_name: STRING;
 			-- Argument name violating the VREG rule
@@ -17,11 +22,7 @@ feature
 	code: STRING is "VREG";
 			-- Error code
 
-	set_entity_name (s: STRING) is
-			-- Assign `s' to `argument_name'.
-		do
-			entity_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +31,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_entity_name (s: STRING) is
+			-- Assign `s' to `argument_name'.
+		do
+			entity_name := s;
+		end;
+
+end -- class VREG

@@ -1,4 +1,9 @@
--- Warning for obsolete features  
+indexing
+
+	description: 
+		"Warning for obsolete features.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class OBS_FEAT_WARN
 
@@ -6,10 +11,10 @@ inherit
 
 	OBS_CLASS_WARN
 		redefine
-			build_explain, code, help_file_name
+			build_explain, code, help_file_name, is_defined
 		end;
 
-feature
+feature -- Properties
 
 	code: STRING is
 		do
@@ -21,23 +26,25 @@ feature
 			Result := "OBS_CALL"
 		end;
 
-	obsolete_feature: FEATURE_I;
+	obsolete_feature: E_FEATURE;
 			-- feature name
 
-	a_feature: FEATURE_I;
-			-- feature using the obsolete
+	a_feature: E_FEATURE;
+			-- Feature using the obsolete
+			-- (Void `a_feature' implies feature is invariant)
 
-	set_obsolete_feature (f: FEATURE_I) is
-			-- Assign `f' to `obsolete_feature'
-		do
-			obsolete_feature := f
-		end;
+feature -- Access
 
-	set_feature (f: FEATURE_I) is
-			-- Assign `f' to `feature'
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			a_feature := f
-		end;
+			Result := classes_defined and then
+				obsolete_feature /= Void
+		ensure then
+			valid_features: Result implies obsolete_feature /= Void	
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -59,4 +66,22 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {ACCESS_FEAT_AS_B} -- Setting
+
+	set_obsolete_feature (f: FEATURE_I) is
+			-- Assign `f' to `obsolete_feature'
+		require
+			valid_f: f /= Void
+		do
+			obsolete_feature := f.api_feature
+		end;
+
+	set_feature (f: FEATURE_I) is
+			-- Assign `f' to `feature'
+		do
+			if f /= Void then
+				a_feature := f.api_feature
+			end
+		end;
+
+end -- class OBS_FEAT_WARN

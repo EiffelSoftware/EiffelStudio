@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for Eiffel feature name.";
+	description: 
+		"AST representation of Eiffel feature name.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,18 +11,29 @@ inherit
 
 	FEATURE_NAME
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			feature_name ?= yacc_arg (0);
+			is_frozen := yacc_bool_arg (0);
+		ensure then
+			feature_name_exists: feature_name /= Void
+		end;
+
+feature -- Properties
 
 	feature_name: ID_AS;
 			-- Feature name
-
-feature -- Conveniences
 
 	internal_name: like feature_name is
 			-- Internal name used by the compiler
 		do
 			Result := feature_name
 		end;
+
+feature -- Comparison
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
@@ -41,23 +53,12 @@ feature -- Conveniences
 			end;
 		end;
 		
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0);
-			is_frozen := yacc_bool_arg (0);
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end;
+feature {COMPILER_EXPORTER}
 
 	set_name (s: STRING) is
 		do
 			!!feature_name.make (0);
 			feature_name.load (s);
 		end;
-		
 
 end -- class FEAT_NAME_ID_AS

@@ -1,4 +1,9 @@
--- Actual type for pointer type
+indexing
+
+	description: 
+		"Actual type for pointer type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class POINTER_A
 
@@ -67,4 +72,4 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
-end
+end -- class POINTER_A

@@ -1,6 +1,10 @@
--- Error when an non-deferred feature is redefined into a deferred one
+indexing
 
--- This error is VDRD5 NOT VDRD7 !!!!!
+	description: 
+		"Error when an non-deferred feature is redefined %
+		%into a deferred one. This error is VDRD5 NOT VDRD7 !!!!!";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRD7 
 
@@ -11,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 5;
 
-end
+end -- class VDRD7

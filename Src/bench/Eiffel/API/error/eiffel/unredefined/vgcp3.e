@@ -1,4 +1,9 @@
--- Error when a feature name is more than once in a creation clause
+indexing
+
+	description: 
+		"Error when a feature name is more than once in a creation clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCP3 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VGCP3

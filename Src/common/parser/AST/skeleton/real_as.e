@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for real constant.";
+	description: 
+		"AST representation of a real constant.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	ATOMIC_AS
 
-feature -- Attribute
-
-	value: STRING;
-			-- Real value
-
-feature -- Initilization
+feature {NONE} -- Initilization
 
 	set is
 			-- Yacc initialization
@@ -23,7 +19,12 @@ feature -- Initilization
 			value ?= yacc_arg (0);
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	value: STRING;
+			-- Real value
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

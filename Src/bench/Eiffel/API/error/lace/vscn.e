@@ -1,16 +1,17 @@
--- Error when name clash in a cluster
+indexing
+
+	description: 
+		"Error when name clash in a cluster.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VSCN
-
 
 inherit
 
 	CLUSTER_ERROR
-		redefine
-			code
-		end
 
-feature
+feature -- Properties
 
 	first: CLASS_I;
 			-- First class in conflict
@@ -18,20 +19,7 @@ feature
 	second: CLASS_I;
 			-- Second class in conflict with first
 
-	set_first (c: CLASS_I) is
-			-- Assign `c' to `first'.
-		do
-			first := c;
-		end;
-
-	set_second (c: CLASS_I) is
-			-- Assing `c' to `second'.
-		do
-			second := c;
-		end;
-
-	code: STRING is "VSCN";
-			-- Error code
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -47,4 +35,18 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {UNIVERSE_I, CLUSTER_I} -- Setting
+
+	set_first (c: CLASS_I) is
+			-- Assign `c' to `first'.
+		do
+			first := c;
+		end;
+
+	set_second (c: CLASS_I) is
+			-- Assing `c' to `second'.
+		do
+			second := c;
+		end;
+
+end -- class VSCN

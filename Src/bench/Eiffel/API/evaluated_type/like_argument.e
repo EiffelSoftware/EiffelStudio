@@ -1,4 +1,9 @@
--- Representation of an type anchored on a routine argument
+indexing
+
+	description: 
+		"Representation of an type anchored on a routine argument.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LIKE_ARGUMENT
 
@@ -212,4 +217,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			!! Result.make (class_name, ass_classc.id)
 		end;
 
-end
+end -- class LIKE_ARGUMENT

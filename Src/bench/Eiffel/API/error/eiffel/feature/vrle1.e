@@ -1,4 +1,9 @@
--- Error when a local variable name is a feature name also
+indexing
+
+	description: 
+		"Error when a local variable name is a feature name also.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VRLE1 
 
@@ -9,16 +14,10 @@ inherit
 			build_explain, subcode
 		end;
 
-feature
+feature -- Properties
 
 	local_name: STRING;
 			-- Local variable name in conflict
-
-	set_local_name (s: STRING) is
-			-- Assign `s' to `local_name'.
-		do
-			local_name := s;
-		end;
 
 	code: STRING is "VRLE";
 			-- Error code
@@ -28,6 +27,8 @@ feature
 			Result := 1;
 		end;
 
+feature -- Output
+
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			ow.put_string ("Local entity name: ");
@@ -35,4 +36,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_local_name (s: STRING) is
+			-- Assign `s' to `local_name'.
+		do
+			local_name := s;
+		end;
+
+end -- class VRLE1

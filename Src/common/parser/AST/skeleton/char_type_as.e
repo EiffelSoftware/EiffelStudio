@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for type CHARACTER.";
+	description: 
+		"AST representation of type CHARACTER.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 
-feature
+feature -- Output
 
 	dump: STRING is "CHARACTER";
 			-- Dumped trace

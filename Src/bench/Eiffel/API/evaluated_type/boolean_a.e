@@ -1,4 +1,9 @@
--- Actual type for boolean type
+indexing
+
+	description: 
+		"Actual type for boolean type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BOOLEAN_A
 
@@ -67,4 +72,4 @@ feature {COMPILER_EXPORTER}
 			Result := System.boolean_class.compiled_class;
 		end;
 
-end
+end -- class BOOLEAN_A

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of binary `=' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BIN_EQ_AS
 
 inherit
@@ -8,7 +15,7 @@ inherit
 			operator_name
 		end
 
-feature
+feature -- Properties
 
 	infix_function_name: STRING is
 			-- Internal name of the infixed feature associated to the
@@ -25,7 +32,7 @@ feature
 	
 	operator_is_special: BOOLEAN is true;
 	
-feature {}
+feature {NONE}
 	
 	constant_name: STRING is "_infix_=";
 

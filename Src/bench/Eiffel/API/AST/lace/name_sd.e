@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class NAME_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_name
 		end
 
-feature
+feature -- Properties
 
 	is_name: BOOLEAN is
 			-- is the option value a name option ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class NAME_SD

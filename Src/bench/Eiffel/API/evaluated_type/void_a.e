@@ -1,4 +1,9 @@
--- VOID actual type
+indexing
+
+	description: 
+		"VOID actual type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VOID_A
 
@@ -75,4 +80,4 @@ feature -- Storage information for EiffelCase
 			not_to_be_called: False
 		end;
 
-end
+end -- class VOID_A

@@ -1,4 +1,10 @@
--- Error when adaptation of a cluster contains a paragraph about itself
+indexing
+
+	description: 
+		"Error when adaptation of a cluster contains%
+		%a paragraph about itself.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD05
 
@@ -9,7 +15,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -18,4 +24,4 @@ feature
 			ow.new_line
 		end;
 
-end
+end -- class VD05

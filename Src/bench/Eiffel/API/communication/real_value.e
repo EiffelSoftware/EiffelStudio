@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing of a real";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class REAL_VALUE
 
 inherit

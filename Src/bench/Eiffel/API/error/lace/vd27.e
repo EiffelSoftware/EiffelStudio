@@ -1,4 +1,9 @@
--- Error when root creation procedure name is not valid
+indexing
+
+	description: 
+		"Error when root creation procedure name is not valid.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD27
 
@@ -6,21 +11,15 @@ inherit
 
 	LACE_ERROR
 
-feature
+feature -- Properties
 
 	creation_routine: STRING;
+			-- Error creation routine 
 
-	root_class: CLASS_C;
+	root_class: E_CLASS;
+			-- Root class
 
-	set_creation_routine (a_name: STRING) is
-		do
-			creation_routine := a_name;
-		end;
-
-	set_root_class (a_class_c: CLASS_C) is
-		do
-			root_class := a_class_c;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -31,4 +30,16 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {CLASS_C} -- Setting
+
+	set_creation_routine (a_name: STRING) is
+		do
+			creation_routine := a_name;
+		end;
+
+	set_root_class (a_class: like root_class) is
+		do
+			root_class := a_class;
+		end;
+
+end -- class VD27

@@ -1,5 +1,10 @@
--- Error when an old expression is found somewhere else that in a 
--- postcondition
+indexing
+
+	description: 
+		"Error when an old expression is found somewhere else %
+		%that in a postcondition";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VAOL1 
 
@@ -10,7 +15,7 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	code: STRING is "VAOL";
 			-- Error code
@@ -20,4 +25,4 @@ feature
 			Result := 1
 		end;
 
-end
+end -- class VAOL1

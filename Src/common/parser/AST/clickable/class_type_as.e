@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for normal class type.";
+	description: 
+		"AST representation for normal class type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -17,7 +18,18 @@ inherit
 			is_class
 		end
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			class_name ?= yacc_arg (0);
+			generics ?= yacc_arg (1);
+		ensure then
+			class_name_exists: class_name /= Void;
+		end;
+
+feature -- Properties
 
 	class_name: ID_AS;
 			-- Class type name
@@ -31,18 +43,24 @@ feature -- Attributes
 			Result := True
 		end;
 
-feature -- Initialization
+feature -- Access
 
-	set is
-			-- Yacc initialization
+	has_like: BOOLEAN is
+			-- Does the type have anchored type in its definition ?
 		do
-			class_name ?= yacc_arg (0);
-			generics ?= yacc_arg (1);
-		ensure then
-			class_name_exists: class_name /= Void;
+			if generics /= Void then
+				from
+					generics.start
+				until
+					generics.after or else Result
+				loop
+					Result := generics.item.has_like;
+					generics.forth
+				end;
+			end;
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -63,7 +81,7 @@ feature -- Simple formatting
 			end;
 		end;
 
-feature -- Conveniences
+feature {COMPILER_EXPORTER} -- Conveniences
 
 	set_class_name (s: like class_name) is
 			-- Assign `s' to `class_name'.
@@ -109,21 +127,6 @@ feature -- Conveniences
 				end;
 				generics.go_i_th (p);
 				o_g.go_i_th (o_p);
-			end;
-		end;
-
-	has_like: BOOLEAN is
-			-- Does the type have anchored type in its definition ?
-		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_like;
-					generics.forth
-				end;
 			end;
 		end;
 

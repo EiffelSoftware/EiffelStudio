@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CHECK_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_check
 		end
 
-feature
+feature -- Properties
 
 	is_check: BOOLEAN is
 			-- Is the option value `check' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class CHECK_SD

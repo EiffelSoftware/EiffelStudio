@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class LOOP_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_loop
 		end
 
-feature
+feature -- Properties
 
 	is_loop: BOOLEAN is
 			-- is the option value `loop' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class LOOP_SD

@@ -1,5 +1,9 @@
--- Error for unvalid renaming
--- renaming a feature as itselt
+indexing
+
+	description: 
+		"Error for invalid renaming. Renaming a feature as itselt.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VHRC3 obsolete "NOT DEFINED IN THE BOOK"
 
@@ -10,8 +14,8 @@ inherit
 			subcode
 		end;
 	
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VHRC3

@@ -1,4 +1,9 @@
--- Error for not supported construction
+indexing
+
+	description: 
+		"Error for not supported construction.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class NOT_SUPPORTED 
 
@@ -30,4 +35,4 @@ feature
 			ow.new_line;
 		end
 
-end
+end -- class NOT_SUPPORTED

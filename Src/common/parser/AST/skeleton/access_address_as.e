@@ -1,6 +1,7 @@
 indexing
 
-	description: "Access for the address operator";
+	description: 
+		"AST representation of an access for the address operator.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,19 +14,7 @@ inherit
 			simple_format
 		end
 
-creation
-
-	make
-
-feature
-
-	make (s: ID_AS) is
-			-- Initialization
-		do
-			feature_name := s;
-		end;
-
-feature 
+feature {NONE} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

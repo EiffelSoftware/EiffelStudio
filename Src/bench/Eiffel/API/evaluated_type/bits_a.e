@@ -1,4 +1,9 @@
--- Actual type for bits: `base_type' is the bits value
+indexing
+
+	description: 
+		"Actual type for bits: `base_type' is the bits value.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BITS_A
 
@@ -139,4 +144,4 @@ feature {COMPILER_EXPORTER}
 			ctxt.put_string (base_type.out);
 		end
 
-end
+end -- class BITS_A

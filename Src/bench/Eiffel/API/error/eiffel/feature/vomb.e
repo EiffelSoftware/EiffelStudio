@@ -1,12 +1,19 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class VOMB
 
 inherit
 
 	FEATURE_ERROR
 
-feature
+feature -- Property
 
 	code: STRING is "VOMB";
 			-- Error code
 
-end
+end -- class VOMB

@@ -1,4 +1,9 @@
--- Warning object sent by the compiler to the workbench
+indexing
+
+	description: 
+		"Warning object sent by the compiler to the workbench.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class WARNING
 
@@ -9,11 +14,11 @@ inherit
 			Error_string
 		end
 
-feature -- Debug pupose
+feature -- Property
 
 	Error_string: STRING is
 		do
 			Result := "Warning";
 		end;
 
-end
+end -- class WARNING

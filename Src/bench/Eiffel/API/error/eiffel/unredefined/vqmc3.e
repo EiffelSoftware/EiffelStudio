@@ -1,4 +1,9 @@
--- Error when a constant value type doesn't match the constant type
+indexing
+
+	description: 
+		"Error when a constant value type doesn't match the constant type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VQMC3 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VQMC3

@@ -1,8 +1,8 @@
 indexing
 
 	description:
-			"Abstract description of a formal generic parameter. %
-			%Instances produced by Yacc.";
+		"AST representation of a formal generic parameter. %
+		%Instances produced by Yacc.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -15,15 +15,7 @@ inherit
 			set, is_deep_equal, simple_format
 		end
 
-feature -- Attributes
-
-	formal_name: ID_AS;
-			-- Formal generic parameter name
-
-	constraint: TYPE;
-			-- Constraint of the formal generic
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -34,6 +26,16 @@ feature -- Initialization
 		ensure then
 			formal_name_exists: formal_name /= Void
 		end; 
+
+feature -- Properties
+
+	formal_name: ID_AS;
+			-- Formal generic parameter name
+
+	constraint: TYPE;
+			-- Constraint of the formal generic
+
+feature -- Access
 
 	is_deep_equal (other: TYPE): BOOLEAN is
 		local
@@ -55,7 +57,7 @@ feature -- Initialization
 			end;
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

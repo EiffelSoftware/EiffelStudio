@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class VTAT1A 
 
 inherit
@@ -13,16 +20,12 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	argument_name: STRING;
 			-- Argument name which anchored type in unvalid
 
-	set_argument_name (s: STRING) is
-			-- Assign `s' to `argument_name'.
-		do
-			argument_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -32,4 +35,12 @@ feature
 			old_build_explain (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_argument_name (s: STRING) is
+			-- Assign `s' to `argument_name'.
+		do
+			argument_name := s;
+		end;
+
+end -- class VTAT1A

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of bit symbols.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BITS_SYMBOL_AS
 
 inherit
@@ -7,20 +14,12 @@ inherit
 			set, is_deep_equal
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	bits_symbol: ID_AS;
 			-- Bits value
 
-feature -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			bits_symbol ?= yacc_arg (0);
-		ensure then
-			bits_symbol_exists: bits_symbol /= Void
-		end;
+feature -- Comparison
 
 	is_deep_equal (other: TYPE): BOOLEAN is
 			-- ATTENTION: May be this feature should be deferred now...
@@ -32,6 +31,8 @@ feature -- Initialization
 				bits_symbol.is_equal (o.bits_symbol)
 		end;
 
+feature -- Output
+
 	dump: STRING is
 			-- Debug purpose
 		do
@@ -39,5 +40,15 @@ feature -- Initialization
 			Result.append ("BIT ");
 			Result.append (bits_symbol);
    		end;
+
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initilization
+		do
+			bits_symbol ?= yacc_arg (0);
+		ensure then
+			bits_symbol_exists: bits_symbol /= Void
+		end;
 
 end -- class BITS_SYMBOL_AS

@@ -14,7 +14,7 @@ inherit
 			adapt as ast_adapt
 		end;
 
-feature -- Setting
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -57,7 +57,7 @@ feature -- Properties
 			-- Do nothing
 		end;
 
-feature -- Free options
+feature -- Free options properties
 
 	is_valid: BOOLEAN is
 		do
@@ -84,7 +84,7 @@ feature -- Free options
 			-- Do nothing
 		end;
 
-feature -- Update
+feature {COMPILER_EXPORTER} -- Update
 
 	process_system_level_options (value: OPT_VAL_SD) is
 		do
@@ -108,4 +108,4 @@ feature -- Update
 			Error_handler.insert_error (vd15);
 		end;
 
-end
+end -- class OPTION_SD

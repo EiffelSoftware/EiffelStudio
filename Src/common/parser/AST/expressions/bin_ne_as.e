@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of binary `/=' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BIN_NE_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			operator_name 
 		end
 
-feature
+feature -- Properties
 
 	operator_name: STRING is "_infix_/=";
 

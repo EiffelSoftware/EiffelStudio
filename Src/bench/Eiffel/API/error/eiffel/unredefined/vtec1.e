@@ -1,4 +1,9 @@
--- Error when the result type of a an expanded feature is deferred
+indexing
+
+	description: 
+		"Error when the result type of a an expanded feature is deferred.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTEC1 
 
@@ -9,7 +14,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is
 		do
@@ -19,10 +24,7 @@ feature
 	entity_name: STRING;
 			-- Entity name for source of error
 
-	set_entity_name (s: STRING) is
-		do
-			entity_name := s
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -33,4 +35,11 @@ feature
 			end;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_entity_name (s: STRING) is
+		do
+			entity_name := s
+		end;
+
+end -- class VTEC1

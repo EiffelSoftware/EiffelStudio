@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a nested call `target.message'";
+	description: 
+		"AST representation of a nested call `target.message'";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	CALL_AS
 
-feature -- Attributes
-
-	target: ACCESS_AS;
-			-- Target of the call
-
-	message: CALL_AS;
-			-- Message send to the target
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initilization
@@ -30,7 +23,15 @@ feature -- Initialization
 			message_exists: message /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	target: ACCESS_AS;
+			-- Target of the call
+
+	message: CALL_AS;
+			-- Message send to the target
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -48,7 +49,6 @@ feature {NESTED_AS} -- Replication
 		do
 			target := t;
 		end;
-
 
 	set_message (m: like message) is
 		require

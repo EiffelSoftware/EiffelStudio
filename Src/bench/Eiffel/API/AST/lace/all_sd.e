@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ALL_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_all
 		end
 
-feature
+feature -- Properties
 
 	is_all: BOOLEAN is
 			-- Is the option value `all' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end;
 
-end
+end -- class ALL_SD

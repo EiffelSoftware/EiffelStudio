@@ -1,4 +1,9 @@
--- Error for empty target list in cluster option
+indexing
+
+	description: 
+		"Error for empty target list in cluster option.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD39
 
@@ -6,14 +11,11 @@ inherit
 
 	CLUSTER_ERROR
 
-feature
+feature -- Property
 
 	option_name: STRING;
 
-	set_option_name (s: STRING) is
-		do
-			option_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -23,4 +25,11 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {O_OPTION_SD} -- Setting
+
+	set_option_name (s: STRING) is
+		do
+			option_name := s;
+		end;
+
+end -- class VD39

@@ -1,4 +1,9 @@
--- keyword all in export clause is repeated more than once
+indexing
+
+	description: 
+		"Keyword all in export clause is repeated more than once.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VLEL1 
 
@@ -9,13 +14,15 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 1;
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			print_parent (ow);
 		end;
 
-end
+end -- class VLEL1

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a tagged expression";
+	description: 
+		"AST representation of a tagged expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	tag: ID_AS;
-			-- Expression tag
-
-	expr: EXPR_AS;
-			-- Expression
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -29,7 +22,15 @@ feature -- Initialization
 			expr_exists: expr /= Void;
 		end;
 
-feature -- Equivalence
+feature -- Properties
+
+	tag: ID_AS;
+			-- Expression tag
+
+	expr: EXPR_AS;
+			-- Expression
+
+feature -- Comparison
 
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' tagged as equivalent to Current?
@@ -37,7 +38,7 @@ feature -- Equivalence
 			Result := deep_equal (tag, other.tag) and then deep_equal (expr, other.expr)
 		end;	
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

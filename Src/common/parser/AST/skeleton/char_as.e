@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for character constant.";
+	description: 
+		"AST representation of character constant.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -14,12 +15,7 @@ inherit
 		end;
 	CHARACTER_ROUTINES
 
-feature -- Attributes
-
-	value: CHARACTER;
-			-- Character value
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -27,7 +23,10 @@ feature -- Initialization
 			value := yacc_char_arg (0);
 		end;
 
-feature -- Conveniences
+feature -- Properties
+
+	value: CHARACTER;
+			-- Character value
 
 	is_character: BOOLEAN is
 			-- Is the current value a character value ?
@@ -41,7 +40,14 @@ feature -- Conveniences
 			Result := True;
 		end;
 
-feature -- Simple formatting
+feature -- Output
+
+    string_value: STRING is
+        do
+            Result := char_text (value)
+        end
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstiture text.
@@ -50,10 +56,5 @@ feature -- Simple formatting
 			ctxt.put_string (char_text (value));
 			ctxt.put_text_item_without_tabs (ti_Quote)
 		end;
-
-    string_value: STRING is
-        do
-            Result := char_text (value)
-        end
 
 end -- class CHAR_AS

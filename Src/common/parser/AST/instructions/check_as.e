@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a check clause";
+	description: 
+		"AST representation of a check clause";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
-
-	check_list: EIFFEL_LIST [TAGGED_AS];
-			-- List of tagged boolean expression
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -23,7 +19,12 @@ feature -- Initialization
 			check_list ?= yacc_arg (0);
 		end;
 
-feature -- Equivalence 
+feature -- Properties
+
+	check_list: EIFFEL_LIST [TAGGED_AS];
+			-- List of tagged boolean expression
+
+feature -- Comparison 
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -46,7 +47,7 @@ feature -- Equivalence
 			Result := deep_equal (check_list, other.check_list)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute Text

@@ -1,4 +1,9 @@
--- Syntax error for empty lace string
+indexing
+
+	description: 
+		"Syntax error for empty lace string.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STRING_EMPTY
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "empty string not permitted here"
         end;
 
-end
+end -- class STRING_EMPTY

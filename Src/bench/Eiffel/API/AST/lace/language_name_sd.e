@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class LANGUAGE_NAME_SD
 
 inherit
 
 	AST_LACE
 
-feature
+feature -- Properties
 
 	language_name: ID_SD;
 			-- Language name
@@ -39,6 +46,8 @@ feature
 			-- Do nothing
 		end;
 
+feature {NONE} -- Initialization from C
+
 	set is
 			-- Yacc initialization
 		do
@@ -47,4 +56,4 @@ feature
 			language_name_exists: language_name /= Void;
 		end
 
-end
+end -- class LANGUAGE_NAME_SD

@@ -1,10 +1,29 @@
+indexing
+
+    description: 
+		"AST representation of a clause clause";
+    date: "$Date$";
+    revision: "$Revision$"
+
 class CREATION_AS
 
 inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			type ?= yacc_arg (0);
+			target ?= yacc_arg (1);
+			call ?= yacc_arg (2);
+		ensure then
+			target_exists: target /= Void;
+		end;
+
+feature -- Properties
 
 	type: TYPE;
 			-- Creation type
@@ -17,19 +36,7 @@ feature -- Attributes
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			type ?= yacc_arg (0);
-			target ?= yacc_arg (1);
-			call ?= yacc_arg (2);
-		ensure then
-			target_exists: target /= Void;
-		end;
-
-feature -- Equivalence
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -60,7 +67,7 @@ feature -- Equivalence
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

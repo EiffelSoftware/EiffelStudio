@@ -1,4 +1,9 @@
--- Error for invalid value for option
+indexing
+
+	description: 
+		"Error for invalid value for option.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD15
 
@@ -9,21 +14,13 @@ inherit
 			build_explain
 		end
 
-feature
+feature -- Properties
 
 	option_name: STRING;
 
 	option_value: STRING;
 
-	set_option_name (s: STRING) is
-		do
-			option_name := s;
-		end;
-
-	set_option_value (s: STRING) is
-		do
-			option_value := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -36,6 +33,18 @@ feature
 			else
 				ow.put_string ("%NNo option value%N");
 			end;
+		end;
+
+feature {OPTION_SD} -- Setting
+
+	set_option_name (s: STRING) is
+		do
+			option_name := s;
+		end;
+
+	set_option_value (s: STRING) is
+		do
+			option_value := s;
 		end;
 
 end

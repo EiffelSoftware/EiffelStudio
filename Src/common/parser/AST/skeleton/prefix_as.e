@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel prefixed feature name.";
+	description: 
+		"AST representation of an Eiffel prefixed feature name.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,7 +14,7 @@ inherit
 			Fix_notation, is_infix, is_prefix
 		end
 
-feature
+feature -- Properties
 
 	Fix_notation: STRING is
 			-- Prefix for prefixed Eiffel feature name used by

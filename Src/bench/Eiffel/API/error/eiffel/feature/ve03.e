@@ -1,5 +1,10 @@
--- Error when the target of an assignment or a reverse assignment is not
--- a writable one or is of NONE type
+indexing
+
+	description: 
+		"Error when the target of an assignment or a reverse %
+		%assignment is not a writable one or is of NONE type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VE03 obsolete "NOT IN THE BOOK"
 
@@ -31,4 +36,4 @@ feature
 			ow.new_line;
 		end;
 
-end
+end -- class VE03

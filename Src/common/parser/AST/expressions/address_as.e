@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel function pointer";
+	description: 
+		"AST representation of an Eiffel function pointer.";
 	date: "$Date$";
 	revision: "Revision $"
 
@@ -10,12 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attribute
-
-	feature_name: FEATURE_NAME;
-			-- Feature name to address
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,12 @@ feature -- Initialization
 			feature_name_exists: feature_name /= Void
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	feature_name: FEATURE_NAME;
+			-- Feature name to address
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

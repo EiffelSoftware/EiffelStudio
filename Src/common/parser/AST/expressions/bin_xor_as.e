@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of binary `xor' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BIN_XOR_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			bit_balanced
 		end
 
-feature
+feature -- Properties
 
 	infix_function_name: STRING is
 			-- Internal name of the infixed feature associated to the

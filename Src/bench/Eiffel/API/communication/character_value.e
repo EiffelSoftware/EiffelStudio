@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing a character.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CHARACTER_VALUE
 
 inherit

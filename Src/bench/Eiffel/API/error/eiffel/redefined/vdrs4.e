@@ -1,4 +1,9 @@
--- Error when the compiler cannot find an effective redefinition
+indexing
+
+	description: 
+		"Error when the compiler cannot find an effective redefinition.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRS4 
 	
@@ -9,21 +14,17 @@ inherit
 			build_explain, subcode
 		end
 
-feature 
+feature -- Properties
 
 	feature_name: STRING;
 			-- Feature name involved
-
-	set_feature_name (fn: STRING) is
-			-- Assign `fn' to `feature_name'.
-		do
-			feature_name := fn;
-		end;
 
 	code: STRING is "VDRS";
 			-- Error code
 
 	subcode: INTEGER is 4;
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -34,4 +35,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_name (fn: STRING) is
+			-- Assign `fn' to `feature_name'.
+		do
+			feature_name := fn;
+		end;
+
+end -- class VDRS4

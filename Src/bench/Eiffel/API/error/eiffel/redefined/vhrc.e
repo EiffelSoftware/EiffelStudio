@@ -1,4 +1,9 @@
--- Error for unvalid renaming
+indexing
+
+	description: 
+		"Error for invalid renaming.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VHRC
 
@@ -6,21 +11,29 @@ inherit
 
 	FEATURE_NAME_ERROR
 		redefine
-			build_explain
+			build_explain, is_defined
 		end;
 
-feature 
+feature -- Properties
 
-	parent: CLASS_C;
+	parent: E_CLASS;
 			-- Involved parent
 
 	code: STRING is "VHRC";
 			-- Error for unvalid renaming
 
-	set_parent (p: CLASS_C) is
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			parent := p;
+			Result := is_class_defined and then
+				parent /= Void
+		ensure then	
+			valid_parent: Result implies parent /= Void
 		end;
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -29,4 +42,13 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_parent (p: CLASS_C) is
+		require
+			valid_p: p /= Void
+		do
+			parent := p.e_class;
+		end;
+
+end -- class VHRC

@@ -1,4 +1,10 @@
--- Error when an attribute is redefined in something else that an attribute
+indexing
+
+	description: 
+		"Error when an attribute is redefined in something else %
+		%that an attribute.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRD6 
 
@@ -9,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 6;
 
-end 
+end -- class VDRD6

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class DEBUG_SD
 
 inherit
@@ -8,7 +15,7 @@ inherit
 		end;
 	SHARED_DEBUG_LEVEL
 
-feature
+feature -- Properties
 
 	option_name: STRING is
 		once
@@ -20,6 +27,8 @@ feature
 		do
 			Result := True;
 		end;
+
+feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -74,4 +83,4 @@ feature
 			end;
 		end;
 
-end
+end -- class DEBUG_SD

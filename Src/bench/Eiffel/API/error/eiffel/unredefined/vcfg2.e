@@ -1,4 +1,9 @@
--- Error for name clash on formal generic parameter
+indexing
+
+	description: 
+		"Error for name clash on formal generic parameter.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VCFG2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VCFG2

@@ -1,5 +1,9 @@
+indexing
 
--- Environment for bitmaps, help, binaries, scripts....
+	description: 
+		"Environment for bitmaps, help, binaries, scripts....";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EIFFEL_ENV
 
@@ -112,4 +116,4 @@ feature {NONE}
 			end
 		end;
 
-end
+end -- class EIFFEL_ENV

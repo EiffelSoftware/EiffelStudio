@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an assignment";
+	description: 
+		"AST representation of an assignment";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
-
-	target: ACCESS_AS;
-			-- Target of the assignment
-
-	source: EXPR_AS;
-			-- Source of the assignment
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,7 +23,15 @@ feature -- Initialization
 			source_exists: source /= Void;
 		end;
 
-feature -- Equivalence
+feature -- Properties
+
+	target: ACCESS_AS;
+			-- Target of the assignment
+
+	source: EXPR_AS;
+			-- Source of the assignment
+
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -62,7 +63,7 @@ feature -- Equivalence
 				end
 			end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text.

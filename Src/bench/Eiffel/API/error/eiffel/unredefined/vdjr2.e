@@ -1,4 +1,9 @@
--- Error for join rule when one argument type is not the same
+indexing
+
+	description: 
+		"Error for join rule when one argument type is not the same.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDJR2 
 
@@ -9,16 +14,12 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Properties
 
 	argument_number: INTEGER;
 			-- Argument number
 
-	set_argument_number (i: INTEGER) is
-			-- Assign `i' to `argument_number'.
-		do
-			argument_number := i;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -29,4 +30,12 @@ feature
 			print_signatures (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_argument_number (i: INTEGER) is
+			-- Assign `i' to `argument_number'.
+		do
+			argument_number := i;
+		end;
+
+end -- class VDJR2

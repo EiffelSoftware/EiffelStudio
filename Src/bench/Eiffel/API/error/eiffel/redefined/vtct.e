@@ -1,4 +1,10 @@
--- Error when a class name is not found in the surrounding universe
+indexing
+
+	description: 
+		"Error when a class name is not found in the surrounding universe.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class VTCT 
 
 inherit
@@ -8,19 +14,15 @@ inherit
 			build_explain
 		end
 	
-feature 
+feature -- Properties
 
 	class_name: STRING;
 			-- Class name not found
 
-	set_class_name (s: STRING) is
-			-- Assign `s' to `class_name'.
-		do
-			class_name := s;
-		end;
-
 	code: STRING is "VTCT";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -35,4 +37,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_class_name (s: STRING) is
+			-- Assign `s' to `class_name'.
+		do
+			class_name := s;
+		end;
+
+end -- class VTCT

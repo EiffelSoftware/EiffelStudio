@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for type POINTER.";
+	description: 
+		"AST representation for type POINTER.";
 	date: "Date: $";
 	revision: "Revision: $"
 
@@ -10,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 
-feature
+feature -- Output
 
 	dump: STRING is "POINTER";
 

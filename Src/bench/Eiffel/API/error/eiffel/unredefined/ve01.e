@@ -1,5 +1,10 @@
--- Error when an external is redefined into a non-external feature or
--- when a non-external one is redefined into an external feature
+indexing
+
+	description: 
+		"Error when an external is redefined into a non-external feature or %
+		%when a non-external one is redefined into an external feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VE01 obsolete "NOT DEFINED IN THE BOOK"
 
@@ -7,28 +12,36 @@ inherit
 
 	FEATURE_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end;
 
-feature
+feature -- Properties
 
-	old_feature: FEATURE_I;
+	old_feature: E_FEATURE;
 			-- Features involved in the error
-
-	set_old_feature (f: FEATURE_I) is
-			-- Assign `f' to `feature2'.
-		do
-			old_feature := f;
-		end;
 
 	code: STRING is "VDRD";
 			-- Error code
 
 	subcode: INTEGER is 7
 
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := is_class_defined and then
+				is_feature_defined and then
+				old_feature /= Void
+		ensure then
+			valid_old_feature: Result implies old_feature /= Void
+		end
+
+feature -- Output
+
 	build_explain (ow: OUTPUT_WINDOW) is
 		local
-			wclass: CLASS_C
+			wclass: E_CLASS
 		do
 			wclass := old_feature.written_class;
 			ow.put_string ("Redeclared routine: ");
@@ -42,4 +55,14 @@ feature
 			end;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_old_feature (f: FEATURE_I) is
+			-- Assign `f' to `feature2'.
+		require
+			valid_f: f /= Void
+		do
+			old_feature := f.api_feature;
+		end;
+
+end -- class VE01

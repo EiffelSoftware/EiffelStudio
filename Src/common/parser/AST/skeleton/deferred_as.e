@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of a deferred routine.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class DEFERRED_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_deferred, has_instruction, index_of_instruction
 		end
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -15,7 +22,7 @@ feature -- Initialization
 			-- Do nothing
 		end;
 
-feature -- Conveniences
+feature -- Properties
 
 	is_deferred: BOOLEAN is
 			-- Is the current routine body a defferred one ?
@@ -36,7 +43,7 @@ feature -- Conveniences
 			Result := 0
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
     simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

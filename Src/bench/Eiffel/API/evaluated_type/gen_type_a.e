@@ -1,4 +1,9 @@
--- Descritpion of an actual generical type
+indexing
+
+	description: 
+		"Descritpion of an actual generical type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class GEN_TYPE_A
 
@@ -672,4 +677,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			Result.set_generics (gens)
         end;
 
-end
+end -- class GEN_TYPE_A

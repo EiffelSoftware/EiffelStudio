@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract class for instruction AS node";
+	description: 
+		"AST represenation of an instruction node";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 		deferred

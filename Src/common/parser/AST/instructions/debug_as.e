@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a debug clause";
+	description: 
+		"AST representation of a debug clause";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
+feature -- Properties
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound to debug
@@ -18,7 +19,7 @@ feature -- Attributes
 	keys: EIFFEL_LIST [STRING_AS];
 			-- Debug keys
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -39,7 +40,7 @@ feature -- Initialization
 			end;
 		end;
 
-feature -- Equivalence
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -66,7 +67,7 @@ feature -- Equivalence
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

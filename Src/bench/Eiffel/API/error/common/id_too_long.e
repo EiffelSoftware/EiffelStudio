@@ -1,4 +1,9 @@
--- Syntax error for identifier too long
+indexing
+
+	description: 
+		"Syntax error for identifier too long.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ID_TOO_LONG
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "identifier too long"
         end;
 
-end
+end -- class ID_TOO_LONG

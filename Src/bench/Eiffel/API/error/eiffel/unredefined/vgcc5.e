@@ -1,4 +1,9 @@
--- Error the feature called after a creation is not a creation procedure
+indexing
+
+	description: 
+		"Error the feature called after a creation is not a creation procedure.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC5 
 
@@ -9,21 +14,18 @@ inherit
 			subcode, build_explain
 		end
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is
 		do
 			Result := 6;
 		end;
 
-	creation_feature: FEATURE_I;
+	creation_feature: E_FEATURE;
 			-- Creation feature involved
 
-	set_creation_feature (f: FEATURE_I) is
-			-- Assign `f' to `creation_feature'.
-		do
-			creation_feature := f;
-		end;
+feature -- Output
+
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -35,4 +37,14 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_creation_feature (f: FEATURE_I) is
+			-- Assign `f' to `creation_feature'.
+		do
+			if f /= Void then
+				creation_feature := f.api_feature;
+			end
+		end;
+
+end -- class VGCC5

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST represenation of a require else construct.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class REQUIRE_ELSE_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_else
 		end
 
-feature
+feature -- Properties
 
 	is_else: BOOLEAN is
 			-- Is the assertion list a require else ?

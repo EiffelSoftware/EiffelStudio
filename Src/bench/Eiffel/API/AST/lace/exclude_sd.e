@@ -1,7 +1,14 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EXCLUDE_SD
 
 inherit
 
-	FILE_NAME_SD;
+	FILE_NAME_SD
 
-end
+end -- class EXCLUDE_SD

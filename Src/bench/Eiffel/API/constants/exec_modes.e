@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Constants for execution modes.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class
 
 	EXEC_MODES

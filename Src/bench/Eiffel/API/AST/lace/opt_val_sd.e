@@ -1,20 +1,9 @@
--- Option_value            : Standard_value
---                         | Class_value
---                         | Name
---                         ;
--- Standard_value          : LEX_YES
---                         | LEX_NO
---                         | LEX_ALL
---                         ;
---
--- Class_value             : LEX_REQUIRE
---                         | LEX_ENSURE
---                         | LEX_INVARIANT
---                         | LEX_LOOP
---                         | LEX_CHECK
---                         ;
+indexing
 
--- Heirs are standrad value or a name.
+	description: 
+		"Heirs are standrad value or a name.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class OPT_VAL_SD
 
@@ -22,11 +11,7 @@ inherit
 
 	AST_LACE
 
-feature -- Attributes
-
-	value: ID_SD;
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -34,7 +19,9 @@ feature -- Initialization
 			value ?= yacc_arg (0)
 		end;
 
-feature -- Identification
+feature -- Properties
+
+	value: ID_SD;
 
 	is_yes: BOOLEAN is
 			-- Is the option value `yes' ?
@@ -90,4 +77,4 @@ feature -- Identification
 			-- Do nothing
 		end;
 
-end
+end -- class OPT_VAL_SD

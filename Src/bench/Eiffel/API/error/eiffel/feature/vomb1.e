@@ -1,4 +1,9 @@
--- Inspect expression is not of type INTEGER or CHARACTER
+indexing
+
+	description: 
+		"Inspect expression is not of type INTEGER or CHARACTER.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VOMB1 
 
@@ -9,7 +14,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is
 		do
@@ -18,10 +23,7 @@ feature
 
 	type: TYPE_A;
 
-	set_type (t: TYPE_A) is
-		do
-			type := t;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +32,11 @@ feature
 			ow.new_line;	
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_type (t: TYPE_A) is
+		do
+			type := t;
+		end;
+
+end -- class VOMB1

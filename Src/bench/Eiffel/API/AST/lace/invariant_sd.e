@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class INVARIANT_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_invariant
 		end
 
-feature
+feature -- Properties
 
 	is_invariant: BOOLEAN is
 			-- is the option value `invariant' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class INVARIANT_SD

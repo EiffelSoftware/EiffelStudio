@@ -1,5 +1,10 @@
--- Error when a class name in a target list of an option clause is not
--- a class of the cluster at hand.
+indexing
+
+	description: 
+		"Error when a class name in a target list of an option%
+		%clause is not a class of the cluster at hand.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD16
 
@@ -10,16 +15,12 @@ inherit
 			build_explain
 		end
 
-feature
+feature -- Property
 
 	node: O_OPTION_SD;
 			-- Option node
 
-	set_node (n: like node) is
-			-- Assign `n' to `node'.
-		do
-			node := n;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -29,4 +30,13 @@ feature
 			ow.new_line;
 			put_class_name (ow);
 		end;
-end
+
+feature {O_OPTION_SD} -- Setting
+
+	set_node (n: like node) is
+			-- Assign `n' to `node'.
+		do
+			node := n;
+		end;
+
+end -- class VD16

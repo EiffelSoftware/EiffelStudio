@@ -1,6 +1,11 @@
-class
+indexing
 
-	SPECIAL_VALUE
+	description: 
+		"Run time value representing of a special object.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class SPECIAL_VALUE
 
 inherit
 

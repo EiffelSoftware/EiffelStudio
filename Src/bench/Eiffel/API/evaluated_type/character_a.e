@@ -1,4 +1,9 @@
--- Actual type for character type
+indexing
+
+	description: 
+		"Actual type for character type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CHARACTER_A
 
@@ -67,4 +72,4 @@ feature {COMPILER_EXPORTER}
 			Result := System.character_class.compiled_class;
 		end;
 
-end
+end -- class CHARACTER_A

@@ -1,4 +1,10 @@
--- Error when a creation procedure is not a procedure or a once procedure
+indexing
+
+	description: 
+		"Error when a creation procedure is not a procedure or %
+		%a once procedure.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCP21 
 
@@ -9,7 +15,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is
 		do
@@ -19,11 +25,7 @@ feature
 	creation_feature: STRING;
 			-- Feature involved
 
-	set_feature_name (s: STRING) is
-			-- Assign `f' to `creation_feature'.
-		do
-			creation_feature := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -32,4 +34,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_name (s: STRING) is
+			-- Assign `f' to `creation_feature'.
+		do
+			creation_feature := s;
+		end;
+
+end -- class VGCP21

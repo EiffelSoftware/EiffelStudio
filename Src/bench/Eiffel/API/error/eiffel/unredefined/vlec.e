@@ -1,4 +1,9 @@
--- Error for class violating the expanded client rule
+indexing
+
+	description: 
+		"Error for class violating the expanded client rule.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VLEC 
 
@@ -6,21 +11,29 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain
+			build_explain, is_defined
 		end;
 
-feature 
+feature -- Properties
 
-	client: CLASS_C;
+	client: E_CLASS;
 			-- Unvalid class type
 
 	code: STRING is "VLEC";
 			-- Error code
 
-	set_client (c: CLASS_C) is
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			client := c;
-		end;
+			Result := is_class_defined and then
+				client /= Void
+		ensure then
+			valid_client: Result implies client /= Void
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -29,4 +42,13 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_client (c: CLASS_C) is
+		require
+			valid_c: c /= Void
+		do
+			client := c.e_class;
+		end;
+
+end -- class VLEC

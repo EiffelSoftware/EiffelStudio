@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a elsif clause of a condition instruction";
+	description: 
+		"AST representation of a elsif clause of a condition instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
+feature -- Properties
 
 	expr: EXPR_AS;
 			-- Conditional expression
@@ -18,7 +19,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -29,7 +30,7 @@ feature -- Initialization
 			expr_exists: expr /= Void
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

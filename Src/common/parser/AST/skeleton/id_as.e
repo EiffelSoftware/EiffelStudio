@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for id.";
+	description: 
+		"AST representation of id.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -24,28 +25,8 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
--- SHOULD BE OBSOLETE
---  start_position: INTEGER;
-			-- Start position of the string
---  end_position: INTEGER;
-			-- Ending position of the string
-
-	is_id: BOOLEAN is
-			-- Is the current atomic node an id ?
-		do
-			Result := True;
-		end;
-
-	pass_address (n: INTEGER) is
-			-- Eiffel-Yacc interface
-		do
-			c_get_address (n, $Current, $set);
-			getid_create ($make);
-			getid_area ($to_c);
-		end;
-	
 	set is
 			-- Yacc initialization
 		local
@@ -57,7 +38,15 @@ feature
 			not_empty: not empty;
 		end;
 
-feature -- Conveniences
+feature -- Properties
+
+	is_id: BOOLEAN is
+			-- Is the current atomic node an id ?
+		do
+			Result := True;
+		end;
+
+feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences
 
 	record_dependances is
 		do
@@ -79,7 +68,7 @@ feature -- Conveniences
 			append (s);
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -93,6 +82,16 @@ feature -- Simple formatting
             Result.append (Current)
         end
 
+feature {YACE_LACE}
+
+	pass_address (n: INTEGER) is
+			-- Eiffel-Yacc interface
+		do
+			c_get_address (n, $Current, $set);
+			getid_create ($make);
+			getid_area ($to_c);
+		end;
+
 feature {NONE}
 
 	getid_create (ptr: POINTER) is
@@ -105,4 +104,4 @@ feature {NONE}
 			"C"
 		end;
 
-end
+end -- class ID_AS

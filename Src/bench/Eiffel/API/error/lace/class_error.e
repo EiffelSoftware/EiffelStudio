@@ -1,4 +1,9 @@
--- Error for a class in a cluster
+indexing
+
+	description: 
+		"Error for a class in a cluster.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLASS_ERROR
 
@@ -6,16 +11,12 @@ inherit
 
 	CLUSTER_ERROR
 
-feature
+feature -- Properties
 
 	class_name: STRING;
 			-- Class nam involved
 
-	set_class_name (s: STRING) is
-			-- Assign `s' to `class_name'.
-		do
-			class_name := s;
-		end;
+feature -- Output
 
 	put_class_name (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +31,12 @@ feature
 			put_class_name (ow);
 		end;
 
-end
+feature {AST_LACE, COMPILER_EXPORTER} -- Setting
+
+	set_class_name (s: STRING) is
+			-- Assign `s' to `class_name'.
+		do
+			class_name := s;
+		end;
+
+end -- class CLASS_ERROR

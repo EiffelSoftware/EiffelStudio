@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of a feature clause structure.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class FEATURE_CLAUSE_AS
 
 inherit
@@ -7,18 +14,7 @@ inherit
 			position
 		end
 
-feature -- Propertoes
-
-	clients: CLIENT_AS;
-			-- Client list
-
-	features: EIFFEL_LIST [FEATURE_AS];
-			-- Features
-
-	position: INTEGER;
-			-- Position after feature keyword
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,6 +26,17 @@ feature -- Initialization
 			features_exists: features /= Void;
 			positive_position: position > 0
 		end;
+
+feature -- Propertoes
+
+	clients: CLIENT_AS;
+			-- Client list
+
+	features: EIFFEL_LIST [FEATURE_AS];
+			-- Features
+
+	position: INTEGER;
+			-- Position after feature keyword
 
 feature -- Access
 
@@ -137,19 +144,7 @@ feature -- Access
 				features_deep_equal (other.features)	
 		end
 
-feature -- Setting
-
-	set_features (f: like features) is
-		do
-			features := f
-		end;
-
-	set_clients (c: like clients) is
-		do
-			clients := c
-		end;
-
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -186,8 +181,6 @@ feature -- Simple formatting
 			features_simple_format (ctxt);
 			ctxt.exdent;
 		end;
-
-feature 
 
 	features_simple_format (ctxt :FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -228,6 +221,18 @@ feature
 				ctxt.commit;
 			end;
 			ctxt.commit;
+		end;
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_features (f: like features) is
+		do
+			features := f
+		end;
+
+	set_clients (c: like clients) is
+		do
+			clients := c
 		end;
 
 end -- class FEATURE_CLAUSE_AS

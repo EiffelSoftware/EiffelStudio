@@ -1,5 +1,10 @@
--- Error when the root class is in two different clusters
--- and none of them is specified in the ace file
+indexing
+
+	description: 
+		"Error when the root class is in two different clusters%
+		%and none of them is specified in the ace file";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD29
 
@@ -7,21 +12,13 @@ inherit
 
 	CLUSTER_ERROR
 
-feature
+feature -- Property
 
 	second_cluster_name: STRING;
 
-	set_second_cluster_name (s: STRING) is
-		do
-			second_cluster_name := s;
-		end;
-
 	root_class_name: STRING;
 
-	set_root_class_name (s: STRING) is
-		do
-			root_class_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -34,4 +31,16 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {ROOT_SD} -- Setting
+
+	set_second_cluster_name (s: STRING) is
+		do
+			second_cluster_name := s;
+		end;
+
+	set_root_class_name (s: STRING) is
+		do
+			root_class_name := s;
+		end;
+
+end -- class VD29

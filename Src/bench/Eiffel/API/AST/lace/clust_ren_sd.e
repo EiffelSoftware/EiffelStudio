@@ -1,7 +1,9 @@
--- Cluster_rename_clause   : Name LEX_COLUMN LEX_RENAME Class_rename_list
--- 
--- Class_rename_list       : Class_rename_pair
---                         | Class_rename_list LEX_COMMA Class_rename_pair
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLUST_REN_SD
 
@@ -12,12 +14,7 @@ inherit
 			set, adapt
 		end
 
-feature -- Attributes
-
-	renamings: LACE_LIST [TWO_NAME_SD];
-			-- Renaming list
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -29,7 +26,12 @@ feature -- Initialization
 			cluster_name_exists: cluster_name /= Void;
 		end;
 
-feature -- Lace compilation
+feature -- Properties
+
+	renamings: LACE_LIST [TWO_NAME_SD];
+			-- Renaming list
+
+feature {COMPILER_EXPORTER} -- Lace compilation
 
 	adapt is
 			-- Adapt current cluster
@@ -81,5 +83,4 @@ feature -- Lace compilation
 --			end;
 		end;
 
-end
-
+end -- class CLUST_REN_SD

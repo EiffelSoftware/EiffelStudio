@@ -1,5 +1,10 @@
--- Name clash of features: there is one inherited feature and a feature
--- implemented in the class
+indexing
+
+	description: 
+		"Name clash of features: there is one inherited %
+		%feature and a feature implemented in the class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VMFN1 
 
@@ -10,18 +15,28 @@ inherit
 			other_feature as inherited_feature,
 			set_other_feature as set_inherited_feature
 		redefine
-			build_explain
+			build_explain, is_defined
 		end
 
-feature
+feature -- Property
 
-	parent: CLASS_C;
+	parent: E_CLASS;
 			-- Parent class to which `inherited_feature' belongs
 
-	set_parent (p: CLASS_C) is
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			parent := p;
-		end;
+			Result := is_class_defined and then
+				a_feature /= Void and then
+				inherited_feature /= Void and then
+				parent /= Void
+		ensure then
+			valid_parent: Result implies parent /= Void;
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -40,4 +55,13 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_parent (p: CLASS_C) is
+		require
+			valid_p: p /= Void
+		do
+			parent := p.e_class;
+		end;
+
+end -- class VMFN1

@@ -1,4 +1,10 @@
--- A feature name of an export clause is not a final name of the parent
+indexing
+
+	description: 
+		"A feature name of an export clause is not a final %
+		%name of the of the parent.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VLEL2 
 
@@ -9,7 +15,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is
 		do
@@ -19,11 +25,7 @@ feature
 	feature_name: STRING;
 			-- Feature name involved
 
-	set_feature_name (s: STRING) is
-			-- Assign `s' to `feature_name'.
-		do
-			feature_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -33,4 +35,12 @@ feature
 			print_parent (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_name (s: STRING) is
+			-- Assign `s' to `feature_name'.
+		do
+			feature_name := s;
+		end;
+
+end -- class VLEL2

@@ -1,15 +1,17 @@
+indexing
+
+	description: 
+		"AST representation of an client classes for feature clause.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CLIENT_AS
 
 inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	clients: EIFFEL_LIST [ID_AS];
-			-- Client list
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -19,7 +21,12 @@ feature -- Initialization
 			not (clients = Void or else clients.empty);
 		end;
 
-feature -- Equivalence
+feature -- Properties
+
+	clients: EIFFEL_LIST [ID_AS];
+			-- Client list
+
+feature -- Comparison
 
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to Current?
@@ -59,7 +66,7 @@ feature -- Equivalence
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,4 +1,9 @@
--- Error for specifying an DLL without a signature
+indexing
+
+	description: 
+		"Error for specifying an DLL without a signature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EXT_DLL_SIGN 
 
@@ -6,9 +11,9 @@ inherit
 
 	FEATURE_ERROR
 
-feature 
+feature -- Properties
 
 	code: STRING is "EXT_DLL_SIGN";
 			-- Error code
 
-end
+end -- class EXT_DLL_SIGN

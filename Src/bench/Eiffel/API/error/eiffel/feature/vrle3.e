@@ -1,4 +1,10 @@
--- Error when an access to Result is invalid: invariant or procedure
+indexing
+
+	description: 
+		"Error when an access to Result is invalid: %
+		%invariant or procedure.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VRLE3 obsolete "NOT IN THE BOOK"
 
@@ -9,11 +15,11 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Property
 
 	code: STRING is "VEEN";
 			-- Error code
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VRLE3

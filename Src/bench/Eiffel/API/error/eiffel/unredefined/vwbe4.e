@@ -1,4 +1,9 @@
--- Loop test expression os not boolean expression
+indexing
+
+	description: 
+		"Loop test expression os not boolean expression.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWBE4 
 
@@ -6,8 +11,8 @@ inherit
 
 	VWBE
 
-feature 
+feature -- Properties
 
 	where: STRING is "In until clause"
 
-end
+end -- class VWBE4

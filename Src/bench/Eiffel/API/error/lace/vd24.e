@@ -1,4 +1,9 @@
--- Error when two different basic classes in two clusters
+indexing
+
+	description: 
+		"Error when two different basic classes in two clusters.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD24
 
@@ -9,16 +14,12 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Property
 
 	other_cluster: CLUSTER_I;
 			-- Other cluster involved
 
-	set_other_cluster (c: CLUSTER_I) is
-			-- Assign `c' to `other_cluster'.
-		do
-			other_cluster := c;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +31,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {UNIVERSE_I} -- Setting
+
+	set_other_cluster (c: CLUSTER_I) is
+			-- Assign `c' to `other_cluster'.
+		do
+			other_cluster := c;
+		end;
+
+end -- class VD24

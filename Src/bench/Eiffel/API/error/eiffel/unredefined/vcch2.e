@@ -1,4 +1,9 @@
--- Error when a decalred deferred class has no deferred features
+indexing
+
+	description: 
+		"Error when a decalred deferred class has no deferred features.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VCCH2 
 
@@ -9,11 +14,11 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VCCH";
 			-- Error code
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VCCH2

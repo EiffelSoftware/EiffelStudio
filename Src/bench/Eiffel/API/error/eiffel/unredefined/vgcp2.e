@@ -1,5 +1,10 @@
--- Error when a name of a creation clause is not a final name of the
--- associated class
+indexing
+
+	description: 
+		"Error when a name of a creation clause is not a final name %
+		%of the associated class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCP2 
 
@@ -10,7 +15,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
@@ -18,11 +23,7 @@ feature
 			-- Feature name repeated in the creation clause of the class
 			-- of id `class_id'
 
-	set_feature_name (s: STRING) is
-			-- Assign `s' to `feature_name'.
-		do
-			feature_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -31,4 +32,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_name (s: STRING) is
+			-- Assign `s' to `feature_name'.
+		do
+			feature_name := s;
+		end;
+
+end -- class VGCP2

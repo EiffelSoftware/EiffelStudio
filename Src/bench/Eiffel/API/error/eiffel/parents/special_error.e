@@ -1,4 +1,9 @@
--- Error for special classes
+indexing
+
+	description: 
+		"Error for special classes.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SPECIAL_ERROR 
 
@@ -13,23 +18,29 @@ inherit
 			{NONE} all
 		end
 
-creation
+creation {CLASS_C}
 
 	make
 
-feature
+feature {NONE} -- Initialization
+
+	make (case: STRING; c: CLASS_C) is
+		require
+			valid_c: c /= Void
+		do
+			error_case := case;
+			e_class := c.e_class;
+		end;
+
+feature -- Properties
 
 	error_case: STRING;
 			-- Case of error
 
-	make (case: STRING; c: CLASS_C) is
-		do
-			error_case := case;
-			class_c := c;
-		end;
-
 	code: STRING is "Special_error";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
@@ -39,4 +50,4 @@ feature
 			ow.new_line;
 		end;
 
-end
+end -- class SPECIAL_ERROR

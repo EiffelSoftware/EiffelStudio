@@ -1,6 +1,7 @@
 indexing
 
-	description: "Description of a unique value.";
+	description: 
+		"AST representation of a unique value.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,7 +14,14 @@ inherit
 			is_unique
 		end
 
-feature -- Conveniences
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+		end; 
+
+feature -- Properties
 
 	is_unique: BOOLEAN is
 			-- Is the terminal a unique constant ?
@@ -21,22 +29,16 @@ feature -- Conveniences
 			Result := True;
 		end;
 
-feature -- Initialization
+feature -- Output
 
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end; -- set
+	string_value: STRING is "";
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item_without_tabs (ti_Unique_keyword);
 		end;
-
-	string_value: STRING is "";
 
 end -- class UNIQUE_AS

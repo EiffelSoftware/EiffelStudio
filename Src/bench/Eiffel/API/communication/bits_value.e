@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing bits.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BITS_VALUE
 
 inherit

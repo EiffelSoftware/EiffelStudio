@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for `like Current' type.";
+	description: 
+		"AST representation for `like Current' type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,7 +14,7 @@ inherit
 			has_like, simple_format
 		end;
 
-feature
+feature {NONE} -- Initialization
 		
 	set is
 			-- Yacc initialization
@@ -21,15 +22,17 @@ feature
 			-- Do nothing
 		end; -- set
 
-feature
+feature -- Properties
 
 	has_like: BOOLEAN is True;
 			-- Does the type have anchor in its definition ?
 
+feature -- Output
+
 	dump: STRING is "like Current";
 			-- Dump trace
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel class.";
+	description: 
+		"AST representation of an Eiffel class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,6 +14,36 @@ inherit
 		redefine
 			is_class
 		end
+
+feature {NONE} -- Initialization
+
+	set is
+			-- Initialization routine.
+		do
+			class_name ?= yacc_arg (0);
+			is_deferred := yacc_bool_arg (0);
+			is_expanded := yacc_bool_arg (1);
+			indexes ?= yacc_arg (1);
+			generics ?= yacc_arg (2);
+			parents ?= yacc_arg (3);
+			creators ?= yacc_arg (4);
+			features ?= yacc_arg (5);
+			invariant_part ?= yacc_arg (6);
+			if (invariant_part /= Void)
+				and then
+				invariant_part.assertion_list = Void
+			then
+					-- The keyword `invariant' followed by no assertion
+					-- at all is not significant.
+				invariant_part := Void;
+			end;
+			suppliers ?= yacc_arg (7);
+			obsolete_message ?= yacc_arg (9);	
+			end_position := yacc_int_arg (0);
+		ensure then
+			class_name_exists: class_name /= Void;
+			suppliers_exists: suppliers /= Void;
+		end;
 
 feature -- Properties
 
@@ -83,38 +114,6 @@ feature -- Access
 			end;
 		end;
 
-feature -- Initialization
-
-	set is
-			-- Initialization routine
-		do
-			class_name ?= yacc_arg (0);
-			is_deferred := yacc_bool_arg (0);
-			is_expanded := yacc_bool_arg (1);
-			indexes ?= yacc_arg (1);
-			generics ?= yacc_arg (2);
-			parents ?= yacc_arg (3);
-			creators ?= yacc_arg (4);
-			features ?= yacc_arg (5);
-			invariant_part ?= yacc_arg (6);
-			if (invariant_part /= Void)
-				and then
-				invariant_part.assertion_list = Void
-			then
-					-- The keyword `invariant' followed by no assertion
-					-- at all is not significant.
-				invariant_part := Void;
-			end;
-			suppliers ?= yacc_arg (7);
-			obsolete_message ?= yacc_arg (9);	
-			end_position := yacc_int_arg (0);
-		ensure then
-			class_name_exists: class_name /= Void;
-			suppliers_exists: suppliers /= Void;
-		end;
-
-feature -- Access
-
 	has_feature_name (n: FEATURE_NAME): BOOLEAN is
 			-- Does `n' appear in class-text?
 		local
@@ -134,55 +133,49 @@ feature -- Access
 			features.go_to (cur)
 		end;
 
-feature -- Setting
+feature -- Comparison
 
-	set_id (i: INTEGER) is
-			-- Assign `i' to `id'.
+	is_equiv (other: like Current): BOOLEAN is
+			-- Is `other' class equivalent to Current?
+		require
+			valid_other: other /= Void
 		do
-			id := i;
+			Result := deep_equal (class_name, other.class_name) and then
+				deep_equal (creators, other.creators) and then
+				deep_equal (generics, other.generics) and then
+				deep_equal (indexes, other.indexes) and then
+				deep_equal (invariant_part, other.invariant_part) and then
+				deep_equal (obsolete_message, other.obsolete_message) and then
+				deep_equal (parents, other.parents) and then
+				features_deep_equal (other.features) and then
+				is_deferred = other.is_deferred and then
+				is_expanded = other.is_expanded 
 		end;
 
-	set_class_name (c: like class_name) is
+	features_deep_equal (other: like features): BOOLEAN is
+			-- Are `other' features equal to Current?
 		do
-			class_name := c
-		end;
+			if features = Void and other = Void then
+				Result := True
+			elseif features /= Void and then 
+				other /= Void and then
+				other.count = features.count
+			then	
+				Result := True
+				from
+					features.start;
+					other.start
+				until
+					features.after or else not Result
+				loop
+					Result := features.item.is_equiv (other.item)
+					features.forth
+					other.forth
+				end
+			end	
+		end
 
-	set_indexes (i: like indexes) is
-		do
-			indexes := i
-		end;
-
-	set_features (f: like features) is
-		do
-			features := f
-		end;
-
-	set_generics (g: like generics) is
-		do
-			generics := g
-		end;
-
-	set_parents (p: like parents) is
-		do
-			parents := p
-		end;
-
-	set_creators (c: like creators) is
-		do
-			creators := c
-		end;
-
-	set_invariant_part (i: like invariant_part) is
-		do
-			invariant_part := i
-		end;
-
-	set_suppliers (s: like suppliers) is
-		do
-			suppliers := s
-		end;
-
-feature -- Simple formatting
+feature {COMPILER_EXPORTER} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 		local
@@ -272,48 +265,55 @@ feature -- Simple formatting
 			ctxt.put_string (c_name)
 			ctxt.new_line
 		end;
- 
-feature -- Equivalence
 
-	is_equiv (other: like Current): BOOLEAN is
-			-- Is `other' class equivalent to Current?
-		require
-			valid_other: other /= Void
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_id (i: INTEGER) is
+			-- Assign `i' to `id'.
 		do
-			Result := deep_equal (class_name, other.class_name) and then
-				deep_equal (creators, other.creators) and then
-				deep_equal (generics, other.generics) and then
-				deep_equal (indexes, other.indexes) and then
-				deep_equal (invariant_part, other.invariant_part) and then
-				deep_equal (obsolete_message, other.obsolete_message) and then
-				deep_equal (parents, other.parents) and then
-				features_deep_equal (other.features) and then
-				is_deferred = other.is_deferred and then
-				is_expanded = other.is_expanded 
+			id := i;
 		end;
 
-	features_deep_equal (other: like features): BOOLEAN is
+	set_class_name (c: like class_name) is
 		do
-			if features = Void and other = Void then
-				Result := True
-			elseif features /= Void and then 
-				other /= Void and then
-				other.count = features.count
-			then	
-				Result := True
-				from
-					features.start;
-					other.start
-				until
-					features.after or else not Result
-				loop
-					Result := features.item.is_equiv (other.item)
-					features.forth
-					other.forth
-				end
-			end	
-		end
+			class_name := c
+		end;
 
+	set_indexes (i: like indexes) is
+		do
+			indexes := i
+		end;
+
+	set_features (f: like features) is
+		do
+			features := f
+		end;
+
+	set_generics (g: like generics) is
+		do
+			generics := g
+		end;
+
+	set_parents (p: like parents) is
+		do
+			parents := p
+		end;
+
+	set_creators (c: like creators) is
+		do
+			creators := c
+		end;
+
+	set_invariant_part (i: like invariant_part) is
+		do
+			invariant_part := i
+		end;
+
+	set_suppliers (s: like suppliers) is
+		do
+			suppliers := s
+		end;
+ 
 feature {NONE} -- Implementation
 
 	features_simple_format (ctxt :FORMAT_CONTEXT) is

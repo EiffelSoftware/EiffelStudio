@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a reverse assignment";
+	description: 
+		"AST representation of a reverse assignment";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,7 +14,7 @@ inherit
 			assign_symbol
 		end
 
-feature {} -- Formatter
+feature {NONE} -- Formatter
 	
 	assign_symbol: TEXT_ITEM is 
 		do

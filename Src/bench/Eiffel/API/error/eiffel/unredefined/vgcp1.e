@@ -1,4 +1,9 @@
--- Error when a deferred class has a creation clause
+indexing
+
+	description: 
+		"Error when a deferred class has a creation clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCP1
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 1;
 
-end 
+end -- class VGCP1

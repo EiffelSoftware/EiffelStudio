@@ -1,36 +1,9 @@
--- Ace                    : System Root Defaults Clusters Externals Generation LEX_END
---
--- System                  : LEX_SYSTEM Name
---                         ;
---
--- Defaults               : /* empty */
---                        | LEX_DEFAULT D_option_clause_list
---                        ;
---
--- D_option_clause_list   : D_option_clause
---                        | D_option_clause_list LEX_SEMICOLON D_option_clause
---                        ;
---
--- Clusters               : /* empty */
---                        | LEX_CLUSTER Cluster_clause_list
---                        ;
---
--- Cluster_clause_list    : Cluster_clause
---                        | Cluster_clause_list LEX_SEMICOLON Cluster_clause
---                        ;
---
--- Externals              : LEX_EXTERNAL Language_contrib_list
---                        ;
---
--- Language_contrib_list  : Language_contrib
---                        | Language_contrib_list LEX_SEMICOLON Language_contrib
---                        ;
--- Generation             : LEX_GENERATE Language_gen_list
---                        ;
---
--- Language_gen_list      : Language_generation
---                        | Language_gen_list LEX_SEMICOLON Language_generation
---                        ;
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ACE_SD
 
@@ -41,11 +14,27 @@ inherit
 			adapt
 		end;
 	SHARED_USE;
-	SHARED_MELT_ONLY;
 	EIFFEL_ENV;
-	CLICKER;
+	SHARED_MELT_ONLY
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			system_name ?= yacc_arg (0);
+			root ?= yacc_arg (1);
+			defaults ?= yacc_arg (2);
+			clusters ?= yacc_arg (3);
+			Externals ?= yacc_arg (4);
+			Generation ?= yacc_arg (5);
+			click_list ?= yacc_arg (6)
+		ensure then
+			system_name_exists: system_name /= Void;
+			root_exists: root /= Void;
+		end;
+
+feature -- Properties
 
 	system_name: ID_SD;
 			-- System name
@@ -68,24 +57,7 @@ feature -- Attributes
 	click_list: CLICK_LIST;
 			-- Structure containing elements to click on AST nodes
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			system_name ?= yacc_arg (0);
-			root ?= yacc_arg (1);
-			defaults ?= yacc_arg (2);
-			clusters ?= yacc_arg (3);
-			Externals ?= yacc_arg (4);
-			Generation ?= yacc_arg (5);
-			click_list ?= yacc_arg (6)
-		ensure then
-			system_name_exists: system_name /= Void;
-			root_exists: root /= Void;
-		end;
-
-feature -- Lace compilation
+feature {COMPILER_EXPORTER} -- Lace compilation
 
 	build_universe is
 			-- Analysis in order to build the universe
@@ -430,7 +402,7 @@ feature -- Lace compilation
 			Result := root.compile_all_classes
 		end;
 
-feature -- DLE
+feature {COMPILER_EXPORTER} -- DLE
 
 	build_static is
 			-- Re-insert the static clusters into the unverse.
@@ -622,4 +594,4 @@ feature -- DLE
 			Compilation_modes.set_is_extendible (extendible)
 		end;
 			
-end
+end -- class ACE_SD

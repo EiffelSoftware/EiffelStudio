@@ -296,12 +296,8 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
 	add_new_object (an_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Add an associated window item for `window_object'.
-			-- `an_object' will have been placed here via pick and drop
-			-- from the type selector, meaning that the object is not completely
-			-- initialized.
 		require
 			an_object_not_void: an_object /= Void
-			not_completely_built: an_object.layout_item = Void
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
 			selector_item: GB_WINDOW_SELECTOR_ITEM
@@ -310,16 +306,21 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			check
 				object_was_window: window_object /= Void
 			end
-			object_handler.add_new_window (window_object)
-			
-			create selector_item.make_with_object (window_object)
+			if an_object.layout_item = Void then
+				object_handler.add_new_window (window_object)			
+				create selector_item.make_with_object (window_object)
 				-- Ensure that when the item is selected, the layout constructor is updated
 				-- to reflect this.
-			selector_item.select_actions.extend (agent selected_window_changed (selector_item))
+				selector_item.select_actions.extend (agent selected_window_changed (selector_item))
+			else
+				unparent_tree_node (an_object.window_selector_item)
+			end
 			
-			extend (selector_item)
+			extend (an_object.window_selector_item)
 		ensure
-			count_increased: count = old count + 1
+			count_increased: old an_object.layout_item = Void implies count = old count + 1
+				-- Only if we were not moving internally as determined by whether the layout item
+				-- is Void, as it will be when picked from the type selector.
 		end
 		
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
@@ -508,10 +509,6 @@ feature {NONE} -- Implementation
 				-- this takes case of both cases, as dialogs inherit
 				-- windows.
 			Result :=  titled_window_object /= Void
-			if Result and then titled_window_object.window_selector_item /= Void then
-					-- Do not allow a window if it is already completely built.
-				Result := False
-			end
 		end
 
 end -- class GB_WINDOW_SELECTOR

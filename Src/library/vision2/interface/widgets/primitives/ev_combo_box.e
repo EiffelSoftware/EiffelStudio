@@ -15,6 +15,12 @@ class
 
 inherit
 	EV_TEXT_FIELD
+		export
+			{NONE} position, set_position, select_region
+			{NONE} cut_selection, copy_selection, paste
+			{NONE} selection_start, selection_end
+			{NONE} has_selection, delete_selection
+			{NONE} select_all, deselect_all
 		redefine
 			implementation,
 			make

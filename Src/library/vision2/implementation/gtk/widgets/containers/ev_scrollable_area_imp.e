@@ -11,7 +11,9 @@ inherit
 	EV_SCROLLABLE_AREA_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			set_item_width,
+			set_item_height
 		redefine
 			interface
 		end
@@ -22,7 +24,11 @@ inherit
 			vertical_adjustment,
 			interface,
 			make,
-			visual_widget
+			on_size_allocate,
+			x_offset,
+			y_offset,
+			set_x_offset,
+			set_y_offset
 		end
 	
 create
@@ -35,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
-			set_scrolling_policy (C.GTK_POLICY_ALWAYS_ENUM, C.GTK_POLICY_ALWAYS_ENUM)
+			set_scrolling_policy (C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
 			set_horizontal_step (10)
 			set_vertical_step (10)
 			viewport := C.gtk_viewport_new (NULL, NULL)
@@ -44,7 +50,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
@@ -72,7 +77,31 @@ feature -- Access
 			Result := vertical_policy = C.GTK_POLICY_ALWAYS_ENUM
 		end
 
+	x_offset: INTEGER is
+			-- Horizontal position of viewport relative to `item'.
+		do
+			Result := C.gtk_adjustment_struct_value (horizontal_adjustment).rounded
+		end
+
+	y_offset: INTEGER is
+			-- Vertical position of viewport relative to `item'.
+		do
+			Result := C.gtk_adjustment_struct_value (vertical_adjustment).rounded
+		end
+
 feature -- Element change
+
+	set_x_offset (a_x: INTEGER) is
+			-- Set `x_offset' to `a_x'.
+		do
+			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+		end
+
+	set_y_offset (a_y: INTEGER) is
+			-- Set `y_offset' to `a_y'.
+		do
+			internal_set_value_from_adjustment (vertical_adjustment, a_y)
+		end
 
 	set_horizontal_step (a_step: INTEGER) is
 			-- Set `horizontal_step' to `a_step'.
@@ -118,11 +147,21 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	visual_widget: POINTER is
+	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- 
+		local
+			item_imp: EV_WIDGET_IMP
+			x_off, y_off: INTEGER
 		do
-			Result := viewport
+			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
+			if item /= Void then
+				item_imp ?= item.implementation
+				x_off := fixed_width
+				y_off := fixed_height
+				C.gtk_widget_set_uposition (item_imp.c_object, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			end	
 		end
-		
+
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do

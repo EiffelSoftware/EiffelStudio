@@ -97,6 +97,63 @@ feature {EV_TABLE_I} -- Access
 
 	row_spacing: INTEGER
 			-- Spacing betwwen two rows in pixels.
+			
+	item_column_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is column coordinate of `widget'.
+		local
+			widget_imp: EV_WIDGET_IMP
+		do
+				-- Retrieve implementation of `widget'.
+			widget_imp ?= widget.implementation
+			check
+				implementation_not_void: widget_imp /= Void
+			end
+			Result := find_widget_child (widget_imp).left_attachment + 1
+		end
+		
+	item_row_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is row coordinate of `widget'.
+		local
+			widget_imp: EV_WIDGET_IMP
+		do
+				-- Retrieve implementation of `widget'.
+			widget_imp ?= widget.implementation
+			check
+				implementation_not_void: widget_imp /= Void
+			end
+			Result := find_widget_child (widget_imp).top_attachment + 1
+		end
+		
+	item_column_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of columns taken by `widget'.
+		local
+			widget_child: EV_TABLE_CHILD_IMP
+			widget_imp: EV_WIDGET_IMP
+		do
+				-- Retrieve implementation of `widget'.
+			widget_imp ?= widget.implementation
+			check
+				implementation_not_void: widget_imp /= Void
+			end
+			widget_child := find_widget_child (widget_imp)
+			Result := widget_child.right_attachment - widget_child.left_attachment
+		end
+	
+	item_row_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of rows taken by `widget'.
+		local
+			widget_child: EV_TABLE_CHILD_IMP
+			widget_imp: EV_WIDGET_IMP
+		do
+				-- Retrieve implementation of `widget'.
+			widget_imp ?= widget.implementation
+			check
+				implementation_not_void: widget_imp /= Void
+			end
+			widget_child := find_widget_child (widget_imp)
+			Result := widget_child.bottom_attachment - widget_child.top_attachment
+		end
+
 
 feature {EV_TABLE_I} -- Status report
 
@@ -272,8 +329,9 @@ feature -- Status settings
 	resize (a_column, a_row: INTEGER) is
 			-- Resize the table to `a_column', `a_row'.
 		do
-				initialize_columns (a_column)
-				initialize_rows (a_row)
+			initialize_columns (a_column)
+			initialize_rows (a_row)
+			notify_change (1 + 2, Current)
 		end
 
 	
@@ -301,7 +359,38 @@ feature -- Status settings
 				-- Call on_orphaned.
 			widget_imp.on_orphaned
 		end
-
+		
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+			-- Move `v' to position `a_column', `a_row'.
+		local
+			table_child: EV_TABLE_CHILD_IMP
+			child_imp: EV_WIDGET_IMP
+		do
+			child_imp ?= v.implementation
+			check
+				valid_child: child_imp /= Void
+			end
+			table_child := find_widget_child (child_imp)
+			table_child.set_attachment
+				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1, table_child.right_attachment - table_child.left_attachment + a_column - 1)
+			notify_change (2 + 1, Current)
+		end
+		
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
+		local
+			table_child: EV_TABLE_CHILD_IMP
+			child_imp: EV_WIDGET_IMP
+		do
+			child_imp ?= v.implementation
+			check
+				valid_child: child_imp /= Void
+			end
+			table_child := find_widget_child (child_imp)
+			table_child.set_attachment
+				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
+			notify_change (2 + 1, Current)		
+		end
 
 feature -- Element change
 

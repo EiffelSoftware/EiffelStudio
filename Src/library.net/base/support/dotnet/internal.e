@@ -23,7 +23,7 @@ feature -- Conformance
 			l_types := known_types
 			l_types.search (type_id)
 			if l_types.found then
-				Result := l_types.found_item.item.is_instance_of_type (object)
+				Result := l_types.found_item.is_instance_of_type (object)
 			end
 		end
 
@@ -42,10 +42,10 @@ feature -- Conformance
 				l_types := known_types
 				l_types.search (type1)
 				if l_types.found then
-					l_child := l_types.found_item.item
+					l_child := l_types.found_item
 					l_types.search (type2)
 					if l_types.found then
-						l_parent := l_types.found_item.item
+						l_parent := l_types.found_item
 						Result := l_parent.is_assignable_from (l_child)
 					end
 				end
@@ -68,7 +68,7 @@ feature -- Creation
 			eiffel_type_mapping.search (class_type)
 			if eiffel_type_mapping.found then
 					-- It is an Eiffel type which was recorded in `load_assemblies'.
-				t := eiffel_type_mapping.found_item.item
+				t := eiffel_type_mapping.found_item
 			else
 					-- Could not find it, let's try the .NET name.
 				t := feature {TYPE}.get_type_string (l_class_type)
@@ -96,7 +96,7 @@ feature -- Creation
 			l_types := known_types
 			l_types.search (type_id)
 			if l_types.found then
-				c := l_types.found_item.item.get_constructor (feature {TYPE}.empty_types)
+				c := l_types.found_item.get_constructor (feature {TYPE}.empty_types)
 				if c /= Void then
 					Result ?= c.invoke (Void)
 				end
@@ -212,9 +212,27 @@ feature -- Access
 			-- Name of class associated with dynamic type `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
+		local
+			l_types: like known_types
+			l_name: EIFFEL_NAME_ATTRIBUTE
+			l_type: TYPE
+			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 		do
-			check
-				False
+			l_types := known_types
+			l_types.search (type_id)
+			if l_types.found then
+				l_type := l_types.found_item
+				l_attributes := l_type.get_custom_attributes (eiffel_name_attribute_type, False)
+				if l_attributes.count > 0 then
+						-- This is an eiffel defined attribute
+					check
+						valid_number_of_custom_attributes: l_attributes.count = 1
+					end
+					l_name ?= l_attributes.item (0)
+					Result := l_name.name
+				else
+					Result := l_type.name
+				end
 			end
 		end
 
@@ -394,7 +412,7 @@ feature -- Access
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				l_field := m.i_th (i).item
+				l_field := m.i_th (i)
 				l_attributes := l_field.get_custom_attributes_type (eiffel_name_attribute_type, False)
 				if l_attributes.count > 0 then
 						-- This is an eiffel defined attribute
@@ -445,7 +463,7 @@ feature -- Access
 		do
 			l_m := get_members (type_id)
 			if l_m /= Void and then l_m.valid_index (i) then
-				l_field := l_m.i_th (i).item
+				l_field := l_m.i_th (i)
 				l_type := l_field.field_type
 				if abstract_types.contains (l_type) then
 					Result ?= abstract_types.item (l_type)
@@ -471,9 +489,14 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
+		local
+			l_m: like get_members
+			l_field: FIELD_INFO
 		do
-			check
-				False
+			l_m := get_members (type_id)
+			if l_m /= Void and then l_m.valid_index (i) then
+				l_field := l_m.i_th (i)
+				Result := get_type_index (l_field.field_type)
 			end
 		ensure
 			field_type_nonnegative: Result >= 0
@@ -490,7 +513,6 @@ feature -- Access
 		do
 			check
 				False
-				-- Not implemented.
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -610,6 +632,9 @@ feature -- Element change
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			reference_field: field_type (i, object) = Reference_type
+			value_conforms_to_field_static_type:
+				type_conforms_to (dynamic_type (value), 
+					field_static_type_of_type (i, dynamic_type (object))) 
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -769,13 +794,13 @@ feature -- Marking
 		
 feature {NONE} -- Implementation
 
-	Object_type: INTEGER is 13
+	object_type: INTEGER is 13
 			-- System.Object type ID
 	
-	New_known_type_id: INTEGER_REF is
+	new_known_type_id: CELL [INTEGER] is
 			-- ID for new stored type
 		once
-			Result := (14).to_integer
+			create Result.put (14)
 		end
 
 	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): SYSTEM_OBJECT is
@@ -793,7 +818,7 @@ feature {NONE} -- Implementation
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				Result := m.i_th (i).item.get_value (object)
+				Result := m.i_th (i).get_value (object)
 			end
 		end
 
@@ -808,7 +833,7 @@ feature {NONE} -- Implementation
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				Result := get_type_index (m.i_th (i).item.get_type)
+				Result := get_type_index (m.i_th (i).get_type)
 			end
 		end
 
@@ -818,7 +843,6 @@ feature {NONE} -- Implementation
 		require
 			t_not_void: t /= Void
 		local
-			cell: CLI_CELL [TYPE]
 			l_types: like known_types_id
 			l_id: like new_known_type_id
 			l_id_object: SYSTEM_OBJECT
@@ -828,10 +852,9 @@ feature {NONE} -- Implementation
 			if l_id_object = Void then
 				l_id := new_known_type_id
 				Result := l_id.item
-				create cell.put (t)
-				known_types.put (cell, Result)
-				l_types.Add (t, Result)
-				l_id.set_item (Result + 1)
+				known_types.put (t, Result)
+				l_types.add (t, Result)
+				l_id.put (Result + 1)
 			else	
 				Result ?= l_id_object
 			end
@@ -896,8 +919,7 @@ feature {NONE} -- Implementation
 						check
 							l_name_not_void: l_name /= Void
 						end
-						eiffel_type_mapping.force (create {CLI_CELL [TYPE]}.put (l_types.item (i)),
-							l_name.name)
+						eiffel_type_mapping.force (l_types.item (i), l_name.name)
 					end
 					i := i + 1
 				end
@@ -909,27 +931,27 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	eiffel_type_mapping: HASH_TABLE [CLI_CELL [TYPE], STRING] is
+	eiffel_type_mapping: HASH_TABLE [TYPE, STRING] is
 			-- Mapping between Eiffel class names and .NET types.
 		once
 			create Result.make (50)
 		end
 
-	known_types: HASH_TABLE [CLI_CELL [TYPE], INTEGER] is
+	known_types: HASH_TABLE [TYPE, INTEGER] is
 			-- All types that have already been identified.
 		once
 				-- FIXME: We do not support BIT
 			create Result.make (50)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.IntPtr").to_cil)), Pointer_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)), Character_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Boolean").to_cil)), Boolean_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int32").to_cil)), Integer_32_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Single").to_cil)), Real_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Double").to_cil)), Double_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Byte").to_cil)), Integer_8_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int16").to_cil)), Integer_16_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int64").to_cil)), Integer_64_type)
-			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Object").to_cil)), Object_type)
+			Result.put (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Object"), Object_type)
 		end
 
 	known_types_id: HASHTABLE is
@@ -940,16 +962,16 @@ feature {NONE} -- Implementation
 		once
 				-- FIXME: We do not support BIT
 			create Result.make_from_capacity (50)
-			Result.add (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), Pointer_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Char").to_cil), Character_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Boolean").to_cil), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int32").to_cil), Integer_32_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Single").to_cil), Real_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Double").to_cil), Double_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Byte").to_cil), Integer_8_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int16").to_cil), Integer_16_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int64").to_cil), Integer_64_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Object").to_cil), Object_type)
+			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Object"), Object_type)
 		end
 
 	abstract_types: HASHTABLE is
@@ -958,18 +980,18 @@ feature {NONE} -- Implementation
 			-- Value: ID
 		once
 			create Result.make_from_capacity (10)
-			Result.add (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), Pointer_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Char").to_cil), Character_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Boolean").to_cil), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int32").to_cil), Integer_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Single").to_cil), Real_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Double").to_cil), Double_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Byte").to_cil), Integer_8_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int16").to_cil), Integer_16_type)
-			Result.add (feature {TYPE}.get_type_string (("System.Int64").to_cil), Integer_64_type)
+			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
 		end
 		
-	get_members (type_id: INTEGER): ARRAYED_LIST [CLI_CELL [FIELD_INFO]] is
+	get_members (type_id: INTEGER): ARRAYED_LIST [FIELD_INFO] is
 			-- Retrieve all members of type `type_id'.
 			-- We need permission to retrieve non-public members.
 			-- Only fields and properties are returned.
@@ -993,7 +1015,7 @@ feature {NONE} -- Implementation
 					fa := 	feature {BINDING_FLAGS}.instance |
 							feature {BINDING_FLAGS}.public |
 							feature {BINDING_FLAGS}.non_public
-					allm := l_types.found_item.item.get_members_binding_flags (fa)
+					allm := l_types.found_item.get_members_binding_flags (fa)
 					c := allm.count
 					create Result.make (10)
 					from
@@ -1005,7 +1027,7 @@ feature {NONE} -- Implementation
 						if l_field_info /= Void then
 							l_cv_f_name := l_field_info.name
 							if not l_cv_f_name.is_equal ("$$____type") then
-								Result.extend (create {CLI_CELL [FIELD_INFO]}.put (l_field_info))
+								Result.extend (l_field_info)
 							end
 						end
 						i := i + 1
@@ -1025,11 +1047,11 @@ feature {NONE} -- Implementation
 		do
 			m := get_members (dynamic_type (object))
 			if m /= Void and then m.valid_index (i) then
-				m.i_th (i).item.set_value (object, value)
+				m.i_th (i).set_value (object, value)
 			end
 		end
 
-	known_members: HASH_TABLE [ARRAYED_LIST [CLI_CELL [FIELD_INFO]], INTEGER] is
+	known_members: HASH_TABLE [ARRAYED_LIST [FIELD_INFO], INTEGER] is
 			-- Buffer for `get_members' lookups
 		once
 			create Result.make (50)

@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			set_menu_name ("Copy")
 			disable_sensitive
 			add_agent (agent execute)
+			drop_agent := agent execute_with_object
 
 				-- Now add an accelerator for `Current'.
 			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_c)
@@ -86,6 +87,16 @@ feature -- Basic operations
 				end
 				clipboard.set_object (cut_object)
 				global_status.resume
+				command_handler.update
+			end
+			
+		execute_with_object (an_object: GB_OBJECT) is
+				-- Execute `Current' directly with object `an_object'.
+			require
+				an_object_not_void: an_object /= Void
+			do
+				clipboard.set_object (an_object)
+				
 				command_handler.update
 			end
 

@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			set_menu_name ("Cut")
 			disable_sensitive
 			add_agent (agent execute)
+			drop_agent := agent execute_with_object
 
 				-- Now add an accelerator for `Current'.
 			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_x)
@@ -89,5 +90,21 @@ feature -- Basic operations
 				
 				command_handler.update
 			end
+			
+		execute_with_object (an_object: GB_OBJECT) is
+				-- Execute `Current' directly with object `an_object'.
+			require
+				an_object_not_void: an_object /= Void
+			local
+				command_delete: GB_DELETE_OBJECT_COMMAND
+			do
+				clipboard.set_object (an_object)
+				
+				create command_delete.make
+				command_delete.delete_object (an_object)
+				
+				command_handler.update
+			end
+			
 
 end -- class GB_CUT_OBJECT_COMMAND

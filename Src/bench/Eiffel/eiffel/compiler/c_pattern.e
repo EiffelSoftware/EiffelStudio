@@ -70,8 +70,7 @@ feature
 			loop
 					-- Use of `deep_equal' is valid as no SPECIAL objects are
 					-- involved
-				Result := deep_equal (argument_types.item (i),
-											(other.argument_types.item (i)));
+				Result := deep_equal (argument_types.item (i), (other.argument_types.item (i)));
 				i := i + 1;
 			end;
 		end;
@@ -323,7 +322,7 @@ feature -- Pattern generation
 				file.putstring (result_type.separate_send_macro);
 				file.putstring ("(result);%N");
 			end;
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
+			file.putstring ("}%N%N"); -- ss MT
 		end;
 
 	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
@@ -358,7 +357,7 @@ feature -- Pattern generation
 				result_type.generate_union (file);
 				file.putstring (" = result;%N");
 			end;
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
+			file.putstring ("}%N%N"); -- ss MT
 		end;
 
 	generate_toi_compound (id: INTEGER; file: INDENT_FILE) is
@@ -389,7 +388,7 @@ feature -- Pattern generation
 				result_type.generate_union (file);
 				file.putstring (";%N");
 			end;
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
+			file.putstring ("}%N%N"); -- ss MT
 		end;
 
 	generate_toi_push (file: INDENT_FILE) is

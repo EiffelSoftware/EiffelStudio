@@ -11,6 +11,8 @@ feature {NONE}
 
 	ace_cmd_name: STRING is "ace"
 
+	add_subquery_cmd_name: STRING is "add"
+
 	ancestors_cmd_name: STRING is "ancestors"
 
 	Arguments_cmd_name: STRING is "arguments"
@@ -20,6 +22,8 @@ feature {NONE}
 	aversions_cmd_name: STRING is "aversions"
 
 	callers_cmd_name: STRING is "callers"
+
+	change_operator_cmd_name: STRING is "operator"
 
 	class_cmd_name: STRING is "class"
 
@@ -31,9 +35,15 @@ feature {NONE}
 
 	compile_cmd_name: STRING is "compile"
 
+	Convert_profile_cmd_name: STRING is "convert";
+
+	Defaults_cmd_name: STRING is "defaults";
+
 	deferred_cmd_name: STRING is "deferred"
 
 	descendants_cmd_name: STRING is "descendants"
+
+	Descendents_cmd_name: STRING is "descendents";
 
 	dversions_cmd_name: STRING is "dversions"
 
@@ -49,6 +59,8 @@ feature {NONE}
 
 	feature_cmd_name: STRING is "feature"
 
+	Featurename_cmd_name: STRING is "featurename";
+
 	file_cmd_name: STRING is "file"
 
 	filter_cmd_name: STRING is "filter";
@@ -61,11 +73,19 @@ feature {NONE}
 
 	freeze_cmd_name: STRING is "freeze"
 
+	Generate_cmd_name: STRING is "generate";
+
 	help_cmd_name: STRING is "help"
+
+	homonyms_cmd_name: STRING is "homonyms"
 
 	implementers_cmd_name: STRING is "implementers"
 
 	indexing_cmd_name: STRING is "indexing"
+
+	Input_cmd_name: STRING is "input";
+
+	Language_cmd_name: STRING is "language";
 
 	loop_cmd_name: STRING is "loop"
 
@@ -77,19 +97,37 @@ feature {NONE}
 
 	modified_cmd_name: STRING is "modifications"
 
+	Number_of_calls_cmd_name: STRING is "calls";
+
 	once_cmd_name: STRING is "once"
+
+	parent_cmd_name: STRING is "parent menu";
+
+	Percentage_cmd_name: STRING is "percentage";
 
 	precompile_cmd_name: STRING is "precompile"
 
+	Profile_cmd_name: STRING is "profile";
+
 	project_cmd_name: STRING is "project"
 
+	queries_cmd_name: STRING is "query"
+
 	quit_cmd_name: STRING is "quit"
+
+	reactivate_subquery_cmd_name: STRING is "reactivate"
+
+	inactivate_subquery_cmd_name: STRING is "inactivate"
 
 	routines_cmd_name: STRING is "routines"
 
 	run_cmd_name: STRING is "run"
 
+	Self_sec_cmd_name: STRING is "self";
+
 	short_cmd_name: STRING is "short"
+
+	show_subqueries_cmd_name: STRING is "show";
 
 	statistics_cmd_name: STRING is "statistics";
 
@@ -99,11 +137,13 @@ feature {NONE}
 
 	suppliers_cmd_name: STRING is "suppliers"
 
-	homonyms_cmd_name: STRING is "homonyms"
+	switches_cmd_name: STRING is "switches"
 
 	system_cmd_name: STRING is "system"
 
 	text_cmd_name: STRING is "text"
+
+	Total_sec_cmd_name: STRING is "total";
 
 	yank_cmd_name: STRING is "yank"
 

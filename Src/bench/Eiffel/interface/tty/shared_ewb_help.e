@@ -13,6 +13,8 @@ feature {NONE}
 
 	ace_loop_help: STRING is "show the Ace file";
 
+	add_subquery_help: STRING is "add a subquery";
+
 	ancestors_help: STRING is "show the ancestors of a class";
 
 	arguments_help: STRING is "set the arguments";
@@ -22,6 +24,8 @@ feature {NONE}
 	attributes_help: STRING is "show the attributes of a class";
 
 	callers_help: STRING is "show the callers of a feature";
+
+	change_operator_help: STRING is "change the boolean operator";
 
 	class_help: STRING is "class formats and information";
 
@@ -33,9 +37,15 @@ feature {NONE}
 
 	compile_help: STRING is "compile or run the system";
 
+	Convert_profile_help: STRING is "convert profiler output files";
+
+	defaults_help: STRING is "reset all values to their defaults";
+
 	deferred_help: STRING is "show the deferred features of a class";
 
 	descendants_help: STRING is "show the descendants of a class";
+
+	Descendents_help: STRING is " output of time spent in descendents of a function";
 
 	dversions_help: STRING is "show the descendant versions of a feature";
 
@@ -51,6 +61,8 @@ feature {NONE}
 
 	feature_help: STRING is "feature formats and information";
 
+	Featurename_help: STRING is " output of featurenames";
+
 	file_help: STRING is "save the output to a file";
 
 	filter_help: STRING is "show a filtered form (troff, ...) of the class text";
@@ -63,11 +75,19 @@ feature {NONE}
 
 	freeze_help: STRING is "freeze the system";
 
+	Generate_help: STRING is "generate profile information for latest run";
+
 	help_help: STRING is "show this help message";
+
+	homonyms_help: STRING is "shown the homonyms of a feature";
 
 	implementers_help: STRING is "show the classes implementing a feature";
 
 	indexing_help: STRING is "show indexing clauses of classes";
+
+	Input_help: STRING is "specify input file (filename or last_output)";
+
+	Language_help: STRING is "specify language (eiffel, c, cycles)";
 
 	loop_help: STRING is "run es3 as a command loop";
 
@@ -79,11 +99,21 @@ feature {NONE}
 
 	modified_help: STRING is "show classes modified since last compilation";
 
+	Number_of_calls_help: STRING is " output of number of calls to a feature";
+
 	once_help: STRING is "show the once & constant features of a class";
+
+	parent_help: STRING is "go back to parent menu";
+
+	Percentage_help: STRING is " output of percentage of time spent in a feature";
 
 	precompile_help: STRING is "precompile the system";
 
+	Profile_help: STRING is "information about a profiled run";
+
 	project_help: STRING is "specify the compilation directory";
+
+	queries_help: STRING is "manipulate subqueries";
 
 	quit_help: STRING is "terminate session";
 
@@ -91,11 +121,21 @@ feature {NONE}
 
 	r_text_help: STRING is "show the text of a feature";
 
+	reactivate_subquery_help: STRING is "reactivate subquery";
+
+	inactivate_subquery_help: STRING is "inactivate subquery";
+
 	routines_help: STRING is "show the routines of a class";
 
 	run_help: STRING is "execute the system";
 
+	run_prof_help: STRING is "run the query";
+
+	Self_sec_help: STRING is " output of time spent in a function itself";
+
 	short_help: STRING is "show the short form of a class";
+
+	show_subqueries_help: STRING is "show the list of queries";
 
 	statistics_help: STRING is "show system statistics";
 
@@ -105,11 +145,13 @@ feature {NONE}
 
 	suppliers_help: STRING is "show the suppliers of a class";
 
-	homonyms_help: STRING is "shown the homonyms of a feature";
+	switches_help: STRING is "show the output switches";
 
 	system_help: STRING is "Ace and cluster details";
 
 	text_help: STRING is "show the text of a class";
+
+	Total_sec_help: STRING is " output of time spent in both the function and a descendents";
 
 	yank_help: STRING is "yank (save) output of last command to a file";
 

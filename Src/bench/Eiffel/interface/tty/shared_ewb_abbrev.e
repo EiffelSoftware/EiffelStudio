@@ -11,6 +11,8 @@ feature
 
 	Ace_abb: CHARACTER is 'a';
 
+	Add_subquery_abb: CHARACTER is 'a';
+
 	Ancestors_abb: CHARACTER is 'a';
 
 	Arguments_abb: CHARACTER is 'a';
@@ -18,6 +20,8 @@ feature
 	Attributes_abb: CHARACTER is 'b';
 
 	Callers_abb: CHARACTER is 'c';
+
+	Change_operator_abb: CHARACTER is 'c';
 
 	Class_abb: CHARACTER is 'c';
 
@@ -27,7 +31,13 @@ feature
 
 	Clusters_abb: CHARACTER is 'c';
 
+	Convert_profile_abb: CHARACTER is 'c';
+
+	Defaults_abb: CHARACTER is 'e';
+
 	Descendants_abb: CHARACTER is 'd';
+
+	Descendents_abb: CHARACTER is 'd';
 
 	Edit_ace_abb: CHARACTER is 'v';
 
@@ -39,11 +49,15 @@ feature
 
 	Feature_abb: CHARACTER is 'f';
 
+	Featurename_abb: CHARACTER is 'f';
+
 	Filter_abb: CHARACTER is 'f';
 
 	Flat_abb: CHARACTER is 'f';
 
 	Freeze_abb: CHARACTER is 'f';
+
+	Generate_abb: CHARACTER is 'g';
 
 	Help_abb: CHARACTER is 'h';
 
@@ -51,11 +65,15 @@ feature
 
 	Indexing_abb: CHARACTER is 'i';
 
+	Input_abb: CHARACTER is 'i';
+
 	Compile_abb: CHARACTER is 'i';
 
 	F_compile_abb: CHARACTER is 'c';
 
 	Flatshort_abb: CHARACTER is 'i';
+
+	Language_abb: CHARACTER is 'l';
 
 	Loop_abb: CHARACTER is 'l';
 
@@ -65,27 +83,49 @@ feature
 
 	Modified_abb: CHARACTER is 'o';
 
+	Number_of_calls_abb: CHARACTER is 'n';
+
 	Once_abb: CHARACTER is 'o';
+
+	Parent_abb: CHARACTER is 'u';
+
+	Percentage_abb: CHARACTER is 'p';
 
 	Precompile_abb: CHARACTER is 'p';
 
+	Profile_abb: CHARACTER is 'p';
+
 	Quit_abb: CHARACTER is 'q';
+
+	Queries_abb: character is 'u';
+
+	Reactivate_subquery_abb: CHARACTER is 'r';
+
+	Inactivate_subquery_abb: CHARACTER is 'i';
 
 	Routines_abb: CHARACTER is 'r';
 
 	Run_abb: CHARACTER is 'r';
 
+	Self_sec_abb: CHARACTER is 's';
+
 	Short_abb: CHARACTER is 's';
+
+	Show_subqueries_abb: CHARACTER is 's';
 
 	Statistics_abb: CHARACTER is 't';
 
 	Storage_abb: CHARACTER is 's';
+
+	Switches_abb: CHARACTER is 's';
 
 	Homonyms_abb: CHARACTER is 'o';
 
 	System_abb: CHARACTER is 's';
 
 	Text_abb: CHARACTER is 't';
+
+	Total_sec_abb: CHARACTER is 't';
 
 	W_compile_abb: CHARACTER is 'w'
 

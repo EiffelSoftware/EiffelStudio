@@ -16,21 +16,16 @@ creation
 
 feature -- Access
 
-	get_value (s: STRING): ANY is
-			-- Used for font, color, and array.
+	get_color (s: STRING): EV_COLOR is
+		local
+			r: COLOR_RESOURCE
 		do
 			if has (s) then
-				Result := item (s).get_value
-			else
-				io.put_string ("%NValue of ")
-				io.put_string (s)
-				io.put_string (" not supplied, default applied.")
+				r ?= item (s)
+				if r /= Void then
+					Result := r.actual_value
+				end
 			end
-		end
-
-	get_color (s: STRING): EV_COLOR is
-		do
-			Result ?= get_value (s)
 		end
 
 	get_array (s: STRING; default_result: ARRAY [STRING]): ARRAY [STRING] is

@@ -240,6 +240,7 @@ feature {CASE_CLUSTER_INFO} -- Case storage
 					gen := generics.item;
 					!! gen_name.make (0);
 					gen_name.append (gen.formal_name);
+					gen_name.to_upper;
 					if gen.constraint = Void then
 						!! gen_data.make (gen_name, Void)
 					else

@@ -160,7 +160,9 @@ feature {NONE} -- Implementation
 						l_filename.extend (a_dir.lastentry)						
 						if not excluded_directories.has (l_filename.string)  then
 							create sub_dir.make (l_filename.string)
-							sub_dir.create_dir
+							if not sub_dir.exists then								
+								sub_dir.create_dir	
+							end
 							generate_directory (src_sub_dir, sub_dir)
 						end						
 					end

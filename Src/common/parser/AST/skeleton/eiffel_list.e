@@ -45,35 +45,20 @@ feature -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- process current element.
+		local
+			l_cursor: CURSOR
 		do
-			v.process_eiffel_list (Current)
+			l_cursor := cursor
+			from
+				start
+			until
+				after
+			loop
+				item.process (v)
+				forth
+			end
+			go_to (l_cursor)
 		end
-
---feature -- Element change
---
---	merge_after_position (p: INTEGER; other: LIST [T]) is
---			-- Merge `other' after position `p', i.e. replace
---			-- items after `p' with items from `other'.
---		require
---			other_fits: other.count <= count - p
---		local
---			pos: INTEGER
---			cur: CURSOR
---		do
---			from
---				pos := p + 1
---				cur := other.cursor
---				other.start
---			until
---				pos = p + other.count + 1
---			loop
---				put_i_th (other.item, pos)
---				other.forth
---				pos := pos + 1
---			end
---
---			other.go_to (cur)
---		end
 
 feature -- Comparison
 

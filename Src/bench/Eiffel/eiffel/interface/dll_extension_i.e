@@ -168,6 +168,7 @@ feature {NONE} -- Internal generation
 				end
 			end
 			buf.putchar ('(')
+			buf.putchar ('(')
 				-- FIXME: Manu 07/21/2003: function cast is done using the Eiffel return type.
 				-- This is not correct, it should use, if specified, the return type from
 				-- signature. Some C compiler might optimize incorrectly otherwise.
@@ -186,8 +187,9 @@ feature {NONE} -- Internal generation
 					l_ret_type.c_type.generate_function_cast (buf, <<"void">>)
 				end
 			end
-			buf.putstring ("fp ) (")
+			buf.putstring ("fp )(")
 			generate_parameter_list (Void, dll_byte_code.argument_count)
+			buf.putchar (')');
 			buf.putchar (')');
 			buf.putchar (';');
 

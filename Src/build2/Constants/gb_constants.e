@@ -242,7 +242,10 @@ feature -- Generation constants
 	pixmap_name: STRING is "internal_pixmap"
 		-- Name of temporary pixmap used during generation
 		-- of pixmap setting code.
-		
+
+	class_implementation_extension: STRING is "_IMP"
+		-- Extension to be added to generated class name,
+		-- for the implementation class.
 		
 feature -- XML saving
 

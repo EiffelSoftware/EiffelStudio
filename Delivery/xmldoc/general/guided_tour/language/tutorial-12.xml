@@ -225,8 +225,8 @@
 				<symbol>[</symbol><local_variable>x</local_variable><symbol>]</symbol>
 			</code>, using the syntax for manifest tuples introduced in 
 			<link>
-				<url>tutorial-11.xml</url><anchor_name>36752</anchor_name>
-				<label>"Tuple types", page 90</label>
+				<url>tutorial-11.xml</url><anchor_name>6752</anchor_name>
+				<label>Chapter 10,  "Other Mechanisms"</label>
 			</link>.  You will always use tuples for the argument to 
 			<code>
 				<feature_name>call</feature_name>

@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 		-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
-			Result := Ws_popup + Ws_thickframe + Ws_dlgframe + Ws_overlapped
+			Result := Ws_popup + Ws_overlapped + Ws_dlgframe
 					+ Ws_clipchildren + Ws_clipsiblings
 		end
 

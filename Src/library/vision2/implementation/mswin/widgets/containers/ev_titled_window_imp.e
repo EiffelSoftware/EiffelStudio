@@ -146,9 +146,10 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 		-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
-			Result := {EV_UNTITLED_WINDOW_IMP} Precursor
-					- Ws_popup + Ws_border + Ws_sysmenu 
+			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
+					+ Ws_clipchildren + Ws_clipsiblings
 					+ Ws_minimizebox + Ws_maximizebox
+					+ Ws_border + Ws_sysmenu 
 		end
 
 	on_show is

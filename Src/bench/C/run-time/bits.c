@@ -30,7 +30,7 @@
 #include "eif_local.h"
 #include "eif_plug.h"
 #include "eif_except.h"
-#include "eif_lmalloc.h"				/* for malloc() */
+#include "eif_lmalloc.h"				/* for eiffel_malloc() */
 
 /* Bit shifting */
 rt_private char *b_left_shift(char *bit, long int s);		/* Shift bit field to the left */
@@ -112,8 +112,8 @@ rt_public char *bmalloc(long int size)
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
 
-	/* As in the memory allocation routines located in malloc.c, a new
-	 * BIT object has to be marked after being allocated in the free
+	/* As in the memory allocation routines located in eiffel_malloc.c, a new
+	 * BIT object has to be marked after being allocated in the eiffel_free
 	 * list. Otherwise the GC will be lost. 
 	 * Fixes negate-big-bit-local.
 	 * -- Fabrice
@@ -237,16 +237,16 @@ rt_public void b_copy(char *a, char *b)
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
 	if ((char *) 0 == a)
-		panic (MTC "bit copy panic (void source)");
+		eiffel_panic (MTC "bit copy eiffel_panic (void source)");
 	if ((char *) 0 == b)
-		panic (MTC "bit copy panic (void target)");
+		eiffel_panic (MTC "bit copy eiffel_panic (void target)");
 
 	len1 = LENGTH(a);
 	len2 = LENGTH(b);
 
 #ifdef MAY_PANIC
 	if (len1 > len2)
-		panic("bits conformance violated");
+		eiffel_panic("bits conformance violated");
 #endif
 
 	if (len1 == len2) {
@@ -1010,7 +1010,7 @@ rt_public char *bmalloc(int size)
 	int nbytes;
 
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
-	new = (struct bit *) malloc(nbytes);
+	new = (struct bit *) eiffel_malloc(nbytes);
 	bzero(new, nbytes);
 	LENGTH(new) = size;
 

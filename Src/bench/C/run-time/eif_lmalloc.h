@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-extern Malloc_t malloc(register unsigned int nbytes);
+extern Malloc_t eiffel_malloc(register unsigned int nbytes);
 
 #ifdef __cplusplus
 }

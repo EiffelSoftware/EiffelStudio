@@ -222,7 +222,7 @@ rt_shared EIF_OBJ map_next(void)
 #ifdef MAY_PANIC
 	/* If we already reached the end of the stack, panic immediately */
 	if (map_stack.st_bot == map_stack.st_top)
-		panic(botched);
+		eiffel_panic(botched);
 #endif
 	
 	item = (EIF_OBJ *) map_stack.st_bot++;		/* Make a guess */
@@ -231,7 +231,7 @@ rt_shared EIF_OBJ map_next(void)
 
 #ifdef MAY_PANIC
 		if (cur == (struct stchunk *) 0)		/* There has to be one */
-			panic(botched);
+			eiffel_panic(botched);
 #endif
 
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
@@ -244,7 +244,7 @@ rt_shared EIF_OBJ map_next(void)
 
 #ifdef MAY_PANIC
 	if (item == (EIF_OBJ *) map_stack.st_top)	/* Reached the end of stack */
-		panic(botched);
+		eiffel_panic(botched);
 #endif
 	
 	return *item;
@@ -262,7 +262,7 @@ rt_shared void map_reset(int emergency)
 
 #ifdef MAY_PANIC
 	if (!emergency && map_stack.st_bot != map_stack.st_top)
-		panic(botched);
+		eiffel_panic(botched);
 #endif
 	
 	/* If we get here because of an emergency, we free all the chunks held
@@ -338,14 +338,14 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 		if (ht_put(tbl,key,object) == (char *) 0) {
 			ht_xtend(tbl);
 			if (ht_put(tbl,key,object) == (char *) 0)
-				panic("insertion trouble");
+				eiffel_panic("insertion trouble");
 		}
 		object_count++;
 	}
 
 	/* Check if no mark */
 	if (flags & EO_STORE)
-		panic("object still marked");
+		eiffel_panic("object still marked");
 
 	/* Evaluation of the number of references of the object */
     if (flags & EO_SPEC) {

@@ -448,7 +448,7 @@ extern struct opstack op_stack;	/* Operational stack */
 extern char *IC;				/* Interpreter Counter (like PC on a CPU) */
 
 
-	/* malloc.h */
+	/* eif_malloc.h */
 extern struct emallinfo m_data;		/* Accounting info from malloc */
 extern struct emallinfo c_data;		/* Accounting info from malloc for C */
 extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */

@@ -11,8 +11,8 @@
 
 	This file is intended to be linked with an Eiffel application which
 	uses external C software (object files or libraries like X11 or curses).
-	Provided that no '-lc' appears on the linking line BEFORE the run-time
-	archive, the malloc() used will be the one from the Eiffel run-time.
+	This way, the eiffel_malloc() used implemented here will be the one from the Eiffel run-time.
+	Manuelt.
 */
 
 #ifndef EIF_THREADS
@@ -40,7 +40,7 @@ rt_private char *rcsid =
  * wanted, but that makes a difference only when we are short in memory--RAM.
  */
 
-rt_public Malloc_t malloc(register unsigned int nbytes)
+rt_public Malloc_t eiffel_malloc(register unsigned int nbytes)
 {
 	char *arena;
 
@@ -56,29 +56,29 @@ rt_public Malloc_t malloc(register unsigned int nbytes)
 	return (Malloc_t) arena;
 }
 
-rt_public Malloc_t calloc(unsigned int nelem, unsigned int elsize)
+rt_public Malloc_t eiffel_calloc(unsigned int nelem, unsigned int elsize)
 {
 	register1 unsigned int nbytes = nelem * elsize;
 	register2 Malloc_t allocated;
 
-	allocated = malloc(nbytes);
+	allocated = eiffel_malloc(nbytes);
 	if (allocated != (Malloc_t) 0)
 		bzero(allocated, nbytes);
 
 	return allocated;
 }
 
-rt_public Malloc_t realloc(register void *ptr, register unsigned int nbytes)
+rt_public Malloc_t eiffel_realloc(register void *ptr, register unsigned int nbytes)
 {
 	/* A realloc with a null pointer has to be equivalent to a single malloc */
 
 	if (ptr == (Malloc_t) 0)
-		return malloc(nbytes);
+		return eiffel_malloc(nbytes);
 
 	return (Malloc_t) xrealloc(ptr, nbytes, GC_OFF);
 }
 
-void free(register void *ptr)
+void eiffel_free(register void *ptr)
 {
 	/* Free is guaranteed to work enven with a null pointer, while xfree will
 	 * most probably dump a core...

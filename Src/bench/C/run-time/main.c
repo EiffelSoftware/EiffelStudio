@@ -57,7 +57,7 @@
 #define null (char *) 0					/* Null pointer */
 
 #if defined VXWORKS
-	/* when malloc() fails, the system dies otherwise !!! */
+	/* when eiffel_malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
 rt_public int cc_for_speed = 0;			/* Save memory */
 #else

@@ -171,7 +171,7 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 
 	rdeepclone(source, (char *) &anchor.boot, 0);	/* Recursive clone */
 	hash_free(&hclone);						/* Free hash table */
-	map_reset(0);							/* And free maping table */
+	map_reset(0);							/* And eiffel_free maping table */
 
 #ifdef DEBUG
 	xobjs= nomark(source);
@@ -230,7 +230,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	EIF_OBJ *hash_zone;				/* Hash table entry recording duplication */
 	char *clone;					/* Where clone is allocated */
 
-	zone = HEADER(source);			/* Where malloc stores its information */
+	zone = HEADER(source);			/* Where eiffel_malloc stores its information */
 	flags = zone->ov_flags;			/* Eiffel flags */
 
 	/* If the object is an expanded one, then its size field is in fact an
@@ -678,7 +678,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 		} else if (shallow_or_deep == DEEP) {	/* Not expanded */
 
 			/* Run rdeepclone recursively only if the reference is not a C
-			 * pointer, i.e. does not refer to a malloc'ed C object which
+			 * pointer, i.e. does not refer to a eiffel_malloc'ed C object which
 			 * happens to have been attached to an Eiffel reference.
 			 */
 			if (!(flags & EO_C)) {
@@ -765,7 +765,7 @@ rt_public void spclearall (EIF_POINTER spobj)
 		init = (char *(*)(char *)) (XCreate(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
 		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
-			panic("init routine lost");
+			eiffel_panic("init routine lost");
 #endif
 		for (i = 0; i < count; i++, ref += elem_size) {
 			zone = HEADER(ref);

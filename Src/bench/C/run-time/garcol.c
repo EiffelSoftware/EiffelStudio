@@ -830,7 +830,7 @@ rt_public void reclaim(void)
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
 		{
 		cn = c->ck_next;
-		free (c);
+		eiffel_free (c);
 		}
 	cklst.ck_head = (struct chunk *) 0;
 
@@ -867,12 +867,12 @@ rt_public void reclaim(void)
 	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
 #ifndef EIF_NO_CONDVAR
 	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
-	  free(eif_children_cond);
+	  eiffel_free(eif_children_cond);
 #endif
 	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
 	}
 
-	free (eif_globals);
+	eiffel_free (eif_globals);
 
 	/* The TSD is managed in a different way under VxWorks: each thread
 	 * must call taskVarAdd upon initialization and taskVarDelete upon
@@ -3466,9 +3466,9 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 #ifdef MAY_PANIC
 	if (to->sc_top > to->sc_end) {			/* Uh-oh! Zone has overflowed */
 		if (to == &sc_to)					/* Identify culprit */
-			panic("generation zone overflow");
+			eiffel_panic("generation zone overflow");
 		else
-			panic("scavenge zone overflow");
+			eiffel_panic("scavenge zone overflow");
 	}
 #endif
 
@@ -4843,7 +4843,7 @@ rt_shared int refers_new_object(register char *object)
 #ifdef MAY_PANIC
 	/* If 'object' is a void reference, panic immediately */
 	if (object == (char *) 0)
-		panic("remembered set botched");
+		eiffel_panic("remembered set botched");
 #endif
 
 	size = sizeof(char *);				/* Usual item size */
@@ -5391,7 +5391,7 @@ rt_public void enomem(void)
 	eraise("Out of memory", 0);
 }
 
-rt_public void panic(char *s)
+rt_public void eiffel_panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);

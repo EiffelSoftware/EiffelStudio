@@ -135,7 +135,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_COND_TYPE			pthread_cond_t
 #define EIF_COND_ATTR_TYPE		pthread_condattr_t
 #define EIF_COND_CREATE(pcond, msg) \
-	pcond = (EIF_COND_TYPE *) malloc (sizeof(EIF_COND_TYPE)); \
+	pcond = (EIF_COND_TYPE *) eiffel_malloc (sizeof(EIF_COND_TYPE)); \
 	if (!(pcond)) eif_thr_panic("cannot allocate memory for cond. variable"); \
 	EIF_COND_INIT(pcond,msg)
 #define EIF_COND_INIT(pcond, msg) \
@@ -157,7 +157,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_SEM_INIT(sem,count,msg) \
 	if (sem_init (sem, 0, (unsigned int) count)) eif_thr_panic (msg)
 #define EIF_SEM_CREATE(sem,count,msg) \
-	sem = (EIF_SEM_TYPE *) malloc (sizeof(EIF_SEM_TYPE)); \
+	sem = (EIF_SEM_TYPE *) eiffel_malloc (sizeof(EIF_SEM_TYPE)); \
 	if (!sem) eif_thr_panic ("Can't allocate memory for semaphore"); \
 	EIF_SEM_INIT(sem,count,msg)
 #define EIF_SEM_POST(sem,msg) \
@@ -167,7 +167,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_SEM_TRYWAIT(sem,r,msg) \
 	r = sem_trywait (sem)
 #define EIF_SEM_DESTROY(sem,msg) \
-	EIF_SEM_DESTROY0(sem,msg); free(sem)
+	EIF_SEM_DESTROY0(sem,msg); eiffel_free(sem)
 #define EIF_SEM_DESTROY0(sem,msg) \
 	if (sem_destroy(sem)) eif_thr_panic(msg)
 #endif
@@ -277,7 +277,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #endif /* _CRAY */
 
 #define EIF_MUTEX_CREATE(m,msg) \
-	m = (EIF_MUTEX_TYPE *) malloc(sizeof(EIF_MUTEX_TYPE)); \
+	m = (EIF_MUTEX_TYPE *) eiffel_malloc(sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	EIF_MUTEX_INIT(m,msg)
 #define EIF_MUTEX_LOCK(m,msg) if (pthread_mutex_lock(m)) eif_thr_panic(msg)
@@ -286,7 +286,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	if (r && (r!=EBUSY)) eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg) \
-	EIF_MUTEX_DESTROY0(m,msg); free(m)
+	EIF_MUTEX_DESTROY0(m,msg); eiffel_free(m)
 #define EIF_MUTEX_DESTROY0(m,msg) \
 	if (pthread_mutex_destroy(m)) eif_thr_panic(msg)
 #define EIF_TSD_CREATE(key,msg)				\
@@ -357,7 +357,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 
 /* Mutex management */
 #define EIF_MUTEX_CREATE(m,msg)		\
-	m = (EIF_MUTEX_TYPE *) malloc(sizeof(EIF_MUTEX_TYPE)); \
+	m = (EIF_MUTEX_TYPE *) eiffel_malloc(sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"); \
 	EIF_MUTEX_INIT(m,msg)
 #define EIF_MUTEX_INIT(m,msg)			InitializeCriticalSection(m)
@@ -365,7 +365,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TRYLOCK(m,r,msg)
 #define EIF_MUTEX_UNLOCK(m,msg)			LeaveCriticalSection(m)
 #define EIF_MUTEX_DESTROY0(m,msg)		DeleteCriticalSection(m)
-#define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); free(m)
+#define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); eiffel_free(m)
 
 /* Semaphore management */
 #define EIF_SEM_CREATE(sem,count,msg) \
@@ -482,7 +482,7 @@ typedef struct {
 #define EIF_MUTEX_INIT(m,msg) \
 	if (mutex_init((m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_CREATE(m,msg) \
-	m = (EIF_MUTEX_TYPE *) malloc (sizeof(EIF_MUTEX_TYPE)); \
+	m = (EIF_MUTEX_TYPE *) eiffel_malloc (sizeof(EIF_MUTEX_TYPE)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	EIF_MUTEX_INIT(m,msg)
 #define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(m)) eif_thr_panic(msg)
@@ -494,7 +494,7 @@ typedef struct {
 #define EIF_MUTEX_DESTROY0(m,msg)	\
 	if (mutex_destroy(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg) \
-	EIF_MUTEX_DESTROY0(m,msg); free(m)
+	EIF_MUTEX_DESTROY0(m,msg); eiffel_free(m)
 
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \

@@ -63,6 +63,9 @@ feature {NONE} -- Initialization
 				create metrics.make (development_window, Current)
 			end
 
+			create history_manager.make (Current)
+			create address_manager.make (Current, True)
+
 			if not Eiffel_project.workbench.is_already_compiled then
 				on_project_unloaded
 			else
@@ -112,8 +115,6 @@ feature {NONE} -- Initialization
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			create history_manager.make (Current)
-			create address_manager.make (Current, True)
 			create mini_toolbar
 			create header_box
 			mini_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
@@ -300,6 +301,7 @@ feature -- Status setting
 			if has_metrics then
 				metrics.widget.disable_sensitive
 			end
+			address_manager.on_project_unloaded
 		end
 
 	set_focus is
@@ -362,7 +364,9 @@ feature -- Stone management
 			conv_dev ?= manager
 			if conv_dev /= Void then
 				if conv_dev.unified_stone then
+					sending_stone := True
 					conv_dev.set_stone (st)
+					sending_stone := False
 				else
 					set_stone (st)
 				end
@@ -411,6 +415,11 @@ feature -- Stone management
 			end
 			launch_stone (a_stone)
 		end
+
+feature {EB_DEVELOPMENT_WINDOW} -- Private stone management
+
+	sending_stone: BOOLEAN
+			-- Is `Current' sending a stone to its development window?
 
 feature {NONE} -- Implementation
 

@@ -72,7 +72,7 @@ feature -- Basic Operations
 			from
 				a_file_list.start
 			until
-				a_file_list.after
+				a_file_list.after or Shared_wizard_environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
 					compile_file (a_file_list.item)

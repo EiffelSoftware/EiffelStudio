@@ -44,18 +44,11 @@ feature -- Access
 			"IDC_UPARROW"
 		end
 
-	Idc_size: INTEGER is
+	Idc_sizeall: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
-			"cwel_idc_size"
-		end
-
-	Idc_icon: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"cwel_idc_icon"
+			"IDC_SIZEALL"
 		end
 
 	Idc_sizenwse: INTEGER is
@@ -84,6 +77,18 @@ feature -- Access
 			"C [macro <wel.h>]"
 		alias
 			"IDC_SIZENS"
+		end
+
+feature -- Obsolete
+
+	Idc_size: INTEGER is obsolete "Use ``Idc_sizeall''"
+		do
+			Result := Idc_sizeall
+		end
+
+	Idc_icon: INTEGER is obsolete "Use ``Idc_arrow''"
+		do
+			Result := Idc_arrow
 		end
 
 end -- class WEL_IDC_CONSTANTS

@@ -11,10 +11,8 @@
 #	endif
 #endif
 
-#ifndef _INC_WINDOWS /* for Win16 */
-#	ifndef _WINDOWS_ /* for Win32 */
-#		include <windows.h>
-#	endif
+#ifndef _WINDOWS_
+#	include <windows.h>
 #endif
 
 #ifndef _eiffel_h_
@@ -33,26 +31,7 @@
 #define c_mouse_message_x(_lparam_) ((short) LOWORD(_lparam_))
 #define c_mouse_message_y(_lparam_) ((short) HIWORD(_lparam_))
 
-#ifdef WIN32
-#	define cwel_is_win32 TRUE
-#	define cwel_menu_item_not_found 0xFFFFFFFF
-#	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, _start_, _end_)
-#	define cwel_scroll_caret(_hwnd_) SendMessage ((HWND) _hwnd_, EM_SCROLLCARET, 0, 0)
-#	define cwel_idc_size IDC_SIZEALL
-#	define cwel_idc_icon IDC_ARROW
-#	define cwel_enum_font_families(_hdc_, _fam_, _proc_, _data_) EnumFontFamilies ((HDC) _hdc_, (LPCSTR) _fam_, (FONTENUMPROC) _proc_, (LPARAM) _data_)
-#else
-#	define cwel_is_win32 FALSE
-#	define cwel_menu_item_not_found 0xFFFF
-#	define OFN_NONETWORKBUTTON 0x0200
-#	define OFN_NOLONGNAMES 0x0400
-#	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, !_scrollcaret_, MAKELPARAM(_start_, _end_))
-#	define cwel_scroll_caret(_hwnd_) ((void) 0)
-#	define cwel_idc_size IDC_SIZE
-#	define cwel_idc_icon IDC_ICON
-#	define WM_NOTIFY 0x004E /* Not defined in `windows.h' version 3.1 */
-#	define cwel_enum_font_families(_hdc_, _fam_, _proc_, _data_) EnumFontFamilies ((HDC) _hdc_, (LPCSTR) _fam_, (FONTENUMPROC) _proc_, (LPSTR) _data_)
-#endif
+#define cwel_menu_item_not_found 0xFFFFFFFF
 
 #endif /* __WEL__ */
 

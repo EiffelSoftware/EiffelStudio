@@ -373,7 +373,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_hour (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_hour)
 			Result := tmp_strg.to_integer
 		end
 
@@ -382,7 +382,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_sec (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_sec)
 			Result := tmp_strg.to_integer
 		end
 
@@ -391,7 +391,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_min (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_min)
 			Result := tmp_strg.to_integer
 		end
 
@@ -400,7 +400,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_year (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_year)
 			Result := tmp_strg.to_integer
 		end
 
@@ -409,7 +409,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_day (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_day)
 			Result := tmp_strg.to_integer
 		end
 
@@ -418,7 +418,7 @@ feature -- External features
 			tmp_strg: STRING
 		do
 			!! tmp_strg.make(0)
-			tmp_strg.from_c(ora_get_month (ind, no_descriptor))
+			tmp_strg.from_c(ora_get_month)
 			Result := tmp_strg.to_integer
 		end
 
@@ -508,175 +508,175 @@ feature {NONE} -- External features
 
 	ora_get_error_message: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_warn_message: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_new_descriptor: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_init_order (command: POINTER; no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_start_order (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_next_row (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_terminate_order (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER): INTEGER is
 		external
-			"C"
+			"C (EIF_INTEGER, text *): EIF_INTEGER | %"oracle.h%""
 		end
 
 	ora_put_select_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_put_data (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_conv_type (index: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_count (no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_data_len (ind: INTEGER; no_descriptor: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_integer_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_float_data (no_descriptor:INTEGER; ind: INTEGER): DOUBLE is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_real_data (no_descriptor:INTEGER; ind: INTEGER): REAL is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_boolean_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_get_date_data (desc: INTEGER; index: INTEGER): INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_hour (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_hour: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_sec (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_sec: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_min (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_min: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_year (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_year: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_day (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_day: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
-	ora_get_month (ind: INTEGER; no_descriptor: INTEGER): POINTER is
+	ora_get_month: POINTER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_database_make (i: INTEGER) is
 		external
-			"C"
+			"C | %"oracle.h%""
 		alias
 			"c_ora_make"
 		end
 
 	ora_disconnect: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_commit: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_rollback: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_trancount: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 
 	ora_connect (user_name, user_passwd: POINTER): INTEGER is
 		external
-			"C"
+			"C (text *, text*): EIF_INTEGER | %"oracle.h%""
 		end
 
 	ora_available_descriptor: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER): INTEGER is
 		external
-			"C"
+			"C (EIF_INTEGER, text *, text *, char *): EIF_INTEGER | %"oracle.h%""
 		end
 
 	ora_string_type: INTEGER is
@@ -702,37 +702,37 @@ feature {NONE} -- External features
 
 	ora_c_string_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_character_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_integer_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_float_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_real_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_boolean_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	ora_c_date_type: INTEGER is
 		external
-			"C"
+			"C | %"oracle.h%""
 		end
 
 	break (s: STRING): STRING is

@@ -149,6 +149,10 @@ int ora_disconnect (void);
 int ora_rollback (void);
 int ora_commit (void);
 int ora_trancount (void);
+int ora_get_integer_data (int, int);
+int ora_get_float_data (int, int);
+int ora_get_real_data (int, int);
+int ora_get_boolean_data (int, int);
 int ora_get_date_data (int no_des, int i);
 char *ora_get_year(void);
 char *ora_get_month(void);
@@ -166,6 +170,13 @@ void ora_clear_error (void);
 char * ora_get_error_message (void);
 void ora_c_free(char *ptr);
 void ora_error_handler(Cda_Def *cursor);
+int ora_c_character_type (void);
+int ora_c_integer_type (void);
+int ora_c_float_type (void);
+int ora_c_real_type (void);
+int ora_c_boolean_type (void);
+int ora_c_string_type (void);
+int ora_c_date_type (void);
 
 
 

@@ -119,7 +119,7 @@ feature -- Output
 				retried := False
 				--display_error_error (st2)
 			end
-			--output_window.process_text (st)
+			output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True

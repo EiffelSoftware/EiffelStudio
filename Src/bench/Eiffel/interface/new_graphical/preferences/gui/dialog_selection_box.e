@@ -14,9 +14,10 @@ feature -- Commands
 
 	change is
 			-- Change the value 
-		require
-			resource_exists: resource /= Void
 		do
+			check
+				resource_exists: resource /= Void
+			end
 			create_tool
 			dialog_tool.ok_actions.extend (~update_changes)
 			dialog_tool.show_modal_to_window (caller)

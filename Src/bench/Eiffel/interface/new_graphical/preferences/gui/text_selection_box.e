@@ -1,8 +1,8 @@
 indexing
-	description: "Text Selection Box."
-	author: "Pascal Freund and Christophe Bonnard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Text Selection Box."
+	author		: "Pascal Freund and Christophe Bonnard"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	TEXT_SELECTION_BOX
@@ -10,26 +10,12 @@ class
 inherit
 	SELECTION_BOX
 		redefine
-			make, display
+			display,
+			change_item_widget
 		end
 
-creation
+create
 	make
-
-feature -- Initialization
-
-	make (h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
-			-- Creation
-		local
-			h1: EV_HORIZONTAL_BOX
-		do
-			Precursor (h, new_caller)
-			create h1
-			frame.extend (h1)
-			create text_f
-			h1.extend (text_f)
-			text_f.return_actions.extend (~commit)
-		end
 
 feature -- Display
 	
@@ -41,33 +27,35 @@ feature -- Display
 			Precursor (new_resource)
 			tmpstr := new_resource.value
 			if tmpstr /= Void and then not tmpstr.is_empty then
-				text_f.set_text (tmpstr)
+				change_item_widget.set_text (tmpstr)
 			else
-				text_f.remove_text
+				change_item_widget.remove_text
 			end
-			text_f.set_focus
+			change_item_widget.set_focus
 		end
 
-feature -- Command
+feature {NONE} -- Command
 
 	commit is
 			-- Commit the changes.
-		require
-			resource_exists: resource /= Void
 		local
 			int: INTEGER_RESOURCE
 			str: STRING_RESOURCE
 			success: BOOLEAN
 		do
+			check
+				resource_exists: resource /= Void
+			end
+
 			int ?= resource
 			str ?= resource
 			if int /= Void then
-				if text_f.text.is_integer then
-					int.set_value (text_f.text)
+				if change_item_widget.text.is_integer then
+					int.set_value (change_item_widget.text)
 					success := True
 				end
 			elseif str /= Void then
-				str.set_value (text_f.text)
+				str.set_value (change_item_widget.text)
 				success := True
 			end
 			if success then
@@ -80,12 +68,15 @@ feature -- Command
 			end
 		end
 
-feature -- Implementation
-		
-	text_f: EV_TEXT_FIELD
-		-- Text where we change the value.
+feature {NONE} -- Implementation
 
-invariant
-	text_f_exists: text_f /= Void
+	change_item_widget: EV_TEXT_FIELD
+
+	build_change_item_widget is
+			-- Create and setup `change_item_widget'.
+		do
+			create change_item_widget
+			change_item_widget.return_actions.extend (~commit)
+		end
 
 end -- class TEXT_SELECTION_BOX

@@ -1,9 +1,8 @@
 indexing
-	description: "Box in which the user may choose %
-				%whether the value is True or False."
-	author: "Pascal Freund and Christophe Bonnard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Box in which the user may choose whether the value is True or False."
+	author		: "Pascal Freund and Christophe Bonnard"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	BOOLEAN_SELECTION_BOX
@@ -11,43 +10,29 @@ class
 inherit
 	SELECTION_BOX
 		redefine
-			make,resource,display
+			resource,
+			display
 		end
 
-creation
+create
 	make
-
-feature -- Creation
-	
-	make (h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
-			-- Creation
-		local
-			h1, h2: EV_HORIZONTAL_BOX
-		do
-			Precursor (h, new_caller)
-			create h2
-			frame.extend (h2)
-			create h1
-			h2.extend (h1)
-			create yes_b.make_with_text ("True")
-			h1.extend (yes_b)
-			create no_b.make_with_text ("False")
-			h1.extend (no_b)
-			create ok_b.make_with_text_and_action ("OK",~commit)
-			h2.extend (ok_b)
-			h2.disable_item_expand (ok_b)
---			ok_b.disable_vertical_resize
-		end
 
 feature -- Commit
 
 	commit is
-		require
-			resource_exists: resource /= Void
+			-- Commit the resource.
+		local
+			new_value: BOOLEAN
 		do
-			resource.set_actual_value (yes_b.is_selected)
-			update_resource
-			caller.update
+			check
+				resource_exists: resource /= Void
+			end
+			new_value := yes_item.is_selected
+			if resource.actual_value /= new_value then
+				resource.set_actual_value (new_value)
+				update_resource
+				caller.update
+			end
 		end
 
 feature -- Display
@@ -57,20 +42,44 @@ feature -- Display
 		do
 			Precursor (new_resource)
 			if resource.actual_value then
-				yes_b.enable_select
+				yes_item.enable_select
 			else
-				no_b.enable_select
+				no_item.enable_select
 			end
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	resource: BOOLEAN_RESOURCE
-		-- Resource.
+			-- Resource.
 
-	yes_b, no_b: EV_RADIO_BUTTON
-		-- radio Buttons
+	yes_item: EV_LIST_ITEM
+			-- "True" item in the combo box.
 
-	ok_b: EV_BUTTON
+	no_item: EV_LIST_ITEM
+			-- "False" item in the combo box.
+
+	build_change_item_widget is
+			-- Create and setup `change_item_widget'.
+		local
+			combobox: EV_COMBO_BOX
+			hbox: EV_HORIZONTAL_BOX
+		do
+			create combobox
+			combobox.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(50))
+			combobox.disable_edit
+			create yes_item.make_with_text ("True")
+			create no_item.make_with_text ("False")
+			combobox.extend (yes_item)
+			combobox.extend (no_item)
+			combobox.select_actions.extend (~commit)
+
+			create hbox
+			hbox.extend (combobox)
+			hbox.disable_item_expand (combobox)
+			hbox.extend (create {EV_CELL})			
+
+			change_item_widget := hbox
+		end
 
 end -- class BOOLEAN_SELECTION_BOX

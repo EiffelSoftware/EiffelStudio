@@ -478,6 +478,14 @@ feature -- Features info
 		do
 		end
 
+	implementation_generate_feature (
+			feat: FEATURE_I; in_interface, is_static, is_override, is_empty: BOOLEAN)
+			-- Generate interface `feat' description.
+		require
+			feat_not_void: feat /= Void
+		do
+		end
+
 	argument_actual_type (a_type: TYPE_I): TYPE_I is
 			-- Compute real type of Current.
 		require
@@ -649,7 +657,7 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
-	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I; is_from_implementation: BOOLEAN) is
+	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.
 		require

@@ -28,6 +28,7 @@ feature
 		do
 			put_string ("Invalid creation procedure name: ");
 			put_string (feature_name);
+			new_line;
 		end;
 
 end

@@ -26,6 +26,12 @@ feature
 		deferred
 		end;
 
+	a_type (a_cluster: CLUSTER_I): TYPE_A is
+			-- Returns the actual type associated in the
+			-- context of `a_cluster'
+		do
+		end;
+
 	trace is
 		do
 			io.error.putstring (dump);
@@ -64,6 +70,22 @@ feature
 			-- Is the current type a anchored type an Current ?
 		do
 			-- Do nothing
+		end;
+
+	check_constraint_type (a_class: CLASS_C) is
+			-- Is the constraint type valid in the
+			-- context of `a_class' ?
+			-- A valid type is a class type that exists
+			-- in the system
+		local
+			vcfg3: VCFG3;
+		do
+			if has_like then
+				!!vcfg3;
+				vcfg3.set_class (a_class);
+				vcfg3.set_formal_name ("Constraint genericity");
+				Error_handler.insert_error (vcfg3);
+			end
 		end;
 
 end

@@ -6,7 +6,7 @@ inherit
 
 	VGCC
 		redefine
-			subcode
+			subcode, build_explain
 		end
 
 feature
@@ -23,6 +23,14 @@ feature
 			-- Assign `f' to `creation_feature'.
 		do
 			creation_feature := f;
+		end;
+
+	build_explain is
+		do
+			print_name;
+			put_string ("Feature name: ");
+			creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
+			new_line;
 		end;
 
 end

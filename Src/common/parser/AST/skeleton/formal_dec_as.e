@@ -54,8 +54,20 @@ feature -- Initialization
 			-- Incrementality of the generic parameters
 		require
 			good_argument: other /= Void
+		local
+			ct, o_ct: TYPE_A;
 		do
-			 Result := constraint_type.same_as (other.constraint_type)
+				-- Test on void is done only to
+				-- protect incorrect generic constraints
+			ct := constraint_type;
+			o_ct := other.constraint_type;
+			if ct /= Void then
+				if o_ct /= Void then
+					Result := ct.same_as (o_ct)
+				end;
+			else
+				Result := o_ct = Void
+			end;
 		end;
 
 	format (ctxt: FORMAT_CONTEXT) is

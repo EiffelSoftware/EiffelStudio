@@ -40,7 +40,6 @@ feature -- Type check, byte code and dead code removal
 					-- Error
 				!!vkcn;
 				context.init_error (vkcn);
-				vkcn.set_node (call);
 				Error_handler.insert_error (vkcn);
 			end;
 				-- Update the type stack

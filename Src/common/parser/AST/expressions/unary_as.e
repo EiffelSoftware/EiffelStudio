@@ -43,7 +43,7 @@ feature -- Type check, byte code and dead code removal
 			feature_b: FEATURE_B;
 			depend_unit: DEPEND_UNIT;
 			vwoe: VWOE;
-			vkcn: VKCN;
+			vkcn3: VKCN3;
 			vhne: VHNE;
 			vuex: VUEX;
 		do
@@ -53,10 +53,9 @@ feature -- Type check, byte code and dead code removal
 			last_constrained := context.last_constrained_type;
 			if last_constrained.is_void then
 					-- No call when target is a procedure
-				!!vkcn;
-				context.init_error (vkcn);
-				vkcn.set_node (Current);
-				Error_handler.insert_error (vkcn);
+				!!vkcn3;
+				context.init_error (vkcn3);
+				Error_handler.insert_error (vkcn3);
 					-- Cannot go on here
 				Error_handler.raise_error;
 			elseif last_constrained.is_none then
@@ -88,7 +87,7 @@ feature -- Type check, byte code and dead code removal
                 !!vuex;
                 context.init_error (vuex);
                 vuex.set_static_class (last_class);
-                vuex.set_feature_name (prefix_feature_name);
+                vuex.set_exported_feature (prefix_feature);
                 Error_handler.insert_error (vuex);
 				Error_handler.raise_error;
             end;

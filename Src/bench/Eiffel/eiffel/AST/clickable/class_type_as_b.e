@@ -6,7 +6,8 @@ inherit
 
 	TYPE
 		redefine
-			has_like, format, fill_calls_list, replicate
+			has_like, format, fill_calls_list, replicate,
+			check_constraint_type, a_type
 		end;
 	SHARED_INST_CONTEXT;
 	STONABLE
@@ -79,6 +80,13 @@ feature -- Conveniences
 
 	actual_type: CL_TYPE_A is
 			-- Actual class type without processing like types
+		do
+			Result := a_type (Inst_context.cluster);
+		end;
+
+	a_type (a_cluster: CLUSTER_I): CL_TYPE_A is
+			-- Returns the actual type associated in the
+			-- context of `a_cluster'
 		local
 			a_class: CLASS_C;
 			gen_type: GEN_TYPE_A;
@@ -102,8 +110,8 @@ feature -- Conveniences
 				end;
 				Result := gen_type;
 			end;
-			a_class :=
-			Universe.class_named (class_name, Inst_context.cluster).compiled_class;
+			a_class := Universe.class_named
+							(class_name, a_cluster).compiled_class;
 			Result.set_base_type (a_class.id);
 					-- Base type class is expanded
 			Result.set_is_expanded (a_class.is_expanded);
@@ -120,6 +128,74 @@ feature -- Conveniences
 				loop
 					Result := generics.item.has_like;
 					generics.forth
+				end;
+			end;
+		end;
+
+	check_constraint_type (a_class: CLASS_C) is
+		local
+			associated_class: CLASS_C;
+			cl_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			class_i: CLASS_I;
+			cluster: CLUSTER_I;
+			vcfg3: VCFG3;
+			vtct: VTCT;
+			vtug: VTUG;
+			error: BOOLEAN;
+			nb_errors: INTEGER;
+		do
+io.error.putstring ("check_constraint_type on: ");
+trace;
+io.error.new_line;
+			if has_like then
+				!!vcfg3;
+				vcfg3.set_class (a_class);
+				vcfg3.set_formal_name ("Constraint genericity");
+				Error_handler.insert_error (vcfg3);
+			else
+				cluster := a_class.cluster;
+				class_i := Universe.class_named (class_name, cluster);
+				if class_i = Void then
+					!!vtct;
+					vtct.set_class (a_class);
+					vtct.set_class_name (class_name);
+					Error_handler.insert_error (vtct);
+				else
+					associated_class := class_i.compiled_class;
+					cl_generics := associated_class.generics;
+					if generics /= Void then
+						if (cl_generics = Void or else
+							cl_generics.count /= generics.count)
+						then
+							!VTUG2!vtug;
+						end;
+					elseif cl_generics /= Void then
+						!VTUG1!vtug;
+					end;
+					if vtug /= Void then
+						vtug.set_class (a_class);
+						vtug.set_type (a_type (cluster));
+						vtug.set_base_class (associated_class);
+						Error_handler.insert_error (vtug);
+					elseif generics /= Void then
+						from
+							generics.start;
+							cl_generics.start
+						until
+							generics.after or else error
+						loop
+							nb_errors := Error_handler.nb_errors;
+							generics.item.check_constraint_type (a_class);
+							error := Error_handler.nb_errors /= nb_errors;
+							if not error then
+								generics.item.a_type (cluster).check_conformance
+									(cl_generics.item.constraint.a_type (cluster));
+								error := Error_handler.new_error;
+							end;
+							generics.forth;
+							cl_generics.forth
+						end;
+					end;
 				end;
 			end;
 		end;

@@ -5,7 +5,10 @@ class VGCC
 inherit
 
 	FEATURE_ERROR
-	
+		redefine
+			build_Explain
+		end;
+
 feature
 
 	type: TYPE_A;
@@ -34,6 +37,11 @@ feature
 			put_string ("%NTarget type: ");
 			type.append_clickable_signature (error_window);
 			new_line;
+		end;
+
+	build_explain is
+		do
+			print_name
 		end;
 
 end

@@ -1067,6 +1067,7 @@ feature -- Workbench feature and descriptor table generation
 			-- Generated file name prefix
 		local
 			fname: STRING;
+			g_path: STRING;
 		do
 			fname := base_file_name;
 			!!Result.make (Generation_path.count + fname.count + 1);
@@ -1593,11 +1594,12 @@ feature
 			pos: INTEGER;
 			vcfg1: VCFG1;
 			vcfg2: VCFG2;
+			error: BOOLEAN;
 		do
 			from
 				generics.start
 			until
-				generics.after
+				generics.after or else error
 			loop
 				generic_dec := generics.item;
 				generic_name := generic_dec.formal_name;
@@ -1609,6 +1611,7 @@ feature
 					vcfg1.set_class (Current);
 					vcfg1.set_formal_name (generic_name);
 					Error_handler.insert_error (Vcfg1);
+					error := True
 				end;
 
 					-- Second, check if the formal generic name doen't 
@@ -1617,7 +1620,7 @@ feature
 				from
 					generics.start
 				until
-					generics.after
+					generics.after or else error
 				loop
 					next_dec := generics.item;
 					if next_dec /= generic_dec then
@@ -1626,6 +1629,7 @@ feature
 							vcfg2.set_class (Current);
 							vcfg2.set_formal_name (generic_name);
 							Error_handler.insert_error (vcfg2);
+							error := True
 						end;
 					end;
 					generics.forth;
@@ -1659,6 +1663,31 @@ feature
 					vcfg1.set_class (Current);
 					vcfg1.set_formal_name (generic_name);
 					Error_handler.insert_error (Vcfg1);
+				end;
+				generics.forth;
+			end;
+		end;
+
+	check_constraint_genericity is
+			-- Check validity of constraint genericity
+		require
+			generics_exists: generics /= Void;
+		local
+			generic_dec: FORMAL_DEC_AS;
+			constraint_type: TYPE;
+		do
+io.error.putstring ("Check constraint genericity of ");
+io.error.putstring (class_name);
+io.error.new_line;
+			from
+				generics.start
+			until
+				generics.after
+			loop
+				generic_dec := generics.item;
+				constraint_type := generic_dec.constraint;
+				if constraint_type /= Void then
+					constraint_type.check_constraint_type (Current)
 				end;
 				generics.forth;
 			end;
@@ -2564,7 +2593,7 @@ feature -- PS
 		obsolete "Use `append_clickable_signature'"
 		local
 			formal_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE_A;
+			constraint_type: TYPE;
 			error: BOOLEAN;
 		do
 			if not error then
@@ -2581,9 +2610,10 @@ feature -- PS
 						Result.append (formal_dec.formal_name);
 						if formal_dec.constraint /= Void then
 							Result.append (" -> ");
-							constraint_type := formal_dec.constraint.actual_type;
-							--constraint_type := constraint_type.instantiation_in (actual_type, id);
-							-- Result.append (constraint_type.signature)
+							constraint_type := formal_dec.constraint.a_type (cluster);
+							if constraint_type = Void then
+								constraint_type := formal_dec.constraint
+							end;
 							Result.append (constraint_type.dump)
 						end;
 						generics.forth;
@@ -2614,7 +2644,7 @@ feature -- PS
 			-- Append the signature of current class in `a_clickable'
 		local
 			formal_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE_A;
+			constraint_type: TYPE;
 			c_name: STRING;
 			error: BOOLEAN;
 		do
@@ -2633,7 +2663,13 @@ feature -- PS
 						a_clickable.put_string (c_name);
 						if formal_dec.constraint /= Void then
 							a_clickable.put_string (" -> ");
-							constraint_type := formal_dec.constraint.actual_type;
+							constraint_type := formal_dec.constraint.a_type (cluster);
+							if constraint_type = Void then
+									-- Problem in building the type
+									-- Should occur only for invalid constraint
+									-- i.e. i`like weasel'
+								constraint_type := formal_dec.constraint
+							end;
 							constraint_type.append_clickable_signature (a_clickable)
 						end;
 						generics.forth;

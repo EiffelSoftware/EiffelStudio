@@ -12,11 +12,6 @@ inherit
 
 feature 
 
-	code: STRING is "VTUG";
-
-	subcode: INTEGER is
-		do
-			NOT_USED;
-		end;
+	subcode: INTEGER is 1
 
 end

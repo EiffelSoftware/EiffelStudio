@@ -399,7 +399,11 @@ feature -- Primitives
 				end;
 			end;
 			if Result = Void then
-				!!Result;
+				if base_generics = Void then
+					!VTUG1!Result;
+				else
+					!VTUG2!Result;
+				end;
 				Result.set_type (Current);
 				Result.set_base_class (associated_class);
 			end;
@@ -437,9 +441,9 @@ feature -- Primitives
 						-- Error
 					!!constraint_info;
 					constraint_info.set_type (Current);
-					constraint_info.set_type1 (to_check);
+					constraint_info.set_actual_type (to_check);
 					constraint_info.set_formal_number (i);
-					constraint_info.set_type2 (constraint_type);
+					constraint_info.set_constraint_type (constraint_type);
 					Constraint_error_list.add_front (constraint_info);
 				end;
 

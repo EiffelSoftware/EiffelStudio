@@ -91,21 +91,21 @@ feature -- Type check, byte code and dead code removal
 			vuar2: VUAR2;
 			vuex: VUEX;
 			vhne: VHNE;
-			vkcn: VKCN;
+			vkcn3: VKCN3;
 			obs_warn: OBS_FEAT_WARN;
 			context_export: EXPORT_I;
 			feature_export: EXPORT_I;
 			vape_check: BOOLEAN;
+			vape: VAPE;
 		do
 			last_type := context.item;
 			last_constrained := context.last_constrained_type;
 
 			if last_constrained.is_void then
 					-- No call when target is a procedure
-				!!vkcn;
-				context.init_error (vkcn);
-				vkcn.set_node (Current);
-				Error_handler.insert_error (vkcn);
+				!!vkcn3;
+				context.init_error (vkcn3);
+				Error_handler.insert_error (vkcn3);
 					-- Cannot go on here
 				Error_handler.raise_error;
 			elseif last_constrained.is_none then
@@ -196,8 +196,8 @@ feature -- Type check, byte code and dead code removal
 				if not is_export_valid (a_feature) then
 					!!vuex;
 					context.init_error (vuex);
-					vuex.set_static_class (context.last_class);
-					vuex.set_feature_name (feature_name);
+					vuex.set_static_class (last_class);
+					vuex.set_exported_feature (a_feature);
 					Error_handler.insert_error (vuex);
 				end;
 				if
@@ -223,11 +223,10 @@ feature -- Type check, byte code and dead code removal
 						not a_feature.feature_name.is_equal ("void") and then
 						not context_export.is_subset (feature_export) 
 					then
-						io.error.putstring ("VAPE error on feature ");
-						io.error.putstring (context.a_feature.feature_name);
-						io.error.putstring (" because of feature ");
-						io.error.putstring (a_feature.feature_name);
-						io.error.new_line;
+						!!vape;
+						context.init_error (vape);
+						vape.set_exported_feature (a_feature);
+						Error_handler.insert_error (vape);
 					end;
 				end;
 					-- Access managment

@@ -53,7 +53,6 @@ feature -- Type check, byte code and dead code removal
 					-- Not an expression
 				!!vaol2;
 				context.init_error (vaol2);
-				vaol2.set_old_expr (Current);
 				Error_handler.insert_error (vaol2);
 			end;
 		end;

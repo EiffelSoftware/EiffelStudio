@@ -108,35 +108,35 @@ feature -- Element change
 	set_step (val: INTEGER) is
 			-- Make `val' the new step.
 		do
-			c_gtk_progressbar_set_step (val.out.to_real)
+			c_gtk_progressbar_set_step (widget, val.out.to_real)
 		end
 
 	set_minimum (val: INTEGER) is
 			-- Make `val' the new minimum.
 		do
-			c_gtk_progressbar_set_minimum (val.out.to_real)
+			c_gtk_progressbar_set_minimum (widget, val.out.to_real)
 		end
 
 	set_maximum (val: INTEGER) is
 			-- Make `val' the new maximum.
 		do
-			c_gtk_progressbar_set_maximum (val.out.to_real)
+			c_gtk_progressbar_set_maximum (widget, val.out.to_real)
 		end
 
 end -- class EV_PROGRESS_BAR_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

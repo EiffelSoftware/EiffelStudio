@@ -189,7 +189,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Behavior
 
-   	on_wm_erase_background (wparam: INTEGER) is
+   	on_wm_erase_background (wparam: POINTER) is
    			-- Wm_paint message.
    			-- May be redefined to paint something on
    			-- the `paint_dc'. `invalid_rect' defines

@@ -600,11 +600,11 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 		do
 			if info.code = Ttn_needtext then
 				create tt1.make_by_nmhdr (info)
-				tt1.set_text_id (tt1.hdr.id_from)
+				tt1.set_text_id (tt1.hdr.id_from.to_integer_32)
 			end
 		end
 
-   	on_wm_erase_background (wparam: INTEGER) is
+   	on_wm_erase_background (wparam: POINTER) is
    			-- Wm_paint message.
    			-- May be redefined to paint something on
    			-- the `paint_dc'. `invalid_rect' defines

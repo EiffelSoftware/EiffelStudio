@@ -45,11 +45,13 @@ feature -- Access
 		%	debug  (no)%N%
 		%	array_optimization (no)%N%
 		%	inlining (no)%N%
-		%	inlining_size (%"4%")%N%
-		%	precompiled (%"%DEIFFEL4\precomp\spec\%DPLATFORM\WEL%");%N%N%
+		%	inlining_size (%"4%")%N%  
 		%cluster%N%
-		%	all component: %""
+		%	all client: %""
 
+	Partial_ace_file_addition: STRING is 	"	all server: %""
+			-- Add Server cluster.
+		
 	Partial_ace_file_part_two: STRING is
 			-- Ace file used to precompile generated Eiffel system
 		do
@@ -229,37 +231,78 @@ feature -- Basic operations
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
 		local
-			a_string: STRING
 			a_file: RAW_FILE
+			a_file_name, a_string: STRING
 		do
-			create a_string.make (1000)
-			a_string.append (shared_wizard_environment.destination_folder)
-			a_string.append (a_folder)
-			a_string.append_character (Directory_separator)
-			a_string.append (Ace_file_name)
-			create a_file.make_create_read_write (a_string)
+			create a_string.make (10000)
 			if a_folder.is_equal (Server) then
-				a_file.put_string (server_generated_ace_file)
+				a_string.append (server_generated_ace_file)
 			else
-				a_file.put_string (client_generated_ace_file)
+				a_string.append (client_generated_ace_file)
 			end
-			a_file.put_string (Tab)
-			a_file.put_string (Tab)
-			a_file.put_string (Tab)
-			a_file.put_string (Double_quote)
-			a_file.put_string (Shared_wizard_environment.destination_folder)
-			a_file.put_string (a_folder)
-			a_file.put_character (Directory_separator)
-			a_file.put_string (Clib)
-			a_file.put_character (Directory_separator)
-			a_file.put_string (Clib_name)
-			a_file.put_string (Lib_file_extension)
-			a_file.put_string (Double_quote)
-			a_file.put_string (Semicolon)
-			a_file.put_string (New_line)
-			a_file.put_string (End_keyword)
+
+			if not is_empty_clib_folder (Client) then
+				a_string.append (Tab)
+				a_string.append (Tab)
+				a_string.append (Tab)
+				a_string.append (Double_quote)
+				a_string.append (Shared_wizard_environment.destination_folder)
+				a_string.append (Client)
+				a_string.append_character (Directory_separator)
+				a_string.append (Clib)
+				a_string.append_character (Directory_separator)
+				a_string.append (Clib_name)
+				a_string.append (Lib_file_extension)
+				a_string.append (Double_quote)
+				a_string.append (Comma)
+			end
+
+			if not is_empty_clib_folder (Server) then
+				a_string.append (New_line_tab_tab_tab)
+				a_string.append (Double_quote)
+				a_string.append (Shared_wizard_environment.destination_folder)
+				a_string.append (Server)
+				a_string.append_character (Directory_separator)
+				a_string.append (Clib)
+				a_string.append_character (Directory_separator)
+				a_string.append (Clib_name)
+				a_string.append (Lib_file_extension)
+				a_string.append (Double_quote)
+				a_string.append (Comma)
+			end
+			
+			a_string.remove (a_string.count)
+
+			a_string.append (Semicolon)
+			a_string.append (New_line)
+			a_string.append (End_keyword)
+
+			create a_file_name.make (100)
+			a_file_name.append (shared_wizard_environment.destination_folder)
+			a_file_name.append (a_folder)
+			a_file_name.append_character (Directory_separator)
+			a_file_name.append (Ace_file_name)
+			create a_file.make_create_read_write (a_file_name)
+
+			a_file.put_string (a_string)
 			a_file.close
 			ace_file_generated := True
+		end
+
+	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
+			-- Is folder `a_folder' empty?
+		local
+			a_file: RAW_FILE
+			a_directory: DIRECTORY
+			a_working_directory, a_string: STRING
+		do
+			a_working_directory := clone (shared_wizard_environment.destination_folder)
+			a_working_directory.append (a_folder)
+			a_working_directory.append_character (Directory_separator)
+			a_working_directory.append (Clib)
+			create a_directory.make_open_read (a_working_directory)
+
+			Result := a_directory.empty
 		end
 
 	server_generated_ace_file: STRING is
@@ -281,7 +324,6 @@ feature -- Basic operations
 			if Shared_wizard_environment.in_process_server then
 				Result.replace_substring_all (Default_keyword, Shared_library_option)
 			end
-			Result.replace_substring_all (Client, Server)
 		end
 
 	client_generated_ace_file: STRING is
@@ -301,6 +343,26 @@ feature -- Basic operations
 			Result.append (Double_quote)
 			Result.append (New_line_tab_tab)
 			Result.append (Visible)
+			Result.append (New_line)
+
+			from
+				system_descriptor.visible_classes_client.start
+			until
+				system_descriptor.visible_classes_client.after
+			loop
+				Result.append (system_descriptor.visible_classes_client.item.generated_code)
+				system_descriptor.visible_classes_client.forth
+			end
+			Result.append (New_line_tab_tab)
+			Result.append (End_keyword)
+
+			Result.append (New_line)
+			Result.append (Partial_ace_file_addition)
+			Result.append (Shared_wizard_environment.destination_folder)
+			Result.append (Server)
+			Result.append (Double_quote)
+			Result.append (New_line_tab_tab)
+			Result.append (Visible)
 			Result.append (New_line_tab_tab_tab)
 
 			if Shared_wizard_environment.server then
@@ -309,12 +371,12 @@ feature -- Basic operations
 				Result.append (New_line)
 			end
 			from
-				system_descriptor.visible_classes_component.start
+				system_descriptor.visible_classes_server.start
 			until
-				system_descriptor.visible_classes_component.after
+				system_descriptor.visible_classes_server.after
 			loop
-				Result.append (system_descriptor.visible_classes_component.item.generated_code)
-				system_descriptor.visible_classes_component.forth
+				Result.append (system_descriptor.visible_classes_server.item.generated_code)
+				system_descriptor.visible_classes_server.forth
 			end
 			Result.append (New_line_tab_tab)
 			Result.append (End_keyword)
@@ -383,6 +445,17 @@ feature -- Basic operations
 			Result.append (Comma)
 			Result.append (New_line_tab_tab)
 			Result.append (Tab)
+
+			Result.append (Double_quote)
+			Result.append (clone (Shared_wizard_environment.destination_folder))
+			Result.append (Server)
+			Result.append_character (Directory_separator)
+			Result.append (Include)
+			Result.append (Double_quote)
+			Result.append (Comma)
+			Result.append (New_line_tab_tab)
+			Result.append (Tab)
+
 			Result.append (Double_quote)
 			Result.append (clone (Shared_wizard_environment.destination_folder))
 			Result.append (Common)
@@ -451,7 +524,7 @@ feature -- Basic operations
 		end
 
 	insert_visible_class is
-			-- Insrt visible clause into correct cluster.
+			-- Insert visible clause into correct cluster.
 		require
 			non_void_cluster_info: cluster_info /= Void
 			non_void_clusters: cluster_info.clusters /= Void

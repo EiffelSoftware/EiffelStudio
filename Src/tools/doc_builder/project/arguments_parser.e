@@ -282,11 +282,14 @@ feature -- Commands
 				report ("Creating help project in " + l_constants.Temporary_help_directory + "...")
 				if help_generation_type.is_equal ("mshtml") then
 					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
+					report ("success")
 				elseif help_generation_type.is_equal ("vsip") then
 					l_help_project := create {MSHELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
+					report ("success")
 				else
 					-- TO DO: Web Help
 				end
+				report ("Generating help from help project information...")
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate
 				report ("success%N")

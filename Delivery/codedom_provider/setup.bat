@@ -7,20 +7,10 @@ REM !!!!!!!!!!!!!!!!!!!!!!!!!!
 REM REPLACE PATH TO C COMPILER IN LINE BETWEEN ****** BELOW
 REM !!!!!!!!!!!!!!!!!!!!!!!!!!
 
-ECHO Setting up C libraries
-CD checkout\C_library\libpng
-REM in "checkout\C_library\libpng"
-CALL make_msc.bat
-COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\libpng.lib ..\..\library\vision2\spec\msc\lib
-CD ..\zlib
-REM in "checkout\C_library\zlib"
-CALL make_msc.bat
-COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\zlib.lib ..\..\library\vision2\spec\msc\lib
-
 ECHO Setting up libraries
 
 ECHO Compiling WEL C library
-CD ..\..\library\wel\clib
+CD checkout\library\wel\clib
 REM in "checkout\library\wel\clib"
 CALL make_msc.bat
 
@@ -34,8 +24,18 @@ CD ..\..\..\Eiffel\library\cli_writer\Clib
 REM in "checkout\Eiffel\library\cli_writer\clib"
 CALL nmake
 
+ECHO Setting up C libraries
+CD ..\..\..\..\C_library\libpng
+REM in "checkout\C_library\libpng"
+CALL make_msc.bat
+COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\libpng.lib ..\..\library\vision2\spec\msc\lib
+CD ..\zlib
+REM in "checkout\C_library\zlib"
+CALL make_msc.bat
+COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\zlib.lib ..\..\library\vision2\spec\msc\lib
+
 ECHO Setting up runtime
-CD ..\..\..\..\C
+CD ..\..\C
 REM in "checkout\C"
 REM **************************************************
 sed -e "s/d:\\\apps\\\MSVC\\\VC98/C:\\\Progra~1\\\Micros~2\\\VC98/g" config.msh > new_config.msh

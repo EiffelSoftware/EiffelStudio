@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_status_bar_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
+	add_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
 		do
 			gtk_box_pack_start ( widget, stat_bar.widget, False, False, 0)
 			stat_bar.set_width (-1)
@@ -74,7 +74,7 @@ feature -- Element change
 			ev_children.extend (stat_bar)
 		end
 
-	remove_status_bar_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
+	remove_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
 		do
 			gtk_container_remove ( widget, stat_bar.widget)
 			ev_children.search (stat_bar)

@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -50,8 +50,7 @@ SUBDIRS = \$(SUB)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
 ########################################################################
 # Start of Jmakefile
 
@@ -162,7 +161,7 @@ Makefiles::
 	echo "Making "Makefiles" in $(DIR)$$i..."; \
 	(cd $$i || exit 1; \
 	if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \
-	$(MAKE) $(MFLAGS) Makefiles); \
+	$(MAKE) $(MFLAGS) Makefiles) \
 	done
 
 Makefiles.SH:: Makefile.SH
@@ -181,7 +180,7 @@ Makefiles.SH:: Makefile.SH
 	echo "Making Makefiles.SH in $(DIR)$$i..."; \
 	(cd $$i || exit 1; $(MAKE) $(MFLAGS) -f ../Makefile \
 	Makefile TOP=$$newtop CURRENT=$(DIR)$$i;\
-	$(MAKE) $(MFLAGS) Makefiles.SH); \
+	$(MAKE) $(MFLAGS) Makefiles.SH) \
 	done
 
 all::
@@ -190,4 +189,3 @@ all::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

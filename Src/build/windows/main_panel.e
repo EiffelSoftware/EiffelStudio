@@ -859,9 +859,10 @@ feature -- Hide/Show Command editor
 	hide_command_editor is
 			-- Hide Command editor.
 		do
--- 			base.set_height (base.height - command_editor.height)
+ 			base.set_height (form.height - command_editor_split_form.height)
+			form.set_height (base.height)
 			command_editor_split_form.unmanage
-			if not command_split_form.managed then
+			if not command_tool_split_form.managed then
 				bottom_split_form.unmanage
 			end
 		end
@@ -869,9 +870,11 @@ feature -- Hide/Show Command editor
 	show_command_editor is
 			-- Show command editor.
 		do
--- 			bottom_split_window.set_proportion (100 * command_split_form.height //
--- 					(command_split_form.height + resources.cmd_ed_height))
--- 			base.set_height (base.height + Resources.cmd_ed_height)
+				--| at the beginning, to have the precedent height of 'command_split_form'
+			bottom_split_window.set_proportion (100 * command_split_form.height //
+ 					(command_split_form.height + resources.cmd_ed_height))
+ 			base.set_height (base.height + resources.cmd_ed_height)
+			form.set_height (base.height)
 			if not command_split_form.managed then
 				bottom_split_form.manage
 			end

@@ -27,15 +27,15 @@ rt_private void desop(char *buf, int size, void (*crypter)())
 	
 	char work[8];		/* DES routines work with 8 bytes chunks */
 
-	bzero(work, 8);		/* Filled with zeros only the first time */
+	memset(work, 0, 8);		/* Filled with zeros only the first time */
 	while (size > 0) {
 		/* Note that residual byte(s) are left untouched even if they are
 		 * garbage (when size < 8). This is a FEATURE, not a bug--RAM.
 		 * At decrypt time, the remaining bytes will be ignored anyway.
 		 */
-		bcopy(buf, work, size < 8 ? size : 8);
+		memcpy(work, buf, size < 8 ? size : 8);
 		(crypter)(work);
-		bcopy(work, buf, size < 8 ? size : 8);
+		memcpy(buf, work, size < 8 ? size : 8);
 		size -= 8;
 		buf += 8;
 	}

@@ -97,6 +97,7 @@ feature -- TOC Management
 					create xml_toc_converter.make
 					xml_toc_converter.process_document (xml)
 					loaded_toc := xml_toc_converter.toc_file
+					loaded_toc.set_file_name (a_name)
 					loaded_tocs.extend (loaded_toc, a_name)
 				end
 			end
@@ -128,13 +129,14 @@ feature -- Commands
 		do				
 			report_status ("Sorting", "Sorting Table of Contents, please wait..")
 			loaded_toc := clone (loaded_toc)
+			loaded_toc.set_file_name (next_toc_name)
 			loaded_toc.set_make_index_root (index_root)
 			loaded_toc.set_filter_empty_elements (not empty_elements)
 			loaded_toc.set_filter_elements_no_index (not no_index)
 			loaded_toc.set_filter_skipped_sub_elements (not sub_elements)			
 			loaded_toc.set_filter_alphabetically (alpha)
 			loaded_toc.sort	
-			display_toc
+			load_toc (loaded_toc.filename)
 			Progress_generator.close
 		end		
 

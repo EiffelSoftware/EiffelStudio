@@ -8,6 +8,31 @@ class
 
 feature -- Externals
 
+	frozen pango_tab_array_new (a_initial_size: INTEGER; a_position_in_pixels: BOOLEAN): POINTER is
+		external
+			"C signature (gint, gboolean): PangoTabArray* use <gtk/gtk.h>"
+		end
+
+	frozen pango_tab_array_resize (a_tab_array: POINTER; a_size: INTEGER) is
+		external
+			"C signature (PangoTabArray*, gint) use <gtk/gtk.h>"
+		end
+
+	frozen pango_tab_array_set_tab (a_tab_array: POINTER; a_tab_index, a_tab_alignment, a_location: INTEGER) is
+		external
+			"C signature (PangoTabArray*, gint, PangoTabAlign, gint) use <gtk/gtk.h>"
+		end
+
+	frozen pango_tab_array_free (a_tab_array: POINTER) is
+		external
+			"C signature (PangoTabArray*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_view_set_tabs (a_text_view, a_tab_array: POINTER) is
+		external
+			"C signature (GtkTextView*, PangoTabArray*) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_event_window_state_struct_changed_mask (a_c_struct: POINTER): INTEGER is
 			-- (from C_GDK_EVENT_CONFIGURE_STRUCT)
 		external

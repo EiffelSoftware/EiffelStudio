@@ -64,7 +64,7 @@ inherit
 feature -- Access
 
 	feature_name: STRING is
-			-- Final name of the feature
+			-- Final name of feature.
 		require
 			feature_name_id_set: feature_name_id > 0
 		do
@@ -78,7 +78,7 @@ feature -- Access
 			-- Id of `feature_name' in `Names_heap' table.
 
 	feature_id: INTEGER
-			-- Feature id: first key in the feature call hash table
+			-- Feature id: first key in feature call hash table
 			-- of a class: tow features of different names have two
 			-- different feature ids.
 
@@ -89,13 +89,13 @@ feature -- Access
 			-- Index of body id
 
 	pattern_id: INTEGER
-			-- Id of the feature pattern
+			-- Id of feature pattern
 
 	rout_id_set: ROUT_ID_SET
-			-- Routine table to which the feature belongs to.
+			-- Routine table to which feature belongs to.
 
 	export_status: EXPORT_I
-			-- Export status of the feature
+			-- Export status of feature
 
 	origin_feature_id: INTEGER
 			-- Feature ID of Current in associated CLASS_INTERFACE
@@ -119,7 +119,7 @@ feature -- Access
 		end
 
 	frozen is_frozen: BOOLEAN is
-			-- Is the feature frozen?
+			-- Is feature frozen?
 		do
 			Result := feature_flags & is_frozen_mask = is_frozen_mask
 		end
@@ -131,19 +131,19 @@ feature -- Access
 		end
 
 	frozen is_infix: BOOLEAN is
-			-- Is the feature an infixed one ?
+			-- Is feature an infixed one ?
 		do
 			Result := feature_flags & is_infix_mask = is_infix_mask
 		end
 
 	frozen is_prefix: BOOLEAN is
-			-- Is the feature a prefixed one ?
+			-- Is feature a prefixed one ?
 		do
 			Result := feature_flags & is_prefix_mask = is_prefix_mask
 		end
 
 	frozen is_selected: BOOLEAN is
-			-- Is the feature selected?
+			-- Is feature selected?
 		do
 			-- FIXME: Manu 11/21/2001.
 			-- Not used at the moment.
@@ -172,9 +172,9 @@ feature -- Access
 feature -- Debugger access
 
 	number_of_breakpoint_slots: INTEGER is
-			-- Number of breakpoint slots in the feature (:::)
-			-- It includes the pre/postcondition (inner & herited)
-			-- and the rescue clause.
+			-- Number of breakpoint slots in feature (:::)
+			-- It includes pre/postcondition (inner & herited)
+			-- and rescue clause.
 			--
 			--|---------------------------------------------------------
 			--| Note from Arnaud PICHERY [ aranud@mail.dotcom.fr ]     |
@@ -242,7 +242,7 @@ feature -- Debugger access
 feature -- Status
 
 	to_melt_in (a_class: CLASS_C): BOOLEAN is
-			-- Has the current feature to be melted in class `a_class' ?
+			-- Has current feature to be melted in class `a_class' ?
 		require
 			good_argument: a_class /= Void
 		do
@@ -250,7 +250,7 @@ feature -- Status
 		end
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
-			-- Has the current feature to be generated in class `a_class' ?
+			-- Has current feature to be generated in class `a_class' ?
 		require
 			good_argument: a_class /= Void
 		do
@@ -422,7 +422,7 @@ feature -- Setting
 			-- Assign `b' to `is_selected'.
 		do
 			-- FIXME: Manu 11/21/2001
-			-- Not used at the moment
+			-- Not used currently used
 			-- is_selected := b
 		end
 
@@ -457,7 +457,7 @@ feature -- Setting
 		end
 
 	generation_class_id: INTEGER is
-			-- Id of the class where the feature has to be generated in
+			-- Id of class where feature has to be generated in
 		do
 			Result := written_in
 		end
@@ -469,7 +469,7 @@ feature -- Setting
 		end
 
 	duplicate_arguments is
-			-- Do a clone of the arguments (for replication)
+			-- Do a clone of arguments (for replication)
 		do
 			-- Do nothing
 		end
@@ -538,7 +538,7 @@ end
 		end
 
 	select_table_equiv (other: FEATURE_I): BOOLEAN is
-			-- Incrementality of the select table
+			-- Incrementality of select table
 		require
 			good_argumnet: other /= Void
 
@@ -551,9 +551,9 @@ end
 		end
 
 	is_valid: BOOLEAN is
-			-- Is the feature still valid?
-			-- Incrementality: The types of the arguments and/or result
-			-- are still defined in the system
+			-- Is feature still valid?
+			-- Incrementality: The types of arguments and/or result
+			-- are still defined in system
 		local
 			type_a: TYPE_A
 		do
@@ -565,7 +565,7 @@ end
 		end
 
 	same_class_type (other: FEATURE_I): BOOLEAN is
-			-- Has `other' the same resulting type than Current ?
+			-- Has `other' same resulting type than Current ?
 		require
 			good_argument: other /= Void
 			same_names: other.feature_name_id = feature_name_id
@@ -574,7 +574,7 @@ end
 		end
 
 	same_interface (other: FEATURE_I): BOOLEAN is
-			-- Has `other' the same interface than Current ?
+			-- Has `other' same interface than Current ?
 			-- [Semnatic for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void
@@ -625,14 +625,14 @@ feature -- creation of default rescue clause
 feature -- Type id
 
 	written_type_id (class_type: CL_TYPE_I): INTEGER is
-			-- Written type id of the feature in the context of the
+			-- Written type id of feature in context of
 			-- type `class_type'.
 		do
 			Result := written_type (class_type).type_id
 		end
 
 	written_type (class_type: CL_TYPE_I): CL_TYPE_I is
-			-- Written type of the feature in the context of the
+			-- Written type of feature in context of 
 			-- type `class_type'.
 		require
 			good_argument: class_type /= Void
@@ -644,7 +644,7 @@ feature -- Type id
 feature -- Conveniences
 
 	assert_id_set: ASSERT_ID_SET is
-			-- Assertions to which the procedure belongs to
+			-- Assertions to which procedure belongs to
 			-- (To be redefined in PROCEDURE_I).
 		do
 			-- Do nothing
@@ -664,7 +664,7 @@ feature -- Conveniences
 		end
 
 	has_arguments: BOOLEAN is
-			-- Has the current feature some formal arguments ?
+			-- Has current feature some formal arguments ?
 		do
 			Result := arguments /= Void
 		end
@@ -676,55 +676,55 @@ feature -- Conveniences
 		end
 
 	is_procedure: BOOLEAN is
-			-- Is the current feature a procedure ?
+			-- Is current feature a procedure ?
 		do
 			-- Do nothing
 		end
 
 	is_function: BOOLEAN is
-			-- Is the cuurent feature a function ?
+			-- Is current feature a function ?
 		do
 			-- Do nothing
 		end
 
 	is_attribute: BOOLEAN is
-			-- Is the current feature an attribute ?
+			-- Is current feature an attribute ?
 		do
 			-- Do nothing
 		end
 
 	is_constant: BOOLEAN is
-			-- Is the current feature a constant ?
+			-- Is current feature a constant ?
 		do
 			-- Do nothing
 		end
 
 	is_once: BOOLEAN is
-			-- Is the current feature a once one ?
+			-- Is current feature a once one ?
 		do
 			-- Do nothing
 		end
 
 	is_do: BOOLEAN is
-			-- Is the current feature a do one ?
+			-- Is current feature a do one ?
 		do
 			-- Do nothing
 		end
 
 	is_deferred: BOOLEAN is
-			-- Is the current feature a deferred one ?
+			-- Is current feature a deferred one ?
 		do
 			-- Do nothing
 		end
 
 	is_unique: BOOLEAN is
-			-- Is the current feature a unique constant ?
+			-- Is current feature a unique constant ?
 		do
 			-- Do nothing
 		end
 
 	is_external: BOOLEAN is
-			-- Is the current feature an external one ?
+			-- Is current feature an external one ?
 		do
 			-- Do nothing
 		end
@@ -752,7 +752,7 @@ feature -- Conveniences
 				if ext /= Void then
 					Result := not ext.extension.is_il
 					if not Result then
-							-- Not a C external, let's check the IL external
+							-- Not a C external, let's check IL external
 						extension ?= ext.extension
 					end
 				else
@@ -772,31 +772,31 @@ feature -- Conveniences
 		end
 		
 	frozen has_precondition: BOOLEAN is
-			-- Is the feature declaring some preconditions ?
+			-- Is feature declaring some preconditions ?
 		do
 			Result := feature_flags & has_precondition_mask = has_precondition_mask
 		end
 
 	frozen has_postcondition: BOOLEAN is
-			-- Is the feature declaring some postconditions ?
+			-- Is feature declaring some postconditions ?
 		do
 			Result := feature_flags & has_postcondition_mask = has_postcondition_mask
 		end
 
 	has_assertion: BOOLEAN is
-			-- Is the feature declaring some pre or post conditions ?
+			-- Is feature declaring some pre or post conditions ?
 		do
 			Result := has_postcondition or else has_precondition
 		end
 
 	frozen is_require_else: BOOLEAN is
-			-- Is the precondition block of the feature a redefined one ?
+			-- Is precondition block of feature a redefined one ?
 		do
 			Result := feature_flags & is_require_else_mask = is_require_else_mask
 		end
 
 	frozen is_ensure_then: BOOLEAN is
-			-- Is the postcondition block of the feature a redefined one ?
+			-- Is postcondition block of feature a redefined one ?
 		do
 			Result := feature_flags & is_ensure_then_mask = is_ensure_then_mask
 		end
@@ -808,25 +808,25 @@ feature -- Conveniences
 		end
 
 	redefinable: BOOLEAN is
-			-- Is the feature redefinable ?
+			-- Is feature redefinable ?
 		do
 			Result := not is_frozen
 		end
 
 	undefinable: BOOLEAN is
-			-- Is the feature undefinable ?
+			-- Is feature undefinable ?
 		do
 			Result := redefinable
 		end
 
 	is_none_attribute: BOOLEAN is
-			-- is the feature an attribute of type NONE ?
+			-- is feature an attribute of type NONE ?
 		do
 			-- Do nothing
 		end
 
 	type: TYPE is
-			-- Type of the feature
+			-- Type of feature
 		do
 			Result := Void_type
 		end
@@ -850,7 +850,7 @@ feature -- Conveniences
 		end
 
 	argument_count: INTEGER is
-			-- Number of arguments of the feature
+			-- Number of arguments of feature
 		do
 			if arguments /= Void then
 				Result := arguments.count
@@ -858,7 +858,7 @@ feature -- Conveniences
 		end
 
 	written_class: CLASS_C is
-			-- Class where the feature is written in
+			-- Class where feature is written in
 		require
 			good_written_in: written_in /= 0
 		do
@@ -868,11 +868,11 @@ feature -- Conveniences
 feature -- Export checking
 
 --	has_special_export: BOOLEAN is
---			-- The export status is special, i.e. the feature
---			-- is not exported to all the other classes.
+--			-- The export status is special, i.e. feature
+--			-- is not exported to all other classes.
 --			-- A call to this feature must be recorded specially
---			-- in the dependances for incrementality purpose:
---			-- If the hierarchy changes, the call may be invalid.
+--			-- in dependances for incrementality purpose:
+--			-- If hierarchy changes, call may be invalid.
 --		require
 --			has_export_status: export_status /= Void
 --		do
@@ -880,7 +880,7 @@ feature -- Export checking
 --		end
 
 	is_exported_for (client: CLASS_C): BOOLEAN is
-			-- Is the current feature exported to class `client' ?
+			-- Is current feature exported to class `client' ?
 		require
 			good_argument: client /= Void
 			has_export_status: export_status /= Void
@@ -889,7 +889,7 @@ feature -- Export checking
 		end
 
 	record_suppliers (feat_depend: FEATURE_DEPENDANCE) is
-			-- Record the suppliers ids in `feat_depend'
+			-- Record suppliers ids in `feat_depend'
 		require
 			good_arg: feat_depend /= Void
 		local
@@ -922,7 +922,7 @@ feature -- Export checking
 		end
 
 	suppliers: TWO_WAY_SORTED_SET [INTEGER] is
-			-- Class ids of all the suppliers of the feature
+			-- Class ids of all suppliers of feature
 		require
 			Tmp_depend_server.has (written_in) or else
 			Depend_server.has (written_in)
@@ -939,20 +939,20 @@ feature -- Export checking
 
 feature -- Check
 
--- Note: `require else' can be used even if the feature has no
--- precursor. There is no problem to raise an error in the normal case,
--- the only case  where we cannot do anything is when aliases are used
--- and one name references a feature with a predecessor and not the
+-- Note: `require else' can be used even if feature has no
+-- precursor. There is no problem to raise an error in normal case,
+-- only case  where we cannot do anything is when aliases are used
+-- and one name references a feature with a predecessor and not 
 -- other one
 
 --	check_assertions is
 --			-- Raise an error if "require else" or "ensure then" is used
---			-- but the feature has no ancestor
+--			-- but feature has no ancestor
 --		do
 --		end
 
 	body: FEATURE_AS is
-			-- Body of the feature
+			-- Body of feature
 		local
 			class_ast: CLASS_AS
 			bid: INTEGER
@@ -998,13 +998,13 @@ end
 		end
 
 	check_local_names is
-			-- Check the conflicts between local names and feature names
+			-- Check conflicts between local names and feature names
 			-- for an unchanged feature
 		do
 		end
 
 	in_pass3: BOOLEAN is
-			-- Does the current feature support the type check ?
+			-- Does current feature support type check ?
 		do
 			Result := True
 		end
@@ -1048,7 +1048,7 @@ feature -- Byte code computation
 		end
 
 	melt (exec: EXECUTION_UNIT) is
-			-- Generate byte code for the current feature
+			-- Generate byte code for current feature
 			-- [To be redefined in CONSTANT_I, ATTRIBUTE_I and in EXTERNAL_I].
 		require
 			good_argument: exec /= Void
@@ -1079,7 +1079,7 @@ feature -- Byte code computation
 feature -- Polymorphism
 
  	has_entry: BOOLEAN is
- 			-- Has the feature an associated polymorphic unit ?
+ 			-- Has feature an associated polymorphic unit ?
  		do
  			Result := True
  		end
@@ -1120,7 +1120,7 @@ feature -- Polymorphism
  		end
  
  	poly_equiv (other: FEATURE_I): BOOLEAN is
- 			-- Is `other' equivalent to Current from the polymorhic table 
+ 			-- Is `other' equivalent to Current from polymorphic table 
 			-- implementation point of view ?
  		require
  			good_argument: other /= Void
@@ -1145,7 +1145,7 @@ feature -- Polymorphism
 feature -- Signature instantiation
 
 	instantiate (parent_type: CL_TYPE_A) is
-			-- Instantiated the signature in the context of `parent_type'.
+			-- Instantiated signature in context of `parent_type'.
 		require
 			good_argument: parent_type /= Void
 			is_solved: type.is_solved
@@ -1172,7 +1172,7 @@ feature -- Signature instantiation
 feature -- Signature checking
 	
 	check_argument_names (feat_table: FEATURE_TABLE) is
-			-- Check the argument names
+			-- Check argument names
 		require
 			argument_names_exists: arguments.argument_names /= Void
 			written_in_class: written_in = feat_table.feat_tbl_id
@@ -1219,9 +1219,9 @@ feature -- Signature checking
 		end
 
 	check_types (feat_table: FEATURE_TABLE) is
-			-- Check the type and the arguments types. The objective is
-			-- to deal with anchored types and genericity. All the anchored
-			-- types are interpreted here and the generic parameter
+			-- Check type and arguments types. The objective is
+			-- to deal with anchored types and genericity. All anchored
+			-- types are interpreted here and generic parameter
 			-- instantiated if possible.
 		require
 			type /= Void
@@ -1330,7 +1330,7 @@ end
 		end
 
 	check_expanded (class_c: CLASS_C) is
-			-- Check the expanded validity rules
+			-- Check expanded validity rules
 		require
 			type /= Void
 		local
@@ -1374,7 +1374,7 @@ end
 		end
 
 	check_signature (old_feature: FEATURE_I) is
-			-- Check the signature conformance beetween Current
+			-- Check signature conformance beetween Current
 			-- and inherited feature in `inherit_info' from which Current
 			-- is a redefinition.
 		require
@@ -1555,7 +1555,7 @@ end
 		end
 
 	check_same_signature (old_feature: FEATURE_I) is
-			-- Check the signature equality beetween Current
+			-- Check signature equality beetween Current
 			-- and inherited feature in `inherit_info' from which Current
 			-- is a join.
 		require
@@ -1664,7 +1664,7 @@ end
 		end
 
 	solve_types (feat_tbl: FEATURE_TABLE) is
-			-- Evaluates signature types in the context of `feat_tbl'.
+			-- Evaluates signature types in context of `feat_tbl'.
 			-- | Take care of possible anchored types
 		do
 			set_type
@@ -1675,7 +1675,7 @@ end
 		end
 
 	same_signature (other: FEATURE_I): BOOLEAN is
-			-- Has `other' the same signature than Current ?
+			-- Has `other' same signature than Current ?
 		require
 			good_argument: other /= Void
 			same_feature_names: feature_name_id = other.feature_name_id
@@ -1782,7 +1782,7 @@ feature -- Replication
 		end
 
 	access_in: INTEGER is
-			-- Id of the class where the current feature can be accessed
+			-- Id of class where current feature can be accessed
 			-- through its routine id
 			-- Useful for replication
 		do
@@ -1812,7 +1812,7 @@ feature -- Replication
 		end
 
 	is_unselected: BOOLEAN is
-			-- Is the current feature an unselected one ?
+			-- Is current feature an unselected one ?
 		do
 			-- Do nothing
 		end
@@ -1842,8 +1842,8 @@ feature -- Replication
 feature -- Genericity
 
 	update_instantiator2 (a_class: CLASS_C) is
-			-- Look for generic types in the result and arguments in order
-			-- to update the instantiator.
+			-- Look for generic types in result and arguments in order
+			-- to update instantiator.
 		require
 			good_argument: a_class /= Void
 			good_context: a_class.changed
@@ -1895,10 +1895,10 @@ feature -- Pattern
 feature -- Dead code removal
 
 	used: BOOLEAN is
-			-- Is the feature used ?
+			-- Is feature used ?
 		do
 					-- In final mode dead code removal process is on.
-					-- In workbench mode all the features are considered
+					-- In workbench mode all features are considered
 					-- used.
 			Result := 	byte_context.workbench_mode 
 						or else
@@ -2001,7 +2001,7 @@ feature -- C code generation
 		end
 
 	generate_header (buffer: GENERATION_BUFFER) is
-			-- Generate a header before the body of the feature
+			-- Generate a header before body of feature
 		require
 			valid_buffer: buffer /= Void
 		do
@@ -2063,7 +2063,7 @@ feature -- Debugging
 	real_body_id: INTEGER is
 			-- Real body id at compilation time. This id might be
 			-- obsolete after supermelting this feature.
-			--| In the latter case, the new real body id is kept
+			--| In latter case, new real body id is kept
 			--| in DEBUGGABLE objects.
 		require
 			valid_body_id: valid_body_id
@@ -2087,8 +2087,8 @@ feature -- Debugging
 		end
 
 	valid_body_id: BOOLEAN is
-			-- the use of this routine as precondition for real_body_id
-			-- allows the enhancement of the external functions
+			-- use of this routine as precondition for real_body_id
+			-- allows enhancement of external functions
 			-- Indeed, if an external has to be encapsulated (macro, signature)
 			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
 		do

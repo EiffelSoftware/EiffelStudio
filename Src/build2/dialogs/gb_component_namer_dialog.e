@@ -22,6 +22,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_NAMING_UTILITIES
+		undefine
+			default_create, copy
+		end
 
 create
 	default_create
@@ -55,6 +60,8 @@ feature -- Initialization
 			accept_button.select_actions.extend (agent hide_and_set)
 			cancel_button.select_actions.extend (agent hide)
 			show_actions.extend (agent name_field.set_focus)
+				-- We must never return a void, name.
+			name := ""
 		end
 		
 	set_name (a_name: STRING) is
@@ -72,9 +79,18 @@ feature {NONE} -- Implementation
 	
 	hide_and_set is
 			-- Hide `Current' and set `name'.
+		local
+			warning: EV_WARNING_DIALOG
 		do
-			hide
-			name := name_field.text
+				-- Components use the same naming convention
+				-- as class names.
+			if valid_class_name (name_field.text) then
+				hide
+				name := name_field.text
+			else
+				create warning.make_with_text ("`" + name_field.text + "'" + Component_name_warning)
+				warning.show_modal_to_window (Current)
+			end
 		end
 		
 	name_field: EV_TEXT_FIELD

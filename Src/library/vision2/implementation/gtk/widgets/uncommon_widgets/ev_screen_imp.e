@@ -199,6 +199,20 @@ feature -- Basic operation
 
 feature -- Measurement
 
+	horizontal_resolution: INTEGER is
+			-- Number of pixels per inch along screen width.
+		do
+			--| FIXME IEK Implement this properly
+			Result := 75
+		end
+
+	vertical_resolution: INTEGER is
+			-- Number of pixels per inch along screen height.
+		do
+			--| FIXME IEK Implement this properly
+			Result := 75
+		end
+
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do

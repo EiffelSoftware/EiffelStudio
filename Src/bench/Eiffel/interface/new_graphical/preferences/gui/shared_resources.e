@@ -192,6 +192,14 @@ feature -- Setting
 			end
 		end
 
+feature -- Basic operations
+
+	save_resources is
+			-- Commit all changes by saving the registry/.es5rc file.
+		do
+			resources.save
+		end
+
 feature {NONE} -- File names
 
 	system_general: FILE_NAME is

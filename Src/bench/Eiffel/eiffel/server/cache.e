@@ -92,23 +92,23 @@ feature -- Cache manipulations
 					-- a circular list: `out_index' is the index of the 
 					-- out_index id of the queue, `in_index' is the next index
 					-- for insertion
-				size := capacity+1;
-				i := out_index;
+				size := array_capacity
+				i := out_index
 			until
 				i = in_index or else stop
 			loop
-				j := i;
-				stop := equal (i_th (i).id, an_id);
+				j := i
+				stop := equal (i_th (i).id, an_id)
 				i := (i + 1) \\ size
 			end;
 			if stop then
-				Result := j;
+				Result := j
 			else
 					-- `capacity' is not a valid index for elements in
 					-- an instance of FIXED_QUEUE
-				Result := in_index;
-			end;
-		end;
+				Result := in_index
+			end
+		end
 
 	item_id (an_id: H): T is
 			-- Item which id is `an_id'
@@ -122,18 +122,18 @@ feature -- Cache manipulations
 					-- Side effect: reorganization of queue; the founded
 					-- id in put in front of the queue.
 				from
-					size := capacity + 1;
-					i := pos;
-					last_index := (in_index - 1 + size) \\ size;
+					size := array_capacity
+					i := pos
+					last_index := (in_index - 1 + size) \\ size
 				until
 					i = last_index
 				loop
-					j := (i + 1) \\ size;
-					put_i_th (i_th (j),i);
-					i := j;
+					j := (i + 1) \\ size
+					put_i_th (i_th (j),i)
+					i := j
 				end;
 					-- The asked id is put at the end of the queue.
-				put_i_th (Result, i);
+				put_i_th (Result, i)
 			end;
 		end;
 

@@ -155,7 +155,9 @@ feature -- Basic operations
 			create xml_store
 			first_element ?= component_document.first
 			component_element := new_child_element (first_element, component_name, "Component")
+			first_element.force_last (component_element)
 			new_element := create_widget_instance (component_element, an_object.type)
+			component_element.force_last (new_element)
 			xml_store.add_new_object_to_output (an_object, new_element, create {GB_GENERATION_SETTINGS})
 			Constants.flatten_constants (component_element)
 		end

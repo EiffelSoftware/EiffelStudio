@@ -294,8 +294,7 @@ feature -- Output on per class
 		local	
 			str: STRING
 		do	
-			str := clone (a_name)
-			str.to_lower
+			str := a_name.as_lower
 			io.error.putstring (case_cluster_message)
 			io.error.putstring (str)
 			io.error.new_line

@@ -386,13 +386,16 @@ feature -- Generic conformance
 			l_buffer: like buffer
 		do
 			l_buffer := buffer
-			if gtype.is_explicit then
-				-- Optimize: Use static array
-				l_buffer.putstring ("static int16 typarr [] = {")
-			else
-				l_buffer.putstring ("int16 typarr [] = {")
-				use_init := True
+			use_init := not gtype.is_explicit
+			
+				-- Optimize: Use static array only when `typarr' is
+				-- not modified by generated code in multithreaded mode only.
+				-- It is safe in monothreaded code as we are guaranteed that
+				-- only one thread of execution will use the modified `typarr'.
+			if not System.has_multithreaded or else not use_init then
+				l_buffer.putstring ("static ")
 			end
+			l_buffer.putstring ("int16 typarr [] = {")
 
 			l_buffer.putint (context.current_type.generated_id (context.final_mode))
 			l_buffer.putstring (", ")
@@ -408,8 +411,10 @@ feature -- Generic conformance
 			l_buffer.new_line
 			l_buffer.putstring ("int16 typres;")
 			l_buffer.new_line
-			l_buffer.putstring ("static int16 typcache = -1;")
-			l_buffer.new_line
+			if not use_init then
+				l_buffer.putstring ("static int16 typcache = -1;")
+				l_buffer.new_line
+			end
 			l_buffer.new_line
 
 			if use_init then
@@ -418,7 +423,11 @@ feature -- Generic conformance
 				gtype.generate_cid_init (l_buffer, context.final_mode, True, idx_cnt)
 			end
 
-			l_buffer.putstring ("typres = RTCID2(&typcache,")
+			if not use_init then
+				l_buffer.putstring ("typres = RTCID2(&typcache, ")
+			else
+				l_buffer.putstring ("typres = RTCID2(NULL, ")
+			end
 			context.generate_current_dftype
 			l_buffer.putstring (", ")
 			l_buffer.putint (gtype.generated_id (context.final_mode))

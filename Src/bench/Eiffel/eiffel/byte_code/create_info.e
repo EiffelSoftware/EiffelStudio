@@ -58,6 +58,12 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
+	is_explicit: BOOLEAN is
+			-- Is type fixed at compile time?
+		do
+			Result := False
+		end
+		
 	generate_start (node: BYTE_NODE) is
 			-- Generate new block if necessary for
 			-- `node'.

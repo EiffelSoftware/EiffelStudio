@@ -8,7 +8,7 @@ class CREATE_TYPE
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid, generate_reverse
+			generate_cid, generate_reverse, is_explicit
 		end
 
 create
@@ -143,6 +143,12 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
+	is_explicit: BOOLEAN is
+			-- Is Current type fixed at compile time?
+		do
+			Result := type.is_explicit
+		end
+		
 	generate_gen_type_conversion (node : BYTE_NODE) is
 
 		local

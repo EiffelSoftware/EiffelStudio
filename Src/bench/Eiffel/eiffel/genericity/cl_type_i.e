@@ -280,9 +280,13 @@ feature -- Status
 		end; 
 
 	is_explicit: BOOLEAN is
-
+			-- Is Current type fixed at compile time?
 		do
-			Result := (cr_info = Void) or else is_expanded
+			if cr_info /= Void then
+				Result := cr_info.is_explicit
+			else
+				Result := True
+			end
 		end
 
 	has_associated_class_type: BOOLEAN is

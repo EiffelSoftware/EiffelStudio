@@ -5,12 +5,6 @@ indexing
 
 class CHARACTER_ARRAY 
 
-inherit
-	TO_SPECIAL [CHARACTER]
-		export
-			{CHARACTER_ARRAY} area
-		end
-
 create
 	make
 
@@ -21,7 +15,7 @@ feature {NONE} -- Initialization
 		require
 			valid_n: n >= 0
 		do
-			make_area (n)
+			create area.make (n)
 			count := n
 		ensure
 			size_set: count = n
@@ -31,6 +25,11 @@ feature -- Access
 
 	count: INTEGER
 			-- Allocated count of the C character array `area'.
+
+feature {CHARACTER_ARRAY} -- Access
+
+	area: SPECIAL [CHARACTER]
+			-- Storage for byte code.
 
 feature -- Store
 
@@ -53,7 +52,7 @@ feature -- Resizing
 			old_area: like area
 		do
 			old_area := area
-			make_area (n)
+			create area.make (n)
 			internal_copy (old_area, area, count, 0)
 			count := n
 		ensure
@@ -74,7 +73,7 @@ feature -- Debug
 			loop
 				io.error.put_integer (i)
 				io.error.put_string (": ")
-				io.error.put_character (item (i))
+				io.error.put_character (area.item (i))
 				io.error.put_new_line
 				i := i + 1
 			end

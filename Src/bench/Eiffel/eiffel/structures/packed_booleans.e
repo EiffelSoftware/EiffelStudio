@@ -7,15 +7,6 @@ indexing
 class
 	PACKED_BOOLEANS
 
-inherit
-	TO_SPECIAL [INTEGER]
-		rename
-			item as area_item,
-			put as area_put,
-			infix "@" as area_infix_at,
-			valid_index as area_valid_index
-		end
-
 create
 	make
 
@@ -25,7 +16,7 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			make_area (1 + (n // Integer_size))
+			create area.make (1 + (n // Integer_size))
 		ensure
 			allocated: area /= Void
 			enough_entries: count >= n
@@ -113,7 +104,7 @@ feature -- Resizing
 			old_count := area.count
 			new_count := 1 + (n // Integer_size)
 			if new_count > old_count then
-				area := arycpy ($area, new_count, 0, old_count)
+				area := area.resized_area (new_count)
 			end
 		ensure
 			consistent_count: count >= n
@@ -134,15 +125,10 @@ feature -- Constants
 	Integer_size: INTEGER is 32
 			-- Size of INTEGER in bits.
 
-feature {NONE} -- Externals
+feature {NONE} -- Implementation
 
-	arycpy (old_area: POINTER; newsize, s, n: INTEGER): like area is
-			-- New area of size `newsize' containing `n' items
-			-- from `oldarea'.
-			-- Old items are at position `s' in new area.
-		external
-			"C | %"eif_misc.h%""
-		end
+	area: SPECIAL [INTEGER]
+			-- Storage for booleans.
 
 invariant
 	area_not_void: area /= Void

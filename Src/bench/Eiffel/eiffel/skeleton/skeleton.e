@@ -4,12 +4,6 @@
 class SKELETON 
 
 inherit
-	TO_SPECIAL [ATTR_DESC]
-		rename
-			item as area_item,
-			put as area_put
-		end
-		
 	SHARED_LEVEL
 		export
 			{ANY} all
@@ -33,7 +27,7 @@ feature -- Initialization
 	make (n: INTEGER) is
 			-- Create a specific skeleton corresponding to a certain CLASS_TYPE
 		do
-			make_area (n)
+			create area.make (n)
 			count := n
 			position := 0
 		end
@@ -56,6 +50,9 @@ feature -- Access
 		do
 			Result := area.item (position)	
 		end
+
+	area: SPECIAL [ATTR_DESC]
+			-- Storage
 
 feature -- Comparison
 

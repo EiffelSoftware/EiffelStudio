@@ -58,11 +58,14 @@ feature
 					if Workbench.automatic_backup then
 						!! f_name.make_from_string (Workbench.backup_subdirectory);
 						f_name.set_file_name ("Ace");
-						!! copy_file.make_open_write (f_name);
-						file.readstream (file.count);
-						file.start;
-						copy_file.putstring (file.laststring);
-						copy_file.close;
+						!! copy_file.make (f_name);
+						if copy_file.is_creatable then
+							copy_file.open_write
+							file.readstream (file.count);
+							file.start;
+							copy_file.putstring (file.laststring);
+							copy_file.close;
+						end
 					end
 
 					parse_lace (file)

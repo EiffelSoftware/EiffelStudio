@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision spin button, mswindows implementation."
@@ -24,10 +23,7 @@ inherit
 			destroy
 		redefine
 			on_key_down,
-			on_scroll,
 			interface,
-			set_range,
-			set_value,
 			initialize
 		end
 
@@ -37,12 +33,12 @@ inherit
 			wel_set_parent,
 			wel_move_and_resize,
 			wel_resize,
-			--move,
 			destroy,
 			on_key_down,
 			on_char,
 			interface,
-			initialize
+			initialize,
+			on_en_change
 		end
 
 	WEL_UDS_CONSTANTS
@@ -56,8 +52,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a spin-button with 1 as minimum,
-			-- 100 as maximum and `par' as parent.
+			-- Create `Current' with `an_interface'.
 		do
 			base_make (an_interface)
 			create container.make (default_parent, "EV_SPIN_BUTTON")
@@ -67,69 +62,77 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			create up_down.make (container, 0, 0, 20, 0, 0)
-			up_down.set_buddy_window (Current)
+			create internal_arrows_control.make (container, 0, 0, 20, 0, 0)
+			internal_arrows_control.set_buddy_window (Current)
 			{EV_GAUGE_IMP} Precursor
 			{EV_TEXT_FIELD_IMP} Precursor
+			last_value := 0
 		end
 
-feature -- Access
+feature {EV_ANY_I} -- Access
 
 	leap: INTEGER
+		-- Size of leap. Default: 10.
 
 	container: EV_INTERNAL_SILLY_CONTAINER_IMP
-			-- A WEL control window to get both children. If we don't use
-			-- an intermediate window, when we change the parent, nothing
-			-- work anymore.
+			-- A WEL control window used as a parent for
+			-- `Current' and `internal_arrows_control'. 
 
-	up_down: EV_INTERNAL_UP_DOWN_CONTROL
-			-- The up_down buttons.
+	internal_arrows_control: EV_INTERNAL_UP_DOWN_CONTROL
+			-- The Windows up down control used internally.
 
-	value: INTEGER is
-			-- Current value
+	value: INTEGER is 
+			-- Current value.
 		do
-			Result := up_down.position
+			Result := internal_arrows_control.position
 		end
 
-	step: INTEGER is
+	step: INTEGER
 			-- Step of the scrolling
-			-- ie : the user clicks on an arrow
-		do
-			Result := 1
-		end
 
 	minimum: INTEGER is
-			-- Minimum value
+			-- Minimum value.
 		do
-			Result := up_down.minimum
+			Result := internal_arrows_control.minimum
 		end
 
 	maximum: INTEGER is
-			-- Maximum value
+			-- Maximum value.
 		do
-			Result := up_down.maximum
+			Result := internal_arrows_control.maximum
 		end
 
-feature -- Status setting
+feature {EV_SPIN_BUTTON_I}-- Status setting
 
 	wel_set_leap (i :INTEGER) is
+			-- Assign `i' to leap.
 		do
 			leap := i
 		end
-	wel_set_step (i :INTEGER) is do end
+		
+	wel_set_step (i :INTEGER) is
+			-- Assign `i' to step.
+		do
+			step := i
+		end
 
 	wel_set_value (i :INTEGER) is
+			-- Assign `i`' to `value'. 
 		do
-			set_value (i)
+			internal_arrows_control.set_position (i)
+			last_value := i
+				-- We must now store the value
+			manually_updating := False
 		end
+
 	wel_set_range (i, j: INTEGER) is
+			-- 
 		local
 			bounds: INTEGER_INTERVAL
 		do
 			create bounds.make (i, j)
-			set_range (bounds)
+			internal_arrows_control.set_range (bounds.lower, bounds.upper)
 		end
-
 
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
@@ -141,21 +144,7 @@ feature -- Status setting
 			container.destroy
 		end
 
-feature -- Element change
-
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
-		do
-			up_down.set_position (val)
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Make `min' the new minimum and `max' the new maximum.
-		do
-			up_down.set_range (a_range.lower, a_range.upper)
-		end
-
-feature -- Basic operation
+feature {NONE} -- WEL Implementation
 
 	translate_text is
 			-- Take a string and translate it to the corresponding
@@ -169,39 +158,67 @@ feature -- Basic operation
 			txt := text
 			if txt.is_integer then
 				val := txt.to_integer
-				if not (val >= up_down.minimum and val <= up_down.maximum) then
-					set_text (up_down.minimum.out)
+				if val < internal_arrows_control.minimum then
+					set_text (internal_arrows_control.minimum.out)
+				elseif val > internal_arrows_control.maximum then
+					set_text (internal_arrows_control.maximum.out)
 				else
-					up_down.set_position (val)
+					internal_arrows_control.set_position (val)
 				end
 			else
-				set_text (up_down.minimum.out)
+				set_text (internal_arrows_control.minimum.out)
 			end
 		end
 
-feature {NONE} -- WEL Implementation
-
-	on_scroll (scroll_code, pos: INTEGER) is
-			-- Do nothing here.
+	on_en_change is	
+			-- Contents of `Current' changed.
+			--| This is redefined as the step used by windows is always one.
+			--| Using `manually_updating', we monitor whether the value
+			--| Changed due to cklicking `internal_arrows_control'. If step
+			--| is greater than One and not manually updating then adjust
+			--| `value' by remaining step.
 		do
+		if step > 1 then
+		if not manually_updating then
+			manually_updating := True
+			if last_value < value then
+				if value + step - 1 <= maximum then
+					set_value (value + step - 1)
+				else
+					set_value (maximum)
+				end
+			elseif last_value > value then
+				if value - step + 1 >= minimum then
+					set_value (value - step + 1)
+				else
+					set_value (minimum)
+				end
+			end
+			last_value := value
+		else
+			manually_updating := False
+		end
+		end
 		end
 
+	last_value: INTEGER
+		-- Holds the last `value'.
+
+	manually_updating: BOOLEAN
+		-- Are we updating the control to move the rest of the step?
+	
+
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- We check if the enter key is pressed)
-			-- 13 is the number of the return key.
+			-- We check if the enter key is pressed
 		do
+			manually_updating := True
 			{EV_GAUGE_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_return then
-				set_caret_position (0)
+				manually_updating := False
+				set_caret_position (1)
 				translate_text
-
+				interface.return_actions.call ([])
 				interface.change_actions.call ([])
-
-				--| This was the old imp.
-				--execute_command (Cmd_activate, Void)
-				--if exists then
-				--	execute_command (Cmd_gauge, Void)
-				--end
 			end
 		end	
 
@@ -215,20 +232,24 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- We must not resize the height of the tool-bar.
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+	repaint: BOOLEAN) is
+			-- Move and resize `Current' and `internal_arrows_control'.
 		do
-			{EV_TEXT_FIELD_IMP} Precursor (0, 0, a_width - 20, a_height, repaint)
-			up_down.move_and_resize (a_width - 20, 0, 20, a_height, repaint)
+			{EV_TEXT_FIELD_IMP} Precursor (0, 0, a_width - 20, a_height,
+			repaint)
+			internal_arrows_control.move_and_resize (a_width - 20, 0, 20,
+			a_height, repaint)
 			container.move_and_resize (a_x, a_y, a_width, a_height, repaint)
 		end
 
 	wel_resize (a_width, a_height: INTEGER) is
-			-- We must not resize the hight of the tool-bar.
+			-- Resize `Current' and `internal_arrows_control'.
 		do
 			container.resize (a_width, a_height)
 			{EV_TEXT_FIELD_IMP} Precursor (a_width, a_height)
-			up_down.move_and_resize (a_width - 20, 0, 20, a_height, True)
+			internal_arrows_control.move_and_resize (a_width - 20, 0, 20,
+			a_height, True)
 		end
 
 	move (a_x, a_y: INTEGER) is
@@ -237,7 +258,7 @@ feature {NONE} -- WEL Implementation
 			-- bug of windows.
 		do
 			container.move (a_x, a_y)
-			up_down.invalidate
+			internal_arrows_control.invalidate
 		end
 
 	wel_set_parent (a_parent: WEL_WINDOW) is
@@ -258,7 +279,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_SPIN_BUTTON_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -272,13 +293,19 @@ end -- class EV_SPIN_BUTTON_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/19 18:42:03  rogers
+--| Improved comments and formatting.Renamed up_down to
+--| internal_arrows_control. Altered the export status of some
+--| features. Redefined on_enchange from EV_TEXT_FIELD_IMP. Added
+--| last_value and manually_updating.
+--|
 --| Revision 1.8  2000/04/18 17:17:10  rogers
 --| Fixed both make and initialize. Implemented wel_Set_leap,
 --| wel_set_range and wel_Set value. Changed wel_parent references

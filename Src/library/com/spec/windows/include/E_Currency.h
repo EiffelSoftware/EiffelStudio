@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_Currency.h
+//  File:   E_Currency.h
 //
-//  Contents:	Declaration of E_Currency macros.
+//  Contents: Declaration of E_Currency macros.
 //
 //
 //--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ void ccom_currency_value_one (CY * a_value);
 EIF_REFERENCE ccom_currency_convert_to_eiffel_currency (CY * a_value);
 
 #ifdef __cplusplus
-	}
+  }
 #endif
 
 #endif // !__ECOM_E_CURRENCY_H_INC__

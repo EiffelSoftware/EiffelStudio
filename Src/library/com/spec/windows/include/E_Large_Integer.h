@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_Large_Integer.h
+//  File:   E_Large_Integer.h
 //
-//  Contents:	E_Large_Integer macros.
+//  Contents: E_Large_Integer macros.
 //
 //
 //--------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		ecom_guid.h
+//  File:   ecom_guid.h
 //
-//  Contents:	Accessors of GUID structure.
+//  Contents: Accessors of GUID structure.
 //
 //
 //--------------------------------------------------------------------------
@@ -27,7 +27,7 @@
 #endif
 
 #ifdef __cplusplus
-	extern "C" {
+  extern "C" {
 #endif
 
 EIF_POINTER ccom_guid_to_wide_string (GUID * guid);
@@ -35,7 +35,7 @@ EIF_REFERENCE ccom_guid_to_defstring (GUID * guid);
 void ccom_generate_guid (GUID * guid);
 
 #ifdef __cplusplus
-	}
+  }
 #endif
 
 #endif // !__ECOM_E_GUID_H_INC__

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_bstr.h
+//  File:   E_bstr.h
 //
-//  Contents:	Declaration of BSTR.
+//  Contents: Declaration of BSTR.
 //
 //
 //--------------------------------------------------------------------------

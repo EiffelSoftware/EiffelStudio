@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		eif_com.h
+//  File:   eif_com.h
 //
-//  Contents:	Base types definition include files	
+//  Contents: Base types definition include files 
 //
 //
 //--------------------------------------------------------------------------

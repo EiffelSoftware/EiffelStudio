@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_Decimal.h
+//  File:   E_Decimal.h
 //
-//  Contents:	Declaration of E_Decimal macros.
+//  Contents: Declaration of E_Decimal macros.
 //
 //
 //--------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 #define ccom_decimal_scale(_ptr_) ((EIF_INTEGER) (_ptr_)->scale)
 
 #ifdef __cplusplus
-	extern "C" {
+  extern "C" {
 #endif
 
 void ccom_decimal_value_zero (DECIMAL * a_value);
@@ -39,7 +39,7 @@ void ccom_decimal_value_one (DECIMAL * a_value);
 EIF_DOUBLE ccom_decimal_to_double (DECIMAL * a_value);
 
 #ifdef __cplusplus
-	}
+  }
 #endif
 
 #endif // !__ECOM_E_DECIMAL_H_INC__

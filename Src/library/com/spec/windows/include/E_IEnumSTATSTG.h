@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_IEnumSTATSTG.h
+//  File:   E_IEnumSTATSTG.h
 //
-//  Contents:	Declaration of IEnumSTATSTG interface implementation class.
+//  Contents: Declaration of IEnumSTATSTG interface implementation class.
 //
 //
 //--------------------------------------------------------------------------
@@ -26,16 +26,16 @@ extern "C" {
 class E_IEnumSTATSTG
 {
 public:
-	E_IEnumSTATSTG (IEnumSTATSTG * p);
-	~E_IEnumSTATSTG();
+  E_IEnumSTATSTG (IEnumSTATSTG * p);
+  ~E_IEnumSTATSTG();
 
-	STATSTG * ccom_next_item ();
-	void ccom_skip (ULONG n);
-	void ccom_reset();
-	IEnumSTATSTG * ccom_clone();
-	IEnumSTATSTG * ccom_item();
+  STATSTG * ccom_next_item ();
+  void ccom_skip (ULONG n);
+  void ccom_reset();
+  IEnumSTATSTG * ccom_clone();
+  IEnumSTATSTG * ccom_item();
 private:
-	IEnumSTATSTG * pIEnum;
+  IEnumSTATSTG * pIEnum;
 };
 
 #ifdef __cplusplus

@@ -5,8 +5,6 @@ indexing
 class
 	ECOM_OLE_TRISTATE_ENUM
 
-creation
-
 feature -- Access
 
 	unchecked: INTEGER is 0

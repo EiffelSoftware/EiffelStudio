@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
 //  File:   E_automation_interface.cpp
 //

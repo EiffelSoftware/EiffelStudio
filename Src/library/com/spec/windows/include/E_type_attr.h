@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_type_attr.h
+//  File:   E_type_attr.h
 //
-//  Contents:	Accessors of TYPEATTR structure.
+//  Contents: Accessors of TYPEATTR structure.
 //
 //
 //--------------------------------------------------------------------------

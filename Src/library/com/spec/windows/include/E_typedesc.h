@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_typedesc.h
+//  File:   E_typedesc.h
 //
-//  Contents:	Accessors of TYPEDESC structure.
+//  Contents: Accessors of TYPEDESC structure.
 //
 //
 //--------------------------------------------------------------------------

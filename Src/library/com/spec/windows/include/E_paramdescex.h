@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_paramdescex.h
+//  File:   E_paramdescex.h
 //
-//  Contents:	Accessors of PARAMDESCEX structure.
+//  Contents: Accessors of PARAMDESCEX structure.
 //
 //
 //--------------------------------------------------------------------------

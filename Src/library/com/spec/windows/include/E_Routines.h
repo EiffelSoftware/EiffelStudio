@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_Routines.h
+//  File:   E_Routines.h
 //
-//  Contents:	Declaration of storage routines.
+//  Contents: Declaration of storage routines.
 //
 //
 //--------------------------------------------------------------------------
@@ -25,9 +25,9 @@ extern "C" {
 class E_Routines
 {
 public:
-	E_Routines(){};
-	~E_Routines(){};
-	int ccom_is_compound_file (WCHAR * pwcsName);
+  E_Routines(){};
+  ~E_Routines(){};
+  int ccom_is_compound_file (WCHAR * pwcsName);
 };
 
 #ifdef __cplusplus

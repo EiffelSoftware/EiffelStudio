@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_ITypeComp.h
+//  File:   E_ITypeComp.h
 //
-//  Contents:	Declaration of ITypeComp interface implementation class.
+//  Contents: Declaration of ITypeComp interface implementation class.
 //
 //
 //--------------------------------------------------------------------------
@@ -26,17 +26,17 @@ extern "C" {
 class E_IType_Comp
 {
 public:
-	// Commands
-	E_IType_Comp(){};
-	E_IType_Comp(ITypeComp * p_i);
-	~E_IType_Comp();
+  // Commands
+  E_IType_Comp(){};
+  E_IType_Comp(ITypeComp * p_i);
+  ~E_IType_Comp();
 
-	// Queries
-	
-	ITypeComp * ccom_item(){return pTypeComp;};
+  // Queries
+  
+  ITypeComp * ccom_item(){return pTypeComp;};
 
 private:
-	ITypeComp * pTypeComp;	
+  ITypeComp * pTypeComp;  
 };
 
 #ifdef __cplusplus

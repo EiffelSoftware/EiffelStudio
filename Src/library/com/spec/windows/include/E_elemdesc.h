@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_elemdesc.h
+//  File:   E_elemdesc.h
 //
-//  Contents:	Accessors of ELEMDESC structure.
+//  Contents: Accessors of ELEMDESC structure.
 //
 //
 //--------------------------------------------------------------------------

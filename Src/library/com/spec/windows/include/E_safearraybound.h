@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_safearraybound.h
+//  File:   E_safearraybound.h
 //
-//  Contents:	Declaration of E_wide_string class.
+//  Contents: Declaration of E_wide_string class.
 //
 //
 //--------------------------------------------------------------------------

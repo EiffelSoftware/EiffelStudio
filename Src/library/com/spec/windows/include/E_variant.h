@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_variant.h
+//  File:   E_variant.h
 //
-//  Contents:	Accessors of VARIANT structure.
+//  Contents: Accessors of VARIANT structure.
 //
 //
 //--------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#define ccom_variant_clear(_PTR_) 	VariantClear (_PTR_)
+#define ccom_variant_clear(_PTR_)   VariantClear (_PTR_)
 
 
 VARIANT * create_ecom_variant ();

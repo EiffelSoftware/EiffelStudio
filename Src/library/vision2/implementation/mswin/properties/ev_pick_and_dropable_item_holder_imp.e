@@ -153,6 +153,12 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 					([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 				press_actions_called := True
 			end
+			if interface.is_dockable then
+				pt := client_to_screen (x_pos, y_pos)
+				dragable_press (x_pos, y_pos,
+				1,
+				pt.x, pt.y)
+			end
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
 			press_actions_called := False
 		end
@@ -177,6 +183,8 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
 				parent_is_pnd_source := False
+			else
+				check_dragable_release (x_pos, y_pos)
 			end
 			interface.pointer_button_release_actions.call
 				([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -241,6 +249,17 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 
 	screen_y: INTEGER is
 			-- Vertical offset of `Current' relative to screen.
+		deferred
+		end
+		
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+			-- Process `a_button' to start/stop the drag/pick and
+			-- drop mechanism.
+		deferred
+		end
+		
+	check_dragable_release (x_pos, y_pos: INTEGER) is
+			-- End transport if in drag and drop.
 		deferred
 		end
 

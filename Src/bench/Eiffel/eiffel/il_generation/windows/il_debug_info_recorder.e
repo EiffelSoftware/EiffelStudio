@@ -807,8 +807,7 @@ feature {NONE} -- Internal access
 		require
 			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
 		do
-			Result := clone (a_mod_name)
-			Result.to_lower
+			Result := a_mod_name.as_lower
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 		end

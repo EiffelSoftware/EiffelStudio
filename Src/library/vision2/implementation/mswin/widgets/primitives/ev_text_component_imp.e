@@ -20,8 +20,6 @@ inherit
 			set_default_minimum_size
 		end
 
-	EV_BAR_ITEM_IMP
-
 feature {NONE} -- Initialization
 
 	set_default_minimum_size is

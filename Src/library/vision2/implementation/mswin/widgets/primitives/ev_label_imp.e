@@ -17,8 +17,6 @@ inherit
 			set_default_minimum_size
 		end
 
-	EV_BAR_ITEM_IMP
-
 	EV_TEXTABLE_IMP
 		redefine
 			set_default_minimum_size,

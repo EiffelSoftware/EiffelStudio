@@ -95,7 +95,6 @@ feature -- Type check, byte code and dead code removal
 			depend_unit: DEPEND_UNIT
 			vwoe: VWOE
 			vwoe1: VWOE1
-			vhne: VHNE
 			vuex: VUEX
 			vape: VAPE
 		do
@@ -106,9 +105,9 @@ feature -- Type check, byte code and dead code removal
 			left_type := context.item
 			left_constrained := context.last_constrained_type
 			if left_constrained.is_none then
-				create vhne
-				context.init_error (vhne)
-				Error_handler.insert_error (vhne)
+				create vuex.make_for_none (infix_function_name)
+				context.init_error (vuex)
+				Error_handler.insert_error (vuex)
 				Error_handler.raise_error
 			end
 

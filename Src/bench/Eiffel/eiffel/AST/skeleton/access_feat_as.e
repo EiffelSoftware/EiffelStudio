@@ -116,7 +116,6 @@ feature -- Type check, byte code and dead code removal
 			vuar1: VUAR1
 			vuar2: VUAR2
 			vuex: VUEX
-			vhne: VHNE
 			vkcn3: VKCN3
 			obs_warn: OBS_FEAT_WARN
 			context_export: EXPORT_I
@@ -154,9 +153,9 @@ feature -- Type check, byte code and dead code removal
 					-- Cannot go on here
 				Error_handler.raise_error
 			elseif last_constrained.is_none then
-				create vhne
-				context.init_error (vhne)
-				Error_handler.insert_error (vhne)
+				create vuex.make_for_none (feature_name)
+				context.init_error (vuex)
+				Error_handler.insert_error (vuex)
 					-- Cannot go on here
 				Error_handler.raise_error
 			end

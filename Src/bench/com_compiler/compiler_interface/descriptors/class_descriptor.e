@@ -41,6 +41,7 @@ inherit
 			is_generic,
 			is_library,
 			is_in_system,
+			assertions,
 			member_of
 		end
 
@@ -506,6 +507,26 @@ feature -- Access
 		do
 			if is_in_system then
 				Result := compiler_class.compiled_class.cluster.is_library
+			end
+		end
+		
+	assertions: INTEGER is
+			-- assertions
+		do
+			if compiler_class.assertion_level.check_precond then
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_require
+			end
+			if compiler_class.assertion_level.check_postcond then
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure
+			end
+			if compiler_class.assertion_level.check_invariant then
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant
+			end
+			if compiler_class.assertion_level.check_loop then
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
+			end
+			if compiler_class.assertion_level.check_check then
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_check
 			end
 		end
 		

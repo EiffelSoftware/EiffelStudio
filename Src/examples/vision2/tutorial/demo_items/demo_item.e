@@ -47,12 +47,24 @@ feature -- Access
 		-- Demo window associated to the item
 
 	action_button: EV_BUTTON is
-			-- An action button to display he action window.
+			-- An action button to display the action window.
 		local
 			cmd: EV_ROUTINE_COMMAND
 		once
 			create Result.make_with_text (Void, "Actions")
 			create cmd.make (~action_activate)
+			Result.add_click_command (cmd, Void)
+			create cmd.make (~event_activate)
+			Result.add_click_command (cmd, Void)
+		end
+
+	event_button: EV_BUTTON is
+			-- An event button to display the event window.
+		local
+			cmd: EV_ROUTINE_COMMAND
+		once
+			create Result.make_with_text (Void, "Events")
+			create cmd.make (~event_activate)
 			Result.add_click_command (cmd, Void)
 		end
 	
@@ -154,7 +166,7 @@ feature {DEMO_ITEM} -- Execution commands
 			-- get a Void parent
 		local
 			demo: DEMO_WINDOW
-			action_shown: BOOLEAN
+			action_shown, event_shown: BOOLEAN
 		do
 			-- First, we set the demo on the first page.
 			demo := current_demo.item
@@ -164,6 +176,10 @@ feature {DEMO_ITEM} -- Execution commands
 				if action_shown then
 --					dem_win.clear_notebook
 					demo.hide_action_window
+				end
+				event_shown := demo.event_window_shown
+				if event_shown then
+					demo.hide_event_window
 				end
 			end
 
@@ -185,8 +201,15 @@ feature {DEMO_ITEM} -- Execution commands
 				end
 			else
 				action_button.set_insensitive (True)
+			end	
+			if demo_window.has_event_window then
+				event_button.set_insensitive (False)
+				if event_shown then
+					demo_window.show_event_window
+				end
+			else
+				event_button.set_insensitive (True)
 			end
-
 			-- And we set the diverse documentations.
 			display_text (example_page, example_file)
 			display_rtf_text (class_page, class_file)
@@ -194,9 +217,15 @@ feature {DEMO_ITEM} -- Execution commands
 		end
  
 	action_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
-				-- Activate feature of the button
+			-- Activate feature of the button
 		do
 			current_demo.item.show_action_window
+		end
+
+	event_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+			-- Activate feature of the button.
+		do
+			current_demo.item.show_event_window
 		end
 
 end -- class DEMO_ITEM

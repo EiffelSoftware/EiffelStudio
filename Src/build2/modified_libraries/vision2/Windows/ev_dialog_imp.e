@@ -439,6 +439,7 @@ feature {NONE} -- Implementation
 			remove_item_actions := other_imp.remove_item_actions
 			resize_actions_internal := other_imp.resize_actions_internal
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
+			show_actions_internal := other_imp.show_actions_internal
 			scroller := other_imp.scroller
 			shared := other_imp.shared
 			upper_bar := other_imp.upper_bar

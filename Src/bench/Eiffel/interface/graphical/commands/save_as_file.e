@@ -33,7 +33,7 @@ feature {NONE}
 		do
 			if 
 				(argument = name_chooser) or else
-				(argument = warner)
+				(last_warner /= Void and argument = last_warner)
 			then
 				!!new_file.make (name_chooser.selected_file);
 				aok := True;
@@ -41,28 +41,28 @@ feature {NONE}
 					(new_file.exists) and then (not new_file.is_plain)
 				then
 					aok := False;
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_a_plain_file (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_a_plain_file (new_file.name))
 				elseif 
-					not (argument = warner) and then
+					argument = name_chooser and then 
 					(new_file.exists and then new_file.is_writable)
 				then
 					aok := False;
-					warner.set_window (text_window);
-					warner.custom_call (Current, w_File_exists (new_file.name),
-								 "Overwrite", Void, "Cancel");
+					warner (text_window).custom_call (Current, 
+						w_File_exists (new_file.name), 
+						"Overwrite", Void, "Cancel");
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_writable (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_writable (new_file.name))
 				elseif
 					not new_file.is_creatable
 				then
 					aok := False;
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_creatable (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_creatable (new_file.name))
 				end;
 				if aok then
 					new_file.open_write;

@@ -25,7 +25,7 @@ feature {NONE}
 			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
-			if argument = warner then
+			if last_warner /= Void and argument = last_warner then
 				-- The user has eventually been warned that he will lose his stuff
 				name_chooser.set_window (text_window);
 				name_chooser.call (Current) 
@@ -38,19 +38,16 @@ feature {NONE}
 					text_window.show_file (fn);
 					text_window.display_header (fn)
 				elseif f.exists and then not f.is_plain then
-					warner.set_window (text_window);
-					warner.custom_call (Current, w_Not_a_file_retry (fn),
-												" OK ", Void, "Cancel");
+					warner (text_window).custom_call (Current, 
+						w_Not_a_file_retry (fn), " OK ", Void, "Cancel");
 				else
-					warner.set_window (text_window);
-					warner.custom_call (Current, w_Cannot_read_file_retry (fn),
-												" OK ", Void, "Cancel");
+					warner (text_window).custom_call (Current, 
+						w_Cannot_read_file_retry (fn), " OK ", Void, "Cancel");
 				end
 			else
 				-- First click on open
 				if text_window.changed then
-					warner.set_window (text_window);
-					warner.call (Current, l_File_changed)
+					warner (text_window).call (Current, l_File_changed)
 				else
 					name_chooser.set_window (text_window);
 					name_chooser.call (Current) 

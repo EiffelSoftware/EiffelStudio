@@ -23,15 +23,14 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Quit cautiously an ace file. Don't actually destroy the window.
 		do
-			if argument = warner then
+			if last_warner /= Void and argument = last_warner then
 				-- The user has been warned that he will lose his stuff
 				text_window.clean;
 				text_window.tool.hide;
 			else
 				-- First click on open
 				if text_window.changed then
-					warner.set_window (text_window);
-					warner.call (Current, l_File_changed)
+					warner (text_window).call (Current, l_File_changed)
 				else
 					text_window.clean;
 					text_window.tool.hide;

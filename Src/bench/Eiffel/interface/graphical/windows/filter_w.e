@@ -108,9 +108,9 @@ feature
 			raise;
 				-- If we popped up the warner when we filled the 
 				-- filter name list, we have now to raise it.
-			if warner.is_popped_up then 
-				warner.popup;
-				warner.raise 
+			if last_warner /= Void and then last_warner.is_popped_up then
+				last_warner.popup;
+				last_warner.raise 
 			end
 		end;
 
@@ -120,9 +120,11 @@ feature {NONE}
 
 	work (argument: ANY) is
 		local
-			tmp_name: STRING;
+			tmp_name: STRING
         do
-			warner.popdown;
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
 			if argument = list then
 				if list.selected_item = Void then
 						-- The user tried to deselect the current filter
@@ -161,8 +163,8 @@ feature {NONE}
 		do
 			!!filter_dir.make (filter_path);
 			if not filter_dir.exists then
-				warner.set_window (associated_command.text_window);
-				warner.gotcha_call (w_Directory_not_exist (filter_path))
+				warner (associated_command.text_window).gotcha_call 
+					(w_Directory_not_exist (filter_path))
 				list.wipe_out;
 				list.put_right ("")
 			else

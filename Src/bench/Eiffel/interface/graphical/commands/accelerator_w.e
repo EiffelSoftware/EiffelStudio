@@ -78,11 +78,14 @@ feature {NONE} -- Execution
 				if name_chooser.is_popped_up then
 					name_chooser.raise
 				end;
-				if confirmer.is_popped_up then
-					confirmer.raise
+				if 
+					last_confirmer /= Void and then 
+					last_confirmer.is_popped_up 
+				then
+					last_confirmer.raise
 				end;
-				if warner.is_popped_up then
-					warner.raise
+				if last_warner /= Void and then last_warner.is_popped_up then
+					last_warner.raise
 				end
 			end
 		end;

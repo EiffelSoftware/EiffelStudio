@@ -42,20 +42,17 @@ feature {NONE}
 				(new_file.exists) and then (not new_file.is_plain)
 			then
 				aok := False;
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Not_a_plain_file (new_file.name))
+				warner (text_window).gotcha_call (w_Not_a_plain_file (new_file.name))
 			elseif
 				new_file.exists and then (not new_file.is_writable)
 			then
 				aok := False;
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Not_writable (new_file.name))
+				warner (text_window).gotcha_call (w_Not_writable (new_file.name))
 			elseif
 				(not new_file.exists) and then (not new_file.is_creatable)
 			then
 				aok := False;
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Not_creatable (new_file.name))
+				warner (text_window).gotcha_call (w_Not_creatable (new_file.name))
 			end;
 
 			if aok then

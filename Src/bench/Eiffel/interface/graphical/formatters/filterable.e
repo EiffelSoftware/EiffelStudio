@@ -56,8 +56,8 @@ feature
 				text_filter.process_text (context.text);
 				Result := text_filter.image
 			else
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Cannot_read_filter (full_pathname))
+				warner (text_window).gotcha_call 
+					(w_Cannot_read_filter (full_pathname))
 			end
 		end;
 

@@ -30,11 +30,9 @@ feature
 			-- Retarget the object tool with the previous object in history.
 		do
 			if not Run_info.is_running then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_running)
+				warner (text_window).gotcha_call (w_System_not_running)
 			elseif not Run_info.is_stopped then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_stopped)
+				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
 				pt_work (argument)
 			end

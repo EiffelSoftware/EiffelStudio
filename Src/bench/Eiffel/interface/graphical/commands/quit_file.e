@@ -21,14 +21,13 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Quit cautiously a file.
 		do
-			if argument = warner then
+			if last_warner /= Void and argument = last_warner then
 				-- The user has been warned that he will lose his stuff
 				window_manager.close (text_window.tool);
 			else
 				-- First click on open
 				if text_window.changed then
-					warner.set_window (text_window);
-					warner.call (Current, l_File_changed)
+					warner (text_window).call (Current, l_File_changed)
 				else
 					window_manager.close (text_window.tool);
 				end

@@ -49,7 +49,7 @@ feature {NONE}
 					if argument = void then
 						system_tool.display;
 						load_default_ace;
-					elseif argument = warner then
+					elseif argument = last_warner then
 						name_chooser.set_window (project_tool.text_window);
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
@@ -65,13 +65,13 @@ feature {NONE}
 							temp.append ("File: ");
 							temp.append (fn);
 							temp.append ("%Ncannot be read. Try again?");
-							warner.set_window (project_tool.text_window);
-							warner.custom_call (Current, temp, " OK ", Void, "Cancel");
+							warner (project_tool.text_window).custom_call 
+								(Current, temp, " OK ", Void, "Cancel");
 						end;
 					else
-						warner.set_window (project_tool.text_window);
-						warner.custom_call (Current, l_Specify_ace,
-							" OK ", "Template", "Cancel");
+						warner (project_tool.text_window).custom_call 
+							(Current, l_Specify_ace, " OK ", 
+							"Template", "Cancel");
 					end;	
 				else
 					!!system_stone.make (System);

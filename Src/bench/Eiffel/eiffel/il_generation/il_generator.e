@@ -261,7 +261,7 @@ feature -- Generation
 					Universe.clusters.after
 				loop
 					l_assembly ?= Universe.clusters.item
-					if l_assembly /= Void and then l_assembly.is_local then
+					if l_assembly /= Void and then not l_assembly.is_in_gac then
 						l_has_local := True
 						copy_to_local (l_assembly.assembly_path)
 					end

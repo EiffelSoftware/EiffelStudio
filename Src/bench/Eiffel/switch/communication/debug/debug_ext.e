@@ -68,7 +68,7 @@ feature
 			"C"
 		end
 
-	send_ref_value (value: INTEGER) is
+	send_ref_value (value: POINTER) is
 			-- value is the address of the object
 		external
 			"C signature (EIF_REFERENCE)"

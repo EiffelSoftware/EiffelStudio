@@ -104,8 +104,8 @@ feature {NONE} -- Actions
 		local
 			click_ast: CLICK_AST
 		do
-			create click_ast.initialize (Dummy_clickable_ast, current_position.start_position,
-				current_position.end_position)
+			create click_ast.initialize (Dummy_clickable_ast, current_position.line_number,
+				current_position.start_position, current_position.end_position)
 			click_list.extend (click_ast)
 			create Result
 			Result.set_first (an_id)

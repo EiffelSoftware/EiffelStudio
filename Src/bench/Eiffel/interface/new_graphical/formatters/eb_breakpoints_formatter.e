@@ -26,11 +26,7 @@ feature -- Initialization
 			-- Initialize the command.
 		do
 			Precursor (a_tool)
---			if tool = project_tool then
---				do_flat := Project_resources.debugger_do_flat_in_breakpoints.actual_value
---			else
-				do_flat := Feature_resources.do_flat_in_breakpoints.actual_value
---			end
+			do_flat := do_flat_in_breakpoints
 		end 
 
 feature -- Formatting

@@ -603,11 +603,11 @@ feature {NONE} -- Implementation
 				
 				-- feature name
 			if is_unary_operator and a_feature.Is_Prefix then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Prefix_keyword, Space, a_feature.eiffel_name)
+				generated_code := generated_code.Concat_String_String_String (generated_code, Prefix_keyword, a_feature.eiffel_name)
 			else
 				--if is_binary_operator and a_feature.IsInfix then
 				if a_feature.Is_Infix then
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Infix_keyword, Space, a_feature.eiffel_name)
+					generated_code := generated_code.Concat_String_String_String (generated_code, Infix_keyword, a_feature.eiffel_name)
 				else
 					generated_code := generated_code.Concat_String_String (generated_code, a_feature.eiffel_name)
 				end
@@ -641,8 +641,10 @@ feature {NONE} -- Implementation
 			if a_feature.Is_Method and then a_feature.Return_Type /= Void and then a_feature.Return_Type.Type_eiffel_name /= Void then
 				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.Return_Type.Type_eiffel_name)
 			end
-			if a_feature.Is_Field and not a_feature.eiffel_name.Starts_With (Property_set_prefix) then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.Return_Type.Type_eiffel_name)
+			if a_feature.Is_Field then
+				if a_feature.external_name /= Void and then not a_feature.external_name.Starts_With (Property_set_prefix) then
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.Return_Type.Type_eiffel_name)
+				end
 			end
 
 				-- `is' keyword
@@ -759,8 +761,9 @@ feature {NONE} -- Implementation
 				if is_unary_operator or is_binary_operator then
 						-- "IL operator `signature' use `alias' "
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Operator, signature, Use)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name), Inverted_comma)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Operator, Space, signature)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Use, Space, formatter.Format_Strong_Name (eiffel_class.Full_External_Name))
+					generated_code := generated_code.Concat_String_String (generated_code, Inverted_comma)
 				else
 					if a_feature.Is_Static then
 							-- "IL static `signature' use `alias' "

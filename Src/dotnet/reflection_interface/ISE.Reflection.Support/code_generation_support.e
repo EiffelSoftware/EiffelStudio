@@ -243,13 +243,14 @@ feature -- Basic Operations
 				slash_index := path.last_index_of ("\") 
 			end
 			from
+				folder_path := path
 				i := folder_names.get_count - 1
 			until
 				i = - 1
 			loop
 				a_folder_name ?= folder_names.get_item (i)	
 				if a_folder_name /= Void then
-					folder_path := path.concat_string_string_string (path, "\", a_folder_name)
+					folder_path := folder_path.concat_string_string_string (folder_path, "\", a_folder_name)
 					info := dir.create_directory (folder_path)
 				end
 				i := i - 1

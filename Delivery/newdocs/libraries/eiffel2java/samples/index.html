@@ -1,0 +1,93 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Eiffel2Java Sample</title>
+<LINK REL=StyleSheet HREF="../../../default.css">
+
+</head>
+
+<body>
+
+<h2>Eiffel2Java</h2>
+<p>This example shows how to create an instance of the Java Virtual Machine and 
+the creation of an object of type <span class="eclass">test</span>, a java class reproduced below:</p>
+
+<pre>## Java ##<br>
+		<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">test</SPAN> <SPAN CLASS="esymbol">{</SPAN><br>
+	<SPAN CLASS="efeature">test</SPAN> <SPAN CLASS="esymbol">() {
+		</SPAN><SPAN CLASS="elocal">my_integer</SPAN><span class="eclass"><span style="background-position: 0 0"> </span>= 10;</span><SPAN CLASS="esymbol">
+	}</SPAN><br>
+	<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
+	<SPAN CLASS="ekeyword">public static</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_static_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
+	<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">void</SPAN> <SPAN CLASS="efeature">my_method</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">arg_int</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">String</SPAN> <SPAN CLASS="elocal">arg_string</SPAN><SPAN CLASS="esymbol">) {</SPAN><br>		<SPAN CLASS="elocal">my_static_integer </SPAN>= <SPAN CLASS="elocal">arg_int</SPAN>;
+		<SPAN CLASS="elocal">my_integer </SPAN>= <SPAN CLASS="elocal">arg_int</SPAN>;<br>
+	<SPAN CLASS="esymbol">}</SPAN><br><SPAN CLASS="esymbol">}</SPAN></pre>
+<p>In order to run properly you need to read <a href="../index.html">the library 
+requirement</a>.</p>
+<p>&nbsp;</p>
+<h3>Compiling the example</h3>
+<p>Since the example is using the `test.java' class, the first step is to 
+compile the java class using the `javac' command line utility from the JDK. Once 
+it is done, copy the `test.class' either in $ISE_EIFFEL\examples\Eiffel2Java\EIFGEN\W_code 
+or in $ISE_EIFFEL\examples\Eiffel2Java\EIFGEN\F_code depending on your 
+compilation mode (freezing vs. finalizing).</p>
+
+<p>&nbsp;</p>
+
+<h3>Running the example</h3>
+
+<p>One the example is compiled, you can run it and here is the expected output:</p>
+
+<pre>$ sample
+Creating instance of class `test'
+Value of `my_integer' is 10
+Value of `my_static_integer' is 0
+Calling `my_method' with (2, &quot;String test&quot;)
+Value of `my_integer' after call to `my_method' is 2</pre>
+
+<h3>Code description</h3>
+
+<pre>## Eiffel ##<br>
+<SPAN CLASS="ekeyword">class</SPAN>
+<SPAN CLASS="eclass">	EIFFEL_TO_JAVA</SPAN><br><SPAN CLASS="ekeyword">inherit</SPAN><br>	<SPAN CLASS="eclass">SHARED_JNI_ENVIRONMENT</SPAN><br><SPAN CLASS="ekeyword">
+creation</SPAN><br>	<SPAN CLASS="efeature">make</SPAN><br>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Creation</SPAN><br>
+	<SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+	<SPAN CLASS="ekeyword">	local</SPAN>
+			<SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_CLASS</SPAN>
+			<SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_OBJECT
+		</SPAN>	<SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">POINTER</SPAN><SPAN CLASS="elocal">
+			value</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">INTEGER
+			</SPAN><SPAN CLASS="elocal">j_args</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_ARGS
+		</SPAN><SPAN CLASS="ekeyword">do
+</SPAN>				<SPAN CLASS="ecomment">--| Creation of the Java object
+			</SPAN><SPAN CLASS="elocal">class_test</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">jni</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">find_class</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="ekeyword">
+			create</SPAN> <SPAN CLASS="efeature">instance_of_class_test.create_instance</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;()V&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">Void</SPAN><SPAN CLASS="esymbol">)</SPAN><br><SPAN CLASS="ecomment">
+				--| Access to a public attribute
+</SPAN>			<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)
+
+				</SPAN><SPAN CLASS="ecomment">-- 'fid' contains the id of the field 'my_integer'
+				-- 'value' contains the value of the field referenced</SPAN><br>				<SPAN CLASS="ecomment">-- by 'fid'</SPAN><br>&nbsp;<SPAN CLASS="ecomment">			</SPAN><SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)
+</SPAN>			<SPAN CLASS="esymbol">...
+
+				</SPAN><SPAN CLASS="ecomment">--| Access to a static attribute using directly the JAVA_CLASS</SPAN>
+			<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="ekeyword">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>			<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="esymbol">...
+</SPAN><br><SPAN CLASS="ecomment">				--| Access to a static attribute using the attribute 'jclass'</SPAN><span class="elocal">
+			fid</span> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)
+			</SPAN><SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="estring">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</sPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)
+			...
+
+				</SPAN><SPAN CLASS="ecomment">--| Access to the method 'my_method'
+</sPAN><SPAN CLASS="esymbol">				</SPAN><SPAN CLASS="ecomment">-- Get the id of 'my_method'
+			</SPAN><SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">method_id</SPAN> <SPAN CLASS="esymbol">(</sPAN><SPAN CLASS="estring">&quot;my_method&quot;</sPAN><SPAN CLASS="ekeyword">,</SPAN> <SPAN CLASS="estring">&quot;(ILjava/lang/String;)V&quot;</SPAN><SPAN CLASS="esymbol">)
+
+			</SPAN><SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</sPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</sPAN><SPAN CLASS="esymbol">)</SPAN><br><SPAN CLASS="elocal">			j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_int</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</SPAN><SPAN CLASS="esymbol">)</SPAN><br><SPAN CLASS="elocal">			j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_string</SPAN><SPAN CLASS="esymbol">(</SPaN><SPAN CLASS="estring">&quot;String test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br><SPAN CLASS="ecomment">				-- Create the set of arguments for 'my_method'</SPAN><br><SPAN CLASS="elocal">			instance_of_class_test</SPAN><SPAN CLASS="esymbol">.<SPAN><SPAN CLASS="efeature">void_method</SPAN> (<SPAN CLASS="elocal">fid</SPAN>, <SPAN CLASS="elocal">j_args</sPAN>)<br><SPAN CLASS="ecomment">				-- Call to the void method referenced by 'fid'</SPAN><br>			...<br>		<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- make</SPAN><br>
+<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- class EIFFEL_TO_JAVA</sPAN> </span></span>
+</pre>
+</body>
+
+</html>

@@ -63,21 +63,16 @@ feature -- Formatting
 						if stone.clickable then
 							display_temp_header (stone);
 							!! mp.set_watch_cursor;
+							cur := text_window.cursor;
 							text_window.clear_window;
 							tool.set_read_only_text;
 							tool.set_file_name (file_name (stone));
 							display_info (stone);
-							if 
-								tool.last_format = 
-									tool.showtext_frmt_holder
-							then
-								cur := text_window.cursor;
-							end;
-							tool.show_read_only_text;
-							text_window.display;
 							if cur /= Void then
 								text_window.go_to (cur)
 							end;
+							tool.show_read_only_text;
+							text_window.display;
 							tool.set_stone (stone);
 							tool.set_last_format (holder);
 							filtered := false;

@@ -80,14 +80,8 @@ feature {NONE} -- Implementation
 		do
 			-- We just call the action if any.
 			if action /= Void then
-				action.call(no_arg)
+				action.call(Void)
 			end
-		end
-
-	no_arg: TUPLE is
-			-- Empty tuple to speed up `call_back'.
-		once
-			create Result.make
 		end
 
 feature {NONE} -- Externals

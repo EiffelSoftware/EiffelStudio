@@ -34,8 +34,8 @@ feature
 			expr.analyze;
 			if not target_type.is_basic then
 				expr.free_register;
+				get_register;
 			end;
-			get_register;
 		end;
 
 	initialize is
@@ -73,7 +73,12 @@ feature
 	print_register is
 			-- Print the value of the old variable
 		do
-			register.print_register;
+			if register = Void then
+				-- Old value of basic 
+				expr.print_register
+			else
+				register.print_register;
+			end;
 		end;
 
 	free_register is

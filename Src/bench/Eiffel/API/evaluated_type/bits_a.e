@@ -9,18 +9,37 @@ inherit
 			internal_conform_to as old_conform_to
 		redefine
 			is_bits, associated_class, dump,
-			heaviest, same_as, append_clickable_signature
+			heaviest, same_as, append_clickable_signature,
+			check_conformance
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
-			heaviest, same_as, append_clickable_signature
+			heaviest, same_as, append_clickable_signature,
+			check_conformance
 		select
 			internal_conform_to
 		end;
 
 feature
+
+	check_conformance (target_type: TYPE_A) is
+			-- Check if Current conforms to `other'.
+			-- If not, insert error into Error handler
+			-- which uses `context' for initialisation of the
+			-- error.
+		local
+			vncb: VNCB;
+		do
+			if not conform_to (target_type) then
+				!!vncb;
+				context.init_error (vncb);
+				vncb.set_source_type (Current);
+				vncb.set_target_type (target_type);
+				Error_handler.insert_error (vncb);
+			end;
+		end;
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?

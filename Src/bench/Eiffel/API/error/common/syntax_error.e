@@ -103,7 +103,7 @@ feature
 						stone (dummy_reference),
 						System.current_class.signature)
 			else
-				put_clickable_string (stone (dummy_reference), " in Ace file")
+				put_clickable_string (ace_stone (dummy_reference), " in Ace file")
 			end;
 			new_line;
 			build_explain;
@@ -118,20 +118,22 @@ feature
 			nb: INTEGER;
 			c: CHARACTER;
 		do
-			from
-				nb := a_line.count;
-			until
-				i = nb
-			loop
-				i := i + 1;
-				c := a_line.item (i);
-				if c = '%T' then
-					put_string ("    ")
-				else
-					put_char (c)
+			if a_line /= Void then
+				from
+					nb := a_line.count;
+				until
+					i = nb
+				loop
+					i := i + 1;
+					c := a_line.item (i);
+					if c = '%T' then
+						put_string ("    ")
+					else
+						put_char (c)
+					end;
 				end;
+				new_line;
 			end;
-			new_line;
 		end;
 
 	display_error_line (a_line: STRING; pos: INTEGER) is
@@ -195,7 +197,13 @@ feature {NONE} -- Externals
 
 feature -- stoning
 
-	stone (reference_class: CLASS_C): SYNTAX_STONE is
+	stone (reference_class: CLASS_C): CL_SYNTAX_STONE is
+			-- Reference class is useless here
+		do
+			!!Result.make (Current)
+		end;
+
+	ace_stone (reference_class: CLASS_C): ACE_SYNTAX_STONE is
 			-- Reference class is useless here
 		do
 			!!Result.make (Current)

@@ -45,6 +45,7 @@ feature -- Type check, byte code and dead code removal
 			vwoe: VWOE;
 			vkcn: VKCN;
 			vhne: VHNE;
+			vuex: VUEX;
 		do
 				-- Check operand
 			expr.type_check;
@@ -82,6 +83,16 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error;
 			end;
 
+                -- Export validity
+            if not prefix_feature.is_exported_for (last_class) then
+                !!vuex;
+                context.init_error (vuex);
+                vuex.set_static_class (last_class);
+                vuex.set_feature_name (prefix_feature_name);
+                Error_handler.insert_error (vuex);
+				Error_handler.raise_error;
+            end;
+ 
 				-- Suppliers update
 			!!depend_unit.make (last_class.id, prefix_feature.feature_id);
 			context.supplier_ids.add (depend_unit);

@@ -22,7 +22,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			vaol1: VAOL1;
 			vaol2: VAOL2;
-			old_as: UN_OLD_AS;
+			saved_vaol_check: BOOLEAN;
 		do
 			if not context.level1 then
 					-- Old expression found somewhere else that in a
@@ -33,13 +33,23 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vaol1);
 			end;
 
+			saved_vaol_check := context.check_for_vaol;
+			if not saved_vaol_check then
+					-- Set flag for vaol check.
+					-- Check for an old expression within
+					-- an old expression.
+				context.set_check_for_vaol (True)
+			end;
 				-- Expression type check
 			expr.type_check;
 
-			old_as ?= expr;
+			if not saved_vaol_check then
+					-- Reset flag for vaol check
+				context.set_check_for_vaol (False)
+			end;
 			if 
 				context.item.conform_to (Void_type) or else
-				(old_as /= Void)
+				context.check_for_vaol
 			then
 					-- Not an expression
 				!!vaol2;

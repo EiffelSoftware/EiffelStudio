@@ -31,7 +31,7 @@ feature
 --debug ("REPLICATION")
 	--trace;
 --end;
-			if not System.replication_off and then count > 1 then
+			if not System.code_replication_off and then count > 1 then
 				detect_replication (parents);
 --debug ("REPLICATION")
 	--io.error.putstring ("after repl%N");

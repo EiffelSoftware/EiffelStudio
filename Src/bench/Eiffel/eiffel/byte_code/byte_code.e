@@ -329,9 +329,51 @@ feature
 			end;
 		end;
 
+feature -- Inherited Assertions
+
+	formulate_inherited_assertions (assert_id_set: ASSERT_ID_SET) is
+			-- Formulate inherited post and pre conditions
+			-- from the precursor definition of feature `feat'
+			-- and save the details in inherited_assertion.
+		require
+			valid_arg: assert_id_set /= Void;
+			current_not_basic: not Context.associated_class.is_basic;
+		local
+			byte_code: BYTE_CODE;
+			inh_f: INH_ASSERT_INFO;
+			ct: CLASS_TYPE;
+			inh_c: CLASS_C;
+			bd_id, i: INTEGER;
+		do
+			from
+				i := 1;
+			until
+				i > assert_id_set.count
+			loop
+				inh_f := assert_id_set.item (i);
+				if inh_f.has_assertion then
+					--! Has assertion
+					inh_c := System.class_of_id (inh_f.written_in);
+					if inh_c.generics = Void then
+						ct := inh_c.types.first;
+					else
+						ct := inh_c.meta_type (Context.current_type).associated_class_type;
+					end;
+					bd_id := System.body_index_table.item (inh_f.body_index);
+					byte_code := System.byte_server.item (bd_id);
+					if inh_f.has_precondition then
+						Context.inherited_assertion.add_precondition_type (ct, byte_code);
+					end;
+					if inh_f.has_postcondition then
+						Context.inherited_assertion.add_postcondition_type (ct, byte_code);
+					end;
+				end;
+				i := i + 1;
+			end;
+		end;
+
 feature -- Byte code generation
 
-	
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code
 		require else
@@ -343,7 +385,20 @@ feature -- Byte code generation
 			local_list: LINKED_LIST [TYPE_I];
 			bit_i: BIT_I;
 			expanded_type: CL_TYPE_I;
+			inh_assert: INHERITED_ASSERTION;
+			feat: FEATURE_I;
 		do
+			feat := Context.associated_class.feature_table.item (feature_name);
+			inh_assert := Context.inherited_assertion;
+			inh_assert.init;
+			if  Context.has_inherited_assertion and then
+				not Context.associated_class.is_basic and then
+				feat.assert_id_set /= Void 
+			then
+					--! Do not get inherited pre & post for basic types
+				formulate_inherited_assertions (feat.assert_id_set);
+			end;
+
 			Temp_byte_code_array.clear;
 			
 				-- Header for debuggable byte code.
@@ -376,16 +431,8 @@ feature -- Byte code generation
 				Temp_byte_code_array.append ('%U');
 			end;
 
-			from
-				i := 1;
-				nb := local_count;
-			until
-				i > nb
-			loop
-					-- Local SK value
-				Context.add_local (context.real_type (locals.item (i)));
-				i := i + 1;
-			end;
+				-- Set up the local variables
+			setup_local_variables;
 
 				-- Feature name
 			ba.append_raw_string (feature_name);
@@ -459,6 +506,43 @@ feature -- Byte code generation
 
 				-- Clean the context
 			local_list.wipe_out;
+			inh_assert.wipe_out;
+		end;
+
+	setup_local_variables is
+			-- Set the local variable type (which includes old expressions)
+			-- for the interpreter.
+		local
+			nb, i, position: INTEGER;
+			item: UN_OLD_B
+		do
+			from
+				position := 1;
+				nb := local_count;
+			until
+				position > nb
+			loop
+					-- Local SK value
+				Context.add_local 
+						(context.real_type (locals.item (position)));
+				position := position + 1;
+			end;
+			if old_expressions /= Void then
+				from
+					nb := old_expressions.count;
+					i := i
+				until
+					i > nb
+				loop
+					item := old_expressions.item;
+					Context.add_local
+						(context.real_type (item.type));
+					item.set_position (position);
+					old_expressions.forth;
+					i := i + 1;
+				end;
+			end;
+			Context.inherited_assertion.setup_local_variables (position);
 		end;
 
 	make_body_code (ba: BYTE_ARRAY) is

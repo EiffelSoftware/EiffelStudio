@@ -203,9 +203,9 @@ feature
 		do
 			io.error.putchar ('[');
 			from
-				i := lower;
+				i := 1;
 			until
-				i > upper
+				i > count
 			loop
 				io.error.putint (item (i));
 				io.error.putchar (' ');

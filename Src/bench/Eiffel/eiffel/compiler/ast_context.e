@@ -75,8 +75,9 @@ feature
 	level4: BOOLEAN;
 			-- Level for analysis of precondition
 
-	check_for_vape: BOOLEAN;
-			-- Flag for checking the vape error
+	check_for_special_error: BOOLEAN;
+			-- Flag for checking the vape error and
+			-- vaol error
 			
 	supplier_ids: FEATURE_DEPENDANCE;
 			-- Supplier units
@@ -128,15 +129,34 @@ feature
 
 	set_level4 (b: BOOLEAN) is
 			-- Assign `b' to `level4'.
+			-- Also set `b' to check_for_vape.
 		do
 			level4 := b;
-			check_for_vape := b;
+			set_check_for_vape (b);
 		end;
 
 	set_check_for_vape (b: BOOLEAN) is
-			-- Assign `b' to `check_for_vape'.
+			-- Assign `b' to `check_for_special_error'.
 		do
-			check_for_vape := b;
+			check_for_special_error := b;
+		end;
+
+	check_for_vape: BOOLEAN is
+			-- Is Current checking for vape error?
+		do
+			Result := check_for_special_error
+		end;
+
+	set_check_for_vaol (b: BOOLEAN) is
+			-- Assign `b' to `check_for_special_error'.
+		do
+			check_for_special_error := b;
+		end;
+
+	check_for_vaol: BOOLEAN is
+			-- Is Current checking for vaol error?
+		do
+			Result := check_for_special_error
 		end;
 
 	set_locals (l: like locals) is

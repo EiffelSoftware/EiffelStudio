@@ -104,7 +104,7 @@ feature {NONE}
 	Bc_cont:			CHARACTER is '%/096/';
 	Bc_bit:				CHARACTER is '%/097/';
 	Bc_array:			CHARACTER is '%/098/';
-	Bc_xxxx:			CHARACTER is '%/099/';
+	Bc_retrieve_old:	CHARACTER is '%/099/';
 	Bc_yyyy:			CHARACTER is '%/100/';
 	Bc_old:				CHARACTER is '%/101/';
 	Bc_add_strip:		CHARACTER is '%/102/';

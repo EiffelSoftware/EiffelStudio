@@ -15,11 +15,19 @@ feature
 	parent: PARENT_C;
 			-- Parent from which the feature is inherited
 
+	renaming_processed: BOOLEAN;
+			-- Has Current already been processed for renaming?
+
+	set_renaming_processed is
+			-- Set True to `renaming_processed'.			
+		do
+			renaming_processed := True
+		end;
+
 	set_a_feature (f: like a_feature) is
 			-- Assign `f' to `a_feature'.
 		do
 			a_feature := f;
---trace;
 		end;
 
 	set_parent (p: like parent) is

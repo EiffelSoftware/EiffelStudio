@@ -201,9 +201,7 @@ feature -- Access
 	rows, count: INTEGER is
 			-- Number of rows in the list.
 		do
-			if list_widget /= Default_pointer then
-				Result := C.c_gtk_clist_rows (list_widget)
-			end
+			Result := ev_children.count
 		end
 
 	item: EV_MULTI_COLUMN_LIST_ROW is
@@ -628,6 +626,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/03/28 01:09:43  king
+--| Using ev_children for count
+--|
 --| Revision 1.51  2000/03/28 00:32:48  king
 --| Using dirty_child to have for update_children reuse
 --|

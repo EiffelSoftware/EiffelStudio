@@ -506,6 +506,7 @@ feature {NONE} -- Initialization
 				l_enclosing_type := type_from_consumed_type (l_nested.enclosing_type)
 				is_nested := True
 				enclosing_class := l_enclosing_type.associated_class
+				add_syntactical_supplier (l_enclosing_type)
 			end
 		end
 

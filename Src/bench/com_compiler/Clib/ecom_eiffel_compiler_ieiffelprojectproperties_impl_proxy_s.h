@@ -22,7 +22,7 @@ class IEiffelProjectProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelProjectProperties_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelClusterProperties_s.h"
+#include "ecom_eiffel_compiler_IEiffelSystemClusters_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -183,30 +183,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_working_directory(  );
-
-
-	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	void ccom_set_working_directory(  /* [in] */ EIF_OBJECT return_value );
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_arguments(  );
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	void ccom_set_arguments(  /* [in] */ EIF_OBJECT return_value );
-
-
-	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_debug_info(  );
@@ -219,27 +195,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of clusters in current project (list of IEiffelClusterProperties*).
+	Project Clusters.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_clusters(  );
-
-
-	/*-----------------------------------------------------------
-	Add a cluster to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_cluster(  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT parent_name,  /* [in] */ EIF_OBJECT cluster_path );
-
-
-	/*-----------------------------------------------------------
-	Remove a cluster from the project.
-	-----------------------------------------------------------*/
-	void ccom_remove_cluster(  /* [in] */ EIF_OBJECT cluster_name );
-
-
-	/*-----------------------------------------------------------
-	Cluster properties.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_properties(  /* [in] */ EIF_OBJECT cluster_name );
 
 
 	/*-----------------------------------------------------------

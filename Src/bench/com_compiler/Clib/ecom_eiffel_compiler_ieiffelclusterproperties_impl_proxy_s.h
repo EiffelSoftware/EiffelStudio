@@ -22,6 +22,8 @@ class IEiffelClusterProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelClusterProperties_s.h"
 
+#include "ecom_eiffel_compiler_IEnumClusterProp_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -139,21 +141,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should preconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_require_by_default(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
 	Should postconditions be evaluated by default?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_evaluate_ensure_by_default(  );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_ensure_by_default(  /* [in] */ EIF_BOOLEAN return_value );
 
 
 	/*-----------------------------------------------------------
@@ -163,21 +153,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should check assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_check_by_default(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
 	Should loop assertions be evaluated by default?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_evaluate_loop_by_default(  );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_loop_by_default(  /* [in] */ EIF_BOOLEAN return_value );
 
 
 	/*-----------------------------------------------------------
@@ -187,9 +165,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should class invariants be evaluated by default?
+	Set assertions for cluster.
 	-----------------------------------------------------------*/
-	void ccom_set_evaluate_invariant_by_default(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_assertions(  /* [in] */ EIF_BOOLEAN evaluate_check,  /* [in] */ EIF_BOOLEAN evaluate_require,  /* [in] */ EIF_BOOLEAN evaluate_ensure,  /* [in] */ EIF_BOOLEAN evaluate_loop,  /* [in] */ EIF_BOOLEAN evaluate_invariant );
 
 
 	/*-----------------------------------------------------------
@@ -208,6 +186,42 @@ public:
 	Remove a directory to exclude.
 	-----------------------------------------------------------*/
 	void ccom_remove_exclude(  /* [in] */ EIF_OBJECT dir_name );
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_parent_name(  );
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	void ccom_set_parent_name(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have a parent cluster?
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_has_parent(  );
+
+
+	/*-----------------------------------------------------------
+	List of subclusters (list of IEiffelClusterProperties*).
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_subclusters(  );
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have children?
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_has_children(  );
+
+
+	/*-----------------------------------------------------------
+	Cluster identifier.
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_cluster_id(  );
 
 
 	/*-----------------------------------------------------------

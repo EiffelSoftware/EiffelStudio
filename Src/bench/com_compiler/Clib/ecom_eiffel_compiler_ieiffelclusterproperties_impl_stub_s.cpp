@@ -342,26 +342,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_evaluate_require_by_default(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should preconditions be evaluated by default?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_require_by_default", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_ensure_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
@@ -379,26 +359,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_ensure_by_default", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_evaluate_ensure_by_default(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should postconditions be evaluated by default?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_ensure_by_default", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
 	
 	END_ECATCH;
 	return S_OK;
@@ -428,26 +388,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_evaluate_check_by_default(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should check assertions be evaluated by default?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_check_by_default", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_loop_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
@@ -465,26 +405,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_loop_by_default", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_evaluate_loop_by_default(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should loop assertions be evaluated by default?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_loop_by_default", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
 	
 	END_ECATCH;
 	return S_OK;
@@ -514,20 +434,24 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::evaluate_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_evaluate_invariant_by_default(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_assertions(  /* [in] */ VARIANT_BOOL evaluate_check, /* [in] */ VARIANT_BOOL evaluate_require, /* [in] */ VARIANT_BOOL evaluate_ensure, /* [in] */ VARIANT_BOOL evaluate_loop, /* [in] */ VARIANT_BOOL evaluate_invariant )
 
 /*-----------------------------------------------------------
-	Should class invariants be evaluated by default?
+	Set assertions for cluster.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_evaluate_check = rt_ce.ccom_ce_boolean (evaluate_check);
+	EIF_BOOLEAN tmp_evaluate_require = rt_ce.ccom_ce_boolean (evaluate_require);
+	EIF_BOOLEAN tmp_evaluate_ensure = rt_ce.ccom_ce_boolean (evaluate_ensure);
+	EIF_BOOLEAN tmp_evaluate_loop = rt_ce.ccom_ce_boolean (evaluate_loop);
+	EIF_BOOLEAN tmp_evaluate_invariant = rt_ce.ccom_ce_boolean (evaluate_invariant);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_invariant_by_default", type_id);
+	eiffel_procedure = eif_procedure ("set_assertions", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_evaluate_check, (EIF_BOOLEAN)tmp_evaluate_require, (EIF_BOOLEAN)tmp_evaluate_ensure, (EIF_BOOLEAN)tmp_evaluate_loop, (EIF_BOOLEAN)tmp_evaluate_invariant);
 	
 	END_ECATCH;
 	return S_OK;
@@ -610,6 +534,161 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::remove_ex
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_dir_name != NULL) ? eif_access (tmp_dir_name) : NULL));
 	if (tmp_dir_name != NULL)
 		eif_wean (tmp_dir_name);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::parent_name(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Name of the parent cluster.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("parent_name", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "parent_name", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_parent_name(  /* [in] */ BSTR return_value )
+
+/*-----------------------------------------------------------
+	Name of the parent cluster.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_return_value = NULL;
+	if (return_value != NULL)
+	{
+		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_parent_name", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
+	if (tmp_return_value != NULL)
+		eif_wean (tmp_return_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Does the current cluster have a parent cluster?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("has_parent", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "has_parent", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value )
+
+/*-----------------------------------------------------------
+	List of subclusters (list of IEiffelClusterProperties*).
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("subclusters", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "subclusters", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_117 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::has_children(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Does the current cluster have children?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("has_children", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "has_children", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::cluster_id(  /* [out, retval] */ ULONG * return_value )
+
+/*-----------------------------------------------------------
+	Cluster identifier.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_INTEGER_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_integer_function ("cluster_id", type_id);
+	EIF_INTEGER tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_id", EIF_INTEGER);
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
@@ -715,7 +794,117 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 	switch (dispID)
 	{
 		
-		case 1610743830:
+		case 210:
+			{
+				if (pDispParams->cArgs != 5)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (5*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11, 11, 11, 11, 11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				if (tmp_value [1]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 1;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_1 = (VARIANT_BOOL)tmp_value [1]->boolVal;
+				
+				if (tmp_value [2]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [2], tmp_value [2], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 2;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_2 = (VARIANT_BOOL)tmp_value [2]->boolVal;
+				
+				if (tmp_value [3]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [3], tmp_value [3], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 3;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_3 = (VARIANT_BOOL)tmp_value [3]->boolVal;
+				
+				if (tmp_value [4]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [4], tmp_value [4], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 4;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_4 = (VARIANT_BOOL)tmp_value [4]->boolVal;
+				
+				hr = set_assertions ( arg_0, arg_1, arg_2, arg_3, arg_4);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 211:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -751,7 +940,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 1610743831:
+		case 212:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -809,7 +998,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 1610743832:
+		case 213:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1088,62 +1277,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				}
 					
 			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_require_by_default ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
 			break;
 
 		case 206:
@@ -1180,62 +1313,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 					pVarResult->boolVal = result;
 				}
 					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_ensure_by_default ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
 			}
 			break;
 
@@ -1274,62 +1351,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				}
 					
 			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_check_by_default ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
 			break;
 
 		case 208:
@@ -1366,62 +1387,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 					pVarResult->boolVal = result;
 				}
 					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_loop_by_default ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
 			}
 			break;
 
@@ -1460,6 +1425,43 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				}
 					
 			}
+			break;
+
+		case 214:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = parent_name (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
 			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
 			{
 				if (pDispParams->cArgs != 1)
@@ -1467,7 +1469,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
 
-				VARTYPE vt_type [] = {11};
+				VARTYPE vt_type [] = {8};
 
 				if (cNamedArgs >0)
 					for (i = 0; i < cNamedArgs; i++)
@@ -1481,9 +1483,9 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				}
 
 				
-				if (tmp_value [0]->vt != 11)
+				if (tmp_value [0]->vt != 8)
 				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
 					if (FAILED (hr))
 				{
 					CoTaskMemFree (tmp_value);
@@ -1492,9 +1494,9 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				}
 			
 				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_evaluate_invariant_by_default ( arg_0);
+				hr = set_parent_name ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1515,6 +1517,154 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 					return DISP_E_EXCEPTION;
 				}
 				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 215:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = has_parent (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 216:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ecom_eiffel_compiler::IEnumClusterProp * result = 0;
+				
+				hr = subclusters (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 13;
+					pVarResult->punkVal = result;
+				}
+					
+			}
+			break;
+
+		case 217:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = has_children (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 218:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ULONG result = 0;
+				
+				hr = cluster_id (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 19;
+					pVarResult->ulVal = result;
+				}
+					
 			}
 			break;
 

@@ -37,6 +37,10 @@ class ecom_gec_Eif_compiler;
 
 #include "ecom_eiffel_compiler_IEnumFeature_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelSystemClusters_s.h"
+
+#include "ecom_eiffel_compiler_IEnumClusterProp_s.h"
+
 #include "ecom_eiffel_compiler_IEiffelClusterProperties_s.h"
 
 #ifdef __cplusplus
@@ -316,57 +320,69 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
+	Convert IEIFFEL_SYSTEM_CLUSTERS_INTERFACE to ecom_eiffel_compiler::IEiffelSystemClusters *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_110( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEiffelSystemClusters * ccom_ec_pointed_interface_112( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
+	Convert CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemClusters * *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_111( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEiffelSystemClusters * * ccom_ec_pointed_cell_113( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemClusters * * old );
 
 
 	/*-----------------------------------------------------------
-	Convert ECOM_VARIANT to VARIANT *.
+	Convert CELL [ECOM_ARRAY [STRING]] to SAFEARRAY *  *.
 	-----------------------------------------------------------*/
-	VARIANT * ccom_ec_pointed_record_113( EIF_REFERENCE eif_ref );
+	SAFEARRAY *  * ccom_ec_pointed_cell_115( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
+
+
+	/*-----------------------------------------------------------
+	Convert IENUM_CLUSTER_PROP_INTERFACE to ecom_eiffel_compiler::IEnumClusterProp *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEnumClusterProp * ccom_ec_pointed_interface_117( EIF_REFERENCE eif_ref );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [IENUM_CLUSTER_PROP_INTERFACE] to ecom_eiffel_compiler::IEnumClusterProp * *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEnumClusterProp * * ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterProp * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_CLUSTER_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelClusterProperties *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterProperties * ccom_ec_pointed_interface_115( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelClusterProperties * ccom_ec_pointed_interface_120( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterProperties * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterProperties * * ccom_ec_pointed_cell_116( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterProperties * * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [ECOM_ARRAY [STRING]] to SAFEARRAY *  *.
-	-----------------------------------------------------------*/
-	SAFEARRAY *  * ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
+	ecom_eiffel_compiler::IEiffelClusterProperties * * ccom_ec_pointed_cell_121( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterProperties * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_119( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_124( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_120( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_125( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [ECOM_ARRAY [STRING]] to SAFEARRAY *  *.
 	-----------------------------------------------------------*/
-	SAFEARRAY *  * ccom_ec_pointed_cell_131( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
+	SAFEARRAY *  * ccom_ec_pointed_cell_136( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_137( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 

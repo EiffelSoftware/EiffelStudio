@@ -119,21 +119,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should preconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_require_by_default(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
 	Should postconditions be evaluated by default?
 	-----------------------------------------------------------*/
 	STDMETHODIMP evaluate_ensure_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_ensure_by_default(  /* [in] */ VARIANT_BOOL return_value );
 
 
 	/*-----------------------------------------------------------
@@ -143,21 +131,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should check assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_check_by_default(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
 	Should loop assertions be evaluated by default?
 	-----------------------------------------------------------*/
 	STDMETHODIMP evaluate_loop_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_loop_by_default(  /* [in] */ VARIANT_BOOL return_value );
 
 
 	/*-----------------------------------------------------------
@@ -167,9 +143,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should class invariants be evaluated by default?
+	Set assertions for cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_invariant_by_default(  /* [in] */ VARIANT_BOOL return_value );
+	STDMETHODIMP set_assertions(  /* [in] */ VARIANT_BOOL evaluate_check, /* [in] */ VARIANT_BOOL evaluate_require, /* [in] */ VARIANT_BOOL evaluate_ensure, /* [in] */ VARIANT_BOOL evaluate_loop, /* [in] */ VARIANT_BOOL evaluate_invariant );
 
 
 	/*-----------------------------------------------------------
@@ -188,6 +164,42 @@ public:
 	Remove a directory to exclude.
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_exclude(  /* [in] */ BSTR dir_name );
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	STDMETHODIMP parent_name(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_parent_name(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have a parent cluster?
+	-----------------------------------------------------------*/
+	STDMETHODIMP has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	List of subclusters (list of IEiffelClusterProperties*).
+	-----------------------------------------------------------*/
+	STDMETHODIMP subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value );
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have children?
+	-----------------------------------------------------------*/
+	STDMETHODIMP has_children(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Cluster identifier.
+	-----------------------------------------------------------*/
+	STDMETHODIMP cluster_id(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------

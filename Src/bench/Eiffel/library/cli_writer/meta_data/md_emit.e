@@ -112,6 +112,15 @@ feature -- Definition: access
 			result_valid: Result > 0
 		end
 		
+	define_module_ref (name: UNI_STRING): INTEGER is
+			-- Define a reference to a module of name `name'.
+		do
+			last_call_success := c_define_module_ref (item, name.item, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0		
+		end
+		
 feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags:
@@ -180,7 +189,20 @@ feature -- Definition: creation
 		ensure
 			success: last_call_success = 0
 		end
-		
+	
+	define_pinvoke_map (method_token, mapping_flags: INTEGER;
+			import_name: UNI_STRING; module_ref: INTEGER)
+		is
+			-- Further specification of a pinvoke method location defined by `method_token'.
+		require
+			import_name_not_void: import_name /= Void
+		do
+			last_call_success := c_define_pinvoke_map (item, method_token,
+				mapping_flags, import_name.item, module_ref)
+		ensure
+			success: last_call_success = 0
+		end
+			
 	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 		is
@@ -358,6 +380,16 @@ feature {NONE} -- Implementation
 			"DefineMethodImpl"
 		end
 
+	c_define_module_ref (an_item: POINTER; module_name: POINTER;
+			module_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineModuleRef'.
+		external
+			"C++ IMetaDataEmit signature (LPCWSTR, mdModuleRef *): EIF_INTEGER use <cor.h>"
+		alias
+			"DefineModuleRef"
+		end
+
 	c_define_param (an_item: POINTER; meth_token: INTEGER; param_number: INTEGER;
 			name: POINTER; flags: INTEGER; default_value_type: INTEGER;
 			default_value_data: POINTER; default_value_data_length: INTEGER;
@@ -373,6 +405,19 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineParam"
+		end
+
+	c_define_pinvoke_map (an_item: POINTER; method_token, mapping_flags: INTEGER;
+			import_name: POINTER; module_ref: INTEGER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefinePinvokeMap'.
+		external
+			"[
+				C++ IMetaDataEmit signature (mdToken, DWORD, LPCWSTR, mdModuleRef): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefinePinvokeMap"
 		end
 
 	c_define_signature (an_item: POINTER; signature: POINTER;

@@ -141,6 +141,14 @@ feature {NONE} -- Implementation
 				-- setting the number of reference of the menu to 1:
 				gtk_object_unref (widget)
 
+				-- 3) Foreground and background Colors.
+				-- Set the menu colors to the same ones as the option button's.
+				option_button_par ?= parent_imp
+				c_gtk_widget_set_fg_color (item_imp.widget, option_button_par.foreground_color.red,
+					option_button_par.foreground_color.green, option_button_par.foreground_color.blue)
+				c_gtk_widget_set_bg_color (item_imp.widget, option_button_par.background_color.red,
+					option_button_par.background_color.green, option_button_par.background_color.blue)
+
 			-- If the parent is not an option button:
 			else
 				gtk_menu_append (widget, item_imp.widget)
@@ -154,6 +162,9 @@ feature {NONE} -- Implementation
 			-- Remove the item from the container.
 		local
 			option_button_par: EV_OPTION_BUTTON_IMP
+			default_colors: EV_DEFAULT_COLORS
+				-- Needed to reset the menu item's colors to
+				-- the default colors.
 		do
 			gtk_container_remove (GTK_CONTAINER (widget), item_imp.widget)
 
@@ -168,6 +179,13 @@ feature {NONE} -- Implementation
 
 			-- Update the array `ev_children'.
 			ev_children.prune_all (item_imp)
+
+			-- Set the menu colors to the default colors. We set it to those colors
+			-- because for now, the user can not set colors on EV_MENU.
+			c_gtk_widget_set_fg_color (item_imp.widget, default_colors.default_foreground_color.red,
+				default_colors.default_foreground_color.green, default_colors.default_foreground_color.blue)
+			c_gtk_widget_set_bg_color (item_imp.widget, default_colors.default_background_color.red,
+				default_colors.default_background_color.green, default_colors.default_background_color.blue)
 		end
 	
 end -- class EV_MENU_IMP

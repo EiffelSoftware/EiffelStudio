@@ -81,6 +81,7 @@ feature -- Status report
 			-- Is the item selected?
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			Result := implementation.is_selected
 		end

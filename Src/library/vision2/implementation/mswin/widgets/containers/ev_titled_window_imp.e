@@ -42,7 +42,8 @@ inherit
 			restore,
 			interface,
 			initialize,
-			on_accelerator_command
+			on_accelerator_command,
+			destroy
 		end
 
 create
@@ -69,10 +70,32 @@ feature {NONE} -- Initialization
 			{EV_WINDOW_IMP} Precursor
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			app_imp.add_root_window (interface)
-			interface.close_actions.extend (interface~destroy)
+			destroy_feature := interface~destroy
+			interface.close_actions.extend (destroy_feature)
 			is_initialized := True
 			create accel_list.make (10)
 		end
+
+	destroy is
+			-- Destroy `Current'.
+		do
+			if not on_wm_close_executed then
+				-- If on_wm_close has not been called
+				--| See comment for on_wm_close_executed in class
+				--| EV_WINDOW_IMP
+				interface.close_actions.prune_all (destroy_feature)
+					-- Remove `destroy_feature' from
+					-- `interface.close_actions'."
+				interface.close_actions.call ([])
+					-- Call `interface.close_actions'
+			end
+			{EV_WINDOW_IMP} Precursor
+		end
+
+	destroy_feature: PROCEDURE [EV_TITLED_WINDOW, TUPLE []]
+		-- Holds the feature `interface.destroy'
+		--| FIXME Why cannot we just prune for the real feature?
+		--| It did not seem to work when attempted.
 
 feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 
@@ -446,6 +469,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/04/03 16:39:10  rogers
+--| Redefined destroy from EV_WINDOW_IMP. Added `destroy_feature'.
+--|
 --| Revision 1.59  2000/03/21 20:21:09  brendel
 --| Fixed initialization of WEL_ARRAY [WEL_ACCELERATOR].
 --|

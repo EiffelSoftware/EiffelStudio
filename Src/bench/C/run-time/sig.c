@@ -27,6 +27,7 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 #include "rt_constants.h"
 #include "rt_sig.h"
 #include "rt_globals.h"
+#include "rt_malloc.h"
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
@@ -103,6 +104,17 @@ doc:	</attribute>
 rt_shared struct s_stack sig_stk;
 
 #endif /* EIF_THREADS */
+
+/*
+doc:	<attribute name="c_sig_stk" return_type="stack_t" export="private">
+doc:		<summary>Stack used for evaluation signal handlers.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_private stack_t c_sig_stk;
+
 
 /* Routine declarations */
 rt_shared Signal_t ehandler(int sig);
@@ -376,6 +388,10 @@ rt_private int dangerous(int sig)
 	} else if (sig == SIGSEGV) {		/* Segmentation violation */
 		return 1;
 #endif
+#ifdef SIGFPE
+	} else if (sig == SIGFPE) {		/* Segmentation violation */
+		return 1;
+#endif
 #ifdef EIF_SGI
 	/* Per man page documentation of `signal' on SGI:
 	 * Signals raised by any instruction in the instruction stream, including
@@ -386,11 +402,10 @@ rt_private int dangerous(int sig)
 	 * that `SIGTRAP' was also dangerous since it is used to catch division by zero and will
 	 * also do an infinite loop.
 	 *
-	 * Note: we do not handle SIGBUS, SIGSEGV, SIGILL here because already done above for non-SGI case.
+	 * Note: we do not handle SIGFPE, SIGBUS, SIGSEGV, SIGILL here because already
+	 * done above for non-SGI case.
 	 */
-	} else if (
-		(sig == SIGFPE) || (sig == SIGEMT) || (sig == SIGTRAP)
-	) {
+	} else if ((sig == SIGEMT) || (sig == SIGTRAP)) {
 		return 1;
 #endif
 	}
@@ -742,6 +757,25 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < EIF_NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
+
+#if defined(HAS_SIGALTSTACK) && defined(SIGSEGV)
+		/* To make sure that stack overflow are properly handled, we allocate
+		 * a stack for signal handling where handler will be executed when
+		 * receiving a SIGSEGV. */
+	c_sig_stk.ss_sp = eif_rt_xcalloc(SIGSTKSZ, 1);	
+	c_sig_stk.ss_flags = 0;
+	c_sig_stk.ss_size = SIGSTKSZ;
+
+	if (sigaltstack(&c_sig_stk, NULL) == 0) {
+		struct sigaction action;
+
+		action.sa_handler = ehandler;
+		sigemptyset (&action.sa_mask);
+		sigaddset (&action.sa_mask, SIGSEGV);
+		action.sa_flags = SA_ONSTACK;
+		sigaction (SIGSEGV, &action, NULL);
+	}
+#endif
 }
 
 /*

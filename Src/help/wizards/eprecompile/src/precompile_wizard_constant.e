@@ -10,7 +10,7 @@ class
 	
 feature -- Constants
 
-	Progress_file: STRING is "progress.eif"
+	Progress_filename: STRING is "progress.eif"
 
 
 end -- class PRECOMPILE_WIZARD_CONSTANT

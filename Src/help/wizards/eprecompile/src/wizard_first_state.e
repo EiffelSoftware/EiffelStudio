@@ -286,28 +286,32 @@ feature -- Tools
 		end
 
 	fill_lists_from_previous_state is
-			-- Fill the MULTI_COLUMN_LIST when the user has previously 
+			-- Fill the "To precompile" and "precompilable"
+			-- MULTI_COLUMN_LISTs when the user has previously 
 			-- choose its library to precompile.
 			-- Can occur only if the user has pushed the Back button
 		do
-			from 
-				wizard_information.l_to_precompile.start
-			until
-				wizard_information.l_to_precompile.after
-			loop
-				to_precompile_libraries.extend (wizard_information.l_to_precompile.item)
-				wizard_information.l_to_precompile.forth
-			end
+			fill_list_from_previous_state (to_precompile_libraries, wizard_information.l_to_precompile)
+			fill_list_from_previous_state (precompilable_libraries, wizard_information.l_precompilable)
+		end
 
+	fill_list_from_previous_state (a_mc_list: EV_MULTI_COLUMN_LIST; a_list: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]) is
+			-- Fill `a_mc_list' with `a_list' when the user has previously 
+			-- choose its library to precompile.
+			-- Can occur only if the user has pushed the Back button
+		local
+			curr_item: EV_MULTI_COLUMN_LIST_ROW
+		do
 			from 
-				wizard_information.l_precompilable.start
+				a_list.start
 			until
-				wizard_information.l_precompilable.after
+				a_list.after
 			loop
-				precompilable_libraries.extend (wizard_information.l_precompilable.item)
-				wizard_information.l_precompilable.forth
+				curr_item := a_list.item
+				curr_item.parent.prune_all (curr_item)
+				a_mc_list.extend (curr_item)
+				a_list.forth
 			end
-
 		end
 	
 	add_all_items is

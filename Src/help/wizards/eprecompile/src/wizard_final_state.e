@@ -1,5 +1,5 @@
 indexing
-	description	: "Objects that ..."
+	description	: "Final state for the precompilation wizard"
 	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -83,13 +83,20 @@ feature -- Basic Operations
 			mess: EV_INFORMATION_DIALOG
 		do
 			build_finish
+			first_window.disable_next_button
+			first_window.disable_back_button
+
+			if not first_window.is_destroyed then
+				first_window.unlock_update
+			end
+
 			launch_precompilations
-			Precursor
 			create mess.make_with_text (final_message)
 			mess.show_modal_to_window (first_window)
+			Precursor
 		end
 
-feature -- Access
+feature {NONE} -- Implementation
 
 	display_state_text is
 		do
@@ -149,9 +156,15 @@ feature -- Access
 			lib_exists: lib_name /= Void and then lib_ace /= Void
 		local
 			to_end: BOOLEAN
+			progress_file: RAW_FILE
 			time_left, n_dir: INTEGER
+			new_time_left: INTEGER
 			proj_path, command: STRING
 			total_prog: INTEGER
+			progress_file_path: FILE_NAME
+			eifgen_path: DIRECTORY_NAME
+			eifgen_dir: DIRECTORY
+			finish_freezing_command: FILE_NAME
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
@@ -165,85 +178,215 @@ feature -- Access
 			proj_path.mirror
 			lib_ace.mirror
 
-				-- Launch the precompilation and update the progress bars.
-			from
-				compt := 1 -- Not needed if the file is used....
-				to_end := False
-				progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
-				create command.make (50)
-				command.append (Eiffel_compiler_command)
-				command.append (" -precompile -ace ")
-				command.append (lib_ace)
-				command.append (" -project_path ")
-				command.append (proj_path)
-				launch (command)
-			until
-				to_end = True
-			loop
-				time_left:= find_time (proj_path)
-				if time_left >= 100 then
-					to_end:= True	
-				else
-					progress_2.set_proportion (time_left/100)
+			create eifgen_path.make_from_string (proj_path)
+			eifgen_path.extend ("EIFGEN")
+			create progress_file_path.make_from_string (eifgen_path)
+			progress_file_path.set_file_name (Progress_filename)
+
+				-- Remove the EIFGEN dir if it exists.
+			if remove_eifgen (eifgen_path) then
+					-- Launch the precompilation and update the progress bars.
+				from
+					compt := 1 -- Not needed if the file is used....
+					to_end := False
+					progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
+					create command.make (50)
+					command.append (Eiffel_compiler_command)
+					command.append ("2 -precompile -ace ")
+					command.append (lib_ace)
+					command.append (" -project_path ")
+					command.append (proj_path)
+					command.append (" -output_file ")
+					command.append (progress_file_path)
+					launch (command)
+				until
+					to_end = True
+				loop
+					new_time_left := find_time (progress_file_path)
+					if new_time_left /= -1 then	
+						if new_time_left >= 100 then
+							to_end := True
+							time_left := 100
+						else
+							time_left := new_time_left
+						end
+					end
+					progress_2.set_proportion (time_left / 100)
 					progress_text_2.set_text ("Precompiling " + lib_name + " library: " + time_left.out + "%%")
-					
-					total_prog:= ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
+						
+					total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
 					progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
 					progress_text.set_text ("Total progress: " + total_prog.out + "%%")
 				end
 			end
-			n_lib_done:= n_lib_done + 1
+			
+				-- Launch `finish_freezing'
+			eifgen_path.extend ("W_CODE")
+			change_working_directory (eifgen_path)
+			create finish_freezing_command.make_from_string (Eiffel_compiler_location)
+			finish_freezing_command.set_file_name ("finish_freezing")
+			launch (finish_freezing_command)
+
+			n_lib_done := n_lib_done + 1
 		end
 
-	find_time (project_path: STRING): INTEGER is
+	remove_eifgen (eifgen_path: DIRECTORY_NAME): BOOLEAN is
+			-- Remove the eifgen directory. Return True if Eifgen has been removed.
+		local
+			eifgen_dir: DIRECTORY
+			error_dialog: EV_ERROR_DIALOG
+			cancel_removal: BOOLEAN
+			new_name: STRING
+		do
+			if not cancel_removal then
+					-- Remove the EIFGEN dir if it exists.
+				create eifgen_dir.make (eifgen_path)
+				if eifgen_dir.exists then
+					new_name := clone (Eifgen_path)
+					if new_name.item (new_name.count) = ']' then
+							-- VMS specification. We need to append `_old' before the `]'.
+						new_name.insert ("_old", new_name.count - 1)
+					else
+						new_name.append ("_old")
+					end
+						-- Rename the old project
+					eifgen_dir.change_name (new_name)
+					eifgen_dir.recursive_delete
+				end
+			end
+			Result := not cancel_removal
+		rescue
+			create error_dialog.make_with_text (
+				"Unable to remove the existing EIFGEN directory%N`"+
+				eifgen_path+
+				"'.%N%
+				%Check your permissions and try again, or cancel the%N%
+				%precompilation")
+			error_dialog.set_buttons (<<"Try again", "Cancel">>)
+			error_dialog.set_default_push_button (error_dialog.button ("Try again"))
+			error_dialog.set_default_cancel_button (error_dialog.button ("Cancel"))
+			error_dialog.show_modal_to_window (first_window)
+			if error_dialog.selected_button.is_equal ("Cancel") then
+				cancel_removal := True
+			end
+			retry
+		end
+
+	find_time (progress_file_path: FILE_NAME): INTEGER is
 			-- Check the progress file to determine the current progress of the precompilation
 			-- The function will check the project file in the directory 'project_path'
 		require
-			project_path_exists: project_path /= Void
+			progress_file_path_valid: progress_file_path /= Void and then progress_file_path.is_valid
 		local
 			fi: PLAIN_TEXT_FILE
 			s: STRING
-			dir: DIRECTORY
-			in_dir: ARRAYED_LIST [STRING]
+			retried: BOOLEAN
+			curr_degree: INTEGER
+			curr_percent: INTEGER
 		do
-			current_application.sleep (100)
-			current_application.process_events
---			compt:= compt + 1
+			if not retried then
+				current_application.sleep (100)
+				current_application.process_events
 
-			create dir.make (project_path)
-			in_dir:= dir.linear_representation
-			in_dir.compare_objects
-			if in_dir.has (Progress_file) then
-				create fi.make_open_read (project_path + "/" + Progress_file)
-				fi.read_stream (fi.count)
-				s:= fi.last_string
-				fi.close
-				Result:= s.to_integer
+				create fi.make_open_read (progress_file_path)
+				if not fi.is_closed and then fi.is_readable then
+					fi.read_stream (fi.count)
+					s := fi.last_string
+					fi.close
+					if s.is_equal ("finished") or s.is_equal ("finished%N") then
+						Result := 100
+						fi.delete
+					else
+						curr_degree := degree_from_output (s)
+						curr_percent := percentage_from_output (s)
+						if curr_degree /= -1 and curr_percent /= -1 then
+							Result := (((6 - curr_degree)* 100 + curr_percent) // 7).min(99)
+						else
+							Result := -1
+						end
+					end
+				else
+					Result := -1
+				end
 			end
-
---			Result:= compt
 		ensure
 			result_is_integer: Result /= Void
+		rescue
+			retried := True
+			retry
+		end
+
+	degree_from_output (a_output_string: STRING): INTEGER is
+			-- Return a degree between 6 and 0 if everything went ok,
+			-- -1 otherwise.
+		local
+			tab_index: INTEGER
+			degree_substring: STRING
+		do
+			tab_index := a_output_string.index_of('%T', 1)
+			Result := a_output_string.substring (1, tab_index).to_integer
+
+			degree_substring := a_output_string.substring (1, tab_index)
+			if degree_substring @ 1 = '-' then
+				if degree_substring.is_integer then
+					Result := -(degree_substring.substring (2, degree_substring.count).to_integer)
+				end
+			else
+				if degree_substring.is_integer then
+					Result := degree_substring.to_integer
+				end
+			end
+			if Result = -1 then
+				Result := 1
+			elseif Result = -2 then
+				Result := 0
+			end
+
+			if Result > 6 or Result < 0 then
+				Result := -1
+			end
+		ensure
+			Result_valid: (Result <= 6 and Result >= 0) or (Result = -1)
+		end
+
+	percentage_from_output (a_output_string: STRING): INTEGER is
+			-- Return a percentage between 100 and 0 if everything went ok,
+			-- -1 otherwise.
+		local
+			tab_index: INTEGER
+			percentage_substring: STRING
+		do
+			Result := -1
+			tab_index := a_output_string.index_of('%T', 1)
+			percentage_substring := a_output_string.substring (tab_index + 1, a_output_string.count - 2)
+			if percentage_substring.is_integer then
+				Result := percentage_substring.to_integer
+				if Result > 100 or Result < 0 then
+					Result := -1
+				end
+			end
+		ensure
+			Result_valid: (Result <= 100 and Result >= 0) or (Result = -1)
 		end
 
 feature -- Access
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-		-- Icon for the Eiffel Store Wizard
+			-- Icon for the Eiffel Wizard
 
 	progress_text_2: EV_LABEL
-		-- 2nd progress text (For each library)
+			-- 2nd progress text (For each library)
 
 	progress_2: EV_HORIZONTAL_PROGRESS_BAR
-		-- 2nd progress bar (For each library)
+			-- 2nd progress bar (For each library)
 
 	n_lib_to_precompile: INTEGER
-		-- Number of library left to precompile
+			-- Number of library left to precompile
 
 	n_lib_done: INTEGER
-		-- Number of library already precompiled
+			-- Number of library already precompiled
 
 	compt: INTEGER
-		-- Used to test .. unuseful if the progress file is used
+			-- Used to test .. unuseful if the progress file is used
 
 end -- class WIZARD_FINAL_STATE

@@ -209,7 +209,7 @@ feature -- Generation constants
 			Result := "<EVENT_DECLARATION>"
 		end
 		
-	attribute_tab: STRING is
+	attribute_tag: STRING is
 			-- `Result' is tag used in templates
 			-- for the attribute declarations.
 		once

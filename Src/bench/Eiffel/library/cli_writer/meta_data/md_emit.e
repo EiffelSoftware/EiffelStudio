@@ -84,6 +84,24 @@ feature -- Definition: access
 			success: last_call_success = 0
 		end
 
+	define_member_ref (method_name: UNI_STRING; in_class_token: INTEGER;
+			signature: MD_SIGNATURE): INTEGER
+		is
+			-- Creat reference to member in class `in_class_token'.
+		require
+			method_name_not_void: method_name /= Void
+			signature_not_void: signature /= Void
+		do
+			if not signature.is_written then
+				signature.update_item
+			end
+			last_call_success := c_define_member_ref (item, in_class_token,
+				method_name.item, signature.item.item, signature.size, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+		
 feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER; assembly_info: MD_ASSEMBLY_INFO): INTEGER is
@@ -123,11 +141,14 @@ feature -- Definition: creation
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; signature: MD_SIGNATURE; impl_flags: INTEGER): INTEGER
 		is
-			-- Creat new methode in class `in_class_token'.
+			-- Creat new method in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
 			signature_not_void: signature /= Void
 		do
+			if not signature.is_written then
+				signature.update_item
+			end
 			last_call_success := c_define_method (item, in_class_token,
 				method_name.item, method_flags, signature.item.item, signature.size,
 				0, impl_flags, $Result)
@@ -256,6 +277,21 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineMethod"
+		end
+
+	c_define_member_ref (an_item: POINTER; type_token: INTEGER; name: POINTER;
+			signature: POINTER; sig_length: INTEGER; member_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineMemberRef'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdToken, LPCWSTR, PCCOR_SIGNATURE, ULONG,
+					mdMemberRef *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineMemberRef"
 		end
 
 end -- class MD_EMIT

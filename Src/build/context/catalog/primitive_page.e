@@ -70,7 +70,7 @@ feature {NONE}
 
 			!!text_field_c;
 			!!text_field.make (text_field_c.eiffel_type, Current);
-			text_field.set_text (text_field_c.eiffel_type);
+			text_field.set_text ("TEXT_FIELD");
 			!!text_field_type.make (Widget_names.text_field_name, text_field_c);
 			text_field_type.initialize_callbacks (text_field);
 

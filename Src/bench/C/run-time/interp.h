@@ -217,5 +217,8 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_PASSIGN			126
 #define BC_PREVERSE			127
 #define BC_PCLIKE			(char) 128
+#define BC_OBJECT_EXPR_ADDR	(char) 129
+#define BC_RESERVE			(char) 130
+#define BC_POP				(char) 131
 
 #endif

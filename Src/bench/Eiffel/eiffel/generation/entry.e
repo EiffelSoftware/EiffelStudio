@@ -129,18 +129,16 @@ feature -- from ENTRY
 			class_type: CL_TYPE_I;
 		do
 			class_type ?= type;
-			if not (
-				class_type = Void
-				or else
-				class_type.is_basic
-				--or else
-				--class_type.is_expanded
-			) then
+			if
+				not ( class_type = Void or else class_type.is_basic
+				--or else --class_type.is_expanded
+				)
+			then
 				Result := class_type.associated_class_type.id.id;
 			end;
 		end;
 
-	generated_static_feature_type_id: STRING is
+	generated_static_feature_type_id (f: INDENT_FILE) is
 			-- Textual representation of type id of the Result type
 		local
 			class_type: CL_TYPE_I
@@ -151,9 +149,9 @@ feature -- from ENTRY
 				--or else-class_type.is_expanded
 				)
 			then
-				Result := class_type.associated_class_type.id.generated_id
+				class_type.associated_class_type.id.generated_id (f)
 			else
-				Result := "-1"
+				f.putint (-1)
 			end
 		end;
 
@@ -163,13 +161,11 @@ feature -- from ENTRY
 			class_type: CL_TYPE_I;
 		do
 			class_type ?= type;
-			if not (
-				class_type = Void
-				or else
-				class_type.is_basic
-				--or else
-				--class_type.is_expanded
-			) then
+			if
+				not ( class_type = Void or else class_type.is_basic
+				--or else --class_type.is_expanded
+				)
+			then
 				Result := class_type.type_id;
 			end;
 		end;

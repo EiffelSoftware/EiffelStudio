@@ -21,7 +21,10 @@ feature -- Access
 			-- Content
 		do
 			create Result.make_empty
-			Result.append ("<document title=%"Enter title here%">%N%T<meta_data/>%N%T<paragraph>Enter content here</paragraph>%N</document>")
+			Result.append ("<document title=%"(Enter title here..)%">%N%
+			%%T<meta_data/>%N%
+			%%T<paragraph>(Enter content here...)</paragraph>%N%
+			%</document>")
 		end	
 
 end -- class EMPTY_TEMPLATE

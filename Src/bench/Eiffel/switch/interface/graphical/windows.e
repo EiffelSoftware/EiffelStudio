@@ -14,12 +14,6 @@ feature {NONE}
 			!! Result.make (ewb_display)
 		end
 
-	Focus_label: FOCUS_LABEL_I is
-			-- Focus label
-		once
-			!FOCUS_LABEL! Result.initialize (Project_tool)
-		end
-
 	Transporter: TRANSPORTER is
 		once
 			!! Result.make (project_tool)

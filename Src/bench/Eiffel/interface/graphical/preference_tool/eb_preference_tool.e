@@ -56,7 +56,7 @@ feature -- Output
 			if not already_realized then
 				set_title (Interface_names.t_Preference_tool);
 				set_icon_name (Interface_names.t_Preference_tool);
-				Focus_label.initialize_focusables (Current)
+				tooltip_realize
 			end
 		end;
 

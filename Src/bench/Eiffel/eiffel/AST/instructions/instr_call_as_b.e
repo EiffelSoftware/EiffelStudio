@@ -17,8 +17,7 @@ inherit
 
 	INSTRUCTION_AS_B
 		redefine
-			type_check, byte_node, 
-			fill_calls_list, replicate
+			byte_node, fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -28,7 +27,7 @@ feature -- Attributes
 
 feature -- Type check, byte code and dead code removal
 
-	type_check is
+	perform_type_check is
 			-- Type check a call as an instruction
 		local
 			vkcn1: VKCN1;

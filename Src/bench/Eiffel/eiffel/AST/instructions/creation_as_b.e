@@ -9,8 +9,7 @@ inherit
 
 	INSTRUCTION_AS_B
 		redefine
-			type_check, byte_node, 
-			fill_calls_list, replicate
+			byte_node, fill_calls_list, replicate
 		end;
 
 	SHARED_INSTANTIATOR;
@@ -30,7 +29,7 @@ feature -- Attributes
 
 feature -- Type check, byte code and dead code removal
 
-	type_check is
+	perform_type_check is
 			-- Type check a creation instruction
 		local
 			access: ACCESS_B;

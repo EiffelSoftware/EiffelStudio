@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision tree-item, gtk implementation"
+	description: "Eiffel Vision tree item. GTK+ implementation."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,16 +26,16 @@ inherit
 		redefine
 			interface,
 			add_to_container,
-			remove_item_from_position,
-			reorder_child,
-			count,
-			item
+			remove_i_th,
+			reorder_child
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface
 		end
+
+	EV_C_UTIL
 
 create
 	make
@@ -98,47 +98,15 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	item: EV_TREE_ITEM is
-			-- Item at current position.
-		do
-			if list_widget /= Default_pointer then
-				Result := Precursor
-			end
-		end
-
-	count: INTEGER is
-			-- Number of items
-		do
-			if list_widget /= Default_pointer then
-				Result := Precursor	
-			end
-		end
-
 	is_selected: BOOLEAN is
 			-- Is the item selected ?
 		local
-			list_pointer, item_pointer: POINTER
-			o: EV_ANY_IMP
-			a_counter: INTEGER
-			current_item: EV_TREE_ITEM
+			list_pointer: POINTER
+			sel_list: LINKED_LIST [EV_TREE_ITEM_IMP]
 		do
 			list_pointer := GTK_TREE_SELECTION (parent_imp.list_widget)
-			if list_pointer /= Default_pointer then
-				from
-					a_counter := 0
-				until
-					a_counter = C.g_list_length (list_pointer)
-				loop
-					item_pointer := C.g_list_nth_data (
-						list_pointer,
-						a_counter
-					)
-					if item_pointer = c_object then
-						Result := True
-					end
-					a_counter := a_counter + 1
-				end
-			end	
+			sel_list ?= gslist_to_eiffel (list_pointer)
+			Result := sel_list.has (Current)
 		end
 
 	is_expanded: BOOLEAN is
@@ -229,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_item_from_position (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_TREE_ITEM_IMP
@@ -289,14 +257,14 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 	dummy_list_widget: POINTER
 			-- Used to temporary store list widget if not in parent.
 
-	list_widget: POINTER is
-			-- Pointer to the items own gtktree.
-		do
-			Result := C.gtk_tree_item_struct_subtree (c_object)
-			if Result = Default_pointer then
-				Result := dummy_list_widget
-			end
-		end
+	--list_widget: POINTER is
+	--		-- Pointer to the items own gtktree.
+	--	do
+	--		Result := C.gtk_tree_item_struct_subtree (c_object)
+	--		if Result = Default_pointer then
+	--			Result := dummy_list_widget
+	--		end
+	--	end
 
 feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
@@ -343,6 +311,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/04/06 02:04:30  brendel
+--| Changed to comply with new EV_DYNAMIC_LIST_IMP.
+--| Does not work yet!
+--|
 --| Revision 1.49  2000/04/04 20:50:19  oconnor
 --| updated signal connection for new marshaling scheme
 --|

@@ -67,6 +67,7 @@ default
 	disabled_debug ("documentation")
 	disabled_debug ("dollar")
 	disabled_debug ("editor")
+	disabled_debug ("eiffelnet")
 	disabled_debug ("eifnet_debugger")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
@@ -130,16 +131,25 @@ cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; "CVS"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
 
 	all net:		"$EIFFEL_SRC\library\net"
@@ -180,6 +190,9 @@ cluster
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"
@@ -274,7 +287,7 @@ cluster
 
 	all graph:		"$EIFFEL_SRC\library\graph"
 		exclude
-			"CVS";
+			"CVS"; 
 		end
 
 external

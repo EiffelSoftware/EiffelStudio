@@ -192,7 +192,11 @@ feature -- Directory
 				from
 					cnt := 1
 					l_arr_index := 1
-					create Result.make (1, l_max_index - 1)
+					if (create {PLATFORM}).is_windows then
+						create Result.make (1, l_max_index)	
+					else					
+						create Result.make (1, l_max_index - 1)	
+					end
 					create l_dir_string.make_empty
 				until
 					cnt > l_dir.count

@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 								l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
 							end
 							l_toc_url.extend (l_toc_name)
-							l_toc_url.extend (toc_template_file_name)
+							l_toc_url.extend (l_util.short_name (toc_template_file_name))
 							l_toc_url_string := l_toc_url.string
 							l_toc_url_string.replace_substring_all ("\", "/")
 							Result.append ("<option value=%"" + l_toc_url_string + "%"")
@@ -362,6 +362,8 @@ feature {NONE} -- File
 			-- List of resource file to copy with project
 		once	
 			create Result.make (6)
+			Result.extend ("toc.js")
+			Result.extend ("simple_toc.js")
 			Result.extend ("toc.css")
 			Result.extend ("header.html")
 			Result.extend ("header_mainarea.jpg")

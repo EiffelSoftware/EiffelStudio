@@ -49,8 +49,7 @@ feature {NONE} -- Implementation
 	resource_files: ARRAYED_LIST [STRING] is
 			-- List of resource file to copy with project
 		once
-			create Result.make (11)		
-			Result.extend ("toc.js")
+			create Result.make (11)	
 			Result.extend ("icon_toc_file.gif")
 			Result.extend ("icon_toc_file_top.gif")
 			Result.extend ("icon_toc_file_bottom.gif")

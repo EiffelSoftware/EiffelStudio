@@ -10,7 +10,8 @@ class
 inherit
 	WEB_HELP_PROJECT
 		redefine
-			create_toc_frame
+			create_toc_frame,
+			full_filter_text
 		end
 
 create
@@ -27,8 +28,65 @@ feature -- Access
 			-- Create left side navigation (toc)
 		do				
 			create formatter.make (toc)
-			if toc.has_child then
+			if toc.has_child then							
 				create_node_sub_toc (toc)				
+			end
+		end			
+		
+	full_filter_text: STRING is
+			-- Create filter HTML for client-side filter processing
+		local
+			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
+			l_output_filter: OUTPUT_FILTER
+			l_filter_count: INTEGER
+			l_toc_name: STRING
+			l_toc_url: FILE_NAME
+			l_toc_url_string: STRING
+			l_util: UTILITY_FUNCTIONS
+		do	
+			create Result.make_empty
+			if shared_constants.application_constants.is_gui_mode then
+				Result.append ("Show documentation for:<br>")
+				if shared_project.preferences.generate_dhtml_filter then
+					l_filters := shared_project.filter_manager.filters
+					Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
+					from
+						l_filters.start
+					until
+						l_filters.after
+					loop						
+						l_output_filter ?= l_filters.item_for_iteration
+						if not l_output_filter.description.is_empty and then generation_data.filter_toc_hash.has (l_output_filter.description) then							
+							create l_toc_url.make_from_string ("..")
+							l_toc_name := generation_data.filter_toc_hash.item (l_output_filter.description)
+							if (create {PLAIN_TEXT_FILE}.make (l_toc_name)).exists then
+								create l_util
+								l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
+							end
+							l_toc_url.extend (l_toc_name)
+							l_toc_url.extend (l_util.short_name (tocs_directory.name))
+							l_toc_url.extend (l_util.short_name (default_toc_file_name))
+							l_toc_url_string := l_toc_url.string
+							l_toc_url_string.replace_substring_all ("\", "/")
+							Result.append ("<option value=%"" + l_toc_url_string + "%"")
+							Result.append (" name=%"" + filter_option_string (l_output_filter) + "%"")
+							Result.append (">")							
+							Result.append (l_output_filter.description)
+							Result.append ("</option>")
+							l_filter_count := l_filter_count + 1
+						end
+						l_filters.forth
+					end
+					Result.append ("</select>")
+					
+					if l_filter_count < 2 then
+							-- If there have been less than 2 filters successfully processed there is no
+							-- point for filter combo, so just wipe out the Result
+						Result.wipe_out
+					end				
+				end
+			else
+				Result.append ("Table of Contents")
 			end
 		end			
 		
@@ -49,12 +107,11 @@ feature -- Access
 		do
 			create l_util
 			l_children := a_node.children			
-			current_toc_index := current_toc_index + 1
 			
 				-- Process children needing sub toc also
 			from				
 				l_children.start
-				l_children_with_parents := l_children.twin
+				create l_children_with_parents.make (1)
 			until
 				l_children.after
 			loop				
@@ -87,17 +144,15 @@ feature -- Access
 				replace_token (l_text, html_toc_style_token, "../toc.css")
 			end
 			
-				-- Create a unique name for the toc for this node
-			l_url := unique_toc_name						
+				-- Create a unique name for the toc for this node						
+			l_url := a_node.id.out
 			create l_filename.make_from_string (tocs_directory.name)
 			l_filename.extend (l_util.file_no_extension (l_url))				
 			l_filename.add_extension ("html")			
 			create l_file.make_create_read_write (l_filename.string)
 			
-				-- Write the node information into the sub toc
-			formatter.set_children_nodes (l_children_with_parents)
-			formatter.set_parent_url (l_url)
-			replace_token (l_text, html_toc_token, formatter.node_text (a_node))			
+				-- Write the node information into the sub toc									
+			replace_token (l_text, html_toc_token, formatter.node_text (a_node))
 			l_file.put_string (l_text)
 			l_file.close
 			
@@ -111,19 +166,10 @@ feature -- Access
 					create_node_sub_toc (l_children_with_parents.item)
 				end
 				l_children_with_parents.forth
-			end
+			end			
 		end		
 		
-feature {NONE} -- Implementation
-
-	unique_toc_name: STRING is
-			-- Uniqe name for toc
-		do
-			Result := current_toc_index.out	
-		end		
-
-	current_toc_index: INTEGER
-			-- Number of current sub toc
+feature {NONE} -- Implementation	
 
 	formatter: TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER
 			-- Formatter
@@ -138,6 +184,7 @@ feature {NONE} -- Implementation
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
 			if shared_constants.application_constants.is_gui_mode then				
 				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					create l_util
 					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
 				else						
 					l_filename.extend (toc.name)	
@@ -169,7 +216,7 @@ feature {NONE} -- Implementation
 	default_toc_file_name: STRING is
 			-- Default toc
 		do
-			Result := tocs_directory.name + "/1.html"
+			Result := tocs_directory.name + "/0.html"
 		end
 			
 	filter_template_file_name: STRING is
@@ -182,7 +229,6 @@ feature {NONE} -- Implementation
 			-- List of resource file to copy with project
 		once
 			create Result.make (3)			
-			Result.extend ("simple_toc.js")
 			Result.extend ("file.gif")
 			Result.extend ("folder.gif")	
 			Result.extend ("go_up.gif")

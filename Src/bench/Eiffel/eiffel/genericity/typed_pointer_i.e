@@ -125,9 +125,12 @@ feature
 			-- String generated to return the result of a separate call
 
 	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
+			-- Reference class associated with simple type. See comments of `metamorphose_type'
+			-- to understand why we say that POINTER_REF is the associated reference type of Current.
+			-- This is a temporary solution as metamorphose of basic types doesn't like
+			-- generic basic types.
 		do
-			Result := system.typed_pointer_class.compiled_class.types.first
+			Result := system.pointer_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is

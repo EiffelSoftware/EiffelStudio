@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			height_set: height = a_height
 		end
 
-feature {NONE} -- Notifications
+feature -- Notifications
 
 	on_bn_clicked is
 			-- Called when the button is clicked

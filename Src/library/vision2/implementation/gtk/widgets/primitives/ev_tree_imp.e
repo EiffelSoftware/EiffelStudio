@@ -26,6 +26,25 @@ feature {NONE} -- Initialization
 			gtk_object_ref (widget)
 		end
 
+feature -- Access
+
+	selected_item: EV_TREE_ITEM is
+			-- Item which is currently selected.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature -- Status report
+
+	selected: BOOLEAN is
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
@@ -41,7 +60,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			check False end
+			remove_commands (selection_changed_id)
 		end
 
 feature {NONE} -- Implementation

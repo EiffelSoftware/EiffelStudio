@@ -186,6 +186,7 @@ compiler,,,,
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034
 ,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035
 ,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036
+,3,Warn the user when an attribute or local is initialized but never used,Xavier,CMP0037
 
 
 

@@ -280,6 +280,8 @@ feature -- Basic operations
 			vertical_node_pixmap_bottom_offset: INTEGER
 			horizontal_node_pixmap_left_offset: INTEGER
 			node_pixmap_vertical_center: INTEGER
+			row_node_clipped: BOOLEAN
+			l_x_start, l_x_end: INTEGER
 			
 		do
 			dynamic_content_function := grid.dynamic_content_function
@@ -352,7 +354,7 @@ feature -- Basic operations
 								current_row_height := current_row.height
 							end
 						end
-						
+
 						parent_row_i := current_row.parent_row_i
 						
 						drawing_subrow := parent_row_i /= Void
@@ -411,8 +413,10 @@ feature -- Basic operations
 						vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
 						vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
 						
-						if drawing_parentrow then
+						if drawing_parentrow or (drawing_subrow and current_row.subrow_count > 0) then
 							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
+						elseif (drawing_subrow and current_row.subrow_count =0) then
+							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 2) + first_tree_node_indent
 						else
 							current_subrow_indent := 0
 						end
@@ -465,20 +469,30 @@ feature -- Basic operations
 							if grid_item_exists then
 									-- An item has been retrieved for the current drawing position so draw it.
 									
+							row_node_clipped := current_subrow_indent - subrow_indent > column_offsets @ (node_index + 1)
+								-- Has the node of `Current' been clipped?
+									
+								if current_column_index = 1 then
+										-- If we are drawing the first row then we must ensure that
+										-- the items are indented to the default indent of the tree, even
+										-- if they are not tree items.
+									current_subrow_indent := current_subrow_indent.max (first_tree_node_indent)
+								end
 									-- Now compute horizontal variables for tree drawing.
-								horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
+								if drawing_parentrow then
+									horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
+								elseif drawing_subrow then
+									horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent -- - (tree_node_spacing * 2) - node_pixmap_width
+								else
+									horizontal_node_pixmap_left_offset := current_item_x_position + current_column_width
+								end
 								node_pixmap_vertical_center := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - (node_pixmap_width + 1) // 2
 								
 								current_tree_adjusted_item_x_position := current_item_x_position
 								current_tree_adjusted_column_width := current_column_width
 
 								if grid.is_tree_enabled then
-									if current_column_index = 1 then
-											-- If we are drawing the first row then we must ensure that
-											-- the items are indented to the default indent of the tree, even
-											-- if they are not tree items.
-										current_subrow_indent := current_subrow_indent.max (first_tree_node_indent)
-									end
+									
 									if current_column_index = node_index then
 										
 										current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
@@ -492,7 +506,7 @@ feature -- Basic operations
 											-- We draw no wider than `current_column_width' to ensure this.
 
 											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-										if current_row.subrow_count > 0 then
+										if current_row.subrow_count > 0 and not row_node_clipped then
 												-- Note we add 1 to account for rounding errors when odd values.
 											if current_row.is_expanded then
 												l_pixmap := collapse_pixmap
@@ -515,12 +529,29 @@ feature -- Basic operations
 										
 										if current_subrow_indent > 0 then
 											grid.drawable.set_foreground_color (black)
-											 grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
-											 	-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
-											 	-- if the node to which we are connected is within a different column.
+											if current_column_index > 1 or drawing_subrow then
+												l_x_start := current_item_x_position.max (parent_x_indent_position)
+												l_x_end := horizontal_node_pixmap_left_offset
+												if l_x_start < current_item_x_position + current_column_width and
+													l_x_end < current_item_x_position + current_column_width then
+													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+												end
+											 		-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
+												 	-- if the node to which we are connected is within a different column.
+											end
 											 
-											if drawing_subrow and then parent_node_index = current_column_index then
-												grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+											if drawing_subrow and then parent_node_index = current_column_index and not row_node_clipped then
+												
+--												print ("Parent subrow count : " + parent_row_i.subrow_count.out + "%N")
+--												print ("Parent subrow count recursive : " + parent_row_i.subnode_count_recursive.out + "%N")
+--												print ("Item index : " + current_row.index.out + "%N")
+--												print ("Parent row index : " + parent_row_i.index.out + "%N")
+--												print ("index diff : " + (current_row.index - parent_row_i.index).out + "%N")
+												if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+												else	
+													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+												end
 											end
 										end
 									end
@@ -551,7 +582,7 @@ feature -- Basic operations
 											
 										if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
 												-- In this case, there are more subrows of `parent_row_i' to be drawn,
-												-- so the vetical line is drawn to span the complete height of the current row.
+												-- so the vertical line is drawn to span the complete height of the current row.
 											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
 										else
 												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line

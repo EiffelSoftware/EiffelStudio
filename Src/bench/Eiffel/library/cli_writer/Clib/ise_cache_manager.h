@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Tue Feb 11 14:25:19 2003
+/* at Mon Sep 08 16:06:37 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -95,7 +95,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("5855B757-2182-4C1B-8D26-AC4BB334A7C8")
+    MIDL_INTERFACE("E1FFE157-2182-4C1B-8D26-AC4BB334A7C8")
     ISE_Cache_COM_ISE_CACHE_MANAGER : public IDispatch
     {
     public:
@@ -512,7 +512,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("710EE4B6-5067-499A-9A25-E6DDA9076E77")
+    MIDL_INTERFACE("E1FFE1B6-5067-499A-9A25-E6DDA9076E77")
     ISE_Cache_COM_ASSEMBLY_INFORMATION : public IDispatch
     {
     public:
@@ -769,7 +769,7 @@ EXTERN_C const CLSID CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER;
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("0477E16A-FB59-4F0C-9D85-ADDD9366E359")
+class DECLSPEC_UUID("E1FFE16A-FB59-4F0C-9D85-ADDD9366E359")
 ISE_Cache_Impl_COM_ISE_CACHE_MANAGER;
 #endif
 #endif /* __emitter_LIBRARY_DEFINED__ */

@@ -11,7 +11,7 @@ library emitter
     // TLib :     // TLib : Common Language Runtime Library : {BED7F4EA-1A96-11D2-8F08-00A0C9A6186D}
     importlib("mscorlib.tlb");
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
-    importlib("STDOLE2.TLB");
+    importlib("stdole2.tlb");
     // TLib :  : {B7D061CC-0912-3816-85E3-981C76DED4D4}
     importlib("ISE.Runtime.tlb");
 
@@ -21,7 +21,7 @@ library emitter
 
     [
       odl,
-      uuid(5855B757-2182-4C1B-8D26-AC4BB334A7C8),
+      uuid(E1FFE157-2182-4C1B-8D26-AC4BB334A7C8),
       version(1.0),
       dual,
       oleautomation
@@ -70,7 +70,7 @@ library emitter
 
     [
       odl,
-      uuid(710EE4B6-5067-499A-9A25-E6DDA9076E77),
+      uuid(E1FFE1B6-5067-499A-9A25-E6DDA9076E77),
       version(1.0),
       dual,
       oleautomation
@@ -93,7 +93,7 @@ library emitter
     };
 
     [
-      uuid(0477E16A-FB59-4F0C-9D85-ADDD9366E359),
+      uuid(E1FFE16A-FB59-4F0C-9D85-ADDD9366E359),
       version(1.0)
     ]
     coclass ISE_Cache_Impl_COM_ISE_CACHE_MANAGER {

@@ -35,7 +35,6 @@ feature -- Access
 			counter: INTEGER
 			first_item, second_item: EV_WIDGET
 			label: EV_LABEL
-			vertical_box: EV_VERTICAL_BOX
 		do
 			create check_buttons.make (0)
 			create Result

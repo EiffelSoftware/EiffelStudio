@@ -13,7 +13,7 @@ inherit
 		redefine
 			has_postcondition, has_precondition,
 			argument_names, arguments, is_once,
-			is_deferred, locals
+			is_deferred, locals, obsolete_message
 		end
 
 feature -- Properties
@@ -55,7 +55,7 @@ feature -- Access
 			end;
 		end;
 
-feature -- Setting
+feature {FEATURE_I} -- Setting
 
 	set_deferred (b: like is_deferred) is
 			-- Set `is_deferred' to `b'.

@@ -1,4 +1,4 @@
-class REFERENCE 
+class MT_REFERENCE 
 inherit
     STORABLE
         rename basic_store as ise_basic_store,retrieve_by_name as ise_retrieve_by_name,general_store as
@@ -34,7 +34,7 @@ feature
 		lls := Void
     end -- set
 
-	set_ref(one_ref : REFERENCE) is
+	set_ref(one_ref : MT_REFERENCE) is
 	do
 		a_ref := one_ref 	
 		if one_array/= Void then 
@@ -51,8 +51,8 @@ feature
 
 	one_string : STRING
 	a : INTEGER
-	a_ref : REFERENCE
-	one_array : ARRAY[REFERENCE]
+	a_ref : MT_REFERENCE
+	one_array : ARRAY[MT_REFERENCE]
 	one_integer_array : ARRAY[INTEGER]
 	one_double_array   : ARRAY[DOUBLE]
 	one_real_array : ARRAY[REAL]
@@ -61,7 +61,7 @@ feature
 	llr : LINKED_LIST[REAL]
 	lls : LINKED_LIST[STRING]
 
-end -- class REFERENCE
+end -- class MT_REFERENCE
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.

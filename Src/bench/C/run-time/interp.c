@@ -1025,6 +1025,32 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Cast of an INTEGER_XX type to CHARACTER
+	 */
+	
+	case BC_CAST_CHAR:
+#ifdef DEBUG
+		dprintf(2)("BC_CAST_CHAR\n");
+#endif
+		last = otop();
+		switch (last->type & SK_HEAD) {
+			case SK_INT8:
+				last->it_char = (EIF_CHARACTER) last->it_int8;
+				break;
+			case SK_INT16:
+				last->it_char = (EIF_CHARACTER) last->it_int16;
+				break;
+			case SK_INT32:
+				last->it_char = (EIF_CHARACTER) last->it_int32;
+				break;
+			case SK_INT64:
+				last->it_char = (EIF_CHARACTER) last->it_int64;
+				break;
+			}
+		last->type = SK_CHAR;
+		break;
+
+	/*
 	 * Assignment to result.
 	 */
 	case BC_RASSIGN:

@@ -129,11 +129,16 @@ feature -- Access
 			-- the features marked `melted' and type check the others
 			-- if the class is marked `changed3'.
 		do
-			Result := propagators.make_pass3
+			Result := propagators.make_pass3 or need_type_check
 		end
 
 	changed3a : BOOLEAN
 			-- Type check?
+
+	need_type_check: BOOLEAN
+			-- Does current needs a complete type check?
+			-- If True, forces a complete type check in `pass3' on all features
+			-- written in current class.
 
 	changed4: BOOLEAN
 			-- Has the class a new class type ?
@@ -2086,6 +2091,8 @@ feature -- Class initialization
 					a_client := syntactical_clients.item
 					Workbench.add_class_to_recompile (a_client.lace_class)
 					a_client.set_changed (True)
+					a_client.set_changed3a (True)
+					a_client.set_need_type_check (True)
 					syntactical_clients.forth
 				end
 					-- We need to reset its `types' so that they are recomputed.
@@ -2661,6 +2668,7 @@ feature -- Parent checking
 					types.forth
 				end
 				types.wipe_out
+				set_changed4 (True)
 			end
 		ensure
 			types_empty: not has_types
@@ -3017,6 +3025,14 @@ feature -- Convenience features
 			changed3a := b
 		ensure
 			changed3a_set: changed3a = b
+		end
+
+	set_need_type_check (b: like need_type_check) is
+			-- Assign `b' to `need_tye_check'.
+		do
+			need_type_check := b
+		ensure
+			need_type_check_set: need_type_check = b
 		end
 
 	set_changed4 (b: BOOLEAN) is

@@ -1545,6 +1545,7 @@ end
 					a_class.set_changed (False)
 					a_class.set_changed2 (False)
 					a_class.set_changed3a (False)
+					a_class.set_need_type_check (False)
 					-- FIXME: changed4, changed5, changed6
 					a_class.changed_features.clear_all
 					a_class.propagators.wipe_out

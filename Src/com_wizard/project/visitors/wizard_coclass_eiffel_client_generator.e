@@ -8,7 +8,7 @@ class
 	WIZARD_COCLASS_EIFFEL_CLIENT_GENERATOR
 
 inherit
-	WIZARD_COCLASS_EIFFEL_GENERATOR [WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR]
+	WIZARD_COCLASS_EIFFEL_GENERATOR
 		redefine
 			generate
 		end
@@ -45,6 +45,16 @@ feature -- Access
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
 			eiffel_writer := Void
+		end
+
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Process coclass interfaces.
+		local
+			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_CLIENT_PROCESSOR
+		do
+			create interface_processor.make (a_coclass, eiffel_writer)
+			interface_processor.process_interfaces
+			dispatch_interface := interface_processor.dispatch_interface
 		end
 
 feature --  Basic operation

@@ -8,7 +8,7 @@ class
 	WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR
 
 inherit
-	WIZARD_COCLASS_EIFFEL_GENERATOR [WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_GENERATOR]
+	WIZARD_COCLASS_EIFFEL_GENERATOR
 		redefine
 			generate
 		end
@@ -18,8 +18,7 @@ inherit
 			set_default_ancestors
 		end
 
-
-feature -- Access
+feature --  Basic operations
 
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
@@ -46,7 +45,15 @@ feature -- Access
 			server_impl_generator.generate (a_coclass)
 		end
 
-feature --  Basic operation
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Process coclass interfaces.
+		local
+			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_PROCESSOR
+		do
+			create interface_processor.make (a_coclass, eiffel_writer)
+			interface_processor.process_interfaces
+			dispatch_interface := interface_processor.dispatch_interface
+		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
 		do

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Cleanup task, reset folder content before new generation."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +30,7 @@ feature -- Access
 		do
 			if not l_retried then
 				l_folder_name := environment.destination_folder.twin
-				if l_folder_name.item (l_folder_name.count) = '\' then
+				if l_folder_name.item (l_folder_name.count) = '\' and l_folder_name.occurrences ('\') > 1 then
 					l_folder_name.keep_head (l_folder_name.count - 1)
 				end
 				create l_folder.make (l_folder_name)

@@ -46,13 +46,10 @@ feature -- Type check and byte code
 
 	type_check is
 			-- Type check access to Current
-		local
-			current_access: CURRENT_B
 		do
 				-- Creation of a byte code access to Current and insertion
 			   -- of it in the access line.
-			create current_access
-			context.access_line.insert (current_access)
+			context.access_line.insert (create {CURRENT_B})
 		end
 
 	byte_node: CURRENT_B is

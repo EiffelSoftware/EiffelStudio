@@ -163,7 +163,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_cluster_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->cluster_count( &ret_value);
 	if (FAILED (hr))

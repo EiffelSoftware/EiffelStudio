@@ -113,7 +113,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_cluste
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of top-level clusters in system.
@@ -129,7 +129,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_count
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "cluster_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

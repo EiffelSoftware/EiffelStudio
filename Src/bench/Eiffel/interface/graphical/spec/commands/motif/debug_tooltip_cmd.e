@@ -10,7 +10,7 @@ class
 inherit
 	MEL_COMMAND
 
-creation
+create
 	make
 
 feature -- Initialization

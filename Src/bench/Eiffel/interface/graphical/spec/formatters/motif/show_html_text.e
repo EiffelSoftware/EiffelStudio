@@ -8,7 +8,7 @@ class SHOW_HTML_TEXT
 inherit
 	SHOW_TEXT
 
-creation
+create
 	make
 
 end -- SHOW_HTML_TEXT

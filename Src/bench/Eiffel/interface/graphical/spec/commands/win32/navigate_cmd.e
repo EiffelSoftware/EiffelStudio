@@ -10,7 +10,7 @@ class
 inherit
 	COMMAND
 
-creation
+create
 	make
 
 feature -- creation

@@ -29,6 +29,19 @@ feature {NONE} -- Access
 			-- The list of the arguments asociated with the commands
 			-- The arguments follow the same order than the commands.
 
+feature {NONE} -- Status report
+
+	has_command (event_id: INTEGER): BOOLEAN is
+			-- Does the object has at least one command on the 
+			-- event given by `event_id'.
+		do
+			if command_list = Void then
+				Result := False
+			else
+				Result := (command_list @ event_id) /= Void
+			end
+		end
+
 feature {NONE} -- status setting
 
 	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is

@@ -12,19 +12,44 @@ inherit
 	EV_FIXED_I
 
 	EV_INVISIBLE_CONTAINER_IMP
+		redefine
+			on_size,
+			parent_ask_resize
+		end
 		
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the fixed container in  ev_window.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			test_and_set_parent (par)
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
 			initialize
-			!! wel_window.make (parent_imp.wel_window)
+			wel_make (par_imp, "Fixed")
 		end
+
+feature {NONE} -- Implementation
+
+	parent_ask_resize (new_width, new_height: INTEGER) is
+			-- When the parent asks the resize, it's not 
+			-- necessary to send him back the information
+		do
+			resize (new_width, new_height)
+		end
+
+feature {NONE} -- Implementation : WEL features
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Wm_size message
+		do
+  		end
 
 end -- class EV_FIXED_IMP
 

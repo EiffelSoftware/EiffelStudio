@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"EiffelVision window. Display a window that allows only one%
-		 % child. Mswindows implementation."
+	description: "EiffelVision window. Display a window that allows only one%
+		 	% child. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -13,27 +11,47 @@ class
 	EV_WINDOW_IMP
 	
 inherit
+
 	EV_WINDOW_I
-		select
-			interface,
-			parent,
-			parent_imp
-		end
 					
 	EV_CONTAINER_IMP
-		rename
-			interface as wrong_interface,
-			parent_imp as wrong_parent_imp,
-			parent as wrong_parent
-		redefine
-			wel_window,	
+		undefine
 			set_width,
-			set_height,
+			set_height
+		redefine
+				-- We redefine the following features because a window
+				-- don't have to notify its parent in the following cases.
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
 			child_width_changed,
-			child_height_changed,
+			child_height_changed
+		end
+
+	WEL_FRAME_WINDOW
+		rename
+			parent as wel_parent
+		undefine
+				-- We undefine the features refined by EV_CONTAINER_IMP
+			destroy,
+			remove_command,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+--			set_width,
+	--		set_height,
+			default_style,
+			on_size,
+			on_get_min_max_info,
+			on_destroy,
+			on_menu_command,
 			on_show
 		end
 
@@ -51,16 +69,19 @@ feature {NONE} -- Initialization
 			-- Create a window. Window does not have any
 			-- parents
 		do
-			!!wel_window.make_top ("EV_WINDOW")
-			wel_window.initialize (Current)
+			make_top ("EV_WINDOW")
 		end
 
 	make (par: EV_WINDOW) is
 			-- Create a window with a parent.
+		local
+			par_imp: EV_WINDOW_IMP
 		do
-			test_and_set_parent (par)
-			!!wel_window.make_child (parent_imp.wel_window, "EV_WINDOW")
-			wel_window.initialize (Current)
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
+			make_child (par_imp, "EV_WINDOW")
 		end
 		
 feature  -- Access
@@ -99,7 +120,7 @@ feature  -- Access
 			-- Application name to be displayed by
 			-- the window manager
 		do
-			Result := wel_window.text
+			Result := text
        	end
 
 	widget_group: EV_WIDGET is
@@ -191,9 +212,9 @@ feature -- Element change
 		end
 
 	set_title (new_title: STRING) is
-			-- Set `title' to `new_title'.            
+			-- Make `new_title' the title of the window.            
 		do
-			wel_window.set_text (new_title)
+			set_text (new_title)
 		end
 
 	set_widget_group (group_widget: EV_WIDGET) is
@@ -233,22 +254,31 @@ feature -- Resizing
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Resize the widget and don't notify the parent.
 		do
-			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			resize (minimum_width.max(new_width), minimum_height.max (new_height))
+--			if child /= Void then
+--				child.parent_ask_resize (width, height)
+--			end
 		end
 
 	
-	set_width (new_width :INTEGER) is
-			-- Set `width' to `new_width'.
-		do
-			wel_window.set_width (minimum_width.max(new_width))
-		end
+--	set_width (new_width :INTEGER) is
+			-- Make `new_width' the width of the window.
+--		do
+--			{WEL_FRAME_WINDOW} Precursor (minimum_width.max(new_width))
+--			if child /= Void then
+--				child.parent_ask_resize (width, height)
+--			end
+--		end
 
 		
-	set_height (new_height: INTEGER) is
-			-- Set `height' to `new_height'
-		do
-			wel_window.set_height (minimum_height.max(new_height))
-		end
+--	set_height (new_height: INTEGER) is
+--			-- Make `new_height' the height of the window.
+--		do
+--			{WEL_FRAME_WINDOW} Precursor (minimum_height.max(new_height))
+--			if child /= Void then
+--				child.parent_ask_resize (width, height)
+--			end
+--		end
 
 
 	set_minimum_width (min_width: INTEGER) is
@@ -280,31 +310,47 @@ feature -- Resizing
                         end		
 		end
 
-feature {EV_WEL_FRAME_WINDOW} -- Event handling
+feature -- Implementation : WEL redefinition
+
+	default_style: INTEGER is
+		-- Set with the option `Ws_clipchildren' to avoid flashing.
+		once
+			Result := Ws_overlappedwindow + Ws_clipchildren
+		end
 
 	on_show is
-			-- When the wel_window receive the on_show message,
-			-- it resizes the wel_window at the minimum_size.
+			-- When the window receive the on_show message,
+			-- it resizes the window at the size of the child.
 		do
 			if child /= Void then
 				parent_ask_resize (child.width, child.height)
 			end
 		end
 
-	on_size (a_width, a_height: INTEGER) is
-			-- Called when the wel_window is resized.
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		do
+			if shown and then child /= Void then
+				child.parent_ask_resize (a_width, a_height)
+			end
+		end
+
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+			min_track: WEL_POINT
+		do
 			if child /= Void then
-					child.parent_ask_resize (a_width, a_height)
+				!! min_track.make (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+				min_max_info.set_min_track_size (min_track)
 			end
 		end
 
 	on_destroy is
-			-- Called when the wel_window is destroy.
+			-- Called when the window is destroy.
 			-- Set the parent sensitive if it exists.
 		do
-			if parent_imp /= Void and not parent_imp.destroyed then
+			if parent_imp /= Void and then not parent_imp.destroyed then
 				parent_imp.set_insensitive (False)
 			end
 		end
@@ -322,7 +368,7 @@ feature {EV_WEL_FRAME_WINDOW} -- Event handling
 			end
 		end
 
-feature --{EV_WINDOW_IMP} -- Implementation
+feature {NONE} -- Implementation
 	
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- System metrics to query things like
@@ -331,11 +377,7 @@ feature --{EV_WINDOW_IMP} -- Implementation
 			!!Result
 		end
 
-feature {EV_APPLICATION_IMP, EV_WINDOW_IMP} -- Implementation
-	
-	wel_window: EV_WEL_FRAME_WINDOW
-
-end
+end -- class EV_WINDOW_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

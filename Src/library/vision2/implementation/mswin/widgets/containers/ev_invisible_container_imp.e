@@ -20,22 +20,43 @@ inherit
 		undefine
 			add_child_ok
 		redefine
-			wel_window,
 			add_child,
 			set_insensitive
+		end
+
+	WEL_CONTROL_WINDOW
+		rename
+			make as wel_make,
+			parent as wel_parent
+		undefine
+			set_width,
+			set_height,
+			remove_command,
+			destroy,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			default_style
 		end
 
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Initialize the container by creating children
-		do
-			!! children.make
+			-- Initialize the container by creating ev_children
+		do 
+			!! ev_children.make
 		end
 
 feature {NONE} -- Access
 	
-	children: LINKED_LIST [EV_WIDGET_IMP]
+	ev_children: LINKED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the box
 
 feature -- Implementation
@@ -43,30 +64,33 @@ feature -- Implementation
 	add_child (child_imp: EV_WIDGET_IMP) is
 		do
 			child := child_imp
-			children.extend (child_imp)
+			ev_children.extend (child_imp)
 		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
    			-- `flag'.
 		do
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					children.item.set_insensitive (flag)
-					children.forth
+					ev_children.item.set_insensitive (flag)
+					ev_children.forth
 				end
 			end
 			Precursor (flag)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation : WEL features
 
-	wel_window: EV_WEL_CONTROL_WINDOW
-		-- Actual WEL component
+	default_style: INTEGER is
+		once
+			Result := Ws_child + Ws_visible 
+				+ Ws_clipchildren + Ws_clipsiblings
+		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP
 

@@ -20,11 +20,20 @@ inherit
 		end
 	
 	EV_WIDGET_IMP
+		rename
+			exists as widget_exists
+		end
+
+	WEL_MENU
+		rename
+			make as wel_make
+		select
+			exists
+		end
 
 creation
 	
 	make
-
 	
 feature {NONE} -- Initialization
 	
@@ -35,24 +44,14 @@ feature {NONE} -- Initialization
 			-- it is just to avoid that the features of ev_primitive
 			-- crash, but it has no need, because when you use them,
 			-- it has no effect.
-		local
-			par_imp: EV_CONTAINER_IMP
 		do
 			wel_make
-			par_imp ?= par.implementation
-			check
-				valid_container: par_imp /= Void
-			end
+			test_and_set_parent (par)
 			initialize
-			!! wel_window.make (par_imp.wel_window)
-			par_imp.wel_window.set_menu (Current)
-		end	
-
-feature -- Implementation
-
-	wel_window: EV_WEL_CONTROL_WINDOW
+			parent_imp.set_menu (Current)
+		end
 	
-end -- class EV_MENU_BAR_IMP
+end -- class EV_WEL_MENU_BAR_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

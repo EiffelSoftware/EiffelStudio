@@ -21,20 +21,60 @@ inherit
 			set_insensitive
 		end
 
-	WEL_WM_CONSTANTS
+	WEL_COMPOSITE_WINDOW
+		rename
+			parent as wel_parent
+		undefine
+				-- We undefine the features that have been redefined
+				-- by EV_WIDGET_IMP
+			remove_command,
+				-- Then, we undefine what is redefine later
+			set_width,
+			set_height,
+			minimal_width,
+			minimal_height,
+			maximal_width,
+			maximal_height,
+			move_and_resize,
+			move,
+			set_default_window_procedure,
+			call_default_window_procedure,
+			process_message,
+			on_wm_menu_command,
+			on_wm_control_id_command,
+			on_show,
+			on_size,
+			on_get_min_max_info,
+			on_destroy,
+			on_menu_command,
+			on_set_cursor,
+			on_mouse_move,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_char,
+			on_key_up,
+			on_paint
+		redefine
+			destroy
+		end
+			
 
 feature -- Access
 	
 	client_width: INTEGER is
 			-- Width of the client area of container
 		do
-			Result := wel_window.client_rect.width
+			Result := client_rect.width
 		end
 	
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
-			Result := wel_window.client_rect.height
+			Result := client_rect.height
 		end
 
 feature -- Status report
@@ -47,6 +87,18 @@ feature -- Status report
 				child.set_insensitive (flag)
 			end
 			Precursor (flag)
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+				parent_imp.set_insensitive (False)
+			end
+			{WEL_COMPOSITE_WINDOW} Precursor
 		end
 
 feature -- Element change
@@ -109,19 +161,6 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
 			if child /= void then
 				child.parent_ask_resize (client_width, client_height)
 			end
-		end
-
-feature {EV_WEL_CONTROL_WINDOW, EV_WEL_FRAME_WINDOW} -- Implementation
-
-	on_show is
-		do
-		end
-
-feature -- Implementation
-
-	wel_window: WEL_COMPOSITE_WINDOW is
-			-- The current wel_window
-		deferred
 		end
 
 end -- class EV_CONTAINER_IMP

@@ -30,6 +30,7 @@ feature -- Initialization
 		local
 			ok : BOOLEAN
 		do
+			io.put_string ("Connection to server (`local)\NetSDK' and database `northwind':%N")
 			create my_sql_connection.make_from_connection_string
 				(("server=(local)\NetSDK;Trusted_Connection=yes;database=northwind").to_cil)
 	 		create my_sql_command.make_from_cmd_text_and_connection
@@ -49,10 +50,10 @@ feature -- Initialization
 				not ok
 			loop
 				feature {SYSTEM_CONSOLE}.write (
-					my_reader.get_item_string (("CustomerID").to_cil).to_string)
+					my_reader.item_string (("CustomerID").to_cil).to_string)
 				feature {SYSTEM_CONSOLE}.write (("    ").to_cil)
 				feature {SYSTEM_CONSOLE}.write (
-					my_reader.get_item_string (("CompanyName").to_cil).to_string)
+					my_reader.item_string (("CompanyName").to_cil).to_string)
 				feature {SYSTEM_CONSOLE}.write_line
 				ok := my_reader.read
 			end

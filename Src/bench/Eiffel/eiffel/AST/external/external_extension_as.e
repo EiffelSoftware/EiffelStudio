@@ -263,13 +263,13 @@ end
 						header_f := unprocessed.substring (start_pos, end_pos)
 						Names_heap.put (header_f)
 						header_files.put (Names_heap.found_item, include_count)
-						unprocessed.tail (unprocessed.count - end_pos)
+						unprocessed.remove_head (end_pos)
 						unprocessed.left_adjust
 						if not unprocessed.is_empty then
 								-- Must have a comma separator
 							if unprocessed @ 1 = ',' then
 									-- Remove comman and white space
-								unprocessed.tail (unprocessed.count - 1)
+								unprocessed.remove_head (1)
 								unprocessed.left_adjust
 							else
 								raise_error ("Invalid character after include file")

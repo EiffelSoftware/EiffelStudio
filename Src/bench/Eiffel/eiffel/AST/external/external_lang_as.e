@@ -168,7 +168,7 @@ end
 				end
 			else
 					-- cleaning string for next operation
-				image.tail (image.count - pos)
+				image.remove_head (pos)
 				image.left_adjust
 
 					-- Extracting the special part
@@ -185,7 +185,7 @@ end
 						special_part.left_adjust
 
 							-- Only unprocessed part is kept in `image'
-						image.tail (image.count - image.index_of (']', 1))
+						image.remove_head (image.index_of (']', 1))
 						image.left_adjust
 
 							-- Checking the type of special part
@@ -270,7 +270,7 @@ end
 						signature_part := image.substring (1, pos)
 
 							-- Only unprocessed part is kept in `image'
-						image.tail (image.count - pos)
+						image.remove_head (pos)
 						image.left_adjust
 					end
 				end
@@ -291,7 +291,7 @@ end
 						signature_part.right_adjust
 	
 							-- Only unprocessed part is kept in `image'
-						image.tail (image.count - pos + 1)
+						image.remove_head (pos - 1)
 					end
 				end
 

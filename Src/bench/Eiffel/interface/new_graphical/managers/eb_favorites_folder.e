@@ -36,10 +36,19 @@ feature {NONE} -- Initialization
 			parent := a_parent
 		end
 
-feature -- Access
+feature -- Status
 
 	is_folder: BOOLEAN is True
-			-- Is the current item a folder?
+			-- Is the current item a folder ?
+
+	is_class: BOOLEAN is 
+			-- Is the current item a class ?
+		do
+			Result := False
+		end
+
+	is_feature: BOOLEAN is False
+			-- Is the current item a feature ?
 
 feature -- Element change
 

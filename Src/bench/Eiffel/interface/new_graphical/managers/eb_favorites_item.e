@@ -23,7 +23,11 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
 			-- Initialize Current with `name' set to `a_name'.
 		do
-			name := a_name.as_upper
+			if is_feature then
+				name := a_name.as_lower
+			else
+				name := a_name.as_upper				
+			end
 			parent := a_parent
 		end
 
@@ -31,14 +35,27 @@ feature -- Access
 
 	name: STRING
 			-- Name of the "favorites" item (class name or folder name)
+			-- or class_name.feature_name
 
 	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for the item.
+
+feature -- Status
 
 	is_folder: BOOLEAN is
 			-- Is the current item a folder?
 		deferred
 		end
+		
+	is_class: BOOLEAN is
+			-- Is the current item a class?
+		deferred
+		end
+
+	is_feature: BOOLEAN is
+			-- Is the current item a feature?
+		deferred
+		end		
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Compare the names

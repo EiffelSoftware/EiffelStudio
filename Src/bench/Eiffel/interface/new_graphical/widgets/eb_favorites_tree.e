@@ -1,6 +1,6 @@
 indexing
 	description	: "Tree representing a set of the favorites"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	author		: "$Author$"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -40,9 +40,10 @@ feature {NONE} -- Initialization
 			favorites_manager := a_favorites_manager
 			build_tree
 			favorites.add_observer (Current)
-			drop_actions.extend (agent remove_class_stone)
+			drop_actions.extend (agent remove_class_stone)			
+			drop_actions.extend (agent remove_feature_stone)
 			drop_actions.extend (agent remove_folder)
-			drop_actions.extend (agent add_class_stone)
+			drop_actions.extend (agent add_stone)
 			drop_actions.extend (agent add_folder)
 			
 			if favorites_manager.Favorites.sensitive then
@@ -93,9 +94,7 @@ feature {NONE} -- Initialization Implementation
 		local
 			tree_item: EB_FAVORITES_TREE_ITEM
 			an_item: EB_FAVORITES_ITEM
-			a_folder_item: EB_FAVORITES_FOLDER
 			a_favorites: like favorites
-			a_class_item: EB_FAVORITES_CLASS
 		do
 			wipe_out
 			a_favorites := favorites
@@ -105,18 +104,7 @@ feature {NONE} -- Initialization Implementation
 				a_favorites.after
 			loop
 				an_item := a_favorites.item
-				if an_item.is_folder then
-					a_folder_item ?= an_item
-					tree_item := build_tree_folder (a_folder_item)
-				else
-					a_class_item ?= an_item
-					create tree_item.make (a_class_item)
-					if is_clickable then
-						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
-					end
-				end
-				tree_item.set_text (an_item.name)
-				tree_item.set_data (an_item)
+				tree_item := favorite_to_tree_item (an_item)
 				extend (tree_item)
 				if tree_item.is_expandable then
 					tree_item.expand_recursively
@@ -132,8 +120,6 @@ feature {NONE} -- Initialization Implementation
 		local
 			tree_item: EB_FAVORITES_TREE_ITEM
 			an_item: EB_FAVORITES_ITEM
-			a_folder_item: EB_FAVORITES_FOLDER
-			a_class_item: EB_FAVORITES_CLASS
 		do
 			create Result.make (a_favorites_folder)
 			from
@@ -142,23 +128,51 @@ feature {NONE} -- Initialization Implementation
 				a_favorites_folder.after
 			loop
 				an_item := a_favorites_folder.item
-				if an_item.is_folder then
-					a_folder_item ?= an_item
-					tree_item := build_tree_folder (a_folder_item)
-				else
-					a_class_item ?= an_item
-					create tree_item.make (a_class_item)
-					if is_clickable then
-						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
-					end
-				end
-				tree_item.set_text (an_item.name)
-				tree_item.set_data (an_item)
+				tree_item := favorite_to_tree_item (an_item)
 				Result.extend (tree_item)
 
 					-- Prepare next iteration.
 				a_favorites_folder.forth
 			end
+		end
+
+	favorite_to_tree_item (an_item: EB_FAVORITES_ITEM): EB_FAVORITES_TREE_ITEM is
+			-- Favorite item to Favorite tree item
+		local
+			a_folder_item: EB_FAVORITES_FOLDER
+			a_class_item: EB_FAVORITES_CLASS
+			a_feat_item: EB_FAVORITES_FEATURE
+			l_tree_item: EB_FAVORITES_TREE_ITEM
+		do
+			if an_item.is_class then				
+				a_class_item ?= an_item
+				create Result.make (a_class_item)
+				if is_clickable then
+					Result.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+				end
+				if not a_class_item.is_empty then
+					from
+						a_class_item.start
+					until
+						a_class_item.after
+					loop
+						l_tree_item := favorite_to_tree_item (a_class_item.item)
+						Result.extend (l_tree_item)
+						a_class_item.forth
+					end
+				end
+			elseif an_item.is_folder then
+				a_folder_item ?= an_item
+				Result := build_tree_folder (a_folder_item)				
+			elseif an_item.is_feature then
+				a_feat_item ?= an_item
+				create Result.make (a_feat_item)
+				if is_clickable then
+					Result.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))
+				end					
+			end
+			Result.set_text (an_item.name)
+			Result.set_data (an_item)
 		end
 
 feature -- Observer pattern
@@ -171,19 +185,24 @@ feature -- Observer pattern
 		local
 			item_list: EV_TREE_NODE_LIST
 			a_class_item: EB_FAVORITES_CLASS
+			a_feat_item: EB_FAVORITES_FEATURE			
 			tree_item: EB_FAVORITES_TREE_ITEM
 		do
 				-- Create a new entry for `a_item' in the tree.
 			item_list := get_tree_item_from_path (Current, a_path)
 			if item_list /= Void then
-				if a_item.is_folder then
-					create tree_item.make (a_item)
-				else
-					create tree_item.make (a_item)
+				create tree_item.make (a_item)
+				
+				if a_item.is_class then		
 					a_class_item ?= a_item
 					if is_clickable then
-						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
+						tree_item.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
 					end
+				elseif a_item.is_feature then
+					a_feat_item ?= a_item
+					if is_clickable then
+						tree_item.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))
+					end					
 				end
 				tree_item.set_text (a_item.name)
 				tree_item.set_data (a_item)
@@ -218,7 +237,30 @@ feature -- Observer pattern
 			wipe_out
 			build_tree
 		end
+		
+	add_stone (a_stone: STONE) is
+			-- Add a stone
+		local
+			l_class_stone: CLASSI_STONE
+			l_feat_stone: FEATURE_STONE
+		do
+			l_class_stone ?= a_stone
+			l_feat_stone ?= a_stone
+			if l_feat_stone /= Void then
+				add_feature_stone (l_feat_stone)
+			elseif l_class_stone /= Void then
+				add_class_stone (l_class_stone)
+			end
+		end		
 
+	add_feature_stone (a_stone: FEATURE_STONE) is
+			-- Add a feature, defined by `a_stone', to the main branch of the tree.
+		require
+			valid_stone: a_stone /= Void
+		do
+			favorites.add_feature_stone (a_stone)
+		end
+		
 	add_class_stone (a_stone: CLASSI_STONE) is
 			-- Add a class, defined by `a_stone', to the main branch of the tree.
 		require
@@ -258,6 +300,18 @@ feature -- Observer pattern
 			old_class.parent.start
 			old_class.parent.prune (old_class)
 		end
+		
+	remove_feature_stone (a_stone: EB_FAVORITES_FEATURE_STONE) is
+			-- Remove a feature, defined by `a_stone', from the tree.
+		require
+			valid_stone: a_stone /= Void
+		local
+			old_feat: EB_FAVORITES_FEATURE
+		do
+			old_feat := a_stone.origin
+			old_feat.parent.start
+			old_feat.parent.prune (old_feat)
+		end		
 
 feature {NONE} -- Implementation
 		

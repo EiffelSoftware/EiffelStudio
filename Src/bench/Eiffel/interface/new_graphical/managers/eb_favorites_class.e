@@ -8,11 +8,15 @@ class
 	EB_FAVORITES_CLASS
 
 inherit
-	EB_FAVORITES_ITEM
+	
+	EB_FAVORITES_FOLDER
 		redefine
-			make
+			is_class,
+			make,
+			string_representation,
+			mouse_cursor, Xmouse_cursor
 		end
-
+		
 	EB_CONSTANTS
 		undefine
 			is_equal
@@ -25,16 +29,41 @@ inherit
 			is_equal
 		end
 
+create {EB_FAVORITES_ITEM_LIST}
+	make_from_string
+	
 create
 	make, make_from_class_stone
 
-feature -- Access
+feature {NONE} -- Access
+
+	make_from_string (a_analyzed_string: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+			-- Initialize Current with `a_analyzed_string' set to `a_name'.
+		local
+			l_split: LIST [STRING]
+		do
+			l_split := a_analyzed_string.split (':')
+			l_split.start
+			make (l_split.item, a_parent)
+			if not l_split.after then
+				from
+					l_split.forth
+				until
+					l_split.after
+				loop
+					add_feature (l_split.item)
+					l_split.forth
+				end
+			end			
+		end
 
 	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
 			-- Initialize Current with `name' set to `a_name'.
 		do
-			Precursor {EB_FAVORITES_ITEM} (a_name, a_parent)
+			Precursor {EB_FAVORITES_FOLDER} (a_name, a_parent)
 			get_class_i
+			
+			item_list_make (5)		
 		end
 
 	make_from_class_stone (a_stone: CLASSI_STONE; a_parent: EB_FAVORITES_ITEM_LIST) is
@@ -46,8 +75,10 @@ feature -- Access
 			make (a_stone.class_name, a_parent)
 		end
 
-	is_folder: BOOLEAN is False
-			-- Is the current item a folder?
+feature -- Status
+
+	is_class: BOOLEAN is True
+			-- Is the current item a class ?			
 
 feature -- Graphical interface
 
@@ -125,7 +156,19 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 	string_representation: STRING is
 			-- String representation for Current.
 		do
-			Result := name
+			if count = 0 then
+				Result := name
+			else
+				Result := name
+				from
+					start
+				until
+					after
+				loop
+					Result := Result + ":" + item.string_representation
+					forth
+				end				
+			end
 		end
 
 end -- class EB_FAVORITES_CLASS

@@ -244,10 +244,13 @@ feature {NONE} -- Implementation
 	refresh_folder (f: EB_FAVORITES_ITEM_LIST) is
 			-- Get rid of dead classes among children of `f'.
 		local
-			conv_f: EB_FAVORITES_ITEM_LIST
+			l_item: EB_FAVORITES_ITEM
+			conv_l: EB_FAVORITES_ITEM_LIST
 			conv_c: EB_FAVORITES_CLASS
+			conv_f: EB_FAVORITES_FEATURE
 			file: RAW_FILE
 			cli: CLASS_I
+			clc: CLASS_C
 			clu: CLUSTER_I
 		do
 			from
@@ -255,12 +258,10 @@ feature {NONE} -- Implementation
 			until
 				f.after
 			loop
-				conv_f ?= f.item
-				conv_c ?= f.item
-				if conv_f /= Void then
-					refresh_folder (conv_f)
-					f.forth
-				elseif conv_c /= Void then
+				l_item := f.item
+
+				if l_item.is_class then
+					conv_c ?= l_item					
 					cli := conv_c.associated_class_i
 					if cli /= Void then
 						clu := cli.cluster
@@ -271,12 +272,14 @@ feature {NONE} -- Implementation
 									if not file.exists then
 										f.remove
 									else
+										refresh_folder (conv_c)
 										f.forth
 									end
 								else
 									f.remove
 								end
 							else
+								refresh_folder (conv_c)
 								f.forth
 							end
 						else
@@ -285,6 +288,18 @@ feature {NONE} -- Implementation
 					else
 						f.remove
 					end
+				elseif l_item.is_folder then
+					conv_l ?= l_item				
+					refresh_folder (conv_l)
+					f.forth					
+				elseif l_item.is_feature then
+					conv_f ?= l_item					
+					clc := conv_f.associated_class_c
+					if clc = Void or else clc.feature_named (conv_f.name) = Void then
+						f.remove
+					else
+						f.forth
+					end					
 				end
 			end
 		end

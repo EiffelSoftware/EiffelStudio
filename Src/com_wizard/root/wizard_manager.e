@@ -241,6 +241,22 @@ feature {NONE} -- Implementation
 				if Shared_wizard_environment.abort then
 					parent.add_message (Generation_Aborted)
 				else
+					from
+						system_descriptor.interfaces.start
+					until
+						system_descriptor.interfaces.after
+						or Shared_wizard_environment.abort
+					loop
+						if shared_wizard_environment.client then
+							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
+						end
+						system_descriptor.interfaces.forth
+					end
+				end
+
+				if Shared_wizard_environment.abort then
+					parent.add_message (Generation_Aborted)
+				else
 
 					-- Generation of runtime functions
 					Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)

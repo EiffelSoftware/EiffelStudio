@@ -36,6 +36,11 @@ inherit
 			recycle
 		end
 
+	EB_DEVELOPMENT_WINDOW_DATA
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -88,7 +93,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			create container
 			window.extend (container)
 			create right_panel.make (Current, False, True)
-			create left_panel.make (Current, window_preferences.left_panel_use_explorer_style, False)
+			create left_panel.make (Current, left_panel_use_explorer_style, False)
 			create panel
 			panel.extend (left_panel.widget)
 			panel.extend (right_panel.widget)
@@ -109,7 +114,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				-- Add the content of the window (left bar + right cell).
 			container.extend (panel)
 
-			new_split_position := window_preferences.left_panel_width
+			new_split_position := left_panel_width
 			min_split_position := panel.minimum_split_position
 			max_split_position := panel.maximum_split_position
 			splitter_position := new_split_position
@@ -583,10 +588,10 @@ feature {NONE} -- Implementation
 			-- Save the size of the window and the main layout.
 		do
 			if initialized then
-				window_preferences.save_left_panel_width (panel.split_position)
+				save_left_panel_width (panel.split_position)
 	
 					-- Save width & height.
-				window_preferences.save_size (window.width, window.height, window.is_maximized)
+				save_size (window.width, window.height, window.is_maximized)
 			end
 		end
 
@@ -594,7 +599,7 @@ feature {NONE} -- Implementation
 			-- Save the size of the window and the main layout.
 		do
 			if panel.full then
-				panel.set_split_position (Window_preferences.left_panel_width.max (
+				panel.set_split_position (left_panel_width.max (
 					panel.minimum_split_position).min (panel.maximum_split_position))
 			end
 			on_size (a_x, a_y, a_width, a_height)
@@ -621,7 +626,9 @@ feature {NONE} -- Implementation / Commands
 			-- Save the apparence of the general toolbar in the registry (or in .es5rc)
 		do
 			if general_customizable_toolbar.changed then
-				window_preferences.save_general_toolbar (general_customizable_toolbar, show_general_toolbar_command.is_visible)
+				set_array_resource ("development_window__general_toolbar_layout", save_toolbar (general_customizable_toolbar))
+				set_boolean_resource ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
+				set_boolean_resource ("development_window__show_text_in_general_toolbar", general_customizable_toolbar.is_text_displayed)
 			end
 		end
 
@@ -636,10 +643,10 @@ feature {NONE} -- Implementation / Commands
 	save_toolbar_state is
 			-- Write in the preferences whether to display the toolbars or not.
 		do
-			window_preferences.set_boolean ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
-			window_preferences.set_boolean ("development_window__show_address_toolbar", show_address_toolbar_command.is_visible)
-			window_preferences.set_boolean ("development_window__show_project_toolbar", show_project_toolbar_command.is_visible)
-			window_preferences.resources.save
+			set_boolean_resource ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
+			set_boolean_resource ("development_window__show_address_toolbar", show_address_toolbar_command.is_visible)
+			set_boolean_resource ("development_window__show_project_toolbar", show_project_toolbar_command.is_visible)
+			resources.save
 		end
 
 feature {NONE} -- Initialization flags
@@ -665,12 +672,6 @@ feature {NONE} -- Constants
 	Default_colors: EV_STOCK_COLORS is
 			-- Default Vision2 colors.
 		once	
-			create Result
-		end
-
-	window_preferences: EB_DEVELOPMENT_WINDOW_DATA is
-			-- Preferences for the development window.
-		once
 			create Result
 		end
 

@@ -149,6 +149,7 @@ feature {NONE} -- Initialization
 
 			l_stack_object: ICOR_DEBUG_VALUE
 			l_stack_adv: ABSTRACT_DEBUG_VALUE
+			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
 		do
 			debug ("DEBUGGER_TRACE_CALLBACK")
@@ -201,7 +202,6 @@ feature {NONE} -- Initialization
 											l_il_offset := l_frame_il.get_ip
 											l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 										
-	
 												--| Here we have a valid Eiffel callstack point
 											create call.make(level)
 	
@@ -209,6 +209,14 @@ feature {NONE} -- Initialization
 											l_stack_object := l_frame_il.get_argument (0)
 											l_stack_adv := debug_value_from_icdv (l_stack_object)
 											l_hexaddress := l_stack_adv.address
+
+											l_stack_drv ?= l_stack_adv
+											if l_stack_drv/= Void then
+												l_class_type := l_stack_drv.dynamic_class_type
+											else
+												l_class_type := l_stack_adv.dynamic_class.types.first
+											end
+
 	
 											call.set_private_current_object (l_stack_adv)
 											call.set_routine (

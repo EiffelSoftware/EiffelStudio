@@ -1341,7 +1341,7 @@ feature {NONE} -- open new class
 			ccname: STRING
 		do
 			current_typed_class := Void
-			if enable_feature_complete then
+			if Workbench.system_defined and enable_feature_complete then
 				clist := system.classes
 				ccname := class_address.text
 				ccname.to_lower
@@ -1387,7 +1387,8 @@ feature {NONE} -- open new class
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or
 									not is_typing or
-									last_caret_position /= str.count + 1
+									last_caret_position /= str.count + 1 or
+									not Workbench.system_defined
 				if nb > 0 and last_key_was_backspace and had_selection then
 					str.head (nb - 1)
 					nb := nb - 1

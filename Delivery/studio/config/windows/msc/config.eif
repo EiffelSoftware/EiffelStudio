@@ -89,7 +89,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%Trc -r -fo$appl.res ..\..\$appl.rc%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res $precompilelibs Makefile%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%T@echo $(LDFLAGS) -OUT:$appl.exe > $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $library $(EXTERNALS) >> $@%N%
@@ -101,14 +101,14 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 
 -- precompilation
 precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
-%%T$(RM) driver.exe%N%
+%%Tif exist driver.exe $(RM) driver.exe%N%
 %%Tlink @driver.lnk%N%
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe $(ISE_C_COMPILER)\driver.exe%N%
 %%T$(MV) precomp.lib $(ISE_C_COMPILER)\precomp.lib%N%
-%%T$(RM) driver.exe%N%
-%%T$(RM) precomp.lib%N%
+%%Tif exist driver.exe $(RM) driver.exe%N%
+%%Tif exist precomp.lib $(RM) precomp.lib%N%
 %%N%
 %driver.rc: $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%N%
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
@@ -117,7 +117,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Trc -r driver.rc%N%
 %%N%
 %precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
 %driver.lnk: e1\emain.obj $(OBJECTS) driver.res $precompilelibs%N%
@@ -132,13 +132,13 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 
 -- cecil
 cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
 
 cecil_def: "%
 %DEF_FILE= c_$appl.def %N%
 %c_$appl.def: %N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%Techo LIBRARY c_$appl.dll > $@%N%
 %%Techo DESCRIPTION %'c_$appl.dll%' >> $@%N%
 %%Ttype $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\templates\cecil.def  >> $@"
@@ -156,7 +156,7 @@ all: "all:: "
 
 intermediate_file_ext: "lib"
 
-make_intermediate: "%T$(RM) $@%N%
+make_intermediate: "%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:$@ $obj%N%T$(CREATE_TEST)"
 
 -- options below are for config internal use

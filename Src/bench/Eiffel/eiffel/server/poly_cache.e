@@ -6,7 +6,6 @@ inherit
 	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
 
 creation
-
 	make
 
 feature

@@ -102,7 +102,7 @@ feature -- Status report
 	text_id_set: BOOLEAN is
 			-- Is `text' equal to a resource string identifer?
 		do
-			Result := cwin_hi_word ( cwel_pointer_to_integer (
+			Result := cwin_hi_word (cwel_pointer_to_integer (
 				cwel_toolinfo_get_lpsztext (item))) = 0
 		end
 

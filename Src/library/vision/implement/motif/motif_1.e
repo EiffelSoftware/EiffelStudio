@@ -95,22 +95,10 @@ feature -- Widget access
 			!! Result.make (a_label, managed, oui_parent)
 		end;
 
-	label_g (a_label_gadget: LABEL_G; managed: BOOLEAN; oui_parent: COMPOSITE): LABEL_G_M is
-			-- Motif implementation of `a_label_gadget'
-		do
-			!! Result.make (a_label_gadget, managed, oui_parent)
-		end; 
-
 	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: MENU): MENU_B_M is
 			-- Motif implementation of menu button
 		do
 			!! Result.make (a_menu_b, managed, oui_parent)
-		end; 
-
-	message (a_message: MESSAGE; managed: BOOLEAN; oui_parent: COMPOSITE): MESSAGE_M is
-			-- Motif implementation of `a_message'
-		do
-			!! Result.make (a_message, managed, oui_parent)
 		end; 
 
 	message_d (a_message_dialog: MESSAGE_D; oui_parent: COMPOSITE): MESSAGE_D_M is
@@ -137,12 +125,6 @@ feature -- Widget access
 			!! Result.make (a_popup, oui_parent)
 		end; 
 
-	prompt (a_prompt: PROMPT; managed: BOOLEAN; oui_parent: COMPOSITE): PROMPT_M is
-			-- Motif implementation of `a_prompt'
-		do
-			!! Result.make (a_prompt, managed, oui_parent)
-		end; 
-
 	prompt_d (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE): PROMPT_D_M is
 			-- Motif implementation of `a_prompt_dialog'
 		do
@@ -165,12 +147,6 @@ feature -- Widget access
 			-- Motif implementation of push button
 		do
 			!! Result.make (a_push_b, managed, oui_parent)
-		end; 
-
-	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN; oui_parent: COMPOSITE): PUSH_BG_M is
-			-- Motif implementation of `a_push_b_gadget'
-		do
-			!! Result.make (a_push_b_gadget, managed, oui_parent)
 		end; 
 
 	question_d (a_question_dialog: QUESTION_D; oui_parent: COMPOSITE): QUESTION_D_M is
@@ -201,12 +177,6 @@ feature -- Widget access
 			-- Motif implementation of `a_scrollable_list'
 		do
 			!! Result.make (a_scrollable_list, managed, is_fixed, oui_parent)
-		end; 
-
-	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLL_L_M is
-			-- Motif implementation of `a_list'
-		do
-			!! Result.make (a_list, managed, is_fixed, oui_parent)
 		end; 
 
 	scrollbar (a_scrollbar: SCROLLBAR; managed: BOOLEAN; oui_parent: COMPOSITE): SCROLLBAR_M is
@@ -246,12 +216,6 @@ oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_M is
 			!! Result.make (a_separator, managed, oui_parent)
 		end; 
 
-	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN; oui_parent: COMPOSITE): SEPARATO_G_M is
-			-- Motif implementation of `a_separator_gadget'
-		do
-			!! Result.make (a_separator_gadget, managed, oui_parent)
-		end; 
-
 	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_M is
 			-- Motif implementation of `a_text'
 		do
@@ -286,12 +250,6 @@ oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_M is
 			-- Motif implementation of `a_toggle_b'
 		do
 			!! Result.make (a_toggle_b, managed, oui_parent)
-		end; 
-
-	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN; oui_parent: COMPOSITE): TOGGLE_BG_M is
-			-- Motif implementation of `a_toggle_b_gadget'
-		do
-			!! Result.make (a_toggle_b_gadget, managed, oui_parent)
 		end; 
 
 	warning_d (a_warning_dialog: WARNING_D; oui_parent: COMPOSITE): WARNING_D_M is

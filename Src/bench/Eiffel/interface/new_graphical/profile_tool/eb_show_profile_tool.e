@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EB_SHOW_PROFILE_TOOL
+class
+	EB_SHOW_PROFILE_TOOL
 
 inherit
 

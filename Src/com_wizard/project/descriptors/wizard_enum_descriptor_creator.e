@@ -66,6 +66,7 @@ feature -- Basic operations
 			create c_type_name.make (100)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
+			size_of_instance := a_type_info.type_attr.size_instance
 
 			create Result.make (Current)
 		ensure then
@@ -127,12 +128,16 @@ feature -- Basic operations
 				c_type_name := ""
 				set_common_fields (a_descriptor)
 				a_descriptor.set_elements (elements)
+				a_descriptor.set_size (size_of_instance)
 			end
 
 feature {NONE} -- Implementation
 
 	elements: LINKED_LIST[WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
+
+	size_of_instance: INTEGER
+			-- Size of instance of this type
 
 end -- class WIZARD_ENUM_DESCRIPTOR_CREATOR
 

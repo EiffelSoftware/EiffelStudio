@@ -157,7 +157,6 @@ feature -- Basic Operations
 		require
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
-			valid_first_char: name.item (1) /= '_' and not name.item (1).is_digit
 		local
 			l_name: STRING
 			l_var: like variable_mapping_table
@@ -177,6 +176,9 @@ feature -- Basic Operations
 				Result.replace_substring_all (Single_dot_string, Single_underscore_string)
 				Result.replace_substring_all (Triple_underscore_string, Single_underscore_string)
 				Result.replace_substring_all (Double_underscore_string, Single_underscore_string)
+				if Result.item (1) = '_' or Result.item (1).is_digit then
+					Result.prepend_character ('l')
+				end
 				Result := eiffel_format (Result, False)
 			end
 		ensure

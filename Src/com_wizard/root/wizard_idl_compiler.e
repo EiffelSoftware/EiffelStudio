@@ -141,7 +141,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			add_message (Current, a_string)
-			generate_make_file (Linker_command_line, Temporary_link_input_file_name)
+			generate_make_file (Linker_command_line, Temporary_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
 			a_string.append (last_make_command)

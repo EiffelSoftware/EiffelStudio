@@ -23,6 +23,33 @@ create
 
 feature -- Status Report
 
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+			-- Internal version which permits optimizations as caret position and selection
+			-- does not need to be restored.
+		do
+		end
+		
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at position `pos'. On some platforms
+			-- this may be optimized to take the selected character format and therefore
+			-- should only be used by `next_change_of_character'.
+		do
+		end
+
+	initialize_for_saving is
+			-- Initialize `Current' for save operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+		end
+		
+	complete_saving is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_saving'.
+		do
+		end
+
 	font_char_set (a_font: EV_FONT): INTEGER is
 			-- 
 		do

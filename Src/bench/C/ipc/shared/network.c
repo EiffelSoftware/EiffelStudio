@@ -77,9 +77,9 @@ rt_public int net_recv(int cs, char *buf, int size)
 	/* Read from network */
 
 	int len = 0;		/* Total amount of bytes read */
-	int length;			/* Amount read by last system call */
 
 #ifdef EIF_WIN32
+	DWORD length;			/* Amount read by last system call */
 	DWORD timer = 0;
 	BOOL fSuccess;
 #ifdef USE_ADD_LOG
@@ -111,17 +111,15 @@ rt_public int net_recv(int cs, char *buf, int size)
 		// There is a problem when there are 0 bytes t send
 		// Literally 0 bytes are sent and the Semaphore is set
 		// We need to release the semaphore in this case
-		if (size == 0)
-			{
-			DWORD t;
-			// Wait to get back in sync.
-			t = WaitForSingleObject (readev(cs), INFINITE);
+		if (size == 0) {
+				/* Wait to get back in sync. */
+			if (WaitForSingleObject (readev(cs), INFINITE) != WAIT_OBJECT_0)
 #ifdef USE_ADD_LOG
-			if (t != WAIT_OBJECT_0)
 				add_log (8, "network:97 Bad wait");
+#else
+				;
 #endif
-			}
-		else
+		} else
 			if (WaitForSingleObject (readev(cs), 0) != WAIT_OBJECT_0)
 #ifdef USE_ADD_LOG
 				add_log (8, "network:101 Wait on %d failed", size);
@@ -145,6 +143,7 @@ closed:
   	return -1;
 
 #else
+	int length;
 
 	Signal_t (*oldalrm)();
 	oldalrm = signal(SIGALRM, (void (*)(int)) timeout);	/* Trap SIGALRM within this function */
@@ -206,11 +205,11 @@ rt_public int net_send(int cs, char *buf, int size)
 {
 	/* Write to network */
 
-	int error;
-	int length;
 	int amount;
 
 #ifdef EIF_WIN32
+	DWORD error;
+	DWORD length;
 	BOOL fSuccess;
 
 #ifdef USE_ADD_LOG
@@ -224,7 +223,7 @@ rt_public int net_send(int cs, char *buf, int size)
 	}
 
 	ReleaseSemaphore (writeev(cs),1,NULL);
-	for (length = 0; length < size; buf += error, length += error) {
+	for (length = 0; length < (DWORD) size; buf += error, length += error) {
 		amount = size - length;
 		if (amount > BUFSIZ)    /* do not write more than BUFSIZ */
 			amount = BUFSIZ;
@@ -236,6 +235,8 @@ rt_public int net_send(int cs, char *buf, int size)
 	}
 
 #else  /* (not) EIF_WIN32 */
+	int length;
+	int error;
 
 	Signal_t (*oldpipe)();
 

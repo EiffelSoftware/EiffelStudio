@@ -13,9 +13,9 @@ inherit
 	PRIMITIVE_IMP
 		undefine
 			on_size,
-			on_move,
-			class_background
+			on_move
 		redefine
+			background_brush,
 			set_size,
 			set_background_color
 		end
@@ -45,6 +45,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			class_background,
+			background_brush,
 			on_right_button_up, on_left_button_down,
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
@@ -113,7 +115,6 @@ feature -- Initialization
 			client_dc: WEL_CLIENT_DC
 		do
 			if not realized then
-				!! background_brush.make_solid (gc_bg_color)
 				!! background_pen.make (Ps_solid, 1, gc_bg_color)
 				wc ?= parent
 				make_with_coordinates (wc, "", x, y, width.min (maximal_width),
@@ -311,8 +312,19 @@ feature -- Basic operations
 
 feature -- WEL
 
-	background_brush: WEL_BRUSH
+	background_brush: WEL_BRUSH is
 			-- Brush used to paint the background.
+			-- Need to be redefine to appear white.
+		local
+			windows_color: COLOR_IMP
+		do
+			if private_background_color = Void then
+				!! Result.make_by_sys_color (Color_windowtext)
+			else
+				windows_color ?= private_background_color.implementation
+				Result := windows_color.brush
+			end
+		end
 
 	background_pen: WEL_PEN
 			-- Pen used to paint the background

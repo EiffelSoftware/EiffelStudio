@@ -42,18 +42,15 @@ default
 	disabled_debug("verbose")
 	disabled_debug("wel_gdi_count")
 	disabled_debug("replication")
-	disabled_debug("debug_recv")
 	disabled_debug("cache")
 	disabled_debug("hide_option")
 	disabled_debug("jvm_gen [ ]")
 	disabled_debug("class_of_id")
 	disabled_debug("actual_replication")
 	disabled_debug("flat_short")
-	disabled_debug("debugger_trace")
 	disabled_debug("jvm_agen")
 	disabled_debug("jvm_once")
 	disabled_debug("parse")
-	disabled_debug("hector")
 	disabled_debug("skeleton")
 	disabled_debug("activity")
 	disabled_debug("local_feat_adaptation")
@@ -61,7 +58,6 @@ default
 	disabled_debug("documentation")
 	disabled_debug("dollar")
 	disabled_debug("cache_server")
-	disabled_debug("once")
 	disabled_debug("c_debugger")
 	disabled_debug("genericity")
 	disabled_debug("win_dispatcher")
@@ -86,7 +82,6 @@ default
 	disabled_debug("count")
 	disabled_debug("options")
 	disabled_debug("assertions")
-	disabled_debug("debugger")
 	disabled_debug("jvm_stack")
 	debug(no)
 	line_generation(no)
@@ -256,9 +251,9 @@ cluster
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
-	interface_switch (switch):		"$\interface\new_graphical"
+	interface_switch (switch):		"$\interface\batch_only"
 
-	communications (switch):		"$\communication"
+	communications (switch):		"$\no_communication"
 
 	time_lock (switch):		"$\license\time_lock"
 
@@ -269,8 +264,6 @@ cluster
 	debuging_class (communications):		"$\debug"
 
 	debuging_formatters (communications):		"$\formatters"
-
-	io_watcher (communications):		"$\spec\mswin"
 
 	"beurk":		"$EIFFEL_SRC\Eiffel\beurk"
 
@@ -283,8 +276,6 @@ cluster
 	common_eiffel_parser (common_parser):		"$\parser"
 
 	"yacc":		"$EIFFEL_SRC\Eiffel\yacc"
-
-	"to_be_moved":		"$EIFFEL_SRC\Eiffel\interface\new_graphical\to_be_moved"
 
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude

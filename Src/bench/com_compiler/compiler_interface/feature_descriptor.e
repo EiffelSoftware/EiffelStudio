@@ -248,10 +248,12 @@ feature -- Access
 				end
 				i := i + 1
 			end
-			res.resize (1, nb)
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			if nb > 1 then
+				res.resize (1, nb - 1)
+				create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
+				create Result.make
+				Result.set_unknown_array (ecom_res)
+			end
 		ensure then
 			result_exists: Result /= void			
 		end
@@ -321,10 +323,10 @@ feature -- Access
 				end
 				i := i + 1
 			end
-			res.resize (1, nb_classes - 1)
-			create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
-		ensure then
-			result_exists: Result /= Void
+			if nb_classes > 1 then
+				res.resize (1, nb_classes - 1)
+				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+			end
 		end
 
 	is_once: BOOLEAN is

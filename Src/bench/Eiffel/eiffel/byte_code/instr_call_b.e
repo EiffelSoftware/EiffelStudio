@@ -47,7 +47,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for an intruction call
 		do
-			generate_il_line_info
+			generate_il_line_info (True)
 			call.generate_il
 		end
 

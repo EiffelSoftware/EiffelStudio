@@ -135,7 +135,7 @@ feature -- IL code generation
 				end
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
-				il_generator.mark_label (l_label)					
+				il_generator.mark_label (l_label)
 			end
 
 				-- Loop labels
@@ -143,7 +143,7 @@ feature -- IL code generation
 			end_label := il_label_factory.new_label
 
 
-			generate_il_line_info
+			generate_il_line_info (True)
 
 				-- Generate byte code for exit expression
 			il_generator.mark_label (test_label)

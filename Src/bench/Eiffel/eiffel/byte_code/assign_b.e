@@ -51,7 +51,7 @@ feature -- IL code generation
 		local
 			source_type: TYPE_I
 		do
-			generate_il_line_info
+			generate_il_line_info (True)
 
 				-- Code that needs to be generated when performing
 				-- assignment to an attribute.

@@ -95,7 +95,7 @@ feature -- IL generation
 			interval_b: INTERVAL_B
 			i, nb: INTEGER
 		do
-			generate_il_line_info
+			generate_il_line_info (False)
 			nb := interval.count
 			need_label := nb > 1
 			if need_label then

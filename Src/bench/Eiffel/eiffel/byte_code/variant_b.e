@@ -38,7 +38,7 @@ feature -- IL code generation
 				not_in_precondition: context.assertion_type /= In_precondition
 			end
 
-			generate_il_line_info
+			generate_il_line_info (True)
 
 				-- Generate expression, duplicate top to perform checking,
 				-- and store it in `a_local'.
@@ -65,7 +65,7 @@ feature -- IL code generation
 				not_in_precondition: context.assertion_type /= In_precondition
 			end
 
-			generate_il_line_info
+			generate_il_line_info (True)
 
 			expr.generate_il
 

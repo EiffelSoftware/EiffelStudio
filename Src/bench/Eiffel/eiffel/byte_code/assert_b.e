@@ -166,7 +166,7 @@ feature -- IL Code generation
 				not_in_precondition: context.assertion_type /= In_precondition
 			end
 
-			generate_il_line_info
+			generate_il_line_info (True)
 
 			expr.generate_il
 
@@ -182,7 +182,7 @@ feature -- IL Code generation
 		require
 			in_precondition: context.assertion_type = In_precondition
 		do
-			generate_il_line_info
+			generate_il_line_info (True)
 			expr.generate_il
 			
 			if tag = Void then

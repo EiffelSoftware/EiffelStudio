@@ -141,7 +141,7 @@ feature -- IL code generation
 			case_b: CASE_B
 		do
 			end_label := il_label_factory.new_label
-			generate_il_line_info
+			generate_il_line_info (True)
 
 				-- Generate switch expression byte code
 			switch.generate_il

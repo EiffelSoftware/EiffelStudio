@@ -18,20 +18,33 @@ feature -- Status report
 	logical_function_mode: INTEGER
 			-- Logical function to be used in Graphic Context.
 
-	line_width: INTEGER
-			-- width of line of current figure
+feature {EV_FIGURE} -- Element change
+
+	get_drawing_attributes (drawing: EV_DRAWABLE) is
+			-- Get the `drawing' attributes.
+		require
+			drawing_exists: drawing /= Void
+		do
+			logical_function_mode := drawing.logical_mode
+			foreground_color := drawing.foreground_color
+			background_color := drawing.background_color
+		end
+
+	set_drawing_attributes (drawing: EV_DRAWABLE) is
+			-- Set the attributes to `drawing'.
+		require
+			drawing_exists: drawing /= Void
+		do
+			drawing.set_logical_mode (logical_function_mode)
+			if foreground_color /= Void then
+				drawing.set_foreground_color (foreground_color)
+			end
+			if background_color /= Void then
+				drawing.set_background_color (background_color)
+			end
+		end
 
 feature -- Status setting
-
-	set_line_width (a_line_width: INTEGER) is
-			-- Set `line_width' of current figure to `a_line_width'.
-		require
-			a_line_width_positive: a_line_width >= 0
-		do
-			line_width := a_line_width
-		ensure
-			line_width = a_line_width
-		end
 
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `background_color' to `a_color'.

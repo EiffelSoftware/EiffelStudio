@@ -5,23 +5,23 @@ class
 
 feature -- String constants
 
-	macro_string: STRING is "macro";
+	macro_string: STRING is "macro"
 
-	dll16_string: STRING is "dll16";
+	dll16_string: STRING is "dll16"
 
-	dll32_string: STRING is "dll32";
+	dll32_string: STRING is "dll32"
 
-	dllwin32_string: STRING is "dllwin32";
+	dllwin32_string: STRING is "dllwin32"
 
 feature -- Integer constants
 
-	macro_type: INTEGER is 1;
+	macro_type: INTEGER is 1
 
-	dll16_type: INTEGER is 2;
+	dll16_type: INTEGER is 2
 
-	dll32_type: INTEGER is 3;
+	dll32_type: INTEGER is 3
 
-	dllwin32_type: INTEGER is 4;
+	dllwin32_type: INTEGER is 4
 
 end -- EXTERNAL_CONSTANTS
 

@@ -74,7 +74,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW, GB_COMMAND_CONV
 				end
 				original_index := parent_item.index
 				window_selector.update_for_removal (Current)
-				parent_item.prune (Current)
+				parent_item.prune_all (Current)
 				parent_item.go_i_th (original_index.min (parent_item.count))
 			end
 		ensure

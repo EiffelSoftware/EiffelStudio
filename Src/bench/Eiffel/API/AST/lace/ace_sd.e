@@ -452,6 +452,8 @@ feature {NONE} -- Incrementality
 			-- Is `new_list' a subset of `original_list'?
 			--| allows Void arguments
 			--| Used for incrementality on externals
+		local
+			comparison_criterion: BOOLEAN
 		do
 			if original_list = Void then
 				Result := new_list = Void
@@ -460,13 +462,17 @@ feature {NONE} -- Incrementality
 			else
 				from
 					Result := True
-					new_list.compare_objects
+					comparison_criterion := original_list.object_comparison
+					original_list.compare_objects
 					new_list.start
 				until
 					new_list.after or else not Result
 				loop
 					Result := original_list.has (new_list.item)
 					new_list.forth
+				end
+				if not comparison_criterion then
+					original_list.compare_references
 				end
 			end
 		end

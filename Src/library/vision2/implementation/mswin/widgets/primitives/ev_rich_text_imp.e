@@ -40,6 +40,7 @@ inherit
 	WEL_RICH_EDIT
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -65,6 +66,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_up,
+			on_key_down,
 			wel_background_color,
 			wel_foreground_color,
 			on_en_change

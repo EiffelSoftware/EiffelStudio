@@ -22,6 +22,7 @@ inherit
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			font as wel_font,
@@ -41,7 +42,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_set_focus,
 			on_kill_focus,
 			on_key_down,

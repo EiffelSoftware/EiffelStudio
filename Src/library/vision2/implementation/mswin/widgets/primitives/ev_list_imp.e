@@ -30,6 +30,7 @@ inherit
 	WEL_SINGLE_SELECTION_LIST_BOX
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			destroy as wel_desroy,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
@@ -52,7 +53,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_key_down,
 			on_key_up,
 			on_set_focus,
@@ -74,6 +74,7 @@ inherit
 		rename
 			make as wel_make,
 			destroy as wel_destroy,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -95,7 +96,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_key_down,
 			on_key_up,
 			on_set_focus,

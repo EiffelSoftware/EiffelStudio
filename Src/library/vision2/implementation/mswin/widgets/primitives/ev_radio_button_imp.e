@@ -19,6 +19,7 @@ inherit
 	WEL_RADIO_BUTTON
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -38,7 +39,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_key_up,
 			on_key_down,
 			on_set_focus,

@@ -152,7 +152,7 @@ feature {NONE} -- WEL implementation
 		local
 			composite: WEL_COMPOSITE_WINDOW
 		do
-			composite ?= parent
+			composite ?= parent_imp
 			menu_container.show_track (absolute_x, absolute_y + height // 2 - 10, composite)
 			execute_command (Cmd_click, Void)
 		end

@@ -593,6 +593,10 @@ feature -- Generator constants -- 8
 
 	Ecatch: STRING is "%TECATCH;%N"
 
+	Ecatch_auto: STRING is "ECATCH_AUTO"
+
+	End_ecatch: STRING is "END_ECATCH;%N%T"
+
 	Lock_module_function: STRING is "LockModule ();"
 
 	Unlock_module_function: STRING is "UnlockModule ();"

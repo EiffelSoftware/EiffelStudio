@@ -122,51 +122,75 @@ feature -- Add objects in baskets
 	add_eiffel_objects is
 			-- Add class C code objects.
 		local
+			class_array: ARRAY [CLASS_C];
+			precomp_id: INTEGER;
+			i, nb: INTEGER;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
 			object_name, file_name: STRING
-			classes: CLASS_C_SERVER
+			classes: CLASS_C_SERVER;
+			old_cursor: CURSOR
 		do
-			from
-				classes := System.classes;
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				from
-					types := a_class.types;
-					types.start
-				until
-					types.after
-				loop
-					cl_type := types.item;
-					if cl_type.is_dynamic then
-						if not empty_class_types.has (cl_type.id) then
-								-- C code
-							object_name := cl_type.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							object_baskets.item
-								(cl_type.packet_number).extend (file_name)
+			classes := System.classes;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := Class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						from
+							types := a_class.types;
+							types.start
+						until
+							types.after
+						loop
+							cl_type := types.item;
+							old_cursor := types.cursor;
+							types.search (cl_type.type);
+							if types.item = cl_type then
+								-- Do not generate twice the same type if it
+								-- has been derived in two different merged
+								-- precompiled libraries.
+
+							if cl_type.is_dynamic then
+								if not empty_class_types.has (cl_type.id) then
+										-- C code
+									object_name := cl_type.base_file_name;
+									!!file_name.make (16);
+									file_name.append (object_name);
+									file_name.append (".o");
+									object_baskets.item
+										(cl_type.packet_number).extend (file_name)
+								end
+							else
+								if dle_class_types.has (cl_type.id) then
+										-- C code of previously removed features
+									object_name := cl_type.base_file_name;
+									!!file_name.make (16);
+									file_name.append (object_name);
+									file_name.append (".o");
+									static_baskets.item
+										(cl_type.packet_number).extend (file_name)
+								end
+							end;
+							end;
+							types.go_to (old_cursor);
+							types.forth
 						end
-					else
-						if dle_class_types.has (cl_type.id) then
-								-- C code of previously removed features
-							object_name := cl_type.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							static_baskets.item
-								(cl_type.packet_number).extend (file_name)
-						end
-					end;
-					types.forth
+					end
+					i := i + 1
 				end;
 				classes.forth
-			end
+			end;
+		end
+
+	add_class_objects (a_class: CLASS_C) is
+			-- Add `a_class' C code objects.
+		require
+			a_class_not_void: a_class /= Void
+		local
+		do
 		end;
 
 feature -- DLE

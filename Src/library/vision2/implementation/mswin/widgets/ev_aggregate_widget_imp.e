@@ -20,7 +20,8 @@ inherit
 		rename
 			interface as ev_horizontal_box_imp_interface
 		redefine
-			make
+			make,
+			initialize
 		end
 create
 	make
@@ -29,8 +30,6 @@ feature -- initialization
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
-		local
-			b: EV_AGGREGATE_BOX_IMP
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
@@ -38,6 +37,14 @@ feature -- initialization
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
 			border_width := Default_border_width
+		end
+
+	initialize is
+			-- Initialize aggregate box.
+		local
+			b: EV_AGGREGATE_BOX_IMP
+		do
+			{EV_HORIZONTAL_BOX_IMP} Precursor
 			create {EV_AGGREGATE_BOX} box
 			extend (box)
 			b ?= box.implementation
@@ -73,6 +80,10 @@ end -- class EV_AGGREGATE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/03 16:18:21  brendel
+--| Fixed bug in order of initialization, where a widget cannot be added
+--| before initialize is called.
+--|
 --| Revision 1.7  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

@@ -212,7 +212,8 @@ feature -- Actions
 				list_row.extend (selected_item @ 3)
 				list_row.extend (selected_item @ 4)
 				gac_assembly_list.extend (list_row)
-				populate_gac_assembly_dialog (assembly_list)
+				assembly_list.go_i_th (assembly_list.index_of (assembly_list.selected_item, 1))
+				assembly_list.remove
 			end	
 		end
 	
@@ -276,36 +277,37 @@ feature -- Actions
 		local
 			fd: EV_FILE_OPEN_DIALOG
 			list_row: EV_MULTI_COLUMN_LIST_ROW
+			l_ass_name: STRING
 		do
 			create fd
 			fd.set_filter ("*.*")
 			fd.set_title ("Select an Assembly")
 			fd.show_modal_to_window (system_window.window)
 			if fd.file_name /= Void and then not fd.file_name.is_empty then
-				if (fd.file_name.substring_index (".dll", fd.file_name.count - 4) > 0)
-					or (fd.file_name.substring_index (".exe", fd.file_name.count - 4) > 0) then
+				l_ass_name := fd.file_name
+				if (l_ass_name.substring_index (".dll", l_ass_name.count - 4) > 0)
+					or (l_ass_name.substring_index (".exe", l_ass_name.count - 4) > 0) then
 						create assembly_interface.make
-						if assembly_interface.signed 
-								(create {STRING}.make_from_string (fd.file_name)) then
-							assembly_interface.get_assembly_info_from_assembly 
-								(create {STRING}.make_from_string (fd.file_name))
-							create list_row
+						assembly_interface.get_assembly_info_from_assembly (l_ass_name)
+						create list_row
+						if assembly_interface.signed (l_ass_name) then
+								-- Assembly is signed.
 							list_row.extend (unique_assembly_cluster_name ("local",
 												assembly_interface.assembly_name,
 												assembly_interface.assembly_version,
 												assembly_interface.assembly_culture,
 												assembly_interface.assembly_public_key_token))
-							list_row.extend ("")
-							list_row.extend (fd.file_name)
-							list_row.extend (assembly_interface.assembly_version)
-							list_row.extend (assembly_interface.assembly_culture)
-							if assembly_interface.signed 
-								(create {STRING}.make_from_string (fd.file_name)) then
-								list_row.extend (assembly_interface.assembly_public_key_token)
-								local_assembly_list.set_column_width (80, 6)
-							end
-							local_assembly_list.extend (list_row)
+						else
+								-- Assembly is not signed.
+							list_row.extend (unique_assembly_cluster_name ("local",
+												assembly_interface.assembly_name,
+												assembly_interface.assembly_version,
+												assembly_interface.assembly_culture,
+												""))
 						end
+							list_row.extend ("")
+							list_row.extend (l_ass_name)
+							local_assembly_list.extend (list_row)							
 				end
 			end
 		end
@@ -392,16 +394,15 @@ feature {NONE} -- Initialization
 			elseif a_assembly_type.is_equal ("local") then
 				create Result.make_with_text ("Local Assembly References")
 				create local_assembly_list.make (system_window.window)
-				local_assembly_list.set_column_titles 
-					(<<"Cluster Name", "Prefix", "Path", "Version", "Culture", "Public Key">>)
+				local_assembly_list.set_column_titles
+					(<<"Cluster Name", "Prefix", "Path">>)
 				local_assembly_list.disable_multiple_selection
 				local_assembly_list.set_column_editable (True, 1)
 				local_assembly_list.set_column_editable (True, 2)
 				local_assembly_list.set_unique_column_values (True)
 				local_assembly_list.deselect_actions.force_extend (agent check_cluster_names_valid)
-				local_assembly_list.set_column_width (0, 4)
-				local_assembly_list.set_column_width (0, 5)
-				local_assembly_list.set_column_width (0, 6)
+--				local_assembly_list.new_item_actions.extend
+--					(local_assembly_list.set_column_width (local_assembly_list.resize_column_to_content (1)))
 				item_box.extend (local_assembly_list)
 			end
 			

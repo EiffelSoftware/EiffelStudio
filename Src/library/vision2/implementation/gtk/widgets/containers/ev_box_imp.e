@@ -15,6 +15,10 @@ inherit
 	EV_BOX_I
 		
 	EV_INVISIBLE_CONTAINER_IMP
+		redefine
+			remove_child,
+			child_added
+		end
 
 feature -- Element change (box specific)
 	
@@ -45,12 +49,21 @@ feature -- Access
 			Result := c_gtk_container_border_width (widget)
 		end
 	
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_BOX} -- Implementation
 
-	set_child_options (resize_flag, position_flag: BOOLEAN; the_child:EV_WIDGET_IMP) is
-			-- Set the new options of the child in the box
+	remove_child (child_imp: EV_WIDGET_IMP) is	
+			-- Remove the given child.
+			-- Function redefined because the widget is in a box. 
 		do
-			
+			-- removing the box in which the widget is will destroy
+			-- both box_widget and widget.
+			gtk_container_remove (GTK_CONTAINER (widget), child_imp.box_widget)
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := c_gtk_container_has_child (widget, a_child.box_widget)
 		end
 
 end -- class EV_BOX_IMP

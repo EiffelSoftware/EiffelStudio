@@ -81,18 +81,69 @@ feature {EV_MENU_HOLDER_IMP} -- Implementation
 
 	name: STRING
 
-feature {NONE} -- Implementation	
+feature {NONE} -- Implementation - Assertion	
+
+	parent_is_option_button: BOOLEAN is
+			-- Is the parent an option button?
+			-- We need this because it requires a special
+			-- processing when the parent is an option button.
+		local
+			par: EV_OPTION_BUTTON
+		do
+			par ?= parent_imp.interface
+			Result := (par /= Void)
+		end	
+
+feature {NONE} -- Implementation
 
 	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add menu item into container
+		local
+			option_button_par: EV_OPTION_BUTTON_IMP
 		do
-			gtk_menu_append (widget, item_imp.widget)
+			-- If the parent is an option button:
+			if parent_is_option_button then
+
+				-- 1) We need to update the parent (the option button)
+				-- `menu_items_array' by adding the new menu_item:
+				option_button_par ?= parent_imp
+				option_button_par.menu_items_array.force (item_imp)
+
+				-- 2) We do the following to resize the option button when adding
+				-- new menu items with a longer length: 
+
+				-- adding a reference to the menu before removing it from its parent:
+				gtk_object_ref (widget)
+				-- removing the menu from its parent, the option button:
+				gtk_option_menu_remove_menu (parent_imp.widget)
+				-- adding the item_imp to the menu:
+				gtk_menu_append (widget, item_imp.widget)
+				-- re-adding the menu to the option button:
+				gtk_option_menu_set_menu (parent_imp.widget, widget)
+				-- setting the number of reference of the menu to 1:
+				gtk_object_unref (widget)
+
+			-- If the parent is not an option button:
+			else
+				gtk_menu_append (widget, item_imp.widget)
+			end
 		end
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Remove the item from the container.
+		local
+			option_button_par: EV_OPTION_BUTTON_IMP
 		do
 			gtk_container_remove (GTK_CONTAINER (widget), item_imp.widget)
+
+			-- If the parent is an option button,
+			-- we also remove the item from its array of
+			-- items, `menu_items_array'.
+			if parent_is_option_button then
+				option_button_par ?= parent_imp
+				option_button_par.menu_items_array.search (item_imp)
+				option_button_par.menu_items_array.remove
+			end
 		end
 	
 end -- class EV_MENU_IMP

@@ -1,10 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
-	description: 
-		"EiffelVision radio menu item. Implementatino interface."
+	description: "Eiffel Vision radio menu item. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,26 +9,6 @@ deferred class
 
 inherit
 	EV_CHECK_MENU_ITEM_I
-
-feature -- Status report
-
-	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
-			-- Is this item in same group as peer
-		require
-		deferred
-		end
-
-
-feature -- Status Setting
-
-	set_peer (peer: EV_RADIO_MENU_ITEM) is
-			-- Put in same group as peer
-		require
-		deferred
-		ensure
-			same_group: is_peer(peer)
-		end
-
 	
 end -- class EV_RADIO_MENU_ITEM_I
 
@@ -57,6 +33,9 @@ end -- class EV_RADIO_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/22 19:55:09  brendel
+--| Changed in compliance with interface.
+--|
 --| Revision 1.5  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

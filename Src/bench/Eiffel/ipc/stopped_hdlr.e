@@ -6,7 +6,9 @@ inherit
 	SHARED_DEBUG;
 	SHARED_WORKBENCH;
 	OBJECT_ADDR;
-	WINDOWS
+	WINDOWS;
+	GRAPHICS;
+	CURSOR_W
 
 creation
 	
@@ -41,6 +43,7 @@ feature
 			address: STRING;
 			reason: INTEGER
 		do
+			set_global_cursor (watch_cursor);
 			run_info.set_is_stopped (true);
 
 				-- Physical address of objects held in object tools
@@ -94,7 +97,8 @@ feature
 			if Run_info.feature_i /= Void then
 				Window_manager.routine_win_mgr.show_stoppoint (Run_info.feature_i, Run_info.break_index)
 			end;		
-			Run_info.display_status
+			Run_info.display_status;
+			restore_cursors
 		end;
 
 feature {} -- parsing features

@@ -73,7 +73,6 @@ void do_init ()
 #ifdef EIF_WINDOWS
 extern void eio(void);
 void do_init(void);
-EIF_INTEGER int_size(void);
 
 eif_winsock_cleanup()
 {
@@ -1098,22 +1097,58 @@ EIF_INTEGER fd;
 #endif
 }
 
-EIF_INTEGER int_size ()
+EIF_INTEGER c_packet_number_size()
 {
-	return sizeof (EIF_INTEGER);
+	return (EIF_INTEGER) (sizeof(uint32));
 }
 
 EIF_INTEGER c_get_number (data_obj)
 EIF_OBJ data_obj;
 {
+	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
+	 * is either 4 or 8.
+	 */
+
+#if LNGSIZ == 4
 	return (EIF_INTEGER) ntohl (* ((EIF_INTEGER *) data_obj));
+#else
+	uint32 upper, lower, value;
+	unsigned long tmp;
+	EIF_INTEGER result;
+
+	bcopy (((char *) data_obj), &value, sizeof(uint32));
+	lower = (uint32) ntohl(value);
+	upper = 0x00000000;
+	if (lower & 0x80000000) {
+		lower &= 0x7fffffff;
+		upper = 0x80000000;
+	}
+	result = (EIF_INTEGER) ((lower & 0x00000000ffffffff) | (upper << 32));
+
+	return  result;
+#endif
 }
 
 void c_set_number (data_obj, num)
 EIF_OBJ data_obj;
 EIF_INTEGER num;
 {
+	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
+	 * is either 4 or 8.
+	 */
+
+#if LNGSIZ == 4
 	(*(EIF_INTEGER *) data_obj) = htonl (num);
+#else
+	uint32 upper, lower, value;
+	unsigned long tmp;
+
+	lower = (uint32) (num & 0x000000007fffffff);
+	if (num & 0x8000000000000000)
+		lower |= 0x80000000;
+	value = htonl((uint32)(lower));
+	bcopy(&value, ((char *) data_obj), sizeof(uint32));
+#endif
 }
 
 void c_set_data (pdata_obj, sdata_obj, count)
@@ -1121,7 +1156,7 @@ EIF_OBJ pdata_obj;
 EIF_OBJ sdata_obj;
 EIF_INTEGER count;
 {
-	bcopy ((pdata_obj + int_size()), sdata_obj, count);
+	bcopy ((pdata_obj + c_packet_number_size()), sdata_obj, count);
 }
 
 void c_get_data (rdata_obj, pdata_obj, count)
@@ -1129,6 +1164,6 @@ EIF_OBJ rdata_obj;
 EIF_OBJ pdata_obj;
 EIF_INTEGER count;
 {
-	bcopy (rdata_obj, (pdata_obj + int_size()), count);
+	bcopy (rdata_obj, (pdata_obj + c_packet_number_size()), count);
 }
 

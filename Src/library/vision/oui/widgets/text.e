@@ -536,6 +536,15 @@ feature -- Basic operations
 			implementation.set_margin_width (new_width)
 		end;
 
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+			-- Search for the string `text_to_find' in the TEXT
+			-- Return the position of the first occurence
+		require
+			text_to_find_not_void: text_to_find /= Void
+		do
+			Result := implementation.find (text_to_find, match_case, start_from)
+		end
+
 feature -- Text mode
 
 	set_rows (i: INTEGER) is

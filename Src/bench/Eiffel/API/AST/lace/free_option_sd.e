@@ -49,6 +49,9 @@ feature {COMPILER_EXPORTER}
 				when extending, extendible then
 					!! dle_license.make;
 					Result := dle_license.licensed
+-- FIXME: more explicit message
+-- FIXME: more explicit message
+-- FIXME: more explicit message
 				else
 					Result := True
 				end

@@ -315,8 +315,8 @@ feature {NONE} -- Integer Values initialization
 			state_ed_width := resource.get_pos_integer ("state_ed_width", 300);
 			state_ed_height := resource.get_pos_integer ("state_ed_height", 300);
 
-			trans_ed_width := resource.get_pos_integer ("trans_ed_width", 250);
-			trans_ed_height := resource.get_pos_integer ("trans_ed_height", 170);
+			trans_ed_width := resource.get_pos_integer ("trans_ed_width", 170);
+			trans_ed_height := resource.get_pos_integer ("trans_ed_height", 120);
 
 			tree_width := resource.get_pos_integer ("tree_width", 320);
 			tree_height := resource.get_pos_integer ("tree_height", 270);

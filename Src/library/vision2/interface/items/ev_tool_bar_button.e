@@ -131,8 +131,8 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TOOL_BAR_ITEM}
-				and Precursor {EV_TEXTABLE} and
-				Precursor {EV_TOOLTIPABLE} and Precursor {EV_SENSITIVE}
+				and Precursor {EV_TEXTABLE} and Precursor {EV_TOOLTIPABLE}
+				and Precursor {EV_SENSITIVE} and Precursor {EV_DOCKABLE_SOURCE}
 		end
 		
 feature {EV_ANY_I} -- Implementation

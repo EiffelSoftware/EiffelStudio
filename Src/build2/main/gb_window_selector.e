@@ -174,26 +174,32 @@ feature -- Access
 			Cursor_not_moved: old index = index
 		end
 
-	directory_names: ARRAYED_LIST [STRING] is
+	directory_names (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM): ARRAYED_LIST [STRING] is
 			-- Names of all root directories contained.
 		local
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			a_cursor: EV_DYNAMIC_LIST_CURSOR [EV_TREE_NODE]
+			tree_node_list: EV_TREE_NODE_LIST
 		do
-			a_cursor := cursor
+			if directory_item /= Void then
+				tree_node_list := directory_item
+			else
+				tree_node_list := Current
+			end
+			a_cursor := tree_node_list.cursor
 			create Result.make (0)
 			from
-				start
+				tree_node_list.start
 			until
-				off
+				tree_node_list.off
 			loop
-				directory ?= item
+				directory ?= tree_node_list.item
 				if directory /= Void then
-					Result.extend (item.text)
+					Result.extend (tree_node_list.item.text)
 				end
-				forth
+				tree_node_list.forth
 			end
-			go_to (a_cursor)
+			tree_node_list.go_to (a_cursor)
 			Result.compare_objects
 		ensure
 			Result_not_void: Result /= Void
@@ -1142,7 +1148,7 @@ feature {NONE} -- Implementation
 				dialog.show_actions.wipe_out
 				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
-				create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name)
+				create dialog.make_with_values (unique_name_from_array (directory_names (selected_directory), "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, selected_directory))
 				dialog.set_icon_pixmap (Icon_build_window @ 1)
 			end
 			
@@ -1188,12 +1194,12 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	valid_directory_name (a_name: STRING): BOOLEAN is
+	valid_directory_name (a_name: STRING; directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM): BOOLEAN is
 			-- Is `a_name' a valid name for a new directory?
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := not directory_names.has (a_name)
+			Result := not directory_names (directory_item).has (a_name)
 		end
 		
 	update_display_and_builder_windows (an_object: GB_OBJECT) is

@@ -46,7 +46,7 @@ feature
 			left_type := left.type;
 			right_type := right.type;
 			if left_type.is_long and then right_type.is_long then
-				generated_file.putstring (" ((float)");
+				generated_file.putstring (" ((EIF_DOUBLE)");
 				left.print_register;
 				generate_operator;
 				right.print_register;

@@ -20,7 +20,7 @@ feature
 
 	check_redeclaration
 		(   feat_tbl, old_tbl: FEATURE_TABLE;
-			pattern_list: LINKED_LIST [STRING];
+			pattern_list: LIST [INTEGER];
 			origin_table: ORIGIN_TABLE) is
 			-- Chec the adaptation with computed new feature table
 			-- `feat_tbl'

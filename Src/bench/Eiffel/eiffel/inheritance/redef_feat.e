@@ -17,7 +17,7 @@ feature
 		local
 			redef_assert_feats: LINKED_LIST [FEATURE_I];
 			list: LINKED_LIST [INHERIT_INFO];
-			feat, feat2: FEATURE_I;
+			feat: FEATURE_I;
 		do
 			from
 				adaptations.start;
@@ -25,25 +25,27 @@ feature
 				adaptations.after
 			loop
 				feat := adaptations.item.new_feature;
-				!!redef_assert_feats.make;
-				list := adaptations.item.old_features.deferred_features;
+				!! redef_assert_feats.make;
+
 				from
+					list := adaptations.item.old_features.deferred_features;
 					list.start
 				until
 					list.after
 				loop
-					feat2 := list.item.a_feature;
-					redef_assert_feats.extend (feat2);
+					redef_assert_feats.extend (list.item.a_feature)
+					redef_assert_feats.forth
 					list.forth;
 				end;
-				list := adaptations.item.old_features.features;
+
 				from
+					list := adaptations.item.old_features.features;
 					list.start
 				until
 					list.after
 				loop
-					feat2 := list.item.a_feature;
-					redef_assert_feats.extend (feat2);
+					redef_assert_feats.extend (list.item.a_feature)
+					redef_assert_feats.forth
 					list.forth;
 				end;
 				if redef_assert_feats.count > 0 then

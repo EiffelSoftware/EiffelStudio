@@ -591,7 +591,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			rw: INTEGER
 		do
 			-- First, we insert the graphical object.
-			list := item_imp.internal_text
+--| FIXME			list := item_imp.internal_text
 			from
 				list.start
 				create litem.make_with_attributes (
@@ -927,6 +927,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/23 18:19:37  brendel
+--| Commented out line that uses internal_text. get back to this.
+--|
 --| Revision 1.56  2000/03/22 20:21:27  rogers
 --| On_right_button_down no longer calls the precursor, but calls the pointer_button_press_actions directly.
 --|

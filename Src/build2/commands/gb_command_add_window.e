@@ -96,7 +96,7 @@ feature -- Basic Operation
 			else
 				directory_item := window_selector.directory_object_from_name (parent_directory)
 				directory_item.add_alphabetically (an_object.window_selector_item)
-				an_object.window_selector_item.expand
+				directory_item.expand
 			end
 
 				-- If this is the only window contained, select it.
@@ -173,7 +173,11 @@ feature -- Basic Operation
 			else
 				object_name := an_object.short_type
 			end
-			Result := object_name + " added to the project"
+			if parent_directory = Void then
+				Result := object_name + " added to the project"
+			else
+				Result := object_name + " added to project in directory " + parent_directory.last
+			end
 		end
 	
 feature {NONE} -- Implementation

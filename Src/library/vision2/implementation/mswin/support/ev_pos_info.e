@@ -160,6 +160,20 @@ feature -- Settings
 		ensure
 			is_positioned_set: is_positioned	
 		end
+		
+feature {EV_SIZEABLE_IMP} -- Status setting
+		
+	disable_user_min_width_set is
+			-- Assign `False' to `is_user_min_width_set'.
+		do
+			is_user_min_width_set := False
+		end
+		
+	disable_user_min_height_set is
+			-- Assign `False' to `is_user_min_height_set'.
+		do
+			is_user_min_height_set := False
+		end
 
 invariant
 	width_positive: width >= 0

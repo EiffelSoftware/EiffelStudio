@@ -601,8 +601,8 @@
                 <File Id="strike.png" Name="strike.png" />
                 <File Id="italic.png" Name="italic.png" />
                 <File Id="bold.png" Name="bold.png" />
-                <File Id="default_text_initializer.e" Name="DEFAUL~1.E" LongName="default_text_initializer.e" />
-                <File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
+				<File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
+				<File Id="welcome.rtf" Name="welcome.rtf" />
               </Component>
             </Directory>
           </Directory>

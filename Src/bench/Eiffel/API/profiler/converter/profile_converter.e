@@ -126,6 +126,10 @@ end;
 			a: ANY
 		do
 			redo_cyclics;
+			if is_eiffel then
+				profile_information.compute_percentages;
+			end;
+
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Ready with analysis.%N%N");
 	io.error.putstring ("Cyclics are re-done.");
@@ -136,14 +140,6 @@ debug("PROFILE_CONVERT")
 	io.error.new_line
 end;
 
--- FIXME: WE should do something like
--- !! out_file_name.make_from_string (profiler_path);
--- out_file_name.set_file_name (profilename.extract_name);
--- in order to put the `profinfo.pfi' in the correct directory
--- out_file_name.add_extension (Dot_profile_information);
---
--- The problem is that no extract_name feature exists in FILE_NAME
--- FIXME
 			!! out_file_name.make_from_string (profilename);
 			out_file_name.add_extension (Dot_profile_information);
 			!! file.make (out_file_name);
@@ -428,6 +424,9 @@ end;
 			if is_eiffel then
 				!! e_data.make (number_of_calls, percentage, function_time, descendant_time, e_function);
 				profile_information.insert_eiffel_profiling_data (e_data)
+				if function_time > profile_information.total_execution_time then
+					profile_information.set_total_execution_time (function_time)
+				end
 
 			elseif is_c then
 				!! c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function);

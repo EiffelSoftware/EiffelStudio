@@ -35,7 +35,7 @@ feature -- Checking
 
 	copy_value (item: PROFILE_DATA) is
 		do
-			item_value := item.number_of_calls
+			item_value := item.calls
 		end
 
 	filtering_is_allowed: BOOLEAN is

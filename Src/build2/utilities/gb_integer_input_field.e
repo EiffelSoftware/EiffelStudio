@@ -8,105 +8,42 @@ class
 	GB_INTEGER_INPUT_FIELD
 
 inherit
-	EV_VERTICAL_BOX
+	GB_INPUT_FIELD
 	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-	
-	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	GB_SHARED_PIXMAPS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
-	GB_WIDGET_UTILITIES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
 	GB_SHARED_PREFERENCES
-		export
-			{NONE} all
 		undefine
-			is_equal, copy, default_create
+			copy, is_equal, default_create
 		end
+	
 create
-	make,
-	make_without_label
+	make
 	
 feature {NONE} -- Initialization
 	
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
+			-- If `label_text' `is_empty', do not display a label.
 			-- `an_execution_agent' is to execute the setting of the attribute.
 			-- `a_validate_agent' is used to query whether the current value is valid as an argument for `execution_agent'.
 			-- `tooltip' is tooltip to be displayed on visible parts of control.
 		require
 			gb_ev_any_not_void: any /= Void
 			a_parent_not_void: a_parent /= Void
-			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
+			label_text_not_void_or_empty: label_text /= Void
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		do
 			call_default_create (any)
-			add_label (label_text, tooltip)
-			internal_property := a_type
+			if not label_text.is_empty then
+				add_label (label_text, tooltip)
+			end
+			internal_type := a_type
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
 			end
 			object ?= internal_gb_ev_any.object
-			internal_gb_ev_any.parent_editor.add_integer_input_field (Current)
-			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
-		ensure
-			execution_agent_not_void: execution_agent /= Void
-			validate_agent_not_void: validate_agent /= Void
-			internal_gb_ev_any_not_void: internal_gb_ev_any /= Void
-		end
-		
-	make_without_label (any: ANY; a_parent: EV_CONTAINER; a_type, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]];
-	a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
-			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
-			-- Build widget structure into `a_parent'.
-			-- `an_execution_agent' is to execute the setting of the attribute.
-			-- `a_validate_agent' is used to query whether the current value is valid as an argument for `execution_agent'.
-			-- `tooltip' is tooltip to be displayed on visible parts of control.
-		require
-			gb_ev_any_not_void: any /= Void
-			a_parent_not_void: a_parent /= Void
-			an_agent_not_void: an_execution_agent /= Void
-			a_validate_agent_not_void: a_validate_agent /= Void
-		do
-			call_default_create (any)
-			internal_property := a_type
-			internal_gb_ev_any ?= any
-			check
-				internal_gb_ev_any /= Void
-			end
-			object ?= internal_gb_ev_any.object
-			internal_gb_ev_any.parent_editor.add_integer_input_field (Current)
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -124,6 +61,12 @@ feature -- Basic operations
 		
 feature -- Access
 
+	type: STRING is
+			-- Type represented by `Current'
+		once
+			Result := integer_constant_type
+		end
+
 	text: STRING is
 			-- `Result' is text of `text_field'.
 		do
@@ -138,12 +81,12 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
 		do
-			constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
 				constants_button.select_actions.block
 				constants_button.enable_select
 				constants_button.select_actions.resume
-				constants_button_selected
+				switch_constants_mode
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -156,51 +99,12 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.disable_select
 				constants_button.select_actions.resume
-				constants_button_selected
+				switch_constants_mode
 				constants_combo_box.first.enable_select
 				text_field.change_actions.block
 				text_field.set_text (a_value)
 				text_field.change_actions.resume
 			end
-		end
-		
-feature {GB_OBJECT_EDITOR} -- Implementation
-
-	constant_removed (constant: GB_INTEGER_CONSTANT) is
-			-- Update `Current' to reflect removal of `constant' from system.
-		require
-			constant_not_void: constant /= Void
-		local
-			list_item: EV_LIST_ITEM
-		do
-			if constants_button.is_selected then
-				if constants_combo_box.selected_item /= Void and then
-					constants_combo_box.selected_item.text.is_equal (constant.name) then
-					constants_button.disable_select
-				end
-			end
-			list_item := list_item_with_matching_text (constants_combo_box, constant.name)
-			check
-				list_item_not_void: list_item /= Void
-			end
-			constants_combo_box.prune_all (list_item)
-		ensure
-			list_count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
-		end
-
-	constant_added (constant: GB_INTEGER_CONSTANT) is
-			-- Update `Current' to reflect addition of `constant' to system.
-		require
-			constant_not_void: constant /= Void
-		local
-			list_item: EV_LIST_ITEM
-		do
-			create list_item.make_with_text (constant.name)
-			list_item.set_data (constant)
-			list_item.select_actions.extend (agent list_item_selected (list_item))
-			constants_combo_box.extend (list_item)
-		ensure
-			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 		end
 
 feature {NONE} -- Implementation
@@ -213,25 +117,9 @@ feature {NONE} -- Implementation
 	
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
-	
-	internal_gb_ev_any: GB_EV_ANY
-		-- instance of GB_EV_ANY that is client of `Current'.
-		
-	internal_property: STRING
-		-- Property referenced by `Current'. This is required, so that the constants can
-		-- be correctly handled. For example "Padding" or "Minimum_width".
 
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
-	constants_button: EV_TOGGLE_BUTTON
-		-- Button to switch between constants or values.
-		
-	constants_combo_box: EV_COMBO_BOX
-		-- Combo box which will contain all INTEGER constants.
-		
-	object: GB_OBJECT
-		-- Object referenced by `Current'.
 		
 	last_selected_constant: GB_CONSTANT
 		-- Last constant that was selected in `Current'.
@@ -243,12 +131,6 @@ feature {NONE} -- Implementation
 			-- call `execution_agent'.
 		do
 			execution_agent.call ([new_value])
-		end
-		
-	update_editors is
-			-- Short version for calling everywhere.
-		do
-			update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)			
 		end
 		
 	set_initial is
@@ -282,36 +164,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	call_default_create (any: ANY) is
-			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
-		require
-			gb_ev_any_not_void: any /= Void
-		local
-			gb_ev_any: GB_EV_ANY
-		do
-			gb_ev_any ?= any
-			check
-				gb_ev_any_not_void: gb_ev_any /= Void
-			end
-			internal_gb_ev_any := gb_ev_any
-			default_create
-		end
-		
-	add_label (label_text, tooltip: STRING) is
-			-- Add a label to `Current' with `text' `label_text' and
-			-- tooltip `tooltip'.
-		require
-			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
-		local
-			label: EV_LABEL
-		do
-			create label.make_with_text (label_text)
-			label.set_tooltip (tooltip)
-			extend (label)
-			disable_item_expand (label)
-			label.align_text_left
-		end
-		
 	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
 			-- Initialize text field for entry.
 		require
@@ -324,8 +176,8 @@ feature {NONE} -- Implementation
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
 				-- Store `a_validate_agent'.
-				
 			validate_agent := a_validate_agent
+			
 			a_parent.extend (Current)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
@@ -337,10 +189,7 @@ feature {NONE} -- Implementation
 			constants_combo_box.disable_edit
 			constants_combo_box.hide
 			horizontal_box.extend (constants_combo_box)
-			create constants_button
-			constants_button.set_tooltip (Select_constant_tooltip)
-			constants_button.select_actions.extend (agent constants_button_selected)
-			constants_button.set_pixmap (Icon_format_onces @ 1)
+			create_constants_button
 			horizontal_box.extend (constants_button)
 			horizontal_box.disable_item_expand (constants_button)
 			populate_constants
@@ -349,7 +198,7 @@ feature {NONE} -- Implementation
 			text_field.focus_out_actions.extend (agent process)
 		end
 		
-	constants_button_selected is
+	switch_constants_mode is
 			-- Respond to a user press of `constants_button' and
 			-- update the displayed input fields accordingly.
 		do
@@ -384,8 +233,8 @@ feature {NONE} -- Implementation
 				list_item.set_data (integer_constants.item)
 				
 				constants_combo_box.extend (list_item)
-				if internal_property /= Void then
-					lookup_string := internal_gb_ev_any.type + internal_property
+				if internal_type /= Void then
+					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						integer_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
@@ -400,9 +249,6 @@ feature {NONE} -- Implementation
 		
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
-		require
-			list_item_not_void: list_item /= Void
-			list_item_has_data: list_item.data /= Void
 		local
 			constant: GB_INTEGER_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
@@ -417,7 +263,7 @@ feature {NONE} -- Implementation
 			
 				if validate_agent.last_result then
 					remove_selected_constant
-					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_property)
+					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
@@ -442,7 +288,7 @@ feature {NONE} -- Implementation
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 			if last_selected_constant /= Void then
-				constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
+				constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 				if constant_context /= Void then
 					constant ?= constant_context.constant
 					if not constants_combo_box.is_displayed then
@@ -461,5 +307,9 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-
+	list_item_deselected (list_item: EV_LIST_ITEM) is
+			-- `list_item' has been deselected from `constants_combo_box'.
+		do
+		end
+		
 end -- class GB_INTEGER_INPUT_FIELD

@@ -11,7 +11,8 @@ class
 inherit
 	EV_MENU_ITEM
 		redefine
-			implementation
+			implementation,
+			create_implementation
 		end
 	
 create
@@ -56,6 +57,11 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	create_implementation is
+		do
+			create {EV_CHECK_MENU_ITEM_IMP} implementation.make (Current)
+		end
+
 	implementation: EV_CHECK_MENU_ITEM_I
 			-- Platform dependent access.
 
@@ -82,6 +88,9 @@ end -- class EV_CHECK_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/18 19:06:50  brendel
+--| Fixed bug where before the implementation was of type EV_MENU_ITEM_IMP.
+--|
 --| Revision 1.12  2000/02/14 11:40:47  oconnor
 --| merged changes from prerelease_20000214
 --|

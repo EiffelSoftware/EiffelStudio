@@ -24,7 +24,7 @@ inherit
 
 feature {NONE}
 
-	catalog: CMD_CATALOG is
+	catalog: COMMAND_CATALOG is
 		do
 			Result := command_catalog
 		end;

@@ -52,7 +52,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_windowtext)
+			create Result.make_system (Color_windowtext)
 		end
 
 	background_color: WEL_COLOR_REF is
@@ -60,7 +60,7 @@ feature -- Access
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (Color_btnface)
+			create Result.make_system (Color_btnface)
 		end
 
 feature -- Basic operations

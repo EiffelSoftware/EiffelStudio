@@ -11,7 +11,7 @@ deferred class
 	EV_TABLE_I
 
 inherit
-	EV_INVISIBLE_CONTAINER_I
+	EV_CONTAINER_I
 
 feature -- Access
 
@@ -106,6 +106,9 @@ end -- class EV_TABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/21 16:52:53  oconnor
+--| removed invisible container
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Class id of the class to which current is the invariant
 			-- description
 
@@ -81,7 +81,7 @@ feature {AST_EIFFEL} -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i;

@@ -25,4 +25,19 @@ feature -- Access
 			retry
 		end
 
+	ole_container: IOLE_CONTAINER_IMPL_PROXY is
+			-- IOleContainer interface of site.
+		require
+			non_void_site_unknown: unknown_site /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				create Result.make_from_other (unknown_site)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 end -- class OUTER_SITE_PROXY

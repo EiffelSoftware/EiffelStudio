@@ -56,6 +56,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -69,6 +74,8 @@ feature -- Basic operation
 			window_file_name, directory_name, directory_file_name: FILE_NAME
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			warning_dialog: EV_WARNING_DIALOG
+			error_message: STRING
 		do
 				-- We must build an XML file representing the project, and
 				-- then for every window found in that file, generate a new window.
@@ -164,6 +171,21 @@ feature -- Basic operation
 				
 				root_element.forth
 			end
+				-- Now display error dialog if one or more templates could not be found.
+			if missing_files /= Void then
+				error_message := "EiffelBuild was unable to locate the following files required for generation:%N%N"
+				from
+					missing_files.start
+				until
+					missing_files.off
+				loop
+					error_message := error_message + missing_files.item + "%N"
+					missing_files.forth
+				end
+				error_message := error_message + "%NCode generation has failed.%NPlease ensure that your installation of EiffelBuild has not been corrupted."
+				create warning_dialog.make_with_text (error_message)
+				warning_dialog.show_modal_to_window (parent_window (progress_bar))
+			end
 		end
 		
 feature {WIZARD_FOURTH_STATE, WIZARD_FINAL_STATE, GB_CODE_GENERATION_DIALOG} -- Implementation
@@ -206,7 +228,6 @@ feature {NONE} -- Implementation
 		do
 			set_progress (progress_switch * (stored / total))
 		end
-		
 
 	reset_generation_constants is
 			-- Reset all constants and attributes required before a generation.
@@ -269,44 +290,47 @@ feature {NONE} -- Implementation
 		do
 			create project_location.make_from_string (system_status.current_project_settings.project_location)
 		
-			create ace_template_file.make_open_read (template_file_name)
-			create ace_text.make (ace_template_file.count)
-			ace_template_file.start
-			ace_template_file.read_stream (ace_template_file.count)
-			ace_text := ace_template_file.last_string
-			ace_template_file.close
-			
-				-- | FIXME
-				-- This code only supports two project location tags per ace file.
-				-- This should be made more general.
-			i := ace_text.substring_index (project_location_tag, 1)
-			j := ace_text.substring_index (project_location_tag, i + 1)
-			
-			ace_text.replace_substring_all (project_location_tag, "")			
-			ace_text.insert_string (project_location, i)
-			temp_string := project_location
-			if j >0 then
-				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
-			end
-			
-				-- Now add the project_name. Note that we add double quotes around the name.
-				-- This allows use to use project names that clash with ace file settings,
-				-- for example, library is an invalid project name without double quotes
+			ace_template_file := open_text_file_for_read (template_file_name)
+			if ace_template_file /= Void then
+					-- Only perform generation if the template file was readable.
+				create ace_text.make (ace_template_file.count)
+				ace_template_file.start
+				ace_template_file.read_stream (ace_template_file.count)
+				ace_text := ace_template_file.last_string
+				ace_template_file.close
 				
-			add_generated_string (ace_text, "%"" + project_settings.project_name.as_lower + "%"", project_name_tag)				
-			
-				-- Now add the application class name.
-			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
-			
-			ace_file_name := clone (generated_path)
-			ace_file_name.extend (file_name)
-					-- Store `ace_text'.
-			create ace_output_file.make (ace_file_name)
-			if not ace_output_file.exists or project_settings.rebuild_ace_file then
-				ace_output_file.open_write
-				ace_output_file.start
-				ace_output_file.putstring (ace_text)
-				ace_output_file.close
+					-- | FIXME
+					-- This code only supports two project location tags per ace file.
+					-- This should be made more general.
+				i := ace_text.substring_index (project_location_tag, 1)
+				j := ace_text.substring_index (project_location_tag, i + 1)
+				
+				ace_text.replace_substring_all (project_location_tag, "")			
+				ace_text.insert_string (project_location, i)
+				temp_string := project_location
+				if j >0 then
+					ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
+				end
+				
+					-- Now add the project_name. Note that we add double quotes around the name.
+					-- This allows use to use project names that clash with ace file settings,
+					-- for example, library is an invalid project name without double quotes
+					
+				add_generated_string (ace_text, "%"" + project_settings.project_name.as_lower + "%"", project_name_tag)				
+				
+					-- Now add the application class name.
+				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+				
+				ace_file_name := clone (generated_path)
+				ace_file_name.extend (file_name)
+						-- Store `ace_text'.
+				create ace_output_file.make (ace_file_name)
+				if not ace_output_file.exists or project_settings.rebuild_ace_file then
+					ace_output_file.open_write
+					ace_output_file.start
+					ace_output_file.putstring (ace_text)
+					ace_output_file.close
+				end
 			end
 		end
 		
@@ -328,72 +352,74 @@ feature {NONE} -- Implementation
 				--| FIXME handle visual studio wizard.
 				
 					--Firstly read the contents of the file.
-				create constants_file.make_open_read (constants_template_file_name)
-				constants_file.read_stream (constants_file.count)
-				constants_file.close
-				constants_content := constants_file.last_string
-				
-					-- Now generate string representing all constants.
-				all_constants := constants.all_constants
-				generated_constants_string := ""
-				from
-					all_constants.start
-				until
-					all_constants.off
-				loop
-					constant := all_constants.item_for_iteration
-					integer_constant ?= constant
-					if integer_constant /= Void then
-						if project_settings.load_constants then
-							l_string := "integer_constant_by_name (%"" + integer_constant.name + "%")"
-						else
-							l_string := integer_constant.value_as_string
+				constants_file := open_text_file_for_read (constants_template_file_name)
+				if constants_file /= Void then
+					constants_file.read_stream (constants_file.count)
+					constants_file.close
+					constants_content := constants_file.last_string
+					
+						-- Now generate string representing all constants.
+					all_constants := constants.all_constants
+					generated_constants_string := ""
+					from
+						all_constants.start
+					until
+						all_constants.off
+					loop
+						constant := all_constants.item_for_iteration
+						integer_constant ?= constant
+						if integer_constant /= Void then
+							if project_settings.load_constants then
+								l_string := "integer_constant_by_name (%"" + integer_constant.name + "%")"
+							else
+								l_string := integer_constant.value_as_string
+							end
+							generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is " +
+								indent +  "-- `Result' is INTEGER constant named " + integer_constant.name + "." + 
+								indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
 						end
-						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is " +
-							indent +  "-- `Result' is INTEGER constant named " + integer_constant.name + "." + 
-							indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
-					end
-					string_constant ?= constant
-					if string_constant /= Void then
-						if project_settings.load_constants then
-							l_string := "string_constant_by_name (%"" + string_constant.name + "%")"
-						else
-							l_string := "%"" + string_constant.value_as_string + "%""
+						string_constant ?= constant
+						if string_constant /= Void then
+							if project_settings.load_constants then
+								l_string := "string_constant_by_name (%"" + string_constant.name + "%")"
+							else
+								l_string := "%"" + string_constant.value_as_string + "%""
+							end
+							generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
+								indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." + 
+								indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
 						end
-						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
-							indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." + 
-							indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
-					end
-					pixmap_constant ?= constant
-					if pixmap_constant /= Void then
-						if pixmap_constant.is_absolute then
-							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-							"Once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
-						else
-							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-							"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "Once" + Indent + "create Result" + Indent + 
-							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.extend (%"" + pixmap_constant.filename +"%")" +
-							indent + "Result.set_with_named_file (a_file_name)" + Indent_less_one + "end" + "%N"
+						pixmap_constant ?= constant
+						if pixmap_constant /= Void then
+							if pixmap_constant.is_absolute then
+								generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
+								"Once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
+							else
+								generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
+								"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "Once" + Indent + "create Result" + Indent + 
+								"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.extend (%"" + pixmap_constant.filename +"%")" +
+								indent + "Result.set_with_named_file (a_file_name)" + Indent_less_one + "end" + "%N"
+							end
 						end
+						directory_constant ?= constant
+						if directory_constant/= Void then
+							generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
+								indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." + 
+								indent_less_one + "once" + indent + "Result := %"" + directory_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
+						end
+						all_constants.forth
 					end
-					directory_constant ?= constant
-					if directory_constant/= Void then
-						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
-							indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." + 
-							indent_less_one + "once" + indent + "Result := %"" + directory_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
-					end
-					all_constants.forth
+	
+					add_generated_string (constants_content, generated_constants_string, constants_tag)
+					
+						-- Now write the new constants file to disk.
+					constants_file_name := clone (generated_path)
+					constants_file_name.extend ("constants.e")
+					create constants_file.make_open_write (constants_file_name)
+					constants_file.start
+					constants_file.putstring (constants_content)
+					constants_file.close
 				end
-
-				add_generated_string (constants_content, generated_constants_string, constants_tag)
-				
-					-- Now write the new constants file to disk.
-				constants_file_name := clone (generated_path)
-				constants_file_name.extend ("constants.e")
-				create constants_file.make_open_write (constants_file_name)
-				constants_file.start
-				constants_file.putstring (constants_content)
-				constants_file.close
 			end
 			
 		build_constants_load_file is
@@ -451,32 +477,33 @@ feature {NONE} -- Implementation
 				else
 					application_template := application_template_file_name			
 				end
+				application_template_file := open_text_file_for_read (application_template)
+				if application_template_file /= Void then
+					create application_text.make (application_template_file.count)
+					application_template_file.start
+					application_template_file.read_stream (application_template_file.count)
+					application_text := application_template_file.last_string
+					application_template_file.close
+				
+						-- Now add the main window class type
+					add_generated_string (application_text, Object_handler.root_window_object.name.as_upper, main_window_tag)
 					
-				create application_template_file.make_open_read (application_template)
-				create application_text.make (application_template_file.count)
-				application_template_file.start
-				application_template_file.read_stream (application_template_file.count)
-				application_text := application_template_file.last_string
-				application_template_file.close
-			
-					-- Now add the main window class type
-				add_generated_string (application_text, Object_handler.root_window_object.name.as_upper, main_window_tag)
-				
-					-- Now add the application class name. 0ne at start
-					-- and one at end of file, so do this twice.
-				application_class_name := project_settings.application_class_name.as_upper
-				change_pos := application_text.substring_index (application_tag, 1)
-				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
-				change_pos := application_text.substring_index (application_tag, 1)
-				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
-				
-				application_file_name := clone (generated_path)
-				application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
-
-				create application_output_file.make_open_write (application_file_name)
-				application_output_file.start
-				application_output_file.putstring (application_text)
-				application_output_file.close
+						-- Now add the application class name. 0ne at start
+						-- and one at end of file, so do this twice.
+					application_class_name := project_settings.application_class_name.as_upper
+					change_pos := application_text.substring_index (application_tag, 1)
+					application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
+					change_pos := application_text.substring_index (application_tag, 1)
+					application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
+					
+					application_file_name := clone (generated_path)
+					application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
+	
+					create application_output_file.make_open_write (application_file_name)
+					application_output_file.start
+					application_output_file.putstring (application_text)
+					application_output_file.close
+				end
 			end
 
 		build_main_window_implementation (directory_name: FILE_NAME) is
@@ -505,131 +532,133 @@ feature {NONE} -- Implementation
 				else
 					window_template := window_template_imp_file_name		
 				end
-				create window_template_file.make_open_read (window_template)
-				create class_text.make (window_template_file.count)
-				window_template_file.start
-				window_template_file.read_stream (window_template_file.count)
-				class_text := window_template_file.last_string
-				window_template_file.close
-				
-					-- Now that we have loaded the class file template, we must
-					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
-					-- if we are generating a dialog.
-				if document_info.type.is_equal ("EV_DIALOG") then
-					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
-				end
-
-					-- We must now perform the generation into `class_text'.
-					-- First replace the name of the class
-				set_class_name (a_class_name)
-
-				-- Add code which implements `show' if necessary, when using EV_WINDOW
-				-- as client. Also export `initialize' as necessary. If client, then it
-				-- must be exported to {ANY}.
-				if project_settings.client_of_window then
-					add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_feature, custom_feature_tag)
-				else
-					add_generated_string (class_text, Void, custom_feature_tag)
-				end
-				
-					-- Generate the widget declarations and creation lines.
-				generate_declarations
-				
-					-- Create storage for all generated feature names.
-				create all_generated_events.make (0)
-				all_generated_events.compare_objects
-				
-					-- Generate the widget building code.
-				generate_structure
-
-					-- Generate the widget setting code.
-				generate_setting
-				
-					-- Generate the event code.
-				generate_events
-				
-				
-					-- Now we must check the status of the prepass, and remove the
-					-- "internal_pixmap" and `"internal_font" which is in the template,
-					-- if they are not necessary
-				if document_info.fonts_set.is_empty then
-					remove_line_containing ("internal_font", class_text)
-				end
-				if document_info.pixmaps_set.is_empty then
-					remove_line_containing ("internal_pixmap", class_text)
-					remove_line_containing ("internal_pixmap", class_text)
-				end
-				
-					-- Now remove the local declaration if necessary.
-				if document_info.fonts_set.is_empty and document_info.pixmaps_set.is_empty and
-				not project_settings.attributes_local then
-					remove_line_containing (local_tag, class_text)
-				end
-			
-				if not project_settings.attributes_local and (not document_info.fonts_set.is_empty
-					or not document_info.pixmaps_set.is_empty) then
-					add_generated_string (class_text, "local", local_tag)
-				end
-				
-				
-					-- Add code for widget attribute settings to `class_text'.
-				add_generated_string (class_text, set_string, set_tag)
-
-				if project_settings.attributes_local then
-					add_generated_string (class_text, "local" + local_string, local_tag)
-					class_text.replace_substring_all (attribute_tag + "%N", "")
-				else
-					add_generated_string (class_text, local_string, attribute_tag)
-				end
-				
-					-- Add code for inheritance structure to `class_text'.
-				if project_settings.client_of_window then
-					temp_string := clone (window_access)
-					if not document_info.type.is_equal (Ev_titled_window_string)  then
-							-- Ensure that the inheritance references the correct type.
-						temp_string := clone (Window_access_as_dialog)
-						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
-							-- Replace "window" from `window_access' with "dialog" only in comment.
-							--| FIXME This is a hack and should probably be improved as the code generation
-							--| is developed.
+				window_template_file := open_text_file_for_read (window_template)
+				if window_template_file /= Void then
+					create class_text.make (window_template_file.count)
+					window_template_file.start
+					window_template_file.read_stream (window_template_file.count)
+					class_text := window_template_file.last_string
+					window_template_file.close
+					
+						-- Now that we have loaded the class file template, we must
+						-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
+						-- if we are generating a dialog.
+					if document_info.type.is_equal ("EV_DIALOG") then
+						class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
 					end
-					add_generated_string (class_text, temp_string,  inheritance_tag)
-				else
-					temp_string := clone (window_inheritance)
-					if not document_info.type.is_equal (Ev_titled_window_string)  then
-						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
-					end
-					add_generated_string (class_text, temp_string, inheritance_tag)
-				end
-				
-					-- Add code for Precursor call in `intialize'.
-				if project_settings.client_of_window then
-					add_generated_string (class_text, "initialize_constants", precursor_tag)
-				else
-					add_generated_string (class_text, "Precursor {" + document_info.type + "}" + Indent + "initialize_constants", precursor_tag)
-				end
-				
-					-- Add code for creation of widgets to `class_text'.
-				add_generated_string (class_text, create_string, create_tag)
-				
-					-- Add code for construction of widget hierarchy to `class_text'.
-				add_generated_string (class_text, build_string, build_tag)	
 	
-					-- Add code connecting events to features to `class_text'.
-				add_generated_string (class_text, event_connection_string, event_connection_tag)
-
-					-- Add declaration of features as deferred to `class_text'.
-				add_generated_string (class_text, event_declaration_string, event_declaration_tag)
+						-- We must now perform the generation into `class_text'.
+						-- First replace the name of the class
+					set_class_name (a_class_name)
+	
+					-- Add code which implements `show' if necessary, when using EV_WINDOW
+					-- as client. Also export `initialize' as necessary. If client, then it
+					-- must be exported to {ANY}.
+					if project_settings.client_of_window then
+						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_feature, custom_feature_tag)
+					else
+						add_generated_string (class_text, Void, custom_feature_tag)
+					end
+					
+						-- Generate the widget declarations and creation lines.
+					generate_declarations
+					
+						-- Create storage for all generated feature names.
+					create all_generated_events.make (0)
+					all_generated_events.compare_objects
+					
+						-- Generate the widget building code.
+					generate_structure
+	
+						-- Generate the widget setting code.
+					generate_setting
+					
+						-- Generate the event code.
+					generate_events
+					
+					
+						-- Now we must check the status of the prepass, and remove the
+						-- "internal_pixmap" and `"internal_font" which is in the template,
+						-- if they are not necessary
+					if document_info.fonts_set.is_empty then
+						remove_line_containing ("internal_font", class_text)
+					end
+					if document_info.pixmaps_set.is_empty then
+						remove_line_containing ("internal_pixmap", class_text)
+						remove_line_containing ("internal_pixmap", class_text)
+					end
+					
+						-- Now remove the local declaration if necessary.
+					if document_info.fonts_set.is_empty and document_info.pixmaps_set.is_empty and
+					not project_settings.attributes_local then
+						remove_line_containing (local_tag, class_text)
+					end
 				
-				
-					-- Tidy up `document_info' ready for next generation.
-				document_info.reset_after_generation
-
-					-- Store `class_text'.				
-				create window_output_file.make_open_write (file_name)
-				window_output_file.start
-				window_output_file.putstring (class_text)
-				window_output_file.close
+					if not project_settings.attributes_local and (not document_info.fonts_set.is_empty
+						or not document_info.pixmaps_set.is_empty) then
+						add_generated_string (class_text, "local", local_tag)
+					end
+					
+					
+						-- Add code for widget attribute settings to `class_text'.
+					add_generated_string (class_text, set_string, set_tag)
+	
+					if project_settings.attributes_local then
+						add_generated_string (class_text, "local" + local_string, local_tag)
+						class_text.replace_substring_all (attribute_tag + "%N", "")
+					else
+						add_generated_string (class_text, local_string, attribute_tag)
+					end
+					
+						-- Add code for inheritance structure to `class_text'.
+					if project_settings.client_of_window then
+						temp_string := clone (window_access)
+						if not document_info.type.is_equal (Ev_titled_window_string)  then
+								-- Ensure that the inheritance references the correct type.
+							temp_string := clone (Window_access_as_dialog)
+							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+								-- Replace "window" from `window_access' with "dialog" only in comment.
+								--| FIXME This is a hack and should probably be improved as the code generation
+								--| is developed.
+						end
+						add_generated_string (class_text, temp_string,  inheritance_tag)
+					else
+						temp_string := clone (window_inheritance)
+						if not document_info.type.is_equal (Ev_titled_window_string)  then
+							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+						end
+						add_generated_string (class_text, temp_string, inheritance_tag)
+					end
+					
+						-- Add code for Precursor call in `intialize'.
+					if project_settings.client_of_window then
+						add_generated_string (class_text, "initialize_constants", precursor_tag)
+					else
+						add_generated_string (class_text, "Precursor {" + document_info.type + "}" + Indent + "initialize_constants", precursor_tag)
+					end
+					
+						-- Add code for creation of widgets to `class_text'.
+					add_generated_string (class_text, create_string, create_tag)
+					
+						-- Add code for construction of widget hierarchy to `class_text'.
+					add_generated_string (class_text, build_string, build_tag)	
+		
+						-- Add code connecting events to features to `class_text'.
+					add_generated_string (class_text, event_connection_string, event_connection_tag)
+	
+						-- Add declaration of features as deferred to `class_text'.
+					add_generated_string (class_text, event_declaration_string, event_declaration_tag)
+					
+					
+						-- Tidy up `document_info' ready for next generation.
+					document_info.reset_after_generation
+	
+						-- Store `class_text'.				
+					create window_output_file.make_open_write (file_name)
+					window_output_file.start
+					window_output_file.putstring (class_text)
+					window_output_file.close
+				end
 			end
 			
 	build_main_window (directory_name: FILE_NAME) is
@@ -655,51 +684,53 @@ feature {NONE} -- Implementation
 			else
 				window_template := window_template_file_name		
 			end
-			create window_template_file.make_open_read (window_template)
-			create class_text.make (window_template_file.count)
-			window_template_file.start
-			window_template_file.read_stream (window_template_file.count)
-			class_text := window_template_file.last_string				
-			window_template_file.close
+			window_template_file := open_text_file_for_read (window_template)
+			if window_template_file /= Void then
+				create class_text.make (window_template_file.count)
+				window_template_file.start
+				window_template_file.read_stream (window_template_file.count)
+				class_text := window_template_file.last_string				
+				window_template_file.close
+				
+					-- Now that we have loaded the class file template, we must
+					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
+					-- if we are generating a dialog.
+				if document_info.type.is_equal ("EV_DIALOG") then
+					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
+				end
 			
-				-- Now that we have loaded the class file template, we must
-				-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
-				-- if we are generating a dialog.
-			if document_info.type.is_equal ("EV_DIALOG") then
-				class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
-			end
-		
-				-- We must now perform the generation into `class_text'.
-				-- First replace the name of the class
-			set_class_name (a_class_name)
-			
-			temp_string := a_class_name + Class_implementation_extension
-			if project_settings.client_of_window then
-					-- Add redefinition of `default_create' if we are client.
-				temp_string := temp_string + default_create_redefinition
-			end
-				-- Generate the inheritance from the window implementation.
-			set_inherited_class_name (temp_string)
-			
-			if project_settings.client_of_window then
-				temp_string := clone (redefined_creation)
-					if not document_info.type.is_equal (Ev_titled_window_string)  then
-						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
-					end
-				add_generated_string (class_text, temp_string, creation_tag)
-			else
-				add_generated_string (class_text, Void, creation_tag)
-			end
-			
-			add_generated_string (class_text, event_implementation_string, event_declaration_tag)
-			
-				-- Store `class_text'.				
-			create window_output_file.make (file_name)
-			if not window_output_file.exists then
-				window_output_file.open_write
-				window_output_file.start
-				window_output_file.putstring (class_text)
-				window_output_file.close
+					-- We must now perform the generation into `class_text'.
+					-- First replace the name of the class
+				set_class_name (a_class_name)
+				
+				temp_string := a_class_name + Class_implementation_extension
+				if project_settings.client_of_window then
+						-- Add redefinition of `default_create' if we are client.
+					temp_string := temp_string + default_create_redefinition
+				end
+					-- Generate the inheritance from the window implementation.
+				set_inherited_class_name (temp_string)
+				
+				if project_settings.client_of_window then
+					temp_string := clone (redefined_creation)
+						if not document_info.type.is_equal (Ev_titled_window_string)  then
+							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+						end
+					add_generated_string (class_text, temp_string, creation_tag)
+				else
+					add_generated_string (class_text, Void, creation_tag)
+				end
+				
+				add_generated_string (class_text, event_implementation_string, event_declaration_tag)
+				
+					-- Store `class_text'.				
+				create window_output_file.make (file_name)
+				if not window_output_file.exists then
+					window_output_file.open_write
+					window_output_file.start
+					window_output_file.putstring (class_text)
+					window_output_file.close
+				end
 			end
 		end
 		
@@ -1363,5 +1394,28 @@ feature {NONE} -- Implementation
 		-- Progress level for end of xml storing, and start of generation.
 		-- As they are performed independently, we need the progress of each to
 		-- work as a whole
+		
+	missing_files: ARRAYED_LIST [STRING]
+		-- All files that could not be located during generation.
+		
+	open_text_file_for_read (file_name: STRING): PLAIN_TEXT_FILE is
+			-- Open file plain text file named `file_name',
+			-- and return it if it exists, otherwise return Void.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			create file.make (file_name)
+			if file.exists then
+				file.open_read
+				Result := file
+			else
+				if missing_files = Void then
+					create missing_files.make (1)
+				end
+				missing_files.extend (file_name)
+			end
+		end
 
 end -- class GB_CODE_GENERATOR

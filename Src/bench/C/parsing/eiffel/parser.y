@@ -52,9 +52,7 @@ extern char token_str[];
 %left		TE_OR;
 %left		TE_XOR;
 %left		TE_AND;
-/* %nonassoc	TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE; */
-/* I'm not convinced of this */
-%left 		TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE;
+%nonassoc	TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE;
 %left		TE_PLUS TE_MINUS;
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV;
 %right		TE_POWER;
@@ -154,9 +152,8 @@ Clients Feature_declaration
 Declaration_body Inheritance Parent Rename New_exports New_export_item
 Feature_set Undefine Redefine Select Formal_arguments Type_mark
 Routine Routine_body External
-External_name Internal Local_declarations Precondition
-Instruction1 Instructionl 
-Postcondition Assertion_clause Type Class_type Existing_generics
+External_name Internal Local_declarations Instruction Precondition
+Postcondition Assertion_clause Type Existing_generics
 Actual_generics
 Formal_generics Formal_generic Constraint Conditional Elsif Elsif_part
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
@@ -165,7 +162,7 @@ Creation Creation_type Creation_target Creation_call Expression
 Manifest_array Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
-Expression_constant Client_list
+Expression_constant Empty_or_feature Empty_or_dec_group Client_list
 Call_on_feature_access Feature_access Class_invariant Free_operator
 Call_on_expression Inspect_default
 
@@ -207,13 +204,11 @@ Indexing:				/* empty */
 							{$$ = NULL;}
 	|					TE_INDEXING {list_init();} Index_list
 							{$$ = list_new(CONSTRUCT_LIST_AS);}
-	|					TE_INDEXING 
-							{$$ = NULL;}
 	;
 
 Index_list:				Index_clause
 							{list_push($1);}
-	|					Index_list ASemi Index_clause
+	|					Index_list TE_SEMICOLON Index_clause
 							{list_push($3);}
 	;
 
@@ -290,10 +285,10 @@ Feature_clause:
 	;
 
 
-Clients: /* empty */	
-			{$$ = NULL;}
-	|	 Client_list
-			{$$ = create_node1(CLIENT_AS,$1);}
+Clients:
+		{$$ = NULL;}
+	| Client_list
+		{$$ = create_node1(CLIENT_AS,$1);}
 	;
 
 Client_list:			TE_LCURLY TE_RCURLY
@@ -315,17 +310,20 @@ Class_list:				Identifier
 							}
 	;
 
-Feature_declaration_list:	/* empty */
-								{list_push(NULL);}
-	|						Feature_declaration_list Feature_declaration
-								{list_push($2);}
+Empty_or_feature:			/* empty */
+								{$$ = NULL;}
+	|						Feature_declaration
+								{$$ = $1;}
 	;
-ASemi:	TE_SEMICOLON
-	|	/* empty */
+
+Feature_declaration_list:	Empty_or_feature
+								{list_push($1);}
+	|						Feature_declaration_list TE_SEMICOLON Empty_or_feature
+								{list_push($3);}
 	;
 
 Feature_declaration:
-	{list_init();} New_feature_list {$$ = list_new(CONSTRUCT_LIST_AS);} Declaration_body ASemi
+	{list_init();} New_feature_list {$$ = list_new(CONSTRUCT_LIST_AS);} Declaration_body
 		{
 		$$ = create_feature_as($<node>3,$4,click_list_start($<value>2),end_position);
 		click_list_set ($$, $<value>2);
@@ -462,23 +460,22 @@ Feature_value:			Manifest_constant
 
 Inheritance:
 	{$$ = NULL;}
-	| TE_INHERIT {list_init();} Parent_list 
+	| TE_INHERIT {list_init();} Parent_list
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
 		}
-	| TE_INHERIT ASemi
-		{ $$ = NULL;}
 	;
 
 Parent_list:
-    Parent ASemi
+	Parent
 		{list_push($1);}
- 	| Parent_list Parent ASemi
-		{list_push($2);} 
+	| Parent_list TE_SEMICOLON Parent
+		{list_push($3);}
 	;
 
-Parent: 
-	 Pushing_id Actual_generics
+Parent:
+	{$$ = NULL;}
+	| Pushing_id Actual_generics
 		{
 		rn_ast = create_node2(CLASS_TYPE_AS,click_list_elem($<value>1),$2);
 		$$ = create_node6(PARENT_AS,rn_ast,NULL,NULL,NULL,NULL,NULL);
@@ -529,30 +526,23 @@ Rename_pair:
 		}
 	;
 
-New_exports:	 /* empty */
-					{$$ = NULL;}
-	| 			TE_EXPORT {list_init();} New_export_list
-					{$$ = list_new(CONSTRUCT_LIST_AS);}
-	|			TE_EXPORT ASemi
-					{$$ = NULL;}
+New_exports:
+	{$$ = NULL;}
+	| TE_EXPORT {list_init();} New_export_list
+		{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-New_export_list: 
-    New_export_item ASemi
+New_export_list:
+	New_export_item
 		{list_push($1);}
-	| New_export_list New_export_item ASemi
-		{list_push($2);}
+	| New_export_list TE_SEMICOLON New_export_item
+		{list_push($3);}
 	;
 
-New_export_item: Client_list Feature_set
-		{	$$ = create_node1(CLIENT_AS,$1);
-			$$ = create_node2(EXPORT_ITEM_AS,$$,$2);
-		}
-	| Client_list
-		{
-			$$ = create_node1(CLIENT_AS,$1);
-			$$ = create_node2(EXPORT_ITEM_AS,$$,NULL);
-		}
+New_export_item:
+	{$$ = NULL;}
+	| Clients Feature_set
+		{$$ = create_node2(EXPORT_ITEM_AS,$1,$2);}
 	;
 
 Feature_set:
@@ -603,24 +593,26 @@ Formal_arguments:		/* empty */
 							{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Entity_declaration_list:	/* empty */
-								{list_push(NULL);}
-	|						Entity_declaration_list Entity_declaration_group
-								{list_push($2);}
-	;
-
-Entity_declaration_group:	{list_init();} Identifier_list {$$ = list_new(CONSTRUCT_LIST_AS);} TE_COLON Type ASemi
-								{$$ = create_node2(TYPE_DEC_AS,$<node>3,$5);}
-	;
-
-Identifier_list: 			Identifier
+Entity_declaration_list:	Empty_or_dec_group
 								{list_push($1);}
-	|						Identifier_list TE_COMMA Identifier
+	|						Entity_declaration_list TE_SEMICOLON Empty_or_dec_group
 								{list_push($3);}
 	;
 
-Strip_identifier_list:		/* empty */
-	|						Identifier_list
+Empty_or_dec_group:			/* empty */
+								{$$ = NULL;}
+	|						Entity_declaration_group
+								{$$ = $1;}
+	;
+
+Entity_declaration_group:	{list_init();} Identifier_list {$$ = list_new(CONSTRUCT_LIST_AS);} TE_COLON Type
+								{$$ = create_node2(TYPE_DEC_AS,$<node>3,$5);}
+	;
+
+Identifier_list:			Identifier
+								{list_push($1);}
+	|						Identifier_list TE_COMMA Identifier
+								{list_push($3);}
 	;
 
 Type_mark:					/* empty */
@@ -666,21 +658,15 @@ Local_declarations:			/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Compound:					Instructionl Instruction1 Opt_Semi
-								{list_push($2);}
-	|						/* empty */ Opt_Semi
-								{list_push(NULL);}
+Compound:					Instruction
+								{list_push($1);}
+	|						Compound TE_SEMICOLON Instruction
+								{list_push($3);}
 	;
-Opt_Semi:					Opt_Semi TE_SEMICOLON
-	|						/* empty */
-	;
-Instructionl:				Instructionl Instruction1 Opt_Semi
-								{$$ = $2;}
-	|						/* empty */ Opt_Semi
+
+Instruction:				/* empty */
 								{$$ = NULL;}
-	;
-Instruction1:
-							Creation
+	|						Creation
 								{$$ = $1;}
 	|						Call
 								{$$ = $1;}
@@ -735,16 +721,15 @@ Assertion:					{list_init();} Assertion_list
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Assertion_list:				/* empty */
-	|						Assertion_list_non_empty
-	;
-Assertion_list_non_empty:	Assertion_clause ASemi
+Assertion_list:				Assertion_clause
 								{list_push($1);}
-	|						Assertion_list_non_empty Assertion_clause ASemi
-								{list_push($2);}
+	|						Assertion_list TE_SEMICOLON Assertion_clause
+								{list_push($3);}
 	;
 
-Assertion_clause: 			Expression 
+Assertion_clause:			/* empty */
+								{$$ = NULL;}
+	|						Expression
 								{
 									push_pos();
 									push_pos();
@@ -787,9 +772,9 @@ Type:
 		$$ = create_exp_class_type(click_list_elem($<value>2),$3);
 		click_list_set ($$, $<value>2);
 		}
-	| TE_BIT Integer_constant
+	| TE_BIT TE_INTEGER
 		{
-		$$ = create_node1(BITS_AS,$2);
+		$$ = create_node1(BITS_AS,create_int(token_str,0));
 		}
 	| TE_BIT Identifier
 		{
@@ -805,23 +790,8 @@ Type:
 		}
 	;
 
-Class_type:
-    Pushing_id
-        {
-        $$ = create_type_class(click_list_elem($<value>1),NULL);
-        click_list_set ($$, $<value>1);
-        }
-    | Pushing_id Existing_generics
-        {
-        $$ = create_type_class(click_list_elem($<value>1),$2);
-        click_list_set ($$, $<value>1);
-        }
-	;
-
 Existing_generics:
-	TE_LSQURE TE_RSQURE
-		{$$ = NULL;}
-	| TE_LSQURE {list_init();} Type_list TE_RSQURE
+	TE_LSQURE {list_init();} Type_list TE_RSQURE
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
 		}
@@ -863,7 +833,7 @@ Formal_generic:
 
 Constraint:
 	{$$ = NULL;}
-    | TE_CONSTRAIN Class_type
+    | TE_CONSTRAIN Type
 		{$$ = $2;}
     ;
 
@@ -1036,13 +1006,9 @@ Creation_clause_list:		Creation_clause
 	;
 
 Creation_clause:			TE_CREATION
-								{$$ = create_node2(CREATE_AS,NULL,NULL);}
+								{$$ = NULL;}
 	|						TE_CREATION Clients {list_init();} Feature_list
 								{$$ = create_node2(CREATE_AS,$2,list_new(CONSTRUCT_LIST_AS));}
-	|						TE_CREATION Client_list 
-								{
-									$$ = create_node1(CLIENT_AS,$2);
-									$$ = create_node2(CREATE_AS,$$,NULL);								}
 	;
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
@@ -1137,7 +1103,7 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node2(BIN_EQ_AS,$1,$3);}
 	|						Expression TE_NE Expression
 								{yyerrok;$$ = create_node2(BIN_NE_AS,$1,$3);}
-	|						Expression Free_operator Expression %prec TE_FREE
+	|						Expression Free_operator Expression
 								{	yyerrok;
 									$$ = create_node3(BIN_FREE_AS,$1,$2,$3);}
 	|						TE_MINUS Expression %prec TE_NOT
@@ -1148,9 +1114,9 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node1(UN_NOT_AS, $2);}
 	|						TE_OLD Expression
 								{yyerrok;$$ = create_node1(UN_OLD_AS,$2);}
-	|						Free_operator Expression %prec TE_NOT
+	|						Free_operator Expression
 								{yyerrok;$$ = create_node2(UN_FREE_AS,$1,$2);}
-	|						TE_STRIP {yyerrok;list_init();} TE_LPARAN Strip_identifier_list TE_RPARAN
+	|						TE_STRIP {yyerrok;list_init();} TE_LPARAN Identifier_list TE_RPARAN
 								{yyerrok;$$ = create_node1(UN_STRIP_AS,list_new(CONSTRUCT_LIST_AS));}
 	| TE_ADDRESS Feature_name
 		{
@@ -1248,9 +1214,7 @@ Expression_list:			Expression
 								{list_push($3);}
 	;
 
-Manifest_expression_list:	/* empty */
-	|						Expression_list
-	;
+
 
 /*
  * etc
@@ -1324,9 +1288,10 @@ Manifest_string:		TE_STRING
 							{$$ = create_string(token_str);}
 	;
 
-Manifest_array:			TE_LARRAY {list_init();} Manifest_expression_list TE_RARRAY
+Manifest_array:			TE_LARRAY {list_init();} Expression_list TE_RARRAY
 							{$$ = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));}
 	;
+
 
 %%
 char deferred;					/* Boolean mark for deferred class */

@@ -87,7 +87,7 @@ feature -- Status setting
 		do
 			implementation.set_width (value)
 		ensure
-			width_set: width = value
+			width_set: (width = value) or (value = -1)
 		end
 
 feature -- Element change

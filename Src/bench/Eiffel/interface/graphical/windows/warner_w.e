@@ -37,8 +37,7 @@ feature
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
-			add_help_action (Current, 1);
-			add_button_click_action (1, Current, popdown_action);
+			add_help_action (Current, help_it);
 			allow_resize;
 			set_default_position (false);
 			realize
@@ -49,7 +48,6 @@ feature
 		local
 			new_x, new_y: INTEGER
 		do
-			if is_popped_up then popdown end;
 			if window = Void then
 				new_x := (screen.width - width) // 2;
 				new_y := (screen.height - height) // 2
@@ -59,6 +57,18 @@ feature
 			else
 				new_x := window.real_x + (window.width - width) // 2;
 				new_y := window.real_y - height
+			end;
+			if new_x + width > screen.width then
+				new_x := screen.width - width
+			end;
+			if new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + height > screen.height then
+				new_y := screen.height - height
+			end;
+			if new_y < 0 then
+				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
 			warning_popup;
@@ -78,6 +88,7 @@ feature
 			last_caller := a_command;
 			set_message (a_message);
 			set_exclusive_grab;
+			remove_button_click_action (1, Current, popdown_action);
 			popup
 		ensure
 			last_caller_recorded: last_caller = a_command
@@ -96,6 +107,7 @@ feature
 	gotcha_call (a_message: STRING) is
 		do
 			set_no_grab;
+			add_button_click_action (1, Current, popdown_action);
 			custom_call (Void, a_message, Void, Void, Void);
 		end;
 
@@ -132,6 +144,7 @@ feature
 
 			if (a_command /= Void) then
 				set_exclusive_grab;
+				remove_button_click_action (1, Current, popdown_action)
 			end
 			
 			popup;
@@ -140,12 +153,11 @@ feature
 feature {NONE}
 
 	popdown_action: ANY is once !!Result end;
+	help_it: ANY is once !!Result end;
 
 	work (argument: ANY) is
-		local
-			i : INTEGER_REF; 
 		do
-			if argument = popdown_action and not is_exclusive_grab then
+			if argument = popdown_action then
 				popdown
 			else
 				popdown;
@@ -155,10 +167,9 @@ feature {NONE}
 				set_ok_label (" OK ");
 				set_cancel_label ("Cancel");
 				set_help_label ("Help");
-				i ?= argument;
 				if last_caller /= void then
-					if i = 1 then
-						last_caller.execute (void)
+					if argument = help_it then
+						last_caller.execute (Void)
 					elseif argument = Current then
 						last_caller.execute (Current)
 					end

@@ -170,7 +170,7 @@ feature -- Status setting
 			-- Destroy actual object.
 		do
 			dc.release
-			{EV_DRAWABLE_IMP} Precursor
+			Precursor {EV_DRAWABLE_IMP}
 		end
 
 feature -- Implementation

@@ -422,7 +422,7 @@ feature {
 				palette := Void
 			end
 
-			{EV_DRAWABLE_IMP} Precursor
+			Precursor {EV_DRAWABLE_IMP}
 		end
 
 feature {EV_PIXMAP} -- Duplication

@@ -240,7 +240,9 @@ feature -- Access
 		local
 			current_element: XM_ELEMENT
 			found: BOOLEAN
+			index: INTEGER
 		do
+			index := element.index
 			from
 				element.start
 			until
@@ -253,6 +255,9 @@ feature -- Access
 				end
 				element.forth
 			end
+			element.go_i_th (index)
+		ensure
+			cursor_not_moved: old element.index = element.index
 		end
 		
 	invalid_characters (xml_string: STRING): HASH_TABLE [CHARACTER, CHARACTER] is

@@ -179,6 +179,16 @@ feature -- Access
         do
             Result := project_properties_internal
         end
+        
+    compiler_support: IEIFFEL_SUPPORT_INTERFACE is
+            -- Project Properties.
+            -- Void until a project is opened.
+        do
+        	if support_internal = Void then
+        		create support_internal
+        	end
+            Result := support_internal
+        end
 
 feature -- Basic Operations
 
@@ -435,6 +445,9 @@ feature {NONE} -- Implementation
     project_properties_internal: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
             -- Instance-specific representation of project properties.
             -- Might be Void if another instance succesfully initialized project.
+            
+	support_internal: COM_COMPILER_SUPPORT
+			-- compiler support
         
     valid_ace_file: BOOLEAN
             -- Was last file checked by `check_ace_file' a valid ace file?

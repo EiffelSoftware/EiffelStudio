@@ -1,0 +1,85 @@
+LINKED_LIST
+l1 = l1 (comparing references): True
+l1 = l2 (comparing references): True
+l1 = l3 (comparing references): False
+l1 = l4 (comparing references): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+
+l1 = l2 (comparing objects): False
+l1 = l3 (comparing objects): False
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+l4 = l5 (comparing objects): False
+
+l1 = l2 (comparing objects): True
+l1 = l3 (comparing objects): True
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing objects): False
+l4 = l5 (comparing objects): True
+
+TWO_WAY_LIST
+l1 = l1 (comparing references): True
+l1 = l2 (comparing references): True
+l1 = l3 (comparing references): False
+l1 = l4 (comparing references): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+
+l1 = l2 (comparing objects): False
+l1 = l3 (comparing objects): False
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+l4 = l5 (comparing objects): False
+
+l1 = l2 (comparing objects): True
+l1 = l3 (comparing objects): True
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing objects): False
+l4 = l5 (comparing objects): True
+
+ARRAYED_LIST
+l1 = l1 (comparing references): True
+l1 = l2 (comparing references): True
+l1 = l3 (comparing references): False
+l1 = l4 (comparing references): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+
+l1 = l2 (comparing objects): False
+l1 = l3 (comparing objects): False
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+l4 = l5 (comparing objects): False
+
+l1 = l2 (comparing objects): True
+l1 = l3 (comparing objects): True
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing objects): False
+l4 = l5 (comparing objects): True
+
+SORTED_TWO_WAY_LIST
+l1 = l1 (comparing references): True
+l1 = l2 (comparing references): True
+l1 = l3 (comparing references): False
+l1 = l4 (comparing references): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+
+l1 = l2 (comparing objects): False
+l1 = l3 (comparing objects): False
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing references): False
+l4 = l5 (comparing references): True
+l4 = l5 (comparing objects): False
+
+l1 = l2 (comparing objects): True
+l1 = l3 (comparing objects): True
+l1 = l4 (comparing objects): False
+l4 = l1 (comparing objects): False
+l4 = l5 (comparing objects): True
+
+Execution completed

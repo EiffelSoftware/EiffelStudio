@@ -1,0 +1,3 @@
+Error: Two or more classes end up with same full name.
+What to do: change name of one or more classes, or change namespace in which
+    they are generated.

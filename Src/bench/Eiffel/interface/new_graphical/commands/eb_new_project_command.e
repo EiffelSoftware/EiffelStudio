@@ -24,16 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_PROJECT_TOOL_DATA
-		export
-			{NONE} all
-		end
-
-	EB_DEBUG_TOOL_DATA
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
@@ -60,6 +50,12 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+		
 create
 	make,
 	make_with_parent
@@ -186,7 +182,7 @@ feature {NONE} -- Implementation
 					msg.append (": ")
 					msg.append (project_dir.name)
 
-					Application.set_interrupt_number (interrupt_every_n_instructions)
+					Application.set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
 				end
 			else
 					-- We were unable to complete the task due to an error

@@ -24,16 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_PROJECT_TOOL_DATA
-		export
-			{NONE} all
-		end
-
-	EB_DEBUG_TOOL_DATA
-		export
-			{NONE} all
-		end
-
 	COMMAND_EXECUTOR
 		rename
 			execute as launch_ebench
@@ -60,6 +50,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
 
 create
 	make,
@@ -222,7 +214,7 @@ feature {NONE} -- Project Initialization
 					if Eiffel_project.ace_file_path /= Void then
 							-- Ace file included in the header of the .epr file...we can recompile if needed.
 						create cd.make_initialized (
-							2, "confirm_convert_project",
+							2, preferences.dialog_data.confirm_convert_project_string,
 							Warning_messages.w_Project_incompatible_version (project_dir.name, version_number, 
 								Eiffel_project.incompatible_version_number),
 							Interface_names.l_Discard_convert_project_dialog
@@ -288,7 +280,7 @@ feature {NONE} -- Project Initialization
 	init_project is
 			-- Initialize project.
 		do
-			Application.set_interrupt_number (interrupt_every_n_instructions)
+			Application.set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
 		end
 
 feature {NONE} -- Project directory access

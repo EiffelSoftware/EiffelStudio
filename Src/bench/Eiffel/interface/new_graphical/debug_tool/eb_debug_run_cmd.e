@@ -70,7 +70,7 @@ inherit
 			{NONE} all
 		end
 	
-	SHARED_RESOURCES
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -349,7 +349,7 @@ feature -- Execution
 								launch_program := True
 								if Application.has_breakpoints and then Application.is_ignoring_stop_points then
 									create ignore_all_breakpoints_confirmation_dialog.make_initialized (
-										2, "confirm_ignore_all_breakpoints",
+										2, preferences.dialog_data.confirm_ignore_all_breakpoints_string,
 										Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again
 									)
 									ignore_all_breakpoints_confirmation_dialog.set_ok_action (agent start_program)
@@ -444,7 +444,7 @@ end
 				output_text.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
 			else
 				debugger_manager.raise
-				Application.set_critical_stack_depth (Debugger_manager.critical_stack_depth)
+				Application.set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
 				Application.run (l_cmd_line_arg, working_dir)
 				if Application.is_running then
 					output_text.add_string ("System is running")
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation / Attributes
 			-- String indicating the .NET debugger to launch if specified in the
 			-- Preferences Tool.
 		do
-			Result := selected_array_resource_value ("dotnet_debugger", Void)
+			Result := preferences.debugger_data.dotnet_debugger -- Void)
 		end
 
 end -- class EB_DEBUG_RUN_COMMAND

@@ -22,7 +22,7 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-	EB_GENERAL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation properties
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell dialog.
 		do
-			Result := general_shell_command.twin
+			Result := preferences.misc_data.general_shell_command.twin
 		end
 
 	menu_name: STRING is

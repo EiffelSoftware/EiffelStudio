@@ -29,12 +29,12 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESOURCES
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
 
-	EB_SHARED_EDITOR_FONT
+	SHARED_EDITOR_FONT
 		export
 			{NONE} all
 		end
@@ -252,19 +252,19 @@ feature {NONE} -- Implementation
 	use_external_editor: BOOLEAN is
 			-- Should we use an external editor to print?
 		do
-			Result := boolean_resource_value ("use_external_editor", False)
+			Result := preferences.misc_data.use_external_editor
 		end
 
 	external_editor: STRING is
 			-- Command line to invoke to use an external editor to print.
 		do
-			Result := string_resource_value ("print_shell_command", "lpr $target")
+			Result := preferences.misc_data.print_shell_command
 		end
 
 	use_postscript: BOOLEAN is
 			-- Should we use postscript when using an external editor to print?
 		do
-			Result := boolean_resource_value ("use_postscript", False)
+			Result := preferences.misc_data.use_postscript
 		end
 
 feature {NONE} -- Externals

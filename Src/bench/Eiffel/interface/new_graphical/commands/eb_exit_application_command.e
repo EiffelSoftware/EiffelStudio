@@ -29,6 +29,9 @@ inherit
 		
 	EV_SHARED_APPLICATION
 		export {NONE} all end
+		
+	EB_SHARED_PREFERENCES
+		export {NONE} all end
 
 feature -- Basic operations
 
@@ -66,7 +69,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 			if not already_confirmed then
 				already_confirmed := True
 				create exit_confirmation_dialog.make_initialized (
-					2, "confirm_on_exit",
+					2, preferences.dialog_data.confirm_on_exit_string,
 					Interface_names.l_Exit_application, Interface_names.l_Dont_ask_me_again
 				)
 				exit_confirmation_dialog.set_ok_action (agent exit_application)
@@ -91,6 +94,8 @@ feature {NONE} -- Callbacks
 				Workbench.Eiffel_project.manager.on_project_close;
 			end
 
+				-- We will save all the preferences for next time we are opened
+			preferences.preferences.save_resources
 			Recent_projects_manager.save_environment
 
 				-- Destroy all development windows.

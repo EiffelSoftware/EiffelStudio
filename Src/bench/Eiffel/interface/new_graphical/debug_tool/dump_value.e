@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_DEBUG_TOOL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -401,7 +401,7 @@ feature -- Status report
 						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
 					then
 						Result := True
-					elseif debug_output_evaluation_enabled then
+					elseif preferences.debug_tool_data.debug_output_evaluation_enabled then
 						dc := debuggable_class
 						Result := dc /= Void and then
 								  dynamic_class.simple_conform_to (dc)
@@ -653,7 +653,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
-			if generating_type_evaluation_enabled then
+			if preferences.debug_tool_data.generating_type_evaluation_enabled then
 				l_feat := generating_type_feature_i (dynamic_class)
 				if application.is_dotnet then
 					if dynamic_class_type /= Void then

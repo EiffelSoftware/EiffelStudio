@@ -22,6 +22,8 @@ inherit
 	EB_SHARED_WINDOW_MANAGER
 
 	EB_SHARED_DEBUG_TOOLS
+	
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -89,7 +91,7 @@ feature {NONE} -- Implementation
 		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
-			create cd.make_initialized (2, "confirm_kill", 
+			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string, 
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again)
 			cd.set_ok_action (agent kill)
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)

@@ -43,7 +43,7 @@ inherit
 			default_create, copy
 		end
 
-	EB_GENERAL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -74,6 +74,13 @@ inherit
 		end
 		
 	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+		
+	EIFFEL_ENV
 		export
 			{NONE} all
 		undefine
@@ -197,7 +204,7 @@ feature {NONE} -- Initialization
 			if show_open_project_frame then
 				open_epr_project_rb.select_actions.extend (agent lookup_selection)
 
-				if show_starting_dialog then
+				if preferences.dialog_data.show_starting_dialog then
 					do_not_display_dialog_button.disable_select
 				else
 					do_not_display_dialog_button.enable_select
@@ -511,7 +518,7 @@ feature {NONE} -- Implementation
 			-- Update user preferences
 		do
 			if show_open_project_frame then
-				save_show_starting_dialog (not do_not_display_dialog_button.is_selected)
+				preferences.dialog_data.show_starting_dialog_preference.set_value (not do_not_display_dialog_button.is_selected)
 			end
 		end
 
@@ -626,7 +633,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				create available_wizards.make
 	
-				create new_project_directory.make ((create {EIFFEL_ENV}).New_project_wizards_path)
+				create new_project_directory.make (new_project_wizards_path)
 				entries := new_project_directory.linear_representation
 				from
 					entries.start
@@ -637,7 +644,7 @@ feature {NONE} -- Implementation
 					extension.keep_tail(4)
 	
 					if extension.is_equal (".dsc") then
-						create filename.make_from_string (New_project_wizards_path)
+						create filename.make_from_string (new_project_wizards_path)
 						filename.extend (entries.item)
 						create wizard.make_with_file (filename)
 						if wizard.target_platform_supported then

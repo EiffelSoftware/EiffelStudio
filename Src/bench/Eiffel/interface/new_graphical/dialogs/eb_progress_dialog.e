@@ -52,6 +52,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 feature {NONE} -- Initialization
 
@@ -430,7 +437,7 @@ feature {NONE} -- Implementation
 
 	progress_bar_color: EV_COLOR is
 		do
-			Result := (create {SHARED_RESOURCES}).color_resource_value ("progress_bar_color", 0, 0, 128)
+			Result := preferences.misc_data.progress_bar_color
 		end
 
 end -- class EB_PROGRESS_DIALOG

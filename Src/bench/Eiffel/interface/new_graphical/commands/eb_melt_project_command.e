@@ -57,12 +57,7 @@ inherit
 		export
 			{NONE} all
 		end
-
-	EB_PROJECT_TOOL_DATA
-		export
-			{NONE} all
-		end
-
+		
 	EB_SHARED_FORMAT_TABLES
 		export
 			{NONE} all
@@ -276,7 +271,7 @@ feature {NONE} -- Execution
 			elseif Eiffel_project.initialized then
 				if not_saved then
 					create cd.make_initialized (
-						3, "confirm_save_before_compile",
+						3, preferences.dialog_data.confirm_save_before_compile_string,
 						Warning_messages.w_Files_not_saved_before_compiling,
 						Interface_names.l_Discard_save_before_compile_dialog
 					)
@@ -321,7 +316,7 @@ feature {NONE} -- Execution
 			then
 				compile_and_run
 			else
-				create cd.make_initialized (2, "stop_execution_when_compiling", "Recompiling project will end current run.", Interface_names.L_do_not_show_again)
+				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, "Recompiling project will end current run.", Interface_names.L_do_not_show_again)
 				cd.set_ok_action (agent compile_and_run)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end

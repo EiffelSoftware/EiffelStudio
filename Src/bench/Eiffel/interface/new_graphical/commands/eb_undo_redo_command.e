@@ -15,7 +15,7 @@ inherit
 			new_menu_item
 		end
 
-	EB_UNDO_REDO_OBSERVER
+	UNDO_REDO_OBSERVER
 		redefine
 			on_changed
 		end

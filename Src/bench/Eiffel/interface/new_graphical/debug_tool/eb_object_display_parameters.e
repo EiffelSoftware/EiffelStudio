@@ -18,10 +18,6 @@ inherit
 		export
 			{NONE} all
 		end
-	EB_DEBUG_TOOL_DATA
-		export
-			{NONE} all
-		end
 	VALUE_TYPES
 		export
 			{NONE} all

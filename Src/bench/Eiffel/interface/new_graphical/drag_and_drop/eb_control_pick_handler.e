@@ -10,7 +10,7 @@ class
 inherit
 	ANY
 
-	EB_GENERAL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	chosen_receiver: STRING is
 			-- Where the stones should be sent (look up in the preferences).
 		do
-			Result := selected_array_resource_value ("ctrl_right_click_receiver", "new_window").as_lower
+			Result := preferences.misc_data.ctrl_right_click_receiver.as_lower
 		ensure
 			not_void: Result /= Void
 			lower_case: Result.is_equal (Result.as_lower)
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			conv_f ?= cs
 			if conv_f = Void then
-				cmd_string := general_shell_command.twin
+				cmd_string := preferences.misc_data.general_shell_command.twin
 				if not cmd_string.is_empty then
 					cmd_string.replace_substring_all ("$target", cs.file_name)
 					cmd_string.replace_substring_all ("$line", "1")
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			cmd_string: STRING
 		do
 				-- feature text area
-			cmd_string := general_shell_command.twin
+			cmd_string := preferences.misc_data.general_shell_command.twin
 			if not cmd_string.is_empty then
 				cmd_string.replace_substring_all ("$target", fs.class_i.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)

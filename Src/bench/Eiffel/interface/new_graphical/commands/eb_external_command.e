@@ -25,7 +25,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESOURCES
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			create timer.make_with_interval (500)
 			timer.actions.extend (agent check_not_finished)
 			execution_environment.launch (cl)
-			create running_dialog.make_initialized (1, "executing_command", Interface_names.l_Executing_command, Interface_names.L_do_not_show_again)
+			create running_dialog.make_initialized (1, preferences.dialog_data.executing_command_string, Interface_names.l_Executing_command, Interface_names.L_do_not_show_again)
 			running_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			timer.destroy
 			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.enable_sensitive)

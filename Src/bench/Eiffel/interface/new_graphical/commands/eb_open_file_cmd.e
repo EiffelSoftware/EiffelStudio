@@ -121,6 +121,7 @@ feature {NONE} -- Implementation
 		local
 			fn: FILE_NAME
 			f: PLAIN_TEXT_FILE
+			efs: EXTERNAL_FILE_STONE
 			bckfn: FILE_NAME
 			backup_file: PLAIN_TEXT_FILE
 			cd: EV_CONFIRMATION_DIALOG
@@ -145,8 +146,13 @@ feature {NONE} -- Implementation
 				if f.exists and then f.is_readable and then f.is_plain then
 					class_i := Eiffel_universe.class_with_file_name (fn)
 					if class_i = Void then
-						create wd.make_with_text (Warning_messages.w_Cannot_open_any_file)
-						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						if allow_external_files_in_ide then
+							create efs.make (f)
+							target.set_stone (efs)
+						else
+							create wd.make_with_text (Warning_messages.w_Cannot_open_any_file)
+							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						end
 					else
 						if class_i.compiled then
 							create {CLASSC_STONE} class_stone.make (class_i.compiled_class)
@@ -226,5 +232,8 @@ feature {NONE} -- Implementation
 
 	open_backup: BOOLEAN
 			-- If a backup file is present, indicates whether it should be opened or not.
+
+	allow_external_files_in_ide: BOOLEAN is False
+			-- Flag to determine if we can load non-eiffel files in the environment
 
 end -- class EB_OPEN_FILE_CMD

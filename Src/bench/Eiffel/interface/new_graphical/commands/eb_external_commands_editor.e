@@ -10,12 +10,12 @@ class
 inherit
 	EB_MENUABLE_COMMAND
     
-	EB_DEVELOPMENT_WINDOW_DATA
+	EB_CONSTANTS
 		export
 			{NONE} all
 		end
-
-	EB_CONSTANTS
+		
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -35,11 +35,10 @@ feature {NONE} -- Initialization
 			if not loaded.item then
 				loaded.set_item (True)
 				from
-					
 				until
 					i > 9
 				loop
-					s := string_resource_value (base_resource_name + i.out, "")
+					s := preferences.misc_data.i_th_external_preference_value (i)
 					if not s.is_empty and not s.is_equal (" ") then
 						create c.make_from_resource (s)
 					end
@@ -214,8 +213,7 @@ feature {NONE} -- Implementation
 				i > 9
 			loop
 				if commands @ i /= Void then
-					rn := base_resource_name + i.out
-					set_string_resource (rn, (commands @ i).resource)
+					preferences.misc_data.i_th_external_preference (i).set_value ((commands @ i).resource)
 				end
 				i := i + 1
 			end
@@ -323,9 +321,6 @@ feature {NONE} -- Implementation
 		do
 			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.rebuild_tools_menu)
 		end
-
-	base_resource_name: STRING is "external_command_"
-			-- Base name for the resources associated to each command.
 
 feature {NONE} -- Properties
 

@@ -13,8 +13,6 @@ inherit
 	EB_CONSTANTS
 
 	EB_SHARED_INTERFACE_TOOLS
-
-	EB_DEBUGGER_DATA
 	
 	EB_SHARED_GRAPHICAL_COMMANDS
 	
@@ -27,6 +25,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 			create debug_run_cmd.make
 			can_debug := True
-			maximum_stack_depth := default_maximum_stack_depth
+			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
 			init_commands
 			object_split_position := 300
 			create observers.make (10)
@@ -82,7 +82,7 @@ feature -- Access
 	new_toolbar: EB_TOOLBAR is
 			-- Toolbar containing all debugging commands.
 		do
-			Result := retrieve_project_toolbar (toolbarable_commands)
+			Result := preferences.debugger_data.retrieve_project_toolbar (toolbarable_commands)
 		end
 
 	new_project_toolbar: EV_VERTICAL_BOX is
@@ -253,7 +253,7 @@ feature -- Status setting
 				Application.status.set_max_depth (nb)
 				if Application.is_stopped then
 					pos := Application.current_execution_stack_number
-					Application.status.reload_current_call_stack
+					Application.status.reload_current_call_stack					
 					ecs := Application.status.current_call_stack
 					if ecs = Void or else ecs.is_empty then
 						--| Nothing to display, maybe debugger had an issue getting call stack ..
@@ -307,7 +307,7 @@ feature -- Status setting
 		local
 			split: EV_SPLIT_AREA
 			i: INTEGER
-			rl, rr: ARRAY_RESOURCE
+			rl, rr: ARRAY_PREFERENCE
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
@@ -396,16 +396,15 @@ feature -- Status setting
 				debug ("DEBUGGER_INTERFACE")
 					io.put_string("Searching resource%N")
 				end
-				rl ?= resources.item ("left_debug_layout_new")
-				rr ?= resources.item ("right_debug_layout_new")
-				debug_splitter_position := integer_resource_value ("splitter_position_during_debug", 250)
+				rl ?= preferences.preferences.get_resource (preferences.debug_tool_data.left_debug_layout_string)
+				rr ?= preferences.preferences.get_resource (preferences.debug_tool_data.right_debug_layout_string)				
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string("Found resource%N")
 					end
 					
-					debugging_window.left_panel.load_from_resource (rl.actual_value)
-					debugging_window.right_panel.load_from_resource (rr.actual_value)
+					debugging_window.left_panel.load_from_resource (rl.value)
+					debugging_window.right_panel.load_from_resource (rr.value)
 				else
 						--| Only minimize the editor.
 					debugging_window.editor_tool.explorer_bar_item.minimize
@@ -458,9 +457,9 @@ feature -- Status setting
 			if split /= Void then
 				object_split_position := split.split_position
 			end
-			set_array_resource ("left_debug_layout_new", debug_left_layout)
-			set_array_resource ("right_debug_layout_new", debug_right_layout)
-			set_integer_resource ("debug_main_splitter_position", debug_splitter_position)
+			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
+			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
+			preferences.debug_tool_data.main_splitter_position_preference.set_value (debug_splitter_position)
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right debug layout: %N")
 	 			from
@@ -547,8 +546,8 @@ feature -- Status setting
 	save_interface (toolbar: EB_TOOLBAR) is
 			-- Save the interface configuration using `toolbar'.
 		do
-			save_project_toolbar (toolbar)
-			save_resources
+			preferences.debugger_data.save_project_toolbar (toolbar)
+--			save_resources
 		end
 
 feature -- Debugging events
@@ -801,8 +800,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			-- Called by the development window with the debugger when closed,
 			-- so that the original layout of the window is stored in the registry.
 		do
-			set_array_resource ("development_window__left_panel_layout_new", normal_left_layout)
-			set_array_resource ("development_window__right_panel_layout_new", normal_right_layout)
+			preferences.development_window_data.left_panel_layout_preference.set_value (normal_left_layout)
+			preferences.development_window_data.right_panel_layout_preference.set_value (normal_right_layout)
 		end
 
 feature -- One time action
@@ -915,7 +914,7 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 
-			if display_dotnet_cmd then
+			if preferences.debugger_data.display_dotnet_cmd then
 				create eac_browser_cmd
 				eac_browser_cmd.disable_sensitive
 				toolbarable_commands.extend (eac_browser_cmd)
@@ -1004,7 +1003,7 @@ feature {NONE} -- Implementation
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
 				if
-					display_dotnet_cmd
+					preferences.debugger_data.display_dotnet_cmd
 					and then Eiffel_project.system_defined
 					and then Eiffel_system.System.il_generation
 				then
@@ -1034,7 +1033,7 @@ feature {NONE} -- Implementation
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			display_error_help_cmd.disable_sensitive
-			if display_dotnet_cmd then
+			if preferences.debugger_data.display_dotnet_cmd then
 				eac_browser_cmd.disable_sensitive
 			end
 		end
@@ -1153,14 +1152,14 @@ feature {NONE} -- Implementation
 			rb2.enable_select
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cancelb)
-			if critical_stack_depth > 30000 then
+			if preferences.debugger_data.critical_stack_depth > 30000 then
 				element_nb.set_value (30000)
-			elseif critical_stack_depth = -1 then
+			elseif preferences.debugger_data.critical_stack_depth = -1 then
 				element_nb.set_value (1000)
 				show_all_radio.enable_select
 				element_nb.disable_sensitive
 			else
-				element_nb.set_value (critical_stack_depth)
+				element_nb.set_value (preferences.debugger_data.critical_stack_depth)
 			end
 			element_nb.set_minimum_width (100)
 			
@@ -1207,7 +1206,7 @@ feature {NONE} -- Implementation
 				nb := element_nb.value
 			end
 			close_dialog
-			set_critical_stack_depth (nb)
+			preferences.debugger_data.critical_stack_depth_preference.set_value (nb)
 			Application.set_critical_stack_depth (nb)
 			if Application.status /= Void and then Application.status.is_stopped then
 				send_rqst_3_integer (Rqst_overflow_detection, 0, 0, nb)

@@ -19,6 +19,8 @@ inherit
 	EB_SHARED_MANAGERS
 
 	EB_CONSTANTS
+	
+	EB_SHARED_PREFERENCES
 
 feature -- Access
 
@@ -143,7 +145,7 @@ feature -- Execution
 		do
 			if Application.has_breakpoints then
 				create cd.make_initialized (
-					2, "confirm_clear_breakpoints",
+					2, preferences.dialog_data.confirm_clear_breakpoints_string,
 					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again
 				)
 				cd.set_ok_action (agent clear_breakpoints)

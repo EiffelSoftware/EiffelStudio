@@ -42,13 +42,13 @@ feature {NONE} -- Deferred Implementation
 	assume_ok: BOOLEAN is
 			-- Should `Ok' be assumed as selected?
 		do
-			Result := not acknowledge_not_loaded
+			Result := not preferences.dialog_data.acknowledge_not_loaded
 		end
 
 	save_check_button_state (check_button_checked: BOOLEAN)is
 			-- Save the preferences according to the state of the check button.
 		do
-			set_acknowledge_not_loaded (not check_button_checked)
+			preferences.dialog_data.acknowledge_not_loaded_preference.set_value (not check_button_checked)
 		end
 
 end -- class EB_TEXT_LOADING_WARNING_DIALOG

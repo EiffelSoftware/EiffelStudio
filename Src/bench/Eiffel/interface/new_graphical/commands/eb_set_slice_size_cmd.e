@@ -14,11 +14,6 @@ inherit
 			new_mini_toolbar_item
 		end
 
-	EB_DEBUG_TOOL_DATA
-		export
-			{NONE} all
-		end
-
 	ATTR_REQUEST -- To be able to modify special values bounds!! (Beurk)
 		rename
 			make as attr_request_make

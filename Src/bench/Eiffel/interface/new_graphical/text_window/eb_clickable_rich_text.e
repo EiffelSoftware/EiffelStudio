@@ -119,7 +119,7 @@ feature -- Access
 --	cursor: SCROLLED_WINDOW_CURSOR is
 --			-- Current cursor position in scrolled text 
 --		do
---			!! Result.make (cursor_position, top_character_position)
+--			create Result.make (cursor_position, top_character_position)
 --		end
 
 	current_line: INTEGER is
@@ -476,7 +476,7 @@ feature {EB_TOOL} -- Objects in Current text area
 			i: INTEGER
 			local_copy: like Current
 		do
-			!! Result.make
+			create Result.make
 			from
 				local_copy := Current
 				i := 1

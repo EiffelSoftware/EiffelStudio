@@ -1003,16 +1003,16 @@ static  void    print_instructions ()
 				fprintf (ofp,"%d", (int) get_char8(&ip));
 				break;
 			case BC_UINT8:
-				fprintf(ofp, "%d", (int) get_char8(&ip));
+				fprintf(ofp, "%u", (int) get_char8(&ip));
 				break;
 			case BC_UINT16:
-				fprintf (ofp, "%d", (int) get_int16(&ip));
+				fprintf (ofp, "%u", (int) get_int16(&ip));
 				break;
 			case BC_UINT32:
-				fprintf (ofp,"%d", get_int32(&ip));
+				fprintf (ofp,"%u", get_int32(&ip));
 				break;
 			case BC_UINT64:
-				fprintf (ofp, "%" EIF_INTEGER_64_DISPLAY, get_uint64(&ip));
+				fprintf (ofp, "%" EIF_NATURAL_64_DISPLAY, get_uint64(&ip));
 				break;
 			case BC_INT8:
 				fprintf(ofp, "%d", (int) get_char8(&ip));

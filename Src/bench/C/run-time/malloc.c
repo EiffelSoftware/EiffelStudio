@@ -1691,7 +1691,7 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	 * it happens to be free, then we do coalescing. And so on...
 	 */
 	
-	while (size = coalesc(zone))	/* Perform coalescing as long as possible */
+	while ((size = coalesc(zone)))	/* Perform coalescing as long as possible */
 		r += size;					/* And upadte size of block */
 		
 	/* Now 'zone' points to the block to be freed, and 'r' is the
@@ -2395,8 +2395,10 @@ rt_shared int full_coalesc(int chunk_type)
 	 * no coalescing ever occurred.
 	 */
 	EIF_GET_CONTEXT
-	int started_here = 0;
 
+#if !defined CUSTOM || defined NEED_OPTION_H
+	int started_here = 0;
+#endif
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
 	register3 int max_coalesced;	/* Size of coalesced block in a chunk */
@@ -3356,7 +3358,7 @@ rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */
 rt_private uint32 c_mem = 0;		/* C memory used (bytes) */
 #endif /* EIF_THREADS */
 
-rt_private void inspect();
+/*rt_private void inspect();    (never defined) */
 rt_private void check_obj(char *object);
 
 

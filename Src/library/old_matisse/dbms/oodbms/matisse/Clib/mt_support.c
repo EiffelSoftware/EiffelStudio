@@ -1,8 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <matisse.h>
-#include "eiffel.h"
-#include "garcol.h"
+#include <mtscli.h>	// admin connection
+#include "eif_eiffel.h"
+#include "eif_garcol.h"
+#include "matisse_store.h"
+
+/*
+ * DEBUGGING SWITCH
+ * ... mindlessly simple, but it does the trick...just choose which of
+ * the following two lines of code you want to keep
+ */
+// #define DEBUG_PRINTF(a)	 fprintf a;
+#define DEBUG_PRINTF(a)	 {};
+
 
 #define BUFFERSIZE 512
 typedef struct {
@@ -14,6 +25,11 @@ typedef struct {
 
 MtSTS result;
 MtDatabase database;
+
+STS admin_sts;			// admin connection last op status
+RPC_HANDLE admin_handle;	// admin connection handle
+char admin_msg[MSGLOG_BUFLEN];  // admin connection sts message
+
 char name[32];
 char buffer[BUFFERSIZE];
 void *value;
@@ -26,162 +42,168 @@ int transaction_count =0 ;
 /*	MATISSE_CONST	*/
 /************************/
 /*--------------------------------------------*/
-public EIF_INTEGER c_mts32()
+EIF_INTEGER c_mts32()
 /*--------------------------------------------*/
 {
 return(MTS32);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtnil()
+ EIF_INTEGER c_mtnil()
 /*--------------------------------------------*/
 {
 return(MTNIL);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtdouble()
+ EIF_INTEGER c_mtdouble()
 /*--------------------------------------------*/
 {
 return(MTDOUBLE);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtfloat()
+ EIF_INTEGER c_mtfloat()
 /*--------------------------------------------*/
 {
 return(MTFLOAT);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtchar()
+ EIF_INTEGER c_mtchar()
 /*--------------------------------------------*/
 {
 return(MTCHAR);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtstring()
+ EIF_INTEGER c_mtstring()
 /*--------------------------------------------*/
 {
 return(MTSTRING);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtasciichar()
+ EIF_INTEGER c_mtasciichar()
 /*--------------------------------------------*/
 {
 return(MTASCIICHAR);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtasciistring()
+ EIF_INTEGER c_mtasciistring()
 /*--------------------------------------------*/
 {
 return(MTASCIISTRING);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mts32_list()
+ EIF_INTEGER c_mts32_list()
 /*--------------------------------------------*/
 {
 return(MTS32_LIST);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtdouble_list()
+ EIF_INTEGER c_mtdouble_list()
 /*--------------------------------------------*/
 {
 return(MTDOUBLE_LIST);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtfloat_list()
+ EIF_INTEGER c_mtfloat_list()
 /*--------------------------------------------*/
 {
 return(MTFLOAT_LIST);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtstring_list()
+ EIF_INTEGER c_mtstring_list()
 /*--------------------------------------------*/
 {
 return(MTSTRING_LIST);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtasciistring_list()
+ EIF_INTEGER c_mtasciistring_list()
 /*--------------------------------------------*/
 {
 return(MTASCIISTRING_LIST);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mts32_array()
+ EIF_INTEGER c_mtu8_array()
+/*--------------------------------------------*/
+{
+return(MTU8_ARRAY);
+}
+/*--------------------------------------------*/
+ EIF_INTEGER c_mts32_array()
 /*--------------------------------------------*/
 {
 return(MTS32_ARRAY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtdouble_array()
+ EIF_INTEGER c_mtdouble_array()
 /*--------------------------------------------*/
 {
 return(MTDOUBLE_ARRAY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtfloat_array()
+ EIF_INTEGER c_mtfloat_array()
 /*--------------------------------------------*/
 {
 return(MTFLOAT_ARRAY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtstring_array()
+ EIF_INTEGER c_mtstring_array()
 /*--------------------------------------------*/
 {
 return(MTSTRING_ARRAY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtasciistring_array()
+ EIF_INTEGER c_mtasciistring_array()
 /*--------------------------------------------*/
 {
 return(MTASCIISTRING_ARRAY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtmin_tran_priority()
+ EIF_INTEGER c_mtmin_tran_priority()
 /*--------------------------------------------*/
 {
 return(MTMIN_TRAN_PRIORITY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtmax_tran_priority()
+ EIF_INTEGER c_mtmax_tran_priority()
 /*--------------------------------------------*/
 {
 return(MTMAX_TRAN_PRIORITY);
 }
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtread()
+ EIF_INTEGER c_mtread()
 /*--------------------------------------------*/
 {
 return(MTREAD);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtwrite()
+ EIF_INTEGER c_mtwrite()
 /*--------------------------------------------*/
 {
 return(MTWRITE);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtdirect()
+ EIF_INTEGER c_mtdirect()
 /*--------------------------------------------*/
 {
 return(MTDIRECT);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtreverse()
+ EIF_INTEGER c_mtreverse()
 /*--------------------------------------------*/
 {
 return(MTREVERSE);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtascend()
+ EIF_INTEGER c_mtascend()
 /*--------------------------------------------*/
 {
 return(MTASCEND);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_mtdescend()
+ EIF_INTEGER c_mtdescend()
 /*--------------------------------------------*/
 {
 return(MTDESCEND);
@@ -194,25 +216,39 @@ return(MTDESCEND);
 MtSize keys_count;
 MtKey *keys;
 /*--------------------------------------------*/
-public EIF_INTEGER c_keys_count()
+ EIF_INTEGER c_keys_count()
 /*--------------------------------------------*/
 {
 return(keys_count);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_ith_key(i)
+ EIF_INTEGER c_ith_key(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
 return(keys[i-1]);
 }
 
+
+static int	keys_malloced;  // TRUE if keys malloced in this
+				// file rather than by MT API call
+
 /*--------------------------------------------*/
-public void c_free_keys()
+ void c_free_keys()
 /*--------------------------------------------*/
 {
-free(keys);
+    if (keys != NULL) {
+	DEBUG_PRINTF((stderr, "c_free_keys() - keys == 0x%lx\n", keys))
+	if (keys_malloced) {
+	    free(keys);
+	    keys_malloced = FALSE;
+	} else
+	    MtMFree(keys);
+	keys = NULL;
+    }
+    else
+        DEBUG_PRINTF((stderr, "c_free_keys() - nothing to do; keys == 0x%lx\n", keys))
 }
 
 /*--------------------------------------------*/
@@ -306,24 +342,33 @@ special:
 /*	MT_ATTRIBUTE	*/
 /************************/
 
+
 /*--------------------------------------------*/
-public void c_get_value(oid,aid)
+ void c_get_value(oid,aid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid;
 {
-result = Mt_MGetValue(oid,aid,&vtype,&value,&vrank,&dvalue);
+    result = Mt_MGetValue(oid,aid,&vtype,&value,&vrank,&dvalue);
+    DEBUG_PRINTF((stderr, "MT malloc value() == 0x%lx\n", value))
 }
 
 /*--------------------------------------------*/
-public void c_free_value(oid,aid)
+ void c_free_value(oid,aid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid;
 {
-free(value);
+    if (value != NULL){
+        DEBUG_PRINTF((stderr, "c_free_value() - value == 0x%lx\n", value))
+	MtMFree(value);
+	value = NULL;
+    }
+    else
+        DEBUG_PRINTF((stderr, "c_free_value() - nothing to do; value == 0x%lx\n", value))
+
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_integer_value()
+ EIF_INTEGER c_get_integer_value()
 /*--------------------------------------------*/
 {
 EIF_INTEGER* one_integer;
@@ -332,7 +377,7 @@ return(*one_integer);
 }
 
 /*--------------------------------------------*/
-public EIF_DOUBLE c_get_double_value()
+ EIF_DOUBLE c_get_double_value()
 /*--------------------------------------------*/
 {
 EIF_DOUBLE* one_double;
@@ -341,7 +386,7 @@ return(*one_double);
 }
 
 /*--------------------------------------------*/
-public EIF_REAL c_get_real_value()
+ EIF_REAL c_get_real_value()
 /*--------------------------------------------*/
 {
 EIF_REAL* one_real;
@@ -350,7 +395,7 @@ return(*one_real);
 }
 
 /*--------------------------------------------*/
-public EIF_CHARACTER c_get_char_value()
+ EIF_CHARACTER c_get_char_value()
 /*--------------------------------------------*/
 {
 EIF_CHARACTER* one_character;
@@ -359,21 +404,31 @@ return(*one_character);
 }
 
 /*--------------------------------------------*/
-public EIF_POINTER c_get_string_value()
+ EIF_POINTER c_get_string_value()
 /*--------------------------------------------*/
 {
 return((char*)value);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_value_type()
+ EIF_INTEGER c_value_type()
 /*--------------------------------------------*/
 {
 return(vtype);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_ith_list_integer(i)
+ EIF_INTEGER c_ith_list_character(i)
+/*--------------------------------------------*/
+EIF_INTEGER i;
+{
+EIF_CHARACTER* one_character;
+one_character = (EIF_INTEGER*) ((MtU8*)value+(i-1));
+return(*one_character);
+}
+
+/*--------------------------------------------*/
+ EIF_INTEGER c_ith_list_integer(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
@@ -383,7 +438,7 @@ return(*one_integer);
 }
 
 /*--------------------------------------------*/
-public EIF_DOUBLE c_ith_list_double(i)
+ EIF_DOUBLE c_ith_list_double(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
@@ -393,7 +448,7 @@ return(*one_double);
 }
 
 /*--------------------------------------------*/
-public EIF_REAL c_ith_list_real(i)
+ EIF_REAL c_ith_list_real(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
@@ -403,7 +458,7 @@ return(*one_real);
 }
 
 /*--------------------------------------------*/
-public EIF_POINTER c_ith_list_string(i)
+ EIF_POINTER c_ith_list_string(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
@@ -413,7 +468,7 @@ return(*one_string);
 }
 
 /*--------------------------------------------*/
-public void c_set_value_integer(oid,aid,type,value,rank)
+ void c_set_value_integer(oid,aid,type,value,rank)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid,type,value,rank;
 {
@@ -422,7 +477,7 @@ result = Mt_SetValue(oid,aid,type,&ivalue,rank);
 }
 
 /*--------------------------------------------*/
-public void c_set_value_double(oid,aid,type,value,rank)
+ void c_set_value_double(oid,aid,type,value,rank)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid,type;
 EIF_DOUBLE value;
@@ -433,18 +488,38 @@ result = Mt_SetValue(oid,aid,type,&ivalue,rank);
 }
 
 /*--------------------------------------------*/
-public void c_set_value_real(oid,aid,type,value,rank)
+ /* this function used only for testing passing of floats - it can be 
+    deleted at anytime.
+  */
+ void c_test_value_real(oid,aid,type,value,rank)
 /*--------------------------------------------*/
-EIF_INTEGER oid,aid,type;
-EIF_REAL value;
-EIF_INTEGER rank;
+int oid,aid,type;
+int value;
+int rank;
 {
-MtFloat ivalue = value;
-result = Mt_SetValue(oid,aid,type,&ivalue,rank);
+fprintf(stderr, "c_test_value_real() called ok - oid:%d, aid:%d, type:%d, value:%e, rank:%d\n", oid,aid,type,value,rank);
+fprintf(stderr, "c_test_value_real() called ok - oid:%d, aid:%d, type:%d, value:%d, rank:%d\n", oid,aid,type,value,rank);
+fprintf(stderr, "c_test_value_real() args as hex 0x%lx 0x%lx 0x%lx 0x%lx 0x%lx 0x%lx\n", *((int*)(&oid)),*((int*)(&oid)+1),*((int*)(&oid)+2),*((int*)(&oid)+3),*((int*)(&oid)+4),*((int*)(&oid)+5));
 }
 
 /*--------------------------------------------*/
-public void c_set_value_char(oid,aid,type,value,rank)
+ void c_set_value_real(oid,aid,type,value,rank)
+/*--------------------------------------------*/
+EIF_INTEGER oid,aid,type;
+//float value;
+EIF_INTEGER value;
+EIF_INTEGER rank;
+{
+//MtFloat ivalue = value;
+MtS32 ivalue = value;
+	DEBUG_PRINTF((stderr, "c_set_value_real() called ok - oid:%d, aid:%d, type:%d, value:%f, rank:%lx\n", oid,aid,type,value,rank))
+	DEBUG_PRINTF((stderr, "c_set_value_real() args as hex 0x%0lx 0x%0lx 0x%0lx 0x%0lx 0x%0lx\n", *((int*)(&oid)),*((int*)(&oid)+1),*((int*)(&oid)+2),*((int*)(&oid)+3),*((int*)(&oid)+4)))
+result = Mt_SetValue(oid,aid,type,&ivalue,rank);
+	DEBUG_PRINTF((stderr, "Mt_SetValue() called ok - oid:%d, aid:%d, type:%d, &ivalue:0x%lx, rank:%d\n", oid,aid,type,&ivalue,rank))
+}
+
+/*--------------------------------------------*/
+ void c_set_value_char(oid,aid,type,value,rank)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid,type;
 EIF_CHARACTER value;
@@ -455,7 +530,7 @@ result = Mt_SetValue(oid,aid,type,&ivalue,rank);
 }
 
 /*--------------------------------------------*/
-public void c_set_value_string(oid,aid,type,value,rank)
+ void c_set_value_string(oid,aid,type,value,rank)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid,type;
 EIF_POINTER value;
@@ -466,7 +541,7 @@ result = Mt_SetValue(oid,aid,MTSTRING,(void*)ivalue,0);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_attribute(attribute_name)
+ EIF_INTEGER c_get_attribute(attribute_name)
 /*--------------------------------------------*/
 char* attribute_name;
 {
@@ -476,7 +551,7 @@ return(aid);
 }
 
 /*--------------------------------------------*/
-public void c_check_attribute(attribute_id,object_id)
+ void c_check_attribute(attribute_id,object_id)
 /*--------------------------------------------*/
 EIF_INTEGER attribute_id,object_id;
 {
@@ -484,7 +559,7 @@ result = Mt_CheckAttribute(attribute_id,object_id);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_dimension(object_id,attribute_id,rank)
+ EIF_INTEGER c_get_dimension(object_id,attribute_id,rank)
 /*--------------------------------------------*/
 EIF_INTEGER object_id,attribute_id,rank;
 {
@@ -508,15 +583,21 @@ result = Mt_SetValue(oid,aid,type,(void*)area,rank,u);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_type_value(aid)
+ EIF_INTEGER c_type_value(aid)
 /*--------------------------------------------*/
 EIF_INTEGER aid;
 {
-MtType tv=0,stype;
-MtS32 *ltypes;
-result = MtMGetValue(aid,"Mt Type",&stype,(void*)&ltypes,NULL,NULL);
-if (ltypes) tv = *ltypes;
-return(tv);
+    MtType tv=0,stype;
+    MtS32 *ltypes;
+
+    result = MtMGetValue(aid,"Mt Type",&stype,(void*)&ltypes,NULL,NULL);
+
+    if (ltypes) {
+        tv = *ltypes;
+	MtMFree(ltypes); // AMP:Another memory leak fixed!!!
+    }
+
+    return(tv);
 }
 
 /************************/
@@ -524,7 +605,7 @@ return(tv);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_class_from_name(name)
+ EIF_INTEGER c_get_class_from_name(name)
 /*--------------------------------------------*/
 char* name;
 {
@@ -534,7 +615,7 @@ return(key);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_create_object(name)
+ EIF_INTEGER c_create_object(name)
 /*--------------------------------------------*/
 char* name;
 {
@@ -544,7 +625,7 @@ return(key);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_class_from_object(object_id)
+ EIF_INTEGER c_get_class_from_object(object_id)
 /*--------------------------------------------*/
 EIF_INTEGER object_id;
 {
@@ -554,7 +635,7 @@ return(cid);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_attributes(class_id)
+ void c_get_all_attributes(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -562,7 +643,7 @@ result = Mt_MGetAllAttributes(&keys_count,&keys,class_id);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_relationships(class_id)
+ void c_get_all_relationships(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -570,7 +651,7 @@ result = Mt_MGetAllRelationships(&keys_count,&keys,class_id);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_i_relationships(class_id)
+ void c_get_all_i_relationships(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -578,7 +659,7 @@ result = Mt_MGetAllIRelationships(&keys_count,&keys,class_id);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_subclasses(class_id)
+ void c_get_all_subclasses(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -586,7 +667,7 @@ result = Mt_MGetAllSubclasses(&keys_count,&keys,class_id);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_superclasses(class_id)
+ void c_get_all_superclasses(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -594,7 +675,7 @@ result = Mt_MGetAllSuperclasses(&keys_count,&keys,class_id);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_instances_number(class_id)
+ EIF_INTEGER c_get_instances_number(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -604,7 +685,7 @@ return(instances_number);
 }
 
 /*--------------------------------------------*/
-public EIF_POINTER c_object_name(object_id)
+ EIF_POINTER c_object_name(object_id)
 /*--------------------------------------------*/
 EIF_INTEGER object_id;
 {
@@ -615,12 +696,14 @@ return(name);
 }
 
 /*--------------------------------------------*/
-public void c_create_num_objects(n,oid)
+ void c_create_num_objects(n,oid)
 /*--------------------------------------------*/
 EIF_INTEGER n,oid;
 {
-keys = (MtKey*) malloc(n*sizeof(MtKey));
-result = Mt_CreateNumObjects(n,keys,oid);
+    keys = (MtKey*) malloc(n*sizeof(MtKey));
+    DEBUG_PRINTF((stderr, "malloc() - keys == 0x%lx\n", keys))
+    result = Mt_CreateNumObjects(n,keys,oid);
+    keys_malloced = TRUE;
 }
 
 /************************/
@@ -628,7 +711,7 @@ result = Mt_CreateNumObjects(n,keys,oid);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_class_stream(class_id)
+ EIF_POINTER c_open_class_stream(class_id)
 /*--------------------------------------------*/
 EIF_INTEGER class_id;
 {
@@ -642,7 +725,7 @@ return(rstream);
 /************************/
 
 /*--------------------------------------------*/
-public void c_get_objects_from_ep(attribute_id,class_id,entry_point_name)
+ void c_get_objects_from_ep(attribute_id,class_id,entry_point_name)
 /*--------------------------------------------*/
 EIF_INTEGER attribute_id,class_id;
 char *entry_point_name;
@@ -651,7 +734,7 @@ result = Mt_MGetObjectsFromEP(&keys_count,&keys,entry_point_name,attribute_id,cl
 }
 
 /*--------------------------------------------*/
-public void c_lock_objects_from_ep(lock,ep_name,attribute_id,class_id)
+ void c_lock_objects_from_ep(lock,ep_name,attribute_id,class_id)
 /*--------------------------------------------*/
 EIF_INTEGER lock;
 char *ep_name;
@@ -665,7 +748,7 @@ result = Mt_LockObjectsFromEP(lock,ep_name,attribute_id,class_id);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_ep_stream(ep_name,attribute_id,class_id)
+ EIF_POINTER c_open_ep_stream(ep_name,attribute_id,class_id)
 /*--------------------------------------------*/
 char* ep_name;
 EIF_INTEGER attribute_id,class_id;
@@ -680,7 +763,7 @@ return(rstream);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_index(index_name)
+ EIF_INTEGER c_get_index(index_name)
 /*--------------------------------------------*/
 char* index_name;
 {
@@ -694,7 +777,44 @@ return(index_key);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_index_stream(index_name,class_name,direction)
+ EIF_POINTER c_open_index_stream(index_name,class_name,direction,
+ 				 crit_start_array,crit_end_array)
+/*--------------------------------------------*/
+char* index_name, *class_name;
+EIF_INTEGER direction;
+EIF_OBJ crit_start_array, crit_end_array; /* ARRAYs of POINTER to STRING */
+{
+    MtStream rstream;
+    void **area_start_crit, **area_end_crit;
+    MtSize count_start_crit;
+
+    count_start_crit = eif_array_count (crit_start_array);
+    area_start_crit = (void **) eif_array_area (crit_start_array);
+    area_end_crit = (void **) eif_array_area (crit_end_array);
+
+    result = MtOpenIndexStream(&rstream,index_name,class_name,direction,
+			   count_start_crit,area_start_crit,area_end_crit);
+
+/* 
+ * the following shows that the eiffel calling code works fine. Reinstate
+ * it if you have doubts...
+ *
+DEBUG_PRINTF((stderr,"Args to MtOpenIndexStream\n"))
+DEBUG_PRINTF((stderr,"	index_name: %s\n", index_name))
+DEBUG_PRINTF((stderr,"	class_name: %s\n", class_name))
+DEBUG_PRINTF((stderr,"	direction: %d\n", direction))
+DEBUG_PRINTF((stderr,"	nr criteria: %d\n", count_start_crit))
+DEBUG_PRINTF((stderr,"	start criteria: %s\n", (char *)(area_start_crit[0])))
+DEBUG_PRINTF((stderr,"	end criteria: %s\n", (char *)(area_end_crit[0])))
+DEBUG_PRINTF((stderr,"Result: %lx\n", result))
+ *
+ */
+
+    return(rstream);
+}
+
+/*--------------------------------------------*/
+ EIF_POINTER c_open_index_stream1(index_name,class_name,direction)
 /*--------------------------------------------*/
 char* index_name, *class_name;
 EIF_INTEGER direction;
@@ -709,28 +829,28 @@ return(rstream);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_max_buffered_objects()
+ EIF_INTEGER c_max_buffered_objects()
 /*--------------------------------------------*/
 {
 return(MtGetConfigurationInfo(MTMAX_BUFFERED_OBJECTS));
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_max_index_criteria_number()
+ EIF_INTEGER c_max_index_criteria_number()
 /*--------------------------------------------*/
 {
 return(MtGetConfigurationInfo(MTMAX_INDEX_CRITERIA_NUMBER));
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_max_index_key_length()
+ EIF_INTEGER c_max_index_key_length()
 /*--------------------------------------------*/
 {
 return(MtGetConfigurationInfo(MTMAX_INDEX_KEY_LENGTH));
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_total_read_bytes()
+ EIF_INTEGER c_get_total_read_bytes()
 /*--------------------------------------------*/
 {
 MtLargeSize total;
@@ -739,7 +859,7 @@ return(total);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_total_write_bytes()
+ EIF_INTEGER c_get_total_write_bytes()
 /*--------------------------------------------*/
 {
 MtLargeSize total;
@@ -748,7 +868,7 @@ return(total);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_wait_time()
+ EIF_INTEGER c_get_wait_time()
 /*--------------------------------------------*/
 {
 MtWait wait_time;
@@ -761,7 +881,7 @@ return(wait_time);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_message(selector)
+ EIF_INTEGER c_get_message(selector)
 /*--------------------------------------------*/
 char* selector;
 {
@@ -776,7 +896,7 @@ return(key);
 
 
 /*--------------------------------------------*/
-public EIF_BOOLEAN c_predefined_msp(oid)
+ EIF_BOOLEAN c_predefined_msp(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -786,7 +906,7 @@ return(is_predefined_msp);
 }
 
 /*--------------------------------------------*/
-public void c_check_instance(oid)
+ void c_check_instance(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -794,7 +914,7 @@ result = MtCheckInstance(oid);
 }
 
 /*--------------------------------------------*/
-public void c_remove_value(oid,aid)
+ void c_remove_value(oid,aid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid;
 {
@@ -802,7 +922,7 @@ result = Mt_RemoveValue(oid,aid);
 }
 
 /*--------------------------------------------*/
-public void c_remove_object(oid)
+ void c_remove_object(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -810,7 +930,7 @@ result = MtRemoveObject(oid);
 }
 
 /*--------------------------------------------*/
-public void c_remove_all_successors(oid,rid)
+ void c_remove_all_successors(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -818,7 +938,7 @@ result = Mt_RemoveAllSuccessors(oid,rid);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_object_size(oid)
+ EIF_INTEGER c_object_size(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -828,7 +948,7 @@ return(osize);
 }
 
 /*--------------------------------------------*/
-public void c_print_to_file(oid,file_pointer)
+ void c_print_to_file(oid,file_pointer)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 EIF_POINTER file_pointer;
@@ -838,7 +958,7 @@ result = MtPrint(oid,(FILE*)file_pointer);
 
 
 /*--------------------------------------------*/
-public EIF_BOOLEAN c_type_p(oid,cid)
+ EIF_BOOLEAN c_type_p(oid,cid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,cid;
 {
@@ -848,7 +968,7 @@ return(typep);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_added_succs(oid,rid)
+ void c_get_all_added_succs(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -856,7 +976,7 @@ result = Mt_MGetAllAddedSuccs(&keys_count,&keys,oid,rid);
 }
 
 /*--------------------------------------------*/
-public void c_get_all_rem_succs(oid,rid)
+ void c_get_all_rem_succs(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -864,15 +984,16 @@ result = Mt_MGetAllRemSuccs(&keys_count,&keys,oid,rid);
 }
 
 /*--------------------------------------------*/
-public void c_get_successors(oid,rid)
+ void c_get_successors(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
 result = Mt_MGetSuccessors(&keys_count,&keys,oid,rid);
+DEBUG_PRINTF((stderr,"Mt_MGetSuccessors; keys=%lx result=%lx\n",keys, result))
 }
 
 /*--------------------------------------------*/
-public void c_get_predecessors(oid,rid)
+ void c_get_predecessors(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -880,17 +1001,17 @@ result = Mt_MGetPredecessors(&keys_count,&keys,oid,rid);
 }
 
 /*--------------------------------------------*/
-public void c_free_object(oid)
+ void c_free_object(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
-MtKey key;
-key = oid;
-result = MtFreeObjects(1,&key);
+    MtKey key;
+    key = oid;
+    result = MtFreeObjects(1,&key);
 }
 
 /*--------------------------------------------*/
-public void c_add_successor_first(oid,rid,soid)
+ void c_add_successor_first(oid,rid,soid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid,soid;
 {
@@ -898,7 +1019,7 @@ result = Mt_AddSuccessor(oid,rid,soid,MTFIRST);
 }
 
 /*--------------------------------------------*/
-public void c_add_successor_append(oid,rid,soid)
+ void c_add_successor_append(oid,rid,soid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid,soid;
 {
@@ -906,7 +1027,7 @@ result = Mt_AddSuccessor(oid,rid,soid,MTAPPEND);
 }
 
 /*--------------------------------------------*/
-public void c_add_successor_after(oid,rid,soid,ooid)
+ void c_add_successor_after(oid,rid,soid,ooid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid,soid,ooid;
 {
@@ -914,7 +1035,7 @@ result = Mt_AddSuccessor(oid,rid,soid,MTAFTER,ooid);
 }
 
 /*--------------------------------------------*/
-public void c_lock_object(oid,lock)
+ void c_lock_object(oid,lock)
 /*--------------------------------------------*/
 EIF_INTEGER oid,lock;
 {
@@ -922,7 +1043,7 @@ result = MtLockObjects(1,oid,lock);
 }
 
 /*--------------------------------------------*/
-public void c_load_object(oid)
+ void c_load_object(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -934,7 +1055,7 @@ result = MtLoadObjects(1,oid);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_object_att_stream(oid)
+ EIF_POINTER c_open_object_att_stream(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -948,7 +1069,7 @@ return(rstream);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_object_irel_stream(oid)
+ EIF_POINTER c_open_object_irel_stream(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -962,7 +1083,7 @@ return(rstream);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_object_rel_stream(oid)
+ EIF_POINTER c_open_object_rel_stream(oid)
 /*--------------------------------------------*/
 EIF_INTEGER oid;
 {
@@ -976,7 +1097,7 @@ return(rstream);
 /************************/
 
 /*--------------------------------------------*/
-public void c_check_property(pid,oid)
+ void c_check_property(pid,oid)
 /*--------------------------------------------*/
 EIF_INTEGER pid,oid;
 {
@@ -988,7 +1109,7 @@ result = Mt_CheckProperty(pid,oid);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_get_relationship_from_name(name)
+ EIF_INTEGER c_get_relationship_from_name(name)
 /*--------------------------------------------*/
 char* name;
 {
@@ -998,7 +1119,7 @@ return(key);
 }
 
 /*--------------------------------------------*/
-public void c_check_relationship(relationship_id,object_id)
+ void c_check_relationship(relationship_id,object_id)
 /*--------------------------------------------*/
 EIF_INTEGER relationship_id,object_id;
 {
@@ -1011,7 +1132,7 @@ result = Mt_CheckRelationship(relationship_id,object_id);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_relationship_stream(oid,rid)
+ EIF_POINTER c_open_relationship_stream(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -1025,7 +1146,7 @@ return(rstream);
 /********************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_open_irelationship_stream(oid,rid)
+ EIF_POINTER c_open_irelationship_stream(oid,rid)
 /*--------------------------------------------*/
 EIF_INTEGER oid,rid;
 {
@@ -1040,7 +1161,7 @@ return(rstream);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_next_object(sid)
+ EIF_INTEGER c_next_object(sid)
 /*--------------------------------------------*/
 EIF_POINTER sid;
 {
@@ -1050,7 +1171,7 @@ return(key);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_next_property(sid)
+ EIF_INTEGER c_next_property(sid)
 /*--------------------------------------------*/
 EIF_POINTER sid;
 {
@@ -1061,7 +1182,7 @@ return(key);
 }
 
 /*--------------------------------------------*/
-public void c_close_stream(sid)
+ void c_close_stream(sid)
 /*--------------------------------------------*/
 EIF_POINTER sid;
 {
@@ -1075,7 +1196,7 @@ result = MtCloseStream(sid);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_POINTER c_time_enum_start()
+ EIF_POINTER c_time_enum_start()
 /*--------------------------------------------*/
 {
 MtStream rstream;
@@ -1084,7 +1205,7 @@ return(rstream);
 }
 
 /*--------------------------------------------*/
-public void c_time_enum_end(sid)
+ void c_time_enum_end(sid)
 /*--------------------------------------------*/
 EIF_POINTER sid;
 {
@@ -1092,7 +1213,7 @@ result = MtTimeEnumEnd(sid);
 }
 
 /*--------------------------------------------*/
-public void c_next_time(sid)
+ void c_next_time(sid)
 /*--------------------------------------------*/
 EIF_POINTER sid;
 {
@@ -1104,7 +1225,48 @@ result = MtNextTime(sid,buffer,BUFFERSIZE);
 /************************/
 
 /*--------------------------------------------*/
-public void c_connect(host_name,database_name)
+/* 
+ * MUST BE CALLED AFTER c_db_connect() to pick up database context. This
+ * allows multiple contexts to be created, each stored in an Eiffel object
+ */
+EIF_POINTER c_database()
+/*--------------------------------------------*/
+{
+    return database;
+}
+
+/*--------------------------------------------*/
+/* MUST BE CALLED BEFORE c_set_context */
+c_set_database(db)
+MtDatabase db;
+/*--------------------------------------------*/
+{
+    database = db;
+}
+
+/*--------------------------------------------*/
+/* 
+ * MUST BE CALLED AFTER c_start_transaction(), c_commit_transaction() and
+ * c_rollback() . This allows multiple contexts to be created, each stored 
+ * in an Eiffel object
+ */
+EIF_INTEGER c_transaction_count()
+/*--------------------------------------------*/
+{
+return(transaction_count);
+}
+
+/*--------------------------------------------*/
+/* MUST BE CALLED BEFORE c_set_context() */
+c_set_transaction_count(trans_count)
+EIF_INTEGER trans_count;
+/*--------------------------------------------*/
+{
+transaction_count = trans_count;
+}
+
+/*--------------------------------------------*/
+ void c_db_connect(host_name,database_name)
 /*--------------------------------------------*/
 char* host_name;
 char* database_name;
@@ -1113,28 +1275,28 @@ result = MtConnect(&database,host_name,database_name,0,0,MTFALSE);
 }
 
 /*--------------------------------------------*/
-public void c_set_context()
+ void c_set_context()
 /*--------------------------------------------*/
 {
 result = MtSetContext(database);
 }
 
 /*--------------------------------------------*/
-public void c_set_no_context()
+ void c_set_no_context()
 /*--------------------------------------------*/
 {
 result = MtNoContext();
 }
 
 /*--------------------------------------------*/
-public void c_disconnect()
+ void c_disconnect()
 /*--------------------------------------------*/
 {
 result = MtDisconnect(database);
 }
 
 /*--------------------------------------------*/
-public void c_start_transaction(priority)
+ void c_start_transaction(priority)
 /*--------------------------------------------*/
 EIF_INTEGER priority;
 {
@@ -1143,7 +1305,7 @@ if MtSuccess(result) transaction_count++;
 }
 
 /*--------------------------------------------*/
-public void c_commit_transaction()
+ void c_commit_transaction()
 /*--------------------------------------------*/
 {
 result = MtCommitTransaction(NULL,NULL);
@@ -1151,7 +1313,7 @@ if MtSuccess(result) transaction_count--;
 }
 
 /*--------------------------------------------*/
-public void c_rollback()
+ void c_rollback()
 /*--------------------------------------------*/
 {
 result = MtAbortTransaction();
@@ -1159,7 +1321,7 @@ if MtSuccess(result) transaction_count--;
 }
 
 /*--------------------------------------------*/
-public void c_set_time(time_name)
+ void c_set_time(time_name)
 /*--------------------------------------------*/
 char* time_name;
 {
@@ -1168,17 +1330,99 @@ result = MtSetTime(time_name);
 
 
 /*--------------------------------------------*/
-public void c_end_time()
+ void c_end_time()
 /*--------------------------------------------*/
 {
 result = MtEndTime();
 }
 
+
 /*--------------------------------------------*/
-public EIF_INTEGER c_transaction_count()
+/* 
+ * MUST BE CALLED AFTER c_admin_connect() to pick up admin context. This
+ * allows multiple contexts to be created, each stored in an Eiffel object
+ */
+EIF_POINTER c_admin_handle()
 /*--------------------------------------------*/
 {
-return(transaction_count);
+    return admin_handle;
+}
+
+/*--------------------------------------------*/
+/* MUST BE CALLED BEFORE c_set_context */
+c_set_admin_handle(hdl)
+RPC_HANDLE hdl;
+/*--------------------------------------------*/
+{
+    admin_handle = hdl;
+}
+
+/*--------------------------------------------*/
+ void c_admin_connect(host_name, database_name)
+/*--------------------------------------------*/
+char* host_name;
+char* database_name;
+{
+    admin_sts = mts_rpc_connect(&admin_handle, host_name, database_name, "mtsoper", 1024, 0);
+}
+
+/*--------------------------------------------*/
+ void c_admin_disconnect()
+/*--------------------------------------------*/
+{
+    admin_sts = mts_rpc_disconnect(admin_handle);
+}
+
+/*--------------------------------------------*/
+void c_admin_collect_and_wait()
+/*--------------------------------------------*/
+{
+    RPC_HANDLE oos_handle;
+
+    /* save the current connection context */
+    admin_sts = mts_rpc_handle(&oos_handle);
+    if (sts_failure (admin_sts))
+        return;
+
+    admin_sts = mts_rpc_set_handle(admin_handle);
+    if (sts_failure (admin_sts))
+        return;
+
+    /* do collect as a background operation */
+    admin_sts = mts_collect (MTS_COLLECT_LEVEL_2);
+    if (sts_failure (admin_sts))
+        return;
+
+    /* wait until the collect is completed */
+    admin_sts = mts_wait_for_adm_operation (MTS_ADMOP_COLLECT_VERSIONS);
+    if (sts_failure (admin_sts))
+        return;
+
+    admin_sts = mts_rpc_set_handle(oos_handle);
+    if (sts_failure (admin_sts))
+        return;
+}
+
+/*--------------------------------------------*/
+ EIF_BOOLEAN c_admin_sts_success()
+/*--------------------------------------------*/
+{
+    return(sts_success(admin_sts));
+}
+
+/*--------------------------------------------*/
+ EIF_INTEGER c_admin_sts()
+/*--------------------------------------------*/
+{
+    return(admin_sts);
+}
+
+/*--------------------------------------------*/
+ EIF_POINTER c_admin_sts_msg()
+/*--------------------------------------------*/
+{
+    sts_msg(admin_msg, admin_sts);
+    return(admin_msg);
 }
 
 /************************/
@@ -1186,35 +1430,35 @@ return(transaction_count);
 /************************/
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_invalid_object()
+ EIF_INTEGER c_invalid_object()
 /*--------------------------------------------*/
 {
 return(mtInvalidObject);
 }
 
 /*--------------------------------------------*/
-public EIF_POINTER c_error()
+ EIF_POINTER c_error()
 /*--------------------------------------------*/
 {
 return(MtError());
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_is_ok()
+ EIF_INTEGER c_is_ok()
 /*--------------------------------------------*/
 {
 return(MtSuccess(result));
 }
 
 /*--------------------------------------------*/
-public EIF_BOOLEAN c_is_check_error()
+ EIF_BOOLEAN c_is_check_error()
 /*--------------------------------------------*/
 {
 return(MtCheckErrorP(result));
 }
 
 /*--------------------------------------------*/
-public void c_perror(head)
+ void c_perror(head)
 /*--------------------------------------------*/
 char* head;
 {
@@ -1222,40 +1466,41 @@ MtPError(head);
 }
 
 /*--------------------------------------------*/
-public EIF_POINTER c_full_error()
+ EIF_POINTER c_full_error()
 /*--------------------------------------------*/
 {
 return(mtErrorStr);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_failure()
+ EIF_INTEGER c_failure()
 /*--------------------------------------------*/
 {
 return(MtFailure(result));
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_result()
+ EIF_INTEGER c_result()
 /*--------------------------------------------*/
 {
 return(result);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_matisse_success()
+ EIF_INTEGER c_matisse_success()
 /*--------------------------------------------*/
 {
 MtSTS one_success = MATISSE_SUCCESS;
 return(one_success);
 }
 
+
 /************************/
 /*	HANDLE_MAT	*/
 /************************/
 
 /*--------------------------------------------*/
-public void c_set_wait_time(wait_time)
+ void c_set_wait_time(wait_time)
 /*--------------------------------------------*/
 EIF_INTEGER wait_time;
 {
@@ -1268,7 +1513,7 @@ result=MtSetWaitTime(wait_time);
 /************************/
 
 /*--------------------------------------------*/
-public void clip(rp,rname,rargs)
+ void clip(rp,rname,rargs)
 /*--------------------------------------------*/
 EIF_POINTER rp,rname,rargs;
 {
@@ -1279,7 +1524,7 @@ result = MtInitialize(1,function);
 }
 
 /*--------------------------------------------*/
-public void c_call_service_function(oid,aid,at_object)
+ void c_call_service_function(oid,aid,at_object)
 /*--------------------------------------------*/
 EIF_INTEGER oid,aid;
 {
@@ -1292,37 +1537,84 @@ eif_wean(at_object);
 /*	MATISSE_IDF_TABLE*/
 /************************/
 
+static int *translation_table;
+
 uint32 *flags ;
 EIF_INTEGER *oids;
 int flags_index=0,oids_index=0;
 
 /*--------------------------------------------*/
-public void c_save_idf_table(c)
+ void c_free_flags()
 /*--------------------------------------------*/
-EIF_INTEGER c;
 {
-MtSetValue(c,"flags",MTU32_ARRAY,flags,1,flags_index);
-MtSetValue(c,"oids",MTS32_ARRAY,oids,1,oids_index);
+    if (flags != NULL) {
+	DEBUG_PRINTF((stderr, "c_free_flags() - flags == 0x%lx\n", flags))
+	free(flags);
+	flags = NULL;
+	flags_index = 0;
+    }
+    else
+        DEBUG_PRINTF((stderr, "c_free_flags() - nothing to do; flags == 0x%lx\n", flags))
+}
+
+void malloc_flags(sz)
+int sz;
+{
+    flags = (uint32*)malloc(sz);
+    DEBUG_PRINTF((stderr, "malloc_flags() - flags == 0x%lx\n", flags))
+}
+
+
+/*--------------------------------------------*/
+ void c_free_oids()
+/*--------------------------------------------*/
+{
+    if (oids != NULL){
+	DEBUG_PRINTF((stderr, "c_free_oids() - oids == 0x%lx\n", oids))
+	free(oids);
+	oids = NULL;
+	oids_index = 0;
+	DEBUG_PRINTF((stderr, "c_free_oids: oids_index RESET to 0\n"))
+    }
+    else
+	DEBUG_PRINTF((stderr, "c_free_oids() - nothing to do; oids == 0x%lx\n", oids))
+}
+
+void malloc_oids(sz)
+int sz;
+{
+    oids = (EIF_INTEGER*) malloc(sz);
+    DEBUG_PRINTF((stderr, "malloc_oids() - oids == 0x%lx\n", oids))
 }
 
 /*--------------------------------------------*/
-public void c_init_flags(c)
+ void c_save_idf_table(c)
 /*--------------------------------------------*/
 EIF_INTEGER c;
 {
-flags = (uint32*) malloc(c*sizeof(uint32));
+    DEBUG_PRINTF((stderr, "c_save_idf_table: storing oids & flags; oids_index == %ld\n", oids_index))
+    MtSetValue(c,"flags",MTU32_ARRAY,flags,1,flags_index);
+    MtSetValue(c,"oids",MTS32_ARRAY,oids,1,oids_index);
 }
 
 /*--------------------------------------------*/
-public void c_init_oids(c)
+ void c_init_flags(c)
 /*--------------------------------------------*/
 EIF_INTEGER c;
 {
-oids =(EIF_INTEGER*) malloc(c*sizeof(EIF_INTEGER));
+    malloc_flags(c*sizeof(uint32));
 }
 
 /*--------------------------------------------*/
-public void c_put_flag(obj)
+ void c_init_oids(c)
+/*--------------------------------------------*/
+EIF_INTEGER c;
+{
+    malloc_oids(c*sizeof(EIF_INTEGER));
+}
+
+/*--------------------------------------------*/
+ void c_put_flag(obj)
 /*--------------------------------------------*/
 EIF_OBJ obj;
 {
@@ -1330,39 +1622,27 @@ uint32 oflags;
 EIF_OBJ object;
 object = obj;
 oflags = HEADER(object)->ov_flags;
-*(flags+flags_index) = oflags;
+
+translation_table = (int *) access_current_table ();
+// *(flags+flags_index) = oflags;
+*(flags+flags_index) = translation_table [oflags&EO_TYPE];
 flags_index++;
 }
 
 
 /*--------------------------------------------*/
-public void c_put_oid(id)
+ void c_put_oid(id)
 /*--------------------------------------------*/
 EIF_INTEGER id;
 {
-*(oids+oids_index) = id;
-oids_index++;
+    *(oids+oids_index) = id;
+    oids_index++;
+    DEBUG_PRINTF((stderr, "c_put_oid: oids_index++ == %ld\n", oids_index))
 }
 
 
 /*--------------------------------------------*/
-public void c_free_flags()
-/*--------------------------------------------*/
-{
-free(flags);
-flags_index = 0;
-}
-
-/*--------------------------------------------*/
-public void c_free_oids()
-/*--------------------------------------------*/
-{
-free(oids);
-oids_index = 0;
-}
-
-/*--------------------------------------------*/
-public EIF_INTEGER c_ith_oid(i)
+ EIF_INTEGER c_ith_oid(i)
 /*--------------------------------------------*/
 EIF_INTEGER i;
 {
@@ -1370,69 +1650,80 @@ return(*(oids+i));
 }
 
 /*--------------------------------------------*/
-public void c_load(one_key)
+ void c_load(one_key)
 /*--------------------------------------------*/
 EIF_INTEGER one_key;
 {
-Value* oids_result, *flags_result;
-EIF_INTEGER i=0;
+    Value* oids_result, *flags_result;
+    EIF_INTEGER i=0;
 
-oids_result = (Value*)malloc(sizeof(Value));
-c_free_oids();
-MtMGetValue(one_key,"oids",&(oids_result->type),&(oids_result->value),&(oids_result->rank),NULL); 
-for (i=0;i<oids_result->rank;i++)
+    oids_result = (Value*)malloc(sizeof(Value));
+oids_result->value = (void*)NULL;	// shouldn't be necessary...
+
+    MtMGetValue(one_key,"oids",&(oids_result->type),&(oids_result->value),&(oids_result->rank),NULL); 
+    for (i=0;i<oids_result->rank;i++)
 	MtGetDimension(one_key,"oids",i,&(oids_result->dimensions[i]));
-if (oids_result->type=MTS32_ARRAY) 
-	{
+
+    c_free_oids();
+    if (oids_result->type == MTS32_ARRAY) {
 	oids_index=oids_result->dimensions[0];
-	oids =(EIF_INTEGER*) malloc(oids_index*sizeof(EIF_INTEGER));
+	DEBUG_PRINTF((stderr, "c_load: oids_index RESET == %ld\n", oids_index))
+	malloc_oids(oids_index*sizeof(EIF_INTEGER));
 	for (i=0;i<oids_index;i++)
-		*(oids+i) = (EIF_INTEGER)*((EIF_INTEGER*)(oids_result->value)+i);
-	};
+	    *(oids+i) = (EIF_INTEGER)*((EIF_INTEGER*)(oids_result->value)+i);
+    };
+// shouldn't have to do this test - it should just work!
+if (oids_result->value != (void*)NULL)
+    MtMFree(oids_result->value);
+free(oids_result);
 
-flags_result = (Value*)malloc(sizeof(Value));
-c_free_flags();
-MtMGetValue(one_key,"flags",&(flags_result->type),&(flags_result->value),&(flags_result->rank),NULL); 
-for (i=0;i<flags_result->rank;i++)
+    flags_result = (Value*)malloc(sizeof(Value));
+flags_result->value = (void*)NULL;	// shouldn't be necessary...
+    MtMGetValue(one_key,"flags",&(flags_result->type),&(flags_result->value),&(flags_result->rank),NULL); 
+
+    for (i=0;i<flags_result->rank;i++)
 	MtGetDimension(one_key,"flags",i,&(flags_result->dimensions[i]));
-if (flags_result->type=MTU32_ARRAY) 
-	{
+
+    c_free_flags();
+    if (flags_result->type == MTU32_ARRAY) {
 	flags_index=flags_result->dimensions[0];
-	flags =(uint32*) malloc(flags_index*sizeof(uint32));
+	malloc_flags(flags_index*sizeof(uint32));
 	for (i=0;i<flags_index;i++)
-		*(flags+i) = (uint32)*((uint32*)(flags_result->value)+i);
-	};
-
-
+	    *(flags+i) = (uint32)*((uint32*)(flags_result->value)+i);
+    };
+// shouldn't have to do this test - it should just work!
+if (oids_result->value != (void*)NULL)
+    MtMFree(flags_result->value);
+free(flags_result);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_oids_index()
+ EIF_INTEGER c_oids_index()
 /*--------------------------------------------*/
 {
 return(oids_index);
 }
 
 /*--------------------------------------------*/
-public EIF_INTEGER c_flags_index()
+ EIF_INTEGER c_flags_index()
 /*--------------------------------------------*/
 {
 return(flags_index);
 }
 
-public EIF_BOOLEAN c_is_ith_special(i)
+ EIF_BOOLEAN c_is_ith_special(i)
 EIF_INTEGER i;
 {
   return((*(flags+i)&EO_SPEC)!=NULL);
 }
 
-public EIF_BOOLEAN c_ith_is_special(i)
+ EIF_BOOLEAN c_ith_is_special(i)
 EIF_INTEGER i;
 {
   return((*(flags+i)&EO_SPEC)!=NULL);
 }
 
-public EIF_REFERENCE c_ith_special(i)
+ EIF_REFERENCE c_ith_special(i)
 EIF_INTEGER i;
 {
 Value* special_result;
@@ -1451,7 +1742,7 @@ a_size = sizeof(special_count);
 special_result = (Value*)malloc(sizeof(Value));
 MtMGetValue(*(oids+i),"eif_size",&(special_result->type),&(special_result->value),&(special_result->rank),NULL); 
 
-if (special_result->type=MTS32) 
+if (special_result->type == MTS32) 
 	{
 	special_size=*(uint32*)(special_result->value);
 	};
@@ -1469,22 +1760,60 @@ ref = new_object + (zone->ov_size&B_SIZE)-LNGPAD(2);
 return(new_object);
 }
 
-public EIF_REFERENCE c_ith_normal(i)
+
+
+EIF_REFERENCE c_ith_normal(EIF_INTEGER i)
+{
+	long nb_char;
+	uint32 normal_flags=*(flags+i);
+	char * new_object = (char *) 0;
+	
+#ifndef WORKBENCH
+	nb_char = esize[(uint16)(normal_flags&EO_TYPE)];
+#else
+	nb_char = esystem[(uint16)(normal_flags&EO_TYPE)].size;
+#endif
+	translation_table = (int *) access_old_table ();	/* Get the table which from the dtype saved
+															 * in the Matisse Database will generate the
+															 * corresponding dtype for the current system */
+	DEBUG_PRINTF((stderr, "normal_flags&EO_TYPE: %ld\n", normal_flags&EO_TYPE))
+	DEBUG_PRINTF((stderr, "translation table entry: %ld\n", translation_table[normal_flags&EO_TYPE]))
+	DEBUG_PRINTF((stderr, "----\n"))
+
+	new_object = emalloc(translation_table [normal_flags&EO_TYPE]);
+	return(new_object);
+}
+
+
+ EIF_REFERENCE c_ith_normal_object(i)
 EIF_INTEGER i;
 {
+EIF_OBJ eif_obj;
+EIF_TYPE_ID eif_type;
+MtKey cid;
+MtType stype;
+MtSize ssize=32;
 long nb_char;
 uint32 normal_flags=*(flags+i);
 char * new_object = (char *) 0;
 
-#ifndef WORKBENCH
-nb_char = esize[(uint16)(normal_flags&EO_TYPE)];
-#else
-nb_char = esystem[(uint16)(normal_flags&EO_TYPE)].size;
-#endif
-new_object = emalloc(normal_flags&EO_TYPE);
-return(new_object);
+	DEBUG_PRINTF((stderr, "oid == 0x%lx\n", c_ith_oid(i) ))
+
+result = MtGetClassFromObject(&cid,c_ith_oid(i));
+
+result = MtGetValue( cid,"Mt Name",&stype,(void*)name,NULL,&ssize,0);
+
+	DEBUG_PRINTF((stderr, "class name == %s\n", (char *)(name)  ))
+
+eif_type = eif_type_id( (char *)(name) );
+
+	DEBUG_PRINTF((stderr, "eif_type_id == %d\n", eif_type ))
+
+eif_obj = eif_create( eif_type );
+
+	DEBUG_PRINTF((stderr, "eif_obj == 0x%1x\n", eif_obj  ))
+
+	return eif_obj;
+
 }
-
-
-
 

@@ -1,18 +1,18 @@
-#include "eiffel.h"
-#include "config.h"
-#include "portable.h"
-#include "malloc.h"
-#include "store.h"
-#include "garcol.h"
-#include "macros.h"
-#include "cecil.h"
-#include "except.h"
-#include "traverse.h"
-#include "struct.h"
-#include "bits.h"
-#include "plug.h"
-#include "run_idr.h"
-#include "except.h"
+#include "eif_eiffel.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_malloc.h"
+#include "eif_store.h"
+#include "eif_garcol.h"
+#include "eif_macros.h"
+#include "eif_cecil.h"
+#include "eif_except.h"
+#include "eif_traverse.h"
+#include "eif_struct.h"
+#include "eif_bits.h"
+#include "eif_plug.h"
+/*#include "eif_run_idr.h"*/
+#include "eif_except.h"
 #include <stdio.h>
 
 
@@ -22,16 +22,16 @@
 
 
 #ifndef WORKBENCH
-  extern long esize[];
+  //extern long esize[];   -- removed by Andrew Perry to avoid plug.h problem
 #endif
 
 
-private void st_store();				/* Second pass of the store */
-public  void ext_gst_write();
-public  void ext_make_header();				/* Make header */
-private void object_write ();
-private void gen_object_write ();
-private void st_clean();
+ void st_store();				/* Second pass of the store */
+  void ext_gst_write();
+  void ext_make_header();				/* Make header */
+ void object_write ();
+ void gen_object_write ();
+ void st_clean();
 
 
 char * new_object = (char *) 0;
@@ -39,33 +39,33 @@ uint32 obj_flags;
 extern char rt_kind;
 extern int r_fides;
 char * old_adress=(char*)NULL;
-private char *s_buffer = (char *) 0;
-private int gen_accounting=0 ;
-private int32*gt_gen=(int32*)0;
+ char *s_buffer = (char *) 0;
+ int gen_accounting=0 ;
+ int32*gt_gen=(int32*)0;
 extern  char* account;
 extern  unsigned int** sorted_attributes;
 extern int scount;
 
-public void c_prepare_header()
+ void c_prepare_header()
 {
   jmp_buf exenv;
   excatch((char*)exenv);
   if (setjmp(exenv)){ereturn();}
 }
 
-public void c_free_account()
+ void c_free_account()
 {
 xfree(account);
 account = (char * )0;
 }
 
-public void c_free_sorted_attributes()
+ void c_free_sorted_attributes()
 {
 xfree(sorted_attributes);
 sorted_attributes = (unsigned int **)0;
 }
 
-public EIF_INTEGER c_gen_traversal(object)
+ EIF_INTEGER c_gen_traversal(object)
 EIF_OBJ object;
 {
   gen_accounting = TR_ACCOUNT;
@@ -79,34 +79,34 @@ EIF_OBJ object;
   return(obj_nb);
 }
 
-public EIF_INTEGER c_dgen()
+ EIF_INTEGER c_dgen()
 {
 return((long)*(gt_gen++));
 }
-public EIF_INTEGER c_scount()
+ EIF_INTEGER c_scount()
 {
 return(scount);
 } 
 
-public EIF_BOOLEAN c_account_item_is_not_null(i)
+ EIF_BOOLEAN c_account_item_is_not_null(i)
 EIF_INTEGER i;
 {
   return(account[i]!=0);
 }
 
-public EIF_INTEGER c_class_size(i)
+ EIF_INTEGER c_class_size(i)
 int i;
 {
 return(Size(i));
 }
 
-public EIF_POINTER c_visible_name(i)
+ EIF_POINTER c_visible_name(i)
 EIF_INTEGER i;
 {
   return(System(i).cn_generator);
 }
 
-public EIF_BOOLEAN c_is_generic(i)
+ EIF_BOOLEAN c_is_generic(i)
 EIF_INTEGER i;
 {
 struct gt_info * info;
@@ -114,7 +114,7 @@ info = (struct gt_info*) ct_value(&ce_gtype,System(i).cn_generator);
 return(info!=(struct gt_info*)0);
 }
 
-public EIF_INTEGER c_nb_gen(i)
+ EIF_INTEGER c_nb_gen(i)
 EIF_INTEGER i;
 {
 struct gt_info * info;
@@ -122,7 +122,7 @@ info = (struct gt_info*) ct_value(&ce_gtype,System(i).cn_generator);
 return(info->gt_param);
 }
 
-public void c_inspect_generics(i)
+ void c_inspect_generics(i)
 EIF_INTEGER i;
 {
 struct gt_info * info;
@@ -139,7 +139,7 @@ gt_type--;
 gt_gen=info->gt_gen+c_nb_gen(i)*(gt_type-info->gt_type);
 
 }
-public EIF_BOOLEAN c_is_special_simples(object)
+ EIF_BOOLEAN c_is_special_simples(object)
 EIF_OBJ object;
 {
   register2 union overhead *zone;
@@ -149,7 +149,7 @@ EIF_OBJ object;
   flags = zone -> ov_flags;
   return ((flags & EO_SPEC) && (!(flags & EO_REF)));
 }
-public EIF_INTEGER c_object_flags(object)
+ EIF_INTEGER c_object_flags(object)
 EIF_OBJ object;
 {
   register2 union overhead *zone;
@@ -160,7 +160,7 @@ EIF_OBJ object;
   return ((uint32)flags);
 }
 
-public EIF_BOOLEAN c_is_special_composites(object)
+ EIF_BOOLEAN c_is_special_composites(object)
 EIF_OBJ object;
 {
   register2 union overhead *zone;
@@ -171,7 +171,7 @@ EIF_OBJ object;
   return ((flags & EO_SPEC) && (flags & EO_REF) && (flags & EO_COMP));
 }
 
-public EIF_BOOLEAN c_is_special_references(object)
+ EIF_BOOLEAN c_is_special_references(object)
 EIF_OBJ object;
 {
   register2 union overhead *zone;
@@ -181,20 +181,20 @@ EIF_OBJ object;
   return ((flags & EO_SPEC) && (flags & EO_REF) && (!(flags & EO_COMP)));
 }
 
-public void c_set_file_descriptor(file_desc)
+ void c_set_file_descriptor(file_desc)
 EIF_INTEGER file_desc;
 {
   fides = (int) file_desc;
   allocate_gen_buffer();
 }
 
-public void c_set_file_descriptor_retrieve(file_desc)
+ void c_set_file_descriptor_retrieve(file_desc)
 EIF_INTEGER file_desc;
 {
   r_fides = (int) file_desc;
 }
 
-public EIF_BOOLEAN c_is_expanded(object)
+ EIF_BOOLEAN c_is_expanded(object)
 EIF_OBJ object;
 {
   register2 union overhead *zone;
@@ -204,19 +204,19 @@ EIF_OBJ object;
   return ((flags & EO_EXP) != (uint32)0);
 }
 
-public EIF_REFERENCE c_read_object_address()
+ EIF_REFERENCE c_read_object_address()
 {
   buffer_read(&old_adress,sizeof(char*));
   return ((char*)old_adress);
 }
 
-public EIF_POINTER c_object_address(object)
+ EIF_POINTER c_object_address(object)
 char*object;
 {
 	return((char *)object);
 }
 
-public EIF_INTEGER c_read_object_flags()
+ EIF_INTEGER c_read_object_flags()
 {
   uint32 flags;
   buffer_read(&flags,sizeof(uint32));
@@ -224,26 +224,26 @@ public EIF_INTEGER c_read_object_flags()
    return ((uint32)flags);
 }
 
-public EIF_BOOLEAN c_read_is_special()
+ EIF_BOOLEAN c_read_is_special()
 {
   return((obj_flags&EO_SPEC)!=NULL);
 }
 
 
-public void  c_buffer_write(data, size_args)
+ void  c_buffer_write(data, size_args)
 EIF_POINTER data;
 int size_args;
 {
   buffer_write(data,size_args*sizeof(char));
 }
 
-public EIF_BOOLEAN c_is_special_object(object)
+ EIF_BOOLEAN c_is_special_object(object)
 char *object;
 {
   return((HEADER(object)->ov_flags&EO_SPEC)!=0);
 }
 
-public EIF_INTEGER c_gen_special_count(object)
+ EIF_INTEGER c_gen_special_count(object)
 char * object;
 {
 char *o_ptr;
@@ -253,7 +253,7 @@ o_ptr = (char*) (object+(HEADER(object)->ov_size & B_SIZE)-LNGPAD(2));
 return((uint32)(*(long*)o_ptr));
 }
 
-public EIF_INTEGER c_gen_special_elm_size(object)
+ EIF_INTEGER c_gen_special_elm_size(object)
 char * object;
 {
 char *o_ptr;
@@ -262,7 +262,7 @@ o_ptr = (char*) (object+(HEADER(object)->ov_size & B_SIZE)-LNGPAD(2));
 return((uint32)(*(long*)(o_ptr+sizeof(long*))));
 }
 
-public EIF_INTEGER c_size_of_special(object)
+ EIF_INTEGER c_size_of_special(object)
 char *object;
 {
 /*  EIF_INTEGER size;
@@ -276,7 +276,7 @@ char *object;
   return( (HEADER(object)->ov_size&B_SIZE)*sizeof(char));
 }
 
-public EIF_INTEGER c_size_of_normal_flag(object)
+ EIF_INTEGER c_size_of_normal_flag(object)
 char *object;
 {
   register2 union overhead *zone;
@@ -289,7 +289,7 @@ char *object;
 }
 
 
-public EIF_INTEGER c_size_of_normal(pointer)
+ EIF_INTEGER c_size_of_normal(pointer)
 EIF_POINTER pointer;
 {
   register2 union overhead *zone;
@@ -298,7 +298,7 @@ EIF_POINTER pointer;
   return(Size((uint16)(flags&EO_TYPE))*sizeof(char));
 }
 
-public void c_write_basic_store_3_2()
+ void c_write_basic_store_3_2()
 {
   char kind_of_store;
   int n;
@@ -306,7 +306,7 @@ public void c_write_basic_store_3_2()
   write(fides,&kind_of_store,sizeof(char));
 }
 
-public void c_write_general_store_3_3()
+ void c_write_general_store_3_3()
 {
   char kind_of_store;
   int n;
@@ -315,7 +315,7 @@ public void c_write_general_store_3_3()
 }
 
 
-public EIF_BOOLEAN c_is_basic_store_3_2()
+ EIF_BOOLEAN c_is_basic_store_3_2()
 {
   char kind_of_store;
   read(r_fides,&kind_of_store,sizeof(char));
@@ -324,7 +324,7 @@ public EIF_BOOLEAN c_is_basic_store_3_2()
 return(kind_of_store == BASIC_STORE_3_2);
 }
 
-public EIF_BOOLEAN c_is_general_store_3_3()
+ EIF_BOOLEAN c_is_general_store_3_3()
 {
   char kind_of_store;
   read(r_fides,&kind_of_store,sizeof(char));
@@ -333,27 +333,27 @@ public EIF_BOOLEAN c_is_general_store_3_3()
   return(kind_of_store == GENERAL_STORE_3_3);
 }
 
-public void c_write_objects_count(object_nb)
+ void c_write_objects_count(object_nb)
 EIF_INTEGER object_nb;
 {
   obj_nb = object_nb;
   buffer_write(&obj_nb,sizeof(long));
 }
 
-public EIF_INTEGER c_read_objects_count()
+ EIF_INTEGER c_read_objects_count()
 {
   long obj_count;
   buffer_read(&obj_count,sizeof(long));
   return(obj_count);
 }
 
-public void st_store_sol(object)
+ void st_store_sol(object)
 char * object;
 {
 /* Do nothing */
 }
 
-public int buffer_read(object,size)
+ int buffer_read(object,size)
 register char * object;
 int size;
 {
@@ -380,7 +380,7 @@ return(i);
 }
 
 
-public EIF_REFERENCE c_retrieved_special()
+ EIF_REFERENCE c_retrieved_special()
 {
   uint32 count,special_size=0,elm_size;
   long nb_char;
@@ -393,7 +393,7 @@ public EIF_REFERENCE c_retrieved_special()
   return(new_object);
 }
 
-public EIF_REFERENCE c_retrieved_normal()
+ EIF_REFERENCE c_retrieved_normal()
 {
   long nb_char;
   
@@ -411,7 +411,7 @@ public EIF_REFERENCE c_retrieved_normal()
   return(new_object);
 }
 
-public char * pointer_on_field(i,object)
+ char * pointer_on_field(i,object)
 long i;
 char * object;
 {
@@ -432,21 +432,21 @@ o_ref = object+offset;
 return o_ref;
 }
 
-public EIF_REFERENCE pointer_inside_field(i,object)
+ EIF_REFERENCE pointer_inside_field(i,object)
 long i;
 char * object;
 {
 return *(char**)pointer_on_field(i,object);
 }
 
-public void change_inside_field(source,target)
+ void change_inside_field(source,target)
 char *source,*target;
 {
 *(char**)target=source;
 }
 
 
-public EIF_REFERENCE pointer_on_special_item(i,object)
+ EIF_REFERENCE pointer_on_special_item(i,object)
 long i;
 char * object;
 {
@@ -456,7 +456,7 @@ ref+= sizeof(EIF_REFERENCE)*i;
 return((char*)(ref));
 }
 
-public EIF_REFERENCE pointer_inside_special_item(i,object)
+ EIF_REFERENCE pointer_inside_special_item(i,object)
 long i;
 char * object;
 {
@@ -467,7 +467,7 @@ return *(char**)pointer_on_special_item(i,object);
 
 
 
-private void ext_st_clean()
+ void ext_st_clean()
 {
   /* clean up memory allocation and reset function pointers */
   
@@ -482,7 +482,7 @@ private void ext_st_clean()
   free_sorted_attributes();
 }
 
-private void ext_gen_object_write(object)
+ void ext_gen_object_write(object)
      char * object;
 {
   /* Writes an object to disk (used by the new (3.3) general store)
@@ -620,7 +620,7 @@ private void ext_gen_object_write(object)
   }
 }
 
-public void ext_gst_write(object)
+ void ext_gst_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
@@ -659,7 +659,7 @@ char *object;
 
 
 
-public void ext_make_header()
+ void ext_make_header()
 {
   
   /* Generate header for stored hiearchy retrivable by other systems. */
@@ -760,14 +760,14 @@ public void ext_make_header()
 	expop(&eif_stack);
 }
 
-public EIF_CHARACTER c_i_th(object,i)
+ EIF_CHARACTER c_i_th(object,i)
 EIF_POINTER object;
 EIF_INTEGER i ;
 {
 return((EIF_CHARACTER)*(object+sizeof(char)*i));
 }
 
-public EIF_CHARACTER c_index0(index)
+ EIF_CHARACTER c_index0(index)
 EIF_INTEGER index;
 {
 int *pindex=(int*)&index;
@@ -775,7 +775,7 @@ char result;
 return((EIF_CHARACTER)*pindex);
 }
 
-public EIF_CHARACTER  c_index(index,i)
+ EIF_CHARACTER  c_index(index,i)
      EIF_INTEGER index;
 {
 
@@ -785,7 +785,7 @@ public EIF_CHARACTER  c_index(index,i)
   return(*(pindex+(3-i)));
 }
 
-public EIF_CHARACTER  c_index_ref(index,i)
+ EIF_CHARACTER  c_index_ref(index,i)
      EIF_POINTER index;
 {
 
@@ -793,19 +793,19 @@ public EIF_CHARACTER  c_index_ref(index,i)
   return(*(pindex+(3-i)));
 }
 
-public void put_char_in_special_char(target,value)
+ void put_char_in_special_char(target,value)
 char *target,value;
 {
 *target=value;
 }
 
-public void put_ref_in_special_char(target,value)
+ void put_ref_in_special_char(target,value)
 char *target,*value;
 {
 *(char**)target=value;
 }
 
-public void put_int_in_special_char(target,value)
+ void put_int_in_special_char(target,value)
 char *target; 
 int value;
 {
@@ -813,7 +813,7 @@ int value;
 }
  
 
-public EIF_REFERENCE pointer_on_special_item_char(i,object)
+ EIF_REFERENCE pointer_on_special_item_char(i,object)
 long i;
 char * object;
 {

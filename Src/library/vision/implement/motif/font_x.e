@@ -22,18 +22,41 @@ creation
 
 	make
 
+feature {FONTABLE_X}
+
+	set_default_font (font_ptr: POINTER) is
+		local
+			null_pointer: POINTER
+		do
+			if null_pointer /= font_ptr then
+				is_specified := true;
+				default_font_pointer := font_ptr
+			end;
+		end
+
 feature {NONE}
+
+	default_font_pointer: POINTER;
+			-- Default font pointer if name has not been specified (XFontStruct)
+
+	has_default_font: BOOLEAN is
+		local
+			null_pointer: POINTER
+		do
+			Result := default_font_pointer /= null_pointer
+		end;
 
 	is_used_by (a_widget: WIDGET): BOOLEAN is
 			-- Is `a_widget' using this resource ?
 		require else
-			a_widget_exists: not (a_widget = Void)
+			a_widget_exists: a_widget /= Void
 		local
 			fontable: FONTABLE
 		do
 			if a_widget.is_fontable then
 				fontable ?= a_widget;
-				Result := (not (fontable.font = Void)) and then (fontable.font.implementation = Current)
+				Result := (not (fontable.font = Void)) and then 
+							(fontable.font.implementation = Current)
 			end
 		ensure then
 			(number_of_uses = 0) implies (not Result)
@@ -50,7 +73,7 @@ feature
 		do
 			Result := c_ascent (resource (a_widget.screen))
 		ensure then
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	average_width: INTEGER is
@@ -62,7 +85,7 @@ feature
 			parse_if_not_yet;
 			Result := average_width_private
 		ensure then
-			average_width >= 0
+			valid_result: Result >= 0
 		end;
 
 	
@@ -82,9 +105,13 @@ feature
 			font_standard: is_standard
 		do
 			parse_if_not_yet;
-			Result := character_set_private
+			if has_default_font then
+				Result := ""
+			else
+				Result := character_set_private
+			end
 		ensure then
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
 
 	
@@ -99,7 +126,7 @@ feature
 	make (a_font: FONT) is
 			-- Create a font.
 		require
-			a_font_exits: not (a_font = Void)
+			a_font_exits: a_font /= Void
 		do
 			resources_x_make;
 		ensure
@@ -116,7 +143,7 @@ feature
 		do
 			Result := c_descent (resource (a_widget.screen))
 		ensure then
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	family: STRING is
@@ -126,21 +153,23 @@ feature
 			font_standard: is_standard
 		do
 			parse_if_not_yet;
-			Result := family_private
+			if has_default_font then
+				Result := ""
+			else
+				Result := family_private
+			end
 		ensure then
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
-
 	
 feature {NONE}
 
 	family_private: STRING;
 			-- Family name (Courier, Helvetica...)
 
-	
 feature 
 
-	n_ame: STRING;
+	name: STRING;
 			-- Name of the font
 
 	foundry: STRING is
@@ -150,9 +179,13 @@ feature
 			font_standard: is_standard
 		do
 			parse_if_not_yet;
-			Result := foundry_private
+			if has_default_font then
+				Result := ""
+			else
+				Result := foundry_private
+			end
 		ensure then
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
 
 	
@@ -200,7 +233,7 @@ feature {NONE}
 			-- Horizontal resolution of screen for which the font is designed
 
 	is_parsed: BOOLEAN;
-			-- Is `n_ame' parsed and values available ?
+			-- Is `name' parsed and values available ?
 
 	
 feature 
@@ -236,7 +269,6 @@ feature
 			Result := is_standard_private
 		end;
 
-	
 feature {NONE}
 
 	is_standard_private: BOOLEAN;
@@ -276,7 +308,7 @@ feature {NONE}
 		end;
 
 	parse_name is
-			-- Parse `n_ame' and set values.
+			-- Parse `name' and set values.
 		require
 			is_specified;
 			not is_parsed
@@ -286,22 +318,22 @@ feature {NONE}
 			parsed: ARRAY [STRING]
 		do
 			is_parsed := true;
-			if n_ame.item (1) = '-' then
+			if name.item (1) = '-' then
 				from
 					pos := 1;
 					!! parsed.make (1, 13);
 					number := 1
 				until
-					(pos > n_ame.count) or (number = 13)
+					(pos > name.count) or (number = 13)
 				loop
-					new_pos := next_minus (n_ame, pos);
+					new_pos := next_minus (name, pos);
 					if pos < new_pos-1 then
-						parsed.put (n_ame.substring (pos+1, new_pos-1), number)
+						parsed.put (name.substring (pos+1, new_pos-1), number)
 					end;
 					number := number+1;
 					pos := new_pos
 				end;
-				if pos <= n_ame.count then
+				if pos <= name.count then
 					foundry_private := parsed.item (1);
 					family_private := parsed.item (2);
 					weight_private := parsed.item (3);
@@ -313,7 +345,7 @@ feature {NONE}
 					vertical_resolution_private := parsed.item (10).to_integer;
 					is_proportional_private := parsed.item (11).item (1) = 'p';
 					average_width_private := parsed.item (12).to_integer;
-					character_set_private := n_ame.substring (pos+1, n_ame.count);
+					character_set_private := name.substring (pos+1, name.count);
 					is_standard_private := true
 				end
 			end
@@ -322,7 +354,7 @@ feature {NONE}
 		end;
 
 	parse_if_not_yet is
-			-- Parse `n_ame' if it isn't yet parsed.
+			-- Parse `name' if it isn't yet parsed.
 		do
 			if not is_parsed then
 				parse_name
@@ -352,7 +384,6 @@ feature {NONE}
 	pixel_size_private: INTEGER;
 			-- Size of font in pixel
 
-	
 feature 
 
 	point: INTEGER is
@@ -384,26 +415,30 @@ feature
 			a_resource: RESOURCE_X;
 			ext_name: ANY
 		do
-			a_resource := find_same_display (a_screen);
-			if (a_resource = Void) then
-				ext_name := n_ame.to_c;
-				Result := x_load_query_font (a_screen.screen_object, $ext_name);
-				!FONT_RES_X! a_resource.make (a_screen, Result, true);
-				put_front (a_resource);
+			if has_default_font then
+				Result := default_font_pointer
 			else
-				Result := a_resource.identifier
+				a_resource := find_same_display (a_screen);
+				if (a_resource = Void) then
+					ext_name := name.to_c;
+					Result := x_load_query_font (a_screen.screen_object, $ext_name);
+					!FONT_RES_X! a_resource.make (a_screen, Result, true);
+					put_front (a_resource);
+				else
+					Result := a_resource.identifier
+				end
 			end
 		end;
 
 	set_name (a_name: STRING) is
-			-- Set `n_ame' to `a_name'.
-		require else
-			a_name_exists: not (a_name = Void)
+			-- Set `name' to `a_name'.
 		local
-			widgets_to_update: LINKED_LIST [FONTABLE_X]
+			widgets_to_update: LINKED_LIST [FONTABLE_X];
+			null_pointer: POINTER
 		do
+			default_font_pointer := null_pointer
 			free_resources;
-			n_ame := clone (a_name);
+			name := clone (a_name);
 			is_specified := true;
 			is_parsed := false;
 			from
@@ -488,9 +523,13 @@ feature
 			font_standard: is_standard
 		do
 			parse_if_not_yet;
-			Result := width_private
+			if has_default_font then
+				Result := ""
+			else
+				Result := width_private
+			end
 		ensure then
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
 
 	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER is
@@ -502,11 +541,11 @@ feature
 			font_valid_for_a_widget: is_valid (a_widget)
 		local
 			ext_name_text: ANY
-			do
+		do
 			ext_name_text := a_text.to_c;
-					Result := c_string_width (resource (a_widget.screen), $ext_name_text)
+			Result := c_string_width (resource (a_widget.screen), $ext_name_text)
 		ensure then
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	
@@ -516,12 +555,12 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	c_string_width (value: POINTER; name: ANY): INTEGER is
+	c_string_width (value: POINTER; font_name: ANY): INTEGER is
 		external
 			"C"
 		end;
 
-	x_load_query_font (scr_obj: POINTER; name: ANY): POINTER is
+	x_load_query_font (scr_obj: POINTER; font_name: ANY): POINTER is
 		external
 			"C"
 		end;

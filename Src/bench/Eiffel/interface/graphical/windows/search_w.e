@@ -60,7 +60,7 @@ feature -- Access
 			new_x, new_y: INTEGER;
 			p: like parent
 		do
-			if tool.has_editable_text then
+			if tool.able_to_edit then
 				set_replace
 			else
 				set_search

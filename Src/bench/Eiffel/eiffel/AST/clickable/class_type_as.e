@@ -22,16 +22,39 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (n: like class_name; g: like generics) is
+	initialize (n: like class_name; g: like generics; a_is_ref, a_is_exp, a_is_sep: BOOLEAN) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
 		do
 			class_name := n
+			class_name.to_upper
 			generics := g
+			is_reference := a_is_ref
+			is_expanded := a_is_exp
+			if a_is_exp then
+				record_expanded
+			end
+			is_separate := a_is_sep
 		ensure
-			class_name_set: class_name = n
+			class_name_set: class_name.is_equal (n.as_upper)
 			generics_set: generics = g
+			is_reference_set: is_reference = a_is_ref
+			is_expanded_set: is_expanded = a_is_exp
+			is_separate_st: is_separate = a_is_sep
+		end
+
+feature {NONE} -- Initialization
+
+	record_expanded is
+			-- This must be done before pass2 `solved_type' and `actual type'
+			-- are called in pass3 for local variables
+		do
+			System.set_has_expanded
+			check
+				system_initialized: System.current_class /= Void
+			end
+			System.current_class.set_has_expanded
 		end
 
 feature -- Visitor
@@ -53,13 +76,24 @@ feature -- Attributes
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
+	is_reference: BOOLEAN
+			-- Is current type used with `reference' keyword?
+	
+	is_expanded: BOOLEAN
+			-- Is current type used with `expanded' keyword?
+			
+	is_separate: BOOLEAN
+			-- Is current type used with `separate' keyword?
+			
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
-				equivalent (generics, other.generics)
+				equivalent (generics, other.generics) and then
+				is_reference = other.is_reference and then
+				is_expanded = other.is_expanded
 		end
 
 feature -- Access
@@ -77,41 +111,6 @@ feature -- Access
 					generics.forth
 				end
 			end
-		end
-
-feature {NONE} -- Status report
-
-	is_tuple (a_class_i: CLASS_I): BOOLEAN is
-			-- Is it a TUPLE type?
-		require
-			a_class_i_not_void: a_class_i /= Void
-		do
-			check
-				tuple_class_not_void: System.tuple_class /= Void
-			end
-			Result := System.tuple_class.compiled_class = a_class_i.compiled_class
-		end
-
-	is_native_array (a_class_i: CLASS_I): BOOLEAN is
-			-- Is it a NATIVE_ARRAY type?
-		require
-			a_class_i_not_void: a_class_i /= Void
-		local
-			l_native: CLASS_I
-		do
-			l_native := System.native_array_class
-			Result := l_native /= Void and then (l_native.compiled_class = a_class_i.compiled_class)
-		end
-		
-	is_typed_pointer (a_class_i: CLASS_I): BOOLEAN is
-			-- Is it a TYPED_POINTER type?
-		require
-			a_class_i_not_void: a_class_i /= Void
-		do
-			check
-				typed_pointer_class_not_void: System.typed_pointer_class /= Void
-			end
-			Result := System.typed_pointer_class.compiled_class = a_class_i.compiled_class
 		end
 
 feature -- Conveniences
@@ -134,16 +133,8 @@ feature -- Conveniences
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
-						if is_tuple (l_class_i) then
-							create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
-						elseif is_native_array (l_class_i) then
-							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id,
-								actual_generic)
-						elseif is_typed_pointer (l_class_i) then
-							create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
-						else
-							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
-						end
+						Result := l_class.partial_actual_type (actual_generic, is_reference,
+							is_expanded, is_separate)
 					until
 						i > count or else abort
 					loop
@@ -156,24 +147,12 @@ feature -- Conveniences
 						i := i + 1
 					end
 				else
-					if is_tuple (l_class_i) then
-						create actual_generic.make (1, 0)
-						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
-					else
-						if not l_class.is_generic then
-							Result := l_class.actual_type
-						else
-							create Result.make (l_class.class_id)
-						end
-					end
+					Result := l_class.partial_actual_type (Void, is_reference, is_expanded,
+						is_separate)
 				end
 
 				if abort then
 					Result := Void
-				else
-					if not Result.is_basic then
-						Result.set_is_true_expanded (l_class.is_expanded)
-					end
 				end
 			end
 		end
@@ -185,49 +164,34 @@ feature -- Conveniences
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 		do
+				-- Lookup class in universe, it should be present.
+			check
+				class_found: Universe.class_named (class_name, Inst_context.cluster) /= Void
+			end
 			l_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
+
+			check
+				class_found_is_compiled: l_class /= Void
+			end
 
 			if generics /= Void then
 				from
 					i := 1
 					count := generics.count
 					create actual_generic.make (1, count)
-					if is_tuple (l_class.lace_class) then
-						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
-					elseif is_native_array (l_class.lace_class) then
-						create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
-					elseif is_typed_pointer (l_class.lace_class) then
-						create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
-					else
-						create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
-					end
+					Result := l_class.partial_actual_type (actual_generic, is_reference,
+						is_expanded, is_separate)
 				until
 					i > count
 				loop
-					actual_generic.put
-						(generics.i_th (i).solved_type (feat_table, f), i)
+					actual_generic.put (generics.i_th (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
 			else
-				if is_tuple (l_class.lace_class) then
-					create actual_generic.make (1, 0)
-					create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
-				end
+				Result := l_class.partial_actual_type (Void, is_reference, is_expanded, is_separate)
 			end
-
-			if Result = Void then
-				if not l_class.is_generic then
-					Result := l_class.actual_type
-				else
-					create Result.make (l_class.class_id)
-				end
-			end
-
-				-- Base type class is expanded
-			if not Result.is_basic then
-				Result.set_is_true_expanded (l_class.is_expanded)
-			end
-			if l_class.is_expanded then
+			if Result.is_expanded and not Result.is_basic then
+					-- Only record when necessary.
 				record_exp_dependance (l_class)
 			end
 		end
@@ -244,7 +208,7 @@ feature -- Conveniences
 			a_cluster := Inst_context.cluster
 			l_class_i := Universe.class_named (class_name, a_cluster)
 				-- Bug fix: `append_signature' can be called on invalid
-				-- types by the error mechanism
+				-- types by the error mechanism, thus the protection
 			if l_class_i /= Void and then l_class_i.compiled_class /= Void then
 				l_class := l_class_i.compiled_class
 				if generics /= Void then
@@ -252,16 +216,8 @@ feature -- Conveniences
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
-						if is_tuple (l_class_i) then
-							create {TUPLE_TYPE_A} Result.make  (l_class.class_id, actual_generic)
-						elseif is_native_array (l_class_i) then
-							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id,
-								actual_generic)
-						elseif is_typed_pointer (l_class_i) then
-							create {TYPED_POINTER_A} Result.make (l_class.class_id, actual_generic)
-						else
-							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
-						end
+						Result := l_class.partial_actual_type (actual_generic, is_reference,
+							is_expanded, is_separate)
 					until
 						i > count
 					loop
@@ -269,25 +225,12 @@ feature -- Conveniences
 						i := i + 1
 					end
 				else
-					if is_tuple (l_class_i) then
-						create actual_generic.make (1, 0)
-						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
-					end
+					Result := l_class.partial_actual_type (Void, is_reference, is_expanded,
+						is_expanded)
 				end
 
-				if Result = Void then
-					if not l_class.is_generic then
-						Result := l_class.actual_type
-					else
-						create Result.make (l_class.class_id)
-					end
-				end
-
-						-- Base type class is expanded
-				if not Result.is_basic then
-					Result.set_is_true_expanded (l_class.is_expanded)
-				end
-				if l_class.is_expanded then
+				if Result.is_expanded and not Result.is_basic then
+						-- Only record when necessary.
 					record_exp_dependance (l_class)
 				end
 			end
@@ -307,6 +250,7 @@ feature -- Conveniences
 			t1, t2: TYPE
 			pos: INTEGER
 			is_tuple_type : BOOLEAN
+			l_gen_type: GEN_TYPE_A
 		do
 			if has_like then
 				create vcfg3
@@ -323,8 +267,8 @@ feature -- Conveniences
 					Error_handler.insert_error (vtct)
 					error_handler.raise_error
 				else
-					is_tuple_type := is_tuple (class_i)
 					associated_class := class_i.compiled_class
+					is_tuple_type := associated_class.is_tuple
 					cl_generics := associated_class.generics
 						-- TUPLEs can have any number of generics
 					if not is_tuple_type then
@@ -358,8 +302,15 @@ feature -- Conveniences
 							end
 							temp.go_i_th (pos)
 							from
+								l_gen_type ?= actual_type
+								check
+										-- Should be not Void since we have
+										-- some generic parameters
+									l_gen_type_not_void: l_gen_type /= Void
+								end
 								generics.start
 								cl_generics.start
+								pos := 1
 							until
 								generics.after or else error
 							loop
@@ -371,10 +322,11 @@ feature -- Conveniences
 									t2 := cl_generics.item.constraint
 									if t2 /= Void then
 										t1.actual_type.check_const_gen_conformance
-											(t2.actual_type, a_class)
+											(l_gen_type, t2.actual_type, a_class, pos)
 										error := Error_handler.new_error
 									end
 								end
+								pos := pos + 1
 								generics.forth
 								cl_generics.forth
 							end
@@ -432,15 +384,12 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT) is
 		local
 			class_i: CLASS_I
-			c_name: STRING
 		do
-			c_name := class_name.as_lower
 			class_i := associated_classi
-			c_name.to_upper
 			if class_i = Void then
-				st.add_string (c_name)
+				st.add_string (class_name)
 			else
-				st.add_classi (class_i, c_name)
+				st.add_classi (class_i, class_name)
 			end
 			if generics /= Void then
 				from
@@ -488,12 +437,8 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-		local
-			s: STRING
 		do
-			s := class_name.as_upper
-
-			ctxt.put_class_name (s)
+			ctxt.put_class_name (class_name)
 			if generics /= Void then
 				ctxt.put_space
 				ctxt.put_text_item_without_tabs (ti_L_bracket)
@@ -520,12 +465,9 @@ feature {COMPILER_EXPORTER} -- Conveniences
 
 	dump: STRING is
 			-- Dumped string
-		local
-			dumped_class_name: STRING
 		do
 			create Result.make (class_name.count)
-			dumped_class_name := class_name.as_upper
-			Result.append (dumped_class_name)
+			Result.append (class_name)
 			if generics /= Void then
 				from
 					generics.start; 

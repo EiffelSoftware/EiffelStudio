@@ -25,6 +25,9 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	buffer_locked_in_format_mode: BOOLEAN
@@ -41,6 +44,9 @@ feature -- Status report
 		deferred
 		ensure
 			index_valid: Result >= 1 and Result <= text_length
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
@@ -52,6 +58,9 @@ feature -- Status report
 		ensure
 			position_valid: Result.x >= 0 and Result.x <= width and
 				Result.y >= 0 and Result.y <= height
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	character_displayed (an_index: INTEGER): BOOLEAN is
@@ -59,6 +68,10 @@ feature -- Status report
 		require
 			index_valid: an_index >= 1 and an_index <= text_length
 		deferred
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	tab_positions: ACTIVE_LIST [INTEGER]
@@ -70,6 +83,9 @@ feature -- Status report
 		deferred
 		ensure
 			result_positive: Result > 0
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 feature -- Status setting
@@ -80,6 +96,10 @@ feature -- Status setting
 		require
 			format_not_void: format /= Void
 		deferred
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -91,6 +111,9 @@ feature -- Status setting
 		deferred
 		ensure
 			text_not_changed: text.is_equal (old text)
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -145,6 +168,9 @@ feature -- Status setting
 		deferred
 		ensure
 			tab_width_set: tab_width = a_width
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 	
 feature {NONE} -- Implementation

@@ -469,7 +469,6 @@ feature -- Code generation
 		local
 			entry_type_token: INTEGER
 			l_sig: like method_sig
-			l_module: IL_MODULE
 			l_type_id: INTEGER
 		do
 			l_type_id := a_class_type.static_type_id

@@ -2292,16 +2292,19 @@ feature
 			-- Mark the class as used in the system
 			-- and propagate to the suppliers
 			-- Used by remove_useless_classes in SYSTEM_I
+		local
+			l_syntactical_suppliers: like syntactical_suppliers
 		do
 			if not marked_classes.has (class_id) then
 				marked_classes.put (class_id)
 				from
-					syntactical_suppliers.start
+					l_syntactical_suppliers := syntactical_suppliers
+					l_syntactical_suppliers.start
 				until
-					syntactical_suppliers.after
+					l_syntactical_suppliers.after
 				loop
-					syntactical_suppliers.item.mark_class (marked_classes)
-					syntactical_suppliers.forth
+					l_syntactical_suppliers.item.mark_class (marked_classes)
+					l_syntactical_suppliers.forth
 				end
 			end
 		end
@@ -2568,13 +2571,15 @@ feature -- Supplier checking
 		local
 			a_class: CLASS_C
 			recompile: BOOLEAN
+			l_syntactical_suppliers: like syntactical_suppliers
 		do
 			from
-				syntactical_suppliers.start
+				l_syntactical_suppliers := syntactical_suppliers
+				l_syntactical_suppliers.start
 			until
-				syntactical_suppliers.after or else recompile
+				l_syntactical_suppliers.after or else recompile
 			loop
-				a_class := syntactical_suppliers.item
+				a_class := l_syntactical_suppliers.item
 				Universe.compute_last_class (a_class.name, cluster)
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
@@ -2585,7 +2590,7 @@ feature -- Supplier checking
 						Workbench.add_class_to_recompile (lace_class)
 					end
 				end
-				syntactical_suppliers.forth
+				l_syntactical_suppliers.forth
 			end
 		end
 
@@ -2865,13 +2870,15 @@ feature -- Propagation
 			-- Order relation on classes
 		local
 			class_i: CLASS_I
+			l_syntactical_clients: like syntactical_clients
 		do
 			from
-				syntactical_clients.start
+				l_syntactical_clients := syntactical_clients
+				l_syntactical_clients.start
 			until
-				syntactical_clients.after
+				l_syntactical_clients.after
 			loop
-				class_i := syntactical_clients.item.lace_class
+				class_i := l_syntactical_clients.item.lace_class
 				debug ("REMOVE_CLASS")
 					io.error.putstring ("Propagation to client: ")
 					io.error.putstring (class_i.name)
@@ -2879,7 +2886,7 @@ feature -- Propagation
 				end
 				workbench.add_class_to_recompile (class_i)
 				class_i.set_changed (True)
-				syntactical_clients.forth
+				l_syntactical_clients.forth
 			end
 		end
 

@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			!!Result
 		end
 
-	current_menu: EV_MENU_ITEM_CONTAINER_IMP
+	current_menu: EV_MENU_CONTAINER_IMP
 			-- The current menu of the window.
 
 end -- class EV_WINDOW_IMP

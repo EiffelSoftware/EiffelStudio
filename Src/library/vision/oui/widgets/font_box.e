@@ -40,9 +40,10 @@ feature {NONE} -- Creation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
-			implementation:= toolkit.font_box (Current, man);
+			identifier := clone (a_name);
+			implementation := toolkit.font_box (Current, man);
 			set_default
+			implementation.set_widget_default;
 		end;
 
 feature

@@ -59,6 +59,7 @@ feature {NONE} -- Creation
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
 			implementation:= toolkit.radio_box (Current, man);
+			implementation.set_widget_default;
 			set_default
 		ensure
 			Parent_set: parent = a_parent;

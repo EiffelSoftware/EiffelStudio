@@ -61,8 +61,9 @@ feature {NONE} -- Creation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
-			implementation:= toolkit.arrow_b (Current, man);
+			identifier := clone (a_name);
+			implementation := toolkit.arrow_b (Current, man);
+			implementation.set_widget_default;
 			set_default
 		end;
 

@@ -69,7 +69,7 @@ feature -- Status setting
 		do
 			a ?= txt.to_c
 			delete_text (0, text_length)
-			insert_text (text)
+			insert_text (txt)
 		end
 	
 	append_text (txt: STRING) is

@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			elseif l_args.args_ok then				
 				l_args.launch_command_line
 			else
-				io.putstring (l_args.argument_error)
-				io.putstring ("%NPress any key to finish execution...")
+				io.put_string (l_args.argument_error)
+				io.put_string ("%NPress any key to finish execution...%N")
 				io.read_character
 			end		
 		end

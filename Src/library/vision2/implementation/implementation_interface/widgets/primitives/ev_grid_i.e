@@ -694,6 +694,44 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 
 	physical_column_count: INTEGER
 		-- Number of physical columns stored in `row_list'
+		
+	recompute_row_offsets (an_index: INTEGER) is
+			-- Recompute contents of `row_offsets' from row index
+			-- `an_index' to `row_count'.
+		require
+			an_index_valid: an_index >= 0 and an_index <= row_count
+			pop: grid_rows.count >= an_index
+		local
+			i: INTEGER
+		do
+			if row_offsets = Void then
+				create row_offsets.make (row_count)
+				row_offsets.extend (0)
+				grid_rows.start
+			else
+				i := row_offsets @ (an_index)
+				grid_rows.go_i_th (an_index)
+			end
+			
+			from
+			until
+				grid_rows.off
+			loop
+				if grid_rows.item /= Void then
+					i := i + grid_rows.item.height
+				else
+					i := i + 16
+				end
+				if grid_rows.index < row_offsets.count then
+					row_offsets.put_i_th (i, grid_rows.index + 1)
+				else
+					row_offsets.extend (i)
+				end
+				grid_rows.forth
+			end
+		ensure
+			offsets_consistent: row_offsets.count = grid_rows.count + 1
+		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I} -- Implementation
 
@@ -705,7 +743,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 	row_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each row in pixels.
 		-- For example, if there are 5 rows, each with a height of 16 pixels,
-		-- `column_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
+		-- `row_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
@@ -808,32 +846,6 @@ feature {NONE} -- Drawing implementation
 			end
 		ensure
 			counts_equal: column_offsets.count = column_count + 1
-		end
-		
-	recompute_row_offsets (an_index: INTEGER) is
-			-- Recompute contents of `row_offsets' from row index
-			-- `an_index' to `row_count'.
-		require
-			an_index_valid: an_index >= 0 and an_index <= row_count
-		local
-			i: INTEGER
-		do
-			if row_offsets = Void then
-				create row_offsets.make (row_count)
-				row_offsets.extend (0)
-				grid_rows.start
-			else
-				i := row_offsets @ (an_index)
-				grid_rows.go_i_th (an_index)
-			end
-			from			
-			until
-				grid_rows.off
-			loop
-				i := i + grid_rows.item.height
-				row_offsets.extend (i)
-				grid_rows.forth
-			end
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
@@ -1325,14 +1337,15 @@ feature {NONE} -- Implementation
 		require
 			a_column_positive: a_column > 0
 		do
-			if grid_columns.valid_index (a_column) then
-				Result := grid_columns @ a_column
+			if not grid_columns.valid_index (a_column) then
+				from
+				until
+					grid_columns.count = a_column
+				loop
+					add_column_at (grid_columns.count + 1, True)
+				end
 			end
-			if Result = Void then
-					-- There is no column object at position `a_column' so we replace the Void reference with a newly created column object
-				add_column_at (a_column, True)
-				Result := grid_columns @ a_column
-			end
+			Result := grid_columns @ a_column
 		ensure
 			column_not_void: Result /= Void
 		end

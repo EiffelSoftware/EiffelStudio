@@ -29,7 +29,8 @@ inherit
 			set_size,
 			x,y, 
 			form_width, 
-			form_height
+			form_height,
+			set_insensitive
 		end	
 
 	MENU_IMP
@@ -48,7 +49,8 @@ inherit
 			x,y, 
 			form_width, 
 			form_height,
-			unrealize
+			unrealize,
+			set_insensitive
 		select
 			unrealize
 		end	
@@ -187,6 +189,22 @@ feature -- Status setting
 	set_y (new_y: INTEGER) is
 		do
 			y := new_y
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until 
+				i > children.count
+			loop
+				set_insensitive_widget (children.item (i), flag)
+				i := i + 1
+			end
+			private_attributes.set_insensitive (flag)
+			invalidate
 		end
 
 feature -- Element change

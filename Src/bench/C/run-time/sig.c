@@ -13,8 +13,8 @@
 	executable.
 */
 
-#ifdef USE_BSD_SIGNALS
-#define _BSD_SIGNALS /* For sgi */
+#if defined USE_BSD_SIGNALS || defined EIF_SGI
+#	define _BSD_SIGNALS /* For sgi */
 #endif
 
 #include <signal.h>
@@ -73,7 +73,7 @@ rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
 
 /* Routine declarations */
 rt_public char *signame(int sig);				/* Give English description of a signal */
-rt_private Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
+rt_public Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
 rt_public Signal_t exfpe(int sig);			/* Floating point exception handler */
 rt_private int dangerous(int sig);			/* Is a given signal dangerous for us? */
 rt_shared void esdpch(EIF_CONTEXT_NOARG);				/* Dispatch queued signals */
@@ -97,7 +97,7 @@ rt_private char *rcsid =
  * Signal handler routines.
  */
 
-rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
+rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 {
 	/* Eiffel signal handler -- all the signals that can be caught let the
 	 * process jump to this routine, which is in charge of dispatching the
@@ -529,7 +529,15 @@ rt_shared void initsig(void)
 
 #ifdef SIGTRAP
 	sig_ign[SIGTRAP] = 0;
-	(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#	ifdef EIF_SGI
+		/* On some platforms (sgi), SIGTRAP is used as a
+		 * Integer-Division-By-Zero signal
+		 */
+		(void) signal(SIGTRAP, ehandlr);	
+#	else
+		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+		
+#	endif /* EIF_SGI */
 #endif
 
 	/* Special treatment for SIGFPE -- always raise an Eiffel exception when

@@ -70,8 +70,10 @@ feature -- Basic operations
 				raw_file: RAW_FILE
 				file_name: FILE_NAME
 				shown_once, created_project: BOOLEAN
-				conf_dialog: EV_CONFIRMATION_DIALOG
+				conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
 				create_project: BOOLEAN
+				dialog_exists: BOOLEAN
+				directory: DIRECTORY
 			do
 				from
 					create dialog
@@ -94,12 +96,22 @@ feature -- Basic operations
 							end
 						end
 						if create_project then
-							created_project := True
-							create settings.make_stand_alone_with_default_values
-							settings.set_project_location (dialog.directory)
-							system_status.set_current_project (settings)
-							main_window.show_tools
-							command_handler.update
+							create directory.make (dialog.directory)
+							if not directory.exists then
+								create directory_conf.make_with_text (Directory_exists_warning)
+								directory_conf.show_modal_to_window (main_window)
+								if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+									directory.create_dir
+								end
+							end
+							if directory.exists then
+								created_project := True
+								create settings.make_stand_alone_with_default_values
+								settings.set_project_location (dialog.directory)
+								system_status.set_current_project (settings)
+								main_window.show_tools
+								command_handler.update
+							end
 						end
 					end
 				end				

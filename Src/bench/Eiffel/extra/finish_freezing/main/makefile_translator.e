@@ -1647,6 +1647,9 @@ feature {NONE} -- Implementation
 				Result := replacement
 			else
 				Result := clone (env.get (word))
+				if Result /= Void and then not Result.is_empty then
+					Result := short_path (Result)
+				end
 			end
 		end
 

@@ -37,7 +37,6 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			l_dyn_class_type: CLASS_TYPE
 			l_feature_i: FEATURE_I
 			
-			l_eiffel_break_index: INTEGER
 			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 		do
 --			Eifnet_debugger_info.reset_current_callstack
@@ -61,17 +60,16 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 			if l_dyn_class_type /= Void then
 				dynamic_class := l_dyn_class_type.associated_class				
-			end
-			
-			if l_feature_i /= Void then
-				e_feature := l_feature_i.e_feature
-				body_index := e_feature.body_index
-				origin_class := l_feature_i.written_class
-
-				l_curr_il_offset := l_current_stack_info.current_il_offset			
-				break_index := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_feature_i, l_curr_il_offset)
-			end
-			
+		
+				if l_feature_i /= Void then
+					e_feature := l_feature_i.e_feature
+					body_index := e_feature.body_index
+					origin_class := l_feature_i.written_class
+	
+					l_curr_il_offset := l_current_stack_info.current_il_offset			
+					break_index := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_dyn_class_type, l_feature_i, l_curr_il_offset)
+				end
+			end			
 ----			if where = Void then
 --				create_where_with (1)			
 ----			end

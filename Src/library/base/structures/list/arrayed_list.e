@@ -424,7 +424,7 @@ feature -- Removal
 			val, default_value: like item;
 		do
 			if object_comparison then
-				if v /= void then
+				if v /= Void then
 					from
 						start
 					until
@@ -476,7 +476,7 @@ feature -- Removal
 				index := i
 				from
 				until
-					i >= count
+					i > count
 				loop
 					put_i_th (default_value, i);
 					i := i + 1;

@@ -34,7 +34,7 @@ feature -- Initialization
 			
 			eiffel_class_name := name_for_class (name, type_kind, True)
 				
-			c_header_file_name := header_name (name)
+			c_header_file_name := header_name (namespace, name)
 
 			description := "Implemented "
 			description.append (Back_quote)
@@ -127,7 +127,7 @@ feature -- Basic operations
 			non_void_name: name /= Void
 			valid_name: not name.empty
 		do
-			Result := header_name (impl_name (is_client))
+			Result := header_name (namespace, impl_name (is_client))
 		ensure
 			non_void_header: Result /= Void
 			valid_header: not Result.empty

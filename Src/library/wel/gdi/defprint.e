@@ -19,12 +19,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Make a printer dc
 		local
-			loc_driver, loc_device: ANY
+			loc_driver, loc_device, loc_output: ANY
 		do
 			loc_device := device.to_c
 			loc_driver := driver.to_c
+			loc_output := output.to_c
 			item := cwin_create_dc ($loc_driver, $loc_device,
-				default_pointer, default_pointer)
+				$loc_output, default_pointer)
 		end
 
 feature -- Basic operations
@@ -83,6 +84,24 @@ feature -- Status report
 
 	driver: STRING is
 			-- Default printer driver installed
+		local
+			c: ANY
+			pointer_result: POINTER
+		once
+			!! Result.make (0)
+			c := Comma_const2.to_c
+			pointer_result := c_strtok (default_pointer, $c)
+			check
+				pointer_result_not_null:
+					pointer_result /= default_pointer
+			end
+			Result.from_c (pointer_result)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	output: STRING is
+			-- Device name for the physical output medium
 		local
 			c: ANY
 			pointer_result: POINTER

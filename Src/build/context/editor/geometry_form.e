@@ -127,25 +127,11 @@ feature
 feature
 
 	reset is
-		local
-			scroll_list: SCROLL_LIST_C
 		do
-			scroll_list ?= context;
 			text_field_x.set_int_value (context.x);
 			text_field_y.set_int_value (context.y);
 			text_field_width.set_int_value (context.width);
-			if scroll_list = Void then
-				text_field_height.manage;
-				label_height.manage;
-				text_field_height.set_int_value (context.height);
-				if not label_width.managed then
-					label_width.manage;
-					text_field_width.manage
-				end;
-			else
-				label_height.unmanage;
-				text_field_height.unmanage;
-			end;
+			text_field_height.set_int_value (context.height);
 		end;
 
 	
@@ -157,8 +143,10 @@ feature
 				not text_field_y.same_value (context.y) then
 				context.set_x_y (text_field_x.int_value, text_field_y.int_value);
 			end;
-			if not text_field_width.same_value (context.width) or else
-				not text_field_height.same_value (context.height) then
+			if (text_field_width.int_value > 0 and then text_field_height.int_value > 0) and then
+				(not text_field_width.same_value (context.width) or else
+				not text_field_height.same_value (context.height))
+			then
 				context.set_size (text_field_width.int_value, text_field_height.int_value);
 			end;
 		end;

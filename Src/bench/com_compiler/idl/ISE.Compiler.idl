@@ -127,6 +127,21 @@ library EiffelComCompiler
     } EIF_EXCEPTIONS;
 
     //---------------------------------------------------------------------
+    // Location types for completion
+	// i.e. are we building a completion list for a target inside a feature
+	// or as part of an inheritance clause
+    //---------------------------------------------------------------------
+    [
+        uuid (UUID_EnumEIF_COMPLETION_LOCATION),
+        helpstring ("Location types for completion\n i.e. are we building a completion list for\n a target inside a feature or as part of an inheritance clause")
+    ]
+    typedef enum EIF_COMPLETION_LOCATION
+    {
+        EIF_COMPLETION_LOCATION_Feature = 0,
+        EIF_COMPLETION_LOCATION_InheritanceClause = 1,
+    } EIF_COMPLETION_LOCATION;
+
+    //---------------------------------------------------------------------
     // Various modes of compilation
     //---------------------------------------------------------------------
     [
@@ -541,7 +556,7 @@ library EiffelComCompiler
         HRESULT AddArgument ([in] BSTR bstrName, [in] BSTR bstrType);
 
         [id (DISPID_EiffelComCompiler_TargetFeatures), helpstring ("Features accessible from target.")]
-        HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
+        HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrLocationName, [in] EIF_COMPLETION_LOCATION clLocation, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
 
         [id (DISPID_EiffelComCompiler_TargetFeature), helpstring ("Feature information")]
         HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);

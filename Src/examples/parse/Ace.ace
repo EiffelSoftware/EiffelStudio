@@ -4,9 +4,6 @@ system
 root
 	PROCESS (root_cluster): "make"
 
-default
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
-
 cluster 
 	root_cluster: 		"$ISE_EIFFEL/examples/parse"
 		-- If you intend to modify any of the examples,
@@ -26,4 +23,5 @@ cluster
 		exclude
 			"desc"; "table_eiffel3"
 		end
+
 end

@@ -184,7 +184,6 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-			internal_font_ascent := a_font.ascent
 			internal_font_imp ?= a_font.implementation
 		end
 
@@ -694,8 +693,6 @@ feature {NONE} -- Implementation
 		
 	radians_to_gdk_angle: INTEGER is 3667 -- 
 			-- Multiply radian by this to get no of (1/64) degree segments.
-		
-	internal_font_ascent: INTEGER
 
 	internal_font_imp: EV_FONT_IMP
 	

@@ -8,8 +8,13 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-
 	EV_MENU_ITEM_CONTAINER
+
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 
 feature -- Implementation
 

@@ -25,11 +25,6 @@ feature -- Status setting
 		local
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
-			cur: CURSOR
-			src: EV_DOCKABLE_TARGET
-			trg: EV_WIDGET_IMP
-			drag_trgs: ARRAYED_LIST [INTEGER]
-			x1, y1, x2, y2: INTEGER
 		do
 			gdkwin := C.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= NULL then				

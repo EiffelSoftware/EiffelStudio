@@ -9,7 +9,8 @@ inherit
 			expr, enlarged, is_hector, type, make_byte_code,
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
-			generate
+			analyze, print_register,
+			generate, generate_operator
 		end
 
 creation
@@ -44,6 +45,17 @@ feature
 	is_hector: BOOLEAN is true;
 			-- The expression is an hector one.
 
+	analyze is
+			-- Analyze expression
+		do
+			context.init_propagation;
+			expr.propagate (No_register);
+			expr.analyze;
+			if expr.is_result and then expr.type.is_basic then
+				context.mark_result_used;
+			end
+		end
+
 feature -- Byte code generation
 
 	operator_constant: CHARACTER is
@@ -64,6 +76,30 @@ feature -- Byte code generation
 				expr.make_byte_code (ba);
 			end
 		end;
+
+	generate_operator is
+			-- Generate the operator
+		do
+			if expr.type.is_basic then
+				generated_file.putstring ("(char *)&");
+			end
+		end
+
+	print_register is
+			-- Print expression value
+		do
+			if expr.type.is_basic then
+				generated_file.putstring ("(char *)&(");
+				if expr.is_attribute then
+					expr.generate_access
+				else
+					expr.print_register;
+				end
+				generated_file.putchar (')');
+			else
+				expr.print_register;
+			end
+		end
 
 	generate is
 			-- Generate expression

@@ -6,7 +6,7 @@
 		</heading>
 		<paragraph>Depending on your C compiler different steps have to be done, but do not forget to do the following before starting the C compiler specific part in a DOS console:</paragraph>
 		<code_block>set ISE_EIFFEL=XXX</code_block>
-		<paragraph>where XXX is the  Eiffel Software  EiffelStudio installation directory. </paragraph>
+		<paragraph>where XXX is the EiffelStudio installation directory. </paragraph>
 		<heading>
 			<size>3</size>With Borland C++:
 		</heading>
@@ -27,7 +27,7 @@
 		<heading>
 			<size>2</size>Compiling for UNIX
 		</heading>
-		<paragraph>Then, make sure that your path to the  Eiffel Software  EiffelStudio executables are properly configured before launching the command below. </paragraph>
+		<paragraph>Then, make sure that your path to the EiffelStudio executables are properly configured before launching the command below. </paragraph>
 		<paragraph>To compile and execute from scratch type:</paragraph>
 		<code_block>finish_freezing -library</code_block>
 	</paragraph></document>

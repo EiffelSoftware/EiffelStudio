@@ -122,13 +122,13 @@ feature
 			end
 		end
 
---	select_i_th (i: INTEGER) is
---			-- Select item at the `i'-th position.
---		do
---			if i <= list.count and then i > 0 then
---				list.go_to_i_th (i)
---			end
---		end
+	select_item (i: INTEGER) is
+			-- Select item at the `i'-th position.
+		do
+			if i <= list.count and then i > 0 then
+				list.select_item (i)
+			end
+		end
 
 feature {NONE} -- Properties
 

@@ -21,7 +21,9 @@ inherit
 			set_default_position,
 			set_enclosing_size,
 			maximal_width,
-			maximal_height
+			maximal_height,
+			on_vertical_scroll_control,
+			on_horizontal_scroll_control
 		redefine
 			unrealize,
 			realize,
@@ -50,7 +52,9 @@ inherit
 			set_default_position,
 			set_enclosing_size,
 			maximal_width,
-			maximal_height
+			maximal_height,
+			on_vertical_scroll_control,
+			on_horizontal_scroll_control
 		redefine
 			unrealize,
 			show,

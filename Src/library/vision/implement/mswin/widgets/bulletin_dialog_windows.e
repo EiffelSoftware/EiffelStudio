@@ -24,7 +24,9 @@ inherit
 			make_with_coordinates,
 			set_default_position,
 			maximal_width,
-			maximal_height
+			maximal_height,
+			on_vertical_scroll_control,
+			on_horizontal_scroll_control
 		redefine
 			class_name,
 			on_size,

@@ -35,7 +35,7 @@ feature -- Initialization
 		do
 			if not retried and then not Member_parser_table.has (an_assembly_name) then
 				create member_parser.make
-				xml_file_path := path_to_assembly (an_assembly_name)
+				xml_file_path := path_to_assembly_doc (an_assembly_name)
 				create l_xml_file.make (xml_file_path)
 				l_xml_file.open_read
 				if not l_xml_file.is_open_read then
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			if not Member_parser_table.has (assembly_type_name) then
 				initialize (assembly_type_name)
 			else
-				xml_file_path := path_to_assembly (assembly_type_name)
+				xml_file_path := path_to_assembly_doc (assembly_type_name)
 				member_parser := Member_parser_table.item (assembly_type_name)
 			end
 			if not xml_file_path.is_empty and member_parser /= Void then
@@ -135,7 +135,7 @@ feature -- Basic Operations
 				if not Member_parser_table.has (assembly_type_name) then
 					initialize (assembly_type_name)
 				else
-					xml_file_path := path_to_assembly (assembly_type_name)
+					xml_file_path := path_to_assembly_doc (assembly_type_name)
 					member_parser := Member_parser_table.item (assembly_type_name)
 					initialized := True
 				end
@@ -153,8 +153,8 @@ feature -- Basic Operations
 			retry
 		end
 
-	path_to_assembly (an_assembly_name: STRING): STRING is
-			-- path to assembly.
+	path_to_assembly_doc (an_assembly_name: STRING): STRING is
+			-- Path to assembly XML file
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
 			not_empty_an_assembly_name: not an_assembly_name.is_empty
@@ -164,6 +164,22 @@ feature -- Basic Operations
 			create l_file_name.make_from_string ((create {IL_ENVIRONMENT}.make (runtime_version)).dotnet_framework_path)
 			l_file_name.set_file_name (an_assembly_name)
 			l_file_name.add_extension ("xml")
+			Result := l_file_name
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	path_to_assembly_dll (an_assembly_name: STRING): STRING is
+			-- Path to assembly
+		require
+			non_void_an_assembly_name: an_assembly_name /= Void
+			not_empty_an_assembly_name: not an_assembly_name.is_empty
+		local
+			l_file_name: FILE_NAME
+		do
+			create l_file_name.make_from_string ((create {IL_ENVIRONMENT}.make (runtime_version)).dotnet_framework_path)
+			l_file_name.set_file_name (an_assembly_name)
+			l_file_name.add_extension ("dll")
 			Result := l_file_name
 		ensure
 			non_void_result: Result /= Void

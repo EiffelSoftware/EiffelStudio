@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 			-- Create new EDITOR_LINE with `lexer'.
 			-- let `click_tool' add hidden information on tokens.
 		do
-			Result := {CLICKABLE_TEXT} Precursor (line_image)
+			Result := Precursor {CLICKABLE_TEXT} (line_image)
 			if current_class_is_clickable then
 				click_tool.setup_line (Result)
 			end

@@ -113,8 +113,7 @@ feature -- Access
 
 	is_valid: BOOLEAN is
 		do
-			Result := fvalid and then
-					{OBJECT_STONE} Precursor and then
+			Result := fvalid and then Precursor {OBJECT_STONE} and then
 					Application.status.where.count >= level_number
 		end
 

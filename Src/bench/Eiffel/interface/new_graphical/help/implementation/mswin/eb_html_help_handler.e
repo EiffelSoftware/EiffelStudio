@@ -1,5 +1,5 @@
 indexing
-	"Controls access to Microsoft HTML Help, allows to display given urls"
+	description: "Controls access to Microsoft HTML Help, allows to display given urls"
 
 class
 	EB_HTML_HELP_HANDLER

@@ -1180,7 +1180,7 @@ feature {NONE} -- Implementation
 			if allow_edition then
 				Result := (text_displayed.number_of_lines - (number_of_lines_displayed // 2)).max (1)
 			else
-				Result := {SELECTABLE_TEXT_PANEL} Precursor
+				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
 		end
 
@@ -1190,7 +1190,7 @@ feature {NONE} -- Implementation
 			if allow_edition then
 				Result := text_displayed /= Void and then (number_of_lines_displayed < 2 * (text_displayed.number_of_lines - 1))
 			else
-				Result := {SELECTABLE_TEXT_PANEL} Precursor
+				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
 		end 
 

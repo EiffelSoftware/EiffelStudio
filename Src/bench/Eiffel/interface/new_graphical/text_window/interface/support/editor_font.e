@@ -39,7 +39,7 @@ feature -- Status report
 		do
 			if is_proportional then
 					-- Proportional font, we use the normal feature
-				Result := {EV_FONT} Precursor(a_string)
+				Result := Precursor {EV_FONT} (a_string)
 			else
 					-- Fixed font...small optimisation
 
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 	is_proportional: BOOLEAN is
 		do
 			if not internal_is_proportional_computed then
-				internal_is_proportional := Precursor
+				internal_is_proportional := Precursor {EV_FONT} 
 				internal_is_proportional_computed := True
 			end
 			Result := internal_is_proportional

@@ -12,6 +12,7 @@ cvs -z3 export -rHEAD -d eclop free_add_ons/eclop
 cvs -z3 export -r%RELEASE% -d library.net Src/library.net
 cvs -z3 export -r%RELEASE% -d compiler_delivery Delivery/studio
 cvs -z3 export -r%RELEASE% -d eifinit_delivery Delivery/eifinit
+cvs -z3 export -r%RELEASE% -d precomp_delivery Delivery/precomp
 
 MKDIR tools
 CD tools

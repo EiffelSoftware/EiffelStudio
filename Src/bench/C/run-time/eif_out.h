@@ -27,7 +27,7 @@ extern "C" {
 
 RT_LNK char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
 extern char *c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
-extern char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
+RT_LNK char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
 extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
 
 /*

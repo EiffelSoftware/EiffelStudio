@@ -46,7 +46,7 @@ feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 			not_before: not before
 		end
 
-feature {EV_DYNAMIC_LIST_I} -- Access
+feature {EV_DYNAMIC_LIST_I, EV_TABLE_I} -- Access
 
 	item: G
 		-- Item `Current' points to.

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "List of default colors used by the system.%
 				% Mswindows implementation"
@@ -18,7 +17,7 @@ inherit
 feature -- Access
 
 	Color_dialog: EV_COLOR is
-			-- Color usely used for the background of dialogs
+			-- Color usually used for the background of dialogs.
 		local
 			color_imp: EV_COLOR_IMP
 		do
@@ -28,8 +27,8 @@ feature -- Access
 		end
 
 	Color_read_only: EV_COLOR is
-			-- Color usely used for the background of editable
-			-- when they are read_only
+			-- Color usually used for the background of editable
+			-- widgets when they are read_only.
 		local
 			color_imp: EV_COLOR_IMP
 		do
@@ -40,26 +39,26 @@ feature -- Access
 
 	Color_read_write: EV_COLOR is
 			-- Color usely used for the background of editable
-			-- when they are in read / write mode
+			-- widgets when they are in read / write mode.
 		do
 			!! Result.make_with_rgb (1, 1, 1)
 		end
 
 	default_background_color: EV_COLOR is
-			-- Default background color for most of the widgets.
+			-- Default background color for most widgets.
 		do
 			Result := Color_dialog
 		end
 
 	default_foreground_color: EV_COLOR is
-			-- Default foreground color for most of the widgets.
+			-- Default foreground color for most widgets.
 		do
 			!! Result.make_with_rgb (0, 0, 0)
 		end
 
 end -- class EV_DEFAULT_COLORS_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -73,13 +72,16 @@ end -- class EV_DEFAULT_COLORS_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/24 16:04:29  rogers
+--| Improved comments.
+--|
 --| Revision 1.6  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -62,11 +62,11 @@ feature -- Access
 		-- Name of printer.
 		
 	horizontal_resolution: INTEGER
-		-- Horizontal resolution in pixels, equating to full width
+		-- Horizontal resolution in points (1/72 of an inch), equating to full width
 		-- of printed page.
 	
 	vertical_resolution: INTEGER
-		-- Vertical resolution in pixels, equating to full height
+		-- Vertical resolution in points (1/72 of an inch), equating to full height
 		-- of printed page.
 
 	file_name: STRING

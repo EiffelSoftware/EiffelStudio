@@ -61,7 +61,27 @@ feature -- Access
 		ensure
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
+		
+	frozen element_address (i: INTEGER): POINTER is
+			-- Address of element at position `i'.
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i < count
+		do
+			Result := $Current
+			Result := Result + i * sp_elem_size ($Current)
+		ensure
+			element_address_not_null: Result /= default_pointer
+		end
 
+	frozen base_address: POINTER is
+			-- Address of element at position `0'.
+		do
+			Result := $Current
+		ensure
+			base_address_not_null: Result /= default_pointer
+		end
+		
 feature -- Measurement
 
 	frozen count, frozen capacity: INTEGER is
@@ -201,6 +221,12 @@ feature {NONE} -- Implementation
 			"C signature (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_misc.h%""
 		alias
 			"arycpy"
+		end
+		
+	frozen sp_elem_size (p: POINTER): INTEGER is
+			-- Size of elements.
+		external
+			"C signature use %"eif_eiffel.h%""
 		end
 
 indexing

@@ -107,11 +107,8 @@ feature {NONE} -- Implementation
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
-		local
-			str_area: ANY
 		do
-			str_area := a_string.area
-			Result := file_gss (file_pointer, $str_area + (pos - 1), nb)
+			Result := file_gss (file_pointer, a_string.area.element_address (pos - 1), nb)
 		end
 
 	file_gib (file: POINTER): INTEGER is

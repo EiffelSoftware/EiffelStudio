@@ -13,6 +13,11 @@ inherit
 		export {NONE}
 			all
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		undefine
+			copy, is_equal, default_create
+		end
 
 feature {NONE} -- Implementation
 
@@ -254,16 +259,6 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	visual_studio_information: VISUAL_STUDIO_INFORMATION is
-			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
-			-- Is a Once, as the state will never change during the
-			-- execution of Build.
-		once
-			create Result
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 	remove_floating_object_editor (a_window: EV_WINDOW) is
 			-- Remove object editor contained in `a_window'
 			-- from `floating_object_editors'.
@@ -282,6 +277,5 @@ feature {NONE} -- Implementation
 		ensure
 			-- Object editor is not in floating object editors.
 		end
-		
 
 end -- class GB_ACCESSIBLE_OBJECT_EDITOR

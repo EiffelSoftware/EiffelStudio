@@ -48,14 +48,17 @@ feature -- Basic operation
 			test_successful := True
 
 			create test_list.make
-			test_list.extend (["extend", ~test_extend])
-			test_list.extend (["put", ~test_put])
-			test_list.extend (["replace", ~test_replace])
-			test_list.extend (["put_left", ~test_put_left])
-			test_list.extend (["put_right", ~test_put_right])
-			test_list.extend (["put_i_th", ~test_put_i_th])
-			test_list.extend (["force", ~test_force])
+		--	test_list.extend (["extend", ~test_extend])
+		--	test_list.extend (["put", ~test_put])
+		--	test_list.extend (["replace", ~test_replace])
+		--	test_list.extend (["put_left", ~test_put_left])
+		--	test_list.extend (["put_right", ~test_put_right])
+		--	test_list.extend (["put_i_th", ~test_put_i_th])
+		--	test_list.extend (["force", ~test_force])
 			test_list.extend (["put_front", ~test_put_front])
+
+			description.append ("Initial state... ")
+			append_result
 
 			from
 				test_list.start
@@ -486,8 +489,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/03/01 23:00:55  brendel
---| Added check if testcase assumption is correct.
+--| Revision 1.10  2000/03/01 23:11:56  brendel
+--| Added check for initial state.
 --|
 --| Revision 1.6  2000/03/01 19:16:56  brendel
 --| Improved test sequence.

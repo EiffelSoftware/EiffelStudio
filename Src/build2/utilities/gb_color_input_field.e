@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			
 			create color_area
+			color_area.pointer_double_press_actions.force_extend (agent color_area_double_clicked)
 			color_area.expose_actions.force_extend (agent color_area.clear)
 			color_area.drop_actions.extend (agent accept_color_stone (?))
 			create frame
@@ -285,6 +286,16 @@ feature {NONE} -- Implementation
 			stone_not_void: stone /= Void
 		do
 			execute_agent (stone.color)
+		end
+		
+	color_area_double_clicked is
+			-- `color_area' has been double clicked, so permit a user to select a color manually.
+		do
+				-- Ensure that if a constant is being used, it is firstly removed.
+			if constants_button.is_selected then
+				constants_button.disable_select
+			end
+			select_color
 		end
 
 end -- class GB_COLOR_INPUT_FIELD

@@ -1,7 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision font constants. Objects that access font may %N%
-		%inherit this class to use its facilities."
+		"Facilities used by and for ues with EV_FONT."
 	status: "See notice at end of class"
 	keywords: "character, face, size, family, weight, shape, bold, italic"
 	date: "$Date$"
@@ -77,6 +76,9 @@ end -- class EV_FONT_CONSTANTS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/16 01:18:11  oconnor
+--| comments
+--|
 --| Revision 1.3  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|
@@ -97,7 +99,6 @@ end -- class EV_FONT_CONSTANTS
 --|
 --| Revision 1.1.2.1  2000/01/07 18:06:26  king
 --| Initial.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

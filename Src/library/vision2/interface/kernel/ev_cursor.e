@@ -1,11 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision cursor. Objects that represent the pointer %N%
-		%cursor on the screen in the form of a pixmap."
+		"Apearance of a screen pointer cursor, typicaly moved by a mouse."
 	status: "See notice at end of class."
 	keywords: "mouse, pointer, cursor, arrow"
 	date: "$Date$"
 	revision: "$Revision$"
+
+--| FIXME Exactly how the codes work and if they are needed should be looked
+--| into and documented here.
 
 class
 	EV_CURSOR
@@ -81,16 +83,17 @@ feature -- Comparison
 			-- Does `other' look like `Current'.
 		do
 			check to_be_implemented: False end
-			--Result := pixmap.is_equal (other.pixmap)
+			--|FIXME Result := pixmap.is_equal (other.pixmap)
 			Result := True 
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_CURSOR_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create implementation of cursor.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CURSOR_IMP} implementation.make (current)
 		end
@@ -118,6 +121,9 @@ end -- class EV_CURSOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/16 01:13:15  oconnor
+--| comments
+--|
 --| Revision 1.7  2000/03/15 22:47:20  king
 --| Implemented a make_with_pixmap creation procedure
 --|

@@ -46,6 +46,7 @@ inherit
 		rename
 			hole_target as source,
 			count as array_count,
+			text_count as count,
 			widget as source
 		redefine
 			clear_window, display, 

@@ -166,23 +166,23 @@ feature -- Saving
 			create l_pe_file.make_open_write (file_name)
 			
 				-- First the headers
-			l_pe_file.put_data (dos_header.item, dos_header.size)
-			l_pe_file.put_data (pe_header.item, pe_header.size)
-			l_pe_file.put_data (optional_header.item, optional_header.size)
-			l_pe_file.put_data (text_section_header.item, text_section_header.size)
-			l_pe_file.put_data (reloc_section_header.item, reloc_section_header.size)
+			l_pe_file.put_data (dos_header.item, dos_header.count)
+			l_pe_file.put_data (pe_header.item, pe_header.count)
+			l_pe_file.put_data (optional_header.item, optional_header.count)
+			l_pe_file.put_data (text_section_header.item, text_section_header.count)
+			l_pe_file.put_data (reloc_section_header.item, reloc_section_header.count)
 
 				-- Add padding to .text section
 			create l_padding.make (padding (headers_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.size)
+			l_pe_file.put_data (l_padding.item, l_padding.count)
 			
 				-- Store .text section
-			l_pe_file.put_data (iat.item, iat.size)
-			l_pe_file.put_data (cli_header.item, cli_header.size)
+			l_pe_file.put_data (iat.item, iat.count)
+			l_pe_file.put_data (cli_header.item, cli_header.count)
 			if method_writer /= Void then
 					-- No need for padding as it is correctly aligned of 4 bytes
 				check
-					correctly_aligned: (iat.size + cli_header.size) \\ 4 = 0
+					correctly_aligned: (iat.count + cli_header.count) \\ 4 = 0
 				end
 				l_pe_file.put_data (method_writer.item, code_size)
 			end
@@ -190,21 +190,21 @@ feature -- Saving
 			
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)
-				l_pe_file.put_data (l_padding.item, l_padding.size)
+				l_pe_file.put_data (l_padding.item, l_padding.count)
 			end
-			l_pe_file.put_data (import_table.item, import_table.size)
-			l_pe_file.put_data (entry_data.item, entry_data.size)
+			l_pe_file.put_data (import_table.item, import_table.count)
+			l_pe_file.put_data (entry_data.item, entry_data.count)
 			
 				-- Add padding to .text section
 			create l_padding.make (padding (text_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.size)
+			l_pe_file.put_data (l_padding.item, l_padding.count)
 			
 				-- Store .reloc section
-			l_pe_file.put_data (reloc_section.item, reloc_section.size)
+			l_pe_file.put_data (reloc_section.item, reloc_section.count)
 			
 				-- Add padding to end of file/
 			create l_padding.make (padding (reloc_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.size)
+			l_pe_file.put_data (l_padding.item, l_padding.count)
 			
 			l_pe_file.close
 			is_valid := False
@@ -226,17 +226,17 @@ feature {NONE} -- Saving
 			end
 
 				-- Real size of all components
-			headers_size := dos_header.size + pe_header.size +
-				optional_header.size + text_section_header.size +
-				reloc_section_header.size
+			headers_size := dos_header.count + pe_header.count +
+				optional_header.count + text_section_header.count +
+				reloc_section_header.count
 			
-			import_table_padding := pad_up (iat.size + cli_header.size + code_size +
-				meta_data_size, 16) - (iat.size + cli_header.size + code_size + meta_data_size)
+			import_table_padding := pad_up (iat.count + cli_header.count + code_size +
+				meta_data_size, 16) - (iat.count + cli_header.count + code_size + meta_data_size)
 
-			text_size := iat.size + cli_header.size + code_size + meta_data_size +
-				import_table_padding + import_table.size + entry_data.size
+			text_size := iat.count + cli_header.count + code_size + meta_data_size +
+				import_table_padding + import_table.count + entry_data.count
 				
-			reloc_size := reloc_section.size
+			reloc_size := reloc_section.count
 			
 				-- Size of `.text' and `.reloc' section on disk.
 			headers_size_on_disk := pad_up (headers_size, file_alignment)
@@ -246,9 +246,9 @@ feature {NONE} -- Saving
 				-- RVA of `.text' and `.reloc'.
 			text_rva := pad_up (headers_size, Section_alignment)
 			reloc_rva := pad_up (text_rva + text_size_on_disk, Section_alignment)
-			code_rva := text_rva + iat.size + cli_header.size
+			code_rva := text_rva + iat.count + cli_header.count
 
-			import_directory_rva := text_rva + iat.size + cli_header.size + code_size + 
+			import_directory_rva := text_rva + iat.count + cli_header.count + code_size + 
 				meta_data_size + import_table_padding
 		end
 
@@ -261,9 +261,9 @@ feature {NONE} -- Saving
 				-- Update optional header section.
 			optional_header.set_code_size (text_size_on_disk)
 			optional_header.set_reloc_size (reloc_size_on_disk)
-			optional_header.set_entry_point_rva (text_rva + iat.size +
-				cli_header.size + code_size + meta_data_size + import_table_padding +
-				import_table.size + entry_data.start_position)
+			optional_header.set_entry_point_rva (text_rva + iat.count +
+				cli_header.count + code_size + meta_data_size + import_table_padding +
+				import_table.count + entry_data.start_position)
 			optional_header.set_base_of_code (text_rva)
 			optional_header.set_base_of_reloc (reloc_rva)
 			optional_header.set_image_size (reloc_rva + pad_up (reloc_size, Section_alignment))
@@ -272,7 +272,7 @@ feature {NONE} -- Saving
 			import_directory := optional_header.directory (
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_import)
 			import_directory.set_rva (import_directory_rva)
-			import_directory.set_data_size (import_table.size - 1)
+			import_directory.set_data_size (import_table.count - 1)
 			
 			reloc_directory := optional_header.directory (
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
@@ -282,12 +282,12 @@ feature {NONE} -- Saving
 			iat_directory := optional_header.directory (
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
 			iat_directory.set_rva (text_rva)
-			iat_directory.set_data_size (iat.size)
+			iat_directory.set_data_size (iat.count)
 			
 			cli_directory := optional_header.directory (
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_cli_descriptor)
-			cli_directory.set_rva (text_rva + iat.size)
-			cli_directory.set_data_size (cli_header.size)
+			cli_directory.set_rva (text_rva + iat.count)
+			cli_directory.set_data_size (cli_header.count)
 			
 				-- Update section headers
 			text_section_header.set_virtual_size (pad_up (text_size, 4))
@@ -295,35 +295,35 @@ feature {NONE} -- Saving
 			text_section_header.set_raw_data_size (text_size_on_disk)
 			text_section_header.set_pointer_to_raw_data (headers_size_on_disk)
 			text_section_header.set_characteristics (
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_code |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_mem_execute |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_mem_read)
+				feature {CLI_SECTION_CONSTANTS}.code |
+				feature {CLI_SECTION_CONSTANTS}.execute |
+				feature {CLI_SECTION_CONSTANTS}.read)
 
 			reloc_section_header.set_virtual_size (pad_up (reloc_size, 4))
 			reloc_section_header.set_virtual_address (reloc_rva)
 			reloc_section_header.set_raw_data_size (reloc_size_on_disk)
 			reloc_section_header.set_pointer_to_raw_data (headers_size_on_disk + text_size_on_disk)
 			reloc_section_header.set_characteristics (
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_initialized_data |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_mem_discardable |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_section_mem_read)
+				feature {CLI_SECTION_CONSTANTS}.initialized_data |
+				feature {CLI_SECTION_CONSTANTS}.discardable |
+				feature {CLI_SECTION_CONSTANTS}.read)
 			
 				-- CLI header.
-			cli_header.meta_data_directory.set_rva_and_size (text_rva + iat.size + cli_header.size +
-				code_size, meta_data_size)
+			cli_header.meta_data_directory.set_rva_and_size (text_rva + iat.count +
+				cli_header.count + code_size, meta_data_size)
 			
 				-- Setting of import table.
-			iat.set_import_by_name_rva (text_rva + iat.size + cli_header.size + code_size +
+			iat.set_import_by_name_rva (text_rva + iat.count + cli_header.count + code_size +
 				meta_data_size + import_table_padding + import_table.Size_to_import_by_name)
-			import_table.set_rvas (text_rva, text_rva + iat.size + cli_header.size + code_size + meta_data_size
-				+ import_table_padding)
+			import_table.set_rvas (text_rva, text_rva + iat.count + cli_header.count +
+				code_size + meta_data_size + import_table_padding)
 			
 				-- Entry point setting
 			entry_data.set_iat_rva (text_rva)
 			
 				-- Reloc section
-			reloc_section.set_data (text_rva + iat.size + cli_header.size + code_size +
-				meta_data_size + import_table_padding + import_table.size + entry_data.jump_size)
+			reloc_section.set_data (text_rva + iat.count + cli_header.count + code_size +
+				meta_data_size + import_table_padding + import_table.count + entry_data.jump_size)
 				
 				-- Set method RVAs now.
 			method_writer.update_rvas (emitter, code_rva)
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 				0x50, 0x45, 0x0, 0x0
 			>>)
 		ensure
-			valid_size: dos_header.size = 132
+			valid_size: dos_header.count = 132
 		end
 
 	headers_size, text_size, reloc_size: INTEGER

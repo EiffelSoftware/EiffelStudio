@@ -17,6 +17,9 @@ feature -- Access
 	uninitialized_data: INTEGER is 0x00000080
 			-- Section contains uninitialized data.
 
+	discardable: INTEGER is 0x02000000
+			-- Section is discardable.
+
 	execute: INTEGER is 0x20000000
 			-- Section is executable.
 

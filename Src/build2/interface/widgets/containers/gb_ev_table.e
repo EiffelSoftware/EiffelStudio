@@ -79,7 +79,7 @@ feature -- Access
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
 			homogeneous_button.select_actions.extend (agent update_editors)
 			Result.extend (homogeneous_button)
-			create layout_button.make_with_text ("Position children")
+			create layout_button.make_with_text ("Position children...")
 			if first.widget_count = 0 then
 				layout_button.disable_sensitive
 			end

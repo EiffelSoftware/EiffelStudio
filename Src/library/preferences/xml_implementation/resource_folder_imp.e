@@ -242,4 +242,10 @@ feature {NONE} -- Implementation
 			Result.append ("Your preferences will be overridden by the default settings.%N")
 		end
 
+	new_child (doc: XM_ELEMENT; struct: like structure): like Current is
+			-- New instance of Current belonging to `struct' according to `doc'.
+		do
+			create Result.make_default (doc, struct)
+		end
+
 end -- class RESOURCE_FOLDER_IMP

@@ -204,13 +204,18 @@ feature -- creation feature check
 					not matched or else creation_feature_list.after	
 				loop
 					feature_name := creation_feature_list.item.internal_name
-					matched := associated_class.feature_table.has (feature_name)	
+					feat_table.search (feature_name)
+					if feat_table.found then
+						matched := is_valid_creation_routine (feat_table.found_item)
+					else
+						matched := False
+					end
 					creation_feature_list.forth
 				end
 
 				if not matched then
-					-- The feature listed in the creation constraint have not been
-					-- declared in the constraint class.
+						-- The feature listed in the creation constraint have not been
+						-- declared in the constraint class.
 					!! vtcg6
 					vtcg6.set_class (current_class)
 					vtcg6.set_constraint_class (associated_class)
@@ -381,6 +386,23 @@ feature {AST_EIFFEL} -- Output
 					ctxt.put_space
 					ctxt.put_text_item (ti_End_keyword)
 				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	is_valid_creation_routine (f: FEATURE_I): BOOLEAN is
+			-- Does `f' have all the needed requirement to be
+			-- used a creation routine for the future creation
+			-- of the generic parameter.
+		require
+			feature_exists: f /= Void
+		local
+			p: PROCEDURE_I
+		do
+			p ?= f
+			Result := p /= Void
+			if Result then
 			end
 		end
 

@@ -1,110 +1,89 @@
+indexing
+
+	description: 
+		"Formats structured text.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class TEXT_FORMATTER
 
-feature
+feature -- Output
 
 	process_text (text: STRUCTURED_TEXT) is
-		do
-			from
-				text.start
-			until
-				text.after
-			loop
-				process_item (text.item);
-				text.forth
-			end;
-		end;
-
-
-	process_item (t: TEXT_ITEM) is
+			-- Process structured text `text' to be
+			-- generated as output.
 		local
-			before_class: BEFORE_CLASS;
-			after_class: AFTER_CLASS;
-			before_feature: BEFORE_FEATURE;
-			after_feature: AFTER_FEATURE;
-			new_line_text: NEW_LINE_TEXT;
-			basic_text: BASIC_TEXT;
-			clickable_text: CLICKABLE_TEXT;
-			breakable_mark: BREAKABLE_MARK;
-			filter_item: FILTER_ITEM;
-			class_name_text: CLASS_NAME_TEXT
+			linkable: LINKABLE [TEXT_ITEM]	
 		do
-			new_line_text ?= t;
-			basic_text ?= t;
-			clickable_text ?= t;
-			breakable_mark ?= t;
-			class_name_text ?= t;
-		
-			if class_name_text /= Void then
-				process_class_name_text (class_name_text)
-			elseif clickable_text /= void then
-				process_clickable_text (clickable_text)
-			elseif basic_text /= void then
-				process_basic_text (basic_text)
-			elseif breakable_mark /= void then
-				process_breakable_mark (breakable_mark);
-			elseif new_line_text /= void then
-				process_new_line_text (new_line_text)
-			else
-				before_class ?= t;
-				after_class ?= t;
-				before_feature ?= t;
-				after_feature ?= t;
-				filter_item ?= t;
-				if after_feature /= void then
-					process_after_feature (after_feature)
-				elseif before_feature /= void then
-					process_before_feature (before_feature)
-				elseif after_class /= void then
-					process_after_class (after_class)
-				elseif before_class /= void then
-					process_before_class (before_class)
-				elseif filter_item /= Void then
-					process_filter_item (filter_item)
-				end
-			end;
+			if text /= Void then
+				from
+					linkable := text.first_element
+				until
+					linkable = Void
+				loop
+					linkable.item.append_to (Current)
+					linkable := linkable.right;
+				end;
+			end
 		end;
-				
-				
+
+feature {TEXT_ITEM} -- Implementation
+
 	process_basic_text (t: BASIC_TEXT) is
+			-- Process basic text `t'.
 		deferred
 		end;
 
 	process_clickable_text (t: CLICKABLE_TEXT) is
+			-- Process basic text `t'.
 		do
 			process_basic_text (t);
 		end;
 
 	process_class_name_text (t: CLASS_NAME_TEXT) is
+			-- Process clickable text `t'.
 		do
 			process_clickable_text (t)
 		end;
 
-	process_breakable_mark (t: BREAKABLE_MARK) is
+	process_breakpoint is
+			-- Process breakpoint.
 		do
 		end;
 
-	process_new_line_text (t: NEW_LINE_TEXT) is
+	process_new_line (t: NEW_LINE_ITEM) is
+			-- Process new line text `t'.
+		deferred
+		end;
+
+	process_indentation (t: INDENT_TEXT) is
+			-- Process indentation `t'.
 		deferred
 		end;
 
 	process_after_feature (t: AFTER_FEATURE) is
+			-- Process after feature text `t'.
 		do
 		end;
 
 	process_before_feature (t: BEFORE_FEATURE) is
+			-- Process before feature text `t'.
 		do
 		end;
 	
 	process_after_class (t: AFTER_CLASS) is
+			-- Process after class text `t'.
 		do
 		end;
 
 	process_before_class (t: BEFORE_CLASS) is
+			-- Process before class `t'.
 		do
 		end;
 
 	process_filter_item (t: FILTER_ITEM) is
+			-- Process filter text `t'.
 		do
 		end;
 
-end
+end -- class TEXT_FORMATTER

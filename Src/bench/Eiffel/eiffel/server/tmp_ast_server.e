@@ -35,9 +35,6 @@ feature
 	last_offset: INTEGER
 			-- Offset of the last introduced class
 
-	last_id: INTEGER
-			-- Id of the current inserted class
-
 	make is
 			-- Initialization
 		do
@@ -61,7 +58,6 @@ feature
 			-- Append object `t' in file ".TMP_AST".
 		do
 			index.clear_all
-			last_id := t.class_id
 				-- Write data structure in file `file'
 			Precursor {COMPILER_SERVER} (t)
 		end
@@ -74,9 +70,7 @@ feature
 			feat: FEATURE_AS
 		do
 				-- Put `obj' in the index.
-			create read_info
-			read_info.set_position (file_position)
-			read_info.set_class_id (last_id)
+			create read_info.make (file_position, current_file_id)
 			read_info.set_object_count (object_count)
 			if is_feature_as (obj) then
 				feat ?= obj
@@ -130,5 +124,8 @@ feature {NONE} -- Implementation of dynamic type checking
 		once
 			Result := dynamic_type (create {FEATURE_AS})
 		end
+
+invariant
+	cache_not_void: cache /= Void
 
 end

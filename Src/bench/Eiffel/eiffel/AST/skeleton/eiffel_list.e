@@ -42,6 +42,25 @@ feature {NONE} -- Initialization
 			compare_objects
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		local
+			l_cursor: CURSOR
+		do
+			l_cursor := cursor
+			from
+				start
+			until
+				after
+			loop
+				item.process (v)
+				forth
+			end
+			go_to (l_cursor)
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is

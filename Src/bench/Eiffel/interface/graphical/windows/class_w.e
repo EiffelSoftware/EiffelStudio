@@ -61,6 +61,12 @@ feature
 			-- Stone corresponding the name entered in
 			-- the class text. (Void if can not find one). 
 		do
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+
 			--Result := class_name_tf.text.empty or else
 						--Universe.class_stone (class_name_tf.text)
 		end;
@@ -84,6 +90,12 @@ feature
 			-- Create a class with class name `c_name' with
 			-- file name `f_name'.
 		do
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
+-- FIXME !!!!!!
 			--!!new_file.make (f_name);
 			--new_file.open_write;
 			--new_file.putstring ("class ");

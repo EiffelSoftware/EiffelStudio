@@ -1,4 +1,6 @@
 TOP = ..\..
+OUTDIR = .
+INDIR = .
 CC = $cc
 JCFLAGS = $ccflags $optimize $(CFLAGS)
 LN = copy

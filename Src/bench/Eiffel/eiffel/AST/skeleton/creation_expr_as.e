@@ -28,6 +28,18 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.put_breakable
+			ctxt.put_text_item (ti_Create_keyword)
+			ctxt.put_text_item (ti_L_curly)
+			ctxt.set_type_creation (type)
+			ctxt.format_ast (type)
+			ctxt.put_text_item (ti_R_curly)
+			ctxt.put_space
+
+			if call /= Void then
+				ctxt.need_dot
+				ctxt.format_ast (call)
+			end
 		end
 
 feature -- Properties
@@ -52,7 +64,6 @@ feature -- Type check
 			a_feature: FEATURE_I
 			export_status: EXPORT_I
 			class_type: CL_TYPE_A
-			access: ACCESS_B
 			create_type: CREATE_TYPE
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			depend_unit: DEPEND_UNIT
@@ -74,14 +85,6 @@ feature -- Type check
 				-- Initialize the type stack, this information will be updated later
 				-- just after `call.type_check'
 			context.begin_expression
-
-				-- Last access: if error happened, then routine
-				-- `type_check' of ACCESS_FEAT_AS will raise an error, so
-				-- it is sure than we have the good access on the access line
-			check
-				access_exists: context.access_line.access /= Void
-			end
-			access := context.access_line.access
 
 			if type.has_like then
 				-- FIXME
@@ -122,14 +125,9 @@ feature -- Type check
 				if gen_type /= Void then
 					Instantiator.dispatch (gen_type, context.a_class)
 				end
-
 					-- We do not update type stack now, since the call to
 					-- `call.type_check' will change the information, we will
 					-- do it when `call.type_check' will be done.
-
-					-- Update the access line
-				access := access.creation_access (creation_type.type_i)
-				context.access_line.change_item (access)
 			end
 
 				-- Check for errors
@@ -226,14 +224,15 @@ feature
 			!! Result.make
 
 				-- Cannot be Void since the only thing that we put is of type CREATION_TYPE
+				-- for a CREATION_EXPR_B
 			create_type ?= context.creation_types.item
+			context.creation_types.forth
 			check
 				create_type_not_void: create_type /= Void
 			end
 			
 			Result.set_info (create_type)
 
-			context.creation_types.forth
 
 			if call /= Void then
 				call_access ?= call.byte_node

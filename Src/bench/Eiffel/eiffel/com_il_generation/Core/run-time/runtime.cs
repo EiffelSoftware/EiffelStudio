@@ -198,14 +198,6 @@ feature -- Hash code
 	}
 
 /*
-feature -- Output
-*/
-	public static String tagged_out (Object o) 
-		// Result of call of `o.ToString()'.
-	{
-		return o.ToString();
-	}
-/*
 feature -- Equality
 */
 	public static Boolean standard_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 

@@ -8,7 +8,7 @@ class
 	EB_CONFIRM_FINALIZE_ASSERTIONS_DIALOG
 
 inherit
-	EB_DISCARDABLE_CONFIRMATION_DIALOG
+	DISCARDABLE_CONFIRMATION_DIALOG
 		rename
 			Interface_names as preferences_names,
 			Layout_constants as preferences_layout_constants

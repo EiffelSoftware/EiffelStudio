@@ -44,7 +44,6 @@ extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
 extern void allocate_gen_buffer(void);
 extern void buffer_write(register char *data, int size);
 
-RT_LNK void set_buffer_size (EIF_INTEGER);
 
 extern int char_write(char *pointer, int size);
 

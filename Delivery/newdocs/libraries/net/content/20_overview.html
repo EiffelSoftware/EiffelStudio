@@ -97,7 +97,7 @@
         <p>On the first distinction:
         <ul>
           <li>If the communicating systems run on the same machine, you may use
-            one of the <SPAN CLASS="eclass">UNIX_<SPAN> classes.
+            one of the <SPAN CLASS="eclass">UNIX_</SPAN> classes.
           <li>For systems that run on different machines, you must use one of
             the <SPAN CLASS="eclass">NETWORK_</SPAN><i> </i>classes. This will also work if the systems are
             on the same machine, but less efficiently since communication may go
@@ -132,14 +132,14 @@
         </i>(see the specification of <a CLASS="eclass" href="../../base/reference/kernel/file_chart.html">FILE</a>
         in reference [2]). So you can use sockets to send and receive
         characters, integers, real numbers in simple or double precision and
-        strings. For example, if the type of</span></span> `<SPAN CLASS="eclass">my_socket'</span>
-          <SPAN CLASS="eclass">is one of the socket classes shown on the preceding figures, any of
+        strings. For example, if the type of</span></span> `my_socket'
+          is one of the socket classes shown on the preceding figures, any of
         the above calls will be valid:
            <dl>
           <blockquote>
           <code>
-          <p>my_socket.putstring (&quot;Some text&quot;)
-my_socket.readint; my_last_integer := my_socketllastint</p>
+          <p>my_socket<span CLASS="esymbol">.</span><span CLASS="efeature">putstring </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;Some text&quot;</span><span CLASS="esymbol">)</span>
+my_socket<span CLASS="esymbol">.</span><span CLASS="efeature">readint</span><span CLASS="esymbol">;</span> my_last_integer <span CLASS="esymbol">:=</span> my_socketllastint</p>
 			</code>
           </blockquote>
 
@@ -161,9 +161,9 @@ my_socket.readint; my_last_integer := my_socketllastint</p>
         There are three storage procedures, called under the respective forms
         <dd>
         <code>
-          <p>struct1.basic_store (iom1)
-struct1.general_store (iom1)
-struct1.independent_store (iom1)</p>
+          <p>struct1<span CLASS="esymbol">.</span><span CLASS="efeature">basic_store </span><span CLASS="esymbol">(</span>iom1<span CLASS="esymbol">)</span><br>
+		  struct1<span CLASS="esymbol">.</span><span CLASS="efeature">general_store </span><span CLASS="esymbol">(</span>iom1<span CLASS="esymbol">)</span><br>
+		  struct1<span CLASS="esymbol">.</span><span CLASS="efeature">independent_store </span><span CLASS="esymbol">(</span>iom1<span CLASS="esymbol">)</span></p>
 		</code>
         </dd>
         <p>Assuming that the type of <i>iom1 </i>is <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>or
@@ -221,7 +221,7 @@ struct1.independent_store (iom1)</p>
           <dl>
             <dd>
             	<code>
-              <p>struct2 ?= retrieved (iom2)</p>
+              <p>struct2 <span CLASS="esymbol">?=</span> retrieved <span CLASS="esymbol">(</span>iom2<span CLASS="esymbol">)</span></p>
               	</code>
             </dd>
           </dl>

@@ -47,23 +47,22 @@
               <p><span CLASS="ekeyword">inherit</span></p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> [<a CLASS="eclass" href="../../base/reference/kernel/string_chart.html">STRING</a>]</p>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> <span CLASS="esymbol">[</span><a CLASS="eclass" href="../../base/reference/kernel/string_chart.html">STRING</a><span CLASS="esymbol">]</span></p>
             </dd>
             <dd>
               <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a></p>
             </dd>
             <dd>
-              <p><span CLASS="ekeyword">&nbsp;&nbsp;&nbsp; creation<span><br>
-              &nbsp;&nbsp;&nbsp;</span></span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>make</span></p>
+              <p><span CLASS="ekeyword">creation<span><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span></span><span>make</span></p>
             </dd>
             <dd>
               <p><span>end</span></p>
             </dd>
           </dl>
         </ul>
-        </span>
         </code>
-        <span><span CLASS="ekeyword"><span CLASS="ekeyword">
+
         <p>Note that to make use of the storage and retrieval facilities the
         objects to be exchanged must be instances of a class which, as here, is
         a descendant of <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>.</p>
@@ -92,124 +91,115 @@
           <dl>
             <dd>
               <p><span CLASS="ekeyword">class</span><span CLASS="eclass"><br>
-              OUR_CLIENT</span></p>
+              &nbsp;&nbsp;&nbsp; OUR_CLIENT</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">inherit</span></p>
             </dd>
             <dd>
-              <p>	<a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT<br>
-</a>		&nbsp;&nbsp;&nbsp; redefine&nbsp;
-			<span CLASS="efeature"><br>
+              <p>	<a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">&nbsp;&nbsp;&nbsp; UNIX_CLIENT<br>
+</a>		&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">redefine</span>&nbsp;
+			<br>
+            &nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span CLASS="efeature">received<br>
             &nbsp;&nbsp;&nbsp;</span>
-              </span></span>
-			<span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp; </span>
-			<span CLASS="efeature"><span CLASS="ekeyword">received<br>
-            &nbsp;&nbsp;&nbsp;</span> </span>
-            <span CLASS="ekeyword">end</p>
+            <span CLASS="ekeyword">end</span></p>
             <dd>
-              <p><span CLASS="ekeyword">creation</span>
-	<span CLASS="efeature">make_client</p>
-              <span>
+              <p><span CLASS="ekeyword">creation</span><br>
+	<span CLASS="efeature">&nbsp;&nbsp;&nbsp;make_client</p>
+              </span>
               <p><span CLASS="ekeyword">feature</span></p>
               <dl>
                 <dd>
-                  <p>our_list<span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE</span></p>
+                  <p><span CLASS="efeature">our_list</span><span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE</span></p>
                 </dd>
                 <dd>
-                  <p>received<span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE<br>
-                  &nbsp;&nbsp;&nbsp;</span> </span></span></span> <span CLASS="ecomment">-- Type redefinition</p>
+                  <p><span CLASS="efeature">received</span><span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE<br>
+                  &nbsp;&nbsp;&nbsp;</span>  <span CLASS="ecomment">-- Type redefinition</span></p>
                 </dd>
-              </dl>
-              <i></i>
-              <blockquote>
-                <blockquote>
-                <p><span CLASS="efeature">make_client</span><span CLASS="ekeyword"> is<br>
+        <dd>
+          <p><span CLASS="efeature">make_client</span><span CLASS="ekeyword"> is<br>
                 &nbsp;&nbsp;&nbsp;</span>
-                -- Build list, send it, receive modified list, and print it.<br>
+                <span CLASS="ecomment">-- Build list, send it, receive modified list, and print it.</span><br>
 	<span CLASS="ekeyword">do<br>
     &nbsp;&nbsp;&nbsp;</span>
-                  </span>
-	<span CLASS="ekeyword"> </span>
- <span CLASS="ecomment">make <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)<br>
+ <span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)<br>
  </span>
 		<span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>
-                  </span><span CLASS="esymbol"> </span>
-		<span CLASS="efeature"> <span CLASS="ecomment">build_list<br>
-        &nbsp;&nbsp;&nbsp;</span> </span>
-		<span CLASS="efeature"> <span CLASS="ecomment">send <span CLASS="esymbol">(</span>our_list<span CLASS="esymbol">)<br>
-        &nbsp;&nbsp;&nbsp;</span></span></span>
-                  <span CLASS="esymbol"> </span> <span CLASS="ecomment">
+		<span CLASS="efeature">build_list<br>
+        &nbsp;&nbsp;&nbsp;</span>
+		 <span CLASS="efeature">send </span><span CLASS="esymbol">(</span><span CLASS="efeature">our_list</span><span CLASS="esymbol">)<br>
+        &nbsp;&nbsp;&nbsp;</span>
+
 		<span CLASS="efeature">receive</span>
                   &nbsp;<br>
-                  &nbsp;&nbsp;&nbsp; process_received
+                  &nbsp;&nbsp;&nbsp; <span CLASS="efeature">process_received</span><br>&nbsp;&nbsp;&nbsp;
         	<span CLASS="efeature">cleanup<br>
                   </span>
 	<span CLASS="ekeyword">rescue</span>
                   &nbsp;<br>
-                  &nbsp;&nbsp;&nbsp; cleanup&nbsp;<br>
-                  end</p>
-                </blockquote>
-                <p>build_list <span CLASS="ekeyword">is</span>
+                  &nbsp;&nbsp;&nbsp; <span CLASS="efeature">cleanup</span>&nbsp;<br>
+                  <span CLASS="ekeyword">end</span></p>
+          </dd>
+          <dd><span CLASS="efeature">build_list</span> <span CLASS="ekeyword">is</span>
                 &nbsp;<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Build list of strings our_list for
-                transmission to server.&nbsp;<br>
-                &nbsp;&nbsp;&nbsp; do&nbsp;<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create our_list<span CLASS="esymbol">.</span><span CLASS="efeature">make</span><span CLASS="esymbol">;<br>
-                </span> &nbsp;&nbsp;&nbsp;</span><span CLASS="esymbol">&nbsp;&nbsp;&nbsp;&nbsp;
-                </span> <span CLASS="ecomment">our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span></span> <span CLASS="ecomment">
-                </span></span><span CLASS="ekeyword"><span CLASS="esymbol">(</span>&quot;This &quot;<span CLASS="esymbol">);</span> our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span>&quot;is &quot;<span CLASS="esymbol">)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ecomment">-- Build list of strings our_list for
+                transmission to server.&nbsp;</span><br>
+                &nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">create</span> <span CLASS="efeature">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">make</span><span CLASS="esymbol">;<br>
+                </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 <span CLASS="efeature">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span>
+               <span CLASS="esymbol">(</span><span CLASS="estring">&quot;This &quot;</span><span CLASS="esymbol">);</span> <span CLASS="efeature">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;is &quot;</span><span CLASS="esymbol">)<br>
               </span>
-              &nbsp;&nbsp;&nbsp;</span><span CLASS="esymbol">&nbsp;&nbsp;&nbsp;&nbsp;
-              </span>
-              <span CLASS="ekeyword">our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span>&quot;our &quot;<span CLASS="esymbol">);</span> our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;test&quot;<span CLASS="esymbol">)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              <span CLASS="efeature">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;our &quot;</span><span CLASS="esymbol">);</span> <span CLASS="efeature">our_list</span><span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span><span CLASS="estring">&quot;test&quot;</span><span CLASS="esymbol">)<br>
               &nbsp;&nbsp;&nbsp;</span>
-              </span><span CLASS="esymbol"> </span>
-              <span CLASS="ekeyword">end</p>
-              <p>process_received <span CLASS="ekeyword">is<br>
+              <span CLASS="ekeyword">end</span>
+              </dd>
+
+          <dd><span CLASS="efeature">process_received</span> <span CLASS="ekeyword">is<br>
               </span>
 		<span CLASS="ecomment">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-		<span CLASS="ecomment">-- Print the contents of received in</span></span><span CLASS="ecomment">
-              </span><span CLASS="ecomment"><span CLASS="ekeyword">sequence.<br>
-              &nbsp;&nbsp;&nbsp;</span> </span>
-              <span CLASS="ekeyword">do&nbsp;<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if received <span CLASS="esymbol">=</span> Void then&nbsp;<br>
+		<span CLASS="ecomment">-- Print the contents of received in sequence.</span><br>
+              &nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">do&nbsp;</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">if</span> <span CLASS="efeature">received </span><span CLASS="esymbol">=</span> Void <span CLASS="ekeyword">then</span>&nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> (&quot;No list received&quot;)&nbsp;<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else&nbsp;<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;No list received&quot;</span><span CLASS="esymbol">)</span>&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">else</span>&nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              from&nbsp;<br>
+              <span CLASS="ekeyword">from</span>&nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">start</span>
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">start</span>
               &nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              until<br>
+              <span CLASS="ekeyword">until</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">after</span>
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">after</span>
               &nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              loop&nbsp;<br>
+              <span CLASS="ekeyword">loop</span>&nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring (received.item)</span>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> <span CLASS="esymbol">(</span><span CLASS="efeature">received</span><span CLASS="esymbol">.<span><span CLASS="efeature">item</span><span CLASS="esymbol">)</span></span>
               &nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">forth</span>
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">forth</span>
               &nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end&nbsp;<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end&nbsp;<br>
+              <span CLASS="ekeyword">end</span>&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>&nbsp;<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line<br>
-              &nbsp;&nbsp;&nbsp;</span> end</p>
-              </blockquote>
+              &nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">end</span></dd>
+              </dl>
               <p><span CLASS="ekeyword">end</span></p>
-            </dd>
             <dl>
             </dl>
           </dl>
         </ul>
         </span>
         </code>
-        <span CLASS="ekeyword">
         <p>The scheme is very simple:
         <ul>
           <li>The inherited procedure <i>make</i> takes care of the many details
@@ -261,81 +251,80 @@
         <ul>
           <dl>
             <dd>
-              <p><span CLASS="eclass">class</span><br>
-              &nbsp;&nbsp;&nbsp; OUR_SERVER</p>
+              <p><span CLASS="ekeyword">class</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">OUR_SERVER</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">inherit</span></p>
             </dd>
             <dd>
               <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER<br>
-              </a>&nbsp;&nbsp;&nbsp; redefine<br>
-              <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-              <span CLASS="efeature">received</span>, <span CLASS="efeature">respond<br>
-              &nbsp;&nbsp;&nbsp;</span></span> <span CLASS="efeature"> </span><span CLASS="ekeyword">end</p>
+              </a>&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">redefine</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">received</span><span CLASS="esymbol">,</span> <span CLASS="efeature">respond<br></span>
+              &nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span></p>
             <dd>
-              <p>creation<br>
-              &nbsp;&nbsp;&nbsp; make_server</p>
+              <p><span CLASS="ekeyword">creation</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make_server<span></p>
             </dd>
             <i></i>
             <dd>
-              <p>feature</p>
+              <p><span CLASS="ekeyword">feature</span></p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; received<span CLASS="esymbol">:</span> OUR_MESSAGE</p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">received</span><span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE</span></p>
             <dd>
-              <p>	<span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span> </span>	<span CLASS="efeature">
-              </span> <span CLASS="ekeyword">	<span CLASS="efeature">make_server</span> <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ecomment"><span CLASS="ekeyword">-- Receive list, print it, extend it, and send the result back.<br>
-              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">do<span CLASS="efeature"><br>
-              &nbsp;&nbsp;&nbsp;</span> </span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span> <span CLASS="ekeyword"><span CLASS="efeature">make</span> (&quot;/tmp/here&quot;)<span CLASS="efeature"><br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="efeature"><span CLASS="ekeyword">execute<br>
-              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">rescue<br>
-              <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <p>	&nbsp;&nbsp;&nbsp;	<span CLASS="efeature">make_server</span> <span CLASS="ekeyword">is</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ecomment">-- Receive list, print it, extend it, and send the result back.</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do<br>
+              &nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <span CLASS="efeature">make</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">execute<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span CLASS="efeature">cleanup<br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ekeyword">end</p>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end</span></p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; process_message <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ecomment"><span CLASS="ekeyword">-- Print received list.<br>
-              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">do<br>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">process_message</span> <span CLASS="ekeyword">is</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              from<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">start<br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ekeyword">until<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">after<br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ekeyword">loop<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring (received.item)</span><br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              received<span CLASS="esymbol">.</span><span CLASS="efeature">forth<br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span><span CLASS="ekeyword">end<br>
+              <span CLASS="ecomment">-- Print received list.</span><br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io.new_line<br>
+              <span CLASS="ekeyword">from</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">start</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">until</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">after<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">loop</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring <span CLASS="esymbol">(</span><span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">item</span><span CLASS="esymbol">)</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">forth<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; respond <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
-              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;
-              <span CLASS="ekeyword">-- Extend received list.</span></span><span CLASS="ekeyword"><br>
-            <span CLASS="ecomment">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            <span CLASS="ecomment">do<br>
-            &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span CLASS="ekeyword">received<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> (&quot;%N I'm back.%N&quot;)<br>
-            <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span></span></span><span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span CLASS="ecomment">resend<span> (received)<br>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">respond</span> <span CLASS="ekeyword">is</span><br>
+              &nbsp;&nbsp;&nbsp;<span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Extend received list.</span><span CLASS="ekeyword"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            do<br></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;%N I'm back.%N&quot;</span><span CLASS="esymbol">)</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="efeature">resend</span> <span CLASS="esymbol">(</span><span CLASS="efeature">received</span><span CLASS="esymbol">)</span><br>
             &nbsp;&nbsp;&nbsp;</span></span></span><span>&nbsp;&nbsp;&nbsp;&nbsp;
-            <span CLASS="ekeyword">end</p>
+            <span CLASS="ekeyword">end</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">end</span></p>

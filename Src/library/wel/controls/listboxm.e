@@ -53,6 +53,10 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Lb_selitemrange, 1,
 				cwin_make_long (start_index, end_index))
+		ensure
+			selected: selected
+			-- For every `i' in `start_index'..`end_index',
+			-- `is_selected' (`i') = True
 		end
 
 	unselect_items (start_index, end_index: INTEGER) is
@@ -70,7 +74,8 @@ feature -- Status setting
 			cwin_send_message (item, Lb_selitemrange, 0,
 				cwin_make_long (start_index, end_index))
 		ensure
-			no_selection: count_selected_items = 0
+			-- For every `i' in `start_index'..`end_index',
+			-- `is_selected' (`i') = False
 		end
 
 	select_all is
@@ -80,7 +85,7 @@ feature -- Status setting
 		do
 			select_items (0, count - 1)
 		ensure
-			count_items_selected: count_selected_items = count
+			all_selected: count_selected_items = count
 		end
 
 	unselect_all is
@@ -90,7 +95,7 @@ feature -- Status setting
 		do
 			unselect_items (0, count - 1)
 		ensure
-			count_items_selected: count_selected_items = 0
+			all_unselected: count_selected_items = 0
 		end
 
 	set_caret_index (index: INTEGER; scrolling: BOOLEAN) is

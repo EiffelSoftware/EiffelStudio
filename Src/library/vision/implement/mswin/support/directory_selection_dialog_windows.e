@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 		do
 			set_title (private_title)
 			if search_directory /= Void and then not search_directory.empty then
+				add_to_recently_used (search_directory)
+				fill_recently_used
 				directory := search_directory
 			else
 				directories_list := get ("DirectoryList")
@@ -387,16 +389,10 @@ feature {NONE} -- Implementation
 			-- and the text based on the value in `directory'
 		local
 			wildcard_dir, drive_to_find: STRING
+			d: DIRECTORY
 			select_item: INTEGER
+			a: ANY
 		do
-			wildcard_dir := clone (directory)
-			if wildcard_dir.item (wildcard_dir.count) = '\' then
-				wildcard_dir.append ("*.*")
-			else
-				wildcard_dir.append ("\*.*")
-			end
-			directory_list.reset_content
-			directory_list.add_files (ddl_directory + ddl_exclusive, wildcard_dir)
 			wildcard_dir := clone (directory)
 			if wildcard_dir.item (wildcard_dir.count) = '\' then
 				wildcard_dir.remove (wildcard_dir.count)
@@ -404,6 +400,7 @@ feature {NONE} -- Implementation
 			if wildcard_dir.item (wildcard_dir.count) = ':' then
 				wildcard_dir.extend ('\')
 			end
+			insert_in_directory_list (wildcard_dir)
 			selection_text.set_text (wildcard_dir)
 			combo_box.set_text (wildcard_dir)
 			drive_list.reset_content
@@ -417,6 +414,51 @@ feature {NONE} -- Implementation
 			action_widget.set_directory (directory)
 		end
 
+	insert_in_directory_list (dir: STRING) is
+			-- Fill `directory_list' with current found item in `dir' directory.
+		require
+			dir_not_void: dir /= Void
+			dir_not_empty: not dir.empty
+		local
+			d: DIRECTORY
+			found_item: STRING
+			file_name: FILE_NAME
+			file: RAW_FILE
+			current_dir: STRING
+		do
+			directory_list.reset_content
+			create d.make (dir)
+			if d.exists then
+				from
+					d.open_read
+					d.start
+					d.readentry
+					found_item := d.lastentry
+					current_dir := "."
+				until
+					found_item = Void
+				loop
+					if found_item /= Void and then not found_item.is_equal (current_dir) then
+						create file_name.make_from_string (dir)
+						file_name.set_file_name (found_item)
+						create file.make (file_name)
+						if
+							file.exists and then
+							not file.is_symlink and then
+							file.is_directory
+						then
+							found_item.prepend_character ('[')
+							found_item.append_character (']')
+							directory_list.add_string (found_item)
+						end
+					end
+					d.readentry
+					found_item := d.lastentry
+				end
+				d.close	
+			end
+		end
+		
 	class_name: STRING is
 			-- Class name
 		once

@@ -72,7 +72,6 @@ feature -- Basic Operations
 		require
 			not_solved: not solved
 		local
-			procedure_index, function_index: INTEGER
 			method_list: SORTED_TWO_WAY_LIST [METHOD_SOLVER]
 			first_method, method: METHOD_SOLVER
 			name, type: STRING
@@ -90,11 +89,6 @@ feature -- Basic Operations
 				method_list.start
 				first_method := method_list.item
 				param_count := first_method.arguments.count
-				if first_method.is_function then
-					function_index := function_index + 1
-				else
-					procedure_index := procedure_index + 1
-				end
 				from
 					method_list.forth
 					if method_list.after then
@@ -125,11 +119,6 @@ feature -- Basic Operations
 						i := i + 1
 					end
 					method.set_eiffel_name (unique_feature_name (name))
-					if method.is_function then
-						function_index := function_index + 1
-					else
-						procedure_index := procedure_index + 1
-					end
 					method_list.forth
 				end
 				if same_param_count then
@@ -160,8 +149,6 @@ feature -- Basic Operations
 			end
 			from
 				method_table.start
-				function_index := 1
-				procedure_index := 1
 			until
 				method_table.after
 			loop
@@ -244,18 +231,7 @@ feature -- Element Settings
 		local
 			name: STRING
 		do
-			if meth.get_is_special_name and meth.get_name.starts_with (("get_").to_cil) then
-				create name.make_from_cil (meth.get_name.substring (4))
-			else
-				create name.make_from_cil (meth.get_name)
-			end
-			method_table.search (name)
-			if not method_table.found then
-				method_table.put (create {SORTED_TWO_WAY_LIST [METHOD_SOLVER]}.make, name)
-				method_table.item (name).extend (create {METHOD_SOLVER}.make (meth))
-			else
-				method_table.found_item.extend (create {METHOD_SOLVER}.make (meth))
-			end
+			internal_add_method (meth, False)
 		end
 
 	add_property (property: PROPERTY_INFO) is
@@ -268,11 +244,11 @@ feature -- Element Settings
 		do
 			l_meth := property.get_get_method
 			if l_meth /= Void then
-				add_method (l_meth)
+				internal_add_method (l_meth, True)
 			end
 			l_meth := property.get_set_method
 			if l_meth /= Void then
-				add_method (l_meth)
+				internal_add_method (l_meth, False)
 			end
 		end
 		
@@ -287,19 +263,42 @@ feature -- Element Settings
 		do
 			l_meth := event.get_raise_method
 			if l_meth /= Void then
-				add_method (l_meth)
+				internal_add_method (l_meth, False)
 			end
 			l_meth := event.get_add_method
 			if l_meth /= Void then
-				add_method (l_meth)
+				internal_add_method (l_meth, False)
 			end
 			l_meth := event.get_remove_method
 			if l_meth /= Void then
-				add_method (l_meth)
+				internal_add_method (l_meth, False)
 			end
 		end
 
-		
+feature {NONE} -- Internal Statur Setting	
+
+	internal_add_method (meth: METHOD_INFO; get_property: BOOLEAN) is
+			-- Include `meth' in overload solving process.
+			-- Remove `get_' for properties getters.
+		require
+			non_void_meth: meth /= void
+		local
+			name: STRING
+		do
+			if get_property then
+				create name.make_from_cil (meth.get_name.substring (4))
+			else
+				create name.make_from_cil (meth.get_name)
+			end	
+			method_table.search (name)
+			if not method_table.found then
+				method_table.put (create {SORTED_TWO_WAY_LIST [METHOD_SOLVER]}.make, name)
+				method_table.item (name).extend (create {METHOD_SOLVER}.make (meth, get_property))
+			else
+				method_table.found_item.extend (create {METHOD_SOLVER}.make (meth, get_property))
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	method_table: HASH_TABLE [SORTED_TWO_WAY_LIST [METHOD_SOLVER], STRING]

@@ -23,7 +23,7 @@ inherit
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
-			update_for_pick_and_drop, is_dockable_source
+			update_for_pick_and_drop, is_dockable_source, height
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -75,7 +75,7 @@ inherit
 			on_mouse_wheel
 		redefine
 			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
- 			on_left_button_double_click, default_style
+ 			on_left_button_double_click, default_style, background_brush
 		end
 
 	WEL_COLOR_CONSTANTS
@@ -881,6 +881,28 @@ feature {NONE} -- WEL Implementation
 				Result := Result + Tbstyle_flat
 			end
 		end
+
+feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
+
+	height: INTEGER is
+			-- Height of `Current'.
+			-- Redefined from EV_PRIMITIVE as we must not take the `max' of
+			-- `height' into account.
+		do
+			Result := minimum_height
+		end
+		
+	background_brush: WEL_BRUSH is
+   			-- Current window background color used to refresh the window when
+   			-- requested by the WM_ERASEBKGND windows message.
+   			-- By default there is no background  
+   		local
+   			tmp_bitmap: WEL_BITMAP
+		do
+ 			if exists then
+				create Result.make_solid (wel_background_color)
+			end
+ 		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 

@@ -1756,7 +1756,7 @@ feature -- Skeleton processing
 			changed4 := False
 		end
 
-feature -- Class initialization
+feature {NONE} -- Class initialization
 
 	init (ast_b: CLASS_AS; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
@@ -1980,6 +1980,91 @@ feature -- Class initialization
 			end
 		end
 
+	similar_parents
+			(a_old_parents, a_new_parents: EIFFEL_LIST [PARENT_AS]): TUPLE [BOOLEAN, BOOLEAN]
+		is
+			-- First element of tuple: Does `a_new_parents' include all types used in
+			-- `a_old_parents' and no type has been removed from `a_old_parents'.
+			-- Second element of tuple: was a parent type of `a_old_parents' removed from
+			-- `a_new_parents'.
+		local
+			i, o_count, j, l_count: INTEGER
+			l_area, o_area: SPECIAL [PARENT_AS]
+			l_parent_type: CLASS_TYPE_AS
+			l_same_parent, l_removed_parent, l_found: BOOLEAN
+		do
+			if a_old_parents = Void then
+					-- Parents may have changed, but none has been removed.
+				Result := [a_new_parents = Void, False]
+			elseif a_new_parents /= Void then
+				l_area := a_new_parents.area
+				o_area := a_old_parents.area
+				l_count := a_new_parents.count - 1
+				o_count := a_old_parents.count - 1
+				
+					-- Check if all types used in new parents clauses were also used in previous
+					-- compilation (possibly in different order and with different number of
+					-- occurrences)
+				from
+					check
+						i_is_zero: i = 0
+					end
+					l_same_parent := True
+				until
+					i > l_count or else not l_same_parent
+				loop
+					l_parent_type := l_area.item (i).type
+					from
+						j := 0
+						l_same_parent := False
+					until
+						j > o_count or else l_same_parent
+					loop
+						l_same_parent := l_parent_type.is_equivalent (o_area.item (j).type)
+						j := j + 1
+					end
+					i := i + 1
+				end
+
+					-- We need to check that all types of `a_old_parents' are present
+					-- in `a_new_parents'.
+				from
+					check
+						l_removed_parent_set: not l_removed_parent
+					end
+					i := 0
+					l_area := a_new_parents.area
+					o_area := a_old_parents.area
+				until
+					i > o_count or else l_removed_parent
+				loop
+					l_parent_type := o_area.item (i).type
+					from
+						j := 0
+						l_found := False
+					until
+						j > l_count or else l_found
+					loop
+						l_found := l_parent_type.is_equivalent (l_area.item (j).type)
+						j := j + 1
+					end
+					l_removed_parent := not l_found
+					i := i + 1
+				end
+
+				Result := [l_same_parent and not l_removed_parent, l_removed_parent]
+			else
+					-- Case where all parents have been removed, clearly it is not
+					-- the same and they have been removed.
+				check
+					status: a_old_parents /= Void and a_new_parents = Void
+				end
+				Result := [False, True]
+			end
+		end
+
+feature -- Class initialization
+
 	init_class_interface is
 			-- Initialize `class_interface' accordingly to current class
 			-- definition.
@@ -1988,75 +2073,6 @@ feature -- Class initialization
 		do
 			if class_interface = Void then
 				create class_interface.make_with_class (Current)
-			end
-		end
-
-	same_parents (old_parents: like parents_classes): BOOLEAN is
-			-- Are `old_parents' the same as `parents_classes' ?
-			-- [Incrementality for conformance tables building.]
-		require
-			good_argument: old_parents /= Void
-		local
-			i, nb, j, l_count: INTEGER
-			l_area, o_area: SPECIAL [CLASS_C]
-			parent_class: CLASS_C
-		do
-			from
-				Result := True
-				l_area := parents_classes.area
-				nb := parents_classes.count
-				o_area := old_parents.area
-				l_count := old_parents.count
-			until
-				i = nb or else not Result
-			loop
-				parent_class := l_area.item (i)
-				from
-					j := 0
-					Result := False
-				until
-					j = l_count or else Result
-				loop
-					Result := parent_class = o_area.item (j)
-					j := j + 1
-				end
-				i := i + 1
-			end
-			if Result then
-				Result := removed_parent (old_parents)
-			end
-		end
-
-	removed_parent (old_parents: like parents_classes): BOOLEAN is
-			-- A parent has been removed from `parents_classes' ?
-			-- [Incrementality for propagation of pass2.]
-		require
-			good_argument: old_parents /= Void
-		local
-			parent_class: CLASS_C
-			l_area, o_area: SPECIAL [CLASS_C]
-			i, nb: INTEGER
-			j, l_count: INTEGER
-		do
-			from
-				Result := True
-				l_area := parents_classes.area
-				l_count := parents_classes.count
-				o_area := old_parents.area
-				nb := old_parents.count
-			until
-				i = nb or else not Result
-			loop
-				parent_class := o_area.item (i)
-				from
-					j := 0	
-				until
-					j= l_count or else Result
-				loop
-					Result := parent_class = l_area.item (j)
-					j := j + 1
-				end
-				i := i + 1
 			end
 		end
 
@@ -2369,7 +2385,7 @@ feature
 
 feature -- Parent checking
 
-	fill_parents (a_class_info: CLASS_INFO) is
+	fill_parents (a_old_class_info, a_class_info: CLASS_INFO) is
 			-- Initialization of the parent types `parents': put
 			-- the default parent HERE if needed. Calculates also the
 			-- lists `descendants'. Since the routine `check_suppliers'
@@ -2384,16 +2400,15 @@ feature -- Parent checking
 			l_parent_class: CLASS_C
 			l_parent_as: PARENT_AS
 			l_raw_type: CLASS_TYPE_AS
-			l_old_parents: like parents_classes
 			l_ancestor_id, l_count: INTEGER
 			l_vhpr1: VHPR1
 			l_ve04: VE04
 			l_dummy_list: LINKED_LIST [INTEGER]
 			l_client: CLASS_C
+			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
 		do
 			Inst_context.set_cluster (cluster)
 			l_parents_as := a_class_info.parents
-			l_old_parents := parents_classes
 			l_ancestor_id := System.any_id
 
 			if l_parents_as /= Void and then not l_parents_as.is_empty then
@@ -2468,17 +2483,19 @@ feature -- Parent checking
 				create computed_parents.make (0)
 			end
 
-			if l_old_parents /= Void then
-				if not same_parents (l_old_parents) then
-						-- Conformance tables incrementality
+			if a_old_class_info /= Void then
+				l_tuple := similar_parents (a_old_class_info.parents, a_class_info.parents)
+				if not l_tuple.boolean_item (1) then
+						-- Conformance tables incrementality as inheritance has changed
 					set_changed (True)
 					set_changed3a (True)
 					System.set_update_sort (True)
 
-						-- Take care of signature conformance for redefinion of
-						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
-						-- from PARENT anymore, the redefinition of f is not valid
-					if removed_parent (l_old_parents) then
+					if l_tuple.boolean_item (2) then
+							-- A parent has been removed:
+							-- Take care of signature conformance for redefinion of
+							-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
+							-- from PARENT anymore, the redefinition of f is not valid
 						from
 							syntactical_clients.start
 						until

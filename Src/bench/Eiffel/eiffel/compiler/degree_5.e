@@ -81,6 +81,7 @@ feature -- Processing
 			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
+			l_old_info: CLASS_INFO
 		do
 			from
 				classes := system.classes
@@ -93,7 +94,12 @@ feature -- Processing
 				if a_class /= Void and a_class.parents = Void then
 					System.set_current_class (a_class)
 					Error_handler.mark
-					a_class.fill_parents (class_info_server.item (a_class.class_id))
+					if class_info_server.server_has (a_class.class_id) then
+						l_old_info := class_info_server.server_item (a_class.class_id)
+					else
+						l_old_info := Void
+					end
+					a_class.fill_parents (l_old_info, class_info_server.item (a_class.class_id))
 					if Error_handler.new_error then
 						insert_class (a_class)
 					end

@@ -23,6 +23,9 @@ feature -- Status report
 	execution_type: DB_EXEC
 			-- Immediate or non-immediate execution		
 
+	login: LOGIN [DATABASE]
+		-- Session login
+
 	all_types: DB_ALL_TYPES is
 			-- All data types available in active database
 		once
@@ -71,6 +74,15 @@ feature {GENERAL_APPL} -- Status setting
 			execution_type = other
 		end
 
+	set_login (other: LOGIN [DATABASE]) is
+		-- Get `other' login for handle
+		require
+			login_not_void: other /= Void
+		do
+			login := other
+		ensure
+			login = other
+		end
 
 end -- class HANDLE
 

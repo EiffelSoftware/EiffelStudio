@@ -50,6 +50,10 @@ feature
 			-- Generate the metamorphism from simple type to reference and
 		   -- put result in register `reg'. The value of the basic type is
 		   -- held in `value'.
+		require
+			valid_reg: reg /= Void;
+			valid_value: value /= Void;
+			valid_file: file /= Void
 		do
 			reg.print_register;
 			file.putstring (" = ");

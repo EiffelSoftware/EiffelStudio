@@ -18,6 +18,9 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT
 
+creation
+	make
+
 feature {NONE} -- Execution
 
 	work (argument: ANY) is
@@ -31,7 +34,9 @@ feature {NONE} -- Execution
 			mp: MOUSE_PTR;
 			system_name: STRING
 		do
-			system_name := clone (Eiffel_system.name);
+			if project_initialized and then system_defined then
+				system_name := clone (Eiffel_system.name);
+			end;
 			if system_name = Void then
 				warner (popup_parent).gotcha_call (Warning_messages.w_Must_finalize_first)
 			else

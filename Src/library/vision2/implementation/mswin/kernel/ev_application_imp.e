@@ -140,23 +140,12 @@ feature -- Basic operation
 		do
 			from
 				create msg.make
-			until
-				done
-			loop
 				msg.peek_all
-				
-				if msg.last_boolean_result then
-					process_message (msg)
-				else
-					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call (Void)
-					elseif idle_actions_internal /= Void and then
-						not idle_actions_internal.is_empty then 
-						idle_actions_internal.call (Void)
-					else
-						done := True
-					end
-				end
+			until
+				not msg.last_boolean_result
+			loop
+				process_message (msg)
+				msg.peek_all
 			end
 
 				-- Signal to Windows to our thread is now
@@ -449,7 +438,7 @@ feature {NONE} -- WEL Implemenation
 feature {NONE} -- Implementation
 
 	blocking_windows_stack: ARRAYED_STACK [EV_WINDOW_IMP]
-			-- Windows that are bloking window. The top
+			-- Windows that are blocking window. The top
 			-- window represent the window that is the
 			-- real current blocking window.
 

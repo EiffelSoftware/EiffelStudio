@@ -50,10 +50,12 @@ iff not defined NO_COMPILE then
 	cd %INSTALL_DIR\C_library\libpng
 	all_makes
 	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
-	quick_move library\vision2\spec\bcb\zlib.lib
-	quick_move library\vision2\spec\msc\zlib.lib
-	quick_move library\vision2\spec\bcb\pnglib.lib
-	quick_move library\vision2\spec\msc\pnglib.lib
+	mkdir /s %INSTALL_DIR\library\vision2\spec\bcb\lib
+	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\lib
+	quick_move library\vision2\spec\bcb\lib\zlib.lib
+	quick_move library\vision2\spec\msc\lib\zlib.lib
+	quick_move library\vision2\spec\bcb\lib\pnglib.lib
+	quick_move library\vision2\spec\msc\lib\pnglib.lib
 	iff isdir %INSTALL_DIR\library\com then
 		remtrace com
 		cd %INSTALL_DIR\library\com\Clib

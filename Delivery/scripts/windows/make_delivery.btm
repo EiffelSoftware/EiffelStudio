@@ -77,6 +77,7 @@ fullrd old_com
 fullrd old_matisse
 fullrd vision
 fullrd build
+fullrd dotnet\registration
 cd ..
 remtrace precomp
 safe_md %INSTALL_DIR\precomp
@@ -93,21 +94,8 @@ exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
 fullrd C_library\.libs
 remtrace Free add ons
 exprt -r %DEFAULT_CVS_TAG -d free_add_ons free_add_ons
-iff not defined NO_COMPILE then
-	cd free_add_ons\zadminer\ace
-	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace
-	move new_ace zad_miner.ace
-	clean_project
-	finalize zad_miner.ace
-	fff
-	cleanup_eiffel zad_miner.exe
-	iff not exist zad_miner.exe then
-		echo Couldnt finalize zad_miner.exe.
-		CANCEL
-	endiff
-else
-	quick_move free_add_ons\zadminer\zad_miner.exe
-endiff
+remtrace .NET assemblies
+exprt -l -r %DEFAULT_CVS_TAG -d dotnet Delivery/dotnet
 remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG
@@ -175,6 +163,21 @@ iff not defined NO_COMPILE then
 		quick_move /s wizards
 	endiff
 
+	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
+	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace
+	clean_project
+	finalize new_ace.ace
+	fff
+	cleanup_eiffel zad_miner.exe
+	iff not exist zad_miner.exe then
+		echo Couldnt finalize zad_miner.exe.
+		CANCEL
+	endiff
+	fullrf new_ace.ace
+	cd ..
+	safe_md binaries
+	move ace\zad_miner.exe binaries
+
 	remtrace Generate Resource Bench
 	call make_rb.btm
 	cdd %INIT_DIR
@@ -190,6 +193,9 @@ else
 	quick_move /s studio\wizards
 	quick_move /s rb
 	quick_move /s wizards
+	cdd %INSTALL_DIR
+	safe_md free_add_ons\zad_miner\binaries
+	quick_move free_add_ons\zad_miner\binaries\zad_miner.exe
 	give_time_to copy executables from the old delivery
 endiff
 

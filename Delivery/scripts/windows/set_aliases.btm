@@ -42,9 +42,9 @@ REM Clean exit
 alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
 
 REM CVS Commands: up, checkout, export
-alias up `cvs -q up -Pd %$ >>& %INSTALL_LOG`
-alias co `cvs -q co -P %$ >>& %INSTALL_LOG`
-alias exprt `cvs -q export %$ >>& %INSTALL_LOG`
+alias up `cvs -z 9 -q up -Pd %$ >>& %INSTALL_LOG`
+alias co `cvs -z 9 -q co -P %$ >>& %INSTALL_LOG`
+alias exprt `cvs -z 9 -q export %$ >>& %INSTALL_LOG`
 REM Tries to update or check out. %1: CVS path %2: local path
 alias safe_up `iff not isdir %2 then & ^
 iff exist %2 then & fullrf %2 & endiff & ^

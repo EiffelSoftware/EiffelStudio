@@ -203,7 +203,7 @@ cd $EXPORT_DIR/build
 untgz_ccode build
 gzip build
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	gunzip -c build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin
+	gunzip -c build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
 fi
 
 remtrace Recompile CD key validator

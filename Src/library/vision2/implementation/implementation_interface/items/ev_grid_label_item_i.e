@@ -53,13 +53,13 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
-			internal_text := a_text.twin
+			internal_text := a_text
 		end
 		
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
-			internal_font := ft.twin
+			internal_font := ft
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation

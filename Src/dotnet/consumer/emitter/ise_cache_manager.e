@@ -13,7 +13,7 @@ inherit
 			error_category as error_category_emitter,
 			error_message_table as error_message_table_emitter
 		export 
-			{NONE} all
+			{COM_ISE_CACHE_MANAGER} all
 		undefine
 			start
 		redefine
@@ -70,35 +70,6 @@ feature -- Access
 		-- last error message
 
 feature -- Basic Oprtations
-
-	consume_gac_assembly (aname, aversion, aculture, akey: STRING) is
-			-- consume an assembly from the gac defined by
-			-- "'aname', Version='aversion', Culture='aculture', PublicKeyToken='akey'"
-		require
-			non_void_name: aname /= Void
-			non_void_version: aversion /= Void
-			non_void_culture: aculture /= Void
-			non_void_key: akey /= Void
-			non_empty_name: aname.count > 0
-			non_empty_version: aversion.count > 0
-			non_empty_culture: aculture.count > 0
-			non_empty_key: akey.count > 0
-		local
-			assembly: ASSEMBLY
-		do
-			is_successful := True
-			last_error_message := ""
-			
-			assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (aname, aversion, aculture, akey).to_cil)
-			if assembly /= Void then
-				consume_in_eac (assembly)
-			else
-				set_error (Cannot_load_gac_assembly, Void)
-				process_error (error_message)
-			end
-		ensure
-			successful: is_successful
-		end
 
 	relative_folder_name (aname, aversion, aculture, akey: STRING): STRING is
 			-- retruns the relative path to an assembly

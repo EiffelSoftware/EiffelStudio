@@ -8,6 +8,54 @@ class
 
 feature -- Externals
 
+	frozen gdk_selection_convert (a_requestor: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER) is
+			-- void	   gdk_selection_convert   (GdkWindow	 *requestor,
+			-- 				    GdkAtom	  selection,
+			-- 				    GdkAtom	  target,
+			-- 				    guint32	  time);
+			-- (from C_GDK)
+		external
+			"C (GdkWindow*, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_owner_get (a_selection: INTEGER): POINTER is
+			-- GdkWindow* gdk_selection_owner_get (GdkAtom	  selection);
+			-- (from C_GDK)
+		external
+			"C (GdkAtom): GdkWindow* | <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_owner_set (a_owner: POINTER; a_selection: INTEGER; a_time: INTEGER; a_send_event: INTEGER): BOOLEAN is
+			-- gboolean   gdk_selection_owner_set (GdkWindow	 *owner,
+			-- 				    GdkAtom	  selection,
+			-- 				    guint32	  time,
+			-- 				    gint	  send_event);
+			-- (from C_GDK)
+		external
+			"C (GdkWindow*, GdkAtom, guint32, gint): gboolean | <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_property_get (a_requestor: POINTER; a_data: POINTER; a_prop_type: POINTER; a_prop_format: POINTER): BOOLEAN is
+			-- gboolean   gdk_selection_property_get (GdkWindow  *requestor,
+			-- 				       guchar	 **data,
+			-- 				       GdkAtom	  *prop_type,
+			-- 				       gint	  *prop_format);
+			-- (from C_GDK)
+		external
+			"C (GdkWindow*, guchar**, GdkAtom*, gint*): gboolean | <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_send_notify (a_requestor: INTEGER; a_selection: INTEGER; a_target: INTEGER; a_property: INTEGER; a_time: INTEGER) is
+			-- void	   gdk_selection_send_notify (guint32	    requestor,
+			-- 				      GdkAtom	    selection,
+			-- 				      GdkAtom	    target,
+			-- 				      GdkAtom	    property,
+			-- 				      guint32	    time);
+			-- (from C_GDK)
+		external
+			"C (guint32, GdkAtom, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
+		end
+
 	frozen gtk_widget_set_minimum_size (a_widget: POINTER; a_width, a_height: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"

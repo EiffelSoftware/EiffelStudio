@@ -29,8 +29,12 @@ feature
 
 	loop_execute is
 		do
-			if confirmed ("Freezing implies some C compilation and linking.%N%
-							%Do you want to do it now") then
+			if Project_read_only.item then
+				io.error.put_string ("Read-only project: cannot compile.%N")
+			elseif 
+				confirmed ("Freezing implies some C compilation and linking.%N%
+							%Do you want to do it now") 
+			then
 				execute
 			end
 		end;

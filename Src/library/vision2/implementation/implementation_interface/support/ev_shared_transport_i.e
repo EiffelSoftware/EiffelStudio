@@ -44,7 +44,7 @@ feature -- Access EV_PICK_AND_DROPABLE.
 
 feature -- Access EV_DRAGABLE_SOURCE.
 		
-	source_being_dragged: EV_DOCKABLE_SOURCE_IMP--WIDGET_IMP
+	source_being_docked: EV_DOCKABLE_SOURCE_IMP
 		-- Dragable source currently being transported. May be a
 		-- WIDGET_IMP or an EV_TOOL_BAR_BUTTON_IMP.
 		
@@ -61,7 +61,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			env: EV_ENVIRONMENT
 		once
 			create env
-			Result := env.application.implementation.dragable_targets
+			Result := env.application.implementation.dockable_targets
 		end
 		
 	insert_label: EV_CELL is
@@ -121,7 +121,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 		end
 		
 			
-	dragable_dialog_target: EV_DOCKABLE_DIALOG
+	dockable_dialog_target: EV_DOCKABLE_DIALOG
 		-- A dockable dialog that will be created as 
 	 	-- necessary. This is not a local, to avoid it
 	 	-- being garbage collected.

@@ -32,11 +32,7 @@ feature
 			-- Record Eiffel routines reachable by feature `feat' from
 			-- static type `in_class'.
 		local
-			next: FEATURE_I
-			traversal_unit: TRAVERSAL_UNIT
-			a_feature: FEATURE_I
 			dep: DEPEND_UNIT
-			static_class: CLASS_C
 			body_id: BODY_ID
 		do
 			from
@@ -47,7 +43,11 @@ feature
 			loop
 				dep := control.item
 				body_id := body_index_table.item (dep.body_index)
-				if not (dep.rout_id.is_attribute or else is_alive (body_id.id)) then
+				if
+					not dep.rout_id.is_attribute and then
+					not is_treated (body_id.id, dep.rout_id)
+				then
+					mark_treated (body_id.id, dep.rout_id)
 					mark (dep.feature_id, dep.body_index, body_id, dep.id, dep.written_in, dep.rout_id)
 				end
 				control.remove
@@ -102,18 +102,10 @@ DEBUG ("DEAD_CODE")
 	end
 end
 					rout_id := depend_unit.rout_id
-					if not (is_treated (body_id.id, rout_id) or else rout_id.is_attribute) then
-						mark_treated (body_id.id, rout_id)
-							-- we mark dead because if it was already alive and not
-							-- treated then we are in the case of a double inheritance
-							-- with one redefine, one rename (cf the doc I MAY write 
-							-- about it)
-						mark_dead (body_id.id)
-debug ("DEAD_CODE")
-	print ("Since it was not treated, we marked bid: ")
-	print (body_id.id)
-	print (" dead%N")
-end
+					if
+						not rout_id.is_attribute and then
+						not is_treated (body_id.id, rout_id)
+					then
 						control.extend (depend_unit)
 					end
 

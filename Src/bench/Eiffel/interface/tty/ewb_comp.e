@@ -115,7 +115,7 @@ feature -- Compilation
 						!!cmd.make (0);
 						cmd.append (Copy_cmd);
 						cmd.extend (' ');
-						cmd.append (Default_ace_file);
+						cmd.append (Default_ace_name);
 						cmd.extend (' ');
 						cmd.append (file_name);
 						Execution_environment.system (cmd);

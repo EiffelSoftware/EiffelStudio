@@ -1937,6 +1937,32 @@ feature -- Genericity
 			end
 		end
 
+	has_anchored_type: BOOLEAN is
+			-- Has feature signature an anchored type?
+			-- (I.e., is anchored type used in argument or result declaration?)
+		local
+			i: INTEGER
+			a: like arguments
+		do
+			if type.has_like then
+				Result := True
+			else
+				from
+					i := 1
+					a := arguments
+					i := argument_count
+				until
+					i <= 0
+				loop
+					if a.i_th (i).has_like then
+						Result := True
+						i := 0
+					end
+					i := i - 1
+				end
+			end
+		end
+
 feature -- Pattern
 
 	pattern: PATTERN is

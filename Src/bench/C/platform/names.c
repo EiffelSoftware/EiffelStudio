@@ -2,11 +2,11 @@
 /* $Id$ */
 
 #ifdef EIF_WIN32
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
 #include "eif_eiffel.h"
+#include "eif_misc.h"
 
 rt_public EIF_REFERENCE eif_dot_e (void)
 {

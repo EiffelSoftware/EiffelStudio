@@ -228,6 +228,15 @@ feature -- Drawing operations
 			draw_arc (pt, r1, r2, 0, 360, orientation, -1)
 		end
 
+	copy_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+			-- Copy `pix' into the drawable at the point `pt'.
+		require
+			valid_point: pt /= Void
+			valid_pixmap: is_valid (pix)
+		do
+			implementation.copy_pixmap (pt, pix)
+		end
+
 feature -- filling operations
 
 	fill_polygon (pts: ARRAY [EV_POINT]) is
@@ -377,14 +386,6 @@ feature {NONE} -- To verify : status settings
 --		end
 
 feature {NONE} -- To verify or implement: TEMP
-
---	copy_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
---			-- Copy `a_pixmap' to the drawing at `a_point'.
---			-- If there is not enough space to create auxiliery bitmap (DDB) 
---			-- exception will be raised
---		do
---			implementation.copy_pixmap (pt, pix)
---		end
 
 -- 	set_text_alignment is
  --			-- Set the default text alignment.

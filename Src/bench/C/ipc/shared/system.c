@@ -18,12 +18,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>
-
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #ifdef I_SYS_FILE
 #include <sys/file.h>

@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- No class name
 		once
-			Result := ""
+			Result := create {STRING}.make (0)
 		end
 
 	default_style: INTEGER is

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
-			name_set: text.is_equal ("")
+			name_set: text.is_equal (create {STRING}.make (0))
 		end
 
 feature -- Status report

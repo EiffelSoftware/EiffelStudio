@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local
-			vertical_box: EV_VERTICAL_BOX
+			tool_bar: EV_TOOL_BAR
+			pixmap: EV_PIXMAP
 		do
 			call_default_create (any)
 			internal_type := a_type
@@ -38,32 +39,35 @@ feature {NONE} -- Initialization
 			check
 				object_not_void: object /= Void
 			end
-			create frame.make_with_text (label_text)
-			create vertical_box
-			frame.extend (vertical_box)
+			set_padding_width (object_editor_vertical_padding_width)	
+			create label.make_with_text (label_text)
+			label.align_text_left
+			extend (label)
 			create horizontal_box
-			vertical_box.extend (horizontal_box)
+			extend (horizontal_box)
 			horizontal_box.set_padding_width (object_editor_padding_width)
-			horizontal_box.set_border_width (Object_editor_padding_width)
 
 			create modify_button.make_with_text (select_button_text)
+			create tool_bar
+			tool_bar.extend (modify_button)
 			modify_button.select_actions.extend (agent modify_pixmap)
 			modify_button.select_actions.extend (agent update_editors)
-			horizontal_box.extend (modify_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			create filler_label
 			horizontal_box.extend (filler_label)
 			create constants_combo_box
 			horizontal_box.extend (constants_combo_box)
 			constants_combo_box.hide
 			create_constants_button
+			create tool_bar
+			tool_bar.extend (constants_button)
 			constants_button.select_actions.extend (agent remove_constant)
 			constants_button.select_actions.extend (agent update_editors)
-			horizontal_box.extend (constants_button)
-			horizontal_box.disable_item_expand (modify_button)
-			horizontal_box.disable_item_expand (constants_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			create pixmap_container
-			Current.extend (frame)
-			vertical_box.extend (pixmap_container)
+			extend (pixmap_container)
 			a_parent.extend (Current)
 
 			execution_agent := an_execution_agent
@@ -176,19 +180,19 @@ feature {NONE} -- Implementation
 					modify_pixmap
 				end
 				filler_label.hide
-				modify_button.hide
+				modify_button.parent.hide
 				constants_combo_box.show
 				pixmap_container.wipe_out
 				filler_label.wipe_out
 			else
 				filler_label.show
-				modify_button.show
+				modify_button.parent.show
 				constants_combo_box.hide
 				constants_combo_box.remove_selection
 			end
 		end
 		
-	modify_button: EV_BUTTON
+	modify_button: EV_TOOL_BAR_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 		

@@ -45,7 +45,7 @@ feature {NONE} -- implementation
 			sep_imp ?= an_item_imp
 			if sep_imp /= Void then
 				check
-					sep_imp_radio_group_void: sep_imp.radio_group = Default_pointer
+					sep_imp_radio_group_void: sep_imp.radio_group = NULL
 				end
 				from
 					interface.go_i_th (pos + 1)
@@ -55,7 +55,7 @@ feature {NONE} -- implementation
 					radio_imp ?= interface.item.implementation
 					if radio_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
-						if sep_imp.radio_group /= Default_pointer then
+						if sep_imp.radio_group /= NULL then
 							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
@@ -68,14 +68,14 @@ feature {NONE} -- implementation
 					sep_imp := separator_imp_by_index (pos)
 					if sep_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
-						if sep_imp.radio_group /= Default_pointer then
+						if sep_imp.radio_group /= NULL then
 							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
 					else
 						radio_imp.set_radio_group (radio_group)
 						radio_item_pointer := radio_imp.radio_group
-						if radio_group /= Default_pointer then
+						if radio_group /= NULL then
 							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						set_radio_group (radio_imp.radio_group)
@@ -105,7 +105,7 @@ feature {NONE} -- implementation
 			from
 				rgroup := a_gslist
 			until
-				rgroup = Default_pointer
+				rgroup = NULL
 			loop
 				item_pointer := C.gslist_struct_data (rgroup)
 				C.set_gtk_radio_menu_item_struct_group (
@@ -187,11 +187,11 @@ feature {NONE} -- implementation
 						if temp_item_pointer = radio_imp.c_object then
 							temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
-						--Check temp_item_pointer_not_void: temp_item_pointer /= Default_pointer end
+						--Check temp_item_pointer_not_void: temp_item_pointer /= NULL end
 						C.gtk_check_menu_item_set_active (temp_item_pointer, True)
 					end
 				end
-				C.gtk_radio_menu_item_set_group (radio_imp.c_object, Default_pointer)
+				C.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
 			else
 				sep_imp ?= item_imp
 				if sep_imp /= Void then
@@ -217,7 +217,7 @@ feature {NONE} -- implementation
 						interface.forth
 					end
 					if not has_radio_item and then sep_imp = Void then
-						set_radio_group (Default_pointer)
+						set_radio_group (NULL)
 					end						
 					interface.go_i_th (an_index)						
 				end
@@ -273,6 +273,10 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.21  2000/05/01 22:23:09  king
 --| Slight refactoring if remove_i_th
 --|

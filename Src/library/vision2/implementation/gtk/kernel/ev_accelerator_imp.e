@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	add_accel is
 			-- Add the current key combination to the invisible button.
 		do
-			if accel_group /= Default_pointer then
+			if accel_group /= NULL then
 				C.gtk_widget_add_accelerator (
 					c_object,
 					eiffel_to_c ("pressed"),
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	remove_accel is
 			-- Remove the current key combination to the invisible button.
 		do
-			if accel_group /= Default_pointer then
+			if accel_group /= NULL then
 				C.gtk_widget_remove_accelerator (
 					c_object,
 					accel_group,
@@ -196,6 +196,10 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/02 18:55:21  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.9  2000/04/20 18:07:38  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

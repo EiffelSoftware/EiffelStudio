@@ -39,7 +39,7 @@ feature -- Initialization
 			-- Create the status bar item.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_frame_new (Default_pointer))
+			set_c_object (C.gtk_frame_new (NULL))
 			C.gtk_frame_set_shadow_type (c_object, C.GTK_SHADOW_IN_ENUM)
 		end
 
@@ -67,7 +67,7 @@ feature -- Initialization
 			C.gtk_box_pack_start (box, pixmap_box, False, False, 1)
 			C.gtk_widget_hide (pixmap_box)
 		ensure
-			status_bar_item_box /= default_pointer
+			status_bar_item_box /= NULL
 		end
 
 feature -- Access
@@ -163,6 +163,10 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.27  2000/04/28 22:07:45  brendel
 --| Unreleased.
 --|

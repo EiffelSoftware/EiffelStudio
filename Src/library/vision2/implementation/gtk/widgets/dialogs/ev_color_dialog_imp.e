@@ -26,16 +26,14 @@ feature {NONE} -- Initialization
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		local
-			a: ANY
-			s: STRING
 			par_imp: EV_CONTAINER_IMP
 		do
-			s := "Color selection dialog"
-			a := s.to_c
 			par_imp ?= par.implementation
 
 			-- Create the gtk object.
-			widget := c_gtk_color_selection_dialog_new ($a)
+			widget := c_gtk_color_selection_dialog_new (
+				eiffel_to_c ("Color selection dialog")
+			)
 
 			-- Attach the window to `par'.
 			gtk_window_set_transient_for (widget, par_imp.widget)
@@ -93,14 +91,14 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "OK" button is pressed.
 		do
-			add_command (ok_widget, "clicked", cmd, arg, default_pointer)
+			add_command (ok_widget, "clicked", cmd, arg, NULL)
 		end
 
 	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "Help" button is pressed.
 		do
-			add_command (help_widget, "clicked", cmd, arg, default_pointer)
+			add_command (help_widget, "clicked", cmd, arg, NULL)
 		end
 
 feature -- Event -- removing command association
@@ -159,6 +157,10 @@ end -- class EV_COLOR_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/05/02 18:55:27  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.8  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|

@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			C.gtk_box_pack_end (box, pixmap_box, True, False, padding)
 			C.gtk_widget_hide (pixmap_box)
 		ensure
-			button_box /= default_pointer
+			button_box /= NULL
 		end
 	
 feature -- Access
@@ -211,6 +211,10 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.32  2000/04/29 03:16:08  pichery
 --| Added feature `is_default_push_button',
 --| `enable/disable_push_button'

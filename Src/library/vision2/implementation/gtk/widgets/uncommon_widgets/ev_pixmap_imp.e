@@ -167,7 +167,6 @@ feature -- Element change
 			-- wrong format, an exception is raised.
 		local
 			pixfile: FILE
-			a: ANY
 			pixmap_buffer: STRING
 			gdkpix, gdkmask: POINTER
 		do
@@ -176,10 +175,12 @@ feature -- Element change
 
 			if pixfile /= Void then
 					-- The medium is a file.
-				a := pixfile.name.to_c
 				gdkpix := C.gdk_pixmap_create_from_xpm (
-						C.gdk_root_parent,
-						$gdkmask, default_pointer, $a)
+					C.gdk_root_parent,
+					$gdkmask,
+					NULL,
+					eiffel_to_c (pixfile.name)
+				)
 				set_pixmap (gdkpix, gdkmask) 
 			else
 					-- The medium is a data stream.
@@ -413,7 +414,7 @@ feature {NONE} -- Implementation
 			-- Remove references to redundant image data.
 		do
 			C.gdk_pixmap_unref (drawable)
-			if mask /= default_pointer then
+			if mask /= NULL then
 				C.gdk_pixmap_unref (mask)
 			end
 		end
@@ -458,6 +459,10 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/05/02 18:55:32  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.33  2000/04/26 17:04:52  oconnor
 --| put GtkPixmap in an event box
 --|

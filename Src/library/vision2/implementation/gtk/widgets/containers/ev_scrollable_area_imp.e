@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
 			scroll_window := (
-				C.gtk_scrolled_window_new (Default_pointer, Default_pointer)
+				C.gtk_scrolled_window_new (NULL, NULL)
 			)
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_horizontal_step (1)
 			set_vertical_step (1)
 
-			viewport := C.gtk_viewport_new (Default_pointer, Default_pointer)
+			viewport := C.gtk_viewport_new (NULL, NULL)
 			C.gtk_widget_show (viewport)
 			C.gtk_container_add (scroll_window, viewport)
 		end
@@ -58,9 +58,9 @@ feature -- Access
 			o: EV_ANY_IMP
 		do
 			p := C.gtk_container_children (viewport)
-			if p/= Default_pointer then
+			if p/= NULL then
 				p := C.g_list_nth_data (p, 0)
-				if p /= Default_pointer then
+				if p /= NULL then
 					o := eif_object_from_c (p)
 					Result ?= o.interface
 				end
@@ -218,6 +218,10 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.12  2000/04/22 00:21:47  brendel
 --| scrollbar -> scroll_bar.
 --|

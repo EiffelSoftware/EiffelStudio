@@ -46,7 +46,7 @@ feature -- Element change
 			-- We left-align and vertical_center-position the text
 			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 
-			if gtk_pixmap /= default_pointer then
+			if gtk_pixmap /= NULL then
 				C.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
 			end				
 		end
@@ -78,6 +78,10 @@ end -- class EV_CHECK_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.9  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

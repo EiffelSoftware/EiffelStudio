@@ -67,11 +67,9 @@ feature {NONE} -- Implementation
 
 	add_menu (menu_imp: EV_MENU_IMP) is
 		local
-			name: ANY
 			i: POINTER
 		do
-			name := menu_imp.name.to_c
-			i := gtk_menu_item_new_with_label ($name)
+			i := gtk_menu_item_new_with_label (eiffel_to_c (menu_imp.name))
 			gtk_menu_item_set_submenu (GTK_MENU_ITEM (i), menu_imp.c_object)
 			gtk_menu_bar_append (GTK_MENU_BAR (c_object), i)
 			gtk_widget_show (i)
@@ -117,6 +115,10 @@ end -- class EV_STATIC_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/02 18:55:32  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Initialize. 
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_viewport_new (Default_pointer, Default_pointer))
+			set_c_object (C.gtk_viewport_new (NULL, NULL))
 			viewport := c_object
 		end	
 
@@ -102,6 +102,10 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.3  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

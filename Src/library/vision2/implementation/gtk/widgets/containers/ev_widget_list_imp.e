@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			--| Is it necessary?
 			C.gtk_widget_ref (p)
 			C.gtk_container_remove (list_widget, p)
-			C.set_gtk_widget_struct_parent (p, Default_pointer)
+			C.set_gtk_widget_struct_parent (p, NULL)
 			--v_imp.set_parent_imp (Void)
 			C.gtk_widget_unref (p)
 		end
@@ -97,6 +97,10 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.16  2000/05/02 17:33:17  king
 --| Added *_i_th implementation that was made deferred in dyn_list_imp
 --|
@@ -156,7 +160,7 @@ end -- class EV_WIDGET_LIST_IMP
 --| protect count from accessing C when is_destroyed
 --|
 --| Revision 1.1.4.14  2000/02/08 09:33:54  oconnor
---| fixed child /= Void to child /= Default_pointer
+--| fixed child /= Void to child /= NULL
 --|
 --| Revision 1.1.4.13  2000/02/08 00:19:38  king
 --| Changed inheritence to deal with changes in ev_dynamic_list

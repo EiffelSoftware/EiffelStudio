@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			C.gtk_box_pack_start (box, text_label, True, True, 0)
 			C.gtk_widget_show (text_label)
 		ensure
-			menu_item_box /= default_pointer
+			menu_item_box /= NULL
 		end
 
 feature -- Access
@@ -89,7 +89,7 @@ feature -- Element change
 			-- Assign `Void' to `text'.
 		do
 			real_text := Void
-			C.gtk_label_set_text (text_label, Default_pointer)
+			C.gtk_label_set_text (text_label, NULL)
 			C.gtk_widget_hide (text_label)
 		end
 
@@ -174,6 +174,10 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.45  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

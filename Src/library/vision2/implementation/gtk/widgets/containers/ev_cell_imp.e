@@ -41,9 +41,9 @@ feature -- Access
 			imp: EV_ANY_IMP
 		do
 			p := C.gtk_container_children (c_object)
-			if p /= Default_pointer then
+			if p /= NULL then
 				p := C.g_list_nth_data (p, 0)
-				if p /= Default_pointer then
+				if p /= NULL then
 					imp := eif_object_from_c (p)
 					check
 						imp_not_void: imp /= Void
@@ -104,6 +104,10 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.5  2000/04/25 21:07:09  brendel
 --| Costmetics.
 --|

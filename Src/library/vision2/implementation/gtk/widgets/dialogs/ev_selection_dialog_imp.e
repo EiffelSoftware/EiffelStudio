@@ -42,7 +42,7 @@ feature {NONE} -- Basic operation
 		do
 			create cmd.make (~execute)
 			create arg.make (Current)
-			add_command (p, "clicked", cmd, arg, default_pointer)
+			add_command (p, "clicked", cmd, arg, NULL)
 		end
 
 feature -- Event - command association
@@ -68,7 +68,7 @@ feature -- Event - command association
 --			remove_single_command (cancel_widget, cancel_clicked_id, cancel_close_command)
 
 			-- Add the command.
-			add_command (cancel_widget, "clicked", cmd, arg, default_pointer)
+			add_command (cancel_widget, "clicked", cmd, arg, NULL)
 
 --			-- re-add a new close command.
 --			add_dialog_close_command (cancel_widget)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation - Event handling -
 			-- to "clicked" event for `ok' and `cancel' button in separate location
 			-- in `event_command_array'.
 		do
-			Result := {EV_STANDARD_DIALOG_IMP} Precursor (default_pointer, ev_str, mouse_but, double_clic)
+			Result := {EV_STANDARD_DIALOG_IMP} Precursor (NULL, ev_str, mouse_but, double_clic)
 			if (ev_str.is_equal ("clicked")) then
 				if (wid = ok_widget) then
 					-- "clicked" event for `ok' button.
@@ -121,6 +121,10 @@ end -- class EV_SELECTION_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/05/02 18:55:27  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.3  2000/02/14 11:40:31  oconnor
 --| merged changes from prerelease_20000214
 --|

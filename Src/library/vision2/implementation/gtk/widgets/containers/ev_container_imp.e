@@ -77,7 +77,7 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 	shared_pointer: POINTER_REF
 			-- Reference to `radio_group'. Used to share the
 			-- pointer `radio_group' with merged containers even when
-			-- its value is still `Default_pointer'.
+			-- its value is still `NULL'.
 
 	set_shared_pointer (p: POINTER_REF) is
 			-- Assign `p' to `shared_pointer'.
@@ -140,7 +140,7 @@ feature -- Status setting
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if radio_group /= Default_pointer then
+				if radio_group /= NULL then
 					C.gtk_radio_button_set_group (r.c_object, radio_group)
 				else
 					C.gtk_toggle_button_set_active (r.c_object, False)
@@ -159,9 +159,9 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				set_radio_group (C.g_slist_remove (radio_group, r.c_object))
-				C.gtk_radio_button_set_group (r.c_object, Default_pointer)
+				C.gtk_radio_button_set_group (r.c_object, NULL)
 				if r.is_selected then
-					if radio_group /= Default_pointer then
+					if radio_group /= NULL then
 						C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
 					end
 				else
@@ -225,6 +225,10 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.34  2000/04/26 17:04:50  oconnor
 --| put GtkPixmap in an event box
 --|

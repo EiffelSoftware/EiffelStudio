@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Create frame.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_frame_new (Default_pointer))
+			set_c_object (C.gtk_frame_new (NULL))
 		end
 
 feature -- Access
@@ -116,7 +116,7 @@ feature -- Status report
 			p: POINTER
 		do
 			p := C.c_gtk_frame_text (c_object)
-			if p /= Default_pointer then
+			if p /= NULL then
 				create Result.make_from_c (p)
 				if Result.count = 0 then
 					Result := Void
@@ -135,7 +135,7 @@ feature -- Element change
 	remove_text is
 			-- Make `text' `Void'.
 		do
-			C.gtk_frame_set_label (c_object, Default_pointer)
+			C.gtk_frame_set_label (c_object, NULL)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -167,6 +167,10 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/05/02 18:55:28  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.11  2000/04/28 22:03:34  brendel
 --| Tried to change border width to 1 for lowered and raised but this attempt
 --| failed. See code.

@@ -53,8 +53,8 @@ feature {NONE} -- Initialization
 
 			-- Creating the gtk scrolled window.
 			scroll_window := (C.gtk_scrolled_window_new (
-					Default_pointer,
-					Default_pointer
+					NULL,
+					NULL
 					)
 					)
 			C.gtk_widget_show (scroll_window)
@@ -143,7 +143,7 @@ feature -- Status report
 			list_pointer: POINTER
 		do
 			list_pointer := C.gtk_tree_struct_selection (list_widget)
-			if list_pointer /= Default_pointer then
+			if list_pointer /= NULL then
 				Result := C.g_list_length (list_pointer) > 0
 			end
 		end
@@ -223,7 +223,7 @@ feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 						C.gtk_list_child_position (a_container, a_child)
 					)
 			check
-				item_pointer_not_null: item_pointer /= Default_pointer
+				item_pointer_not_null: item_pointer /= NULL
 			end
 			C.gtk_list_remove_items_no_unref (a_container, item_pointer)
 			C.gtk_list_insert_items (a_container, item_pointer, a_position)
@@ -256,6 +256,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.41  2000/04/19 20:58:47  oconnor
 --| no more externals used
 --|

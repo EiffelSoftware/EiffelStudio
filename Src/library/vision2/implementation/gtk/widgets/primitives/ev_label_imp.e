@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-			text_label := C.gtk_label_new (Default_pointer)
+			text_label := C.gtk_label_new (NULL)
 			C.gtk_widget_show (text_label)
 			C.gtk_container_add (c_object, text_label)
 		end
@@ -71,6 +71,10 @@ end --class LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.15  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

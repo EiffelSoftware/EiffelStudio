@@ -132,7 +132,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 			-- functionality implemented by `Current'
 
 invariant
-	entry_widget_set: entry_widget /= Default_pointer
+	entry_widget_set: entry_widget /= NULL
 end -- class EV_TEXT_FIELD_IMP
 
 --!-----------------------------------------------------------------------------
@@ -156,6 +156,10 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.18  2000/04/20 18:07:41  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

@@ -84,7 +84,7 @@ feature -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if radio_group /= Default_pointer then
+				if radio_group /= NULL then
 					r.disable_select
 				end
 				radio_group := C.g_slist_append (radio_group, r.c_object)
@@ -103,7 +103,7 @@ feature -- Implementation
 			if r /= Void then
 				if r.is_selected then
 					radio_group := C.g_slist_remove (radio_group, r.c_object)
-					if radio_group /= Default_pointer then
+					if radio_group /= NULL then
 						C.gtk_toggle_button_set_active (
 							C.gslist_struct_data (radio_group), True
 						)
@@ -145,6 +145,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.20  2000/04/14 16:57:04  king
 --| Implemented remove radio button
 --|

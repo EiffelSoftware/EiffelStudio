@@ -430,12 +430,13 @@ feature -- Element change
 
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
-		local
-			a: ANY
 		do
 			if list_widget /= NULL then
-				a := a_txt.to_c
-				C.gtk_clist_set_column_title (list_widget, a_column - 1, $a)
+				C.gtk_clist_set_column_title (
+					list_widget,
+					a_column - 1,
+					eiffel_to_c (a_txt)
+				)
 			end
 		end
 
@@ -757,7 +758,7 @@ feature {NONE} -- Implementation
 					eiffel_to_c (a_text),
 					0,
 					C.gtk_pixmap_struct_pixmap (pixmap_imp.c_object),
-					Default_pointer
+					NULL
 					--C.gtk_cell_pixmap_struct_mask (
 					--	pointer_array_i_th (
 					--		C.gtk_clist_row_struct_cell (
@@ -923,6 +924,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.70  2000/04/27 18:23:34  king
 --| Selected items is now arrayed_list
 --|

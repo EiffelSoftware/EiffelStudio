@@ -153,11 +153,15 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/05/02 18:55:19  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.23  2000/04/18 16:50:04  king
 --| Replaced press-actions -> select_actions
 --|
 --| Revision 1.22  2000/04/13 21:59:47  king
---| Correct pointer equivalance from Void to Default_pointer
+--| Correct pointer equivalance from Void to NULL
 --|
 --| Revision 1.21  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_text_new (Default_pointer, Default_pointer))
+			set_c_object (C.gtk_text_new (NULL, NULL))
 			C.gtk_text_set_editable (c_object, True)
 			entry_widget := c_object
 		end
@@ -189,10 +189,7 @@ feature -- Status setting
 		end
 	
 	set_text (txt: STRING) is
-		local
-			a: ANY
 		do
-			a := txt.to_c
 			delete_text (1, text_length + 1)
 			insert_text (txt)
 		end
@@ -293,6 +290,10 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/05/02 18:55:30  oconnor
+--| Use NULL instread of Defualt_pointer in C code.
+--| Use eiffel_to_c (a) instead of a.to_c.
+--|
 --| Revision 1.22  2000/04/18 19:53:04  oconnor
 --| Revised to survive without externals.
 --|

@@ -28,20 +28,13 @@ feature
 
 	is_valid: BOOLEAN is
 		do
-io.error.putstring ("Is valid");
-io.error.putstring (option_name);
 			Result := valid_options.has (option_name);
-io.error.putbool (Result);
-io.error.new_line
 		end;
 
 	is_system_level: BOOLEAN is
 		require else
 			is_valid: is_valid
 		do
-io.error.putstring ("Is is_system_level");
-io.error.putstring (option_name);
-io.error.new_line;
 			Result := True
 		end;
 
@@ -80,10 +73,8 @@ io.error.new_line;
 				valid_options.item (option_name)
 			when dead_code then
 				if value.is_no then
-io.error.putstring ("System set_remover off True%N");
 					System.set_remover_off (True)
 				elseif value.is_yes then
-io.error.putstring ("System set_remover off False%N");
 					System.set_remover_off (False)
 				else
 					error_found := True;
@@ -93,21 +84,17 @@ io.error.putstring ("System set_remover off False%N");
 				Error_handler.insert_warning (vd37);
 			when exception_stack_managed then
 				if value.is_no then
-io.error.putstring ("System set_exception_stack_managed False%N");
 					System.set_exception_stack_managed (False)
 				elseif value.is_yes then
-io.error.putstring ("System set_exception_stack_managed (True)%N");
 					System.set_exception_stack_managed (True)
 				else
 					error_found := True;
 				end;
 			when code_replication then
 				if value.is_no then
-io.error.putstring ("System set_code_replication off True%N");
-					System.set_replication_off (True);
+					System.set_code_replication_off (True);
 				elseif value.is_yes then
-io.error.putstring ("System set_code_replication off False%N");
-					System.set_replication_off (False);
+					System.set_code_replication_off (False);
 				else
 					error_found := True;
 				end;

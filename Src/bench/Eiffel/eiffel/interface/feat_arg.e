@@ -164,7 +164,7 @@ feature
 							!!vtec2;
 							vtec2.set_class (associated_class);
 							vtec2.set_feature (f);
-							vtec1.set_entity_name (argument_name);
+							vtec2.set_entity_name (argument_name);
 							Error_handler.insert_error (vtec2);
 						end
 					end;

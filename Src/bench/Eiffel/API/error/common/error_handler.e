@@ -64,6 +64,11 @@ end;
 			new_error := False;
 		end;
 
+	nb_errors: INTEGER is
+		do
+			Result := error_list.count;
+		end;
+
 	has_error: BOOLEAN is
 			-- Has the error handler detected an error so far ?
 		do
@@ -117,7 +122,7 @@ feature -- Syntax errors
 	make_id_too_long is
 			-- Build an error message for a too long identifier.
 		local
-			id_too_long: STRING_TOO_LONG;
+			id_too_long: ID_TOO_LONG;
 		do
 			!!id_too_long.init;
 			insert_error (id_too_long);
@@ -164,6 +169,15 @@ feature -- Syntax errors
 			raise_error;
 		end;
 
+	make_basic_generic_type is
+		local
+			basic_gen_type_error: BASIC_GEN_TYPE_ERR;
+		do
+			!!basic_gen_type_error.init;
+			insert_error (basic_gen_type_error);
+			raise_error;
+		end;
+
 	send_yacc_information is
 			-- Send to C code of Yacc information for making
 			-- error messages.
@@ -174,7 +188,8 @@ feature -- Syntax errors
 									$make_string_uncompleted,
 									$make_bad_character,
 									$make_string_empty,
-									$make_id_too_long);
+									$make_id_too_long,
+									$make_basic_generic_type);
 		end;
 
 	wipe_out is
@@ -215,7 +230,7 @@ feature -- Debug purpose
 
 feature {NONE} -- Externals
 
-	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7: POINTER) is
+	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"

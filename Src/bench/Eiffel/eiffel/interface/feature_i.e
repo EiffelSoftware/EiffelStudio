@@ -890,8 +890,6 @@ feature -- Signature checking
 			vffd7: VFFD7;
 			vffd8: VFFD8;
 			vtug: VTUG;
-			vtec1: VTEC1;
-			vtec2: VTEC2;
 			vtgg1: VTGG1;
 		do
 			if type.has_like and then is_once then
@@ -1004,11 +1002,13 @@ end;
 						!!vtec1;
 						vtec1.set_class (written_class);	
 						vtec1.set_feature (Current);
+						vtec1.set_entity_name (feature_name);
 						Error_handler.insert_error (vtec1);
 					elseif not solved_type.valid_expanded_creation then
 						!!vtec2;
 						vtec2.set_class (written_class);	
 						vtec2.set_feature (Current);
+						vtec2.set_entity_name (feature_name);
 						Error_handler.insert_error (vtec2);
 					end
 				end;
@@ -1613,7 +1613,7 @@ feature -- PS
 				loop
 					Result.append (arguments.argument_names.i_th (arguments.position));
 					Result.append (": ");
-					Result.append (arguments.item.actual_type.dump);
+					Result.append (arguments.item.dump);
 					arguments.forth;
 					if not arguments.after then
 						Result.append (", ")
@@ -1643,7 +1643,7 @@ feature -- PS
 				loop
 					a_clickable.put_string (arguments.argument_names.i_th (arguments.position));
 					a_clickable.put_string (": ");
-					arguments.item.actual_type.append_clickable_signature (a_clickable);
+					arguments.item.append_clickable_signature (a_clickable);
 					arguments.forth;
 					if not arguments.offright then
 						a_clickable.put_string (", ")
@@ -1682,6 +1682,7 @@ feature -- PS
 				end;
 				!!Result.make (Current, c, body.start_position, body.end_position);
 			else
+io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: FIX ME%N");
 				!!Result.make (Current, c, 0, 0);
 			end;
 		end;

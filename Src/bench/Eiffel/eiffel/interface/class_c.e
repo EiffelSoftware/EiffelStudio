@@ -1067,7 +1067,6 @@ feature -- Workbench feature and descriptor table generation
 			-- Generated file name prefix
 		local
 			fname: STRING;
-			g_path: STRING;
 		do
 			fname := base_file_name;
 			!!Result.make (Generation_path.count + fname.count + 1);

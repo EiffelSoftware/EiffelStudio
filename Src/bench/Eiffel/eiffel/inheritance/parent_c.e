@@ -98,16 +98,18 @@ feature
 
 	has_renamed (feature_name: STRING): BOOLEAN is
 			-- Is the current parent renamed a feature to `feature_name' ?
+		local
+			local_renaming: EXTEND_TABLE [STRING, STRING]
 		do
-			if renaming /= Void then
+			local_renaming := renaming
+			if local_renaming /= Void then
 				from
-					renaming.start
+					local_renaming.start
 				until
-					renaming.after or else Result
+					local_renaming.after or else Result
 				loop
-					Result := renaming.item_for_iteration.is_equal
-								(feature_name);
-					renaming.forth
+					Result := local_renaming.item_for_iteration.is_equal (feature_name);
+					local_renaming.forth
 				end
 			end;
 		end;
@@ -154,16 +156,18 @@ feature
 			vhrc5: VHRC5;
 			old_name, new_name: STRING;
 			f: FEATURE_I;
+			local_renaming: EXTEND_TABLE [STRING, STRING]
 		do
-			if renaming /= Void then
+			local_renaming := renaming
+			if local_renaming /= Void then
 				from
 					parent_table := parent.feature_table;
-					renaming.start
+					local_renaming.start
 				until
-					renaming.after
+					local_renaming.after
 				loop
-					old_name := renaming.key_for_iteration;
-					new_name := renaming.item_for_iteration;
+					old_name := local_renaming.key_for_iteration;
+					new_name := local_renaming.item_for_iteration;
 					if old_name.is_equal (new_name) then
 						!!vhrc3;
 						vhrc3.set_class (System.current_class);
@@ -203,7 +207,7 @@ feature
 							Error_handler.insert_error (vhrc4);
 						end;
 					end;
-					renaming.forth
+					local_renaming.forth
 				end;
 			end;
 		end;
@@ -240,15 +244,20 @@ feature
 			vmss1: VMSS1;
 			vdus1: VDUS1;
 			vlel2: VLEL2;
+			local_redefining: SEARCH_TABLE [STRING]
+			local_selecting: SEARCH_TABLE [STRING]
+			local_undefining: SEARCH_TABLE [STRING]
+			local_exports: EXPORT_ADAPTATION
 		do
 			parent_table := parent.feature_table;
-			if redefining /= Void then
+			local_redefining := redefining
+			if local_redefining /= Void then
 				from
-					redefining.start
+					local_redefining.start
 				until
-					redefining.after
+					local_redefining.after
 				loop
-					feature_name := redefining.item_for_iteration;
+					feature_name := local_redefining.item_for_iteration;
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 					
@@ -260,16 +269,18 @@ feature
 						Error_handler.insert_error (vdrs1);
 					end;
 
-					redefining.forth;
+					local_redefining.forth;
 				end;		
 			end;
-			if selecting /= Void then
+
+			local_selecting := selecting
+			if local_selecting /= Void then
 				from
-					selecting.start
+					local_selecting.start
 				until
-					selecting.after
+					local_selecting.after
 				loop	
-					feature_name := selecting.item_for_iteration;
+					feature_name := local_selecting.item_for_iteration;
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 
@@ -281,16 +292,18 @@ feature
 						Error_handler.insert_error (vmss1);
 					end;
 
-					selecting.forth;
+					local_selecting.forth;
 				end;
 			end;
-			if undefining /= Void then
+
+			local_undefining := undefining
+			if local_undefining /= Void then
 				from
-					undefining.start
+					local_undefining.start
 				until	
-					undefining.after
+					local_undefining.after
 				loop
-					feature_name := undefining.item_for_iteration;
+					feature_name := local_undefining.item_for_iteration;
 						-- Take care of renaming
 					real_name := renaming_of (feature_name);
 
@@ -302,16 +315,18 @@ feature
 						Error_handler.insert_error (vdus1);
 					end;
 	
-					undefining.forth;
+					local_undefining.forth;
 				end;
 			end;
-			if exports /= Void then
+
+			local_exports := exports
+			if local_exports /= Void then
 				from
-					exports.start
+					local_exports.start
 				until
-					exports.after
+					local_exports.after
 				loop
-					feature_name := exports.key_for_iteration;
+					feature_name := local_exports.key_for_iteration;
 						-- Take care of renamings
 					real_name := renaming_of (feature_name);
 	
@@ -322,7 +337,7 @@ feature
 						vlel2.set_feature_name (feature_name);
 						Error_handler.insert_error (vlel2);
 					end;
-					exports.forth;
+					local_exports.forth;
 				end;
 			end;
 		end;
@@ -333,23 +348,27 @@ feature
 			has_selection: selecting /= Void;
 		local
 			vmss2: VMSS2;
+			local_selecting: SEARCH_TABLE [STRING]
+			local_selected: LINKED_LIST [STRING]
 		do
 			from
-				selecting.start
+				local_selecting := selecting
+				local_selected := Selected
+				local_selecting.start
 			until
-				selecting.after
+				local_selecting.after
 			loop
-				Selected.start;
-				Selected.compare_objects
-				Selected.search (selecting.item_for_iteration);
-				if Selected.after then
+				local_selected.start;
+				local_selected.compare_objects
+				local_selected.search (local_selecting.item_for_iteration);
+				if local_selected.after then
 					!!vmss2;
 					vmss2.set_class (System.current_class);
 					vmss2.set_parent (parent);
 					vmss2.set_feature_name (selecting.item_for_iteration);
 					Error_handler.insert_error (vmss2);
 				end;
-				selecting.forth;
+				local_selecting.forth;
 			end;
 		end;
 
@@ -359,21 +378,23 @@ feature
 			good_argument: feature_name /= Void;
 		local
 			new_name: STRING;
+			local_renaming: EXTEND_TABLE [STRING, STRING]
 		do
-			if renaming /= Void then
+			local_renaming := renaming
+			if local_renaming /= Void then
 				from
-					renaming.start
+					local_renaming.start
 				until
-					renaming.after or else Result /= Void
+					local_renaming.after or else Result /= Void
 				loop
-					new_name := renaming.item_for_iteration;
+					new_name := local_renaming.item_for_iteration;
 					if new_name.is_equal (feature_name) then
-						Result := renaming.key_for_iteration;
+						Result := local_renaming.key_for_iteration;
 					end;
-					renaming.forth;
+					local_renaming.forth;
 				end;
 				if Result = Void then
-					if not renaming.has (feature_name) then
+					if not local_renaming.has (feature_name) then
 						Result := feature_name;
 					end;
 				end;

@@ -216,12 +216,12 @@ feature -- Access
 
 	api_feature_table: E_FEATURE_TABLE is	
 			-- Feature table for current class
-		require
-			has_feature_table: Feat_tbl_server.has (id)
+			--| Can be Void when `feature_table' has not yet
+			--| been computed (for example, error at degree 5).
 		do
-			Result := feature_table.api_table
-		ensure
-			valid_result: Result /= Void
+			if feature_table /= Void then
+				Result := feature_table.api_table
+			end
 		end
 
 	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE] is

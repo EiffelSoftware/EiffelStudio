@@ -1,24 +1,24 @@
 indexing
-
-	description: "Integer values coded on 8 bits"
+	description: "Integer values coded on 16 bits"
 	status: "See notice at end of class"
+	external_name: "System.Int16"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class INTEGER_8 inherit
+frozen expanded class INTEGER_16 inherit
 
-	INTEGER_8_REF
+	INTEGER_16_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({INTEGER_8_REF}),
-	to_reference: {INTEGER_8_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
+	make_from_reference ({INTEGER_16_REF}),
+	to_reference: {INTEGER_16_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real: {REAL},
 	to_double: {DOUBLE},
-	to_integer_16: {INTEGER_16},
 	to_integer_32: {INTEGER},
 	to_integer_64: {INTEGER_64}
 
@@ -54,7 +54,7 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class INTEGER_8
+end -- class INTEGER_16
 
 
 

@@ -1,24 +1,30 @@
 indexing
-
-	description: "Integer values coded on 64 bits"
+	description: "Integer values coded on 8 bits"
 	status: "See notice at end of class"
+	external_name: "System.Byte"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class INTEGER_64
+frozen expanded class NATURAL_8 inherit
 
-inherit
-	INTEGER_64_REF
+	NATURAL_8_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({INTEGER_64_REF}),
-	to_reference: {INTEGER_64_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	to_real: {REAL},
-	to_double: {DOUBLE}
+	make_from_reference ({NATURAL_8_REF}),
+	to_reference: {NATURAL_8_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
+	to_real_32: {REAL},
+	to_real_64: {DOUBLE},
+	to_integer_16: {INTEGER_16},
+	to_integer_32: {INTEGER},
+	to_integer_64: {INTEGER_64},
+	to_natural_16: {NATURAL_16},
+	to_natural_32: {NATURAL_32},
+	to_natural_64: {NATURAL_64}
 
 indexing
 
@@ -52,7 +58,4 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class INTEGER_64
-
-
-
+end

@@ -35,3 +35,4 @@ extern EIF_INTEGER xm_list_item_pos_from (EIF_POINTER list, EIF_POINTER xm_strin
 
 extern void xm_add_wm_protocol (EIF_POINTER shell, EIF_POINTER an_atom);
 extern void xm_font_list_entry_free (EIF_POINTER an_entry);
+extern void c_xm_set_focus (EIF_POINTER my_widget);

@@ -551,7 +551,7 @@ feature {NONE} -- C code generation
 					integer_size
 				when 8 then buffer.put_string ("_8%", 9)")
 				when 16 then buffer.put_string ("_16%", 10)")
-				when 32 then buffer.put_string ("%", 7)")
+				when 32 then buffer.put_string ("_32%", 10)")
 				when 64 then buffer.put_string ("_64%", 10)")
 				end
 			when pointer_type then

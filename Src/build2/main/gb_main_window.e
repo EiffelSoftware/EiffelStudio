@@ -229,7 +229,6 @@ feature {NONE} -- Implementation
 			-- Tool bar of `Current'
 		local
 			separator: EV_TOOL_BAR_SEPARATOR
-			generation_button: GB_CODE_GENERATION_TOOL_BAR_BUTTON
 		once
 			create Result
 			Result.extend (command_handler.delete_object_command.new_toolbar_item (True, False))

@@ -14,6 +14,19 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (b: ID_AS) is
+			-- Create a new BIT_CONSTANT AST node with
+			-- with bit sequence contained in `b'.
+		require
+			b_not_void: b /= Void
+		do
+			value := b
+		ensure
+			value_set: value = b
+		end
+
 feature {NONE} -- Initialization
 
 	set is

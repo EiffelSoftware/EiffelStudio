@@ -14,6 +14,14 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	 initialize is
+			-- Create a new ALL AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -24,6 +24,25 @@ inherit
 			is_feature
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like feature_names; b: like body; s, e: INTEGER) is
+			-- Create a new FEATURE AST node.
+		require
+			f_not_void: f /= Void
+			f_not_empty: not f.empty
+			b_not_void: b /= Void
+		do
+			feature_names := f
+			body := b
+			start_position := s
+			end_position := e
+			set_start_position
+		ensure
+			feature_names_set: feature_names = f
+			body_set: body = b
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -19,6 +19,21 @@ inherit
 			is_precursor
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like parent_name; p: like parameters) is
+			-- Create a new PRECURSOR AST node.
+		do
+			parent_name := n
+			parameters := p
+			if parameters /= Void then
+				parameters.start
+			end
+		ensure
+			parent_name_set: parent_name = n
+			parameters_set: parameters = p
+		end
+
 feature {NONE} -- Initialization
 
 	set is

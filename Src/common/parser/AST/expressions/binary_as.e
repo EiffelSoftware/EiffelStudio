@@ -11,6 +11,21 @@ inherit
 
 	EXPR_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: like left; r: like right) is
+			-- Create a new BINARY AST node.
+		require
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+		do
+			left := l
+			right := r
+		ensure
+			left_set: left = l
+			right_set: right = r
+		end
+
 feature {NONE} -- Initialization
 
 	set is

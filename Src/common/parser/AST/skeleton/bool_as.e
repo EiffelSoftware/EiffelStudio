@@ -14,6 +14,16 @@ inherit
 			is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (b: BOOLEAN) is
+			-- Create a new BOOLEAN AST node.
+		do
+			value := b
+		ensure
+			value_set: value = b
+		end
+
 feature {NONE} -- Initialization
 
 	set is

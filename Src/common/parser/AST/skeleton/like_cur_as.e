@@ -14,6 +14,14 @@ inherit
 			has_like, simple_format
 		end;
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new LIKE_CURRENT AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 		
 	set is

@@ -14,6 +14,30 @@ inherit
 			number_of_stop_points
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (k: like keys; c: like compound; s, l: INTEGER) is
+			-- Create a new DEBUG AST node.
+		do
+			keys := k
+				-- Debug keys are not case sensitive
+			if keys /= Void then
+				from keys.start until keys.after loop
+					keys.item.value.to_lower
+					keys.forth
+				end
+			end
+
+			compound := c
+			start_position := s
+			line_number := l
+		ensure
+			keys_set: keys = k
+			compound_set: compound = c
+			start_position_set: start_position = s
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -10,8 +10,22 @@ class BITS_AS
 inherit
 
 	BASIC_TYPE
+		rename
+			initialize as initialize_basic_type
 		redefine
 			set, is_equivalent
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (v: like bits_value) is
+			-- Create a new BITS AST node.
+		require
+			v_not_void: v /= Void
+		do
+			bits_value := v
+		ensure
+			bits_value_set: bits_value = v
 		end
 
 feature {NONE} -- Initialization

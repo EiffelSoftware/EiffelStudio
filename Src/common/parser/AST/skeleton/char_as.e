@@ -13,6 +13,16 @@ inherit
 		end;
 	CHARACTER_ROUTINES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: CHARACTER) is
+			-- Create a new CHARACTER AST node.
+		do
+			value := c
+		ensure
+			value_set: value = c
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -14,6 +14,16 @@ inherit
 			is_integer, good_integer, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (i: INTEGER) is
+			-- Create a new INTEGER AST node.
+		do
+			value := i
+		ensure
+			value_set: value = i
+		end
+
 feature {NONE} -- Initialization
 
 	set is

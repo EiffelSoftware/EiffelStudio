@@ -11,6 +11,26 @@ inherit
 
 	INSTRUCTION_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (tp: like type; tg: like target; c: like call; s, l: INTEGER) is
+			-- Create a new CREATION AST node.
+		require
+			tg_not_void: tg /= Void
+		do
+			type := tp
+			target := tg
+			call := c
+			start_position := s
+			line_number := l
+		ensure
+			type_set: type = tp
+			target_set: target = tg
+			call_set: call = c
+			start_position_set: start_position = s
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -14,6 +14,22 @@ inherit
 			number_of_stop_points, is_equivalent, line_number
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (e: like expr; c: like compound; l: INTEGER) is
+			-- Create a new ELSIF AST node.
+		require
+			e_not_void: e /= Void
+		do
+			expr := e
+			compound := c
+			line_number := l
+		ensure
+			expr_set: expr = e
+			compound_set: compound = c
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

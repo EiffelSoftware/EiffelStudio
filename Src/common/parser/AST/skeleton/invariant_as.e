@@ -14,6 +14,16 @@ inherit
 			is_invariant_obj, is_equivalent
 		end;
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (a: like assertion_list) is
+			-- Create a new INVARIANT AST node.
+		do
+			assertion_list := a
+		ensure
+			assertion_list_set: assertion_list = a
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -24,9 +24,6 @@ inherit
 			reset
 		end
 
-	EXTERNAL_FACTORY
-		export {NONE} all end
-
 	SHARED_IL_CONSTANTS
 		rename
 			valid_type as valid_il_type

@@ -27,6 +27,7 @@ create
 
 A		([a-z]|[A-Z]|[0-9]|_|&)
 X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
+N		[0-9]
 
 %%
 
@@ -193,6 +194,14 @@ X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
 			}
 
 -- Identifiers
+[@]{N}*		{
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				current_position.go_to (token_buffer.count)
+				token_buffer.remove_head (1)
+				last_token := TE_INTEGER
+			}
+
 [@]{A}{X}*	{
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)

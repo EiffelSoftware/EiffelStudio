@@ -16,33 +16,20 @@ inherit
 			destroy_item
 		end
 
-creation
-	make
-
-feature -- Initialization
-
-	make is
-			-- Make a null icon.
-		do
-			exists := True
-		ensure
-			exists: exists
-		end
-
 feature -- Status report
 
-	exists: BOOLEAN
-			-- Does the `item' exist?
+	exists: BOOLEAN is True
+			-- A null icon always exists.
 
 feature {NONE} -- Removal
 
 	destroy_item is
-			-- `item' does not need to be garbage collected.
+			-- Nothing to destroy.
 		do
-			exists := False
 		end
 
 invariant
+	exists: exists
 	no_item: item = default_pointer
 
 end -- class WEL_NULL_ICON

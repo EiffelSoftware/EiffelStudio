@@ -1,18 +1,30 @@
 :Base eiffelcom.hlp>ECOM
 :Title EiffelCOM Help
 1 Getting Started
-2 Creating a New Component=createnew
-2 Accessing a New Component=accessnew
+2 Introduction=IDH_started
+2 Creating a New Component from a COM definition=IDH_createnewcom
+2 Creating a New Component from an Eiffel Project=IDH_new_from_eiffel
+2 Accessing a Component=IDH_access
+2 Simmary=IDH_summary_started
 1 Microsoft Component Object Model
-2 Overview=comoverview
-2 Generalities=generalities
-2 Component Types=comtypes
-2 Deeper into COM=deepintocom
+2 Overview=IDH_comoverview
+2 Generalities=IDH_com_generalities
+2 Component Types=IDH_com_types
+2 Deeper into COM=IDH_deeper
 1 The EiffelCOM Wizard
-2 Overview=wizardoverview
-2 The Wizard=wizard
-2 Accessing a Component=accesscomponent
-2 Building a Component=buildcomponent
+2 Overview=IDH_wizard_overview
+2 The wizard
+3 Introduction=IDH_wizard
+3 Introduction Dialog and Main Window=IDH_main_win
+3 Generated Code Type Dialog=IDH_code_type_dialog
+3 Definition File Dialog=IDH_definition_file_dialog
+3 Eiffel Project File Dialog=IDH_eiffel_project_dialog
+3 IDL Marshalling Definition Dialog=IDH_idl_marshling_dialog
+3 Type Library Marshalling Definition Dialog=IDH_type_lib_marshaling_dialog
+3 Final Dialog=IDH_final_dialog
+3 Code generation=IDH_definition_processing
+1 Accessing a Component=IDH_accessing_component
+1 Building a Component=IDH_building_component
 1 EiffelCOM Library
-2 Overview=liboverview
-2 Compound File=compoundfile
+2 Overview=IDH_library_overview
+2 Compound File=IDH_compound

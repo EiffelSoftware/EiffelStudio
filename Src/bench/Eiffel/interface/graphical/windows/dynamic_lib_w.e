@@ -479,6 +479,9 @@ feature -- Graphical Interface
 			toolbar_parent.set_spacing (1)
 			!! dynamic_lib_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
 			dynamic_lib_toolbar.set_height (22)
+			if not Platform_constants.is_windows then
+				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			end
 		end
 
 	raise_shell_popup is

@@ -34,6 +34,8 @@ feature {TTY_RESOURCES} -- Initialization
 			create symbol_text.make_default ("symbol_text", rt, "black", "-*-times-medium-r-normal-*-12-*-*-*-*-*-*")
 			create html_text.make_default ("html_text", rt, "blue", "-*-times-medium-r-*-*-12-*-*-*-*-*-*")
 
+			create text_background_color.make_default ("text_background_color", rt, "white")
+
 --			if not Platform_constants.is_windows then
 --				create progress_bar_color.make_default ("progress_bar_color", rt, "blue")
 --				create focus_label_color.make_default ("explanation_label", rt, "LightYellow")

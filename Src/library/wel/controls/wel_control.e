@@ -179,8 +179,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK CallWindowProc
 		external
-			"C [macro <wel.h>] (WNDPROC, HWND, UINT, WPARAM, %
-				%LPARAM): EIF_INTEGER"
+			"C [macro <wel.h>] (WNDPROC, HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"CallWindowProc"
 		end

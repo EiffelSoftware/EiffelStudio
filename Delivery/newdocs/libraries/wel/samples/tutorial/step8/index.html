@@ -35,12 +35,12 @@
 		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line"
 		menu, will display a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> which allows you to change the thickness of the line that is drawn.
 		If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. Selecting "Save" from the "File"
-		menu will display a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_save_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> which allows you to specify the filename and location of the picture you have drawn.
-		Selecting "Open" from the "File" menu will display a <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> which allows you to specify a previously saved drawing
+		menu will display a <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> which allows you to specify the filename and location of the picture you have drawn.
+		Selecting "Open" from the "File" menu will display a <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> which allows you to specify a previously saved drawing
 		to open.
 		</P>
 		<H2>Under the Hood</H2>
-		The <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> and the <A CLASS="eclass" HREF="/libraries/wel/stddlgs/wel_save_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> are both activated from
+		The <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog_chart.html">WEL_OPEN_FILE_DIALOG</A> and the <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog_chart.html">WEL_SAVE_FILE_DIALOG</A> are both activated from
 		the redefinition of <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window_chart.html#f_on_menu_command">on_menu_command</A>.
 		A new class, <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step8/root_cluster/lines_chart.html">LINES</A> is now used to store the lines drawn by the user and this inherits <A HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>
 		which allows it to be easily stored and retrieved.

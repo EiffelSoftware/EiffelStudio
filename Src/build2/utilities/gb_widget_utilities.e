@@ -35,6 +35,40 @@ feature -- Basic operations
 			box_contains_widget: a_box.has (a_widget)
 			widget_not_expanded: not a_box.is_item_expanded (a_widget)
 		end
-
 		
+	disable_all_items (b: EV_BOX) is
+			-- Call `disable_item_expand' on all items in `b'.
+		require
+			box_not_void: b /= Void
+		do
+			from
+				b.start
+			until
+				b.off
+			loop
+				b.disable_item_expand (b.item)
+				b.forth
+			end
+		end
+		
+	align_labels_left (b: EV_BOX) is
+			-- For every item in `b' of type EV_LABEL, align the test left.
+		require
+			box_not_void: b /= Void
+		local
+			label: EV_LABEL
+		do
+			from
+				b.start
+			until
+				b.off
+			loop
+				label ?= b.item
+				if label /= Void then
+					label.align_text_left
+				end
+				b.forth
+			end
+		end
+
 end -- class GB_UTILITIES

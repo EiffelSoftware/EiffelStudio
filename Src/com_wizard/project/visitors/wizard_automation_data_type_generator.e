@@ -34,6 +34,7 @@ feature -- Basic operations
 			a_type := an_automation_descriptor.type
 			c_type := vartype_namer.c_name (a_type)
 			eiffel_type := vartype_namer.eiffel_name (a_type)
+			vt_type := a_type
 
 			if a_type = Vt_i1 then
 				cecil_type.append ("EIF_CHARACTER")
@@ -95,6 +96,7 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_variant")
 				ec_function_name.append ("ccom_ec_variant")
 				is_structure := True
+				vt_type := binary_or (Vt_variant, Vt_byref)
 
 			elseif is_currency (a_type) then
 				ce_function_name.append ("ccom_ce_currency")
@@ -145,7 +147,6 @@ feature -- Basic operations
 
 			end
 
-			vt_type := a_type
 			create c_header_file.make (0)
 			create c_post_type.make (0)
 			set_visitor_atributes (a_visitor)

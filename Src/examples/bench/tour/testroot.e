@@ -4,9 +4,11 @@ class TESTROOT create
 
 feature
 
-	o1, o2: PARENT;
+	o1, o2: PARENT
+			-- Examples of attributes
 
 	make is
+			-- Output messages tracing what's going on.
 		do
 			display_demonstration_message
 			create {HEIR} o1
@@ -16,6 +18,7 @@ feature
 		end
 
 	display_demonstration_message is
+			-- Output a welcoming message.
 		do
 			io.put_new_line
 			io.put_string (" ISE Eiffel spoken here")
@@ -26,4 +29,5 @@ feature
 		-- To get a typical compilation error, remove the two dashes
 		-- at the beginning of the next line:
 	-- inv: INVALID
-end
+
+end -- class TESTROOT

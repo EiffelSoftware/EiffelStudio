@@ -8,8 +8,8 @@ class INVALID feature
 		local
 			p: PARENT
 		do
-			create p;
+			create p
 			p.first_message (1)
-		end;
+		end
 
 end -- class INVALID

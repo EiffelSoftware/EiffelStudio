@@ -160,18 +160,19 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 6
+	Build_version_number: STRING is "0213"
 			-- Version number
 
 	Version_number: STRING is
 			-- Version number composed of
 			-- `Major_version_number' . `Minor_version_number' . `Build_version_number'.
 		once
-			create Result.make (10)
+			create Result.make (30)
 			Result.append_integer (Major_version_number)
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0213")
+			Result.append_string (Build_version_number)
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
 		end

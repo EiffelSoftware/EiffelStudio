@@ -49,17 +49,6 @@ feature
 			set_width (200);
 			run := cmd;
 		end;
-
-	application_name: STRING is
-		require
-			valid_system_name: System.system_name /= Void
-		do
-			!!Result.make (20);
-			Result.append (System.system_name);
-			Result.append (" ");
-			Result.append (argument_list);	
-		end;
-
 	
 feature {NONE}
 

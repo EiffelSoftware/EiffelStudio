@@ -3,18 +3,32 @@ class EWB_FINALIZE
 
 inherit
 
-	EWB_CMD
-		rename
-			name as finalize_cmd_name,
-			help_message as finalize_help,
-			abbreviation as finalize_abb
+	EWB_COMP
 		redefine
-			loop_execute
+			name, help_message, abbreviation,
+			execute, loop_execute
 		end
 
 creation
 
 	make, null
+
+feature
+
+	name: STRING is
+		do
+			Result := finalize_cmd_name
+		end;
+
+	help_message: STRING is
+		do
+			Result := finalize_help
+		end;
+
+	abbreviation: CHARACTER is
+		do
+			Result := finalize_abb
+		end;
 
 feature
 
@@ -29,8 +43,8 @@ feature
 		local
 			answer: STRING
 		do
-			if confirmed ("Finalizing implies some C compilation%N%
-							%and linking. Do you want to do it now") then
+			if confirmed ("Finalizing implies some C compilation and linking.%N%
+							%Do you want to do it now") then
 				io.putstring ("--> Keep assertions (y/n): ");
 				wait_for_return;
 				answer := io.laststring;
@@ -46,37 +60,29 @@ feature
 
 	execute is
 		do
-				print_header;
-				init_project;
-				if not error_occurred then
-					if project_is_new then
-						make_new_project
-					else
-						retrieve_project
+			init;
+			if not error_occurred then
+				compile;
+				if System.successfull then
+						-- Save the project before the finalization in order to
+						-- be able to use the project for other melting/freezing
+						-- or finalization afterwards.
+					terminate_project;
+					System.finalized_generation (keep_assertions);
+					if System.poofter_finalization then
+						io.error.putstring 
+							("Warning: the finalized system might not be optimal%N%
+								%%Tin size and speed. In order to produce an optimal%N%
+								%%Texecutable, finalize the system from scratch and do%N%
+								%%Tnot use precompilation.%N%N");
 					end;
+					print_tail;
+					prompt_finish_freezing (True);
+					if not System.freezing_occurred then
+						link_driver
+					end
 				end;
-				if not error_occurred then
-					compile;
-					if System.successfull then
-							-- Save the project before the finalization in order to
-							-- be able to use the project for other melting/freezing
-							-- or finalization afterwards.
-						terminate_project;
-						System.finalized_generation (keep_assertions);
-						if System.poofter_finalization then
-							io.error.putstring 
-								("Warning: the finalized system might not be optimal%N");
-							io.error.putstring
-								("%Tin size and speed. In order to produce an optimal%N");
-							io.error.putstring
-								("%Texecutable, finalize the system from scratch and do%N");
-							io.error.putstring
-								("%Tnot use precompilation.%N%N");
-						end;
-						print_tail;
-						prompt_finish_freezing (True);
-					end;
-				end;
+			end;
 		end;
 
 end

@@ -105,7 +105,7 @@ feature {NONE}
 	work (argument: ANY) is
 		local
 			i : INTEGER_REF; 
-        do
+		do
 			popdown;
 			hide_help_button;
 			show_cancel_button;

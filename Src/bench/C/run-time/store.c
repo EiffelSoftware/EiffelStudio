@@ -112,7 +112,7 @@ public void allocate_gen_buffer ()
         general_buffer = (char *) cmalloc (buffer_size * sizeof (char));
 		if (general_buffer == (char *) 0)
 			eraise ("out of memory", EN_PROG);
-	g_data.status - g_status;
+	g_data.status = g_status;
     }
 	current_position = 0;
 	end_of_buffer = 0;

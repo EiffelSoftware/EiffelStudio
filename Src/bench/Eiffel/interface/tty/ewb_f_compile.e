@@ -12,4 +12,9 @@ inherit
 
 feature
 
+	c_code_directory: STRING is
+		do
+			Result := Final_generation_path
+		end;
+
 end

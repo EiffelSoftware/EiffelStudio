@@ -141,6 +141,9 @@ feature -- xterminal
 				end;
 				if initialized then
 					raise
+					if warner.is_poped_up then
+						warner.raise
+					end
 				end
 			elseif arg = popdown then
 				window_manager.hide_all_editors;

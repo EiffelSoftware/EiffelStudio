@@ -400,19 +400,6 @@ feature {NONE} -- I/O
 	abort: BOOLEAN;
 			-- Does the user want to abort the command?
 
-	prompt_finish_freezing (finalized_dir: BOOLEAN) is
-		do
-			io.error.putstring ("You must now run %"");
-			io.error.putstring (Finish_freezing_script);
-			io.error.putstring ("%" in:%N%T");
-			if finalized_dir then
-				io.error.putstring (Final_generation_path)	
-			else
-				io.error.putstring (Workbench_generation_path)	
-			end;
-			io.error.new_line;
-		end;
-
 feature -- I/O
 
 	set_output_window (display: CLICK_WINDOW) is
@@ -480,12 +467,17 @@ feature -- Input/Output
 		end;
 
 	confirmed (message: STRING): BOOLEAN is
+		local
+			c: CHARACTER
 		do
 			io.putstring (message);
 			io.putstring (" [y/n]? ");
 			io.readchar;
-			io.next_line;	
-			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
+			c := io.lastchar;
+			if c /= '%N' then
+				io.next_line;
+			end;
+			Result := ((c = 'Y') or (c = 'y'))
 		end;
 
 	print_header is

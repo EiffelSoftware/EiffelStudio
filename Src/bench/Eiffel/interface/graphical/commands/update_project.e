@@ -15,14 +15,77 @@ creation
 
 	make
 
-feature 
+feature
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
-			init (c, a_text_window)
+			init (c, a_text_window);
+			!!request
 		end;
 
 feature {NONE}
+
+	reset_debugger is
+		do
+			debug_info.wipe_out;
+			quit_cmd.exit_now;
+		end;
+
+	compile (argument: ANY) is
+		local
+			temp: STRING
+		do
+			set_global_cursor (watch_cursor);
+			project_tool.set_changed (true);
+			Workbench.recompile;
+			if Workbench.successfull then
+				freezing_actions;
+				project_tool.set_changed (false);
+				system.server_controler.wipe_out; -- ???
+				save_failed := False;
+				save_workbench_file;
+				if save_failed then
+					!! temp.make (0);
+					temp.append ("Could not write to ");
+					temp.append (Project_file_name);
+					temp.append ("%NPlease check permissions and disk space%
+								%%NThen press ");
+					temp.append (command_name);
+					temp.append (" again%N");
+					error_window.put_string (temp);
+				else
+					finalization_actions (argument);
+					launch_c_compilation (argument);
+				end;
+			end;
+			restore_cursors;
+		end;
+
+	launch_c_compilation (argument: ANY) is
+		do
+			error_window.put_string ("System recompiled%N");
+			if System.freezing_occurred then
+				error_window.put_string 
+					("System had to be frozen to include new externals.%N%
+						%Background C compilation launched.%N");
+				finish_freezing 
+			else
+				link_driver
+			end;		
+		end;
+
+	freezing_actions is
+		do
+		end;
+
+	finalization_actions (argument: ANY) is
+		do
+		end;
+
+	confirm_and_compile (argument: ANY) is
+		do
+			compile (argument)
+		end;
 
 	work (argument: ANY) is
 			-- Recompile the project.
@@ -31,40 +94,11 @@ feature {NONE}
 			f: UNIX_FILE;
 			temp: STRING
 		do
-			debug_info.wipe_out;
-			quit_cmd.exit_now;
+			reset_debugger;
 			if project_tool.initialized then
 				error_window.clear_window;
 				if Lace.file_name /= Void then
-					set_global_cursor (watch_cursor);
-					project_tool.set_changed (true);
-					Workbench.recompile;
-					if Workbench.successfull then
-						project_tool.set_changed (false);
-						system.server_controler.wipe_out; -- ???
-						save_failed := False;
-						save_workbench_file;
-						if save_failed then
-							!! temp.make (0);
-							temp.append ("Could not write to ");
-							temp.append (Project_file_name);
-							temp.append ("%NPlease check permissions and disk space");
-							temp.append ("%NThen press Melt again%N");
-							error_window.put_string (temp);
-						else
-							error_window.put_string ("System recompiled%N");
-							if System.freezing_occurred then
-								error_window.put_string 
-									("System had to be frozen to include new externals.%N");
-								error_window.put_string 
-									("Background C compilation launched.%N");
-								finish_freezing 
-							else
-								link_driver
-							end;		
-						end;
-					end;
-					restore_cursors;
+					confirm_and_compile (argument);
 					error_window.display;
 				elseif argument = warner then
 					name_chooser.call (Current)
@@ -96,24 +130,26 @@ feature {NONE}
 
 	link_driver is
 		local
-			arg1, arg2: STRING;
-			req: ASYNC_SHELL;
-			cmd_string: STRING
+			arg2: STRING;
+			cmd_string: STRING;
+			uf: UNIX_FILE;
 		do
 			if System.uses_precompiled then
 					-- Target
 				arg2 := build_path (Workbench_generation_path,
 									System.system_name);
-					-- Request
-				!!req;
-				!!cmd_string.make (200);
-				cmd_string.append
-						("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
-				cmd_string.append (Precompilation_driver);
-				cmd_string.append (" ");
-				cmd_string.append (arg2);
-				req.set_command_name (cmd_string);
-				req.send	
+				!!uf.make (arg2);
+				if not uf.exists then
+						-- Request
+					!!cmd_string.make (200);
+					cmd_string.append
+							("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
+					cmd_string.append (Precompilation_driver);
+					cmd_string.append (" ");
+					cmd_string.append (arg2);
+					request.set_command_name (cmd_string);
+					request.send
+				end;
 			end;
 		end;
 
@@ -144,17 +180,9 @@ feature {NONE}
 			end
 		end;
 
-feature 
-
-	symbol: PIXMAP is
-		once
-			Result := bm_Update
-		end;
- 
-	
 feature {NONE}
 
-	command_name: STRING is do Result := l_Update end;
+	request: ASYNC_SHELL;
 
 	load_default_ace is
 		require
@@ -168,32 +196,47 @@ feature {NONE}
 				system_tool.text_window.show_file_content (file_name);
 				system_tool.text_window.set_changed (True)
 		end;
-				
+
+	c_code_directory: STRING is
+		do
+			Result := Workbench_generation_path
+		end;
+
+feature
+
 	finish_freezing is
 		local
 			d: DIRECTORY;
 			cmd, copy_cmd: STRING;
-			request: ASYNC_SHELL
 		do
 			!!cmd.make (50);
 			cmd.append ("cd ");
-			cmd.append (Workbench_generation_path);
+			cmd.append (c_code_directory);
 			cmd.append ("; ");
 			cmd.append (Finish_freezing_script);
  
-			!!d.make (Workbench_generation_path);
+			!!d.make (c_code_directory);
 			if not d.has_entry (Finish_freezing_script) then
 				!!copy_cmd.make (50);
 				copy_cmd.append ("cp ");
 				copy_cmd.append (freeze_command_name);
 				copy_cmd.append (" ");
-				copy_cmd.append (Workbench_generation_path);
+				copy_cmd.append (c_code_directory);
 				copy_cmd.append ("; ");
 				cmd.prepend (copy_cmd);
 			end;
-			!! request;
 			request.set_command_name (cmd);
 			request.send;
 		end;
+
+	symbol: PIXMAP is
+		once
+			Result := bm_Update
+		end;
+ 
+	
+feature {NONE}
+
+	command_name: STRING is do Result := l_Update end;
 
 end

@@ -70,7 +70,7 @@ feature -- Basic Operations
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
-					Eiffel_project.Workbench.recompile
+					Eiffel_project.melt
 					if Eiffel_project.Workbench.successful then
 						is_successful := True
 					end

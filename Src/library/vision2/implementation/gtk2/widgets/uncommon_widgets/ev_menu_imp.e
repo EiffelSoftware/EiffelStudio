@@ -89,10 +89,12 @@ feature {NONE} -- Externals
 			"C inline use %"ev_menu_imp.h%""
 		alias
 			"[
+				{
 				c_position pos;
 				pos.x_position = $a_x;
 				pos.y_position = $a_y;
-				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, 3, gtk_get_current_event_time());			
+				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, 3, gtk_get_current_event_time());
+				}
 			]"
 		end
 

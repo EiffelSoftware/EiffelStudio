@@ -19,10 +19,6 @@ JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-OBJECTS = minilzo.$obj loader.$obj
+OBJECTS = minilzo.$obj
 
-all:: minilzo.dll
-
-minilzo.dll: $(OBJECTS)
-	$(LINK32) -SUBSYSTEM:windows -DLL -DEF:minilzo.def -OUT:minilzo.dll $(OBJECTS)
-
+all:: minilzo.$obj

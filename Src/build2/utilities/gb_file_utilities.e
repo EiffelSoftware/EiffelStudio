@@ -13,18 +13,21 @@ feature -- Basic operations
 
 	rename_file_if_exists (directory_path: DIRECTORY; old_name, new_name: STRING) is
 			-- Rename file named `old_name' in directory `directory_path' to
-			-- `new_name' in the same directory. Do nothing if the old file does not exist.
+			-- `new_name' in the same directory. Do nothing if the old file does not exist
+			-- or the file names are identical.
 		local
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			create new_file_name.make_from_string (directory_path.name)
-			new_file_name.extend (new_name)
-			create old_file_name.make_from_string (directory_path.name)
-			old_file_name.extend (old_name)
-			create file.make (old_file_name)
-			if file.exists then
-				file.change_name (new_file_name.string)
+			if not old_name.is_equal (new_name) then
+				create new_file_name.make_from_string (directory_path.name)
+				new_file_name.extend (new_name)
+				create old_file_name.make_from_string (directory_path.name)
+				old_file_name.extend (old_name)
+				create file.make (old_file_name)
+				if file.exists then
+					file.change_name (new_file_name.string)
+				end
 			end
 		end
 		

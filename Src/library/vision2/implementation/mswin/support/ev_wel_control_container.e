@@ -68,7 +68,8 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name
+			class_name,
+			on_erase_background
 		end
 
 feature {NONE} -- Initialization
@@ -104,7 +105,36 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := generator
 		end
-	
+
+	application_imp: EV_APPLICATION_IMP is
+			-- Access to the current application
+		deferred
+		end
+		
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		local
+			bk_brush: WEL_BRUSH
+			theme_drawer: EV_THEME_DRAWER_IMP
+		do
+			bk_brush := background_brush
+			theme_drawer := application_imp.theme_drawer
+			theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
+			disable_default_processing
+			set_message_return_value (to_lresult (1))
+			bk_brush.delete
+		end
+		
+	current_as_container: EV_CONTAINER_IMP is
+			-- Result is `Current' as a container.
+		do
+			Result ?= Current
+		end
+
 feature {NONE} -- Deferred features
 
 	default_parent: WEL_FRAME_WINDOW is

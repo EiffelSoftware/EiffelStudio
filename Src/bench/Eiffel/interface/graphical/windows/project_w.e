@@ -1983,13 +1983,14 @@ feature -- Information
 		local
 			root_class_name: STRING
 			root_class_c: CLASS_C
+			creation_name: STRING
 			st: STRUCTURED_TEXT
 		do
 			if eiffel_project.system /= Void then	
 				root_class_name:= clone(eiffel_system.root_class_name)
 
 				!! st.make
-				st.add_comment_text(    "SYSTEM        : ")
+				st.add_comment_text ("SYSTEM        : ")
 				st.add_string (eiffel_system.name)
 
 				if root_class_name /= Void then
@@ -1997,11 +1998,16 @@ feature -- Information
 					st.add_comment_text("ROOT CLASS    : ")
 					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
 					root_class_name.to_upper
-					st.add_classi(root_class_c.lace_class,  root_class_name)
-					st.add_new_line
+					st.add_classi(root_class_c.lace_class, root_class_name)
 
-					st.add_comment_text ("CREATION      : ")
-					st.add_feature_name (eiffel_ace.ast.root.creation_procedure_name, root_class_c)
+					creation_name := eiffel_ace.ast.root.creation_procedure_name
+					if creation_name /= Void then
+							-- We do have a creation routine in the Ace file
+							--| This is not a precompilation or a fake compilation (root class = NONE)
+						st.add_new_line
+						st.add_comment_text ("CREATION      : ")
+						st.add_feature_name (eiffel_ace.ast.root.creation_procedure_name, root_class_c)
+					end
 
 					st.add_new_line
 					st.add_new_line

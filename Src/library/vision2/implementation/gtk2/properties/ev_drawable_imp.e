@@ -22,11 +22,21 @@ inherit
 			default_create
 		end
 
+	PLATFORM
+		undefine
+			copy,
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	init_default_values is
 			-- Set default values. Call during initialization.
+		local
+			l_mem: INTEGER_16
 		do
+			l_mem := {INTEGER_16} 3 | ({INTEGER_16} 3 |<< integer_8_bits)
+			set_dashes_pattern (gc, $l_mem)
 			line_style := {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
@@ -324,7 +334,7 @@ feature -- Clearing operations
 					a_width,
 					a_height)
 				set_foreground_color (tmp_fg_color)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -335,14 +345,14 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 	 			{EV_GTK_EXTERNALS}.gdk_draw_point (drawable, gc, x, y)
-	 			flush
+	 			update_if_needed
 			end
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_internal (x, y, a_text, True)
+			draw_text_internal (x, y, a_text, True, -1)
 		end
 
 	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
@@ -350,7 +360,7 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			--| FIXME IEK Implement me
+			draw_text_internal (x, y, a_text, True, clipping_width)
 		end
 
 	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
@@ -358,10 +368,10 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			--| FIXME IEK Implement me
+			draw_text_internal (x, y, a_text, False, clipping_width)
 		end
 		
-	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN) is
+	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN; a_width: INTEGER) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -381,20 +391,28 @@ feature -- Drawing operations
 				a_cs := a_text
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
-				a_text_count := a_text.count
-				{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+				a_text_count := a_text.count				
+				if a_width /= -1 then
+						-- We need to perform ellipsizing on text
+					{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
+					{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+				end
+				{EV_GTK_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
 					{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
-				{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+
+				{EV_GTK_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
+				
+				{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
+				{EV_GTK_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 			end
 		end		
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
-			draw_text_internal (x, y, a_text, False)
+			draw_text_internal (x, y, a_text, False, -1)
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -402,7 +420,7 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -424,14 +442,14 @@ feature -- Drawing operations
 					(a_start_angle * radians_to_gdk_angle).truncated_to_integer ,
 					(radians_to_gdk_angle * an_aperture).truncated_to_integer
 				)
-				flush
+				update_if_needed
 			end
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		do
-			draw_full_pixmap (x, y, a_pixmap, 0, 0, -1, -1)
+			draw_full_pixmap (x, y, a_pixmap, 0, 0, a_pixmap.width, a_pixmap.height)
 		end
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
@@ -447,7 +465,7 @@ feature -- Drawing operations
 				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,
 					x_src, y_src, x, y, src_width, src_height)
-				flush
+				update_if_needed
 				if pixmap_imp.mask /= default_pointer then
 					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
 					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
@@ -477,7 +495,7 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -490,7 +508,7 @@ feature -- Drawing operations
 					{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
 						(a_height - 1), 0, whole_circle)
-					flush
+					update_if_needed
 				end
 			end
 		end
@@ -506,10 +524,10 @@ feature -- Drawing operations
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					{EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
-					flush
+					update_if_needed
 				else
 					{EV_GTK_EXTERNALS}.gdk_draw_lines (drawable, gc, $tmp, points.count)
-					flush
+					update_if_needed
 				end
 			end
 		end
@@ -562,6 +580,7 @@ feature -- Drawing operations
 			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
+			update_if_needed
 		end
 
 feature -- filling operations
@@ -576,7 +595,7 @@ feature -- filling operations
 				end
 				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1, x, y, a_width, a_height)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -592,7 +611,7 @@ feature -- filling operations
 				{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, x,
 					y, a_width,
 					a_height, 0, whole_circle)
-				flush
+				update_if_needed
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 			end
 		end
@@ -610,7 +629,7 @@ feature -- filling operations
 				end
 				{EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -637,7 +656,7 @@ feature -- filling operations
 					(an_aperture * radians_to_gdk_angle).truncated_to_integer
 				)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
-				flush
+				update_if_needed
 			end
 		end
 
@@ -683,7 +702,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		local
 			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
 		do
-			a_pix := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
 			if mask /= default_pointer then
 				mask_pixbuf1 := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
 				mask_pixbuf2 := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
@@ -761,6 +780,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	update_if_needed is
+			-- Force update of `Current' if needed
+		deferred
+		end
+
 	whole_circle: INTEGER is 23040
 		-- Number of 1/64 th degrees in a full circle (360 * 64)
 		
@@ -775,6 +799,14 @@ feature {NONE} -- Implementation
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
 		external
 			"C (GdkGC*) | <gtk/gtk.h>"
+		end
+
+	set_dashes_pattern (a_gc, dash_pattern: POINTER) is
+			-- Set the dashes pattern for gc `a_gc', `dash_pattern' is a pointer to a two count gint8[]] denoting the pattern.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_gc_set_dashes ((GdkGC*) $a_gc, 0, (gint8*) $dash_pattern, 2)"
 		end
 
 invariant

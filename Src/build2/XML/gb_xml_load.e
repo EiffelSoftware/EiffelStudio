@@ -460,6 +460,7 @@ feature {NONE} -- Implementation
 			create load_timer.make_with_interval (250)
 			load_timer.actions.extend (agent update_status_bar)
 		 	set_status_text ("Loading    -")
+		 	environment.application.process_events
 		end
 		
 	update_status_bar is

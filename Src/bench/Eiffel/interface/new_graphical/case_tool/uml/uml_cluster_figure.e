@@ -304,8 +304,8 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					h := name_label.height
 					px := port_x
 					py := port_y
-					l_left := px - w // 2
-					l_top := py - h // 2
+					l_left := px - as_integer (w / 2)
+					l_top := py - as_integer (h / 2)
 					
 					pax := l_left - rb
 					pay := l_top - rb

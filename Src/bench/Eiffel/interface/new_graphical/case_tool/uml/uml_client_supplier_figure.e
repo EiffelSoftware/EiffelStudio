@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 					ny := m * (nx - lx) + ly
 				end
 			end
-			name_group.set_point_position (nx.truncated_to_integer + 5, ny.truncated_to_integer)
+			name_group.set_point_position (as_integer (nx) + 5, as_integer (ny))
 		end
 		
 	retrieve_preferences is

@@ -199,7 +199,7 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 			command_handler.update
 		end
 
-feature {GB_OBJECT_HANDLER} -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 
 	create_object_from_type is
 			-- Create an object of type `type' and assign

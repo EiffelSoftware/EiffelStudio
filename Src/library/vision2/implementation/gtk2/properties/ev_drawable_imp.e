@@ -347,20 +347,23 @@ feature -- Drawing operations
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
-			a_pango_layout: POINTER
+			a_pango_layout, a_pango_iter: POINTER
 			a_baseline: INTEGER
 			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
-				create a_cs.make (a_text)
+				--create a_cs.make (a_text)
+				a_cs := a_text
+					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_context_changed (a_pango_layout)
 				if draw_from_baseline then
-					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (App_implementation.pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+					a_pango_iter := App_implementation.pango_iter
+					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
 					a_y := y - a_baseline
 				else
 					a_y := y - 2

@@ -88,7 +88,9 @@ feature -- Element change
 			propvalue: EV_GTK_C_STRING
 		do
 			name := a_face
-			create propvalue.make (a_face)
+			--create propvalue.make (a_face)
+			propvalue := a_face
+				-- Change this code back when we get UTF16 support
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)			
 		end
 
@@ -150,11 +152,12 @@ feature -- Status report
 			a_cs: EV_GTK_C_STRING
 			pango_layout, pango_iter: POINTER
 		do
-			create a_cs.make ("A")
+			a_cs := "A"
 			pango_layout := app_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
 			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (pango_iter)
 		end
 
 	descent: INTEGER is
@@ -165,13 +168,14 @@ feature -- Status report
 			pango_layout, pango_iter: POINTER
 			a_width, a_height: INTEGER
 		do
-			create a_cs.make ("A")
+			a_cs := "A"
 			pango_layout := app_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
 			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
 			Result := a_height - Result
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (pango_iter)
 		end
 
 	width: INTEGER is
@@ -200,7 +204,10 @@ feature -- Status report
 			a_pango_layout, ink_rect, log_rect: POINTER
 			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
 		do
-			create a_cs.make (a_string)
+			--create a_cs.make (a_string)
+			a_cs := a_string
+				-- Change this code back when we have UTF16 support
+			
 			a_pango_layout := App_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)

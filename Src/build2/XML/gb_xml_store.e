@@ -86,6 +86,15 @@ feature -- Basic operation
 			write_file_to_disk (last_string)
 			set_timed_status_text ("Saved.")
 		end
+		
+	register_object_written_agent (an_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]) is
+			-- Insert `an_agent' into `object_written_actions'.
+		require
+			agent_not_void: an_agent /= Void
+		do
+			object_written_action := an_agent
+		end
+
 
 feature {NONE} -- Basic operation.
 	
@@ -150,9 +159,12 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 				-- so we avoid displaying the output if we are in wizard mode.
 				-- We also use `Current' to generate XML, ready for code generation.
 			if generation_settings.is_saving and not System_status.is_wizard_system then
-				objects_written := objects_written + 1
 				set_status_text ("Saving : " + (((objects_written / object_count) * 95).truncated_to_integer.out) + "%%")
 				environment.application.process_events
+			end
+			objects_written := objects_written + 1
+			if object_written_action /= Void then
+				Object_written_action.call ([object_count, objects_written])
 			end
 			create handler
 				-- We must store the name and other attributes
@@ -301,5 +313,8 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (0)
 		end
+		
+	object_written_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]
+			-- An agent to be fired when a new object is written to the XML.
 
 end -- class GB_XML_STORE

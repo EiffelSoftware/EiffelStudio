@@ -64,7 +64,7 @@ feature
 			correctly_set: global_cursor = cursor
 		end; 
 
-	show_tree (a_file: UNIX_FILE) is
+	show_tree (a_file: PLAIN_TEXT_FILE) is
 			-- Print a textual representation of the widgets tree on `a_file'.
 		require
 			a_file_exists: not (a_file = Void);

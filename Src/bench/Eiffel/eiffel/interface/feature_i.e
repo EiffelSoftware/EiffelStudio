@@ -1835,6 +1835,9 @@ feature -- Debugging
 			du := Dispatch_table.last_unit;
 			Result.set_real_body_index (du.real_body_index);
 
+			-- Set the class type in `Result'.
+			Result.set_class_type (class_type);
+
 			-- Compute the real body id.
 			eu :=  du.execution_unit;
 			if eu.real_body_id.id <= System.frozen_level then

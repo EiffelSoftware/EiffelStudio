@@ -111,6 +111,8 @@ feature {NONE}
 
 	Profile_cmd_name: STRING is "profile";
 
+	project_path_cmd_name: STRING is "project_path"
+
 	project_cmd_name: STRING is "project"
 
 	queries_cmd_name: STRING is "query"

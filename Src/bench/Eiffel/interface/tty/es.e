@@ -1,26 +1,27 @@
 indexing
-
 	description: 
 		"Batch compiler without invoking the -loop. This is the root%
 		%class for the personal version (which does allow c compilation)."
 	date: "$Date$"
 	revision: "$Revision $"
 
-class ES
+class
+	ES
 
 inherit
+	COMMAND_LINE_PROJECT
 
 	ARGUMENTS
-	SHARED_ERROR_BEHAVIOR
-	SHARED_EWB_HELP
-	SHARED_EWB_CMD_NAMES
-	WINDOWS
-	SHARED_EXEC_ENVIRONMENT
-	COMMAND_LINE_PROJECT
+
 	SHARED_CONFIGURE_RESOURCES
 
-creation
+	SHARED_ERROR_BEHAVIOR
 
+	SHARED_EWB_HELP
+
+	SHARED_EWB_CMD_NAMES
+
+creation
 	make, make_unlicensed
 
 feature -- Initialization
@@ -86,12 +87,10 @@ feature {NONE} -- Initialization
 							command.set_output_window (output_window)
 							output_window.close
 						end
-						init_project; 
+						init_project (Project_file_name); 
 						if not error_occurred then
 							if project_is_new then
-								make_new_project (
-									equal (command.name,
-									loop_cmd_name))
+								make_new_project (equal (command.name, loop_cmd_name))
 							else
 								retrieve_project
 							end
@@ -165,6 +164,7 @@ feature -- Properties
 			Result.put (implementers_help, implementers_cmd_name)
 			Result.put (loop_help, loop_cmd_name)
 			Result.put (project_help, project_cmd_name)
+			Result.put (project_path_help, project_path_cmd_name)
 			Result.put (quick_melt_help, quick_melt_cmd_name)
 			Result.put (short_help, short_cmd_name)
 			Result.put (stop_help, stop_cmd_name)
@@ -238,13 +238,15 @@ feature -- Output
 				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
 				%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
 				%%T-filter filtername [-all | class] |%N%
-				%%T-descendants [-filter filtername] class |%N%
+				%%T-descendants [-filter filtername] class |%N")
+			io.putstring ("%
 				%%T-ancestors [-filter filtername] class |%N%
 				%%T-aversions [-filter filtername] class feature |%N%
 				%%T-dversions [-filter filtername] class feature |%N%
 				%%T-implementers [-filter filtername] class feature |%N%
 				%%T-callers [-filter filtername] [-show_all] class feature |%N%
-				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N")
+				%%T[-stop] [-ace Ace] [-project Project_file_name]|%N%
+				%%T[-project_path Project_directory_path] [-file File]]%N")
 		end
 
 	print_help is
@@ -310,8 +312,6 @@ feature -- Update
 			i: INTEGER
 		do
 					-- Default Project Options
-			Project_name := clone (Operating_environment.Current_directory_name_representation)
-
 			from
 				current_option := 1
 			until
@@ -656,7 +656,14 @@ feature -- Update
 			elseif option.is_equal ("-project") then
 				if current_option < argument_count then
 					current_option := current_option + 1
-					Project_name := argument (current_option)
+					project_file_name := argument (current_option)
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-project_path") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					project_path_name := argument (current_option)
 				else
 					option_error := True
 				end

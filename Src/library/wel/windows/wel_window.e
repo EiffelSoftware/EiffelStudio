@@ -411,7 +411,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_get_window_long (item, Gwl_style)
+			Result := cwel_pointer_to_integer (cwin_get_window_long (item, Gwl_style))
 		end
 
 	ex_style: INTEGER is
@@ -419,7 +419,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_get_window_long (item, Gwl_exstyle)
+			Result := cwel_pointer_to_integer (cwin_get_window_long (item, Gwl_exstyle))
 		end
 
 	background_brush: WEL_BRUSH is
@@ -653,7 +653,7 @@ feature -- Status setting
 		local
 			cur_ex_style: INTEGER
 		do
-			cwin_set_window_long (item, Gwl_style, a_style)
+			cwin_set_window_long (item, Gwl_style, cwel_integer_to_pointer (a_style))
 
 				-- Update changes
 			cur_ex_style := ex_style
@@ -672,7 +672,7 @@ feature -- Status setting
 			old_ex_style := ex_style
 
 				-- Change the Extended style
-			cwin_set_window_long (item, Gwl_exstyle, an_ex_style)
+			cwin_set_window_long (item, Gwl_exstyle, cwel_integer_to_pointer (an_ex_style))
 
 				-- Update changes
 			update_cached_style (old_ex_style, an_ex_style)
@@ -682,7 +682,7 @@ feature -- Status setting
 			-- Update Window cache buffer for Window style.
 			--|
 			--| Certain window data is cached, so changes you make using 
-			--| SetWindowLong will not take effect until you call the 
+			--| SetWindowLongPtr will not take effect until you call the 
 			--| SetWindowPos function. Specifically, if you change any 
 			--| of the frame styles, you must call SetWindowPos with 
 			--| the SWP_FRAMECHANGED flag for the cache to be updated 
@@ -1516,10 +1516,12 @@ feature {NONE} -- Messages
 		do
 		end
 
-feature {WEL_WINDOW} -- Implementation
+feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 	default_window_procedure: POINTER
 			-- Default window procedure
+
+feature {WEL_WINDOW} -- Implementation
 
 	internal_window_make (a_parent: WEL_WINDOW; a_name: STRING;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
@@ -1573,6 +1575,9 @@ feature {WEL_WINDOW} -- Implementation
 	set_default_window_procedure is
 			-- Set `default_window_procedure' if the window must
 			-- call its previous window procedure.
+		require
+			exists: exists
+			internal_data_not_null: internal_data /= default_pointer
 		do
 		end
 
@@ -1625,7 +1630,7 @@ feature {WEL_WINDOW} -- Implementation
 			destroy_item
 				-- Stop default processing because no more C objects attached
 				-- to WEL object.
-			disable_default_processing
+--			disable_default_processing
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)
@@ -1771,23 +1776,27 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 			end
 		end
 
-	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 		do
-			Result := cwin_def_window_proc (item, msg, wparam,
-				lparam)
+			Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 		end
 
 feature -- Registration
 
-	register_current_window is
+	frozen register_current_window is
 			-- Register `Current' in window manager.
+		local
+			p: POINTER
 		do
-			set_internal_data (eif_object_id (Current))
+			p := p.memory_alloc (feature {WEL_INTERNAL_DATA}.structure_size)
+			p.memory_set (0, feature {WEL_INTERNAL_DATA}.structure_size)
+			feature {WEL_INTERNAL_DATA}.set_object_id (p, eif_object_id (Current))
+			set_internal_data (p)
 		end
 
 feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 
-	internal_data: INTEGER is
+	frozen internal_data: POINTER is
 			-- Data set to widget at creation.
 			-- Used for having weak references
 		require
@@ -1796,7 +1805,7 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 			Result := cwin_get_window_long (item, Gwl_userdata)
 		end
 
-	set_internal_data (v: INTEGER) is
+	frozen set_internal_data (v: POINTER) is
 			-- Set data of window.
 		require
 			exists: exists
@@ -1826,8 +1835,10 @@ feature {NONE} -- Removal
 			-- Reset C and WEL structure that keep track of Current.
 		local
 			object_id: INTEGER
+			null, l_data: POINTER
 		do
-			object_id := internal_data
+			l_data := internal_data
+			object_id := feature {WEL_INTERNAL_DATA}.object_id (l_data)
 			check
 					-- `internal_data' cannot be 0 when the Window has not yet been
 					-- destroyed by Windows.
@@ -1835,9 +1846,13 @@ feature {NONE} -- Removal
 			end
 
 			eif_object_id_free (object_id)
+			
+			feature {WEL_INTERNAL_DATA}.set_object_id (l_data, 0)
+			feature {WEL_INTERNAL_DATA}.set_default_window_procedure (l_data, null)
+			l_data.memory_free
 
 				-- Remove `object_id' from `internal_data' of Current.
-			set_internal_data (0)
+			set_internal_data (null)
 
 				-- Clean `item' C pointer.
 			item := default_pointer
@@ -1853,7 +1868,6 @@ feature {NONE} -- Removal
 			if is_window (hwnd) then
 					-- Our Window has not been destroyed by Windows yet. We can clean
 					-- our stuff then.
-				destroy_item
 
 					-- Save protected reference to `dispatcher' object.
 				p := cwel_dispatcher_pointer
@@ -1863,10 +1877,14 @@ feature {NONE} -- Removal
 				cwel_set_dispatcher_pointer (null)
 
 					-- Destroying the window.
+					-- C code will automatically do an equivalent of `destroy_item'
+					-- feature.
 				cwin_destroy_window (hwnd)
 
 					-- Restore `dispatcher' object so that dispatching can proceed.
 				cwel_set_dispatcher_pointer (p)
+
+				item := default_pointer				
 			end
 		end
 

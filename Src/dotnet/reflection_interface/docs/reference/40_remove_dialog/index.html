@@ -18,27 +18,12 @@
 			The remove dialog aims at enabling you to remove an imported assembly from the Eiffel assembly cache. Nevertheless, it tries to make sure you really want to remove the selected assembly since the importation time is quite long (up to twenty minutes for some assemblies, such as `System.Windows.Forms').<br>
 			At the top of the window, you can find the name, version, culture and public key of the selected assembly for removal, so that there cannot be any misunderstanding about the assembly to remove. <br>
 			At this point, you still have the possibility not to remove the assembly by clicking on the `No' button.<br>
-			In case you really want to remove the assembly, you also have the opportunity to remove its dependencies. To do so, you just have to check the box `Remove dependencies'. By default, the option to remove dependencies is not checked.
+			ISE Assembly Manager will remove the selected assembly as soon as you click `Yes'.
 		</p>
 		<p>
 			<center>
 				<img src = "../../images/remove_dialog.png" no border>
 			</center>
 		</p>
-		<p>
-			If the box `Remove dependencies' is not checked, ISE Assembly Manager will remove the selected assembly as soon as you click `Yes'. Otherwise, a warning dialog appears to avoid any mistakes:
-		</p>
-		<p>
-			<center>
-				<img src = "../../images/warning_remove.png" no border>
-			</center>
-		</p>
-		<p>
-			The warning almost looks like the <a href = "../10_dependency_viewer/index.html">dependency viewer</a> except that it asks you to confirm the removal of the assembly and its dependencies.
-		</p>
-		<ul>
-			<li>If you click on `<b>Yes</b>', ISE Assembly Manager will remove <b>the selected assembly and its dependencies</b> (except the kernel assembly `mscorlib.dll', which cannot be removed from the Eiffel assembly cache).</li>
-			<li>If you click on `<b>No</b>', only <b>the selected assembly</b> will be removed.</li>
-		</ul>
 	</body>
 </html>

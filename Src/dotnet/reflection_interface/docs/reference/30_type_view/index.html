@@ -16,8 +16,13 @@
 
 		<p>
 			The type view is an editable short form of an Eiffel class. At the top of the window, the name, version, culture and public key of the assembly the edited type belongs to is repeated.<br>
-			In the panel below, you will notice that some words appear with a colored background. These are the words, which are editable. It includes the class name (the Eiffel one), the name of each feature and its arguments names (if any), except for the creation routine.
+			In the panel below, you will notice that some words appear with a colored background. These are the words, which are editable. It includes the the name of each local feature and its arguments names (if any), except for the creation routine.
 		</p>
+
+		<p class = "note">
+			<b>Note</b>: Only <b>local features</b> (i.e. first defined in the currently edited class) and its arguments names are editable. If you want to rename a feature, which is inherited (or an argument whose related feature is inherited) you have to switch to the parent class to change the feature name (or argument name).
+		</p>
+
 		<p>
 			<center>
 				<img src = "../../images/type_view.png" no border>
@@ -28,14 +33,9 @@
 		<h2>Facilities provided by the type view:</h2>
 
 		<ul>
-		<a name = rename_class></a>
-		<li><b>Rename an external class</b><br>
-			When you open the type view (by clicking on the type Eiffel name in the <a href = "../20_assembly_view/index.html">assembly view</a>), the class name text field is automatically selected. You just have to type the new class name.
-		</li><br>
-
 		<a name = rename_feature></a>
 		<li><b>Rename a class feature</b><br>
-			To rename a feature, just give the focus to the text field you want to edit (by clicking with the mouse) and type the new feature name.
+			When you open the type view (by clicking on the type Eiffel name in the <a href = "../20_assembly_view/index.html">assembly view</a>), the text field with first class feature name is automatically selected. You just have to type the new feature name.
 		</li><br>
 
 		<a name = rename_argument></a>
@@ -46,7 +46,7 @@
 
 		<p>
 			Note that your changes will only be taken into account when you click on `OK'. If you click on `Cancel', your changes will be lost.<br>
-			Nevertheless, ISE Assembly Manager first checks that your changes are consistent before saving them. In case problems are detected, the list of errors appears at the bottom of the type view. Each error mentions the location of the error, that is "Class name" or "Feature name" (and the original name of the problematic feature) or "Argument name" (with the name of the feature it belongs to and the original name of the argument).
+			Nevertheless, ISE Assembly Manager first checks that your changes are consistent before saving them. In case problems are detected, the list of errors appears at the bottom of the type view. Each error mentions the location of the error, that is "Feature name" (and the original name of the problematic feature) or "Argument name" (with the name of the feature it belongs to and the original name of the argument).
 		</p>
 		<p>
 			<center>

@@ -1677,7 +1677,6 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 {
 	EIF_CONF_TAB *stab;
-	EIF_GEN_DER *sgdp, *tgdp;
 	int16 *ptypes;
 	int i, idx, result;
 	unsigned char mask;
@@ -1765,12 +1764,14 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 		/* We have to compute it now (once!) */
 
-		sgdp = eif_derivations [stype];
-		tgdp = eif_derivations [ttype];
 
 		if (stype >= first_gen_id)
 		{
-			/* Both ids generated here */
+			EIF_GEN_DER *sgdp, *tgdp;
+
+				/* Both ids generated here */
+			tgdp = eif_derivations [ttype];
+			sgdp = eif_derivations [stype];
 		
 			if (sgdp->first_id == tgdp->first_id)
 			{
@@ -1841,20 +1842,34 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 				result = 1;
 				goto done;
 			}
-		}
 
-		/* Target is generic.
-		   We need to check every parent of the source
-		   against the target */
+			/* Target is generic.
+				We need to check every parent of the source
+				against the target */
 
-		ptypes = sgdp->ptypes;
+			ptypes = sgdp->ptypes;
+			result = 0;
+			while (!result && (*ptypes != TERMINATOR)) {
+				result = eif_gen_conf (*ptypes, ttype);
+				++ptypes;
+			}
+		} else {
+				/* Source is not generic, but target is.
+				 * We need to check every parent of the source
+				 * against the target */
 
-		result = 0;
+				/* Compiler generated id */
+			ptypes = par_info (RTUD_INV (source_type))->parents;
+			result = 0;
 
-		while (!result && (*ptypes != TERMINATOR))
-		{
-			result = eif_gen_conf (*ptypes, ttype);
-			++ptypes;
+			while (!result && (*ptypes != TERMINATOR)) {
+				CHECK ("Not a formal type", *ptypes > FORMAL_TYPE);
+				if (*ptypes < 0)
+					result = eif_gen_conf (*ptypes, ttype);
+				else
+					result = eif_gen_conf ((int16) RTUD(*ptypes), ttype);
+				++ptypes;
+			}
 		}
 
 done:
@@ -3021,6 +3036,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	dtype = Deif_bid(dftype);
 
+		/* Compiler generated id */
 	pt = par_info (RTUD_INV(dtype));
 
 	is_generic = pt->nb_generics > 0;
@@ -3235,6 +3251,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 
 	dtype = Deif_bid(dftype);
 
+		/* Compiler generated id */
 	pt = par_info (RTUD_INV(dtype));
 
 	/* Compute the range of the id map */

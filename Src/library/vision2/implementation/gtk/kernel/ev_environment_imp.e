@@ -57,7 +57,7 @@ feature -- Access
 			Result := return_code = 0
 		end
 
-	fonts: LINEAR [EV_FONT] is
+	font_families: LINEAR [STRING] is
 			-- List of fonts available on the system
 		do
 			--| FIXME IEK To be implemented

@@ -427,7 +427,9 @@ feature -- Command generation
 				Result.append (extension_to_add)
 				Result.append (")%N")
 				if test_toggle_b.state and not procedure.precondition_list.empty then
-					Result.append ("%N%T%T%T%Tend")
+					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+					Result.append (test_text_field.text)
+					Result.append ("%")%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Telse%N%T%T%T%T")
 				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
@@ -435,7 +437,9 @@ feature -- Command generation
 				Result.append (extension_to_add)
 				Result.append (")%N")
 				if test_toggle_b.state and not procedure.precondition_list.empty then
-					Result.append ("%T%T%T%Tend")
+					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+					Result.append (test_text_field.text)
+					Result.append ("%")%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Tend%N")
 			elseif text_field_name /= Void then
@@ -450,7 +454,9 @@ feature -- Command generation
 				Result.append (")%N")
 			end
 			if test_toggle_b.state and not procedure.precondition_list.empty and not is_both then
-				Result.append ("%T%T%Tend%N")
+				Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+				Result.append (test_text_field.text)
+				Result.append ("%")%N%T%T%T%Tend%N")
 			end		
 		end
 
@@ -469,13 +475,11 @@ feature -- Command generation
 					preconditions.islast
 				loop
 					Result.append (preconditions.item.precondition)
-					Result.append ("%N%T%T%T%Tand ")
+					Result.append ("%N%T%T%T%Tand then ")
 					preconditions.forth
 				end		
 				Result.append (preconditions.last.precondition)
-				Result.append ("%N%T%T%Tthen%N%T%T%T%Tio.put_string (%"")
-				Result.append (test_text_field.text)
-				Result.append ("%")%N%T%T%T%T")
+				Result.append ("%N%T%T%Tthen%N%T%T%T%T")
 			end
 			Result.append ("target.")
 			Result.append (procedure.method_name)

@@ -93,6 +93,10 @@ feature {NONE} -- Initialization
 			if C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object) then
 				C.gtk_widget_show (c_object)
 			end
+			
+			internal_minimum_width := -1
+			internal_minimum_height := -1
+			
 			initialize_events	
 			set_default_colors
 				--| "configure-event" only happens for windows,
@@ -414,8 +418,8 @@ feature -- Element change
 			cur_pix, a_cursor_ptr, fg, bg: POINTER
 			a_cur_data: ANY
 		do
-			fg := fg_color
-			bg := bg_color
+			fg := App_implementation.fg_color
+			bg := App_implementation.bg_color
 			a_cursor_imp ?= a_cursor.implementation
 			check
 				a_cursor_imp_not_void: a_cursor_imp /= Void
@@ -435,27 +439,6 @@ feature -- Element change
 		do
 			C.gdk_window_set_cursor (C.gtk_widget_struct_window (visual_widget), a_cursor_ptr)
 			C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), a_cursor_ptr)
-		end
-	
-	bg_color: POINTER is
-			-- Default allocated background color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := C.c_gdk_color_struct_allocate
-			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
-		end
-		
-	fg_color: POINTER is
-			-- Default allocate foreground color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := C.c_gdk_color_struct_allocate
-			C.set_gdk_color_struct_red (Result, 65535)
-			C.set_gdk_color_struct_green (Result, 65535)
-			C.set_gdk_color_struct_blue (Result, 65535)
-			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
 		end
 	
 	set_minimum_width (a_minimum_width: INTEGER) is
@@ -530,34 +513,38 @@ feature -- Measurement
 				C.gtk_widget_struct_allocation (c_object)
 			).max (minimum_height)
 		end
-	
- 	minimum_width: INTEGER is
-			-- Minimum horizontal size in pixels.
+		
+	minimum_width: INTEGER is
+			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
 		do
-			if not widget_in_fixed then
-				gr := C.c_gtk_requisition_struct_allocate
-				C.gtk_widget_size_request (c_object, gr)
-				Result := C.gtk_requisition_struct_width (gr)
-				C.c_gtk_requisition_struct_free (gr)
+			if internal_minimum_width /= -1 then
+				Result := internal_minimum_width
 			else
-				Result := fixed_minimum_width
+				if not widget_in_fixed then
+					gr := C.gtk_widget_struct_requisition (c_object)
+					Result := C.gtk_requisition_struct_width (gr)
+				else
+					Result := fixed_minimum_width
+				end
 			end
 		end
-
+		
 	minimum_height: INTEGER is
-			-- Minimum vertical size in pixels.
+			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
 		do
-			if not widget_in_fixed then
-				gr := C.c_gtk_requisition_struct_allocate
-				C.gtk_widget_size_request (c_object, gr)
-				Result := C.gtk_requisition_struct_height (gr)
-				C.c_gtk_requisition_struct_free (gr)
+			if internal_minimum_height /= -1 then
+				Result := internal_minimum_height
 			else
-				Result := fixed_minimum_height
+				if not widget_in_fixed then
+					gr := C.gtk_widget_struct_requisition (c_object)
+					Result := C.gtk_requisition_struct_height (gr)
+				else
+					Result := fixed_minimum_height
+				end
 			end
 		end
 
@@ -605,6 +592,12 @@ feature {NONE} -- Implementation
 
 	cursor_signal_tag: INTEGER
 			-- Tag returned from Gtk used to disconnect `enter-notify' signal
+
+	internal_minimum_width: INTEGER	
+			-- Minimum width for the widget.
+
+	internal_minimum_height: INTEGER
+			-- Minimum height for the widget.
 
 feature {EV_WINDOW_IMP} -- Implementation
 
@@ -675,6 +668,8 @@ feature {NONE} -- Implementation
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Abstracted implementation for minumum size setting.
 		do
+			internal_minimum_width := a_minimum_width
+			internal_minimum_height := a_minimum_height
 			if widget_in_fixed then
 				fixed_minimum_height := a_minimum_height
 				fixed_minimum_width := a_minimum_width

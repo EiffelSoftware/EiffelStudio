@@ -1,15 +1,13 @@
 indexing
-
-	description: 
-		"Command to generate documentation.";
+	description: "Command to generate documentation.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class DOCUMENT_GENERATION
 
 inherit
+	TOOL_COMMAND
 
-	TOOL_COMMAND;
 	WARNER_CALLBACKS
 
 creation
@@ -72,13 +70,13 @@ feature -- Generation
             inspect
                 format_type
             when flat_type then
-                !! cmd.make_flat (filter_name, Generate_window)
+                !! cmd.make_flat (filter_name, Project_tool.progress_dialog)
             when flat_short_type then
-                !! cmd.make_flat_short (filter_name, Generate_window)
+                !! cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
             when text_type then
-                !! cmd.make_text (filter_name, Generate_window)
+                !! cmd.make_text (filter_name, Project_tool.progress_dialog)
             when short_type then
-                !! cmd.make_short (filter_name, Generate_window)
+                !! cmd.make_short (filter_name, Project_tool.progress_dialog)
             end
             if do_parents then
                 cmd.set_do_parents

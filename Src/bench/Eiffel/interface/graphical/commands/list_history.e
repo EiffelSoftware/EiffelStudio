@@ -2,8 +2,8 @@ indexing
 
 	description:
 		"Popup a list of all targets in the tool's history. %
-		%The contents is created in the descendants.";
-	date: "$Date$";
+		%The contents is created in the descendants."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LIST_HISTORY
@@ -24,19 +24,19 @@ feature -- Properties
 			-- Name of the command
 		do
 			Result := Interface_names.f_List_targets
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_List_targets
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
 			Result := Interface_names.a_List_targets
-		end;
+		end
 
 feature {NONE} -- Execution
 
@@ -45,7 +45,7 @@ feature {NONE} -- Execution
 		local
 			a_button: EB_BUTTON
 		do
-			a_button ?= argument;
+			a_button ?= argument
 			if a_button /= Void then
 					--| Argument is a button, CHOICE_W should be
 					--| popped up.
@@ -55,7 +55,7 @@ feature {NONE} -- Execution
 					--| the text_window will do.
 				retarget_text_window
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -67,25 +67,25 @@ feature {NONE} -- Implementation
 			a_list: TWO_WAY_LIST [STRING]
 		do
 			if choices = Void then
-				!! choices.make_with_widget (a_button.parent, a_button);
-			end;
-			!! a_list.make;
-			fill_list (a_list);
-			choices.popup (Current, a_list, tool.history_window_title);
+				!! choices.make_with_widget (a_button.parent, a_button)
+			end
+			!! a_list.make
+			fill_list (a_list)
+			choices.popup (Current, a_list, tool.history_window_title)
 			choices.select_i_th (tool.history.index)
-		end;
+		end
 
 	fill_list (list: TWO_WAY_LIST [STRING]) is
 			-- Fill `list' with strings.
 			--| Be careful: `fill_list' may not change
 			--| the position of the active item!!
 		local
-			cur: CURSOR;
-			a_string: STRING;
+			cur: CURSOR
+			a_string: STRING
 			history: STONE_HISTORY
 		do
-			history := tool.history;
-			cur := history.cursor;
+			history := tool.history
+			cur := history.cursor
 			from
 				history.start
 			until
@@ -93,35 +93,35 @@ feature {NONE} -- Implementation
 			loop
 				list.extend (history.item.history_name)
 				history.forth
-			end;
+			end
 			history.go_to (cur)
-		end;
+		end
 
 	retarget_text_window is
 			-- Retarget `text_window' with the chosen item.
 		local
-			history: STONE_HISTORY;
+			history: STONE_HISTORY
 			pos, i: INTEGER
 		do
-			pos := choices.position;
+			pos := choices.position
 			if pos = 0 then
 				choices.popdown
 			else
-				history := tool.history;
+				history := tool.history
 				from
-					i := 1;
+					i := 1
 					history.start
 				until
 					i = pos
 				loop
-					history.forth;
+					history.forth
 					i := i + 1
-				end;
-				history.set_do_not_update (True);
-				tool.receive (history.item);
+				end
+				history.set_do_not_update (True)
+				tool.receive (history.item)
 				history.set_do_not_update (False)
 			end
-		end;
+		end
 
 feature {NONE} -- Properties
 

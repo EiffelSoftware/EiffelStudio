@@ -34,7 +34,7 @@ feature {NONE} -- Execution
 			mp: MOUSE_PTR;
 			system_name: STRING
 		do
-			if project_initialized and then system_defined then
+			if Eiffel_project.initialized and then Eiffel_project.system_defined then
 				system_name := clone (Eiffel_system.name);
 			end;
 			if system_name = Void then

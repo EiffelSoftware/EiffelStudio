@@ -18,12 +18,15 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show universe: clusters in class lists.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
 			cursor: CURSOR;
 		do
+			structured_text.add_string ("Classes modified since last compilation");
+			structured_text.add_new_line;
+			structured_text.add_new_line;
 			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
 					--| Skip precompile clusters for now

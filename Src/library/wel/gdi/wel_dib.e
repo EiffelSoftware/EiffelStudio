@@ -20,7 +20,8 @@ inherit
 		end
 
 creation
-	make_by_file
+	make_by_file,
+	make_by_content_pointer
 
 feature {NONE} -- Initialization
 
@@ -60,6 +61,20 @@ feature {NONE} -- Initialization
 			file.close
 		ensure
 			file_closed: file.is_closed
+		end
+
+	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER) is
+		local
+			bitmap_file_header: WEL_BITMAP_FILE_HEADER						
+		do
+			create info_header.make
+
+			structure_size := size
+			structure_make
+
+			memory_copy (bits_ptr, structure_size)
+			info_header.memory_copy (item, info_header.structure_size)
+			calculate_palette
 		end
 
 feature -- Access

@@ -149,7 +149,11 @@ feature {NONE} -- Initialization
 			
 			address_manager.disable_formatters
 			if Eiffel_project.manager.is_project_loaded then
+				on_project_created
 				on_project_loaded
+			elseif Eiffel_project.manager.is_created then
+				on_project_unloaded
+				on_project_created
 			else
 				on_project_unloaded
 			end
@@ -1827,8 +1831,8 @@ feature -- Resource Update
 		do
 			build_menu_bar
 			enable_commands_on_project_created
-			address_manager.on_project_created
 			context_tool.on_project_created
+			address_manager.on_project_created
 			if has_dll_generation then
 				show_dynamic_lib_tool.enable_sensitive
 			end

@@ -10,6 +10,8 @@ class
 inherit
 
 	EV_TREE
+		export {NONE}
+			all
 		undefine
 			is_in_default_state
 		redefine
@@ -17,6 +19,8 @@ inherit
 		end
 	
 	GB_SUPPORTED_WIDGETS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -26,7 +30,7 @@ inherit
 create
 	default_create
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.

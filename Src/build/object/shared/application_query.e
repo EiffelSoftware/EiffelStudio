@@ -36,7 +36,14 @@ feature -- Attributes
 	query_type: STRING
 			-- Name of the returned type
 
-feature
+	possible_commands: LINKED_LIST [APPLICATION_COMMAND]
+			-- Possible commands to change the current query.
+
+	possible_routines: LINKED_LIST [APPLICATION_ROUTINE]
+			-- Possible routines to change the current query
+			-- (for boolean query).
+
+feature -- Access
 
 	value: STRING is
 			-- Value displayed in a scrollable list.
@@ -45,6 +52,51 @@ feature
 			Result.append (query_name)
 			Result.append (": ")
 			Result.append (query_type)
+		end
+
+	sort_possible_methods (application: APPLICATION_CLASS) is
+			-- Sort application methods and list of compatible methods
+			-- containing the name of the query.
+		local
+			command: APPLICATION_COMMAND
+			routine: APPLICATION_ROUTINE
+		do
+			!! possible_commands.make
+			!! possible_routines.make
+			from
+				application.command_list.start
+			until
+				application.command_list.after
+			loop
+				command := application.command_list.item
+				if command /= Void then
+					if command.argument_type.is_equal (query_type) then
+						if command.command_name.substring_index (query_name, 1) > 0 then
+							possible_commands.put_front (command)
+						else
+							possible_commands.extend (command)
+						end
+					end
+				end
+				application.command_list.forth
+			end
+			if query_type.is_equal ("BOOLEAN") then
+				from
+					application.routine_list.start
+				until
+					application.routine_list.after
+				loop
+					routine := application.routine_list.item
+					if routine.argument_list.empty then
+						if routine.routine_name.substring_index (query_name, 1) > 0 then
+							possible_routines.put_front (routine)
+						else
+							possible_routines.extend (routine)
+						end	
+					end
+					application.routine_list.forth
+				end
+			end
 		end
 
 end -- class APPLICATION_QUERY

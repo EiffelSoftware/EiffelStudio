@@ -135,7 +135,8 @@ feature
 			if not Result then
 				Result := true;
 					-- It is not predefined. If it has parameters, then none
-					-- of them may have a call.
+					-- of them may have a call or allocate memory (manifest arrays,
+					-- strings, ...).
 				if parameters /= Void then
 					pos := parameters.index;
 					from
@@ -144,7 +145,7 @@ feature
 						parameters.after or not Result
 					loop
 						expr_b ?= parameters.item;
-						Result := not expr_b.has_call;
+						Result := not (expr_b.has_call or else expr_b.allocates_memory)
 						parameters.forth;
 					end;
 					parameters.go_i_th (pos);

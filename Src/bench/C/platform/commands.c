@@ -433,14 +433,14 @@ UINT event_id;
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
-void win_ioh_make_client(a, o)
+void win_ioh_make_client(a, o, a_delay)
 EIF_POINTER a;
 EIF_OBJ     o;
-/*EIF_INTEGER a_delay;*/
+EIF_INTEGER a_delay;
 {
 	event_callback = (EVENT_CALLBACK) a;
 	event_object = eif_adopt (o);
-	delay = 10; /* FIXME - passed as an argument */
+	delay = 10; 
 }
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)

@@ -4,7 +4,8 @@ class FILE_ID
 
 inherit
 
-	COMPILER_ID
+	COMPILER_ID;
+	PROJECT_CONTEXT
 
 creation
 
@@ -24,6 +25,16 @@ feature -- Access
 			!! Result.make (6)
 			Result.extend ('E')
 			Result.append_integer (internal_id)
+		end
+
+	directory_path: STRING is
+			-- Server file directory path
+		once
+			if Compilation_modes.is_extending then
+				Result := Extendible_path
+			else
+				Result := Compilation_path
+			end
 		end
 
 feature {NONE} -- Implementation

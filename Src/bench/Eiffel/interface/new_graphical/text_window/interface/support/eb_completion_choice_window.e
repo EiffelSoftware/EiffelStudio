@@ -387,6 +387,7 @@ feature {NONE} -- Implementation
 				else
 					editor.complete_feature_from_window (" " + sorted_names.item (ix).full_insert_name, True, character_to_append)
 				end
+				last_completed_feature_had_arguments := sorted_names.item (ix).has_arguments
 			end
 		end
 
@@ -417,7 +418,7 @@ feature {NONE} -- Implementation
 					preferences.development_window_data.save_completion_list_size (width, height)
 				end
 				hide
-				if not feature_mode then
+				if not last_completed_feature_had_arguments then
 					editor.exit_complete_mode
 				end
 			end
@@ -468,6 +469,9 @@ feature {NONE} -- Implementation
 				end
 			end			
 		end
+
+	last_completed_feature_had_arguments: BOOLEAN
+			-- Did the last inserted completed feature name contain arguments?
 
 feature {NONE} -- String matching
 

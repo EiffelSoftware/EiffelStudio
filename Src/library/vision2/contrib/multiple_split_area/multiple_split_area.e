@@ -849,7 +849,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					if not external_representation.has (all_holders.item.tool) then
 						all_holders.item.enable_minimize_button
 					end
-					all_holders.item.tool.show
+					if not (minimized_states @ all_holders.index) then
+						all_holders.item.tool.show
+					end
 				else
 					all_holders.item.enable_minimize_button
 				end
@@ -1074,7 +1076,14 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				if linear_representation.item /= a_tool then
 					-- As the tool of `holder' is already in `linear_representation' at this point,
 					-- we must ignore it in the calculations.
-					maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
+					
+						-- Must not forget to handle items that are minimized correctly.
+						-- Those that are minimized are not displayed, only the holder.
+					if linear_representation.item.is_displayed then
+						maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
+					else
+						maximum_insert_height := maximum_insert_height - tool_holder_height
+					end
 				end
 				linear_representation.forth
 			end
@@ -1527,7 +1536,8 @@ feature {NONE} -- Implementation
 			contained: linear_representation.has (a_widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			first_minimized, second_minimized: BOOLEAN
+			first_minimized: EV_WIDGET
+			minimized_count: INTEGER
 		do
 			holder := holder_of_widget (a_widget)
 			if maximized_tool /= Void then
@@ -1536,18 +1546,25 @@ feature {NONE} -- Implementation
 				minimized_states.remove
 			end
 			
-				-- Must handle the case where the second to last item is removed,
-				-- and the final item is minimized.
-			if count = 2 then
-				first_minimized := is_item_minimized (linear_representation @ 1)
-				second_minimized := is_item_minimized (linear_representation @ 2)
-				if linear_representation @ 1 = a_widget and second_minimized then
-					restore_minimized_tool (holder_of_widget (linear_representation @ 2))
-					holder_of_widget (linear_representation @ 2).minimize_button.set_pixmap (minimize_pixmap)
-				elseif linear_representation @ 2 = a_widget and first_minimized then
-					restore_minimized_tool (holder_of_widget (linear_representation @ 1))
-					holder_of_widget (linear_representation @ 1).minimize_button.set_pixmap (minimize_pixmap)
+				-- Must handle the case where an item is removed, and all remaining items are minimized.
+				-- The first must be unminimized.
+			from
+				linear_representation.start
+			until
+				linear_representation.off
+			loop
+				if linear_representation.item /= a_widget and is_item_minimized (linear_representation.item) then
+					minimized_count := minimized_count + 1
+					if first_minimized = Void then
+							-- Set `first_minimized' if `Void' so it may be used if all widgets are minimized.
+						first_minimized := linear_representation.item
+					end
 				end
+				linear_representation.forth
+			end
+			if minimized_count = count - 1 then
+				restore_minimized_tool (holder_of_widget (first_minimized))
+				holder_of_widget (first_minimized).minimize_button.set_pixmap (minimize_pixmap)
 			end
 			
 			all_holders.prune_all (holder)
@@ -1596,6 +1613,7 @@ feature {NONE} -- Implementation
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
+			holder_height: INTEGER
 		do
 			cursor := linear_representation.cursor
 			create pre_insertion_heights.make (count)
@@ -1606,7 +1624,10 @@ feature {NONE} -- Implementation
 				linear_representation.off
 			loop
 				holder := holder_of_widget (linear_representation.item)
-				pre_insertion_heights.extend (holder.height)
+					-- Must not include minimized and maximized items, as they are placed in `upper_box'
+					-- and `lower_box'.
+				holder_height := holder.height - holder.lower_box.height - holder.upper_box.height
+				pre_insertion_heights.extend (holder_height)
 				pre_insertion_holders.extend (holder)
 				linear_representation.forth
 			end
@@ -1686,7 +1707,14 @@ feature {NONE} -- Implementation
 				if linear_representation.item /= holder.tool then
 					-- As the tool of `holder' is already in `linear_representation' at this point,
 					-- we must ignore it in the calculations.
-					maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
+					
+						-- Must not forget to handle items that are minimized correctly.
+						-- Those that are minimized are not displayed, only the holder.
+					if linear_representation.item.is_displayed then
+						maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
+					else
+						maximum_insert_height := maximum_insert_height - tool_holder_height
+					end
 				end
 				linear_representation.forth
 			end

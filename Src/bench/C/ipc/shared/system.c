@@ -56,9 +56,6 @@ int new;
 
 #include "timehdr.h"
 
-#undef NULL
-#define NULL (char *) 0
-
 #ifndef HAS_USLEEP
 public int usleep(usec)
 int usec;
@@ -70,7 +67,7 @@ int usec;
 	tm.tv_sec = (usec > 1000000) ? usec / 1000000 : 0;
 	tm.tv_usec = (usec < 1000000) ? usec : usec % 1000000;
 
-	(void) select(1, NULL, NULL, NULL, &tm);
+	(void) select(1, (Select_fd_set_t) 0, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm);
 }
 #endif
 

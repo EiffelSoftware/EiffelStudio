@@ -182,9 +182,9 @@ feature -- Settings
 					buffer.put_string (local_onces.key_for_iteration)
 					buffer.put_string ("_result;")
 				end
-				buffer.put_string ("%Nextern EIF_BOOLEAN ")
+				buffer.put_string ("%NRTOSH(")
 				buffer.put_string (local_onces.key_for_iteration)
-				buffer.put_string ("_done;")
+				buffer.put_character (')')
 				local_onces.forth
 			end
 

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
+			set_c_object (C.gtk_fixed_new)
 		end
 
 feature -- Status setting
@@ -38,7 +39,7 @@ feature -- Status setting
 		local
 			w_imp: EV_WIDGET_IMP
 		do
-			w_imp ?= a_widget
+			w_imp ?= a_widget.implementation
 			C.gtk_widget_set_uposition (w_imp.c_object, an_x, a_y)
 		end
 
@@ -48,7 +49,7 @@ feature -- Status setting
 		local
 			w_imp: EV_WIDGET_IMP
 		do
-			w_imp ?= a_widget
+			w_imp ?= a_widget.implementation
 			C.gtk_fixed_move (c_object, w_imp.c_object, a_width, a_height)
 		end
 
@@ -90,6 +91,9 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/05/02 18:34:22  brendel
+--| Corrected implementation.
+--|
 --| Revision 1.10  2000/05/02 16:32:34  brendel
 --| Implemented.
 --|

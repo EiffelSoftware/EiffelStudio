@@ -22,10 +22,10 @@ feature {NONE}
 			Result := Pixmaps.selected_windows_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.window_label
--- samik		end;
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.window_label)
+		end
 
 	make is 
 		do
@@ -39,5 +39,6 @@ feature {NONE}
 			extend (popup_cmd);
 			extend (popdown_cmd);
 		end;
+
 
 end -- class WINDOW_CMDS

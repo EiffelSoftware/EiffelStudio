@@ -34,4 +34,9 @@ feature {NONE}
 			Result := Pixmaps.selected_user_defined_pixmap
 		end
 
+	set_focus_string is
+		do
+			button.set_focus_string (Focus_labels.user_label)
+		end
+
 end

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			--put ("localhost:0", "DISPLAY")
+--			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 			
 			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
@@ -104,14 +104,12 @@ feature {NONE} -- Initialization
 							interface.post_launch_actions.call (Void)
 							post_launch_actions_called := True
 						end
-						if not internal_idle_actions.is_empty then
-							internal_idle_actions.call (Void)
-						elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
-							idle_actions_internal.call (Void)
+						if not internal_idle_actions.is_empty or else internal_idle_actions /= Void then
+							call_idle_actions
 						else
-								-- Block loop by running a gmain loop iteration with blocking enabled.
+									-- Block loop by running a gmain loop iteration with blocking enabled.
 							main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
-						end			
+						end
 				end				
 			end
 		end
@@ -120,6 +118,16 @@ feature {EV_ANY_IMP} -- Access
 		
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
+		
+	call_idle_actions is
+			-- Execute idle actions
+		do
+			if not internal_idle_actions.is_empty then
+				internal_idle_actions.call (Void)
+			elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
+				idle_actions_internal.call (Void)
+			end
+		end
 
 feature -- Access
 

@@ -34,7 +34,7 @@ feature
 
 	remove_yourself is
 		do
-			cmd_editor.remove_argument (data)
+--			cmd_editor.remove_argument (data)
 		end;
 
 	data: ARG;

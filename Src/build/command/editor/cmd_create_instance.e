@@ -34,19 +34,19 @@ feature {NONE}
 
 	redo is
 		local
-			inst_editor: CMD_INST_EDITOR
+			command_tool: COMMAND_TOOL_TOP_SHELL
 		do
 			if not cmd_instance.edited then
-				inst_editor := window_mgr.cmd_inst_editor;
-				inst_editor.set_instance (cmd_instance);
-				window_mgr.display (inst_editor)
+				command_tool := window_mgr.command_tool;
+				command_tool.set_instance (cmd_instance);
+				window_mgr.display (command_tool)
 			end
 		end;
 
 	undo is
 		do
 			if cmd_instance.edited then
-				cmd_instance.inst_editor.clear
+				cmd_instance.command_tool.clear
 			end;
 		end;
 

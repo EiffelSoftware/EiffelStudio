@@ -1,9 +1,15 @@
--- General class for holes in the command editor
-deferred class CMD_EDITOR_HOLE
+indexing
+	description: "General class for holes in the command editor."
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class
+	CMD_EDITOR_HOLE
 
 inherit
 
-	EB_BUTTON;
+	EB_BUTTON
+
 	HOLE
 		select
 			init_toolkit
@@ -11,21 +17,20 @@ inherit
 
 feature {NONE}
 
-	command_editor: CMD_EDITOR;
+	command_editor: COMMAND_EDITOR
 
-	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+	make (ed: like command_editor; a_parent: COMPOSITE) is
 		require
 			valid_ed: ed /= Void
 		do
-			command_editor := ed;
-			make_visible (a_parent);
-			register;
-		end;
+			command_editor := ed
+			make_visible (a_parent)
+			register
+		end
 
 	target: WIDGET is
 		do
 			Result := Current
 		end
 
-end
-	
+end -- class CMD_EDITOR_HOLE

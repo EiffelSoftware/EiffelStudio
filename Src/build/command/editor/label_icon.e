@@ -1,5 +1,10 @@
+indexing
+	description: "Icon that appears in a LABEL_BOX."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class LABEL_ICON 
+class
+	LABEL_ICON
 
 inherit
 
@@ -8,8 +13,8 @@ inherit
 			stone_cursor, stone
 		redefine
 			data, set_widget_default
-		end;
-	LABEL_STONE;
+		end
+	LABEL_STONE
 	REMOVABLE
 
 creation
@@ -18,26 +23,26 @@ creation
 	
 feature {NONE}
 
-	cmd_editor: CMD_EDITOR;
+	cmd_editor: COMMAND_EDITOR
 
 	
 feature 
 
-	data: CMD_LABEL;
+	data: CMD_LABEL
 
-	make (ed: CMD_EDITOR) is
+	make (ed: like cmd_editor) is
 		do
 			cmd_editor := ed
-		end;
+		end
 
 	set_widget_default is
 		do
-			initialize_transport;
-		end;
+			initialize_transport
+		end
 
 	remove_yourself is
 		do
 			cmd_editor.remove_label (data)
-		end;
+		end
 
-end
+end -- class LABEL_ICON

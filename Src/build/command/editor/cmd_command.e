@@ -45,9 +45,9 @@ feature
 			Result.append (")");
 		end;
 	
-feature {NONE}
+	edited_command: USER_CMD
 
-	edited_command: USER_CMD;
+feature {NONE}
 
 	work (argument: ANY) is
 		do

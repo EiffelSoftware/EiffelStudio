@@ -1,5 +1,11 @@
+indexing
+	description: "Hole used to add a formal argument %
+				% to a command."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class ARG_HOLE 
+class
+	ARG_HOLE
 
 inherit
 
@@ -16,45 +22,47 @@ feature
 
 	stone_type: INTEGER is
 		do
-		end;
+		end
 
 	compatible (st: STONE): BOOLEAN is
 		do
 			Result := 
 				st.stone_type = Stone_types.context_type or else
-				st.stone_type = Stone_types.type_stone_type
-		end;
+				st.stone_type = Stone_types.type_stone_type or else
+				st.stone_type = Stone_types.application_object_type
+		end
 
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.type_pixmap
-		end;
+		end
 
 	create_focus_label is
 		do
 			set_focus_string (Focus_labels.argument_label)
-		end;
+		end
 	
 feature {NONE}
 
 	process_type (dropped: TYPE_STONE) is
 		local
-			c: GROUP_C;
+			c: GROUP_C
 			t: CONTEXT_GROUP_TYPE
+			app_obj: APPLICATION_OBJECT [ANY]
 		do
-			c ?= dropped.data;
-			t ?= dropped.data;
-			if (c = Void) and (t = Void) then
+			c ?= dropped.data
+			t ?= dropped.data
+			app_obj ?= dropped.data
+			if app_obj /= Void then
+				io.put_string ("Has to work in ARG_HOLE.process_type")
+			elseif (c = Void) and (t = Void) then
 				command_editor.add_argument (dropped)
-			end;
-		end;
+			end
+		end
 
 	process_context (dropped: CONTEXT_STONE) is
 		do
 			process_type (dropped)
-		end;
+		end
 
-end
-	
-
-	
+end -- class ARG_HOLE

@@ -37,14 +37,14 @@ feature {NONE}
 
 	execute (arg: ANY) is
 		local
-			inst_editor: CMD_INST_EDITOR;
+			command_tool: COMMAND_TOOL;
 			inst: CMD_INSTANCE;
 		do
 			if command_editor.current_command /= Void then
 				!!inst.session_init (command_editor.current_command);
-				inst_editor := window_mgr.cmd_inst_editor;
-				inst_editor.set_instance (inst);
-				window_mgr.display (inst_editor)
+				command_tool := window_mgr.cmd_command_tool;
+				command_tool.set_instance (inst);
+				window_mgr.display (command_tool)
 			end
 		end;
 

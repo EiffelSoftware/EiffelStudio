@@ -74,6 +74,7 @@ feature -- Basic Operations
 			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			checked_changed_delegate: SYSTEM_EVENTHANDLER
 		do	
 			initialize
 			set_text (dictionary.Title)
@@ -92,11 +93,27 @@ feature -- Basic Operations
 				support.create_folder (eiffel_path)
 			end
 			destination_path_text_box.set_text (eiffel_path)
+
+				-- Default path check box
+			create default_path_check_box.make_checkbox
+			default_path_check_box.set_text (dictionary.Default_path_check_box_text)
+			default_path_check_box.set_font (a_font)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (4 * dictionary.Margin + 7 * dictionary.Label_height)
+			default_path_check_box.set_location (a_point)
+			a_size.set_height (dictionary.Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			default_path_check_box.set_size (a_size)
+			default_path_check_box.set_checked (True)
+			default_path_check_box.set_auto_check (True)
+			get_controls.add (default_path_check_box)
+			create checked_changed_delegate.make_eventhandler (Current, $on_check)
+			default_path_check_box.add_checked_changed (checked_changed_delegate)
 			
 				-- OK button
 			create ok_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			a_point.set_Y (5 * dictionary.Margin + 9 * dictionary.Label_height)
+			a_point.set_Y (5 * dictionary.Margin + 8 * dictionary.Label_height)
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
 			ok_button.set_height (dictionary.Button_height)
@@ -107,7 +124,7 @@ feature -- Basic Operations
 				-- Cancel button
 			create cancel_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_Y (5 * dictionary.Margin + 9 * dictionary.Label_height)
+			a_point.set_Y (5 * dictionary.Margin + 8 * dictionary.Label_height)
 			cancel_button.set_location (a_point)
 			cancel_button.set_height (dictionary.Button_height)
 			cancel_button.set_width (dictionary.Button_width)

@@ -13,6 +13,10 @@ inherit
 
 feature -- Access
 
+	widget: EV_WIDGET
+			-- The mouse pointer was over this widget 
+			-- when event happened
+
 	clip_region: EV_CLIP
 			-- Exposed region
 

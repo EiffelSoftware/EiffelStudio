@@ -17,7 +17,11 @@ inherit
 		end
 
 feature -- Access	
-	
+
+	widget: EV_WIDGET
+			-- The mouse pointer was over this widget 
+			-- when event happened
+
 	x: INTEGER
 			-- x coordinate of mouse pointer relative to widget
 
@@ -81,6 +85,12 @@ feature -- Element change
 			set_first_button (first)
 			set_second_button (second)
 			set_third_button (third)
+		end
+
+	set_widget (wid: EV_WIDGET) is
+			-- Make `wid' the new widget.
+		do
+			widget := wid
 		end
 
 	set_x (value: INTEGER) is

@@ -18,6 +18,10 @@ inherit
 
 feature -- Access	
 
+	widget: EV_WIDGET
+			-- The mouse pointer was over this widget 
+			-- when event happened
+
 	x: INTEGER
 			-- x coordinate of mouse pointer relative to widget
 
@@ -87,6 +91,12 @@ feature -- Element change
 			set_third_button (third)
 		end
 
+	set_widget (wid: EV_WIDGET) is
+			-- Make `wid' the new widget.
+		do
+			widget := wid
+		end
+
 	set_x (value: INTEGER) is
 			-- Make `value' the new x.
 		do
@@ -140,11 +150,11 @@ feature {NONE} -- Implementation
 	state: INTEGER
 			-- Current state of the complementary keys and buttons.
 			-- Correspond to a binary number with :
-			--   bit 0 : shift_key_pressed
-			--	 bit 1 : control_key_pressed
-			--	 bit 2 : first_button_pressed
-			--	 bit 3 : second_button_pressed
-			--	 bit 4 : third_button_pressed
+			--	bit 0 : shift_key_pressed
+			--	bit 1 : control_key_pressed
+			--	bit 2 : first_button_pressed
+			--	bit 3 : second_button_pressed
+			--	bit 4 : third_button_pressed
 
 end -- class EV_BUTTON_EVENT_DATA_I
 

@@ -1,60 +1,89 @@
 system
-	 wizard
+	wizard
 
 root
-	WIZARD_MANAGER (precompile_wizard): "make_and_launch"
+	WIZARD_MANAGER: make_and_launch
 
 default
-	assertion (require)
-	assertion (ensure)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
-	exception_trace (yes)
-	arguments ("C:\Eiffel50\bench\wizards\precompile")
+	assertion(require)
+	assertion(ensure)
+	address_expression(no)
+	array_optimization(no)
+	console_application(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments("D:\Eiffel50\bench\wizards\precompile")
+	arguments("C:\Eiffel50\bench\wizards\precompile")
+	disabled_debug(yes)
+	disabled_debug("win_dispatcher")
+	disabled_debug("wel")
+	disabled_debug("gdiobjectscreation")
+	disabled_debug("gdi_count")
+	disabled_debug("vision2_windows")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+
+-- Root cluster
+-- Precompilation Wizard
+-- EiffelBase
+-- Wel
+-- EiffelVision2
+-- Wizard library
+-- Lex and Parse
 
 cluster
-		-- Root cluster
-	root_cluster: "$EIFFEL_SRC\help\wizards"
-	
-		-- Precompilation Wizard
-	precompile_wizard (root_cluster): "$\eprecompile"
-	
-		-- EiffelBase
-	all base: "$EIFFEL_SRC\library\base"
+	root_cluster:		"$EIFFEL_SRC\help\wizards"
 		exclude
-			"desc";"table_eiffel3";"CVS"
+			"CVS"; 
 		end
 
-		-- Wel
-	all wel: "$EIFFEL_SRC\library\wel"
+	precompile_wizard (root_cluster):		"$\eprecompile"
 		exclude
-			"CVS"
+			"CVS"; 
+		end
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"desc"; "table_eiffel3"; "CVS"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
 		default
-			assertion (ensure)
+			assertion(ensure)
 		end
 
-		-- EiffelVision2
-	all vision2: "$EIFFEL_SRC\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk";"EIFGEN";"tmp";"temp";"release";"obsolete";"CVS"
+			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
 		end
 
-		-- Wizard library
-	all wizard_library: "$EIFFEL_SRC\library\wizard"
+	all wizard_library:		"$EIFFEL_SRC\library\wizard"
+		exclude
+			"CVS"; 
+		end
 
-		-- Lex and Parse
-	all lex: "$EIFFEL_SRC\library\lex"
-	all parse: "$EIFFEL_SRC\library\parse"
+	all lex:		"$EIFFEL_SRC\library\lex"
+		exclude
+			"CVS"; 
+		end
+
+	all parse:		"$EIFFEL_SRC\library\parse"
+		exclude
+			"CVS"; 
+		end
 
 external
+
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include"
@@ -64,4 +93,5 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
 		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib"
+
 end

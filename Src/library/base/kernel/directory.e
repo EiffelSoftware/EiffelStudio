@@ -251,7 +251,7 @@ feature {DIRECTORY} -- Implementation
 			-- Return the `DIRENTRY' structure corresponding
 			-- to the name `entry' of directory `dir_ptr'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 feature {NONE} -- Implementation
@@ -267,61 +267,61 @@ feature {NONE} -- Implementation
 	file_mkdir (dir_name: POINTER) is
 			-- Make directory `dir_name'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	dir_open (dir_name: POINTER): POINTER is
 			-- Open the directory `dir_name'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	dir_rewind (dir_ptr: POINTER) is
 			-- Rewind the directory `dir_ptr'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	dir_close (dir_ptr: POINTER) is
 			-- Close the directory `dir_ptr'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	dir_next (dir_ptr: POINTER): STRING is
 			-- Return the next entry for directory 'dir_ptr'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	eif_dir_delete (dir_name: POINTER) is
 			-- Delete the directory `dir_name'.
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	eif_dir_exists (dir_name: POINTER): BOOLEAN is
 			-- Does the directory `dir_name' exist?
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	eif_dir_is_readable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' readable?
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	eif_dir_is_executable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' executable?
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	eif_dir_is_writable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' writable?
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 end -- class DIRECTORY

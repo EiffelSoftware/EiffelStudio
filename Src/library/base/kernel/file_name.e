@@ -83,22 +83,22 @@ feature {NONE} -- Externals
 
 	eif_append_file_name (s, p, v: POINTER) is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_is_file_name_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_is_extension_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_is_file_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 end -- class FILE_NAME

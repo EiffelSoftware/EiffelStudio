@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	c_outi (i: INTEGER): STRING is
 			-- Printable representation of integer value
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	one_ref: INTEGER_REF is

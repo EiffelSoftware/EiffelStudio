@@ -1388,57 +1388,57 @@ feature {NONE} -- Implementation
 	file_link (from_name, to_name: POINTER) is
 			-- Link `to_name' to `from_name'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_unlink (fname: POINTER) is
 			-- Delete file `fname'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_dopen (fd, how: INTEGER): POINTER is
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_close (file: POINTER) is
 			-- Close `file'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_flush (file: POINTER) is
 			-- Flush `file'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_fd (file: POINTER): INTEGER is
 			-- Operating system's file descriptor
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_gc (file: POINTER): CHARACTER is
 			-- Access the next character
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_gs (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -1447,7 +1447,7 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1.
 			-- If it fits, result is number of characters read.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_gss (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
@@ -1455,7 +1455,7 @@ feature {NONE} -- Implementation
 			-- into `a_string'. If it does not fit, result is `length' + 1.
 			-- Otherwise, result is the number of characters read.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_gw (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -1466,44 +1466,44 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1,
 			-- otherwise result is number of characters read.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_lh (file: POINTER): CHARACTER is
 			-- Look ahead in `file' and find out the value of the next
 			-- character. Do not read over character.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_size (file: POINTER): INTEGER is
 			-- Size of `file'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_tnil (file: POINTER) is
 			-- Read upto next input line.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_tell (file: POINTER): INTEGER is
 			-- Current cursor position in file.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_touch (f_name: POINTER) is
 			-- Touch file `f_name'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_rename (old_name, new_name: POINTER) is
 			-- Change file name from `old_name' to `new_name'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_perm (f_name, who, what: POINTER; flag: INTEGER) is
@@ -1511,105 +1511,105 @@ feature {NONE} -- Implementation
 			-- `flag' = 1 -> add permissions,
 			-- `flag' = 0 -> remove permissions.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_chmod (f_name: POINTER; mask: INTEGER) is
 			-- Change mode of `f_name' to `mask'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_chown (f_name: POINTER; new_owner: INTEGER) is
 			-- Change owner of `f_name' to `new_owner'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_chgrp (f_name: POINTER; new_group: INTEGER) is
 			-- Change group of `f_name' to `new_group'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_utime (f_name: POINTER; time, how: INTEGER) is
 			-- Set access, modification time or both (`how' = 0,1,2) on
 			-- `f_name', using `time' as time stamp.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_tnwl (file: POINTER) is
 			-- Print a new-line to `file'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_append (file, from_file: POINTER; length: INTEGER) is
 			-- Append a copy of `from_file' to `file'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
 			-- Print `a_string' to `file'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_pc (file: POINTER; c: CHARACTER) is
 			-- Put `c' to end of `file'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_go (file: POINTER; abs_position: INTEGER) is
 			-- Go to absolute `position', originated from start.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_recede (file: POINTER; abs_position: INTEGER) is
 			-- Go to absolute `position', originated from end.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_move (file: POINTER; offset: INTEGER) is
 			-- Move file pointer by `offset'.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_feof (file: POINTER): BOOLEAN is
 			-- End of file?
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_access (f_name: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real UID.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_creatable (f_name: POINTER): BOOLEAN is
 			-- Is `f_name' creatable.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	c_retrieved (file_handle: INTEGER): ANY is
 			-- Object structured retrieved from file of pointer
 			-- `file_ptr'
 		external
-			"C | <retrieve.h>"
+			"C | %"eif_retrieve.h%""
 		alias
 			"eretrieve"
 		end;
@@ -1618,7 +1618,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | <store.h>"
+			"C | %"eif_store.h%""
 		alias
 			"estore"
 		end;
@@ -1627,7 +1627,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | <store.h>"
+			"C | %"eif_store.h%""
 		alias
 			"eestore"
 		end;
@@ -1636,7 +1636,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | <store.h>"
+			"C | %"eif_store.h%""
 		alias
 			"sstore"
 		end;

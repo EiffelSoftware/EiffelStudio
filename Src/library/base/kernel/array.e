@@ -417,7 +417,7 @@ feature {ARRAY} -- Implementation
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		end;
 
 feature {NONE} -- Implementation
@@ -477,13 +477,13 @@ feature {NONE} -- Implementation
 			-- Copy elements of `source' within bounds `s'
 			-- and `e' to `target' starting at index `i'.
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		end
 
 	spclearall (p: POINTER) is
 			-- Reset all items to default value.
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		end
 
 invariant

@@ -102,7 +102,7 @@ feature {NONE} -- GUI building
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)
 
 			create field
-			create browse_button.make_with_text_and_action ("Browse...", ~browse_for_directory)
+			create browse_button.make_with_text_and_action ("Browse...", agent browse_for_directory)
 
 			l_hbox.extend (field)
 			l_hbox.extend (browse_button)

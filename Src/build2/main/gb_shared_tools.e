@@ -246,6 +246,12 @@ feature -- Access
 			end
 		end
 		
+	clipboard_dialog: EV_DIALOG is
+			-- Dialog to display contents of `clipboard'.
+		once
+			create Result
+		end
+		
 feature {NONE} -- Implementation
 
 	tool_name_as_storable (a_name: STRING): STRING is

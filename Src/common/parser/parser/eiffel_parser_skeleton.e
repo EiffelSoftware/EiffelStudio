@@ -433,63 +433,6 @@ feature {NONE} -- Actions
 
 feature {NONE} -- ID factory
 
-	new_integer_id_as (n: INTEGER): ID_AS is
-			-- New ID AST node for "INTEGER" of `n' bits.
-		do
-			inspect n
-			when 8 then create Result.initialize (Integer_8_classname)
-			when 16 then create Result.initialize (Integer_16_classname)
-			when 32 then create Result.initialize (Integer_classname)
-			when 64 then create Result.initialize (Integer_64_classname)
-			end
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
-	new_boolean_id_as: ID_AS is
-			-- New ID AST node for "BOOLEAN"
-		do
-			create Result.initialize (Boolean_classname)
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
-	new_character_id_as (is_wide: BOOLEAN): ID_AS is
-			-- New ID AST node for "CHARACTER"
-		do
-			if is_wide then
-				create Result.initialize (Wide_char_classname)
-			else
-				create Result.initialize (Character_classname)
-			end
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
-	new_real_id_as: ID_AS is
-			-- New ID AST node for "REAL"
-		do
-			create Result.initialize (Real_classname)
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
-	new_double_id_as: ID_AS is
-			-- New ID AST node for "DOUBLE"
-		do
-			create Result.initialize (Double_classname)
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
-	new_pointer_id_as: ID_AS is
-			-- New ID AST node for "POINTER"
-		do
-			create Result.initialize (Pointer_classname)
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
 	new_none_id_as: ID_AS is
 			-- New ID AST node for "NONE"
 		do
@@ -811,28 +754,32 @@ feature {NONE} -- Type factory
 		do
 			class_name := ci.first
 			click_ast := ci.second
-			if generics = Void then
-				from formal_parameters.start until formal_parameters.after loop
-					i := i + 1
-					if class_name.is_equal (formal_parameters.item) then
-						formal_type := new_formal_as (i)
-							-- Shouldn't we just remove the formal type
-							-- name from the clickable list instead? (ericb)
-						click_ast.set_node (formal_type)
-						Result := formal_type
-							-- Jump out of the loop.
-						formal_parameters.finish
+			if none_classname.is_equal (class_name) then
+				Result := new_none_type (click_ast, generics /= Void)
+			else
+				if generics = Void then
+					from formal_parameters.start until formal_parameters.after loop
+						i := i + 1
+						if class_name.is_equal (formal_parameters.item) then
+							formal_type := new_formal_as (i)
+								-- Shouldn't we just remove the formal type
+								-- name from the clickable list instead? (ericb)
+							click_ast.set_node (formal_type)
+							Result := formal_type
+								-- Jump out of the loop.
+							formal_parameters.finish
+						end
+						formal_parameters.forth
 					end
-					formal_parameters.forth
 				end
-			end
-			if Result = Void then
-					-- It is a common class type.
-				class_type := new_class_type_as (class_name, generics)
-					-- Put the supplier in `suppliers'.
-				suppliers.insert_supplier_id (class_name)
-				click_ast.set_node (class_type)
-				Result := class_type
+				if Result = Void then
+						-- It is a common class type.
+					class_type := new_class_type_as (class_name, generics)
+						-- Put the supplier in `suppliers'.
+					suppliers.insert_supplier_id (class_name)
+					click_ast.set_node (class_type)
+					Result := class_type
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -882,75 +829,6 @@ feature {NONE} -- Type factory
 			click_ast_updated: ci.second.node = Result
 		end
 
-	new_boolean_type (click_ast: CLICK_AST; is_generic: BOOLEAN): BOOL_TYPE_AS is
-			-- New boolean class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_boolean_type_as
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
-	new_character_type (click_ast: CLICK_AST; is_generic, is_wide: BOOLEAN): CHAR_TYPE_AS is
-			-- New character class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_character_type_as (is_wide)
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
-	new_double_type (click_ast: CLICK_AST; is_generic: BOOLEAN): DOUBLE_TYPE_AS is
-			-- New double class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_double_type_as
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
-	new_integer_type (click_ast: CLICK_AST; is_generic: BOOLEAN; n: INTEGER): INT_TYPE_AS is
-			-- New integer class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-			valid_n: n = 8 or n = 16 or n = 32 or n = 64
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_integer_type_as (n)
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
 	new_none_type (click_ast: CLICK_AST; is_generic: BOOLEAN): NONE_TYPE_AS is
 			-- New none class type;
 			-- Update the clickable list and report
@@ -962,40 +840,6 @@ feature {NONE} -- Type factory
 				report_basic_generic_type_error
 			end
 			Result := new_none_type_as
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
-	new_pointer_type (click_ast: CLICK_AST; is_generic: BOOLEAN): POINTER_TYPE_AS is
-			-- New pointer class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_pointer_type_as
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
-		end
-
-	new_real_type (click_ast: CLICK_AST; is_generic: BOOLEAN): REAL_TYPE_AS is
-			-- New real class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_real_type_as
 			click_ast.set_node (Result)
 		ensure
 			type_not_void: Result /= Void
@@ -1057,7 +901,7 @@ feature {NONE} -- Constants
 			-- Dummy CLICKABLE_AST used to temporarily
 			-- fill `node' in CLICK_AST
 		once
-			Result := new_integer_type_as (32)
+			Result := new_none_type_as
 		ensure
 			dummy_clicable_as_not_void: Result /= Void
 		end

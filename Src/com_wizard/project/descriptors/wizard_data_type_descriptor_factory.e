@@ -19,31 +19,31 @@ feature -- Basic operations
 				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_DATA_TYPE_DESCRIPTOR is
 			-- Create 'Result' according to type
 		local
-			var_type: INTEGER
-			automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR 
-			pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR 
-			safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR 
-			array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR 
-			user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR 
+			l_var_type: INTEGER
+			l_automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR 
+			l_pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR 
+			l_safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR 
+			l_array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR 
+			l_user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR 
 		do
-			var_type := a_type_desc.var_type
-			if is_user_defined (var_type) then
-				create user_defined_creator
-				Result := user_defined_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
-			elseif is_carray (var_type) then
-				create array_creator
-				Result := array_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
-			elseif is_ptr (var_type) then
-				create pointed_creator
-				Result := pointed_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
-			elseif is_safearray (var_type) then
-				create safearray_creator
-				Result := safearray_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
+			l_var_type := a_type_desc.var_type
+			if is_user_defined (l_var_type) then
+				create l_user_defined_creator
+				Result := l_user_defined_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
+			elseif is_carray (l_var_type) then
+				create l_array_creator
+				Result := l_array_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
+			elseif is_ptr (l_var_type) then
+				create l_pointed_creator
+				Result := l_pointed_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
+			elseif is_safearray (l_var_type) then
+				create l_safearray_creator
+				Result := l_safearray_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
 			else
-				create automation_creator
-				Result := automation_creator.create_descriptor (a_type_desc)
+				create l_automation_creator
+				Result := l_automation_creator.create_descriptor (a_type_desc)
 			end
-			if is_unknown (var_type) then
+			if is_unknown (l_var_type) then
 				a_system_description.set_iunknown
 			end
 		end

@@ -57,7 +57,6 @@ feature -- Basic operations
 			if Eiffel_keywords.has (l_string) then
 				name.prepend ("a_")
 			end
-
 			type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, an_elem_desc.type_desc, a_system_descriptor)
 			flags := an_elem_desc.param_desc.flags
 			if has_fopt_and_fhasdefault (flags) then

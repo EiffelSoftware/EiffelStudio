@@ -22,11 +22,6 @@ inherit
 			initialize
 		end
 		
-	IL_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 creation
 	make,
 	make_from_entity

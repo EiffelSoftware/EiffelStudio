@@ -241,7 +241,6 @@ feature {NONE} -- Expressions Implementation
 			doc_not_void: a_doc /= void
 			doc_has_associated_file: a_doc.file.exists
 		local
-			l_filename: FILE_NAME
 			l_file: PLAIN_TEXT_FILE
 			l_file_string, l_subject, l_matched_text, 
 			l_final_string, l_replacement, l_substring: STRING
@@ -253,8 +252,8 @@ feature {NONE} -- Expressions Implementation
 			l_file.readstream (l_file.count)
 			l_file_string := l_file.laststring
 			l_file.close
-			l_subject := clone (l_file_string)
-			l_final_string := clone (l_file_string)
+			l_subject := l_file_string.twin
+			l_final_string := l_file_string.twin
 			from
 				Ordered_expressions.start
 			until
@@ -275,7 +274,7 @@ feature {NONE} -- Expressions Implementation
 					until
 						not regexp.has_matched
 					loop					
-						l_replacement := clone (Expressions.item (Ordered_expressions.item))
+						l_replacement := (Expressions.item (Ordered_expressions.item)).twin
 						if regexp.match_count > 1 then
 							from
 								l_cnt := 1
@@ -293,7 +292,7 @@ feature {NONE} -- Expressions Implementation
 						end
 						regexp.next_match
 					end
-					l_subject := clone (l_final_string)
+					l_subject := l_final_string.twin
 				end
 				
 				Ordered_expressions.forth
@@ -368,9 +367,6 @@ feature {NONE} -- XML Implementation
 		require
 			doc_not_void: a_doc /= void
 			doc_has_associated_file: a_doc.file.exists
-		local
-			l_filename: FILE_NAME
-			l_file: PLAIN_TEXT_FILE
 		do
 			if a_doc.is_valid_xml then
 				if xml_expr_check.is_selected then

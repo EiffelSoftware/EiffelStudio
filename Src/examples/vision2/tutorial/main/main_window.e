@@ -148,7 +148,7 @@ feature -- Tree features
 
 			-- Sub items for widgets node
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-			demo,gauges,table: EV_TREE_ITEM
+			demo,gauges,table,buttons: EV_TREE_ITEM
 
 			-- Sub items for items node
 			-- simple, composed, separator: EV_TREE_ITEM
@@ -204,7 +204,10 @@ feature -- Tree features
 			!SPIN_BUTTON_ITEM! demo.make (gauges)
 			!SCROLL_BAR_ITEM! demo.make (gauges)
 
-			!BUTTON_ITEM! demo.make (primitive)
+			!BUTTON_ITEM! buttons.make (primitive)
+			!TOGGLE_BUTTON_ITEM! demo.make (buttons)
+			!CHECK_BUTTON_ITEM! demo.make (buttons)
+			!RADIO_BUTTON_ITEM! demo.make (buttons)
 			!OPTION_ITEM! demo.make (primitive)
 			!MULTI_COLUMN_LIST_ITEM! demo.make (primitive)
 			!LABEL_ITEM! demo.make (primitive)

@@ -170,9 +170,17 @@ feature -- {EV_TREE_IMP}
 			-- Because this message is only recieved when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of 
 			-- the item and send this message.
+		local
+			local_parent: EV_TREE_IMP
+			value: INTEGER
 		do
+			local_parent := top_parent_imp
+			value := local_parent.image_list.count
 			remove_all_direct_references
-			top_parent_imp.reduce_image_list_references (image_index)
+			if value /= local_parent.image_list.count then
+				-- If an image has been removed from the image list.
+				local_parent.reduce_image_list_references (image_index)
+			end
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
 		end
@@ -571,6 +579,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/28 17:32:23  rogers
+--| on_orphaned now only reduces high indices if an image was removed
+--| from the image list.
+--|
 --| Revision 1.48  2000/03/28 01:11:02  rogers
 --| Added reduce_image_list_references.
 --|

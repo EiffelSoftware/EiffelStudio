@@ -6,6 +6,12 @@ indexing
 class
 	ASSEMBLY_DESCRIPTOR
 
+inherit
+	ANY
+		redefine
+			GetHashCode
+		end	
+
 create 
 	make,
 	make_from_assembly
@@ -89,6 +95,20 @@ feature -- Access
 		indexing
 			description: "Assembly public key"
 			external_name: "PublicKey"
+		end
+
+feature -- Basic Operations
+
+	GetHashCode: INTEGER is
+		indexing
+			description: "Hash code for an assembly descriptor"
+			external_name: "GetHashCode"
+		local
+			string_to_code: STRING
+		do
+			string_to_code ?= name.clone
+			string_to_code := string_to_code.concat_string_string_string_string (string_to_code, version, culture, public_key)
+			Result := string_to_code.GetHashCode
 		end
 		
 invariant

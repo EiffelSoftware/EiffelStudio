@@ -22,10 +22,14 @@ feature -- Properties
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
+		local
+			upper_name: STRING
 		do
 			put_cluster_name (st);
 			st.add_string ("Class name: ");
-			st.add_string (first.class_name);
+			upper_name := clone (first.class_name);
+			upper_name.to_upper;
+			st.add_string (upper_name);
 			st.add_new_line;
 			st.add_string ("First file: ");
 			st.add_string (first.file_name);
@@ -35,7 +39,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-feature {UNIVERSE_I, CLUSTER_I} -- Setting
+feature {UNIVERSE_I, CLUSTER_I, CLUST_REN_SD} -- Setting
 
 	set_first (c: CLASS_I) is
 			-- Assign `c' to `first'.

@@ -37,12 +37,11 @@ feature {NONE} -- Implementation
 	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
 			-- Process feature `e_feature' defined in `e_class'.
 		local
-			stone: FEATURE_STONE;
 			text: STRING;
 		do
-			-- ** FIXME
-			--stone := e_feature.stone (e_class);
-			text := stone.origin_text;
+			if e_class.file_name /= Void then
+				text := e_feature.text;
+			end;
 			if text /= Void then
 				output_window.put_string (text);
 				output_window.new_line;

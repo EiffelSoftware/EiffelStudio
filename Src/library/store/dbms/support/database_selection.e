@@ -105,21 +105,26 @@ feature -- Status setting
 			cursor_exists: cursor /= Void
 			object_exists: object /= Void
 		local
-			i: INTEGER
+			i, pos: INTEGER
 			r_any: ANY
 			tst : BOOLEAN
 			database_data: DATABASE_DATA [G]
+			database: G
 		do
 			database_data ?= cursor.data
 			if database_data /= Void then
 				from
 					i := 1
+					create database
 				until
 					i > database_data.count or not is_ok
 				loop
 					r_any := database_data.item (i)
-					if r_any /= Void and database_data.map_table.item (i) > 0 then
-						tst := field_copy (database_data.map_table.item (i), object, r_any)
+					pos := database_data.map_table.item (i)
+					if r_any /= Void and pos > 0 then
+						tst := field_copy (pos, object,
+								database.convert_string_type (r_any,
+									  field_name (pos, object), r_any.generator))
 					end
 					i := i + 1
 				end

@@ -368,6 +368,22 @@ feature -- For DATABASE_DYN_STORE
 		do
 		end
 
+feature -- For database types
+
+	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY is
+			-- Convert `r_any' to the expected object.
+			-- By default returns `r_any', redefined in ORACLE to return
+			-- an INTEGER_REF when `field_name' is "data_type".
+		require
+			r_any_not_void: r_any /= Void
+			field_name_not_void: field_name /= Void
+			class_name_not_void: class_name /= Void
+		do
+			Result := r_any
+		ensure
+			Valid_result: Result /= Void
+		end
+
 feature -- External features
 
 	get_error_message: POINTER is

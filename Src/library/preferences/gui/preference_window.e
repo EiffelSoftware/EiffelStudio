@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			right_list.select_actions.extend (agent on_right_list_select)
 			right_list.deselect_actions.extend (agent on_right_list_deselect)
 			right_list.focus_out_actions.extend (agent on_right_list_focus_out)
-			right_list.column_resize_actions.extend (agent on_right_list_column_resize)
+			right_list.column_resized_actions.extend (agent on_right_list_column_resize)
 			right_list.resize_actions.extend (agent on_window_move_and_resize)
 
 --			create boolean_selec.make (Current)
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			default_create
 			folder := resources.folder (folder_name)
 			if folder /= Void then
-				it := left_list.item_by_data (folder)
+				it := left_list.retrieve_item_by_data (folder, True)
 				check
 					not_void: it /= Void
 				end

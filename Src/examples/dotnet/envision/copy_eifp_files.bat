@@ -6,7 +6,7 @@ copy .\eifp_files\calculator.eifp .\samples\calculator\calculator.eifp
 
 copy .\eifp_files\data.eifp .\samples\data\data_grid.eifp
 
-copy .\eifp_files\monitor.eifp .\samples\threading\monitor\monitor.eifp
+rem copy .\eifp_files\monitor.eifp .\samples\threading\monitor\monitor.eifp
 copy .\eifp_files\pools.eifp .\samples\threading\pools\pools.eifp
 copy .\eifp_files\timers.eifp .\samples\threading\timers\timers.eifp
 
@@ -34,6 +34,5 @@ copy .\eifp_files\hello_world_window.eifp .\samples\winforms\hello_world_window\
 copy .\eifp_files\mdi.eifp .\samples\winforms\mdi\mdi.eifp
 copy .\eifp_files\menu.eifp .\samples\winforms\menu\menu.eifp
 copy .\eifp_files\progress_bar.eifp .\samples\winforms\progress_bar\progress_bar.eifp
-copy .\eifp_files\simple_window.eifp .\samples\winforms\simple_window\simple_window.eifp
 copy .\eifp_files\tree_view.eifp .\samples\winforms\tree_view\tree_view.eifp
 copy .\eifp_files\window_calculator.eifp .\samples\winforms\window_calculator\window_calculator.eifp

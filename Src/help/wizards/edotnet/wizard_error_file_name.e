@@ -7,19 +7,27 @@ class
 inherit
 	BENCH_WIZARD_ERROR_STATE_WINDOW
 		redefine
-			make
+			make,
+			build
 		end
 
 creation
 	make
 
-feature {NONE} -- Implementation
+feature -- Initialization
 
 	make (an_info: like wizard_information) is
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
 			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info) 
+		end
+
+	build is
+		do
+			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW}
+			first_window.set_final_state ("Next >")
+			First_window.disable_next_button
 		end
 
 feature -- Access

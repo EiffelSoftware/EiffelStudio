@@ -129,7 +129,7 @@ feature -- Element change
 				-- True reading the file as a xpm format.
 				-- If this fails then try to read it as bitmap format.
 			!! attr.make;
-			attr.set_valuemask (XpmSize+XpmHotspot+XpmInfos);
+			attr.set_valuemask (XpmSize+XpmInfos);
 			!! xpm_format.make_from_file (def_screen, a_file_name, attr);
 			if xpm_format.is_valid then
 				is_allocated := True;
@@ -138,8 +138,6 @@ feature -- Element change
 				number_of_colors := attr.number_of_colors;
 				height := attr.height;
 				width := attr.width;
-				hot_x := attr.x_hotspot;
-				hot_y := attr.y_hotspot;
 				if xpm_format.shape_mask /= Void then
 					xpm_format.shape_mask.destroy;
 				end;

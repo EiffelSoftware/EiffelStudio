@@ -383,7 +383,7 @@ rt_public void file_flush (FILE *fp)
 #endif
 }
 
-rt_public  EIF_INTEGER file_size (FILE *fp)
+rt_public  EIF_INTEGER eif_file_size (FILE *fp)
 {
 	struct stat buf;
 #ifdef EIF_VMSxxx

@@ -3,9 +3,9 @@ echo -----------------------------------------------------------------
 echo ----------------- Preparing Temporary directory -----------------
 echo -----------------------------------------------------------------
 pushd
-mkdir %DELIVERY%\bench\wizards\wel\spec
-mkdir %DELIVERY%\bench\wizards\wel\spec\windows
-mkdir %DELIVERY%\bench\wizards\wel\spec\windows\bin
+mkdir %DELIVERY%\bench\wizards\new_projects\wel\spec
+mkdir %DELIVERY%\bench\wizards\new_projects\wel\spec\windows
+mkdir %DELIVERY%\bench\wizards\new_projects\wel\spec\windows\bin
 echo Y > y.txt
 rd /S %TEMP%\wel_wizard < y.txt
 del y.txt

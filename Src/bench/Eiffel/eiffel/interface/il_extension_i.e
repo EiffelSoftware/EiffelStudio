@@ -57,25 +57,28 @@ feature -- Settings
 
 feature -- Call generation
 
-	generate_call (n: STRING; is_polymorphic: BOOLEAN) is
-			-- Generate external feature call on feature name `n' using information
-			-- of Current.
+	generate_call (is_polymorphic: BOOLEAN) is
+			-- Generate external feature call on Current.
+		require
+			valid_alias_name: alias_name_id > 0
 		do
 			if type = enum_field_type then
 				il_generator.put_integer_32_constant (Names_heap.item (alias_name_id).to_integer)
 			else
-				il_generator.generate_external_call (base_class, n, type,
-					argument_types, return_type, is_polymorphic)
+				il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
+					type, argument_types, return_type, is_polymorphic)
 			end
 		end
 
-	generate_creation_call (n: STRING) is
+	generate_creation_call is
 			-- Generate external feature call on constructor `n' using information
 			-- of Current wihtout creating an object.
+		require
+			valid_alias_name: alias_name_id > 0
 		do
 				-- Generate a normal non-virtual call.
-			il_generator.generate_external_call (base_class, n, creator_call_type,
-					argument_types, return_type, False)
+			il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
+				creator_call_type, argument_types, return_type, False)
 		end
 
 end -- class IL_EXTENSION_I

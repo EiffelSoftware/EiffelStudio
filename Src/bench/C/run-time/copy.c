@@ -685,7 +685,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 	}
 }
 
-EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
+rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 {
 
 	/*
@@ -703,7 +703,7 @@ EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	return ((EIF_BOOLEAN) temp);
 }
 
-void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
+rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
 {
 	/* Copy elements of `source' within bounds `start'..`end'
 	 * to `target' starting at index `index'.
@@ -735,7 +735,7 @@ void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_I
 		eremb(target);
 }
 
-void spclearall (EIF_POINTER spobj)
+rt_public void spclearall (EIF_POINTER spobj)
 {
 	/* Reset all elements of `spobj' to default value. Call
 	 * creation procedure of expanded objects if `spobj' is

@@ -15,7 +15,7 @@ inherit
 			linear_representation as old_linear_representation,
 			wipe_out as split_area_wipe_out
 		export
-			{NONE} all
+			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER} all
 		redefine
 			initialize
 		end
@@ -262,53 +262,6 @@ feature -- Status setting
 		do
 			remove_implementation (a_widget)
 			rebuild
-		ensure
-			remove: not linear_representation.has (a_widget)
-			count_decreased: linear_representation.count = old linear_representation.count - 1
-		end
-		
-	remove_implementation (a_widget: EV_WIDGET) is
-			-- Implementation for removal, without a rebuilding step. This allows features
-			-- such as `wipe_out' to remove all widgets without rebuilding the complete structure
-			-- for each removal. 
-		require
-			a_widget_not_void: a_widget /= Void
-			contained: linear_representation.has (a_widget)
-		local
-			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-		do
-			holder := holder_of_widget (a_widget)
-			if maximized_tool /= Void then
-					-- Remove representation from `minimized_states'.
-				minimized_states.go_i_th (all_holders.index_of (holder, 1))
-				minimized_states.remove
-			end
-			
-			all_holders.prune_all (holder)
-				-- Must also unparent the holder, which must be
-				-- parented for it to be contained in `Current'.
-				-- Unless `wipe_out' is being called as part of the insertion
-				-- process.
-			if holder.parent /= Void then
-				holder.parent.prune_all (holder)
-			end
-				-- Now actually remove `a_widget' from its holder.
-			if a_widget.parent /= Void then
-				a_widget.parent.prune_all (a_widget)
-			end
-			
-				-- If `holder' was the maximized tool, then update
-				-- accordingly.
-			if maximized_tool = holder then
-				restore_maximized_tool (holder)
-				maximized_tool := Void
-			end
-			
-				-- Remove corresponding item from `stored_splitter_widths'.
-			stored_splitter_widths.go_i_th (linear_representation.index_of (a_widget, 1))
-			
-			linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
-			linear_representation.remove
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
@@ -758,7 +711,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				stored_splitter_widths.off
 			loop
 				split_area := all_split_areas.i_th (stored_splitter_widths.index)
-				if split_area.full then
+				if split_area /= Void and then split_area.full then
 						-- As `Current' may have been reduced smaller than it was when the tool was maximized,
 						-- we must restrict the resetting of the spit position to the maximum now allowed.
 					split_area.set_split_position ((stored_splitter_widths.item.min (split_area.maximum_split_position)).max (split_area.minimum_split_position))
@@ -807,7 +760,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				update_all_minimize_buttons
 			else
 				remove_tool_from_parent (a_tool)
-				lower_holder := all_holders.i_th (position_of_tool - 1)
+				lower_holder := i_th_holder (position_of_tool - 1)--:= all_holders.i_th (position_of_tool - 1)
 				lower_holder.lower_box.extend (a_tool)
 				update_all_minimize_buttons
 			end
@@ -1155,6 +1108,20 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			valid_result: Result >= 1 and Result <= count
 		end
 		
+	i_th_holder (an_index: INTEGER): MULTIPLE_SPLIT_AREA_TOOL_HOLDER IS
+			-- `Result' is i_th holder in current, not excluding any externally docked
+			-- holders. Therefore, you may not simply query `all_holders.i_th', as this includes
+			-- the external holders.
+		require
+			index_valid: an_index >= 1 and an_index <= count
+		local
+			widget_at_index: EV_WIDGET
+		do
+			widget_at_index := linear_representation.i_th (an_index)
+			Result := holder_of_widget (widget_at_index)
+		ensure
+			Result_not_void: Result /= Void
+		end
 		
 	update_for_holder_position_change (original_position, new_position: INTEGER) is
 			--
@@ -1231,6 +1198,53 @@ feature {NONE} -- Implementation
 			Result_count_consistent: Result.count = box.count
 			box_count_unchanged: box.count = old box.count
 			box_index_consistent: old box.index = box.index
+		end
+
+	remove_implementation (a_widget: EV_WIDGET) is
+			-- Implementation for removal, without a rebuilding step. This allows features
+			-- such as `wipe_out' to remove all widgets without rebuilding the complete structure
+			-- for each removal. 
+		require
+			a_widget_not_void: a_widget /= Void
+			contained: linear_representation.has (a_widget)
+		local
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+		do
+			holder := holder_of_widget (a_widget)
+			if maximized_tool /= Void then
+					-- Remove representation from `minimized_states'.
+				minimized_states.go_i_th (all_holders.index_of (holder, 1))
+				minimized_states.remove
+			end
+			
+			all_holders.prune_all (holder)
+				-- Must also unparent the holder, which must be
+				-- parented for it to be contained in `Current'.
+				-- Unless `wipe_out' is being called as part of the insertion
+				-- process.
+			if holder.parent /= Void then
+				holder.parent.prune_all (holder)
+			end
+				-- Now actually remove `a_widget' from its holder.
+			if a_widget.parent /= Void then
+				a_widget.parent.prune_all (a_widget)
+			end
+			
+				-- If `holder' was the maximized tool, then update
+				-- accordingly.
+			if maximized_tool = holder then
+				restore_maximized_tool (holder)
+				maximized_tool := Void
+			end
+			
+				-- Remove corresponding item from `stored_splitter_widths'.
+			stored_splitter_widths.go_i_th (linear_representation.index_of (a_widget, 1))
+			
+			linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
+			linear_representation.remove
+		ensure
+			remove: not linear_representation.has (a_widget)
+			count_decreased: linear_representation.count = old linear_representation.count - 1
 		end
 
 invariant

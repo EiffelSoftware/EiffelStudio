@@ -1794,15 +1794,20 @@ feature {NONE} -- Removal
 			-- meaning that `destroy' has not been called. We need to call it.
 		local
 			p, null: POINTER
-			i: INTEGER
+			object_id: INTEGER
 		do
-			i := internal_data
+			if is_window (item) then
+					-- Our Window has not been destroyed by Windows yet. We can clean
+					-- our stuff then.
 
-				-- `internal_data' can be 0 when the Window has currently been
-				-- destroyed by Windows. In that case in `disptchr.c' we already
-				-- called `eif_object_id_free' and no need to do anything else.
-			if i > 0 then
-				eif_object_id_free (i)
+				object_id := internal_data
+				check
+						-- `internal_data' cannot be 0 when the Window has not yet been
+						-- destroyed by Windows.
+					valid_id: object_id > 0
+				end
+
+				eif_object_id_free (object_id)
 
 					-- Save protected reference to `dispatcher' object.
 				p := cwel_dispatcher_pointer
@@ -1827,6 +1832,14 @@ feature {NONE} -- Constants
 		end	
 
 feature {NONE} -- Externals
+
+	is_window (hwnd: POINTER): BOOLEAN is
+			-- Does `hwnd' point to a valid Window?
+		external
+			"C [macro <windows.h>] (HWND): EIF_BOOLEAN"
+		alias
+			"IsWindow"
+		end
 
 	cwin_create_window_ex (a_ex_stlyle: INTEGER; a_class_name,
 				a_name: POINTER; a_style, a_x, a_y, a_w,

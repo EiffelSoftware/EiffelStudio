@@ -42,12 +42,10 @@ feature {COMPILER_EXPORTER}
 	is_valid: BOOLEAN is
 		do
 			if valid_options.has (option_name) then
-				inspect valid_options.item (option_name)
+				inspect
+					valid_options.item (option_name)
 				when extending, extendible then
 					Result := dle_licensed
--- FIXME: more explicit message
--- FIXME: more explicit message
--- FIXME: more explicit message
 				else
 					Result := True
 				end
@@ -86,7 +84,7 @@ feature {NONE}
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, override_cluster, address_expression, profile,
 	document, hide_implementation, java_generation, line_generation,
-	multithreaded: INTEGER is UNIQUE;
+	multithreaded, dynamic_runtime, console_application: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -113,6 +111,8 @@ feature {NONE}
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
 			Result.force (multithreaded, "multithreaded")
+			Result.force (dynamic_runtime, "dynamic_runtime")
+			Result.force (console_application, "console_application")
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -195,19 +195,6 @@ feature {COMPILER_EXPORTER}
 				else
 					error_found := True;
 				end;
-
-			when multithreaded then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_freeze (System.has_multithreaded)
-					System.set_has_multithreaded (False)
-				elseif value.is_yes or else value.is_all then
-					System.set_freeze (not System.has_multithreaded)
-					System.set_has_multithreaded (True)
-				else
-					error_found := True
-				end
 
 			when inlining_size then
 				if value = Void then
@@ -345,11 +332,44 @@ feature {COMPILER_EXPORTER}
 					error_found := True
 				elseif value.is_no then
 					System.set_line_generation (False)
-				elseif value.is_yes then
+				elseif value.is_yes  or else value.is_all then
 					System.set_line_generation (True)
 				else
 					error_found := True;
 				end;
+
+			when dynamic_runtime then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_dynamic_runtime (False)
+				elseif value.is_yes or else value.is_all then
+					System.set_dynamic_runtime (True)
+				else
+					error_found := True;
+				end;
+
+			when console_application then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_console_application (False)
+				elseif value.is_yes or else value.is_all then
+					System.set_console_application (True)
+				else
+					error_found := True;
+				end;
+
+			when multithreaded then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_has_multithreaded (False)
+				elseif value.is_yes or else value.is_all then
+					System.set_has_multithreaded (True)
+				else
+					error_found := True
+				end
 
 			when dynamic, hide then
 					-- This has been taken care of in `adapt'.

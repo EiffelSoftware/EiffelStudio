@@ -13,9 +13,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-create
-	make
 	
 feature {NONE}
 

@@ -1520,45 +1520,40 @@ UDWORD odbc_get_data_len (int no_des, int index)
 
 int odbc_conv_type (int typeCode)
 {
-  int type=typeCode;
+	int type=typeCode;
 
-  
-
-  switch (type)
-    {
-    case SQL_CHAR:
-    case SQL_VARCHAR:
-    case SQL_LONGVARCHAR:
-    case SQL_BINARY:
-    case SQL_VARBINARY:
-    case SQL_LONGVARBINARY:
-	return STRING_TYPE;
-    case SQL_DECIMAL:
-    case SQL_NUMERIC:
-    case SQL_FLOAT:
-    case SQL_DOUBLE:
-	return FLOAT_TYPE;
-    case SQL_REAL:
-	return REAL_TYPE;
-    case SQL_SMALLINT:
-    case SQL_INTEGER:
-    case SQL_TINYINT:
-    case SQL_BIGINT:
-	return INTEGER_TYPE;
-    case SQL_BIT:
-	return BOOLEAN_TYPE;
-    //case SQL_DATE:
-	case SQL_TYPE_DATE:
-	return DATE_TYPE;
-    //case SQL_TIME:
-	case SQL_TYPE_TIME:
-	return DATE_TYPE;  /* Or should we support TIME_TYPE? */
-    //case SQL_TIMESTAMP:
-	case SQL_TYPE_TIMESTAMP:
-	return DATE_TYPE;
-    default:
-      return UNKNOWN_TYPE;
-    }
+	switch (type) {
+		case SQL_CHAR:
+		case SQL_VARCHAR:
+		case SQL_LONGVARCHAR:
+		case SQL_BINARY:
+		case SQL_VARBINARY:
+		case SQL_LONGVARBINARY:
+			return STRING_TYPE;
+		case SQL_DECIMAL:
+		case SQL_NUMERIC:
+		case SQL_FLOAT:
+		case SQL_DOUBLE:
+			return FLOAT_TYPE;
+		case SQL_REAL:
+			return REAL_TYPE;
+		case SQL_SMALLINT:
+		case SQL_INTEGER:
+		case SQL_TINYINT:
+		case SQL_BIGINT:
+			return INTEGER_TYPE;
+		case SQL_BIT:
+			return BOOLEAN_TYPE;
+		case SQL_DATE:
+		case SQL_TYPE_DATE:
+		case SQL_TIME:
+		case SQL_TYPE_TIME:
+		case SQL_TIMESTAMP:
+		case SQL_TYPE_TIMESTAMP:
+			return DATE_TYPE;
+		default:
+			return UNKNOWN_TYPE;
+	}
 }
 
 int odbc_get_col_type (int no_des, int index)

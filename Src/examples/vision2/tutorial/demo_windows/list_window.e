@@ -14,6 +14,8 @@ inherit
 		redefine
 			make
 		end
+	WIDGET_COMMANDS
+	LIST_COMMANDS
 
 creation
 	make
@@ -33,6 +35,9 @@ feature {NONE} -- Initialization
  			item2.set_text ("Item 2")
  			!! item3.make_with_text (Current, "item 3")
 			set_multiple_selection
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "list")
+			add_list_commands (Current, event_window, "List")
 		end
 
 	set_tabs is

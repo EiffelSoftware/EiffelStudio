@@ -35,12 +35,19 @@ feature {NONE} -- Initialization
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_dialog_tabs
+			tab_list.extend (selection_dialog_tab)
+			tab_list.extend (file_dialog_tab)
+			create tab_list.make
+			tab_list.extend (file_open_dialog_tab)
+			create action_window.make (dialog, tab_list)
 		end
 
 feature -- Access
 
 	dialog: EV_FILE_OPEN_DIALOG
 			-- The dialog
+	w: EV_selection_dialog
 
 feature -- Execution features
 

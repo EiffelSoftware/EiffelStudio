@@ -14,6 +14,8 @@ inherit
 		redefine
 			make
 		end
+	WIDGET_COMMANDS
+	TEXT_COMPONENT_COMMANDS
 
 creation
 	make
@@ -25,6 +27,9 @@ feature {NONE} -- Initialization
 		do
 			{EV_TEXT} Precursor (par)
 			append_text ("This is a text area.")
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "text area")
+			add_text_component_commands (Current, event_window, "Text area")
 		end
 
 	set_tabs is
@@ -35,9 +40,6 @@ feature {NONE} -- Initialization
 			tab_list.extend (text_tab)
 			create action_window.make (Current, tab_list)
 		end
-
-feature -- Access
-
 
 end -- class TEXT_AREA_WINDOW
 

@@ -13,6 +13,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -23,6 +24,8 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 			-- For efficiency, we first create the notebook 
 			-- without parent.
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
 			{EV_NOTEBOOK} Precursor (Void)
 			!! button1.make (Current)
@@ -35,8 +38,11 @@ feature {NONE} -- Initialization
 			append_page (button1, "Button")
 			append_page (box, "Pixmap 2")
 			set_current_page (2)
-			set_parent (par)
-			
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "notebook")
+			create cmd.make (~switch_command)
+			add_switch_command (cmd, Void)
+			set_parent (par)			
 		end
 	
 	set_tabs is
@@ -54,6 +60,14 @@ feature -- Access
 
 	box: EV_VERTICAL_BOX
 		-- Box for the demo
+
+feature -- Execution
+
+	switch_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When selected tab changes, inform user in `event_window'
+		do
+			event_window.display ("Switch command in notebook.")
+		end
 
 end -- class NOTEBOOK_WINDOW
 

@@ -10,12 +10,13 @@ class
 inherit
 	DEMO_WINDOW
 
-	EV_VERTICAL_BOX
+	EV_BUTTON
 		redefine
 			make
 		end
 
-	PIXMAP_PATH
+	WIDGET_COMMANDS
+	BUTTON_COMMANDS
 
 creation
 	make
@@ -27,34 +28,19 @@ feature {NONE} -- Initialization
 			-- We create the box first hidden because it
 			-- is faster.
 		local
-			pixmap: EV_PIXMAP
+			color: EV_COLOR
+			set_col: EV_COLOR
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			{EV_BUTTON} Precursor (par)
 			hide
-
-			set_homogeneous (False)
-			!! b1.make_with_text (Current, "Button")
-
-			!! b2.make (Current)
-			create pixmap.make_from_file (pixmap_path ("save"))
-			b2.set_pixmap (pixmap)
-			!! toggle_b.make_with_text (Current, "Toggle Button")
-			!! check_b.make_with_text (Current, "Check Button")
-			!! check_b.make_with_text (Current, "Check 2")
-			check_b.set_pixmap (pixmap)
-			!! frame.make_with_text (Current, "Frame")
-			!! box.make (frame)
-
-			!! radio1_b.make_with_text (box, "Radio 1")
-			!! radio2_b.make_with_text (box, "Radio 2")
-			!! radio3_b.make_with_text (box, "Radio 3")
-			radio2_b.set_pixmap (pixmap)
-
-			-- There is no action window for these buttons
-			-- Each descendant has a seperate action window.
-			--Sets the tabs for the action window
-
-			show
+			make_with_text (par, "Button")
+			create color.make_rgb (100,0,0)
+			set_background_color (color)
+			set_col := background_color
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "button")
+			add_button_commands (Current, event_window, "Button")
+			set_parent (par)
 		end
 
 	set_tabs is
@@ -62,18 +48,7 @@ feature {NONE} -- Initialization
 		do
 			set_primitive_tabs
 			create action_window.make (Current,tab_list)
-		end
-
-feature -- Access
-
-	b1, b2, b3, b4: EV_BUTTON
-	toggle_b: EV_TOGGLE_BUTTON
-	check_b: EV_CHECK_BUTTON
-	radio1_b: EV_RADIO_BUTTON
-	radio2_b: EV_RADIO_BUTTON
-	radio3_b: EV_RADIO_BUTTON
-	frame: EV_FRAME
-	box: EV_VERTICAL_BOX
+		end		
 	
 end -- class BUTTON_WINDOW
 

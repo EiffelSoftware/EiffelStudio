@@ -13,6 +13,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -43,10 +44,10 @@ feature {NONE} -- Initialization
 			set_homogeneous (True)
 			set_row_spacing (5)
 			set_column_spacing (5)
-
-			set_parent (par)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "dynamic table")
 			!!button_list.make
-
+			set_parent (par)
 			end
 
 	set_tabs is

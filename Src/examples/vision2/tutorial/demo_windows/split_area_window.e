@@ -13,6 +13,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -31,6 +32,8 @@ feature {NONE} -- Initialization
 			hsplit.set_position (100)
 			!! texta.make (Current)
 			set_position (50)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "split area")
 			set_parent (par)
 		end
 

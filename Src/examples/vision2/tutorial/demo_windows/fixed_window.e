@@ -13,6 +13,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -34,6 +35,9 @@ feature {NONE} -- Initialization
 			button2.set_x_y (200, 50)
 			xvel:=20
 			yvel:=20
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "fixed window")
+			set_parent (par)
 		end
 
 	set_tabs is

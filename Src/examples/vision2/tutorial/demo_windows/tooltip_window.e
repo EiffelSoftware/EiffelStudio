@@ -31,17 +31,19 @@ feature {NONE} -- Initialization
 			{EV_VERTICAL_BOX} Precursor (par)
 			create tooltip.make
 
-			create button.make_with_text (Current, "Where are you?")
-			tooltip.add_tip (button, "I am here!")
-			create button.make_with_text (Current, "You want to change the color?")
-			tooltip.add_tip (button, "Click me then.")
-			button.add_click_command (Current, Void)
+			create button.make_with_text (Current, "Move mouse over button.")
+			create frame.make_with_text (Current, "Empty Frame.")
+			tooltip.add_tip (button, "I am a Tool Tip!")
 			tooltip.enable
 		end
 
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			create tab_list.make
+			tab_list.extend (tool_tip_tab)
+			create action_window.make (tooltip, tab_list)
+			tool_tip_tab.set_colors
 		end
 
 feature -- Access
@@ -49,16 +51,10 @@ feature -- Access
 	tooltip: EV_TOOLTIP
 			-- A tooltip for the window.
 
-feature -- Execution feature
+feature -- Execution Feature
 
 	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-				-- Change of color.
-		local
-			color: EV_BASIC_COLORS
 		do
-			create color
-			tooltip.set_foreground_color (color.yellow)
-			tooltip.set_background_color (color.dark_blue)
 		end
 
 end -- class CURSOR_WINDOW

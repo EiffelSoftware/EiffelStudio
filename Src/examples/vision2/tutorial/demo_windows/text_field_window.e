@@ -16,6 +16,10 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	TEXT_COMPONENT_COMMANDS
+	TEXT_FIELD_COMMANDS
+
 creation
 	make
 
@@ -29,6 +33,10 @@ feature {NONE} -- Initialization
 		do
 			{EV_VERTICAL_BOX} Precursor (Void)
 			!! textfield.make_with_text (Current, "Edit me")
+			create event_window.make (textfield)
+			add_widget_commands (textfield, event_window, "text field")
+			add_text_component_commands (textfield, event_window, "Text field")
+			add_text_field_commands (textfield, event_window, "text field")
 			set_parent (par)	
 		end
 

@@ -104,6 +104,44 @@ feature -- Initialization
 			type /= Type_unknown
 		end
 
+feature -- Status report
+
+	same_as (other: DUMP_VALUE): BOOLEAN is
+			-- Do `Current' and `other' represent the same object, in the equality sense?
+		require
+			valid_other: other /= Void
+		local
+			tiit: INTEGER
+		do
+			Result := type = other.type and then output_value.is_equal (other.output_value)
+		end
+
+	to_basic: DUMP_VALUE is
+			-- Convert `Current' from a reference value to a basic value, if possible.
+			-- If impossible, return `Current'.
+		require
+			is_reference: address /= Void
+		local
+			o: DEBUGGED_OBJECT
+			att: ABSTRACT_DEBUG_VALUE
+		do
+			create o.make (address, 0, 1)
+			from
+				o.attributes.start
+			until
+				o.attributes.after
+			loop
+				att := o.attributes.item
+				if att.name.is_equal ("item") then
+					Result := att.dump_value
+				end
+				o.attributes.forth
+			end
+			if Result = Void then
+				Result := Current
+			end
+		end
+
 feature -- Action
 	
 	send_value is
@@ -165,10 +203,10 @@ feature -- Access
 				Result := value_real.out
 			when Type_double then
 				Result := value_double.out
-			when Type_string then
-				Result := value_object
 			when Type_bits then
 				Result := value_bits.out
+			when Type_string then
+				Result := value_object
 			when Type_pointer then
 				Result := value_pointer.out
 			when Type_object then
@@ -210,7 +248,7 @@ feature -- Access
 
 feature -- Inapplicable
 
-feature {NONE} -- Implementation
+feature {DUMP_VALUE} -- Implementation
 
 	type: INTEGER 
 		-- type discrimant, possible values are Type_XXXX

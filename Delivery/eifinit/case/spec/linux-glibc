@@ -1,7 +1,9 @@
+ECASE: "4.3"
 algo_tool_height: 550
 algo_tool_width: 400
 ace_window_height: 300
 ace_window_width: 300
+automatic_saving_delay: 10
 auxiliary_cluster_tool_height: 400
 auxiliary_cluster_tool_width: 700
 auxiliary_cluster_tool_x: 100
@@ -21,7 +23,7 @@ class_tool_height: 500
 class_tool_width: 500
 cluster_chart_tool_height: 300
 cluster_chart_tool_width: 200
-cluster_color: "Black"
+cluster_color: "blue"
 cluster_icon_x_margin: 10
 cluster_icon_y_margin: 20
 cluster_iconized_color: "grey"

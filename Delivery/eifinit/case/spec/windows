@@ -1,3 +1,4 @@
+ECASE: "4.3"
 ace_window_width : 400
 ace_window_height : 300 
 algo_tool_width : 450
@@ -101,7 +102,7 @@ system_varuable: "SYSTEM"
 system_tool_height: 400
 system_tool_width: 400
 width_to_scatter : 400
-tab_length: 4
+tab_length: 8
 view_tool_height: 300
 view_tool_width: 200
 window_max_free_list: 0

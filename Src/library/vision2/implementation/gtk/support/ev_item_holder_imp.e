@@ -172,7 +172,7 @@ feature -- Removal
 			a_position := interface.index_of (v, 1)
 			if a_position > 0 then
 				remove_item_from_position (a_position)
-				if index > pos then
+				if index > a_position then
 					index := index - 1
 				end
 			end
@@ -290,6 +290,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/16 21:09:24  king
+--| Corrected prune
+--|
 --| Revision 1.19  2000/03/16 20:31:56  king
 --| Corrected list test bugs by comparing to widget list
 --|

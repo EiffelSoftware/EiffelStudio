@@ -34,13 +34,15 @@ feature -- Access
 	actual_value: EV_COLOR is
 			-- Color value of resource
 		do
-			create Result.make_with_rgb (r, g, b)
+			create Result
+			Result.set_rgb_with_8_bit (r, g, b)
 		end
 
 	negative_value: EV_COLOR is
 			-- Negative value of resource
 		do
-			create Result.make_with_rgb (1 - r, 1 - g, 1 - b)
+			create Result
+			Result.set_rgb_with_8_bit (255 - r, 255 - g, 255 - b)
 		end
 
 	valid_actual_value: EV_COLOR is
@@ -74,9 +76,9 @@ feature -- Status setting
 			value_exists: new_value /= Void
 		do
 			value := new_value
-			r := col.red
-			g := col.green
-			b := col.blue
+			r := col.red_8_bit
+			g := col.green_8_bit
+			b := col.blue_8_bit
 		end
 
 	set_value (new_value: STRING) is
@@ -89,13 +91,13 @@ feature -- Status setting
 			s := clone (value)
 			i := s.index_of(';', 1)
 			if i > 0 then
-				r := head_real (s, i - 1)
+				r := head_integer (s, i - 1)
 				s := s.substring (i + 1, s.count)
 				i := s.index_of (';',1)
 				if i > 0 then
-					g := head_real (s, i - 1)
+					g := head_integer (s, i - 1)
 					s := s.substring (i + 1, s.count)
-					b := head_real (s, s.count)
+					b := head_integer (s, s.count)
 				else
 					r := 0
 					g := 0
@@ -110,7 +112,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	r, g, b: REAL
+	r, g, b: INTEGER
 
 	head_real (s: STRING; i: INTEGER): REAL is
 			-- Real represented by the `i' first characters of `s'

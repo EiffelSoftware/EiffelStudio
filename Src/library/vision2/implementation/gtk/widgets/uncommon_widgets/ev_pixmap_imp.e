@@ -209,7 +209,7 @@ feature -- Element change
 			destination_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
 			
 			from
-					-- We are using zero-based arrays to match gdkimage lookup to gain performance
+					-- We are using zero-based arrays to match gdkimage lookup and thus gain performance
 				row_counter := 0
 			until
 				row_counter = a_y
@@ -219,7 +219,7 @@ feature -- Element change
 				until
 					column_counter = a_x
 				loop
-					-- Map destination pixels with source pixels
+						-- Map destination pixels to source pixels
 					feature {EV_GTK_EXTERNALS}.gdk_image_put_pixel (
 						destination_gdkimage,
 						column_counter,

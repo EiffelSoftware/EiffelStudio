@@ -763,6 +763,7 @@ feature -- Transformation
 			swapped_to_item: item = old i_th (i)
 			swapped_from_item: i_th (i) = old item
 		end
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCROLLABLE_LIST_I;

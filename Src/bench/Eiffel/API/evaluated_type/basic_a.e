@@ -27,7 +27,7 @@ feature -- Access
 			Result := True;
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?

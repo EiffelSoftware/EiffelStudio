@@ -71,8 +71,9 @@ feature {NONE} -- Recording information for eiffelcase
 										-- Was not found
 									!! cli_sup_data;
 									cli_sup_data.set_implementation (True);
-									cli_sup_data.set_class_links (classc.id.id,
-											sup_class_id.id);
+									cli_sup_data.set_class_links (classc.id.id, sup_class_id.id);
+									cli_sup_data.set_class_names (clone (classc.name),
+										clone (System.class_of_id (sup_class_id).name))
 									c_l.extend (cli_sup_data);
 								end;
 							end;
@@ -109,6 +110,7 @@ feature {NONE} -- Recording information for eiffelcase
 			label_done: BOOLEAN
 			gen_type: S_GEN_TYPE_INFO;
 			type_a: TYPE_A
+			dummy_id: CLASS_ID
 		do
 			from
 				features.start
@@ -140,8 +142,10 @@ feature {NONE} -- Recording information for eiffelcase
 							if c_l.after then
 									-- Supplier hasn't been record 
 								!! cli_sup_data;
-								cli_sup_data.set_class_links (classc.id.id,
-										sup_class_id);
+								!! dummy_id.make (sup_class_id)
+								cli_sup_data.set_class_links (classc.id.id, sup_class_id);
+								cli_sup_data.set_class_names (clone (classc.name),
+										clone (System.class_of_id (dummy_id).name))
 								c_l.extend (cli_sup_data);
 							else
 								cli_sup_data := c_l.item;
@@ -203,8 +207,10 @@ feature {NONE} -- Recording information for eiffelcase
 								if c_l.after then
 										-- Supplier hasn't been recorded.
 									!! cli_sup_data;
-									cli_sup_data.set_class_links (classc.id.id,
-											sup_class_id);
+									!! dummy_id.make (sup_class_id)
+									cli_sup_data.set_class_links (classc.id.id, sup_class_id);
+									cli_sup_data.set_class_names (clone (classc.name),
+										clone (System.class_of_id (dummy_id).name))
 									c_l.extend (cli_sup_data);
 								else
 									cli_sup_data :=  c_l.item;

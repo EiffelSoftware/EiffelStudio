@@ -83,6 +83,7 @@ feature {NONE} -- Recording information for eiffelcase
 					-- let's record it now
 					!! inherit_data
 					inherit_data.set_class_links ( classc.id.id, parent_id.id )
+					inherit_data.set_class_names (clone (classc.name), clone (parents.item.class_name)) 
 					if list_gene /= Void then
 						inherit_data.set_generics ( list_gene )
 					end

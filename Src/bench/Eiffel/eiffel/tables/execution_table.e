@@ -166,8 +166,12 @@ end;
 			until
 				include_set.after
 			loop
-				file.putstring ("#include ");
-				file.putstring (include_set.item);
+				if not (include_set.item.is_equal("%"eiffel.h%"")) then
+					file.putstring ("#include ");
+					file.putstring (include_set.item);
+				else
+					file.putstring ("/* #include %"eiffel.h%" */");
+				end
 				file.putstring ("%N%N");
 				include_set.forth
 			end

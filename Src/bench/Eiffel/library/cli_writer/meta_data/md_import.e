@@ -9,11 +9,10 @@ class
 
 inherit
 	COM_OBJECT
-		export 
+		export
 			{NONE} all;
-			{ANY} add_ref;
 		redefine
-			make_by_pointer
+			make_by_pointer, dispose
 		end
 		
 create
@@ -27,6 +26,25 @@ feature {NONE} -- Initialisation
 			Precursor {COM_OBJECT} (an_item)
 		end
 
+feature -- dispose
+
+	clean_on_dispose is
+			-- Clean as this object was about to be disposed
+		local
+			l_nb_ref: INTEGER
+		do
+			if item /= Default_pointer then
+				l_nb_ref := feature {CLI_COM}.release (item)
+				item := default_pointer
+			end
+		end
+
+	dispose is
+			-- Free `item'.
+		do
+			clean_on_dispose
+		end
+		
 feature -- Enumerating collections
 
 	close_enum (a_enum_hdl: INTEGER) is

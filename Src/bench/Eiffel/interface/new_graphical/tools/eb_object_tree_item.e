@@ -85,7 +85,6 @@ feature -- Change
 						--| For now we don't support this for external type
 					create ost.make (dv.address, dv.name, dv.dynamic_class)
 					ost.set_associated_tree_item (Current)
-					ost.set_associated_debug_value (dv)
 					set_pebble (ost)
 					set_accept_cursor (ost.stone_cursor)
 					set_deny_cursor (ost.X_stone_cursor)

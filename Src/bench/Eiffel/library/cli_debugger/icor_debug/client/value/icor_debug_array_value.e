@@ -131,7 +131,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_element (item, a_indexes.count, l_mp_indexes.item, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (associated_frame)
 			end
 		ensure
 			success: last_call_success = 0
@@ -147,7 +146,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_element_at_position (item, a_position, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (associated_frame)				
 			end
 		ensure
 			success: last_call_success = 0

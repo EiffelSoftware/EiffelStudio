@@ -33,6 +33,14 @@ feature -- Initialization
 
 		end
 
+	terminate_callback is
+			-- Terminate callback
+		local
+			l_success: INTEGER
+		do
+			l_success := c_terminate_callback (item)
+		end			
+
 feature {NONE} -- debugger behavior
 	
 	begin_of_unmanaged_callback (cb_id: INTEGER) is
@@ -67,9 +75,11 @@ feature -- Basic Operations
 		require
 		do
 			begin_of_unmanaged_callback (Cst_unmanaged_debug_event)
---			print ("%N%N%N@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%N")
---			print ("UNMANAGED  debug_event !!!")
---			print ("%N%N%N@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%N")			
+			debug ("debugger_trace_callback")
+				io.error.put_string ("%N%N%N@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%N")
+				io.error.put_string ("UNMANAGED  debug_event : " + p_debug_event.to_hex_string)
+				io.error.put_string ("%N%N%N@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%N")			
+			end
 			end_of_unmanaged_callback (Cst_unmanaged_debug_event)
 		end
 
@@ -87,6 +97,18 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"initialize_callback"
+		end
+
+	c_terminate_callback (obj: POINTER): INTEGER is
+			-- Pass features to external side to terminate callbacks.
+		external
+			"[
+				C++ DebuggerUnmanagedCallback signature 
+					(): EIF_INTEGER
+				use "cli_debugger_callback.h"
+			]"
+		alias
+			"terminate_callback"
 		end
 
 end -- class ICOR_DEBUG_UNMANAGED_CALLBACK

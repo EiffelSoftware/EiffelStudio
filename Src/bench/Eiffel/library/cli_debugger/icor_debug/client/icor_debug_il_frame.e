@@ -50,20 +50,20 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_ip (item, $l_noffset, $l_cordebugmapping_result)
 			Result := l_noffset
 			debug ("DEBUGGER_EIFNET_DATA","DEBUGGER_TRACE_STEPPING")
-				print ("### ILFrame::GetIP -> 0x" + l_noffset.to_hex_string
+				io.error.put_string ("### ILFrame::GetIP -> 0x" + l_noffset.to_hex_string
 							+ "  : MappingResult="
 	--						+"0x"+ l_cordebugmapping_result.to_hex_string
 					)
 				inspect l_cordebugmapping_result 
-				when 1 then print ("MAPPING_PROLOG"); 				
-				when 2 then print ("MAPPING_EPILOG"); 				
-				when 3 then print ("MAPPING_NO_INFO"); 				
-				when 4 then print ("MAPPING_UNMAPPED_ADDRESS"); 				
-				when 16 then print ("MAPPING_EXACT"); 				
-				when 32 then print ("MAPPING_APPROXIMATE"); 						
-				else print ("???")				
+				when 1 then io.error.put_string ("MAPPING_PROLOG"); 				
+				when 2 then io.error.put_string ("MAPPING_EPILOG"); 				
+				when 3 then io.error.put_string ("MAPPING_NO_INFO"); 				
+				when 4 then io.error.put_string ("MAPPING_UNMAPPED_ADDRESS"); 				
+				when 16 then io.error.put_string ("MAPPING_EXACT"); 				
+				when 32 then io.error.put_string ("MAPPING_APPROXIMATE"); 						
+				else io.error.put_string ("???")				
 				end
-				print ("%N")
+				io.error.put_string ("%N")
 			end
 --	typedef enum CorDebugMappingResult
 --	{
@@ -85,7 +85,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_enumerate_local_variables (item, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (Current)				
 			end
 		ensure
 			success: last_call_success = 0
@@ -98,7 +97,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_local_variable (item, a_index, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (Current)				
 			end
 		ensure
 			success: last_call_success = 0
@@ -111,7 +109,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_enumerate_arguments (item, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (Current)
 			end
 		ensure
 			success: last_call_success = 0
@@ -124,7 +121,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_argument (item, a_index, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
-				Result.set_associated_frame (Current)
 			end
 		ensure
 			success: last_call_success = 0

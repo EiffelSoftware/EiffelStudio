@@ -23,7 +23,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugFunctionBreakpoint (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end
 		end
 		
@@ -34,7 +33,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugValueBreakpoint (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end
 		end		
 		
@@ -45,7 +43,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugModuleBreakpoint (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end
 		end			
 		
@@ -69,7 +66,6 @@ feature {ICOR_EXPORTER} -- Access
 		ensure
 			success: last_call_success = 0
 		end
-
 
 feature {NONE} -- QueryInterface Implementation
 

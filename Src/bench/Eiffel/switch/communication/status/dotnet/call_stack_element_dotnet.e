@@ -64,11 +64,12 @@ feature {NONE} -- Initialization
 
 feature -- Filling
 
-	set_routine (l_frame: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
+	set_routine (a_frame_il: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
 			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
 			a_feature: FEATURE_I; a_line_number: INTEGER) is
 		do
-			icd_il_frame := l_frame
+			icd_il_frame := a_frame_il
+			icd_il_frame.add_ref
 			
 			il_offset := icd_il_frame.get_ip
 			
@@ -94,6 +95,18 @@ feature -- Filling
 			routine := a_feature.e_feature
 			private_body_index := -1
 		end
+		
+feature -- Cleaning
+
+	clean is
+			-- Clean stored data
+		do
+			if icd_il_frame /= Void then
+					--| FIXME JFIAT: please check if it is safe ...
+				icd_il_frame.clean_on_dispose
+				icd_il_frame := Void
+			end
+		end
 
 feature -- Dotnet Properties
 
@@ -106,18 +119,6 @@ feature -- Properties
 	routine: E_FEATURE
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
-		
-	current_exception: ABSTRACT_DEBUG_VALUE is
-			-- Current object value
-		local
-			l_icd: ICOR_DEBUG_VALUE
-		do
-			if private_current_exception = Void then
-				l_icd := application.imp_dotnet.eifnet_debugger.active_exception_value
-				private_current_exception := debug_value_from_icdv (l_icd)
-			end
-			Result := private_current_exception
-		end		
 
 	object_address: STRING
 			-- Hector address of associated object 
@@ -200,12 +201,8 @@ feature {NONE} -- Implementation Dotnet Properties
 
 feature {NONE} -- Implementation Properties
 
-
 	private_current_object: ABSTRACT_DEBUG_VALUE
 			-- Current object value
-
-	private_current_exception: ABSTRACT_DEBUG_VALUE
-			-- Current Exception value
 
 	display_object_address:like object_address
 
@@ -215,13 +212,21 @@ feature {NONE} -- Implementation
 			-- 
 		local
 			l_function: ICOR_DEBUG_FUNCTION
+			l_class: ICOR_DEBUG_CLASS
+			l_module: ICOR_DEBUG_MODULE
 		do			
 			l_function := icd_il_frame.get_function
 
 			private_dotnet_feature_token := l_function.get_token		
-			private_dotnet_class_token := l_function.get_class.get_token
-			private_dotnet_module_name := l_function.get_module.module_name
-			private_dotnet_module_filename := l_function.get_module.get_name
+			l_class := l_function.get_class
+			l_module := l_function.get_module
+			private_dotnet_class_token := l_class.get_token
+			private_dotnet_module_name := l_module.module_name
+			private_dotnet_module_filename := l_module.get_name
+
+			l_function.clean_on_dispose
+			l_class.clean_on_dispose
+			l_module.clean_on_dispose
 
 			dotnet_initialized := True
 		ensure
@@ -253,7 +258,8 @@ feature {NONE} -- Implementation
 				initialized := True
 			else
 				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
-					io.put_string ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
+					io.put_string ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): " + routine_name
+									+ " from: " + dynamic_class.name + "%N")
 				end
 				rout := routine
 				if rout /= Void then
@@ -410,11 +416,11 @@ feature {NONE} -- Implementation
 			l_enum_args: ICOR_DEBUG_VALUE_ENUM
 		do
 			l_il_frame := icd_il_frame
-
 			l_enum_args := l_il_frame.enumerate_arguments
 			if l_enum_args /= Void then
 --				l_enum_args.skip (1)  -- Ignore first element which is Current Object
 				Result := debug_value_list_from_enum (l_enum_args)
+				l_enum_args.clean_on_dispose
 			end
 		ensure
 			arg_list_not_void: Result /= Void
@@ -435,6 +441,7 @@ feature {NONE} -- Implementation
 			l_enum_locals := l_il_frame.enumerate_local_variables
 			if l_enum_locals /= Void then
 				Result := debug_value_list_from_enum (l_enum_locals)
+				l_enum_locals.clean_on_dispose
 			else
 				create {LINKED_LIST[ABSTRACT_DEBUG_VALUE]} Result.make
 			end
@@ -471,7 +478,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			--| FIXME: JFIAT : maybe return Empty List .. not Void ...
+			--| NOTA: JFIAT : maybe return Empty List .. not Void ...
 		end
 
 invariant

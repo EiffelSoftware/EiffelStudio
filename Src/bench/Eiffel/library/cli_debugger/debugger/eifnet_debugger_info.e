@@ -13,7 +13,7 @@ inherit
 		export
 			{EIFNET_DEBUGGER_INFO_ACCESSOR} all
 		redefine
-			reset, init			
+			reset, init
 		end
 		
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
@@ -72,13 +72,13 @@ feature -- Debugger
 			optimized_jit_debugging_enabled := v
 		end		
 
-	controller: EIFNET_DEBUGGER
+	debugger: EIFNET_DEBUGGER
 			-- Bridge to dotnet debugger
 
-	set_controller (val: like controller) is
-			-- Set `controller' value to `val'.
+	set_debugger (val: like debugger) is
+			-- Set `debugger' value to `val'.
 		do
-			controller := val
+			debugger := val
 		end
 
 feature -- Reset
@@ -86,27 +86,16 @@ feature -- Reset
 	reset is
 			-- Reset data contained in Current.
 		do
-			data_changed                := False
+			data_changed := False
 
-				--| ICorDebug |--
-			last_icd                    := Void
-			last_icd_updated            := True
-			last_p_icd                  := Default_pointer
 				--| Breakpoint |--
-			last_icd_breakpoint         := Void
-			last_icd_breakpoint_updated := True
-			last_p_icd_breakpoint       := Default_pointer
-				--| Process |--
-			last_icd_process            := Void
-			last_icd_process_updated    := True
-			last_p_icd_process          := Default_pointer
+			reset_last_icd_breakpoint
 				--| Thread |--
-			last_icd_thread             := Void
-			last_icd_thread_updated     := True
-			last_p_icd_thread           := Default_pointer		
-
-				--| AppDomain |--
-			last_p_icd_app_domain       := Default_pointer
+			reset_last_icd_thread
+				--| Controller |--
+			reset_last_icd_controller
+				--| ICorDebugProcess |--
+			reset_last_icd_process
 
 				--| StepComplete |--
 			last_step_complete_reason   := 0
@@ -125,11 +114,9 @@ feature -- Reset
 			last_control_mode := 0
 			
 				--| Ancestors |--
-			
 			reset_jit_info
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
 		end
-
 
 feature -- Current CallStack
 
@@ -142,7 +129,7 @@ feature -- Current CallStack
 	reset_current_callstack is
 			-- Reset current callstack information
 		do
-			create current_stack_info
+			current_stack_info := Void
 			current_callstack_initialized := False
 		end
 		
@@ -153,40 +140,57 @@ feature -- Current CallStack
 			l_chain: ICOR_DEBUG_CHAIN
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_func: ICOR_DEBUG_FUNCTION
+			l_code : ICOR_DEBUG_CODE
+			l_module : ICOR_DEBUG_MODULE
+			l_class : ICOR_DEBUG_CLASS
+			l_il_code : ICOR_DEBUG_CODE
 		do
 			if not current_callstack_initialized then
 				if current_stack_info = Void then
-					create current_stack_info					
+					create current_stack_info
 				end
 				current_stack_info.set_synchronized (False)
 				
-				debug ("DEBUGGER_TRACE_EIFNET")
-					print ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
+				debug ("debugger_trace_eifnet")
+					io.error.put_string ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
 				end
 				if 
-					last_p_icd_process /= Default_pointer 
+					last_p_icd_controller /= Default_pointer 
 					and then last_p_icd_thread /= Default_pointer 
 				then
-					update_icd_thread
-					l_frame := last_icd_thread.get_active_frame
+					l_frame := icd_thread.get_active_frame
 					if l_frame = Void then
 						debug ("DEBUGGER_TRACE_SYNCHRO")
-							print ("[ERROR] Debugger not synchronized%N")
+							io.error.put_string ("[ERROR] Debugger not synchronized%N")
 						end
 					else
 						l_il_frame := l_frame.query_interface_icor_debug_il_frame
 						if l_il_frame /= Void then
 							current_stack_info.set_synchronized (True)
 							l_chain := l_frame.get_chain
+							l_code := l_il_frame.get_code
 							l_func 	:= l_il_frame.get_function
+							l_module := l_func.get_module
+							l_class := l_func.get_class
+							l_il_code := l_func.get_il_code
+							
 							current_stack_info.set_current_stack_pseudo_depth (l_chain.enumerate_frames.count)
-							current_stack_info.set_current_module_name        (l_func.get_module.get_name)
-							current_stack_info.set_current_class_token        (l_func.get_class.get_token)
+							current_stack_info.set_current_module_name        (l_module.get_name)
+							current_stack_info.set_current_class_token        (l_class.get_token)
 							current_stack_info.set_current_feature_token      (l_func.get_token)
-							current_stack_info.set_current_il_code_size       (l_func.get_il_code.get_size)
+							current_stack_info.set_current_il_code_size       (l_il_code.get_size)
 							current_stack_info.set_current_il_offset          (l_il_frame.get_ip)
-							current_stack_info.set_current_stack_address      (l_il_frame.get_code.get_address.to_hex_string)
+							current_stack_info.set_current_stack_address      (l_code.get_address.to_hex_string)
+
+							l_il_code.clean_on_dispose
+							l_class.clean_on_dispose
+							l_module.clean_on_dispose
+							l_func.clean_on_dispose
+							l_code.clean_on_dispose
+							l_chain.clean_on_dispose
+							l_il_frame.clean_on_dispose
 						end
+						l_frame.clean_on_dispose
 					end
 				end
 				current_callstack_initialized := True
@@ -245,8 +249,8 @@ feature -- Progression
 		do
 			if previous_stack_info /= Void then
 				debug ("DEBUGGER_TRACE_STEPPING")
-					print ("PREVIOUS=" +previous_stack_info.to_string + "%N")
-					print ("CURRENT =" +current_stack_info.to_string + "%N")				
+					io.error.put_string ("PREVIOUS=" +previous_stack_info.to_string + "%N")
+					io.error.put_string ("CURRENT =" +current_stack_info.to_string + "%N")				
 				end
 				Result := current_stack_info.is_equal (previous_stack_info)
 			end
@@ -265,11 +269,11 @@ feature -- Debugger updatable
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
-	icd: ICOR_DEBUG is
-			-- Last ICOR_DEBUG object
+	icd_controller: ICOR_DEBUG_CONTROLLER is
+			-- Last ICOR_DEBUG_CONTROLLER object
 		do
-			update_icd
-			Result := last_icd
+			update_icd_controller
+			Result := last_icd_controller
 		end
 
 	icd_process: ICOR_DEBUG_PROCESS is
@@ -307,55 +311,135 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 
-	set_last_icd (p: POINTER) is 
-			-- Set `last_icd' to `p'
+	set_last_icd_controller (p: POINTER) is 
+			-- Set `last_icd_controller' to `p'
+		local
+			n: INTEGER
 		do
-			if not p.is_equal (last_p_icd) then
-				last_p_icd := p
-				last_icd_updated := False
+			if not p.is_equal (last_p_icd_controller) then
+				reset_last_icd_controller
+				last_p_icd_controller := p
+				last_icd_controller_updated := False
+				if last_p_icd_controller /= Default_pointer then
+					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
+					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugController " + last_p_icd_controller.out + " nb=" + n.out + "%N")					
+				end
+				debug ("DEBUGGER_EIFNET_DATA")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Controller changed%N")
+				end
 			end
 		end
 
+	reset_last_icd_controller is
+		local
+			n: INTEGER
+		do
+			if last_p_icd_controller /= Default_pointer then
+				n := feature {CLI_COM}.release (last_p_icd_controller)
+				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugController " + last_p_icd_controller.out + " nb=" + n.out + "%N")					
+				
+				last_p_icd_controller := Default_pointer
+			end
+			last_icd_controller := Void
+			last_icd_controller_updated := True
+		end
+		
 	set_last_icd_process (p: POINTER) is 
 			-- Set `last_icd_process' to `p'
+		local
+			n: INTEGER
 		do
 			if not p.is_equal (last_p_icd_process) then
+				reset_last_icd_process
 				last_p_icd_process := p
 				last_icd_process_updated := False
-				debug ("DEBUGGER_EIFNET_DATA")
-					print ("/// EIFNET_DEBUGGER_INFO:: Process changed%N")
+				if last_p_icd_process /= Default_pointer then
+					n := feature {CLI_COM}.add_ref (last_p_icd_process)
+					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugProcess " + last_p_icd_process.out + " nb=" + n.out + "%N")					
+					
 				end
-
+				debug ("DEBUGGER_EIFNET_DATA")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Process changed%N")
+				end
 			end
 		end
+
+	reset_last_icd_process is
+		local
+			n: INTEGER
+		do
+			if last_p_icd_process /= Default_pointer then
+				n := feature {CLI_COM}.release (last_p_icd_process)
+				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugProcess " + last_p_icd_process.out + " nb=" + n.out + "%N")					
+				last_p_icd_process := Default_pointer
+			end
+			last_icd_process := Void
+			last_icd_process_updated := True
+		end		
 
 	set_last_icd_thread (p: POINTER) is 
 			-- Set `last_icd_thread' to `p'
+		local
+			n: INTEGER
 		do
 			if not p.is_equal (last_p_icd_thread) then
+				reset_last_icd_thread
 				last_p_icd_thread := p
 				last_icd_thread_updated := False
+				if last_p_icd_thread /= Default_pointer then
+					n := feature {CLI_COM}.add_ref (last_p_icd_thread)
+					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugThread " + last_p_icd_thread.out + " nb=" + n.out + "%N")					
+				end
+
 				debug ("DEBUGGER_EIFNET_DATA")
-					print ("/// EIFNET_DEBUGGER_INFO:: Thread changed%N")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Thread changed%N")
 				end
 			end
 		end		
 
-	set_last_icd_app_domain (p: POINTER) is 
-			-- Set `last_icd_app_domain' to `p'
+	reset_last_icd_thread is
+		local
+			n: INTEGER
 		do
-			if not p.is_equal (last_p_icd_app_domain) then
-				last_p_icd_app_domain := p	
+			if last_p_icd_thread /= Default_pointer then
+				n := feature {CLI_COM}.release (last_p_icd_thread)
+				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugThread " + last_p_icd_thread.out + " nb=" + n.out + "%N")			
+				last_p_icd_thread := Default_pointer
 			end
+			last_icd_thread := Void
+			last_icd_thread_updated := True
 		end
 
 	set_last_icd_breakpoint (p: POINTER) is 
 			-- Set `last_icd_breakpoint' to `p'
+		local
+			n: INTEGER
 		do
 			if not p.is_equal (last_p_icd_breakpoint) then
+				reset_last_icd_breakpoint
 				last_p_icd_breakpoint := p
 				last_icd_breakpoint_updated := False
+				if last_p_icd_breakpoint /= Default_pointer then
+					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)
+					jfiat_tools.output.put_string (Current, "Com AddRef on ICorDebugBreakpoint " + last_p_icd_breakpoint.out + " nb=" + n.out + "%N")			
+				end
+				debug ("DEBUGGER_EIFNET_DATA")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Breakpoint changed%N")
+				end
 			end
+		end
+
+	reset_last_icd_breakpoint is
+		local
+			n: INTEGER
+		do
+			if last_p_icd_breakpoint /= Default_pointer then
+				n := feature {CLI_COM}.release (last_p_icd_breakpoint)
+				jfiat_tools.output.put_string (Current, "Com Release on ICorDebugBreakpoint " + last_p_icd_breakpoint.out + " nb=" + n.out + "%N")			
+				last_p_icd_breakpoint := Default_pointer
+			end
+			last_icd_breakpoint := Void
+			last_icd_breakpoint_updated := True
 		end
 
 	set_last_step_complete_reason (val: INTEGER) is
@@ -372,14 +456,11 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 
-	last_p_icd: POINTER --|ICOR_DEBUG
-			-- Last ICOR_DEBUG object
-	
+	last_p_icd_controller: POINTER --|ICOR_DEBUG_CONTROLLER
+			-- Last ICOR_DEBUG_CONTROLLER object
+
 	last_p_icd_process: POINTER --|ICOR_DEBUG_PROCESS
 			-- Last ICOR_DEBUG_PROCESS object
-	
-	last_p_icd_app_domain: POINTER --|ICOR_DEBUG_APP_DOMAIN
-			-- Last ICOR_DEBUG_APP_DOMAIN object
 
 	last_p_icd_thread: POINTER --|ICOR_DEBUG_THREAD
 			-- Last ICOR_DEBUG_THREAD object	
@@ -389,10 +470,10 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 
 feature {NONE} -- Pointers to COM Objects
 
-	last_icd_updated: BOOLEAN
-	last_icd: ICOR_DEBUG
-			-- Last ICOR_DEBUG object
-	
+	last_icd_controller_updated: BOOLEAN
+	last_icd_controller: ICOR_DEBUG_CONTROLLER
+			-- Last ICOR_DEBUG_CONTROLLER object
+
 	last_icd_process_updated: BOOLEAN
 	last_icd_process: ICOR_DEBUG_PROCESS
 			-- Last ICOR_DEBUG_PROCESS object
@@ -407,29 +488,33 @@ feature {NONE} -- Pointers to COM Objects
 
 feature {NONE} -- COM Object
 
-	update_icd is
-			-- Last ICOR_DEBUG object
+	update_icd_controller is
+			-- Last ICOR_DEBUG_CONTROLLER object
+		local
+			n: INTEGER
 		do
-			if not last_icd_updated then
-				if last_p_icd = Default_pointer then
-					last_icd := Void
+			if not last_icd_controller_updated then
+				if last_p_icd_controller = Default_pointer then
+					last_icd_controller := Void
 				else
-					create last_icd.make_by_pointer (last_p_icd)
-					last_icd.add_ref
+					create last_icd_controller.make_by_pointer (last_p_icd_controller)
+					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
 				end
-				last_icd_updated := True
+				last_icd_controller_updated := True
 			end
 		end
-	
+
 	update_icd_process is
 			-- Last ICOR_DEBUG_PROCESS object
+		local
+			n: INTEGER
 		do
 			if not last_icd_process_updated then
 				if last_p_icd_process = Default_pointer then
 					last_icd_process := Void
 				else
 					create last_icd_process.make_by_pointer (last_p_icd_process)
-					last_icd_process.add_ref
+					n := feature {CLI_COM}.add_ref (last_p_icd_process)					
 				end
 				last_icd_process_updated := True
 			end
@@ -437,13 +522,15 @@ feature {NONE} -- COM Object
 
 	update_icd_thread is
 			-- Last ICOR_DEBUG_THREAD object
+		local
+			n: INTEGER
 		do
 			if not last_icd_thread_updated then
 				if last_p_icd_thread = Default_pointer then
 					last_icd_thread := Void
 				else
 					create last_icd_thread.make_by_pointer (last_p_icd_thread)
-					last_icd_thread.add_ref
+					n := feature {CLI_COM}.add_ref (last_p_icd_thread)
 				end
 				last_icd_thread_updated := True
 			end
@@ -451,13 +538,15 @@ feature {NONE} -- COM Object
 
 	update_icd_breakpoint is
 			-- Last Breakpoint object
+		local
+			n: INTEGER
 		do
 			if not last_icd_breakpoint_updated then
 				if last_p_icd_breakpoint = Default_pointer then
 					last_icd_breakpoint := Void
 				else
 					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
-					last_icd_breakpoint.add_ref
+					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)					
 				end
 				last_icd_breakpoint_updated := True
 			end
@@ -512,21 +601,33 @@ feature -- JIT info
 		do
 			create Loaded_modules.make (10)
 			loaded_modules.compare_objects
-			
---| removed so far, since we do not really need this
---| and for performance reason
---			create Loaded_classes.make (10)
---			loaded_classes.compare_objects
 		end
 
 	reset_jit_info is
 			-- Reset JustInTime information.
+		local
+			l_mod: ICOR_DEBUG_MODULE
 		do
-			Loaded_modules.wipe_out
-
---| removed so far, since we do not really need this
---| and for performance reason
---			Loaded_classes.wipe_out
+			if not loaded_modules.is_empty then
+				from
+					loaded_modules.start
+				until
+					loaded_modules.after
+				loop
+					l_mod := loaded_modules.item_for_iteration
+					debug ("com_object")
+						io.error.put_string ("Release ICorDebugModule : " + l_mod.module_name 
+								+ " " + l_mod.item.out
+								+ "%N")
+					end
+					l_mod.clean_on_dispose
+					loaded_modules.forth
+				end
+				Loaded_modules.wipe_out
+			end
+				--| Mscorlib_module is already cleaned
+				--| since it is also contained by `loaded_modules'
+			mscorlid_module := Void
 		end
 
 	register_new_module (a_module: ICOR_DEBUG_MODULE) is
@@ -539,10 +640,10 @@ feature -- JIT info
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
 			debug ("debugger_trace_callback_data")
-				print ("Registering new module : %N  [" + a_module.get_name + "]%N")
+				io.error.put_string ("Registering new module : %N  [" + a_module.get_name + "]%N")
 			end
 			if optimized_jit_debugging_enabled then
-				a_module.enable_jit_debugging (True, True)			
+				a_module.enable_jit_debugging (True, True)
 			else
 				a_module.enable_jit_debugging (True, False)
 			end
@@ -553,21 +654,25 @@ feature -- JIT info
 					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module 
 				mscorlid_module := a_module
 			end
+			debug ("com_object")
+				io.error.put_string ("AddRef on [" + a_module.module_name + "]%N")
+			end
+			a_module.add_ref
 			loaded_modules.put (a_module, l_module_key_name)
 			if not loaded_modules.inserted then
 				l_module_stored := loaded_modules.item (l_module_key_name)
 				if l_module_stored /= Void then
 					if l_module_stored.is_equal_as_icor_object (a_module) then
 						debug ("debugger_trace_eifnet")
-							print ("WARNING: Reloading same ICorDebugModule %N")
-							print (" address -> " + a_module.item.out + "%N")
-							print ("    name -> " + l_module_key_name + "%N")
+							io.error.put_string ("WARNING: Reloading same ICorDebugModule %N")
+							io.error.put_string (" address -> " + a_module.item.out + "%N")
+							io.error.put_string ("    name -> " + l_module_key_name + "%N")
 						end
 					else
 						debug ("debugger_trace_eifnet")
-							print ("WARNING: Overwriting same ICorDebugModule %N")
-							print (" address -> " + a_module.item.out + "%N")
-							print ("    name -> " + l_module_key_name + "%N")
+							io.error.put_string ("WARNING: Overwriting same ICorDebugModule %N")
+							io.error.put_string (" address -> " + a_module.item.out + "%N")
+							io.error.put_string ("    name -> " + l_module_key_name + "%N")
 						end
 	
 						loaded_modules.force (a_module, l_module_key_name)
@@ -576,14 +681,16 @@ feature -- JIT info
 						end
 					end
 				else
-					print ("[ERROR] while inserting new ICorDebugModule %N")
+					debug ("debugger_trace_eifnet")
+						io.error.put_string ("[ERROR] while inserting new ICorDebugModule %N")
+					end
 				end
 			end
 			
 			debug ("debugger_trace_eifnet")
 				l_module_key_name_tail := l_module_key_name.twin
 				l_module_key_name_tail.keep_tail (30)
-				print ("Load module [.. " + l_module_key_name_tail + "]%N")
+				io.error.put_string ("Load module [.. " + l_module_key_name_tail + "]%N")
 			end
 			notify_new_module (l_module_key_name)
 		end
@@ -598,7 +705,7 @@ feature {NONE} -- JIT info implementation
 --| and used only for Breakpoint in class contained inside the module from GAC
 			Result := il_debug_info_recorder.resolved_module_key (a_module_name)
 			debug ("debugger_trace_eifnet")
-				print ("Module name key (internal table building):%N (1) " + a_module_name + "%N (2) " + Result + "%N")
+				io.error.put_string ("Module name key (internal table building):%N (1) " + a_module_name + "%N (2) " + Result + "%N")
 			end
 		end
 

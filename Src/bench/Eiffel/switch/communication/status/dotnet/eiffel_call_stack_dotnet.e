@@ -137,6 +137,8 @@ feature {NONE} -- Initialization
 			i: INTEGER
 
 			l_func: ICOR_DEBUG_FUNCTION
+			l_class: ICOR_DEBUG_CLASS
+			l_module: ICOR_DEBUG_MODULE
 			l_class_token: INTEGER
 			l_feature_token: INTEGER
 			l_module_name: STRING
@@ -183,10 +185,17 @@ feature {NONE} -- Initialization
 								l_frame := l_frames @ i
 								l_frame_il := l_frame.query_interface_icor_debug_il_frame
 								if l_frame.last_call_succeed and then l_frame_il /= Void then
+									l_frame.clean_on_dispose --| Not needed anymore
+
 									l_func := l_frame_il.get_function
 									l_feature_token := l_func.get_token
-									l_class_token := l_func.get_class.get_token
-									l_module_name := l_func.get_module.get_name
+									l_class         := l_func.get_class
+									l_module        := l_func.get_module
+									l_class_token   := l_class.get_token
+									l_module_name   := l_module.get_name
+									l_class.clean_on_dispose
+									l_module.clean_on_dispose
+									l_func.clean_on_dispose
 
 									if il_debug_info_recorder.has_info_about_module (l_module_name) then
 										l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
@@ -243,11 +252,14 @@ feature {NONE} -- Initialization
 									end
 								end
 								i := i + 1
-							end		
+							end
+							l_enum_frames.clean_on_dispose
 						end
+						l_chain.clean_on_dispose
 					end
 					c := c + 1
 				end
+				l_enum_chain.clean_on_dispose
 			end
 		end
 
@@ -259,5 +271,21 @@ feature {NONE} -- Initialization
 --			list_make
 --		end
 
+feature -- cleaning
+
+	clean is
+			-- Clean stored data
+		do
+			if not is_empty then
+				from
+					start
+				until
+					after
+				loop
+					item.clean
+					forth
+				end
+			end	
+		end
 
 end -- class EIFFEL_CALL_STACK_DOTNET

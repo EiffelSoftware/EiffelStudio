@@ -47,15 +47,14 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
 			-- 	Set `value' to `v'.
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 			a_prepared_value_not_void: a_prepared_value /= Void
---			a_frame_not_void: f /= Void
 		do
 			set_default_name
-			init_dotnet_data (a_referenced_value, a_prepared_value, f)
+			init_dotnet_data (a_referenced_value, a_prepared_value)
 			address := icd_value_info.address_as_hex_string
 			register_dotnet_data			
 		ensure

@@ -7,7 +7,11 @@ indexing
 class
 	EIFNET_DEBUGGER
 
-inherit 
+inherit
+	
+	DISPOSABLE
+	
+	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 	
@@ -68,13 +72,62 @@ create
 
 feature -- Initialization
 
-	make is
+	make, init is
 			-- Creation
 		do
 			debug ("debugger")
 				print ("New EIFNET_DEBUGGER %N")
 			end
 		end
+		
+	create_icor_debug is
+			-- Create icor_debug as ICorDebug
+		local
+			icor_debug_managed_callback_obj: ICOR_DEBUG_MANAGED_CALLBACK
+			icor_debug_unmanaged_callback_obj: ICOR_DEBUG_UNMANAGED_CALLBACK
+			l_icor_debug: ICOR_DEBUG
+			last_icor_debug_pointer: POINTER -- Last ICorDebug created
+		do
+			if icor_debug = Void then
+					-- And now for the dotnet world			
+				initialize_clr_host
+	
+				eif_debug_display ("[EIFDBG] initialize debugger session")
+				last_icor_debug_pointer := (create {ICOR_DEBUG_FACTORY}).new_cordebug_pointer
+
+				if last_icor_debug_pointer /= Default_pointer then
+					create icor_debug.make_by_pointer (last_icor_debug_pointer)
+					l_icor_debug := icor_debug
+					l_icor_debug.add_ref
+
+					l_icor_debug.initialize
+					if l_icor_debug.last_call_succeed then
+							--| We keep the callback server objects alive in the C/Cpp glue
+							--| then let's add a ref, but we'll leave `dispose' the responsibility 
+							--| to Release the object
+						icor_debug_managed_callback_obj := (create {ICOR_DEBUG_MANAGED_CALLBACK_FACTORY}).new_cordebug_managed_callback
+						icor_debug_managed_callback_obj.add_ref
+						icor_debug_managed_callback_obj.initialize_callback
+						l_icor_debug.set_managed_handler (icor_debug_managed_callback_obj)
+						
+						
+						icor_debug_unmanaged_callback_obj := (create {ICOR_DEBUG_UNMANAGED_CALLBACK_FACTORY}).new_cordebug_unmanaged_callback
+						icor_debug_unmanaged_callback_obj.add_ref
+						icor_debug_unmanaged_callback_obj.initialize_callback
+						l_icor_debug.set_unmanaged_handler (icor_debug_unmanaged_callback_obj)
+
+							--| Enable callback to update data in the estudio world.
+						enable_estudio_callback
+					else
+						l_icor_debug.release
+						l_icor_debug := Void
+					end
+				end
+			end
+		end
+
+	icor_debug: ICOR_DEBUG
+			-- ICorDebug object used to control and access Dotnet debugger
 		
 	initialize_clr_host is
 			-- Initialize dotnet runtime, to be sure to use the correct version of the
@@ -86,13 +139,19 @@ feature -- Initialization
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)			
 		end
 		
+	init_debugging_data is
+		do
+			if eifnet_dbg_evaluator = Void then
+				create eifnet_dbg_evaluator.make (Current)				
+			end
+			Eifnet_debugger_info.set_debugger (Current)			
+		end
+		
 	reset_debugging_data is
 				-- Reset objects who has session related data
 		do
-			create eifnet_dbg_evaluator.make (Current)
 			reset_dbg_evaluator
 			eifnet_debugger_info.reset
-			Eifnet_debugger_info.set_controller (Current)
 			exit_process_occurred := False
 			
 			il_debug_info_recorder.reset_debugging_live_data
@@ -101,47 +160,29 @@ feature -- Initialization
 			last_stepper := Void
 			last_dbg_call_success := 0
 			last_string_value_length := 0
-		end		
+		end
 		
 	initialize_debugger_session is
 			-- Initialize a debugger session
 		require
 			not is_debugging
 		local
-			icor_debug_ptr: POINTER
-			icor_debug_managed_callback_obj: ICOR_DEBUG_MANAGED_CALLBACK
-			icor_debug_unmanaged_callback_obj: ICOR_DEBUG_UNMANAGED_CALLBACK
+			l_icor_debug: ICOR_DEBUG
 		do
 				-- Reset objects who has session related data
-			reset_debugging_data		
-			
-				-- And now for the dotnet world			
-			initialize_clr_host
+			init_debugging_data
 
-			eif_debug_display ("[EIFDBG] initialize debugger session")
-			icor_debug_ptr := (create {ICOR_DEBUG_FACTORY}).new_cordebug_pointer
-			if icor_debug_ptr /= Default_pointer then
-				set_last_icor_debug_by_pointer (icor_debug_ptr)
-	
-				icor_debug_managed_callback_obj := (create {ICOR_DEBUG_MANAGED_CALLBACK_FACTORY}).new_cordebug_managed_callback
-				icor_debug_managed_callback_obj.initialize_callback
-				
-				icor_debug_unmanaged_callback_obj := (create {ICOR_DEBUG_UNMANAGED_CALLBACK_FACTORY}).new_cordebug_unmanaged_callback
-				icor_debug_unmanaged_callback_obj.initialize_callback
-	
-				icor_debug.initialize
-				if icor_debug.last_call_succeed then
-					icor_debug_managed_callback_obj.add_ref
-					icor_debug.set_managed_handler (icor_debug_managed_callback_obj)
-					icor_debug_unmanaged_callback_obj.add_ref			
-					icor_debug.set_unmanaged_handler (icor_debug_unmanaged_callback_obj)				
-		
-					init_dbg_synchronisation
-					enable_estudio_callback
-					start_dbg_timer
-					create_monitoring_of_process_termination_on_exit
-					is_debugging := True
-				end
+			create_icor_debug
+			l_icor_debug := icor_debug
+			if l_icor_debug /= Void then
+					--| Initialize the dbg synchronization
+				init_dbg_synchronisation
+					--| start the timer which will trigger the callbacks
+				start_dbg_timer
+					--| Create a timer which will check for the end of the process
+				create_monitoring_of_process_termination_on_exit
+					--| And now we can consider inside a debugging session ...
+				is_debugging := True
 			else
 				is_debugging := False
 			end
@@ -163,6 +204,8 @@ feature -- Termination monitoring ...
 
 	create_monitoring_of_process_termination_on_exit is
 			-- Create and start the timer to check if the debugging is done
+		require
+			timer_void: timer_monitor_process_termination_on_exit = Void
 		do
 			create timer_monitor_process_termination_on_exit.make_with_interval (1000)
 			timer_monitor_process_termination_on_exit.actions.extend (agent monitor_process_termination_on_exit)
@@ -173,47 +216,82 @@ feature -- Termination monitoring ...
 		do
 			if exit_process_occurred and then not is_dbg_synchronizing then
 				timer_monitor_process_termination_on_exit.destroy
+				timer_monitor_process_termination_on_exit := Void
+				--FIXME JFIAT:  try to reuse timer object !
 				Application.process_termination
 			end
 		end
 
-feature -- Termination ...
+
+feature -- Disposable
+
+	dispose is
+			-- Dispose Current
+		do
+			if icor_debug /= Void then
+				terminate_debugger
+				icor_debug := Void
+			end
+		end
+
+feature -- Terminate ICorDebug
+		
+	terminate_debugger is
+			-- Terminate ICorDebug and clean what need to be cleaned
+			-- Called inside Dispose, so don't pollute this with unsafe code
+		do
+			if icor_debug /= Void then
+				icor_debug.terminate
+			end
+		end
+
+feature -- Debugging session Termination ...
 
 	terminate_debugger_session is
 			-- Terminate debugging session and clean what need to be cleaned
 		do
 			stop_dbg_timer
 			terminate_dbg_synchronisation
-			eifnet_debugger_info.set_controller (Void)
-			eifnet_debugger_info.reset			
-		end		
+			eifnet_dbg_evaluator.reset
+			eifnet_debugger_info.reset
+			icor_debug.clean_data
+		end
 
-	terminate_debugger is
+	terminate_debugging is
 			-- Terminate the debugging session
 		require
-			
 			is_debugging: is_debugging
 		local
-			l_icor_dbg_pro: ICOR_DEBUG_PROCESS
+			l_controller: ICOR_DEBUG_CONTROLLER
+			l_pro_hdl: INTEGER
+			l_success: BOOLEAN
 		do
 			eif_debug_display ("[EIFDBG] terminate debugging")
-			l_icor_dbg_pro := icor_debug_process
-			if l_icor_dbg_pro /= Void then
+			l_controller := icor_debug_controller
+			if l_controller /= Void then
 				eif_debug_display ("[EIFDBG] pProcess->Terminate (..)")
-				l_icor_dbg_pro.stop (infinite_time) --| to get the hand on and to be synchronized
-				l_icor_dbg_pro.terminate (1)
+				l_controller.stop (infinite_time) --| to get the hand on and to be synchronized
+				l_controller.terminate (0)
+				if not l_controller.last_call_succeed then
 					--| the end of the killing process will be done on callback ExitProcess
+					--| Maybe try with no Stop (..)
+					--} but use violent .. ::TerminateProcess ...
+					if icor_debug_process /= Void then
+						l_pro_hdl := icor_debug_process.get_handle
+					else
+						l_pro_hdl := icor_debug.last_icor_debug_process_handle
+					end
+					l_success := cwin_terminate_process (l_pro_hdl, 0)
+				end
 			else
-				eif_debug_display ("[EIFDBG] could not find ICorDebugProcess object ...")
+				eif_debug_display ("[EIFDBG] could not find ICorDebugController object ...")
 				on_exit_process
 			end
-	
 		end
 
 	on_exit_process	is
 			-- On ExitProcess callback
 		do
-			Eifnet_debugger_info.icd.terminate
 			eif_debug_display ("[EIFDBG] execution exiting")
 			is_debugging := False
 			terminate_debugger_session
@@ -224,7 +302,7 @@ feature -- Termination ...
 	notify_exit_process_occurred is
 			-- Notify callback `ExitProcess' occurred
 		do
-			exit_process_occurred := True			
+			exit_process_occurred := True
 		end
 		
 feature -- Status
@@ -241,6 +319,19 @@ feature -- Callback notification about synchro
 		
 feature -- Interaction with .Net Debugger
 
+	do_create_process is
+			-- Create Process
+		local
+			l_icd_process: POINTER
+			n: INTEGER
+		do
+			l_icd_process := icor_debug.create_process (debug_param_executable + " " + debug_param_arguments, debug_param_directory)
+			n := feature {CLI_COM}.add_ref (l_icd_process)
+			set_last_controller_by_pointer (l_icd_process)
+			n := feature {CLI_COM}.release (l_icd_process)
+--| FIXME jfiat [2004/07/02] : check if the order matters
+		end
+
 	waiting_debugger_callback (a_title: STRING) is
 		do
 			debug ("debugger_trace_operation")
@@ -252,27 +343,29 @@ feature -- Interaction with .Net Debugger
 
 	do_run is
 			-- Start the process to debug
-		require
 		do
-			icor_debug.create_process (debug_param_executable + " " + debug_param_arguments, debug_param_directory)
+			do_create_process
 			waiting_debugger_callback ("run process")
 			last_dbg_call_success := icor_debug.last_call_success
 		end
 
 	do_stop is
+			-- Stop the process (on a step complete or breakpoint for instance)
 		require
-			process_exists: icor_debug_process /= Void
+			controller_exists: icor_debug_controller /= Void
+		local
+			l_controller: ICOR_DEBUG_CONTROLLER
 		do
-			if exit_process_occurred or else icor_debug_process = Void then
+			l_controller := icor_debug_controller
+			if exit_process_occurred or else l_controller = Void then
 				on_exit_process
 			else
-				icor_debug_process.stop (infinite_time)
+				l_controller.stop (infinite_time)
+				last_dbg_call_success := l_controller.last_call_success
 				debug ("debugger_eifnet_data")
-					print ("EIFNET_DEBUGGER.do_stop : after stop icor_debug_process.last_call_success = " + icor_debug_process.last_error_code_id + "%N")
+					print ("EIFNET_DEBUGGER.do_stop : after stop ICorDebugController.last_call_success = " + l_controller.last_error_code_id + "%N")
 				end
-				
 				waiting_debugger_callback ("stop")
-				last_dbg_call_success := icor_debug_process.last_call_success
 			end
 		end
 
@@ -280,12 +373,15 @@ feature -- Interaction with .Net Debugger
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER		
 		do	
-			if exit_process_occurred or else icor_debug_process = Void then
+			if exit_process_occurred or else icor_debug_controller = Void then
 				on_exit_process
 			else
-				l_controller := icor_debug_process
+				l_controller := icor_debug_controller
 				l_controller.continue (False)
 				last_dbg_call_success := l_controller.last_call_success
+				if last_dbg_call_success /= 0 then
+					io.error.put_string ("EIFNET_DEBUGGER.do_continue failed %N")
+				end
 			end
 		end
 		
@@ -324,13 +420,13 @@ feature {NONE} -- Stepping Implementation
 				if l_thread.last_call_succeed and then l_frame /= Void then
 					l_stepper := l_frame.create_stepper			
 					l_error := l_frame.last_call_success
+					l_frame.clean_on_dispose
 				else
 					l_stepper := l_thread.create_stepper
 					l_error := l_thread.last_call_success
 				end	
 				Result := l_error = 0
 				last_stepper := l_stepper
-				last_stepper.add_ref				
 			else
 				Result := False
 				eif_debug_display ("[DBG/WARNING] No thread available ...")
@@ -342,7 +438,7 @@ feature {NONE} -- Stepping Implementation
 --			valid_step_mode: (a_mode = cst_control_step_next) 
 --								or else (a_mode = cst_control_step_in)
 --								or else (a_mode = cst_control_step_out)						
-			process_exists: icor_debug_process /= Void
+			controller_exists: icor_debug_controller /= Void
 		local
 			l_succeed: BOOLEAN
 		do
@@ -431,7 +527,7 @@ feature -- Stepping Access
 	stepping_possible: BOOLEAN is
 			-- 
 		do
-			Result := icor_debug_process /= Void and then icor_debug_thread /= Void
+			Result := icor_debug_controller /= Void and then icor_debug_thread /= Void
 		end
 
 feature -- Debuggee Session Parameters
@@ -511,7 +607,8 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			Result := Eifnet_debugger_info.last_managed_callback_is_eval_exception
 		end	
 
-	active_exception_value: ICOR_DEBUG_VALUE is
+	new_active_exception_value: ICOR_DEBUG_VALUE is
+			-- Active Exception value retrieved each call from .Net debugger
 		local
 			l_last_thread: ICOR_DEBUG_THREAD
 		do
@@ -521,20 +618,26 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
-	active_frame: ICOR_DEBUG_FRAME is
+	new_active_frame: ICOR_DEBUG_FRAME is
+			-- Active Thread value retrieved each call from .Net debugger
 		local
 			l_last_thread: ICOR_DEBUG_THREAD
-			l_active_frame: ICOR_DEBUG_FRAME
-
 		do
 			l_last_thread := icor_debug_thread
 			if l_last_thread /= Void then
-				l_active_frame := l_last_thread.get_active_frame
-				if l_last_thread.last_call_succeed and then l_active_frame /= Void then
-					l_active_frame.add_ref
-					Result := l_active_frame
-				end
+				Result := l_last_thread.get_active_frame
 			end
+		end
+		
+	current_icor_debug_frame: ICOR_DEBUG_IL_FRAME is
+			-- IL Frame related to current call stack.
+			-- This is a shared instance, so don't release it unless you know
+			-- what you do.
+		local
+			l_cse: CALL_STACK_ELEMENT_DOTNET
+		do
+			l_cse ?= application.status.current_stack_element
+			Result := l_cse.icd_il_frame
 		end
 
 feature -- Easy access
@@ -549,8 +652,10 @@ feature -- Easy access
 		do
 			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_type)
 			l_icd_module := icor_debug_module (l_class_module_name)
-			l_class_token := Il_debug_info_recorder.class_token (l_class_module_name, a_class_type)
-			Result := l_icd_module.get_class_from_token (l_class_token)
+			if l_icd_module /= Void then
+				l_class_token := Il_debug_info_recorder.class_token (l_class_module_name, a_class_type)
+				Result := l_icd_module.get_class_from_token (l_class_token)
+			end
 		end
 		
 feature -- Bridge to MD_IMPORT
@@ -574,15 +679,21 @@ feature -- Function Evaluation
 		local
 			l_feat_tok: INTEGER
 			l_feat_name: STRING
-			l_icd_module: ICOR_DEBUG_MODULE	
+			l_icd_class: ICOR_DEBUG_CLASS			
+			l_icd_module: ICOR_DEBUG_MODULE
 			l_class_module_name: STRING
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
+			l_dispose_mod: BOOLEAN
 		do
 			if ct.is_external and icdv /= Void then
 				l_icd_obj_val := icdv.query_interface_icor_debug_object_value
 				if l_icd_obj_val /= Void then
-					l_icd_module := l_icd_obj_val.get_class.get_module
+					l_icd_class := l_icd_obj_val.get_class
+					l_icd_module := l_icd_class.get_module
 					l_feat_name := a_feat.external_name
+					l_dispose_mod := True
+					l_icd_class.clean_on_dispose
+					l_icd_obj_val.clean_on_dispose
 				end
 			else
 					--| This should be an true Eiffel type
@@ -600,6 +711,9 @@ feature -- Function Evaluation
 				end
 				if l_feat_tok > 0 then
 					Result := l_icd_module.get_function_from_token (l_feat_tok)
+				end
+				if l_dispose_mod then
+					l_icd_module.clean_on_dispose
 				end
 			end
 		end
@@ -621,11 +735,8 @@ feature -- Specific function evaluation
 		
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for STRING
-		local
-			ct: CLASS_TYPE
 		do
-			ct := Eiffel_system.String_class.compiled_class.types.first
-			Result := icor_debug_class (ct)
+			Result := icor_debug_class (Eiffel_system.String_class.compiled_class.types.first)
 		end
 
 	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
@@ -716,6 +827,7 @@ feature -- Specific function evaluation
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
 			
+			l_class: ICOR_DEBUG_CLASS
 			l_string_class: CLASS_C
 			l_feat_internal_string_builder: FEATURE_I
 			l_feat_internal_string_builder_token: INTEGER
@@ -728,7 +840,9 @@ feature -- Specific function evaluation
 			l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
 				
 				--| Get `internal_string_builder' from `STRING' instance Value
-			l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
+			l_class := icd_string_instance.get_class
+			l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_internal_string_builder_token)
+			l_class.clean_on_dispose
 				
 				--| l_icd_value represents the `internal_string_builder' value
 			if l_icd_value /= Void then
@@ -772,10 +886,8 @@ feature -- Specific function evaluation
 			-- ANY.generating_)type: STRING evaluation result
 		local
 			l_icd: ICOR_DEBUG_VALUE		
-			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_md_import: MD_IMPORT
 			l_module_name: STRING
 			l_feature_token: INTEGER
 			
@@ -785,13 +897,11 @@ feature -- Specific function evaluation
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do	
 			l_icd := a_icd
-			l_icd_object := a_icd_obj
 			l_class_type := a_class_type
 			
-			l_icd_class := l_icd_object.get_class
+			l_icd_class := a_icd_obj.get_class
 			l_icd_module := l_icd_class.get_module		
-			l_md_import := l_icd_module.interface_md_import
-			l_feature_token := l_md_import.find_method (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
+			l_feature_token := l_icd_module.md_feature_token (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
 			if l_func /= Void then
@@ -802,6 +912,7 @@ feature -- Specific function evaluation
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
+				l_func.clean_on_dispose
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
 					l_module_name := l_icd_module.get_name
@@ -812,6 +923,9 @@ feature -- Specific function evaluation
 					print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 				end
 			end
+
+			l_icd_module.clean_on_dispose
+			l_icd_class.clean_on_dispose
 
 			debug ("DEBUGGER_TRACE_EVAL")
 				if Result = Void then
@@ -825,6 +939,7 @@ feature -- Specific function evaluation
  				min,max: INTEGER): STRING is
 			-- Debug ouput string value
 		local
+			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icd: ICOR_DEBUG_VALUE		
 			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
@@ -854,7 +969,9 @@ feature -- Specific function evaluation
 						l_func := l_icd_module.get_function_from_token (l_feature_token)
 					end
 					if l_func /= Void then
-						l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+						l_icd_frame := a_frame
+						l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<l_icd>>)
+						l_func.clean_on_dispose
 					else						
 						debug ("DEBUGGER_TRACE_EVAL")
 							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
@@ -864,6 +981,8 @@ feature -- Specific function evaluation
 						end
 					end
 				end
+				l_icd_module.clean_on_dispose
+				l_icd_class.clean_on_dispose
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
 					Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, min, max)							
@@ -888,7 +1007,6 @@ feature -- Specific function evaluation
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE		
-			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
@@ -897,8 +1015,7 @@ feature -- Specific function evaluation
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do	
 			l_icd := a_icd
-			l_icd_object := a_icd_obj
-			l_icd_class := l_icd_object.get_class
+			l_icd_class := a_icd_obj.get_class
 			l_icd_module := l_icd_class.get_module
 			l_module_name := l_icd_module.get_name
 
@@ -910,11 +1027,18 @@ feature -- Specific function evaluation
 				if l_icd /= Void then
 						--| We should get a System.String
 					create l_debug_info.make (l_icd)
-					Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)							
+					Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)
+					l_debug_info.icd_prepared_value.clean_on_dispose
+					l_debug_info.clean
+					l_icd.clean_on_dispose
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
+				l_func.clean_on_dispose
 			end
+
+			l_icd_module.clean_on_dispose
+			l_icd_class.clean_on_dispose
 		end
 
  	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
@@ -939,7 +1063,20 @@ feature -- Specific function evaluation
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
+				l_func.clean_on_dispose
 			end
+		end
+
+	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_adapted_class_type: CLASS_TYPE;
+								a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue object representing the once value.
+		local
+			l_icd_class: ICOR_DEBUG_CLASS
+		do
+			l_icd_class := icor_debug_class (a_adapted_class_type)			
+			Result := once_function_value_on_icd_class (a_icd_frame,
+								l_icd_class, a_adapted_class_type, a_feat)
+			l_icd_class.clean_on_dispose
 		end
 
 	once_function_value_on_icd_class (a_icd_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS; a_adapted_class_type: CLASS_TYPE; a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
@@ -952,14 +1089,15 @@ feature -- Specific function evaluation
 			l_once_info_tokens: TUPLE [INTEGER, INTEGER]
 			l_done_token, l_result_token: INTEGER
 			l_icd_debug_value: ICOR_DEBUG_VALUE
+			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_already_called: BOOLEAN
 			l_icd_frame: ICOR_DEBUG_FRAME
 		do
 				--| Set related frame
 			l_icd_frame := a_icd_frame
-			if l_icd_frame = Void then
+			if l_icd_frame = Void and then icor_debug_thread /= Void then
 					--| just in case icd_frame is not set
-				l_icd_frame := active_frame
+				l_icd_frame := icor_debug_thread.get_active_frame
 			end
 
 				--| Get related tokens
@@ -974,8 +1112,10 @@ feature -- Specific function evaluation
 			then
 				l_icd_debug_value := a_icd_class.get_static_field_value (l_done_token, l_icd_frame)
 				if l_icd_debug_value /= Void then
-					l_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
-					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_debug_value)
+					l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
+					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icd_debug_value)
+					l_prepared_icd_debug_value.clean_on_dispose
+					l_icd_debug_value.clean_on_dispose
 				end
 			end
 

@@ -96,12 +96,6 @@ feature -- Status setting
 		do
 			tree_item := item
 		end
-		
-	set_associated_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
-			-- 
-		do
-			debug_value := dv
-		end
 
 feature -- Status report
 
@@ -132,9 +126,6 @@ feature -- Status report
 			-- Tree item representing `Current' in the object tree.
 			-- May be Void, even if `Current' is represented in the object tree.
 			
-	debug_value: ABSTRACT_DEBUG_VALUE
-			-- Debug value data associated with the curent stone.
-
 invariant
 
 	address_exists: object_address /= Void

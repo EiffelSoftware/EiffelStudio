@@ -26,6 +26,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+	get_handle: INTEGER is
+			-- GetHandle returns a handle to the process
+		do
+			last_call_success := cpp_get_handle (item, $Result)
+		ensure
+			success: last_call_success = 0
+		end
+
 	get_thread (a_thread_id: INTEGER): ICOR_DEBUG_THREAD is
 			-- Debuggee Thread for `a_thread_id'
 		local
@@ -59,6 +67,18 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+feature {ICOR_EXPORTER} -- Get Handle
+
+	frozen cpp_get_handle (obj: POINTER; a_p_handle: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugProcess signature(HPROCESS *): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"GetHandle"
+		end
+	
 feature {NONE} -- Implementation
 
 	cpp_get_id (obj: POINTER; a_p_id: POINTER): INTEGER is

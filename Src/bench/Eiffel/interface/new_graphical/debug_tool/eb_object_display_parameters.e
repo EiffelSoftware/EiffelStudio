@@ -171,7 +171,6 @@ feature -- Transformation
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
 				ost.set_associated_tree_item (attr_item)
-				ost.set_associated_debug_value (Void )
 				main_item.extend (attr_item)
 				attr_item.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				attr_item.expand_actions.extend (agent on_expand (attributes_id))

@@ -18,7 +18,7 @@ feature {ICOR_EXPORTER} -- Access
 	stop (a_timeout: INTEGER) is
 		do
 			debug ("debugger_eifnet_data")
-				print ("[>] ICOR_DEBUG_CONTROLLER.stop ("+a_timeout.out+")%N")
+				io.error.put_string ("[>] ICOR_DEBUG_CONTROLLER.stop ("+a_timeout.out+")%N")
 			end			
 			last_call_success := cpp_stop (item, a_timeout)
 --		ensure
@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 			retried: BOOLEAN
 		do
 			debug ("debugger_eifnet_data")
-				print ("[>] ICOR_DEBUG_CONTROLLER.continue ("+a_f_is_out_of_band.out+")%N")
+				io.error.put_string ("[>] ICOR_DEBUG_CONTROLLER.continue ("+a_f_is_out_of_band.out+")%N")
 			end
 			
 			if not retried then
@@ -40,8 +40,9 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		rescue
 			retried := True
-			print ("ERROR while calling pProcess->Continue(..)%N")
-
+			debug ("debugger_icor_data")
+				io.error.put_string ("ERROR while calling pProcess->Continue(..)%N")
+			end
 			retry
 		end
 
@@ -50,6 +51,31 @@ feature {ICOR_EXPORTER} -- Access
 			l_result: INTEGER
 		do
 			last_call_success := cpp_is_running (item, $l_result)
+			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+		ensure
+			success: last_call_success = 0
+		end
+		
+	has_queued_callbacks (a_icd_th: ICOR_DEBUG_THREAD): BOOLEAN is
+			-- HasQueuedCallbacks returns TRUE if there are currently managed
+			-- callbacks which are queued up for the given thread.  These
+			-- callbacks will be dispatched one at a time, each time Continue
+			-- is called.
+			--
+			-- The debugger can check this flag if it wishes to report multiple 
+			-- debugging events which occur simultaneously.
+			-- 
+			-- If NULL is given for the pThread parameter, HasQueuedCallbacks
+			-- will return TRUE if there are currently managed callbacks
+			-- queued for any thread.
+		local
+			l_result: INTEGER
+			l_icd_th_ptr: POINTER
+		do
+			if a_icd_th /= Void then
+				l_icd_th_ptr := a_icd_th.item
+			end
+			last_call_success := cpp_has_queued_callbacks (item, l_icd_th_ptr, $l_result)
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
@@ -124,6 +150,17 @@ feature {NONE} -- Implementation
 			"IsRunning"
 		end
 
+	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: POINTER): INTEGER is
+			-- Call `ICorDebugController->HasQueuedCallbacks'.
+		external
+			"[
+				C++ ICorDebugController signature(ICorDebugThread*, BOOL*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"HasQueuedCallbacks"
+		end
+
 	cpp_terminate (obj: POINTER; a_exitcode: INTEGER): INTEGER is
 			-- Call `ICorDebugController->Terminate'.
 		external
@@ -145,6 +182,14 @@ feature {NONE} -- Implementation
 			"EnumerateThreads"
 		end
 
+feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Query
+
+	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: POINTER): INTEGER is
+		external
+			"C++ inline use %"cli_debugger_utils.h%""
+		alias
+			"((ICorDebugController *) $obj)->QueryInterface (IID_ICorDebugController, (void **) $a_p)"
+		end	
 		
 end -- class ICOR_DEBUG_CONTROLLER
 

@@ -8,6 +8,7 @@ class
 	EIFNET_DEBUG_VALUE_INFO
 
 inherit
+	
 	ICOR_EXPORTER
 		export
 			{NONE} all
@@ -60,7 +61,57 @@ feature {NONE} -- Initialisation
 			icd_prepared_value := a_prepared_value
 			init
 		end
-		
+
+feature -- Dispose
+
+	clean is
+			-- Clean Current value
+			-- and make Current ready to be disposed
+			-- This object should not be used anymore.
+			-- For that the caller must be sure the data are not
+			-- referenced elsewhere
+		do
+				--| IcorDebug world
+			icd_referenced_value := Void
+			icd_prepared_value := Void --| Nota: could be cleaned .. in certain context
+			
+				--| Array value
+			if once_interface_debug_array_value /= Void then
+				once_interface_debug_array_value.clean_on_dispose
+				once_interface_debug_array_value := Void
+			end
+				--| Object value
+			if once_interface_debug_object_value /= Void then
+				once_interface_debug_object_value.clean_on_dispose
+				once_interface_debug_object_value := Void
+			end
+				--| Reference value
+			if once_interface_debug_reference_value /= Void then
+				once_interface_debug_reference_value.clean_on_dispose
+				once_interface_debug_reference_value := Void
+			end
+				--| String value
+			if once_interface_debug_string_value /= Void then
+				once_interface_debug_string_value.clean_on_dispose
+				once_interface_debug_string_value := Void
+			end
+				--| ICorDebugClass value
+			if once_value_icd_class /= Void then
+				once_value_icd_class.clean_on_dispose
+				once_value_icd_class := Void
+			end
+				--| ICorDebugModule value
+			if once_value_icd_module /= Void then
+				once_value_icd_module.clean_on_dispose
+				once_value_icd_module := Void
+			end
+
+				--| And then ...
+				
+				--|Eiffel world
+			once_value_class_type := Void
+		end
+
 feature {NONE} -- Internal Initialisation
 
 	init is
@@ -181,12 +232,6 @@ feature -- Nature Reference
 
 feature -- Queries
 
-	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE is
-			-- Debug value corresponding to dotnet debug value
-		do
-			Result := debug_value_from_prepared_icdv (icd_referenced_value, icd_prepared_value)
-		end
-
 	value_icd_class: ICOR_DEBUG_CLASS is
 			-- ICOR_DEBUG_CLASS related to this Current value
 		require
@@ -198,8 +243,8 @@ feature -- Queries
 				Result := interface_debug_object_value.get_class
 				once_value_icd_class := Result
 			end
-		end		
-		
+		end
+
 	value_class_type: CLASS_TYPE is
 			-- CLASS_TYPE related to this Current value
 		require
@@ -290,7 +335,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, l_ct) then
 				Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)			
 			else
-				Result := value_icd_module.interface_md_import.get_typedef_props (l_ct)
+				Result := value_icd_module.md_type_name (l_ct)
 			end
 		end
 
@@ -315,17 +360,6 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		end
 
 feature -- Interface queries for feature
-
-	feature_token_for_feature_name (a_feat_name: STRING): INTEGER is
-			-- feature token for feature named by `a_feat_name'
-		local
-			l_feat_i: FEATURE_I
-		do
-			l_feat_i := value_class_c.feature_named (a_feat_name)
-			if l_feat_i /= Void then
-				Result := feature_token_for_feature (l_feat_i)
-			end
-		end
 		
 	feature_token_for_feature (a_feat_i: FEATURE_I): INTEGER is
 			-- feature token for `a_feat_i'
@@ -383,7 +417,7 @@ feature -- Interface Access
 			end
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
 
 	once_value_class_type: CLASS_TYPE
 			-- Once per instance for `value_class_type'
@@ -406,14 +440,16 @@ feature {NONE} -- Implementation
 	once_interface_debug_string_value: ICOR_DEBUG_STRING_VALUE
 			-- Once per instance for `interface_debug_string_value'
 
+	error_occurred: BOOLEAN
+			-- Did an error occurred ?
+
+feature -- Restricted properties
+
 	icd_referenced_value: ICOR_DEBUG_VALUE
 			-- Object encapsulated by Current
 
 	icd_prepared_value: ICOR_DEBUG_VALUE
 			-- prepared Object encapsulated by Current
-
-	error_occurred: BOOLEAN
-			-- Did an error occurred ?
 
 invariant
 

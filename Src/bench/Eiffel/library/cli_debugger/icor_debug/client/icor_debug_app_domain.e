@@ -190,6 +190,6 @@ feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Implementation
 		alias
 			"GetID"
 		end
-		
+
 end -- class ICOR_DEBUG_APP_DOMAIN
 

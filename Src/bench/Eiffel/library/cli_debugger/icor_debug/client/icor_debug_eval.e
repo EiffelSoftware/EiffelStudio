@@ -19,7 +19,7 @@ class
 	ICOR_DEBUG_EVAL
 
 inherit
-	ICOR_OBJECT_WITH_FRAME
+	ICOR_OBJECT
 
 	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 		export
@@ -109,7 +109,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_result (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)
 			end
 --		ensure
 --			success: last_call_success = 0
@@ -143,7 +142,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_create_value (item, a_cor_element_type, l_class_p , $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)		
 			end
 --		ensure
 --			success: last_call_success = 0

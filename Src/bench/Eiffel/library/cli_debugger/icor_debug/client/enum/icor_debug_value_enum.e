@@ -9,42 +9,10 @@ class
 
 inherit
 
-	ICOR_DEBUG_ENUM_WITH_NEXT_AND_FRAME [ICOR_DEBUG_VALUE]
+	ICOR_DEBUG_ENUM_WITH_NEXT [ICOR_DEBUG_VALUE]
 
 create 
 	make_by_pointer
-
-feature {ICOR_EXPORTER} -- Access
-
---	next (a_celt: INTEGER): ARRAY [ICOR_DEBUG_VALUE] is
---		require
---			celt_positive: a_celt > 0
---		local
---			l_p: POINTER
---			p_celt_fetched: INTEGER
---			mp_tab: MANAGED_POINTER
---			i: INTEGER
---			l_icor: ICOR_DEBUG_VALUE
---		do
---			create mp_tab.make (a_celt * feature {PLATFORM}.pointer_bytes)
---			last_call_success := cpp_next (item, a_celt, mp_tab.item, $p_celt_fetched)
---			if p_celt_fetched > 0 then
---				from
---					i := 1
---					create Result.make (1, p_celt_fetched)
---				until
---					i > p_celt_fetched
---				loop
---					l_p := mp_tab.read_pointer(i - 1)
---					create l_icor.make_by_pointer (l_p)
---					l_icor.add_ref
---					Result.put (l_icor, i)
---					i := i + 1
---				end
---			end
---		ensure
-----			success: last_call_success = 0
---		end
 
 feature {NONE} -- Implementation
 

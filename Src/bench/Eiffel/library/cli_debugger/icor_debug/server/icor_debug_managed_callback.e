@@ -86,6 +86,14 @@ feature -- Initialization
 					$breakpoint_set_error
 				)
 		end
+		
+	terminate_callback is
+			-- Terminate callback
+		local
+			l_success: INTEGER
+		do
+			l_success := c_terminate_callback (item)
+		end	
 
 feature {NONE} -- debugger behavior
 
@@ -115,38 +123,65 @@ feature {NONE} -- debugger behavior
 			process_callback := eifnet_debugger_info.callback_enabled (eifnet_debugger_info.last_managed_callback)
 
 			if process_callback then
-				Eifnet_debugger_info.init_current_callstack
-				if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
-					execution_stopped := execution_stopped_on_end_of_breakpoint_callback
-				elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
-					if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating	then
-						execution_stopped := False
-					else
-						execution_stopped := execution_stopped_on_end_of_step_complete_callback
-					end
-				elseif 
-					Eifnet_debugger_info.last_managed_callback_is_exception and then
-					Eifnet_debugger_info.is_inside_function_evaluation
-				then
-					if Eifnet_debugger_info.icd_process /= Void then
-						Eifnet_debugger_info.controller.do_continue
-					end					
-					execution_stopped := False
-				else
-						--| Then we stop the execution ;)
-						--| do nothing for now
-					execution_stopped := True
-				end
+				execution_stopped := stop (cb_id)
 			else
-					--| Let's continue, we don't stop on this callback
-				if Eifnet_debugger_info.icd_process /= Void then
-					Eifnet_debugger_info.controller.do_continue
-				else
-					print ("No ICorDebugController ... going to terminate_debugger ...%N")
-					Eifnet_debugger_info.controller.terminate_debugger
-				end
+				execution_stopped := continue (cb_id)
 			end
 			notify_end_of_callback (cb_id, execution_stopped)
+		end
+
+	end_of_managed_callback_on_error (cb_id: INTEGER) is
+			-- called at each ending of callback where an error occured
+		do			
+			debug ("debugger_eifnet_data")
+				io.error.put_string ("End of Managed callback : retry on error %N")
+			end
+			notify_end_of_callback (cb_id, False)
+		end
+
+	continue (cb_id: INTEGER): BOOLEAN is
+			-- Continue witout stopping the system
+		do
+				--| Let's continue, we don't stop on this callback
+			if Eifnet_debugger_info.icd_controller /= Void then
+				Eifnet_debugger_info.debugger.do_continue
+			else
+				debug ("debugger_trace_callstack")
+					io.error.put_string ("No ICorDebugController ... going to terminate_debugger ...%N")
+				end
+				Eifnet_debugger_info.debugger.terminate_debugging
+			end
+			Result := False
+		end
+
+	stop (cb_id: INTEGER): BOOLEAN is
+			-- Stop the system (on step complete or breakpoint for instance)
+		local
+			execution_stopped: BOOLEAN			
+		do
+			Eifnet_debugger_info.init_current_callstack
+			if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
+				execution_stopped := execution_stopped_on_end_of_breakpoint_callback
+			elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
+				if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating	then
+					execution_stopped := False
+				else
+					execution_stopped := execution_stopped_on_end_of_step_complete_callback
+				end
+			elseif 
+				Eifnet_debugger_info.last_managed_callback_is_exception and then
+				Eifnet_debugger_info.is_inside_function_evaluation
+			then
+				if Eifnet_debugger_info.icd_controller /= Void then
+					Eifnet_debugger_info.debugger.do_continue
+				end					
+				execution_stopped := False
+			else
+					--| Then we stop the execution ;)
+					--| do nothing for now
+				execution_stopped := True
+			end
+			Result := execution_stopped
 		end
 
 	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN is
@@ -177,7 +212,7 @@ feature {NONE} -- debugger behavior
 							
 			create l_copy.make_copy (l_previous_stack_info)
 			
-			l_il_debug_info := Eifnet_debugger_info.controller.Il_debug_info_recorder
+			l_il_debug_info := Eifnet_debugger_info.debugger.Il_debug_info_recorder
 			if l_il_debug_info.has_info_about_module (l_copy.current_module_name) then
 				l_feat := l_il_debug_info.feature_i_by_module_feature_token (
 							l_copy.current_module_name,
@@ -197,7 +232,7 @@ feature {NONE} -- debugger behavior
 				
 			l_copy.set_current_il_offset (l_potential_il_offset)
 			if l_copy.is_equal (l_current_stack_info) then
-				Eifnet_debugger_info.controller.do_continue				
+				Eifnet_debugger_info.debugger.do_continue				
 				Result := False
 			else			
 				Result := True
@@ -251,22 +286,18 @@ feature {NONE} -- debugger behavior
 					and l_class_token > 0
 				then
 					unknown_class_for_call_stack_stop := not Il_debug_info_recorder.has_class_info_about_module_class_token (l_module_name, l_class_token)
---				else
---					unknown_class_for_call_stack_stop := False
 				end
 				if unknown_class_for_call_stack_stop then
 					debug ("debugger_trace_stepping")
 						print ("[!] Unknown Class [0x" + l_class_token.to_hex_string + "] .. we'd better go out to breath %N")
 						print ("[!] module = " + l_module_name + "%N")
 					end
-					Eifnet_debugger_info.controller.do_step_out
+					Eifnet_debugger_info.debugger.do_step_out
 				else
 					l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
 					l_feat_token := l_current_stack_info.current_feature_token
 					if l_feat_token > 0 then
 						inside_valid_feature_call_stack_stepping := Il_debug_info_recorder.has_feature_info_about_module_class_token (l_module_name, l_class_token, l_feat_token)
---					else
---						inside_valid_feature_call_stack_stepping := False
 					end
 					if inside_valid_feature_call_stack_stepping then
 						l_current_il_offset := l_current_stack_info.current_il_offset
@@ -282,7 +313,7 @@ feature {NONE} -- debugger behavior
 						
 						if l_current_il_offset = 0 then
 								--| Let's skip the first `nop' , non sense for the eStudio debugger					
-							Eifnet_debugger_info.controller.do_step_into					
+							Eifnet_debugger_info.debugger.do_step_into					
 						else
 							is_valid_callstack_offset := Il_debug_info_recorder.is_il_offset_related_to_eiffel_line (l_class_type, l_feat, l_current_il_offset)					
 							if 
@@ -298,7 +329,7 @@ feature {NONE} -- debugger behavior
 									--| or we are in a step_into concerning a `foo( a(), b())'
 									--| so in either case, a step_into is the correct behavior.
 								
-								Eifnet_debugger_info.controller.do_step_into
+								Eifnet_debugger_info.debugger.do_step_into
 							else
 									--| we can stop, this is a valid stoppable point for
 									--| the eStudio debugger
@@ -315,24 +346,51 @@ feature {NONE} -- debugger behavior
 						
 							--| ranges ...
 						if Eifnet_debugger_info.last_control_mode_is_step_out then
-							Eifnet_debugger_info.controller.do_step_out
+							Eifnet_debugger_info.debugger.do_step_out
 						elseif 
 							Eifnet_debugger_info.last_control_mode_is_step_into
 						then
-							Eifnet_debugger_info.controller.do_step_range (True, <<[0,l_current_stack_info.current_il_code_size]>>)
+							Eifnet_debugger_info.debugger.do_step_range (True, <<[0,l_current_stack_info.current_il_code_size]>>)
 						elseif 
 							Eifnet_debugger_info.last_control_mode_is_step_next
 						then
-							Eifnet_debugger_info.controller.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
+							Eifnet_debugger_info.debugger.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
 						else 
 							--| FIXME JFIAT : is this default stepping case needed ???
 --							print ("[WARNING] unexpected/expected case in step_complete callback%N") 
-							Eifnet_debugger_info.controller.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
+							Eifnet_debugger_info.debugger.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
 						end
 					end
 				end	
 				Result := execution_stopped
 			end			
+		end
+
+feature -- ICorDebug... pointer helpers
+
+	icd_controller_interface (p_controller: POINTER): POINTER is
+			-- Computed ICorDebugController interface from a Process or AppDomain pointer.
+		local
+			p_process: POINTER
+			p_app_domain: POINTER
+			l_hr: INTEGER
+			n: INTEGER
+		do
+			if p_controller /= Default_pointer then
+				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $Result)
+			end		
+			if l_hr /= 0 then
+				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
+				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
+				Result := p_process
+				n := feature {CLI_COM}.release (p_app_domain)
+				-- FIXME JFIAT : check ...
+				
+				debug ("DEBUG_JFIAT")
+					jfiat_tools.output.put_string (Current, "-> NbRef=" + n.out + "%N")
+				end
+			end
+			n := feature {CLI_COM}.release (p_controller)			
 		end
 		
 feature -- Basic Operations
@@ -347,10 +405,12 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_breakpoint)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				set_last_breakpoint_by_pointer (p_breakpoint)
 				end_of_managed_callback (Cst_managed_cb_breakpoint)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_breakpoint)
 			end
 		rescue
 			retried := True
@@ -369,7 +429,7 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_step_complete)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				set_last_step_complete_reason (a_reason)
 				end_of_managed_callback (Cst_managed_cb_step_complete)
@@ -393,6 +453,11 @@ feature -- Basic Operations
 					--| 
 					--| STEP_EXIT means that the thread exited before the step completed.
 					--|		No more stepping can be performed with the stepper.
+
+				--| NOTA jfiat [2004/06/21] : here we may record the stepper
+				--| when we will take care of Multithreading debugging
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_step_complete)
 			end
 		rescue
 			retried := True
@@ -408,9 +473,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_break)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_break)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_break)
 			end
 		rescue
 			retried := True
@@ -427,10 +494,8 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				debug ("DEBUGGER_TRACE_MESSAGE")
-				end
 				begin_of_managed_callback (Cst_managed_cb_exception)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 
 				if unhandled = 1 then 
@@ -441,6 +506,8 @@ feature -- Basic Operations
 					set_last_exception_handled (True)
 				end
 				end_of_managed_callback (Cst_managed_cb_exception)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_exception)
 			end
 		rescue
 			retried := True
@@ -457,9 +524,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_eval_complete)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_eval_complete)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_eval_complete)
 			end
 		rescue
 			retried := True
@@ -476,9 +545,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_eval_exception)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_eval_exception)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_eval_exception)
 			end
 		rescue
 			retried := True
@@ -493,8 +564,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_process)
-				set_last_process_by_pointer (p_process)
+				set_last_controller_by_pointer (p_process)				
+				set_last_process_by_pointer (p_process)				
 				end_of_managed_callback (Cst_managed_cb_create_process)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_create_process)
 			end
 		rescue
 			retried := True
@@ -506,11 +580,16 @@ feature -- Basic Operations
 			-- `p_process' [in].  
 		local
 			retried: BOOLEAN
+			n: INTEGER
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_process)
-				reset_last_process_by_pointer (p_process)			
+				reset_last_controller_by_pointer (p_process)
+				reset_last_process_by_pointer (p_process)	
+				n := feature  {CLI_COM}.release (p_process)
 				end_of_managed_callback (Cst_managed_cb_exit_process)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_exit_process)
 			end
 		rescue
 			retried := True
@@ -526,9 +605,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_thread)
-				set_last_app_domain_by_pointer (p_app_domain)
-				set_last_thread_by_pointer_if_unset (p_thread)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
+				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_create_thread)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_create_thread)
 			end
 		rescue
 			retried := True
@@ -544,9 +625,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_thread)
-				set_last_app_domain_by_pointer (p_app_domain)
-				reset_last_thread_by_pointer (p_thread)			
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
+				reset_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_exit_thread)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_exit_thread)
 			end
 		rescue
 			retried := True
@@ -563,15 +646,19 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_module)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				if p_module /= Default_pointer then
 					create l_module.make_by_pointer (p_module)
-					l_module.add_ref
 					Eifnet_debugger_info.register_new_module (l_module)
 				end
 				end_of_managed_callback (Cst_managed_cb_load_module)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_load_module)
 			end
 		rescue
+			debug ("debugger_trace_callstack")
+				io.error.put_string ("Error during LoadModule callback notification%N")
+			end
 			retried := True
 			retry
 		end
@@ -585,8 +672,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_unload_module)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_unload_module)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_unload_module)
 			end
 		rescue
 			retried := True
@@ -602,8 +691,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_class)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_load_class)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_load_class)
 			end
 		rescue
 			retried := True
@@ -619,8 +710,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_unload_class)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_unload_class)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_unload_class)
 			end
 		rescue
 			retried := True
@@ -637,8 +730,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_debugger_error)
-				set_last_process_by_pointer (p_process)
+				set_last_controller_by_pointer (p_process)
 				end_of_managed_callback (Cst_managed_cb_debugger_error)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_debugger_error)
 			end
 		rescue
 			retried := True
@@ -657,9 +752,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_log_message)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_log_message)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_log_message)
 			end
 		rescue
 			retried := True
@@ -679,9 +776,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_log_switch)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_log_switch)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_log_switch)
 			end
 		rescue
 			retried := True
@@ -698,14 +797,15 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_app_domain)
-				set_last_process_by_pointer (p_process)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (p_process)
 				
 				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p_app_domain)
 				check
 					l_hr = 0
 				end
 				end_of_managed_callback (Cst_managed_cb_create_app_domain)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_create_app_domain)
 			end
 		rescue
 			retried := True
@@ -721,10 +821,12 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_app_domain)
-				set_last_process_by_pointer (p_process)
-				set_last_app_domain_by_pointer (p_app_domain)
-				reset_last_app_domain_by_pointer (p_app_domain)			
+				set_last_controller_by_pointer (p_process)
+				-- NOTA jfiat [2004/06/21] : Maybe we should use controller interface
+				-- of p_app_domain, but I don't see why
 				end_of_managed_callback (Cst_managed_cb_exit_app_domain)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_exit_app_domain)
 			end
 		rescue
 			retried := True
@@ -740,8 +842,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_assembly)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_load_assembly)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_load_assembly)
 			end
 		rescue
 			retried := True
@@ -757,8 +861,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_unload_assembly)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_unload_assembly)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_unload_assembly)
 			end
 		rescue
 			retried := True
@@ -773,8 +879,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_control_ctrap)
-				set_last_process_by_pointer (p_process)
+				set_last_controller_by_pointer (p_process)
 				end_of_managed_callback (Cst_managed_cb_control_ctrap)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_control_ctrap)
 			end
 		rescue
 			retried := True
@@ -790,9 +898,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_name_change)
-				set_last_app_domain_by_pointer (p_app_domain)
-				set_last_thread_by_pointer_if_unset (p_thread)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
+				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_name_change)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_name_change)
 			end
 		rescue
 			retried := True
@@ -809,8 +919,10 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_update_module_symbols)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				end_of_managed_callback (Cst_managed_cb_update_module_symbols)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_update_module_symbols)
 			end
 		rescue
 			retried := True
@@ -828,9 +940,11 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_edit_and_continue_remap)
 			end
 		rescue
 			retried := True
@@ -848,13 +962,15 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
-				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				debug ("debugger_trace_callstack")
 					io.put_string ("DBG callback : breakpoint_set_error %N")
 					io.put_string ("  error = " + (dw_error & 0x0FFFF).to_hex_string + "%N")
 				end
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
+			else
+				end_of_managed_callback_on_error (Cst_managed_cb_breakpoint_set_error)
 			end
 		rescue
 			retried := True
@@ -900,6 +1016,18 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"initialize_callback"
+		end
+
+	c_terminate_callback (obj: POINTER): INTEGER is
+			-- Pass features to external side to terminate callbacks.
+		external
+			"[
+				C++ DebuggerManagedCallback signature 
+					(): EIF_INTEGER
+				use "cli_debugger_callback.h"
+			]"
+		alias
+			"terminate_callback"
 		end
 
 end -- class ICOR_DEBUG_MANAGED_CALLBACK

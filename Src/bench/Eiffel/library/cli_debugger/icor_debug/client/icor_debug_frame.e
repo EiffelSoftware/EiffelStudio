@@ -23,7 +23,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugILFrame (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end
 		ensure
 --			success: last_call_success = 0
@@ -36,7 +35,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugNativeFrame (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end
 		ensure
 --			success: last_call_success = 0

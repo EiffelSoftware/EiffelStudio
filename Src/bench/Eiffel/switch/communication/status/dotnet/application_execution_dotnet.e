@@ -7,6 +7,9 @@ indexing
 class APPLICATION_EXECUTION_DOTNET
 
 inherit
+	
+	SHARED_EIFNET_DEBUGGER
+	
 	APPLICATION_EXECUTION_IMP
 		redefine
 			make
@@ -58,10 +61,10 @@ create {SHARED_APPLICATION_EXECUTION}
 feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 	
 	make is
-			-- 
+			-- Create Current
 		do
 			Precursor
-			create eifnet_debugger.make
+			Eifnet_debugger.init
 		end
 
 feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
@@ -187,12 +190,15 @@ feature -- Bridge to Debugger
 			l_icd_exception: ICOR_DEBUG_VALUE
 		do
 			if not retried then
-				l_icd_exception := eifnet_debugger.active_exception_value
+				l_icd_exception := eifnet_debugger.new_active_exception_value
 				if l_icd_exception /= Void then
 					create l_exception_info.make (l_icd_exception)
 					l_class_details := l_exception_info.value_class_name
 					l_module_details := l_exception_info.value_module_file_name
-					Result := [l_class_details, l_module_details]					
+					Result := [l_class_details, l_module_details]
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
 				end
 			end
 		rescue
@@ -210,13 +216,16 @@ feature -- Bridge to Debugger
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
 			if not retried then
-				l_icd_exception := eifnet_debugger.active_exception_value
+				l_icd_exception := eifnet_debugger.new_active_exception_value
 				create l_exception_info.make (l_icd_exception)
 
 				Result := eifnet_debugger.to_string_value_from_exception_object_value (Void, 
 					l_icd_exception,
 					l_exception_info.interface_debug_object_value
 				)
+				l_exception_info.icd_prepared_value.clean_on_dispose
+				l_exception_info.clean
+				l_icd_exception.clean_on_dispose
 			end
 		rescue
 			retried := True
@@ -233,7 +242,7 @@ feature -- Bridge to Debugger
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
 			if not retried then
-				l_icd_exception := eifnet_debugger.active_exception_value
+				l_icd_exception := eifnet_debugger.new_active_exception_value
 				if l_icd_exception /= Void then
 					create l_exception_info.make (l_icd_exception)
 
@@ -246,6 +255,9 @@ feature -- Bridge to Debugger
 						--| or .. anything else
 						Result := l_exception_info.value_class_name
 					end
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
 				end
 			end
 		rescue
@@ -253,15 +265,6 @@ feature -- Bridge to Debugger
 			retry
 		end		
 	
-	eifnet_debugger: EIFNET_DEBUGGER
-			-- Access to the Dotnet Debugger
-
-	icd_string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
-			-- ICorDebugStringValue of the `icd_string_instance'.
-		do
-			Result := eifnet_debugger.icd_string_value_from_string_class_object_value (icd_string_instance)
-		end
-		
 feature -- Execution
 
 	run (args, cwd: STRING) is
@@ -276,7 +279,6 @@ feature -- Execution
 			app: STRING
 			l_status: APPLICATION_STATUS_DOTNET
 		do
-			create eifnet_debugger.make
 			eifnet_debugger.initialize_debugger_session
 			if eifnet_debugger.is_debugging then
 				app := Eiffel_system.application_name (True)
@@ -331,24 +333,23 @@ feature -- Execution
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 		do	
-			if eifnet_debugger.icor_debug_process /= Void then
+			if eifnet_debugger.icor_debug_controller /= Void then
 				debug ("debugger_eifnet_data")
-					print ("IsRunning :: " + eifnet_debugger.icor_debug_process.is_running.out + "%N")
+					print ("IsRunning :: " + eifnet_debugger.icor_debug_controller.is_running.out + "%N")
 				end
 
 				process_before_running	
 				eifnet_debugger.set_last_control_mode_is_stop
-				
 				eifnet_debugger.do_stop
 
 				debug ("debugger_eifnet_data")
-					print ("IsRunning :: " + eifnet_debugger.icor_debug_process.is_running.out + "%N")
+					print ("IsRunning :: " + eifnet_debugger.icor_debug_controller.is_running.out + "%N")
 				end
 
 				--| Here debugger may not be synchronized |--
 				Eifnet_debugger_info.reset_current_callstack
 				Eifnet_debugger_info.init_current_callstack		
-				debug  ("DEBUGGER_TRACE_EIFNET")			
+				debug ("debugger_eifnet_data_extra")
 					debug_display_threads
 				end
 				eifnet_debugger.do_step_next
@@ -369,7 +370,7 @@ feature -- Execution
 		do
 			if eifnet_debugger.is_debugging then
 				eifnet_debugger.set_last_control_mode_is_kill
-				eifnet_debugger.terminate_debugger
+				eifnet_debugger.terminate_debugging
 			end
 		end
 
@@ -377,6 +378,8 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
+			Eifnet_debugger.reset_debugging_data
+			
 --			Eifnet_debugger.terminate_debugger_session
 -- this is now called directly from EIFNET_DEBUGGER.on_exit_process
 		end
@@ -413,7 +416,7 @@ feature -- Controle execution
 				send_breakpoints
 			end
 			
-			debug ("debugger_eifnet_data")
+			debug ("debugger_eifnet_data_extra")
 				debug_display_threads
 			end
 
@@ -425,32 +428,32 @@ feature -- Controle execution
 	debug_display_threads is
 			-- 
 		local
-			l_process: ICOR_DEBUG_PROCESS
+			l_controller: ICOR_DEBUG_CONTROLLER
 			l_enum_thread: ICOR_DEBUG_THREAD_ENUM
 			l_threads: ARRAY [ICOR_DEBUG_THREAD]
+			l_last_thread_id: STRING
 			i: INTEGER
 			l_th: ICOR_DEBUG_THREAD
 		do
-			l_process := Eifnet_debugger_info.icd_process
-			if l_process /= Void then
-				l_enum_thread := l_process.enumerate_threads
+			l_controller := Eifnet_debugger.icor_debug_controller
+			if l_controller /= Void then
+				l_enum_thread := l_controller.enumerate_threads
+				l_last_thread_id := Eifnet_debugger_info.icd_thread.get_id.to_hex_string
 				if l_enum_thread /= Void and then l_enum_thread.count > 0 then
 					l_threads := l_enum_thread.next (l_enum_thread.count)
 					print ("[info]  => " + l_threads.count.out + " Threads.%N")
-					print ("        => last   :: " + Eifnet_debugger_info.icd_thread.get_id.to_hex_string + "%N")
-					print ("        => helper :: " + l_process.get_helper_thread_id.to_hex_string + "%N")
-
+					print ("        => last   :: " + l_last_thread_id + "%N")
 					from
 						i := l_threads.lower
 					until
 						i > l_threads.upper
 					loop
 						l_th := l_threads.item (i)
-						print ("        => " + l_th.get_id.to_hex_string 
-								+ "%N"
-						)
+						print ("        => " + l_th.get_id.to_hex_string + "%N")
+						l_th.clean_on_dispose
 						i := i + 1
 					end
+					l_enum_thread.clean_on_dispose
 				end
 			end
 		end
@@ -983,7 +986,6 @@ feature {NONE} -- Events on notification
 			l_icd_bp := icd_bp
 			l_icd_func_bp := l_icd_bp.query_interface_icor_debug_function_breakpoint
 			if l_icd_func_bp /= Void then
-			
 				print ("%T   - Offset = " + l_icd_func_bp.get_offset.out + "%N")
 				l_function := l_icd_func_bp.get_function
 				print ("%T   - Function = " + l_function.to_string + "%N")
@@ -998,9 +1000,9 @@ feature -- Call stack related
 		local
 			l_frame_il: ICOR_DEBUG_IL_FRAME
 			l_output: STRING
-			
-
 			l_func: ICOR_DEBUG_FUNCTION
+			l_class: ICOR_DEBUG_CLASS
+			l_module: ICOR_DEBUG_MODULE
 			l_class_token: INTEGER
 			l_feature_token: INTEGER
 			l_module_name: STRING
@@ -1023,8 +1025,14 @@ feature -- Call stack related
 				if a_frame.last_call_succeed and then l_frame_il /= Void then
 					l_func := l_frame_il.get_function
 					l_feature_token := l_func.get_token
-					l_class_token := l_func.get_class.get_token
-					l_module_name := l_func.get_module.get_name
+					l_class := l_func.get_class
+					l_class_token := l_class.get_token
+					l_module := l_func.get_module
+					l_module_name := l_module.get_name
+
+					l_class.clean_on_dispose
+					l_module.clean_on_dispose
+					l_func.clean_on_dispose
 	
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)
@@ -1071,12 +1079,12 @@ feature -- Call stack related
 							
 						l_output.append_string ("%N")
 						l_output.append_string ("%T0x" + l_class_token.to_hex_string )
-						l_output.append_string (" :: 0x"+l_feature_token.to_hex_string)
+						l_output.append_string (" :: 0x" + l_feature_token.to_hex_string)
 						l_output.append_string (" module=" + l_module_display + "%N")
 					end
-	
 				end
-			end			
+				l_frame_il.clean_on_dispose
+			end
 			Result := l_output
 		end
 
@@ -1124,13 +1132,16 @@ feature -- Call stack related
 								l_frame := l_frames @ i
 								l_output.append_string ("... chain::" + c.out + " frame::" + i.out + " =%N")
 								l_output.append_string (frame_callstack_info (l_frame))
+								l_frame.clean_on_dispose
 								i := i + 1
-							end		
+							end
+							l_enum_frames.clean_on_dispose
 						end
+						l_chain.clean_on_dispose
 					end
-					
 					c := c + 1
 				end
+				l_enum_chain.clean_on_dispose
 			end
 			
 			io.put_new_line
@@ -1140,12 +1151,6 @@ feature -- Call stack related
 		end
 
 feature -- Object Keeper
-
-	recycle_kept_object is
-			-- recycle the "keeper" container
-		do
-			Debug_value_keeper.recycle
-		end
 
 	keep_only_objects (a_addresses: LIST [STRING]) is
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'

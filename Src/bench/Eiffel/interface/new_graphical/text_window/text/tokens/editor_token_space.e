@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 
  				-- Display the text.
- 			device.draw_text_top_left (d_x, d_y + height // 8, the_text)
+ 			draw_text_top_left (d_x, d_y, the_text, device)
 		end
 
 feature {NONE} -- Private Constants

@@ -11,7 +11,7 @@ inherit
 		rename
 			cursor as widget_cursor
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		redefine
 			make,
 			set_text,
@@ -35,12 +35,12 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 --	NEW_EB_CONSTANTS
 --		undefine
---			is_equal, copy, consistent, setup
+--			is_equal, copy
 --		end
 
 creation

@@ -15,7 +15,7 @@ inherit
 		export
 			{ANY} process_text
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		redefine
 			put_address, put_feature_name, put_feature,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
@@ -27,7 +27,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 feature -- Properties

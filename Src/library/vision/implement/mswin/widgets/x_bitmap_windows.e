@@ -161,7 +161,7 @@ feature -- Implementation
 				row_filler := 4 - row_filler
 			end
 			structure_size := info_header.structure_size + 8 + 
-				(row_filler + temporary_storage.width) * temporary_storage.height				
+				(row_filler + temporary_storage.width) * temporary_storage.height
 			structure_make
 			i := info_header.structure_size
 			!! s.make (structure_size);

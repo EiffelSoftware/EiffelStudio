@@ -182,7 +182,7 @@ feature -- Cecil
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
 			Make_file.putstring (" Makefile%N%Tar x ");
-			Make_file.putstring (run_time);
+			Make_file.putstring ("$(EIFLIB)");
 			Make_file.new_line;
 			Make_file.putstring ("%Tar cr ");
 			Make_file.putstring (libname);
@@ -475,13 +475,16 @@ feature -- Generation, Header
 			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
 			if Lace.ace_options.has_multithreaded then
-				Make_file.putstring ("LDFLAGS = $mtldflags%N")
+				Make_file.putstring ("LDFLAGS = $mtldflags%N%
+									 %EIFLIB = ")
 			else
-				Make_file.putstring ("LDFLAGS = $ldflags%N")
+				Make_file.putstring ("LDFLAGS = $ldflags%N%
+									 %EIFLIB = ")
 			end
 
-			Make_file.putstring ("%
-				%LIBS = $libs%N%
+			Make_file.putstring (run_time);
+
+			Make_file.putstring ("%NLIBS = $libs%N%
 				%MAKE = make%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
@@ -719,7 +722,7 @@ feature -- Generation (Linking rules)
 			if System.object_file_names /= Void then
 				Make_file.putstring ("$(EXTERNALS) ");
 			end;
-			Make_file.putstring (run_time);
+			Make_file.putstring ("$(EIFLIB)");
 			Make_file.putstring (" $(LIBS)%N");
 
 			generate_additional_rules;

@@ -41,7 +41,6 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #endif
 #include "rt_error.h"
 #include "rt_run_idr.h"
-#include "../idrs/idrf.h"
 #ifdef EIF_OS2
 #include <io.h>
 #endif
@@ -130,78 +129,6 @@ rt_shared void eif_run_idr_thread_init (void)
 }
 #endif
 
-rt_private bool_t run_idr_setpos(IDR *idrs, size_t pos)
-{
-	/* Set the position of the stream to pos and return true if it is possible,
-	 * false otherwise.
-	 */
-
-	if (pos >= (size_t) idrs->i_size) {
-		return FALSE;
-	}
-	
-	idrs->i_ptr = idrs->i_buf + pos;
-	return TRUE;
-}
-
-rt_public void run_mem_destroy(IDR *idrs)
-{
-	/* Release the memory used by the IDR stream */
-
-	idrs->i_size = 0;
-	if (idrs->i_buf != (char *) 0) {
-		eif_rt_xfree(idrs->i_buf);
-		idrs->i_buf = idrs->i_ptr = (char *) 0;
-	}
-}
-
-rt_public void run_idrmem_create(IDR *idrs, char *addr, size_t len, int i_op)
-          			/* The IDR structure managing the stream */
-           			/* Address of the serializing buffer */
-        			/* Length of the serializing buffer */
-         			/* Operation wanted */
-{
-	/* Initialize a memory stream, where the (de)serialization is done in the
-	 * provided buffer pointed to by addr.
-	 */
-
-	REQUIRE("len not too big", len < 0x7FFFFFFF);
-	idrs->i_op = i_op;
-	idrs->i_size = (int) len;
-	idrs->i_buf = addr;
-	idrs->i_ptr = addr;
-}
-
-
-rt_public int run_idrf_create(size_t size)
-         		/* Size of IDR buffers */
-{
-	/* Initializes memory for IDR operations. We create memory streams for
-	 * input and output. Thus, all the input requests will have the same length,
-	 * regardless of their type. The same applies for output request, although
-	 * the size may not be the same. Return 0 if ok, -1 for failure.
-	 */
-	
-	RT_GET_CONTEXT
-	char *out_addr;			/* IDR output data buffer */
-	char *in_addr;			/* IDR input data buffer */
-
-	/* Create input IDR memory stream (decode mode) */
-	if ((char *) 0 == (in_addr = (char *) eif_rt_xmalloc(size, C_T, GC_OFF)))
-		return -1;
-
-	/* Create output IDR memory stream (encode mode) */
-	if ((char *) 0 == (out_addr = (char *) eif_rt_xmalloc(size, C_T, GC_OFF))) {
-		eif_rt_xfree(in_addr);
-		return -1;
-	}
-
-	run_idrmem_create(&idrf.i_decode, in_addr, size, IDR_DECODE);
-	run_idrmem_create(&idrf.i_encode, out_addr, size, IDR_ENCODE);
-	return 0;
-}
-
-
 rt_public void run_idr_init (size_t idrf_size, int type)
 {
 	RT_GET_CONTEXT
@@ -213,7 +140,7 @@ rt_public void run_idr_init (size_t idrf_size, int type)
 		 * instruction), we need to make sure that we have enough allocated memory
 		 * to read or store `idrf_buffer_size' bytes.
 		 */
-	if (-1 == run_idrf_create (idrf_size + sizeof(int32)))
+	if (-1 == idrf_create (&idrf, idrf_size + sizeof(int32)))
 		eraise ("cannot allocate idrf", EN_MEM);
 
 		/* Reset amount_read */
@@ -223,15 +150,14 @@ rt_public void run_idr_init (size_t idrf_size, int type)
 		 * to store upon writting the size of block, so that only one write operation
 		 * is performed */
 	if (type) {
-		run_idr_setpos (&idrf.i_encode, sizeof(int32));
+		idr_setpos (&idrf.i_encode, sizeof(int32));
 	}
 }
 
 rt_public void run_idr_destroy (void)
 {
 	RT_GET_CONTEXT
-	run_mem_destroy(&idrf.i_encode);
-	run_mem_destroy(&idrf.i_decode);
+	idrf_destroy(&idrf);
 }
 
 rt_private int run_idr_read (IDR *bu)
@@ -295,12 +221,12 @@ rt_public void check_capacity (IDR *bu, size_t size)
 	if (idrs_op (bu)) {
 		if ((bu->i_ptr + size) > (bu->i_buf + amount_read)) {
 			amount_read = run_idr_read_func (bu);
-			(void) run_idr_setpos (bu, 0);
+			(void) idr_setpos (bu, 0);
 		}
 	} else {
 		if ((bu->i_ptr + size) > (bu->i_buf + bu->i_size)) {
 			run_idr_write (bu);
-			(void) run_idr_setpos (bu, sizeof(int32));
+			(void) idr_setpos (bu, sizeof(int32));
 		}
 	}
 }

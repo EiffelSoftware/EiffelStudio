@@ -12,24 +12,43 @@ class
 	EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 	
 inherit
-	ANY
+	EV_PARAGRAPH_CONSTANTS
+		rename
+			alignment as alignment_flag,
+			left_margin as left_margin_flag,
+			right_margin as right_margin_flag,
+			top_spacing as top_spacing_flag,
+			bottom_spacing as bottom_spacing_flag
 		export
-			{NONE} default_create
+			{NONE} all
+			{ANY} valid_alignment, valid_paragraph_flag
 		end
-
+	
 create
-	make_with_values
+	make_with_flags
 	
 feature -- Creation
 
-	make_with_values (an_alignment, a_left_margin, a_right_margin, a_top_spacing, a_bottom_spacing: BOOLEAN) is
-			-- Create `Current' and apply all values to corresponding attributes.
+	make_with_flags (flags: INTEGER) is
+			-- Create `Current' and apply `flags' to set attributes.
+			-- Valid flags are the corresponding flags from EV_PARAGRAPH_CONSTANTS.
+			-- Combine these in `flags' to set multiple attrbutes, e.g. to set the
+			-- left and right margins as applicable peform:
+			-- "make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.left_margin | feature {EV_PARAGRAPH_CONSTANTS}.right_margin)"
+		require
+			valid_paragraph_flag: valid_paragraph_flag (flags)
 		do
-			alignment := an_alignment
-			left_margin := a_left_margin
-			right_margin := a_right_margin
-			top_spacing := a_top_spacing
-			bottom_spacing := a_bottom_spacing
+			alignment := flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment = flags
+			left_margin := flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin = flags
+			right_margin := flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin = flags
+			top_spacing := flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags
+			bottom_spacing := flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags
+		ensure
+			attributes_set: alignment = (flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment = flags) and
+				left_margin = (flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin = flags) and
+				right_margin = (flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin = flags) and
+				top_spacing = (flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing = flags) and
+				bottom_spacing = (flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing = flags)
 		end
 
 feature -- Access

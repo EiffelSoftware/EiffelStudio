@@ -209,7 +209,7 @@ feature -- Widget Names used in context editor and catalog
 	Scale_form_name: STRING is "Scale_form";
 	Scale_name: STRING is "Scale";
 	Scroll_list_form_name: STRING is "Scroll_list_form";
-	Scroll_list_name: STRING is "Scroll list";
+	Scrollable_list_name: STRING is "Scrollable list";
 	Selection_mode_name: STRING is "Selection mode";
 	Separator_form_name: STRING is "Separator_form";
 	Separator_name: STRING is "Separator";

@@ -1,0 +1,53 @@
+<document title="Interface">
+	<meta_data/>
+	<paragraph>
+		<paragraph>This document describes the use of graphical widgets to display and manipulate preferences.</paragraph>
+		<paragraph>The preference library contains a cluster called 
+			<cluster_name>interface</cluster_name>.  This cluster provides some basic classes which can be used to graphically display and manipulate the PREFERENCE types used by the library.  There are various widget classes which correspond to particular types of preferences and can be used to view and change the values of an associated preference.  The table below illustraes which widgets are used to display each of the known preference types:
+		</paragraph>
+		<paragraph>
+			<table>
+				<row>
+					<cell>
+						<bold>Preference Type</bold>
+					</cell>
+					<cell>
+						<bold>Associated Widget</bold>
+					</cell>
+				</row>
+				<row>
+					<cell>INTEGER_PREFERENCE</cell>
+					<cell>STRING_PREFERENCE_WIDGET</cell>
+				</row>
+				<row>
+					<cell>BOOLEAN_PREFERENCE</cell>
+					<cell>BOOLEAN_PREFERENCE_WIDGET</cell>
+				</row>
+				<row>
+					<cell>STRING_PREFERENCE</cell>
+					<cell>STRING_PREFERENCE_WIDGET</cell>
+				</row>
+				<row>
+					<cell>ARRAY_PREFERENCE</cell>
+					<cell>STRING_PREFERENCE_WIDGET</cell>
+				</row>
+				<row>
+					<cell>COLOR_PREFERENCE</cell>
+					<cell>COLOR_PREFERENCE_WIDGET</cell>
+				</row>
+				<row>
+					<cell>FONT_PREFERENCE</cell>
+					<cell>FONT_PREFERENCE_WIDGET</cell>
+				</row>
+			</table>
+		</paragraph>All of these widgets inherit the abstract base class PREFERENCE_WIDGET and implement the required deferred features therein.  Each implementation builds its own specific EiffelVision2 interface that allow for changing of the preference value.  For example, BOOLEAN_PREFERENCE_WIDGET uses an EV_COMBO_BOX to display the 'True' and 'False' properties of a BOOLEAN_PREFERENCE.  When the widget is loaded it disaply the current value of the associated preference in the combo box.  When the user changes the combo box value the preference value is changed also, and optionally saved.
+		<paragraph>Using these supplied widgets in your interface is simply a matter of creating the object and using its 
+			<feature_name>change_item_widget</feature_name>, which is an EV_WIDGET that you may add to your current interface classes.  Admittedly displaying a widget for each preference could soon use up a lot of screen space real estate, so the other option is to use a special dialog just for viewing and changing preferences.  By default the library proives such a view in the form of PREFERENCES_TREE_WINDOW.  This is an EV_TITLED_WINDOW with a navigable tree for finding groups of related preferences (i.e. managers), and a list for displying each preference.  It is a useful, general purpose interface for preference manipulation.  As with preferences themselves you may create your view if this dialog is not sufficient for your needs, and can use the code therein as a template for your code.  Below is the supplied control.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>preference_window.PNG</url>
+			</image>
+		</paragraph>
+<paragraph>For an example of creating custom widget views for individual preferences, or a custom view for all preferences, please refer to the example in this documentation.</paragraph>
+	</paragraph></document>

@@ -149,18 +149,18 @@ feature -- Access
 		local
 			cur: CURSOR
 		do
-			cur := features.cursor
-	
-			from
-				features.start
-			until
-				features.after or else Result
-			loop
-				Result := features.item.has_feature_name (n)
-				features.forth
+			if features /= Void then
+				cur := features.cursor	
+				from
+					features.start
+				until
+					features.after or else Result
+				loop
+					Result := features.item.has_feature_name (n)
+					features.forth
+				end
+				features.go_to (cur)
 			end
-
-			features.go_to (cur)
 		end;
 
 feature -- Comparison
@@ -198,6 +198,7 @@ feature {COMPILER_EXPORTER} -- Element change
 	add_feature_to_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
 			-- Add feature `f' to feature clause number `fc_num'
 		require
+			feature_clauses_exist: features /= Void
 			fc_num_ok: features.valid_index (fc_num)
 		local
 			saved, feat_count, offset: INTEGER
@@ -223,6 +224,7 @@ feature {COMPILER_EXPORTER} -- Element change
 	remove_feature_from_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
 			-- Remove feature `f' from feature clause number `fc_num'
 		require
+			feature_clauses_exist: features /= Void
 			fc_num_ok: features.valid_index (fc_num)
 		local
 			index, offset: INTEGER
@@ -250,6 +252,7 @@ feature {COMPILER_EXPORTER} -- Element change
 			-- Replace feature `old_f' in feature clause number `fc_num'
 			-- by feature `new_f'
 		require
+			feature_clauses_exist: features /= Void
 			fc_num_ok: features.valid_index (fc_num)
 		local
 			index, offset: INTEGER

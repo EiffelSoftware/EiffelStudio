@@ -80,11 +80,10 @@ feature {NONE} -- Basic operations
 			face_found: STRING
 		do
 			face_found := elf.log_font.face_name.twin
-			face_found.to_lower
 			if not internal_font_faces.has (face_found) then
 				internal_font_faces.extend (face_found)
 			end
-			text_metrics.put (tm, face_found)
+			text_metrics.put (tm.twin, face_found)
 			log_fonts.put (elf.log_font, face_found)
 		end
 

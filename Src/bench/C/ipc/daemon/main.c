@@ -63,7 +63,6 @@ extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);	/* Start up child with 
 extern char *getenv(const char *);			/* Get environment variable value */
 #endif
 
-extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 rt_public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
 rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */

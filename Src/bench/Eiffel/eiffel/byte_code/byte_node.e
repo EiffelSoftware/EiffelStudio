@@ -52,14 +52,17 @@ feature -- Eiffel source line information
 
 	generate_line_info is
 			-- Generate source line information.
+		local
+			l_buffer: like buffer
 		do
 			if System.line_generation and then line_number > 0 then
-				buffer.putstring ("%N#line ")
-				buffer.putint (line_number)
-				buffer.putstring (" %"")
-				buffer.escape_string (buffer, Context.associated_class.lace_class.base_name)
-				buffer.putstring ("%"")
-				buffer.new_line
+				l_buffer := buffer
+				l_buffer.putstring ("%N#line ")
+				l_buffer.putint (line_number)
+				l_buffer.putstring (" %"")
+				l_buffer.escape_string (l_buffer, Context.associated_class.lace_class.base_name)
+				l_buffer.putstring ("%"")
+				l_buffer.new_line
 			end
 		end
 
@@ -96,28 +99,33 @@ feature -- Eiffel source line information
 			-- line number `lnr' (line number means breakpoint slot)
 		local
 			lnr: INTEGER
+			l_buffer: like buffer
 		do
 			if not context.final_mode then
 				lnr := context.get_next_breakpoint_slot
 				check
 					lnr > 0
 				end
-				buffer.putstring("RTHOOK(")
-				buffer.putint(lnr)
-				buffer.putstring(");")
-				buffer.new_line
+				l_buffer := buffer
+				l_buffer.putstring("RTHOOK(")
+				l_buffer.putint(lnr)
+				l_buffer.putstring(");")
+				l_buffer.new_line
 			end
 		end
 
 	generate_frozen_end_debugger_hook is
 			-- Generate the hook for the C debugger corresponding
 			-- to the end of the feature.
+		local
+			l_buffer: like buffer
 		do
 			if not context.final_mode then
-				buffer.putstring("RTHOOK(")
-				buffer.putint(context.current_feature.number_of_breakpoint_slots)
-				buffer.putstring(");")
-				buffer.new_line
+				l_buffer := buffer
+				l_buffer.putstring("RTHOOK(")
+				l_buffer.putint(context.current_feature.number_of_breakpoint_slots)
+				l_buffer.putstring(");")
+				l_buffer.new_line
 			end
 		end
 
@@ -126,6 +134,7 @@ feature -- Eiffel source line information
 			-- line number `lnr' (line number means breakpoint slot)
 		local
 			lnr: INTEGER
+			l_buffer: like buffer
 		do
 				-- used to generate a debugger hook in the middle of nested call
 				-- to be able to enter in the function applicated to the object 
@@ -154,10 +163,11 @@ feature -- Eiffel source line information
 				lnr := context.get_breakpoint_slot
 					-- if lnr = 0 or -1 then we do nothing.
 				if lnr > 0 then
-					buffer.putstring("RTNHOOK(")
-					buffer.putint(lnr)
-					buffer.putstring(");")
-					buffer.new_line
+					l_buffer := buffer
+					l_buffer.putstring("RTNHOOK(")
+					l_buffer.putint(lnr)
+					l_buffer.putstring(");")
+					l_buffer.new_line
 				end
 			end
 		end
@@ -342,19 +352,25 @@ feature -- Generic conformance
 
 	generate_block_open is
 			-- Open a new C block.
+		local
+			l_buffer: like buffer
 		do
-			buffer.putchar ('{')
-			buffer.new_line
-			buffer.indent
+			l_buffer := buffer
+			l_buffer.putchar ('{')
+			l_buffer.new_line
+			l_buffer.indent
 		end
 
 	generate_block_close is
 			-- Close C block.
+		local
+			l_buffer: like buffer
 		do
-			buffer.new_line
-			buffer.exdent
-			buffer.putchar ('}')
-			buffer.new_line
+			l_buffer := buffer
+			l_buffer.new_line
+			l_buffer.exdent
+			l_buffer.putchar ('}')
+			l_buffer.new_line
 		end
 
 	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
@@ -365,48 +381,50 @@ feature -- Generic conformance
 		local
 			use_init : BOOLEAN
 			idx_cnt : COUNTER
+			l_buffer: like buffer
 		do
+			l_buffer := buffer
 			if gtype.is_explicit then
 				-- Optimize: Use static array
-				buffer.putstring ("static int16 typarr [] = {")
+				l_buffer.putstring ("static int16 typarr [] = {")
 			else
-				buffer.putstring ("int16 typarr [] = {")
+				l_buffer.putstring ("int16 typarr [] = {")
 				use_init := True
 			end
 
-			buffer.putint (context.current_type.generated_id (context.final_mode))
-			buffer.putstring (", ")
+			l_buffer.putint (context.current_type.generated_id (context.final_mode))
+			l_buffer.putstring (", ")
 
 			if use_init then
 				!!idx_cnt
 				idx_cnt.set_value (1)
-				gtype.generate_cid_array (buffer, context.final_mode, True, idx_cnt)
+				gtype.generate_cid_array (l_buffer, context.final_mode, True, idx_cnt)
 			else
-				gtype.generate_cid (buffer, context.final_mode, True)
+				gtype.generate_cid (l_buffer, context.final_mode, True)
 			end
-			buffer.putstring ("-1};")
-			buffer.new_line
-			buffer.putstring ("int16 typres;")
-			buffer.new_line
-			buffer.putstring ("static int16 typcache = -1;")
-			buffer.new_line
-			buffer.new_line
+			l_buffer.putstring ("-1};")
+			l_buffer.new_line
+			l_buffer.putstring ("int16 typres;")
+			l_buffer.new_line
+			l_buffer.putstring ("static int16 typcache = -1;")
+			l_buffer.new_line
+			l_buffer.new_line
 
 			if use_init then
 				-- Reset counter
 				idx_cnt.set_value (1)
-				gtype.generate_cid_init (buffer, context.final_mode, True, idx_cnt)
+				gtype.generate_cid_init (l_buffer, context.final_mode, True, idx_cnt)
 			end
 
-			buffer.putstring ("typres = RTCID(&typcache,")
+			l_buffer.putstring ("typres = RTCID(&typcache,")
 
 			context.Current_register.print_register
 
-			buffer.putstring (", ")
-			buffer.putint (gtype.generated_id (context.final_mode))
-			buffer.putstring (", typarr);")
-			buffer.new_line
-			buffer.new_line
+			l_buffer.putstring (", ")
+			l_buffer.putint (gtype.generated_id (context.final_mode))
+			l_buffer.putstring (", typarr);")
+			l_buffer.new_line
+			l_buffer.new_line
 		end
 
 end

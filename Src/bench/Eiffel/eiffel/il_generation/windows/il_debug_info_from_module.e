@@ -136,7 +136,7 @@ feature -- Reverse Queries Class
 			l_cursor: CURSOR
 		do
 			debug ("il_info_trace")
-				print ("Reverse Search ..%N")
+				io.error.put_string ("Reverse Search ..%N")
 			end
 			l_id := a_class_type.static_type_id
 			l_cursor := list_class_type_id.cursor
@@ -206,11 +206,11 @@ feature -- Recording Operation
 				list_class_type_id.put (l_class_static_type_id , a_class_token)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_class_token : "+a_class_type.associated_class.name_in_upper+" <<%N")
-					print ("  - key : class_token =" + a_class_token.to_hex_string + "%N")
-					print ("  - already           = " + list_class_type_id.item (a_class_token).out + "%N")
-					print ("  - replace           = " + l_class_static_type_id.out + "%N")
-					print ("%N")
+					io.error.put_string (">> CONFLICT record_class_token : "+a_class_type.associated_class.name_in_upper+" <<%N")
+					io.error.put_string ("  - key : class_token =" + a_class_token.to_hex_string + "%N")
+					io.error.put_string ("  - already           = " + list_class_type_id.item (a_class_token).out + "%N")
+					io.error.put_string ("  - replace           = " + l_class_static_type_id.out + "%N")
+					io.error.put_string ("%N")
 				end
 				list_class_type_id.force (l_class_static_type_id , a_class_token)
 			end
@@ -235,13 +235,13 @@ feature -- Recording Operation
 				list_feature_info.put (l_entry , a_feature_token)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_feature_i : "+a_class_type.associated_class.name_in_upper
+					io.error.put_string (">> CONFLICT record_feature_i : "+a_class_type.associated_class.name_in_upper
 							+"."+a_feature_i.feature_name
 							+" <<%N")
-					print ("  - key : feature_token =" + a_feature_token.to_hex_string + "%N")
-					print ("  - already             = " + list_feature_info.item (a_feature_token).out + "%N")
-					print ("  - replace             = " + l_entry.out + "%N")
-					print ("%N")
+					io.error.put_string ("  - key : feature_token =" + a_feature_token.to_hex_string + "%N")
+					io.error.put_string ("  - already             = " + list_feature_info.item (a_feature_token).out + "%N")
+					io.error.put_string ("  - replace             = " + l_entry.out + "%N")
+					io.error.put_string ("%N")
 				end
 				list_feature_info.force (l_entry , a_feature_token)
 			end

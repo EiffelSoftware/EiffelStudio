@@ -84,11 +84,7 @@ feature -- Start output features
 		local
 			i_name: STRING
 		do
-			if is_destroyed then	
-				create_window
-			else
-				parent.set_title (Interface_names.d_Compilation_progress);
-			end;
+			parent.set_title (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
 			current_degree := degree_nbr;
 			processed := 0;
@@ -141,6 +137,7 @@ feature -- Start output features
 	put_start_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
+			processed := 0;
 			set_project_icon_name (removing_dead_code_message)
 			put_non_degree_message (removing_dead_code_message);
 			entity_l.set_label_as_string (Interface_names.d_Features_processed);
@@ -305,7 +302,7 @@ feature -- Output on per class
 		do
 			processed := features_done + processed;
 			total_number := processed + nbr_to_go;
-			a_per := percentage_calculation (processed);
+			a_per := percentage_calculation (nbr_to_go);
 			progress_bar.update_percentage (a_per);
 			update_interface (processed.out, nbr_to_go, a_per);
 		end;

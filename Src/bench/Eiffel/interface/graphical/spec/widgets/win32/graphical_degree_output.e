@@ -74,9 +74,6 @@ feature -- Start output
 		local
 			i_name: STRING
 		do
-			if not exists then
-				create_window;
-			end
 			set_text (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
 			current_degree := degree_nbr;
@@ -126,6 +123,8 @@ feature -- Start output
 	put_start_dead_code_removal_message is
 			-- Put message indicating the start of dead code removal.
 		do
+			processed := 0;
+
 			set_project_icon_name (removing_dead_code_message);
 			put_non_degree_message (removing_dead_code_message);
 			nbr_to_go_text.set_text (Interface_names.d_Features_processed);
@@ -333,10 +332,9 @@ feature -- Per entity output
 			a_per: INTEGER
 		do
 			processed := processed + features_done;
-			current_entity_text.set_text (processed.out);
-			total_number := nbr_to_go + features_done;
-			a_per := percentage_calculation (features_done);
-			update_interface (Empty_string, nbr_to_go, a_per);
+			total_number := nbr_to_go + processed;
+			a_per := percentage_calculation (nbr_to_go);
+			update_interface (Empty_string, processed, a_per);
 			progress_bar.set_position (a_per);
 
 			process_messages
@@ -392,6 +390,7 @@ feature {NONE} -- Implementation
 			!! percentage_text.make_by_id (Current, Txt_percentage);
 
 			activate;
+			set_text (Interface_names.d_Compilation_progress);
 		end;
 
 	update_interface (a_name: STRING; nbr_to_go: INTEGER; a_per: INTEGER) is

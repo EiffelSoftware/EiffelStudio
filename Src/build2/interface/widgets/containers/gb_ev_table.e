@@ -125,8 +125,6 @@ feature {GB_XML_STORE} -- Output
 		
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
-		local
-			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -152,7 +150,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -168,7 +166,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			children_names: ARRAYED_LIST [STRING]
 		do
 
-			Result := ""
+			create Result.make (4)
 			full_information := get_unique_full_info (element)
 			if attribute_set (columns_string) then
 				columns := retrieve_integer_setting (columns_string)
@@ -181,18 +179,18 @@ feature {GB_CODE_GENERATOR} -- Output
 				rows := "1"
 			end
 			
-			Result := info.name + ".resize (" + columns + ", " + rows + ")"
+			Result.extend (info.name + ".resize (" + columns + ", " + rows + ")")
 			
 			if attribute_set (row_spacing_string) then
-				Result := Result + indent + info.name + ".set_row_spacing (" +  retrieve_integer_setting (row_spacing_string) + ")"
+				Result.extend (info.name + ".set_row_spacing (" +  retrieve_integer_setting (row_spacing_string) + ")")
 			end
 			
 			if attribute_set (column_spacing_string) then
-				Result := Result + indent + info.name + ".set_column_spacing (" + retrieve_integer_setting (column_spacing_string) + ")"
+				Result.extend (info.name + ".set_column_spacing (" + retrieve_integer_setting (column_spacing_string) + ")")
 			end
 			
 			if attribute_set (border_width_string) then
-				Result := Result + indent + info.name + ".set_border_width (" + retrieve_integer_setting (border_width_string) + ")"
+				Result.extend (info.name + ".set_border_width (" + retrieve_integer_setting (border_width_string) + ")")
 			end
 
 			element_info := full_information @ (column_positions_string)
@@ -225,7 +223,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			end
 			children_names := info.child_names
 			if not children_names.is_empty then
-				Result := Result + indent + "%T-- Insert and position all children of `" + info.name + "'."
+				Result.extend ("%T-- Insert and position all children of `" + info.name + "'.")
 				from
 					counter := 1
 				until
@@ -244,12 +242,11 @@ feature {GB_CODE_GENERATOR} -- Output
 					row_position.prune_all_leading ('0')
 					column_span.prune_all_leading ('0')
 					row_span.prune_all_leading ('0')
-					Result := Result + indent + info.name + ".put_at_position (" + current_child_name + ", " + column_position + ", " +
-						row_position + ", " + column_span + ", " + row_span + ")"			
+					Result.extend (info.name + ".put_at_position (" + current_child_name + ", " + column_position + ", " +
+						row_position + ", " + column_span + ", " + row_span + ")")
 					counter := counter + 1
 				end			
 			end
-			Result := strip_leading_indent (Result)
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting

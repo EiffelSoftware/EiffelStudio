@@ -77,7 +77,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -86,7 +86,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			linked_groups: ARRAYED_LIST [INTEGER]
 			temp_output: STRING
 		do
-			Result := ""
+			create Result.make (2)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ merged_groups_string
 			if element_info /= Void then
@@ -102,11 +102,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					linked_groups.off
 				loop
 					temp_output := info.Names_by_id.item (linked_groups.item) + ".merge_radio_button_groups (" + info.name + ")"
-					if linked_groups.index = 1 then
-						Result := temp_output
-					else
-						Result := Result + indent + temp_output
-					end
+					Result.extend (temp_output)
 					linked_groups.forth
 				end
 			end

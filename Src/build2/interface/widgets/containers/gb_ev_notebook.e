@@ -101,7 +101,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO):ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -110,11 +110,11 @@ feature {GB_CODE_GENERATOR} -- Output
 			names: ARRAYED_LIST [STRING]
 			children_names: ARRAYED_LIST [STRING]
 		do
-			Result := ""
+			create Result.make (4)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (tab_position_string)
 			if element_info /= Void then
-				Result := info.name + ".set_tab_position (" + element_info.data + ")"
+				Result.extend (info.name + ".set_tab_position (" + element_info.data + ")")
 			end
 			element_info := full_information @ (Item_text_string)
 			if element_info /= Void then
@@ -130,12 +130,11 @@ feature {GB_CODE_GENERATOR} -- Output
 				loop
 						-- If the current name is empty, then we do not generate a setting.
 					if not names.item.is_equal ("") then
-						Result := Result + indent + info.name + ".set_item_text (" + (children_names @ (names.index)) + ", %"" + names.item + "%")"
+						Result.extend (info.name + ".set_item_text (" + (children_names @ (names.index)) + ", %"" + names.item + "%")")
 					end
 					names.forth
 				end
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_NOTEBOOK

@@ -61,24 +61,23 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
-			Result := ""
+			create Result.make (1)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_selected_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := info.name + ".enable_select"
+					Result.extend (info.name + ".enable_select")
 				else
-					Result := info.name + ".disable_select"
+					Result.extend (info.name + ".disable_select")
 				end
 			end
-			Result := strip_leading_indent (Result)
 		end
 
 end -- class GB_EV_DESELECTABLE

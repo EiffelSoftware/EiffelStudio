@@ -83,34 +83,34 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
-			Result := ""
+			create Result.make (2)
 			full_information := get_unique_full_info (element)
 						
 			element_info := full_information @ item_width_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_width (" + retrieve_integer_setting (item_width_string) + ")"
+				Result.extend (info.name + ".set_item_width (" + retrieve_integer_setting (item_width_string) + ")")
 			end
 			
 			element_info := full_information @ item_height_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_height (" + retrieve_integer_setting (item_height_string) + ")"
+				Result.extend (info.name + ".set_item_height (" + retrieve_integer_setting (item_height_string) + ")")
 			end
 			
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := info.name + ".set_x_offset (" + retrieve_integer_setting (X_offset_string) + ")"
+				Result.extend (info.name + ".set_x_offset (" + retrieve_integer_setting (X_offset_string) + ")")
 			end
 			
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := Result + indent + info.name + ".set_y_offset (" + retrieve_integer_setting (Y_offset_string) + ")"
+				Result.extend (info.name + ".set_y_offset (" + retrieve_integer_setting (Y_offset_string) + ")")
 			end
 		end
 

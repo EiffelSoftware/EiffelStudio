@@ -125,7 +125,6 @@ feature {GB_XML_STORE} -- Output
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			element_info: ELEMENT_INFORMATION
-			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -151,38 +150,35 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
-			escaped_text: STRING
 		do
-			Result := ""
+			create Result.make (4)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (User_can_resize_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := info.name + ".enable_user_resize"
+					Result.extend (info.name + ".enable_user_resize")
 				else
-					Result := info.name + ".disable_user_resize"
+					Result.extend (info.name + ".disable_user_resize")
 				end
 			end
 			
 			if attribute_set (Maximum_width_string) then
-				Result := Result + indent + info.name + ".set_maximum_width (" + retrieve_integer_setting (Maximum_width_string) + ")"
+				Result.extend (info.name + ".set_maximum_width (" + retrieve_integer_setting (Maximum_width_string) + ")")
 			end
 				
 			if attribute_set (Maximum_height_string) then
-				Result := Result + indent + info.name + ".set_maximum_height (" + retrieve_integer_setting (Maximum_height_string) + ")"
+				Result.extend (info.name + ".set_maximum_height (" + retrieve_integer_setting (Maximum_height_string) + ")")
 			end
 			
 			if attribute_set (Title_string) then
-				Result := Result + indent + info.name + ".set_title (" + retrieve_string_setting (title_string) + ")"
+				Result.extend (info.name + ".set_title (" + retrieve_string_setting (title_string) + ")")
 			end
-
-			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation

@@ -40,11 +40,11 @@ inherit
 			is_unique,
 			local_callers,
 			local_callers_count,
-			name,
 			parameters,
 			return_type,
 			signature,
-			written_class
+			written_class,
+			name
 		end
 		
 create
@@ -106,38 +106,11 @@ feature {NONE} -- Initialization
 		end
 		
 feature -- Access
-
+		
 	name: STRING is
-			-- Name of feature qualified with kind of feature
+			-- name
 		do
-			create Result.make (20)
-			if is_once then
-				Result.append ("once ")
-			end
-			if is_constant then
-				Result.append ("constant ")
-			end
-			if is_frozen then
-				Result.append ("frozen ")
-			end
-			if is_external then
-				Result.append ("external ")
-			end
-			if is_deferred then
-				Result.append ("deferred ")
-			end
-			if is_infix then
-				Result.append ("Infix operator ")
-			elseif is_prefix then
-				Result.append ("prefix operator ")
-			elseif is_attribute then
-				Result.append ("attribute ")
-			elseif is_function then
-				Result.append ("function ")
-			elseif is_procedure then
-				Result.append ("procedure ")
-			end
-			Result.append (internal_name)
+			Result := internal_name
 		end
 		
 	feature_name: STRING

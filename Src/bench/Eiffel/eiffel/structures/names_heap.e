@@ -96,6 +96,7 @@ feature -- Constants
 	default_create_name_id: INTEGER is 14
 	default_rescue_name_id: INTEGER is 15
 	dispose_name_id: INTEGER is 16
+	internal_invariant_name_id: INTEGER is 17
 			-- Predefined name IDs constants
 	
 feature -- Status report
@@ -178,6 +179,7 @@ feature {NONE} -- Implementation: access
 			put ("default_create") check found_item = default_create_name_id end
 			put ("default_rescue") check found_item = default_rescue_name_id end
 			put ("dispose") check found_item = dispose_name_id end
+			put ("_invariant") check found_item = internal_invariant_name_id end
 		end
 		
 invariant

@@ -56,16 +56,24 @@ feature {NONE} -- Implementation
 
 	formatter: POINTER is
 			-- Error messages formatter.
-		once
-			Result := ccom_initialize_formatter
+		do
+			if impl_formatter = default_pointer then
+				impl_formatter := ccom_initialize_formatter
+			end
+			Result := impl_formatter
 		ensure
 			valid_formatter: Result /= default_pointer
 		end
 
+	impl_formatter: POINTER
+			-- Pointer holder.
+
 	dispose is
 			-- Free formatter first.
 		do
-			ccom_delete_formatter (formatter)
+			if impl_formatter /= default_pointer then
+				ccom_delete_formatter (impl_formatter)
+			end
 		end
 			
 feature {NONE} -- External

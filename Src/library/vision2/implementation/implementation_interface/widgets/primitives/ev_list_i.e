@@ -37,8 +37,8 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_i_th_visible (an_index: INTEGER) is
-			-- Ensure item `an_index' is visible in `Current'.
+	ensure_item_visible (an_item: EV_LIST_ITEM) is
+			-- Ensure item `an_item' is visible in `Current'.
 		deferred
 		end
 
@@ -125,6 +125,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2001/06/25 19:03:41  rogers
+--| Rplaced `ensure_i_th_visible' with `ensure_item_visible'.
+--|
 --| Revision 1.47  2001/06/07 23:08:10  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -70,6 +70,9 @@ extern "C" {
 RT_LNK EIF_REFERENCE emalloc(uint32 type);				/* Allocate an Eiffel object */
 RT_LNK EIF_REFERENCE emalloc_size(uint32 ftype, uint32 dtype, uint32 size);	/* Allocate an Eiffel object */
 RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
+RT_LNK EIF_REFERENCE tuple_malloc (uint32 ftype);	/* Allocated tuple object */
+RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
+rt_public EIF_REFERENCE smart_emalloc (uint32 ftype);
 RT_LNK EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 RT_LNK void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 

@@ -274,7 +274,12 @@ feature -- Status setting
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
-			if not Eiffel_system.System.il_generation then
+				-- Since we can be called even before system is compiled 
+				-- we need to check if we can call `Eiffel_system' or not.
+			if
+				not (Eiffel_project.initialized and then eiffel_project.system_defined) or else
+				not Eiffel_system.System.il_generation
+			then
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 			end

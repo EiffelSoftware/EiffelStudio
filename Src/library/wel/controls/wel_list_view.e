@@ -170,7 +170,7 @@ feature -- Status report
 
 	get_item_state (index, mask: INTEGER): INTEGER is
 			-- State of the zero-based `index'-th item. The mask give
-			-- the state informations to retrieve.See WEL_LVIS_CONSTANTS for
+			-- the state informations to retrieve. See WEL_LVIS_CONSTANTS for
 			-- the value of the mask.
 		require
 			exists: exists
@@ -208,7 +208,9 @@ feature -- Status report
 		require
 			exists: exists
 			index_large_enough: index >= 0
-			index_small_enough: index < column_count
+			index_small_enough: index < count
+			subitem_large_enough: subitem >= 0
+			subitem_small_enough: subitem < column_count
 		local
 			buffer: STRING
 		do

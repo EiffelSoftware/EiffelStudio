@@ -9,6 +9,10 @@ indexing
 
 class BUTCLICK_DATA 
 
+obsolete
+    "button click actions will be removed therefor Current class will %
+	%not be needed."
+
 inherit
 
 	BUTREL_DATA

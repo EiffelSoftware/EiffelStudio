@@ -55,6 +55,9 @@ feature {NONE} -- Initialization
 			set_title (private_title)
 			if search_directory /= Void and then not search_directory.empty then
 				add_to_recently_used (search_directory)
+				if directories_list = Void then
+					directories_list := get ("DirectoryList")
+				end
 				fill_recently_used
 				directory := search_directory
 			else

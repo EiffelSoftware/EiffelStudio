@@ -2588,7 +2588,7 @@ rt_private void interpret(int flag, int where)
 						break;
 					case SK_REF:
 						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;
-						RTAS_OPT(it->it_ref, curr_pos, sp_area);
+						RTAR(sp_area, it->it_ref);
 						break;
 					case SK_INT8:
 						*((EIF_INTEGER_8 *) sp_area + curr_pos) = it->it_int8;
@@ -5208,8 +5208,8 @@ rt_private void assign(long offset, uint32 type)
 		 * assignment, as RTAR may call eremb() which in turn may call the GC.
 		 */
 		ref = icurrent->it_ref;
-		RTAR(last->it_ref, ref);
 		*(EIF_REFERENCE *) (ref + offset) = last->it_ref;
+		RTAR(ref, last->it_ref);
 		break;
 	default: eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
 	}

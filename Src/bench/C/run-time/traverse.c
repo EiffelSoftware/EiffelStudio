@@ -700,7 +700,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		
 			/* Store object in `Result'. */
 		*((EIF_REFERENCE*) Result + i) = l_found.area [i];
-		RTAS_OPT (l_found.area [i], i, Result);
+		RTAR(Result, l_found.area [i]);
 	}
 
 		/* Now, we reset all EO_STORE flags. */

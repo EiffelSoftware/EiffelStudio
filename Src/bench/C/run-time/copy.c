@@ -379,7 +379,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 		*(EIF_REFERENCE *) (enclosing + offset) = clone;
 		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
 #ifdef ISE_GC
-		RTAS(clone, enclosing);
+		RTAR(enclosing, clone);
 #endif /* ISE_GC */
 		return;
 	}

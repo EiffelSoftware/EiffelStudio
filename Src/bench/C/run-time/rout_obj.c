@@ -153,7 +153,7 @@ rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_
 			break;
 		default:
 			*((EIF_REFERENCE *) resp) = result.rarg;
-			RTAS_OPT(result.rarg, 0, resp);
+			RTAR(resp, result.rarg);
 			break;
 	}
 
@@ -366,7 +366,7 @@ rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION
 			break;
 		default:
 			*((EIF_REFERENCE *) resp) = it->itu.itu_ref;
-			RTAS_OPT(it->itu.itu_ref, 0, resp);
+			RTAR(resp, it->itu.itu_ref);
 			break;
 	}
 	RT_GC_WEAN(res);

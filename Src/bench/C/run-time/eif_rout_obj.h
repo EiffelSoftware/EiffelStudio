@@ -98,7 +98,7 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 /* Copy TUPLE element s[j] into t[i] */
 #define rout_tuple_item_copy(t,i,s,j) \
 	(*((EIF_TYPED_ELEMENT *) (t) + i)).element = (*((EIF_TYPED_ELEMENT *) (s) + j)).element;\
-	if (eif_item_type(t,i) == 'r') RTAS(eif_reference_item(s,j), (EIF_REFERENCE) t);
+	if (eif_item_type(t,i) == 'r') RTAR((EIF_REFERENCE) t, eif_reference_item(s,j));
 
 /***************************************/
 /* Macros used for tuple manipulations */
@@ -172,7 +172,7 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_put_integer_64_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i64arg = (EIF_INTEGER_64)(val)
 #define eif_put_pointer_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.parg = (EIF_POINTER)(val)
 #define eif_put_real_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = (EIF_REAL)(val)
-#define eif_put_reference_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg = (EIF_REFERENCE) (val); RTAS((EIF_REFERENCE) (val), (EIF_REFERENCE) (tuple))
+#define eif_put_reference_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg = (EIF_REFERENCE) (val); RTAR((EIF_REFERENCE) (tuple), (EIF_REFERENCE) (val))
 
 #ifdef __cplusplus
 }

@@ -51,7 +51,7 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 #define ei_ptr_field(i,object)		*(EIF_POINTER *) ei_oref(i,(EIF_REFERENCE) (object))
 
 /* Attribute setting */
-#define ei_set_reference_field(i,object,value)	RTAR(value,object); *(EIF_REFERENCE *) ei_oref(i,object) = (EIF_REFERENCE) (value)
+#define ei_set_reference_field(i,object,value)	RTAR(object,value); *(EIF_REFERENCE *) ei_oref(i,object) = (EIF_REFERENCE) (value)
 #define ei_set_char_field(i,object,value)		*(EIF_CHARACTER *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_CHARACTER) (value)
 #define ei_set_boolean_field(i,object,value)	*(EIF_BOOLEAN *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_BOOLEAN) (value)
 #define ei_set_integer_8_field(i,object,value)	*(EIF_INTEGER_8 *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_INTEGER_8) (value)

@@ -1326,7 +1326,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 				new_object_attr = eif_access(new_object_attr);
 				*(char **)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced as `object' */
-				RTAS_OPT(new_object_attr,attr_number,object);
+				RTAR(object, new_object_attr);
 				break;
 		}
 	}
@@ -1421,7 +1421,7 @@ rt_private unsigned char modify_attr(char *object, long attr_number, struct item
 				new_object_attr = eif_access(new_object_attr);
 				*(char **)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced is `object' */
-				RTAR(new_object_attr,object);
+				RTAR(object, new_object_attr);
 				break;
 		}
 	}

@@ -324,28 +324,8 @@ feature -- Status setting
 	set_background_color (a_color: COLOR) is
 			-- Set the background color to `a_color'
 			-- We may need a call to UpdateWindow
-		local
-			client_dc: WEL_CLIENT_DC
-			cw: COLOR_WINDOWS
-			ww: WEL_WINDOW
 		do
 			private_background_color := a_color;
-			if exists then
-				ww ?= Current
-				if ww /= Void then
-					cw ?= a_color.implementation
-					check
-						cw_not_void: cw /= Void
-					end
-					!! client_dc.make (ww)
-					client_dc.get
-					if client_dc.exists then
-						client_dc.set_background_color (cw)
-						client_dc.release
-					end;
-					invalidate
-				end
-			end
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is

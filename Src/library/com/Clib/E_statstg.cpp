@@ -20,7 +20,7 @@ E_STATSTG::~E_STATSTG()
 };
 //--------------------------------------------------------------------------
 
-void E_STATSTG::ccom_initialize_statstg(STATSTG * p_statstg)
+E_STATSTG::E_STATSTG(STATSTG * p_statstg)
 
 {
 	pSTATSTG = p_statstg;

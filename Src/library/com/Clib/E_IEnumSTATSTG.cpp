@@ -18,7 +18,7 @@ E_IEnumSTATSTG::~E_IEnumSTATSTG()
 };
 //-------------------------------------------------------------------------
 
-void E_IEnumSTATSTG::ccom_initialize_i_enum_ptr (IEnumSTATSTG * p)
+E_IEnumSTATSTG::E_IEnumSTATSTG (IEnumSTATSTG * p)
 
 // Points pIEnum to known enumerator object pointed by p.
 //		Parameters
@@ -54,10 +54,8 @@ void E_IEnumSTATSTG::ccom_skip(ULONG n)
 	hr = pIEnum->Skip(n);
 	if (hr != S_OK)
 	{	
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
@@ -70,10 +68,8 @@ void E_IEnumSTATSTG::ccom_reset()
 	hr = pIEnum->Reset();
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
@@ -93,10 +89,8 @@ IEnumSTATSTG * E_IEnumSTATSTG::ccom_clone()
 	
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return pIEnum_cloned;
 };

@@ -20,13 +20,58 @@ E_IStream::~E_IStream ()
 };
 //--------------------------------------------------------------------------
 
-void E_IStream::ccom_initialize_stream (IStream * p_Stream)
+E_IStream::E_IStream (IStream * p_Stream)
 
 // Points pStream to known stream object pointed by p_Stream
 //		Parameters
 // - p_Stream points to open storage object
 {
 	pStream = p_Stream;
+};
+//--------------------------------------------------------------------------
+
+EIF_INTEGER E_IStream::ccom_end_of_stream_reached()
+
+// Returns 1 if current seek pointer at the end of the stream 
+// and 0 otherwise
+{
+	EIF_INTEGER result = 0;
+	HRESULT hr;
+	ULONG bytes_read;
+	char byte;
+	LARGE_INTEGER li;
+	ULARGE_INTEGER uli;
+
+	LISet32(li, (DWORD)(0));
+	hr = pStream->Seek (li, 1, &uli);
+
+	hr = pStream->Read(&byte, 1, &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (1 > bytes_read)
+	{
+		result = 1;
+	}
+	else 
+	{
+		//LISet32(li, (DWORD)(-1));
+		(li).HighPart = (uli).HighPart;
+		(li).LowPart = (uli).LowPart;
+		hr = pStream->Seek (li, 0, NULL);
+		if (FAILED(hr))
+		{
+			Formatter  f;
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
+	}
+	return result;
 };
 //--------------------------------------------------------------------------
 
@@ -40,16 +85,174 @@ void E_IStream::ccom_read (void * p_buffer, ULONG number_bytes)
 //	attempt to read from the stream object. 
 {
 	HRESULT hr;
-	hr = pStream->Read(p_buffer, number_bytes, NULL);
+	ULONG bytes_read;
+	hr = pStream->Read(p_buffer, number_bytes, &bytes_read);
+	
 	if (FAILED(hr))
 	{	
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (number_bytes > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
 	}
 };
 //-------------------------------------------------------------------------
+
+EIF_CHARACTER E_IStream::ccom_read_character()
+
+// Read character from stream
+{
+	HRESULT hr;
+	ULONG bytes_read;
+	EIF_CHARACTER character;
+	hr = pStream->Read((void *)&character, (ULONG)sizeof(EIF_CHARACTER), &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (sizeof (EIF_CHARACTER) > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+	return character;
+};
+//-------------------------------------------------------------------------
+
+EIF_INTEGER E_IStream::ccom_read_integer()
+
+// Read integer from stream
+{
+	HRESULT hr;
+	ULONG bytes_read;
+	EIF_INTEGER integer;
+	hr = pStream->Read((void *)&integer, (ULONG)sizeof(EIF_INTEGER), &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (sizeof (EIF_INTEGER) > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+	return integer;
+};
+//-------------------------------------------------------------------------
+
+EIF_REAL E_IStream::ccom_read_real()
+
+// Read real from stream
+{
+	HRESULT hr;
+	ULONG bytes_read;
+	EIF_REAL real;
+	hr = pStream->Read((void *)&real, (ULONG)sizeof(EIF_REAL), &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (sizeof (EIF_REAL) > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+	return real;
+};
+//-------------------------------------------------------------------------
+
+EIF_BOOLEAN E_IStream::ccom_read_boolean()
+
+// Read boolean from stream
+{
+	HRESULT hr;
+	ULONG bytes_read;
+	EIF_BOOLEAN boolean;
+	hr = pStream->Read((void *)&boolean, (ULONG)sizeof(EIF_BOOLEAN), &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (sizeof (EIF_BOOLEAN) > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+	return boolean;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE E_IStream::ccom_read_string()
+
+// Read string from stream
+{
+	HRESULT hr;
+	ULONG bytes_read;
+	EIF_REFERENCE local_obj;
+	char * string;
+	EIF_INTEGER size;
+
+	hr = pStream->Read((void *)&size, (ULONG)sizeof(EIF_INTEGER), &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (sizeof (EIF_INTEGER) > bytes_read)
+	{
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+
+	string = (char *)malloc(size + 1);
+	hr = pStream->Read((void *)string, size + 1, &bytes_read);
+	if (FAILED(hr))
+	{	
+		Formatter  f;
+		free (string);
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+	else if (hr == S_FALSE)
+	{
+		free (string);
+		com_eraise ("Data could not be read from stream", HRESULT_CODE (hr));
+	}
+	else if (size + 1 > bytes_read)
+	{
+		free (string);
+		com_eraise ("end of stream is reached", E_end_of_stream);
+	}
+	local_obj = RTMS((char *)string);
+	free (string);
+	return local_obj;
+};
+//-------------------------------------------------------------------------
+
 void E_IStream::ccom_write (void * p_buffer, ULONG number_bytes)
 
 // Writes a specified number of bytes into the stream object 
@@ -64,13 +267,96 @@ void E_IStream::ccom_write (void * p_buffer, ULONG number_bytes)
 	hr = pStream->Write(p_buffer, number_bytes, NULL);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
+void E_IStream::ccom_write_character (EIF_CHARACTER character)
+
+// Writes `character' into stream
+
+{
+	HRESULT hr;
+	hr = pStream->Write((void *)&character, (ULONG)sizeof(EIF_CHARACTER), NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+};
+//-------------------------------------------------------------------------
+
+void E_IStream::ccom_write_integer (EIF_INTEGER integer)
+
+// Writes `integer' into stream
+
+{
+	HRESULT hr;
+	hr = pStream->Write((void *)&integer, (ULONG)sizeof(EIF_INTEGER), NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+};
+//-------------------------------------------------------------------------
+
+void E_IStream::ccom_write_real (EIF_REAL real)
+
+// Writes `real' into stream
+
+{
+	HRESULT hr;
+	hr = pStream->Write((void *)&real, (ULONG)sizeof(EIF_REAL), NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+};
+//-------------------------------------------------------------------------
+
+void E_IStream::ccom_write_boolean (EIF_BOOLEAN boolean)
+
+// Writes `boolean' into stream
+
+{
+	HRESULT hr;
+	hr = pStream->Write((void *)&boolean, (ULONG)sizeof(EIF_BOOLEAN), NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+};
+//-------------------------------------------------------------------------
+
+void E_IStream::ccom_write_string (EIF_POINTER string)
+
+// Writes `string' into stream
+{
+	HRESULT hr;
+	EIF_INTEGER size;
+
+	size = strlen ((char *) string);
+	hr = pStream->Write((void *)&size, (ULONG)sizeof(EIF_INTEGER), NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+
+	hr = pStream->Write((void *)string, size + 1, NULL);
+	if (hr != S_OK)
+	{
+		Formatter f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+	}
+};
+//-------------------------------------------------------------------------
+
 void E_IStream::ccom_seek (EIF_POINTER offset, EIF_INTEGER origin)
 
 // Changes the seek pointer to a new location relative to 
@@ -89,13 +375,12 @@ void E_IStream::ccom_seek (EIF_POINTER offset, EIF_INTEGER origin)
 	hr = pStream->Seek (*dlibMove, (DWORD)origin, NULL);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
 void E_IStream::ccom_set_size (EIF_POINTER new_size)
 
 // Changes the size of the stream object. 
@@ -109,13 +394,12 @@ void E_IStream::ccom_set_size (EIF_POINTER new_size)
 	hr = pStream->SetSize(*libNewSize);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
 void E_IStream::ccom_copy_to (IStream * pDestination, EIF_POINTER cb)
 
 // Copies a specified number of bytes from the current seek 
@@ -131,13 +415,12 @@ void E_IStream::ccom_copy_to (IStream * pDestination, EIF_POINTER cb)
 	hr = pStream->CopyTo (pDestination, *uliNumBytes, NULL, NULL);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
 void E_IStream::ccom_lock_region (EIF_POINTER offset, 
 			EIF_POINTER cb, EIF_INTEGER dwLockType)
 
@@ -156,13 +439,12 @@ void E_IStream::ccom_lock_region (EIF_POINTER offset,
 	hr = pStream->LockRegion (*ulibOffset, *uliNumBytes, (DWORD)dwLockType);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
 void E_IStream::ccom_unlock_region (EIF_POINTER offset, 
 			EIF_POINTER cb, EIF_INTEGER dwLockType)
 
@@ -182,13 +464,12 @@ void E_IStream::ccom_unlock_region (EIF_POINTER offset,
 	hr = pStream->UnlockRegion (*ulibOffset, *uliNumBytes, (DWORD)dwLockType);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 //-------------------------------------------------------------------------
+
 STATSTG * E_IStream::ccom_stat (EIF_INTEGER grfStatFlag)
 
 // Retrieves the STATSTG structure for the stream.
@@ -207,18 +488,17 @@ STATSTG * E_IStream::ccom_stat (EIF_INTEGER grfStatFlag)
 	hr = pStream->Stat (pstatstg, (DWORD)grfStatFlag);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
 		if (pstatstg->pwcsName != NULL)
 			CoTaskMemFree (pstatstg->pwcsName);
 		free (pstatstg);
 		pstatstg = NULL;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return pstatstg;
 };
 //-------------------------------------------------------------------------
+
 IStream * E_IStream::ccom_clone ()
 
 // Creates a new stream object with its own seek pointer 
@@ -230,10 +510,8 @@ IStream * E_IStream::ccom_clone ()
 	hr = pStream->Clone (&pClonedStream);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return pClonedStream;
 };

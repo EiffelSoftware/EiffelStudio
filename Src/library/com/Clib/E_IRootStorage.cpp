@@ -32,15 +32,13 @@ void E_IRootStorage::ccom_switch_to_file (EIF_POINTER filename)
 	hr = pIRootStorage->SwitchToFile ((WCHAR *)filename);
 	if (hr != S_OK)
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
 
 //---------------------------------------------------------------------
-void E_IRootStorage::ccom_initialize_root_storage (EIF_POINTER pstgName)
+E_IRootStorage::E_IRootStorage (EIF_POINTER pstgName)
 
 // Set `pIRootStorage' to known pointer to IRootStorage
 {

@@ -16,12 +16,15 @@ inherit
 	DIALOG_M;
 
 	BULLETIN_M
+		rename
+			make as bulletin_make
 		export
 			{NONE} all
 		undefine
-			make, lower, raise, action_target
+			lower, raise, action_target,
+			show, hide, shown, destroy_xt_widget
 		redefine
-		define_cursor_if_shell, undefine_cursor_if_shell,
+			define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable
 		end
 
@@ -29,7 +32,7 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_bulletin_d: BULLETIN_D) is
 			-- Create a motif bulletin dialog.

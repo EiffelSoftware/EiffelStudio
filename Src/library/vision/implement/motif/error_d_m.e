@@ -23,13 +23,11 @@ inherit
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
 
-	DIALOG_M
-
 creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (an_error_dialog: ERROR_D) is
 			-- Create a motif error dialog.

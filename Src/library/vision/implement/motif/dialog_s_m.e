@@ -27,7 +27,7 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
 	make (a_dialog_shell: DIALOG_SHELL) is
 			-- Create a dialog shell.

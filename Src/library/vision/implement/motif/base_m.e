@@ -29,7 +29,7 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
 	make (a_base: BASE; application_class: STRING) is
 		local

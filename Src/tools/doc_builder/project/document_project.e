@@ -20,25 +20,24 @@ feature -- Initialize
 		require
 			has_preferences: preferences /= Void
 		do		
-			is_valid := True
-			create filter_manager.make
-			create invalid_files.make (5)
-			invalid_files.compare_objects
-			has_been_validated := False				
-			
-					-- Copy stylesheet file
-			if Shared_document_manager.has_stylesheet then
-				copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
+			if preferences.is_valid then
+				create filter_manager.make
+				create invalid_files.make (5)
+				invalid_files.compare_objects
+				has_been_validated := False
+				all_documents_read := False
+				files_changed := False	
+				
+						-- Copy stylesheet file
+				if Shared_document_manager.has_stylesheet then
+					copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
+				end
+				
+						-- Perform gui initialization if in GUI mode
+				if Shared_constants.Application_constants.is_gui_mode then
+					initialize_document_selector
+				end							
 			end
-			
-					-- Perform gui initialization if in GUI mode
-			if Shared_constants.Application_constants.is_gui_mode then
-				initialize_document_selector
-			end
-			
-					-- Retrieve documents
-			all_documents_read := False
-			files_changed := False
 			update
 		end		
 
@@ -52,6 +51,19 @@ feature -- Initialize
 			end
 			create document_map.make (root_directory, Application_window.document_selector)
 		end	
+
+	reset is
+			-- Reset current
+		do
+			name := Void
+			root_directory := Void
+			invalid_files := Void
+			document_map := Void
+			has_been_validated := False			
+			all_documents_read := False
+			files_changed := False
+			Application_window.document_selector.wipe_out
+		end
 
 feature -- Access
 
@@ -74,7 +86,8 @@ feature -- Commands
 			-- Update
 		do
 			if Shared_constants.Application_constants.is_gui_mode then
-				Application_window.update
+				application_window.update
+				application_window.update_output_combo
 				if Shared_document_manager.has_schema then
 					Application_window.render_schema	
 				end
@@ -134,7 +147,8 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 				invalid_files.wipe_out
 				progress_generator.set_title ("File Validation")
 				progress_generator.set_upper_range (documents.count)
-				progress_generator.set_procedure (agent validate_against_xml)
+--				progress_generator.set_procedure (agent validate_against_xml)
+				progress_generator.set_procedure (agent format_all_files)
 				progress_generator.set_heading_text ("Validating project files...")				
 				progress_generator.generate	
 			end
@@ -237,9 +251,6 @@ feature -- Status Setting
 			files_changed := True
 		end
 
-	is_valid: BOOLEAN
-			-- Is this a valid project?
-
 feature -- Access
 			
 	filter_manager: FILTER_MANAGER				
@@ -257,6 +268,12 @@ feature -- Access
 				validate_files
 			end
 			Result := invalid_files.count > 0			
+		end		
+
+	is_valid: BOOLEAN is
+			-- Valid project?
+		do
+			Result := preferences /= Void and then preferences.is_valid	
 		end		
 
 feature {DOCUMENT_PROJECT_PREFERENCES}
@@ -329,6 +346,35 @@ feature {NONE} -- Implementation
 					if not invalid_files.has (l_document.name) then
 						add_invalid_file (l_document.name)
 					end
+				end
+				l_documents.forth
+				progress_generator.update_progress_report
+			end
+		end	
+		
+	format_all_files is
+			-- Validate all files for XML validity
+		local
+			l_documents: ARRAYED_LIST [DOCUMENT]
+			l_document: DOCUMENT
+		do		
+			from
+				l_documents := documents
+				l_documents.start
+			until
+				l_documents.after
+			loop
+				l_document := l_documents.item
+				progress_generator.set_status_text (l_document.name)
+				if not l_document.is_valid_xml then
+					if not invalid_files.has (l_document.name) then
+						add_invalid_file (l_document.name)
+					end
+				else
+					format_document (deserialize_text (l_document.text), l_document.name)
+					l_document.set_text (last_ostring)
+					l_document.set_text (pretty_xml (l_document.text))
+					l_document.save
 				end
 				l_documents.forth
 				progress_generator.update_progress_report
@@ -460,6 +506,7 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 	load (a_filename: STRING) is
 			-- Load from `a_filename'
 		do
+			reset
 			create file.make (a_filename)
 			create preferences.make (Current)
 			preferences.read

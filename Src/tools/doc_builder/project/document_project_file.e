@@ -28,6 +28,11 @@ feature -- Creation
 			has_project: project /= Void
 		end
 
+feature -- Access
+
+	is_valid: BOOLEAN
+			-- Are loaded preferences valid?
+
 feature -- Basic operations
 
 	read is
@@ -38,9 +43,14 @@ feature -- Basic operations
 		do
 			document := deserialize_document (create {FILE_NAME}.make_from_string (project.file.name))
 			if document /= Void then
-				process_element (document.root_element)
-			else
-				create l_error_report.make ("Could not open project")
+				process_element (document.root_element)				
+			end
+			
+			is_valid := project.name /= Void and project.root_directory /= Void 
+				
+			if not is_valid then
+				create l_error_report.make ("Could not load project.")
+				error_description := "The project file is invalid."
 				l_error_report.append_error (create {ERROR}.make_with_line_information (error_description, 0 ,0))
 				l_error_report.show
 			end			
@@ -103,24 +113,9 @@ feature -- Basic operations
 		end
 	
 feature -- Access
-
-	auto_validate_schema: BOOLEAN
-			-- Should files be schema validated during editing?
-			
-	flag_invalid_schema_files: BOOLEAN
-			-- Should files invalid to schema be highlighted?
-			
-	auto_validate_xml: BOOLEAN
-			-- Should files be XML validated during editing?
-	
-	flag_invalid_xml_files: BOOLEAN
-			-- Should files invalid to XML specification be highlighted?
 			
 	process_includes: BOOLEAN is True
-			-- Should include directives be processed during transformation?
-			
-	process_html_stylesheet: BOOLEAN is True
-			-- Should HTML stylesheet reference be added during transformation?
+			-- Should include directives be processed during transformation?			
 			
 	process_header: BOOLEAN is True
 			-- Should header be included in transformations?
@@ -145,6 +140,12 @@ feature -- Access
 			
 	footer_name: STRING
 			-- Footer file name
+			
+	process_html_stylesheet: BOOLEAN is True
+			-- Should HTML stylesheet reference be added during transformation?
+			
+	include_navigation_links: BOOLEAN is True
+			-- Should easy navigation links be generated during transformation?
 	
 feature {PREFERENCES_DIALOG} -- Status Setting	
 	

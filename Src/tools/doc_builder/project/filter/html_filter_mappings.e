@@ -133,6 +133,7 @@ feature -- Element Data
 			Result.extend ("alt_text")
 			Result.extend ("content")
 			Result.extend ("meta_content")
+			Result.extend ("url")
 		end
 
 	attributable_elements: ARRAYED_LIST [STRING] is

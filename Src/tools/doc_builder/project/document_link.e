@@ -239,6 +239,28 @@ feature -- Commands
 			end		
 		end		
 			
+feature -- Status Setting
+
+	set_filename (a_filename: STRING) is
+			-- Set `filename'
+		require
+			filename_not_void: a_filename /= Void
+		do
+			filename := a_filename
+		ensure
+			filename_set: filename = a_filename
+		end	
+		
+	set_url (a_url: STRING) is
+			-- Set `url'
+		require
+			url_not_void: a_url /= Void
+		do
+			url := a_url
+		ensure
+			url_set: url = a_url
+		end	
+			
 feature -- Query
 
 	matches (a_link: like Current): BOOLEAN is

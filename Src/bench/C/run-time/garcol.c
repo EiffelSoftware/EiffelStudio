@@ -4017,7 +4017,23 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 			return 0;					/* No references at all */
 		o_ref = RT_SPECIAL_INFO(object);
 		refs = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
-		if (flags & EO_COMP)			/* Composite object = has expandeds */
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+			l_item ++;
+			refs--;
+			for (; refs > 0; refs--, l_item++) {
+				if (eif_tuple_item_type (l_item) == EIF_REFERENCE_CODE) {
+					root = eif_reference_tuple_item(l_item);
+					if (root) {
+						if (!(HEADER(root)->ov_flags & EO_OLD)) {
+							return 1;
+						}
+					}
+				}
+			}
+				/* Job is now done */
+			return 0;
+		} else if (flags & EO_COMP)			/* Composite object = has expandeds */
 			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) + OVERHEAD;
 		else
 			size = REFSIZ;		/* Usual item size */

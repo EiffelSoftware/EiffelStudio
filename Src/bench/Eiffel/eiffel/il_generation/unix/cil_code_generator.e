@@ -306,6 +306,13 @@ feature -- Settings
 			object_type_id_set: object_type_id = an_id
 		end
 
+feature -- Cleanup
+
+	cleanup is
+			-- Clean up all data structures that were used for this code generation.
+		do
+		end
+
 feature -- Generation Structure
 
 	start_assembly_generation (

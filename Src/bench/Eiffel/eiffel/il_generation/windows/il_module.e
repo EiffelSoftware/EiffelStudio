@@ -397,6 +397,15 @@ feature -- Settings: signature
 			end
 		end
 
+feature -- Cleanup
+
+	cleanup is
+			-- Clean up external data structures.
+		do
+			internal_dbg_documents := Void
+			dbg_writer := Void
+		end
+		
 feature -- Code generation
 
 	prepare (a_dispenser: MD_DISPENSER; a_count: INTEGER) is

@@ -244,17 +244,17 @@
 			</code>. 
 			<code>
 				<class_name>ANY</class_name>
-			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (page 
+			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>12485</anchor_name>
-				<label>28</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>) and default input-output.  The procedure 
 			<code>
 				<string>print</string>
-			</code> used in the first version of our "Hello World" (page 
+			</code> used in the first version of our "Hello World" (
 			<link>
 				<url>tutorial-05.xml</url><anchor_name>80381</anchor_name>
-				<label>11</label>
+				<label>Chapter 4, "Hello World"</label>
 			</link>) comes from 
 			<code>
 				<class_name>ANY</class_name>

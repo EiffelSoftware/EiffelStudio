@@ -212,6 +212,48 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_down_triangle")
 		end
 
+	Icon_compilation_succeeded: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_compiled")
+		end
+
+	Icon_compilation_failed: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_compilation_error")
+		end
+
+	Icon_application_paused: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_stopped")
+		end
+
+	Icon_edited: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_editing")
+		end
+
+	Icon_not_edited: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_exe_up_to_date")
+		end
+
+	Icon_running: ARRAY [EV_PIXMAP] is
+		once
+			create Result.make (1, 3)
+			Result.put (pixmap_file_content ("icon_running_1"), 1)
+			Result.put (pixmap_file_content ("icon_running_2"), 2)
+			Result.put (pixmap_file_content ("icon_running_3"), 3)
+		end
+
+	Icon_compiling: ARRAY [EV_PIXMAP] is
+		once
+			create Result.make (1, 4)
+			Result.put (pixmap_file_content ("icon_compiling_1"), 1)
+			Result.put (pixmap_file_content ("icon_compiling_2"), 2)
+			Result.put (pixmap_file_content ("icon_compiling_3"), 3)
+			Result.put (pixmap_file_content ("icon_compiling_4"), 4)
+		end
+
 	Icon_feature: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("feature")
@@ -229,6 +271,12 @@ feature -- Icons
 			-- Icon for "Melt project" command.
 		once
 			Result := build_text_pixmap ("compile")
+		end
+
+	Icon_quick_compile: ARRAY [EV_PIXMAP] is
+			-- Icon for "Quick melt project" command.
+		once
+			Result := build_classic_pixmap ("quick_compile")
 		end
 
 	Icon_finalize: ARRAY [EV_PIXMAP] is

@@ -79,9 +79,12 @@ feature -- Comparison
 			-- Are `some' and `other' either both void or attached
 			-- to objects considered equal?
 		do
-			Result := (some = Void and other = Void) or else
-						((some /= Void and other /= Void) and then
-						some.is_equal (other))
+			if some = Void then
+				Result := other = Void
+			else
+				Result := other /= Void and then
+							some.is_equal (other)
+			end
 		ensure
 			definition: Result = (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
@@ -93,9 +96,12 @@ feature -- Comparison
 			-- field-by-field identical objects of the same type?
 			-- Always uses default object comparison criterion.
 		do
-			Result := (some = Void and other = Void) or else
-						((some /= Void and other /= Void) and then
-						some.standard_is_equal (other))
+			if some = Void then
+				Result := other = Void
+			else
+				Result := other /= Void and then
+							some.standard_is_equal (other)
+			end
 		ensure
 			definition: Result = (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
@@ -106,9 +112,12 @@ feature -- Comparison
 			-- Are `some' and `other' either both void
 			-- or attached to isomorphic object structures?
 		do
-			Result := (some = Void and then other = Void) or else
-						(some /= Void and then other /= Void and then
-						c_deep_equal ($some, $other))
+			if some = Void then
+				Result := other = Void
+			else
+				Result := other /= Void and then
+							c_deep_equal ($some, $other)
+			end
 		ensure
 			shallow_implies_deep: standard_equal (some, other) implies Result;
 			both_or_none_void: (some = Void) implies (Result = (other = Void));
@@ -251,22 +260,13 @@ feature -- Basic operations
 			-- Default value of type `POINTER'
 			-- (Avoid the need to write `p'.`default' for
 			-- some `p' of type `POINTER'.)
-		once
+		do
 		ensure
 			-- Result = Result.default
 		end;
 
 	frozen Void: NONE;
 			-- Void reference
-
-	die (code: INTEGER) is obsolete "Use ``new_die'' from ``EXCEPTIONS''"
-			-- Terminate execution with exit status `code',
-			-- without triggering an exception.
-		external
-			"C"
-		alias
-			"esdie"
-		end;
 
 feature {GENERAL} -- Implementation
 

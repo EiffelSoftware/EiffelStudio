@@ -206,7 +206,11 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := hashcode ($area, count)
+			Result := internal_hash_code
+			if Result = 0 then
+				Result := hashcode ($area, count)
+				internal_hash_code := Result
+			end
 		end
 
 	False_constant: STRING is "false"
@@ -651,6 +655,7 @@ feature -- Element change
 			s := t.substring (n1, n2)
 			area := s.area
 			count := s.count
+			internal_hash_code := 0
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end
@@ -672,6 +677,7 @@ feature -- Element change
 					($old_area).memory_copy ($area, count)
 					area := old_area
 				end
+				internal_hash_code := 0
 			end
 		ensure then
 			new_result_count: count = other.count
@@ -697,6 +703,7 @@ feature -- Element change
 			end0 := end_pos - 1
 			index0 := index_pos - 1
 			spsubcopy ($other_area, $area, start0, end0, index0)
+			internal_hash_code := 0
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
 			--	 item (index_pos + i) = old other.item (start_pos + i)
@@ -721,6 +728,7 @@ feature -- Element change
 			s_area := s.area
 			str_replace ($area, $s_area, count, s.count, start_index, end_index)
 			count := new_size
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count + old s.count - end_index + start_index - 1
 			replaced: is_equal (old (substring (1, start_index - 1) +
@@ -749,6 +757,7 @@ feature -- Element change
 						change_pos := 0
 					end
 				end
+				internal_hash_code := 0
 			end
 		end
 
@@ -775,6 +784,7 @@ feature -- Element change
 			-- Replace every character with `c'.
 		do
 			($area).memory_set (c.code, count)
+			internal_hash_code := 0
 		ensure
 			same_count: (count = old count) and (capacity >= old capacity)
 			filled: occurrences (c) = count
@@ -796,6 +806,7 @@ feature -- Element change
 		do
 			($area).memory_set (c.code, safe_capacity)
 			count := safe_capacity
+			internal_hash_code := 0
 		ensure
 			filled: full
 			same_size: (count = capacity) and (capacity = old capacity)
@@ -824,6 +835,7 @@ feature -- Element change
 		do
 			if n < count then
 				count := n
+				internal_hash_code := 0
 			end
 		ensure
 			new_count: count = n.min (old count)
@@ -863,6 +875,7 @@ feature -- Element change
 					j := j + 1
 				end
 				count := n
+				internal_hash_code := 0
 			end
 		ensure
 			new_count: count = n.min (old count)
@@ -872,6 +885,7 @@ feature -- Element change
 			-- Remove leading whitespace.
 		do
 			count := str_left ($area, count)
+			internal_hash_code := 0
 		ensure
 			new_count: (count /= 0) implies
 				((item (1) /= ' ') and
@@ -884,6 +898,7 @@ feature -- Element change
 			-- Remove trailing whitespace.
 		do
 			count := str_right ($area, count)
+			internal_hash_code := 0
 		ensure
 			new_count: (count /= 0) implies
 				((item (count) /= ' ') and
@@ -901,6 +916,7 @@ feature -- Element change
 		do
 			area := other.area
 			count := other.count
+			internal_hash_code := 0
 		ensure
 			shared_count: other.count = count
 			-- sharing: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`i')
@@ -910,6 +926,7 @@ feature -- Element change
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
+			internal_hash_code := 0
 		end
 
 	precede, prepend_character (c: CHARACTER) is
@@ -920,6 +937,7 @@ feature -- Element change
 			end
 			str_cprepend ($area, c, count)
 			count := count + 1
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count + 1
 		end
@@ -939,6 +957,7 @@ feature -- Element change
 			s_area := s.area
 			str_insert ($area, $s_area, count, s.count, 1)
 			count := new_size
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count + s.count
 		end
@@ -990,6 +1009,7 @@ feature -- Element change
 			s_area := s.area;
 			($area + count).memory_copy ($s_area, s.count)
 			count := new_size
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count + old s.count
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
@@ -1046,6 +1066,7 @@ feature -- Element change
 			end
 			area.put (c, current_count)
 			count := current_count + 1
+			internal_hash_code := 0
 		ensure then
 			item_inserted: item (count) = c
 			new_count: count = old count + 1
@@ -1089,6 +1110,7 @@ feature -- Element change
 			s_area := s.area
 			str_insert ($area, $s_area, count, s.count, i)
 			count := new_size
+			internal_hash_code := 0
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
 				+ old clone (s) + old substring (i, count))
@@ -1108,6 +1130,7 @@ feature -- Element change
 			end
 			str_insert ($area, $c, count, 1, i)
 			count := new_size
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count + 1
 		end
@@ -1122,6 +1145,7 @@ feature -- Removal
 		do
 			str_rmchar ($area, count, i)
 			count := count - 1
+			internal_hash_code := 0
 		ensure
 			new_count: count = old count - 1
 		end
@@ -1134,6 +1158,7 @@ feature -- Removal
 		do
 			if n > count then
 				count := 0
+				internal_hash_code := 0
 			else
 				keep_tail (count - n)
 			end
@@ -1175,6 +1200,7 @@ feature -- Removal
 			l_count := count
 			if n > l_count then
 				count := 0
+				internal_hash_code := 0
 			else
 				keep_head (l_count - n)
 			end
@@ -1207,6 +1233,7 @@ feature -- Removal
 			True
 		do
 			count := str_rmall ($area, c, count)
+			internal_hash_code := 0
 		ensure then
 			changed_count: count = (old count) - (old occurrences (c))
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
@@ -1239,6 +1266,7 @@ feature -- Removal
 		do
 			area := empty_area
 			count := 0
+			internal_hash_code := 0
 		ensure then
 			is_empty: count = 0
 			empty_capacity: capacity = 0
@@ -1248,6 +1276,7 @@ feature -- Removal
 			-- Reset all characters.
 		do
 			count := 0
+			internal_hash_code := 0
 		ensure
 			is_empty: count = 0
 			same_capacity: capacity = old capacity
@@ -1321,6 +1350,7 @@ feature -- Conversion
 			-- the capacity as the width
 		do
 			str_ljustify ($area, count, safe_capacity)
+			internal_hash_code := 0
 		end
 
 	center_justify is
@@ -1328,6 +1358,7 @@ feature -- Conversion
 			-- the capacity as the width
 		do
 			str_cjustify ($area, count, safe_capacity)
+			internal_hash_code := 0
 		end
 
 	right_justify is
@@ -1335,6 +1366,7 @@ feature -- Conversion
 			-- the capacity as the width
 		do
 			str_rjustify ($area, count, safe_capacity)
+			internal_hash_code := 0
 		end
 
 	character_justify (pivot: CHARACTER; position: INTEGER) is
@@ -1372,6 +1404,7 @@ feature -- Conversion
 			loop
 				extend (' ')
 			end
+			internal_hash_code := 0
 		end
 
 	to_lower is
@@ -1389,6 +1422,7 @@ feature -- Conversion
 				a.put (a.item (i).lower, i)
 				i := i - 1
 			end
+			internal_hash_code := 0
 		end
 
 	to_upper is
@@ -1406,6 +1440,7 @@ feature -- Conversion
 				a.put (a.item (i).upper, i)
 				i := i - 1
 			end
+			internal_hash_code := 0
 		end
 
 	to_integer: INTEGER is
@@ -1596,6 +1631,7 @@ feature -- Conversion
 					i := i - 1
 					j := j + 1
 				end
+				internal_hash_code := 0
 			end
 		ensure
 			same_count: count = old count
@@ -1660,6 +1696,7 @@ feature {STRING_HANDLER} -- Implementation
 			valid_count: 0 <= number and number <= capacity
 		do
 			count := number
+			internal_hash_code := 0
 		ensure
 			new_count: count = number
 		end
@@ -1685,6 +1722,19 @@ feature {NONE} -- Empty string implementation
 			Result := area.count - 1
 		end
 
+	internal_hash_code: INTEGER
+			-- Computed hash-code.
+
+	frozen set_internal_hash_code (v: like internal_hash_code) is
+			-- Set `internal_hash_code' with `v'.
+		require
+			v_nonnegative: v >= 0
+		do
+			internal_hash_code := v
+		ensure
+			internal_hash_code_set: internal_hash_code = v
+		end
+		
 feature {STRING} -- Implementation
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is

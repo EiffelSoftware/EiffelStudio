@@ -41,8 +41,7 @@ feature -- Output
 			-- Write `s' at current position.
 		do
 			if s.count /= 0 then
-				writer.write_string (s.to_cil.replace_string_string (eiffel_newline,
-					dotnet_newline))
+				writer.write_string (s.to_cil.replace (eiffel_newline, dotnet_newline))
 			end
 		end
 
@@ -76,13 +75,9 @@ feature -- Input
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
-		local
-			l_str: STRING
 		do
 			Precursor {FILE} (nb_char)
-			l_str := last_string
-			create last_string.make_from_cil (
-				l_str.to_cil.replace_string_string (dotnet_newline, eiffel_newline))
+			last_string.replace_substring_all (dotnet_newline, eiffel_newline)
 		end
 		
 	readstream (nb_char: INTEGER) is
@@ -326,10 +321,10 @@ feature {NONE} -- Implementation
 	c_open_modifier: INTEGER is 16384
 			-- File should be opened in plain text mode.
 
-	eiffel_newline: SYSTEM_STRING is "%N"
+	eiffel_newline: STRING is "%N"
 			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
 			
-	dotnet_newline: SYSTEM_STRING is "%R%N"
+	dotnet_newline: STRING is "%R%N"
 			-- Representation of a .NET newline as a SYSTEM_STRING.
 
 invariant

@@ -130,9 +130,12 @@ feature -- Input
 			str_area: NATIVE_ARRAY [INTEGER_8]
 			str_area_index: INTEGER
 		do
-			create last_string.make (nb_char)
+			if last_string = Void then
+				create last_string.make (default_last_string_size)
+			else
+				last_string.clear_all
+			end
 			last_string.grow (nb_char)
-			last_string.fill_blank
 			create str_area.make (nb_char)
 			new_count := reader.read_integer_8_array_integer_integer (str_area, 0, nb_char)
 			
@@ -145,7 +148,7 @@ feature -- Input
 			until
 				str_area_index = new_count
 			loop
-				last_string.put (str_area.item (str_area_index).to_character, str_area_index + 1)
+				last_string.append_character (str_area.item (str_area_index).to_character)
 				str_area_index := str_area_index + 1
 			end
 			internal_end_of_file := reader.peek_char = -1

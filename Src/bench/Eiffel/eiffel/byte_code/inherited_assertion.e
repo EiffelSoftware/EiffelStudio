@@ -688,6 +688,8 @@ feature -- Concurrent Eiffel
 		-- the corresponding STD_BYTE_CODE object which call the 
 		-- "generate_precondition" feature of the class.
 
+		-- FIXME!!!
+
 	has_separate_call_in_precondition: BOOLEAN
 		-- is there separate feature call in the prtecondition of 
 		-- object "std_obj"?

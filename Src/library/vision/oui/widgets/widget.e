@@ -287,12 +287,16 @@ feature -- Color and pixmap
 			-- Background color of Current widget
 		do
 			Result := implementation.background_color
+		ensure
+			valid_result: Result /= Void
 		end;
 
 	background_pixmap: PIXMAP is
 			-- Background pixmap of Current widget
 		do
 			Result := implementation.background_pixmap
+		ensure
+			valid_result: Result /= Void and then Result.is_valid
 		end;
 
 	set_background_color (new_color: COLOR) is
@@ -302,8 +306,8 @@ feature -- Color and pixmap
 		do
 			implementation.set_background_color (new_color)
 		ensure
-			Color_set: background_color = new_color;
-			Pixmap_not_set: background_pixmap = Void
+			color_set: background_color = new_color;
+			--reset_background_pixmap_to_default:
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
@@ -313,8 +317,8 @@ feature -- Color and pixmap
 		do
 			implementation.set_background_pixmap (a_pixmap)
 		ensure
-			Pixmap_set: background_pixmap = a_pixmap;
-			--Color_not_set: background_color = Void
+			pixmap_set: background_pixmap = a_pixmap;
+			--reset_background_color_to_default: 
 		end;
 
 feature -- Cursor
@@ -448,7 +452,9 @@ feature -- Windowing
 		do
 			implementation.hide
 		ensure
-			not_shown: not shown
+			shown: (parent /= Void and then 
+				parent.shown implies not shown) or else
+				(parent = Void implies not shown)
 		end;
 
 	show is
@@ -476,7 +482,7 @@ feature -- Windowing
 		do
 			implementation.set_managed (True)
 		ensure
-			managed: managed
+			managed: parent /= Void implies managed
 		end;
 
 	lower is
@@ -502,7 +508,7 @@ feature -- Windowing
 		do
 			implementation.set_managed (False)
 		ensure
-			not_managed: not managed
+			not_managed: parent /= Void implies not managed
 		end;
 
 	managed: BOOLEAN is

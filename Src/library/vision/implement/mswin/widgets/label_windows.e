@@ -172,9 +172,7 @@ feature {NONE} -- Implementation
 				end
 				adjust_label
 				if not managed then
-					if wel_shown then
-						wel_hide
-					end
+					wel_hide
 				elseif parent.shown then
 					shown := true
 				end

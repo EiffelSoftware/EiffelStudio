@@ -1,0 +1,49 @@
+system
+	"app"
+
+root
+	APPLICATION: make
+
+default
+	assertion (no)
+	msil_generation (yes)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (yes)
+	il_verifiable (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
+
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\basic"
+
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "kernel"; "support"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	all system_:		"$ISE_EIFFEL\library.net\system"
+
+	all drawing:		"$ISE_EIFFEL\library.net\drawing"
+
+	all forms:		"$ISE_EIFFEL\library.net\winforms"
+
+	all accessibility:		"$ISE_EIFFEL\library.net\accessibility"
+
+external
+
+	assembly:
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.dll",
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Web.dll",
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Web.Services.dll",
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Drawing.dll",
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\System.Windows.Forms.dll",
+		"C:\winnt\Microsoft.NET\Framework\v1.0.3328\Accessibility.dll"
+
+end

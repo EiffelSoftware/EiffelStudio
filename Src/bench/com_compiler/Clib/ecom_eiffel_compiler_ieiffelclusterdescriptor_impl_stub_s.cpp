@@ -139,7 +139,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
+		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -192,7 +192,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_28 (eif_access (tmp_object));
+		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_28 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

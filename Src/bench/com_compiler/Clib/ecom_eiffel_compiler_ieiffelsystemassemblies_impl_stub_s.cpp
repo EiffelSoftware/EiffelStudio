@@ -203,7 +203,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_p
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_180 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_180 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -564,7 +564,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assemblies
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_191 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_191 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -691,7 +691,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -813,7 +813,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -897,7 +897,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -955,7 +955,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1014,7 +1014,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1080,7 +1080,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1146,7 +1146,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1251,7 +1251,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1317,7 +1317,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1422,7 +1422,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1488,7 +1488,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1554,7 +1554,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1620,7 +1620,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1698,7 +1698,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -1729,7 +1729,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;

@@ -104,6 +104,39 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::remove_incl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::replace_include_path(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_include_path )
+
+/*-----------------------------------------------------------
+	Replace an include path in the project.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_new_include_path = NULL;
+	if (new_include_path != NULL)
+	{
+		tmp_new_include_path = eif_protect (rt_ce.ccom_ce_bstr (new_include_path));
+	}
+	EIF_OBJECT tmp_old_include_path = NULL;
+	if (old_include_path != NULL)
+	{
+		tmp_old_include_path = eif_protect (rt_ce.ccom_ce_bstr (old_include_path));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("replace_include_path", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_include_path != NULL) ? eif_access (tmp_new_include_path) : NULL), ((tmp_old_include_path != NULL) ? eif_access (tmp_old_include_path) : NULL));
+	if (tmp_new_include_path != NULL)
+		eif_wean (tmp_new_include_path);
+	if (tmp_old_include_path != NULL)
+		eif_wean (tmp_old_include_path);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value )
 
 /*-----------------------------------------------------------
@@ -123,7 +156,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::include_pat
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_166 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_166 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -186,6 +219,39 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::remove_obje
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::replace_object_file(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_object_file )
+
+/*-----------------------------------------------------------
+	Replace an object file in the project.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_new_include_path = NULL;
+	if (new_include_path != NULL)
+	{
+		tmp_new_include_path = eif_protect (rt_ce.ccom_ce_bstr (new_include_path));
+	}
+	EIF_OBJECT tmp_old_object_file = NULL;
+	if (old_object_file != NULL)
+	{
+		tmp_old_object_file = eif_protect (rt_ce.ccom_ce_bstr (old_object_file));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("replace_object_file", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_include_path != NULL) ? eif_access (tmp_new_include_path) : NULL), ((tmp_old_object_file != NULL) ? eif_access (tmp_old_object_file) : NULL));
+	if (tmp_new_include_path != NULL)
+		eif_wean (tmp_new_include_path);
+	if (tmp_old_object_file != NULL)
+		eif_wean (tmp_old_object_file);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::object_files(  /* [out, retval] */ ecom_eiffel_compiler::IEnumObjectFiles * * return_value )
 
 /*-----------------------------------------------------------
@@ -205,7 +271,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::object_file
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_169 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_169 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -332,7 +398,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -389,7 +455,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -447,7 +513,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -460,6 +526,77 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 			break;
 
 		case 1610743811:
+			{
+				if (pDispParams->cArgs != 2)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (2*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8, 8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				if (tmp_value [1]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 1;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
+				
+				hr = replace_include_path ( arg_0, arg_1);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743812:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -477,7 +614,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -495,7 +632,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 			}
 			break;
 
-		case 1610743812:
+		case 1610743813:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -541,7 +678,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -553,7 +690,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 			}
 			break;
 
-		case 1610743813:
+		case 1610743814:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -599,7 +736,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;
@@ -611,7 +748,78 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 			}
 			break;
 
-		case 1610743814:
+		case 1610743815:
+			{
+				if (pDispParams->cArgs != 2)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (2*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8, 8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				if (tmp_value [1]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 1;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
+				
+				hr = replace_object_file ( arg_0, arg_1);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743816:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -629,7 +837,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemExternals_impl_stub::Invoke( DIS
 						BSTR b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
+						wide_string = ccom_create_from_string ("ISE");
 						b_string = SysAllocString (wide_string);
 						free (wide_string);
 						pExcepInfo->bstrSource = b_string;

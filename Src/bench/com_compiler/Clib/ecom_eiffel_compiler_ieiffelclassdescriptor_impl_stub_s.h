@@ -229,7 +229,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_Eif_compiler.h"
+#include "ecom_grt_globals_ISE.h"
 
 
 #endif

@@ -295,9 +295,7 @@ feature -- Output
 					stack_num := Application.current_execution_stack_number
 					cs := where.i_th (stack_num)
 					cs.display_arguments (st)
-					if not oc.lace_class.hide_implementation then
-						cs.display_locals (st)
-					end
+					cs.display_locals (st)
 					where.display_stack (st)
 				end
 			end

@@ -28,6 +28,8 @@ inherit
 	
 	GB_SHARED_STATUS_BAR
 	
+	GB_SHARED_SYSTEM_STATUS
+	
 feature -- Basic operation
 
 	store is
@@ -107,9 +109,11 @@ feature {GB_XML_HANDLER} -- Implementation
 			new_name: STRING
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
-				-- Only output saving information if performing a real store.
+				-- Only output saving information if performing a real store, note that
+				-- the wizard version of Build has to perform a real store at the end,
+				-- so we avoid displaying the output if we are in wizard mode.
 				-- We also use `Current' to generate XML, ready for code generation.
-			if generation_settings.is_saving then
+			if generation_settings.is_saving and not System_status.is_wizard_system then
 				objects_written := objects_written + 1
 				set_status_text ("Saving : " + (((objects_written / object_count) * 95).truncated_to_integer.out) + "%%")
 				environment.application.process_events

@@ -163,11 +163,11 @@ end
 
 				gen_file.putstring ("#include %"eif_eiffel.h%"%N")
 
-				gen_file.close
-
-				Extern_declarations.generate_header (gen_file.name)
-				Extern_declarations.generate (gen_file.name)
+				Extern_declarations.generate_header (gen_file)
+				Extern_declarations.generate (gen_file)
 				Extern_declarations.wipe_out
+
+				gen_file.close
 			else
 
 					-- Generate the dispatch table in Workbench mode

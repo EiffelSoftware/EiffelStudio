@@ -44,7 +44,7 @@ inherit
 	WEL_TREE_VIEW
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -117,29 +117,12 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_ARRAYED_LIST_ITEM_HOLDER_IMP} Precursor
-			!! all_ev_children.make (1)
-			create image_list.make (16, 16, Ilc_color24, True)
-				-- Create image list with all images 16 by 16 pixels
-			set_image_list(image_list)
-				-- Associate the image list with the tree.
-			create current_image_list_info.make (4)
+			create all_ev_children.make (1)
+
 			is_initialized := True
 		end
 
 feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
 
 	all_ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
@@ -173,7 +156,7 @@ feature -- Basic operations
 			ci: EV_TREE_ITEM_IMP
 			bool: BOOLEAN
 		do
-			-- First, we add the item
+				-- First, we add the item
 			create struct.make
 			if par = default_pointer then
 				struct.set_root
@@ -185,7 +168,7 @@ feature -- Basic operations
 			wel_insert_item (struct)
 			all_ev_children.force (item_imp, last_item)
 
-			-- Then, we add the subitems if there are some.
+				-- Then, we add the subitems if there are some.
 			if item_imp.internal_children /= Void then
 				c := item_imp.internal_children
 				from
@@ -200,7 +183,7 @@ feature -- Basic operations
 				item_imp.set_internal_children (Void)
 			end
 
-			-- Then, we redraw the tree
+				-- Then, we redraw the tree
 			invalidate
 		end
 
@@ -225,7 +208,8 @@ feature -- Basic operations
 			end
 			all_ev_children.remove (item_imp.h_item)
 			delete_item (item_imp)
-			-- Then, we redraw the tree
+	
+				-- Then, we redraw the tree
 			invalidate
 		end
 
@@ -310,45 +294,23 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- WEL Implementation
 
-	image_list: WEL_IMAGE_LIST
+	image_list: EV_IMAGE_LIST_IMP
 			-- WEL image list to store all images required by items.
 
-	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
-			-- A list of all items in the image list and their positions.
-			-- [[position in image list, number of items pointing to this
-			-- image], windows pointer].
-
-	reduce_image_list_references (i: INTEGER) is
-			--  Decrease any references to an image position > `i' by one.
-		local
-			original_index: INTEGER
-			value: INTEGER
-		do
-			from
-				current_image_list_info.start
-			until
-				current_image_list_info.off
-			loop
-				value := current_image_list_info.item_for_iteration.
-					integer_item (1)
-				if value > i then
-					current_image_list_info.item_for_iteration.enter
-						(value - 1, 1)
-				end
-				current_image_list_info.forth
-			end
-			original_index := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.reduce_image_list_references (i)
-				ev_children.forth
-			end
-			ev_children.go_i_th (original_index)
-		end
 	
+	setup_image_list(a_width, a_height: INTEGER) is
+			-- Create the image list and associate it
+			-- to the control if it's not already done.
+		do
+				-- Create image list with all images 16 by 16 pixels
+			create image_list.make_with_size (a_width, a_height)
+
+				-- Associate the image list with the tree.
+			set_image_list(image_list)
+		ensure
+			image_list_not_void: image_list /= Void
+		end
+
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event.
@@ -544,6 +506,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/25 01:23:47  pichery
+--| Changed pixmap handling.
+--|
 --| Revision 1.65  2000/04/17 17:30:26  rogers
 --| Added wel_window_parent fix.
 --|

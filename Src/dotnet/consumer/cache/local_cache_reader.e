@@ -34,8 +34,6 @@ feature {NONE}
 			if not (local_cache_path.item (local_cache_path.count) = a_op_env.Directory_separator) then
 				local_cache_path.append (a_op_env.Directory_separator.out)
 			end	
-			local_cache_path.append (clr_version)
-			local_cache_path.append_character ('\')
 		end
 		
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is

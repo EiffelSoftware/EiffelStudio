@@ -209,10 +209,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_variant_id;
-	EIF_PROC make;
+	EIF_PROCEDURE make;
 
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
-	make = eif_proc ("make_by_pointer", eif_variant_id);
+	make = eif_procedure ("make_from_pointer", eif_variant_id);
 	result = eif_create (eif_variant_id);
 	make (eif_access (result), (EIF_POINTER)a_variant);
 	return eif_wean (result);

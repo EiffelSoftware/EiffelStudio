@@ -1,10 +1,7 @@
 # ecom_runtime.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include -I$(LIBRARY)\com\library\include\ 
-
-.cpp.obj:
-	$(CC) $(CFLAGS) $<
+CFLAGS = -c -Zi -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include -I$(LIBRARY)\com\library\include\ 
 
 OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
 
@@ -15,3 +12,7 @@ com_runtime.lib: $(OBJ)
 	copy $@ $(LIBRARY)\com\runtime\lib
 	del $@
 	del *.obj
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+

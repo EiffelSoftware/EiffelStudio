@@ -19,7 +19,32 @@ inherit
 
 creation
 
-	make, make_from_old_cluster
+	make, 
+	make_from_old_cluster
+
+feature {COMPILER_EXPORTER} -- Initialization
+
+	make (p: STRING) is
+		do
+			dollar_path := p;
+			update_path;
+			!! classes.make (10);
+			!! renamings.make;
+			!! ignore.make;
+			!! sub_clusters.make (3);
+			is_dynamic := System.is_dynamic
+		end;
+
+	make_from_old_cluster (old_cluster_i: CLUSTER_I) is
+		require
+			valid_arg: old_cluster_i /= Void
+		do
+			make (old_cluster_i.dollar_path)
+
+			copy_old_cluster (old_cluster_i)
+
+			cluster_name := old_cluster_i.cluster_name
+		end
 
 feature -- Attributes
 
@@ -74,6 +99,13 @@ feature -- Attributes
 			-- Hide the implementation code of
 			-- precompiled classes?
 
+	parent_cluster: CLUSTER_I;
+			-- Parent cluster of Current cluster
+			-- (Void implies it is a top level cluster)
+
+	sub_clusters: ARRAYED_LIST [CLUSTER_I]
+			-- List of sub clusters for Current cluster
+
 feature -- Access
 
 	has_base_name (b_name: STRING): BOOLEAN is
@@ -112,6 +144,20 @@ feature -- Element change
 			classes.put (class_i, class_i.name);	
 		ensure
 			in_cluster: classes.has (class_i.name)
+		end;
+
+	add_sub_cluster (c: CLUSTER_I) is
+			-- Add cluster `c' to `sub_clusters.
+		require
+			valid_c: c /= Void;
+			not_added: sub_clusters /= Void;
+			parent_not_set: c.parent_cluster = Void
+		do
+			sub_clusters.extend (c);
+			c.set_parent_cluster (Current)
+		ensure
+			has_c: sub_clusters.has (c);
+			parent_cluster_set: c.parent_cluster = Current
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
@@ -159,6 +205,14 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			update_path
 		end;
 
+	set_parent_cluster (c: like parent_cluster) is
+			-- Set `parent_cluster' to `c'.
+		require
+			valid_c: c /= Void
+		do
+			parent_cluster := c
+		end;
+
 	update_path is
 		do
 			if dollar_path /= Void then
@@ -172,35 +226,28 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			is_override_cluster := flag
 		end;
 
-feature {COMPILER_EXPORTER} -- Creation feature
-
-	make (p: STRING) is
-		do
-			dollar_path := p;
-			update_path;
-			!!classes.make (10);
-			!!renamings.make;
-			!!ignore.make;
-			is_dynamic := System.is_dynamic
-		end;
-
-	make_from_old_cluster (old_cluster_i: CLUSTER_I) is
-		require
-			valid_arg: old_cluster_i /= Void
-		do
-			make (old_cluster_i.dollar_path)
-
-			copy_old_cluster (old_cluster_i)
-
-			cluster_name := old_cluster_i.cluster_name
-		end
-
 feature {COMPILER_EXPORTER}
 
 	clear is
 			-- Empty the structure
 		do
 			classes.clear_all;
+		end;
+
+	wipe_out_cluster_info is
+			-- Remove current cluster from parent_cluster `sub_cluster'
+			-- (if it exists) and reset parent_cluster to Void.
+		local
+			s_clusters: ARRAYED_LIST [CLUSTER_I]
+		do
+			if parent_cluster = Void then
+				s_clusters := Eiffel_system.sub_clusters;
+			else
+				s_clusters := parent_cluster.sub_clusters;
+			end;
+			parent_cluster := Void;
+			s_clusters.start;
+			s_clusters.prune (Current);
 		end;
 
 	copy_old_cluster (old_cluster_i: CLUSTER_I) is
@@ -1128,7 +1175,7 @@ feature -- Output
 				end;
 				classes.forth
 			end
-			st.add (ti_After_class_declaration);
+			st.add (ti_after_class_declaration);
 		end;
 
 feature -- Document processing
@@ -1231,6 +1278,7 @@ invariant
 
 	path_exists: path /= Void;
 	classes_exists: classes /= Void;
-	dynamic_constraint: is_dynamic implies System.is_dynamic
+	dynamic_constraint: is_dynamic implies System.is_dynamic;
+	sub_clusters_exists: sub_clusters /= Void
 
 end

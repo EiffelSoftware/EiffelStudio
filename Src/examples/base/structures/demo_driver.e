@@ -7,23 +7,6 @@ indexing
 class 
 	DEMO_DRIVER 
 
---export
---
---	new_menu,
---	add_entry, last_entry,
---	print_menu,
---	complete_menu,
---	get_choice,
---	get_integer,
---	get_string,
---	signal_error,
---	exit,
---	start_result, end_result,
---	putbool, putstring, putint, new_line
-
-inherit
-	STD_FILES
-
 create
 	make
 
@@ -32,7 +15,6 @@ feature -- Creation
 	make is
 			-- Create arrays to store menus. 
 		do
-			set_error_default
 			create menu_entry.make (1, Max_Number_of_Entries)
 			create menu_help.make (1, Max_Number_of_Entries)
 			create menu_tag.make (1, Max_Number_of_Entries)
@@ -59,6 +41,34 @@ feature -- Other attributes
 	last_entry: INTEGER
 	menu_height: INTEGER
 	choice: INTEGER
+
+feature -- Output
+
+	putstring (s: STRING) is
+			-- Write `s' at end of default output.
+		require
+			string_not_void: s /= void
+		do
+			io.put_string (s)
+		end
+		
+	new_line is
+			-- Write line feed at end of default output.
+		do
+			io.new_line
+		end
+		
+	putint (i: INTEGER) is
+			-- Write `i' at end of default output.
+		do
+			io.put_integer (i)
+		end
+		
+	putbool (b: BOOLEAN) is
+			-- Write `b' at end of default output.
+		do
+			io.put_boolean (b)
+		end
 
 feature -- Routines
 
@@ -128,16 +138,16 @@ feature -- Routines
 		local
 			i: INTEGER 
 		do
-			putstring (line)
-			new_line
-			putstring (comment)
-			new_line
-			putstring ("Select a command by typing the first two letters")
-			new_line
-			putstring ("in upper- or lower-case (? for help)")
-			new_line
-			putstring (line)
-			new_line
+			io.putstring (line)
+			io.new_line
+			io.putstring (comment)
+			io.new_line
+			io.putstring ("Select a command by typing the first two letters")
+			io.new_line
+			io.putstring ("in upper- or lower-case (? for help)")
+			io.new_line
+			io.putstring (line)
+			io.new_line
 			menu_height := menu_size
 			from
 				i := 1
@@ -145,11 +155,11 @@ feature -- Routines
 				i > menu_height
 			loop
 				print_entry (i)
-				putchar ('%N')
+				io.putchar ('%N')
 				i := i + 1
 			end
-			putstring (line)
-			new_line
+			io.putstring (line)
+			io.new_line
 		end
 
 	print_entry (n: INTEGER) is
@@ -165,7 +175,7 @@ feature -- Routines
 			until
 				i > length
 			loop
-				putchar (entry.item (i)) 
+				io.putchar (entry.item (i)) 
 				i := i + 1
 			end
 		end
@@ -186,11 +196,11 @@ feature -- Routines
 			-- the entry as it has been entered by add_menu 
 			-- (first entered returns number 1, ...) .
 		do
-			putstring ("%NCOMMAND: ")
+			io.putstring ("%NCOMMAND: ")
 			choice := read_choice 
 			if choice = menu_size then
 				print_menu
-				putstring ("%NHELP: ")
+				io.putstring ("%NHELP: ")
 				choice := read_choice 
 				show_help
 				choice := get_choice
@@ -201,7 +211,7 @@ feature -- Routines
 	bell is
 			-- Ring the bell.
 		do
-			putstring ("%/007/")
+			io.putstring ("%/007/")
 		end
 
 	build_line is
@@ -222,21 +232,21 @@ feature -- Routines
 	show_help is
 			-- Display a help message.
 		do
-			putstring (menu_entry.item (choice))
-			putstring (" ==> %N     ")
-			putstring (menu_help.item (choice))
-			new_line
+			io.putstring (menu_entry.item (choice))
+			io.putstring (" ==> %N     ")
+			io.putstring (menu_help.item (choice))
+			io.new_line
 		end
 
 	get_string (what_is_it: STRING): STRING is
 			-- Get a user string input for stdin. 
 			-- 'what_is_it' is the name of the requested value. 
 		do
-			putstring("Please enter parameter %'") 
-			putstring(what_is_it) 
-			putstring("%' ") 
-			readline
-			Result := laststring
+			io.putstring("Please enter parameter %'") 
+			io.putstring(what_is_it) 
+			io.putstring("%' ") 
+			io.readline
+			Result := io.laststring
 		end
 
 	get_integer (what_is_it: STRING): INTEGER is
@@ -251,10 +261,10 @@ feature -- Routines
 		do
 			bell
 			if message = Void then
-				putstring ("This operation is not allowed")
-				new_line
+				io.putstring ("This operation is not allowed")
+				io.new_line
 			else
-				putstring (message)
+				io.putstring (message)
 			end
 		end
 
@@ -280,8 +290,8 @@ feature -- Routines
 			until
 				recognized_entry > 0
 			loop
-				readchar
-				char := lastchar
+				io.readchar
+				char := io.lastchar
 				number_char_read := number_char_read + 1
 				if char.is_lower then
 					char := char.upper
@@ -305,7 +315,7 @@ feature -- Routines
 					i := i + 1
 				end
 				if bad_char then
-					readline; tag := laststring
+					io.readline; tag := io.laststring
 					number_char_read := 0
 					signal_error ("Bad choice. Try again: ")
 					from
@@ -318,8 +328,8 @@ feature -- Routines
 					end
 				end
 			end
-			readline
-			tag := laststring
+			io.readline
+			tag := io.laststring
 			Result := recognized_entry
 		end
 

@@ -206,20 +206,40 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
+		require
+			exists: not destroyed
+			valid_cmd: cmd /= Void
 		do
-			add_command (Cmd_selection, cmd, arg)
+			add_command (Cmd_select, cmd, arg)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when an item has been unselected.
+		require
+			exists: not destroyed
+			valid_cmd: cmd /= Void
+		do
+			add_command (Cmd_unselect, cmd, arg)
 		end
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
 		do
-			remove_command (Cmd_selection)
+			remove_command (Cmd_select)
+		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when an item has been unselected.
+		do
+			remove_command (Cmd_unselect)
 		end
 
 feature {NONE} -- Implementation
@@ -267,8 +287,10 @@ feature {NONE} -- Implementation : WEL features
 				actual := ev_children @ (caret_index + 1)
 				if actual.is_selected then
 					actual.execute_command (Cmd_item_activate, Void)
+					execute_command (Cmd_select, Void)
 				else
 					actual.execute_command (Cmd_item_deactivate, Void)
+					execute_command (Cmd_unselect, Void)
 				end
 
 			-- Another treatment in single selection mode.
@@ -277,17 +299,19 @@ feature {NONE} -- Implementation : WEL features
 					actual := ev_children @ (selected_index + 1)
 					if last /= Void and then last /= actual then
 						last.execute_command (Cmd_item_deactivate, Void)
+						execute_command (Cmd_unselect, Void)
 					end
 					last_selected_item := actual
 					actual.execute_command (Cmd_item_activate, Void)
+					if last /= Void and then last /= actual then
+						execute_command (Cmd_select, Void)
+					end
 				else
 					last_selected_item := Void
 					last.execute_command (Cmd_item_deactivate, Void)
+					execute_command (Cmd_unselect, Void)
 				end
 			end
-
-			-- We launch the command of the list
-			execute_command (Cmd_selection, Void)
 		end
 
 	on_lbn_dblclk is

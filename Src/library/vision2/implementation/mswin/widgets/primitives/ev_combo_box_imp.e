@@ -217,8 +217,8 @@ feature -- Status setting
 					-- it as specified by user.
 				cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (item))
-				execute_command (Cmd_selection, Void)
-					-- Must now manually inform the combo box that a selection is taking place.
+				execute_command (Cmd_select, Void)
+				-- Must now manually inform the combo box that a selection is taking place.
 			end
 		end
 
@@ -317,29 +317,52 @@ feature -- Basic operation
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
+		require
+			exists: not destroyed
+			valid_cmd: cmd /= Void
 		do
-			add_command (Cmd_selection, cmd, arg)
+			add_command (Cmd_select, cmd, arg)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when an item has been unselected.
+		require
+			exists: not destroyed
+			valid_cmd: cmd /= Void
+		do
+			add_command (Cmd_unselect, cmd, arg)
 		end
 
 	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.
+		require
+			exists: not destroyed
+			valid_cmd: cmd /= Void
 		do
 			add_command (Cmd_activate, cmd, arg)
 		end
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
 		do
-			remove_command (Cmd_selection)
+			remove_command (Cmd_select)
 		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when an item has been unselected.
+		do
+			remove_command (Cmd_unselect)	
+		end	
 
 	remove_return_commands is
 			-- Empty the list of commands to be executed
@@ -452,8 +475,9 @@ feature {NONE} -- WEL Implementation
 			-- The selection is about to be changed.
 		do
 			-- Event for the unselected item
-			if old_selected_item /= Void then
+			if old_selected_item /= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 				old_selected_item.execute_command (Cmd_item_deactivate, Void)
+				execute_command (Cmd_unselect, Void)
 			end
 
 			-- Event for the newly selected item
@@ -462,7 +486,7 @@ feature {NONE} -- WEL Implementation
 					-- the current selection.
 				old_selected_item := ev_children.i_th (wel_selected_item + 1)
 				old_selected_item.execute_command (Cmd_item_activate, Void)
-				execute_command (Cmd_selection, Void)
+				execute_command (Cmd_select, Void)
 					-- Must now manually inform combo box that a selection is taking place
 			elseif not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 				old_selected_item := Void

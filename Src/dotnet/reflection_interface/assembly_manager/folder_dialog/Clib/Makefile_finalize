@@ -1,7 +1,7 @@
 # ecom_client.lib and ecom_server.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = /W0 /Ox /D "_WIN32_DCOM" /c /I$(ISE_EIFFEL)\bench\spec\windows\include /I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = /W0 /Ox /D "_WIN32_DCOM" /c /I$(ISE_EIFFEL)\bench\spec\windows\include /I$(EIFFEL_SRC)\library\com\spec\windows\include 
 
 OBJ_CLIENT = ecom_folderbrowser_ifolderbrowser_impl_proxy_s.obj 
 

@@ -168,10 +168,11 @@ feature {NONE} -- Externals
 			"C [macro <lvcolumn.h>]"
 		end
 
-	cwel_lv_column_set_iimage (ptr: POINTER; value: INTEGER) is
-		external
-			"C [macro <lvcolumn.h>]"
-		end
+-- XX Not define in Borland C++
+--	cwel_lv_column_set_iimage (ptr: POINTER; value: INTEGER) is
+--		external
+--			"C [macro <lvcolumn.h>]"
+--		end
 
 	cwel_lv_column_get_mask (ptr: POINTER): INTEGER is
 		external
@@ -198,10 +199,11 @@ feature {NONE} -- Externals
 			"C [macro <lvcolumn.h>]"
 		end
 
-	cwel_lv_column_get_iimage (ptr: POINTER): INTEGER is
-		external
-			"C [macro <lvcolumn.h>]"
-		end
+-- XX Not defined in Borland C++
+--	cwel_lv_column_get_iimage (ptr: POINTER): INTEGER is
+--		external
+--			"C [macro <lvcolumn.h>]"
+--		end
 
 invariant
 	invariant_clause: -- Your invariant here

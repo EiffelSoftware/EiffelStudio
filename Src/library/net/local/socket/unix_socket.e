@@ -9,49 +9,57 @@ indexing
 
 class UNIX_SOCKET
 
-	inherit
+inherit
 
-		SOCKET
-			redefine
-				address, name
-		end;
+	SOCKET
+		redefine
+			address, cleanup, name
+		end
 
 creation {UNIX_SOCKET}
 
 	create_from_descriptor
 
-feature 	-- Status Report
+feature -- Status Report
 
-
-	address: SOCKET_ADDRESS_UNIX;
+	address: UNIX_SOCKET_ADDRESS
 			-- Local address of socket
+
+	cleanup is
+			-- Close the socket and unlink it from file system.
+		do
+			close
+			if address /= Void then
+				unlink
+			end
+		end
 
 	name: STRING is
 			-- name of the socket
 		require else
-			valid_address: address /= Void;
+			valid_address: address /= Void
 		do
-			!! Result.make (10);
-			Result.append (address.path);
-		end;
+			!! Result.make (10)
+			Result.append (address.path)
+		end
 
-feature 	-- Status setting
+feature -- Status setting
 
 	unlink is
 			-- Remove associate name from file system
 		require else
-			name_address: address /= void;
+			name_address: address /= void
 		local
-			ext: ANY;
+			ext: ANY
 		do
-			ext := name.to_c;
-			c_unlink ($ext);
-		end;
+			ext := name.to_c
+			c_unlink ($ext)
+		end
 
-end 	-- class UNIX_SOCKET
+end -- class UNIX_SOCKET
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -62,5 +70,4 @@ end 	-- class UNIX_SOCKET
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
-
 

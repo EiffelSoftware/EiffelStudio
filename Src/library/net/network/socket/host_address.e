@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A host address object";
+		"A host address object.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -17,8 +17,7 @@ inherit
 			copy as old_copy
 		redefine
 			is_equal
-		end;
-
+		end
 
 	TO_SPECIAL[CHARACTER]
 		rename
@@ -27,121 +26,118 @@ inherit
 			copy, is_equal
 		select
 			copy
-		end;
+		end
 
 creation
 
 	make
 
-feature	-- Initialization
+feature -- Initialization
 
 	make is
 			-- Create a host address object 
 		do
-			make_area (in_addr_size);
-		end;
+			make_area (in_addr_size)
+		end
 
-feature	-- Measurement
+feature -- Measurement
 
 	count: INTEGER is
 			-- object address size
 		do
-			Result := address_host.count;
-		end;
+			Result := address_host.count
+		end
 
 feature -- Comparison
 
 	is_equal (other: like current): BOOLEAN is
 			-- Are the two host address areas equal
 		do
-			Result := address_host.is_equal (other.address_host);
-		end;
+			Result := address_host.is_equal (other.address_host)
+		end
 
-feature	--  Status_report
+feature -- Status_report
 
 	host_number: INTEGER is
 		do
-			Result := get_host_addr ($address_host);
-		end;
+			Result := get_host_addr ($address_host)
+		end
 
-feature	--  Status_setting
+feature -- Status_setting
 
 	set_address_from_name (a_name: STRING) is
 			-- set the host address using the name provided in 'a_name'
 		require
-			name_valid: a_name /= Void and then not a_name.empty;
+			name_valid: a_name /= Void and then not a_name.empty
 		local
-			ext: ANY;
+			ext: ANY
 		do
-			ext := a_name.to_c;
-			host_address_from_name ($address_host, $ext);
-		end;
-
+			ext := a_name.to_c
+			host_address_from_name ($address_host, $ext)
+		end
 
 	set_host_address (host_id: STRING) is
 			-- set host address from dotted string
 		require
-			dotted_address_not_void: host_id /= Void;
+			dotted_address_not_void: host_id /= Void
 		local
-			ext: ANY;
-			host_num: INTEGER;
+			ext: ANY
+			host_num: INTEGER
 		do
-			ext := host_id.to_c;
-			host_num := net_host_addr ($ext);
-			set_host_addr ($address_host, host_num);
-			
-		end;
+			ext := host_id.to_c
+			host_num := net_host_addr ($ext)
+			set_host_addr ($address_host, host_num)
+		end
 
 	set_in_address_any is
 			-- Set host address to in address any
 			-- This is a special address selected by the host machine.
 		do
-			set_host_addr ($address_host, inet_inaddr_any);
-		end;
+			set_host_addr ($address_host, inet_inaddr_any)
+		end
 
-feature	-- Conversion
+feature -- Conversion
 
 	from_c (ptr: POINTER) is
 			-- converts a c host address structure (address_in)
 			-- to an eiffel address object
 		do
-			set_from_c ($address_host, ptr);
-		end;
+			set_from_c ($address_host, ptr)
+		end
 
-feature	-- Duplication
+feature -- Duplication
 
 	copy (other: like Current) is
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			old_copy (other);
-			make_area (other.count);
-			address_host.copy (other.address_host);
+			old_copy (other)
+			make_area (other.count)
+			address_host.copy (other.address_host)
 		ensure then
-			new_result_count: count = other.count or else count = in_addr_size;
-		end;
+			new_result_count: count = other.count or else count = in_addr_size
+		end
 
-feature {NONE}	-- External
+feature {NONE} -- External
 
 	in_addr_size: INTEGER is
-				-- the size of the c address structure
+			-- the size of the c address structure
 		external
 			"C"
-		end;
+		end
 
 	inet_inaddr_any: INTEGER is
-				-- a c constant
+			-- a c constant
 		external
 			"C"
-		end;
-
+		end
 
 	set_host_addr (addr: ANY; value: INTEGER) is
 		external
 			"C"
 		alias
 			"set_sin_addr"
-		end;
+		end
 
 	get_host_addr (addr: ANY): INTEGER is
 			-- get the host number from 'addr'
@@ -149,39 +145,37 @@ feature {NONE}	-- External
 			"C"
 		alias
 			"get_sin_addr"
-		end;
-
+		end
 
 	net_host_addr(host_addr: ANY): INTEGER is
 			--  Convert the dotted string address to a host number
 		external
 			"C"
-		end;
+		end
 
 	net_host (addr: ANY): STRING is
 		external
 			"C"
-		end;
-
+		end
 
 	host_address_from_name (addr, name: ANY) is
-				-- sets the host address in 'addr' using the
-				-- name to identify the host.
+			-- sets the host address in 'addr' using the
+			-- name to identify the host.
 		external
 			"C"
-		end;
+		end
 
 	set_from_c (addr: ANY ptr: POINTER) is
-				--  copies the address infor in 'ptr'
-				-- to the addr object.
+			--  copies the address infor in 'ptr'
+			-- to the addr object.
 		external
 			"C"
-		end;
+		end
 
 end
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

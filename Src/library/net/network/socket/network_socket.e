@@ -14,74 +14,73 @@ inherit
 	SOCKET
 		redefine
 			address, set_peer_address
-	end;
+	end
 
 creation {NETWORK_SOCKET}
 
 	create_from_descriptor
 
-feature	-- Status Report
+feature -- Status Report
 
-	address: SOCKET_ADDRESS_NETWORK;
+	address: NETWORK_SOCKET_ADDRESS
 			-- local address of the socket
 
 	port: INTEGER is
 			--  port socket is bound to.
 		require
-			valid_socket: exists;
-			is_bound: is_open_read;
+			valid_socket: exists
+			is_bound: is_open_read
 		local
-			ext: ANY;
-			temp_addr: like address;
+			ext: ANY
+			temp_addr: like address
 		do
-			!!temp_addr.make;
-			ext := temp_addr.socket_address;
-			c_sock_name (descriptor, $ext, temp_addr.count);
-			Result := temp_addr.port;
-		end;
+			!!temp_addr.make
+			ext := temp_addr.socket_address
+			c_sock_name (descriptor, $ext, temp_addr.count)
+			Result := temp_addr.port
+		end
 
-feature 	-- Status_setting
+feature -- Status_setting
 
 	set_peer_address (addr: like address) is
-				-- set the peer address to addr
+			-- set the peer address to addr
 		require else
-			same_type: addr.family = family;
+			same_type: addr.family = family
 		do
-			peer_address := addr;
-		end;
-
+			peer_address := addr
+		end
 
 	set_reuse_address is
 			-- set the reuse option
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1);
-		end;
+			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1)
+		end
 
 	do_not_reuse_address is
 			-- remove reuse option
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0);
-		end;
+			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
+		end
 
 	reuse_address: BOOLEAN is
 			-- is reuse option set
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		local
-			reuse: INTEGER;
+			reuse: INTEGER
 		do
-			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr);
-			Result := reuse /= 0;
-		end;
+			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr)
+			Result := reuse /= 0
+		end
 
-end	-- class NETWORK_SOCKET
+end -- class NETWORK_SOCKET
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -92,3 +91,4 @@ end	-- class NETWORK_SOCKET
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
+

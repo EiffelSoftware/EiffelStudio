@@ -180,7 +180,7 @@ feature -- Element change
 		do
 			implementation.set_text (a_text)
 		ensure
-			text_set: check_text_modification (Void, a_text)
+			text_set: check_text_modification ("", a_text)
 		end
 
 	remove_text is
@@ -188,7 +188,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_text
+			set_text ("")
 		ensure
 			text_empty: text.is_empty
 		end
@@ -376,11 +376,7 @@ feature {NONE} -- Contract support
 			-- all %R removed.
 		do
 			added_text.prune_all ('%R')
-			if old_text /= Void then
-				Result := text.is_equal (old_text + added_text)
-			else
-				Result := text.is_equal (added_text)
-			end
+			Result := text.is_equal (old_text + added_text)
 		end
 
 	is_in_default_state: BOOLEAN is

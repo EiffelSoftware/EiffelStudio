@@ -20,9 +20,7 @@ inherit
 		redefine
 			text_window
 		end;
-	SHARED_DEBUG;
-	OBJECT_ADDR
-
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -55,9 +53,9 @@ feature
 	work (argument: ANY) is
 			-- Re-run the application
 		local
-			application_name: FILE_NAME;
 			makefile_sh_name: FILE_NAME;
-			status: BOOLEAN;
+			status: APPLICATION_STATUS;
+			ok: BOOLEAN;
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
 			kept_objects: LINKED_SET [STRING];
@@ -82,7 +80,7 @@ feature
 				debug_window.clear_window;
 				debug_window.put_string ("System not compiled%N");
 				debug_window.display
-			elseif not Run_info.is_running then
+			elseif not Application.is_running then
 					-- Application is not running. Start it.
 debug
 	io.error.putstring (generator);
@@ -92,14 +90,8 @@ end;
 				!!makefile_sh_name.make_from_string (Workbench_generation_path);
 				makefile_sh_name.set_file_name (Makefile_SH);
 
-				!!application_name.make_from_string (Workbench_generation_path);
-				!!temp.make (0);
-				temp.append (System.system_name);
-				temp.append (Executable_suffix);
-				application_name.set_file_name (temp);
-
-				!!uf.make (application_name);
-				!!make_f.make (makefile_sh_name);
+				!! uf.make (Application.name);
+				!! make_f.make (makefile_sh_name);
 
 --!! FIXME: melt_only (no check for Makefile.SH)
 --!! FIXME: melt_only
@@ -119,11 +111,18 @@ end;
 						debug_window.put_string ("Launching system...%N");
 						debug_window.display;
 						set_global_cursor (watch_cursor);
-						temp := clone (application_name);
-						temp.extend (' ');
-						temp.append (argument_window.argument_list);
-						run_request.set_application_name (temp);
-						run_request.send
+						Application.run (argument_window.argument_list);
+						if Application.is_running then
+							debug_window.clear_window;
+							debug_window.put_string ("System is running%N");
+							debug_window.display
+						else
+								-- Something went wrong
+							debug_window.clear_window;
+							debug_window.put_string 
+								(Application.eiffel_timeout_message);
+						end;
+						debug_window.display
 					end
 				elseif make_f.exists then
 						-- There is no application
@@ -133,40 +132,32 @@ end;
 					warner (text_window).gotcha_call 
 						(w_Must_compile_first)
 				end;
-				Run_info.set_is_stopped (False);
 				restore_cursors
-			elseif Run_info.is_stopped then
+			else
+				status := Application.status;
+				if status.is_stopped then
 					-- Application is stopped. Continue execution.
 debug
 	io.error.putstring (generator);
 	io.error.putstring (": Contine execution%N");
 end;
-				set_global_cursor (watch_cursor);
-					-- Ask the application to wean objects the
-					-- debugger doesn't need anymore.
-				kept_objects := window_manager.object_win_mgr.objects_kept;
-				debug_text ?= debug_window;
-				kept_objects.merge (debug_text.kept_objects);
-				keep_objects (kept_objects);
-
-				status := cont_request.send_byte_code;
-				if status then
-					cont_request.send_breakpoints
-				end;
-				debug_info.tenure;
-					-- For `hang_on' to work properly, application 
-					-- must not be stopped (is_stopped = False).
-				Run_info.set_is_stopped (False);
-				Window_manager.object_win_mgr.hang_on;
-				if Run_info.e_feature /= Void then
-					Window_manager.routine_win_mgr.show_stoppoint 
-						(Run_info.e_feature, Run_info.break_index)
-				end;
-				cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
-				debug_window.clear_window;
-				debug_window.put_string ("System is running%N");
-				debug_window.display;
-				restore_cursors
+					set_global_cursor (watch_cursor);
+						-- Ask the application to wean objects the
+						-- debugger doesn't need anymore.
+					kept_objects := window_manager.object_win_mgr.objects_kept;
+					debug_text ?= debug_window;
+					kept_objects.merge (debug_text.kept_objects);
+					Application.continue (kept_objects);
+					Window_manager.object_win_mgr.hang_on;
+					if status.e_feature /= Void then
+						Window_manager.routine_win_mgr.show_stoppoint 
+							(status.e_feature, status.break_index)
+					end;
+					debug_window.clear_window;
+					debug_window.put_string ("System is running%N");
+					debug_window.display;
+					restore_cursors
+				end
 			end
 		end;
 

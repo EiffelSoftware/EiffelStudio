@@ -8,6 +8,8 @@ class
 
 inherit
 	IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB
+		undefine
+			is_equal
 		redefine
 			name,
 			external_name,
@@ -43,14 +45,22 @@ inherit
 			has_precondition,
 			has_postcondition,
 			feature_location,
-			is_feature
+			is_feature,
+			ccom_create_item
 		end
 
 	COMPLETION_ENTRY
+		undefine
+			create_item
+		redefine
+			ccom_create_item
+		end
 
 	SHARED_EIFFEL_PROJECT
 		export {NONE}
 			all
+		undefine
+			is_equal
 		end
 
 create
@@ -74,7 +84,7 @@ feature -- Access
 			-- Feature name.
 		do
 			Result := clone (compiler_feature.feature_name)
-			if Result.substring_index ("_infix_", 1) > 0 then
+			if is_infix then
 				Result.replace_substring_all ("_infix_", "")
 				if Result.is_equal ("ge") then
 					Result := ">="
@@ -104,7 +114,7 @@ feature -- Access
 					Result := "//"
 				end
 			end
-			if Result.substring_index ("_prefix_", 1) > 0 then
+			if is_prefix then
 				Result.replace_substring_all ("_prefix_", "")
 				if Result.is_equal ("minus") then
 					Result := "-"
@@ -455,7 +465,7 @@ feature -- Access
 
 	is_feature (return_value: BOOLEAN_REF) is
 			-- Is a feature (from COMPLETION_ENTRY)
-		once
+		do
 			return_value.set_item (True)
 		end
 
@@ -709,5 +719,11 @@ feature {NONE} -- Implementation
 		end
 		
 	Initial_array_size: INTEGER is 0
+
+	ccom_create_item (eif_object: ANY): POINTER is
+			-- Initialize `item'
+		external
+			"C++ [new ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_stub_s.h%"](EIF_OBJECT)"
+		end
 			
 end -- class FEATURE_DESCRIPTOR

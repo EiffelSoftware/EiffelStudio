@@ -67,7 +67,7 @@ feature {NONE} -- WEL Implementation
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -90,24 +90,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	on_wm_paint (wparam: INTEGER) is
+	on_wm_paint (wparam: POINTER) is
 			-- Wm_paint message handling
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -362,8 +362,7 @@ feature {NONE} -- Implementation
 			bk_pen: WEL_PEN
 			pen: WEL_PEN
 		do
-			create paint_dc.make_by_pointer (Current,
-				cwel_integer_to_pointer(wparam))
+			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.get
 
 			if not flat_separator and count = 2 then

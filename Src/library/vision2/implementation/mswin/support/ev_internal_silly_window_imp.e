@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			Result := Ws_overlappedwindow
 		end
 
-	on_wm_vscroll (wparam, lparam: INTEGER) is
+	on_wm_vscroll (wparam, lparam: POINTER) is
  			-- Wm_vscroll message.
  			-- Should be implementated in EV_CONTAINER_IMP,
 			-- But as we can't implement a deferred feature
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			end
  		end
  
- 	on_wm_hscroll (wparam, lparam: INTEGER) is
+ 	on_wm_hscroll (wparam, lparam: POINTER) is
  			-- Wm_hscroll message.
  		local
  			range: EV_RANGE_IMP
@@ -109,13 +109,13 @@ feature {NONE} -- Implementation
 			end
  		end
 
-	on_wm_notify (wparam, lparam: INTEGER) is
+	on_wm_notify (wparam, lparam: POINTER) is
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
 			ww: WEL_WINDOW
 		do
-			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create info.make_by_pointer (lparam)
 			if
 				has_child (info.window_from)
 			then

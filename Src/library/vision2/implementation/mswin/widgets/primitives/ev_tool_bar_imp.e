@@ -432,8 +432,8 @@ feature -- Basic operation
 	internal_get_index (button: EV_TOOL_BAR_ITEM_IMP): INTEGER is
 			-- Retrieve the current index of `button'.
 		do
-			Result := cwin_send_message_result (
-				wel_item, Tb_commandtoindex, button.id, 0)
+			Result := cwin_send_message_result_integer (
+				wel_item, Tb_commandtoindex, to_wparam (button.id), to_lparam (0))
 		end
 
 	compute_minimum_width is
@@ -1098,24 +1098,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

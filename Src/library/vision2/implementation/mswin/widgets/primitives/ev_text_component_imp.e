@@ -340,7 +340,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do

@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			menu_item_list.menu_item_clicked (an_id)
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -63,11 +63,9 @@ feature {NONE} -- WEL Implementation
 
 	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
-		local
-			return_value: INTEGER
 		do
-			return_value := menu_item_list.on_menu_char (char_code, corresponding_menu)
-			set_message_return_value (return_value)
+			set_message_return_value (
+				menu_item_list.on_menu_char (char_code, corresponding_menu))
 		end
 		
 	class_requires_icon: BOOLEAN is

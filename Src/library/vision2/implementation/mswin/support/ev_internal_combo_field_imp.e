@@ -200,10 +200,10 @@ feature {NONE} -- Implementation
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 		
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do

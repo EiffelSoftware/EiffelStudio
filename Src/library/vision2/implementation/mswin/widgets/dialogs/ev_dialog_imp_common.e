@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	on_wm_command (wparam, lparam: INTEGER) is
+	on_wm_command (wparam, lparam: POINTER) is
 			-- Wm_command message.
 		local
 			text_field_imp: EV_TEXT_FIELD_IMP
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 				-- Escape has been pressed in `Current', so we 
 				-- call the `select_actions' of the default_cancel_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
-			if wparam = idcancel and lparam = 0 then
+			if cwin_lo_word (wparam) = idcancel and lparam = default_pointer then
 				if focus_on_widget.item /= Void then
 					focus_on_widget.item.process_standard_key_press (Vk_escape)	
 				end
@@ -533,7 +533,10 @@ feature {NONE} -- Implementation
 				-- Enter has been pressed in `Current', so we 
 				-- call the `select_actions' of the default_push_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
-			elseif wparam = bn_clicked or (wparam = idok and lparam = 0) then
+			elseif
+				cwin_hi_word (wparam) = bn_clicked or
+				(cwin_lo_word (wparam) = idok and lparam = default_pointer)
+			then
 				if focus_on_widget.item /= Void then
 					original_top_window := Focus_on_widget.item.top_level_window_imp
 						-- We must now call the `return_actions' on the text_field.
@@ -555,7 +558,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
 			if msg = Wm_initdialog then
@@ -567,15 +570,15 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_wm_ctlcolordialog (wparam, lparam: INTEGER) is
+	on_wm_ctlcolordialog (wparam, lparam: POINTER) is
 			-- Wm_ctlcolordialog message received.
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.set_background_color (wel_background_color)
 			paint_dc.set_text_color (wel_foreground_color)
-			set_message_return_value (background_brush.to_integer)
+			set_message_return_value (background_brush.item)
 			--| FIXME Julian should we really delete this brush here?
 			--| doesn't seem to make much difference to GDI count, is it necessary?
 			--| If it is determined that it is required, uncomment.
@@ -604,11 +607,11 @@ feature {NONE} -- Implementation
 			destroy_item
 		end
 		
-	window_on_wm_activate (wparam, lparam: INTEGER) is
+	window_on_wm_activate (wparam, lparam: POINTER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
-			if wparam = Wel_window_constants.Wa_inactive then
+			if cwin_lo_word (wparam) = Wel_window_constants.Wa_inactive then
 					-- The Wm_killfocus message is sent correctly when a
 					-- dialog is empty but not otherwise. I think that this is
 					-- because when a dialog has a child, one of the children automatically

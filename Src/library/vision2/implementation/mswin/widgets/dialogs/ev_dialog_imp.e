@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			set_position (other_imp.x_position, other_imp.y_position)
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
 			if msg = Wm_close then

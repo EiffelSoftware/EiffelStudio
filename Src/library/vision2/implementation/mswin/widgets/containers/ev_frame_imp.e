@@ -305,7 +305,7 @@ feature {NONE} -- WEL Implementation
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -398,7 +398,7 @@ feature {NONE} -- WEL Implementation
 
 			bk_brush.delete
 
-			if wel_style.bit_and (Bdr_raisedouter) = Bdr_raisedouter then
+			if (wel_style & Bdr_raisedouter) = Bdr_raisedouter then
 					--| This is to work around a bug where the 3D highlight
 					--| does not seem to appear.
 				pen := highlight_pen

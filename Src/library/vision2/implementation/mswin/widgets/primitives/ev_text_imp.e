@@ -139,7 +139,7 @@ feature -- Initialization
 			show_vertical_scroll_bar
 				-- Remove the standard upper limit on characters in
 				-- `Current'. Default is 32,767.
-			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 		end
 		
 	initialize is
@@ -276,7 +276,8 @@ feature -- Status Report
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
 		do
-			Result := cwin_send_message_result (wel_item, em_linefromchar, i + 1, 0) + 1
+			Result := cwin_send_message_result_integer (wel_item, em_linefromchar,
+				to_wparam (i + 1), to_lparam (0)) + 1
 		end
 		
 	selection_start: INTEGER is
@@ -310,7 +311,7 @@ feature -- Status Settings
 			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
 			set_default_font
 			set_text (old_text)
-			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 			show_vertical_scroll_bar
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
@@ -327,7 +328,7 @@ feature -- Status Settings
 			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
 			set_default_font
 			set_text (old_text)
-			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 			show_vertical_scroll_bar
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
@@ -513,24 +514,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

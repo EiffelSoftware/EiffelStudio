@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_vscroll (wparam, lparam: INTEGER) is
+	on_wm_vscroll (wparam, lparam: POINTER) is
 			-- Wm_vscroll message.
 			-- Here, we know it's a spin button.
 		local
@@ -754,24 +754,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		do
 			Result := internal_text_field.next_dlggroupitem (hdlg, hctl,
 				previous)
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

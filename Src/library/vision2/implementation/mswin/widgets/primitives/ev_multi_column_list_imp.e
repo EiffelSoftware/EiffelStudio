@@ -539,7 +539,7 @@ feature -- Access
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
+			cwin_send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Lvht_onitemlabel)
 			or flag_set (info.flags, Lvht_onitemicon)
 			then
@@ -615,8 +615,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			loop
 				create litem.make_with_attributes (
 					Lvif_text, an_index - 1, list.index - 1, 0, list.item)
-				cwin_send_message (wel_item, Lvm_setitem, 0,
-					litem.to_integer)
+				cwin_send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 				list.forth
 			end
 				-- Now update image.
@@ -665,8 +664,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					image_list.add_pixmap (row.internal_pixmap)
 					litem.set_image (image_list.last_position)
 				end
-			cwin_send_message (wel_item, Lvm_setitem, 0,
-				litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 		end
 	
 	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING; item_index: INTEGER) is
@@ -732,8 +730,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected + Lvis_focused)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i,
-				litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
@@ -746,8 +743,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i,
-				litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	set_default_minimum_size is
@@ -1054,7 +1050,7 @@ feature {NONE} -- WEL Implementation
 			Result := point.y
 		end
 
-	process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		do
@@ -1195,7 +1191,7 @@ feature {NONE} -- WEL Implementation
 				brush.delete
 
 				disable_default_processing
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 			end
 		end
 		
@@ -1319,24 +1315,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

@@ -195,7 +195,7 @@ feature {EV_ANY_I} -- Status report
 			point.set_x (point.x - screen_x)
 			point.set_y (point.y - screen_y)
 			create hit_test_info.make_with_point (point)		
-			Result := cwin_send_message_result (wel_item, tcm_hittest, 0, cwel_pointer_to_integer (hit_test_info.item)) + 1
+			Result := cwin_send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
 		end
 		
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
@@ -671,24 +671,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
-		end
-
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
@@ -698,37 +680,37 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
@@ -915,7 +897,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 						-- If no image list is associated with `Current', retrieve
 						-- and associate one.
 					image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
-					cwin_send_message (wel_item, tcm_setimagelist, 0, cwel_pointer_to_integer (image_list.item))
+					cwin_send_message (wel_item, tcm_setimagelist, to_wparam (0), image_list.item)
 				end
 				image_list.add_pixmap (a_pixmap)
 					-- Set the `iimage' to the index of the image to be used
@@ -948,7 +930,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					-- Note that `get_item' is not used as this does not set the `mask' enabling
 					-- `iimage' to be returned. I did not want to change the behaviour in WEL_TAB_CONTROL_ITEM
 					-- to avoid breaking something. Julian
-				cwin_send_message (wel_item, Tcm_getitem, index_of (v, 1) - 1, a_wel_item.to_integer)
+				cwin_send_message (wel_item, Tcm_getitem, to_wparam (index_of (v, 1) - 1), a_wel_item.item)
 				image_index := a_wel_item.iimage
 					-- `image_index' may be -1 in the case where a tab does not have an associated image.
 					-- If so, there is nothing to do as the returned pixmap must be `Void'.
@@ -1024,8 +1006,7 @@ feature {NONE} -- Font implementation
 					set_default_font
 				end
 			else
-				cwin_send_message (wel_item, Wm_setfont, 0,
-					cwin_make_long (1, 0))
+				cwin_send_message (wel_item, Wm_setfont, to_wparam (0), cwin_make_long (1, 0))
 			end
 			notify_change (2 + 1, Current)
 		end

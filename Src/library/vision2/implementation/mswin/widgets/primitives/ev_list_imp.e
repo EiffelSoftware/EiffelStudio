@@ -495,8 +495,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected + Lvis_focused)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i,
-				litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -509,8 +508,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i,
-				litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	set_default_minimum_size is
@@ -602,7 +600,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
+			cwin_send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Lvht_onitemlabel)
 			or flag_set (info.flags, Lvht_onitemicon)
 			then
@@ -723,7 +721,7 @@ feature {EV_ANY_I} -- Implementation
 			pixmap_line_length: INTEGER
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 				-- Create a brush corresponding to the background color.
 			if is_sensitive then
 				if background_color_imp = Void then
@@ -889,24 +887,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

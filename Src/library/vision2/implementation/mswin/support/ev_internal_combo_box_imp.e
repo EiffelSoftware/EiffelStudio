@@ -218,17 +218,17 @@ feature {NONE} -- Implementation
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 		
-	cwin_get_wm_command_hwnd (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_COMMAND_HWND"
 		end
 
-	on_wm_ctlcolor (wparam, lparam: INTEGER) is
+	on_wm_ctlcolor (wparam, lparam: POINTER) is
 			-- Common routine for Wm_ctlcolor messages.
 		require
 			exists: exists
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			if hwnd_control /= default_pointer then
 				control ?= window_of_item (hwnd_control)
 				if control /= Void and then control.exists then
-					create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+					create paint_dc.make_by_pointer (Current, wparam)
 					on_color_control (control, paint_dc)
 				end
 			end
@@ -281,13 +281,12 @@ feature {NONE} -- Implementation
 				debug ("WEL")
 					io.put_string ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
 				end
-				set_message_return_value (brush.to_integer)
+				set_message_return_value (brush.item)
 				disable_default_processing
 			end
 		end
 		
-	process_message (hwnd: POINTER; msg,
-			wparam, lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		do

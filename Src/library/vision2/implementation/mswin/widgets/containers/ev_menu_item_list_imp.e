@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 		
+	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
+		
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -97,7 +102,7 @@ feature -- Standard output
 		
 feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL Implementation
 
-	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): INTEGER is
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER is
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		local
 			shortcut_text: STRING
@@ -124,14 +129,14 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 						if menu_text.count > shortcut_text.count and then
 						   menu_text.substring_index (shortcut_text, 1) /= 0
 						then
-							if Result = 0 then
+							if Result = default_pointer then
 									-- item with the right letter found,
 									-- execute it.
-								Result := ((feature {WEL_MNC_CONSTANTS}.Mnc_execute) |<< 16) | child_index
+								Result := cwin_make_long (child_index, feature {WEL_MNC_CONSTANTS}.Mnc_execute)
 							else
 									-- There is a second item with the right letter,
 									-- just select the first one.
-								Result := ((feature {WEL_MNC_CONSTANTS}.Mnc_select) |<< 16) | (Result & 0x0000FFFF)
+								Result := cwin_make_long (cwin_lo_word (Result), feature {WEL_MNC_CONSTANTS}.Mnc_select)
 							end
 						end
 					end
@@ -234,7 +239,8 @@ feature {NONE} -- Implementation
 
 			sep_imp ?= menu_item_imp
 			if sep_imp /= Void then
-				cwin_insert_menu (wel_item, pos - 1, Mf_separator | menu_flag, 0, cwel_integer_to_pointer (sep_imp.object_id))
+				cwin_insert_menu (wel_item, pos - 1, Mf_separator | menu_flag,
+					default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 			else
 				menu_imp ?= menu_item_imp
 				if menu_item_imp.is_sensitive then
@@ -243,13 +249,16 @@ feature {NONE} -- Implementation
 					menu_flag := menu_flag | Mf_grayed
 				end
 				if menu_imp /= Void then
-					cwin_insert_menu (wel_item, pos - 1, Mf_popup | menu_flag, cwel_pointer_to_integer (menu_imp.wel_item), cwel_integer_to_pointer (menu_imp.object_id))
+					cwin_insert_menu (wel_item, pos - 1, Mf_popup | menu_flag,
+						menu_imp.wel_item, cwel_integer_to_pointer (menu_imp.object_id))
 				else
 					chk_imp ?= menu_item_imp
 					if chk_imp /= Void and then chk_imp.is_selected then
 						menu_flag := menu_flag | Mf_checked
 					end
-					cwin_insert_menu (wel_item, pos - 1, menu_flag, menu_item_imp.id, cwel_integer_to_pointer (menu_item_imp.object_id))
+					cwin_insert_menu (wel_item, pos - 1, menu_flag,
+						cwel_integer_to_pointer (menu_item_imp.id),
+						cwel_integer_to_pointer (menu_item_imp.object_id))
 					check
 						inserted: position_to_item_id (pos - 1) = menu_item_imp.id
 						inserted_on_same_place: position_to_item_id (pos - 1) = (ev_children @ pos).id
@@ -353,7 +362,8 @@ feature {NONE} -- Implementation
 			if rgroup /= Void then
 				sep_imp.set_radio_group (rgroup)
 			end
-			cwin_insert_menu (wel_item, pos - 1, Mf_separator | Mf_byposition | Mf_ownerdraw, 0, cwel_integer_to_pointer (sep_imp.object_id))
+			cwin_insert_menu (wel_item, pos - 1, Mf_separator | Mf_byposition | Mf_ownerdraw,
+				default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 		end
 		
 	insert_menu (menu_imp: EV_MENU_IMP; pos: INTEGER) is
@@ -362,7 +372,8 @@ feature {NONE} -- Implementation
 			menu_flag: INTEGER
 		do
 			menu_flag := Mf_popup | Mf_byposition | Mf_ownerdraw
-			cwin_insert_menu (wel_item, pos - 1, menu_flag, cwel_pointer_to_integer (menu_imp.wel_item),  cwel_integer_to_pointer (menu_imp.object_id))
+			cwin_insert_menu (wel_item, pos - 1, menu_flag, menu_imp.wel_item,
+				cwel_integer_to_pointer (menu_imp.object_id))
 		end
 		
 	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
@@ -372,7 +383,9 @@ feature {NONE} -- Implementation
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
 		do
-			cwin_insert_menu (wel_item, pos -1, Mf_byposition | Mf_ownerdraw, menu_item_imp.id, cwel_integer_to_pointer (menu_item_imp.object_id))
+			cwin_insert_menu (wel_item, pos -1, Mf_byposition | Mf_ownerdraw,
+				cwel_integer_to_pointer (menu_item_imp.id),
+				cwel_integer_to_pointer (menu_item_imp.object_id))
 			check
 				inserted: position_to_item_id (pos - 1) = menu_item_imp.id
 				inserted_on_same_place: position_to_item_id (pos - 1) = (ev_children @ pos).id
@@ -459,7 +472,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): INTEGER is
+	propagate_on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER is
 			-- Propagate the `on_menu_char' message to the submenus until
 			-- the message is handled.
 		local
@@ -470,7 +483,7 @@ feature {NONE} -- Implementation
 			from
 				ev_children.start
 			until
-				Result /= 0 or ev_children.after
+				Result /= default_pointer or ev_children.after
 			loop
 				sub_menu ?= ev_children.item
 				if sub_menu /= Void then

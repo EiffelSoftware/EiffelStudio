@@ -27,6 +27,11 @@ inherit
 			execute_warner_ok as open_project
 		end
 
+	BENCH_COMMAND_EXECUTOR
+		rename
+			execute as launch_ebench
+		end
+
 creation
 	make,
 	make_from_project_file
@@ -93,6 +98,7 @@ feature {NONE} -- Implementation
 			file: RAW_FILE
 			environment_variable: EXECUTION_ENVIRONMENT
 			last_directory_opened:STRING
+			ebench_command_name: STRING
 		do
 			if not project_tool.initialized then
 				if has_project_name then
@@ -141,6 +147,60 @@ feature {NONE} -- Implementation
 									Interface_names.b_Ok, Void, Void)
 							else
 								open_project_file (file_name)
+							end
+						end
+					end
+				end
+			else
+					-- A project has been opened, we need to open a new one
+				if has_project_name then
+					!! file.make (project_file_name)
+					if not file.exists then
+						warner (Project_tool).custom_call (Current,
+								Warning_messages.w_file_not_exist (project_file_name), 
+								Interface_names.b_Ok, Void, Void)
+					else
+						open_project_file (project_file_name)
+					end
+				else
+					if argument = project_tool then
+						-- We open the file_selection dialog on the last opened directory.
+						!! environment_variable
+						new_name_chooser := name_chooser (Project_tool)
+						last_directory_opened := environment_variable.get (Bench_Directory_List)
+						new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
+						new_name_chooser.set_file_selection
+
+						new_name_chooser.set_title (Interface_names.t_Select_a_file)
+						new_name_chooser.set_pattern ("*.epr")
+						new_name_chooser.set_pattern_name ("Eiffel Project File (*.epr)")
+
+						if not has_limited_license then
+							last_name_chooser.set_window (Project_tool)
+							last_name_chooser.call (Current)
+						else
+							choose_again := True
+							warner (Project_tool).custom_call (Current,
+								expiration_message, Interface_names.b_Ok, Void, Void)
+						end
+					else
+						file_name := clone (last_name_chooser.selected_file)
+						if file_name.empty then
+							choose_again := True
+							warner (Project_tool).custom_call (Current,
+								Warning_messages.w_file_not_exist (file_name), 
+								Interface_names.b_Ok, Void, Void)
+						else
+							!! file.make (file_name)
+							if not file.exists then
+								choose_again := True
+								warner (Project_tool).custom_call (Current,
+									Warning_messages.w_file_not_exist (file_name), 
+									Interface_names.b_Ok, Void, Void)
+							else
+								ebench_command_name := "ebench "
+								ebench_command_name.append (file_name)
+								launch_ebench (ebench_command_name)
 							end
 						end
 					end

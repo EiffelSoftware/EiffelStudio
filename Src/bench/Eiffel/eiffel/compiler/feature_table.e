@@ -6,7 +6,7 @@ class FEATURE_TABLE
 
 inherit
 
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			same_type as general_same_type,
 			id as feat_tbl_id,
@@ -395,9 +395,9 @@ debug ("ACTIVITY")
 	io.error.putstring (" removed%N");
 end;
 					if not f.is_code_replicated then
-						Tmp_body_server.desactive (f.body_id.id);
+						Tmp_body_server.desactive (f.body_id);
 					else
-						Tmp_rep_feat_server.desactive (f.body_id.id);
+						Tmp_rep_feat_server.desactive (f.body_id);
 					end;
 						
 					-- There is no need for a corresponding "reactivate" here
@@ -854,7 +854,7 @@ feature -- Debugging
 if it.written_class > System.any_class.compiled_class then
 				it.trace;
 				io.error.putstring ("code id: ");
-				io.error.putint (it.code_id.id);
+				it.code_id.trace;
 				io.error.putstring (" DT: ");
 				io.error.putstring (it.generator);
 				io.error.new_line;

@@ -169,10 +169,12 @@ feature -- Access
 				can_drop := False
 			end
 
-				--| We must override if the type represented by `object' is a window.
-				--| Currently, windows are fixed and may not be replaced.
+				-- We must override if the type represented by `object' is a window
+				-- or `Current' represents a window, as nothing may be replaced by a window.
+				-- Currently, windows are fixed and may not be replaced.
 				
-			if object.type.is_equal (Ev_window_string) or object.type.is_equal (Ev_titled_window_string) then
+			if object.type.is_equal (Ev_window_string) or object.type.is_equal (Ev_titled_window_string) or object.type.is_equal (Ev_dialog_string) or
+				type.is_equal (Ev_window_string) or type.is_equal (Ev_titled_window_string) or type.is_equal (Ev_dialog_string) then
 				can_drop := False
 			end
 

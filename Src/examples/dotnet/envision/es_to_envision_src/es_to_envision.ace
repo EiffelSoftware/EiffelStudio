@@ -1,0 +1,23 @@
+system
+	"es_to_envision"
+
+root
+	es_to_envision: make
+
+default
+	assertion (require)
+	console_application (no)
+
+
+-- EiffelBase
+
+cluster
+	root_cluster:		"$EIFFEL_SRC\examples\dotnet\envision"
+
+
+	library base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+end

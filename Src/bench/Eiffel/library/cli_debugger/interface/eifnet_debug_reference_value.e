@@ -144,10 +144,6 @@ feature -- Access
 						value_module_file_name_valid: value_module_file_name /= Void
 						value_class_token_valid: value_class_token > 0
 					end
-					--FIXME: JFIAT
-					print ("EIFNET_DEBUG_REFERENCE_VALUE.dynamic_class_type ... computing%N%T module=")
-					print (value_module_file_name)
-					print ("%N")
 					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
 					if Result = Void then
 						--| This means we are dealing with an external type (dotnet)

@@ -6,8 +6,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class MULTIPLE_TRANSACTION inherit
+class
+	 MULTIPLE_TRANSACTION
 
+inherit
 	TRANSACTION
 		undefine
 			copy, is_equal
@@ -19,7 +21,7 @@ class MULTIPLE_TRANSACTION inherit
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force, is_inserted
+			copy, is_equal, force, is_inserted, search
 		end
 	
 	ARRAYED_LIST[TRANSACTION]
@@ -31,7 +33,6 @@ class MULTIPLE_TRANSACTION inherit
 		end
 
 create
-
 	make
 
 feature {NONE} -- Initialization

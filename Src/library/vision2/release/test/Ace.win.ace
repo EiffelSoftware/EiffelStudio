@@ -29,7 +29,7 @@ external
 		"$VISION_PRERELEASE\vision2\spec\include"
 	object:
 		"$VISION_PRERELEASE\wel\spec\$(COMPILER)\lib\wel.lib",
-		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\libpng.lib",
-		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\zlib.lib",
+		"$VISION_PRERELEASE\libpng\libpng.lib",
+		"$VISION_PRERELEASE\zlib\zlib.lib",
 		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\vision2.lib"
 end

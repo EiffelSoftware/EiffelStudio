@@ -136,6 +136,9 @@ feature {NONE} -- Initialization
  			if titled_window /= void then
  				show
  			end
+ 			
+ 				-- update events from `other'.
+			copy_events_from_other (other)
 
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.

@@ -37,6 +37,14 @@ feature {AST_FACTORY} -- Initialization
 			end_location_set: end_location.is_equal (el)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_if_as (Current)
+		end
+
 feature -- Attributes
 
 	condition: EXPR_AS

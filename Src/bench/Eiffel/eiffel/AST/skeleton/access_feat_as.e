@@ -33,6 +33,14 @@ feature {AST_FACTORY} -- Initialization
 			parameters_set: parameters = p
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_access_feat_as (Current)
+		end
+
 feature -- Attributes
 
 	feature_name: ID_AS

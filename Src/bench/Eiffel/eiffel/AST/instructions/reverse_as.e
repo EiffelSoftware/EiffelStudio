@@ -11,7 +11,16 @@ class REVERSE_AS
 inherit
 	ASSIGN_AS
 		redefine
+			process,
 			check_validity, byte_node, assign_symbol
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_reverse_as (Current)
 		end
 
 feature -- Access

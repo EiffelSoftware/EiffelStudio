@@ -13,14 +13,25 @@ inherit
 		rename
 			access_type as feature_access_type
 		redefine
+			process,
 			is_argument
 		end
 
 	ACCESS_INV_AS
+		undefine
+			process
 		redefine
 			access_type, is_argument
 		select 
 			access_type
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_access_id_as (Current)
 		end
 
 feature

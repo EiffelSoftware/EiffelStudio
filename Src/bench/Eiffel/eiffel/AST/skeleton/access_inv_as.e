@@ -12,7 +12,16 @@ class ACCESS_INV_AS
 inherit
 	ACCESS_FEAT_AS
 		redefine
+			process,
 			is_export_valid
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_access_inv_as (Current)
 		end
 
 feature

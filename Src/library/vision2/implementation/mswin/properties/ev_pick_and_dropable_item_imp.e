@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -81,6 +80,9 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/14 21:48:01  brendel
+--| Released.
+--|
 --| Revision 1.2  2000/04/12 18:56:20  brendel
 --| Unreleased.
 --| Cosmetics.

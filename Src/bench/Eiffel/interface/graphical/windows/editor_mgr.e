@@ -239,7 +239,6 @@ feature {WINDOW_MGR} -- Implementation
 				ed.close;
 				active_editors.remove;
 				if free_list.count >= free_list_max then
-print("First destroy:%N")
 					ed.destroy
 				else
 					free_list.extend (ed)
@@ -248,7 +247,6 @@ print("First destroy:%N")
 					--| Should never happen but this is ultra
 					--| safe programming.
 				ed.close;
-				ed.unregister_holes;
 				if ed.is_a_shell then
 					ed.destroy
 				end

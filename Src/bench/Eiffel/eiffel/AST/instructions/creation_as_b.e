@@ -110,7 +110,7 @@ feature -- Type check, byte code and dead code removal
 						-- Check specified creation type
 					if type.has_like then
 							-- FIXME
-							-- !like a! is nott supported in 3.2
+							-- !like a! is not supported in 3.2
 							-- The resolution of the type should be done
 							-- as the one for local variables (call to
 							-- local_evalutor and use of solved type!!)

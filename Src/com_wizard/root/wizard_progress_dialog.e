@@ -8,7 +8,8 @@ inherit
 	WEL_MODELESS_DIALOG
 		redefine
 			on_cancel,
-			terminate
+			terminate,
+			setup_dialog
 		end
 
 	APPLICATION_IDS
@@ -51,6 +52,7 @@ feature -- Access
 
 	terminate (ares: INTEGER) is
 		do
+			Parent.enable
 			Precursor (ares)
 		end
 
@@ -60,6 +62,13 @@ feature {NONE} -- Behavior
 			-- Cancel generation.
 		do
 			Shared_wizard_environment.set_abort (Standard_abort_value)
+			Precursor
+		end
+
+	setup_dialog is
+			-- Disable parent when active.
+		do
+			parent.disable
 		end
 
 end -- class WIZARD_PROGRESS_DIALOG

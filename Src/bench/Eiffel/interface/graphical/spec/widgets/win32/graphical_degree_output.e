@@ -299,7 +299,7 @@ feature -- Per entity output
 			cluster_name := a_cluster.cluster_name
 			if cluster_name.count + a_path.count > 40 then
 				l_path := clone(a_path)
-				l_path.head (7)
+				l_path.head (12)
 				output_string := clone (cluster_name) + " in " + l_path
 				l_path := clone(a_path)
 				l_path.tail (15)

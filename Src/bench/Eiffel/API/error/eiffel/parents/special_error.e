@@ -21,7 +21,6 @@ inherit
 		end
 
 creation {CLASS_C}
-
 	make
 
 feature {NONE} -- Initialization
@@ -39,7 +38,7 @@ feature -- Properties
 	error_case: STRING;
 			-- Case of error
 
-	code: STRING is "Special_error";
+	code: STRING is "Library_error";
 			-- Error code
 
 feature -- Output

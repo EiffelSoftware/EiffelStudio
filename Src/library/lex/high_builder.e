@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 		local
 			back_slashed, endword: BOOLEAN
 		do
-			!! last_string.make (0);
+			create last_string.make (0);
 			from
 			until
 				endword or parsing_stopped
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 			error_position: INTEGER;
 			message: STRING
 		do
-			!! message.make (0);
+			create message.make (0);
 			if description_length = 1 or pos < 1 then
 				error_position := 1
 			elseif pos < description_length then

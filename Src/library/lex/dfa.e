@@ -54,7 +54,7 @@ feature -- Access
 			if l.after or l.is_empty then
    				Result := state.final_array
 			else
-   				!!Result.make (0, -1)
+   				create Result.make (0, -1)
 			end
 		end; 
 

@@ -30,7 +30,7 @@ feature -- Status setting
 			-- Make current state final for `i'-th regular expression.
 		do
 			if final_array = Void then
-				!! final_array.make (1, 1);
+				create final_array.make (1, 1);
 				final_array.put (i, 1);
 				final := i
 			elseif final_array.item (final_array.lower) /= i then

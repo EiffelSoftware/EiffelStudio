@@ -61,9 +61,10 @@ feature -- Creation
 			-- Set values for GUI elements.
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
+			temp_title: STRING
 		do
-			set_title ("Object tool generator")
-			set_size (505, 580)
+			set_title ("Object tool generator: ")
+			set_size (resources.object_tool_generator_width, resources.object_tool_generator_height)
 			included_label.set_left_alignment
 			excluded_label.set_left_alignment
 			include_button.set_down
@@ -102,11 +103,6 @@ feature -- Creation
 			arrow_form.attach_left_position (exclude_button, 20)
 			arrow_form.attach_left_widget (include_button, include_label, 3)
 			arrow_form.attach_left_widget (exclude_button, exclude_label, 3)
-
--- 			arrow_form.attach_left_ (include_all_label, )
--- 			arrow_form.attach_right (exclude_all_label, 0)
--- 			arrow_form.attach_right_widget (include_all_label, include_all_button, 3)
--- 			arrow_form.attach_right_widget (exclude_all_label, exclude_all_button, 3)
 
 			arrow_form.attach_left_position (include_all_button, 70)
 			arrow_form.attach_left_position (exclude_all_button, 70)
@@ -376,7 +372,12 @@ feature {NONE} -- Implementation
 			edited_class_not_void: edited_class /= Void
 		local
 			query_list: LINKED_LIST [APPLICATION_QUERY]
+			temp_title: STRING
 		do
+			!! temp_title.make (0)
+			temp_title.append ("Object tool generator: ")
+			temp_title.append (edited_class.class_name)
+			set_title (temp_title)
 			excluded_list.wipe_out
 			included_list.wipe_out
 			query_list := edited_class.query_list

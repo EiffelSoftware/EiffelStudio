@@ -947,6 +947,13 @@ feature -- Access
 			"WM_COMMNOTIFY"
 		end
 
+	Wm_notify: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WM_NOTIFY"
+		end
+
 end -- class WEL_WM_CONSTANTS
 
 --|-------------------------------------------------------------------------

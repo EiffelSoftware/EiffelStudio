@@ -51,12 +51,9 @@ rt_public EIF_BOOLEAN xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 		return EIF_TRUE;
 
 	if (ref1 != (EIF_REFERENCE) 0 && ref2 != (EIF_REFERENCE) 0) {
-		if (econfg(ref2, ref1)) {
-			tmp = ref1;
-			ref1 = ref2;
-			ref2 = tmp;
-		}
-			/* `eequal' needs second argument to conform to its first one */ 
+			/* We don't care anymore about conformance, eequal expect
+			 * type to be equal, otherwise it returns False.
+			 */
 		return eequal(ref1, ref2);
 	}
 

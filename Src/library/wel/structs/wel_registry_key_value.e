@@ -44,6 +44,16 @@ feature -- Initialization
 			type_set: type = t
 			internal_value_set: internal_value = v
 		end
+		
+	make_with_dword_value (v: like dword_value) is
+			-- Set `dword_value' with `v'.
+			-- Set `type' with `reg_dword'.
+		do
+			set_dword_value (v)
+		ensure
+			type_set: type = reg_dword
+			dword_value_set: dword_value = v
+		end
 
 feature -- Access
 

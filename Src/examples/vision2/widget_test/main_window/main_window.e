@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 			register_type_change_agent (agent clear_idle_actions)
 				-- Clear any agents from the idle actions, as a new widget
 				-- type is being selected.
+				
+			register_type_change_agent (agent update_title)
 			
 				-- The first type change agent that we register locks the update, so
 				-- that the user does not see the changes taking place.
@@ -119,6 +121,13 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	update_title (a_widget: EV_WIDGET) is
+			-- Update `title' based on type of `a_widget'.
+		do
+			set_title ("Vision2 Tour - " + a_widget.generating_type)
+		end
+		
 
 	clear_idle_actions (a_widget: EV_WIDGET) is
 			-- Clear `idle_actions' from EV_APPLICATION.

@@ -100,7 +100,6 @@ feature -- method id's
 
 feature -- call object's methods
 
-
 	void_method (mid: POINTER; args: JAVA_ARGS) is
 			-- Call a Java procedure with method_id "mid" and 
 			-- arguments "args.
@@ -114,7 +113,6 @@ feature -- call object's methods
 			end
 			c_call_void_method (jni.envp, java_object_id, mid, argsp)
 		end
-
 
 	string_method (mid: POINTER; args: JAVA_ARGS): STRING is
 			-- Call an instance function that returns a STRING.
@@ -256,7 +254,6 @@ feature -- call object's methods
 			Result := c_call_byte_method (jni.envp, java_object_id, mid, argsp)
 		end
 
-
 feature -- attribute IDs
 
 	field_id (lname: STRING; sig: STRING): POINTER is
@@ -274,7 +271,6 @@ feature -- attribute IDs
 		end
 
 feature -- access object's attributes
-
 
 	integer_attribute (fid: POINTER): INTEGER is
 			-- access to an integer attribute

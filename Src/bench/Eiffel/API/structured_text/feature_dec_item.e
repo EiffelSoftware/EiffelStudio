@@ -42,8 +42,8 @@ feature {TEXT_FILTER} -- Access
 
 	on_before_processing (f: TEXT_FILTER) is
 			-- `Current' is about to be processed.
-		do
-			f.set_keyword (kw_Feature, feature_name)
+		do			
+			f.set_keyword (kw_Feature, f.escaped_text (feature_name))
 		end
 
 	on_after_processing (f: TEXT_FILTER) is

@@ -238,6 +238,35 @@ feature -- Text processing
 			end
 		end;
 
+	escaped_text (str: STRING): STRING is
+			-- Escape characters in `str'.
+		require
+			str_not_void: str /= Void
+		local
+			i, str_count: INTEGER;
+			char: CHARACTER
+		do
+			if escape_characters.is_empty then
+				Result := str
+			else
+				str_count := str.count
+				create Result.make (str_count)
+				from
+					i := 1
+				until
+					i > str_count
+				loop
+					char := str.item (i)
+					if escape_characters.has (char) then
+						Result.append (escape_characters.item (char))
+					else
+						Result.extend (char)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Text processing
 
 	structured_text: STRUCTURED_TEXT
@@ -581,35 +610,6 @@ feature {NONE} -- Text processing
 			print_escaped_text (text.e_class.name_in_upper)
 		end;
 
-	escaped_text (str: STRING): STRING is
-			-- Escape characters in `str'.
-		require
-			str_not_void: str /= Void
-		local
-			i, str_count: INTEGER;
-			char: CHARACTER
-		do
-			if escape_characters.is_empty then
-				Result := str
-			else
-				str_count := str.count
-				create Result.make (str_count)
-				from
-					i := 1
-				until
-					i > str_count
-				loop
-					char := str.item (i)
-					if escape_characters.has (char) then
-						Result.append (escape_characters.item (char))
-					else
-						Result.extend (char)
-					end
-					i := i + 1
-				end
-			end
-		end
-
 	print_escaped_text (str: STRING) is
 			-- Append `str' to `image' with escape characters
 			-- substitutions if required.
@@ -669,12 +669,14 @@ feature {NONE} -- Text processing
 			else
 				feat_suffix := class_suffix
 			end
+			
+			feat_suffix := escaped_text (feat_suffix)			
 
 			set_keyword (kw_File, relative_to_base ("" +
 				written_class.lace_class.document_file_relative_path (file_separator) +
 				feat_suffix
 			))
-			set_keyword (kw_Feature, real_feature.name)
+			set_keyword (kw_Feature, escaped_text (real_feature.name))
 		end
 
 	process_feature_text (text: FEATURE_TEXT) is

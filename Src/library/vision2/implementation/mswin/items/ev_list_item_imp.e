@@ -212,18 +212,18 @@ feature {NONE} -- Implementation
 	draw_unselected_body (dc: WEL_DC; rect: WEL_RECT) is
 			-- Draw the body of the button : bitmap + text
 		do
-			dc.set_background_color (parent_imp.background_color)
+			dc.set_background_color (parent_imp.background_color_imp)
 			dc.fill_rect (rect, parent_imp.background_brush)
 			if pixmap_imp /= Void and text /= "" then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			rect.set_left (pixmap_imp.width + 5)
-				dc.set_text_color (parent_imp.foreground_color)
+				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 				rect.set_left (0)
 			elseif pixmap_imp /= Void then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			elseif text /= "" then
-				dc.set_text_color (parent_imp.foreground_color)
+				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 			end
 		end	

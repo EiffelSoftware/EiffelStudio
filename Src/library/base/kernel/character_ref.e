@@ -16,14 +16,12 @@ class CHARACTER_REF inherit
 		export
 			{NONE} max_ref, min_ref
 		redefine
-			out, three_way_comparison
+			out, three_way_comparison, is_equal
 		end;
 
 	HASHABLE
-		undefine
-			is_equal
 		redefine
-			is_hashable, out
+			is_hashable, out, is_equal
 		end
 
 feature -- Access
@@ -58,6 +56,13 @@ feature -- Comparison
 			-- Is `other' greater than current character?
 		do
 			Result := item < other.item
+		end;
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object of the same type
+			-- as current object and identical to it?
+		do
+			Result := other.item = item
 		end;
 
 	three_way_comparison (other: CHARACTER_REF): INTEGER is

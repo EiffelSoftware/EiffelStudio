@@ -82,6 +82,10 @@ stats */
 	/*---------*/
 #define TAG_SIZE 512  /* Maximum size for a single tagged expression */
 
+	/*------------*/
+	/*  string.c  */
+	/*------------*/
+#define	MAX_NUM_LEN	256	/* Maximum length for an ASCII number. */
 
 	/*---------*/
 	/* sig.c */

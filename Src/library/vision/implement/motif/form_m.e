@@ -6,42 +6,54 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FORM_M
+class 
+	FORM_M
 
 inherit
 
 	FORM_I;
 
 	BULLETIN_M
+		rename
+			is_valid as is_widget_valid,
+            attach_right as child_attach_right,
+            attach_left as child_attach_left,
+            attach_top as child_attach_top,
+            attach_bottom as child_attach_bottom,
+            detach_right as child_detach_right,
+            detach_left as child_detach_left,
+            detach_top as child_detach_top,
+            detach_bottom as child_detach_bottom
 		undefine
-			create_widget
+			create_widget, is_form
 		redefine
 			make
 		end
 
-    MEL_FORM
-        rename
-            make as form_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-			attach_right as mel_attach_right,
-			attach_left as mel_attach_left,
-			attach_top as mel_attach_top,
-			attach_bottom as mel_attach_bottom,
-			detach_right as mel_detach_right,
-			detach_left as mel_detach_left,
-			detach_top as mel_detach_top,
-			detach_bottom as mel_detach_bottom,
-            is_shown as shown
+	MEL_FORM
+		rename
+			make as form_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			is_shown as shown,
+            attach_right as child_attach_right,
+            attach_left as child_attach_left,
+            attach_top as child_attach_top,
+            attach_bottom as child_attach_bottom,
+            detach_right as child_detach_right,
+            detach_left as child_detach_left,
+            detach_top as child_detach_top,
+            detach_bottom as child_detach_bottom,
+			is_valid as is_widget_valid
 		select
 			form_make, make_no_auto_unmanage
-        end
+		end
 
 creation
 
@@ -51,11 +63,12 @@ feature {NONE} -- Initialization
 
 	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif form.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            form_make (a_form.identifier,
-                    mel_parent (a_form, widget_index),
-                    man);
+			form_make (a_form.identifier, mc, man);
 		end
 
 feature -- Element change
@@ -66,9 +79,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_attach_right (w);
-			set_right_offset (w, r_offset)
+			w := real_child (a_child);
+			w.attach_right;
+			w.set_right_offset (r_offset)
 		end;
 
 	attach_left (a_child: WIDGET_I; l_offset: INTEGER) is
@@ -77,9 +90,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_attach_left (w);
-			set_left_offset (w, l_offset)
+			w := real_child (a_child);
+			w.attach_left;
+			w.set_left_offset (l_offset)
 		end;
 
 	attach_bottom (a_child: WIDGET_I; b_offset: INTEGER) is
@@ -88,9 +101,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_attach_bottom (w);
-			set_bottom_offset (w, b_offset)
+			w := real_child (a_child);
+			w.attach_bottom;
+			w.set_bottom_offset (b_offset)
 		end;
 
 	attach_top (a_child: WIDGET_I; t_offset: INTEGER) is
@@ -99,9 +112,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_attach_top (w);
-			set_top_offset (w, t_offset)
+			w := real_child (a_child);
+			w.attach_top;
+			w.set_top_offset (t_offset)
 		end;
 
 	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; r_offset: INTEGER) is
@@ -110,10 +123,10 @@ feature -- Element change
 		local
 			w, t: MEL_RECT_OBJ
 		do
-			t ?= a_widget;
-			w ?= a_child;
-			attach_right_to_widget (w, t);
-			set_right_offset (w, r_offset);
+			t := real_child (a_widget);
+			w := real_child (a_child);
+			w.attach_right_to_widget (t);
+			w.set_right_offset (r_offset);
 		end;
 
 	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; l_offset: INTEGER) is
@@ -122,10 +135,10 @@ feature -- Element change
 		local
 			w, t: MEL_RECT_OBJ
 		do
-			t ?= a_widget;
-			w ?= a_child;
-			attach_left_to_widget (w, t);
-			set_left_offset (w, l_offset);
+			t := real_child (a_widget);
+			w := real_child (a_child);
+			w.attach_left_to_widget (t);
+			w.set_left_offset (l_offset);
 		end;
 
 	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; b_offset: INTEGER) is
@@ -134,10 +147,10 @@ feature -- Element change
 		local
 			w, t: MEL_RECT_OBJ
 		do
-			t ?= a_widget;
-			w ?= a_child;
-			attach_bottom_to_widget (w, t);
-			set_bottom_offset (w, b_offset);
+			t := real_child (a_widget);
+			w := real_child (a_child);
+			w.attach_bottom_to_widget (t);
+			w.set_bottom_offset (b_offset);
 		end;
 
 	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; t_offset: INTEGER) is
@@ -146,10 +159,10 @@ feature -- Element change
 		local
 			w, t: MEL_RECT_OBJ
 		do
-			t ?= a_widget;
-			w ?= a_child;
-			attach_top_to_widget (w, t);
-			set_top_offset (w, t_offset);
+			t := real_child (a_widget);
+			w := real_child (a_child);
+			w.attach_top_to_widget (t);
+			w.set_top_offset (t_offset);
 		end;
 
 	attach_left_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -160,8 +173,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			attach_left_to_position (w, a_position);
+			w := real_child (a_child);
+			w.attach_left_to_position (a_position);
+			w.set_left_offset (0)
 		end;
 
 	attach_right_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -172,8 +186,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			attach_right_to_position (w, a_position);
+			w := real_child (a_child);
+			w.attach_right_to_position (a_position);
+			w.set_right_offset (0)
 		end;
 
 	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -184,8 +199,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			attach_bottom_to_position (w, a_position);
+			w := real_child (a_child);
+			w.attach_bottom_to_position (a_position);
+			w.set_bottom_offset (0);
 		end;
 
 	attach_top_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -196,8 +212,9 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			attach_top_to_position (w, a_position);
+			w := real_child (a_child);
+			w.attach_top_to_position (a_position);
+			w.set_top_offset (0);
 		end;
 
 	detach_right (a_child: WIDGET_I) is
@@ -205,8 +222,8 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_detach_right (w);
+			w := real_child (a_child);
+			w.detach_right;
 		end;
 
 	detach_left (a_child: WIDGET_I) is
@@ -214,8 +231,8 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_detach_left (w);
+			w := real_child (a_child);
+			w.detach_left;
 		end;
 
 	detach_bottom (a_child: WIDGET_I) is
@@ -223,8 +240,8 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_detach_bottom (w);
+			w := real_child (a_child);
+			w.detach_bottom;
 		end;
 
 	detach_top (a_child: WIDGET_I) is
@@ -232,8 +249,25 @@ feature -- Element change
 		local
 			w: MEL_RECT_OBJ
 		do
-			w ?= a_child;
-			mel_detach_top (w);
+			w := real_child (a_child);
+			w.detach_top;
+		end;
+
+feature {NONE} -- Implementation
+
+	real_child (a_child: WIDGET_I): MEL_RECT_OBJ is
+			-- Get the real mel child of the `a_child'
+		do
+			Result ?= a_child;
+			if Result.parent /= Current then
+					-- This means that the widget could be
+					-- scrolled_text or a scrolled_list and the actual
+					-- attachment should be done to the parent widget. 
+				Result := Result.parent	
+				check
+					form_consistency: Result.parent = Current
+				end
+			end	
 		end;
 
 end -- class FORM_M

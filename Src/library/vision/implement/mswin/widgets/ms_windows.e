@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
                         -- `application_class' is used for the resource specifications.
 		do 
 			runable := True
+			set_application (Current)
 			if application_class /= Void then
 				app_class := clone (application_class)
 			end

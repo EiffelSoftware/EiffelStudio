@@ -140,6 +140,7 @@ end
 				max_rout_id := max_rout_id.max (id.id)
 			end;
 debug ("TRANSFER")
+			print ("%NIs transferring")
 			print ("%NPoly_tables count: ")
 			print (tmp_poly_server.count)
 			print ("%Nnewunits size : ")
@@ -158,7 +159,6 @@ end
 		do
 			if count > Overload then
 				transfer;
-				print ("Is transferring%N")
 			end;
 		end;
 

@@ -178,13 +178,16 @@ feature -- Queries
 			Result := "0x" + object_address.to_integer.to_hex_string
 		end
 
-	value_to_string: STRING is
-			-- String output for the Current value
+	value_to_truncated_string (a_size: INTEGER): STRING is
+			-- Truncated string output for the Current value
 		do
 			if is_string_type then
-				Result := Edv_formatter.prepared_icor_debug_value_as_string (icd_prepared_value)
+				Result := Edv_formatter.prepared_icor_debug_value_as_truncated_string (icd_prepared_value, a_size)
 			else
-				Result := Edv_formatter.prepared_icor_debug_value_to_string (icd_prepared_value)
+				check
+					False -- FIXME: jfiat: should not occur, but for safety, let's keep this here for now
+				end
+				Result := Edv_formatter.prepared_icor_debug_value_to_truncated_string (icd_prepared_value, a_size)
 			end
 		end
 

@@ -217,6 +217,7 @@ feature {NONE} -- Implementation
 			-- Initialize Client subdirectory
 			a_path := clone (Shared_wizard_environment.destination_folder)
 			a_path.append (Client)
+			initialize_directory (a_path)
 			a_path.append_character (Directory_separator)
 			a_path2 := clone (a_path)
 			a_path2.append (Clib)
@@ -231,6 +232,7 @@ feature {NONE} -- Implementation
 			-- Initialize Server subdirectory
 			a_path := clone (Shared_wizard_environment.destination_folder)
 			a_path.append (Server)
+			initialize_directory (a_path)
 			a_path.append_character (Directory_separator)
 			a_path2 := clone (a_path)
 			a_path2.append (Clib)

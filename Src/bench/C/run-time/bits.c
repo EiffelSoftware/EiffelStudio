@@ -110,8 +110,15 @@ long size;
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
 
+	/* As in the memory allocation routines located in malloc.c, a new
+	 * BIT object has to be marked after being allocated in the free
+	 * list. Otherwise the GC will be lost. 
+	 * Fixes negate-big-bit-local.
+	 * -- Fabrice
+	 */
+
 	if (object != (char *) 0) {
-		char *result = eif_set(object, nbytes, bit_dtype);
+		char *result = eif_set(object, nbytes, bit_dtype | EO_NEW);
 
 		LENGTH(result) = (uint32) size;				/* Record size */
 		return result;
@@ -121,15 +128,16 @@ long size;
 	/* NOTREACHED */
 }
 
-char *makebit(bit)
+char *makebit(bit, bit_count)
 char *bit;
+long bit_count;
 {
 	/* Returns a new bit object with value `s' */
 	uint32 val;
 	int i, j, nb_packs, temp;
 	char *result;
 	uint32 *arena;
-	long blength = strlen(bit);
+	long blength = bit_count;
 	
 	result = bmalloc(blength);		/* Creates bit object */
 	arena = ARENA(result);

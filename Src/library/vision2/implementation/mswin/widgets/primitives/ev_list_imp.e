@@ -9,12 +9,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-
+class
 	EV_LIST_IMP
 
 inherit
-
 	EV_LIST_I
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -102,7 +100,6 @@ inherit
 		end
 
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -226,6 +223,27 @@ feature -- Status setting
 				wel_make (wel_imp, 0, 0, 0, 0, 0)
 				copy_list
 			end
+		end
+
+
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+			-- XX Need to be reimplemented with the set_parent
+			-- XX feature.
+
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.interface.remove_implementation
+				ev_children.forth
+			end
+			reset_content
+			ev_children.wipe_out
 		end
 
 feature -- Event : command association

@@ -29,64 +29,66 @@
 #include "eiffel.h"			/* For Windows and OS2 */
 
 #if defined EIF_WINDOWS || defined EIF_OS2
-EIF_BOOLEAN c_is_file_valid (EIF_POINTER p);
-EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER p);
-EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER p);
+EIF_BOOLEAN eif_is_file_valid (EIF_POINTER);
+EIF_BOOLEAN eif_is_directory_name_valid (EIF_POINTER);
+EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER);
 #endif
 
 /* Validity */
 
-EIF_BOOLEAN c_is_directory_valid(EIF_POINTER p)
+EIF_BOOLEAN eif_is_directory_valid(p)
+EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed directory path */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
 	int i, len, last_bslash;
+	EIF_BOOLEAN result;
 
 	len = strlen (p);
 	s = (char *) malloc (len + 1);
-		/* FIXME: memory leak */
 	strcpy (s, p);
 	c = s + len - 1;
 	last_bslash = 0;
 	for (i = len;i >= 0; i--, c--)
 		if (*c == '\\')
-			if (strlen(c+1) && !c_is_directory_name_valid (c+1))
+			if (strlen(c+1) && !eif_is_directory_name_valid (c+1)) {
+				free(s);
 				return EIF_FALSE;
-			else
-				if (last_bslash -1 != i)
-					{
+			} else
+				if (last_bslash -1 != i) {
 					*c = '\0';
 					last_bslash = i;
-					}
-				else
+				} else {
+					free(s);
 					return EIF_FALSE; /* two \ is a row */
+				}
 		else 
 			if (*c == ':')
-				/* Form a:xyz\def  or a:\xyz\def */
-				if ((strlen (c+1)) && (!c_is_directory_name_valid (c+1)))
-					/* Form a:xyz  where xyz is invalid */
+				/* Form a:xyz\def or a:\xyz\def */
+				if ((strlen (c+1)) && (!eif_is_directory_name_valid (c+1))) {
+					/* Form a:xyz where xyz is invalid */
+					free(s);
 					return EIF_FALSE;
-				else
+				} else {
 					/* Form a:\xyz or a: - currently as a:*/
-					{
 					* (c+1) = '\0';
-					return c_is_volume_name_valid (s);
-					}
+					result = eif_is_volume_name_valid (s);
+					free(s);
+					return result;
+				}
 			else
 				;
 					
 	/* 	Did we start with an \ ? If so s is empty other wise it is a relative path */
 	if (strlen(s))
-		if (c_is_directory_name_valid (s))
-			return EIF_TRUE;
-		else
-			return EIF_FALSE;	
-	else			
-		return EIF_TRUE;
+		result = eif_is_directory_name_valid (s);
+	else
+		result = EIF_TRUE;
 
-	/* We don't get here but */
-	return EIF_FALSE;
+	free(s);
+	return result;
+
 #elif defined (__VMS)
 	/* first check to see if p includes a ] */
 	/* in fact, the last character should be ] */
@@ -98,11 +100,13 @@ EIF_BOOLEAN c_is_directory_valid(EIF_POINTER p)
 		return EIF_FALSE;
 	return EIF_TRUE;
 #else
+		/* FIXME */
 	return EIF_TRUE;
 #endif
 }
 
-EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER p)
+EIF_BOOLEAN eif_is_volume_name_valid (p)
+EIF_POINTER p;
 {
 #ifdef __WINDOWS_386__
 	int drive;
@@ -128,13 +132,17 @@ EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER p)
 			}
 	return EIF_FALSE;
 #elif defined EIF_OS2
-	return EIF_TRUE;
+	implement
+#elif defined (__VMS)
+	implement
 #else
-	return EIF_FALSE;
+		/* Unix */
+	return (*p == '\0');
 #endif
 }
 
-EIF_BOOLEAN c_is_file_name_valid (EIF_POINTER p)
+EIF_BOOLEAN eif_is_file_name_valid (p)
+EIF_POINTER p;
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 #ifdef EIF_WIN_31
@@ -182,12 +190,16 @@ EIF_BOOLEAN c_is_file_name_valid (EIF_POINTER p)
 #endif
 				
 	return EIF_TRUE;
+#elif defined (__VMS)
+	implement
 #else
+		/* Unix implement */
 	return EIF_TRUE;
 #endif
 }
 
-EIF_BOOLEAN c_is_extension_valid (EIF_POINTER p)
+EIF_BOOLEAN eif_is_extension_valid (p)
+EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid extension */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -199,13 +211,17 @@ EIF_BOOLEAN c_is_extension_valid (EIF_POINTER p)
 		return EIF_FALSE;
 #endif
 
-	return c_is_file_name_valid (p);
+	return eif_is_file_name_valid (p);
+#elif defined (__VMS)
+	implement
 #else
+		/* Unix implement */
 	return EIF_TRUE;
 #endif
 }
 
-EIF_BOOLEAN c_is_file_valid (EIF_POINTER p)
+EIF_BOOLEAN eif_is_file_valid (p)
+EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed file name (with directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -223,21 +239,25 @@ EIF_BOOLEAN c_is_file_valid (EIF_POINTER p)
 			*c = '\0';
 			break;
 			}
-	if (!c_is_file_name_valid (c+1))
+	if (!eif_is_file_name_valid (c+1))
 		return EIF_FALSE;
-	return c_is_directory_valid (s);
+	return eif_is_directory_valid (s);
+#elif defined (__VMS)
+	implement
 #else
+		/* Unix implement */
 	return EIF_TRUE;
 #endif
 }
 
-EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER p)
+EIF_BOOLEAN eif_is_directory_name_valid (p)
+EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return c_is_file_name_valid (p);
+	return eif_is_file_name_valid (p);
 #elif defined (__VMS)
-	/* For VMS, allow  "subdir" or  "[.subdir]" or "dev:[sub.subdir]" */
+	/* For VMS, allow "subdir" or "[.subdir]" or "dev:[sub.subdir]" */
 	if ( strchr( (char *)p,'[') != NULL) /* if it has a [ ... */
 		if ( p[strlen(p)-1] != ']')	/* ... end with ] */
 			return EIF_FALSE;
@@ -245,11 +265,14 @@ EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER p)
 		return EIF_FALSE;
 	return EIF_TRUE;
 #else
+		/* Unix implement */
 	return EIF_TRUE;
 #endif
 }
 
-EIF_BOOLEAN c_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_INTEGER length)
+EIF_BOOLEAN eif_path_name_compare(s, t, length)
+EIF_POINTER s, t;
+EIF_INTEGER length;
 {
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -264,37 +287,41 @@ EIF_BOOLEAN c_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_INTEGER length
 
 /* Concatenation */
 
-void c_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
+void eif_append_directory(string, p, v)
+EIF_REFERENCE string;
+EIF_POINTER p;
+EIF_POINTER v;
 {
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
 #ifdef __VMS
 	char	vcopy[PATH_MAX];
 
-        /* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
+		/* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
 	if (p == NULL)	{	/* if p is empty, just return what's in v */
 		strcpy(p,v);
 		}
-        /* allowable forms for v are [.subdir] or subdir */
-        /* make [p] look like [p. */
-        p[strlen((char *)p)-1]='.'; /* change ] to .*/
-        /* make v or [.v] look like v] */
-        /* don't mess with v, use a copy */
-        strcpy(vcopy,v);
-        if (v[0]!='[')  {               /* just looks like v */
-                strcat( (char *)vcopy,"]");
-                }
-        else    {       /* change [.v] to v] */
-                strcpy((char *)vcopy,(char *)v[2]);
-                }
-        /* now concat [p. and v] to get [p.v] */
-        strcat( (char *)p, (char *)vcopy);
-        (eif_strset)(string, strlen ((char *)p));
+		/* allowable forms for v are [.subdir] or subdir */
+		/* make [p] look like [p. */
+		p[strlen((char *)p)-1]='.'; /* change ] to .*/
+		/* make v or [.v] look like v] */
+		/* don't mess with v, use a copy */
+		strcpy(vcopy,v);
+		if (v[0]!='[') {			/* just looks like v */
+				strcat( (char *)vcopy,"]");
+				}
+		else	{	/* change [.v] to v] */
+				strcpy((char *)vcopy,(char *)v[2]);
+				}
+		/* now concat [p. and v] to get [p.v] */
+		strcat( (char *)p, (char *)vcopy);
+		(eif_strset)(string, strlen ((char *)p));
 #else	/* not vms */
 	if (*((char *)p) != '\0')
 #if defined EIF_WINDOWS || defined EIF_OS2
 		strcat ((char *)p, "\\");
 #else
+			/* Unix */
 		strcat ((char *)p, "/");
 #endif
 
@@ -303,7 +330,10 @@ void c_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 #endif
 }
 
-void  c_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
+void eif_set_directory(string, p, v)
+EIF_REFERENCE string;
+EIF_POINTER p;
+EIF_POINTER v;
 {
 		/* Set the absolute part of the path name */
 #ifdef __VMS
@@ -311,18 +341,22 @@ void  c_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 	strcat ((char *)p, (char *)v);
 	strcat ((char *)p,"]");
 	(eif_strset)(string, strlen ((char *)p));
-#else
-#if defined EIF_WINDOWS || defined EIF_OS2
+#elif defined EIF_WINDOWS || defined EIF_OS2
 	strcat ((char *)p, "\\");
+	strcat ((char *)p, (char *)v);
+	(eif_strset)(string, strlen ((char *)p));
 #else
+		/* Unix */
 	strcat ((char *)p, "/");
-#endif
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
 #endif
 }
 
-void  c_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
+void eif_append_file_name(string, p, v)
+EIF_REFERENCE string;
+EIF_POINTER p;
+EIF_POINTER v;
 {
 		/* Append the file name part in the path name */
 	if (*((char *)p) == '\0'){
@@ -347,6 +381,7 @@ EIF_BOOLEAN eif_case_sensitive_path_names(void)
 #elif defined (__VMS)
 	return EIF_FALSE;
 #else
+		/* Unix */
 	return EIF_TRUE;
 #endif
 }
@@ -401,4 +436,41 @@ EIF_REFERENCE eif_root_directory_name(void)
 #endif
 }
 
+ 
+/* Routines to split a PATH_NAME in its different parts */
+ 
+EIF_REFERENCE eif_volume_name(p)
+EIF_POINTER p;
+{
+	/* Returns p's violume name as an EIFFEL string */
+ 
+#if defined EIF_WINDOWS || defined EIF_OS2
+	implement
+#elif defined (__VMS)
+	implement
+#else
+	/* Unix */
+	implement
+#endif
+}
+ 
+EIF_REFERENCE eif_extracted_paths(p)
+EIF_POINTER p;
+{
+	/* Returns p's directory components as a manifest array */
+ 
+	EIF_REFERENCE array;
+ 
+	array = emalloc(arr_dtype);
+	epush(&loc_stack, &array);
+ 
+#if defined EIF_WINDOWS || defined EIF_OS2
+	implement
+#elif defined (__VMS)
+	implement
+#else
+	/* Unix */
+	implement
+#endif
+}
 

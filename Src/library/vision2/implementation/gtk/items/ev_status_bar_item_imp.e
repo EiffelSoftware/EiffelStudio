@@ -84,6 +84,7 @@ feature -- Status report
 	index: INTEGER is
 			-- Index of the current item.
 		do
+			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
 feature -- Status setting

@@ -144,7 +144,7 @@ feature {NONE} -- Update
 				if Eiffel_project.successful then
 					exit := True
 				elseif Eiffel_project.save_error then
-					save_project_again;
+					save_project_again
 				else
 					if stop_on_error then
 						lic_die (-1);
@@ -242,7 +242,7 @@ feature {NONE} -- Compilation
 					if finished then
 						lic_die (-1)
 					else
-						Eiffel_project.save_project;
+						perform_compilation
 					end;
 				end
 			end

@@ -26,9 +26,6 @@ inherit
 			on_left_button_down,
 			on_middle_button_down,
 			on_right_button_down,
-			on_left_button_up,
-			on_middle_button_up,
-			on_right_button_up,
 			on_key_down,
 			interface
 		end
@@ -80,7 +77,8 @@ inherit
 		redefine
 			default_style,
 			on_tvn_selchanged,
-			on_tvn_itemexpanded
+			on_tvn_itemexpanded,
+			on_size
 		end
 
 	WEL_TVHT_CONSTANTS
@@ -294,6 +292,35 @@ feature {EV_TREE_ITEM_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		local
+			it: EV_TREE_ITEM_IMP
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			if it /= Void then
+				it.interface.pointer_button_press_actions.call ([x_pos, y_pos, button, 0.0, 0.0, 0.0, 0, 0])
+			end
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_ITEM_IMP is
+			-- Find the item at the given position.
+			-- Position is relative to the toolbar.
+		local
+			pt: WEL_POINT
+			info: WEL_TV_HITTESTINFO
+		do
+			create pt.make (x_pos, y_pos)
+			create info.make_with_point (pt)
+			cwin_send_message (wel_item, Tvm_hittest, 0, info.to_integer)
+			if flag_set (info.flags, Tvht_onitemlabel)
+			or flag_set (info.flags, Tvht_onitemicon)
+			then
+				Result := all_ev_children @ info.hitem
+			end
+		end
+
+
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
@@ -340,83 +367,35 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	on_size (size_type, a_height, a_width: INTEGER) is
+			-- List resized.
+		do
+			--Precursor (size_type, a_height, a_width)
+			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+		end
+
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_press) then
---				execute_command (Cmd_button_one_press, ev_data)
---			end
---			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_press) then
---				execute_command (Cmd_button_two_press, ev_data)
---			end
---			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_press) then
---				execute_command (Cmd_button_three_press, ev_data)
---			end
---			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
---			disable_default_processing
-		end
-
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_release) then
---				execute_command (Cmd_button_one_release, ev_data)
---			end
---			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
-		end
-
-	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_mbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_release) then
---				execute_command (Cmd_button_two_release, ev_data)
---			end
---			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
-		end
-
-	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_rbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (3, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_release) then
---				execute_command (Cmd_button_three_release, ev_data)
---			end
---			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -510,6 +489,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/13 17:45:46  rogers
+--| Removed on_left_button_up, on_middle_button_up and on_right_button_up. Added internal propogate_pointer_press and find_item_at position.
+--|
 --| Revision 1.44  2000/03/09 19:59:02  rogers
 --| Removed multiple selection features.
 --|

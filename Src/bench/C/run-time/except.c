@@ -35,7 +35,7 @@
 #include "eif_lmalloc.h"		/* for eif_free, eif_realloc */
 
 #ifdef EIF_WIN32
-#include "eif_econsole.h"
+#include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
 #endif
 
@@ -295,8 +295,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector);			/* Dump an exe
 #endif
 
 #ifndef lint
-rt_private char *rcsid =
-	"$Id$";
+rt_private char *rcsid = "$Id$";
 #endif
 
 /* Throughout the routines which maintain the execution stack, we must be *very*

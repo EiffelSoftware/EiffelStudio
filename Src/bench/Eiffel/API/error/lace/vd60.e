@@ -47,6 +47,7 @@ feature -- Output
 		do
 			st.add_string ("Assembly: ")
 			st.add_string (assembly.cluster_name)
+			st.add_new_line
 			st.add_string ("Referred assembly: ")
 			st.add_string (referred_assembly.out)
 			st.add_new_line

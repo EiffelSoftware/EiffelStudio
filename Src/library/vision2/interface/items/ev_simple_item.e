@@ -32,6 +32,20 @@ feature -- Access
 			Result := implementation.text
 		end
 
+	parent: EV_ANY is
+			-- The parent of the Current widget
+			-- Can be void.
+		require
+			exists: not destroyed
+		do
+			if implementation.parent_imp /= Void then
+				Result ?= implementation.parent_imp.interface
+			else
+				Result := Void
+			end
+		end
+		
+
 	parent_widget: EV_WIDGET is
 			-- Parent widget of the current item
 		require

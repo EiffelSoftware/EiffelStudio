@@ -31,20 +31,6 @@ feature -- Access
 		deferred
 		end
 
-feature -- Obsolete
-
-	parent_set (par: like parent): BOOLEAN is
-			-- Is the parent set
-		obsolete
-			"dont use it"
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface = par
-			else
-				Result := par = Void
-			end
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM
@@ -74,6 +60,9 @@ end -- class EV_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/22 23:04:44  rogers
+--| Removed parent_set. This was marked as obsolete, but still required by Windows, so moved into the Windows ev_item_imp.
+--|
 --| Revision 1.10  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

@@ -10,6 +10,7 @@ inherit
 	IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_STUB
 		redefine
 			name,
+			type,
 			display
 		end
 

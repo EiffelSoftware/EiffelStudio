@@ -438,7 +438,7 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 				counter = current_row_count or Result > 0
 			loop
 				if current_row_list.item (counter) /= Void then
-					Result := counter
+					Result := counter + 1
 				end
 				counter := counter + 1
 			end

@@ -42,10 +42,19 @@ feature
 		do
 			Result := Precursor
 			!! predefined_cmds
+			Result.extend (predefined_cmds.new_cmd)
 			Result.extend (predefined_cmds.open_cmd)
 			Result.extend (predefined_cmds.save_cmd)
 			Result.extend (predefined_cmds.popup_cmd)
 			Result.extend (predefined_cmds.popdown_cmd)
+			Result.extend (predefined_cmds.open_window_cmd)
+			Result.extend (predefined_cmds.close_window_cmd)
+			Result.extend (predefined_cmds.minimize_window_cmd)
+			Result.extend (predefined_cmds.maximize_window_cmd)
+			Result.extend (predefined_cmds.restore_window_cmd)
+			Result.extend (predefined_cmds.reset_to_empty_cmd)
+			Result.extend (predefined_cmds.reset_to_zero_cmd)
+			Result.extend (predefined_cmds.clear_cmd)
 		end
 
 feature {NONE}

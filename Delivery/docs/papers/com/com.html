@@ -31,15 +31,17 @@
 <blockquote>
 <A NAME="pgfId=370309">
  </A>
-The goal of this chapter is to cover enough information on COM so that Eiffel developers can use the EiffelCOM wizard in an effective way. It will not cover all of COM since it would require an entire book but will present the main concepts needed to understand how to build an EiffelCOM system.
+This chapter&nbsp; covers enough information on COM for Eiffel developers to use the EiffelCOM wizard in an effective way. It
+does not cover all of COM since it would require an entire book but presents the main concepts needed to understand how to build an EiffelCOM system.
   <p>
 <A NAME="pgfId=374007">
  </A>
-Briefly said, the Component Object Model is a Microsoft binary standard that establishes how two binary units can access each other at runtime. Such binary units can run in the same process, in different processes on the same machine or even on different machines. Components can be implemented in any language as long as the compiler produces COM standard compliant binaries.
+Briefly said, the Component Object Model is a Microsoft binary standard that establishes how two binary units can access each other at runtime. Such binary units can run in the same process, in different processes on the same machine, or even on different machines. Components can be implemented in any language as long as the compiler produces COM standard compliant binaries.
   <p>
 <A NAME="pgfId=374042">
  </A>
-The advantages of such an approach include an increased reusability (binary reuse), a better version management (COM standard implies that new component versions will still be compatible with older ones) and a built-in runtime environment. The binary reuse aspect of COM added with the source reuse ability of Eiffel offer the developer an ideal platform to increase considerably their productivity.
+The advantages of such an approach include an increased reusability (binary reuse), a better version management (COM standard implies that new component versions
+are compatible with the older ones) and a built-in runtime environment. The binary reuse aspect of COM added with the source reuse ability of Eiffel offer the developer an ideal platform to increase considerably their productivity.
 </blockquote>
 <DIV>
 <H6 CLASS="dd-sec2">
@@ -50,12 +52,11 @@ GENERALITIES</H6>
 <A NAME="pgfId=374119">
 </A>This paragraph presents briefly the principal notions of COM needed to
 understand the rest of this chapter. COM is a binary standard that describes how
-the component can communicate with the outer-world. Communication is done
-through well defined interfaces. Each interface is a specification of a group of
+the component can communicate with the outer-world. The component communicates through well defined interfaces. Each interface is a specification of a group of
 methods and functions. An interface does not contain the implementation of these
 routines and functions but only their specification (signatures). The actual
 implementation lies in the coclass. There can be different implementations of a
-same interface in different coclasses. Finally each coclass can be instantiated
+same interface in different coclasses. Finally, each coclass can be instantiated
 using a class object or class factory. These three notions will be discussed
 further in the forthcoming paragraphs.
 </blockquote>
@@ -66,7 +67,7 @@ further in the forthcoming paragraphs.
 <blockquote>
 <A NAME="pgfId=374134">
  </A>
-They are at the heart of any COM component. Interfaces are described in the definition file of a component. They consist of a group of semantically related functions that can be accessed by the clients of the component. Although they are a specification they also have a physical representation. A client can request a pointer on an interface and access the component functions through that pointer. Interfaces are the only possible way to access functions from a component. They enforce information hiding by providing only the public functions to the client.
+They are at the heart of any COM component. Interfaces are described in the definition file of a component. They consist of a group of semantically related functions that can be accessed by the clients of the component. Although they are a specification, they also have a physical representation. A client can request a pointer on an interface and access the component functions through that pointer. Interfaces are the only possible way to access functions from a component. They enforce information hiding by providing only the public functions to the client.
   <p>
 <A NAME="pgfId=374215">
  </A>
@@ -228,10 +229,10 @@ Description</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376044">
  </A>
-boolean</H6>
+ VARIANT_BOOL</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -248,10 +249,10 @@ Standard boolean</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376050">
  </A>
-unsigned char</H6>
+unsigned char</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -268,10 +269,10 @@ Standard character</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376056">
  </A>
-double</H6>
+double</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -288,10 +289,10 @@ Standard double</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376062">
  </A>
-float</H6>
+float</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -308,10 +309,10 @@ REAL</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376068">
  </A>
-int</H6>
+int</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -328,10 +329,10 @@ Standard integer</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376074">
  </A>
-long</H6>
+long</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -348,10 +349,10 @@ Standard integer</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376080">
  </A>
-short</H6>
+short</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -368,10 +369,10 @@ INTEGER</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376086">
  </A>
-BSTR</H6>
+BSTR</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -388,10 +389,10 @@ Standard string</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376092">
  </A>
-CURRENCY</H6>
+CURRENCY</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -408,16 +409,16 @@ Currency value</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376098">
  </A>
-DATE</H6>
+DATE</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
 <A NAME="pgfId=376100">
  </A>
-DATE</P>
+DATE_TIME</P>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -428,10 +429,10 @@ Standard date</P>
 </TR>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
-<H6 CLASS="aa.first">
+<p>
 <A NAME="pgfId=376104">
  </A>
-SCODE</H6>
+SCODE</p>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -457,7 +458,7 @@ Interface IDispatch *</P>
 <P CLASS="ee-text">
 <A NAME="pgfId=376112">
  </A>
-ECOM_QUERIABLE</P>
+ ECOM_INTERFACE</P>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -477,7 +478,7 @@ Interface IUnknown *</P>
 <P CLASS="ee-text">
 <A NAME="pgfId=376118">
  </A>
-ECOM_QUERIABLE</P>
+ ECOM_INTERFACE</P>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -497,7 +498,7 @@ dispinterface</P>
 <P CLASS="ee-text">
 <A NAME="pgfId=376314">
  </A>
-ECOM_QUERIABLE</P>
+ ECOM_INTERFACE</P>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -537,7 +538,7 @@ SAFEARRAY(TypeName)</P>
 <P CLASS="ee-text">
 <A NAME="pgfId=376302">
  </A>
-ARRAY [TypeName]</P>
+ ECOM_ARRAY [TypeName]</P>
 </TD>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -567,6 +568,28 @@ Pointer to type</P>
 </TD>
 </TR>
 <TR>
+<TD COLSPAN="1">
+VARIANT
+</TD>
+<TD COLSPAN="1">
+ECOM_VARIANT
+</TD>
+<TD COLSPAN="1">
+Variant value
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="1">
+enum
+</TD>
+<TD COLSPAN="1">
+INTEGER
+</TD>
+<TD COLSPAN="1">
+Enumeration
+</TD>
+</TR>
+<TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
 <A NAME="pgfId=376288">
@@ -583,7 +606,7 @@ ECOM_DECIMAL</P>
 <P CLASS="ee-text">
 <A NAME="pgfId=376292">
  </A>
-Decimal value</P>
+ Decimal value</P>
 </TD>
 </TR>
 </TABLE>
@@ -733,7 +756,7 @@ Summary</H6>
 <blockquote>
 <A NAME="pgfId=375521">
  </A>
-This very brief introduction to the Component Object Model should be enough to get started with the EiffelCOM wizard. It specifies the main characteristics that define the type of a component and that need to be given to the wizard along with the definition file.
+This brief introduction to the Component Object Model should be enough to get started with the EiffelCOM wizard. It specifies the main characteristics that define the type of a component and that need to be given to the wizard along with the definition file.
 </blockquote>
 </DIV>
 </DIV>

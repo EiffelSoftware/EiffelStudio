@@ -1,12 +1,13 @@
 /*
-	Commands used by the compiler to link the precompilation driver or
-	to execute `finish_freezing'
+	Commands used by the compiler to link the precompilation driver,
+	to execute `finish_freezing' and other platform dependent actions.
 */
 
 #include "config.h"
 #include "portable.h"
 
 #include <sys/types.h>
+#include <time.h>
 #include <sys/stat.h>
 
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -406,3 +407,13 @@ EIF_BOOLEAN eif_is_windows_3_1()
 #endif
 }
 
+EIF_REFERENCE eif_date_string (a_date)
+EIF_INTEGER a_date;
+{
+	EIF_REFERENCE result;
+	char *date_string = ctime(&a_date);
+
+	result = RTMS(date_string);
+	free (date_string);
+	return (EIF_REFERENCE) result;
+}

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Initialize file protocol.
 		do
 			create file.make (address.name)
-			create buffer.make_area (Default_buffer_size)
+			create buffer.make (Default_buffer_size)
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode
 		end
@@ -168,9 +168,9 @@ feature -- Status setting
 			-- Set size of read buffer.
 		do
 			read_buffer_size := n
-			create buffer.make_area (read_buffer_size)
+			create buffer.make (read_buffer_size)
 		ensure then
-			buffer_size_correct: buffer.area.count = read_buffer_size
+			buffer_size_correct: buffer.count = read_buffer_size
 		end
 		
 	set_overwrite_mode is
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 
 	file: RAW_FILE
 
-	buffer: TO_SPECIAL[CHARACTER]
+	buffer: SPECIAL[CHARACTER]
 
 	overwrite_mode: BOOLEAN
 

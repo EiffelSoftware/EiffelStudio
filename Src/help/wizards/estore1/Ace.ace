@@ -1,52 +1,68 @@
 system
-	sample
+	erp_web
 
 root
-	root_class:"make"
+	PROJECT_MANAGER: "make_and_launch"
 
 default
-	assertion (no)
+	assertion (invariant)
+	multithreaded (no)
+	exception_trace (yes)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+
 
 cluster
 	
-	all root_cluster: "d:\wizards\database";
+	root_cluster: "c:\development\EiffelWeb_wizard"
+	wizard(root_cluster): "$\estore1\src"
 
-	-- EiffelBase
-	all base:						"d:\Eiffel45\library\base"
+
+		-- EiffelBase
+	all base:				"c:\ISE_Environment\Eiffel46/library/new_base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	
-	--all wel:						"d:\Eiffel45\library\wel"
+	all vision2: 			"c:\ISE_Environment\Eiffel46\library\new_vision"
+		exclude
+			"gtk"
+			"test"
+		end
 
-	--all vision:						"d:\Eiffel45\library\vision2"
-	--	exclude
-	--		"gtk"
-	--	end
+	all Events:				"c:\ISE_Environment\Eiffel46\library\events"
 
+	all web: 				"c:\ISE_Environment\Eiffel46\library\new_wel"
 
-	-- EiffelTime
-	time:				"d:\Eiffel45\library\time";
+-- EiffelTime
+	time:				"c:\ISE_Environment\Eiffel46\library\time";
 	time_format(time):	"$\format";
 	time_english(time):	"$\format\english";
 
 	-- EiffelStore
-	estore_support:		"d:\Eiffel45\library\store\support"
-	estore_interface:	"d:\Eiffel45\library\store\interface"
-	estore_db_support:	"d:\Eiffel45\library\store\dbms\support"
-	estore_rdbms:		"d:\Eiffel45\library\store\dbms\rdbms\oracle"
+	estore_support:		"c:\ISE_Environment\Eiffel46\library\store\support"
+	estore_interface:	"c:\ISE_Environment\Eiffel46\library\store\interface"
+	estore_db_support:	"c:\ISE_Environment\Eiffel46\library\store\dbms\support"
+	estore_rdbms:		"c:\ISE_Environment\Eiffel46\library\store\dbms\rdbms\oracle"
 
 
 external
 	include_path:		
-						"d:\Eiffel45\library\store\dbms\rdbms\oracle\Clib",
-	--					"d:\Eiffel45\library\wel\spec\windows\include",
+						"c:\ISE_Environment\Eiffel46\library\store\dbms\rdbms\oracle\Clib",
+						"c:\ISE_Environment\Eiffel46\library\new_wel\spec\windows\include",
 						"$(ORACLE_HOME)\OCI\include"
 
-	object: 			"d:\Eiffel45\library\store\spec\$(COMPILER)\lib\support.lib",
-	--					"d:\Eiffel45\library\wel\spec\msc\lib\wel.lib",
-						"d:\Eiffel45\library\time\spec\$(COMPILER)\lib\datetime.lib",
-						"d:\Eiffel45\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+	object: 			"c:\ISE_Environment\Eiffel46\library\store\spec\$(COMPILER)\lib\support.lib",
+						"c:\ISE_Environment\Eiffel46\library\new_wel\spec\msc\lib\wel.lib",
+						"c:\ISE_Environment\Eiffel46\library\time\clib\datetime.lib",
+						"c:\ISE_Environment\Eiffel46\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
 						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 end

@@ -2090,12 +2090,11 @@ feature -- Information
 		do
 			if eiffel_project.system /= Void then	
 				root_class_name:= clone(eiffel_system.root_class_name)
-
-				!! st.make
-				st.add_comment_text ("SYSTEM        : ")
-				st.add_string (eiffel_system.name)
-
 				if root_class_name /= Void then
+					!! st.make
+					st.add_comment_text ("SYSTEM        : ")
+					st.add_string (eiffel_system.name)
+
 					st.add_new_line
 					st.add_comment_text("ROOT CLASS    : ")
 					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(1).compiled_class
@@ -2122,18 +2121,8 @@ feature -- Information
 					st.add_comment_text ("PROJECT PATH  : ")
 					st.add_string (eiffel_project.name)
 					st.add_new_line
---					st.add_new_line
--- 					st.add_comment_text ("$EIFFEL4      = ")
--- 					st.add_string (execution_environment.get ("EIFFEL4"))
--- 					st.add_new_line
--- 					st.add_comment_text ("$PLATFORM     = ")
--- 					st.add_string (execution_environment.get ("PLATFORM"))
--- 					st.add_new_line
--- 					st.add_comment_text ("$COMPILER     = ")
--- 					st.add_string (execution_environment.get ("COMPILER"))
--- 					st.add_new_line
+					Result := st
 				end
-				Result := st
 			end
 		end
 

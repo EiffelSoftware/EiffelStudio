@@ -345,7 +345,7 @@ void eif_console_putint (long l)
 
 void eif_console_putchar (EIF_CHARACTER c)
 {
-	char transfer_buffer [BUFFER_SIZE];
+	char transfer_buffer [1];
 
 	if (!eif_console_allocated)
 		eif_make_console();
@@ -502,19 +502,22 @@ void eif_console_cleanup ()
 	BOOL b;
 	DWORD buffer_length = (DWORD) 0;
 
-	if (windowed_application) {
-		result = MessageBox (NULL, "Execution terminated.\nDo you want to save the content of the console before to quit?",
-						  "Execution terminated", MB_OKCANCEL + MB_ICONQUESTION + MB_TASKMODAL + MB_TOPMOST);
-		DestroyWindow (eif_conout_window);
-	} else {
-		eif_console_putstring("\nPress Return to finish the execution...\0", 40);
-		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-			eio ();
+	if (eif_console_allocated) {
+		if (windowed_application) {
+			result = MessageBox (NULL, "Execution terminated.\nDo you want to save the content of the console before to quit?",
+							  "Execution terminated", MB_OKCANCEL + MB_ICONQUESTION + MB_TASKMODAL + MB_TOPMOST);
+			DestroyWindow (eif_conout_window);
+		} else {
+			eif_console_putstring("\nPress Return to finish the execution...\0", 40);
+			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+				eio ();
 
-		CloseHandle (eif_coninfile);
-		CloseHandle (eif_conoutfile);
+			CloseHandle (eif_coninfile);
+			CloseHandle (eif_conoutfile);
 
-		b = FreeConsole ();
+			b = FreeConsole ();
+		}
+		eif_console_allocated = FALSE;
 	}
 }
 
@@ -544,10 +547,10 @@ void eif_make_console()
 
 		ShowWindow (eif_conout_window, SW_SHOW);
 	} else {
-		BOOL b;
+		BOOL bSuccess;
 		SECURITY_ATTRIBUTES sa;
 
-		b = AllocConsole();
+		bSuccess = AllocConsole();
 
 		sa.nLength = sizeof (sa);
 		sa.lpSecurityDescriptor = NULL;

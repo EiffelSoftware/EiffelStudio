@@ -2,83 +2,89 @@
 	<head>
 		<title>Reflection system specification</title>
 		<LINK REL="StyleSheet" HREF="/default.css">
+		<META NAME ="MS-HKWD" CONTENT = "ISE.Reflection.CodeGenerator.dll">
+		<META NAME ="MS-HKWD" CONTENT = "Code generator, Eiffel code generator, XML code generator, Eiffel code generator from XML">
 	</head>
 
 	<body>
 
 		<br><br>
-		<h2>4. ISE.CodeGenerator.dll</h2>
+		<h2>4. ISE.Reflection.CodeGenerator.dll</h2>
 
-				<p>`ISE.CodeGenerator.dll' provides basically three kinds of services. You can:</p>
+				<p>`ISE.Reflection.CodeGenerator.dll' provides basically three kinds of services. You can:</p>
 						<ul>
-								<li>Generate Eiffel classes with `EiffelCodeGenerator'.</li>
-								<li>Generate Xml files with `XmlAssemblyCodeGenerator' and `XmlTypeCodeGenerator'.</li>
-								<li>Generate Eiffel classes from Xml files with `EiffelCodeGeneratorFromXml'.</li>
+								<li>Generate Eiffel classes with <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN>.</li>
+								<li>Generate Xml files with <SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN> and <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN>.</li>
+								<li>Generate Eiffel classes from Xml files with <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN>.</li>
 						</ul>
 				<br>
 
 				<a name = eiffel_generator></a>
-				<h3>4.1 EiffelCodeGenerator</h3>
+				<h3>4.1 <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN></h3>
 
 						<p>
-								To create an `EiffelCodeGenerator', you must call `make_from_info (eiffel_class: EIFFEL_CLASS; eiffel_assembly: EIFFEL_ASSEMBLY)'. <br>
-								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' and `EIFFEL_CLASS' classes.<br>
-								The main service provided by this class is to generate the Eiffel class by using information of `eiffel_class' and `eiffel_assembly' given as parameters to the creation routine.<br>
-								EiffelCodeGenerator will use `eiffel_class' and `eiffel_assembly' to find the filename of class to be generated. More precisely, generated class filename will be of the form: filename = eiffel_assembly.eiffel_cluster_path + "\" + eiffel_class.dot_net_full_name + ".e"
+								To create an <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN>, you must call <SPAN CLASS = "efeature">make_from_info</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN><SPAN CLASS = "esymbol">;</SPAN> <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN><SPAN CLASS = "esymbol">)</SPAN>. <br>
+								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.Reflection.EiffelComponents</a> for more information about <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> and <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> classes.<br>
+								The main service provided by this class is to generate the Eiffel class by using information of <SPAN CLASS = "elocal">eiffel_class</SPAN> and <SPAN CLASS = "elocal">eiffel_assembly</SPAN> given as parameters to the creation routine.<br>
+								EiffelCodeGenerator will use <SPAN CLASS = "elocal">eiffel_class</SPAN> and <SPAN CLASS = "elocal">eiffel_assembly</SPAN> to find the filename of class to be generated. More precisely, generated class filename will be of the form: filename = <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS "efeature">eiffel_cluster_path</SPAN> + "\" + <SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS = "efeature">dot_net_full_name</SPAN> + ".e"
 						</p>
 						<p>
-								When you call `GenerateEiffelClasses' from `Emitter.exe', it calls `generate_eiffel_class' of `EiffelCodeGenerator' for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+								When you call <SPAN CLASS = "efeature">GenerateEiffelClasses</SPAN> from `ISE.Reflection.Emitter.exe', it calls <SPAN CLASS = "efeature">generate_eiffel_class</SPAN> of <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN> for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.
 						</p>
 				<br>
 
 				<a name = xml_assembly_generator></a>
-				<h3>4.2 XmlAssemblyCodeGenerator</h3>
+				<h3>4.2 <SPAN CLASS = "class">XmlAssemblyCodeGenerator</SPAN></h3>
 
 						<p>
-								To create an instance of `XmlAssemblyCodeGenerator', you have to call `make_from_assembly (eiffel_assembly: EIFFEL_ASSEMBLY). See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' class.<br>
-								`XmlAssemblyCodeGenerator' provides a feature called `generate_xml_file', which takes no argument. It generates Xml description file from `eiffel_assembly' given as parameter to creation routine.<br>
-								To find the right folder in which to generate Xml file, `XmlAssemblyCodeGenerator' uses assembly version, culture and public key (retrieved from `eiffel_assembly') and calls `hash_value' (from `ISE.ReflectionInterface.dll').
+								To create an instance of <SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN>, you have to call <SPAN CLASS = "efeature">make_from_assembly</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN><SPAN CLASS = "esymbol"><SPAN CLASS = "esymbol">)</SPAN>. See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.Reflection.EiffelComponents</a> for more information about <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> class.<br>
+								<SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN> provides a feature called <SPAN CLASS = "efeature">generate_xml_file</SPAN>, which takes no argument. It generates XML description file from <SPAN CLASS = "elocal">eiffel_assembly</SPAN> given as parameter to creation routine.<br>
+								To find the right folder in which to generate XML file, <SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN> uses assembly version, culture and public key (retrieved from <SPAN CLASS = "elocal">eiffel_assembly</SPAN>) and calls <SPAN CLASS = "efeature">hash_value</SPAN> (from `ISE.Reflection.Support.dll').
 						</p>
 						<p>
-								When you call `GenerateXmlFiles' from `Emitter.exe', it calls `generate_xml_file' of `XmlAssemblyCodeGenerator' for the first type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+								When you call <SPAN CLASS = "efeature">GenerateXmlFiles</SPAN> from `ISE.Reflection.Emitter.exe', it calls <SPAN CLASS = "efeature">generate_xml_file</SPAN> of <SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN> for the first type of the assembly. See <a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.
 						</p>
 				<br>
 
 				<a name = xml_type_generator></a>
-				<h3>4.3 XmlTypeCodeGenerator</h3>
+				<h3>4.3 <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN></h3>
 
 						<p>
-								In the same way you have to give an instance of `EIFFEL_CLASS' and one of `EIFFEL_ASSEMBLY' to create an `EiffelCodeGenerator', you have to give it the creation routine of `XmlTypeCodeGenerator', whose signature is:<br>
-								`make_from_info (eiffel_class: EIFFEL_CLASS; eiffel_assembly: EIFFEL_ASSEMBLY). <br>
-								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' and `EIFFEL_CLASS' classes.<br>
-								`XmlTypeCodeGenerator' provides a feature called `generate_xml_file', which takes no argument. It generates Xml description file from `eiffel_class' given as parameter to creation routine.<br>
-								You may wonder why you also have to give an instance of `EIFFEL_ASSEMBLY'. In fact, this is used to find the right folder in which to generate Xml file: `XmlTypeCodeGenerator' uses assembly version, culture and public key (retrieved from `eiffel_assembly') and calls `hash_value' (from `ISE.ReflectionInterface.dll').
+								In the same way you have to give an instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> and one of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> to create an <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN>, you have to give it the creation routine of <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN>, whose signature is:
+						</P>
+						<P CLASS = "code">
+								<SPAN CLASS = "efeature">make_from_info</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN><SPAN CLASS = "esymbol">;</SPAN> <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN><SPAN CLASS = "esymbol">)</SPAN>
 						</p>
 						<p>
-								When you call `GenerateXmlFiles' from `Emitter.exe', it calls `generate_xml_file' of `XmlTypeCodeGenerator' for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.Reflection.EiffelComponents</a> for more information about <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> and <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> classes.<br>
+								<SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN> provides a feature called <SPAN CLASS = "efeature">generate_xml_file</SPAN>, which takes no argument. It generates XML description file from <SPAN CLASS = "elocal">eiffel_class</SPAN> given as parameter to creation routine.<br>
+								You may wonder why you also have to give an instance of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN>. In fact, this is used to find the right folder in which to generate xml file: <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN> uses assembly version, culture and public key (retrieved from <SPAN CLASS = "elocal">eiffel_assembly</SPAN>) and calls <SPAN CLASS = "efeature">hash_value</SPAN> (from `ISE.Reflection.Support.dll').
+						</p>
+						<p>
+								When you call <SPAN CLASS = "efeature">GenerateXmlFiles</SPAN> from `ISE.Reflection.Emitter.exe', it calls <SPAN CLASS = "efeature">generate_xml_file</SPAN> of <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN> for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.
 						</p>
 				<br>
 
 				<a name = eiffel_generator_from_xml></a>
-				<h3>4.4 EiffelCodeGeneratorFromXml</h3>
+				<h3>4.4 <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN></h3>
 
 				<p>
-						The first aim of `EiffelCodeGeneratorFromXml' is to generate Eiffel classes from Xml description files. Therefore it provides a feature called `generate_eiffel_code_from_xml', which takes no argument. To be allowed to call this feature, you first have to call the creation routine `make_from_info (xml_type_filename, xml_assembly_filename: STRING)'. <br>
-						`EiffelCodeGeneratorFromXml' provides another creation routine called `make_from_assembly_description', which only takes one Xml filename (corresponding to the assembly description) as argument. But this will not be sufficient to generate Eiffel code, since class information is basically contained by the type description Xml file. Thus, if you create an instance`EiffelCodeGeneratorFromXml' by using `make_from_assembly', you have to call `set_type_description_filename' before calling `generate_eiffel_code_from_xml'. This is suggested by the precondition `non_void_type_description_filename: type_description_filename /= Void'.
+						The first aim of <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN> is to generate Eiffel classes from XML description files. Therefore it provides a feature called <SPAN CLASS = "efeature">generate_eiffel_code_from_xml</SPAN>, which takes no argument. To be allowed to call this feature, you first have to call the creation routine <SPAN CLASS = "efeature">make_from_info</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">xml_type_filename</SPAN><SPAN CLASS = "esymbol">,</SPAN> <SPAN CLASS = "elocal">xml_assembly_filename</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">STRING</SPAN><SPAN CLASS = "esymbol">)</SPAN>. <br>
+						<SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN> provides another creation routine called <SPAN CLASS = "efeature">make_from_assembly_description</SPAN>, which only takes one XML filename (corresponding to the assembly description) as argument. But this will not be sufficient to generate Eiffel code, since class information is basically contained by the type description XML file. Thus, if you create an instance <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN> by using <SPAN CLASS = "efeature">make_from_assembly</SPAN>, you have to call <SPAN CLASS = "efeature">set_type_description_filename</SPAN> before calling <SPAN CLASS = "efeature">generate_eiffel_code_from_xml</SPAN>. This is suggested by the precondition <SPAN CLASS = "etag">non_void_type_description_filename</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "efeature">type_description_filename</SPAN> <SPAN CLASS = "esymbol">/</SPAN><SPAN CLASS = "esymbol">=</SPAN> <SPAN CLASS = "ereserved">Void</SPAN>
 				</p>
 				<p>
-						You may wonder why this class provides two creation routines. In fact, `EiffelCodeGeneratorFromXml' provides two services derived from the first one.<br>
+						You may wonder why this class provides two creation routines. In fact, <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN> provides two services derived from the first one.<br>
 						<ul>
 								<li>
-										First, you may want to generate an instance of `EIFFEL_ASSEMBLY' from an assembly description Xml file. So you can find feature `generate_eiffel_assembly_from_xml'. Now you may understand the aim of the second creation routine. In fact, `generate_eiffel_assembly_from_xml' takes no argument, but needs an Xml file to generate the `EIFFEL_ASSEMBLY'. It will find the required information from the creation routine. But it does not need any type description file. That is the reason why you can find the second creation routine `make_from_assembly'. In fact, it should only be used in that case. Otherwise, `make_from_info' is required.
+										First, you may want to generate an instance of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> from an assembly description XML file. So you can find feature <SPAN CLASS = "efeature">generate_eiffel_assembly_from_xml</SPAN>. Now you may understand the aim of the second creation routine. In fact, <SPAN CLASS = "efeature">generate_eiffel_assembly_from_xml</SPAN> takes no argument, but needs an XML file to generate the <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN>. It will find the required information from the creation routine. But it does not need any type description file. That is the reason why you can find the second creation routine <SPAN CLASS = "efeature">make_from_assembly</SPAN>. In fact, it should only be used in that case. Otherwise, <SPAN CLASS = "efeature">make_from_info</SPAN> is required.
 								</li>
 								<br><br>
 								<li>
-										`EiffelCodeGeneratorFomXml' also provides a feature `generate_eiffel_class_from_xml', which generates an instance of `EIFFEL_CLASS'  from the xml type description filename given as parameter.
+										<SPAN CLASS = "eclass">EiffelCodeGeneratorFomXml</SPAN> also provides a feature <SPAN CLASS = "efeature">generate_eiffel_class_from_xml</SPAN>, which generates an instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> from the XML type description filename given as parameter.
 								</li>
 						</ul>
 						<p>
-								These two features are used internally by `generate_eiffel_code_from_xml'. But there are also used by the reflection interface when user wants to retrieve information (cf. <a href = "./reflection_interface.html" target = "_parent">3. ISE.ReflectionInterface</a>).
+								These two features are used internally by <SPAN CLASS = "efeature">generate_eiffel_code_from_xml</SPAN>. But there are also used by the reflection interface when user wants to retrieve information (cf. <a href = "./reflection_interface.html" target = "_parent">3. ISE.Reflection.ReflectionInterface</a>).
 						</p>
 				</p>
 				<br>
@@ -87,7 +93,7 @@
 				<h3>4.5 Classes diagram</h3>
 
 						<p>
-								Up to now, we have only mentionned four classes of assembly `ISE.CodeGenerator.dll' (`EiffelCodeGenerator', `XmlAssemblyCodeGenerator', `XmlTypeCodeGenerator' and `EiffelCodeGeneratorFromXml') because these are providing services. Nevetheless, the design of `ISE.CodeGenerator.dll' is a little more complicated in the sense that it includes other classes, which links these three base classes. <br>
+								Up to now, we have only mentioned four classes of the assembly `ISE.Reflection.CodeGenerator.dll' (<SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN>, <SPAN CLASS = "eclass">XmlAssemblyCodeGenerator</SPAN>, <SPAN CLASS = "eclass">XmlTypeCodeGenerator</SPAN> and <SPAN CLASS = "eclass">EiffelCodeGeneratorFromXml</SPAN>) because these are providing services. Nevetheless, the design of `ISE.Reflection.CodeGenerator.dll' is a little more complicated in the sense that it includes other classes, which links these three base classes. <br>
 								The following diagram should help you understand the design of code generator assembly provided by ISE.
 						</p>
 						<center><img src = "./code_generator_diagram.png" no border></center>

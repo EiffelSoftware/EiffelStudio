@@ -59,6 +59,16 @@ feature -- Element change
 			implementation.set_parent (par)
 		end
 
+	set_text (txt: STRING) is
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		do
+			implementation.set_text (txt)
+		ensure
+			text_set: equal (txt, text)
+		end
+
 feature -- Implementation
 	
 	implementation: EV_MENU_I	

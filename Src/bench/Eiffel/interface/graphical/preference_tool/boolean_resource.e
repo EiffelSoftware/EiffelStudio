@@ -16,12 +16,12 @@ creation
 
 feature {NONE} -- Initialization
 
-    make_with_values (a_name: STRING; a_value: BOOLEAN) is
-            -- Initialie Current
-        do
-            name := a_name;
-            actual_value := a_value
-        end;
+	make_with_values (a_name: STRING; a_value: BOOLEAN) is
+		-- Initialie Current
+		do
+			name := a_name;
+			actual_value := a_value
+		end;
 
 	make (a_name: STRING; rt: RESOURCE_TABLE; def_value: BOOLEAN) is
 			-- Initialize Current.

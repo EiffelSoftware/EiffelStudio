@@ -48,7 +48,7 @@ feature -- Access
 	indexing_clauses: LIST [CODE_INDEXING_CLAUSE]
 			-- Type indexing clauses
 		
-	parents: HASH_TABLE [CODE_PARENT, STRING]
+	parents: CODE_PARENT_COLLECTION
 			-- List of parents
 			-- Key is parent Eiffel name
 
@@ -71,7 +71,33 @@ feature -- Access
 			-- These features are added during code generation
 			-- Value: feature
 			-- Key: feature name
-			
+	
+	all_features: HASH_TABLE [CODE_FEATURE, STRING] is
+			-- Features including creation routines
+		local
+			l_features, l_creation_routines: HASH_TABLE [CODE_FEATURE, STRING]
+		do
+			l_features := features
+			l_creation_routines := creation_routines
+			create Result.make (l_features.count + l_creation_routines.count)
+			from
+				l_features.start
+			until
+				l_features.after
+			loop
+				Result.put (l_features.item_for_iteration, l_features.key_for_iteration)
+				l_features.forth
+			end
+			from
+				l_creation_routines.start
+			until
+				l_creation_routines.after
+			loop
+				Result.put (l_creation_routines.item_for_iteration, l_creation_routines.key_for_iteration)
+				l_creation_routines.forth
+			end
+		end
+		
 	parent (a_name: STRING): CODE_PARENT is
 			-- Parent with full Eiffel name `a_name' if any
 		require
@@ -162,7 +188,7 @@ feature -- Element Settings
 			non_void_creation_routine: a_creation_routine /= Void
 		do
 			if not features.has ("constructor_called") then
-				features.extend (create {CODE_SNIPPET_FEATURE}.make ("constructor_called", "constructor_called: BOOLEAN%N"), "constructor_called")
+				features.extend (create {CODE_SNIPPET_FEATURE}.make ("constructor_called", "%Tconstructor_called: BOOLEAN%N"), "constructor_called")
 			end
 			creation_routines.put (a_creation_routine, a_creation_routine.eiffel_name)
 		ensure
@@ -227,7 +253,7 @@ feature -- Element Settings
 		ensure
 			snippet_inherit_clause_set: snippet_inherit_clause = a_text
 		end
-		
+	
 feature -- Code generation
 
 	header: STRING is

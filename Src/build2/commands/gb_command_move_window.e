@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			parent_item: EV_TREE_ITEM
 			dir: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
+			history.cut_off_at_current_position
 			original_id := window.id
 			dir ?= window.window_selector_item.parent
 			original_directory := dir

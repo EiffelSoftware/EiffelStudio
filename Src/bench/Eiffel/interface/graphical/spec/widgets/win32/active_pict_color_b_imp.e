@@ -16,31 +16,14 @@ inherit
 			total_offset
 		end
 
-	ACTIVE_PICT_COLOR_B_I
-
 creation
 	make
 
-feature
+feature -- Access
 
-	draw_all_unselected (a_dc: WEL_DC) is
-			-- Draw current button when unselected.
-			-- With the borders.
-		require else
-			a_dc_not_void: a_dc /= Void
-			a_dc_exists: a_dc.exists
-		do
-			if active then
-				draw_unselected (a_dc)
-				if mouse_in then
-					draw_unselected_border (a_dc)
-				else
-					draw_unselected_no_border (a_dc)
-				end
-			else
-				{PICT_COLOR_B_IMP} Precursor (a_dc)
-			end
-		end
+	active: BOOLEAN
+			-- Is the button an active one (ACTIVE_PICT_COLOR_B) or
+			-- is it not (PICT_COLOR_B)
 
 feature -- Update
 
@@ -80,6 +63,25 @@ feature {NONE}
 	total_offset: INTEGER is 4
 
 feature {NONE}
+
+	draw_all_unselected (a_dc: WEL_DC) is
+			-- Draw current button when unselected.
+			-- With the borders.
+		require else
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			if active then
+				draw_unselected (a_dc)
+				if mouse_in then
+					draw_unselected_border (a_dc)
+				else
+					draw_unselected_no_border (a_dc)
+				end
+			else
+				{PICT_COLOR_B_IMP} Precursor (a_dc)
+			end
+		end
 
 	draw_unselected_no_border (a_dc: WEL_DC) is
 			-- Draw the button without any border.
@@ -140,9 +142,5 @@ feature {NONE} -- Attributes
 
 	mouse_in: BOOLEAN
 			-- Is the cursor inside the button?
-
-	active: BOOLEAN
-			-- Is the button an active one (ACTIVE_PICT_COLOR_B) or
-			-- is it not (PICT_COLOR_B)
 
 end -- class ACTIVE_PICT_COLOR_B_IMP

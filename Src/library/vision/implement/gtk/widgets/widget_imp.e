@@ -32,7 +32,7 @@ feature -- Access
 			-- Get time granted for clicking
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -40,7 +40,7 @@ feature -- Access
 			-- Background color of widget
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -49,7 +49,7 @@ feature -- Access
 			-- Background pixmap of widget
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -58,7 +58,7 @@ feature -- Access
 			-- Cursor of current widget
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -73,7 +73,7 @@ feature -- Access
 			-- Horizontal position relative to root window
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -82,7 +82,7 @@ feature -- Access
 			-- Vertical position relative to root window
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -91,7 +91,7 @@ feature -- Access
 			-- Screen of widget
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -100,7 +100,7 @@ feature -- Access
 			-- Screen object implementation of current widget
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -115,7 +115,7 @@ feature -- Access
 			-- Horizontal position relative to parent
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -124,7 +124,7 @@ feature -- Access
 			-- Vertical position relative to parent
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end	
@@ -240,7 +240,7 @@ feature -- Status report
 			-- Clean up data information for destroyed widget.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -255,7 +255,7 @@ feature -- Status setting
 		-- peers stacking order
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -277,7 +277,7 @@ feature -- Status setting
 			-- set by cursor during the grab.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end;
@@ -287,7 +287,7 @@ feature -- Status setting
 			-- is specified for event. 
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -296,7 +296,7 @@ feature -- Status setting
 			-- Raise current to top of peer stacking order
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -334,7 +334,7 @@ feature -- Status setting
 			-- Don't propagate event to direct ancestor.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -363,7 +363,7 @@ feature -- Status setting
 			-- to parent.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -372,10 +372,7 @@ feature -- Status setting
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		do
-			check
-				not_be_called: False
-			end
-
+			gtk_widget_set_uposition (widget, new_x, new_y)
 		end
 
 	set_y (new_y: INTEGER) is
@@ -383,7 +380,7 @@ feature -- Status setting
 			-- to parent.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -400,7 +397,7 @@ feature -- Status setting
 			-- Release the mouse and the keyboard from an earlier grab.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 
 		end
@@ -480,7 +477,7 @@ feature -- Element change
 			-- specified with Xtoolkit convention.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -488,7 +485,7 @@ feature -- Element change
 			-- Set background color to `new_color'.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -496,7 +493,7 @@ feature -- Element change
 			-- Set background pixmap to `a_pixmap'.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -504,7 +501,7 @@ feature -- Element change
 			-- Set `cursor' of current widget to `a_cursor'.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -519,7 +516,7 @@ feature -- Element change
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -529,7 +526,7 @@ feature -- Element change
 			-- is pressed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -539,7 +536,7 @@ feature -- Element change
 			-- is released.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -549,7 +546,7 @@ feature -- Element change
 			-- is clicked
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -557,7 +554,7 @@ feature -- Element change
 			-- Set time granted for clicking
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -566,7 +563,7 @@ feature -- Element change
 			-- execute when current widget is destroyed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -575,7 +572,7 @@ feature -- Element change
 			-- execute when the pointer enter the window.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -584,7 +581,7 @@ feature -- Element change
 			-- execute when a key is pressed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -593,7 +590,7 @@ feature -- Element change
 			-- execute when a key is released.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -602,7 +599,7 @@ feature -- Element change
 			-- execute when the pointer leave the window.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -611,7 +608,7 @@ feature -- Element change
 			-- execute when the mouse is moved.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -623,7 +620,7 @@ feature -- Removal
 			-- command has been specified.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -634,7 +631,7 @@ feature -- Removal
 
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -644,7 +641,7 @@ feature -- Removal
 			-- is pressed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -654,7 +651,7 @@ feature -- Removal
 			-- is released.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -664,7 +661,7 @@ feature -- Removal
 			-- is clicked.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -674,7 +671,7 @@ feature -- Removal
 			-- destroyed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -684,7 +681,7 @@ feature -- Removal
 			-- window.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -693,7 +690,7 @@ feature -- Removal
 			-- execute when a key is pressed.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -702,7 +699,7 @@ feature -- Removal
 			-- execute when a key is released.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -712,7 +709,7 @@ feature -- Removal
 			-- window.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 
@@ -721,7 +718,7 @@ feature -- Removal
 			-- execute when the mouse is moved.
 		do
 			check
-				not_be_called: False
+				not_yet_implemented: False
 			end
 		end;
 	
@@ -764,7 +761,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 	
-	c_widget_of_button (p: PUSH_B): POINTER is 
+	c_widget_of_push_b (p: PUSH_B): POINTER is 
 			-- C pointer to the widget of p
 		require
 			not_void: p /= Void

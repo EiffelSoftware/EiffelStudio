@@ -15,8 +15,9 @@ inherit
 			make as license_window_make,
 			dot as cursor_dot
 		undefine
-			execute, watch_cursor
+			execute, watch_cursor, license
 		end;
+	SHARED_BENCH_LICENSES
 
 creation
 

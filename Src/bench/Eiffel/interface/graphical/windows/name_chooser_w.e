@@ -24,7 +24,7 @@ inherit
 		select
 			popup, popdown
 		end;
-	SHARED_LICENSE;
+	SHARED_BENCH_LICENSES;
 	WINDOW_ATTRIBUTES
 
 creation

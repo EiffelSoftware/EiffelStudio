@@ -47,11 +47,6 @@ inherit
 			{NONE} all
 		end
 
-	WEL_GWL_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_SWP_CONSTANTS
 		export
 			{NONE} all
@@ -93,12 +88,6 @@ feature -- Access
 	commands: WEL_COMMAND_MANAGER
 			-- Command manager associated to the current window.
 
-	creation_data: INTEGER is
-			-- Data set to the widget at creation.
-		do
-			Result := cwin_get_window_long (item, Gwl_userdata)
-		end
-
 feature -- Status report
 
 	is_inside: BOOLEAN is
@@ -118,7 +107,6 @@ feature -- Status report
 		do
 			Result := default_processing
 		end
-
 
 	enabled: BOOLEAN is
 			-- Is the window enabled for mouse and keyboard input?
@@ -157,7 +145,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := windows.item (cwin_get_focus)
+			Result := window_of_item (cwin_get_focus)
 		end
 
 	captured_window: WEL_WINDOW is
@@ -166,7 +154,7 @@ feature -- Status report
 			exists: exists
 			window_captured: window_captured
 		do
-			Result := windows.item (cwin_get_capture)
+			Result := window_of_item (cwin_get_capture)
 		end
 
 	window_captured: BOOLEAN is
@@ -1440,7 +1428,7 @@ feature {WEL_WINDOW} -- Implementation
 					main_args.current_instance.item, data)
 			end
 			if item /= default_pointer then
-				register_window (Current)
+				register_current_window
 				set_default_window_procedure
 			end
 		ensure
@@ -1631,6 +1619,28 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 				lparam)
 		end
 
+feature -- Registration
+
+	register_current_window is
+			-- Register `Current' in window manager.
+		do
+			set_internal_data (eif_object_id (Current))
+		end
+
+feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
+
+	internal_data: INTEGER is
+			-- Data set to widget at creation.
+			-- Used for having weak references
+		do
+			Result := cwin_get_window_long (item, Gwl_userdata)
+		end
+
+	set_internal_data (v: INTEGER) is
+			-- Set data of window.
+		do
+			cwin_set_window_long (item, Gwl_userdata, v)
+		end
 
 feature {NONE} -- Removal
 
@@ -1639,8 +1649,7 @@ feature {NONE} -- Removal
 			-- by Windows (see `on_wm_destroy').
 			-- Reset C and WEL structure that keep track of Current.
 		do
-				-- Remove Current window from `windows' of WEL_WINDOW_MANAGER.
-			unregister_window (Current)
+			eif_object_id_free (internal_data)
 
 				-- Clean `item' C pointer.
 			item := default_pointer
@@ -1923,21 +1932,6 @@ feature {NONE} -- Externals
 			"PostMessage"
 		end
 
-	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
-			-- SDK GetWindowLong
-		external
-			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
-		alias
-			"GetWindowLong"
-		end
-
-	cwin_set_window_long (hwnd: POINTER; offset, value: INTEGER) is
-			-- SDK SetWindowLong
-		external
-			"C [macro %"wel.h%"] (HWND, int, LONG)"
-		alias
-			"SetWindowLong"
-		end
 
 	cwin_move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER;
 				repaint: BOOLEAN) is

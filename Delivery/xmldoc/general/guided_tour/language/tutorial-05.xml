@@ -106,7 +106,7 @@
 			</code>.  As will be seen in 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
-				<label>"The contract form of a class", page 44</label>
+				<label>"The contract form of a class", Chapter 8, "Design by Contract, Assertions and Exceptions"</label>
 			</link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  
 		</paragraph>
 		<paragraph>The body of the feature is introduced by the 

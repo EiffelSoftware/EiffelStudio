@@ -689,7 +689,7 @@ end;
 				i := i + 1
 			end;
 
-			Skeleton_file.putstring ("void dle_eskelet()");
+			Skeleton_file.putstring ("void dle_eskelet(void)");
 			Skeleton_file.new_line;
 			Skeleton_file.putchar ('{');
 			Skeleton_file.new_line;
@@ -763,7 +763,7 @@ end;
 				Skeleton_file.putchar ('}');
 				Skeleton_file.new_line;
 				Skeleton_file.new_line;
-				Skeleton_file.putstring ("void free_eskelet()");
+				Skeleton_file.putstring ("void free_eskelet(void)");
 				Skeleton_file.new_line;
 				Skeleton_file.putchar ('{');
 				Skeleton_file.new_line;
@@ -823,7 +823,7 @@ end;
 			make_cecil_tables;
 			Cecil2.generate;
 			Cecil3.generate;
-			Cecil_file.putstring ("void dle_evisib()");
+			Cecil_file.putstring ("void dle_evisib(void)");
 			Cecil_file.new_line;
 			Cecil_file.putchar ('{');
 			Cecil_file.new_line;
@@ -887,7 +887,7 @@ end;
 			if final_mode then
 				Cecil_file.exdent;
 				Cecil_file.putstring ("}%N%N");
-				Cecil_file.putstring ("void free_evisib()");
+				Cecil_file.putstring ("void free_evisib(void)");
 				Cecil_file.new_line;
 				Cecil_file.putchar ('{');
 				Cecil_file.new_line;
@@ -951,7 +951,7 @@ end;
 			Conformance_file.putstring ("};%N");
 
 			Conformance_file.new_line;
-			Conformance_file.putstring ("void dle_econform()");
+			Conformance_file.putstring ("void dle_econform(void)");
 			Conformance_file.new_line;
 			Conformance_file.putchar ('{');
 			Conformance_file.new_line;
@@ -963,7 +963,7 @@ end;
 			Conformance_file.new_line;
 			if in_final_mode then
 				Conformance_file.new_line;
-				Conformance_file.putstring ("void free_econform()");
+				Conformance_file.putstring ("void free_econform(void)");
 				Conformance_file.new_line;
 				Conformance_file.putchar ('{');
 				Conformance_file.new_line;
@@ -1011,7 +1011,7 @@ end;
 			if not in_final_mode then
 				Initialization_file := Init_f (false);
 				Initialization_file.open_write;
-				Initialization_file.putstring ("void dle_einit()");
+				Initialization_file.putstring ("void dle_einit(void)");
 				Initialization_file.new_line;
 				Initialization_file.putchar ('{');
 				Initialization_file.new_line;
@@ -1087,7 +1087,7 @@ end;
 				classes.forth
 			end;
 
-			Option_file.putstring ("void dle_eoption()");
+			Option_file.putstring ("void dle_eoption(void)");
 			Option_file.new_line;
 			Option_file.putchar ('{');
 			Option_file.new_line;
@@ -1175,7 +1175,7 @@ end;
 				file.putstring ("#include %"macros.h%"");
 				file.new_line;
 				file.new_line;
-				file.putstring ("void dle_esize()");
+				file.putstring ("void dle_esize(void)");
 				file.new_line;
 				file.putchar ('{');
 				file.new_line;
@@ -1214,7 +1214,7 @@ end;
 			file.new_line;
 			file.new_line;
 
-			file.putstring ("void free_esize()");
+			file.putstring ("void free_esize(void)");
 			file.new_line;
 			file.putchar ('{');
 			file.new_line;
@@ -1244,7 +1244,7 @@ end;
 				Reference_file.putstring ("#include %"plug.h%"");
 				Reference_file.new_line;
 				Reference_file.new_line;
-				Reference_file.putstring ("void dle_eref()");
+				Reference_file.putstring ("void dle_eref(void)");
 				Reference_file.new_line;
 				Reference_file.putchar ('{');
 				Reference_file.new_line;
@@ -1286,7 +1286,7 @@ end;
 			Reference_file.new_line;
 			Reference_file.new_line;
 
-			Reference_file.putstring ("void free_eref()");
+			Reference_file.putstring ("void free_eref(void)");
 			Reference_file.new_line;
 			Reference_file.putchar ('{');
 			Reference_file.new_line;
@@ -1332,7 +1332,7 @@ end;
 					remover.array_optimizer.generate_dle_plug_extern (Plug_file)
 				end;
 				Plug_file.new_line;
-				Plug_file.putstring ("void dle_eplug()");
+				Plug_file.putstring ("void dle_eplug(void)");
 				Plug_file.new_line;
 				Plug_file.putchar ('{');
 				Plug_file.new_line;
@@ -1370,7 +1370,7 @@ end;
 			else
 				Plug_file.putstring ("extern fnptr **eif_address_table;%N%N");
 				Plug_file.putstring ("extern fnptr *Deif_address_table[];%N%N");
-				Plug_file.putstring ("void dle_eplug()");
+				Plug_file.putstring ("void dle_eplug(void)");
 				Plug_file.new_line;
 				Plug_file.putchar ('{');
 				Plug_file.new_line;
@@ -1397,30 +1397,30 @@ end;
 			DLE_file.open_write;
 
 			if not in_final_mode then
-				DLE_file.putstring ("extern void dle_eskelet();");
+				DLE_file.putstring ("extern void dle_eskelet(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_efrozen();");
+				DLE_file.putstring ("extern void dle_efrozen(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_disptch();");
+				DLE_file.putstring ("extern void dle_disptch(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_econform();");
+				DLE_file.putstring ("extern void dle_econform(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_ecall();");
+				DLE_file.putstring ("extern void dle_ecall(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_eoption();");
+				DLE_file.putstring ("extern void dle_eoption(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_epattern();");
+				DLE_file.putstring ("extern void dle_epattern(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void free_epattern();");
+				DLE_file.putstring ("extern void free_epattern(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_einit();");
+				DLE_file.putstring ("extern void dle_einit(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_evisib();");
+				DLE_file.putstring ("extern void dle_evisib(void);");
 				DLE_file.new_line;
-				DLE_file.putstring ("extern void dle_eplug();");
+				DLE_file.putstring ("extern void dle_eplug(void);");
 				DLE_file.new_line;
 				DLE_file.new_line;
-				DLE_file.putstring ("void dle_load()");
+				DLE_file.putstring ("void dle_load(void)");
 				DLE_file.new_line;
 				DLE_file.putchar ('{');
 				DLE_file.new_line;
@@ -1450,7 +1450,7 @@ end;
 				DLE_file.new_line;
 				DLE_file.new_line;
 
-				DLE_file.putstring ("void dle_free()");
+				DLE_file.putstring ("void dle_free(void)");
 				DLE_file.new_line;
 				DLE_file.putchar ('{');
 				DLE_file.new_line;
@@ -1469,33 +1469,33 @@ end;
 				DLE_file.putchar ('"');
 				DLE_file.new_line;
 				DLE_file.new_line;
-				DLE_file.putstring ("void dle_load()");
+				DLE_file.putstring ("void dle_load(void)");
 				DLE_file.new_line;
 				DLE_file.putchar ('{');
 				DLE_file.new_line;
 				DLE_file.indent;
 
-				DLE_file_h.putstring ("extern void dle_econform();");
+				DLE_file_h.putstring ("extern void dle_econform(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_econform();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void dle_eref();");
+				DLE_file_h.putstring ("extern void dle_eref(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_eref();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void dle_esize();");
+				DLE_file_h.putstring ("extern void dle_esize(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_esize();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void dle_eskelet();");
+				DLE_file_h.putstring ("extern void dle_eskelet(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_eskelet();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void dle_evisib();");
+				DLE_file_h.putstring ("extern void dle_evisib(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_evisib();");
 				DLE_file.new_line;
@@ -1508,12 +1508,12 @@ end;
 				loop
 					DLE_file_h.putstring ("extern void dle_erout");
 					DLE_file_h.putint (i);
-					DLE_file_h.putstring ("();");
+					DLE_file_h.putstring ("(void);");
 					DLE_file_h.new_line;
 
 					DLE_file.putstring ("dle_erout");
 					DLE_file.putint (i);
-					DLE_file.putstring ("();");
+					DLE_file.putstring ("(void);");
 					DLE_file.new_line;
 					i := i + 1
 				end;
@@ -1525,19 +1525,19 @@ end;
 				loop
 					DLE_file_h.putstring ("extern void dle_eattr");
 					DLE_file_h.putint (i);
-					DLE_file_h.putstring ("();");
+					DLE_file_h.putstring ("(void);");
 					DLE_file_h.new_line;
 
 					DLE_file.putstring ("dle_eattr");
 					DLE_file.putint (i);
-					DLE_file.putstring ("();");
+					DLE_file.putstring ("(void);");
 					DLE_file.new_line;
 					i := i + 1
 				end;
 
 					-- The code in `plug' has to be called after the routine
 					-- and attribute tables have been initialized.
-				DLE_file_h.putstring ("extern void dle_eplug();");
+				DLE_file_h.putstring ("extern void dle_eplug(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("dle_eplug();");
 				DLE_file.new_line;
@@ -1547,33 +1547,33 @@ end;
 				DLE_file.new_line;
 				DLE_file.new_line;
 
-				DLE_file.putstring ("void dle_free()");
+				DLE_file.putstring ("void dle_free(void)");
 				DLE_file.new_line;
 				DLE_file.putchar ('{');
 				DLE_file.new_line;
 				DLE_file.indent;
 
-				DLE_file_h.putstring ("extern void free_econform();");
+				DLE_file_h.putstring ("extern void free_econform(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("free_econform();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void free_eref();");
+				DLE_file_h.putstring ("extern void free_eref(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("free_eref();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void free_esize();");
+				DLE_file_h.putstring ("extern void free_esize(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("free_esize();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void free_eskelet();");
+				DLE_file_h.putstring ("extern void free_eskelet(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("free_eskelet();");
 				DLE_file.new_line;
 
-				DLE_file_h.putstring ("extern void free_evisib();");
+				DLE_file_h.putstring ("extern void free_evisib(void);");
 				DLE_file_h.new_line;
 				DLE_file.putstring ("free_evisib();");
 				DLE_file.new_line;

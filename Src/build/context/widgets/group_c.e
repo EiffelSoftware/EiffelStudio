@@ -17,7 +17,7 @@ inherit
 			children_color, children_initialization, eiffel_declaration, 
 			full_name, intermediate_name, create_context, 
 			show_tree_elements, hide_tree_elements, tree_element, 
-			is_bulletin, is_in_a_group, is_a_group, save_widget, 
+			is_bulletin, is_a_group, save_widget, 
 			stored_node, widget, set_modified_flags, 
 			help_file_name, is_able_to_be_grouped,
 			update_group_name_in_tree, remove_callbacks,
@@ -30,7 +30,7 @@ inherit
 			children_color, children_initialization, eiffel_declaration, 
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
-			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
+			cut_list, is_bulletin, is_a_group, save_widget, 
 			stored_node, widget, set_modified_flags, help_file_name,
 			is_able_to_be_grouped, update_group_name_in_tree, 
 			remove_callbacks, reset_callbacks
@@ -237,11 +237,6 @@ feature
 		do
 			Result := not is_in_a_group and then
 				grouped and then group.count > 1
-		end;
-
-	is_in_a_group: BOOLEAN is
-		do
-			Result := parent.is_in_a_group
 		end;
 
 	cut_list: LINKED_LIST [CONTEXT] is

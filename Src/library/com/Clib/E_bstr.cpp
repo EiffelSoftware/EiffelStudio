@@ -30,16 +30,12 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
     wcstombs (str_name, BstrName, bstr_size);
     str_name [bstr_size] = '\0';
 
-    name = henter (RTMS (str_name));
+    name = henter (eif_string (str_name));
     free (str_name);
   }
   else
   {
-    eif_string_id = eif_type_id ("STRING");
-    string_make = eif_proc ("make", eif_string_id);
-    nstcall = 0;
-    name = eif_create (eif_string_id);
-    string_make (eif_access (name), 0);
+	name = henter (eif_string (""));
   }
   return name;
 };

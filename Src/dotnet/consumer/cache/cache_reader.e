@@ -147,7 +147,7 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 		
-	consumed_type (a_type: TYPE): CONSUMED_TYPE is
+	consumed_type (a_type: SYSTEM_TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -216,7 +216,7 @@ feature -- Status Report
 			Result := l_ca /= Void and (not a_consumed or l_ca.is_consumed)
 		end
 	
-	is_type_in_cache (a_type: TYPE): BOOLEAN is
+	is_type_in_cache (a_type: SYSTEM_TYPE): BOOLEAN is
 			-- Is `a_type' in EAC?
 		require
 			non_void_type: a_type /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	type_index_from_type (a_type: TYPE): INTEGER is
+	type_index_from_type (a_type: SYSTEM_TYPE): INTEGER is
 			-- retrieve type index from `a_type' in `a_assembly'
 		require
 			a_type_not_void: a_type /= Void

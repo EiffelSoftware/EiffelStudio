@@ -60,6 +60,8 @@ feature -- Access
 
 	Cf_nosizesel: INTEGER is 2097152
 
+	Cf_noscriptsel: INTEGER is 8388608
+
 end -- class WEL_CF_CONSTANTS
 
 --|----------------------------------------------------------------

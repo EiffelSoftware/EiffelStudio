@@ -12,7 +12,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "POPUP_CMD";
+	eiffel_type: STRING is "Build_popup_cmd";
 
 	label: STRING is "Popup";
 
@@ -23,12 +23,12 @@ feature
 
 	arguments: EB_LINKED_LIST [ARG] is
 		local
-			arg: ARG;
+			arg: ARG
 		once
-			!! Result.make;
-			!! arg.session_init (context_catalog.temp_wind_type);
-			Result.extend (arg);
-		end;
+			!! Result.make
+			!! arg.session_init (context_catalog.temp_wind_type)
+			Result.extend (arg)
+		end
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is
 		local

@@ -13,7 +13,7 @@ creation
 	
 feature 
 
-	eiffel_type: STRING is "SAVE";
+	eiffel_type: STRING is "Build_save";
 
 	label: STRING is "Save";
 
@@ -24,12 +24,12 @@ feature
 
 	arguments: EB_LINKED_LIST [ARG] is
 		local
-			arg: ARG;
+			arg: ARG
 		once
-			!! Result.make;
-			!!arg.session_init (context_catalog.text_type);
-			arguments.extend (arg);
-		end;
+			!! Result.make
+			!! arg.session_init (context_catalog.text_type)
+			arguments.extend (arg)
+		end
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is
 		local

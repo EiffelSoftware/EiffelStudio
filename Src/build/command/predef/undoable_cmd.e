@@ -28,7 +28,7 @@ feature
 
 	arguments: EB_LINKED_LIST [ARG] is 
 		once 
-			!!Result.make 
+			!! Result.make 
 		end;
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is

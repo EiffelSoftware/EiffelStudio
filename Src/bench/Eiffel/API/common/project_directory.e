@@ -38,7 +38,7 @@ feature -- Access
 
 	is_new: BOOLEAN is
 			-- Is this a new eiffel project directory?
-			-- (Checks to see if there is eiffelgen directory
+			-- (Checks to see if there is an EIFGEN directory
 			-- and project.eif file).
 		require
 			exists: exists
@@ -49,11 +49,18 @@ feature -- Access
 			!! dir_name.make_from_string (name);
 			dir_name.extend (Eiffelgen);
 			!! eif_gen_d.make (dir_name);
-			Result := not eif_gen_d.exists or else
-				not project_eif_file.exists
+			Result := not eif_gen_d.exists
+			if not Result then
+					-- A `EIFGEN' directory exists, we need to check
+					-- if there is an Eiffel Project Repository file.
+				if project_eif_file /= Void then
+					Result := not project_eif_file.exists
+				end
+			end
 		ensure
 			not_new_implies_eif_exists:
-				not is_new implies project_eif_file.exists
+				not is_new implies (project_eif_file /= Void
+							and then project_eif_file.exists)
 		end;
 
 	valid_project_eif: BOOLEAN is

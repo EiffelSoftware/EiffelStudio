@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROJECT_MANAGER
+	WIZARD_PROJECT_MANAGER
 
 inherit
 	EV_APPLICATION
@@ -13,7 +13,7 @@ inherit
 			make_and_launch
 		end
 
-	SHARED
+	WIZARD_SHARED
 		undefine
 			default_create
 		end
@@ -41,4 +41,4 @@ feature -- Initialization
 			first_window.set_title("Wizard Version 1.1")
 		end 
  	
-end -- class PROJECT_MANAGER
+end -- class WIZARD_PROJECT_MANAGER

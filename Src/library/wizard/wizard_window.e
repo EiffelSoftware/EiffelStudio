@@ -10,7 +10,7 @@ class
 inherit
 	EV_TITLED_WINDOW 
 
-	STATE_MANAGER
+	WIZARD_STATE_MANAGER
 		undefine
 			default_create
 		end
@@ -73,10 +73,10 @@ feature -- Initialization
 	load_first_state is
 			-- Load first state.
 		local
-			db_initialization: DB_INITIALIZATION
+			wizard_initial_state: WIZARD_INITIAL_STATE
 		do
-			Create db_initialization.make(Create {WIZARD_INFORMATION}.make)
-			proceed_with_new_state(db_initialization)
+			wizard_initial_state.make(Create {WIZARD_INFORMATION}.make)
+			proceed_with_new_state(wizard_initial_state)
 		end
 
 feature -- Implementation

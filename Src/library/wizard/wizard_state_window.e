@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 
 inherit
-	STATE_MANAGER
+	WIZARD_STATE_MANAGER
 
 feature -- Initialization
 
@@ -139,4 +139,4 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-end -- class STATE_WINDOW
+end -- class WIZARD_STATE_WINDOW

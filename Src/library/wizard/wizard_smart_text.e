@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SMART_TEXT
+	WIZARD_SMART_TEXT
 
 inherit
 	EV_VERTICAL_BOX
@@ -33,4 +33,4 @@ feature -- basic Operations
 			extend(Create {EV_LABEL}.make_with_text(s))
 		end
 
-end -- class SMART_TEXT
+end -- class WIZARD_SMART_TEXT

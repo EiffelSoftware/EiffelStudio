@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	SHARED
+	WIZARD_SHARED
 
 inherit
-	PROJECT_SHARED
+	PROJECT_WIZARD_SHARED
 
 	ARGUMENTS
 
@@ -24,7 +24,7 @@ feature -- Access
 
 	main_box: EV_VERTICAL_BOX is
 			-- Box in which we display the different pages the
-			-- user will see. All the STATE_WINDOW instances will
+			-- user will see. All the WIZARD_STATE_WINDOW instances will
 			-- be displayed child of this box.
 		once
 			Result := first_window.wizard_page
@@ -41,7 +41,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	history: TWO_WAY_LIST [STATE_WINDOW] is
+	history: TWO_WAY_LIST [WIZARD_STATE_WINDOW] is
 			-- History of the different pages
 			-- the user has processed.
 		once
@@ -53,7 +53,7 @@ feature -- Access
 	wizard_source: STRING is
 			-- Wizard sources
 		require
-			argument_count>0
+			argument(1).count>0   
 		once
 			Result := argument(1)
 		ensure
@@ -72,4 +72,4 @@ feature -- Access
 			Result := wizard_source +"\resources"
 		end
 
-end -- class SHARED
+end -- class WIZARD_SHARED

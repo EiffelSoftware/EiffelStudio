@@ -40,8 +40,9 @@ feature {NONE} -- Initialization
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
-			!EV_MENU_ITEM_IMP! implementation.make_with_text (txt)
+			!EV_MENU_ITEM_IMP! implementation.make
 			implementation.set_interface (Current)
+			implementation.set_text (txt)
 			set_parent (par)
 		end
 
@@ -77,46 +78,61 @@ feature -- Status setting
    			flag = insensitive
    		end
 
-	set_selected is
+	set_selected (flag: BOOLEAN) is
    			-- Set current item as the selected one.
 			-- we use it only when the grand parent is an option button.
    		require
-			parent_is_an_option_button: grand_parent_is_option_button
+			exists: not destroyed
+--			parent_is_an_option_button: grand_parent_is_option_button
    		do
- 			implementation.set_selected
+ 			implementation.set_selected (flag)
  		ensure
    			is_now_selected: is_selected
    		end
 
 feature -- Assertion
 
-	grand_parent_is_option_button: BOOLEAN is
-			-- True if the grand parent is an option button.
-			-- False otherwise.
-		do
-			Result := implementation.grand_parent_is_option_button
-		end
+--	grand_parent_is_option_button: BOOLEAN is
+--			-- True if the grand parent is an option button.
+--			-- False otherwise.
+--		do
+--			Result := implementation.grand_parent_is_option_button
+--		end
 
 	is_selected: BOOLEAN is
 			-- True if the current item is selected.
 			-- False otherwise.
 			-- we use it only when the grand parent is an option button.
-   		require
-			valid_grand_parent: grand_parent_is_option_button
+  		require
+			exists: not destroyed
+--			valid_grand_parent: grand_parent_is_option_button
 		do
 			Result := implementation.is_selected
 		end
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_activate_command (cmd, arg)
+			implementation.add_select_command (cmd, arg)
+		end
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		obsolete
+			"Will be removed in next week release, %
+			 %use add_select_command instead."
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_select_command (cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -124,10 +140,22 @@ feature -- Event -- removing command association
 	remove_activate_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is activated.
+		obsolete
+			"Will be removed in next week release, %
+			 %use remove_select_commands instead."
 		require
 			exists: not destroyed
 		do
-			implementation.remove_activate_commands			
+			implementation.remove_select_commands			
+		end	
+
+	remove_select_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is selected.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_select_commands			
 		end
 
 feature -- Implementation

@@ -1,0 +1,242 @@
+# ecom.lib - Makefile for Microsoft C
+
+MV = copy
+CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe
+OUTPUT_CMD = -o
+CFLAGS = -w- -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+
+OBJ = ecom_gce_ise_c.obj \
+ecom_gec_ise_c.obj \
+ecom_ise_reflection_codegenerator_eiffelcodegenerator.obj \
+ecom_ise_reflection_codegenerator_eiffelcodegeneratordictionary.obj \
+ecom_ise_reflection_codegenerator_eiffelcodegeneratorfromxml.obj \
+ecom_ise_reflection_codegenerator_generator.obj \
+ecom_ise_reflection_codegenerator_partcomparable_impl_proxy.obj \
+ecom_ise_reflection_codegenerator_xmlcodegenerator.obj \
+ecom_ise_reflection_codegenerator__eiffelcodegenerator_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents_assemblydescriptor.obj \
+ecom_ise_reflection_eiffelcomponents_convert.obj \
+ecom_ise_reflection_eiffelcomponents_eiffelassemblyfactory.obj \
+ecom_ise_reflection_eiffelcomponents_eiffelclass.obj \
+ecom_ise_reflection_eiffelcomponents_eiffelcomponents.obj \
+ecom_ise_reflection_eiffelcomponents_eiffelfeature.obj \
+ecom_ise_reflection_eiffelcomponents_exportclause.obj \
+ecom_ise_reflection_eiffelcomponents_formalnamedsignaturetype.obj \
+ecom_ise_reflection_eiffelcomponents_formalsignaturetype.obj \
+ecom_ise_reflection_eiffelcomponents_genericderivation.obj \
+ecom_ise_reflection_eiffelcomponents_inamedsignaturetype_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents_inheritanceclause.obj \
+ecom_ise_reflection_eiffelcomponents_namedsignaturetype.obj \
+ecom_ise_reflection_eiffelcomponents_parent.obj \
+ecom_ise_reflection_eiffelcomponents_partcomparable_2_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents_redefineclause.obj \
+ecom_ise_reflection_eiffelcomponents_renameclause.obj \
+ecom_ise_reflection_eiffelcomponents_selectclause.obj \
+ecom_ise_reflection_eiffelcomponents_signaturetype.obj \
+ecom_ise_reflection_eiffelcomponents_undefineclause.obj \
+ecom_ise_reflection_eiffelcomponents__assemblydescriptor_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__eiffelassemblyfactory_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__eiffelclass_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__eiffelfeature_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__exportclause_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__formalnamedsignaturetype_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__namedsignaturetype_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__parent_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__redefineclause_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__renameclause_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__selectclause_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__signaturetype_impl_proxy.obj \
+ecom_ise_reflection_eiffelcomponents__undefineclause_impl_proxy.obj \
+
+
+WOBJ = wecom_gce_ise_c.obj \
+wecom_gec_ise_c.obj \
+wecom_ise_reflection_codegenerator_eiffelcodegenerator.obj \
+wecom_ise_reflection_codegenerator_eiffelcodegeneratordictionary.obj \
+wecom_ise_reflection_codegenerator_eiffelcodegeneratorfromxml.obj \
+wecom_ise_reflection_codegenerator_generator.obj \
+wecom_ise_reflection_codegenerator_partcomparable_impl_proxy.obj \
+wecom_ise_reflection_codegenerator_xmlcodegenerator.obj \
+wecom_ise_reflection_codegenerator__eiffelcodegenerator_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents_assemblydescriptor.obj \
+wecom_ise_reflection_eiffelcomponents_convert.obj \
+wecom_ise_reflection_eiffelcomponents_eiffelassemblyfactory.obj \
+wecom_ise_reflection_eiffelcomponents_eiffelclass.obj \
+wecom_ise_reflection_eiffelcomponents_eiffelcomponents.obj \
+wecom_ise_reflection_eiffelcomponents_eiffelfeature.obj \
+wecom_ise_reflection_eiffelcomponents_exportclause.obj \
+wecom_ise_reflection_eiffelcomponents_formalnamedsignaturetype.obj \
+wecom_ise_reflection_eiffelcomponents_formalsignaturetype.obj \
+wecom_ise_reflection_eiffelcomponents_genericderivation.obj \
+wecom_ise_reflection_eiffelcomponents_inamedsignaturetype_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents_inheritanceclause.obj \
+wecom_ise_reflection_eiffelcomponents_namedsignaturetype.obj \
+wecom_ise_reflection_eiffelcomponents_parent.obj \
+wecom_ise_reflection_eiffelcomponents_partcomparable_2_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents_redefineclause.obj \
+wecom_ise_reflection_eiffelcomponents_renameclause.obj \
+wecom_ise_reflection_eiffelcomponents_selectclause.obj \
+wecom_ise_reflection_eiffelcomponents_signaturetype.obj \
+wecom_ise_reflection_eiffelcomponents_undefineclause.obj \
+wecom_ise_reflection_eiffelcomponents__assemblydescriptor_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__eiffelassemblyfactory_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__eiffelclass_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__eiffelfeature_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__exportclause_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__formalnamedsignaturetype_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__namedsignaturetype_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__parent_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__redefineclause_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__renameclause_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__selectclause_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__signaturetype_impl_proxy.obj \
+wecom_ise_reflection_eiffelcomponents__undefineclause_impl_proxy.obj \
+
+
+all:: ecom.lib ecom_final.lib
+
+ecom.lib: $(WOBJ)
+	if exist $@ del $@
+	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**
+	del *.obj
+	if not exist bcb mkdir bcb
+	$(MV) $@ bcb
+	del $@
+
+ecom_final.lib: $(OBJ)
+	if exist $@ del $@
+	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**
+	del *.obj
+	if not exist bcb mkdir bcb
+	$(MV) $@ bcb
+	del $@
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+
+wecom_gce_ise_c.obj: ecom_gce_ise_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_gec_ise_c.obj: ecom_gec_ise_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_eiffelcodegenerator.obj: ecom_ise_reflection_codegenerator_eiffelcodegenerator.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_eiffelcodegeneratordictionary.obj: ecom_ise_reflection_codegenerator_eiffelcodegeneratordictionary.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_eiffelcodegeneratorfromxml.obj: ecom_ise_reflection_codegenerator_eiffelcodegeneratorfromxml.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_generator.obj: ecom_ise_reflection_codegenerator_generator.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_partcomparable_impl_proxy.obj: ecom_ise_reflection_codegenerator_partcomparable_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator_xmlcodegenerator.obj: ecom_ise_reflection_codegenerator_xmlcodegenerator.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_codegenerator__eiffelcodegenerator_impl_proxy.obj: ecom_ise_reflection_codegenerator__eiffelcodegenerator_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_assemblydescriptor.obj: ecom_ise_reflection_eiffelcomponents_assemblydescriptor.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_convert.obj: ecom_ise_reflection_eiffelcomponents_convert.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_eiffelassemblyfactory.obj: ecom_ise_reflection_eiffelcomponents_eiffelassemblyfactory.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_eiffelclass.obj: ecom_ise_reflection_eiffelcomponents_eiffelclass.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_eiffelcomponents.obj: ecom_ise_reflection_eiffelcomponents_eiffelcomponents.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_eiffelfeature.obj: ecom_ise_reflection_eiffelcomponents_eiffelfeature.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_exportclause.obj: ecom_ise_reflection_eiffelcomponents_exportclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_formalnamedsignaturetype.obj: ecom_ise_reflection_eiffelcomponents_formalnamedsignaturetype.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_formalsignaturetype.obj: ecom_ise_reflection_eiffelcomponents_formalsignaturetype.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_genericderivation.obj: ecom_ise_reflection_eiffelcomponents_genericderivation.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_inamedsignaturetype_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents_inamedsignaturetype_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_inheritanceclause.obj: ecom_ise_reflection_eiffelcomponents_inheritanceclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_namedsignaturetype.obj: ecom_ise_reflection_eiffelcomponents_namedsignaturetype.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_parent.obj: ecom_ise_reflection_eiffelcomponents_parent.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_partcomparable_2_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents_partcomparable_2_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_redefineclause.obj: ecom_ise_reflection_eiffelcomponents_redefineclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_renameclause.obj: ecom_ise_reflection_eiffelcomponents_renameclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_selectclause.obj: ecom_ise_reflection_eiffelcomponents_selectclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_signaturetype.obj: ecom_ise_reflection_eiffelcomponents_signaturetype.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents_undefineclause.obj: ecom_ise_reflection_eiffelcomponents_undefineclause.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__assemblydescriptor_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__assemblydescriptor_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__eiffelassemblyfactory_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__eiffelassemblyfactory_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__eiffelclass_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__eiffelclass_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__eiffelfeature_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__eiffelfeature_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__exportclause_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__exportclause_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__formalnamedsignaturetype_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__formalnamedsignaturetype_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__namedsignaturetype_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__namedsignaturetype_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__parent_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__parent_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__redefineclause_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__redefineclause_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__renameclause_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__renameclause_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__selectclause_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__selectclause_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__signaturetype_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__signaturetype_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_ise_reflection_eiffelcomponents__undefineclause_impl_proxy.obj: ecom_ise_reflection_eiffelcomponents__undefineclause_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+

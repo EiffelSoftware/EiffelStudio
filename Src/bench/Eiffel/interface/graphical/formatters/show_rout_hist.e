@@ -50,7 +50,7 @@ feature {NONE}
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Searching system for implementers...")
+			text_window.display_header ("Searching system for implementors...")
 		end;
 
 end

@@ -954,14 +954,15 @@ feature {NONE} -- Actions
 		local
 			l_item, node: EV_TREE_ITEM
 			found: BOOLEAN
+			clus_name: STRING
 		do
 			l_item ?= cluster_tree.selected_item
 			if l_item /= Void then
+				clus_name := cluster_tree.selected_item.text
 				check
-					has_text: cluster_tree.selected_item.text /= Void
+					has_text: clus_name /= Void
 					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
 				end
-				clusters.remove (cluster_tree.selected_item.text)
 				reset_cluster_info
 				from
 					cluster_tree.start
@@ -980,6 +981,7 @@ feature {NONE} -- Actions
 						cluster_tree.forth
 					end
 				end
+				clusters.remove (clus_name)
 			end
 		end
 

@@ -593,8 +593,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 							is_conform := False
 						end
 					end
-				elseif constraint_type.generics /= Void then
+				elseif
+					constraint_type.generics /= Void and then
+					constraint_type.generics.count /= 0
+				then
 						-- The constraint has a generic type itself which is not new in 4.3.
+						-- and the constraint is not a TUPLE type without generic parameters.
 						-- However we need to do a substitution in the case the generic
 						-- type is referencing another formal generic parameter. This
 						-- is the case when you wrote something like:

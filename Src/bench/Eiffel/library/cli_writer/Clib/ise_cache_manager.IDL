@@ -3,8 +3,8 @@
 // typelib filename: emitter.tlb
 
 [
-  uuid(9D69A826-596D-3973-8981-7878814B5049),
-  version(5.3)
+  uuid(3A0E2FF7-8B0B-369F-8336-D2BCC82DF77B),
+  version(5.4)
 ]
 library emitter
 {

@@ -70,10 +70,12 @@ feature -- Status setting
 			point: WEL_POINT
 			ww: WEL_COMPOSITE_WINDOW
 		do
-			ww ?= parent_imp
-			create point.make (0, 0)
-			point.set_cursor_position
-			show_track (point.x, point.y, ww)
+			if count /= 0 then
+				ww ?= parent_imp
+				create point.make (0, 0)
+				point.set_cursor_position
+				show_track (point.x, point.y, ww)
+			end
 		end
 
 	show_at_position (x, y: INTEGER) is
@@ -81,8 +83,10 @@ feature -- Status setting
 		local
 			ww: WEL_COMPOSITE_WINDOW
 		do
-			ww ?= parent_imp
-			show_track (x, y, ww)
+			if count /= 0 then
+				ww ?= parent_imp
+				show_track (x, y, ww)
+			end
 		end
 
 feature -- Element change

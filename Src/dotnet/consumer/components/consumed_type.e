@@ -44,9 +44,6 @@ feature -- Access
 
 	dotnet_name: STRING
 			-- Type full name
-
-	assembly: CONSUMED_ASSEMBLY
-			-- Assembly containing consumed type
 	
 	parent: CONSUMED_REFERENCED_TYPE
 			-- Parent type

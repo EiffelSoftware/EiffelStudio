@@ -333,13 +333,13 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 		
 feature {EV_ANY_IMP} -- Combo box intermediary agent routines
 
-	on_combo_box_button_release (a_c_object: POINTER) is
+	on_combo_box_dropdown_unmapped (a_c_object: POINTER) is
 			-- Button released
 		local
 			a_combo_box_imp: EV_COMBO_BOX_IMP
 		do
 			a_combo_box_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_combo_box_imp.on_button_released
+			a_combo_box_imp.launch_select_actions
 		end
 
 feature {EV_ANY_IMP} -- Window intermediary agent routines

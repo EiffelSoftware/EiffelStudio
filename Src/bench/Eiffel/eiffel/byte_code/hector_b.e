@@ -62,7 +62,7 @@ feature -- Access
 			else
 				Result := internal_type
 				if Result = Void then
-					create {TYPED_POINTER_I} Result.make_typed (
+					create {TYPED_POINTER_I} Result.make (
 						System.typed_pointer_class.compiled_class.class_id, expr.type.type_a)
 					internal_type := Result
 				end

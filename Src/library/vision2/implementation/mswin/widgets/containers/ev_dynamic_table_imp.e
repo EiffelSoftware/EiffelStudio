@@ -22,30 +22,6 @@ inherit
 			child_minheight_changed
 		end
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			set_parent as wel_set_parent,
-			destroy as wel_destroy
-		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-			on_draw_item,
-			default_style,
-			background_brush,
-			on_menu_command
-		end
-
 creation
 	make
 

@@ -466,9 +466,6 @@ feature -- Access
 			-- Ordered elements (appears in code with same order
 			-- as added)
 
-	import_files_after: LIST [STRING]
-			-- Imported header files
-
 feature -- Element Change
 
 	set_name (a_name: like name) is
@@ -595,20 +592,6 @@ feature -- Element Change
 			extern_functions.extend (an_extern_function)
 		ensure
 			added: extern_functions.last = an_extern_function
-		end
-
-	add_import_after (an_import_file: STRING) is
-			-- Add `an_import_file' to list of imported header files.
-		require
-			non_void_import_file: an_import_file /= Void
-			valid_import_file: not an_import_file.empty
-			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
-		do
-			if not import_files_after.has (an_import_file) then
-				import_files_after.extend (an_import_file)
-			end
-		ensure
-			added: import_files_after.has (an_import_file)
 		end
 
 feature -- Basic Operations

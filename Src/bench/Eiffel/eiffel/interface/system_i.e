@@ -908,8 +908,8 @@ end
 				private_freeze := False
 			end
 			if il_generation and then (private_melt or else not degree_minus_1.is_empty) then
-				Degree_minus_1.wipe_out
 				generate_il
+				Degree_minus_1.wipe_out
 			end
 			private_melt := False
 			first_compilation := False

@@ -184,6 +184,14 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 	tool: EV_WIDGET
 		-- Tool in `Current'.
 		
+	is_external: BOOLEAN is
+			-- Is `Current' external to `parent_area' and
+			-- therefore contained in a dockable dialog?
+		do
+			Result := parent_dockable_dialog (Current) /= Void
+		end
+		
+		
 	is_minimized: BOOLEAN
 		-- Is `Current' minimized?
 		

@@ -38,7 +38,7 @@
 #include "err_msg.h"
 #include "dle.h"
 #include "project.h"				/* For rcdt, rcorigin, rcoffset, ... */
-#include "oncekeys.h"
+#include "main.h"
 
 #ifdef DEBUG
 #include "interp.h"					/* For idump() */

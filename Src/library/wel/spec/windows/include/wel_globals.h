@@ -70,8 +70,9 @@ extern "C" {
 	 */
 
 #define WGTCX \
-	wel_global_context_t *wel_globals = \
-		(wel_global_context_t *) TlsGetValue (wel_global_key);
+	wel_global_context_t *wel_globals; \
+	wel_thr_register(); \
+	wel_globals = (wel_global_context_t *) TlsGetValue (wel_global_key);
 
 #define WEDCX 
 	

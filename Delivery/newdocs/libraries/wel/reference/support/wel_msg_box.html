@@ -1,11 +1,11 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-		
+
 <TITLE>WEL_MSG_BOX Flat contracts</TITLE>
-		
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
@@ -24,7 +24,7 @@
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/support/wel_msg_box.html">WEL_MSG_BOX</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box.html">WEL_MSG_BOX</A><BR>
 
 <BR>
 
@@ -32,7 +32,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_make">make</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_make">make</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> initialize language</SPAN><BR>
 
@@ -42,29 +42,29 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_flag_set"><A CLASS="efeature" HREF="../../wel/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_flag_set"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">mask</SPAN><SPAN CLASS="ecomment"> set in </SPAN><SPAN CLASS="equoted">flags</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_language"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_language">language</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_language"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_language">language</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actual language for "push buttons"</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_message_box_result"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_message_box_result">message_box_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_message_box_result"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_message_box_result">message_box_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last result for all </SPAN><SPAN CLASS="equoted">xxx_message_box</SPAN><SPAN CLASS="ecomment"> routines.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_id_constants.html">WEL_ID_CONSTANTS</A><SPAN CLASS="ecomment"> for values.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_id_constants.html">WEL_ID_CONSTANTS</A><SPAN CLASS="ecomment"> for values.</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_sublanguage"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_sublanguage">sublanguage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sublanguage"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_sublanguage">sublanguage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sublanguage of language for "push buttons"</SPAN><BR>
 
@@ -74,7 +74,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_basic_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_basic_message_box">basic_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_basic_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_message_box">basic_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show a basic message box with </SPAN><SPAN CLASS="equoted">a_text</SPAN><SPAN CLASS="ecomment"> inside and</SPAN><BR>
 
@@ -82,31 +82,31 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the flag </SPAN><SPAN CLASS="equoted">MB_USERICON</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_mb_constants.html">WEL_MB_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment"> value.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_mb_constants.html">WEL_MB_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment"> value.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">basic_message_box</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">basic_message_box</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_clear_flag"><A CLASS="efeature" HREF="../../wel/support/wel_bit_operations.html#f_clear_flag">clear_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_clear_flag"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_clear_flag">clear_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clear the </SPAN><SPAN CLASS="equoted">mask</SPAN><SPAN CLASS="ecomment"> in </SPAN><SPAN CLASS="equoted">flags</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">flag_unset</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../wel/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">flag_unset</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_error_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_error_message_box">error_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_error_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_error_message_box">error_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show an error message box with message </SPAN><SPAN CLASS="equoted">a_text</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -114,13 +114,13 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_information_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_information_message_box">information_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_information_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_information_message_box">information_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show an information message box with message </SPAN><SPAN CLASS="equoted">a_text</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -128,19 +128,19 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_make">make</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_make">make</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> initialize language</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_question_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_question_message_box">question_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_question_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_question_message_box">question_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show a question message box with message </SPAN><SPAN CLASS="equoted">a_text</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -148,25 +148,25 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_flag"><A CLASS="efeature" HREF="../../wel/support/wel_bit_operations.html#f_set_flag">set_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_flag"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_set_flag">set_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the </SPAN><SPAN CLASS="equoted">mask</SPAN><SPAN CLASS="ecomment"> in </SPAN><SPAN CLASS="equoted">flags</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations.html">WEL_BIT_OPERATIONS</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">flag_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">flag_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_language"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_set_language">set_language</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_language_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_language"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_set_language">set_language</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_language_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set language to a_language_id</SPAN><BR>
 
@@ -174,19 +174,19 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_langid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_language_id</SPAN> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_langid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_language_id</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_sublangid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_sublangid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">language_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_language">language</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_language_id</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">language_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_language">language</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_language_id</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">sublanguage_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_sublanguage">sublanguage</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">sublanguage_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_sublanguage">sublanguage</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_user_icon_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_user_icon_message_box">user_icon_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_user_icon_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_user_icon_message_box">user_icon_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show a message box with a user icon </SPAN><SPAN CLASS="equoted">an_id</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
 
@@ -194,19 +194,19 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the flag </SPAN><SPAN CLASS="equoted">MB_USERICON</SPAN><SPAN CLASS="ecomment"> must be present in </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_mb_constants.html">WEL_MB_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment"> value.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_mb_constants.html">WEL_MB_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment"> value.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">user_message_box</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">user_message_box</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_warning_message_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_warning_message_box">warning_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_warning_message_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_warning_message_box">warning_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show a warning message box with message </SPAN><SPAN CLASS="equoted">a_text</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -214,9 +214,9 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">text_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_text</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">title_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_title</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -224,7 +224,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_basic_msg_box"><A CLASS="efeature" HREF="../../wel/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_basic_msg_box"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> does </SPAN><SPAN CLASS="equoted">a_style</SPAN><SPAN CLASS="ecomment"> contain the flag </SPAN><SPAN CLASS="equoted">Mb_usericon</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
@@ -234,11 +234,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 <BR>
 

@@ -1,18 +1,18 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-		
+
 <TITLE>WEL_COMMAND Flat contracts</TITLE>
-		
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
 <SPAN CLASS="ekeyword">indexing</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General notion of command. To write an actual command inherit from this class and implement the `</SPAN><A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_execute">execute</A><SPAN CLASS="estring">' feature."</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General notion of command. To write an actual command inherit from this class and implement the `</SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_execute">execute</A><SPAN CLASS="estring">' feature."</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
 
@@ -24,7 +24,7 @@
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/support/wel_command.html">WEL_COMMAND</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_command.html">WEL_COMMAND</A><BR>
 
 <BR>
 
@@ -32,7 +32,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_message_information"><A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_message_information">message_information</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/messages/wel_message_information.html">WEL_MESSAGE_INFORMATION</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_message_information"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_message_information">message_information</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/messages/wel_message_information.html">WEL_MESSAGE_INFORMATION</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Information associated to the message</SPAN><BR>
 
@@ -42,13 +42,13 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_message_information"><A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_set_message_information">set_message_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/messages/wel_message_information.html">WEL_MESSAGE_INFORMATION</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_message_information"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_set_message_information">set_message_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/messages/wel_message_information.html">WEL_MESSAGE_INFORMATION</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_message_information">message_information</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">mi</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_message_information">message_information</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">mi</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">message_information_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_message_information">message_information</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">mi</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">message_information_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_message_information">message_information</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">mi</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -56,7 +56,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="../../wel/support/wel_command.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_command.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute the command with </SPAN><SPAN CLASS="equoted">argument</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
@@ -66,11 +66,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 <BR>
 

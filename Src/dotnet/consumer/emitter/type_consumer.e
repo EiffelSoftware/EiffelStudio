@@ -105,11 +105,11 @@ feature {NONE} -- Initialization
 --						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.flatten_hierarchy)
+						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+						feature {BINDING_FLAGS}.static)
 				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.flatten_hierarchy)
+						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public|
+						feature {BINDING_FLAGS}.static)
 			end
 			
 --			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
@@ -174,6 +174,11 @@ feature -- Basic Operation
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			
+			cp_function: CONSUMED_FUNCTION
+			cp_procedure: CONSUMED_PROCEDURE
+			cp_property: CONSUMED_PROPERTY
+			cp_event: CONSUMED_EVENT
 		do
 			if not rescued then
 				check
@@ -225,16 +230,20 @@ feature -- Basic Operation
 						check
 							is_method: l_meth /= Void
 						end
-						if is_consumed_method (l_meth) then
-							if not is_property_or_event (l_meth) then
-								if is_function (l_meth) then
-									l_functions.extend (consumed_function (l_meth, False))
-								else
-									l_procedures.extend (consumed_procedure (l_meth, False))
+						if not is_property_or_event (l_meth) then
+							if is_function (l_meth) then
+								cp_function := consumed_function (l_meth, False)
+								if cp_function /= Void then
+									l_functions.extend (cp_function)
 								end
 							else
-								-- The method will be added at the same time than the property or the event.
+								cp_procedure := consumed_procedure (l_meth, False)
+								if cp_function /= Void then
+									l_procedures.extend (cp_procedure)
+								end
 							end
+						else
+							-- The method will be added at the same time than the property or the event.
 						end
 					elseif l_member.get_member_type = feature {MEMBER_TYPES}.field then
 						l_field ?= l_member
@@ -244,72 +253,28 @@ feature -- Basic Operation
 						if is_consumed_field (l_field) then
 							l_fields.extend (consumed_field (l_field))						
 						end
+					elseif l_member.get_member_type = feature {MEMBER_TYPES}.property then
+						l_property ?= l_member
+						check
+							is_property: l_property /= Void
+						end
+						cp_property := consumed_property (l_property)
+						if cp_property /= Void then
+							l_properties.extend (cp_property)	
+						end
+					elseif l_member.get_member_type = feature {MEMBER_TYPES}.event then
+						l_event ?= l_member
+						check
+							is_event: l_event /= Void
+						end
+						cp_event := consumed_event (l_event)
+						if cp_event /= Void then
+							l_events.extend (cp_event)	
+						end
 					end
 					i := i + 1
 				end
 
---					-- Add methods.
---				from
---					i := 0
---					nb := internal_methods.count
---				until
---					i = nb
---				loop
---					l_meth := internal_methods.item (i)
---					check
---						is_method: l_meth /= Void
---					end
---					if not is_property_or_event (l_meth) then
---						if is_function (l_meth) then
---							l_functions.extend (consumed_function (l_meth, False))
---						else
---							l_procedures.extend (consumed_procedure (l_meth, False))
---						end
---					end
---					i := i + 1
---				end
-				
---					-- Add fields
---				from
---					i := 0
---					nb := internal_fields.count
---				until
---					i = nb
---				loop
---					l_field := internal_fields.item (i)
---					check
---						is_field: l_field /= Void
---					end
---					if is_consumed_field (l_field) then
---						l_fields.extend (consumed_field (l_field))						
---					end
---					i := i + 1
---				end
-	
-					-- Add properties.
-				from
-					i := 0
-					nb := internal_properties.count
-				until
-					i = nb
-				loop
-					l_property := internal_properties.item (i)
-					l_properties.extend (consumed_property (l_property))
-					i := i + 1
-				end
-	
-					-- Add events.
-				from
-					i := 0
-					nb := internal_events.count
-				until
-					i = nb
-				loop
-					l_event := internal_events.item (i)
-					l_events.extend (consumed_event (l_event))
-					i := i + 1
-				end
-	
 				consumed_type.set_properties (l_properties)
 				consumed_type.set_events (l_events)
 				consumed_type.set_constructors (solved_constructors (tc))
@@ -414,25 +379,6 @@ feature -- Basic Operation
 				end
 				i := i + 1
 			end
-	
---				-- Add methods in overload_solver.
---			from
---				i := 0
---				nb := internal_methods.count
---			until
---				i = nb
---			loop
---				l_meth := internal_methods.item (i)
---				check
---					is_method: l_meth /= Void
---				end
---				if is_consumed_method (l_meth) then
---					if not is_property_or_event (l_meth) then
---						overload_solver.add_method (l_meth)
---					end
---				end
---				i := i + 1
---			end
 		end
 
 
@@ -521,20 +467,22 @@ feature {NONE} -- Implementation
 			l_arguments: ARRAYED_LIST [CONSUMED_ARGUMENT]
 			l_unique_eiffel_name: STRING
 		do
-			l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
-			check
-				non_void_eiffel_name: l_unique_eiffel_name /= Void
+			if is_consumed_method (info) then
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+				check
+					non_void_eiffel_name: l_unique_eiffel_name /= Void
+				end
+				create Result.make (
+					l_unique_eiffel_name,
+					create {STRING}.make_from_cil (info.get_name),
+					consumed_arguments (info),
+					info.get_is_final,
+					info.get_is_static,
+					info.get_is_abstract,
+					info.get_is_public,
+					property_or_event,
+					referenced_type_from_type (info.get_declaring_type))
 			end
-			create Result.make (
-				l_unique_eiffel_name,
-				create {STRING}.make_from_cil (info.get_name),
-				consumed_arguments (info),
-				info.get_is_final,
-				info.get_is_static,
-				info.get_is_abstract,
-				info.get_is_public,
-				property_or_event,
-				referenced_type_from_type (info.get_declaring_type))		
 		end
 	
 	consumed_function (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_FUNCTION is
@@ -544,23 +492,25 @@ feature {NONE} -- Implementation
 		local
 			l_unique_eiffel_name: STRING
 		do
-			l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
-			check
-				non_void_eiffel_name: l_unique_eiffel_name /= Void
+			if is_consumed_method (info) then
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+				check
+					non_void_eiffel_name: l_unique_eiffel_name /= Void
+				end
+				create Result.make (
+					l_unique_eiffel_name,
+					create {STRING}.make_from_cil (info.get_name),
+					consumed_arguments (info),
+					referenced_type_from_type (info.get_return_type),
+					info.get_is_final,
+					info.get_is_static,
+					info.get_is_abstract,
+					is_infix (info),
+					is_prefix (info),
+					info.get_is_public,
+					property_or_event,
+					referenced_type_from_type (info.get_declaring_type))
 			end
-			create Result.make (
-				l_unique_eiffel_name,
-				create {STRING}.make_from_cil (info.get_name),
-				consumed_arguments (info),
-				referenced_type_from_type (info.get_return_type),
-				info.get_is_final,
-				info.get_is_static,
-				info.get_is_abstract,
-				is_infix (info),
-				is_prefix (info),
-				info.get_is_public,
-				property_or_event,
-				referenced_type_from_type (info.get_declaring_type))			
 		end
 
 	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
@@ -576,27 +526,31 @@ feature {NONE} -- Implementation
 		do
 			create dotnet_name.make_from_cil (info.get_name)
 			if info.get_can_read then
-				l_info := info.get_get_method
+				l_info := info.get_get_method_boolean (True)
+				check
+					non_void_l_info: l_info /= Void
+				end
 				l_getter := consumed_function (l_info, True)
 			end
 			if info.get_can_write then
-				l_info := info.get_set_method
+				l_info := info.get_set_method_boolean (True)
+				check
+					non_void_l_info: l_info /= Void
+				end
 				l_setter := consumed_procedure (l_info, True)
 			end
 			check
 				is_property: l_info /= Void
-				non_void_setter_or_getter: l_setter = Void implies l_getter /= Void 
-				non_void_setter_or_getter: l_getter = Void implies l_setter /= Void 
 			end
-			create Result.make (
-				dotnet_name,
-				l_info.get_is_public,
-				l_info.get_is_static,
-				referenced_type_from_type (info.get_declaring_type),
-				l_getter,
-				l_setter)
-		ensure
-			non_void_property: Result /= Void
+			if l_getter /= Void or l_setter /= Void then
+				create Result.make (
+					dotnet_name,
+					l_info.get_is_public,
+					l_info.get_is_static,
+					referenced_type_from_type (info.get_declaring_type),
+					l_getter,
+					l_setter)
+			end
 		end
 
 	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
@@ -611,9 +565,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
-			l_add_method := info.get_add_method
-			l_remove_method := info.get_remove_method
-			l_raise_method := info.get_raise_method
+			l_add_method := info.get_add_method_boolean (True)
+			l_remove_method := info.get_remove_method_boolean (True)
+			l_raise_method := info.get_raise_method_boolean (True)
 
 			if l_raise_method /= Void then
 				l_raiser := consumed_procedure (l_raise_method, True)
@@ -633,16 +587,16 @@ feature {NONE} -- Implementation
 			elseif l_remove_method /= Void then
 				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
 			end
-			create Result.make (
-				dotnet_name,
-				True,
-				l_parameter_type,
-				l_raiser,
-				l_adder,
-				l_remover
-				)
-		ensure
-			non_void_event: Result /= Void
+			if l_remover /= Void or l_raiser /= Void or l_adder /= Void then
+				create Result.make (
+					dotnet_name,
+					True,
+					l_parameter_type,
+					l_raiser,
+					l_adder,
+					l_remover
+					)
+			end
 		end
 		
 	solved_constructors (
@@ -807,13 +761,13 @@ feature {NONE} -- Status Setting.
 			non_void_info: info /= Void
 		do
 			if info.get_can_read then
-				add_properties_or_events (info.get_get_method)
+				add_properties_or_events (info.get_get_method_boolean (True))
 			end
 			if info.get_can_write then
-				add_properties_or_events (info.get_set_method)
+				add_properties_or_events (info.get_set_method_boolean (True))
 			end
 		end
-		
+	
 	add_event (info:EVENT_INFO) is
 			-- Add event.
 		require
@@ -845,14 +799,16 @@ feature {NONE} -- Status Setting.
 			l_key: SYSTEM_STRING
 			l_dotnet_name: SYSTEM_STRING
 		do
-			l_dotnet_name := info.get_name
-			create l_key.make_from_c_and_count (' ', 0)
-			l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
-			if not properties_and_events.contains_key (l_key) then
-				properties_and_events.add (l_key, info)
+			if is_consumed_method (info) then
+				l_dotnet_name := info.get_name
+				create l_key.make_from_c_and_count (' ', 0)
+				l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
+				if not properties_and_events.contains_key (l_key) then
+					properties_and_events.add (l_key, info)
+				end
 			end
 		ensure
---			info_added: properties_and_events.contains_key (info.get_name + key_args (info.get_parameters).to_cil)
+--			info_added: is_consumed_method (info) implies properties_and_events.contains_key (info.get_name + key_args (info.get_parameters))
 		end
 
 	is_property_or_event (info: METHOD_INFO): BOOLEAN is
@@ -992,11 +948,11 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+					feature {BINDING_FLAGS}.static)
 			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
+					feature {BINDING_FLAGS}.static)
 			
 
 				-- merge members.

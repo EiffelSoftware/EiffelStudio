@@ -536,6 +536,7 @@ uint32 s_flags;
 		case SK_POINTER:
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
 				return FALSE;
+			break;
 		default:
 			if ((target_type & SK_HEAD) == SK_BIT) {
 				/* BITS attribute */

@@ -9,25 +9,39 @@ make='$compiler_path\bin\nmake'
 #-- MT debug
 #-----------
 #optimize='/Od'
-#ccflags='/nologo /Zi /MTd /DEIF_THREADS /DWIN32 /D_WINDOWS'
+#ccflags='/nologo /Zi /MTd /DEIF_THREADS'
 #link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS) /DEBUGTYPE:BOTH /NODEFAULTLIB:LIBC.LIB'
-#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS) /DEBUGTYPE:BOTH /NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT no debug
 #--------------
-optimize='/Ogityb1'
-ccflags='/nologo /MT /DEIF_THREADS /DWIN32 /D_WINDOWS'
-link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
-link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
-#
-#-- no MT
-#--------
-#optimize='/Oityb1'
-#ccflags='/nologo /DWIN32'
+#optimize='/Ogityb1'
+#ccflags='/nologo /MT /DEIF_THREADS'
 #link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
 #
+#-- MT DLL debug
+#--------------
+#optimize='/Od'
+#ccflags='/nologo /Zi /MDd /DEIF_THREADS'
+#link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS) /DEBUGTYPE:BOTH /NODEFAULTLIB:LIBC.LIB'
+#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS) /DEBUGTYPE:BOTH /NODEFAULTLIB:LIBC.LIB'
+#
+#-- MT DLL no debug
+#--------------
+#optimize='/Ogityb1'
+#ccflags='/nologo /MD /DEIF_THREADS'
+#link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
+#
+#-- no MT
+#--------
+optimize='/Oityb1'
+ccflags='/nologo'
+link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
+link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
+#
 cc='cl'
 extra_object_files=''
-compiler_path='d:\apps\msdev'
+compiler_path='c:\msvc50'
 #

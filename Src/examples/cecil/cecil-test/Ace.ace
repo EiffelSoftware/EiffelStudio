@@ -15,32 +15,25 @@ default
  
 cluster
 
-		root_cluster: 			"."
+		root_cluster: 			"$EIFFEL4/examples/cecil/cecil-test";
+				-- If you intend to modify any part of the example,
+				-- copy all the files of $EIFFEL4/examples/cecil/cecil-test
+				-- into one of your directories, and replace
+				-- $EIFFEL4/examples/cecil/cecil-test by the name of
+				-- that directory on the above line.
 			default
 				assertion(no)
 			visible
 				MAIN 
 			end
-		end;      
-		kernel:             "$EIFFEL4/library/base/kernel"
+		end;   
+
+		all base :			"$EIFFEL4/library/base"	
 			visible
 				STRING 
 			end
-		end;
-        support:            "$EIFFEL4/library/base/support";
-        access:             "$EIFFEL4/library/base/structures/access";
-        cursors:            "$EIFFEL4/library/base/structures/cursors";
-        dispenser:          "$EIFFEL4/library/base/structures/dispenser";
-        list:               "$EIFFEL4/library/base/structures/list"
 			visible
 				LINKED_LIST 
 			end
-		end;
-        set:                "$EIFFEL4/library/base/structures/set";
-        sort:               "$EIFFEL4/library/base/structures/sort";
-        storage:            "$EIFFEL4/library/base/structures/storage";
-        table:              "$EIFFEL4/library/base/structures/table";
-        traversing:         "$EIFFEL4/library/base/structures/traversing";
-        tree:               "$EIFFEL4/library/base/structures/tree";
 
 end

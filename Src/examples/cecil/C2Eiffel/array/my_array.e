@@ -2,7 +2,7 @@ class
 	MY_ARRAY [G]
 inherit
 	ARRAY [G]
-creation
+create
 	make	
 feature	-- Display
 

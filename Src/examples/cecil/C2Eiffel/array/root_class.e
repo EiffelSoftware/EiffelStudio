@@ -1,6 +1,6 @@
 class
 	ROOT_CLASS
-creation
+create
 	make
 feature -- Initialization
 	make is

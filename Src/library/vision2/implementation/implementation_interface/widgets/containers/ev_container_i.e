@@ -50,8 +50,8 @@ feature -- Access
 			-- `Result' is all other radio button groups
 			-- merged with `Current'.
 		do
-			Result := clone (internal_merged_radio_button_groups)
-			if Result /= Void then
+			if internal_merged_radio_button_groups /= Void then
+				Result := internal_merged_radio_button_groups.twin
 				Result.prune_all (interface)	
 			end
 		ensure

@@ -80,7 +80,7 @@ feature -- Status report
 			a_column_positive: a_column > 0
 		do
 			if a_column <= column_titles.count then
-				Result := clone (column_titles @ a_column)
+				Result := (column_titles @ a_column).twin
 			else
 				Result := ""
 			end
@@ -227,7 +227,7 @@ feature -- Element change
 		do
 			if a_column <= column_titles.count then
 				column_titles.go_i_th (a_column)
-				column_titles.replace (clone (a_title))
+				column_titles.replace (a_title.twin)
 			else
 				from	
 				until
@@ -235,7 +235,7 @@ feature -- Element change
 				loop
 					column_titles.extend (Void)
 				end
-				column_titles.extend (clone (a_title))
+				column_titles.extend (a_title.twin)
 			end
 			column_title_changed (a_title, a_column)
 			if column_titles.count > column_count then
@@ -264,7 +264,7 @@ feature -- Element change
 				i > titles.count
 			loop
 				column_title_changed (titles @ (i + titles.lower - 1), i)
-				column_titles.extend (clone (titles @ (i + titles.lower - 1)))
+				column_titles.extend ((titles @ (i + titles.lower - 1)).twin)
 				i := i + 1
 				old_count := old_count - 1
 			end

@@ -42,6 +42,7 @@ link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
 #ccflags='-nologo'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+#link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
 #
 optimize='-Ox'
 cc='cl'

@@ -23,12 +23,11 @@ inherit
 			class_name,
 			on_wm_control_id_command
 		redefine
-			interface,
-			process_message,
+			interface, process_message,
 			wel_move_and_resize,
 			wel_destroy_window,
-			on_wm_destroy,
-			on_wm_command
+			on_wm_destroy, on_wm_command,
+			forbid_resize, allow_resize
 		select
 			x_position,
 			y_position,
@@ -128,7 +127,153 @@ feature -- Status Setting
 			is_closeable := False
 		end
 
+	forbid_resize is
+			-- Forbid the resize of `Current'.
+		do
+			update_style_and_minimum_size
+		end
+
+	allow_resize is
+			-- Allow the resize of `Current'.
+		do
+			update_style_and_minimum_size
+		end
+
+feature {EV_CONTAINER_IMP} -- Implementation
+
+	modify_tab_order (widget: EV_WIDGET_IMP) is
+			--
+		local
+			first, second: WEL_WINDOW
+			container: EV_CONTAINER_IMP
+			a_counter : INTEGER
+			ordered_widgets: ARRAYED_LIST [WEL_WINDOW]
+			widget_depths: ARRAYED_LIST [INTEGER]
+			maximum_depth: INTEGER
+		do
+			container ?= widget
+				-- Create the lists.
+			create ordered_widgets.make (20)
+			create widget_depths.make (20)
+				--| Note that if the child of `Current' is not a container, there is no need to 
+				--| adjust the tab order, as it will be the only child, and therefore the tab ordering
+				--| will not be a problem.
+			if container /= Void then
+				container.adjust_tab_ordering (ordered_widgets, widget_depths, 1)
+			end	
+			check
+				lists_equal_in_length: ordered_widgets.count = widget_depths.count
+			end
+				
+				-- If we did reverse the tab orders then.
+			if ordered_widgets.count > 0 then
+					-- We now find the maximum_depth of the children of `Current'.
+				from
+					widget_depths.start
+				until
+					widget_depths.off
+				loop
+					if widget_depths.item > maximum_depth then
+						maximum_depth := widget_depths.item
+					end
+					widget_depths.forth
+				end
+					-- For every depth of window in `Current'.
+				from
+					a_counter := 1
+				until
+					a_counter = maximum_depth + 1
+				loop
+					from
+						widget_depths.start
+						ordered_widgets.start
+					until
+						widget_depths.off
+					loop
+							-- If this window is of the correct depth
+							-- Then we will re-order it as necessary.
+						if widget_depths.item = a_counter then
+							first := second
+							second := ordered_widgets.item
+							if first /= Void and second /= Void then
+								second.insert_after (first)
+							end
+						end
+						widget_depths.forth
+						ordered_widgets.forth
+					end	
+					a_counter := a_counter + 1
+				end
+			end
+		end
+
+feature {EV_DIALOG_I} -- Implementation
+
+	apply_center_dialog: BOOLEAN
+			-- Should `center_dialog' be called?
+
+	interface: EV_DIALOG
+			-- Interface for `Current'.
+
+	parent_window: EV_WINDOW
+			-- Parent window if any, Void otherwise.
+
+	other_imp: EV_DIALOG_IMP
+			-- Previous Implementation if any, Void otherwise.
+
+	destroy_implementation is
+			-- Destroy `Current' but does not wipe out the children.
+		local
+			app_i: EV_APPLICATION_I
+			app_imp: EV_APPLICATION_IMP
+		do
+			app_i := (create {EV_ENVIRONMENT}).application.implementation
+			app_imp ?= app_i
+			check
+				implementation_not_void: app_imp /= void
+			end
+			app_imp.remove_root_window (Current)
+
+			wel_destroy_window
+			is_destroyed := True
+		end
+
 feature {NONE} -- Implementation
+
+	update_style_and_minimum_size is
+			-- Update the style and the minimum size after changing
+			-- the `user_can_resize' flag.
+		do
+			update_style
+			compute_minimum_size
+			if is_displayed then
+				hide
+				show
+			end
+		end
+		
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
+			a_name: STRING) is
+			-- Create the dialog
+		deferred
+		end
+
+	dlg_template: WEL_DLG_TEMPLATE is
+			-- Empty dialog template
+		once
+			create Result.make_with_global_alloc
+			Result.set_style (default_style)
+		end
+
+	promote_to_dialog_window is
+			-- Promote the current implementation to
+			-- EV_DIALOG_IMP_MODAL which allows modality
+		local
+			dialog_window_imp: EV_DIALOG_IMP
+		do
+			create dialog_window_imp.make_with_real_dialog (Current)
+			interface.replace_implementation (dialog_window_imp)
+		end
 
 	copy_attributes is
 			-- Copy attributes from `other_imp' to `Current'
@@ -233,9 +378,9 @@ feature {NONE} -- Implementation
 				-- Move the children from the hidden window to the dialog.
 			move_children
 
-				-- Change the style of the window and the icon pixmap.
-				-- Update the title as well
-			update_style_and_pixmap
+				-- Change the style of the window and the window icon.
+			update_style
+			set_icon_pixmap (other_imp.icon_pixmap)
 
 				-- Center the dialog relative to the parent window.
 			check
@@ -290,7 +435,7 @@ feature {NONE} -- Implementation
 			terminate (Idcancel)
 		end
 
-	update_style_and_pixmap is
+	update_style is
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.
@@ -316,9 +461,6 @@ feature {NONE} -- Implementation
 			new_style := bit_op.clear_flag (new_style, Ws_minimizebox)
 			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
 			set_style (new_style)
-
-				-- Update the pixmap.
-			set_icon_pixmap (other_imp.icon_pixmap)
 		end
 
 	center_dialog is
@@ -433,130 +575,6 @@ feature {NONE} -- Implementation
 		do
 			on_destroy
 			destroy_item
-		end
-
-feature {EV_CONTAINER_IMP} -- Implementation
-
-	modify_tab_order (widget: EV_WIDGET_IMP) is
-			--
-		local
-			first, second: WEL_WINDOW
-			container: EV_CONTAINER_IMP
-			a_counter : INTEGER
-			ordered_widgets: ARRAYED_LIST [WEL_WINDOW]
-			widget_depths: ARRAYED_LIST [INTEGER]
-			maximum_depth: INTEGER
-		do
-			container ?= widget
-				-- Create the lists.
-			create ordered_widgets.make (20)
-			create widget_depths.make (20)
-				--| Note that if the child of `Current' is not a container, there is no need to 
-				--| adjust the tab order, as it will be the only child, and therefore the tab ordering
-				--| will not be a problem.
-			if container /= Void then
-				container.adjust_tab_ordering (ordered_widgets, widget_depths, 1)
-			end	
-			check
-				lists_equal_in_length: ordered_widgets.count = widget_depths.count
-			end
-				
-				-- If we did reverse the tab orders then.
-			if ordered_widgets.count > 0 then
-					-- We now find the maximum_depth of the children of `Current'.
-				from
-					widget_depths.start
-				until
-					widget_depths.off
-				loop
-					if widget_depths.item > maximum_depth then
-						maximum_depth := widget_depths.item
-					end
-					widget_depths.forth
-				end
-					-- For every depth of window in `Current'.
-				from
-					a_counter := 1
-				until
-					a_counter = maximum_depth + 1
-				loop
-					from
-						widget_depths.start
-						ordered_widgets.start
-					until
-						widget_depths.off
-					loop
-							-- If this window is of the correct depth
-							-- Then we will re-order it as necessary.
-						if widget_depths.item = a_counter then
-							first := second
-							second := ordered_widgets.item
-							if first /= Void and second /= Void then
-								second.insert_after (first)
-							end
-						end
-						widget_depths.forth
-						ordered_widgets.forth
-					end	
-					a_counter := a_counter + 1
-				end
-			end
-		end
-
-feature {EV_DIALOG_I} -- Implementation
-
-	apply_center_dialog: BOOLEAN
-			-- Should `center_dialog' be called?
-
-	interface: EV_DIALOG
-			-- Interface for `Current'.
-
-	parent_window: EV_WINDOW
-			-- Parent window if any, Void otherwise.
-
-	other_imp: EV_DIALOG_IMP
-			-- Previous Implementation if any, Void otherwise.
-
-	destroy_implementation is
-			-- Destroy `Current' but does not wipe out the children.
-		local
-			app_i: EV_APPLICATION_I
-			app_imp: EV_APPLICATION_IMP
-		do
-			app_i := (create {EV_ENVIRONMENT}).application.implementation
-			app_imp ?= app_i
-			check
-				implementation_not_void: app_imp /= void
-			end
-			app_imp.remove_root_window (Current)
-
-			wel_destroy_window
-			is_destroyed := True
-		end
-
-feature {NONE} -- Implementation
-
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING) is
-			-- Create the dialog
-		deferred
-		end
-
-	dlg_template: WEL_DLG_TEMPLATE is
-			-- Empty dialog template
-		once
-			create Result.make_with_global_alloc
-			Result.set_style (default_style)
-		end
-
-	promote_to_dialog_window is
-			-- Promote the current implementation to
-			-- EV_DIALOG_IMP_MODAL which allows modality
-		local
-			dialog_window_imp: EV_DIALOG_IMP
-		do
-			create dialog_window_imp.make_with_real_dialog (Current)
-			interface.replace_implementation (dialog_window_imp)
 		end
 
 end -- class EV_DIALOG_IMP_COMMON

@@ -15,47 +15,20 @@ inherit
 			process_notification_info
 		end
 
-	WEL_LVS_CONSTANTS
-		export
-			{NONE} all
-		end
+	WEL_WINDOWS_VERSION
 
-	WEL_LVM_CONSTANTS
+	WEL_LIST_VIEW_CONSTANTS
 		export
 			{NONE} all
-		end
-
-	WEL_LVN_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVIF_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVIS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVNI_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVSIL_CONSTANTS
-		export
-			{NONE} all
+			{ANY} valid_lvcfmt_constant, 
+				  is_valid_list_view_flag, 
+				  valid_lvis_constants
 		end
 
 	WEL_ILC_CONSTANTS
 		export
 			{NONE} all
 		end
-
-	WEL_LVCF_CONSTANTS
 
 creation
 	make,
@@ -261,7 +234,23 @@ feature -- Status report
 			cwin_send_message (item, Lvm_getitem, 0, Result.to_integer)
 		end
 
+	get_extended_view_style: INTEGER is
+			-- Gets extended styles in list view controls. 
+		require
+			function_supported: comctl32_version >= version_470
+		do
+			Result := cwin_send_message_result (item, Lvm_getextendedlistviewstyle, 0, 0)
+		end
+
 feature -- Status setting
+
+	set_extended_view_style (a_new_style: INTEGER) is
+			-- Sets extended styles in list view controls. 
+		require
+			function_supported: comctl32_version >= version_470
+		do
+			cwin_send_message (item, Lvm_setextendedlistviewstyle, 0, a_new_style)
+		end
 
 	set_column_width (value, index: INTEGER) is
 			-- Make `value' the new width of the zero-base `index'-th column.
@@ -293,7 +282,7 @@ feature -- Status setting
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
-			!! an_item.make
+			create an_item.make
 			an_item.set_statemask (state)
 			an_item.set_state (state)
 			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
@@ -348,7 +337,7 @@ feature -- Status setting
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
-			!! a_column.make_with_attributes (Lvcf_fmt, index, fmt, "")
+			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, "")
 			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
 		end
 
@@ -601,45 +590,49 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			code: INTEGER
 		do
 			code := notification_info.code
-			if code = Lvn_begindrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+			inspect code
+			when Lvn_begindrag then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_begindrag (nm_info)
-			elseif code = Lvn_beginlabeledit then
-				!! disp_info.make_by_nmhdr (notification_info)
+			when Lvn_beginlabeledit then
+				create disp_info.make_by_nmhdr (notification_info)
 				on_lvn_beginlabeledit (disp_info.list_item)
-			elseif code = Lvn_beginrdrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_beginrdrag then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_beginrdrag (nm_info)
-			elseif code = Lvn_columnclick then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_columnclick then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_columnclick (nm_info)
-			elseif code = Lvn_deleteallitems then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_deleteallitems then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_deleteallitems (nm_info)
-			elseif code = Lvn_deleteitem then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_deleteitem then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_deleteitem (nm_info)
-			elseif code = Lvn_endlabeledit then
-				!! disp_info.make_by_nmhdr (notification_info)
+			when Lvn_endlabeledit then
+				create disp_info.make_by_nmhdr (notification_info)
 				on_lvn_endlabeledit (disp_info.list_item)
-			elseif code = Lvn_getdispinfo then
-				!! disp_info.make_by_nmhdr (notification_info)
+			when Lvn_getdispinfo then
+				create disp_info.make_by_nmhdr (notification_info)
 				on_lvn_getdispinfo (disp_info.list_item)
-			elseif code = Lvn_insertitem then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_insertitem then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_insertitem (nm_info)
-			elseif code = Lvn_itemchanged then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_itemchanged then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_itemchanged (nm_info)
-			elseif code = Lvn_itemchanging then
-				!! nm_info.make_by_nmhdr (notification_info)
+			when Lvn_itemchanging then
+				create nm_info.make_by_nmhdr (notification_info)
 				on_lvn_itemchanging (nm_info)
-			elseif code = Lvn_keydown then
-				!! keydown_info.make_by_nmhdr (notification_info)
+			when Lvn_keydown then
+				create keydown_info.make_by_nmhdr (notification_info)
 				on_lvn_keydown (keydown_info.virtual_key)
-			elseif code = Lvn_setdispinfo then
-				!! disp_info.make_by_nmhdr (notification_info)
+			when Lvn_setdispinfo then
+				create disp_info.make_by_nmhdr (notification_info)
 				on_lvn_setdispinfo (disp_info.list_item)
+			when Lvn_getinfotip then
+				--| FIXME ARNAUD: Implement it.
+			else
 			end
 		end
 

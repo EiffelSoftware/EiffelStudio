@@ -79,9 +79,6 @@ RT_LNK char *portable_retrieve(int (*char_read_function)(char *, int));
 
 extern char *rt_make(void);			/* Retrieve object graph */
 extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
-extern struct htable *rt_table;	/* Table used for solving references */
-extern int32 nb_recorded;		/* Number of items recorded in Hector */
-extern char rt_kind;
 RT_LNK EIF_BOOLEAN eif_discard_pointer_values;	/* Do we need to store pointers or not? */
 
 extern int old_retrieve_read(void);
@@ -93,7 +90,6 @@ extern int retrieve_read_with_compression(void);
 extern void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
 extern void rt_reset_retrieve(void);
 
-extern int (*retrieve_read_func)(void);
 extern int (*char_read_func)(char *, int);
 
 #ifdef __cplusplus

@@ -91,7 +91,12 @@ feature -- Type check, byte code and dead code removal
 			!!Result;
 			Result.set_switch (switch.byte_node);
 			if case_list /= Void then
-				tmp := case_list.byte_node;
+					-- The AST stores the inspect cases in reverse order
+					-- compared to the way the user wrote them. So we
+					-- put them back in the correct order in the generated
+					-- byte code so that it will match the displayed text
+					-- when debugging.
+				tmp := case_list.reversed_byte_node;
 				tmp := tmp.remove_voids;
 				if tmp /= Void then
 					Result.set_case_list (tmp);
@@ -133,6 +138,10 @@ feature -- Formatter
 			if case_list /= void then
 				ctxt.set_separator (Void);
 				ctxt.new_line_between_tokens;
+					-- The AST stores the inspect cases in reverse order
+					-- compared to the way the user wrote them. So we
+					-- put them back in the correct order in the structured
+					-- text being built.
 				case_list.reversed_format (ctxt);
 				ctxt.next_line;
 			end;

@@ -57,6 +57,23 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+	reversed_byte_node: BYTE_LIST [BYTE_NODE] is
+			-- Byte code list generated in reverse order
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := count;
+				!!Result.make (nb);
+				i := 1;
+			until
+				i > nb
+			loop
+				Result.put_i_th (i_th (i).byte_node, nb - i + 1);
+				i := i + 1
+			end;
+		end;
+
 feature -- Debugger
  
 	find_breakable is
@@ -119,6 +136,7 @@ feature -- Formatter
 		end;
 
 	reversed_format (ctxt : FORMAT_CONTEXT) is
+			-- Build the structured text of the list in the reverse order.
 		local
 			i: INTEGER;
 			failure: BOOLEAN;

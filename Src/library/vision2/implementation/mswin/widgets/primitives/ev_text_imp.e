@@ -13,7 +13,8 @@ inherit
 		
 	EV_TEXT_COMPONENT_IMP
 		undefine
-			on_key_down
+			on_key_down,
+			build
 		end
 
 	WEL_MULTIPLE_LINE_EDIT

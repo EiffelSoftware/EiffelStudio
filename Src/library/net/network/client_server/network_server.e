@@ -46,7 +46,7 @@ feature -- Access
 		do
 			in.accept;
 			outflow ?= in.accepted;
-			received ?= retrieved (outflow)
+			received ?= outflow.retrieved
 		end;
 
 	resend (msg: ANY) is

@@ -48,12 +48,12 @@ feature {EV_WIDGET} -- Initialization
 			-- Does the widget expand its cell to take the
 			-- size the parent would like to give to it.
 
-	resize_type: INTEGER
-			-- How the widget resize itself in the cell
-			-- 0 : no resizing, the widget move
-			-- 1 : only the width changes
-			-- 2 : only the height changes
-			-- 3 : both width and height change
+--	resize_type: INTEGER
+--			-- How the widget resize itself in the cell
+--			-- 0 : no resizing, the widget move
+--			-- 1 : only the width changes
+--			-- 2 : only the height changes
+--			-- 3 : both width and height change
 
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
@@ -111,8 +111,9 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
-		do
-			Result := (resize_type = 1) or (resize_type = 3)	
+			managed: managed
+		deferred
+--			Result := (resize_type = 1) or (resize_type = 3)	
 		end
 
 	vertical_resizable: BOOLEAN is
@@ -120,8 +121,9 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
-		do
-			Result := (resize_type = 2) or (resize_type = 3)	
+			managed: managed
+		deferred
+--			Result := (resize_type = 2) or (resize_type = 3)	
 		end
 
 feature -- Status setting
@@ -207,18 +209,20 @@ feature -- Status setting
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
+			-- Make `flag' the new horizontal_resizable status.
 		require
 			exists: not destroyed
+			managed: managed
 		deferred
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
 		end
 
 	set_vertical_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
+			-- Make `flag' the new vertical_resizable status.
 		require
 			exists: not destroyed
+			managed: managed
 		deferred
 		ensure
 			vertical_resize_set: vertical_resizable = flag
@@ -322,6 +326,7 @@ feature -- Resizing
 			-- and `new_height' the new `height'.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_width: new_width >= 0
 			Positive_height_: new_height >= 0
 		deferred
@@ -333,6 +338,7 @@ feature -- Resizing
 			-- Make `value' the new width.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_width: value >= 0
 		deferred
 		ensure
@@ -343,6 +349,7 @@ feature -- Resizing
 			-- Make `value' the new.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_height: value >= 0
 		deferred
 		ensure					
@@ -386,6 +393,7 @@ feature -- Resizing
 			-- vertical position `new_y' relative to parent.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 		deferred
 		ensure
 			x_y_set: position_set (new_x, new_y)
@@ -396,6 +404,7 @@ feature -- Resizing
 			-- to parent.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 		deferred
 		ensure
 			x_set: x_set (value)
@@ -406,6 +415,7 @@ feature -- Resizing
 			-- to parent.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 		deferred
 		ensure
 			y_set: y_set (value)		
@@ -660,7 +670,7 @@ invariant
 
 --	backgound_color_not_void: background_color /= Void
 --	foreground_color_not_void: foreground_color /= Void
-	good_resize_type: resize_type >= 0 and resize_type <= 3
+--	good_resize_type: resize_type >= 0 and resize_type <= 3
 	
 end -- class EV_WIDGET_I
 

@@ -453,10 +453,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			unparent_all_holders
 			all_split_areas.extend (Current)
 			if count = 1 then
-				cell_extend (all_holders.i_th (1))
+				cell_extend (holder_of_widget (linear_representation.i_th (1)))
 			elseif count = 2 then
-				cell_extend (all_holders.i_th (1))	
-				cell_extend (all_holders.i_th (2))
+				cell_extend (holder_of_widget (linear_representation.i_th (1)))
+				cell_extend (holder_of_widget (linear_representation.i_th (2)))
 				if top_widget_resizing then
 					enable_item_expand (first)
 					disable_item_expand (second)				
@@ -602,6 +602,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	
 	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Maximize `a_tool'.
+		local
+			must_store_positions: BOOLEAN
 		do
 			if maximized_tool /= Void then
 				maximized_tool.silent_set_minimized
@@ -624,13 +626,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					else
 						minimized_states.extend (False)
 					end
-					if all_holders.item /= a_tool and not external_representation.has (all_holders.item.tool) then
-							-- Do not minimize if external.
-						all_holders.item.silent_set_minimized
-						all_holders.item.disable_minimize_button
-					else
-						all_holders.item.silent_remove_minimized
-						all_holders.item.tool.show
+					if not external_representation.has (all_holders.item.tool) then
+							-- State must not change if external.
+						if all_holders.item /= a_tool then
+							all_holders.item.silent_set_minimized
+							all_holders.item.disable_minimize_button
+						else
+							all_holders.item.silent_remove_minimized
+							all_holders.item.tool.show
+						end
 					end
 					all_holders.forth
 				end
@@ -685,6 +689,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			split_area: EV_SPLIT_AREA
 		do
 			if top_widget_resizing then
+					-- We now reverse all of the split area positions which is necessary
+					-- when `top_widget_resizing'.
 				from
 					all_split_areas.start
 				until
@@ -732,8 +738,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			position_of_tool: INTEGER
 			cursor: CURSOR
 		do
-				-- Store the current height of the holder.
---			a_tool.set_restore_height (a_tool.height)
 			cursor := all_holders.cursor
 				-- Firstly hide the actual widget of the tool, so that its minimum size
 				-- has no effect.
@@ -932,14 +936,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 		
 	next_non_minimized_down (current_position: INTEGER): INTEGER is
-			--
+			-- `Result' is next index of tool in `Current' from index `current_position'
+			-- that is not minimized or not external.
 		do
 			from
 				all_holders.go_i_th (current_position)
 			until
 				all_holders.off or Result /= 0
 			loop
-				if not all_holders.item.minimized then
+				if not all_holders.item.minimized and not external_representation.has (all_holders.item.tool) then
 					Result := all_holders.index
 				end
 				all_holders.forth
@@ -1065,10 +1070,25 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			a_widget_not_void: a_widget /= Void
 			linear_representation.has (a_widget)
+		local
+			cursor: CURSOR
 		do
-			Result := all_holders.i_th (linear_representation.index_of (a_widget, 1))
+			cursor := all_holders.cursor
+			--Result := all_holders.i_th (linear_representation.index_of (a_widget, 1))
+			from
+				all_holders.start
+			until
+				Result /= Void
+			loop
+				if all_holders.item.tool = a_widget then
+					Result := all_holders.item
+				end
+				all_holders.forth
+			end
+			all_holders.go_to (cursor)
 		ensure
 			result_not_void: Result /= Void
+			position_not_changed: all_holders.index = old all_holders.index
 		end
 		
 	update_for_holder_position_change (original_position, new_position: INTEGER) is

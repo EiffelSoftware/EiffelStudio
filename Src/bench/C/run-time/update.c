@@ -128,10 +128,12 @@ rt_public void update(char ignore_updt)
 
 #ifdef EIF_WIN32
 	strcat(filename, "\\");
-#elif defined EIF_VMS	/* append path separator only if necessary */
+#else
+#ifdef EIF_VMS	/* append path separator only if necessary */
 	if (!eifrt_vms_has_path_terminator (filename))
 #endif
 	strcat(filename, "/");
+#endif
 
 	strcat (filename, egc_system_name);
 	strcat (filename, ".melted");

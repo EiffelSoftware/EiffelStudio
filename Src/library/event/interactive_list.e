@@ -18,7 +18,14 @@ inherit
 			cleanup_after_remove,
 			merge_left,
 			merge_right,
-			wipe_out
+			wipe_out,
+			put_front,
+			put_left,
+			put_right,
+			remove_right,
+			replace,
+			remove,
+			extend
 		end
 
 feature {NONE} -- Initialization
@@ -38,6 +45,13 @@ feature -- Miscellaneous
 		deferred
 		end
 
+	on_item_already_added (an_item: G) is
+			-- `an_item' is has been added.
+		require
+			an_item_not_void: an_item /= Void
+		deferred
+		end
+
 	on_item_removed (an_item: G) is
 			-- `an_item' is about to be removed.
 		require
@@ -45,22 +59,146 @@ feature -- Miscellaneous
 		deferred
 		end
 
+	on_item_already_removed (an_item: G) is
+			-- `an_item' has been removed.
+		require
+			an_item_not_void: an_item /= Void
+		deferred
+		end
+
 feature -- Element Change
+
+	put_front (v: like item) is
+			-- Add `v' to beginning.
+			-- Do not move cursor.
+		do
+			adding_item (v)
+
+			in_operation := True
+			{LINKED_LIST} Precursor (v)
+			in_operation := False
+
+			added_item (v)
+		end
+
+	extend (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		do
+			adding_item (v)
+
+			in_operation := True
+			{LINKED_LIST} Precursor (v)
+			in_operation := False
+
+			added_item (v)
+		end
+
+	put_left (v: like item) is
+			-- Add `v' to the left of cursor position.
+			-- Do not move cursor.
+		do
+			adding_item (v)
+
+			in_operation := True
+			{LINKED_LIST} Precursor (v)
+			in_operation := False
+
+			added_item (v)
+		end
+
+	put_right (v: like item) is
+			-- Add `v' to the right of cursor position.
+			-- Do not move cursor.
+		do
+			adding_item (v)
+
+			in_operation := True
+			{LINKED_LIST} Precursor (v)
+			in_operation := False
+
+			added_item (v)
+		end
+
+	replace (v: like item) is
+			-- Replace current item by `v'.
+		local
+			active_item: like item
+		do
+			active_item := active.item
+
+			removing_item (active_item)
+			adding_item (v)
+
+			in_operation := True
+			Precursor (v)
+			in_operation := False
+
+			removed_item (active_item)
+			added_item (v)
+		end
+
+	remove is
+			-- Remove current item.
+			-- Move cursor to right neighbor
+			-- (or `after' if no right neighbor).
+		local
+			active_item: like item
+		do
+			active_item := active.item
+			removing_item (active_item)
+
+			in_operation := True
+			Precursor
+			in_operation := False
+
+			removed_item (active_item)
+		end
+
+	remove_right is
+			-- Remove item to the right of cursor position.
+			-- Do not move cursor.
+		local
+			item_removed: like item
+		do
+			if before then
+				item_removed := first_element.item
+			else
+				item_removed := active.right.item
+			end
+			removing_item (item_removed)
+
+			in_operation := True
+			Precursor
+			in_operation := False
+
+			removed_item (item_removed)
+		end
 
 	merge_left (other: like Current) is
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			add_all (other)
+			add_all (other, True)
+
+			in_operation := True
 			Precursor (other)
+			in_operation := False
+
+			add_all (other, False)
 		end
 
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			add_all (other)
+			add_all (other, True)
+
+			in_operation := True
 			Precursor (other)
+			in_operation := False
+
+			add_all (other, False)
 		end
 
 feature -- Removal
@@ -78,6 +216,14 @@ feature -- Removal
 				forth
 			end
 			Precursor
+			from
+				start
+			until
+				after
+			loop
+				on_item_already_removed (item)
+				forth
+			end
 		end
 
 feature  {LINKED_LIST} -- Implementation
@@ -86,7 +232,6 @@ feature  {LINKED_LIST} -- Implementation
 			-- Create new cell with `v'.
 		do
 			consistency_count := consistency_count + 1
-			on_item_added (v)
 			create Result
 			Result.put (v)
 		end
@@ -95,12 +240,11 @@ feature  {LINKED_LIST} -- Implementation
 			-- Clean-up a just removed cell.
 		do
 			consistency_count := consistency_count - 1
-			on_item_removed (v.item)
 		end
 
 feature {NONE} -- Implementation
 
-	add_all (other: like Current) is
+	add_all (other: like Current; increase_count: BOOLEAN) is
 			-- Call `on_item_added' for all elements in `other'.
 		local
 			cur: CURSOR
@@ -111,14 +255,19 @@ feature {NONE} -- Implementation
 			until
 				other.after
 			loop
-				consistency_count := consistency_count + 1
-				on_item_added (other.item)
+				if increase_count then
+					consistency_count := consistency_count + 1
+					adding_item (other.item)
+				else
+					added_item (other.item)
+				end
+				
 				other.forth
 			end
 			other.go_to (cur)
 		end
 
-	remove_all (other: like Current) is
+	remove_all (other: like Current; decrease_count: BOOLEAN) is
 			-- Call `on_item_removed' for all elements in `other'.
 		do
 			from
@@ -126,11 +275,52 @@ feature {NONE} -- Implementation
 			until
 				other.after
 			loop
-				consistency_count := consistency_count - 1
-				on_item_removed (other.item)
+				if decrease_count then
+					consistency_count := consistency_count - 1
+					removing_item (other.item)
+				else
+					removed_item (other.item)
+				end
 				other.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	adding_item (an_item: G) is
+			-- `an_item' is about to be added.
+		do
+			if not in_operation then
+				on_item_added (an_item)
+			end
+		end
+
+	added_item (an_item: G) is
+			-- `an_item' is has been added.
+		do
+			if not in_operation then
+				on_item_already_added (an_item)
+			end
+		end
+
+	removing_item (an_item: G) is
+			-- `an_item' is about to be removed.
+		do
+			if not in_operation then
+				on_item_removed (an_item)
+			end
+		end
+
+	removed_item (an_item: G) is
+			-- `an_item' has been removed.
+		do
+			if not in_operation then
+				on_item_already_removed (an_item)
+			end
+		end
+
+	in_operation: BOOLEAN
+			-- Are we executing an operation from LINKED_LIST?
 
 feature {NONE} -- Contract support
 
@@ -163,6 +353,12 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.3  2000/06/15 03:30:46  pichery
+--| Added 2 new actions: These actions are called
+--| once the items are added/removed. The other
+--| actions are now called BEFORE the items are
+--| added/removed.
+--|
 --| Revision 1.2  2000/03/24 16:22:57  brendel
 --| Fixed `wipe_out'.
 --|

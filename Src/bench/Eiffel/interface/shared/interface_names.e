@@ -246,7 +246,7 @@ feature -- Accelerator, focus label and menu name
 	f_Down_stack: STRING is				"Go down one level"
 	m_Down_stack: STRING is				"Go &down one level"
 	m_Editor: STRING is					"&Editor"
-	m_Eiffel_introduction: STRING is	"Introduction to Eiffel"
+	m_Eiffel_introduction: STRING is	"&Introduction to Eiffel"
 	m_Eiffel_on_the_web: STRING is		"Eiffel on the &Web"
 	f_Enable_stop_points: STRING is		"Enable all breakpoints"
 	m_Enable_stop_points: STRING is		"&Enable all breakpoints"
@@ -298,7 +298,7 @@ feature -- Accelerator, focus label and menu name
 	f_Generate: STRING is				"Generate"
 	m_Generate: STRING is				"&Generate"
 	m_Generate_documentation: STRING is "Generate &documentation..."
-	m_Guided_tour: STRING is			"Guided &Tour"
+	m_Guided_tour: STRING is			"&Guided Tour"
 	f_Help: STRING is					"Help"
 	m_Help: STRING is					"&Help"
 	m_Hide_favorites: STRING is			"&Hide favorites"
@@ -311,7 +311,7 @@ feature -- Accelerator, focus label and menu name
 	m_History_back: STRING is			"&Back"
 	f_History_forth: STRING is			"Go forth"
 	f_History_back: STRING is			"Go back"
-	m_How_to_s: STRING is				"How to's"
+	m_How_to_s: STRING is				"&How to's"
 	m_If_block: STRING is				"&Embed in %"if...%"%TCtrl+I"
 	m_Indent: STRING is					"&Indent selection%TTab"
 	f_List_targets: STRING is			"List targets"
@@ -360,7 +360,7 @@ feature -- Accelerator, focus label and menu name
 	f_Precompile: STRING is				"&Precompile..."
 	m_Precompile: STRING is				"Precompile...%TCtrl+Shift+P"
 	f_Precompile_new: STRING is			"Precompile"
-	m_Precompile_new: STRING is			"Pre&compile"
+	m_Precompile_new: STRING is			"&Precompile"
 	f_Print: STRING is					"Print"
 	m_Print: STRING is					"&Print"
 	f_Preferences: STRING is			"Preferences"
@@ -526,7 +526,7 @@ feature -- Menu mnenomics
 	m_C_Compilation: STRING is			"C Com&pilation"
 	m_Debug: STRING is					"&Debug"
 	m_Disable_this_bkpt: STRING is		"&Disable this breakpoint"
-	m_Display_error_help: STRING is		"Compilation error wizard"
+	m_Display_error_help: STRING is		"Compilation error &wizard"
 	m_Display_system_info: STRING is	"S&ystem info"
 	m_Document: STRING is				"&Documentation"
 	m_Dotnet_import: STRING is			"I&SE Assembly Manager"
@@ -1070,6 +1070,8 @@ feature -- Wizard texts
 
 feature -- Metric constants (tooltips)
 
+	metric_metrics: STRING is			"&Metrics"
+
 	metric_this_archive: STRING is		"Archive..."
 	metric_this_system: STRING is		"System"
 	metric_this_cluster: STRING is		"Cluster"
@@ -1178,13 +1180,13 @@ feature -- Metric constants (tooltips)
 	metric_local_unit: STRING is			"Local"
 	metric_comment_unit: STRING is			"Comment"
 	
-	metric_calculate: STRING is				"Calculate"
-	metric_add: STRING is					"Add"
-	metric_delete: STRING is				"Delete"
-	metric_details: STRING is				"Show/hide details"
-	metric_new_metrics: STRING is			"New metrics"
-	metric_management: STRING is			"Metric management"
-	metric_archive: STRING is				"Archive"
+	metric_calculate: STRING is				"&Calculate"
+	metric_add: STRING is					"&Add"
+	metric_delete: STRING is				"&Delete"
+	metric_details: STRING is				"&Show/hide details"
+	metric_new_metrics: STRING is			"&New metrics"
+	metric_management: STRING is			"&Metric management"
+	metric_archive: STRING is				"A&rchive"
 
 end -- class INTERFACE_NAMES
 	

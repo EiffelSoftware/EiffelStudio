@@ -1,0 +1,10 @@
+<!ELEMENT document (title, body)>
+<!ELEMENT body (topic+)>
+<!ELEMENT topic (head, text)>
+<!ELEMENT text (#PCDATA)>
+<!ELEMENT title  (#CDATA)>
+<!ELEMENT eiffel (ek*, ec*, et*, es*)>
+<!ELEMENT ek (#CDATA)>
+<!ELEMENT et (#CDATA)>
+<!ELEMENT es (#CDATA)>
+<!ELEMENT ec (#CDATA)>

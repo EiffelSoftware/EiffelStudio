@@ -598,8 +598,9 @@ feature {NONE} -- Implementation
 			Result.put ("unique_", "unique")
 			Result.put ("until_", "until")
 			Result.put ("variant_", "variant")
+			Result.put ("void_", "void")
 			Result.put ("when_", "when")
-			Result.put ("xor_", "xor")
+			Result.put ("xor_", "xor")			
 		end 
 
 	argument_mapping_table: HASH_TABLE [STRING, STRING] is

@@ -35,6 +35,25 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 		end
+		
+feature {EV_WINDOW_IMP} -- Implementation
+
+	set_parent_window (a_wind: EV_WINDOW) is
+			-- Set `parent_window' to `a_wind'.
+		require
+			a_wind_not_void: a_wind /= Void
+		do
+			parent := a_wind
+		end
+		
+	parent: EV_WINDOW
+			-- Parent window of Current.
+	
+	remove_parent_window is
+			-- Set `parent_window' to Void.
+		do
+			parent := Void
+		end
 
 feature {NONE} -- Implementation
 
@@ -72,6 +91,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/21 23:05:56  king
+--| Added parent support
+--|
 --| Revision 1.14  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -14,6 +14,12 @@ inherit
 			proceed_with_current_info,
 			build
 		end
+		
+	ISE_DIRECTORY_UTILITIES
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
@@ -26,6 +32,7 @@ feature -- Basic Operation
 			project_name.set_label_string_and_size ("Project name", 10)
 			project_name.set_textfield_string (wizard_information.project_name)
 			project_name.generate
+			project_name.change_actions.extend (agent on_change_name)
 
 			create project_location.make (Current)
 			project_location.set_label_string_and_size ("Project location", 10)
@@ -54,29 +61,28 @@ feature -- Basic Operation
 				project_location.change_actions,
 				to_compile_b.select_actions>>)
 		end
-
+		
 	proceed_with_current_info is 
 		local
-			dir: DIRECTORY
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
-			a_project_location: STRING
+			a_project_location: DIRECTORY_NAME
 		do
 			if not rescued then
-				a_project_location := clone (project_location.text)
-				remove_ending_slash_and_spaces (a_project_location)
-			
-				create dir.make (a_project_location)
-				if not dir.exists then
-					-- Try to create the directory
-					dir.create_dir
-				end
-
-				Precursor
-				if not dir.exists then
-					create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
+				if not is_project_name_valid (project_name.text) then
+						-- Ask for a valid project name
+					create {WIZARD_ERROR_PROJECT_NAME} next_window.make (wizard_information)
 				else
-					create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
+					a_project_location := validate_directory_string (project_location.text)
+					if a_project_location.is_empty then
+						create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
+					else
+							-- create the directory
+						recursive_create_directory (a_project_location)
+		
+						Precursor
+						create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
+					end
 				end
 			else
 				-- Something went wrong when checking that the selected directory exists
@@ -94,11 +100,9 @@ feature -- Basic Operation
 	update_state_information is
 			-- Check User Entries
 		local
-			a_project_location: STRING
+			a_project_location: DIRECTORY_NAME
 		do
-			a_project_location := clone (project_location.text)
-			remove_ending_slash_and_spaces (a_project_location)
-			
+			a_project_location := validate_directory_string (project_location.text)
 			wizard_information.set_project_location (a_project_location)
 			wizard_information.set_project_name (project_name.text)
 			wizard_information.set_compile_project (to_compile_b.is_selected)
@@ -107,20 +111,74 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	remove_ending_slash_and_spaces (a_directory_name: STRING) is
-			-- Remove the ending slash, backslash.
+	on_change_name is
+			-- The user has changed the project name, update the project location
 		local
-			end_char: CHARACTER
-			directory_name_count: INTEGER
+			curr_project_location: STRING
+			curr_project_name: STRING
+			sep_index: INTEGER
 		do
-				-- Remove slash/backslash.
-			directory_name_count := a_directory_name.count
-			end_char := a_directory_name @ directory_name_count
-			if end_char = '/' or end_char = '\' then			
-				a_directory_name.head (directory_name_count - 1)
+			curr_project_location := project_location.text
+			curr_project_name := project_name.text
+			sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
+			curr_project_location.head (sep_index)
+			if curr_project_name /= Void then
+				curr_project_location.append (curr_project_name)
+			end
+
+			project_location.set_text (curr_project_location)
+		end
+		
+	validate_directory_string (a_directory: STRING): DIRECTORY_NAME is
+			-- Validate the directory `a_directory' and return the
+			-- validated version of `a_directory'.
+		local
+			a_directory_name: DIRECTORY_NAME
+		do
+			if a_directory /= Void then
+				create a_directory_name.make_from_string (a_directory)
+				a_directory_name := validate_directory_name (a_directory_name)
+				if a_directory_name /= Void then
+					Result := a_directory_name
+				end
+			end
+			if Result = Void then
+				create Result.make_from_string("")
+			end
+		ensure
+			valid_Result: Result /= Void
+		end
+		
+	is_project_name_valid (a_project_name: STRING): BOOLEAN is
+			-- Is `a_project_name' valid as project name?
+		local
+			curr_index: INTEGER
+			curr_character: CHARACTER
+		do
+			if a_project_name = Void or else a_project_name.is_empty then
+				Result := False
+			else
+				Result := True
+				from
+					curr_index := 1
+				until
+					(Result = false) or (curr_index > a_project_name.count)
+				loop
+					curr_character := a_project_name @ curr_index
+					if curr_index = 1 then
+						if not curr_character.is_alpha then
+							Result := False
+						end
+					else
+						if not (curr_character.is_alpha or curr_character.is_digit or curr_character.is_equal ('_')) then
+							Result := False
+						end
+					end
+					curr_index := curr_index + 1
+				end
 			end
 		end
-
+		
 	display_state_text is
 		do
 			title.set_text ("Project Name and Project location")

@@ -9,9 +9,10 @@ indexing
 class FEATURE_ADAPTER
 
 inherit
+	COMPILER_EXPORTER
 
-	COMPILER_EXPORTER;
-	PART_COMPARABLE;
+	PART_COMPARABLE
+
 	SHARED_FORMAT_INFO
 		undefine 
 			is_equal
@@ -108,7 +109,7 @@ feature -- Element change
 					i > l_count
 				loop
 					!! eiffel_list.make (1);
-					eiffel_list.put_i_th (names.i_th (i), 1);
+					eiffel_list.extend (names.i_th (i));
 					new_feature_as := clone (feature_as);
 					new_feature_as.set_feature_names (eiffel_list);
 					!! adapter;
@@ -142,7 +143,7 @@ feature -- Element change
 						f_name := clone (names.first)
 						f_name.set_name (source_feature.feature_name);
 						!! eiffel_list.make (1);
-						eiffel_list.put_i_th (f_name, 1);
+						eiffel_list.extend (f_name);
 						new_feature_as.set_feature_names (eiffel_list);
 						adapter.replicate_feature (source_feature,
 										t_feat, new_feature_as, format_reg);
@@ -316,7 +317,7 @@ feature -- Case storage output
 			target_feature.store_case_information (Result);
 			c := comments;
 			if c /= Void then
-				!! feature_comments.make (comments.count)
+				!! feature_comments.make_filled (comments.count)
 				from
 					c.start;
 					feature_comments.start

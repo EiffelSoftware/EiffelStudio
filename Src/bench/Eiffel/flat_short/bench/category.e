@@ -224,7 +224,7 @@ feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
 			if comments = Void then
 				!! comment_data.make (0);
 			else
-				!! comment_data.make (comments.count);
+				!! comment_data.make_filled (comments.count);
 				from	
 					comment_data.start;
 					comments.start

@@ -242,10 +242,11 @@ feature -- Status setting
 	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
 			-- Set the dialog shell action to `cmd' with `arg'
 		local
-			x_vision_callback: X_EVENT_CALLBACK
-		do 
-			!! x_vision_callback.make (cmd);
-			parent.set_translation (action, x_vision_callback, arg)
+		list: VISION_COMMAND_LIST
+        do
+		!! list.make;
+			parent.set_translation (action, list, arg);
+			list.add_command (cmd, arg)
 		end
 
 	remove_parent_action (action: STRING) is

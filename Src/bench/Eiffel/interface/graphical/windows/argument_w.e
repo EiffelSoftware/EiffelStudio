@@ -22,7 +22,7 @@ creation
 	
 feature -- Initialization
 
-	make (a_composite: COMPOSITE; cmd: COMMAND_W) is
+	make (a_composite: COMPOSITE; cmd: COMMAND) is
 			-- Create a file selection dialog
 		do
 			prompt_dialog_create (Interface_names.n_X_resource_name, a_composite);
@@ -46,7 +46,7 @@ feature -- Initialization
 		do
 		end;
 
-	initialize (a_composite: COMPOSITE; cmd: COMMAND_W) is
+	initialize (a_composite: COMPOSITE; cmd: COMMAND) is
 			-- Initialize Current with `a_composite' as parent and
 			-- `cmd' as command window.
 			--| Use this in conjunction with `make_plain' to
@@ -98,7 +98,7 @@ feature {NONE} -- Properties
 	apply_it, cancel_it, run_it: ANY;
 			-- Arguments for the command
 
-	run: COMMAND_W;
+	run: COMMAND;
 
 feature {NONE} -- Implementation
 

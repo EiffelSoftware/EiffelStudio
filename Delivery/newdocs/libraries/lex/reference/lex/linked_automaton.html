@@ -1,0 +1,83 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>LINKED_AUTOMATON Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General finite state automata, implemented as lists"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/linked_automaton.html">LINKED_AUTOMATON</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">S</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../lex/state.html">STATE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">S</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">make</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="../lex/linked_automaton.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">state</SPAN><SPAN CLASS="ecomment"> a final state for regular expression </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">old_p</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CURSOR</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">old_p</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">cursor</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">go_to</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_p</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">same_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="nefeature">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <SPAN CLASS="nefeature">index</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>LINKED_AUTOMATON<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

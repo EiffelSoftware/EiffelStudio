@@ -1,0 +1,269 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>CHOICE Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../parse/index.html">parse</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Constructs whose specimens are specimens of constructs chosen among a specified list."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`_infix_@' was declared in CHAIN"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">@</SPAN><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arity' was declared in LINKED_LIST as `count'"><SPAN CLASS="nefeature">arity</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`binary_representation' was declared in TREE"><SPAN CLASS="nefeature">binary_representation</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BINARY_TREE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><SPAN CLASS="nefeature">changeable_comparison_criterion</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child' was declared in LINKED_LIST as `active'"><SPAN CLASS="nefeature">child</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">first_element</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_after' was declared in LINKED_LIST as `after'"><SPAN CLASS="nefeature">child_after</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_before' was declared in LINKED_LIST as `before'"><SPAN CLASS="nefeature">child_before</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_cursor' was declared in LINKED_LIST as `cursor'"><SPAN CLASS="nefeature">child_cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CURSOR</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_extendible' was declared in DYNAMIC_CHAIN as `extendible'"><SPAN CLASS="nefeature">Child_extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_index' was declared in LINKED_LIST as `index'"><SPAN CLASS="nefeature">child_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_isfirst' was declared in TREE"><SPAN CLASS="nefeature">child_isfirst</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_islast' was declared in TREE"><SPAN CLASS="nefeature">child_islast</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_item' was declared in LINKED_LIST as `item'"><SPAN CLASS="nefeature">child_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_off' was declared in LINKED_LIST as `off'"><SPAN CLASS="nefeature">child_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_readable' was declared in TREE"><SPAN CLASS="nefeature">child_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_writable' was declared in TREE"><SPAN CLASS="nefeature">child_writable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`committed' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_committed">committed</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`construct_name' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_construct_name">construct_name</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' was declared in TREE"><SPAN CLASS="nefeature">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`document' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_document">Document</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/input_chart.html">INPUT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`duplicate' was declared in DYNAMIC_TREE"><SPAN CLASS="nefeature">duplicate</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exhausted' was declared in LINEAR"><SPAN CLASS="nefeature">exhausted</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' was declared in DYNAMIC_TREE"><SPAN CLASS="nefeature">Extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`first' was declared in LINKED_LIST"><SPAN CLASS="nefeature">first</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`first_child' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">first_child</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`for_all' was declared in LINEAR"><SPAN CLASS="nefeature">for_all</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">FUNCTION</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">TUPLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has' was declared in TREE"><SPAN CLASS="nefeature">has</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`i_th' was declared in CHAIN"><SPAN CLASS="nefeature">i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_of' was declared in CHAIN"><SPAN CLASS="nefeature">index_of</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_set' was declared in CHAIN"><SPAN CLASS="nefeature">index_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER_INTERVAL</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' was declared in TREE"><SPAN CLASS="nefeature">is_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_optional' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_is_optional">is_optional</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_root' was declared in TREE"><SPAN CLASS="nefeature">is_root</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_sibling' was declared in TREE"><SPAN CLASS="nefeature">is_sibling</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in CELL"><SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last' was declared in LINKED_LIST"><SPAN CLASS="nefeature">last</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_child' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">last_child</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`left_recursion' is declared in `Current'"><A CLASS="efeature" HREF="../parse/choice.html#f_left_recursion">left_recursion</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`left_sibling' was declared in BI_LINKABLE as `left'"><SPAN CLASS="nefeature">left_sibling</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`linear_representation' was declared in TREE"><SPAN CLASS="nefeature">linear_representation</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINEAR</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_components' was declared in TREE as `is_empty'"><SPAN CLASS="nefeature">no_components</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`object_comparison' was declared in CONTAINER"><SPAN CLASS="nefeature">object_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`occurrences' was declared in CHAIN"><SPAN CLASS="nefeature">occurrences</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parsed' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_parsed">parsed</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`print_mode' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_print_mode">Print_mode</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CELL</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">BOOLEAN</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`production' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prunable' was declared in DYNAMIC_CHAIN"><SPAN CLASS="nefeature">prunable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable' was declared in TREE"><SPAN CLASS="nefeature">Readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable_child' was declared in TREE"><SPAN CLASS="nefeature">readable_child</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`retained' is declared in `Current'"><A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`right_sibling' was declared in LINKABLE as `right'"><SPAN CLASS="nefeature">right_sibling</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sequential_occurrences' was declared in LINEAR as `occurrences'"><SPAN CLASS="nefeature">sequential_occurrences</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sublist' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">sublist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`there_exists' was declared in LINEAR"><SPAN CLASS="nefeature">there_exists</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">FUNCTION</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">TUPLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_cursor' was declared in LINKED_LIST"><SPAN CLASS="nefeature">valid_cursor</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CURSOR</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_cursor_index' was declared in TREE"><SPAN CLASS="nefeature">valid_cursor_index</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_index' was declared in CHAIN"><SPAN CLASS="nefeature">valid_index</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`writable' was declared in TREE"><SPAN CLASS="nefeature">Writable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`writable_child' was declared in TREE"><SPAN CLASS="nefeature">writable_child</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`append' was declared in SEQUENCE"><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">SEQUENCE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_back' was declared in TWO_WAY_LIST as `back'"><SPAN CLASS="nefeature">child_back</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_extend' was declared in TWO_WAY_LIST as `extend'"><SPAN CLASS="nefeature">child_extend</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_finish' was declared in TWO_WAY_LIST as `finish'"><SPAN CLASS="nefeature">child_finish</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_forth' was declared in TWO_WAY_LIST as `forth'"><SPAN CLASS="nefeature">child_forth</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_go_i_th' was declared in LINKED_LIST as `go_i_th'"><SPAN CLASS="nefeature">child_go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_go_to' was declared in LINKED_LIST as `go_to'"><SPAN CLASS="nefeature">child_go_to</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CURSOR</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_put' was declared in CHAIN as `put'"><SPAN CLASS="nefeature">child_put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_put_left' was declared in TWO_WAY_LIST as `put_left'"><SPAN CLASS="nefeature">child_put_left</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_put_right' was declared in TWO_WAY_LIST as `put_right'"><SPAN CLASS="nefeature">child_put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_replace' was declared in LINKED_LIST as `replace'"><SPAN CLASS="nefeature">child_replace</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_start' was declared in LINKED_LIST as `start'"><SPAN CLASS="nefeature">child_start</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`commit' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_commit">commit</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_objects' was declared in CONTAINER"><SPAN CLASS="nefeature">compare_objects</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_references' was declared in CONTAINER"><SPAN CLASS="nefeature">compare_references</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`do_all' was declared in LINEAR"><SPAN CLASS="nefeature">do_all</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">PROCEDURE</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">TUPLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`do_if' was declared in LINEAR"><SPAN CLASS="nefeature">do_if</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">PROCEDURE</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">TUPLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">FUNCTION</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">TUPLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extend' was declared in DYNAMIC_TREE"><SPAN CLASS="nefeature">extend</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill' was declared in TREE"><SPAN CLASS="nefeature">fill</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">TREE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_from_binary' was declared in DYNAMIC_TREE"><SPAN CLASS="nefeature">fill_from_binary</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BINARY_TREE</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force' was declared in SEQUENCE"><SPAN CLASS="nefeature">force</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`merge_tree_after' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">merge_tree_after</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">first_child</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`merge_tree_before' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">merge_tree_before</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">first_child</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`move' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">move</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parse' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_parse">parse</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`post_action' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_post_action">post_action</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pre_action' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_pre_action">pre_action</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`print_name' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_print_name">print_name</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`process' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_process">process</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prune' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">prune</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">first_child</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prune_all' was declared in DYNAMIC_CHAIN"><SPAN CLASS="nefeature">prune_all</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_child' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">put_child</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_child_left' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">put_child_left</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_child_right' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">put_child_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_front' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">put_front</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_i_th' was declared in CHAIN"><SPAN CLASS="nefeature">put_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_child' was declared in TWO_WAY_LIST as `remove'"><SPAN CLASS="nefeature">remove_child</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_left_child' was declared in TWO_WAY_LIST as `remove_left'"><SPAN CLASS="nefeature">remove_left_child</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_right_child' was declared in TWO_WAY_LIST as `remove_right'"><SPAN CLASS="nefeature">remove_right_child</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_sublist' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">remove_sublist</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace' was declared in CELL"><SPAN CLASS="nefeature">replace</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace_child' was declared in TWO_WAY_TREE"><SPAN CLASS="nefeature">replace_child</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">parent</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`search_child' was declared in BILINEAR as `search'"><SPAN CLASS="nefeature">search_child</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`semantics' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_semantics">semantics</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_optional' was declared in CONSTRUCT"><A CLASS="efeature" HREF="../parse/construct.html#f_set_optional">set_optional</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`split' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">split</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sprout' was declared in TREE"><SPAN CLASS="nefeature">sprout</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`swap' was declared in CHAIN"><SPAN CLASS="nefeature">swap</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`twl_merge_left' was declared in TWO_WAY_LIST as `merge_left'"><SPAN CLASS="nefeature">twl_merge_left</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`twl_merge_right' was declared in TWO_WAY_LIST as `merge_right'"><SPAN CLASS="nefeature">twl_merge_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/choice_chart.html">CHOICE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`twl_prune' was declared in DYNAMIC_CHAIN as `prune'"><SPAN CLASS="nefeature">twl_prune</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../parse/construct_chart.html">CONSTRUCT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out' was declared in TWO_WAY_LIST"><SPAN CLASS="nefeature">wipe_out</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

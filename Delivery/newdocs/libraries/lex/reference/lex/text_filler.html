@@ -1,0 +1,923 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>TEXT_FILLER Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Buffered files or strings for lexical analysis"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">comment</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See detailed comment at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/text_filler.html">TEXT_FILLER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_buffer"><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Buffer filled by fill_buffer</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_file_name"><A CLASS="efeature" HREF="../lex/text_filler.html#f_file_name">file_name</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of input file</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">name</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_line_nb_array"><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array recording the line numbers of each buffered</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character (the line number of the </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th character in the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buffer is the </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th entry of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_nb_array"><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array recording the column numbers of each buffered</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character (the column number of the </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th character in the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buffer is the </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th entry of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_char_buffered_number"><A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of characters read and written</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in buffer since the beginning</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_create_buffers"><A CLASS="efeature" HREF="../lex/text_filler.html#f_create_buffers">create_buffers</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create buffers and mask.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">buf</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_length">line_length</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">lin</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">fill_blank</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lex_array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lex_array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">buf</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_length">line_length</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">lin</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_resize_and_fill_buffer"><A CLASS="efeature" HREF="../lex/text_filler.html#f_resize_and_fill_buffer">resize_and_fill_buffer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When increasing </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="ecomment">: resize the buffer and then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> fill the new buffer.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When decreasing </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="ecomment">: fill the buffer and then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> resize it.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When filling the buffer: Copy the characters from the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment">+1-st to the last one (of the buffer before resizing) in</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the beginning of the buffer and then fill</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the end of the buffer (after resizing) with the text.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This routine skips the columns</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> forbidden by exclude, but always puts '\n' at the end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of a line; the line and column numbers are those of</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the characters in the real file.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">l_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_not_too_large</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">previous_buffer_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">previous_buffer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">buf</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">previous_buffer_size</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">buf</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">previous_buffer</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">previous_buffer</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_file">fill_from_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">previous_buffer_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_string">fill_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">previous_buffer_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_file">fill_from_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_string">fill_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">buf</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">buf</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_exclude"><A CLASS="efeature" HREF="../lex/text_filler.html#f_exclude">exclude</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Discard columns </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">j</SPAN><SPAN CLASS="ecomment"> from the input.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> A zero value for </SPAN><SPAN CLASS="equoted">j</SPAN><SPAN CLASS="ecomment"> means all the way to the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> end of the line.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">j_null_or_greater_than_i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">j</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">j</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_length">line_length</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">all_true</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">j</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_length">line_length</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">j</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">last_index</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_file"><A CLASS="efeature" HREF="../lex/text_filler.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use </SPAN><SPAN CLASS="equoted">f_name</SPAN><SPAN CLASS="ecomment"> as input file.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">file_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make_open_read</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_reset">reset</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_source_size">source_size</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_initialize">initialize</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_reset_data">reset_data</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_string"><A CLASS="efeature" HREF="../lex/text_filler.html#f_set_string">set_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> as the input string.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">string_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_reset">reset</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_source_size">source_size</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">capacity</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_initialize">initialize</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_reset_data">reset_data</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_fill_buffer"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_buffer">fill_buffer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy the characters from the </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment">+1-st to the last one in</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the beginning of the buffer and then fill the end of</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the buffer with the text. This routine skips the columns</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> forbidden by exclude, but always puts '\n' at the end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of a line; the line and column numbers are those of</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the characters in the real file.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">l_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_not_too_large</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_file">fill_from_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_string">fill_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_fill_whole_buffer"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_whole_buffer">fill_whole_buffer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill with new characters.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_buffer">fill_buffer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_close_file"><A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Close input file if any.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_closed</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">close</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">file_is_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_buffer_size"><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Buffer size</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_line_length"><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_length">line_length</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximal number of characters in a line</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_source_size"><A CLASS="efeature" HREF="../lex/text_filler.html#f_source_size">source_size</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character number in file or string source</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_file"><A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">PLAIN_TEXT_FILE</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> File to be buffered</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_string"><A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String to be buffered</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mask"><A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set of readable columns</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_source_is_file"><A CLASS="efeature" HREF="../lex/text_filler.html#f_source_is_file">source_is_file</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the source a file? (If not it is a string)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_line_number"><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_number"><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character position in document</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_position_in_string"><A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Position of last character read in </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initialize"><A CLASS="efeature" HREF="../lex/text_filler.html#f_initialize">initialize</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set buffers</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_reset_data"><A CLASS="efeature" HREF="../lex/text_filler.html#f_reset_data">reset_data</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize datas when set_file or set_string is used.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_reset"><A CLASS="efeature" HREF="../lex/text_filler.html#f_reset">reset</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize character position in document.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_fill_from_file"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_file">fill_from_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy the characters from </SPAN><SPAN CLASS="equoted">position</SPAN><SPAN CLASS="ecomment">+1-th to </SPAN><SPAN CLASS="equoted">old_size</SPAN><SPAN CLASS="ecomment">-th</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in beginning of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="ecomment">, and fill other part of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with characters from </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">l_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">position_not_too_large</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">position_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_old_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">file_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CHARACTER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">nb</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">file_nb</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">file_last_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">position</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">nb</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">file_nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_stream</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file_nb</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">file_last_string</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">file_last_string</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="elocal">file_nb</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">file_nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">file_last_string</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'ÿ'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">file_nb</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">file_nb</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">file_nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file_last_string</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">file_nb</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">new_size</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="echar">'ÿ'</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="echar">'%N'</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">cmask</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">new_size</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">end_of_file</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'ÿ'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_character</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_file">file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_character</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%N'</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">&lt;=</SPAN> <SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_fill_from_string"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_from_string">fill_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy the characters from </SPAN><SPAN CLASS="equoted">position</SPAN><SPAN CLASS="ecomment">+1-th to </SPAN><SPAN CLASS="equoted">old_size</SPAN><SPAN CLASS="ecomment">-th</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in beginning of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="ecomment">, and fill other part of </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with characters from </SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">l_buffer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">position_not_too_large</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">position_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_old_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">string_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CHARACTER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">nb</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">str_nb</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">old_size</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">position</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">nb</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">str_nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="esymbol">-</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="elocal">str_nb</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">str_nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="esymbol">-</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'ÿ'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">str_nb</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">str_nb</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">str_nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">str_nb</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">str_nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">new_size</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="echar">'ÿ'</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="echar">'%N'</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">cmask</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_mask">mask</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">new_size</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'ÿ'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">eof</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_string">string</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_position_in_string">position_in_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%N'</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">&lt;=</SPAN> <SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">cmask</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lines</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_number">line_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">columns</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_column_number">column_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="elocal">nb</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TEXT_FILLER<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

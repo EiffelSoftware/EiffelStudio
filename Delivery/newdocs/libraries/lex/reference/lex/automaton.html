@@ -1,0 +1,119 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>AUTOMATON Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General finite-state automata"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/automaton.html">AUTOMATON</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_greatest_input"><A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Greatest input used for the transitions from state</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to state (the smallest one is zero)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start_number"><A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unique start state used for the beginning of</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the automaton's operation</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_nb_states"><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of states in the automaton</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_start"><A CLASS="efeature" HREF="../lex/automaton.html#f_set_start">set_start</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Select state </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> as the starting state.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">no_other_start</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_transition"><A CLASS="efeature" HREF="../lex/automaton.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set transition from source to target on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="../lex/automaton.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">state</SPAN><SPAN CLASS="ecomment"> final for regular expression </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_state"><A CLASS="efeature" HREF="../lex/automaton.html#f_set_state">set_state</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a new state.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>AUTOMATON<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

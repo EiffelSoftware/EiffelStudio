@@ -1,0 +1,135 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>FIXED_AUTOMATON Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General finite-state automata, implemented by arrays"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/fixed_automaton.html">FIXED_AUTOMATON</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">S</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../lex/state.html">STATE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">S</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">array_make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">export</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">upper</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">put</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make an automaton including at most </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> states,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with transitions 0 to </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">array_make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_last_position"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Position of last state inserted</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">state</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">final</SPAN><SPAN CLASS="ecomment"> for regular expression </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <SPAN CLASS="nefeature">upper</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="nefeature">lower</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_add_right"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_add_right">add_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">S</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> to the first possible item.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_full</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="nefeature">count</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>FIXED_AUTOMATON<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

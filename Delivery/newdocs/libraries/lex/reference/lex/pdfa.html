@@ -1,0 +1,837 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>PDFA Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Partially deterministic finite state automata"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">comment</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See comment at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/pdfa.html">PDFA</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">array_make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">export</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="nefeature">to_c</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">undefine</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">consistent</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">copy</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">setup</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">is_equal</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="neclass">ASCII</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">undefine</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">consistent</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">copy</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">setup</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">is_equal</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../lex/pdfa.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a </SPAN><A CLASS="eclass" HREF="../lex/pdfa.html">PDFA</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> states, and </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> + 1 inputs.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">array_make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_keywords_list">keywords_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_input_array"><A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For each input, set of the states which have</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a transition on this input to the following state</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_final_array"><A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The </SPAN><SPAN CLASS="equoted">final</SPAN><SPAN CLASS="ecomment"> value for each state</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (regular expression, if any, for which it is final).</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_keywords_list"><A CLASS="efeature" HREF="../lex/pdfa.html#f_keywords_list">keywords_list</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Keywords associated with current automaton.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has_letters"><A CLASS="efeature" HREF="../lex/pdfa.html#f_has_letters">has_letters</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are there any letters among the active transitions?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_letters"><A CLASS="efeature" HREF="../lex/pdfa.html#f_set_letters">set_letters</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Direct the active transitions to include letters.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_has_letters">has_letters</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="../lex/pdfa.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> the final state of regular expression </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_transition"><A CLASS="efeature" HREF="../lex/pdfa.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment"> on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_successor</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_e_transition"><A CLASS="efeature" HREF="../lex/pdfa.html#f_set_e_transition">set_e_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set epsilon transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_add_keyword"><A CLASS="efeature" HREF="../lex/pdfa.html#f_add_keyword">add_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">word</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Insert </SPAN><SPAN CLASS="equoted">word</SPAN><SPAN CLASS="ecomment"> in the keyword list.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_keywords_list">keywords_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">finish</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_keywords_list">keywords_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">word</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_include"><A CLASS="efeature" HREF="../lex/pdfa.html#f_include">include</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/pdfa.html">PDFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">fa</SPAN><SPAN CLASS="ecomment"> with state numbers shifted</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> by </SPAN><SPAN CLASS="equoted">shift</SPAN><SPAN CLASS="ecomment"> positions in the transitions.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not preserve the </SPAN><SPAN CLASS="equoted">final</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">same_inputs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">nb_states_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_e_include">e_include</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_largest">largest</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_smallest">smallest</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">last_index</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/pdfa.html#f_has_letters">has_letters</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_has_letters">has_letters</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_remove_case_sensitiveness"><A CLASS="efeature" HREF="../lex/pdfa.html#f_remove_case_sensitiveness">remove_case_sensitiveness</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove case sensitiveness.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">z_possible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="nefeature">lower_z</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">upper_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">lower_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_has_letters">has_letters</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">lower_a</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">lower_z</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">lower_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">upper_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="nefeature">case_diff</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">upper_set</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">lower_set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="nefeature">case_diff</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">lower_set</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">upper_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">upper_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">upper_set</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">upper_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">upper_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="nefeature">case_diff</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_delete_transition"><A CLASS="efeature" HREF="../lex/pdfa.html#f_delete_transition">delete_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Delete transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment"> on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_successor</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_trace"><A CLASS="efeature" HREF="../lex/pdfa.html#f_trace">trace</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output an internal representation</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of the current automaton.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" State # "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" final state of token type: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" Epsilon transitions to: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">epsilon_list</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">epsilon_list</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">epsilon_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"%N Inputs with a transition to the following state:%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_closure"><A CLASS="efeature" HREF="../lex/pdfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Epsilon_closure of ith state which means</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state reachable from ith</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> state on epsilon-transition alone.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">state_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_STACK</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">int</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">top</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">remove</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_successors_list</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">int</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">int</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">int</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">stack</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">int</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_successors_list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">state_in_closure</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_move"><A CLASS="efeature" HREF="../lex/pdfa.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states to which there is a transition on</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> input i from some </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state s of initial_set.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Void if the set if empty.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">initial_set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_is_empty">is_empty</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">right_shifted</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initial_final_designation"><A CLASS="efeature" HREF="../lex/pdfa.html#f_initial_final_designation">initial_final_designation</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the final and initial attributes of the dfa,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> consistent with those of the current automaton.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">dfa_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_set_start">set_start</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_dfa_set_final">dfa_set_final</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_dfa_set_final"><A CLASS="efeature" HREF="../lex/pdfa.html#f_dfa_set_final">dfa_set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> the </SPAN><SPAN CLASS="equoted">final</SPAN><SPAN CLASS="ecomment"> state for </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/pdfa.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_e_include"><A CLASS="efeature" HREF="../lex/pdfa.html#f_e_include">e_include</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/pdfa.html">PDFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy the fa epsilon transition in Current</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with state numbers shifted in the transitions.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The attributes are not preserved.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">nb_states_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">last_index</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">fa</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/pdfa.html#f_set_e_transition">set_e_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="elocal">shift</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">list</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_find_successors"><A CLASS="efeature" HREF="../lex/pdfa.html#f_find_successors">find_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Successors of </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> void if no successor</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/pdfa.html#f_input_array">input_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_find_e_successors"><A CLASS="efeature" HREF="../lex/pdfa.html#f_find_e_successors">find_e_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Epsilon successors of source;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Void if no successor</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_state"><A CLASS="efeature" HREF="../lex/pdfa.html#f_set_state">set_state</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This routine is deferred in </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> but is useless in </SPAN><A CLASS="eclass" HREF="../lex/pdfa.html">PDFA</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>PDFA<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

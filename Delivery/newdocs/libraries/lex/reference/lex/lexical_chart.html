@@ -1,0 +1,121 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>LEXICAL Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/lexical_chart.html">LEXICAL</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../lex/index.html">lex</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Lexical analyzers"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/lexical.html#f_make_new">make_new</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/lexical.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/text_filler_chart.html">TEXT_FILLER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`buffer' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer">buffer</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`buffer_item_code' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_buffer_item_code">buffer_item_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`buffer_size' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_buffer_size">buffer_size</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`char_buffered_number' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_char_buffered_number">char_buffered_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`column_nb_array' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_column_nb_array">column_nb_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array_chart.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dfa' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_dfa">dfa</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`end_of_text' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_end_of_text">end_of_text</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`file_name' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_file_name">file_name</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`keyword_code' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_keyword_code">keyword_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">word</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`keyword_string' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_keyword_string">keyword_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_is_keyword' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_last_is_keyword">last_is_keyword</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_keyword_code' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_last_keyword_code">last_keyword_code</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_keyword_text' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_last_keyword_text">last_keyword_text</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_string_read' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_last_string_read">last_string_read</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_last_token">last_token</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/token_chart.html">TOKEN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`line_nb_array' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_line_nb_array">line_nb_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/lex_array_chart.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_no_token">No_token</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`other_possible_tokens' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_other_possible_tokens">other_possible_tokens</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`token_column_number' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_token_column_number">token_column_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`token_line_number' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_token_line_number">token_line_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`token_type' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_token_type">token_type</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close_file' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_close_file">close_file</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`create_buffers' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_create_buffers">create_buffers</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exclude' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_exclude">exclude</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_buffer' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_buffer">fill_buffer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_whole_buffer' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_fill_whole_buffer">fill_whole_buffer</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get_any_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_get_any_token">get_any_token</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get_fixed_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_get_fixed_token">get_fixed_token</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get_short_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_get_short_token">get_short_token</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get_token' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_get_token">get_token</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_new' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_make_new">make_new</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`resize_and_fill_buffer' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_resize_and_fill_buffer">resize_and_fill_buffer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">buf</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_file' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_separator_type' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_string' was declared in TEXT_FILLER"><A CLASS="efeature" HREF="../lex/text_filler.html#f_set_string">set_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`trace' is declared in `Current'"><A CLASS="efeature" HREF="../lex/lexical.html#f_trace">trace</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

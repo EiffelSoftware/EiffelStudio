@@ -1,0 +1,171 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>FIXED_DFA Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../lex/index.html">lex</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Deterministic finite automata"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/dfa_chart.html">DFA</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/fixed_automaton_chart.html">FIXED_AUTOMATON</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">S</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../lex/state_chart.html">STATE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`_infix_@' was declared in ARRAY"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><SPAN CLASS="esymbol">@</SPAN><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`additional_space' was declared in RESIZABLE"><SPAN CLASS="nefeature">additional_space</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`all_default' was declared in ARRAY"><SPAN CLASS="nefeature">all_default</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`area' was declared in TO_SPECIAL"><SPAN CLASS="nefeature">area</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">SPECIAL</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`capacity' was declared in ARRAY"><SPAN CLASS="nefeature">capacity</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><SPAN CLASS="nefeature">changeable_comparison_criterion</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' was declared in ARRAY"><SPAN CLASS="nefeature">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`entry' was declared in ARRAY"><SPAN CLASS="nefeature">entry</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' was declared in ARRAY"><SPAN CLASS="nefeature">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`find_successor' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_find_successor">find_successor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full' was declared in ARRAY"><SPAN CLASS="nefeature">full</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`greatest_input' was declared in AUTOMATON"><A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`growth_percentage' was declared in RESIZABLE"><SPAN CLASS="nefeature">Growth_percentage</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has' was declared in ARRAY"><SPAN CLASS="nefeature">has</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_set' was declared in ARRAY"><SPAN CLASS="nefeature">index_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER_INTERVAL</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' was declared in FINITE"><SPAN CLASS="nefeature">is_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_equal' was declared in ARRAY"><SPAN CLASS="nefeature">is_equal</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in ARRAY"><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_position' was declared in FIXED_AUTOMATON"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_last_position">last_position</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`linear_representation' was declared in ARRAY"><SPAN CLASS="nefeature">linear_representation</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINEAR</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lower' was declared in ARRAY"><SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`minimal_increase' was declared in RESIZABLE"><SPAN CLASS="nefeature">Minimal_increase</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nb_states' was declared in AUTOMATON"><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`object_comparison' was declared in CONTAINER"><SPAN CLASS="nefeature">object_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`occurrences' was declared in ARRAY"><SPAN CLASS="nefeature">occurrences</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`possible_tokens' was declared in DFA"><A CLASS="efeature" HREF="../lex/dfa.html#f_possible_tokens">possible_tokens</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prunable' was declared in ARRAY"><SPAN CLASS="nefeature">prunable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`recognize' was declared in DFA"><A CLASS="efeature" HREF="../lex/dfa.html#f_recognize">recognize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`resizable' was declared in RESIZABLE"><SPAN CLASS="nefeature">resizable</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`same_items' was declared in ARRAY"><SPAN CLASS="nefeature">same_items</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_number' was declared in AUTOMATON"><A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`subarray' was declared in ARRAY"><SPAN CLASS="nefeature">subarray</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">start_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">end_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_c' was declared in ARRAY"><SPAN CLASS="nefeature">to_c</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ANY</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`upper' was declared in ARRAY"><SPAN CLASS="nefeature">upper</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_index' was declared in ARRAY"><SPAN CLASS="nefeature">valid_index</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_index_set' was declared in ARRAY"><SPAN CLASS="nefeature">valid_index_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_right' was declared in FIXED_AUTOMATON"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_add_right">add_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`array_make' was declared in ARRAY as `make'"><SPAN CLASS="nefeature">array_make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`automatic_grow' was declared in RESIZABLE"><SPAN CLASS="nefeature">automatic_grow</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`clear_all' was declared in ARRAY"><SPAN CLASS="nefeature">clear_all</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_objects' was declared in CONTAINER"><SPAN CLASS="nefeature">compare_objects</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_references' was declared in CONTAINER"><SPAN CLASS="nefeature">compare_references</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`copy' was declared in ARRAY"><SPAN CLASS="nefeature">copy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`discard_items' was declared in ARRAY"><SPAN CLASS="nefeature">discard_items</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enter' was declared in ARRAY"><SPAN CLASS="nefeature">enter</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`f_set_final' was declared in FIXED_AUTOMATON as `set_final'"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_set_final">f_set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill' was declared in COLLECTION"><SPAN CLASS="nefeature">fill</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CONTAINER</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fixed_make' was declared in FIXED_AUTOMATON as `make'"><A CLASS="efeature" HREF="../lex/fixed_automaton.html#f_make">fixed_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force' was declared in ARRAY"><SPAN CLASS="nefeature">force</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`grow' was declared in ARRAY"><SPAN CLASS="nefeature">grow</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_from_array' was declared in ARRAY"><SPAN CLASS="nefeature">make_from_array</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prune_all' was declared in COLLECTION"><SPAN CLASS="nefeature">prune_all</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put' was declared in ARRAY"><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa_chart.html">STATE_OF_DFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`resize' was declared in ARRAY"><SPAN CLASS="nefeature">resize</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_final' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_start' was declared in AUTOMATON"><A CLASS="efeature" HREF="../lex/automaton.html#f_set_start">set_start</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_state' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_set_state">set_state</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_transition' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`subcopy' was declared in ARRAY"><SPAN CLASS="nefeature">subcopy</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa_chart.html">FIXED_DFA</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">start_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">end_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">index_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`trace' is declared in `Current'"><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_trace">trace</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

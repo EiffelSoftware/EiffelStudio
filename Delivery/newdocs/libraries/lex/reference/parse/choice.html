@@ -1,0 +1,279 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
+		
+<TITLE>CHOICE Text</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Constructs whose specimens are specimens of constructs chosen among a specified list."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../parse/choice.html">CHOICE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../parse/construct.html">CONSTRUCT</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_put_component">put_component</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">branch</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">is_leaf</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">no_components</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_retained"><A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/construct.html">CONSTRUCT</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Child which matches the input document;</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Void if none.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_left_recursion"><A CLASS="efeature" HREF="../parse/choice.html#f_left_recursion">left_recursion</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the construct's definition left-recursive?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">has</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_global_left_recursion">global_left_recursion</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ekeyword">True</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_child_recursion">child_recursion</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ekeyword">True</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_recursion_message">recursion_message</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_construct_name">construct_name</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_recursion_message">recursion_message</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">no_components</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="nefeature">child_after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <A CLASS="efeature" HREF="../parse/construct.html#f_message_construction">message_construction</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">search</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">remove</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_structure_list">structure_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../parse/construct.html">CONSTRUCT</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_check_recursion"><A CLASS="efeature" HREF="../parse/choice.html#f_check_recursion">check_recursion</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Check choice construct for left recursion.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <A CLASS="efeature" HREF="../parse/construct.html#f_check_recursion_list">check_recursion_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">has</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_check_recursion_list">check_recursion_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">extend</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../parse/construct.html#f_print_mode">print_mode</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/choice.html#f_print_children">print_children</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">no_components</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="nefeature">child_after</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_check_recursion">check_recursion</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_print_children"><A CLASS="efeature" HREF="../parse/choice.html#f_print_children">print_children</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Print children separated with a bar.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_print_name">print_name</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" : &nbsp;&nbsp;&nbsp;"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_start</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">no_components</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="nefeature">child_after</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_print_name">print_name</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">child_forth</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="nefeature">child_after</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" | "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_expand"><A CLASS="efeature" HREF="../parse/choice.html#f_expand">expand</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create list of possible choices.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_expand_next">expand_next</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_parse_body"><A CLASS="efeature" HREF="../parse/choice.html#f_parse_body">parse_body</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Try each possible expansion and keep</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the one that works.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">initial_document_position</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">initial_document_position</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../parse/construct.html#f_document">document</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">index</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/choice.html#f_expand">expand</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">no_components</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="nefeature">child_after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_parse_child">parse_child</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="nefeature">child</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_parsed">parsed</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">child</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_document">document</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_document_position</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/choice.html#f_expand">expand</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/construct.html#f_complete">complete</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">wipe_out</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_in_action"><A CLASS="efeature" HREF="../parse/choice.html#f_in_action">in_action</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/choice.html#f_retained">retained</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../parse/construct.html#f_semantics">semantics</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>CHOICE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

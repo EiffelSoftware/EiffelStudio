@@ -152,6 +152,7 @@ EIF_BOOLEAN c_gtk_widget_displayed (GtkWidget *w);
 */
 EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w); 
 
+
 /* Two routines for post-consitions */
 EIF_BOOLEAN c_gtk_widget_position_set (GtkWidget *w, gint x, gint y);
 EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint height);
@@ -466,6 +467,10 @@ void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int
 void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
+EIF_BOOLEAN c_gtk_box_is_child_expandable (GtkWidget *box, GtkWidget *child);
+
+void c_gtk_box_set_child_expandable (GtkWidget *box, GtkWidget *child, gint flag);
+
 #define c_gtk_box_homogeneous(p)	(GTK_BOX(p)->homogeneous)  /* guint */
 
 #define c_gtk_box_spacing(p)	(GTK_BOX(p)->spacing)  /* guint */
@@ -554,6 +559,8 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
 
 EIF_POINTER c_gtk_progress_bar_new_with_adjustment (gfloat val, gfloat min, gfloat max, gfloat step, gfloat page);
 
+void c_gtk_progress_bar_set_adjustment (GtkProgressBar *progressbar, gfloat val, gfloat min, gfloat max, gfloat step);
+
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
 #define c_gtk_progress_bar_adjustment(p)      (GTK_PROGRESS (p)->adjustment)      /*GtkAdjustment*/
 
@@ -637,7 +644,7 @@ EIF_POINTER c_gtk_vscale_new (gfloat value, gfloat min, gfloat max, gfloat step,
 EIF_POINTER c_gtk_hscale_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap);
 
 /* The following value are currently integer but can be real with GTK. Not yet with windows. */
-#define c_gtk_scale_value(p)      ((EIF_INTEGER) GTK_SCALE(p)->value_pos)      /*Integer*/
+#define c_gtk_scale_value(p)      ((EIF_INTEGER) GTK_RANGE(p)->adjustment->value)      /*Integer*/
 
 /*==============================================================================
  gtk_scroll (vertical and horizontal) functions for EV_SCROLL_BAR

@@ -1774,9 +1774,11 @@ void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int
 
 /*********************************
  *
- * Function : `c_gtk_box_set_child_options'
+ * Function :	`c_gtk_box_set_child_options'	(1)
+ * 				`c_gtk_box_is_child_expandable'	(2)
  *
- * Note : Change the options of a child in a box.
+ * Note : (1) Change the options of a child in a box.
+ * 		  (2) Is the child expandable?
  *
  * Author : Leila
  *
@@ -1794,7 +1796,31 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 			       & old_padding, & old_pack_type);
   gtk_box_set_child_packing (GTK_BOX(box), child, expand, fill, 
 			     old_padding, old_pack_type);
+}
 
+EIF_BOOLEAN c_gtk_box_is_child_expandable (GtkWidget *box, GtkWidget *child)
+{
+  gint fill;
+  gint expand;
+  gint padding;
+  GtkPackType pack_type;
+
+  gtk_box_query_child_packing (GTK_BOX(box), child, &expand, &fill,
+			       &padding, &pack_type);
+  
+  return (EIF_BOOLEAN) expand;
+}
+
+void c_gtk_box_set_child_expandable (GtkWidget *box, GtkWidget *child, gint flag)
+{
+  gint fill;
+  gint old_expand;
+  gint padding;
+  GtkPackType pack_type;
+
+  gtk_box_query_child_packing (GTK_BOX(box), child, &old_expand, &fill,
+			       &padding, &pack_type);
+  gtk_box_set_child_packing (GTK_BOX(box), child, flag, fill, padding, pack_type);
 }
 
 /*********************************
@@ -2005,6 +2031,22 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 	}
 	else
 	return 0;	
+}
+
+void c_gtk_progress_bar_set_adjustment (GtkProgressBar *progressbar, gfloat value, gfloat min, gfloat max, gfloat step)
+{ 
+  GtkAdjustment *adj;
+  
+  adj = GTK_PROGRESS (progressbar)->adjustment;
+
+  adj->value = value;
+  adj->upper = max;
+  adj->lower = min;
+  adj->step_increment = step;
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
 }
 
 /*==============================================================================

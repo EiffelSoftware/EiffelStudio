@@ -164,7 +164,7 @@ if [ -f config.sh ]; then
 fi
 cp CONFIGS/$platform config.sh
 if [ $allmakefiles != no ]; then
-	Configure -S
+	./Configure -S
 fi
 
 if [ $runtimes = all ]; then

@@ -172,6 +172,9 @@ feature -- Access
 	Bc_int16:			CHARACTER is '%/141/'
 	Bc_int64:			CHARACTER is '%/142/'
 
+		-- Conversion
+	Bc_cast_char:		CHARACTER is '%/143/'
+
 		-- Instructions for Concurrent Eiffel
 
 	Bc_sep_set:			CHARACTER is '%/150/'; 

@@ -97,7 +97,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Private feature
 
-	prepare_line(line: like first_displayed_line) is
+	prepare_line (line: like first_displayed_line) is
 			-- Prepare the line to be added in our
 			-- structure.
 		local
@@ -112,7 +112,7 @@ feature {NONE} -- Private feature
 			loop
 					-- Compute the position of each token.
 				current_token := line.item
-				current_token.set_position(current_position)
+				current_token.set_position (current_position)
 				current_position := current_position + current_token.length
 
 					-- prepare next iteration

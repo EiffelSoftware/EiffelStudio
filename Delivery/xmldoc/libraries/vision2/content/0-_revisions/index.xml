@@ -23,12 +23,12 @@
 				<list ordered="false">
 					<item>Added `pointed_tab_index' which returns the index of the tab beneath the mouse pointer or 0 if none.</item>
 					<item>Added EV_NOTEBOOK_TAB which may be queried via the new query `item_tab'. The object represented by this new class provides the ability to set both the text and a pixmap for the tab item.</item>
-					<item>Now inherits EV_ITEM_PIXMAP_SCALER as the tabs support pixmaps through the use of EV_NOTEBOOK_TAB.</item>
+					<item>Now inherits EV_ITEM_PIXMAP_SCALER as the tabs support pixmaps through the use of EV_NOTEBOOK_TAB.</item>					
 				</list>
 			</item>
-			<item>
-				<bold>EV_COMBO_BOX</bold> - Added `drop_down_actions', fired as the list is dropped down which permits dynamic filling of the combo box as its contents are displayed.
-			</item>
+				<item>
+					<bold>EV_COMBO_BOX</bold> - Added `drop_down_actions', fired as the list is dropped down which permits dynamic filling of the combo box as its contents are displayed.
+				</item>
 			<item>
 				<bold>EV_WIDGET</bold> - Removed postcondition `has_focus' from `set_focus' since in most cases it does not hold. Indeed between the time you set the focus and the time you check if you still have the focus something could have happen that would remove the focus.
 			</item>
@@ -72,7 +72,6 @@
 							<item>Fixed `has_focus' to return True when either the combo or the text field when it exists has the focus.</item>
 							<item>Fixed call on Void target when calling `set_foreground_color' on a displayed combo box which is not editable.</item>
 							<item>Fixed invariant violation with a non editable combo box.</item>
-							<item>Calling `set_background_color' did not reflect the color change immediately.</item>
 						</list>
 					</item>
 					<item>
@@ -101,7 +100,12 @@
 						<bold>EV_DIRECTORY_DIALOG</bold> - Fixed bug in which the dialog always reported that "ok" has been selected even if the "cancel" button had been selected. This occurred if the dialog  had been shown more than once with "ok" already selected.
 					</item>
 					<item>
-						<bold>EV_PIXMAP</bold> - Fixed color displayed around a pixmap while parented in a container. Previously, gray was always displayed but now we use the `background_color' of the `parent'.
+						<bold>EV_PIXMAP</bold>
+							<list ordered="false">
+								<item>Fixed color displayed around a pixmap while parented in a container. Previously, gray was always displayed but now we use the `background_color' of the `parent'.</item>
+								<item>Fixed masking blitting in draw_sub_pixmap.  Previously the mask wasn't being blitted correctly discoloring the source image</item>
+								<item>Fixed mask handling with PNG loading.  Previously if the source image pixels under the mask were not black then masking for icons and cursors didnt work correctly, now any color can be used underneath the mask and it will still be masked correctly</item>
+							</list>
 					</item>
 					<item>
 						<bold>EV_TOOL_BAR</bold>
@@ -112,9 +116,6 @@
 					</item>
 					<item>
 						<bold>EV_FONT</bold> - Fixed bug in `is_equal' which occasionally failed due to rounding errors between `height' and `height_in_points'. Now, `is_equal' compares `height_in_points' for the font which is more accurate and prevents this issue.
-					</item>
-					<item>
-						<bold>EV_PICK_AND_DROPABLE</bold> - Fixed a bug which caused a pick and drop transport to start when dropping on a widget that was also pick and drop target. This only occurred if you called `process_events' on the application from the `drop_actions'.
 					</item>
 				</list>
 			</item>
@@ -127,6 +128,7 @@
 							<item> Fixed memory leaks in font lookup</item>
 							<item>Now all resources get freed on disposal of font</item>
 							<item>Now precalculating `ascent' and `descent' to improve drawing performance</item>
+							<item>Added better default font handling, now if the default font gets passed in, it will be treated as such by the Gtk theme engine</item>
 						</list>
 					</item>
 					<item>
@@ -151,6 +153,12 @@
 							<item>Fixed `buffered_format' to not wipe out the text buffer of the widget and therefore stop other EV_TEXT features from functioning correctly</item>
 							<item>Now `buffered_append' doesn't wipe out the screen contents of the rich text control</item>
 						</list>
+					</item>
+					<item>
+						<bold>EV_ACCELERATOR</bold> - Now the key accelerator is checked if valid before proceeding, in some circumstances when a key is not present in the key mapping table adding an accelerator would crash the system, now if the accelerator is not valid for the current key mapping then nothing is done
+					</item>
+					<item>
+						<bold>EV_WINDOW</bold> - Now setting and querying focus works in all circumstances with all window types
 					</item>
 				</list>
 			</item>
@@ -629,8 +637,8 @@
 			</item>
 			<item>
 				<bold>EV_TABLE</bold> - Now inherits CHAIN instead of ARRAY. This is a breaking  change, and may require some modification to your code. The inheritance from  ARRAY was seriously flawed. For example, if you were to call `extend' on an  EV_CONTAINER object that was currently referencing an EV_TABLE, then this would  fail. Now that we inherit CHAIN, this problem, among others of a similar nature  are fixed. Another advantage of inheriting CHAIN, is that the table may now be  iterated which allows for greater flexibility.
-				<line_break/>
-				<line_break/> The following list details some of the breaking changes, and how to fix them:
+				<line_break></line_break>
+				<line_break></line_break> The following list details some of the breaking changes, and how to fix them:
 				<list ordered="false">
 					<item>
 						<bold>item</bold> - If you were using `item', you should change this to `item_at_position'. A  call to `item' will now return the current item.
@@ -824,7 +832,7 @@
 			</item>
 		</list>
 		<paragraph>
-			<bold/>
+			<bold></bold>
 		</paragraph>
 		<heading>
 			<size>2</size>EiffelStudio 5.2

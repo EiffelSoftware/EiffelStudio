@@ -19,23 +19,24 @@ inherit
 		end
 
 	EV_BAR_ITEM
---		redefine
---			make,
---			implementation
---		end
+		redefine
+			make,
+			implementation
+		end
 
 creation
 	make
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a text field with, `par' as
-			-- parent
+        make (par: EV_CONTAINER) is
+                        -- Create a text field with, `par' as
+                        -- parent
 		do
 			!EV_TEXT_FIELD_IMP!implementation.make (par)
 			widget_make (par)
 		end
+	
 
 feature -- Event - command association
 	

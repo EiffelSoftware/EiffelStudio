@@ -34,9 +34,9 @@ feature -- Basic operations
 		do
 			create cpp_class_writer.make
 			a_descriptor.set_impl_names (True)
-			cpp_class_writer.set_name (a_descriptor.c_type_name)
+			cpp_class_writer.set_name (a_descriptor.impl_c_type_name (True))
 			cpp_class_writer.set_header (a_descriptor.description)
-			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
+			cpp_class_writer.set_header_file_name (a_descriptor.impl_c_header_file_name (True))
 
 			cpp_class_writer.add_import (a_descriptor.interface_descriptor.c_header_file_name)
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.interface_descriptor.name, a_descriptor.interface_descriptor.guid))
@@ -44,30 +44,22 @@ feature -- Basic operations
 			create data_member.make
 			data_member.set_comment (Interface_pointer_comment)
 
-			-- Variable name
 			create a_name.make (100)
 			a_name.append (Interface_variable_prepend)
 			a_name.append (a_descriptor.interface_descriptor.c_type_name)
 			data_member.set_name (a_name)
 
-			-- Variable type
 			create a_result_type.make (100)
 			a_result_type.append (a_descriptor.interface_descriptor.c_type_name)
 			a_result_type.append (Space)
 			a_result_type.append (Asterisk)
 			data_member.set_result_type (a_result_type)
-
 			cpp_class_writer.add_member (data_member, Private)
 
 			create data_member.make
 			data_member.set_comment (Default_iunknown_variable_comment)
-
-			-- Variable name
 			data_member.set_name (Iunknown_variable_name)
-
-			-- Variable type
 			data_member.set_result_type (Iunknown_pointer)
-
 			cpp_class_writer.add_member (data_member, Private)
 
 			if 

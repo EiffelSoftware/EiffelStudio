@@ -571,48 +571,44 @@ feature {NONE} -- Cluster display and saving
 			d_option: D_OPTION_SD
 			ass: ASSERTION_SD
 			v: OPT_VAL_SD
-			had_assertion: BOOLEAN
 			default_options: LACE_LIST [D_OPTION_SD]
 		do
 			if override_default_assertions.is_selected then
 				default_options := prop.default_option
+
+					-- Reset values to `no' so that changes are indeed
+					-- taken into account.
+				create v.make_no
+				create ass
+				create d_option.initialize (ass, v)
+				default_options.extend (d_option)
+
 				if check_check.is_selected then
-					had_assertion := True
 					create v.make_check
 					create ass
 					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if require_check.is_selected then
-					had_assertion := True
 					create v.make_require
 					create ass
 					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if ensure_check.is_selected then
-					had_assertion := True
 					create v.make_ensure
 					create ass
 					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if loop_check.is_selected then
-					had_assertion := True
 					create v.make_loop
 					create ass
 					create d_option.initialize (ass, v)
 					default_options.extend (d_option)
 				end
 				if invariant_check.is_selected then
-					had_assertion := True
 					create v.make_invariant
-					create ass
-					create d_option.initialize (ass, v)
-					default_options.extend (d_option)
-				end
-				if not had_assertion then
-					create v.make_no
 					create ass
 					create d_option.initialize (ass, v)
 					default_options.extend (d_option)

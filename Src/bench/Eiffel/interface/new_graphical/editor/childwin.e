@@ -449,7 +449,7 @@ feature -- Basic operations
 				l_number := (y_pos // line_increment) + first_line_displayed
 				if l_number > number_of_lines then
 					xline := text_displayed.last_line
-					create new_cursor.make_from_relative_pos (xline, xline.end_token, 1, Current)
+					create new_cursor.make_from_relative_pos (xline, xline.eol_token, 1, Current)
 				else
 					create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
 				end
@@ -576,7 +576,7 @@ feature {NONE} -- Display functions
 				line.start
 				curr_token := line.item
 			until
-				line.after or else curr_token = line.end_token
+				line.after or else curr_token = line.eol_token
 			loop
 				if has_selection then
 					-- The text contains a selection, we may have to display this token
@@ -671,11 +671,11 @@ feature {NONE} -- Display functions
 			end
 
 				-- Display the end token
-			curr_token := line.end_token
+			curr_token := line.eol_token
 			if has_selection and then (begin_selection.y_in_lines /= end_selection.y_in_lines) and then (selected_line or else (a_line = begin_selection.y_in_lines)) then 
-				line.end_token.display_end_token_selected(curr_y, dc, width)
+				line.eol_token.display_end_token_selected(curr_y, dc, width)
 			else
-				line.end_token.display_end_token_normal(curr_y, dc, width)
+				line.eol_token.display_end_token_normal(curr_y, dc, width)
 			end
 
 				-- Display the cursor (if its on the current end of line).

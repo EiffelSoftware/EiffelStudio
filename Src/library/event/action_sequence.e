@@ -306,7 +306,7 @@ feature {NONE} -- Debug
 		local
 			i, j: INTEGER
 		do
-			Result := "("+ cursor_stack.count.out + " nests) " + name_internal + ".call ("
+			Result := "action_sequence ("+ cursor_stack.count.out + " nests) " + name_internal + ".call ("
 				from
 					i := event_data.lower
 					j := event_data_names_internal.lower
@@ -369,6 +369,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.7  1999/10/27 20:36:31  oconnor
+--| improved logging message
+--|
 --| Revision 1.6  1999/10/27 18:01:51  oconnor
 --| spelling
 --|

@@ -1,6 +1,7 @@
 indexing
 	description: "Access to ISE runtime features for CLI"
 	external_name: "ISE.Runtime.RUN_TIME"
+	assembly: "ise_runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,7 +34,7 @@ feature -- Duplication
 	frozen standard_clone (o: ANY): SYSTEM_OBJECT is
 			-- Create a new instance of same type as `o'.
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE_Runtime.EIFFEL_TYPE_INFO.Object use ISE.Runtime.GENERIC_CONFORMANCE"
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE.Runtime.EIFFEL_TYPE_INFO use ISE.Runtime.GENERIC_CONFORMANCE"
 		alias
 			"create_like_object"
 		end

@@ -123,7 +123,6 @@ feature -- Type check, byte code, dead code removal and formatter
 			l_array_type: GEN_TYPE_A
 			l_array_element_type, l_element_type: TYPE_A
 			i, nb: INTEGER
-			l_conversion: CONVERSION_INFO
 			l_expressions: BYTE_LIST [BYTE_NODE]
 			l_expr: EXPR_B
 		do

@@ -11,20 +11,20 @@ class
 
 inherit
 
-	MEL_VENDOR_SHELL
-		redefine
-			screen
-		end;
-
 	MEL_TOP_LEVEL_SHELL_RESOURCES
 		export
 			{NONE} all
+		end;
+
+	MEL_VENDOR_SHELL
+		redefine
+			screen, is_shown
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (app_name, app_class: STRING; a_screen: MEL_SCREEN) is
 				-- Create a top level shell.
@@ -43,16 +43,18 @@ feature {NONE} -- Initialization
 			end;
 			screen_object := xt_create_top_level_shell ($application, $application_class,
 								a_screen.display.handle, a_screen.handle);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_without_parent (Current);
 			set_default
+		ensure
+			screen_set: screen = a_screen
 		end;
 
 	make_popup (a_name: STRING; a_parent: MEL_COMPOSITE; a_screen: MEL_SCREEN) is
 			-- Create a top level shell as a popup shell.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed;
-			a_screen_not_void: a_screen /= Void
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed;
+			screen_not_void: a_screen /= Void
 		local
 			widget_name: ANY
 		do
@@ -63,16 +65,25 @@ feature {NONE} -- Initialization
 				same_display_as_parent: screen.display = parent.screen.display
 			end;
 			screen_object := xt_create_top_level_popup_shell ($a_name, a_parent.screen_object, screen.handle);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_popup_shell (Current);
 			set_default
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name);
+			screen_set: screen = a_screen
 		end
 
 feature -- Access
 
 	screen: MEL_SCREEN;
 			-- Screen
+
+	is_shown: BOOLEAN is
+			-- Is Current shown on the screen?
+		do
+			Result := xt_is_visible (screen_object)
+		end;
 
 feature -- Status report
 

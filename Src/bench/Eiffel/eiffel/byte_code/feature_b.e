@@ -708,7 +708,7 @@ feature -- Inlining
 					formal_a.set_position (i)
 					actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
 					actual_gen.put (actual_type, i)
-					if actual_type.is_basic then
+					if actual_type.is_expanded then
 						m.put (actual_type.type_i, i)
 					else
 						constraint := written_class.constraint (i)

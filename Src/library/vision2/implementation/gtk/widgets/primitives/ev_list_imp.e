@@ -28,7 +28,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
-			interface
+			interface,
+			list_widget
 		end
 	
 create
@@ -226,8 +227,7 @@ feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST
 
-invariant
-	list_widget_not_void: is_initialized implies list_widget /= Void
+	list_widget: POINTER
 
 end -- class EV_LIST_IMP
 
@@ -252,6 +252,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/04/06 22:21:47  brendel
+--| Added list_widget. Removed invariant since it is now in
+--| EV_DYNAMIC_LIST_IMP.
+--|
 --| Revision 1.38  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

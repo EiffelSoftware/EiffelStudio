@@ -29,6 +29,11 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	GB_PICK_AND_DROP_SHIFT_MODIFIER
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make_with_text
@@ -48,6 +53,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TREE_ITEM}
 			set_pebble_function (agent generate_transportable)
+			pick_actions.force_extend (agent object_handler.set_up_drop_actions_for_all_objects)
+			pick_actions.force_extend (agent create_shift_timer)
+			pick_ended_actions.force_extend (agent destroy_shift_timer)
 		end
 
 feature -- Access

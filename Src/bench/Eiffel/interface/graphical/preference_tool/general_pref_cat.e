@@ -17,7 +17,8 @@ inherit
 	PREFERENCE_CATEGORY
 		redefine
 			init_colors
-		end
+		end;
+	SYSTEM_CONSTANTS
 
 creation
 	make
@@ -41,6 +42,9 @@ feature {NONE} -- Initialization
 			!! default_window_position.make (associated_category.default_window_position);
 			!! window_free_list_number.make (associated_category.window_free_list_number);
 			!! color_list.make (associated_category.color_list);
+			if not Platform_constants.is_windows then
+				!! print_shell_command.make (associated_category.print_shell_command);
+			end
 
 			resources.extend (acrobat_reader);
 			resources.extend (tab_step);
@@ -56,6 +60,9 @@ feature {NONE} -- Initialization
 			resources.extend (default_window_position);
 			resources.extend (window_free_list_number);
 			resources.extend (color_list)
+			if not Platform_constants.is_windows then
+				resources.extend (print_shell_command)
+			end
 		end;
 
 	init_colors is
@@ -97,6 +104,7 @@ feature {NONE} -- Resources
 	tab_step: INTEGER_PREF_RES;
 	acrobat_reader, editor, filter_path, profile_path, tmp_path: STRING_PREF_RES;
 	shell_command: STRING_PREF_RES;
+	print_shell_command: STRING_PREF_RES;
 	filter_name: STRING_PREF_RES;
 	filter_command: STRING_PREF_RES;
 	active_drag_and_drop, default_window_position: BOOLEAN_PREF_RES;

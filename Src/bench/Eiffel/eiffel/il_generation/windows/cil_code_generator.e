@@ -2767,7 +2767,7 @@ feature {IL_CODE_GENERATOR} -- Local saving
 			-- Generate local information about routine `method_token'.
 		require
 			debug_info_requested: is_debug_info_enabled
-			valid_method_token: a_method_token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
+			valid_method_token: a_method_token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
 		local
 			l_locals: like local_types
 			l_sig: MD_TYPE_SIGNATURE
@@ -4496,7 +4496,7 @@ feature {IL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute defini
 		do
 			l_ca_token := md_emit.define_custom_attribute (token, ctor_token, data)
 			check
-				l_ca_token_set: l_ca_token & 0xFF000000 = feature {MD_TOKEN_TYPES}.custom_attribute
+				l_ca_token_set: l_ca_token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_custom_attribute
 			end
 		end
 

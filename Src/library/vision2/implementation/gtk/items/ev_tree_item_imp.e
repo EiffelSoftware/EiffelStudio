@@ -148,21 +148,19 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	subtree_set: BOOLEAN
-
 	add_to_container (v: like item) is
 			-- Add `v' to tree items tree.
 		local
 			item_imp: EV_TREE_ITEM_IMP
 		do
-			if not subtree_set then
+			if count = 0 and then not subtree_set then
 				C.gtk_tree_item_set_subtree (c_object, list_widget)
 				subtree_set := True
 			end
 			item_imp ?= v.implementation
-			item_imp.set_tree_widget_imp (tree_widget_imp)
 			C.gtk_widget_show (item_imp.c_object)
 			C.gtk_tree_append (list_widget, item_imp.c_object)
+			item_imp.set_tree_widget_imp (tree_widget_imp)
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -173,6 +171,10 @@ feature {NONE} -- Implementation
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_tree_widget_imp (Void)	
 			Precursor (a_position)
+			if count = 0 and subtree_set then
+				C.gtk_tree_item_remove_subtree (c_object)
+				subtree_set := False
+			end
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -205,6 +207,9 @@ feature {NONE} -- Implementation
 		-- Redefined to avoid seg faults from invariant calling
 		-- invalid features for items.
 
+	subtree_set: BOOLEAN
+		-- Flag to designate whether the items subtree has been assigned
+		-- to the item.
 
 feature {EV_TREE_IMP} -- Implementation
 
@@ -217,10 +222,24 @@ feature {EV_ANY_I} -- Implementation
 
 	tree_widget_imp: EV_TREE_IMP
 
-	set_tree_widget_imp (tree_imp: EV_TREE_IMP) is
+	set_tree_widget_imp (a_tree_imp: EV_TREE_IMP) is
 			-- Set the root tree imp for current.
+		local
+			temp_subtree_set: BOOLEAN
 		do
-			tree_widget_imp := tree_imp
+			temp_subtree_set := subtree_set
+
+			if a_tree_imp /= Void and count > 0 then
+				C.gtk_tree_item_set_subtree (c_object, list_widget)
+				subtree_set := True
+			end
+
+			if a_tree_imp = Void and temp_subtree_set then
+				C.gtk_tree_item_remove_subtree (c_object)
+				subtree_set := False
+			end
+
+			tree_widget_imp := a_tree_imp
 		end
 	
 end -- class EV_TREE_ITEM_IMP
@@ -246,6 +265,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/02/24 20:09:40  king
+--| Added subtree handling on addition and removal of items
+--|
 --| Revision 1.34  2000/02/24 18:47:55  king
 --| Redefined min_wid/hgt to avoid invariant violation that doesnt apply to feature needed by the tree item
 --|

@@ -191,15 +191,6 @@ feature -- Status Report
 				Result := wel_text_length
 			end
 		end
-
-	has_system_frozen_widget: BOOLEAN is
-			-- Is there any widget frozen?
-			-- If a widget is frozen any updates made to it
-			-- will not be shown until the widget is
-			-- thawn again.
-		do
-			Result := has_system_window_locked
-		end
 	
 feature -- Status Settings
 
@@ -217,24 +208,6 @@ feature -- Status Settings
 			replace_selection (a_string)
 			internal_set_caret_position (previous_caret_position)
 		end
-
-	freeze is
-			-- Freeze this widget.
-			-- If the widget is frozen any updates made to the
-			-- window will not be shown until the widget is
-			-- thawn again.
-			-- Note: Only one window can be frozen at a time.
-			-- This is because of a limitation on Windows.
-		do
-			lock_window_update
-		end
-
-	thaw is
-			-- Thaw a frozen widget.
-		do
-			unlock_window_update
-		end
-
 
 feature -- Basic operation
 
@@ -375,7 +348,9 @@ feature {NONE} -- WEL Implementation
 		local
 			back: WEL_COLOR_REF
 		do
-			if is_editable then
+				-- We always use the background color, unless `Current' has been made
+				-- non editable, and the user has not set a background color.
+			if (not is_editable and background_color_imp /= Void) or is_editable then
 				back ?= background_color.implementation
 			else
 				create back.make_system (Color_btnface)

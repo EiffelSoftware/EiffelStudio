@@ -86,7 +86,8 @@ feature {NONE} -- Implementation
 
 invariant
 	consistent_selection: exists and then selected implies
-		is_selected (selected_item)
+		is_selected (selected_item) and
+		strings.item (selected_item).is_equal (selected_string)
 
 end -- class WEL_SINGLE_SELECTION_LIST_BOX
 

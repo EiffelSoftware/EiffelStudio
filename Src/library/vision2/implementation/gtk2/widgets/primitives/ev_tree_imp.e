@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 			connect_button_press_switch
 			
-			set_row_height (App_implementation.default_font_size + 9)
+			set_row_height ((App_implementation.default_font_point_height * 2 + 2).max (20))
 				-- We explicitly set the row height to be proportional to the default gtk application font
 		end
 

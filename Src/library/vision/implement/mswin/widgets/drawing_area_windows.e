@@ -13,7 +13,8 @@ inherit
 	PRIMITIVE_WINDOWS
 		undefine
 			on_size,
-			on_move
+			on_move,
+			class_background
 		redefine
 			set_size,
 			set_background_color
@@ -220,7 +221,7 @@ feature -- Basic operations
 				!! expose_data.make (owner, clip, 0)
 				expose_actions.execute (Current, expose_data)
 				unset_drawing_dc
-				printer_dc.new_frame
+				printer_dc.end_page
 				printer_dc.end_document
 				drawing_dc := old_dc
 				painting := false

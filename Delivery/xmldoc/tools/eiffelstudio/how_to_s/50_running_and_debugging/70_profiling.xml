@@ -69,13 +69,13 @@
 			</item>
 			<item>Call ` 
 				<link>
-					<url>/libraries/base/reference/support/classic/PROFILING_SETTING_chart.xml</url><anchor_name>f_start_profiling</anchor_name>
+					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url><anchor_name>f_start_profiling</anchor_name>
 					<label>PROFILING_SETTING</label>
 				</link>' on this object to start the profiler.
 			</item>
 			<item>Call ` 
 				<link>
-					<url>/libraries/base/reference/support/classic/PROFILING_SETTING_chart.xml</url><anchor_name>f_stop_profiling</anchor_name>
+					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url><anchor_name>f_stop_profiling</anchor_name>
 					<label/>
 				</link>' on this object to stop the profiler.
 			</item>

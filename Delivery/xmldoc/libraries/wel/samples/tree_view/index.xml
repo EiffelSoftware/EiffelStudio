@@ -35,7 +35,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>TREEVIEW</class_name></code> inherits <link><url>../../reference/controls/WEL_TREE_VIEW_chart.xml</url><label>WEL_TREE_VIEW</label></link> and redefines make to initialize items within the tree. A <link><url>../../reference/structs/WEL_TREE_VIEW_INSERT_STRUCT_chart.xml</url><label>WEL_TREE_VIEW_INSERT_STRUCT</label></link> is used to insert each <link><url>../../reference/structs/WEL_TREE_VIEW_ITEM_chart.xml</url><label>WEL_TREE_VIEW_ITEM</label></link> while a <link><url>../../reference/structs/WEL_IMAGE_LIST_chart.xml</url><label>WEL_IMAGE_LIST</label></link> is used to reference images within the tree. 
+		<paragraph><code><class_name>TREEVIEW</class_name></code> inherits <link><url>../../reference/controls/wel_tree_view_chart.xml</url><label>WEL_TREE_VIEW</label></link> and redefines make to initialize items within the tree. A <link><url>../../reference/structs/wel_tree_view_insert_struct_chart.xml</url><label>WEL_TREE_VIEW_INSERT_STRUCT</label></link> is used to insert each <link><url>../../reference/structs/wel_tree_view_item_chart.xml</url><label>WEL_TREE_VIEW_ITEM</label></link> while a <link><url>../../reference/structs/wel_image_list_chart.xml</url><label>WEL_IMAGE_LIST</label></link> is used to reference images within the tree. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
 					<item><code><class_name>TREEVIEW</class_name></code></item>
@@ -47,7 +47,7 @@
 					<bold>See Also</bold>
 					<line_break/>
 					<link>
-						<url>/libraries/wel/reference/controls/WEL_TREE_VIEW_chart.xml</url>
+						<url>/libraries/wel/reference/controls/wel_tree_view_chart.xml</url>
 						<label>WEL_TREE_VIEW</label>
 					</link>
 				</seealso>

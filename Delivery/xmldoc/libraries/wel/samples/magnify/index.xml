@@ -34,7 +34,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>In order to be able to control the output of the sample, <code><class_name>MAIN_WINDOW</class_name></code> redefines many features from <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. The feature <code><feature_name>draw_zoom_rectangle</feature_name></code> is used to display the output and <code><feature_name>on_menu_command</feature_name></code> handles the notifications sent to the window when a <code><feature_name>menu_selection</feature_name></code> has been made.</paragraph>
+		<paragraph>In order to be able to control the output of the sample, <code><class_name>MAIN_WINDOW</class_name></code> redefines many features from <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. The feature <code><feature_name>draw_zoom_rectangle</feature_name></code> is used to display the output and <code><feature_name>on_menu_command</feature_name></code> handles the notifications sent to the window when a <code><feature_name>menu_selection</feature_name></code> has been made.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION_IDS</class_name></code></item>

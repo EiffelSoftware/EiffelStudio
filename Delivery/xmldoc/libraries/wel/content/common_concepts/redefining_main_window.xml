@@ -11,7 +11,7 @@
 			<link>
 				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
-			</link>, you will need to implement the deferred feature  main_window as a once function.  This will be the main window of your application, and can be any descendent of <link><url>../../reference/windows/WEL_COMPOSITE_WINDOW_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>. 
+			</link>, you will need to implement the deferred feature  main_window as a once function.  This will be the main window of your application, and can be any descendent of <link><url>../../reference/windows/wel_composite_window_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>. 
 		</paragraph>
 		<note>
 			<bold>Note</bold>. See 

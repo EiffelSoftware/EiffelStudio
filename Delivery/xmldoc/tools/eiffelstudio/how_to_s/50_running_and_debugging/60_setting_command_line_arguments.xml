@@ -53,7 +53,7 @@
 		<tip>
 			<bold>Tip</bold>: To get the command line arguments in a program, it is possible to either define the root feature as taking an array of STRING objects, or to use the 
 			<link>
-				<url>/libraries/base/reference/kernel/classic/ARGUMENTS_chart.xml</url>
+				<url>/libraries/base/reference/kernel/classic/arguments_chart.xml</url>
 				<label>ARGUMENTS class</label>
 			</link>, which provides a lot of functionality linked with command line arguments.
 		</tip>

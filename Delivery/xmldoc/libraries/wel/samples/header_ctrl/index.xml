@@ -31,11 +31,11 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the <link><url>../../reference/controls/WEL_LIST_VIEW_chart.xml</url><label>WEL_LIST_VIEW</label></link> situated below. </paragraph>
+		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the <link><url>../../reference/controls/wel_list_view_chart.xml</url><label>WEL_LIST_VIEW</label></link> situated below. </paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/controls/WEL_HEADER_CONTROL_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
+		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/controls/wel_header_control_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION_IDS</class_name></code></item>

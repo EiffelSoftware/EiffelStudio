@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The kernel cluster contains classes that provide functionality that  are common to most Windowed application. These classes are  considered the core, or kernel of any Vision2 application. The  most important of these classes is  <link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link>. This is used to  initialize the graphical toolkit and event loop of your Vision2  application. Kernel also includes classes such as 
+		<paragraph>  The kernel cluster contains classes that provide functionality that  are common to most Windowed application. These classes are  considered the core, or kernel of any Vision2 application. The  most important of these classes is  <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link>. This is used to  initialize the graphical toolkit and event loop of your Vision2  application. Kernel also includes classes such as 
 			<link>
 				<url>../../reference/interface/kernel/ev_timeout_chart.xml</url>
 				<label> EV_TIMEOUT</label>
@@ -19,12 +19,12 @@
 			<link>
 				<url>/libraries/vision2/reference/interface/kernel/index.xml</url>
 				<label>here</label>
-			</link>.  To start programming with Vision2, you first have to correctly initialize <link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link>.
+			</link>.  To start programming with Vision2, you first have to correctly initialize <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link>.
 		</paragraph>
 		<heading>
 			<size>2</size>Launching your application with EV_APPLICATION - The heart of all Vision2 systems
 		</heading>
-		<paragraph><link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link> is the basis for every  Vision2 application and is considered the most important class in the  library. It is responsible for initializing the underlying toolkit  that is driving the windowing system on the platform that you decide to  compile your system on. It also also where the main event loop  that drives your application is executed.  </paragraph>
+		<paragraph><link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link> is the basis for every  Vision2 application and is considered the most important class in the  library. It is responsible for initializing the underlying toolkit  that is driving the windowing system on the platform that you decide to  compile your system on. It also also where the main event loop  that drives your application is executed.  </paragraph>
 		<note>
 			<bold>Note:</bold> It is 
 			<bold> not</bold> possible to create a  Vision2 component unless an application exists (query  
@@ -32,13 +32,13 @@
 				<url>/libraries/vision2/reference/interface/kernel/ev_environment_chart.xml</url>
 				<label>EV_ENVIRONMENT</label>
 			</link>).  
-		</note>  You may inherit <link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link> or use it as a client in order to create your vision2  application. A simple method of using EV_APPLICATION is as follows:  
+		</note>  You may inherit <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link> or use it as a client in order to create your vision2  application. A simple method of using EV_APPLICATION is as follows:  
 		<list ordered="true">
 			<item>Create an instance of EV_APPLICATION.</item>
 			<item>Create one or more windows for your application.</item>
 			<item>Launch the application.</item>
 		</list>
-		<paragraph>An example of a Vision2 application using inheritance from <link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link> is  shown below.</paragraph>
+		<paragraph>An example of a Vision2 application using inheritance from <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link> is  shown below.</paragraph>
 <code_block>
 	<keyword>class</keyword>
 		<class_name>HELLOWORLD_APP</class_name>
@@ -108,7 +108,7 @@
 				<link>
 					<url>/libraries/vision2/content/30_events/index.xml</url>
 					<label>events</label>
-				</link> as they occur. Therefore, if you call launch on  an <link><url>../../reference/interface/kernel/EV_APPLICATION_chart.xml</url><label>EV_APPLICATION</label></link>, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call <code><feature_name>destroy</feature_name></code> on the application).  
+				</link> as they occur. Therefore, if you call launch on  an <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link>, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call <code><feature_name>destroy</feature_name></code> on the application).  
 			</note>   
 			<heading>
 				<size>2</size>Building your application skeleton

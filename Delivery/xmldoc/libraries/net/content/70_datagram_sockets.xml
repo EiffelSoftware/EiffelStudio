@@ -41,11 +41,11 @@
 				<label>PACKET</label>
 			</link>,    itself an heir of 
 			<link>
-				<url>../../base/reference/kernel/classic/ARRAY_chart.xml</url>
+				<url>../../base/reference/kernel/classic/array_chart.xml</url>
 				<label>ARRAY</label>
 			</link> [ 
 			<link>
-				<url>../../base/reference/kernel/classic/CHARACTER_chart.xml</url>
+				<url>../../base/reference/kernel/classic/character_chart.xml</url>
 				<label>CHARACTER</label>
 			</link>].    Class 
 			<link>

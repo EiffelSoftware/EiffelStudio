@@ -10,7 +10,7 @@
 		<paragraph>Try to keep the number of classes and objects in your system as low as possible to ensure maximum efficiency. This should never hinder the design of the system, though.</paragraph>
 		<paragraph>You can also use the functionality provided by the 
 			<link>
-				<url>/libraries/base/reference/kernel/classic/MEMORY_chart.xml</url>
+				<url>/libraries/base/reference/kernel/classic/memory_chart.xml</url>
 				<label>MEMORY class</label>
 			</link> to tweak the garbage collector behavior according to your needs. However, be careful with this, since providing erroneous parameters might lead to memory leaks, huge memory consumption, or on the contrary a dramatic slow down of the application. If you are not entirely sure what a parameter is for, avoid changing it. The default values should fit for most standard applications.
 		</paragraph>

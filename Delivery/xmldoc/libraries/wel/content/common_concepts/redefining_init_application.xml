@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph><link><url>../../reference/support/WEL_APPLICATION_chart.xml</url><label>WEL_APPLICATION</label></link>  contains a feature <code><feature_name>init_application</feature_name></code> which does nothing by default, but is called before the application  is started. This can be redefined to execute tasks that must be performed before the application is running.  A common redefinition is to allow the loading of common dll's, see 
+		<paragraph><link><url>../../reference/support/wel_application_chart.xml</url><label>WEL_APPLICATION</label></link>  contains a feature <code><feature_name>init_application</feature_name></code> which does nothing by default, but is called before the application  is started. This can be redefined to execute tasks that must be performed before the application is running.  A common redefinition is to allow the loading of common dll's, see 
 			<link>
 				<url>/libraries/wel/samples/list_view/index.xml</url>
 				<label>list_view</label>

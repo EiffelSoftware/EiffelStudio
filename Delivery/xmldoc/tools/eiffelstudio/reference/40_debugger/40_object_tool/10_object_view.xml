@@ -32,6 +32,6 @@
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with <link><url>/libraries/base/reference/kernel/classic/SPECIAL_chart.xml</url><label><code><class_name>SPECIAL</class_name></code></label></link> objects.
+			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><code><class_name>SPECIAL</class_name></code></label></link> objects.
 		</paragraph>
 	</paragraph></document>

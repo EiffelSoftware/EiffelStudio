@@ -7,13 +7,13 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A <link><url>../../reference/controls/WEL_PROGRESS_BAR_chart.xml</url><label>WEL_PROGRESS_BAR</label></link> control is an encapsulation of the Win32  progress bar. It can be used to display the progress of a lengthy operation. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/wel_progress_bar_chart.xml</url><label>WEL_PROGRESS_BAR</label></link> control is an encapsulation of the Win32  progress bar. It can be used to display the progress of a lengthy operation. </paragraph>
 		<note>
 			<bold>Note:</bold> By specifying the style Pbs_vertical, the progress bar will be displayed  vertically.     
 		</note>
 		<heading>
 			<size>2</size>Appearance
-		</heading>A <link><url>../../reference/controls/WEL_PROGRESS_BAR_chart.xml</url><label>WEL_PROGRESS_BAR</label></link>.
+		</heading>A <link><url>../../reference/controls/wel_progress_bar_chart.xml</url><label>WEL_PROGRESS_BAR</label></link>.
 		<line_break/>
 		<image> 
 			<url>images/wel_progress_bar_half.png</url> 

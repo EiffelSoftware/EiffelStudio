@@ -7,17 +7,17 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A <link><url>../../reference/controls/WEL_CHECK_BOX_chart.xml</url><label>WEL_CHECK_BOX</label></link> control can take two states,  checked or unchecked. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/wel_check_box_chart.xml</url><label>WEL_CHECK_BOX</label></link> control can take two states,  checked or unchecked. </paragraph>
 		<heading>
 			<size>2</size>Appearance
-		</heading>A <link><url>../../reference/controls/WEL_CHECK_BOX_chart.xml</url><label>WEL_CHECK_BOX</label></link>
+		</heading>A <link><url>../../reference/controls/wel_check_box_chart.xml</url><label>WEL_CHECK_BOX</label></link>
 		<line_break/>
 		<image> 
 			<url>images/wel_check_box_unchecked.png</url> 
 			<alt_text>wel_check_box_unchecked</alt_text>
 		</image>
 		<line_break/>
-		<line_break/>A checked <link><url>../../reference/controls/WEL_CHECK_BOX_chart.xml</url><label>WEL_CHECK_BOX</label></link>
+		<line_break/>A checked <link><url>../../reference/controls/wel_check_box_chart.xml</url><label>WEL_CHECK_BOX</label></link>
 		<line_break/>
 		<image> 
 			<url>images/wel_check_box_checked.png</url> 

@@ -8,7 +8,7 @@ creation
 
 feature 
 
-	supplier: E_CLASS;
+	supplier: CLASS_C;
 			-- Supplier
 
 	occurence: INTEGER;

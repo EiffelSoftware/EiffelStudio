@@ -5,23 +5,28 @@ class BYTE_NODE
 
 inherit
 
-	SHARED_BYTE_CONTEXT
-		export
-			{ANY} all
-		end;
-	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end;
-	SHARED_TYPE_I
-		export
-			{NONE} all
-		end;
 	BYTE_CONST
 		export
 			{NONE} all
-		end;
-	SHARED_GENERATION_CONSTANTS;
+		end
+
+	SHARED_BYTE_CONTEXT
+		export
+			{ANY} all
+		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
+	SHARED_GENERATION_CONSTANTS
+
 	COMPILER_EXPORTER
 
 feature -- Eiffel source line information

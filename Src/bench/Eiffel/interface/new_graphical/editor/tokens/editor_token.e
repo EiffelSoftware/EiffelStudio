@@ -7,6 +7,9 @@ indexing
 deferred class
 	EDITOR_TOKEN
 
+inherit
+	SHARED_EDITOR_PREFERENCES
+
 feature -- Access
 
 	image: STRING
@@ -59,13 +62,8 @@ feature -- Linkable functions
 			end
 		end
 
-feature -- Miscellaneous
+feature -- Display
 
-	width: INTEGER is
-			-- Width in pixel of the entire.
-		deferred
-		end
-	
 	display(d_y: INTEGER; dc: WEL_DC) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
@@ -90,6 +88,23 @@ feature -- Miscellaneous
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
 			display(d_y, dc)
+		end
+
+feature -- Width & height
+
+	width: INTEGER is
+			-- Width in pixel of the entire.
+		deferred
+		end
+	
+	height: INTEGER is
+		local
+			a_dc: WEL_MEMORY_DC
+		once
+			create a_dc.make
+			a_dc.select_font(font)
+			Result := a_dc.string_height(" ")
+			a_dc.unselect_font
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -131,6 +146,25 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 	background_color: WEL_COLOR_REF is
 		do
 			create Result.make_rgb(255,255,255)
+		end
+
+	font: WEL_FONT is
+		local
+			log_font: WEL_LOG_FONT
+		once
+				-- create the font
+			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
+			create Result.make_indirect(log_font)
+		end
+
+	normal_background_brush: WEL_BRUSH is
+		once
+			create Result.make_solid(background_color)
+		end
+
+	selected_background_brush: WEL_BRUSH is
+		once
+			create Result.make_solid(selected_background_color)
 		end
 
 invariant

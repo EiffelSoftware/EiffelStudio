@@ -14,11 +14,6 @@ inherit
 			display_half_selected
 		end
 
-	SHARED_EDITOR_PREFERENCES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -26,103 +21,54 @@ feature -- Initialisation
 
 	make(number: INTEGER) is
 			-- Create a token composed of `number' spaces.
-		local
-			i: INTEGER
 		do
 			length := number
 			create image.make(number)
-			from i := 1 until i > number loop
-				image.append_character(' ')
-				i := i + 1
-			end
+			image.fill_character(' ')
+
+			create alternate_image.make(number)
+			alternate_image.fill_character(space_symbol)
 		end
 
-feature -- Miscellaneous
+feature -- Display
 
-	display(d_y: INTEGER; dc: WEL_DC) is
+	display(d_y: INTEGER; a_dc: WEL_DC) is
+		local
+			local_position: INTEGER
 		do
-			--[ Don't display anything. If an option is set to see the spaces, 
-			--  put it here ]
+			local_position := display_spaces(position, d_y, a_dc, False, 1, length)
 		end
 
 	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
 		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
+			local_position: INTEGER
 		do
-				-- Change drawing style here.
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
-			a_dc.set_text_color(selected_text_color)
-			a_dc.set_background_color(selected_background_color)
-			a_dc.select_font(font)
-
-				-- Display the text.
-			a_dc.text_out (position, d_y, image)
-
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			a_dc.unselect_font
+			local_position := display_spaces(position, d_y, a_dc, True, 1, length)
 		end
 
 	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
-			-- FIXME ARNAUD: can be done better than this....
 		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
 			local_position: INTEGER
 		do
-				-- Save current drawing style
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
 			local_position := position
 
-				-- Change drawing style here.
-			a_dc.select_font(font)
-
-			-----------------------------------------------------------------------------------------
-
+				-- if the selection do not start at the beginning of the token,
+				-- display the first 'non selected' area
 			if start_selection /= 1 then
-					-- Set drawing style to "normal" text
-				a_dc.set_text_color(text_color)
-				a_dc.set_background_color(background_color)
-
-					-- Display the beginning of the text.
-				a_dc.text_out (local_position, d_y, image.substring(1,start_selection-1))
-				local_position := local_position + a_dc.string_width(image.substring(1,start_selection-1))
+				local_position := display_spaces(local_position, d_y, a_dc, False, 1, start_selection-1)
 			end
 
-			-----------------------------------------------------------------------------------------
+				-- Display the 'selected' area
+			local_position := display_spaces(local_position, d_y, a_dc, True, start_selection, end_selection-1)
 
-				-- Set drawing style to "selected" text
-			a_dc.set_text_color(selected_text_color)
-			a_dc.set_background_color(selected_background_color)
-
-				-- Display the "selected" text.
-			a_dc.text_out (local_position, d_y, image.substring(start_selection,end_selection-1))
-			local_position := local_position + a_dc.string_width(image.substring(start_selection,end_selection-1))
-
-			-----------------------------------------------------------------------------------------
-
+				-- if the selection do not end at the end of the token,
+				-- Display the last 'non selected' area
 			if end_selection <= length then
-					-- Set drawing style to "normal" text
-				a_dc.set_text_color(text_color)
-				a_dc.set_background_color(background_color)
-
-					-- Display the end of the text.
-				a_dc.text_out (local_position, d_y, image.substring(end_selection,length))
-			end
-
-			-----------------------------------------------------------------------------------------
-
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			if font /= Void then
-				a_dc.unselect_font
+				local_position := display_spaces(local_position, d_y, a_dc, False, end_selection,length)
 			end
 		end
+
+feature -- Width & Height
 
 	width: INTEGER is
 		do
@@ -147,15 +93,47 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	font: WEL_FONT is
-			-- Font used to draw the text
+	display_spaces(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
 		local
-			log_font: WEL_LOG_FONT
-		once
-				-- create the font
-			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
-			create Result.make_indirect(log_font)
+			old_text_color		: WEL_COLOR_REF
+			old_background_color: WEL_COLOR_REF
+			the_text_color		: WEL_COLOR_REF
+			the_background_color: WEL_COLOR_REF
+			the_text			: STRING
+		do
+				-- Select the drawing style we will use.
+			if editor_preferences.view_invisible_symbols then
+				the_text := alternate_image.substring(char_start, char_end)
+			else
+				the_text := image.substring(char_start, char_end)
+			end
+
+			if selected then
+				the_text_color := selected_text_color
+				the_background_color := selected_background_color
+			else
+				the_text_color := text_color
+				the_background_color := background_color
+			end
+
+				-- Backup old drawing style and set the new one.
+			old_text_color := a_dc.text_color
+			old_background_color := a_dc.background_color
+			a_dc.set_text_color(the_text_color)
+			a_dc.set_background_color(the_background_color)
+			a_dc.select_font(font)
+
+				-- Display the text.
+			a_dc.text_out (d_x, d_y, the_text)
+			Result := d_x + a_dc.string_width(the_text)
+
+				-- Restore drawing style here.
+			a_dc.set_text_color(old_text_color)
+			a_dc.set_background_color(old_background_color)
+			a_dc.unselect_font
 		end
+
+feature {NONE} -- Private Constants
 
 	font_width: INTEGER is
 		local
@@ -167,14 +145,14 @@ feature {NONE} -- Implementation
 			dc.unselect_font
 		end
 
-	font_height: INTEGER is
-		local
-			dc: WEL_MEMORY_DC
+	space_symbol: CHARACTER is
 		once
-			create dc.make
-			dc.select_font(font)
-			Result := dc.string_height(" ")
-			dc.unselect_font
+			Result := '·'
 		end
+	
+	alternate_image: STRING
+			-- String representation of what is displayed
+			-- when the "invisible" symbols (spaces, end of lines
+			-- & tabulations) are set to be visible.
 
 end -- class EDITOR_TOKEN_SPACE

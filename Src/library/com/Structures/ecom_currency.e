@@ -7,10 +7,17 @@ indexing
 class
 	ECOM_CURRENCY
 
-inherit	
+inherit
+
 	ECOM_STRUCTURE
+		undefine
+			is_equal
+		end
 
 	NUMERIC
+		redefine
+			is_equal
+		end
 
 creation
 	make,
@@ -45,6 +52,12 @@ feature  -- Access
 		end
 
 feature -- status report
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is 'other' the same as Current object?
+		do
+			Result := (low_bits = other.low_bits) and (high_bits = other.high_bits)
+		end
 	
 	divisible (other: ECOM_CURRENCY): BOOLEAN is
 			-- Is divisible by `other'?

@@ -1,5 +1,5 @@
 indexing
-	description: "COM Decimal Structure"
+	description: "COM Decimal Structure.  Wrapping COM DECIMAL type"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,7 +9,13 @@ class
 
 inherit	
 	ECOM_STRUCTURE
+		undefine
+			is_equal
+		end
 	NUMERIC
+		redefine
+			is_equal
+		end
 
 creation
 	make,
@@ -31,7 +37,23 @@ feature  -- Access
 			ccom_decimal_value_one (Result.item)
 		end
 
+	scale: INTEGER is
+			-- Scale of value.  e.g. 123.45 has a scale of 2
+		require
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
+		do
+			Result := ccom_decimal_scale (item)
+		end
+
 feature -- status report
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is 'other' equal to Current object?
+			-- Not implemented yet.
+		do
+			Result := True
+		end
 
 	divisible (other: ECOM_DECIMAL): BOOLEAN is
 			-- Is divisible by `other'?
@@ -59,6 +81,8 @@ feature -- Conversion
 			-- Round value with `value' decimal places
 		require
 			valid_value: value >= 0
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_round (item, value, Result.item)
@@ -67,8 +91,11 @@ feature -- Conversion
 		end
 
 	ceiled_integer_portion: ECOM_DECIMAL is
-			-- Integer portion of decimal value. The first negative 
-			-- integer >= to the value is returned if the value is negative.
+			-- Integer portion of decimal value. 
+			-- The first negative integer >= to the value is returned if the value is negative.
+		require
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_fix (item, Result.item)
@@ -79,6 +106,9 @@ feature -- Conversion
 	truncated_to_integer_portion: ECOM_DECIMAL is
 			-- Integer portion of a decimal value. The first negative integer 
 			-- <= to the value is returned if the value is negative.
+		require
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_integer (item, Result.item)
@@ -88,6 +118,9 @@ feature -- Conversion
 
 	absolute: ECOM_DECIMAL is
 			-- Absolute value of decimal
+		require
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_absolute (item, Result.item)
@@ -99,6 +132,9 @@ feature -- Basic operations
 	
 	prefix "-": ECOM_DECIMAL is
 			-- Negative value of decimal
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_negative (item, Result.item)
@@ -106,6 +142,9 @@ feature -- Basic operations
 	
 	infix "-" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Subtract with `other'
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_subtract (item, other.item, Result.item)
@@ -113,6 +152,9 @@ feature -- Basic operations
 
 	infix "+" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Add with `other'
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_add (item, other.item, Result.item)
@@ -120,6 +162,9 @@ feature -- Basic operations
 
 	infix "*" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Multiply by `other'
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_multiply (item, other.item, Result.item)
@@ -127,6 +172,9 @@ feature -- Basic operations
 
 	infix "/" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Multiply by `other'
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 			create Result.make
 			ccom_decimal_divide (item, other.item, Result.item)
@@ -134,15 +182,26 @@ feature -- Basic operations
 
 	prefix "+": ECOM_DECIMAL is
 			-- Unary plus
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 		end
 
 	infix "^" (other: NUMERIC):NUMERIC is
 			-- Current objects to the power 'other'
+		require else
+			non_void_item: item /= Void
+			valid_item: item /= default_pointer
 		do
 		end
 
 feature {NONE} -- Externals
+
+	ccom_decimal_scale (a_ptr: POINTER): INTEGER is
+		external
+			"C [macro %"E_Decimal.h%"] (DECIMAL *): EIF_INTEGER"
+		end
 
 	ccom_decimal_value_zero (a_ptr: POINTER) is
 		external

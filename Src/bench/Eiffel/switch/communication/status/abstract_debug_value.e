@@ -57,6 +57,8 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		deferred
+		ensure
+			valid_result: Result /= Void
 		end
 
 feature -- Comparison

@@ -197,7 +197,7 @@ feature -- IL code generation
 
 			if cl_type.base_class.is_special then
 				special_class_type ?= class_type
-				special_class_type.generate_il (feature_name)
+				special_class_type.generate_il (feature_name_id)
 				if System.il_verifiable then
 					if 
 						not return_type.is_expanded and then

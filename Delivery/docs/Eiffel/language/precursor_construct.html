@@ -1,0 +1,187 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Precursor</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Precursor</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+              <h1>Precursor construct: the revised formal proposal</h1>
+              <p>The Precursor mechanism is a recently introduced Eiffel
+              construct The mechanism was proposed in mid-1997 (see <a href="#credits">credits</a>
+              at the end) to the language committee of NICE, the Nonprofit
+              International Consortium for Eiffel, and formally approved by the
+              committee in a vote of October 1997.
+              <p>To understand this description you should have read the
+              companion document presenting an <a href="http://www.eiffel.com/doc/manuals/language/precursor/index.html">informal
+              description</a> of the mechanism.
+              <p>The rest of this document contains the formal description of
+              the mechanism in a form meant for adoption by the NICE language
+              committee. This is a slight revision of the formally approved
+              proposal (<a href="http://www.eiffel.com/doc/manuals/language/precursor/formal-old.html">still
+              available</a>). A section below describes the <a href="#differences">differences</a>
+              brought to the mechanism as a result of one year's use of the
+              Precursor mechanism. These differences are minor and the earlier
+              syntax is still supported by ISE Eiffel.
+              <p>&nbsp;</p>
+              <h2>New reserved word</h2>
+              <p>(To be added to list in &quot;Eiffel: The Language&quot;, page
+              553.)
+              <ul>
+                <font color="#aa00ff"><font color="#0000a0"><i>Precursor</i></font></font>
+              </ul>
+              <h2>&nbsp;</h2>
+              <h2>Syntax change</h2>
+              Page 342, definition of <font color="#aa00ff">Unqualified_call</font>
+              (previously <font color="#aa00ff">Entity [Actuals]</font>) becomes
+              <ul>
+                <font color="#aa00ff">Unqualified_call == Feature_of_call [Actuals]</font>
+              </ul>
+              <p>with the new construct definitions
+              <ul>
+                <font color="#aa00ff">Feature_of_call == Entity | Precursor<br>
+                Precursor == <font color="#0000a0"><i>Precursor</i></font> [Parent_qualification]<br>
+                Parent_qualification == &quot;{&quot; Class_name &quot;}&quot;</font>
+              </ul>
+              <p>&nbsp;</p>
+              <h2>Validity changes</h2>
+              Note (not subject to vote): everything could be done within VUEX,
+              page 368. We have found it more clear to introduce two new
+              constraints. In VUEX, page 368, replace condition 1 by
+              <ul>
+                1. The call is an <font color="#aa00ff">Unqualified_call</font>.
+              </ul>
+              <p>With the new validity rule VUNQ
+              <ul>
+                An <font color="#aa00ff">Unqualified_call</font> appearing in a
+                routine <font color="#0000a0"><i>r</i></font> of a class <font color="#0000a0"><i>C</i></font>
+                is valid if and only if it satisfies one of the following two
+                conditions:
+                <ul>
+                  <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                  1. Its <font color="#aa00ff">Feature_of_call</font> is the
+                  final name of a feature of <font color="#0000a0"><i>C</i></font>.
+                  <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                  2. Its <font color="#aa00ff">Feature_of_call</font> is of the <font color="#aa00ff">Precursor</font>
+                  kind.</p>
+                </ul>
+              </ul>
+              <p>and the new validity rule VUPR:
+              <ul>
+                A <font color="#aa00ff">Precursor</font> is valid if and only if
+                it satisfies the following three conditions:
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                1. It appears in the <font color="#aa00ff">Routine_body</font>
+                or the <font color="#aa00ff">Rescue</font> clause of the
+                declaration of exactly one routine <font color="#0000a0"><i>r</i></font>
+                of <font color="#0000a0"><i>C</i></font>.
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                2. If the <font color="#aa00ff">Parent_qualification</font> part
+                is present, its <font color="#aa00ff">Class_name</font> is the
+                name of a parent <font color="#0000a0"><i>P</i></font> of <font color="#0000a0"><i>C</i></font>.
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                3. The declaration of <font color="#0000a0"><i>r</i></font> in <font color="#0000a0"><i>C</i></font>
+                is the redefinition of a routine that has exactly one version
+                inherited by <font color="#0000a0"><i>C</i></font> as effective
+                in the set of <font color="#aa00ff">Parent</font> types of <font color="#0000a0"><i>C</i></font>,
+                restricted if case 2 applies to those having <font color="#0000a0"><i>P</i></font>
+                as their <font color="#aa00ff">Class_name</font>.</p>
+              </ul>
+              <p>&nbsp;</p>
+              <h2>Semantics change</h2>
+              Insert a new section on page 345 between 21.8 and 21.9:
+              <p>&nbsp;
+              <ul>
+                <b>Precursor calls</b>
+                <ul>
+                  <p>A call of the <font color="#aa00ff">Precursor</font> form,
+                  that is
+                  <ul>
+                    <font color="#0000a0"><i>Precursor</i> (...)</font>
+                  </ul>
+                  or
+                  <ul>
+                    <font color="#0000a0"><i>Precursor</i> {<i>PARENT</i>} (...)</font>
+                  </ul>
+                  <p>may only appear in the redefinition of a routine <font color="#0000a0"><i>r</i></font>.
+                  The original version of <font color="#0000a0"><i>r</i></font>
+                  in the parent is known as the &quot;immediate precursor&quot;.
+                  <p>In this case the feature of the call, <font color="#0000a0"><i>fname</i></font>,
+                  is the immediate precursor.</p>
+                </ul>
+              </ul>
+              <p>Also, the next section (21.9) should begin
+              <ul>
+                Now assume <font color="#0000a0"><i>target_value</i></font> is
+                not void and the call is not of the <font color="#aa00ff">Precursor</font>
+                form.
+              </ul>
+              <p>&nbsp;</p>
+              <h2>Note</h2>
+              (This note is not part of the proposal.) Since <a href="http://www.eiffel.com/doc/oosc.html"><i>Object-Oriented
+              Software Construction, second edition</i></a> (Prentice Hall,
+              1997) uses double braces, as in {{<font color="#0000a0"><i>PARENT</i></font>}},
+              rather than single braces as in {<font color="#0000a0"><i>PARENT</i></font>},
+              it may be desirable for compilers to accept both forms. (<i>ISE
+              note</i>: this is the case with ISE Eiffel.)
+              <h2>Differences with earlier version</h2>
+              <a name="differences"></a>
+              <p>(This note is not part of the proposal.) The present version is
+              the one implemented in ISE Eiffel 4.3 and later. The differences with the
+              original proposal are:
+              <ul>
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                Syntax: the <font color="#aa00ff">Parent_qualification</font>,
+                if present, now appears after the <font color="#0000a0">Precursor</font>
+                keyword. The other order is still supported, so no
+                incompatibility should result. Reason for the change: better
+                consistency with other uses of braces in the syntax and the
+                dominant Eiffel style of &quot;qualified before qualifier&quot;
+                and &quot;most important information first&quot; (LL-like
+                style).
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                Validity: shortening and rewriting of the validity constraint.
+                Purposes: simpler, more clear definition; taking care of some
+                special cases that had been overlooked in the initial
+                discussion. Also, permitting the use of <font color="#0000a0">Precursor</font>
+                not only in a <font color="#0000a0">Routine_body</font> as
+                before but also in a <font color="#0000a0">Rescue</font> clause.
+                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                Web page cosmetics: more systematic use of colors (different
+                colors for <font color="#aa00ff">Syntactical constructs</font>
+                and for actual <font color="#0000a0">Eiffel text examples</font>.</p>
+              </ul>
+              <p>The validity change has been discussed by the language
+              committee and other experts and seems to enjoy consensus so far.
+              The syntax change has not yet been discussed widely. <a name="credits"></a></p>
+              <h2>Credits</h2>
+              <p>The Precursor proposal was put together and presented to NICE
+              by Bertrand Meyer of ISE but the language construct is the result
+              of collective work. The contributions of the following people are
+              gratefully acknowledged (please signal any omissions): Éric
+              Bezault, Roger Browne, James McKim, Xavier Le Vourch, Bertrand
+              Meyer, Frieder Monninger, Steve Tynor, Dino Valente, Kim Waldén.
+              In addition the validity change benefited from comments by David
+              Hollenberg and Alexander Kogtenkov.
+              
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

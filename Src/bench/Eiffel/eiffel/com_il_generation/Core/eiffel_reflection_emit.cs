@@ -894,6 +894,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				GenerateCurrent ();
 				for (i = 0; i < nb ; i++) {
 					GenerateArgument (i + 1);
+// FIXME: to uncomment when Eiffel is covariance safe, which it is not at the moment.
 //					if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
 //						MethodIL.Emit (OpCodes.Castclass,
 //							Classes [Method.ParameterTypeIDs [i]].Builder);
@@ -906,7 +907,30 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 					DefineMethodOverride (Override, (MethodInfo) ParentMethod.Builder);
 
 				if (Method.IsAttribute && ParentMethod.IsAttribute) {
-					// FIXME: implements MethodImpl on Setter.
+						// Generate MethodImpl on Setter.
+					Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
+						DefineMethod (OverridePrefix + SetterPrefix + ParentMethod.Name() +
+							counter.ToString(), MethodAttributes.Virtual | MethodAttributes.Final |
+								MethodAttributes.Private, VoidType,
+							new Type [1] {((MethodInfo)ParentMethod.Builder).ReturnType});
+
+					counter = counter + 1;
+
+					MethodIL = Override.GetILGenerator();
+					GenerateCurrent ();
+					for (i = 0; i < nb ; i++) {
+						GenerateArgument (i + 1);
+// FIXME: to uncomment when Eiffel is covariance safe, which it is not at the moment.
+//						if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
+//							MethodIL.Emit (OpCodes.Castclass,
+//								Classes [Method.ParameterTypeIDs [i]].Builder);
+//						}
+					}
+					MethodIL.Emit (OpCodes.Callvirt, Method.SetterBuilder);
+					MethodIL.Emit (OpCodes.Ret);
+
+					((TypeBuilder) Classes [CurrentTypeID].Builder).
+						DefineMethodOverride (Override, ParentMethod.SetterBuilder);
 				}
 			}
 			} else {

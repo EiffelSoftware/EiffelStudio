@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -47,6 +48,9 @@ end -- class EV_INVISIBLE_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/17 23:51:18  oconnor
+--| unreleased
+--|
 --| Revision 1.8  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

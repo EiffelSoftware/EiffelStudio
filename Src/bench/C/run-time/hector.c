@@ -83,11 +83,6 @@ rt_private EIF_REFERENCE hpop(void);				/* Pop a free entry off the free stack *
 rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root);	/* Maps an adress to an hector position */
 
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 /* In the following routines, I've put EIF_OBJECT to emphazise the fact that the
  * variable is an indirection pointer in the hector table. Otherwise, a EIF_REFERENCE 
  * refers to a true object's address (for instance the result of efreeze).
@@ -236,10 +231,10 @@ rt_shared int stck_nb_items (const struct stack stk)
 {
 
 	EIF_GET_CONTEXT
-	register1 struct stchunk *s;
-	register2 EIF_REFERENCE *arena;
+	struct stchunk *s;
+	EIF_REFERENCE *arena;
 	int done = 0;
-	int nb_items = 0;
+	rt_uint_ptr nb_items = 0;
 
 for (s = stk.st_hd; s && !done; s = s->sk_next) {
         arena = s->sk_arena;                /* Start of stack */
@@ -400,9 +395,9 @@ rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root)
 	 * search, but the size of this stack should remain small.
 	 */
 	RT_GET_CONTEXT
-	register1 int nb_items;			/* Number of items in arena */
-	register2 struct stchunk *s;	/* To walk through each stack's chunk */
-	register3 EIF_REFERENCE *arena;			/* Current arena in chunk */
+	rt_uint_ptr nb_items;			/* Number of items in arena */
+	struct stchunk *s;	/* To walk through each stack's chunk */
+	EIF_REFERENCE *arena;			/* Current arena in chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 	for (s = hec_saved.st_hd; s && !done; s = s->sk_next) {

@@ -510,14 +510,6 @@ feature -- Implementation
 				end
 			end
 
-			if accept_cursor = Void then
-				--| FIXME IEK
-				create accept_cursor--.make_with_code (curs_code.standard)
-			end
-			if deny_cursor = Void then
-				create deny_cursor--.make_with_code (curs_code.no)
-			end
-
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 

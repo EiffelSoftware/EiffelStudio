@@ -54,13 +54,13 @@ feature -- Element change
 		local
 			p: POINTER
 		do
+			pixmap := Void
 			p := gtk_pixmap
 			if p /= NULL then
 				C.gtk_object_ref (p)
 				C.gtk_container_remove (pixmap_box, p)
 			end
 			C.gtk_widget_hide (pixmap_box)
-			pixmap := Void
 		end
 
 feature {NONE} -- Implementation

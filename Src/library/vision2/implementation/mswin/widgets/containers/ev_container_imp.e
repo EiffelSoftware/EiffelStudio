@@ -18,11 +18,14 @@ inherit
 		
 
 	EV_WIDGET_IMP
+		export
+			{EV_WEL_FRAME_WINDOW} parent_imp
 		redefine
 			parent_ask_resize
 		end
 
 	WEL_WM_CONSTANTS
+
 
 feature {EV_CONTAINER}
 	
@@ -72,12 +75,36 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
 			-- dimensions of the client area)
 			set_size (new_width, new_height)
 		end
+
+	child_minwidth_changed (new_child_minimum: INTEGER) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
+			-- By default, the minimum width of a container is
+			-- the one of its child, to change this, just use
+			-- set_minimum_width
+		do
+			set_minimum_width (new_child_minimum)
+		end
+
+	child_minheight_changed (new_child_minimum: INTEGER) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
+			-- By default, the minimum width of a container is
+			-- the one of its child, to change this, just use
+			-- set_minimum_width
+		do
+			set_minimum_height (new_child_minimum)
+		end
 	
-		
-feature -- Access
+feature -- Implementation
 
 	the_child: EV_WIDGET_IMP
 			-- The child of the composite
+
+	wel_window: WEL_COMPOSITE_WINDOW is
+			-- The current wel_window
+		deferred
+		end
 
 end
 

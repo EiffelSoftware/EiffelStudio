@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 				i > end_tab
 			loop
 					-- Compute the width of the tabulation
-				if start_tab = 1 then
+				if i = start_tab then
 					local_width := get_substring_width(1)
 				else
 					local_width := tabulation_width
@@ -176,6 +176,8 @@ feature {NONE} -- Implementation
 			a_dc.unselect_font
 			a_dc.set_background_opaque
 			a_dc.set_text_color(old_text_color)
+
+			Result := local_position
 		end
 
 feature {NONE} -- Private characteristics & constants

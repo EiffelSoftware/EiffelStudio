@@ -238,17 +238,10 @@ feature -- Basic operations
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
-			if ctrled_key and shifted_key then
-				on_key_down_ctrl_shift(virtual_key, key_data)
-
-			elseif ctrled_key then
-				on_key_down_ctrl(virtual_key, key_data)
-			
-			elseif shifted_key then
-				on_key_down_shift(virtual_key, key_data)
-			
+			if ctrled_key then
+				handle_extended_ctrled_key(virtual_key, key_data)
 			else
-				on_key_down_normal(virtual_key, key_data)
+				handle_extended_key(virtual_key, key_data)
 			end
 
 				-- Handle state key.			
@@ -281,32 +274,10 @@ feature -- Basic operations
  	on_char (character_code, key_data: INTEGER) is
    			-- Process Wm_char message
    			-- See class WEL_VK_CONSTANTS for `character_code' value.
-		local
-			c: CHARACTER
-			wel_rect: WEL_RECT
    		do
 			if (character_code >= 32) then
 					-- Ignoring special characters
-				c := character_code.ascii_char
-				if has_selection then
-					delete_selection
-					history.record_insert (c)
-					cursor.insert_char (c)
-					invalidate
-					update
-				else
-					invalidate_cursor_rect (False)
-
-					if insert_mode then
-						history.wipe_out
-						cursor.replace_char (c)
-					else
-						history.record_insert (c)
-						cursor.insert_char (c)
-					end
-
-					invalidate_cursor_rect (True)
-				end
+				handle_character(character_code.ascii_char)
 			end
  		end
 
@@ -449,6 +420,7 @@ feature -- Selection Handling
 		do
 			if has_selection then
 				text_displayed.indent_selection(begin_selection, end_selection)
+				history.wipe_out
 				invalidate
 				update
 			end
@@ -459,6 +431,7 @@ feature -- Selection Handling
 		do
 			if has_selection then
 				text_displayed.unindent_selection(begin_selection, end_selection)
+				history.wipe_out
 				invalidate
 				update
 			end
@@ -469,6 +442,7 @@ feature -- Selection Handling
 		do
 			if has_selection then
 				text_displayed.comment_selection(begin_selection, end_selection)
+				history.wipe_out
 				invalidate
 				update
 			end
@@ -479,6 +453,7 @@ feature -- Selection Handling
 		do
 			if has_selection then
 				text_displayed.uncomment_selection(begin_selection, end_selection)
+				history.wipe_out
 				invalidate
 				update
 			end
@@ -519,11 +494,7 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
-	on_key_down_ctrl_shift (virtual_key: INTEGER; key_data: INTEGER) is
-		do
-		end
-
-	on_key_down_ctrl (virtual_key: INTEGER; key_data: INTEGER) is
+	handle_extended_ctrled_key (virtual_key: INTEGER; key_data: INTEGER) is
 		do
 			if virtual_key = Vk_x then
 					-- Ctrl-X (cut)
@@ -555,11 +526,7 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
-	on_key_down_shift (virtual_key: INTEGER; key_data: INTEGER) is
-		do
-		end
-
-	on_key_down_normal (virtual_key: INTEGER; key_data: INTEGER) is
+	handle_extended_key (virtual_key: INTEGER; key_data: INTEGER) is
 		do
 			if virtual_key = Vk_left then
 					-- Left arrow action
@@ -617,12 +584,53 @@ feature {NONE} -- Handle keystokes
 				invalidate
 				update
 
-
 			elseif  virtual_key = Vk_Insert then
 					-- Insert key action
 				insert_mode := not insert_mode
 				invalidate
 				update
+
+			elseif  virtual_key = Vk_Tab then
+					-- Tab key action
+				if has_selection then
+					if shifted_key then
+							-- Shift + Tab = Unindent selection
+						unindent_selection
+					else
+							-- Tab = indent selection
+						indent_selection
+					end
+				else
+					-- No selection --> we insert a %T character
+					handle_character('%T')
+				end
+
+				invalidate
+				update
+			end
+		end
+
+ 	handle_character(c: CHARACTER) is
+ 			-- Process the push on a character key.
+ 		do
+			if has_selection then
+				delete_selection
+				history.record_insert (c)
+				cursor.insert_char (c)
+				invalidate
+				update
+			else
+				invalidate_cursor_rect (False)
+
+				if insert_mode then
+					history.wipe_out
+					cursor.replace_char (c)
+				else
+					history.record_insert (c)
+					cursor.insert_char (c)
+				end
+
+				invalidate_cursor_rect (True)
 			end
 		end
 

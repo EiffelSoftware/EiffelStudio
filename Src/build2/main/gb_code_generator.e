@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			local
 				project_location, temp_string: STRING
 				ace_file_name: FILE_NAME
-				ace_template_file, ace_output_file: RAW_FILE
+				ace_template_file, ace_output_file: PLAIN_TEXT_FILE
 				i, j: INTEGER
 			do
 				create project_location.make_from_string (system_status.current_project_settings.project_location)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		build_application_file is
 				-- Generate an application class for the project.
 			local
-				application_template_file, application_output_file: RAW_FILE
+				application_template_file, application_output_file: PLAIN_TEXT_FILE
 				application_file_name, application_template: FILE_NAME
 				application_class_name: STRING
 				change_pos: INTEGER
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 		build_main_window_implementation is
 				-- Generate a main window for the project.
 			local
-				window_template_file, window_output_file: RAW_FILE
+				window_template_file, window_output_file: PLAIN_TEXT_FILE
 				window_file_name, window_template: FILE_NAME
 				store: GB_XML_STORE
 				generation_settings: GB_GENERATION_SETTINGS
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 	build_main_window is
 			-- Generate interface of our window.
 		local
-			window_template_file, window_output_file: RAW_FILE
+			window_template_file, window_output_file: PLAIN_TEXT_FILE
 			window_file_name, window_template: FILE_NAME
 			temp_string: STRING
 		do

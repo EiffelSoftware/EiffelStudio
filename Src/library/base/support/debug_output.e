@@ -11,6 +11,8 @@ feature {NONE} -- Status report
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 indexing

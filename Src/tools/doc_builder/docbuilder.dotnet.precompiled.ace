@@ -4,10 +4,12 @@ system
 root
 	DOC_BUILDER: make_and_launch
 
-default	
+default
+	precompiled ("$ISE_EIFFEL\precomp\spec\dotnet\vision2")
 	assertion (no)
+	msil_generation (yes)
 	disabled_debug (yes)
-	debug ("console_output")
+	disabled_debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("gelex")
 	disabled_debug ("geyacc")
@@ -20,9 +22,18 @@ default
 	disabled_debug ("win_dispatcher")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
-	line_generation (no)
+	debug (no)
+	line_generation (yes)
 	profile (no)
 	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	msil_clr_version ("v1.1.4322")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
 	syntax_warning (no)
@@ -30,16 +41,38 @@ default
 	array_optimization (no)
 	dead_code_removal (yes)
 	dynamic_runtime (no)
-	exception_trace (yes)
-	inlining (yes)
-	inlining_size ("0")
+	exception_trace (no)
+	inlining (no)
 	multithreaded (no)
 
-
 cluster
+	all base_net:		"$EIFFEL_SRC\library.net\base"
+
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"spec"; "clib"; "classic"; 
+		end
+
+	all wel_net:		"$EIFFEL_SRC\library.net\wel"
+
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp.e"; "gtk2"; 
+		end
+
+	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"
+
+	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
+
 	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
-			"doc_builder.e"; 
+			"doc_builder_classic.e"; 
 		end
 
 	project (root_cluster):		"$\project"
@@ -53,9 +86,6 @@ cluster
 	interface (root_cluster):		"$\interface"
 
 	interface_widgets (interface):		"$\widgets"
-		exclude
-			"document_browser.e"; 
-		end
 
 	interface_app (interface):		"$\application"
 
@@ -75,10 +105,11 @@ cluster
 
 	xml (root_cluster):		"$\xml"
 
+	schema (xml):		"$\schema"
+
 	xsl (xml):		"$\xslt"
-		exclude
-			"xsl_transform.e"; 
-		end
+
+	validation (xml):		"$\validation"
 
 	help (root_cluster):		"$\help"
 
@@ -88,26 +119,6 @@ cluster
 
 	help_toc (help):		"$\toc"
 
-	facade (root_cluster):		"$\facade"
-		exclude
-			"help_manager.e"; "help_setting_constants.e"; 
-		end
-
-	all base:		"$EIFFEL_SRC\library\base"
-		exclude
-			"CVS"; "table_eiffel3"; "desc"; 
-		end
-
-	all wel:		"$EIFFEL_SRC\library\wel"
-		exclude
-			"CVS"; 
-		end
-
-	all vision2:		"$EIFFEL_SRC\library\vision2"
-		exclude
-			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; 
-		end
-
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
 			"french"; "german"; 
@@ -116,8 +127,6 @@ cluster
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
-		default
-			assertion (no)
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
@@ -133,8 +142,8 @@ external
 		"$(EIFFEL_SRC)\tools\doc_builder\Clib"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\tools\doc_builder\Clib\htmlhelp.lib"

@@ -38,8 +38,8 @@ extern "C" {
 void c_ev_load_pixmap(
 		void *pCurrObject, 
 		char *pszFileName, 
-		void (*LoadPixmapUpdateObject)(void*, unsigned int, unsigned int, unsigned int, unsigned int, void*, void*)
-		);
+		void *fnptr
+	);
 
 void c_ev_save_png(
 		char *,

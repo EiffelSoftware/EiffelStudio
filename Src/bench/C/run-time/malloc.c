@@ -1163,7 +1163,7 @@ private int free_last_chunk()
 	 */
 
 #if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	brk = sbrk(0);						/* Fetch current break value */
+	brk = (char *) sbrk(0);						/* Fetch current break value */
 	if (brk != last_addr) {				/* There *is* something */
 		SIGRESUME;						/* End of critical section */
 		return -2;						/* Sorry, cannot shrink data segment */

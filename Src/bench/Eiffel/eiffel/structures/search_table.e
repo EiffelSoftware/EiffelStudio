@@ -245,6 +245,34 @@ feature -- Number of elements
 	count: INTEGER
 			-- Number of items actually inserted in `Current'
 
+feature -- Conversion
+
+	linear_representation: ARRAYED_LIST [H] is
+			-- Representation as a linear structure
+			-- (order is same as original order of insertion)
+		local
+			i, table_size: INTEGER
+			l_content: like content
+			l_item: H
+		do
+			from
+				l_content := content
+				create Result.make (count)
+				table_size := l_content.count - 1
+			until
+				i > table_size
+			loop
+				l_item := l_content.item (i)
+				if valid_key (l_item) then
+					Result.extend (l_item)
+				end
+				i := i + 1
+			end
+		ensure then
+			Result_exists: Result /= Void
+			good_count: Result.count = count
+		end
+
 feature {NONE} -- Internal features
 
 	position: INTEGER

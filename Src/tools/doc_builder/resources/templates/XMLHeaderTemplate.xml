@@ -1,9 +1,18 @@
-<table style="header">
-	<row>
-		<cell style="header">[!product!]</cell>
-	</row>
-	<row>
-		<cell style="subheader">[!title!]</cell>
-		<cell>[!navigation!]</cell>
-	</row>
-</table>
+<span>
+	<table style="header">
+		<row>
+			<cell style="header">
+				[!Product!]
+			</cell>
+		</row>
+		<row>
+			<cell style="subheader">
+				[!Title!]
+			</cell>
+			<cell style="navigation">
+				[!Navigation!]
+			</cell>
+		</row>
+	</table>
+	<line_break/>
+</span>

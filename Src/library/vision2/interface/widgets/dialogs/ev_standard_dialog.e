@@ -1,6 +1,6 @@
 indexing
 	description:
-		"EiffelVision standard dialog. Deferred class,%
+		" EiffelVision standard dialog. Deferred class,%
 		% ancestor of the standard dialogs.%
 		% All the standard dialogs are modal. Therefore%
 		% nothing can be done until the user close the%

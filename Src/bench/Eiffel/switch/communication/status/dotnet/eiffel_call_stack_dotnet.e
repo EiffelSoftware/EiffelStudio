@@ -163,105 +163,107 @@ feature {NONE} -- Initialization
 			level := 1
 	
 			l_active_thread := Application.imp_dotnet.Eifnet_debugger.icor_debug_thread
-			l_enum_chain := l_active_thread.enumerate_chains
-			if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
-				l_chains := l_enum_chain.next (l_enum_chain.get_count)
-				from
-					c := l_chains.lower
-				until
-					c > l_chains.upper
-				loop
-					--| Let's iterate on each frame of the chain to determine the call stack items |--
-					l_chain := l_chains.item (c)
-					if l_chain /= Void then
-						l_enum_frames := l_chain.enumerate_frames
-						if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
-							l_frames := l_enum_frames.next (l_enum_frames.get_count)
-							from
-								i := l_frames.lower
-							until
-								i > l_frames.upper or else (n > 0 and level > n)
-							loop
-								l_frame := l_frames @ i
-								l_frame_il := l_frame.query_interface_icor_debug_il_frame
-								if l_frame.last_call_succeed and then l_frame_il /= Void then
-
--- FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
-									l_func := l_frame_il.get_function
-									l_feature_token := l_func.get_token
-									l_class         := l_func.get_class
-									l_module        := l_func.get_module
-									l_class_token   := l_class.get_token
-									l_module_name   := l_module.get_name
-									l_class.clean_on_dispose
-									l_module.clean_on_dispose
-									l_func.clean_on_dispose
-
-									l_frame.clean_on_dispose --| Not needed anymore
-
-									if il_debug_info_recorder.has_info_about_module (l_module_name) then
-										l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
-										l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
+			if l_active_thread /= Void then
+				l_enum_chain := l_active_thread.enumerate_chains
+				if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
+					l_chains := l_enum_chain.next (l_enum_chain.get_count)
+					from
+						c := l_chains.lower
+					until
+						c > l_chains.upper
+					loop
+						--| Let's iterate on each frame of the chain to determine the call stack items |--
+						l_chain := l_chains.item (c)
+						if l_chain /= Void then
+							l_enum_frames := l_chain.enumerate_frames
+							if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
+								l_frames := l_enum_frames.next (l_enum_frames.get_count)
+								from
+									i := l_frames.lower
+								until
+									i > l_frames.upper or else (n > 0 and level > n)
+								loop
+									l_frame := l_frames @ i
+									l_frame_il := l_frame.query_interface_icor_debug_il_frame
+									if l_frame.last_call_succeed and then l_frame_il /= Void then
 	
-										if l_feature_i = Void then
-											if l_feature_token = Il_debug_info_recorder.entry_point_token then
-												l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+	-- FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
+										l_func := l_frame_il.get_function
+										l_feature_token := l_func.get_token
+										l_class         := l_func.get_class
+										l_module        := l_func.get_module
+										l_class_token   := l_class.get_token
+										l_module_name   := l_module.get_name
+										l_class.clean_on_dispose
+										l_module.clean_on_dispose
+										l_func.clean_on_dispose
+	
+										l_frame.clean_on_dispose --| Not needed anymore
+	
+										if il_debug_info_recorder.has_info_about_module (l_module_name) then
+											l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
+											l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
+		
+											if l_feature_i = Void then
+												if l_feature_token = Il_debug_info_recorder.entry_point_token then
+													l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+												end
 											end
-										end
-										if l_class_type /= Void and then l_feature_i /= Void then
-											l_stack_object := l_frame_il.get_argument (0)
-												--| FIXME jfiat 2004/06/03 : why Current may be Void ?
-												--| If JITdebugging is enabled (badly), this may cause problem
-												--| resulting in Void l_stack_object
-												--| We may require to check this and fix this potential bug
-												--| but this seems to be fixed by doing in the good way
-												--| the JITdebugging settings
-												--| Nota: we leave this comment, just in case this occurs again...
-											check
-												stack_object_not_void: l_stack_object /= Void
-											end
+											if l_class_type /= Void and then l_feature_i /= Void then
+												l_stack_object := l_frame_il.get_argument (0)
+													--| FIXME jfiat 2004/06/03 : why Current may be Void ?
+													--| If JITdebugging is enabled (badly), this may cause problem
+													--| resulting in Void l_stack_object
+													--| We may require to check this and fix this potential bug
+													--| but this seems to be fixed by doing in the good way
+													--| the JITdebugging settings
+													--| Nota: we leave this comment, just in case this occurs again...
+												check
+													stack_object_not_void: l_stack_object /= Void
+												end
+													
+													--| Here we have a valid Eiffel callstack point
+												create call.make(level)
 												
-												--| Here we have a valid Eiffel callstack point
-											create call.make(level)
-											
-												--| Compute data to get address and co ...
-											l_il_offset := l_frame_il.get_ip
-											l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
-
-											l_stack_adv := debug_value_from_icdv (l_stack_object)
-											l_hexaddress := l_stack_adv.address
-											l_stack_drv ?= l_stack_adv
-											if l_stack_drv/= Void then
-												l_class_type := l_stack_drv.dynamic_class_type
-											else
-												l_class_type := l_stack_adv.dynamic_class.types.first
+													--| Compute data to get address and co ...
+												l_il_offset := l_frame_il.get_ip
+												l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
+	
+												l_stack_adv := debug_value_from_icdv (l_stack_object)
+												l_hexaddress := l_stack_adv.address
+												l_stack_drv ?= l_stack_adv
+												if l_stack_drv/= Void then
+													l_class_type := l_stack_drv.dynamic_class_type
+												else
+													l_class_type := l_stack_adv.dynamic_class.types.first
+												end
+	
+												call.set_private_current_object (l_stack_adv)
+												call.set_routine (
+													l_chain,
+													l_frame_il,
+													False, 			-- is_melted (No since this is a dotnet system)
+													l_hexaddress,
+													l_class_type, 	-- dynmic class type
+													l_feature_i.written_class, 	-- origin class
+													l_feature_i, 	-- routine, routine_name ...
+													l_line_number 	-- break_index / line number
+													)
+												extend (call)
+	
+												level := level + 1
 											end
-
-											call.set_private_current_object (l_stack_adv)
-											call.set_routine (
-												l_chain,
-												l_frame_il,
-												False, 			-- is_melted (No since this is a dotnet system)
-												l_hexaddress,
-												l_class_type, 	-- dynmic class type
-												l_feature_i.written_class, 	-- origin class
-												l_feature_i, 	-- routine, routine_name ...
-												l_line_number 	-- break_index / line number
-												)
-											extend (call)
-
-											level := level + 1
 										end
 									end
+									i := i + 1
 								end
-								i := i + 1
+								l_enum_frames.clean_on_dispose
 							end
-							l_enum_frames.clean_on_dispose
 						end
+						c := c + 1
 					end
-					c := c + 1
+					l_enum_chain.clean_on_dispose
 				end
-				l_enum_chain.clean_on_dispose
 			end
 		end
 

@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			wnd_class: WEL_WND_CLASS
 		do
 			!! wnd_class.make (class_name)
-			if not wnd_class.is_registered then
+			if not wnd_class.registered then
 				wnd_class.set_style (class_style)
 				wnd_class.set_window_procedure (class_window_procedure)
 				wnd_class.set_icon (class_icon)

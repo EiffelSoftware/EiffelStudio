@@ -354,14 +354,13 @@ end -- class EV_TITLED_WINDOW_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
-
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.50  2000/02/14 11:40:44  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.51  2000/02/14 22:26:34  oconnor
+--| merged from HACK-O-RAMA
 --|
 --| Revision 1.49.6.7  2000/02/04 19:08:03  rogers
 --| Removed make_with_owner.

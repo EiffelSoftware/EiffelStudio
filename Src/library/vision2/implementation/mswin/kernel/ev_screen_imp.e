@@ -77,6 +77,8 @@ feature -- Status setting
 			-- Destroy actual object.
 		do
 			dc.delete
+			is_destroyed := True
+			destroy_just_called := True
 		end
 
 feature -- Implementation
@@ -106,8 +108,11 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/02/14 11:40:45  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.5  2000/02/14 22:26:34  oconnor
+--| merged from HACK-O-RAMA
+--|
+--| Revision 1.3.10.5  2000/02/14 20:48:59  rogers
+--| Added 'is_destroyed := True' and 'destroy_just_called := True' to destroy.
 --|
 --| Revision 1.3.10.4  2000/01/27 19:30:32  oconnor
 --| added --| FIXME Not for release

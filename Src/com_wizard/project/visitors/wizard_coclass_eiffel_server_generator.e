@@ -195,7 +195,6 @@ feature {NONE} -- Implementation
 			tmp_body.append (argument_test_code (Register_server_option_a, Register_server_option_b, Ccom_regserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
-			tmp_body.append (Space)
 			tmp_body.append (argument_test_code (Unregister_server_option_a, Unregister_server_option_b, Ccom_unregserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
@@ -222,16 +221,18 @@ feature {NONE} -- Implementation
 			Result := clone (Tab_tab_tab)
 			Result.append (Double_quote)
 			Result.append (C_keyword)
-			Result.append (Open_parenthesis)
+			Result.append (Space_open_parenthesis)
 			Result.append (Argument_types)
 			Result.append (Close_parenthesis)
 			Result.append (Colon)
+			Result.append (Space)
 			Result.append (Eif_pointer)
 			Result.append (Space)
 			Result.append (C_binary_or)
 			Result.append (Space)
 			Result.append (Percent_double_quote)
 			Result.append (coclass_descriptor.c_type_name)
+			Result.append (Underscore)
 			Result.append (Factory)
 			Result.append (Header_file_extension)
 			Result.append (Percent_double_quote)
@@ -339,7 +340,7 @@ feature {NONE} -- Implementation
 			Result.add_argument ("riid: POINTER")
 			Result.add_argument ("interface_pointer: POINTER")
 
-			Result.set_body (common_c_external_feature_code ("EIF_TYPE_ID, REFCLSID, REFIID, (void **)"))
+			Result.set_body (common_c_external_feature_code ("EIF_TYPE_ID, REFCLSID, REFIID, void **"))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -401,6 +402,7 @@ feature {NONE} -- Implementation
 		local
 			prop_generator: WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
 			func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
+			tmp_original_name, tmp_changed_name: STRING
 		do
 			if not a_desc.functions.empty then
 				from
@@ -414,6 +416,9 @@ feature {NONE} -- Implementation
 
 					if func_generator.function_renamed then
 						inherit_clause.add_rename (func_generator.original_name, func_generator.changed_name)
+						tmp_original_name := vartype_namer.user_precondition_name (func_generator.original_name)
+						tmp_changed_name := vartype_namer.user_precondition_name (func_generator.changed_name)
+						inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
 					end
 
 					if func_generator.feature_writer.result_type = Void or else 

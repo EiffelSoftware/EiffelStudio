@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Ccom_embedding_feature_name)
-            Result.set_comment ("Initialize server with %"EMBEDDING%" option.")
+            	Result.set_comment ("Initialize server with %"EMBEDDING%" option.")
 			Result.set_result_type (Void_c_keyword)
 
 			tmp_string := clone (Eif_type_id)
@@ -231,9 +231,12 @@ feature {NONE} -- Implementation
 
 			-- HRESULT hr = CoInitialize (0)
 			tmp_string := clone (Tab)
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (type_id_variable_name)
+			tmp_string.append (Class_object_variable_name)
+			tmp_string.append (Dot)
+			tmp_string.append (Set_type_id_function_name)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Type_id_variable_name)
+			tmp_string.append (Close_parenthesis)
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line)
 			tmp_string.append (New_line_tab)
@@ -338,8 +341,6 @@ feature {NONE} -- Implementation
 			tmp_string.append (Co_uninitialize_function)
 			tmp_string.append (New_line_tab)
 			tmp_string.append (Return)
-			tmp_string.append (Space)
-			tmp_string.append (Hresult_variable_name)
 			tmp_string.append (Semicolon)
 
 			Result.set_body (tmp_string)
@@ -364,9 +365,12 @@ feature {NONE} -- Implementation
 
 			-- HRESULT hr = CoInitialize (0)
 			tmp_string := clone (Tab)
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (type_id_variable_name)
+			tmp_string.append (Class_object_variable_name)
+			tmp_string.append (Dot)
+			tmp_string.append (Set_type_id_function_name)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Type_id_variable_name)
+			tmp_string.append (Close_parenthesis)
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line)
 			tmp_string.append (New_line_tab)
@@ -416,13 +420,18 @@ feature {NONE} -- Implementation
 
 			Result.set_signature (tmp_string)
 
-			-- HRESULT hr = CoInitialize (0)
-			tmp_string := clone (Tab)
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (type_id_variable_name)
+			-- class_object.set_type_id (tid)
+			tmp_string := clone (Class_object_variable_name)
+			tmp_string.append (Dot)
+			tmp_string.append (Set_type_id_function_name)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Type_id_variable_name)
+			tmp_string.append (Close_parenthesis)
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line)
+
+			-- HRESULT hr = CoInitialize (0)
+
 			tmp_string.append (New_line_tab)
 			tmp_string.append (Hresult)
 			tmp_string.append (Space)
@@ -468,14 +477,18 @@ feature {NONE} -- Implementation
 			Result.set_name (tmp_string)
 			Result.set_comment ("DLL get class object funcion")
 			Result.set_result_type (Std_api)
-			Result.set_signature ("EIF_TYPE_ID tid, REFCLASOD rclsid, REFIID riid, void **ppv")
+			Result.set_signature ("EIF_TYPE_ID tid, REFCLSID rclsid, REFIID riid, void **ppv")
 
 			tmp_string := clone (Tab)
-			-- type_id := tid;
+			-- 'type_id_variable_name'.set_type_id (tid);
 
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
+			tmp_string.append (Class_object_variable_name)
+			tmp_string.append (Dot)
+			tmp_string.append (Set_type_id_function_name)
+			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Type_id_variable_name)
+			tmp_string.append (Close_parenthesis)
+
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line_tab)
 			tmp_string.append (If_keyword)

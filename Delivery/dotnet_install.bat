@@ -1,9 +1,9 @@
-echo on
+@echo on
 rem ISE .NET support is being installed on your computer.
 rem 
 rem Please wait a few seconds for the installation of the components.
 
-echo off
+@echo off
 
 rem Registering ISE runtime for .NET
 call gacutil -silent -nologo -u ise_runtime
@@ -16,8 +16,8 @@ call regasm -silent -nologo core.dll
 
 call dotnet_install_ami.bat
 
-echo on
+@echo on
 rem Installation of .NET components terminated.
 rem
 
-echo off
+@echo off

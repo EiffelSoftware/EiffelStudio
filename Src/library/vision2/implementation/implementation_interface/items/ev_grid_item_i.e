@@ -71,7 +71,7 @@ feature -- Access
 		require
 			is_parented: is_parented
 		do
-			Result := parent_column_i.interface
+			Result := column_i.interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -89,7 +89,7 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			Result := parent_row_i.interface
+			Result := row_i.interface
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -102,11 +102,11 @@ feature -- Status setting
 			if not is_selected then
 				if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
 						-- We are in row selection mode so we manipulate the parent row directly
-					parent_row_i.enable_select
+					row_i.enable_select
 				else
 					enable_select_internal
-					if parent_row_i.is_selected then
-						parent_i.update_row_selection_status (parent_row_i)
+					if row_i.is_selected then
+						parent_i.update_row_selection_status (row_i)
 					end
 					parent_i.update_item_selection_status (Current)
 					parent_i.redraw_client_area
@@ -136,7 +136,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected?
 		do
-			if parent_row_i.is_selected or else parent_column_i.is_selected then
+			if row_i.is_selected or else column_i.is_selected then
 				Result := True
 			else
 				Result := internal_is_selected
@@ -165,8 +165,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			item_is_not_selected: not is_selected
 		do
 			internal_is_selected := True
-			parent_row_i.increase_selected_item_count
-			parent_column_i.increase_selected_item_count					
+			row_i.increase_selected_item_count
+			column_i.increase_selected_item_count					
 		end
 
 	disable_select_internal is
@@ -174,8 +174,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			item_is_selected: is_selected
 		do
-			parent_row_i.decrease_selected_item_count
-			parent_column_i.decrease_selected_item_count
+			row_i.decrease_selected_item_count
+			column_i.decrease_selected_item_count
 			internal_is_selected := False
 		end
 
@@ -186,20 +186,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	set_parents (a_parent_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
+	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I) is
 			-- Set the appropriate grid, column and row parents
 		require
 			a_parent_i_not_void: a_parent_i /= Void
-			a_parent_column_i_not_void: a_parent_column_i /= Void
-			a_parent_row_i_not_void: a_parent_row_i /= Void
+			a_column_i_not_void: a_column_i /= Void
+			a_row_i_not_void: a_row_i /= Void
 		do
 			parent_i := a_parent_i
-			parent_column_i := a_parent_column_i
-			parent_row_i := a_parent_row_i
+			column_i := a_column_i
+			row_i := a_row_i
 		ensure
 			parent_i_set: parent_i = a_parent_i
-			parent_column_i_set: parent_column_i = a_parent_column_i
-			parent_row_i_set: parent_row_i = a_parent_row_i
+			column_i_set: column_i = a_column_i
+			row_i_set: row_i = a_row_i
 		end
 
 	set_created_from_grid is
@@ -214,10 +214,10 @@ feature {EV_GRID_I} -- Implementation
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
 
-	parent_column_i: EV_GRID_COLUMN_I
+	column_i: EV_GRID_COLUMN_I
 		-- Grid column that `Current' resides in if any
 
-	parent_row_i: EV_GRID_ROW_I
+	row_i: EV_GRID_ROW_I
 		-- Grid row that `Current' resides in if any
 		
 feature {NONE} -- Implementation
@@ -258,8 +258,8 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 			-- functionality implemented by `Current'
 
 invariant
-	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then parent_column_i /= Void and then parent_row_i /= Void
-	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then parent_column_i = Void and then parent_row_i = Void
+	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then column_i /= Void and then row_i /= Void
+	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
 			
 end
 

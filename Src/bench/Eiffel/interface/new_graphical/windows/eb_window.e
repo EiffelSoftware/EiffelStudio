@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_APPLICATION_EXECUTION
+		export
+			{NONE} all
+		end
+
 	EB_RECYCLER
 		rename
 			destroy as destroy_recyclable_items
@@ -255,7 +260,10 @@ feature -- Window management / Status Setting
 		do
 			if not destroyed then
 				Exit_application_cmd.set_already_confirmed (False)
-				if debugger_manager.debugging_window = Current then
+				if
+					application.is_running and then
+					debugger_manager.debugging_window = Current
+				then
 					Exit_application_cmd.set_already_confirmed (True)
 					if Window_manager.development_windows_count > 1 then
 						create cd.make_with_text (Warning_messages.w_Closing_stops_debugger)

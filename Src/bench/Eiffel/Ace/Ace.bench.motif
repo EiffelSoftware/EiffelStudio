@@ -29,7 +29,8 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
-		limand:			 "$BENCH/Eiffel/limand";
+		liman_common:		"$BENCH/Eiffel/limand/common";
+		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		beurk:				"$BENCH/Eiffel/beurk";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 		debugclas:			"$BENCH/Eiffel/debug";
@@ -76,7 +77,7 @@ cluster
 		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
 		structures:			"$BENCH/Eiffel/eiffel/structures";
 		tables:				"$BENCH/Eiffel/eiffel/tables";
-		descriptor:		 "$BENCH/Eiffel/eiffel/descriptor";
+		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
 
 -- SHARED BETWEEN COMPILER AND INTERFACE:
 
@@ -87,34 +88,34 @@ cluster
 
 -- INTERFACE CLUSTERS
 
---	 Root
+-- Root
 
-		 root_cluster:		"$BENCH/Eiffel/root";
+		root_cluster:		"$BENCH/Eiffel/root";
 
 	-- Switch:
 	
-		switch: 			"$BENCH/Eiffel/batch_bench/bench";
+		switch:				"$BENCH/Eiffel/batch_bench/bench";
 
 	-- graphical interface (bench):
 
-		 windows:			"$BENCH/Eiffel/interface/windows";
-		 commands:			"$BENCH/Eiffel/interface/commands";
-		 formatters:			"$BENCH/Eiffel/interface/formatters";
-		 debugging:			"$BENCH/Eiffel/interface/debugging";
-		 archi_text:			"$BENCH/Eiffel/interface/archi_text";
+		windows:			"$BENCH/Eiffel/interface/windows";
+		commands:			"$BENCH/Eiffel/interface/commands";
+		formatters:			"$BENCH/Eiffel/interface/formatters";
+		debugging:			"$BENCH/Eiffel/interface/debugging";
+		archi_text:			"$BENCH/Eiffel/interface/archi_text";
 
-		 ipc:				"$BENCH/Eiffel/ipc";
+		ipc:				"$BENCH/Eiffel/ipc";
 
 		case_common:		"$BENCH/Eiffel/case_storage/common";
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
-		 graph_resources:	"$BENCH/Eiffel/library/vision/implement/motif/Resources";
-		 graph_widgets:		"$BENCH/Eiffel/library/vision/implement/motif/widgets";
-		 graph_toolkit:		"$BENCH/Eiffel/library/vision/implement/toolkit";
-		 graph_X:			"$BENCH/Eiffel/library/vision/implement/X";
-		 graph_commands:	"$BENCH/Eiffel/library/vision/oui/commands";
-		 graph_kernel:		"$BENCH/Eiffel/library/vision/oui/kernel";
-		 graph_oui_widgets:	"$BENCH/Eiffel/library/vision/oui/widgets";
+		graph_resources:	"$EIFFEL3/library/vision/implement/motif/Resources";
+		graph_widgets:		"$EIFFEL3/library/vision/implement/motif/widgets";
+		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
+		graph_X:			"$EIFFEL3/library/vision/implement/X";
+		graph_commands:		"$EIFFEL3/library/vision/oui/commands";
+		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
+		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
 
 external
 

@@ -44,9 +44,13 @@ class STRING inherit
 		end
 
 create
-	make, make_from_string, make_from_c
+	make,
+	make_empty,
+	make_filled,
+	make_from_string,
+	make_from_c
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate space for at least `n' characters.
@@ -64,20 +68,25 @@ feature {NONE} -- Initialization
 			area_allocated: capacity >= n
 		end
 
-feature -- Initialization
-
-	remake (n: INTEGER) is
-			-- Allocate space for at least `n' characters.
-		obsolete
-			"Use `make' instead"
-		require
-			non_negative_size: n >= 0
+	make_empty is
+			-- Create empty string.
 		do
-			count := 0
-			make (n)
+			make (0)
 		ensure
-			empty_string: count = 0
-			area_allocated: capacity >= n
+			empty: count = 0
+			area_allocated: capacity >= 0
+		end
+
+	make_filled (c: CHARACTER; n: INTEGER) is
+			-- Create string of length `n' filled with `c'.
+		require
+			valid_count: n >= 0
+		do
+			make (n)
+			fill_character (c)
+		ensure
+			count_set: count = n
+			filled: occurrences (c) = count
 		end
 
 	make_from_string (s: STRING) is
@@ -124,9 +133,9 @@ feature -- Initialization
 		ensure
 			no_zero_byte: not has ('%/0/')
 			-- characters: for all i in 1..count, item (i) equals
-			--             ASCII character at address c_string + (i - 1)
+			--			 ASCII character at address c_string + (i - 1)
 			-- correct_count: the ASCII character at address c_string + count
-			--             is NULL
+			--			 is NULL
 		end
 
 	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER) is
@@ -150,7 +159,7 @@ feature -- Initialization
 		ensure
 			valid_count: count = end_pos - start_pos + 1
 			-- characters: for all i in 1..count, item (i) equals
-			--             ASCII character at address c_string + (i - 1)
+			--			 ASCII character at address c_string + (i - 1)
 		end
 
 	adapt (s: STRING): like Current is
@@ -159,6 +168,19 @@ feature -- Initialization
 		do
 			create Result.make (0)
 			Result.share (s)
+		end
+
+	remake (n: INTEGER) is
+			-- Allocate space for at least `n' characters.
+		obsolete
+			"Use `make' instead"
+		require
+			non_negative_size: n >= 0
+		do
+			make (n)
+		ensure
+			empty_string: count = 0
+			area_allocated: capacity >= n
 		end
 
 feature -- Access
@@ -194,23 +216,6 @@ feature -- Access
 			-- Does string share the text of `other'?
 		do
 			Result := (other /= Void) and then (area = other.area)
-		end
-
-	has (c: CHARACTER): BOOLEAN is
-			-- Does string include `c'?
-		local
-			counter: INTEGER
-		do
-			if not is_empty then
-				from
-					counter := 1
-				until
-					counter > count or else (item (counter) = c)
-				loop
-					counter := counter + 1
-				end
-				Result := (counter <= count)
-			end
 		end
 
 	index_of (c: CHARACTER; start: INTEGER): INTEGER is
@@ -294,6 +299,19 @@ feature -- Access
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
 
+	string: STRING is
+			-- New STRING having same character sequence as `Current'.
+		do
+			create Result.make (count)
+			Result.append (Current)
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			first_item: count > 0 implies Result.item (1) = item (1)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (
+				substring (2, count).string)
+		end
+
 	substring_index (other: STRING; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start';
 			-- 0 if none.
@@ -329,6 +347,35 @@ feature -- Access
 		do
 			a := other.area
 			Result := str_str ($area, $a, count, other.count, start, fuzz)
+		end
+
+feature -- Status report
+
+	has (c: CHARACTER): BOOLEAN is
+			-- Does string include `c'?
+		local
+			counter: INTEGER
+		do
+			if not is_empty then
+				from
+					counter := 1
+				until
+					counter > count or else (item (counter) = c)
+				loop
+					counter := counter + 1
+				end
+				Result := (counter <= count)
+			end
+		end
+
+	has_substring (other: STRING): BOOLEAN is
+			-- Does `Current' contain `other'?
+		require
+			other_not_void: other /= Void
+		do
+			if other.count <= count then
+				Result := substring_index (other, 1) > 0
+			end
 		end
 
 feature -- Measurement
@@ -384,6 +431,16 @@ feature -- Comparison
 				o_area := other.area
 				Result := str_strict_cmp ($area, $o_area, count) = 0
 			end
+		end
+
+	same_string (other: STRING): BOOLEAN is
+			-- Do `Current' and `other' have same character sequence?
+		require
+			other_not_void: other /= Void
+		do
+			Result := string.is_equal (other.string)
+		ensure
+			definition: Result = string.is_equal (other.string)
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -442,22 +499,22 @@ feature -- Status report
 				-- conditions are satisfied:
 				--
 				-- 1. In the following BNF grammar, the value of
-				--    'Current' can be produced by "Real_literal":
+				--	'Current' can be produced by "Real_literal":
 				--
-				-- Real_literal    = Mantissa [Exponent_part]
-				-- Exponent_part   = "E" Exponent
-				--                 | "e" Exponent
-				-- Exponent        = Integer_literal
-				-- Mantissa        = Decimal_literal
+				-- Real_literal	= Mantissa [Exponent_part]
+				-- Exponent_part = "E" Exponent
+				--				 | "e" Exponent
+				-- Exponent		= Integer_literal
+				-- Mantissa		= Decimal_literal
 				-- Decimal_literal = Integer_literal ["." Integer]
 				-- Integer_literal = [Sign] Integer
-				-- Sign            = "+" | "-"
-				-- Integer         = Digit | Digit Integer
-				-- Digit           = "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+				-- Sign			= "+" | "-"
+				-- Integer		= Digit | Digit Integer
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 				--
 				-- 2. The numerical value represented by 'Current'
-				--    is within the range that can be represented
-				--    by an instance of type REAL.
+				--	is within the range that can be represented
+				--	by an instance of type REAL.
 		end
 
 	is_double: BOOLEAN is
@@ -470,22 +527,22 @@ feature -- Status report
 				-- conditions are satisfied:
 				--
 				-- 1. In the following BNF grammar, the value of
-				--    'Current' can be produced by "Real_literal":
+				--	'Current' can be produced by "Real_literal":
 				--
-				-- Real_literal    = Mantissa [Exponent_part]
-				-- Exponent_part   = "E" Exponent
-				--                 | "e" Exponent
-				-- Exponent        = Integer_literal
-				-- Mantissa        = Decimal_literal
+				-- Real_literal	= Mantissa [Exponent_part]
+				-- Exponent_part = "E" Exponent
+				--				 | "e" Exponent
+				-- Exponent		= Integer_literal
+				-- Mantissa		= Decimal_literal
 				-- Decimal_literal = Integer_literal ["." Integer]
 				-- Integer_literal = [Sign] Integer
-				-- Sign            = "+" | "-"
-				-- Integer         = Digit | Digit Integer
-				-- Digit           = "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+				-- Sign			= "+" | "-"
+				-- Integer		= Digit | Digit Integer
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 				--
 				-- 2. The numerical value represented by 'Current'
-				--    is within the range that can be represented
-				--    by an instance of type DOUBLE.
+				--	is within the range that can be represented
+				--	by an instance of type DOUBLE.
 		end
 	
 	is_boolean: BOOLEAN is
@@ -559,7 +616,7 @@ feature -- Element change
 			spsubcopy ($other_area, $area, start0, end0, index0)
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
-			--     item (index_pos + i) = other.item (start_pos + i)
+			--	 item (index_pos + i) = other.item (start_pos + i)
 		end
 
 	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
@@ -652,6 +709,20 @@ feature -- Element change
 	head (n: INTEGER) is
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
+		obsolete
+			"ELKS 2001: use `keep_head' instead'"
+		require
+			non_negative_argument: n >= 0
+		do
+			keep_head (n)
+		ensure
+			new_count: count = n.min (old count)
+			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
+		end
+
+	keep_head (n: INTEGER) is
+			-- Remove all characters except for the first `n';
+			-- do nothing if `n' >= `count'.
 		require
 			non_negative_argument: n >= 0
 		do
@@ -664,6 +735,19 @@ feature -- Element change
 		end
 
 	tail (n: INTEGER) is
+			-- Remove all characters except for the last `n';
+			-- do nothing if `n' >= `count'.
+		obsolete
+			"ELKS 2001: use `keep_tail' instead'"
+		require
+			non_negative_argument: n >= 0
+		do
+			keep_tail (n)
+		ensure
+			new_count: count = n.min (old count)
+		end
+
+	keep_tail (n: INTEGER) is
 			-- Remove all characters except for the last `n';
 			-- do nothing if `n' >= `count'.
 		require
@@ -878,11 +962,25 @@ feature -- Element change
 		end
 
 	insert (s: STRING; i: INTEGER) is
-			-- Add `s' to the left of position `i' in current string.
+			-- Add `s' to left of position `i' in current string.
+		obsolete
+			"ELKS 2001: use `insert_string' instead"
 		require
 			string_exists: s /= Void
-			index_small_enough: i <= count
+			index_small_enough: i <= count + 1
 			index_large_enough: i > 0
+		do
+			insert_string (s, i)
+		ensure
+			new_count: count = old count + s.count
+		end
+		
+	insert_string (s: STRING; i: INTEGER) is
+			-- Insert `s' at index `i', shifting characters between ranks 
+			-- `i' and `count' rightwards.
+		require
+			string_exists: s /= Void
+			valid_insertion_index: 1 <= i and i <= count + 1
 		local
 			new_size: INTEGER
 			s_area: like area
@@ -898,6 +996,24 @@ feature -- Element change
 			new_count: count = old count + s.count
 		end
 
+	insert_character (c: CHARACTER; i: INTEGER) is
+			-- Insert `c' at index `i', shifting characters between ranks 
+			-- `i' and `count' rightwards.
+		require
+			valid_insertion_index: 1 <= i and i <= count + 1
+		local
+			new_size: INTEGER
+		do
+			new_size := count + 1
+			if new_size > capacity then
+				resize (new_size + additional_space)
+			end
+			str_insert ($area, $c, count, 1, i)
+			count := new_size
+		ensure
+			new_count: count = old count + 1
+		end
+
 feature -- Removal
 
 	remove (i: INTEGER) is
@@ -910,6 +1026,57 @@ feature -- Removal
 			count := count - 1
 		ensure
 			new_count: count = old count - 1
+		end
+
+	remove_head (n: INTEGER) is
+			-- Remove first `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		do
+			if n > count then
+				count := 0
+			else
+				keep_tail (count - n)
+			end
+		ensure
+			removed: is_equal (old substring (n.min (count) + 1, count))
+		end
+
+	remove_substring (start_index, end_index: INTEGER) is
+			-- Remove all characters from `start_index'
+			-- to `end_index' inclusive.
+		require
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+		local
+			l_tail_count: INTEGER
+		do
+			l_tail_count := count - end_index
+			remove_head (start_index - 1)
+			remove_tail (l_tail_count)
+		ensure
+			removed: is_equal (old substring (1, start_index - 1) +
+					old substring (end_index + 1, count))
+		end
+
+	remove_tail (n: INTEGER) is
+			-- Remove last `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		local
+			l_count: INTEGER
+		do
+			l_count := count
+			if n > l_count then
+				count := 0
+			else
+				keep_head (l_count - n)
+			end
+		ensure
+			removed: is_equal (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER) is
@@ -1021,6 +1188,30 @@ feature -- Resizing
 		end
 
 feature -- Conversion
+
+	as_lower: like Current is
+			-- New object with all letters in lower case.
+		do
+			Result := clone (Current)
+			Result.to_lower
+		ensure
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1) = item (1).as_lower
+			recurse: count > 1 implies Result.substring (2, count).
+				is_equal (substring (2, count).as_lower)
+		end
+
+	as_upper: like Current is
+			-- New object with all letters in upper case
+		do
+			Result := clone (Current)
+			Result.to_upper
+		ensure
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1) = item (1).as_upper
+			recurse: count > 1 implies Result.substring (2, count).
+				is_equal (substring (2, count).as_upper)
+		end
 
 	left_justify is
 			-- Left justify the string using
@@ -1224,9 +1415,18 @@ feature -- Conversion
 	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
+		local
+			l_area: like area
 		do
-			area.put ('%U', count)
-			Result := area
+				--| `area' can be Void in some cases (e.g. during
+				--| partial retrieval of objects).
+			l_area := area
+			if l_area /= Void then
+				l_area.put ('%U', count)
+				Result := l_area
+			else
+				Result := empty_area
+			end
 		end
 
 	mirrored: like Current is
@@ -1271,23 +1471,23 @@ feature -- Conversion
 
 feature -- Duplication
 
-	substring (n1, n2: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current is
 			-- Copy of substring containing all characters at indices
-			-- between `n1' and `n2'
+			-- between `start_index' and `end_index'
 		local
 			other_area: like area
 		do
-			if (1 <= n1) and (n1 <= n2) and (n2 <= count) then
-				create Result.make (n2 - n1 + 1)
+			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
+				create Result.make (end_index - start_index + 1)
 				other_area := Result.area;
-				($other_area).memory_copy ($area + (n1 - 1), n2 - n1 + 1)
-				Result.set_count (n2 - n1 + 1)
+				($other_area).memory_copy ($area + (start_index - 1), end_index - start_index + 1)
+				Result.set_count (end_index - start_index + 1)
 			else
 				create Result.make (0)
 			end
 		ensure
-			new_result_count: Result.count = n2 - n1 + 1 or Result.count = 0
-			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)
+			new_result_count: Result.count = end_index - start_index + 1 or Result.count = 0
+			-- original_characters: For every `i' in 1..`end_index'-`start_index', `Result'.`item' (`i') = `item' (`start_index'+`i'-1)
 		end
 
 	multiply (n: INTEGER) is

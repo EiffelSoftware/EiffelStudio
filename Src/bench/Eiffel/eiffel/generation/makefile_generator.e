@@ -448,7 +448,7 @@ feature -- Generation, Header
 				%CC = $cc%N%
 				%CPP = $cpp%N")
 
-			if Lace.ace_options.has_multithreaded then
+			if System.has_multithreaded then
 				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");
 			else
 				Make_file.putstring ("CFLAGS = $optimize $ccflags $large ");
@@ -461,7 +461,7 @@ feature -- Generation, Header
 			generate_specific_defines;
 			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
-			if Lace.ace_options.has_multithreaded then
+			if System.has_multithreaded then
 				Make_file.putstring ("CPPFLAGS = $optimize $mtcppflags $large ");
 			else
 				Make_file.putstring ("CPPFLAGS = $optimize $cppflags $large ");
@@ -474,7 +474,7 @@ feature -- Generation, Header
 			generate_specific_defines;
 			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
-			if Lace.ace_options.has_multithreaded then
+			if System.has_multithreaded then
 				Make_file.putstring ("LDFLAGS = $mtldflags%N%
 									 %EIFLIB = ")
 			else
@@ -484,7 +484,7 @@ feature -- Generation, Header
 
 			Make_file.putstring (run_time);
 
-			if Lace.ace_options.has_multithreaded then
+			if System.has_multithreaded then
 				Make_file.putstring ("%NLIBS = $mtlibs")
 			else
 				Make_file.putstring ("%NLIBS = $libs")

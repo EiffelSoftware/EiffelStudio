@@ -140,9 +140,64 @@ feature -- Status setting
 
 	unconnect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Remove Join of `a_container' to radio grouping of `Current'.
+		local
+			l: ARRAYED_LIST [POINTER]
+			peer: EV_CONTAINER_IMP
+			a_child_list: POINTER
+			rad_but_imp: EV_RADIO_BUTTON_IMP
 		do
-			check
-				to_be_implemented: False
+			peer ?= a_container.implementation
+			if peer = Void then
+				-- It's a widget that inherits from EV_CONTAINER,
+				-- but has implementation renamed.
+				-- If this is the case, on `a_container' this feature
+				-- had to be redefined.
+				a_container.unmerge_radio_button_groups (interface)
+			else
+				if shared_pointer = peer.shared_pointer then
+						-- They share the same radio grouping.
+					a_child_list := C.gtk_container_children (peer.container_widget)
+					l := glist_to_eiffel (a_child_list)
+							-- Wipe out peers radio grouping
+					if l /= Void then
+						from
+							l.start
+						until
+							l.off
+						loop
+							if l.item /= NULL then
+								rad_but_imp ?= eif_object_from_c (l.item)
+								if rad_but_imp /= Void then
+									peer.remove_radio_button (rad_but_imp.interface)
+								end
+							end
+							l.forth
+						end
+						peer.set_shared_pointer (NULL)
+						peer.set_radio_group (NULL)
+						
+							-- Rebuild peers radio grouping.
+						from
+							l.start
+						until
+							l.off
+						loop
+							if l.item /= NULL then
+								rad_but_imp ?= eif_object_from_c (l.item)
+								if rad_but_imp /= Void then
+									if peer.radio_group /= NULL then
+										C.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)
+									end
+									peer.set_radio_group (C.gtk_radio_button_group (rad_but_imp.visual_widget))
+								end
+							end
+							l.forth
+						end
+					end
+					if a_child_list /= NULL then
+						C.g_list_free (a_child_list)
+					end	
+				end
 			end
 		end
 
@@ -350,6 +405,24 @@ feature {NONE} -- Externals
 			loop
 				Result.extend (C.gslist_struct_data (cur))
 				cur := C.gslist_struct_next (cur)
+			end
+		ensure
+		--	same_size: Result.count = g_slist_length (gslist)
+		end
+		
+	glist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
+			-- Convert `gslist' to Eiffel structure.
+		local
+			cur: POINTER
+		do
+			create Result.make (10)
+			from
+				cur := gslist
+			until
+				cur = NULL
+			loop
+				Result.extend (C.glist_struct_data (cur))
+				cur := C.glist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)

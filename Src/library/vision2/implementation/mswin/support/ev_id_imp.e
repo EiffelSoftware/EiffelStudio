@@ -12,17 +12,12 @@ deferred class
 
 feature -- Access
 
-	id: INTEGER
-		-- Identifier of the item
-
-feature -- Basic operations
-
-	on_activate is
-			-- Is called by the menu when the item is activated.
+	id: INTEGER is
+			-- Identifier of the item
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature -- Basic operations
 
 	new_id: INTEGER is
 			-- Give a new unique id.
@@ -30,6 +25,13 @@ feature {NONE} -- Implementation
 			Result := counter.item
 			counter.set_item (counter.item + 1)
 		end
+
+	on_activate is
+			-- Is called by the menu when the item is activated.
+		deferred
+		end
+
+feature {NONE} -- Implementation
 
 	counter: INTEGER_REF is
 			-- A counter to set unique ids.

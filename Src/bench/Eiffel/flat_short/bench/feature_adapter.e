@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 
 feature -- Case storage output
 
-	storage_info: S_FEATURE_DATA_R331 is
+	storage_info: S_FEATURE_DATA_R340 is
 			-- Storage information for Current
 		require else
 			valid_target_feature: target_feature /= Void
@@ -306,6 +306,12 @@ feature -- Case storage output
 			f_name.append (target_feature.feature_name);
 			!! Result.make (f_name);
 			Result.set_reversed_engineered;
+			if target_feature.is_once then	
+				Result.set_is_once
+			end;
+			if target_feature.is_constant then	
+				Result.set_is_constant
+			end;
 			ast.store_information (Result);
 			target_feature.store_case_information (Result);
 			c := comments;

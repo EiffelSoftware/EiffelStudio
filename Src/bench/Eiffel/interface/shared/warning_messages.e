@@ -426,6 +426,27 @@ feature -- Debug warnings
 			Result := "Could not launch system in %"" + wd + "%"."
 		end
 
+	w_Syntax_error_in_expression (expr: STRING): STRING is
+			-- Message when an expression has an invalid syntax.
+		require
+			expr_not_void: expr /= Void
+		do
+			Result := "%'" + expr + "%' is an invalid or not supported syntax."
+		end
+
+	w_Invalid_address (addr: STRING): STRING is
+			-- Message when an address does not correspond to an object.
+		require
+			addr_not_void: addr /= Void
+		do
+			if addr.is_empty then
+				Result := "Please enter a valid address."
+			else
+				Result := "%'" + addr + "%' is not a valid address.%N%
+					%Addresses only make sense while an application is stopped."
+			end
+		end
+
 feature -- Cluster tree warnings
 
 	w_Cannot_move_class: STRING is

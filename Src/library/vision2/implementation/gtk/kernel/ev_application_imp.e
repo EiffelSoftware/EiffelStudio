@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			
 				-- Initialize the dependent routines object
 			create gtk_dependent_routines
-			
+				-- Uncomment for Gtk 2.x only
 			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)
 
 		end
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			gtk_dependent_launch_initialize
 
 			main_loop			
-			-- Unhook marshal object.
+				-- Unhook marshal object.
 			gtk_marshal.destroy
 		end	
 		
@@ -218,22 +218,14 @@ feature -- Basic operation
 		local
 			main_not_running: INTEGER
 		do
-				-- We do not want nested loops of process events.
-			if not processing_events then
-				from
-					processing_events := True
-				until 
-					feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
-				loop
-						main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
-							-- We only want to process the current events so we don't want any blocking.
-				end
-				processing_events := False
+			from
+			until 
+				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
+			loop
+					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+						-- We only want to process the current events so we don't want any blocking.
 			end
 		end
-		
-	processing_events: BOOLEAN
-		-- Is process_events in the middle of execution?
 
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.

@@ -311,7 +311,7 @@ feature {NONE} -- Execution
 				Precursor
 			end
 		end
-		
+
 	on_cancel is
 			-- Cancel button has been pressed
 		do
@@ -324,6 +324,7 @@ feature {NONE} -- Execution
 			-- Ok button has been pressed
 		do
 			ok_selected := True
+			hide
 
 				-- Create a new project using an ISE Wizard
 			if wizard_rb.is_selected then
@@ -345,9 +346,10 @@ feature {NONE} -- Execution
 				window_manager.last_focused_development_window.Melt_project_cmd.execute
 			end
 
+			show
 			update_preferences
 		end
-		
+
 	on_double_click_radio_button (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
 					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
 					a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -405,7 +407,6 @@ feature {NONE} -- Execution
 			create_project_dialog: EB_CREATE_PROJECT_DIALOG
 		do
 			create create_project_dialog.make_blank (parent_window)
-			hide
 			create_project_dialog.show_modal_to_parent
 
 				-- Destroy the current dialog if `create_project_dialog'
@@ -471,7 +472,7 @@ feature {NONE} -- Execution
 
 			compile_project := False
 		end
-		
+
 	open_existing_project_not_listed is
 			-- Open a non listed existing project
 		local
@@ -512,7 +513,7 @@ feature {NONE} -- Implementation
 
 	compile_project: BOOLEAN
 			-- Should a compilation be launched upon completion of this dialog?
-			
+
 	update_preferences is
 			-- Update user preferences
 		do
@@ -542,7 +543,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-			
+
 	create_and_fill_compiled_projects_list is
 			-- Create and fill `compiled_projects_list'
 		local
@@ -553,7 +554,7 @@ feature {NONE} -- Implementation
 		do
 			create compiled_projects_list
 			compiled_projects_list.set_minimum_height (Layout_constants.Dialog_unit_to_pixels(80))
-	
+
 			if not retried then
 				lop := recent_projects_manager.recent_projects
 				if not lop.is_empty then
@@ -574,7 +575,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			
+
 				-- Connect the list with `on_ok' via the wrapper `on_double_click_project_list'
 			compiled_projects_list.pointer_double_press_actions.extend (agent on_double_click_project_list)
 		ensure
@@ -583,7 +584,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	exists_project (a_project_path: STRING): BOOLEAN is
 			-- Does the project `a_project_path' exists?
 		local
@@ -615,7 +616,7 @@ feature {NONE} -- Implementation
 				wizards_list.extend (list_item)
 				available_wizards.forth
 			end
-			
+
 			basic_application_item.enable_select
 		end
 
@@ -661,7 +662,7 @@ feature {NONE} -- Implementation
 				retry
 			end
 		end
-		
+
 	selected_wizard: EB_NEW_PROJECT_WIZARD is
 			-- Currently selected wizard.
 		local
@@ -739,7 +740,7 @@ feature {NONE} -- Implementation
 
 					-- Execute the wizard
 				a_wizard.execute
-				
+
 					-- Enable controls
 				enable_all_controls
 
@@ -783,7 +784,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	disable_all_controls is
 			-- Disable all controls in the window
 		do
@@ -799,7 +800,7 @@ feature {NONE} -- Implementation
 			end
 			controls_disabled := True
 		end
-		
+
 	enable_all_controls is
 			-- Enable all controls in the window
 		do
@@ -815,7 +816,7 @@ feature {NONE} -- Implementation
 			end
 			controls_disabled := False
 		end
-		
+
 feature {NONE} -- Private attributes
 
 	controls_disabled: BOOLEAN
@@ -829,10 +830,10 @@ feature {NONE} -- Private attributes
 
 	wizard_rb: EV_RADIO_BUTTON
 			-- Radio button for "ISE Wizard"
-	
+
 	browse_button: EV_BUTTON
 			-- Browse button to browse for existing projects
-			
+
 	open_ace_file_rb: EV_RADIO_BUTTON
 			-- Radio button for "Ace file"
 
@@ -841,19 +842,19 @@ feature {NONE} -- Private attributes
 
 	do_not_display_dialog_button: EV_CHECK_BUTTON
 			-- Check button labeled "Don't show this dialog at start-up"
-			
+
 	ok_button: EV_BUTTON
 			-- OK/Next button
-		
+
 	cancel_button: EV_BUTTON
 			-- Cancel button
-	
+
 	compiled_projects_list: EV_LIST
 			-- List containing the last opened projects.
-			
+
 	wizards_list: EV_LIST
 			-- Widget representing the list of all available wizard.
-	
+
 	parent_window: EV_WINDOW
 			-- Parent window, Void if none.
 

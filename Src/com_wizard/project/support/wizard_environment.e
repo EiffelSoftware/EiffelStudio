@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			automation := True
 			client := True
 			output_level := Output_warnings
+			Compile_c := True
 			Compile_eiffel := True
 		end
 
@@ -79,6 +80,9 @@ feature -- Access
 
 	compile_eiffel: BOOLEAN
 			-- Should generated eiffel code be compiled?
+
+	compile_c: BOOLEAN
+			-- Should generated c code be compiled?
 
 feature -- Element Change
 
@@ -248,6 +252,14 @@ feature -- Element Change
 			compile_eiffel := a_boolean
 		ensure
 			compile_eiffel_set: compile_eiffel = a_boolean
+		end
+
+	set_compile_c (a_boolean: like compile_c) is
+			-- Set `compile_c' to `a_boolean'.
+		do
+			compile_c := a_boolean
+		ensure
+			compile_c_set: compile_c = a_boolean
 		end
 
 invariant

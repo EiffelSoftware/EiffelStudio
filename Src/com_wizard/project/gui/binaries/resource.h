@@ -47,6 +47,7 @@
 #define Title_Static                    1048
 #define Eiffel_Code_Compilation_Check   1048
 #define Open_Project_Check              1049
+#define C_Code_Compilation_Check        1049
 #define Create_Project_Check            1050
 #define Definition_File_Browse_Button   1051
 #define Code_Type_Static                1052

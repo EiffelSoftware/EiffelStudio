@@ -27,8 +27,6 @@ inherit
 		end
 
 	EV_GTK_KEY_CONVERSION
-		rename
-			gdk_delete_enum as gdk_key_delete_enum
 		undefine
 			default_create
 		end
@@ -322,6 +320,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/18 01:07:42  king
+--| Removed renaming error
+--|
 --| Revision 1.12  2000/03/18 00:11:48  brendel
 --| Before calling key action sequence, checks if key code is valid.
 --|

@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
 			Result.set_pixmap (icons @ (dv.kind))
 			Result.set_data (dv)
-			if dv.expandable then
+			if dv.expandable and then not dv.is_external_type then
 				Result.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				Result.expand_actions.extend (agent fill_item (Result))
 			end

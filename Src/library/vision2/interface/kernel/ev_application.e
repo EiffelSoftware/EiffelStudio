@@ -289,7 +289,6 @@ feature {NONE} -- Implementation
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			(create {EV_ENVIRONMENT}).set_application (Current)
 			create {EV_APPLICATION_IMP} implementation.make (Current)
 		end
 

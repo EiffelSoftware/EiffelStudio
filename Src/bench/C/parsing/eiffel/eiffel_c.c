@@ -224,8 +224,9 @@ char *constrained;
  * Creating Eiffel objects
  */
 
-char *create_class(cl_name, deferred, expanded, indexes, generics, parents, creators, features, invariant, cl_list)
-char *cl_name, *indexes, *generics, *parents, *creators, *features, *invariant, *cl_list;
+char *create_class(cl_name, deferred, expanded, indexes, generics, obsolete,
+parents, creators, features, invariant, cl_list)
+char *cl_name, *obsolete, *indexes, *generics, *parents, *creators, *features, *invariant, *cl_list;
 char deferred, expanded;
 {
 	/* Create an instance of CLASS_AS */
@@ -244,6 +245,7 @@ char deferred, expanded;
 	object_arg[6] = invariant;
 	object_arg[7] = suppliers;
 	object_arg[8] = cl_list;
+	object_arg[9] = obsolete;
 	bool_arg[0] = deferred;
 	bool_arg[1] = expanded;
 	(*init_array[CLASS_AS])(result);

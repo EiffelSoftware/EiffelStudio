@@ -187,7 +187,7 @@ Class_declaration:
 	Formal_generics Obsolete Inheritance Creators Features Class_invariant TE_END
 		{
 			/* node is set at the Eiffel level for root class */
-			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,$1,$6,$8,$9,$10,$11,click_list_new());
+			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,$1,$6,$7,$8,$9,$10,$11,click_list_new());
 		}
 	;
 
@@ -625,7 +625,7 @@ Type_mark:					/* empty */
 
 
 Routine:					Obsolete Precondition Local_declarations Routine_body Postcondition Rescue TE_END
-								{$$ = create_node5(ROUTINE_AS,$2,$3,$4,$5,$6);}
+								{$$ = create_node6(ROUTINE_AS,$1,$2,$3,$4,$5,$6);}
 	;
 
 Routine_body: 				Internal

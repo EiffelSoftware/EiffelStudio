@@ -318,6 +318,46 @@ int where;		/* Invariant is being checked before or after compound? */
 }
 
 #ifdef WORKBENCH
+
+char *(*dispose_routine(type))()
+uint32 type;
+{
+	/* Dispose routine associated with type `type'.
+	 * Return 0 if does not exist
+	 */
+
+	uint32 dispose_id;
+
+	dispose_id = esystem[type].dispose_id;
+	
+	if (dispose_id)
+		return wdisp(dispose_id);	/* Has dispose */
+	else
+		return 0;
+}
+
+char *cr_exp(type)
+uint32 type;							/* Dynamic type */
+{
+	/* Creates expanded object of type `type'. If it has
+	 * a creation routine then call it.
+	 */
+
+	char *result;
+	register1 struct cnode *exp_desc;	/* Expanded object description */
+	int32 feature_id;               	/* Creation procedure feature id */
+	int32 static_id;                	/* Creation procedure feature id */
+
+	result = emalloc(type);
+	exp_desc = &System(type);
+	feature_id = exp_desc->cn_creation_id;
+	static_id = exp_desc->static_id;	
+	if (feature_id)
+		callexp(result, feature_id, static_id);	/* Call creation routine */
+
+	return result;
+}
+
 /*
  * Standard initialization routine for composite objects in
  * workbench mode
@@ -361,12 +401,17 @@ char *parent;	/* Parent (enclosing object) */
 		switch (type & SK_HEAD) {
 		case SK_EXP:						/* Found an expanded attribute */
 			{
+			struct cnode *exp_desc;			/* Expanded object description */
 			long offset;					/* Attribute offset */
 			int exp_dtype;					/* Expanded dynamic type */
 			int32 feature_id;				/* Creation procedure feature id */		
+			int32 static_id;				/* Creation procedure feature id */		
 
 			offset = ((long *) Table(cn_attr[i]))[dtype];
 			exp_dtype = (int) (type & SK_DTYPE);
+			exp_desc = &System(exp_dtype);
+			feature_id = exp_desc->cn_creation_id;
+			static_id = exp_desc->static_id;
 			/* Set the expanded reference */
 			*(char **) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + offset;
 			
@@ -375,6 +420,9 @@ char *parent;	/* Parent (enclosing object) */
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
+
+			if (feature_id)
+				callexp(l[0] + offset, feature_id, static_id);
 
 			/* If expanded object is composite also, initialize it. */
 			if (System(exp_dtype).cn_composite)

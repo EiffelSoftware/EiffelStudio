@@ -185,11 +185,11 @@ extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
 /* This is to make tests */
 #undef References
 #undef Size
-#undef Dispose
+#undef Disp_rout
 #undef Create
 #define References(type)	2		/* Number of references in object */
 #define Size(type)			40		/* Size of the object */
-#define Dispose(type)		0		/* No dispose procedure */
+#define Disp_rout(type)		0		/* No dispose procedure */
 #define Create(type)		0		/* No creation procedure */
 char *(**ecreate)();
 
@@ -235,7 +235,7 @@ uint32 type;				/* Dynamic type */
 	 * to be allocated in the scavenge zone, if it exists at all. Also the
 	 * objects must not have any attached dispose routine.
 	 */
-	if (!(gen_scavenge & GS_OFF) && nbytes <= GS_LIMIT && 0 == Dispose(type)) {
+	if (!(gen_scavenge & GS_OFF) && nbytes <= GS_LIMIT && 0 == Disp_rout(type)) {
 		object = malloc_from_zone(nbytes);
 		if (object != (char *) 0)
 			return eif_set(object, nbytes, type);	/* Set for Eiffel use */

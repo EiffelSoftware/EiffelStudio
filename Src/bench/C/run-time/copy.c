@@ -362,6 +362,7 @@ register1 char *target;
 	register5 union overhead *s_zone;	/* Source object header */
 	register6 union overhead *t_zone;	/* Target object header */
 	char *enclosing;					/* Enclosing target object */
+	uint32 size;
 
 	s_zone = HEADER(source);
 	s_flags = s_zone->ov_flags;
@@ -370,8 +371,12 @@ register1 char *target;
 	
 	/* Precompute the enclosing target object */
 	enclosing = target;					/* By default */
-	if (t_flags & EO_EXP)
+	if (t_flags & EO_EXP) {
 		enclosing -= t_zone->ov_size & B_SIZE;
+		size = t_zone->ov_size & B_SIZE;
+		}
+	else
+		size = s_zone->ov_size & B_SIZE;
 
 	if ((s_flags & EO_TYPE) == (t_flags & EO_TYPE)) {
 
@@ -379,7 +384,7 @@ register1 char *target;
 		 * with same dynamic type. Block copy here, but references on
 		 * expanded must be updated and sepcial objects reallocated.
 		 */
-		bcopy(source, target, s_zone->ov_size & B_SIZE);
+		bcopy(source, target, size);
 
 		/* Perform aging tests. We need the address of the enclosing object to
 		 * update the flags there, in case the target is to be memorized.

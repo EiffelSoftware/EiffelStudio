@@ -437,9 +437,9 @@ int where;			/* Are we checking invariant before or after compound? */
 			switch (last->type & SK_HEAD) {
 			case SK_EXP:
 				epush(&loc_stack, &ref);
-				last->it_ref = RTLN(get_short());
+				last->it_ref = RTLX(get_short());
 				epop(&loc_stack, 1);
-				last->type = SK_REF;
+				last->type = SK_EXP;
 				ecopy(ref, last->it_ref);
 				break;
 			case SK_BIT:
@@ -515,10 +515,10 @@ int where;			/* Are we checking invariant before or after compound? */
 				case SK_EXP:
 					stagval = tagval;
 					last->type = SK_POINTER;	/* GC: wait for malloc */
-					last->it_ref = RTLN(type & SK_DTYPE);
-					last->type = SK_REF;	
-					if (tagval != stagval)
-						sync_registers(scur, stop);
+					last->it_ref = RTLX(type & SK_DTYPE);
+					last->type = SK_EXP;	
+					/*if (tagval != stagval) this is done in callexp()
+						sync_registers(scur, stop);*/
 					break;
 				case SK_BIT:
 					last->type = SK_POINTER;	/* GC: wait for malloc */
@@ -536,7 +536,7 @@ int where;			/* Are we checking invariant before or after compound? */
 				stagval = tagval;
 				last->type = SK_POINTER;		/* For GC */
 				last->it_ref = RTLN(type & SK_DTYPE);	
-				last->type = SK_REF;
+				last->type = SK_EXP;
 				if (tagval != stagval)
 					sync_registers(scur, stop);
 				break;
@@ -2523,6 +2523,23 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	}
 	IC = old_IC;					/* Restore IC back-up */
 	return result;
+}
+
+public void callexp(object, fid, stype)
+char *object;
+int fid;			/* Feature ID of expanded creation routine */
+int stype;			/* Static type of expanded */
+{
+	/* This calls the creation routine of the expanded class */
+	struct item *stop;              /* To save stack context */
+	struct item *last;              /* To save stack context */
+	struct stochunk *scur;          /* Current chunk (stack context) */
+
+	last = iget();					/* Get last item from stack */
+	last->it_ref = object;				/* Put item in stack */
+	last->type = SK_REF;
+	if (icall(fid, stype, 0))
+		sync_registers(scur, stop);
 }
 
 private void access(fid, stype, type)

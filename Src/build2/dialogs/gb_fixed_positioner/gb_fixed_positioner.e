@@ -19,15 +19,17 @@ inherit
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	EV_STOCK_PIXMAPS
-		rename
-			implementation as stock_pixmaps_implementation
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
 		undefine
-			default_create, copy, is_equal
+			default_create, copy
 		end
 		
 create
@@ -42,6 +44,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			set_icon_pixmap (Icon_build_window @ 1)
 		end
 		
 	make_with_editor (an_editor: GB_EV_FIXED_EDITOR_CONSTRUCTOR) is

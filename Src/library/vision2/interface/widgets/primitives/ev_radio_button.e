@@ -1,7 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision radio button. Select state is mutualy exlusive%N%
-		%with respect to other radio buttons in a container."
+		"Eiffel Vision radio button. Select state is mutually%N%
+		%exclusive with respect to other radio buttons in a container."
 	status: "See notice at end of class"
 	keywords: "toggle, radio, button"
 	date: "$Date$"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	create_implementation is
 			-- Create the implementation for the toggle button.
 		do
-			Create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
+			create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
 
 feature -- Contract support
@@ -75,6 +75,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/25 22:33:40  brendel
+--| Formatting.
+--|
 --| Revision 1.15  2000/02/25 01:45:35  brendel
 --| Revised. Connection to container needs implementing.
 --|

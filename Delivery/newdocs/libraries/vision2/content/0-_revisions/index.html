@@ -90,6 +90,8 @@
 			<li><B>EV_WIDGET_ACTION_SEQUENCES</B>  - Added `mouse_wheel_actions', fired each time that the mouse wheel is scrolled.</li>
 			<LI><B>EV_NOTEBOOK</B> - Now inherits EV_FONTABLE permitting a font to be applied to the item texts.</li>
 			<li><B>EV_ENVIRONMENT</B> - Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the number of lines that should be scrolled in response to each mouse wheel scroll event received.</li>
+			<li><B>EV_PRINT_CONTEXT</B> - Added `horizontal_resolution' and `vertical_resolution' which return the page size in pixels of the page type selected from an EV_PRINT_DIALOG. This permits you to adjust the figure world you are printing to an EV_PRINT_PROJECTOR based on the limits of the page, as determined by `horizontal_resolution' and `vertical_resolution' in pixels.</li>
+			<li><B>EV_APPLCIATION</B> - Added `process_events_until_stopped' and `stop_processing', similar to `process_events', except the processing is executed until `stop_processing' is called.</li>
 </ul>
 		<P><b>Breaking changes</b></P>
 		<UL>

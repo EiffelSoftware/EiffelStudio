@@ -71,6 +71,8 @@ feature {NONE}
 				an_event ?= input_data
 				an_event.remove_interface_command (edited_behavior.context, removed_command)
 			end
+			edited_function.reset_input_data
+			edited_function.reset_output_data
 			if not do_not_record then
 				history.record (Current);
 			end;

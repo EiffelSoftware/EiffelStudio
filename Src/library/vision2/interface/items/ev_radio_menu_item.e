@@ -10,9 +10,12 @@ class
 
 inherit
 	EV_CHECK_MENU_ITEM
+		export
+			{NONE} disable_select
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			disable_select
 		end
 	
 create
@@ -24,6 +27,30 @@ feature {NONE} -- Initialization
 	create_implementation is
 		do
 			create {EV_RADIO_MENU_ITEM_IMP} implementation.make (Current)
+		end
+
+feature -- Status report
+
+	peers: LINKED_LIST [like Current] is
+			-- List of all radio items in the group `Current' is in.
+		do
+			Result := implementation.peers
+		ensure
+			not_void: Result /= Void
+			bridge_ok: Result.is_equal (implementation.peers)
+			different_list_every_time: Result /= peers
+			not_empty_implies_has_current:
+				not Result.empty implies Result.has (Current)
+		end
+
+feature -- Inapplicable
+
+	disable_select is
+			-- Inapplicable for radio items.
+		do
+			check
+				inapplicable: False
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -54,6 +81,11 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/24 01:32:17  brendel
+--| Added feature `peers' which lets the user look in the list of radio-items
+--| associated with the current item.
+--| Redefined `disable_select', because it is not applicable to radio items.
+--|
 --| Revision 1.12  2000/02/22 19:54:44  brendel
 --| Reworked interface.
 --| Basically removed everything since radiobuttons are now automatically

@@ -17,6 +17,8 @@ interface IEnumFeature;
 interface IEnumEiffelClass;
 interface IEnumCluster;
 interface IEnumClusterProp;
+interface IEiffelClassDescriptor;
+interface IEiffelFeatureDescriptor;
 
 // =========================================================================
 //                                                         Enum Declarations
@@ -314,6 +316,42 @@ interface IEiffelCompilerEvents: IDispatch
 };
 
 //---------------------------------------------------------------------
+// IEiffelDefinitionResult
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IEIFFELDEFINITIONRESULT),
+	helpstring ("Eiffel Go To Defintion Result.")
+]
+interface IEiffelDefinitionResult: IDispatch
+{
+	[id (DISPID_EiffelComCompiler_ModuleName), helpstring ("Retrieve module name of found definition"), propget]
+	HRESULT ModuleName ([out, retval] BSTR* pbstrName);
+
+	[id (DISPID_EiffelComCompiler_Namespace), helpstring ("Retrieve namespace of found definition"), propget]
+	HRESULT Namespace ([out, retval] BSTR* pbstrNamespace);
+	
+	[id (DISPID_EiffelComCompiler_ClassDescriptor), helpstring ("Retrieve found definition class descriptor"), propget]
+	HRESULT ClassDescriptor ([out, retval] IEiffelClassDescriptor** ppDescriptor);
+};
+
+//---------------------------------------------------------------------
+// IEiffelDefinitionFeatureResult
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IEIFFELDEFINITIONFEATURERESULT),
+	helpstring ("Eiffel Go To Defintion Result.")
+]
+interface IEiffelDefinitionFeatureResult: IEiffelDefinitionResult
+{
+	[id (DISPID_EiffelComCompiler_FeatureDescriptor), helpstring ("Retrieve found definition feature descriptor"), propget]
+	HRESULT FeatureDescriptor ([out, retval] IEiffelFeatureDescriptor** ppDescriptor);
+};
+
+//---------------------------------------------------------------------
 // IEiffelCompletionInfo
 //---------------------------------------------------------------------
 [
@@ -346,10 +384,10 @@ interface IEiffelCompletionInfo: IDispatch
 	HRESULT ParseSourceForExpr ([in] BSTR bstrSrcText, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrExpr, [out] BSTR* pbstrFeatureName, [out] VARIANT_BOOL* pvbIsClassExpr);
 
 	[id (DISPID_EiffelComCompiler_FindDefinition), helpstring ("Find targets definition and return filename and location")]
-	HRESULT FindDefinition ([in] BSTR bstrClassText, [in] BSTR bstrTargetFileName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrSourceFileName, [out] ULONG* pulSourceRow);
+	HRESULT FindDefinition ([in] BSTR bstrClassText, [in] BSTR bstrTargetFileName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out, retval] IEiffelDefinitionResult** ppDefResult);
 
 	[id (DISPID_EiffelComCompiler_FindInheritedDefinition), helpstring ("Find targets definition and return filename and location")]
-	HRESULT FindInheritedDefinition ([in] BSTR bstrClassText, [in] BSTR bstrClassName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrSourceFileName, [out] ULONG* pulSourceRow);
+	HRESULT FindInheritedDefinition ([in] BSTR bstrClassText, [in] BSTR bstrClassName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out, retval] IEiffelDefinitionResult** ppDefResult);
 
 	[id (DISPID_EiffelComCompiler_FlushCompletionFeatures), helpstring ("Flush temporary completion features for a specific file")]
 	HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
@@ -701,6 +739,9 @@ interface IEiffelClassDescriptor: IDispatch
 
 	[id (DISPID_EiffelComCompiler_IsExternal), helpstring ("Is class external?"), propget]
 	HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
+
+	[id (DISPID_EiffelComCompiler_IsTrueExternal), helpstring ("Is class a true external?"), propget]
+	HRESULT IsTrueExternal ([out, retval] VARIANT_BOOL* pvbExternal);
 
 	[id (DISPID_EiffelComCompiler_IsGeneric), helpstring ("Is class generic?"), propget]
 	HRESULT IsGeneric ([out, retval] VARIANT_BOOL* pvbGeneric);
@@ -1421,6 +1462,8 @@ library EiffelComCompiler
 	interface IEiffelProjectProperties;
 	interface IEiffelCompiler;
 	interface IEiffelCompilerEvents;
+	interface IEiffelDefinitionResult;
+	interface IEiffelDefinitionFeatureResult;
 	interface IEiffelCompletionInfo;
 	interface IEiffelHtmlDocumentationGenerator;
 	interface IEiffelHtmlDocumentationEvents;   

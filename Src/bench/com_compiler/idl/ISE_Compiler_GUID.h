@@ -18,7 +18,7 @@
 // =========================================================================
 //                                                           Proxy Stub GUID
 
-#define UUID_EIFFELCOMPILERPS                   E1FFE10C-06F1-448E-A221-9C702B9DF685 // This GUID has to be the same as first interfaces IDL!!!
+#define UUID_EIFFELCOMPILERPS                   E1FFE10C-06F1-448E-A221-9C702B9DF685 // This GUID has to be the same as last interfaces in library!!!
 
 // =========================================================================
 //                                                              CoClass GUID
@@ -33,6 +33,8 @@
 #define UUID_IEIFFELEXCEPTION                   E1FFE10C-06F1-448E-A221-9C702B9DF685 // Last interface in library
 #define UUID_IEIFFELPROJECT                     E1FFE1EA-1AED-489B-9E8A-E35342582b2b
 #define UUID_IEIFFELCOMPLETIONINFO              E1FFE139-EDAE-46B7-880B-27D68E7184fa
+#define UUID_IEIFFELDEFINITIONRESULT            E1FFE1F0-F998-41E8-819D-7B802775F51F
+#define UUID_IEIFFELDEFINITIONFEATURERESULT     E1FFE116-678C-403D-AB6E-C4F5254DD36D
 #define UUID_IEIFFELCOMPLETIONENTRY             E1FFE15D-24B4-49A9-9CBC-6AFF6AEb6de3
 #define UUID_IEIFFELCOMPILER                    E1FFE11B-A2E4-4F29-8891-AF2654B50b6b
 #define UUID_IEIFFELCOMPILEREVENTS              E1FFE173-A00E-4BCF-9A7A-13D41E6359b4
@@ -156,6 +158,16 @@ enum
     DISPID_EiffelComCompiler_OutputError,
     DISPID_EiffelComCompiler_OutputWarning,
 
+	// IEiffelDefinitionResult dispatch ID's
+
+	DISPID_EiffelComCompiler_ModuleName,
+	DISPID_EiffelComCompiler_Namespace,
+	DISPID_EiffelComCompiler_ClassDescriptor,
+
+	// IEiffelDefinitionFeatureResult dispatch ID's
+
+	DISPID_EiffelComCompiler_FeatureDescriptor,
+
     // IEiffelCompletionInfo dispatch ID's
 
     DISPID_EiffelComCompiler_AddLocal,
@@ -198,8 +210,8 @@ enum
     DISPID_EiffelComCompiler_ClusterCount,
     DISPID_EiffelComCompiler_RootCluster,
     DISPID_EiffelComCompiler_ClusterDescriptor,
-    DISPID_EiffelComCompiler_ClassDescriptor,
-    DISPID_EiffelComCompiler_FeatureDescriptor,
+    //DISPID_EiffelComCompiler_ClassDescriptor,
+    //DISPID_EiffelComCompiler_FeatureDescriptor,
     DISPID_EiffelComCompiler_SearchClasses,
     DISPID_EiffelComCompiler_SearchFeatures,
     DISPID_EiffelComCompiler_DescriptionFromDotnetType,
@@ -264,6 +276,7 @@ enum
     DISPID_EiffelComCompiler_ClassPath,
     DISPID_EiffelComCompiler_IsDeferred,
     DISPID_EiffelComCompiler_IsExternal,
+    DISPID_EiffelComCompiler_IsTrueExternal,
     DISPID_EiffelComCompiler_IsGeneric,
     // DISPID_EiffelComCompiler_IsLibrary,
 

@@ -13,11 +13,10 @@ inherit
 		redefine
 			make
 		end
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 		rename
 			make as editor_make
 		end
---	WINDOW_ATTRIBUTES
 	EIFFEL_ENV
 
 creation
@@ -25,15 +24,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: EV_WINDOW) is
-			-- Create the dialog.
+	make (par: EV_WINDOW) is
+			-- Create the dialog with parent `par'.
 		local	
 			p_label: EV_LABEL
 --			sep: EV_HORIZONTAL_SEPARATOR
 			hb: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
 		do
-			Precursor (a_parent)
+			Precursor (par)
 
 			create hb.make (display_area)
 			create p_label.make_with_text (hb, Interface_names.t_Shell_command)
@@ -48,16 +47,16 @@ feature {NONE} -- Initialization
 
 			create cancel_b.make_with_text (action_area, Interface_names.b_Cancel)
 			cancel_b.add_click_command (Current, cancel_it)
-			ok_b.set_width (cancel_b.width)
+--			ok_b.set_width (cancel_b.width)
 
-			shell_cmd_field.set_width (150)
+--			shell_cmd_field.set_width (150)
 			shell_cmd_field.add_return_command (Current, ok_it)
 
 			set_modal (true)
 --			set_composite_attributes (Current)
 		end
 
-	make_default (a_tool: EB_EDITOR) is
+	make_default (a_tool: like tool) is
 			-- Popup the dialog for command `a_cmd'.
 		local
 			shell_command: STRING
@@ -140,7 +139,7 @@ feature {NONE} -- Implementation
 			-- if `t' has a current format, and if
 			-- this format is filterable.
 		local
-			mft: EB_MULTIFORMAT_EDIT_TOOL
+			mft: EB_MULTIFORMAT_TOOL
 		do
 			mft ?= tool
 			if mft /= Void then
@@ -161,7 +160,7 @@ feature {NONE} -- Implementation
 				cmd_string.replace_substring_all ("$target", file_name)
 			end
 			if filterable_format = Void or else not postscript_t.state then
-				new_text := tool.text_window.text
+				new_text := tool.text_area.text
 			else
 				new_text := filterable_format.filtered_text 
 					(tool.stone, "PostScript")

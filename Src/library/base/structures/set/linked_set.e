@@ -40,7 +40,7 @@ feature -- Comparison
 	is_subset (other: like Current): BOOLEAN is
 			-- Is current set a subset of `other'?
 		do
-			if not other.empty then
+			if not other.empty and then count <= other.count then
 				from
 					start
 				until

@@ -1,8 +1,15 @@
+indexing
+
+	description:
+		"The query as to run the profile information with.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class PROFILER_QUERY
 
 feature -- Status setting
 
-	set_subqueries (new_queries: LINKED_LIST [EWB_SUBQUERY]) is
+	set_subqueries (new_queries: LINKED_LIST [SUBQUERY]) is
 			-- Set `subqueries' to `new_queries'.
 		do
 			from
@@ -18,7 +25,7 @@ feature -- Status setting
 			end;
 		end;
 
-	set_subquery_operators (new_operators: LINKED_LIST [EWB_SUBQUERY_OPERATOR]) is
+	set_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR]) is
 			-- Set `subquery_operators' to `new_operators'.
 		do
 			from
@@ -36,7 +43,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	subquery_at (index: INTEGER): EWB_SUBQUERY is
+	subquery_at (index: INTEGER): SUBQUERY is
 			-- Result is the subquery at position `index'.
 		require
 			index_large_enough: index >= 1;
@@ -56,7 +63,7 @@ feature -- Status report
 			Result := subqueries.item;
 		end;
 
-	operator_at (index: INTEGER): EWB_SUBQUERY_OPERATOR is
+	operator_at (index: INTEGER): SUBQUERY_OPERATOR is
 			-- Result is the operator at position `index'.
 		require
 			index_large_enough: index >= 1;
@@ -76,10 +83,10 @@ feature -- Status report
 			Result := subquery_operators.item;
 		end;
 
-	subqueries: LINKED_LIST [EWB_SUBQUERY]
+	subqueries: LINKED_LIST [SUBQUERY]
 			-- All active subqueries.
 
-	subquery_operators: LINKED_LIST [EWB_SUBQUERY_OPERATOR]
+	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR]
 			-- All active operators.
 
 end -- class PROFILER_QUERY

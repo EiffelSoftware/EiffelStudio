@@ -71,6 +71,7 @@ inherit
 			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
+			on_mouse_wheel,
 			on_key_up,
 			on_set_focus,
 			on_desactivate,

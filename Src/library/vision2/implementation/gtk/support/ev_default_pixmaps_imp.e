@@ -110,80 +110,132 @@ feature -- Default cursors
 
 	Busy_cursor: EV_CURSOR is
 			-- Standard arrow and small hourglass
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (busy_cursor_xpm)
 		end
 
 	Standard_cursor: EV_CURSOR is
 			-- Standard arrow
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (standard_cursor_xpm)
 		end
 
 	Crosshair_cursor: EV_CURSOR is
 			-- Crosshair
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (crosshair_cursor_xpm)
 		end
 
 	Help_cursor: EV_CURSOR is
 			-- Arrow and question mark
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (help_cursor_xpm)
 		end
 
 	Ibeam_cursor: EV_CURSOR is
 			-- I-beam
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (ibeam_cursor_xpm)
 		end
 
 	No_cursor: EV_CURSOR is
 			-- Slashed_circle
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (no_cursor_xpm)
 		end
 
 	Sizeall_cursor: EV_CURSOR is
 			-- Four-pointed arrow pointing north, south, east and west
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (sizeall_cursor_xpm)
 		end
 
 	Sizens_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north and south
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (sizens_cursor_xpm)
 		end
 
 	Sizenwse_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north-west and south-east
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (sizenwse_cursor_xpm)
 		end
 
 	Sizenesw_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north-east and south-west
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (sizenesw_cursor_xpm)
 		end
 
 	Sizewe_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing west and east
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (sizewe_cursor_xpm)
 		end
 
 	Uparrow_cursor: EV_CURSOR is
 			-- Vertical arrow
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (uparrow_cursor_xpm)
 		end
 
 	Wait_cursor: EV_CURSOR is
 			-- Hourglass
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (wait_cursor_xpm)
 		end
 
 feature {NONE} -- Externals
@@ -248,68 +300,96 @@ feature {NONE} -- Externals
 		alias
 			"portrait_pixmap_xpm"
 		end
-
-	GDK_WATCH: INTEGER is
+		
+	busy_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_WATCH"
+			"busy_cursor_xpm"
 		end
-
-	GDK_ARROW: INTEGER is
+		
+	crosshair_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_ARROW"
+			"crosshair_cursor_xpm"
 		end
-
-	GDK_CROSSHAIR: INTEGER is
+		
+	help_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_CROSSHAIR"
+			"help_cursor_xpm"
 		end
-
-	GDK_XTERM: INTEGER is
+		
+	ibeam_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_XTERM"
+			"ibeam_cursor_xpm"
 		end
-
-	GDK_CROSS_REVERSE: INTEGER is
+		
+	no_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_CROSS_REVERSE"
+			"no_cursor_xpm"
 		end
-
-	GDK_FLEUR: INTEGER is
+		
+	sizeall_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_FLEUR"
+			"sizeall_cursor_xpm"
 		end
-
-	GDK_SB_V_DOUBLE_ARROW: INTEGER is
+		
+	sizenesw_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_SB_V_DOUBLE_ARROW"
+			"sizenesw_cursor_xpm"
 		end
-
-	GDK_SB_H_DOUBLE_ARROW: INTEGER is
+		
+	sizens_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_SB_H_DOUBLE_ARROW"
+			"sizens_cursor_xpm"
 		end
-
-	GDK_SB_UP_ARROW: INTEGER is
+		
+	sizenwse_cursor_xpm: POINTER is
 		external
-			"C [macro <gdk/gdktypes.h>]"
+			"C [macro %"ev_c_util.h%"]"
 		alias
-			"GDK_SB_UP_ARROW"
+			"sizenwse_cursor_xpm"
+		end
+		
+	sizewe_cursor_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"sizewe_cursor_xpm"
+		end
+	
+	standard_cursor_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"standard_cursor_xpm"
+		end
+		
+	uparrow_cursor_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"busy_cursor_xpm"
+		end
+		
+	wait_cursor_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"busy_cursor_xpm"
 		end
 
 end -- class EV_STOCK_PIXMAPS_IMP

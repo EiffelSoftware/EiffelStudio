@@ -7,7 +7,9 @@ class
 	CONSUMED_ASSEMBLY
 
 inherit
-	ANY
+	CACHE_SETTINGS
+		export
+			{NONE} all
 		redefine
 			is_equal, out
 		end
@@ -50,10 +52,14 @@ feature {NONE} -- Initialization
 			unique_id := id
 			is_in_gac := a_in_gac
 			
-			create folder_name.make (n.count + id.count + 1)
-			folder_name.append (n)
-			folder_name.append_character ('!')
-			folder_name.append (id)
+			if concervative_mode then
+				folder_name := id.twin
+			else
+				create folder_name.make (n.count + id.count + 1)
+				folder_name.append (n)
+				folder_name.append_character ('!')
+				folder_name.append (id)				
+			end
 		ensure
 			name_set: name = n
 			version_set: version = v

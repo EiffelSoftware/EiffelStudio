@@ -7,35 +7,43 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INET_CLIENT
+class NETWORK_CLIENT
 
 inherit
+
 	CLIENT
 		redefine
-			in_out
+			in_out, send
 		end
 
 feature -- Access
 
-	in_out: NETWORK_SOCKET_STREAM
-		-- Receive and send sockets.
+	in_out: NETWORK_STREAM_SOCKET
+			-- Receive and send sockets.
 
-	make (a : SOCKET_ADDRESS_NETWORK) is
+	make (a_peer_port: INTEGER; a_peer_name: STRING) is
+		require
+			a_valid_port: a_peer_port > 0
+			a_valid_name: a_peer_name /= Void and then not a_peer_name.empty
 		do
-			!!in_out.make 
-			in_out.set_peer_address (clone (a))
-			in_out.connect;
+			!!in_out.make_client_by_port (a_peer_port, a_peer_name)
+			in_out.connect
 		end
 
-	close is
+	cleanup is
 		do
 			in_out.close
 		end
 
-end -- class INET_CLIENT
+	send (msg : STORABLE) is
+		do
+			msg.independent_store (in_out)
+		end
+
+end -- class NETWORK_CLIENT
 
 --|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

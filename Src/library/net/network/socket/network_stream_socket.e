@@ -1,130 +1,173 @@
 indexing
 
 	description:
-		"A network socket stream.";
+		"A network stream socket.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class NETWORK_SOCKET_STREAM
+class NETWORK_STREAM_SOCKET
 
 inherit
 
 	NETWORK_SOCKET
 
-creation {NETWORK_SOCKET_STREAM}
+creation {NETWORK_STREAM_SOCKET}
 
 	create_from_descriptor
 
 creation
 
-	make
+	make, make_client_by_port, make_server_by_port
 
-feature	-- Initialization
+feature -- Initialization
 
 	make is
 			-- Create a network stream socket
 		do
-			family := af_inet;
-			type := sock_stream;
-			make_socket;
-		end;
+			family := af_inet
+			type := sock_stream
+			make_socket
+		end
 
-feature 	-- Status report
-	
+	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
+		require
+			valid_peer_host: a_peer_host /= Void and then not a_peer_host.empty
+			valid_port: a_peer_port >= 0
+		local
+			h_address: HOST_ADDRESS
+			i, code: INTEGER
+			is_hostname: BOOLEAN
+		do
+			make
+			from
+				i := 1
+			until
+				i > a_peer_host.count or is_hostname
+			loop
+				code := a_peer_host.item_code (i)
+				is_hostname := (code /= 46 and then (code < 48 or else code > 57))
+				i := i + 1
+			end
+			!!h_address.make
+			if is_hostname then
+				h_address.set_address_from_name (a_peer_host)
+			else
+				h_address.set_host_address (a_peer_host)
+			end
+			!!peer_address.make
+			peer_address.set_host_address (h_address)
+			peer_address.set_port (a_peer_port)
+		end
+
+	make_server_by_port (a_port: INTEGER) is
+		require
+			valid_port: a_port >= 0
+		local
+			h_address: HOST_ADDRESS
+		do
+			make
+			!!h_address.make
+			h_address.set_in_address_any
+			!!address.make
+			address.set_host_address (h_address)
+			address.set_port (a_port)
+			bind
+		end
+
+feature -- Status report
+
 	maxium_seg_size: INTEGER is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg);
-		end;
+			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg)
+		end
 
-feature	-- Status setting
+feature -- Status setting
 
 	set_delay is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1);
-		end;
+			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1)
+		end
 
 	set_nodelay is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0);
-		end;
+			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0)
+		end
 
 	linger_time: INTEGER is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			Result := c_linger_time (descriptor);
-		end;
+			Result := c_linger_time (descriptor)
+		end
 
 	is_linger_on: BOOLEAN is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			Result := c_is_linger_on (descriptor);
-		end;
+			Result := c_is_linger_on (descriptor)
+		end
 
 	set_linger (flag: BOOLEAN; time: INTEGER) is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		local
-			valid_return: INTEGER;
+			valid_return: INTEGER
 		do
-			valid_return := c_set_sock_opt_linger (descriptor, flag, time);
-		end;
+			valid_return := c_set_sock_opt_linger (descriptor, flag, time)
+		end
 
 	set_out_of_band_inline is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 1);
-		end;
-
+			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 1)
+		end
 
 	set_out_of_band_not_inline is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 0);
-		end;
+			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 0)
+		end
 
 	is_out_of_band_inline: BOOLEAN is
 		require
-			socket_exists: exists;
+			socket_exists: exists
 		local
 			is_inline: INTEGER
 		do
-			is_inline := c_get_sock_opt_int (descriptor, level_sol_socket, so_oob_inline);
-			Result := is_inline /= 0;
-		end;
-
+			is_inline := c_get_sock_opt_int (descriptor, level_sol_socket, so_oob_inline)
+			Result := is_inline /= 0
+		end
 
 feature {NONE} -- Externals
 
 	c_set_sock_opt_linger (fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER is
 		external
 			"C"
-		end;
+		end
 
 	c_is_linger_on (fd: INTEGER): BOOLEAN is
 		external
 			"C"
-		end;
+		end
 
 	c_linger_time (fd: INTEGER): INTEGER is
 		external
 			"C"
-		end;
-end
+		end
+end -- class NETWORK_STREAM_SOCKET
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -135,3 +178,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
+

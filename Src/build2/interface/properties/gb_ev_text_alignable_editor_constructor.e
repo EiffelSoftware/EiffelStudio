@@ -26,6 +26,7 @@ feature -- Access
 			-- of items held in `objects'.
 		do	
 			create Result
+			Result.set_padding_width (object_editor_vertical_padding_width)
 			initialize_attribute_editor (Result)
 			create label.make_with_text (gb_ev_text_alignable)
 			label.set_tooltip (gb_ev_text_alignable_tooltip)

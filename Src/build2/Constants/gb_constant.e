@@ -20,6 +20,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

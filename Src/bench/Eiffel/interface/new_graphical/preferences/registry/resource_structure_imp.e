@@ -14,8 +14,6 @@ create
 feature -- Initialization
 
 	initialize (default_file: STRING; loc: STRING) is
-		local
-			file_name: FILE_NAME
 		do
 			make_default (default_file)
 			if root_folder_i /= Void then
@@ -52,8 +50,6 @@ feature -- Initialization
 
 	make_from_location (loc: STRING) is
 				-- Initialize Current from registry key `loc'.
-		local
-			s: STRING
 		do
 			location := loc
 			create table.make (100)
@@ -75,8 +71,6 @@ feature -- Update
 
 	update (loc: STRING) is
 				-- Initialize Current from registry key `loc'.
-		local
-			s: STRING
 		do
 			location := loc
 			root_folder_i.update_root (loc)

@@ -1,9 +1,7 @@
 indexing
- 
-	description:
-		"A resource value for color resources."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "A resource value for color resources."
+	date		: "$Date$"
+	revision	: "$Revision$"
  
 class
 	COLOR_RESOURCE 

@@ -23,7 +23,7 @@ feature -- Initialization
 	make is
 			-- Initialize
 		local
-			h1, edit_box: EV_HORIZONTAL_BOX
+			edit_box: EV_HORIZONTAL_BOX
 			v0, v1, v2: EV_VERTICAL_BOX
 			split: EV_HORIZONTAL_SPLIT_AREA
 --			sbar: EV_STATUS_BAR

@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"Resource encapsulating an array of strings."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Resource encapsulating an array of strings."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	ARRAY_RESOURCE
@@ -15,10 +13,11 @@ inherit
 			default_value as value
 		redefine
 			set_value, value, xml_trace
-		end;
+		end
 
 creation
-	make, make_from_string
+	make, 
+	make_from_string
 
 feature {NONE} -- Initialization
 
@@ -43,8 +42,7 @@ feature -- Access
 	value: STRING
 			-- Value of the resource 
 
---	default_value, 
-		actual_value: ARRAY [STRING]
+	actual_value: ARRAY [STRING]
 			-- The array, as reprensented by `value'.
 
 feature -- Setting
@@ -60,39 +58,10 @@ feature -- Setting
 	set_value (a_string: STRING) is
 			-- Set `value' to `a_string' and update
 			-- `actual_value',
-		require else
-			a_string_is_valid: is_valid (a_string)
 		do
 			value := a_string
 			update_actual_value
 		end
-
---	has_changed: BOOLEAN is
---			-- Has the resource changed from the default value?
---		local
---			i: INTEGER
---		do
---			Result := True
---			if actual_value /= Void and then
---				default_value /= Void 
---			then
---				if actual_value.count = default_value.count then
---					from	
---						i := 1
---					until
---						i > actual_value.count or else not Result
---					loop
---						Result := not default_value.item (i).is_equal
---									(actual_value.item (i))
---						i := i + 1
---					end
---				end
---			elseif actual_value = Void and then
---				default_value = Void 
---			then
---				Result := False
---			end
---		end
 
 feature {NONE} -- Implementation
 
@@ -103,7 +72,7 @@ feature {NONE} -- Implementation
 			not_first_time: BOOLEAN
 			c: INTEGER
 		do
-			!! value.make (0)
+			create value.make (0)
 			c := actual_value.count
 			if c > 0 then
 				from
@@ -127,7 +96,7 @@ feature {NONE} -- Implementation
 		local
 			start_pos, end_pos: INTEGER
 		do
-			!! actual_value.make (1, 0)
+			create actual_value.make (1, 0)
 			if not value.empty then
 				from
 					start_pos := 1
@@ -149,11 +118,17 @@ feature -- Output
 
 	xml_trace: STRING is
 			-- XML representation of current
+		local
+			xml_name, xml_value: STRING
 		do
-			Result := "<TEXT>"
-			Result.append (name)
+			xml_name := name
+			xml_value := value
+
+			create Result.make (41 + xml_name.count + xml_value.count)
+			Result.append ("<TEXT>")
+			Result.append (xml_name)
 			Result.append ("<LIST_STRING>")
-			Result.append (value)
+			Result.append (xml_value)
 			Result.append ("</LIST_STRING></TEXT>")
 		end
 

@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"A resource value for string resources."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "A resource value for string resources."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	FONT_RESOURCE
@@ -11,7 +9,7 @@ class
 inherit
 	STRING_RESOURCE
 		redefine
-			make, set_value, is_valid, xml_trace, registry_name
+			make, set_value, xml_trace, registry_name
 		end
 
 	EV_FONT_CONSTANTS
@@ -66,19 +64,6 @@ feature -- Access
 		ensure
 			valid_result: Result /= Void
 		end;
-
-	is_valid (a_value: STRING): BOOLEAN is
-			-- Is `a_value' valid for use in Current?
-			--| Always `True'.
-		local
---			font: EV_FONT
-		do
---			if not a_value.empty then
---				create font.make_by_name(a_value)
---				Result := font.destroyed
---			end
-			Result := True
-		end
 
 feature -- Status Setting
 
@@ -191,11 +176,17 @@ feature -- Output
 
 	xml_trace: STRING is
 			-- XML representation of current
+		local
+			xml_name, xml_value: STRING
 		do
-			Result := "<TEXT>"
-			Result.append (name)
+			xml_name := name
+			xml_value := value
+
+			create Result.make (27 + xml_name.count + xml_value.count)
+			Result.append ("<TEXT>")
+			Result.append (xml_name)
 			Result.append ("<FONT>")
-			Result.append (value)
+			Result.append (xml_value)
 			Result.append ("</FONT></TEXT>")
 		end
 

@@ -33,9 +33,6 @@ feature -- Access
 	item, resource (resource_name: STRING): RESOURCE is
 			-- Resource named `resource_name'.
 			-- Name includes path.
-		local
-			rl: LINKED_LIST [RESOURCE]
-			last_sep, pos: INTEGER
 		do
 			Result := table.item (resource_name)
 		end
@@ -133,7 +130,6 @@ feature {NONE} -- Implementation
 		local
 			l: LINKED_LIST [RESOURCE_FOLDER_I]
 			f: RESOURCE_FOLDER_I
-			s: STRING
 		do
 			l := par.child_list
 			from

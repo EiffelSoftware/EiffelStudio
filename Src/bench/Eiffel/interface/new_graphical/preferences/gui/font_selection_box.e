@@ -25,7 +25,7 @@ feature -- Creation
 	make (h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
 			-- Creation
 		local
-			h0, h1, h2: EV_HORIZONTAL_BOX
+			h2: EV_HORIZONTAL_BOX
 		do
 			Precursor (h, new_caller)
 			create h2
@@ -44,12 +44,12 @@ feature -- Commands
 	update_changes is
 			-- Commit the Result of Font Tool.
 		local
-			s: STRING
+--			s: STRING
 		do
 			update_resource
 			caller.update
-		--	create s.make (20)
-		--	resource.set_value (s)
+--			create s.make (20)
+--			resource.set_value (s)
 		end
 
 	create_tool is

@@ -415,7 +415,7 @@ feature -- Resizing
 feature -- Event - command association
 	
 	add_button_press_command (mouse_button: INTEGER; 
-		 cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button number 'mouse_button' is pressed.
 		require
@@ -425,9 +425,27 @@ feature -- Event - command association
 			implementation.add_button_press_command (mouse_button,
 								 cmd, arg)
 		end
-	
+
+--	remove_button_press_commands (mouse_button: INTEGER) is
+--			-- Empty the list of commands to be executed when
+--			-- button number 'mouse_button' is pressed.
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.remove_button_press_commands (mouse_button)
+	--	end
+
+--	get_button_press_commands (mouse_button: INTEGER): LINKED_LIST[EV_COMMAND] is
+--			-- Return the list of commands to be executed when
+	--		-- button number 'mouse_button' is pressed.
+	--	require
+	--		exists: not destroyed
+	--	do
+	--		implementation.get_button_press_commands (mouse_button)
+	--	end
+
 	add_button_release_command (mouse_button: INTEGER;
-		    cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button number 'mouse_button' is released.
 		require
@@ -439,7 +457,7 @@ feature -- Event - command association
 		end
 	
 	add_double_click_command (mouse_button: INTEGER;
-			  cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			  cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button number `mouse_button' is double clicked.
 		require
@@ -450,7 +468,7 @@ feature -- Event - command association
 								 cmd, arg)
 		end
 	
-	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- mouse move.
 		require
@@ -460,7 +478,7 @@ feature -- Event - command association
 			implementation.add_motion_notify_command (cmd, arg)
 		end
 	
-	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the widget is destroyed.
 		require
@@ -470,7 +488,7 @@ feature -- Event - command association
 			implementation.add_destroy_command (cmd, arg)
 		end	
 	
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the widget has to be redrawn because it was exposed from
 			-- behind another widget.
@@ -481,7 +499,7 @@ feature -- Event - command association
 			implementation.add_expose_command (cmd, arg)
 		end	
 	
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- a key is pressed on the keyboard while the widget has the
 			-- focus.
@@ -492,7 +510,7 @@ feature -- Event - command association
 			implementation.add_key_press_command (cmd, arg)
 		end	
 	
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- a key is released on the keyboard while the widget has the
 			-- focus.
@@ -503,7 +521,7 @@ feature -- Event - command association
 			implementation.add_key_release_command (cmd, arg)
 		end	
 	
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the cursor of the mouse enter the widget.
 		require
@@ -513,7 +531,7 @@ feature -- Event - command association
 			implementation.add_enter_notify_command (cmd, arg)
 		end	
 	
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the cursor of the mouse leave the widget.
 		require
@@ -541,7 +559,7 @@ feature -- Event - command association
 			Result := implementation.last_command_id
 		end
 	
-feature {EV_WIDGET_I, EV_WIDGET} -- Implementation
+feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget

@@ -296,7 +296,7 @@ invariant
 	change_actions_not_void: is_useable implies
 		change_actions /= Void
 	proportion_within_range: is_useable implies
-		proportion >= 0 and proportion <= 1
+		proportion >= 0.0 and proportion <= 1.0
 	proportion_definition: is_useable implies
 		maximum = minimum implies proportion = 0.0
 	proportion_correct_value: (is_useable and maximum /= minimum) implies
@@ -333,6 +333,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/20 22:46:42  pichery
+--| Fixed bug.
+--|
 --| Revision 1.15  2000/04/20 17:03:59  rogers
 --| Added delta, which is now used in the assertion
 --| proportion_correct_value.

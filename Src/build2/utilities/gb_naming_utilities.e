@@ -91,7 +91,7 @@ feature -- Basic operations
 				Result_is_uniqe_name: not names.has (Result)
 			end
 		end
-		
+
 	undo_last_character (text_field: EV_TEXT_FIELD) is
 			-- Remove last character added to `text_field'.
 			-- Dependent on caret position, so this should be called
@@ -117,6 +117,21 @@ feature -- Basic operations
 				end
 				text_field.change_actions.resume
 		end
+		
+	pixmap_file_title_to_constant_name (file_title: STRING): STRING is
+			-- Convert `file_title' which is the title of a file on disk
+			-- to a prompted name for a constant value.
+		require
+			file_title_not_void: file_title /= Void
+		do
+			Result := clone (file_title)
+			Result.replace_substring_all (" ", "_")
+			Result.replace_substring_all (".", "_")
+			Result := Result.as_lower
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 		
 
 end -- class GB_NAMING_UTILITIES

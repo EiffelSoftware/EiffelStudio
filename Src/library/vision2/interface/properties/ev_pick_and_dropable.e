@@ -146,14 +146,24 @@ feature {NONE}-- Implementation
 
 	create_action_sequences is
 			-- See `{EV_ANY}.create_action_sequences'.
+		local
+			pnd_targets: LINKED_LIST [INTEGER]
 		do
+			pnd_targets := (create {EV_ENVIRONMENT})
+				.application.implementation.pnd_targets
 			create pick_actions
 			create conforming_pick_actions
 			create drop_actions
-			drop_actions.set_source_connection_agent (
-				((create {EV_ENVIRONMENT}).application.
-					implementation.pnd_targets)~extend (object_id)
+			drop_actions.not_empty_actions.extend (
+					pnd_targets~extend (object_id)
 			)
+			drop_actions.empty_actions.extend (
+					pnd_targets~prune_all (object_id)
+			)
+			if not drop_actions.empty then
+				pnd_targets.extend (object_id)
+			end
+
 		end
 
 feature {EV_APPLICATION_I, EV_PICK_AND_DROPABLE_I} -- Implementation
@@ -191,6 +201,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/24 02:19:58  oconnor
+--| use new not_empty_actions from ACTION_SEQUENCE
+--|
 --| Revision 1.5  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

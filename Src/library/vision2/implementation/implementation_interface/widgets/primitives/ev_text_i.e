@@ -71,40 +71,6 @@ feature -- Status report
 			valid_caret_position: valid_caret_position (i)
 		end
 
-	has_system_frozen_widget: BOOLEAN is
-			-- Are there any frozen widgets?
-			-- If a widget is frozen any updates made to it
-			-- will not be shown until the widget is
-			-- thawn again.
-		require
-		deferred
-		end
-
-feature -- Status settings
-
-	freeze is
-			-- Freeze the widget.
-			-- If the widget is frozen any updates made to the
-			-- window will not be shown until the widget is
-			-- thawn again.
-			-- Note: Only one window can be frozen at a time.
-			-- This is because of a limitation on Windows.
-		require
-			not_widget_is_frozen: not has_system_frozen_widget
-		deferred
-		ensure
-			is_frozen: has_system_frozen_widget
-		end
-
-	thaw is
-			-- Thaw a frozen widget.
-		require
-			is_frozen: has_system_frozen_widget
-		deferred
-		ensure
-			no_widget_is_frozen: not has_system_frozen_widget
-		end
-
 feature -- Basic operation
 
 	put_new_line is

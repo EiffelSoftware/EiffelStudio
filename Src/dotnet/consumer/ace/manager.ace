@@ -37,6 +37,8 @@ cluster
 		exclude
 			"CVS"; "EIFGEN"; 
 		visible
+			LOCAL_CACHE_READER
+			end
 			COM_ISE_CACHE_MANAGER
 			end
 			COM_ASSEMBLY_INFORMATION
@@ -66,3 +68,4 @@ assembly
 			"XML_"
 		end
 end
+

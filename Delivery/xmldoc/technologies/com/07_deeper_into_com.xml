@@ -1,7 +1,5 @@
 <document title="Deeper into COM" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Deeper into COM
@@ -80,9 +78,7 @@
 			<line_break></line_break>
 			<link>
 				<url>06_access_type.html</url>
-				<label> Access Type
-					<line_break></line_break>
-				</label>
+				<label> Access Type</label>
 			</link>
 			<line_break></line_break>
 			<link>
@@ -90,5 +86,4 @@
 				<label> Deeper into COM</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

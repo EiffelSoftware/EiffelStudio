@@ -1,7 +1,5 @@
 <document title="EiffelCOM" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>The Component Object Model
@@ -84,9 +82,7 @@
 			<line_break></line_break>
 			<link>
 				<url>06_access_type.html</url>
-				<label> Access Type
-					<line_break></line_break>
-				</label>
+				<label> Access Type</label>
 			</link>
 			<line_break></line_break>
 			<link>

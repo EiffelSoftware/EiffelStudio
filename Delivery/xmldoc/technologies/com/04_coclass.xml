@@ -1,7 +1,5 @@
 <document title="Coclass" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Coclass
@@ -15,7 +13,7 @@
 		<paragraph>The way a class object is loaded in memory (this process is called activation) depends on the location of the component (See 
 			<link>
 				<url>05_component_location.xml</url>
-				<label>Location. </label> 
+				<label>Location</label> 
 			</link> for a description of the possible locations of a component). If the component is an in-process server then the class object is called directly through the functions exported from the DLL. If the component is an out-of-process server then it provides COM with a pointer to the class object. In both cases, once the component is loaded, COM has access to the class object and can call it would a client request a new instance of a component. 
 		</paragraph>
 		<div>
@@ -67,9 +65,7 @@
 			<line_break></line_break>
 			<link>
 				<url>06_access_type.html</url>
-				<label> Access Type
-					<line_break></line_break>
-				</label>
+				<label> Access Type</label>
 			</link>
 			<line_break></line_break>
 			<link>

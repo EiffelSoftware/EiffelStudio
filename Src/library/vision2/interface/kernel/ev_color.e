@@ -147,7 +147,7 @@ feature -- Implementation
 	implementation: EV_COLOR_I
 			-- Implementation of color
 
-feature {EV_DEFAULT_COLORS_IMP, EV_COLOR_SELECTION_DIALOG_IMP} -- Initialization
+feature {EV_DEFAULT_COLORS_IMP, EV_COLOR_DIALOG_IMP} -- Initialization
 
 	set_implementation (color_imp: EV_COLOR_IMP) is
 			-- Set a color thanks to an implementation color

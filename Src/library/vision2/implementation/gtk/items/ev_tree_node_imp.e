@@ -310,6 +310,9 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			C.gtk_label_get (text_label, $text_ptr)
 			if gtk_pixmap /= NULL and then parent_tree_imp /= Void then
+				if pixmap.height > parent_tree_imp.row_height then
+					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pixmap.height)
+				end
 				C.gtk_pixmap_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), $gdkpix, $gdkmask)
 				C.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,

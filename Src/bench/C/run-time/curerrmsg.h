@@ -45,6 +45,7 @@
 #define CURAPPERR10	"    A Child Separate Object is dead(maybe killed by user)(%s)."
 #define CURAPPERR11	"    No error occurs on the processor so far. Crash happens on other processor(s)."
 #define CURAPPERR12	"    Invalid connection to parent."
+#define CURAPPERR38	"    Try to apply feature/attribute to Void separate object."
 
 
 /* The following are error messages whose causes are not clear  */
@@ -53,6 +54,12 @@
 #define CURERR3		"    Receive Unknown Parameter Data Type: %d."
 #define CURERR4		"    Try to Send Unknown Parameter Data Type: %d."
 #define CURERR5		"    A UNREGISTER make a reserved client destroyed \n-- maybe caused by the crash of other separate object(s)!"
+#define CURERR17	"    The parent processor asked the local processor to terminate."
+#define CURERR18	"    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list."
+#define CURERR19	"    Got EXIT_OK message from <%s, %d> but there is no entry in child list."
+#define CURERR20	"    Network exception happened on the local processor."
+#define CURERR21	"    Network exception happened on the parent of the local processor."
+#define CURERR22	"    Network exception happened on the child(ren) of the local processor."
 
 
 /*--------------------------------------------------------*/
@@ -127,6 +134,7 @@
 #define CURIMPERR21	"    Can't find an entry for local host `%s' in host table(s)."
 #define CURIMPERR22	"    Can't allocate socket!\n-- Maybe system resources are exhausted(%s)!"
 #define CURIMPERR23	"    Can't create server for a separate object!\n-- Maybe system resources(socket) are exhausted(%s)!"
+#define CURIMPERR24	"    Error happened when accepts from network(%s)."
 
 /* The following are application error messages */
 
@@ -149,9 +157,9 @@
 /* The following are error messages whose causes are not clear  */
 #define CURERR7 	"    Invalid number of parameters to start the concurrent application\n-- Correct format is: executable init parameters_of_the_creation_feature_of_root_obj(if_any)."
 #define CURERR8 	"    The first parameter of service file must be `init'(used by user to start\n up application) or `creation'(used by system)."
-#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up."	
-#define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	
-#define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	
+#define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number(%d)."	
+#define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>."
+#define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>."
 	
 
 
@@ -164,15 +172,16 @@
 /* The following are implementation error messages */
 #define CURIMPERR17 	"    Expect REGISTER/REGISTER_FIRST_FROM_PARENT but got %s (in 'idle_usage')."
 
-/* The following are application error messages */
-/*
-#define CURAPPERR38
-*/
+
+/*--------------------------------------------------------*/
+/*     Error Message From  SEP_CALL.c                     */
+/*--------------------------------------------------------*/
 
 /* The following are error messages whose causes are not clear  */
-/*
-#define CURERR13	
-*/
+#define CURERR13	"    Error in separate_call. Got %s."	
+#define CURERR14	"    Error happened when execute separate feature/attribute `%s'\nof `%s'."
+#define CURERR15	"   Attribute %s is not found in class %s."
+#define CURERR16	"    Not implemented type(0x%x) of separate attribute."
 
 
 /*--------------------------------------------------------*/
@@ -181,17 +190,17 @@
 
 /* The following are implementation error messages */
 /*
-#define CURIMPERR24	
+#define CURIMPERR25	
 */
 
 /* The following are application error messages */
 /*
-#define CURAPPERR38
+#define CURAPPERR39
 */
 
 /* The following are error messages whose causes are not clear  */
 /*
-#define CURERR13	
+#define CURERR23	
 */
 
 #endif

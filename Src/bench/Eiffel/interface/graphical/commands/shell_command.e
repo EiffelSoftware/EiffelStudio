@@ -84,14 +84,20 @@ feature -- Update
 		end
 
 	replace_target (cmd: STRING; fn:STRING) is
+			-- Find out if `fn' is a relativ path or not and if it is
+			-- one, complete it to make it absolute, so that the shell
+			-- editor will be able to load the file
 		local
 			target_string: STRING
 			cwd:STRING
 			file:PLAIN_TEXT_FILE
 			code:INTEGER
 		do
-			cwd := clone (current_working_directory)
---			change_working_directory ("EIFGEN")
+			cwd := current_working_directory
+				--| Move to the "EIFGEN" directory and try to open
+				--| the file `fn', if it does not succeed, it means
+				--| that it was a relativ pathname and we need to make
+				--| it absolute
 			change_working_directory (Eiffelgen)
 			!! file.make(fn)
 			if file.exists then 
@@ -99,7 +105,7 @@ feature -- Update
 				target_string := fn
 			else
 				change_working_directory (cwd)
-				target_string := fn
+				target_string := clone (fn)
 				target_string.prepend_character (Directory_separator)
 				target_string.prepend (current_working_directory)
 			end

@@ -485,8 +485,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
-			conformance_on_formal: BOOLEAN
---			creation_constraint_list: LINKED_LIST [FEATURE_I]
+			conformance_on_formal, matched: BOOLEAN
+			creators_table: EXTEND_TABLE [EXPORT_I, STRING]
+			creation_constraint_list: LINKED_LIST [FEATURE_I]
 			error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
 			from
@@ -511,7 +512,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 					-- Evaluation of the constraint in the associated class
 				constraint_type := associated_class.generics.i_th (i).constraint_type
---				creation_constraint_list := associated_class.generics.i_th (i).constraint_creation_list
 				conformance_on_formal := False
 
 				if constraint_type.is_formal then
@@ -545,6 +545,34 @@ feature {COMPILER_EXPORTER} -- Primitives
 						!! Result.make
 					end
 					generate_constraint_error (Result, to_check, constraint_type, i)
+				end
+
+					-- Check now for the validity of the creation constraint clause if there is one
+				creation_constraint_list := associated_class.generics.i_th (i).constraint_creation_list
+				if creation_constraint_list /= Void then
+					creators_table := to_check.associated_class.creators
+
+						-- A creation procedure has to be specified, so if none is specified
+						-- or if there is no creation procedure in the class corresponding to
+						-- `to_check', this is not valid.
+					matched := creators_table /= Void and then not creators_table.empty
+					if matched then
+						from
+							creation_constraint_list.start
+						until
+							matched or else creation_constraint_list.after
+						loop
+							matched := creators_table.has (creation_constraint_list.item.feature_name)
+							creation_constraint_list.forth
+						end
+					end
+	
+					if not matched then
+						if Result = Void then
+							!! Result.make
+						end
+						generate_constraint_error (Result, to_check, constraint_type, i)
+					end
 				end
 
 					-- We append the list coming from the recursive call

@@ -21,13 +21,6 @@ deferred class DYNAMIC_TREE [G] inherit
 	TREE [G]
 		redefine
 			parent
-		select
-			child_replace, add_child
-		end;
-
-	UNBOUNDED
-		undefine
-			empty
 		end
 
 feature -- Access
@@ -232,20 +225,13 @@ feature -- Deletion
 
 	wipe_out is
 			-- Empty `Current'.
-		do
-			from
-				child_start
-			until
-				child_off
-			loop
-				remove_child
-			end
+		deferred
 		end;
 
 	child_contractable: BOOLEAN is
 			-- May items be removed from `Current'?
 		do
-			Result := not off
+			Result := not child_off
 		end;
 
 feature {DYNAMIC_TREE} -- Creation
@@ -274,7 +260,7 @@ feature -- Obsolete features
 			from
 				counter := 1
 			until
-				off or else (counter > n)
+				child_off or else (counter > n)
 			loop
 				remove_left_child;
 				counter := counter + 1
@@ -291,7 +277,7 @@ feature -- Obsolete features
 			from
 				counter := 1
 			until
-				off or else (counter > n)
+				child_off or else (counter > n)
 			loop
 				remove_right_child;
 				counter := counter + 1
@@ -301,6 +287,6 @@ feature -- Obsolete features
 invariant
 
 	extensible_definition: extensible = true;
-	child_property: child_contractable = not off
+	child_property: child_contractable = not child_off
 
 end -- class DYNAMIC_TREE

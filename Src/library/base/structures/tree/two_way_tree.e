@@ -36,8 +36,7 @@ class TWO_WAY_TREE [G] inherit
 			{TWO_WAY_TREE}
 				bl_put_left, bl_put_right,
 				forget_left, forget_right;
-			{NONE}
-				bl_put_between
+			{NONE} bl_put_between
 		end;
 
 	BI_LINKABLE [G]
@@ -76,11 +75,11 @@ class TWO_WAY_TREE [G] inherit
 			merge_right as twl_merge_right,
 			fill as twl_fill,
 			writable as child_writable,
-			extensible as child_extensible,
 			remove as remove_child,
 			remove_left as remove_left_child,
 			remove_right as remove_right_child,
 			contractable as child_contractable,
+			extensible as child_extensible,
 			duplicate as twl_duplicate,
 			empty as is_leaf,
 			full as twl_full,
@@ -99,21 +98,15 @@ class TWO_WAY_TREE [G] inherit
 			isfirst as child_isfirst,
 			islast as child_islast
 		export
-			{NONE}
-				twl_has, twl_add,
-				twl_put, twl_replace, twl_fill,
-				twl_merge_left, twl_merge_right,
-				twl_contractable,
-				twl_seq_rep, twl_duplicate,
-				twl_full
+			{ANY} child
 		undefine
-			child_readable,
-			child_writable, child_extensible,
+			child_readable, is_leaf,
+			child_writable,
 			child_contractable,
 			sequential_representation,
-			is_leaf, arity
+			child_isfirst, child_islast, valid_cursor_index
 		redefine
-			first_child, last_child
+			first_child, last_child, new_cell
 		end
 
 creation
@@ -125,7 +118,7 @@ feature -- Creation
 	make (v: like item) is
 			-- Create single node with item `v'.
 		do
-			bl_put (v);
+			put (v);
 			twl_make
 		end;
 
@@ -146,7 +139,7 @@ feature -- Insertion
 			-- Add `v' to the children list of `Current'.
 			-- Do not move child cursor.
 		do
-			add (v);
+			twl_add (v);
 			last_child.attach_to_parent (Current)
 		end;
 
@@ -264,7 +257,7 @@ feature -- Insertion
 			-- Make `other' a leaf.
 		do
 			attach (other);
-			bl_merge_left (other)
+			twl_merge_left (other)
 		end;
 
 	merge_tree_after (other: like first_child) is
@@ -273,7 +266,7 @@ feature -- Insertion
 			-- Make `other' a leaf.
 		do
 			attach (other);
-			bl_merge_right (other)
+			twl_merge_right (other)
 		end;
 
 feature {NONE} -- Insertion
@@ -293,6 +286,12 @@ feature {NONE} -- Insertion
 
 feature {LINKED_TREE} -- Creation
 
+
+	new_cell (v: like item): like first_child is
+		do
+			!!Result.make (v)
+		end;
+
 	new_tree: like Current is
 			-- Instance of class `like Current'.
 			-- This feature should be implemented in
@@ -305,6 +304,6 @@ feature {LINKED_TREE} -- Creation
 
 invariant
 
-	assertion_1: (child = Void) implies child_off
+	off_constraint: (child = Void) implies child_off
 
 end -- class TWO_WAY_TREE

@@ -353,6 +353,26 @@ feature -- Code generation
 		deferred
 		end
 
+	minimum_interval_value: INTERVAL_VAL_B is
+			-- Minimum value in inspect interval for current type
+		require
+			valid_type: is_long or else is_char
+		do
+				-- Implementation is provided by descendants that meet precondition
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	maximum_interval_value: INTERVAL_VAL_B is
+			-- Maximum value in inspect interval for current type
+		require
+			valid_type: is_long or else is_char
+		do
+				-- Implementation is provided by descendants that meet precondition
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- IL code generation
 
 	il_convert_from (source: TYPE_I) is

@@ -7,7 +7,9 @@ inherit
 		redefine
 			is_char,
 			same_as, element_type, tuple_code,
-			description, sk_value, hash_code
+			description, sk_value, hash_code,
+			maximum_interval_value,
+			minimum_interval_value
 		end
 
 create
@@ -165,7 +167,19 @@ feature -- Access
 			end
 		end
 
-feature
+feature -- Code generation
+
+	minimum_interval_value: CHAR_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			create Result.make ('%/0/')
+		end
+
+	maximum_interval_value: CHAR_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			create Result.make (feature {EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character)
+		end
 
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.

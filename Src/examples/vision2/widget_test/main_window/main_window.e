@@ -68,8 +68,20 @@ feature {NONE} -- Implementation
 			-- `widget_holder'.
 		do
 			widget_holder.wipe_out
+			
+				-- We must now rebuild `widget_holder' to ensure
+				-- that no minimum size settings still apply. This
+				-- will ensure that each test will be at the default size,
+				-- even if the last was large.
+			vertical_spacing_box.prune (widget_holder)
+			create widget_holder
+			vertical_spacing_box.go_i_th (2)
+			vertical_spacing_box.put_left (widget_holder)
+			scrollable_widget_area.set_item_height (310)
+			scrollable_widget_area.set_item_width (310)
+			
 			widget_holder.extend (a_widget)
 		end
-	
+
 end -- class MAIN_WINDOW
 

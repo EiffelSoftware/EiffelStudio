@@ -67,16 +67,14 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			profile_output_dir := clone (Eiffel_gen_path);
-			profile_output_dir.extend (Platform_constants.Directory_separator);
+			!! profile_out_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
-				profile_output_dir.append (W_code);
+				profile_out_file.extend (W_code);
 			else
-				profile_output_dir.append (F_code);
+				profile_out_file.extend (F_code);
 			end;
-			profile_output_dir.extend (Platform_constants.Directory_separator);
-			profile_output_dir.append (profile_name);
-			!!file.make (profile_output_dir);
+			profile_out_file.set_file_name (profile_name);
+			!! file.make (profile_out_file);
 			exists := file.exists
 		end -- check_profile_file
 
@@ -85,23 +83,21 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE;
 		do
-			translat_dir := clone (Eiffel_gen_path);
-			translat_dir.extend (Platform_constants.Directory_separator);
+			!! translat_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
-				translat_dir.append (W_code);
+				translat_file.extend (W_code);
 			else
-				translat_dir.append (F_code);
+				translat_file.extend (F_code);
 			end;
-			translat_dir.extend (Platform_constants.Directory_separator);
-			translat_dir.append (Translation_log_file_name);
-			!!file.make (translat_dir);
+			translat_file.set_file_name (Translation_log_file_name);
+			!! file.make (translat_file);
 			exists := file.exists
 		end -- check_project_directory
 	
 	do_convertion is
 			-- Creates both files and initiates conversion.
 		do
-			!!profile_converter.make (profile_output_dir, translat_dir, config);
+			!! profile_converter.make (profile_out_file, translat_file, config);
 			profile_converter.convert_profile_listing
 		end;
 
@@ -127,11 +123,11 @@ feature {NONE} -- attributes
 	exists : BOOLEAN
 			-- Does the file passed as argument exist?
 
-	profile_output_dir: STRING
-			-- Directory where the output file is written.
+	profile_out_file: FILE_NAME
+			-- File name where the output file is written
 
-	translat_dir: STRING
-			-- Directory where TRANSLAT really is; is based upon
+	translat_file: FILE_NAME
+			-- File name where TRANSLAT really is; is based upon
 			-- commandline argument (2).
 
 	config: SHARED_PROF_CONFIG

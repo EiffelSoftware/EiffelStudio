@@ -1580,7 +1580,7 @@ feature {NONE} -- Inapplicable
 		do
 		ensure then
 			item = v;
-		  	count = old count
+			count = old count
 		end;
 
 	prunable: BOOLEAN is
@@ -1601,7 +1601,7 @@ feature {NONE} -- Inapplicable
 			prunable: file_prunable
 		do
 		ensure then
-		  	count <= old count
+			count <= old count
 		end;
 
 feature {FILE} -- Implementation

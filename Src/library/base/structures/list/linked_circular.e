@@ -112,7 +112,7 @@ feature -- Element change
 			list.put_left (v)
 		end
 
-feature --  Access
+feature -- Access
 
 	item : G is
 			-- Current item

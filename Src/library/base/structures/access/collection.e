@@ -43,8 +43,8 @@ feature -- Element change
 			-- The representations of `other' and current structure
 			-- need not be the same.
 		require
-				  other_not_void: other /= Void;
-				  extendible
+			other_not_void: other /= Void;
+			extendible
 		local
 			lin_rep: LINEAR [G]
 		do

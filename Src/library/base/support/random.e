@@ -72,7 +72,7 @@ feature -- Access
 			-- Default value 0;
 			-- may be redefined for a new generator.
 		once
-			Result :=  0
+			Result := 0
 		end
 
 	seed: INTEGER
@@ -124,7 +124,7 @@ feature -- Access
 		end;
 
 	real_item: REAL is
-			-- The current random number as a real between 0 and  1
+			-- The current random number as a real between 0 and 1
 		local
 			r1, r2: REAL
 		do
@@ -143,7 +143,7 @@ feature -- Access
 		end
 
 	real_i_th (i: INTEGER): REAL is
-			-- The `i'-th random number as a real between 0 and  1
+			-- The `i'-th random number as a real between 0 and 1
 		local
 			r1, r2: REAL
 		do

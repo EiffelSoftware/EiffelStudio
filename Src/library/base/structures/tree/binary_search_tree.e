@@ -60,7 +60,7 @@ feature -- Access
 				Result := (right_child /= Void) and then
 					right_child.has (v)
 			end
-   		end;
+		end;
 
 feature -- Measurement
 
@@ -377,7 +377,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end;
 
-feature  {NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
 			-- Put values from `t' into tree in such an order that

@@ -45,9 +45,9 @@ feature -- Initialization
 feature -- Access
 
 	has (v: like item): BOOLEAN is
-			--  Does structure include an occurrence of `v'?
-			--  (Reference or object equality,
-			--  based on `object_comparison'.)
+			-- Does structure include an occurrence of `v'?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			if object_comparison then
 				item_table.compare_objects
@@ -58,9 +58,9 @@ feature -- Access
 		end
 
 	occurrences (v: G): INTEGER is
-			--  Number of times `v' appears.
-			--  (Reference or object equality,
-			--  based on `object_comparison'.)
+			-- Number of times `v' appears.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			if object_comparison then
 				item_table.compare_objects

@@ -8,8 +8,8 @@ indexing
 	revision: "$Revision$"
 
 --| Caution:
---|  For implementation reasons, additional operations on BIT types can
---|  only be introduced by ISE
+--| For implementation reasons, additional operations on BIT types can
+--| only be introduced by ISE
 
 class BIT_REF inherit
 

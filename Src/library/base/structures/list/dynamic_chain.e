@@ -29,7 +29,7 @@ feature -- Status report
 	prunable: BOOLEAN is
 			-- May items be removed? (Answer: yes.)
 		do
-			Result :=  true
+			Result := true
 		end;
 
 feature -- Element change

@@ -63,7 +63,7 @@ creation
 feature -- Initialization
 
 	make (nb_rows, nb_columns: INTEGER) is
-		  	-- Create a two dimensional array which has `nb_rows'
+			-- Create a two dimensional array which has `nb_rows'
 			-- rows and `nb_columns' columns,
 			-- with lower bounds starting at 1.
 		require
@@ -96,7 +96,7 @@ feature -- Initialization
 					put (v, row, column);
 					column := column + 1
 				end;
-				row :=  row + 1
+				row := row + 1
 			end
 		end;
 
@@ -127,7 +127,7 @@ feature -- Element change
 			valid_row: 1 <= row and row <= height;
 			valid_column: 1 <= column and column <= width
 		do
-			array_put (v,  (row - 1) * width + column)
+			array_put (v, (row - 1) * width + column)
 		end;
 
 	force (v: like item; row, column: INTEGER) is
@@ -155,7 +155,7 @@ feature -- Resizing
 
 	resize (nb_rows, nb_columns: INTEGER) is
 			-- Rearrange array so that it can accommodate
-		   	-- `nb_rows' rows and `nb_columns' columns,
+			-- `nb_rows' rows and `nb_columns' columns,
 			-- without losing any previously
 			-- entered items, nor changing their coordinates;
 			-- do nothing if not possible.

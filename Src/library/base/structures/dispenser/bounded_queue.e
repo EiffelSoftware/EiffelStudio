@@ -57,7 +57,7 @@ feature -- Access
 			i: INTEGER
 		do
 			if object_comparison then
-				if  v /= Void then
+				if v /= Void then
 					if out_index > in_index then
 						from
 							i := out_index
@@ -132,7 +132,7 @@ feature -- Measurement
 			size: INTEGER;
 		do
 			size := fl.capacity;
-			Result := (in_index - out_index + size)\\  size
+			Result := (in_index - out_index + size)\\ size
 		end;
 
 feature -- Status report

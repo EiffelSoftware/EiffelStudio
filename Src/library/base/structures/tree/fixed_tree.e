@@ -260,7 +260,7 @@ feature -- Obsolete
 		do
 		end;
 
-feature  {FIXED_TREE} -- Implementation
+feature {FIXED_TREE} -- Implementation
 
 	new_node: like Current is
 			-- Instance of class `like Current'.
@@ -321,7 +321,7 @@ feature  {FIXED_TREE} -- Implementation
 			position_in_parent := n.child_index
 		end;
 
-feature  {NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	position_in_parent: INTEGER;
 			-- Position of current node in parent

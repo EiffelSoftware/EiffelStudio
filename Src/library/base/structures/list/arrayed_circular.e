@@ -56,7 +56,7 @@ feature -- Initialization
 			!!list.make (n)
 		end
 
-feature --  Access
+feature -- Access
 
 	item : G is
 			-- Current item

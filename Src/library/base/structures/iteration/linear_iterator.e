@@ -226,7 +226,7 @@ feature -- Cursor movement
 				start ;
 				j := 1
 			invariant
-				j >= 1 and  j <= i
+				j >= 1 and j <= i
 			variant
 				i - j
 			until
@@ -265,7 +265,7 @@ feature -- Cursor movement
 				variant
 					k - j
 				until
-					exhausted  or else j = k
+					exhausted or else j = k
 				loop
 					forth ;
 					j := j + 1

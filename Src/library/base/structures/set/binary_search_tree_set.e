@@ -12,7 +12,7 @@ indexing
 	revision: "$Revision$"
 
 class
-  BINARY_SEARCH_TREE_SET [G -> COMPARABLE]
+	BINARY_SEARCH_TREE_SET [G -> COMPARABLE]
 
 inherit
 	COMPARABLE_SET [G]

@@ -93,7 +93,7 @@ feature -- Access
 					count := First
 					to_test := i_th (count)
 				until
-				   to_test >= n
+					to_test >= n
 				loop
 					count := count + 1
 					to_test := i_th (count)

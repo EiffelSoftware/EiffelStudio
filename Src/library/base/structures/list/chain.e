@@ -164,7 +164,7 @@ feature -- Cursor movement
 			-- may end up `off' if the absolute value of `i'
 			-- is too big.
 		local
-			counter, pos,  final: INTEGER
+			counter, pos, final: INTEGER
 		do
 			if i > 0 then
 				from

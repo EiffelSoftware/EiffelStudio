@@ -115,19 +115,19 @@ feature -- Access
 	first_child: like parent;
 			-- Leftmost child
 
-   	left_sibling: like parent is
+	left_sibling: like parent is
 			-- Left neighbor (if any)
-			do
-				if parent /= Void then
-					from
-						Result := parent.first_child;
-					until
-						Result = Void or else Result.right_sibling = Current
-					loop
-						Result := Result.right_sibling
-					end
+		do
+			if parent /= Void then
+				from
+					Result := parent.first_child;
+				until
+					Result = Void or else Result.right_sibling = Current
+				loop
+					Result := Result.right_sibling
 				end
 			end
+		end
 
 feature -- Element change
 

@@ -37,6 +37,12 @@ feature -- Basic operations
 			item := default_pointer
 		end
 
+	quick_release is
+		do
+			cwin_release_dc (hwindow, item)
+			item := default_pointer
+		end
+
 feature {NONE} -- Implementation
 
 	hwindow: POINTER

@@ -203,7 +203,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char **EIF_once_values_cx;	/* Once values for a thread */
     int in_assertion_cx = 0;    /* Is an assertion evaluated? */
 
-
 #ifdef WORKBENCH
 		/* except.c */
 	unsigned char db_ign_cx[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
@@ -219,7 +218,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #else
 		/* garcol.c and retrieve.c */
 	int r_fides_cx;					/* File descriptor use for retrieve */
-	char r_fstoretype_cx;				/* File storage type used for retrieve */
+	int s_fides_cx;					/* File descriptor use for store */
 #endif
 
 	/* Thread management variables */
@@ -277,11 +276,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define gc_running		(eif_globals->gc_running_cx)	/* rt_public */
 #define last_gc_time	(eif_globals->last_gc_time_cx)	/* rt_public */
 #define gc_ran			(eif_globals->gc_ran_cx)		/* rt_public */
-#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
-#else
-#define r_fides			(eif_globals->r_fides_cx)		/* rt_public */
-#define r_fstoretype	(eif_globals->r_fstoretype_cx)	/* rt_public */
-#endif
 #define spoilt_tbl		(eif_globals->spoilt_tbl_cx)	/* rt_private */
 #define ps_from			(eif_globals->ps_from_cx)		/* rt_shared */
 #define ps_to			(eif_globals->ps_to_cx)		/* rt_shared */
@@ -354,13 +348,14 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define EIF_once_values	(eif_globals->EIF_once_values_cx)	/* rt_public */
 #define in_assertion	(eif_globals->in_assertion_cx)	/* rt_public */
 
-	/* special */
-/* These variables are defined only if
- * __VMS, EIF_OS2 or SYMANTEC_CPP
- * Found in retrieve.h */
-/*extern int r_fides;				/* moved here from retrieve.c */
-/*extern char r_fstoretype;		/* File storage type use for retrieve */
+	/* store.c and retrieve.c */
+#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+#else
+#define r_fides			(eif_globals->r_fides_cx)		/* rt_private */
+#define s_fides			(eif_globals->s_fides_cx)		/* rt_private */
+#endif
 
+	/* special */
 #define n_children		(eif_globals->n_children_cx)
 #define eif_children_mutex (eif_globals->children_mutex_cx)
 #define eif_children_cond (eif_globals->children_cond_cx)
@@ -458,14 +453,7 @@ extern struct s_stack sig_stk;	/* The signal stack */
 
 	/* main.c */
 RT_LNK char **EIF_once_values;	/* Once values for a thread */
-
-	/* special */
-/* These variables are defined only if
- * __VMS, EIF_OS2 or SYMANTEC_CPP
- * Found in retrieve.h */
-extern int r_fides;				/* moved here from retrieve.c */
-extern char r_fstoretype;		/* File storage type use for retrieve */
-
+RT_LNK int in_assertion;	/* Value of the assertion level */
 
 #endif	/* EIF_THREADS */
 

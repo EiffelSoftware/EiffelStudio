@@ -247,21 +247,28 @@ feature -- Status setting
 			-- Replace object editor item of type `a_type' with a newly built one.
 			-- This forces an update due to the current state of `object'.
 		local
-			found: BOOLEAN
+			editor_item: GB_OBJECT_EDITOR_ITEM
+		do
+			editor_item := editor_item_by_type (a_type)
+			if editor_item /= Void then
+				editor_item.creating_class.update_attribute_editor
+			end
+		end
+		
+	editor_item_by_type (a_type: STRING): GB_OBJECT_EDITOR_ITEM is
+			-- `Result' is editor item of type `a_type', contained
+			-- in `Current'. Void if none exists.
+		local
 			editor_item: GB_OBJECT_EDITOR_ITEM
 		do
 			from
 				item_parent.start
 			until
-				item_parent.off or found
+				item_parent.off or Result /= Void
 			loop
 				editor_item ?= item_parent.item
-				check
-					editor_item_not_void: editor_item /= Void
-				end
-				if editor_item.type_represented.is_equal (a_type) then
-					found := True
-					editor_item.creating_class.update_attribute_editor
+				if editor_item /= Void then
+					Result := editor_item
 				end
 				item_parent.forth
 			end

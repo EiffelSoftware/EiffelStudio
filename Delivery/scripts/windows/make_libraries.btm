@@ -7,7 +7,7 @@ exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"
 remtrace com
 exprt -r %DEFAULT_CVS_TAG -d com "Src/library/com"
 remtrace Eiffel2Java
-exprt -r %DEFAULT_CVS_TAG -d "Eiffel2Java Src/library/Eiffel2Java"
+exprt -r %DEFAULT_CVS_TAG -d Eiffel2Java "Src/library/Eiffel2Java"
 remtrace lex
 exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net
@@ -31,39 +31,33 @@ exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 
 iff not defined NO_COMPILE then
 	remtrace Compile the C code, and remove extra clib's
-	remtrace com
-	cd com\Clib
-	all_makes
-	cd \Clib_runtime
-	all_makes
-	cd ..
-	fullrd Clib
-	fullrd Clib_runtime
-	cd ..
+	iff isdir %INSTALL_DIR\library\com then
+		remtrace com
+		cd %INSTALL_DIR\library\com\Clib
+		all_makes
+		cd %INSTALL_DIR\library\com\Clib_runtime
+		all_makes
+		cd %INSTALL_DIR\library\com
+		fullrd Clib
+		fullrd Clib_runtime
+	endiff
 	remtrace Eiffel2Java
-	cd Eiffel2Java\Clib
+	cd %INSTALL_DIR\library\Eiffel2Java\Clib
 	all_makes
-	cd ..\..
 	remtrace net
-	cd net\Clib
+	cd %INSTALL_DIR\library\net\Clib
 	all_makes
-	cd ..\..
 	remtrace store
-	cd store\clib
+	cd %INSTALL_DIR\library\store\dbms\rdbms\odbc\clib
 	all_makes
-	cd ..
-	fullrd clib
-	cd ..
 	remtrace time
-	cd time\Clib
+	cd %INSTALL_DIR\library\time\Clib
 	all_makes
-	cd ..\..
 	remtrace vision2
-	cd vision2\Clib
+	cd %INSTALL_DIR\library\vision2\Clib
 	all_makes
-	cd ..\..
 	remtrace wel
-	cd wel\clib
+	cd %INSTALL_DIR\library\wel\clib
 	all_makes
 else
 	quick_move /s library\com\spec

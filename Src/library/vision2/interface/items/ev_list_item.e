@@ -8,7 +8,6 @@ indexing
 	revision: "$Revision$"
 
 class 
-
 	EV_LIST_ITEM
 
 inherit
@@ -17,11 +16,6 @@ inherit
 			implementation
 		end
 
-	EV_PIXMAPABLE
-		redefine
-			implementation
-		end
-	
 creation
 	make_with_text,
 	make

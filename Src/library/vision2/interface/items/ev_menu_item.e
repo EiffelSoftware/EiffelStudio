@@ -16,18 +16,12 @@ inherit
 			implementation
 		end
 	
-	EV_PIXMAPABLE
-		redefine
-			implementation
-		end
-
 	EV_MENU_ITEM_CONTAINER
 		redefine
 			implementation
 		end
 
 creation
-	
 	make_with_text
 	
 feature {NONE} -- Initialization

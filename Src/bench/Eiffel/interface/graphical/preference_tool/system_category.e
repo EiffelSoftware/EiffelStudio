@@ -28,6 +28,10 @@ feature {RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all rsources valid for Current.
 		do
+			!! default_window_position.make ("default_window_position", 
+					rt.get_boolean ("default_window_position", False));
+			!! parse_class_after_saving.make ("parse_class_after_saving", 
+					rt.get_boolean ("parse_class_after_saving", True));
 			!! automatic_backup.make (r_AutomaticBackup,
 					rt.get_boolean (r_AutomaticBackup, False));
 			!! temporary_dir.make (r_Tmp_directory,
@@ -48,20 +52,10 @@ feature -- Validation
 			Result := True
 		end
 
-feature -- Access
-
-	linear_representation: LINKED_LIST [RESOURCE] is
-			-- All resources within Current
-		do
-			!! Result.make;
-			Result.extend (temporary_dir);
-			Result.extend (profiler_dir);
-			Result.extend (filter_dir);
-			Result.extend (history_size)
-		end
-
 feature -- Resources
 
+	parse_class_after_saving: BOOLEAN_RESOURCE;
+	default_window_position: BOOLEAN_RESOURCE;
 	automatic_backup: BOOLEAN_RESOURCE;
 	temporary_dir: STRING_RESOURCE;
 	profiler_dir: STRING_RESOURCE;

@@ -188,11 +188,11 @@ feature -- Removal
 		local
 			ds: MEL_DIALOG_SHELL
 		do
-			obj_destroy;
 			if created_dialog_automatically then
 				ds ?= parent;
-				--ds.remove_itself_from_pare
-			end
+				ds.remove_from_popup_list
+			end;
+			obj_destroy;
 		end
 
 feature {NONE} -- Implementation

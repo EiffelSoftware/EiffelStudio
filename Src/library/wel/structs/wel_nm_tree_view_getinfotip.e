@@ -67,14 +67,14 @@ feature {NONE} -- Externals
 
 	c_size_of_nm_tvgetinfotip: INTEGER is
 		external
-			"C [macro <windows.h>]"
+			"C [macro <commctrl.h>]"
 		alias
 			"sizeof (NMTVGETINFOTIP)"
 		end
 
 	cwel_nmtvinfotip_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_POINTER"
+			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_POINTER"
 		alias
 			"&hdr"
 		end
@@ -82,28 +82,28 @@ feature {NONE} -- Externals
 	cwel_nmtvinfotip_get_psztext (ptr: POINTER): POINTER is
 			-- (export status {NONE})
 		external
-			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_POINTER"
+			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_POINTER"
 		alias
 			"pszText"
 		end
 		
 	cwel_nmtvinfotip_get_cchtextmax (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
 			"cchTextMax"
 		end
 
 	cwel_nmtvinfotip_get_hitem (ptr: POINTER): POINTER is
 		external
-			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
 			"hItem"
 		end
 
 	cwel_nmtvinfotip_get_lparam (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMTVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
 			"lParam"
 		end

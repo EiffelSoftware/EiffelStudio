@@ -73,49 +73,49 @@ feature {NONE} -- Externals
 
 	c_size_of_nm_lvgetinfotip: INTEGER is
 		external
-			"C [macro <windows.h>]"
+			"C [macro <commctrl.h>]"
 		alias
 			"sizeof (NMLVGETINFOTIP)"
 		end
 
 	cwel_nmlvinfotip_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_POINTER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_POINTER"
 		alias
 			"&hdr"
 		end
 		
 	cwel_nmlvinfotip_get_dwflags (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"dwFlags"
 		end
 
 	cwel_nmlvinfotip_get_psztext (ptr: POINTER): POINTER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_POINTER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_POINTER"
 		alias
 			"pszText"
 		end
 
 	cwel_nmlvinfotip_get_cchtextmax (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"cchTextMax"
 		end
 		
 	cwel_nmlvinfotip_get_iitem (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"iItem"
 		end
 		
 	cwel_nmlvinfotip_get_lparam (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (NMLVGETINFOTIP): EIF_INTEGER"
+			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"lParam"
 		end

@@ -919,8 +919,8 @@ rt_public void reclaim(void)
 	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 #endif
 
-#ifdef DEBUG
-	dprintf(1)("reclaim: collecting all objects...\n");
+#ifdef RECLAIM_DEBUG
+	fprintf(stderr, "reclaim: collecting all objects...\n");
 #endif
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
@@ -996,7 +996,6 @@ rt_public void reclaim(void)
 	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
 #ifndef EIF_NO_CONDVAR
 	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
-	  eif_free(eif_children_cond);
 #endif
 	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
 	}
@@ -1024,10 +1023,15 @@ rt_public void reclaim(void)
 
 #ifdef LMALLOC_CHECK
 #ifdef EIF_THREADS
-	if (eif_thr_is_root ())	
-#endif
+	if (eif_thr_is_root ())	{
 		eif_lm_display ();
-#endif
+		eif_lm_free ();
+	}
+#else	/* EIF_THREADS */
+	eif_lm_display ();
+	eif_lm_free ();
+#endif	/* EIF_THREADS */
+#endif	/* LMALLOC_CHECK */
 	EIF_END_GET_CONTEXT
 }
 
@@ -1171,20 +1175,22 @@ rt_private void mark_special_table (register struct special_table *spt, register
 	EIF_REFERENCE	*container;			/* Special object. */
 	union overhead	*zone;				/* Special object malloc info zone. */
 	union overhead	*iz;				/* Item header. */
-	EIF_INTEGER		ofst;				/* Index of item in special. */
-	int				i;					/* Index. */
+	EIF_INTEGER	ofst;				/* Index of item in special. */
+	int		i;				/* Index. */
+
 
 #ifndef NDEBUG
-	int old_count = spt->count;			/* For postcondition checking */
+	int old_count;			/* For postcondition checking */
 #endif	/* !NDEBUG */
-
 	/*** Preconditions ***/
 	assert (g_data.status & GC_FAST);
 
 	if (spt == (struct special_table *) 0)	/* Table not created yet. */
 		return;
 
-
+#ifndef NDEBUG
+	old_count = spt->count;
+#endif
 	/* Initialization. */
 
 	assert (spt->h_keys != (EIF_INTEGER *) 0);		/* Cannot be empty. */

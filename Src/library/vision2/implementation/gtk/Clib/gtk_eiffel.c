@@ -236,6 +236,9 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
 		printf("event_flags = %d\n", event_flags);
 	}
+	
+
+	
 		
 	if(after) {
 		if (event) {
@@ -310,6 +313,43 @@ void c_gtk_signal_disconnect (GtkObject *widget,
     /*  printf ("connect rtn= %d object= %d cbd= %d\n", cbd->rtn, (cbd->obj), cbd); */
 
     gtk_signal_disconnect_by_data (widget, (gpointer)&cbd);
+}
+
+/*********************************
+ *
+ * Function `c_gtk_event_keys_state'
+ *
+ * Note : state, information about
+ * 		  pressed Keys (Shift, Control...)
+ *
+ *********************************/
+
+int c_gtk_event_keys_state (GdkEventMotion *p)
+{
+	int x,y;
+	GdkModifierType state;
+	
+	gdk_window_get_pointer (((GdkEventMotion*)p)->window, &x, &y, &state);
+
+	return (int)state;
+}
+	
+/*********************************
+ * 
+ * Function `gtk_widget_set_all_events'
+ *
+ * Note : set the events which have to be
+ *		  caught by the window
+ * 
+ *********************************/
+
+void gtk_widget_set_all_events (GtkWidget * win)
+{
+	gint event_flags;
+
+ 	event_flags = gtk_widget_get_events(GTK_WIDGET(win));
+ 	event_flags = event_flags | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_FOCUS_CHANGE_MASK;
+	gtk_widget_set_events (GTK_WIDGET(win), event_flags);
 }
 
 /*********************************
@@ -407,11 +447,16 @@ EIF_BOOLEAN c_gtk_widget_forground (GtkWidget *w)
  *
  * Function `c_gtk_window_x'
  *          `c_gtk_window_y'
+ *			`c_gtk_window_maximum_height'
+ *			`c_gtk_window_maximum_width'
+ *			`c_gtk_window_title'
  *
  * Note : Return the x and y coordinates of a window
  * 		  And the postcondition function for x. 
+ * 		  Return the maximum height and width.
+ * 		  Return the title of a window 
  *      
- * Author : Leila
+ * Author : Leila, Alex
  *
  *********************************/
 
@@ -445,6 +490,37 @@ void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 {
 	gtk_signal_connect_object(GTK_OBJECT(window),"show",GTK_SIGNAL_FUNC(gtk_grab_add),GTK_OBJECT(window));
 	gtk_signal_connect_object(GTK_OBJECT(window),"hide",GTK_SIGNAL_FUNC(gtk_grab_remove),GTK_OBJECT(window));
+}
+
+EIF_INTEGER c_gtk_window_maximum_height (GtkWidget *w)
+{
+	GtkWindowGeometryInfo * info;
+	
+	if GTK_WIDGET_VISIBLE(w)
+	{		
+		info = (GtkWindowGeometryInfo *) gtk_object_get_data (GTK_OBJECT(w), "gtk-window-geometry");
+		return info->geometry.max_height;
+	}
+	else
+		return (-1);
+}
+
+EIF_INTEGER c_gtk_window_maximum_width (GtkWidget *w)
+{
+	GtkWindowGeometryInfo * info;
+			
+	if GTK_WIDGET_VISIBLE(w)
+	{		
+		info = (GtkWindowGeometryInfo *) gtk_object_get_data (GTK_OBJECT(w), "gtk-window-geometry");
+		return info->geometry.max_width;
+	}
+	else
+		return (-1);
+}
+
+gchar* c_gtk_window_title (GtkWindow *w)
+{
+	return w->title;
 }
 
 /*********************************

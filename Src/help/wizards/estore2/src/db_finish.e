@@ -53,7 +53,12 @@ feature -- basic Operations
 
 	final_message: STRING is "All files have been successfully Generated !!!"
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: FILE_NAME is 
+			--
+		do
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
 
 	build_finish is 
 			-- Build user entries.
@@ -74,6 +79,7 @@ feature -- basic Operations
 			progress.set_background_color (white_color)
 			progress_text.set_background_color (white_color)
 			choice_box.show
+	--		main_box.show
 		end
 
 	launch_operations is
@@ -81,9 +87,7 @@ feature -- basic Operations
 		local
 			li: ARRAYED_LIST [CLASS_NAME]
 			dir: DIRECTORY
-			fi: PLAIN_TEXT_FILE
 			b: BOOLEAN
-			f_name: FILE_NAME
 			class_number: INTEGER
 			s: STRING
 			rep: DB_REPOSITORY
@@ -114,7 +118,7 @@ feature -- basic Operations
 			end
 			create repositories.make (10)
 			create table_class_generator
-			create table_constraints_generator
+			initialize_table_constraints_generator
 			template_db_table_content := retrieve_resource_file_content (Template_db_table_name)
 			template_db_table_descr_content := retrieve_resource_file_content (Template_db_table_descr_name)
 			from
@@ -137,7 +141,7 @@ feature -- basic Operations
 				li.forth
 			end
 			generate_access_class
-			
+			copy_class ("db_specific_tables_access_use")
 			
 				-- Modified by Cedric R.
 			if wizard_information.new_project then
@@ -170,6 +174,29 @@ feature -- basic Operations
 
 
 feature {NONE} -- Processing
+
+	initialize_table_constraints_generator is
+			-- Initialize `table_constraints_generator'.
+		local
+			li: ARRAYED_LIST [CLASS_NAME]
+			scope_tables: ARRAYED_LIST [STRING]
+			tmp: STRING
+		do
+			create table_constraints_generator.make
+			li := wizard_information.table_list
+			from
+				li.start
+				create scope_tables.make (li.count)
+			until
+				li.after
+			loop
+				tmp := clone (li.item.table_name)
+				tmp.to_upper
+				scope_tables.extend (tmp)
+				li.forth
+			end
+			table_constraints_generator.set_scope_tables (scope_tables)
+		end
 
 	generate_access_class is
 			-- Generate class enabling to access database table class descriptions.
@@ -238,8 +265,11 @@ feature {NONE} -- Processing
 			i1, i2, i3, i4, j1, j2: INTEGER
 			new_begin_code, new_end_code, squeleton: STRING
 			fi: PLAIN_TEXT_FILE
+			file_name: FILE_NAME
 		do
-			create fi.make_open_read_write (wizard_resources_path + "/" + "table_squeleton_class.e")
+			file_name := clone (wizard_resources_path)
+			file_name.set_file_name ("table_squeleton_class.e")
+			create fi.make_open_read_write (file_name)
 			fi.read_stream (fi.count)
 			squeleton:= clone (fi.last_string)
 			fi.close
@@ -273,8 +303,11 @@ feature {NONE} -- Processing
 			fi: PLAIN_TEXT_FILE
 			inheritance_text, new_begin_code, new_end_code: STRING
 			mi, di, ti: INTEGER
+			file_name: FILE_NAME
 		do
-			create fi.make_open_read_write (wizard_resources_path + "/" + "ev_queryable_inh.e")
+			file_name := clone (wizard_resources_path)
+			file_name.set_file_name ("ev_queryable_inh.e")
+			create fi.make_open_read_write (file_name)
 			fi.read_stream (fi.count)
 			inheritance_text:= clone (fi.last_string)
 			fi.close
@@ -386,13 +419,7 @@ feature {NONE} -- Processing
 
 	load_management_classes is
 			-- Load classes to use EiffelStore. Modified by Cedric R.
-		local
-			f_name: FILE_NAME
 		do
---			notify_user ("Importing database_manager ...")
---			copy_database_manager
-			notify_user ("Importing db_action ...")
-			copy_class ("db_action")
 			notify_user ("Importing db_shared ...")
 			copy_db_shared
 			notify_user ("Importing db_action_dyn ...")

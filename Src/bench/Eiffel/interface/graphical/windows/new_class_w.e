@@ -93,7 +93,7 @@ feature -- Callbacks
 			-- The user wants to keep it.
 		do
 			cluster.classes.put (class_i, class_name);
-			class_text.receive (stone)
+			class_text.tool.process_classi (stone)
 		end;
 
 feature -- Properties
@@ -218,7 +218,7 @@ feature -- Execution
 							file.close;
 							cluster.add_new_classs (class_i);
 							!! stone.make (class_i);
-							class_text.receive (stone);
+							class_text.tool.process_classi (stone);
 							popdown;
 						elseif
 							not (file.is_readable and then file.is_plain)

@@ -14,14 +14,17 @@ inherit
 			make as normal_create,
 			attach_all as default_attach_all,
 			reset as old_reset, 
-			close_windows as old_close_windows
+			close_windows as old_close_windows,
+			set_stone as old_set_stone
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			create_edit_buttons, set_default_size,
 			build_widgets, resize_action,
-			build_edit_bar
+			build_edit_bar, stone_type, synchronize,
+			process_class_syntax, process_feature,
+			process_class, process_classi, compatible
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -30,9 +33,12 @@ inherit
 			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
 			make, set_default_size, build_widgets, attach_all,
-			close_windows, resize_action
+			close_windows, resize_action, stone_type,
+			synchronize, set_stone, process_class_syntax,
+			process_feature, process_class, process_classi,
+			compatible
 		select
-			reset, make, attach_all, close_windows
+			reset, make, attach_all, close_windows, set_stone
 		end
 
 creation
@@ -48,9 +54,113 @@ feature -- Initialization
 			set_composite_attributes (Current)
 		end;
 
-feature -- Window Properties
+feature -- Properties
+
+	stone_type: INTEGER is
+			-- Accept any type stone
+		do
+			Result := Class_type
+		end
 
 	text_window: CLASS_TEXT;
+
+feature -- Access
+
+	compatible (a_stone: STONE): BOOLEAN is
+			-- Is Current hole compatible with `a_stone'?
+		do
+			Result :=
+				a_stone.stone_type = Routine_type or else
+				a_stone.stone_type = Breakable_type or else
+				a_stone.stone_type = Class_type
+		end;
+ 
+feature {TEXT_WINDOW} -- Status setting
+ 
+	set_stone (s: like stone) is
+		local
+			c: CLASSC_STONE;
+			ci: CLASSI_STONE
+		do
+			old_set_stone (s);
+			c ?= stone;
+			ci ?= stone;
+			if c /= Void then
+				update_class_name (clone (c.e_class.name))
+			elseif ci /= Void then
+				update_class_name (clone (ci.class_i.class_name))
+			end
+		end;
+ 
+feature -- Stone process
+ 
+	process_classi (s: CLASSI_STONE) is
+		do
+			if text_window.changed then
+				showtext_command.execute (s);
+			else
+				last_format.execute (s);
+				history.extend (s)
+			end
+		end;
+ 
+	process_class (s: CLASSC_STONE) is
+		do
+			if text_window.changed then
+				showtext_command.execute (s);
+			else
+				last_format.execute (s);
+				history.extend (s)
+			end
+		end;
+ 
+	process_feature (s: FEATURE_STONE) is
+			-- Proces feature stone.
+		local
+			cl_stone: CLASSC_STONE;
+			e_class: E_CLASS
+		do
+			if text_window.changed then
+				showtext_command.execute (s);
+			else
+				e_class := s.e_feature.written_class;
+				!! cl_stone.make (e_class);
+				showtext_command.execute (cl_stone);
+				history.extend (stone);
+				text_window.deselect_all;
+				text_window.highlight_selected
+						(s.start_position, s.end_position);
+				text_window.set_cursor_position (s.start_position)
+			end
+		end;
+ 
+	process_class_syntax (s: CL_SYNTAX_STONE) is
+			-- Process class syntax.
+		local
+			cl_stone: CLASSC_STONE
+		do
+			if text_window.changed then
+				showtext_command.execute (s)
+			else
+				!! cl_stone.make (s.associated_class);
+				showtext_command.execute (cl_stone);
+				text_window.deselect_all;
+				text_window.set_cursor_position
+						(s.start_position);
+				text_window.highlight_selected
+						(s.start_position,
+						s.end_position);
+			end
+		end;
+ 
+	synchronize is
+			-- Synchronize clickable elements with text, if possible.
+		do
+			synchronise_stone;
+			if stone = Void then
+				change_class_command.clear
+			end
+		end;
 
 feature -- Update
 
@@ -86,30 +196,6 @@ feature -- Window Settings
 			if fw.is_popped_up then
 				fw.popdown
 			end
-		end;
-
-feature -- Save (FIXME*******************)
-
-	save_new_class (c_name: STRING; f_name: STRING) is
-			-- Create a class with class name `c_name' with
-			-- file name `f_name'.
-		do
-			--!! new_file.make (f_name);
-			--new_file.open_write;
-			--new_file.putstring ("class ");
-			--c_name.to_upper;
-			--new_file.putstring (c_name);
-			--new_file.putstring ("%N%Nfeature%N%Nend");
-			--if not (to_write.item (to_write.count) = '%N') then
-				-- Add a carriage return like vi if there's none at the end
-				--new_file.putchar ('%N')
-			--end;
-			--new_file.close;
-			--if text_window.file_name /= Void then
-				---- Not a format shown
-				--text_window.set_file_name (f_name);
-			   	--text_window.set_changed (false);
-			--end
 		end;
 
 feature -- Commands

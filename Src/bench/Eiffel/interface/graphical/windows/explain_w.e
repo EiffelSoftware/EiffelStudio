@@ -13,13 +13,15 @@ inherit
 		rename
 			make as normal_create
 		redefine
-			text_window, build_format_bar, hole,
-			tool_name, build_text_window
+			text_window, build_format_bar, 
+			tool_name, build_text_window, hole, stone_type, 
+			process_any
 		end;
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole,
-			tool_name, make, build_text_window
+			text_window, build_format_bar, 
+			tool_name, make, build_text_window, 
+			hole, stone_type, process_any
 		select
 			make
 		end;
@@ -35,6 +37,30 @@ feature -- Creation
 		do
 			normal_create (a_screen);
 			text_window.set_read_only
+		end;
+
+feature -- Properties
+
+	stone_type: INTEGER is
+			-- Accept any type stone
+		do
+			Result := Any_type
+		end
+
+feature -- Status setting
+
+	process_any (s: like stone) is
+			-- Set `s' to `stone'.
+		do
+			if s.is_valid then
+				text_window.set_editable;
+				text_window.set_changed (true);
+				text_window.set_text (s.help_text);
+				text_window.display_header (s.header);
+				text_window.set_read_only;
+				text_window.set_changed (false);
+				update_save_symbol
+			end
 		end;
 
 feature -- Graphical Interface

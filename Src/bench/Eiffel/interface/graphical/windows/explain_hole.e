@@ -9,9 +9,9 @@ class EXPLAIN_HOLE
 
 inherit
 
-	HOLE
+	EB_BUTTON_HOLE
 		redefine
-			compatible, symbol, stone_type, name,
+			symbol, stone_type, name,
 			icon_symbol, full_symbol
 		end
 
@@ -37,15 +37,6 @@ feature  -- Properties
 			-- Icon for the explain tool
 		once
 			Result := bm_Explain_icon
-		end;
-
-	compatible (dropped: STONE): BOOLEAN is
-			-- True: all elements can be explained if not void
-		do
-			Result := dropped /= Void and then
-				(dropped.stone_type = Explain_type)
-		ensure then
-			true_if_not_void: Result = (dropped /= Void)
 		end;
 
 	name: STRING is

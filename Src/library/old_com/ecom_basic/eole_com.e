@@ -22,7 +22,7 @@ creation
 feature -- Initialization
 
 	make is
-			-- Create `status'
+			-- Create `status'.
 		do
 			!! status
 		end
@@ -98,7 +98,7 @@ feature -- Element change
 		end
 	
 	co_get_class_object (clsid: STRING; context: INTEGER; iid: STRING): POINTER is
-			-- Provide pointer to C++ interface `iid' on class object 
+			-- Provide pointer to interface `iid' on class object 
 			-- associated with CLSID `clsid' according to `context'. 
 		require
 			valid_clsid: is_valid_guid (clsid)

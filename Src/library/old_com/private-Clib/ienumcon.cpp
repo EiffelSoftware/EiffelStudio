@@ -8,9 +8,10 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.4  1998/01/27 00:25:12  raphaels
-//-- Added `clone' method on enumerators.
-//-- More corrections to support Borland Compiler.
+//-- Revision 1.5  1998/02/02 18:05:12  raphaels
+//-- Added TypeComp support.
+//-- Updated TypeLib and TypeInfo support.
+//-- Modified some file names.
 //--
 //-- Revision 1.3  1998/01/20 23:47:59  raphaels
 //-- Removed obsolete files.

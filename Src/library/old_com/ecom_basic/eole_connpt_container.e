@@ -36,7 +36,7 @@ feature -- Message Transmission
 			-- supported in this connectable object.
 			-- Not meant to be redefined; redefine `on_enum_connection_points' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_connection_point_container_enum_connection_points (ole_interface_ptr)
 		end
@@ -45,7 +45,7 @@ feature -- Message Transmission
 			-- Request connection point outgoing interface `refiid'.
 			-- Not meant to be redefined; redefine `on_find_connection_point' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_refiid: refiid /= Void
 		local
 			wel_string: WEL_STRING;

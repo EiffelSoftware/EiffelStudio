@@ -9,6 +9,11 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
+// Revision 1.4  1998/02/02 18:05:02  raphaels
+// Added TypeComp support.
+// Updated TypeLib and TypeInfo support.
+// Modified some file names.
+//
 // Revision 1.3  1998/01/20 23:47:54  raphaels
 // Removed obsolete files.
 //
@@ -315,12 +320,6 @@ extern "C" EIF_INTEGER eole2_dispatch_get_type_info_count(
 
     return (EIF_INTEGER) pctinfo;
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// ITypeLib
-
-static MEMBERID __RPC_FAR* srgMemID;
-static ITypeInfo __RPC_FAR *__RPC_FAR *sppTInfo;
  
 /////////////////////////////////////////////////////////////////////////////
 // ITypeLib
@@ -331,10 +330,40 @@ E_ITypeLib::E_ITypeLib(): E_IUnknown() {
 STDMETHODIMP E_ITypeLib::GetTypeInfoCount (void) {
    return E_NOTIMPL;
 }
+
 STDMETHODIMP E_ITypeLib::GetTypeInfo (UINT index,
                                     ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo) {
 	return E_ITypeLib_GetTypeInfo (GetEiffelCurrentPointer(), index,
                                           				pptinfo );
+}
+
+STDMETHODIMP E_ITypeLib::GetTypeInfoOfGuid (REFGUID guid,
+                                    ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo) {
+	return E_ITypeLib_GetTypeInfoOfGuid (GetEiffelCurrentPointer(), guid,
+                                          				pptinfo );
+}
+
+STDMETHODIMP E_ITypeLib::GetTypeComp (ITypeComp FAR* FAR* ppTComp) {
+	return E_ITypeLib_GetTypeComp (GetEiffelCurrentPointer(), ppTComp);
+}
+
+STDMETHODIMP E_ITypeLib::GetLibAttr ( TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr ) {
+	return E_ITypeLib_GetLibAttr (GetEiffelCurrentPointer(), pptlibattr);
+}
+
+void E_ITypeLib::ReleaseTLibAttr ( TLIBATTR __RPC_FAR *ptlibattr ) {
+	E_ITypeLib_ReleaseTLibAttr (GetEiffelCurrentPointer(), ptlibattr);
+}
+
+STDMETHODIMP E_ITypeLib::IsName ( LPOLESTR szNameBuf, ULONG lHashVal,
+								 BOOL __RPC_FAR *pfName ) {
+	return E_ITypeLib_IsName (GetEiffelCurrentPointer(), szNameBuf, lHashVal, pfName);
+}
+
+STDMETHODIMP E_ITypeLib::GetTypeInfoType (UINT index,
+                                    TYPEKIND FAR* pTKind) {
+	return E_ITypeLib_GetTypeInfoType (GetEiffelCurrentPointer(), index,
+                                          				pTKind );
 }
 
 STDMETHODIMP E_ITypeLib::GetDocumentation (INT index, BSTR __RPC_FAR *pbstrName,
@@ -358,11 +387,7 @@ extern "C" HRESULT E_ITypeLib_FindName (void *ptr, LPOLESTR szNameBuf,
 										ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo,
 										MEMBERID __RPC_FAR *rgMemId, 
 										USHORT __RPC_FAR *pcFound) {
-   HRESULT hr;
    return ((ITypeLib *)ptr)->FindName (szNameBuf, 0, ppTInfo, rgMemId, pcFound);
-   srgMemID = rgMemId;
-   sppTInfo = ppTInfo;
-   return hr;
 }
 
 extern "C" HRESULT E_ITypeLib_GetTypeInfoCount (void *ptr) {
@@ -372,6 +397,34 @@ extern "C" HRESULT E_ITypeLib_GetTypeInfoCount (void *ptr) {
 extern "C" HRESULT E_ITypeLib_GetTypeInfo (void *ptr, UINT index,
                                            ITypeInfo __RPC_FAR *__RPC_FAR *ppTinfo ) {
    return ((ITypeLib*)ptr)->GetTypeInfo (index, ppTinfo);
+}
+
+extern "C" HRESULT E_ITypeLib_GetTypeInfoOfGuid (void *ptr, REFGUID guid,
+                                           ITypeInfo __RPC_FAR *__RPC_FAR *ppTinfo ) {
+   return ((ITypeLib*)ptr)->GetTypeInfoOfGuid (guid, ppTinfo);
+}
+
+extern "C" HRESULT E_ITypeLib_GetTypeInfoType (void *ptr, UINT index,
+                                           TYPEKIND FAR* pTKind) {
+   return ((ITypeLib*)ptr)->GetTypeInfoType (index, pTKind);
+}
+
+extern "C" HRESULT E_ITypeLib_GetTypeComp (void *ptr,
+                                           ITypeComp FAR* FAR* ppTComp) {
+   return ((ITypeLib*)ptr)->GetTypeComp (ppTComp);
+}
+
+extern "C" HRESULT E_ITypeLib_GetLibAttr (void *ptr, TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr ) {
+   return ((ITypeLib*)ptr)->GetLibAttr (pptlibattr);
+}
+
+extern "C" void E_ITypeLib_ReleaseTLibAttr (void *ptr, TLIBATTR __RPC_FAR *ptlibattr ) {
+   ((ITypeLib*)ptr)->ReleaseTLibAttr (ptlibattr);
+}
+
+extern "C" HRESULT E_ITypeLib_IsName (void *ptr, LPOLESTR szNameBuf, ULONG lHashVal,
+								 BOOL __RPC_FAR *pfName ) {
+   return ((ITypeLib*)ptr)->IsName (szNameBuf, lHashVal, pfName);
 }
 
 extern "C" HRESULT E_ITypeLib_GetDocumentation (
@@ -386,32 +439,44 @@ extern "C" HRESULT E_ITypeLib_GetDocumentation (
             pbstrHelpFile );
 }
 
-extern "C" EIF_POINTER eole2_typelib_get_result_type_info (EIF_INTEGER index) {
-	return (EIF_POINTER)sppTInfo [index];
-}
-
-extern "C" EIF_INTEGER eole2_typelib_get_result_member_ids (EIF_INTEGER index) {
-	return (EIF_INTEGER)srgMemID [index];
-}
-
-extern "C" EIF_INTEGER eole2_typelib_find_name (EIF_POINTER pTypeLib, BSTR *szName, EIF_INTEGER count) {
-	OLECHAR FAR* szNameBuf = *szName;
+extern "C" EIF_OBJ eole2_typelib_find_name (EIF_POINTER pTypeLib, EIF_POINTER name, EIF_INTEGER count) {
+	OLECHAR FAR* szNameBuf;
 	ITypeInfo FAR* FAR* ppTInfo;
 	MEMBERID FAR* rgMemId;
 	unsigned short FAR* pcFound;
+	EIF_OBJ Result;
+	EIF_PROC eif_make;
+	EIF_PROC eif_put_member_ids;
+	EIF_PROC eif_put_type_info;
+	EIF_TYPE_ID type_id;
+	int i = 0;
 	
+    szNameBuf = Eif2OleString (name);
 	pcFound = (unsigned short FAR*)malloc (sizeof (unsigned short));
 	*pcFound = (unsigned short)count;
+	rgMemId = (MEMBERID FAR *)malloc (count * sizeof (MEMBERID));
+	ppTInfo = (ITypeInfo FAR* FAR*)malloc (count * sizeof (ITypeInfo FAR*));
 	g_hrStatusCode = E_ITypeLib_FindName (pTypeLib, szNameBuf, ppTInfo, rgMemId, pcFound);
-	return (EIF_INTEGER) *pcFound;
+	type_id = eif_type_id ("EOLE_TYPE_LIB_RESULT");
+	Result = eif_create (type_id);
+	eif_make = eif_proc ("make", type_id);
+	eif_put_member_ids = eif_proc ("put_member_ids", type_id);
+	eif_put_type_info = eif_proc ("put_type_info", type_id);
+	eif_make (eif_access (Result), (EIF_INTEGER)*pcFound);
+	while (i != *pcFound) {
+		eif_put_member_ids (eif_access (Result), (EIF_INTEGER)rgMemId [i], i + 1);
+		eif_put_type_info (eif_access (Result), (EIF_POINTER)ppTInfo [i], i + 1);
+		i++;
+	}
+	free (pcFound);
+	free (rgMemId);
+	free (ppTInfo);
+	return eif_access (Result);
 }
 
 extern "C" EIF_INTEGER eole2_typelib_get_type_info_count (EIF_POINTER pTypeLib) {	
    g_hrStatusCode = E_ITypeLib_GetTypeInfoCount (pTypeLib);
-   if (g_hrStatusCode == S_OK) {
-      return (EIF_INTEGER)1;
-   }
-   return (EIF_INTEGER)0;
+   return (EIF_INTEGER)g_hrStatusCode;
 }
 
 
@@ -419,6 +484,52 @@ extern "C" EIF_POINTER eole2_typelib_get_type_info (EIF_POINTER pTypeLib, EIF_IN
    ITypeInfo *pTypeInfo;
    g_hrStatusCode = E_ITypeLib_GetTypeInfo (pTypeLib, index, &pTypeInfo);
    return (EIF_POINTER)pTypeInfo;
+}
+
+extern "C" EIF_POINTER eole2_typelib_get_type_info_of_guid (EIF_POINTER pTypeLib, EIF_POINTER guid) {
+   ITypeInfo *pTypeInfo;
+   GUID tmpIID;
+   
+   EiffelStringToGuid( guid, &tmpIID );
+   g_hrStatusCode = E_ITypeLib_GetTypeInfoOfGuid (pTypeLib, tmpIID, &pTypeInfo);
+   return (EIF_POINTER)pTypeInfo;
+}
+
+extern "C" EIF_INTEGER eole2_typelib_get_type_info_type (EIF_POINTER pTypeLib, EIF_INTEGER index) {
+   TYPEKIND TKind;
+
+   g_hrStatusCode = E_ITypeLib_GetTypeInfoType (pTypeLib, index, &TKind);
+   return (EIF_INTEGER)TKind;
+}
+
+extern "C" EIF_POINTER eole2_typelib_get_type_comp (EIF_POINTER pTypeLib) {
+   ITypeComp FAR* pTComp;
+
+   g_hrStatusCode = E_ITypeLib_GetTypeComp (pTypeLib, &pTComp);
+   return (EIF_POINTER)pTComp;
+}
+
+extern "C" EIF_POINTER eole2_typelib_get_lib_attr (EIF_POINTER pTypeLib) {
+   tagTLIBATTR **pptlibattr;
+
+   pptlibattr = (tagTLIBATTR**)malloc (sizeof (tagTLIBATTR*));
+   E_ITypeLib_GetLibAttr (pTypeLib, pptlibattr);
+   return (EIF_POINTER)*pptlibattr;
+}
+
+extern "C" void eole2_typelib_release_lib_attr (EIF_POINTER pTypeLib, EIF_POINTER ptlibattr) {
+   E_ITypeLib_ReleaseTLibAttr (pTypeLib, (struct tagTLIBATTR *)ptlibattr);
+}
+
+extern "C" EIF_BOOLEAN eole2_typelib_is_name (EIF_POINTER pTypeLib, EIF_POINTER name, EIF_INTEGER lcid) {
+   OLECHAR FAR* szNameBuf;
+   BOOL fName;
+
+   szNameBuf = Eif2OleString (name);
+   g_hrStatusCode = E_ITypeLib_IsName (pTypeLib, (LPOLESTR) szNameBuf, 0,
+								 &fName );
+   return (EIF_BOOLEAN)(fName);
+
 }
 
 extern "C" void eole2_typelib_get_documentation(EIF_POINTER pTypeLib,
@@ -1146,10 +1257,10 @@ extern "C" EIF_INTEGER eole2_tinfo_get_documentation(
     g_hrStatusCode = E_ITypeInfo_GetDocumentation(
             ptInfo, FALSE,
             (MEMBERID)member_id,
-            (BSTR*)&name,
-            (BSTR*)&doc_string,
+            (BSTR*)name,
+            (BSTR*)doc_string,
             &context,
-            (BSTR*)&help_file );
+            (BSTR*)help_file );
 
     return (EIF_INTEGER) context;
 }
@@ -1357,4 +1468,5 @@ extern "C" void eole2_tinfo_release_var_desc(
 
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
+
 

@@ -58,3 +58,4 @@ end -- class EOLE_REGISTER_FLAGS
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

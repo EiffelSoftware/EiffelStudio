@@ -115,3 +115,4 @@ end -- class EOLE_SELECT_PICTURE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

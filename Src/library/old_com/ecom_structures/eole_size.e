@@ -132,3 +132,4 @@ end -- class EOLE_SIZE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

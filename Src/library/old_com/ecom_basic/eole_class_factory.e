@@ -48,7 +48,7 @@ feature -- Message Transmission.
 			-- Return Void if fails.
 			-- Not meant to be redefined; redefine `on_create_instance' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_interface_identifier: interface_identifier /= Void
 		local
 			wel_string: WEL_STRING
@@ -62,7 +62,7 @@ feature -- Message Transmission.
 			-- `lock' is true.
 			-- Not meant to be redefined; redefine `on_lock_server' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_clsfact_lock_server (ole_interface_ptr, lock)
 		end

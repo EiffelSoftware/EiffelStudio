@@ -34,7 +34,7 @@ feature -- Element change
 	destroy is
 			-- Destroy associated C++ structure.
 		do
-			if (not is_ole_ptr_attached) and then (ole_ptr /= default_pointer) then
+			if (not is_attached) and then (ole_ptr /= default_pointer) then
 				ole2_destroy_dispparams (ole_ptr)
 				ole_ptr := default_pointer
 			end

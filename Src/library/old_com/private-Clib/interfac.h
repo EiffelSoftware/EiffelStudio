@@ -1372,22 +1372,22 @@ public:
     STDMETHOD( GetTypeInfoCount )( void );
     STDMETHOD( GetTypeInfo )( UINT index,
             ITypeInfo __RPC_FAR *__RPC_FAR *ppitinfo );
-//    STDMETHOD( GetTypeInfoType )( UINT index, TYPEKIND __RPC_FAR *ptkind );
-//    STDMETHOD( GetTypeInfoOfGuid )( REFGUID guid,
-//            ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo );
-//    STDMETHOD( GetLibAttr )( TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr );
-//    STDMETHOD( GetTypeComp )( ITypeComp __RPC_FAR *__RPC_FAR *pptcomp );
+    STDMETHOD( GetTypeInfoType )( UINT index, TYPEKIND __RPC_FAR *ptkind );
+    STDMETHOD( GetTypeInfoOfGuid )( REFGUID guid,
+            ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo );
+    STDMETHOD( GetLibAttr )( TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr );
+    STDMETHOD( GetTypeComp )( ITypeComp __RPC_FAR *__RPC_FAR *pptcomp );
     STDMETHOD( GetDocumentation )( INT index, BSTR __RPC_FAR *pbstrName,
             BSTR __RPC_FAR *pbstrDocString,
             DWORD __RPC_FAR *pdwHelpContext,
             BSTR __RPC_FAR *pbstrHelpFile );
-//    STDMETHOD( IsName )( LPOLESTR szNameBuf, ULONG lHashVal,
-//            BOOL __RPC_FAR *pfName );
+    STDMETHOD( IsName )( LPOLESTR szNameBuf, ULONG lHashVal,
+            BOOL __RPC_FAR *pfName );
     STDMETHOD( FindName )( LPOLESTR szNameBuf, ULONG lHashVal,
             ITypeInfo __RPC_FAR *__RPC_FAR *rgptinfo,
             MEMBERID __RPC_FAR *rgmemid,
             USHORT __RPC_FAR *pcFound );
-//    STDMETHOD( ReleaseTLibAttr )( TLIBATTR __RPC_FAR *ptlibattr );
+    void ( ReleaseTLibAttr )( TLIBATTR __RPC_FAR *ptlibattr );
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1676,3 +1676,4 @@ public:
 #endif // !__INTERFAC_H_INC__
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

@@ -23,21 +23,21 @@ feature -- Element change
 		do
 			destroy
 			ole_ptr := allocate
-			is_ole_ptr_attached := False
+			is_attached := False
 		ensure
 			valid_c_structure_pointer: ole_ptr /= default_pointer
-			not_attached: is_ole_ptr_attached = False
+			not_attached: is_attached = False
 		end
 
 	destroy is
 			-- Destroy associated C++ structure.
 		do
-			if not is_ole_ptr_attached and then ole_ptr /= default_pointer then
+			if not is_attached and then ole_ptr /= default_pointer then
 				ole2_free_pointer (ole_ptr)
 				ole_ptr := default_pointer
 			end
 		ensure
-			destroyed: not is_ole_ptr_attached implies ole_ptr = default_pointer
+			destroyed: not is_attached implies ole_ptr = default_pointer
 		end
 
 	attach (ptr: POINTER) is
@@ -47,19 +47,19 @@ feature -- Element change
 		do
 			destroy
 			ole_ptr := ptr
-			is_ole_ptr_attached := True
+			is_attached := True
 		ensure
 			ole_ptr_set: ole_ptr = ptr
-			attached: is_ole_ptr_attached
+			attached: is_attached
 		end
 
 	detach is
 			-- Detach associated C++ structure.
 		do
-			is_ole_ptr_attached := False
+			is_attached := False
 			destroy
 		ensure
-			detached: not is_ole_ptr_attached
+			detached: not is_attached
 			destroyed: ole_ptr = default_pointer
 		end
 
@@ -68,7 +68,7 @@ feature -- Access
 	ole_ptr: POINTER
 			-- Pointer to associated C++ structure
 
-	is_ole_ptr_attached: BOOLEAN
+	is_attached: BOOLEAN
 			-- Does associated C++ structure exist?
 	
 feature {NONE} -- Implementation
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	valid_pointer: is_ole_ptr_attached implies ole_ptr /= default_pointer
+	valid_pointer: is_attached implies ole_ptr /= default_pointer
 	
 end -- class EOLE_OBJECT_WITH_POINTER
 

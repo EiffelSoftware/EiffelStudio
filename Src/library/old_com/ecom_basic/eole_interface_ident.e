@@ -336,3 +336,4 @@ end -- class EOLE_INTERFACE_IDENT
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

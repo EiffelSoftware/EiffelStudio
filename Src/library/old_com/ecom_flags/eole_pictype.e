@@ -91,3 +91,4 @@ end -- class EOLE_PICTYPE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

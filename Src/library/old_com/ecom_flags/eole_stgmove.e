@@ -52,3 +52,4 @@ end -- class EOLE_STGMOVE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

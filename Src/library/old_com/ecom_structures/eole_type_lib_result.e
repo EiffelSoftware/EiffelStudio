@@ -16,8 +16,8 @@ feature -- Initialization
 	make (cnt: INTEGER) is
 			-- Initialize attributes
 		do
-			!! type_info.make (0, cnt - 1)
-			!! member_ids.make (0, cnt - 1)
+			!! type_info.make (1, cnt)
+			!! member_ids.make (1, cnt)
 			count := cnt
 		end
 		
@@ -25,12 +25,27 @@ feature -- Access
 
 	type_info: ARRAY [POINTER]
 			-- Array of pointers on ITypeInfo interfaces matching `find_name'
+			-- These pointer should by attached to an object EOLE_TYPE_INFO.
 		
 	member_ids: ARRAY [INTEGER]
-			-- Array of identifiers of ITypeInfo interfaces.
+			-- Array of identifiers of ITypeInfo interfaces
 		
 	count: INTEGER
 			-- Size of arrays
+			
+feature -- Element Change
+
+	put_member_ids (value, index: INTEGER) is
+			-- Set `item' of `member_ids' at `index' with `value'.
+		do
+			member_ids.put (value, index)
+		end
+		
+	put_type_info (value: POINTER; index: INTEGER) is
+			-- Set `item' of `type_info' at `index' with `value'.
+		do
+			type_info.put (value, index)
+		end
 		
 end -- class EOLE_TYPE_LIB_RESULT
 

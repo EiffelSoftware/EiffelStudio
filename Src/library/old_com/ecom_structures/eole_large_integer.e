@@ -119,3 +119,4 @@ end -- class EOLE_LARGE_INTEGER
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

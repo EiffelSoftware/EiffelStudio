@@ -15,7 +15,7 @@ inherit
 			destroy
 		end
 
-	EOLE_VARTYPE
+	EOLE_VAR_TYPE
 		export
 			{NONE} all
 		end
@@ -32,7 +32,7 @@ feature -- Element change
 	destroy is
 			-- Destroy associated OLE pointer.
 		do
-			if not is_ole_ptr_attached and then ole_ptr /= default_pointer then
+			if not is_attached and then ole_ptr /= default_pointer then
 				ole2_variant_clear (ole_ptr)
 				ole2_variant_free (ole_ptr)
 				ole_ptr := default_pointer

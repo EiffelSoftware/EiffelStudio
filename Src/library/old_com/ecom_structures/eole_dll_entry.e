@@ -78,3 +78,4 @@ end -- class EOLE_DLL_ENTRY
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

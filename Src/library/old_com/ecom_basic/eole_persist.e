@@ -35,7 +35,7 @@ feature -- Message Transmission
 			-- Class identifier (CLSID) of component object
 			-- Not meant to be redefined; redefine `on_get_class_id' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_get_class_id (ole_interface_ptr)
 		end

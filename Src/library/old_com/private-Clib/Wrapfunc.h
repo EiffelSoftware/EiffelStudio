@@ -1683,38 +1683,38 @@ extern "C" HRESULT E_ITypeLib_GetTypeInfo(
         void* ptr,
         UINT index,
         ITypeInfo __RPC_FAR *__RPC_FAR *ppitinfo );
-//extern "C" HRESULT E_ITypeLib_GetTypeInfoType(
-//        void* ptr,
-//        UINT index, TYPEKIND __RPC_FAR *ptkind );
-//extern "C" HRESULT E_ITypeLib_GetTypeInfoOfGuid(
-//        void* ptr,
-//        REFGUID guid,
-//        ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo );
-//extern "C" HRESULT E_ITypeLib_GetLibAttr(
-//        void* ptr,
-//        TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr );
-//extern "C" HRESULT E_ITypeLib_GetTypeComp(
-//        void* ptr,
-//        ITypeComp __RPC_FAR *__RPC_FAR *pptcomp );
+extern "C" HRESULT E_ITypeLib_GetTypeInfoType(
+        void* ptr,
+        UINT index, TYPEKIND __RPC_FAR *ptkind );
+extern "C" HRESULT E_ITypeLib_GetTypeInfoOfGuid(
+        void* ptr,
+        REFGUID guid,
+        ITypeInfo __RPC_FAR *__RPC_FAR *pptinfo );
+extern "C" HRESULT E_ITypeLib_GetLibAttr(
+        void* ptr,
+        TLIBATTR __RPC_FAR *__RPC_FAR *pptlibattr );
+extern "C" HRESULT E_ITypeLib_GetTypeComp(
+        void* ptr,
+        ITypeComp __RPC_FAR *__RPC_FAR *pptcomp );
 extern "C" HRESULT E_ITypeLib_GetDocumentation(
         void* ptr,
         INT index, BSTR __RPC_FAR *pbstrName,
         BSTR __RPC_FAR *pbstrDocString,
         DWORD __RPC_FAR *pdwHelpContext,
         BSTR __RPC_FAR *pbstrHelpFile );
-// extern "C" HRESULT E_ITypeLib_IsName(
-//        void* ptr,
-//        LPOLESTR szNameBuf, ULONG lHashVal,
-//        BOOL __RPC_FAR *pfName );
+ extern "C" HRESULT E_ITypeLib_IsName(
+        void* ptr,
+        LPOLESTR szNameBuf, ULONG lHashVal,
+        BOOL __RPC_FAR *pfName );
 extern "C" HRESULT E_ITypeLib_FindName(
         void* ptr,
         LPOLESTR szNameBuf,
         ITypeInfo __RPC_FAR *__RPC_FAR *rgptinfo,
         MEMBERID __RPC_FAR *rgmemid,
         USHORT __RPC_FAR *pcFound );
-//extern "C" HRESULT E_ITypeLib_ReleaseTLibAttr(
-//        void* ptr, BOOL incomingCall,
-//        TLIBATTR __RPC_FAR *ptlibattr );
+extern "C" void E_ITypeLib_ReleaseTLibAttr(
+        void* ptr,
+        TLIBATTR __RPC_FAR *ptlibattr );
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2123,3 +2123,4 @@ extern "C" HRESULT E_IOleContainer_LockContainer (
 #endif // !__WRAPFUNC_H_INC__
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

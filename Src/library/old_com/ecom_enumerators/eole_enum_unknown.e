@@ -36,7 +36,7 @@ feature -- Message Transmission
 			-- Retrieve `count' EOLE_UNKNOWN inteface(s) in enumeration sequence.
 			-- Not meant to be redefined; redefine `on_next' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_enum_unknown_next (ole_interface_ptr, count)
 		end
@@ -44,7 +44,7 @@ feature -- Message Transmission
 	skip (count: INTEGER) is
 			-- Skip over `count' EOLE_UNKNOWN interface(s) in enumeration sequence.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_enum_unknown_skip (ole_interface_ptr, count)
 		end
@@ -52,7 +52,7 @@ feature -- Message Transmission
 	reset is
 			-- Reset enumeration sequence to beginning.  
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_enum_unknown_reset (ole_interface_ptr)
 		end
@@ -60,7 +60,7 @@ feature -- Message Transmission
 	ole_clone: like Current is
 			-- Create a clone of Current.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			!! Result.make
 			Result.attach_ole_interface_ptr (ole2_enum_unknown_clone (ole_interface_ptr))

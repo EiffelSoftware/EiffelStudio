@@ -91,3 +91,4 @@ end -- class EOLE_STGC
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

@@ -17,7 +17,7 @@ inherit
 	
 	EOLE_STAT_FLAGS
 
-	EOLE_LOCKTYPES
+	EOLE_LOCK_TYPES
 
 creation
 	make
@@ -34,7 +34,7 @@ feature -- Message Transmission
 			-- to `origin'.
 			-- See class EOLE_STREAM_SEEK for `origin' value.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_origin: is_valid_seek (origin)
 		do
 			ole2_stream_seek (ole_interface_ptr, offset, origin)
@@ -43,7 +43,7 @@ feature -- Message Transmission
 	set_size (new_size: INTEGER) is
 			-- Set size of stream to `new_size'.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_stream_set_size (ole_interface_ptr, new_size)
 		end
@@ -52,8 +52,8 @@ feature -- Message Transmission
 			-- Copies num_byrtes_to_copy `bytes' to `stream_dest' stream,
 			-- starting at current seek pointer in each stream.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_stream_dest: stream_dest /= Void and then stream_dest.ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_stream_dest: stream_dest /= Void and then stream_dest.is_valid_interface
 		do
 			ole2_stream_copy_to (ole_interface_ptr, stream_dest.ole_interface_ptr, num_bytes_to_copy)
 		end
@@ -63,7 +63,7 @@ feature -- Message Transmission
 			--  Current according to `mode'.
 			-- See class EOLE_STGC for `mode' value.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_mode: is_valid_stgc (mode)
 		do
 			ole2_stream_commit (ole_interface_ptr, mode)
@@ -74,7 +74,7 @@ feature -- Message Transmission
 			-- or last committed in transacted mode.
 			-- In direct mode has no effect.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			ole2_stream_revert (ole_interface_ptr)
 		end
@@ -82,7 +82,7 @@ feature -- Message Transmission
 	stat (stat_flag: INTEGER): EOLE_STATSTG is
 			-- Retrieve informations about `Current'
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_stat_flag: is_valid_stat_flag (stat_flag)
 		do
 			!! Result
@@ -93,7 +93,7 @@ feature -- Message Transmission
 			-- Restrict access to range of bytes specified 
 			-- by `offset' and `count' in the stream.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_offset: offset /= Void
 			valid_count: count /= Void and (count.low_part /= 0 or count.high_part /= 0)
 			valid_lock_type: is_valid_lock (lock)
@@ -106,7 +106,7 @@ feature -- Message Transmission
 			-- and `count' previously restricted with `lock_region'. `lock' should be
 			-- the same as when `lock_region' has been called.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_offset: offset /= Void
 			valid_count: count /= Void and (count.low_part /= 0 or count.high_part /= 0)
 			valid_lock_type: is_valid_lock (lock)
@@ -118,7 +118,7 @@ feature -- Message Transmission
 			-- Write `num_bytes_to_write' bytes of `buff' into stream
 			-- and return number of bytes actually written.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_buffer: buff /= default_pointer
 		do
 			Result := ole2_stream_write (ole_interface_ptr, buff, num_bytes_to_write)
@@ -168,7 +168,7 @@ feature -- Message Transmission
 			-- Read `num_bytes_to_read' bytes into `buff' and
 			-- return number of bytes actually read.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_buffer: buff /= default_pointer
 		do
 			Result := ole2_stream_read (ole_interface_ptr, buff, num_bytes_to_read)
@@ -178,7 +178,7 @@ feature -- Message Transmission
 	read_character: CHARACTER is
 			-- Read single character from stream at current position.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_stream_read_character (ole_interface_ptr)
 			end_of_stream := status.last_hresult = S_false
@@ -187,7 +187,7 @@ feature -- Message Transmission
 	read_integer: INTEGER is
 			-- Read integer value from stream at current position.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_stream_read_integer (ole_interface_ptr)
 			end_of_stream := status.last_hresult = S_false
@@ -196,7 +196,7 @@ feature -- Message Transmission
 	read_real: REAL is
 			-- Read real value from stream at current position.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_stream_read_real (ole_interface_ptr)
 			end_of_stream := status.last_hresult = S_false
@@ -205,7 +205,7 @@ feature -- Message Transmission
 	read_boolean: BOOLEAN is
 			-- Read boolean value from stream at current position.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_stream_read_boolean (ole_interface_ptr)
 			end_of_stream := status.last_hresult = S_false
@@ -214,7 +214,7 @@ feature -- Message Transmission
 	read_string: STRING is
 			-- Read string from stream at current position.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_stream_read_string (ole_interface_ptr)
 			end_of_stream := status.last_hresult = S_false

@@ -67,3 +67,4 @@ extern "C" void eole2_error_set_last_hresult (EIF_INTEGER code);
 #endif // !__EIFOLE_H_INC__
 
 /////// END OF FILE /////////////////////////////////////////////////////////
+

@@ -390,12 +390,16 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	start_routine_ctxt_t *routine_ctxt;
+	EIF_INTEGER l_is_initialized = 0;
+	EIF_OBJECT root_object = NULL;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 
 	routine_ctxt = (start_routine_ctxt_t *)eif_malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
 	routine_ctxt->current = eif_adopt (thr_root_obj);
+	root_object = routine_ctxt->current;
+	routine_ctxt->is_initialized = &l_is_initialized;
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
 	routine_ctxt->addr_n_children = &n_children;
@@ -430,6 +434,14 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	}
 	LAUNCH_MUTEX_UNLOCK;
 	last_child = tid;
+		/* Wait until child thread is initialized so that we can safely
+		 * unprotect `thr_root_obj'. */
+	EIF_ENTER_C;
+	while (!l_is_initialized) {
+		EIF_THR_YIELD;	
+	}
+	EIF_EXIT_C;
+	eif_wean (root_object);
 }
 
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
@@ -442,14 +454,15 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 	 * the Eiffel objects allocated in this thread.
 	 */
 
+	EIF_REFERENCE root_object = NULL;
 	start_routine_ctxt_t *routine_ctxt = (start_routine_ctxt_t *)arg;
-	eif_thr_register();
 		/* To prevent current thread to return too soon after call
 		 * to EIF_THR_CREATE or EIF_THR_CREATE_WITH_ATTR.
 		 * That way `tid' is properly initialized and can be freed
 		 * safely later on */
 	LAUNCH_MUTEX_LOCK;
 	LAUNCH_MUTEX_UNLOCK;
+	eif_thr_register();
 	{
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
@@ -478,7 +491,12 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 #ifdef WORKBENCH
 		xinitint();
 #endif
-
+			/* Protect root object so that it can be freed in `eif_thr_exit'. */
+		RT_GC_PROTECT(root_object);
+		root_object = eif_access(routine_ctxt->current);
+		routine_ctxt->current = henter(root_object);
+		*routine_ctxt->is_initialized = 1;
+		RT_GC_WEAN(root_object);
 			/* Call the `execute' routine of the thread */
 		(FUNCTION_CAST(void,(EIF_REFERENCE)) execute)(eif_access(routine_ctxt->current));
 
@@ -521,6 +539,14 @@ rt_public void eif_thr_exit(void)
 	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 	EIF_REFERENCE thread_object = NULL;
 
+	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
+		/* Decrement the number of child threads of the parent */
+	*l_addr_n_children -= 1;
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
+#endif
+	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+
 	exitprf();
 
 	RT_GC_PROTECT(thread_object);
@@ -532,8 +558,6 @@ rt_public void eif_thr_exit(void)
 #ifdef ISE_GC
 	gc_thread_status = EIF_THREAD_BLOCKED;
 #endif
-	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
-
 		/* Set the `terminated' field of the twin thread object to True so that
 		 * it knows the thread is terminated */
 	*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
@@ -600,14 +624,6 @@ rt_public void eif_thr_exit(void)
 	if (taskVarDelete(0,(int *)&(rt_global_key))) 
 	  eif_thr_panic("Problem with taskVarDelete\n");
 #endif	/* VXWORKS */
-
-		/* Decrement the number of child threads of the parent */
-	*l_addr_n_children -= 1;
-
-#ifndef EIF_NO_CONDVAR
-	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
-#endif
-	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
 
 
 	EIF_THR_EXIT(0);

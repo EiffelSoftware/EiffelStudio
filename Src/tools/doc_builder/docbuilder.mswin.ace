@@ -1,0 +1,141 @@
+system
+	"doc_builder"
+
+root
+	DOC_BUILDER: make_and_launch
+
+default
+	il_verifiable (no)
+	msil_generation_type ("exe")
+	assertion (no)
+	disabled_debug (yes)
+	debug ("console_output")
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("gelex")
+	disabled_debug ("geyacc")
+	disabled_debug ("regexp")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
+	inlining (yes)
+	inlining_size ("0")
+	multithreaded (no)
+
+
+cluster
+	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
+		exclude
+			"doc_builder.e"; 
+		end
+
+	project (root_cluster):		"$\project"
+
+	managers (project):		"$\managers"
+
+	filters (project):		"$\filter"
+
+	templates (project):		"$\templates"
+
+	interface (root_cluster):		"$\interface"
+
+	interface_widgets (interface):		"$\widgets"
+		exclude
+			"document_browser.e"; 
+		end
+
+	interface_app (interface):		"$\application"
+
+	interface_wizard (interface):		"$\wizard"
+
+	shared (root_cluster):		"$\shared"
+
+	shared_constants (shared):		"$\constants"
+
+	shared_misc (shared):		"$\miscellaneous"
+
+	misc (root_cluster):		"$\miscellaneous"
+
+	patterns (misc):		"$\patterns"
+
+	observer (patterns):		"$\observer"
+
+	xml (root_cluster):		"$\xml"
+
+	xsl (xml):		"$\xslt"
+		exclude
+			"xsl_transform.e"; 
+		end
+
+	help (root_cluster):		"$\help"
+
+	help_shared (help):		"$\shared"
+
+	help_project (help):		"$\project"
+
+	help_toc (help):		"$\toc"
+
+	facade (root_cluster):		"$\facade"
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"CVS"; "table_eiffel3"; "desc"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; 
+		end
+
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"french"; "german"; 
+		end
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
+		default
+			assertion (no)
+		end
+
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"CVS"; 
+		end
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\tools\doc_builder\Clib"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\tools\doc_builder\Clib\htmlhelp.lib"
+
+end

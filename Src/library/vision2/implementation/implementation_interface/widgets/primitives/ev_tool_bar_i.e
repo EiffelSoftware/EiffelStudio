@@ -26,9 +26,9 @@ inherit
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	insertion_position: INTEGER is
-			-- `Result' is index of item beneath the
+			-- `Result' is index to left of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
-			-- and not over a button.
+			-- and not over a button. i.e if over button 1, `Result' is 0.
 		deferred
 		end
 		

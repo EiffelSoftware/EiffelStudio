@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_arguments
+			has_arguments, arguments
 		end
 create
 	make

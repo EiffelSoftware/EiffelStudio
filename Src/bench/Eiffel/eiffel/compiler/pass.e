@@ -17,6 +17,7 @@ feature
 	make is
 		do
 			!!changed_classes.make
+			changed_classes.compare_references
 		end;
 
 	execute is
@@ -37,7 +38,6 @@ end;
 				System.set_current_class (pass_c.associated_class);
 				pass_c.execute;
 				changed_classes.start;
-				changed_classes.compare_references
 				changed_classes.search (pass_c);
 				if not changed_classes.after then
 					changed_classes.remove;

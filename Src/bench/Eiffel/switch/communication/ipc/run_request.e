@@ -10,6 +10,8 @@ inherit
 		end
 
 	SHARED_STATUS
+	
+	APPLICATION_STATUS_EXPORTER	
 
 create
 
@@ -50,7 +52,7 @@ feature -- Update
 	send is
 			-- Send `Current' request to ised, which may relay it to the application.
 		local
-			status: APPLICATION_STATUS
+			status: APPLICATION_STATUS_CLASSIC
 		do
 			if server_mode and then not Application.is_running and then start_application then
 				create status.do_nothing

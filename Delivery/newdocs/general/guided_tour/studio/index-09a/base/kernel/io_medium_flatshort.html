@@ -1,0 +1,418 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Any medium that can perform input and/or output">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>IO_MEDIUM Flat contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="IO_MEDIUM"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Any medium that can perform input and/or output"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_name"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Medium name</SPAN>
+</A>
+	<A NAME="f_retrieved"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_retrieved">retrieved</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieved object structure</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> To access resulting object under correct type,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> use assignment attempt.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Will raise an exception (code </SPAN><SPAN CLASS="equoted">Retrieve_exception</SPAN><SPAN CLASS="ecomment">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if content is not a stored Eiffel structure.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+			<SPAN CLASS="etag">is_open_read</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_read">is_open_read</A>
+			<SPAN CLASS="etag">support_storable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_support_storable">support_storable</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does medium exist?</SPAN>
+</A>
+	<A NAME="f_extendible"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May new items be added?</SPAN>
+</A>
+	<A NAME="f_handle"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_handle">handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Handle to medium</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_handle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_handle_available">handle_available</A>
+</A>
+	<A NAME="f_handle_available"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_handle_available">handle_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the handle available after class has been</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> created?</SPAN>
+</A>
+	<A NAME="f_is_closed"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the I/O medium open</SPAN>
+</A>
+	<A NAME="f_is_executable"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is medium executable?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">handle_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+</A>
+	<A NAME="f_is_open_read"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_read">is_open_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is this medium opened for input</SPAN>
+</A>
+	<A NAME="f_is_open_write"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_write">is_open_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is this medium opened for output</SPAN>
+</A>
+	<A NAME="f_is_plain_text"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_plain_text">is_plain_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is file reserved for text (character sequences)?</SPAN>
+</A>
+	<A NAME="f_is_readable"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is medium readable?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">handle_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+</A>
+	<A NAME="f_is_writable"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is medium writable?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">handle_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+</A>
+	<A NAME="f_last_character"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last character read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_character">read_character</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_last_double"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_double">last_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_flatshort.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last double read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_double">read_double</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_last_integer"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last integer read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_integer">read_integer</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_last_real"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real_flatshort.html">REAL</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last real read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_real">read_real</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_last_string"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last string read</SPAN>
+
+	<A NAME="f_readable"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there a current item that may be read?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">handle_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+</A>
+	<A NAME="f_support_storable"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_support_storable">support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can medium be used to store an Eiffel object?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_close"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_close">close</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Close medium.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">medium_is_open</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_flatshort.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_closed">is_closed</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_basic_store"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Produce an external representation of the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> entire object structure reachable from </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrievable within current system only.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">object_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">object</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+			<SPAN CLASS="etag">is_open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_write">is_open_write</A>
+			<SPAN CLASS="etag">support_storable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_support_storable">support_storable</A>
+</A>
+	<A NAME="f_general_store"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_general_store">general_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Produce an external representation of the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> entire object structure reachable from </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrievable from other systems for same platform</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (machine architecture).</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">object_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">object</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+			<SPAN CLASS="etag">is_open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_write">is_open_write</A>
+			<SPAN CLASS="etag">support_storable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_support_storable">support_storable</A>
+</A>
+	<A NAME="f_independent_store"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_independent_store">independent_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Produce an external representation of the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> entire object structure reachable from </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrievable from other systems for the same or other</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> platform (machine architecture).</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">object_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">object</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_exists">exists</A>
+			<SPAN CLASS="etag">is_open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_is_open_write">is_open_write</A>
+			<SPAN CLASS="etag">support_storable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_support_storable">support_storable</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_dispose"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_dispose">dispose</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure this medium is closed when garbage collected.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Obsolete</SPAN>
+
+	<A NAME="f_lastchar"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last character read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_character">read_character</A><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_lastdouble"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_lastdouble">lastdouble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_flatshort.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last double read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_double">read_double</A><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_lastint"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_lastint">lastint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last integer read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_integer">read_integer</A><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_lastreal"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_lastreal">lastreal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real_flatshort.html">REAL</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last real read by </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_real">read_real</A><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_laststring"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last string read</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Input</SPAN>
+
+	<A NAME="f_read_character"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_character">read_character</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new character.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_character">last_character</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readchar">readchar</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_read_double"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_double">read_double</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new double.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_double">last_double</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readdouble">readdouble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_read_integer"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_integer">read_integer</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new integer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_integer">last_integer</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readint">readint</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_read_line"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_line">read_line</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read characters until a new line or</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> end of medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_string">last_string</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readline">readline</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_read_real"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_real">read_real</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new real.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_real">last_real</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readreal">readreal</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_read_stream"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_stream">read_stream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a string of at most </SPAN><SPAN CLASS="equoted">nb_char</SPAN><SPAN CLASS="ecomment"> bound characters</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or until end of medium is encountered.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_string">last_string</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readstream">readstream</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readchar"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readchar">readchar</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new character.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_character">last_character</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_character">read_character</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readdouble"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readdouble">readdouble</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new double.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_double">last_double</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_double">read_double</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readint"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readint">readint</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new integer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_integer">last_integer</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_integer">read_integer</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readline"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readline">readline</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read characters until a new line or</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> end of medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_string">last_string</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_line">read_line</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readreal"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readreal">readreal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a new real.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_real">last_real</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_real">read_real</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>
+	<A NAME="f_readstream"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readstream">readstream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a string of at most </SPAN><SPAN CLASS="equoted">nb_char</SPAN><SPAN CLASS="ecomment"> bound characters</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or until end of medium is encountered.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_last_string">last_string</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_read_stream">read_stream</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_readable">readable</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
+
+	<A NAME="f_new_line"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_new_line">new_line</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write a new line character to medium</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_new_line">put_new_line</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_boolean"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putbool">putbool</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_character"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putchar">putchar</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_double"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_flatshort.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putdouble">putdouble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_integer"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putint">putint</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_new_line"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_new_line">put_new_line</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write a new line character to medium</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_new_line">new_line</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_real"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real_flatshort.html">REAL</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putreal">putreal</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_put_string"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putstring">putstring</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+			<SPAN CLASS="etag">non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+</A>
+	<A NAME="f_putbool"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_boolean">put_boolean</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_putchar"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putchar">putchar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_character">put_character</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_putdouble"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_flatshort.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_double">put_double</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_putint"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_integer">put_integer</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_putreal"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real_flatshort.html">REAL</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_real">put_real</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+</A>
+	<A NAME="f_putstring"><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_putstring">putstring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> to medium.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/io_medium_flatshort.html">IO_MEDIUM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_put_string">put_string</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/io_medium_flatshort.html#f_extendible">extendible</A>
+			<SPAN CLASS="etag">non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>IO_MEDIUM<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="io_medium_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="IO_MEDIUM"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="membership">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TT``Active'' data structures, which at every stage haveR TTa possibly undefined ``current item''.R TTBasic access and modification operations apply to the current item.">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="names" CONTENT="active, access">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>ACTIVE Text</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTIVE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		``</SPAN><SPAN CLASS="equoted">Active</SPAN><SPAN CLASS="estring">'' data structures, which at every stage have</SPAN>
+<SPAN CLASS="estring">		a possibly undefined ``current item''.</SPAN>
+<SPAN CLASS="estring">		Basic access and modification operations apply to the current item.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> active<SPAN CLASS="esymbol">,</SPAN> access
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> membership
+	<SPAN CLASS="eitag">contents</SPAN><SPAN CLASS="esymbol">:</SPAN> generic
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../../base/structures/access/active.html">ACTIVE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/access/bag.html">BAG</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current item</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_readable">readable</A>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_readable"><A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there a current item that may be read?</SPAN>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_writable"><A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_writable">writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there a current item that may be modified?</SPAN>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_replace"><A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Replace current item by </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">writable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_writable">writable</A>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">item_replaced</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_remove"><A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_remove">remove</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove current item.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">prunable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_prunable">prunable</A>
+			<SPAN CLASS="etag">writable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_writable">writable</A>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">writable_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_writable">writable</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_readable">readable</A>
+	<SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_is_empty">is_empty</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_readable">readable</A><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/access/active.html#f_writable">writable</A><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ACTIVE<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTIVE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

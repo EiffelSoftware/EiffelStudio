@@ -1,0 +1,364 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Formatter for integral numbers">
+<META NAME="names" CONTENT="format_integer">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>FORMAT_INTEGER Flat contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_INTEGER"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Formatter for integral numbers"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> format_integer
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/format_integer_flatshort.html">FORMAT_INTEGER</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">reasonable_field</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">w</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">blank_fill</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">' '</SPAN>
+			<SPAN CLASS="etag">show_sign_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_negative">show_sign_negative</A>
+			<SPAN CLASS="etag">no_separator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_separator">no_separator</A>
+			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">w</SPAN>
+			<SPAN CLASS="etag">right_justified</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justified">right_justified</A>
+			<SPAN CLASS="etag">leading_sign</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_leading_sign">leading_sign</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">reasonable_field</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">w</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">blank_fill</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">' '</SPAN>
+			<SPAN CLASS="etag">show_sign_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_negative">show_sign_negative</A>
+			<SPAN CLASS="etag">no_separator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_separator">no_separator</A>
+			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">w</SPAN>
+			<SPAN CLASS="etag">right_justified</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justified">right_justified</A>
+			<SPAN CLASS="etag">leading_sign</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_leading_sign">leading_sign</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_bracketted_negative"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_bracketted_negative">bracketted_negative</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enclose negative numbers in brackets?</SPAN>
+
+	<A NAME="f_fill_character"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Padding character.</SPAN>
+
+	<A NAME="f_justification"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Where in the field the format goes.</SPAN>
+
+	<A NAME="f_separator"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Separator between 1000's of numbers.</SPAN>
+
+	<A NAME="f_sign_format"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_format">sign_format</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> How the sign is formatted.</SPAN>
+
+	<A NAME="f_sign_string"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Formatting details for the sign.</SPAN>
+
+	<A NAME="f_trailing_sign"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_trailing_sign">trailing_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the sign at the end?</SPAN>
+
+	<A NAME="f_width"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Width of the field.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_centered"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_centered">centered</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to be formatted centered?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_center_justification">center_justification</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_ignore_sign"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_ignore_sign">ignore_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ignore the sign of a number?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_format">sign_format</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_ignore_sign_value">ignore_sign_value</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_leading_sign"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_leading_sign">leading_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the sign leading?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_flatshort.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_trailing_sign">trailing_sign</A>
+</A>
+	<A NAME="f_left_justified"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_left_justified">left_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to be formatted with spaces on the right?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_left_justification">left_justification</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_no_separator"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_separator">no_separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there a separator?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_not_justified"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_not_justified">not_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to be formatted in smallest string possible</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_justification">no_justification</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_right_justified"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justified">right_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to be formatted with spaces on the left?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justification">right_justification</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_show_sign"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign">show_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to show sign whether positive or negative?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_format">sign_format</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_value">show_sign_value</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_show_sign_negative"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_negative">show_sign_negative</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to show sign only when negative?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_format">sign_format</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_negative_value">sign_negative_value</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_show_sign_positive"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_positive">show_sign_positive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to show sign only when positive?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_format">sign_format</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_positive_value">sign_positive_value</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_asterisk_fill"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_asterisk_fill">asterisk_fill</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with asterisks.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'*'</SPAN>
+</A>
+	<A NAME="f_blank_fill"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_blank_fill">blank_fill</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with blanks.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">' '</SPAN>
+</A>
+	<A NAME="f_bracket_negative"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_bracket_negative">bracket_negative</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Bracket negative numbers.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_bracketted_negative">bracketted_negative</A>
+</A>
+	<A NAME="f_center_justify"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_center_justify">center_justify</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put padding on right and left</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_centered">centered</A>
+</A>
+	<A NAME="f_comma_separate"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_comma_separate">comma_separate</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set separator to comma.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">','</SPAN>
+</A>
+	<A NAME="f_dollar_fill"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_dollar_fill">dollar_fill</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with dollars.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'$'</SPAN>
+</A>
+	<A NAME="f_dot_separate"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_dot_separate">dot_separate</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set separator to period.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'.'</SPAN>
+</A>
+	<A NAME="f_left_justify"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_left_justify">left_justify</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">Put padding on right</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_left_justified">left_justified</A>
+</A>
+	<A NAME="f_no_justify"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_justify">no_justify</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Always return the smallest string possible</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_not_justified">not_justified</A>
+</A>
+	<A NAME="f_remove_separator"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_remove_separator">remove_separator</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove the separator.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN>
+</A>
+	<A NAME="f_right_justify"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justify">right_justify</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put padding on left</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justified">right_justified</A>
+</A>
+	<A NAME="f_set_fill"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_set_fill">set_fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c</SPAN>
+</A>
+	<A NAME="f_set_separator"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_set_separator">set_separator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_flatshort.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the separator to </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c</SPAN>
+</A>
+	<A NAME="f_set_sign"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_set_sign">set_sign</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign values for positive, zero, negative</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> All values must be the same length.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stored as negative, zero, positive.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+			<SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">3</SPAN>
+			<SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref_flatshort.html#f__infix_mod">\\</A> <SPAN CLASS="enumber">3</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_width"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set width to </SPAN><SPAN CLASS="equoted">w</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">wide_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">w</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">w</SPAN>
+</A>
+	<A NAME="f_sign_cr_dr"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_cr_dr">sign_cr_dr</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign for CR/DR</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"CR DR"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_sign_dr_cr"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_dr_cr">sign_dr_cr</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign for DR/CR</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"DR CR"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_sign_floating_dollar"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_floating_dollar">sign_floating_dollar</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign for floating dollar.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"$$$"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_sign_floating_dollar_signed"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_floating_dollar_signed">sign_floating_dollar_signed</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign for floating dollar include sign.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"-$ $+$"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_sign_ignore"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_ignore">sign_ignore</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not show sign.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_ignore_sign">ignore_sign</A>
+</A>
+	<A NAME="f_sign_leading"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_leading">sign_leading</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the sign to lead</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_leading_sign">leading_sign</A>
+</A>
+	<A NAME="f_sign_negative_only"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_negative_only">sign_negative_only</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show sign for negative numbers only.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_negative">show_sign_negative</A>
+</A>
+	<A NAME="f_sign_normal"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_normal">sign_normal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set sign for - and +.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"- +"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_sign_positive_only"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_positive_only">sign_positive_only</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show sign for positive numbers only.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign_positive">show_sign_positive</A>
+</A>
+	<A NAME="f_sign_show"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_show">sign_show</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show sign for all numbers.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_show_sign">show_sign</A>
+</A>
+	<A NAME="f_sign_trailing"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_trailing">sign_trailing</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the sign to trail</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_trailing_sign">trailing_sign</A>
+</A>
+	<A NAME="f_unbracket_negative"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_unbracket_negative">unbracket_negative</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not bracket negative numbers.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_flatshort.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_bracketted_negative">bracketted_negative</A>
+</A>
+	<A NAME="f_underscore_separate"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_underscore_separate">underscore_separate</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set separator to underscore.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_separator">separator</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'_'</SPAN>
+</A>
+	<A NAME="f_zero_fill"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_zero_fill">zero_fill</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with zeros.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'0'</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
+
+	<A NAME="f_formatted"><A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_formatted">formatted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_flatshort.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Format the integer.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+			<SPAN CLASS="etag">correct_length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_not_justified">not_justified</A> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_flatshort.html#f__infix_or">or</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_flatshort.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">sign_string_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_sign_string">sign_string</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_void">void</A>
+	<SPAN CLASS="etag">wide_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_width">width</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN>
+	<A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_no_justification">no_justification</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_flatshort.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_justification">justification</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../base/support/format_integer_flatshort.html#f_right_justification">right_justification</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>FORMAT_INTEGER<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_integer_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_INTEGER"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

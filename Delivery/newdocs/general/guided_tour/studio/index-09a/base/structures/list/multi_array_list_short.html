@@ -1,0 +1,223 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="index, cursor, membership">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="names" CONTENT="list, sequence">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTLists implemented as sequences of arrays, the last of which mayR TTbe non-full. No limit on size (a new array is allocated if listR TToutgrows its initial allocation).">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="representation" CONTENT="array, linked">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>MULTI_ARRAY_LIST Contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="MULTI_ARRAY_LIST"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Lists implemented as sequences of arrays, the last of which may</SPAN>
+<SPAN CLASS="estring">		be non-full. No limit on size (a new array is allocated if list</SPAN>
+<SPAN CLASS="estring">		outgrows its initial allocation).</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> list<SPAN CLASS="esymbol">,</SPAN> sequence
+	<SPAN CLASS="eitag">representation</SPAN><SPAN CLASS="esymbol">:</SPAN> array<SPAN CLASS="esymbol">,</SPAN> linked
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> index<SPAN CLASS="esymbol">,</SPAN> cursor<SPAN CLASS="esymbol">,</SPAN> membership
+	<SPAN CLASS="eitag">contents</SPAN><SPAN CLASS="esymbol">:</SPAN> generic
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/list/multi_array_list_short.html">MULTI_ARRAY_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an empty list, setting block_size to b</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item at cursor position</SPAN>
+</A>
+	<A NAME="f_first"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_first">first</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item at first position</SPAN>
+</A>
+	<A NAME="f_last"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_last">last</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item at last position</SPAN>
+</A>
+	<A NAME="f_has"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_short.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does list include </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Reference or object equality,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container_short.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.)</SPAN>
+</A>
+	<A NAME="f_index"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_index">index</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current cursor index</SPAN>
+
+	<A NAME="f_cursor"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_cursor">cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/cursor_short.html">CURSOR</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current cursor position</SPAN>
+</A>
+	<A NAME="f_first_element"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_first_element">first_element</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/list/bi_linkable_short.html">BI_LINKABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/structures/list/arrayed_list_short.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> First array_sequence element of the list</SPAN>
+
+	<A NAME="f_last_element"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_last_element">last_element</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/list/bi_linkable_short.html">BI_LINKABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/structures/list/arrayed_list_short.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last array_sequence element of the list</SPAN>
+
+	<A NAME="f_block_size"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_block_size">block_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_count"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_full"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_full">full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_short.html">BOOLEAN</A>
+</A>
+	<A NAME="f_valid_cursor"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_valid_cursor">valid_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/cursor_short.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_short.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can the cursor be moved to position </SPAN><SPAN CLASS="equoted">p</SPAN><SPAN CLASS="ecomment">?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Cursor movement</SPAN>
+
+	<A NAME="f_start"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_start">start</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to first position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (No effect if empty)</SPAN>
+</A>
+	<A NAME="f_finish"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_finish">finish</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to last position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (No effect if empty)</SPAN>
+</A>
+	<A NAME="f_forth"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_forth">forth</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to next position, if any.</SPAN>
+</A>
+	<A NAME="f_back"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_back">back</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to previous position, if any.</SPAN>
+</A>
+	<A NAME="f_move"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> positions. The cursor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> may end up </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/chain_short.html#f_off">off</A><SPAN CLASS="ecomment"> if the offset is too big.</SPAN>
+</A>
+	<A NAME="f_go_to"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/cursor_short.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to position </SPAN><SPAN CLASS="equoted">p</SPAN><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_search"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to first position (at or after current</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> cursor position) where </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> are equal.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Reference or object equality,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container_short.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_replace"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Replace current item by </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_extend"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to end.</SPAN>
+</A>
+	<A NAME="f_put_front"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_put_front">put_front</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> at the beginning.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+</A>
+	<A NAME="f_put_left"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to the left of current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+</A>
+	<A NAME="f_put_right"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_put_right">put_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to the left of current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_wipe_out"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_wipe_out">wipe_out</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items.</SPAN>
+</A>
+	<A NAME="f_remove"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_remove">remove</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove current item</SPAN>
+</A>
+	<A NAME="f_remove_left"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_remove_left">remove_left</A>
+</A>
+	<A NAME="f_remove_right"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_remove_right">remove_right</A>
+</A>
+	<A NAME="f_prune_all"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_prune_all">prune_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_duplicate"><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy of sub-list beginning at cursor position</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> and having min (</SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment">, </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_count">count</A><SPAN CLASS="ecomment"> - </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/multi_array_list_short.html#f_index">index</A><SPAN CLASS="ecomment"> + 1) items</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">writable_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/sequence_short.html#f_writable">writable</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/chain_short.html#f_off">off</A>
+	<SPAN CLASS="etag">readable_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/sequence_short.html#f_readable">readable</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/chain_short.html#f_off">off</A>
+	<SPAN CLASS="etag">extendible_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain_short.html#f_extendible">extendible</A>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>MULTI_ARRAY_LIST<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="multi_array_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="MULTI_ARRAY_LIST"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

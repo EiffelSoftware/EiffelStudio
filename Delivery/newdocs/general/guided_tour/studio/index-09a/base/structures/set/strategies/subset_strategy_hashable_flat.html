@@ -1,0 +1,228 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTStrategies for calculating several features for subsets containingR TTHASHABLEs.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>SUBSET_STRATEGY_HASHABLE Flat</TITLE>
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable.html">Text</A></TD>
+<TD CLASS="nolink2">Flat</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SUBSET_STRATEGY_HASHABLE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Strategies for calculating several features for subsets containing</SPAN>
+<SPAN CLASS="estring">		</SPAN><A CLASS="eclass" HREF="../../../../base/kernel/hashable_flat.html">HASHABLE</A><SPAN CLASS="estring">s.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../../../base/structures/set/strategies/subset_strategy_hashable_flat.html">SUBSET_STRATEGY_HASHABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
+
+	<A NAME="f_disjoint"><A CLASS="efeature" HREF="../../../../base/structures/set/strategies/subset_strategy_hashable_flat.html#f_disjoint">disjoint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/structures/set/traversable_subset_flat.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/boolean_flat.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are </SPAN><SPAN CLASS="equoted">set1</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">set2</SPAN><SPAN CLASS="ecomment"> disjoint?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/structures/set/strategies/subset_strategy_flat.html">SUBSET_STRATEGY</A>
+			<SPAN CLASS="etag">sets_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set1</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">set2</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+			<SPAN CLASS="etag">same_rule</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/structures/table/hash_table_flat.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/integer_flat.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/hashable_flat.html">HASHABLE</A>
+			<SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/integer_flat.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../base/kernel/integer_ref_flat.html#f__infix_plus">+</A> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_compare_objects">compare_objects</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_start">start</A>
+				<SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__infix_or_else">or else</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__infix_and">and</A> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A>
+					<SPAN CLASS="ekeyword">check</SPAN>
+						<SPAN CLASS="etag">hashable_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+					<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+						<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">else</SPAN>
+						<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						<SPAN CLASS="ekeyword">check</SPAN>
+							<SPAN CLASS="etag">item_found</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found">found</A>
+						<SPAN CLASS="ekeyword">end</SPAN>
+						<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+							<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+						<SPAN CLASS="ekeyword">else</SPAN>
+							<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__infix_and_then">and then</A> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A>
+					<SPAN CLASS="ekeyword">check</SPAN>
+						<SPAN CLASS="etag">hashable_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+					<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A>
+					<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found">found</A>
+					<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+						<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">else</SPAN>
+						<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+							<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="ekeyword" HREF="../../../../base/kernel/boolean_ref_flat.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+						<SPAN CLASS="ekeyword">else</SPAN>
+							<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_forth">forth</A>
+				<SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_symdif"><A CLASS="efeature" HREF="../../../../base/structures/set/strategies/subset_strategy_hashable_flat.html#f_symdif">symdif</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/structures/set/traversable_subset_flat.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items of </SPAN><SPAN CLASS="equoted">set1</SPAN><SPAN CLASS="ecomment"> that are also in </SPAN><SPAN CLASS="equoted">set2</SPAN><SPAN CLASS="ecomment">, and add all</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> items of </SPAN><SPAN CLASS="equoted">set2</SPAN><SPAN CLASS="ecomment"> not already present in </SPAN><SPAN CLASS="equoted">set1</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/structures/set/strategies/subset_strategy_flat.html">SUBSET_STRATEGY</A>
+			<SPAN CLASS="etag">sets_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set1</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">set2</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+			<SPAN CLASS="etag">same_rule</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/structures/table/hash_table_flat.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/integer_flat.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/hashable_flat.html">HASHABLE</A>
+			<SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/integer_flat.html">INTEGER</A>
+			<SPAN CLASS="elocal">eq</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/kernel/boolean_flat.html">BOOLEAN</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../base/kernel/integer_ref_flat.html#f__infix_plus">+</A> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_compare_objects">compare_objects</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A>
+				<SPAN CLASS="ekeyword">check</SPAN>
+					<SPAN CLASS="etag">hashable_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A>
+				<SPAN CLASS="ekeyword">check</SPAN>
+					<SPAN CLASS="etag">hashable_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_void">void</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="elocal">c</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found">found</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/container_flat.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+						<SPAN CLASS="elocal">eq</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">else</SPAN>
+						<SPAN CLASS="elocal">eq</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_found_item">found_item</A><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">eq</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+						<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">)</SPAN>
+					<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/kernel/hashable_flat.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="elocal">set2</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/traversable_subset_flat.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/access/collection_flat.html#f_wipe_out">wipe_out</A>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">set1</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/set/set_flat.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_item_for_iteration">item_for_iteration</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">hash</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/structures/table/hash_table_flat.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/kernel/any_flat.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/kernel/any_flat.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>SUBSET_STRATEGY_HASHABLE<FORM ONSUBMIT="go_to('../../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable.html">Text</A></TD>
+<TD CLASS="nolink2">Flat</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="subset_strategy_hashable_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SUBSET_STRATEGY_HASHABLE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

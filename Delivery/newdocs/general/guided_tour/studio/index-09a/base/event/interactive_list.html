@@ -1,0 +1,338 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="keywords" CONTENT="Eiffel class, event, linked, list">
+<META NAME="description" CONTENT="TTSequential, one-way linked lists that call add/remove featuresR TTwhen an item is removed or added.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>INTERACTIVE_LIST Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="INTERACTIVE_LIST"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Sequential, one-way linked lists that call add/remove features</SPAN>
+<SPAN CLASS="estring">		when an item is removed or added.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"event, linked, list"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/event/interactive_list.html">INTERACTIVE_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/any.html#f_default_create">default_create</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_new_cell">new_cell</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_cleanup_after_remove">cleanup_after_remove</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_merge_left">merge_left</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_merge_right">merge_right</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_wipe_out">wipe_out</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_put_front">put_front</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_put_left">put_left</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_put_right">put_right</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_remove_right">remove_right</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_replace">replace</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_remove">remove</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_extend">extend</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_default_create"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_default_create">default_create</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize linked list.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_make">make</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Miscellaneous</SPAN>
+
+	<A NAME="f_on_item_added"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_added">on_item_added</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> has just been added.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">an_item_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">an_item</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_on_item_removed"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_removed">on_item_removed</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> has been removed.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">an_item_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">an_item</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
+
+	<A NAME="f_put_front"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_put_front">put_front</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to beginning.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_put_front">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_extend"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to end.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_extend">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_left"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to the left of cursor position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_put_left">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_right"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_put_right">put_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> to the right of cursor position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_put_right">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_replace"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Replace current item by </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">active_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">active_item</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_active">active</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/cell.html#f_item">item</A>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_replace">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_removed_item">removed_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">active_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_remove"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_remove">remove</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove current item.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to right neighbor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (or </SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_after">after</A><SPAN CLASS="ecomment"> if no right neighbor).</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">active_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">active_item</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_active">active</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/cell.html#f_item">item</A>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_remove">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_removed_item">removed_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">active_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_remove_right"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_remove_right">remove_right</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove item to the right of cursor position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not move cursor.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">item_removed</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_before">before</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">item_removed</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_first_element">first_element</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/cell.html#f_item">item</A>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="elocal">item_removed</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_active">active</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linkable.html#f_right">right</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/cell.html#f_item">item</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_remove_right">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_removed_item">removed_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">item_removed</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_merge_left"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_merge_left">merge_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Merge </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> into current structure after cursor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> position. Do not move cursor. Empty </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_merge_left">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_add_all">add_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_merge_right"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_merge_right">merge_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Merge </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> into current structure before cursor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> position. Do not move cursor. Empty </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_merge_right">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_add_all">add_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_wipe_out"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_wipe_out">wipe_out</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">l</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_standard_clone">standard_clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/structures/list/linked_list.html#f_wipe_out">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_removed">on_item_removed</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/structures/list/linked_list.html">LINKED_LIST</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_new_cell"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_new_cell">new_cell</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_first_element">first_element</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create new cell with </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/cell.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_cleanup_after_remove"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_cleanup_after_remove">cleanup_after_remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_first_element">first_element</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clean-up a just removed cell.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_add_all"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_add_all">add_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call </SPAN><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_added">on_item_added</A><SPAN CLASS="ecomment"> for all elements in </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">cur</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/structures/cursors/cursor.html">CURSOR</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">cur</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_cursor">cursor</A>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cur</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_remove_all"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_remove_all">remove_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call </SPAN><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_removed">on_item_removed</A><SPAN CLASS="ecomment"> for all elements in </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_removed_item">removed_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_added_item"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_added_item">added_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> is has been added.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_added">on_item_added</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_removed_item"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_removed_item">removed_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> has been removed.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_on_item_removed">on_item_removed</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_in_operation"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_in_operation">in_operation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are we executing an operation from LINKED_LIST?</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contract support</SPAN>
+
+	<A NAME="f_consistency_count"><A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items in the list.</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">consistency_count_equal_to_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/interactive_list.html#f_consistency_count">consistency_count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list.html#f_count">count</A>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>INTERACTIVE_LIST<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="interactive_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="INTERACTIVE_LIST"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

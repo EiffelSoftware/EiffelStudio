@@ -124,6 +124,10 @@ feature {NONE} -- IL code generation
 			can_discard_target: BOOLEAN
 			is_target_generated: BOOLEAN
 			l_call_access: CALL_ACCESS_B
+			l_attr: ATTRIBUTE_B
+			l_cl_type: CL_TYPE_I
+			local_number: INTEGER
+			l_type: TYPE_I
 		do
 			can_discard_target := not message.need_target
 
@@ -147,6 +151,10 @@ feature {NONE} -- IL code generation
 					-- the address of `target' instead of `target' itself.
 					-- `message' will manage the boxing operation if needed.
 				target.generate_il_call_access (True)
+					-- We need to generate an address operation of most recently
+					-- pushed value, but because it is not a predefined entity
+					-- we need to do something special.
+				l_attr ?= target
 			end
 
 			if can_discard_target and is_target_generated then
@@ -157,6 +165,22 @@ feature {NONE} -- IL code generation
 			l_call_access ?= message
 			if l_call_access /= Void then
 				l_call_access.generate_il_call (inv_checked)
+				if l_attr /= Void and then l_attr.need_address (True) then
+					l_type := Context.real_type (l_call_access.type)
+					if not l_type.is_void then
+						context.add_local (l_type)
+						local_number := context.local_list.count
+						il_generator.put_dummy_local_info (l_type, local_number)
+						il_generator.generate_local_assignment (local_number)
+					end
+					l_cl_type ?= l_attr.context_type
+					il_generator.generate_expanded_attribute_assignment (
+						il_generator.implemented_type (l_attr.written_in, l_cl_type),
+						l_attr.attribute_id)
+					if not l_type.is_void then
+						il_generator.generate_local (local_number)
+					end
+				end
 			else
 				message.generate_il
 			end

@@ -36,11 +36,17 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
+		local
+			scroll_window: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			set_c_object (C.gtk_event_box_new)
+
+			scroll_window := (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			C.gtk_widget_show (scroll_window)
+			C.gtk_container_add (c_object, scroll_window)
 			C.gtk_scrolled_window_set_policy (
-				c_object, 
+				scroll_window, 
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
@@ -48,7 +54,7 @@ feature {NONE} -- Initialization
 			list_widget := C.gtk_tree_new
 			C.gtk_tree_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
 			C.gtk_widget_show (list_widget)
-			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
 		end
 
 	initialize is
@@ -210,6 +216,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/21 21:52:30  king
+--| Made c_object an event box
+--|
 --| Revision 1.36  2000/03/13 22:10:13  king
 --| Added reference handling for child reordering
 --|

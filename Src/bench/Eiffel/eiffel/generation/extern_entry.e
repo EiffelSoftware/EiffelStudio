@@ -13,20 +13,8 @@ feature -- from EXTERN_ENTRY
 	external_name: STRING;
 			-- External name to generate
 
-	set_external_name (s: STRING) is
-			-- Assign `s' to `external_name'.
-		do
-			external_name := s;
-		end;
-
 	encapsulated: BOOLEAN;
 			-- Has the external to be encapsulated ?
-
-	set_encapsulated (b: BOOLEAN) is
-			-- set `encapsulated' to b
-		do
-			encapsulated := b;
-		end;
 
 	routine_name: STRING is
 			-- Routine name to generate
@@ -37,6 +25,31 @@ feature -- from EXTERN_ENTRY
 				Result := external_name;
 			end;
 		end;
+
+	include_list: ARRAY [STRING]
+			-- List of headers needed to specify an external routine.
+
+feature -- Settings
+
+	set_external_name (s: STRING) is
+			-- Assign `s' to `external_name'.
+		do
+			external_name := s;
+		end;
+
+	set_encapsulated (b: BOOLEAN) is
+			-- set `encapsulated' to b
+		do
+			encapsulated := b;
+		end;
+
+	set_include_list (list: like include_list) is
+			-- Set `include_list' to `list'.
+		do
+			include_list := list
+		ensure
+			include_list_set: include_list = list
+		end
 
 feature -- previously in EXTERNAL_UNIT
 
@@ -53,6 +66,7 @@ feature -- previously in EXTERNAL_UNIT
 			Result.set_written_type_id (written_type.type_id);
 			Result.set_external_name (external_name);
 			Result.set_encapsulated (encapsulated);
+			Result.set_include_list (include_list)
 			-- Not necessary anymore
 			--Result.set_pattern_id
 			--	(Pattern_table.c_pattern_id (pattern_id, written_type) - 1);

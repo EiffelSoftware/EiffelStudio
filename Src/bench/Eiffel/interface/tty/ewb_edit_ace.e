@@ -20,7 +20,7 @@ feature
 			if not (error_occurred or project_is_new) then
 				retrieve_project;
 				if not error_occurred then
-					lace_name :=  Lace.file_name
+					lace_name := Lace.file_name
 					if lace_name = Void then
 						io.error.putstring ("You must select an Ace file first%N");
 					else

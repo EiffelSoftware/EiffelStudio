@@ -69,7 +69,7 @@ feature
 				output_window.put_string ("%T");
 				a_classi := classes.item (sorted_class_names.item);
 				a_classc := a_classi.compiled_class;
-				if a_classc /= Void  then
+				if a_classc /= Void then
 					a_classc.append_clickable_signature (output_window);
 					display_indexing (a_classc)
 				else

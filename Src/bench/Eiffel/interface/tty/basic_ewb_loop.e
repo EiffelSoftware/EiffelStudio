@@ -155,25 +155,25 @@ feature -- Initialization
 			!!Result.make (1, 7)
 
 			!EWB_PAST! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_SENDERS! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_FUTURE! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_R_FLAT! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_HISTORY! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_HOMONYMS! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_R_TEXT! ewb_cmd.null;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 		end;
 
 	compile_menu: EWB_MENU is
@@ -188,13 +188,13 @@ feature -- Initialization
 			!!Result.make (1, 3);
 
 			!EWB_ARGS! ewb_cmd;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_COMP! ewb_cmd;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_RUN! ewb_cmd;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 		end;
 
 	commands: ARRAY [EWB_MENU] is

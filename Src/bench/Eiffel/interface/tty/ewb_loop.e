@@ -31,10 +31,10 @@ feature
 			Result.add_entry (ewb_cmd)
 
 			!EWB_RUN! ewb_cmd;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 
 			!EWB_W_COMPILE! ewb_cmd;
-			Result.add_entry  (ewb_cmd);
+			Result.add_entry (ewb_cmd);
 		end
 
 end

@@ -33,7 +33,7 @@ feature
 					classc ?= classes.item_for_iteration.compiled_class;
 					if classc /= Void then 
 						feature_table := classc.feature_table;
-						if feature_table.has (feature_name)  then
+						if feature_table.has (feature_name) then
 							class_name := classc.class_name;
 							feat := feature_table.item (feature_name);
 							feat.append_clickable_signature (output_window, classc);

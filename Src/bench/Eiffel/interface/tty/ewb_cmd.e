@@ -511,8 +511,8 @@ feature -- Input/Output
 	print_header is
 		do
 			io.putstring ("%
-			   	%Eiffel compilation manager%N%
-			  	%  (version ");
+				%Eiffel compilation manager%N%
+				%  (version ");
 			io.putstring (Version_number);
 			io.putstring (")%N");
 		end;

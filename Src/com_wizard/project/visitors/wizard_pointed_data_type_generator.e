@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (10000)
 
-			Result.append (tab)
+			Result.append ("%Tif (a_record_pointer != NULL)%N%T%T")
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (Ce_mapper)
@@ -332,6 +332,8 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append ("%N%Telse%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			valid_result: Result /= Void and then not Result.empty
 		end
@@ -343,7 +345,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (10000)
 
-			Result.append (tab)
+			Result.append ("%Tif (a_interface_pointer != NULL)%N%T%T")
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (Ce_mapper)
@@ -359,6 +361,8 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append ("%N%Telse%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			valid_result: Result /= Void and then not Result.empty
 		end
@@ -405,8 +409,8 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_OBJECT result, tmp_object;
-			--
+			-- EIF_OBJECT result = 0;
+			-- EIF_OBJECT tmp_object = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
@@ -533,10 +537,12 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
+			-- if (*(a_c_type) a_pointer != NULL)
 			-- tmp_object = eif_protect ( cpp_object_name.element_ce_function (*(a_c_type) a_pointer));
 			--                 			       value of ^               value of ^             value of ^
-
-
+			
+			Result.append ("if (*(" + a_c_type + ") a_pointer != NULL)%N%T%T")
+			
 			Result.append ("tmp_object")
 			Result.append (Space_equal_space)
 			Result.append (Eif_protect)
@@ -564,7 +570,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- set_item (eif_access (result), eif_access (tmp_object));
+			-- set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 
 			Result.append ("set_item")
 			Result.append (Space)
@@ -576,17 +582,15 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Comma)
 			Result.append (Space)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("tmp_object")
-			Result.append (Close_parenthesis)
+			Result.append ("((tmp_object != NULL) ? eif_access (tmp_object) : NULL)")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
+			-- if (tmp_object != NULL)
 			-- eif_wean (tmp_object);
 
+			Result.append ("if (tmp_object != NULL)%N%T%T")
 			Result.append (Eif_wean)
 			Result.append (Space_open_parenthesis)
 			Result.append ("tmp_object")

@@ -26,7 +26,7 @@ RM = $rm -f
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 .c.o:
-	$(CC) $(CFLAGS) -D$(PLATFORM) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 OBJECTS = datetime.o
 

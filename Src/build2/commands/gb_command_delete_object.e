@@ -95,8 +95,6 @@ feature {NONE} -- Implementation
 	
 	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
 			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
-			--| FIXME this is repeated in GB_COMMAND_ADD_OBJECT. When get time
-			--| extract into a new class and inherit.
 		local
 			editor: GB_OBJECT_EDITOR
 			window_parent: EV_WINDOW

@@ -127,6 +127,7 @@ feature -- Type check, byte code and dead code removal
 			is_in_creation_expression: BOOLEAN
 			multi: MULTI_TYPE_A
 			was_overloaded: BOOLEAN
+			l_source_type, l_target_type: CL_TYPE_A
 		do
 			last_type := context_last_type
 
@@ -242,14 +243,28 @@ feature -- Type check, byte code and dead code removal
 							-- at only one place, ie here.
 						open_type ?= arg_type
 						if open_type /= Void or else not current_item.conform_to (arg_type) then
-							create vuar2
-							context.init_error (vuar2)
-							vuar2.set_called_feature (a_feature, last_id)
-							vuar2.set_argument_position (i)
-							vuar2.set_argument_name (a_feature.arguments.item_name (i))
-							vuar2.set_formal_type (arg_type)
-							vuar2.set_actual_type (current_item)
-							Error_handler.insert_error (vuar2)
+							if
+								open_type = Void and
+								current_item.convert_to (context.current_class, arg_type)
+							then
+								if parameters_convert_info = Void then
+									create parameters_convert_info.make (1, count)
+								end
+								l_source_type ?= current_item
+								l_target_type ?= arg_type
+								parameters_convert_info.put (
+									create {PAIR [CL_TYPE_A, CL_TYPE_A]}.make (l_source_type,
+										l_target_type), i)
+							else
+								create vuar2
+								context.init_error (vuar2)
+								vuar2.set_called_feature (a_feature, last_id)
+								vuar2.set_argument_position (i)
+								vuar2.set_argument_name (a_feature.arguments.item_name (i))
+								vuar2.set_formal_type (arg_type)
+								vuar2.set_actual_type (current_item)
+								Error_handler.insert_error (vuar2)
+							end
 						end
 							-- Insert the attachment type in the
 							-- parameters line for byte code
@@ -446,17 +461,31 @@ feature -- Type check, byte code and dead code removal
 			params: BYTE_LIST [PARAMETER_B]
 			p: PARAMETER_B
 			i, nb: INTEGER
+			l_info: PAIR [CL_TYPE_A, CL_TYPE_A]
+			l_convert_info: like parameters_convert_info
 		do
 			if parameters /= Void then
 				from
 					nb := parameters.count
 					create params.make_filled (nb)
+					l_convert_info := parameters_convert_info
 					i := 1
 				until
 					i > nb
 				loop
 					create p
-					p.set_expression (parameters.i_th (i).byte_node)
+					if l_convert_info /= Void then
+						l_info := l_convert_info.item (i)
+					end
+					if l_info /= Void then
+							-- Process conversion if any
+						p.set_expression (Byte_code_factory.convert_byte_node (
+							parameters.i_th (i).byte_node, l_info.first, l_info.second,
+							line_number)
+						)
+					else
+						p.set_expression (parameters.i_th (i).byte_node)
+					end
 					params.put_i_th (p, i)
 					i := i + 1	
 				end
@@ -471,6 +500,8 @@ feature -- Type check, byte code and dead code removal
 					Attachments.forth
 					i := i - 1
 				end
+				
+				parameters_convert_info := Void
 			end
 
 			access_line := context.access_line
@@ -566,7 +597,19 @@ feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
 			parameters := p
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation: convertibility
+
+	parameters_convert_info: ARRAY [PAIR [CL_TYPE_A, CL_TYPE_A]]
+			-- For each parameters that need a conversion call, we store info used in `byte_node'
+			-- to generate conversion call.
+
+	Byte_code_factory: BYTE_CODE_FACTORY is
+			-- Factory to create conversion byte node.
+		once
+			create Result
+		end
+
+feature {NONE} -- Implementation: overloading
 
 	overloaded_feature (last_type: TYPE_A; last_class: CLASS_C): FEATURE_I is
 			-- Find overloaded feature that could match Current. The rules are taken from

@@ -24,6 +24,7 @@ inherit
 			{ANY} Pg_break, Pg_interrupt,
 				Pg_raise, Pg_viol 
 		end;
+	SHARED_APPLICATION_EXECUTION
 
 creation {RUN_REQUEST}
 
@@ -34,6 +35,8 @@ feature {STOPPED_HDLR} -- Initialization
 	set (n: STRING; obj: STRING; ot, dt, offs, reas: INTEGER) is
 			-- Set the various attributes identifying current 
 			-- position in source code.
+		local
+			stack_num: INTEGER
 		do
 
 			object_address := obj;
@@ -59,6 +62,11 @@ feature {STOPPED_HDLR} -- Initialization
 				break_index := 0;
 			end;
 			!! where.make;
+			stack_num := Application.current_execution_stack_number;
+			if stack_num > where.count then
+				stack_num := where.count
+			end;
+			Application.set_current_execution_stack (stack_num)
 		end;
 
 feature -- Values
@@ -96,6 +104,12 @@ feature -- Values
 
 	exception_tag: STRING;
 			-- Exception tag if any
+
+	current_stack_element: CALL_STACK_ELEMENT is
+			-- Current call stack element being displayed
+		do
+			Result := where.i_th (Application.current_execution_stack_number)
+		end
 
 feature -- Access
 
@@ -160,6 +174,8 @@ feature -- Output
 			c, oc: E_CLASS;
 			ll: LINKED_LIST [STRING];
 			f, of: E_FEATURE;
+			cs: CALL_STACK_ELEMENT;
+			stack_num: INTEGER
 		do
 			if not is_stopped then
 				st.add_string ("System is running");
@@ -214,8 +230,10 @@ feature -- Output
 					st.add_new_line
 				end;
 				if not where.empty then
-					where.first.display_arguments (st);
-					where.first.display_locals (st);
+					stack_num := Application.current_execution_stack_number;
+					cs := where.i_th (stack_num);
+					cs.display_arguments (st);
+					cs.display_locals (st);
 					where.display_stack (st)
 				end
 			end;

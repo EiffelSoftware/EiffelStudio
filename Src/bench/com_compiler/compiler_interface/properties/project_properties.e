@@ -76,6 +76,7 @@ inherit
 
 create
     make,
+    make_from_project,
     make_in_memory
 
 feature {NONE} -- Initialization
@@ -85,11 +86,22 @@ feature {NONE} -- Initialization
         require
             initialized: Eiffel_project.initialized
         do
-            create ace.make (Eiffel_ace.file_name)
-			if not msil_generation then
-				ace.set_il_generation (True)
-			end
+        	if (create {RAW_FILE}.make (Eiffel_ace.file_name)).exists then
+	            create ace.make (Eiffel_ace.file_name)
+				if not msil_generation then
+					ace.set_il_generation (True)
+				end        		
+			else
+					-- There is no ace file so create properties from project.
+				make_from_project
+        	end
         end
+    
+    make_from_project is
+    		-- Initializes properties from project rather than ace
+    	do
+    		create ace.make_from_ast (eiffel_project.ace.ast)
+    	end
     
     make_in_memory is
     		-- Initialize properties from in memory ace AST

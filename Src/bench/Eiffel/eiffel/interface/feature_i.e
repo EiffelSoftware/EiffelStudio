@@ -53,16 +53,32 @@ inherit
 	SHARED_EXEC_TABLE
 
 	HASHABLE
+		rename
+			hash_code as feature_name_id
+		end
 
 	PART_COMPARABLE
 
 	COMPILER_EXPORTER
+
+	SHARED_NAMES_HEAP
 			
 feature -- Access
 
-	feature_name: STRING
+	feature_name: STRING is
 			-- Final name of the feature
+		require
+			feature_name_id_set: feature_name_id >= 1
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
 
+	feature_name_id: INTEGER
+			-- Id of `feature_name' in `Names_heap' table.
+			
 	feature_id: INTEGER
 			-- Feature id: first key in the feature call hash table
 			-- of a class: tow features of different names have two
@@ -181,15 +197,6 @@ feature -- Debugger access
 
 feature -- Comparison
 
-	hash_code: INTEGER is
-			-- Hash code
-		do
-			check
-				feature_name_exists: feature_name /= Void
-			end
-			Result := feature_name.hash_code
-		end
-
 	infix "<" (other: like Current): BOOLEAN is
 		do
 			Result := feature_name < other.feature_name
@@ -233,16 +240,31 @@ feature -- Setting
 			pattern_id := i
 		end
 
-	set_feature_name (s: STRING) is
+	set_feature_name, set_renamed_name (s: STRING) is
 			-- Assign `s' to `feature_name'.
+			-- `set_renamed_name' is needed for C external
+			-- routines that can't be renamed.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		local
+			l_names_heap: like Names_heap
 		do
-			feature_name := s
+			l_names_heap := Names_heap
+			l_names_heap.put (s)
+			feature_name_id := l_names_heap.found_item
+		ensure
+			feature_name_set: equal (feature_name, s)
 		end
 
-	set_renamed_name (s: STRING) is
-			-- Set `s' to `feature_name' for a renaming.
+	set_feature_name_id (id: INTEGER) is
+			-- Assign `id' to `feature_name_id'.
+		require
+			valid_id: Names_heap.valid_index (id)
 		do
-			feature_name := s
+			feature_name_id := id
+		ensure
+			feature_name_id_set: feature_name_id = id
 		end
 
 	set_written_in (a_class_id: like written_in) is
@@ -302,10 +324,14 @@ feature -- Setting
 			-- Assign `n' to `external_name'.
 		require
 			n_not_empty: n /= Void implies not n.is_empty
+		local
+			l_names_heap: like Names_heap
 		do
-			private_external_name := n
+			l_names_heap := Names_heap
+			l_names_heap.put (n)
+			private_external_name_id := l_names_heap.found_item
 		ensure
-			external_name_set: n /= Void implies external_name = n
+			external_name_set: n /= Void implies equal (external_name, n)
 		end
 
 	generation_class_id: INTEGER is
@@ -665,12 +691,6 @@ feature -- Conveniences
 			-- No arguments
 		end
 
-	argument_names: EIFFEL_LIST [ID_AS] is
-			-- Argument names
-		do
-			-- No argument names
-		end
-
 	set_assert_id_set (set: like assert_id_set) is
 			-- Assign `set' to assert_id_set.
 		do
@@ -1001,32 +1021,31 @@ feature -- Signature checking
 	check_argument_names (feat_table: FEATURE_TABLE) is
 			-- Check the argument names
 		require
-			argument_names_exists: argument_names /= Void
+			argument_names_exists: arguments.argument_names /= Void
 			written_in_class: written_in = feat_table.feat_tbl_id
 				-- The feature must be written in the associated class
 				-- of `feat_table'.
 		local
-			arg_names: like argument_names
-			arg_id: ID_AS
+			args: like arguments
+			arg_id: STRING
 			vreg: VREG
 			vrfa: VRFA
-			l_area: SPECIAL [ID_AS]
 			i, nb: INTEGER
 		do
 			from
-				arg_names := argument_names
-				l_area := arg_names.area
-				nb := arg_names.count
+				args := arguments
+				i := 1
+				nb := args.count
 			until
-				i = nb
+				i > nb
 			loop
-				arg_id := l_area.item (i)
+				arg_id := args.item_name (i)
 					-- Searching to find after the current item another one
 					-- with the same name. 
 					-- We do `i + 2' for the start index because we need to go
 					-- one step further (+ 1) and also because we are directly
 					-- using area (+ 1)
-				if arg_names.locate_index_of (arg_id, 1, i + 2) /= 0 then
+				if args.argument_position (arg_id, i + 2) /= 0 then
 						-- Two arguments with the same name
 					!!vreg
 					vreg.set_class (written_class)
@@ -1479,24 +1498,23 @@ end
 		end
 
 	argument_position (arg_id: ID_AS): INTEGER is
-			-- Position of argument `arg_id' in the list of arguments
-			-- of the current feature. 0 if none or not found.
+			-- Position of argument `arg_id' in list of arguments
+			-- of current feature. 0 if none or not found.
 		require
 			arg_id /= Void
 		do
 			if arguments /= Void then
-				Result := argument_names.locate_index_of (arg_id, 1, 1)
+				Result := arguments.argument_position (arg_id, 1)
 			end
 		end
 
-	has_argument_name (arg_id: ID_AS): BOOLEAN is
-			-- Has the current feature an argument named `arg_id" ?
+	has_argument_name (arg_id: INTEGER): BOOLEAN is
+			-- Has current feature an argument named `arg_id" ?
+		require
+			arg_id /= Void
 		do
 			if arguments /= Void then
-				argument_names.start
-				argument_names.compare_objects
-				argument_names.search (arg_id)
-				Result := not argument_names.after
+				Result := arguments.argument_position_id (arg_id, 1) /= 0
 			end
 		end
 
@@ -1896,8 +1914,18 @@ feature {NONE} -- Implementation
 
 feature {INHERIT_TABLE} -- Access
 
-	private_external_name: STRING
+	private_external_name_id: INTEGER
+			-- External name id of feature if any in IL generation.
+
+	private_external_name: STRING is
 			-- External name of feature if any in IL generation.
+		do
+			Result := Names_heap.item (private_external_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+
+		end
 
 feature -- Concurrent Eiffel
 

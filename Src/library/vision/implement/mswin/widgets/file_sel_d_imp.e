@@ -81,6 +81,9 @@ feature -- Access
 	file_list: LINKED_LIST [STRING] is
 			-- List of files below `filter' that match `pattern'
 		do
+			if wel_file_dialog /= Void and then wel_file_dialog.selected then
+				Result := wel_file_dialog.multiple_file_names
+			end
 		end
 
 	filter: STRING 

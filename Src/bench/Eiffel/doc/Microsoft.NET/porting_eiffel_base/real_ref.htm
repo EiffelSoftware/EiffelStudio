@@ -1,0 +1,37 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>DOUBLE_REF</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+<h1>DOUBLE_REF</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>CONVERT
+	<li>MATH
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{MATH}.floor, ceiling, abs_double
+	<li>{CONVERT}.to_int32, to_string_double
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>None.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>When converting double's into integer's (round, ceiling, floor, truncated_to_integer), 
+	an exception might be raised if the result is larger than the larger integer available,
+	or smaller than the smallest integer available.
+</ul>
+<h2>Other notes</h2>
+<p>The implementation of some features seems to be very slow (round for example).
+That's because of the strong postcondition.
+
+</body>
+
+</html>

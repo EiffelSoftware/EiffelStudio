@@ -1,0 +1,45 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>FILE</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+<h1>FILE</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>FILEINFO
+	<li>FILESTREAM
+	<li>IntPtr (POINTER)
+	<li>DateTime
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>Users need the correct permissions to access information relative to files.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>All permission exceptions triggered by FILE.
+	<li>Exceptions raised when a file doesn't exist.
+	<li>There are conversions from int64 to int32 here and there (count, file_descriptor,...), which may
+	raise overflow exceptions.
+</ul>
+<h2>Other notes</h2>
+<p>The behavior mimics the behavior under Windows (no inode, no user, etc).
+<p>File descriptors are there for base compatibility only, they are not natively supported and may cause bugs.
+<p>Haven't figured out yet how to implement the retrieve process.
+<p>Reopening files doesn't work. reopen* only closes the file and opens another one, according to the parameter name.
+<p>Link doesn't do anything. I believe it was already the case on Windows anyway.
+<p>Adding and removing permissions on files is not supported.
+<p>extend and copy_to seem buggy to me (extend does a put_character, copy_to erases the contents of last_string (which is a side effect)),
+but those are the behaviors in Base.
+
+</body>
+
+</html>

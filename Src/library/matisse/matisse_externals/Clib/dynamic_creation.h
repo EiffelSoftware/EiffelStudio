@@ -11,6 +11,7 @@
 #ifndef __DYNAMIC_CREATION_H__
 #define __DYNAMIC_CREATION_H__
 
+#include "eif_eiffel.h"
 
 /* define names of classes used as container of successors */
 
@@ -32,5 +33,10 @@
 /* A sample of reference type for HASH_TABLE */
 #define HT_REFERENCE_TYPE	"STRING" 
 
+#ifdef WORKBENCH
+#define DTYPE_GEN(x)	(rtud_inv[(uint32) (x) & SK_DTYPE])
+#else
+#define DTYPE_GEN(x)	((uint32) (x) & SK_DTYPE)
+#endif
 
 #endif

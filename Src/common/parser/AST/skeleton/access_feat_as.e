@@ -134,6 +134,7 @@ feature -- Type check, byte code and dead code removal
 					!!vuar1;
 					context.init_error (vuar1);
 					vuar1.set_called_feature (a_feature);
+					vuar1.set_argument_count (count);
 					Error_handler.insert_error (vuar1);
 						-- Cannot go on here: too dangerous
 					Error_handler.raise_error;

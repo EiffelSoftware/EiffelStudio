@@ -32,8 +32,9 @@ feature
 		do
 			if (bits_value.value <= 0) then
 				!!vtbt;
-				vtbt.set_class_id (feat_table.feat_tbl_id);
-				vtbt.set_feature_name (f.feature_name);
+				vtbt.set_class (feat_table.associated_class);
+				vtbt.set_feature (f);
+				vtbt.set_value (bits_value.value);
 				Error_handler.insert_error (vtbt);
 					-- Cannot go on here
 				Error_handler.raise_error;

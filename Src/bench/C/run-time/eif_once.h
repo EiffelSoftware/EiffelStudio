@@ -38,7 +38,7 @@ extern EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER fun
 extern void eif_global_procedure  (EIF_REFERENCE Current, EIF_POINTER proc_ptr);
 	/* Call to once procedure */ 
 
-extern rt_shared void eif_destroy_once_mutexes (void);
+extern rt_shared void eif_destroy_once_per_process (void);
 #ifdef __cplusplus
 }
 #endif

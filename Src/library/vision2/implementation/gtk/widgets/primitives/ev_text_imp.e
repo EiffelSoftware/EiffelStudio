@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_text_new (NULL, NULL))
-			C.gtk_text_set_editable (c_object, True)
 			entry_widget := c_object
+			C.gtk_text_set_editable (entry_widget, True)
 		end
 
 feature -- Access
@@ -48,7 +48,7 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := C.gtk_editable_get_chars (c_object, 0, -1)
+			p := C.gtk_editable_get_chars (entry_widget, 0, -1)
 			create Result.make_from_c (p)
 			C.g_free (p)
 		end
@@ -83,7 +83,7 @@ feature -- Access
 				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
 			end
 
-			p := C.gtk_editable_get_chars (c_object, line_begin_pos - 1, line_end_pos - 1)
+			p := C.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
 			create Result.make_from_c (p)
 			C.g_free (p)
 		end
@@ -97,7 +97,7 @@ feature -- Status report
 			p: POINTER
 			temp_string: STRING
 		do
-			p := C.gtk_editable_get_chars (c_object, 0, C.gtk_text_get_point (c_object))
+			p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
 			create temp_string.make_from_c (p)
 			C.g_free (p)
 			Result := temp_string.occurrences ('%N') + 1
@@ -106,7 +106,7 @@ feature -- Status report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_text_get_point (c_object) + 1
+			Result := C.gtk_text_get_point (entry_widget) + 1
 		end
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
@@ -179,7 +179,7 @@ feature -- Status setting
 	set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			C.gtk_text_set_point (c_object, pos - 1)
+			C.gtk_text_set_point (entry_widget, pos - 1)
 		end
 	
 	insert_text (txt: STRING) is
@@ -187,12 +187,12 @@ feature -- Status setting
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (txt)
-			C.gtk_text_insert (c_object, NULL, NULL, NULL, a_gs.item, -1)
+			C.gtk_text_insert (entry_widget, NULL, NULL, NULL, a_gs.item, -1)
 		end
 	
 	set_text (txt: STRING) is
 		do
-			C.gtk_editable_delete_text (c_object, 0, -1)
+			C.gtk_editable_delete_text (entry_widget, 0, -1)
 			insert_text (txt)
 		end
 	
@@ -202,7 +202,7 @@ feature -- Status setting
 			temp_caret_pos: INTEGER
 		do
 			temp_caret_pos := caret_position
-			C.gtk_text_set_point (c_object, text_length)
+			C.gtk_text_set_point (entry_widget, text_length)
 			insert_text (txt)
 			set_caret_position (temp_caret_pos)
 		end
@@ -213,7 +213,7 @@ feature -- Status setting
 			temp_caret_pos: INTEGER
 		do
 			temp_caret_pos := caret_position
-			C.gtk_text_set_point (c_object, 0)
+			C.gtk_text_set_point (entry_widget, 0)
 			insert_text (txt)
 			set_caret_position (temp_caret_pos)
 		end
@@ -222,7 +222,7 @@ feature -- Status setting
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
 		do
-			C.gtk_editable_delete_text (c_object, start + 1, finish + 1)
+			C.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
 		end
 
 	freeze is
@@ -233,13 +233,13 @@ feature -- Status setting
 			-- Note: Only one window can be frozen at a time.
 			-- This is because of a limitation on Windows.
 		do
-			C.gtk_text_freeze (c_object)
+			C.gtk_text_freeze (entry_widget)
 		end
 
 	thaw is
 			-- Thaw a frozen widget.
 		do
-			C.gtk_text_thaw (c_object)
+			C.gtk_text_thaw (entry_widget)
 		end
 
 feature -- Basic operation

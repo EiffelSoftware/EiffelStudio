@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DATABASE_MANAGER [G -> DATABASE create default_create end]
+	DATABASE_MANAGER [reference G -> DATABASE create default_create end]
 
 feature -- Connection
 

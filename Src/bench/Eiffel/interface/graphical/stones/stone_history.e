@@ -82,9 +82,18 @@ feature -- Element change
 				not v.same_as (last) or else
 				not equal (v.signature, item.signature))
 			then
+				if not empty and then not islast then
+					from
+					until
+						islast
+					loop
+						remove_right
+					end
+				end;
 				twl_extend (v);
 				if count > capacity then
-					start; remove
+					start; 
+					remove
 				end;
 				finish
 			end

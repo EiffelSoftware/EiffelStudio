@@ -254,7 +254,9 @@ feature -- Execution
 	execute is
 			-- Recompile the project, start C compilation if necessarry.
 		do
-			execute_with_c_compilation_flag (True)
+			if is_sensitive then
+				execute_with_c_compilation_flag (True)
+			end
 		end
 
 	execute_without_c_compilation is

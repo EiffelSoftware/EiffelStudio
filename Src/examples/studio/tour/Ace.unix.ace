@@ -1,14 +1,14 @@
 system 
-	SIMPLE
+	simple
 root
-	TESTROOT  (ROOT_CLUSTER): "make"
+	testroot  (root_cluster): "make"
 
 default
 	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
-	ROOT_CLUSTER:		"$ISE_EIFFEL/examples/studio/tour";
+	root_cluster:		"$ISE_EIFFEL/examples/studio/tour";
 				-- If you intend to modify any part of the example,
 				-- copy all the files of $ISE_EIFFEL/examples/studio/tour
 				-- into one of your directories, and replace

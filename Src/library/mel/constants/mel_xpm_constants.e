@@ -188,7 +188,7 @@ feature -- Error access
 			"XpmColorFailed"
 		end;
 
-end -- class MEL_XMP_CONSTANTS
+end -- class MEL_XPM_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Motif Eiffel Library: library of reusable components for ISE Eiffel.

@@ -90,6 +90,10 @@ extern "C" {
 #define EIF_GC_SET_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex");
 #define EIF_GC_SET_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
 
+	/* To protect access to `g_data'. */
+#define EIF_G_DATA_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_g_data_mutex, "Could not lock GC rem_set mutex");
+#define EIF_G_DATA_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_g_data_mutex, "Could not unlock GC rem_set mutex")
+
 	/* Values used to set the running status of a thread. */
 #define EIF_THREAD_RUNNING		0
 #define EIF_THREAD_GC_REQUESTED	1001
@@ -102,6 +106,8 @@ extern "C" {
 #define GC_THREAD_PROTECT(x)	x
 #else
 #define GC_THREAD_PROTECT(x)
+#define EIF_G_DATA_MUTEX_LOCK
+#define EIF_G_DATA_MUTEX_UNLOCK
 #endif
 
 /* Macro for enabling/disabling debugger */

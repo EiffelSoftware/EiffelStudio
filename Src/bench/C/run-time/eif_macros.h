@@ -74,8 +74,13 @@ extern "C" {
 
 
 /* Macro used for allocation:
- *  RTLN(x) allocates a new object of type 'x'
+ *  RTLN(x) allocates a new object of dftype 'x'
+ *  RTLNS(x,y,z) allocates a new routine object of dftype 'x', dtype 'y' and size 'z'
+ *  RTLNT(x) allocates a new tuple object of dftype 'x'
+ *  RTLNT(x) allocates a new tuple object of dftype 'x', with 'n' elements and is_atomic 'a'
+ *  RTLNSMART(x) allocates a new object of dftype 'x'
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
+ *  RTLNC(x) creates a new non-initialized instance of 'x'.
  *  initializes it with the routine pointer 'y', the true routine pointer 'z',
  *  argument tuple 'a', open map 'o' and closed map 'c'
  *  RTLB(x) allocated a new bit object of size 'x'
@@ -88,7 +93,11 @@ extern "C" {
  */
 #define RTLN(x)				emalloc(x)
 #define RTLNS(x,y,z)		emalloc_size(x,y,z)
+#define RTLNT(x)			tuple_malloc(x)
+#define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
+#define RTLNSMART(x)		smart_emalloc(x)
 #define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
+#define RTLNC(x)			eclone(x)
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)
 #define RTXB(x,y)			b_copy(x,y)

@@ -363,36 +363,6 @@ feature -- Duplication
 		deferred
 		end;
 
-feature -- Obsolete
-
-	child_position: INTEGER is obsolete "Use ``child_index''"
-			-- Position of child cursor
-		do
-			Result := child_index
-		end;
-
-	child_go (i: INTEGER) is obsolete "Use ``child_go_i_th''"
-			-- Move cursor to `i'-th position.
-		require
-			valid_cursor_index: valid_cursor_index (i)
-		do
-			child_go_i_th (i)
-		ensure
-			position_espected: child_index = i
-		end;
-
-	child_offleft: BOOLEAN is obsolete "Use ``child_before''"
-			-- Is child cursor left of leftmost child?
-		do
-			Result := child_before
-		end;
-
-	child_offright: BOOLEAN is obsolete "Use ``child_after''"
-			-- Is child cursor right of rightmost child?
-		do
-			Result := child_after
-		end;
-
 feature {TREE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is

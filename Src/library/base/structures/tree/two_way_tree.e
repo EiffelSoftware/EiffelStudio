@@ -252,24 +252,6 @@ feature {NONE} -- Implementation
 			other.child_go_to (cursor)
 		end;
 
-feature -- Obsolete
-
-	child_add_left (v: like item) is
-			-- Add `v' to the left of current child.
-			-- Do not move child
-		obsolete "Use %"child_put_left%" instead."
-		do
-			child_put_left (v)
-		end
-
-	child_add_right (v: like item) is
-			-- Add `v' to the right of current child.
-			-- Do not move child.
-		obsolete "Use %"child_put_right%" instead."
-		do
-			child_put_right (v)
-		end
-
 invariant
 
 	off_constraint: (child = Void) implies child_off

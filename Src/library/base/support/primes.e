@@ -158,26 +158,6 @@ feature -- Access
 			end
 		end;
 
-feature -- Obsolete
-
-	next_prime (n: INTEGER): INTEGER is
-			obsolete "Use `higher_prime' instead"
-		do
-			Result := higher_prime (n)
-		end;
-
-	former_prime (n: INTEGER): INTEGER is
-			obsolete "Use `lower_prime' instead"
-		do
-			Result := lower_prime (n)
-		end;
-
-	test_prime (n: INTEGER): BOOLEAN is
-			obsolete "Use `is_prime' instead"
-		do
-			Result := is_prime (n)
-		end;
-
 end -- class PRIMES
 
 

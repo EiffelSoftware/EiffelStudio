@@ -103,7 +103,7 @@ feature -- Access
 			Result := ccom_tag_qacontainer_lcid (item)
 		end
 
-	hpal: WIRE_HPALETTE_ALIAS is
+	hpal: POINTER is
 			-- No description available.
 		do
 			Result := ccom_tag_qacontainer_hpal (item)
@@ -209,7 +209,7 @@ feature -- Basic Operations
 			ccom_tag_qacontainer_set_lcid (item, a_lcid)
 		end
 
-	set_hpal (a_hpal: WIRE_HPALETTE_ALIAS) is
+	set_hpal (a_hpal: POINTER) is
 			-- Set `hpal' with `a_hpal'.
 		require
 			non_void_a_hpal: a_hpal /= Void
@@ -389,7 +389,7 @@ feature {NONE}  -- Externals
 			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, LONG)"
 		end
 
-	ccom_tag_qacontainer_hpal (a_pointer: POINTER): WIRE_HPALETTE_ALIAS is
+	ccom_tag_qacontainer_hpal (a_pointer: POINTER): POINTER is
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *):EIF_REFERENCE"

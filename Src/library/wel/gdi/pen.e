@@ -18,6 +18,7 @@ inherit
 
 creation
 	make,
+	make_solid,
 	make_indirect,
 	make_by_pointer
 

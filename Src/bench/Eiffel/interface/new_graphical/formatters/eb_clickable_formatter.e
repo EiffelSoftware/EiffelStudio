@@ -56,7 +56,7 @@ feature -- Status Setting
 			-- Associate current formatter with `a_class'.  Redefined to prevent
 			-- attempted formatting of external class type.
 		do
-			if a_class /= Void and not a_class.is_external then
+			if a_class /= Void and not a_class.is_true_external then
 				Precursor (a_class)
 			end
 		end

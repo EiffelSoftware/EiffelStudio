@@ -202,7 +202,7 @@ rt_shared void traversal(char *object, int p_accounting)
 		}
 	} else {
 		/* Normal object */
-		count = Deif_bid(flags & EO_TYPE);
+		count = Deif_bid(flags);
 		count = References(count);
 
 		/* Traversal of references of `object' */
@@ -403,7 +403,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 		}
 	} else {
 		/* Normal object */
-		count = References(Deif_bid(flags & EO_TYPE));
+		count = References(Deif_bid(flags));
 
 		/* Traversal of references of `object' */
 		for (;  count > 0;

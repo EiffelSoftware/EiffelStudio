@@ -66,7 +66,7 @@ rt_public char *c_generator(register char *Current)
 	if (flags & EO_SPEC)
 		return makestr("SPECIAL", 7);
 	
-	generator = System(Deif_bid(flags & EO_TYPE)).cn_generator;
+	generator = System(Deif_bid(flags)).cn_generator;
 
 	return makestr(generator, strlen(generator));
 }
@@ -106,7 +106,7 @@ rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
 		rec_swrite(eif_access(object), 0);
 	} else {
 		/* Print instance class name and object id */
-		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags & EO_TYPE)).cn_generator,
+		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags)).cn_generator,
 			eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
@@ -300,7 +300,7 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;
-	dt_type = (int) Deif_bid(flags & EO_TYPE);
+	dt_type = (int) Deif_bid(flags);
 
 	if (!(flags & EO_REF)) 
 		if (flags & EO_COMP) 

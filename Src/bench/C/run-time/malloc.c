@@ -2809,7 +2809,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 * is in charge of setting some other flags like EO_COMP and initializing
 	 * of expanded inter-references.
 	 */
-	init = (char *(*) (char *)) XCreate(Deif_bid(type & EO_TYPE));
+	init = (char *(*) (char *)) XCreate(Deif_bid(type));
 	if (init != (char *(*)(char *)) 0)
 		((void (*)()) init)(object, object);
 
@@ -2985,7 +2985,7 @@ rt_private void check_ref(char *object)
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if (Deif_bid(flags & EO_TYPE) > max_dtype) {
+	if (Deif_bid(flags) > max_dtype) {
 		printf("memck: object 0x%lx exceeds maximum dtype (%d), skipped.\n",
 			object, flags & EO_TYPE);
 		mempanic;
@@ -3002,7 +3002,7 @@ rt_private void check_ref(char *object)
 		else
 			size = sizeof(char *);
 	} else
-		refs = References(Deif_bid(flags & EO_TYPE));
+		refs = References(Deif_bid(flags));
 	
 	for (; refs != 0; refs--, object += size) {
 		root = *(char **) object;
@@ -3059,7 +3059,7 @@ rt_private void check_flags(char *object, char *from)
 		printf("memck: object 0x%lx exceeds maximum dynamic type (%d).\n",
 			object, dtype);
 	} else if (from == (char *) 0)
-		obj_use[Deif_bid(flags & EO_TYPE)]++;
+		obj_use[Deif_bid(flags)]++;
 
 	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
 		int mod;
@@ -3438,7 +3438,7 @@ rt_private void check_obj(char *object)
 	uint32 mflags;
 
 	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dtype = Deif_bid(flags & EO_TYPE);
+	dtype = Deif_bid(flags);
 
 	if (flags & EO_C) {						/* Not an Eiffel object */
 		mflags = HEADER(object)->ov_size;
@@ -3447,7 +3447,7 @@ rt_private void check_obj(char *object)
 	}
 
 	if (dtype <= scount)
-		type_use[Deif_bid(flags & EO_TYPE)]++;
+		type_use[Deif_bid(flags)]++;
 
 	EIF_END_GET_CONTEXT
 }

@@ -1727,7 +1727,7 @@ marked:		/* I need this goto label to avoid code duplication */
 		}
 
 	} else
-		offset = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
+		offset = References(Deif_bid(flags));	/* Number of references */
 
 #ifdef DEBUG
 	dprintf(16)("recursive_mark: %d references for 0x%lx\n", offset, root);
@@ -1949,7 +1949,7 @@ marked: /* Goto label needed to avoid code duplication */
 			}
 
 		} else
-			count = offset = References(Deif_bid(flags & EO_TYPE));	/* # items */
+			count = offset = References(Deif_bid(flags));	/* # items */
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_mark: %d references for 0x%lx\n", offset, current);
@@ -2159,7 +2159,7 @@ marked:
 			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
-			offset = References(Deif_bid(flags & EO_TYPE));	/* # of references */
+			offset = References(Deif_bid(flags));	/* # of references */
 
 
 		/* Step 1
@@ -2268,7 +2268,7 @@ not_explorable:
 				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
-				offset = References(Deif_bid(flags & EO_TYPE));
+				offset = References(Deif_bid(flags));
 
 			if (position == offset)
 				epush (&path_stack, (char *) (position | LAST_REF));
@@ -2993,7 +2993,7 @@ rt_private int sweep_from_space(void)
 			 */
 
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-				dtype = Deif_bid(zone->ov_flags & EO_TYPE);		/* Dispose ptr */
+				dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
 				if (Disp_rout(dtype)) {					/* Exists ? */
 					gc_status = g_data.status;      	/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
@@ -3068,7 +3068,7 @@ rt_private int sweep_from_space(void)
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					dtype = Deif_bid(next->ov_flags & EO_TYPE);	/* Dispose ptr */
+					dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
 					if (Disp_rout(dtype)) {				/* Exists ? */
 						gc_status = g_data.status;      /* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
@@ -3886,7 +3886,7 @@ rt_private char *generation_mark(char *root)
 		}
 
 	} else
-		offset = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
+		offset = References(Deif_bid(flags));	/* Number of references */
 
 #ifdef DEBUG
 	dprintf(16)("generation_mark: %d references for 0x%lx\n", offset, root);
@@ -4074,7 +4074,7 @@ rt_private char *hybrid_gen_mark(char *root)
 					goto done;		/* End of iteration; exit procedure */
 			}
 		} else
-			count = offset = References(Deif_bid(flags & EO_TYPE)); /* # of references */
+			count = offset = References(Deif_bid(flags)); /* # of references */
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_gen_mark: %d references for 0x%lx\n", offset, current);
@@ -4253,7 +4253,7 @@ rt_private char *it_gen_mark(char *root)
 			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
-			offset = References(Deif_bid(flags & EO_TYPE));	/* # of references */
+			offset = References(Deif_bid(flags));	/* # of references */
 
 		/* Step 1
 		 * if the current object has reference(s), inspect the first one.
@@ -4362,7 +4362,7 @@ not_explorable:
 				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
-				offset = References(Deif_bid(flags & EO_TYPE));
+				offset = References(Deif_bid(flags));
 
 			if (position == offset)
 				epush (&path_stack, (char *) (position | LAST_REF));
@@ -4876,7 +4876,7 @@ rt_shared int refers_new_object(register char *object)
 		else
 			size = sizeof(char *);		/* Usual item size */
 	} else
-		refs = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
+		refs = References(Deif_bid(flags));	/* Number of references */
 
 	/* Loop over the referenced objects to see if there is a new one. If the
 	 * reference is on an expanded object, recursively explore that object.

@@ -238,7 +238,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	 * its dynamic type.
 	 */
 	if (flags & EO_EXP)						/* Object is expanded */
-		size = Size(Deif_bid(flags & EO_TYPE));		/* Get its size though skeleton */
+		size = Size(Deif_bid(flags));		/* Get its size though skeleton */
 	else
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
 
@@ -379,7 +379,7 @@ rt_public void ecopy(register char *source, register char *target)
 	enclosing = target;					/* By default */
 	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
 		enclosing -= t_zone->ov_size & B_SIZE;
-		size = Size(Deif_bid(t_flags & EO_TYPE));
+		size = Size(Deif_bid(t_flags));
 		}
 	else
 		size = s_zone->ov_size & B_SIZE;
@@ -496,7 +496,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 		s_enclosing = source - s_offset;		/* Address of enclosing object */
 	}
 
-	nb_ref = References(Deif_bid(flags & EO_TYPE));		/* References in target */
+	nb_ref = References(Deif_bid(flags));		/* References in target */
 
 	/* Iteration on the references of the object */
 	for (

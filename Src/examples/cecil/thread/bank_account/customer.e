@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			once_status: global
 		once
 			create Result.make
-			random.start
+			Result.start
 		ensure
 			not_void: Result /= Void
 		end

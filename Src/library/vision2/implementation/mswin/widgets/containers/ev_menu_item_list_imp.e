@@ -15,7 +15,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM]
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_MENU
@@ -28,6 +29,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			Precursor
 			create ev_children.make (2)
 			is_initialized := True
 		end
@@ -341,6 +343,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/24 19:21:36  rogers
+--| Redefined initialize from EV_ITEM_LIST_IMP.
+--|
 --| Revision 1.10  2000/03/23 01:05:06  brendel
 --| Now calls item_select_actions.
 --|

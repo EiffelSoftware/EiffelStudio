@@ -18,11 +18,13 @@ inherit
 		redefine
 			parent_imp,
 			set_parent,
-			interface
+			interface,
+			initialize
 		end
 
 	EV_ITEM_LIST_IMP [EV_STATUS_BAR_ITEM]
 		redefine
+			initialize,
 			interface
 		end
 
@@ -81,6 +83,12 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, 0)
 			!! ev_children.make (0)
+		end
+
+	initialize is
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			{EV_ITEM_LIST_IMP} Precursor
 		end
 
 feature -- Access
@@ -419,6 +427,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/24 19:23:36  rogers
+--| Redefined initialize from EV_ITEM_LIST_IMP.
+--|
 --| Revision 1.22  2000/03/14 03:02:57  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

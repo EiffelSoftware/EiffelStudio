@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include "eif_project.h" /* for egc_prof_enabled */
 #include "eif_config.h"
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
@@ -339,7 +340,6 @@ rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int 
  * moving objects (i.e. set to False if no assertion and exception_trace(yes)
  * is not used in the Ace file
  */
-#include "eif_project.h"			/* for exception_stack_managed */
 
 #define DISP(x,y) (Dispose(x))(y)
 
@@ -816,7 +816,7 @@ rt_public void reclaim(void)
 #endif
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_enabled)
+	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
 #endif
 

@@ -454,7 +454,6 @@ feature -- Element change
 			a_cluster.flat_linkables.for_all (agent has_linkable_figure)
 		local
 			cluster_figure: EG_CLUSTER_FIGURE
---			linkable: EG_LINKABLE_FIGURE
 		do
 			cluster_figure := factory.new_cluster_figure (a_cluster)
 			extend (cluster_figure)
@@ -467,9 +466,6 @@ feature -- Element change
 			until
 				a_cluster.linkables.after
 			loop
---				linkable ?= items_to_figure_lookup_table.item (a_cluster.linkables.item)
---				cluster_figure.extend (linkable)
---				linkable.set_cluster (cluster_figure)
 				cluster_figure.model.linkable_add_actions.call ([a_cluster.linkables.item])
 				a_cluster.linkables.forth
 			end
@@ -956,21 +952,18 @@ feature {NONE} -- Implementation
 			end
 			cluster_figure ?= figure
 			if cluster_figure = Void then
-				if not figure_was_selected and then button = 1 and then ev_application.ctrl_pressed then
-					if figure.is_selected then
+				if not ev_application.ctrl_pressed and then not selected_figures.has (figure) then
+					deselect_all
+				end
+				if not figure_was_selected and then button = 1 then --and then ev_application.ctrl_pressed then
+					if figure.is_selected and then ev_application.ctrl_pressed then
 						selected_figures.prune_all (figure)
-					else
-						selected_figures.extend (figure)
-					end
-					if figure.is_selected then
 						figure.disable_selected
-					else
+					elseif not selected_figures.has (figure) then
+						selected_figures.extend (figure)
 						figure.enable_selected
 					end
 					figure_was_selected := True
-				end
-				if not ev_application.ctrl_pressed and then not selected_figures.has (figure) then
-					deselect_all
 				end
 			end
 			selected_figure := figure

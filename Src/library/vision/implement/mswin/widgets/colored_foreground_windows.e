@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	COLORED_FOREGROUND_WINDOWS
 
 inherit
@@ -33,11 +33,24 @@ feature
 			-- Set the foreground color of current widget.
 		do
 			private_foreground_color := c
+			if exists then
+				invalidate
+			end
 		end
 
 	update_foreground_color is
 			-- Update the foregreound color of current widget.
 		do
+		end
+
+	invalidate is
+			-- Invalidate the window
+		deferred
+		end
+
+	exists: BOOLEAN is
+			-- Does the Widget exist?
+		deferred
 		end
 
 end -- class COLORED_FOREGROUND_WINDOWS

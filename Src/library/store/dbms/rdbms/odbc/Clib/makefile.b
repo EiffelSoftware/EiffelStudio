@@ -1,22 +1,23 @@
-CC = bcc32
-CFLAGS = -O2 -c -WC -g0 -w- -DEIF_BORLAND -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib
+CFLAGS = -O2 -WC -g0 -w- -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
 
 OBJ = odbc.obj
 
 all:: clean odbc_store.lib 
 
 .c.obj:
-	$(CC) $(CFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 odbc_store.lib: odbc.obj odbc.h
-		del $@
-		tlib $@ /c +odbc.obj
+		-del $@
+		$(AR) $@ +odbc.obj
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
-		if not exist ..\..\..\..\spec\bcc mkdir ..\..\..\..\spec\bcc
-		if not exist ..\..\..\..\spec\bcc\lib mkdir ..\..\..\..\spec\bcc\lib
-		copy odbc_store.lib ..\..\..\..\spec\bcc\lib
+		if not exist ..\..\..\..\spec\bcb mkdir ..\..\..\..\spec\bcb
+		if not exist ..\..\..\..\spec\bcb\lib mkdir ..\..\..\..\spec\bcb\lib
+		copy odbc_store.lib ..\..\..\..\spec\bcb\lib
 
 odbc.obj: odbc.c odbc.h
 
 clean:
-	del *.obj *.lib
+	-del *.obj

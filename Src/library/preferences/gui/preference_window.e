@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			buttons_box: like build_buttons_box
 		do
 			default_create
+			create post_close_actions
 			set_title (Interface_names.t_Preference_window)
 			set_size (Layout_constants.Dialog_unit_to_pixels (640), Layout_constants.Dialog_unit_to_pixels (460))
 			set_icon_pixmap (pixmap_file_contents (Interface_names.preference_window_icon))
@@ -80,6 +81,7 @@ feature {NONE} -- Initialization
 			extend (main_box)
 
 			fill_list
+			close_request_actions.extend (agent post_close_actions.call (Void))
 			close_request_actions.extend (agent destroy)
 			move_actions.extend (agent on_window_move_and_resize)
 			resize_actions.extend (agent on_window_move_and_resize)
@@ -121,6 +123,11 @@ feature {NONE} -- Initialization
 				-- Popup warning => Category not found !
 			end
 		end
+		
+feature -- Events
+
+	post_close_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed immediately after `Current' is closed.
 
 feature -- Command
 
@@ -309,6 +316,7 @@ feature {NONE} -- Execution
 			-- the Preferences Window.
 		do
 			apply_changes
+			post_close_actions.call (Void)
 			destroy
 		end 
 

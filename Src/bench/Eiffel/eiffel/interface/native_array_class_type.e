@@ -7,6 +7,9 @@ class NATIVE_ARRAY_CLASS_TYPE
 
 inherit
 	CLASS_TYPE
+		redefine
+			type
+		end
 
 	SHARED_C_LEVEL
 
@@ -21,13 +24,16 @@ creation
 
 feature -- Access
 
+	type: NATIVE_ARRAY_TYPE_I
+			-- Type of generic derivation.
+
 	first_generic: TYPE_I is
 			-- First generic parameter type
 		require
-			has_generics: type.meta_generic /= Void
-			good_generic_count: type.meta_generic.count = 1
+			has_generics: type.true_generics /= Void
+			good_generic_count: type.true_generics.count = 1
 		do
-			Result := type.meta_generic.item (1)
+			Result := type.true_generics.item (1)
 		end
 
 	il_type_name: STRING is
@@ -54,20 +60,12 @@ feature -- Access
 			cl_type: CL_TYPE_I
 			ref: REFERENCE_I
 		do
-			gen_param := first_generic
-			ref ?= gen_param
-			if ref /= Void and then not gen_param.is_true_expanded then
-					-- Create 15 characters to accomodate 2 extra ones `[]'.
-				create Result.make (15)
-				Result := "System.Object"
-			else
-				cl_type ?= type.true_generics.item (1)
-				check
-					cl_type_not_void: cl_type /= Void
-				end
-				create Result.make (cl_type.il_type_name.count + 2)
-				Result.append (cl_type.il_type_name)
+			cl_type ?=  type.true_generics.item (1)
+			check
+				cl_type_not_void: cl_type /= Void
 			end
+			create Result.make (cl_type.il_type_name.count + 2)
+			Result.append (cl_type.il_type_name)
 		end
 
 feature -- IL code generation

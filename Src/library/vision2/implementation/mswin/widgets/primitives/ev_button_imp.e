@@ -697,7 +697,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				r.offset (1, 1)
 				dc.set_background_transparent
 				dc.set_text_color (white)
-				dc.draw_text (text, r, text_format)
+				dc.draw_text (wel_text, r, text_format)
 				dc.set_text_color (color_gray_text)
 				r.offset (-1, -1)
 			else
@@ -705,7 +705,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				dc.set_text_color (color_imp)
 			end
 			dc.set_background_transparent
-			dc.draw_text (text, r, text_format)
+			dc.draw_text (wel_text, r, text_format)
 			dc.set_text_color (old_text_color)
 		end
 		

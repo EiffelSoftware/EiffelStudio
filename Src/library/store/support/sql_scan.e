@@ -326,7 +326,6 @@ feature {NONE} -- Status setting
 	go_after_identifier is
 			-- Move cursor to next character not allowed in identifier
 		local
-			c: CHARACTER
 			found: BOOLEAN
 			i, l_count: INTEGER
 		do

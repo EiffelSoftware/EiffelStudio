@@ -110,7 +110,7 @@ feature -- Type check, byte code and dead code removal
 		do
 				-- Check validity of class specification
 			l_type := class_type.actual_type
-			if l_type.is_formal or l_type.has_like then
+			if l_type.is_formal or l_type.has_like or l_type.is_none then
 				create vsta1.make (l_type.dump, feature_name)
 				vsta1.set_class (context.current_class)
 				error_handler.insert_error (vsta1)

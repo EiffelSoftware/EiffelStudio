@@ -193,6 +193,8 @@ feature -- Project initialization
 				!! g_degree_output
 				Project_tool.set_progress_dialog (g_degree_output)
 			end
+				-- We erase the content of the Project window
+			Project_tool.active_menus (True)
 		end;
 
 feature -- Tool

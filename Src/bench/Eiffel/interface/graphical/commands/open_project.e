@@ -343,6 +343,8 @@ feature -- Project Initialization
 				project_tool.set_initialized
 				project_tool.set_icon_name (Eiffel_system.name)
 				project_tool.save_environment
+					-- We don't touch the content of the Project tool.
+				project_tool.active_menus (False)
 			end
 
 			mp.restore

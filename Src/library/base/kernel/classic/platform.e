@@ -14,6 +14,28 @@ feature -- Platform
 
 	is_dotnet: BOOLEAN is False
 			-- Are we targetting .NET?
+			
+	is_windows: BOOLEAN is
+			-- Are we running on Windows platform?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_WINDOWS"
+		end
+
+	is_unix: BOOLEAN is
+			-- Are we running on a Unix like platform?
+		once
+			Result := not (is_vms or is_windows)
+		end
+
+	is_vms: BOOLEAN is
+			-- Are we running on VMS?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_VMS"
+		end
 
 feature -- Access bytes size
 

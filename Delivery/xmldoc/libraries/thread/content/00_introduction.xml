@@ -1,12 +1,12 @@
 <document output="studio" title="EiffelThread Content">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Multithreaded applications provide a flexible, exciting way of utilizing the power of modern computer systems. ISE Eiffel supports a    powerful multithreaded model, fast and easy to use.</paragraph>
+		<paragraph>Multithreaded applications provide a flexible, exciting way of utilizing the power of modern computer systems. Eiffel Software Eiffel supports a powerful multithreaded model, fast and easy to use.</paragraph>
 		<paragraph>The 
 			<link>
 				<url>10_thread_library.xml</url>
 				<label>EiffelThread library</label>
-			</link>    is mapped to the C thread standard libraries: it supports Windows, POSIX-like and Unix International Threads. EiffelThread is    supported by the ISE compiler and run-time on Windows, Linux, FreeBSD,    LinuxPPC, Solaris, SGI, VxWorks, LynxOS, CRAY and Unixware.
+			</link>    is mapped to the C thread standard libraries: it supports Windows, POSIX-like and Unix International Threads. EiffelThread is supported by the Eiffel Software compiler and run-time on Windows, Linux, FreeBSD,    LinuxPPC, Solaris, SGI, VxWorks, LynxOS, CRAY and Unixware.
 		</paragraph>
 		<paragraph>This document will explain 
 			<link>
@@ -14,7 +14,7 @@
 				<label>how to use the EiffelThread library</label>
 			</link>.    To fully take advantage of this documentation you should know some    basics about multithreaded systems
 		</paragraph>
-		<paragraph>To enable multithreading in the ISE EiffelStudio environment, you will need to do some changes in your 
+		<paragraph>To enable multithreading in the Eiffel Software EiffelStudio environment, you will need to do some changes in your 
 			<link>
 				<url>/technologies/threads/10_compilation.xml</url>
 				<label>project    settings</label>

@@ -1,5 +1,5 @@
-<document output="studio" title="Major changes between ISE Eiffel 5.4 and ISE Eiffel 5.5">
-	<meta_data/>
+<document output="studio" title="Major changes between  Eiffel Software  Eiffel 5.4 and  Eiffel Software  Eiffel 5.5">
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>What's new
@@ -22,10 +22,10 @@
 		</heading>
 		<list ordered="false">
 			<item>Compiler is now checking that you cannot redeclare a formal generic parameter into a reference type unless the formal generic parameter is being constraint to be always a reference type.</item>
-			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_name> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
+			<item>Removed obsolete <code><feature_name>eifcid</feature_name></code>, <code><feature_name>eif_expand</feature_name></code> and <code><feature_name>eifexp</feature_name> </code>from the CECIL interface, one has to use <code><feature_name>eif_type_id</feature_name> </code>instead.</item>
 			<item>In .NET, changed the naming conventions of resources included in an assembly. The extension `.resources' is appended for resources that are originally provided as `.resx' or `.txt' files. Other files are embedded as is in the assembly and the name of the resource is the name of the file.</item>
-			<item>In .NET, now all classes inherit from <class_name>ANY</class_name>. Before all classes inherited from <class_name>SYSTEM_OBJECT</class_name>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class.</item>
-			<item>Now on .NET the following assignment attempt will succeed whereas it failed before because <class_name>SYSTEM_OBJECT</class_name> did not inherit from <class_name>ANY</class_name>:<code_block>a: <class_name>ANY</class_name>
+			<item>In .NET, now all classes inherit from <code><class_name>ANY</class_name></code>. Before all classes inherited from <code><class_name>SYSTEM_OBJECT</class_name></code>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class.</item>
+			<item>Now on .NET the following assignment attempt will succeed whereas it failed before because <code><class_name>SYSTEM_OBJECT</class_name></code> did not inherit from <code><class_name>ANY</class_name></code>:<code_block>a: <class_name>ANY</class_name>
 o: <class_name>SYSTEM_OBJECT</class_name>
 ...
 <keyword>check</keyword> o /= Void <keyword>and</keyword> a = Void <keyword>end</keyword>
@@ -53,7 +53,7 @@ a ?= o
 			l_g <symbol>:</symbol><symbol>=</symbol> l_any
 		<keyword>end</keyword>
 			</code_block>
-			The workaround is to use the <keyword>reference</keyword> keyword to guarantee that the formal generic parameter will always be instantiated with a reference type. For example the code below is correct:
+			The workaround is to use the <code><keyword>reference</keyword></code> keyword to guarantee that the formal generic parameter will always be instantiated with a reference type. For example the code below is correct:
 			<code_block>
 <keyword>class</keyword> <class_name>A</class_name> [<keyword>reference</keyword> G]
 <keyword>feature</keyword>
@@ -71,17 +71,17 @@ a ?= o
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item>Enabled creation of <class_name>SPECIAL</class_name> instances, no need to create an instance of <class_name>TO_SPECIAL</class_name> or <class_name>ARRAY</class_name> to get a <class_name>SPECIAL</class_name> instance. Now you can simply do:<code_block>my_special: <class_name>SPECIAL</class_name> [<class_name>INTEGER</class_name>]
+			<item>Enabled creation of <code><class_name>SPECIAL</class_name></code> instances, no need to create an instance of <code><class_name>TO_SPECIAL</class_name> </code>or <code><class_name>ARRAY</class_name></code> to get a <code><class_name>SPECIAL</class_name> </code>instance. Now you can simply do:<code_block>my_special: <class_name>SPECIAL</class_name> [<class_name>INTEGER</class_name>]
 <keyword>create</keyword> my_special.<feature_name>make</feature_name> (10)</code_block>
 			</item>
-			<item>Fixed incrementality issues with <keyword>strip</keyword> and static calls on external routines which could fail after a class has been added to or removed from the system.</item>
+			<item>Fixed incrementality issues with <code><keyword>strip</keyword></code> and static calls on external routines which could fail after a class has been added to or removed from the system.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
 		</heading>
 		<list ordered="false">
 			<item>Fixed incorrect code generation which would result in a C compiler error in classic mode when assigning a Void entity to a formal generic parameter that will be instantiated as a basic type.</item>
-			<item>In multithreaded mode, fixed dead lock on Unix plaforms when evaluating global onces.</item>
+			<item>In multithreaded mode, fixed dead lock on Unix platforms when evaluating global onces.</item>
 			<item>In multithreaded mode, prevented dead lock when a thread is exiting.</item>
 			<item>In multithreaded mode, prevented memory corruption which could occur if the first thing that a thread performs when launched is to trigger a GC collection.</item>
 			<item>Fixed incorrect generic conformance data when manipulating expanded generic types. For example, the following code:<code_block><keyword>class</keyword> <class_name>A</class_name> [G, H]

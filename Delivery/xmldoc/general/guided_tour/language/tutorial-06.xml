@@ -12,7 +12,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>We now look at the overall organization of Eiffel software.  </paragraph>
-		<paragraph>References to ISE-originated libraries appearing in subsequent examples include: 
+		<paragraph>References to  Eiffel Software -originated libraries appearing in subsequent examples include: 
 			<bold>EiffelBase</bold>, the fundamental open-source library covering data structures and algorithms; the 
 			<bold>kernel library</bold>, a subset of EiffelBase covering the most basic notions such as arrays and strings; and 
 			<bold>EiffelVision 2</bold>, an advanced graphics and GUI library providing full compatibility across platforms (Unix, Windows, VMS) with native look-and-feel on each.
@@ -44,7 +44,7 @@
 			</code>, that is to say extends or specializes 
 			<code>
 				<class_name>A</class_name>
-			</code>.  (These two relations, client and inheritance, are coveredbelow.)
+			</code>.  (These two relations, client and inheritance, are covered below.)
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -121,7 +121,7 @@
 				</code> is always non-negative.
 			</item>
 		</list>
-		<paragraph>We may characterize the first of these examples as an analysis class, directly modeling objects from the application domain; the second one as a design class, describing a high-level solution; and the third as an implementation class, reused whenever possible from a library such as EiffelBase.  In Eiffel, however, there is no strict distinction between these categories; it is part of the approach's seamlessness that the same notion of class, and the associated concepts, may be used at all levels of the software development process.  </paragraph>
+		<paragraph>We may characterize the first of these examples as an analysis class, directly modeling objects from the application domain; the second one as a design class, describing a high-level solution; and the third as an implementation class, reused whenever possible from a library such as EiffelBase.  In Eiffel, however, there is no strict distinction between these categories; it is part of the approaches seamlessness that the same notion of class, and the associated concepts, may be used at all levels of the software development process.  </paragraph>
 		<heading>
 			<size>2</size>
 			<content>Class relations</content>
@@ -307,7 +307,7 @@
 				<keyword>alias</keyword>
 			</code> clause is optional, but here it is needed because the C name, starting with an underscore, is not valid as an Eiffel identifier.
 		</paragraph>
-		<paragraph>Similar syntax exists to interface with C++ classes.  ISE Eiffel includes a tool called 
+		<paragraph>Similar syntax exists to interface with C++ classes.   Eiffel Software  Eiffel includes a tool called 
 			Legacy++ which will automatically produce, from a C++ class, an Eiffel class that encapsulates its facilities, making them available to the rest of the Eiffel software as 
 			bona fide  Eiffel features.
 		</paragraph>

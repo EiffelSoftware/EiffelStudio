@@ -52,7 +52,7 @@
 				</code> -th element.  Class 
 				<code>
 					<string>ARGUMENTS</string>
-				</code> has more features; since you haveEiffelStudio up, you can check the details if you wish (use the contract form).
+				</code> has more features; since you have Eiffelstudio up, you can check the details if you wish (use the contract form).
 			</paragraph>
 			<paragraph>There are 2 ways to specify execution arguments from within EiffelStudio.  The first is through the 
 				<code>

@@ -2,7 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>This tab contains information about the type of project you wish to build, and associated information.</paragraph>
-		<paragraph>Here is the appearence of the Build tab when 'build type' is selected as 'Project':</paragraph>
+		<paragraph>Here is the appearance of the Build tab when 'build type' is selected as 'Project':</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/project_build.png</url>
@@ -14,13 +14,13 @@
 				<url>/images/eiffelbuild/screenshots/project_build_class.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The options available in this tab are as as follows:
+		<paragraph>The options available in this tab are as follows:
 			<list ordered="false">
 				<item>
 					<anchor>build_type</anchor>
 					<bold>Build type</bold>
 					<paragraph>Select 'Project' if you wish to generate a complete project including an ace file, and an application class, which will launch the GUI you are developing.</paragraph>
-					<paragraph>Select `Class' if you wish to generate a single class that represents the GUI you are developing. This option is useful if you wish to incorporate your current project into an exising Vision2 system.</paragraph>
+					<paragraph>Select `Class' if you wish to generate a single class that represents the GUI you are developing. This option is useful if you wish to incorporate your current project into an existing Vision2 system.</paragraph>
 				</item>
 				<item>
 					<bold>Always rebuild ace</bold>

@@ -25,7 +25,7 @@
 			<url>tutorial-2.png</url>
 		</image>
 		<paragraph>The Eiffel techniques developed below, in particular information hiding and Design by Contract, make the concurrent engineering process possible by letting the clusters rely on each other through clearly defined interfaces, strictly limiting the amount of knowledge that one must acquire to use the cluster, and permitting separate testing.  When the inevitable surprises of a project happen, the project leader can take advantage of the model's flexibility, advancing or delaying various clusters and steps through dynamic reallocation of resources.  </paragraph>
-		<paragraph>Each of the individual cluster lifecycles is based on a continuous progression of activities, from the more abstract to the more implementation-oriented:</paragraph>
+		<paragraph>Each of the individual cluster life cycles is based on a continuous progression of activities, from the more abstract to the more implementation-oriented:</paragraph>
 		<image>
 			<url>tutorial-3.png</url>
 		</image>
@@ -47,25 +47,25 @@
 			<size>2</size>
 			<content>Generalization and reuse</content>
 		</heading>
-		<paragraph>The last step of the cluster lifecycles,  Generalization, is unheard of in traditional models.  Its task is to prepare the results of a cluster for reuse across projects by looking for elements of general applicability, and transform them for inclusion in libraries.  </paragraph>
+		<paragraph>The last step of the cluster,  Generalization, is unheard of in traditional models.  Its task is to prepare the results of a cluster for reuse across projects by looking for elements of general applicability, and transform them for inclusion in libraries.  </paragraph>
 		<paragraph>Recent object-oriented literature has used the term "refactoring" to describe a process of continuous improvement of released software.  Generalization includes refactoring, but also pursues a more ambitious goal: helping turn 
 			program elements (software modules useful only as part of a certain program) into 
 			software components -- reusable parts with a value of their own, ready to be used by diverse programs that can benefit from their capabilities.
 		</paragraph>
-		<paragraph>Of course not all companies using the method will be ready to include a Generalization phase in their lifecycles.  But those which do will see the reusability of their software greatly improved.  </paragraph>
+		<paragraph>Of course not all companies using the method will be ready to include a Generalization phase in their.  But those which do will see the reusability of their software greatly improved.  </paragraph>
 		<heading>
 			<size>2</size>
 			<content>Constant availability</content>
 		</heading>
 		<paragraph>Complementing the preceding principles is the idea that, in the cluster lifecycle, the development team (under the responsibility of the project leader) should at all times maintain a 
-			current working demo which, although covering only a part of the final system, works well, and can be demonstrated or -- starting at a suitable time -- shipped as an early release.  It is not a "prototype" in the sense of a mockup meant to be thrown away, but an initial iteration towards the final product; the successive iterations will progress continuously towards until they become that final product.
+			current working demo which, although covering only a part of the final system, works well, and can be demonstrated or -- starting at a suitable time -- shipped as an early release.  It is not a "prototype" in the sense of a meant to be thrown away, but an initial iteration towards the final product; the successive iterations will progress continuously towards until they become that final product.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Compilation technology</content>
 		</heading>
 		<paragraph>The preceding goals benefit from the ability to check frequently that the current iteration is correct and robust.  Eiffel supports efficient compilation mechanisms through such mechanisms as the 
-			<bold>Melting Ice Technology</bold> in ISE's EiffelStudio.  The Melting Ice achieves immediate recompilation after a change, guaranteeing a recompilation time that's a function of the size of the 
+			<bold>Melting Ice Technology</bold> in Eiffel Software's EiffelStudio.  The Melting Ice achieves immediate recompilation after a change, guaranteeing a recompilation time that's a function of the size of the 
 			changes, not of the system's overall size.  Even for a system of several thousand classes and several hundred thousand lines, the time to get restarted after a change to a few classes is, on a typical modern computer, a few seconds.
 		</paragraph>
 		<paragraph>Such a "melt" (recompilation) will immediately catch (along with any syntax errors) the type errors -- often the symptoms of conceptual errors that, if left undetected, could cause grave damage later in the process or even during operation.  Once the type errors have been corrected, the developers should start testing the new functionalities, relying on the power of 
@@ -83,6 +83,6 @@
 			<bold>quality</bold> level: apply all the style rules, put in all the assertions, handle erroneous cases (rather than the all too common practice of thinking that one will "make the product robust" later on), enforce the proper architecture.  This applies to all the quality factors except possibly reusability (since one may not know ahead of time how best to generalize a component, and trying to make everything fully general may conflict with solving the specific problem at hand quickly).  All that varies is 
 			<bold>functionality</bold>: as the project progresses and clusters come into place, more and more of the final product's intended coverage becomes available.  The project's most common question, "Can we ship something yet?", translates into "Do we cover enough?", not "Is it good enough?" (as in "Will it not crash?").
 		</paragraph>
-		<paragraph>Of course not everyone using Eiffel can, any more than in another approach, guarantee that the ideal just presented will always hold.  But it is the theoretical scheme to which the method tends.  It explains Eiffel's emphasis on getting everything right: the grandiose and the mundane, the structure and the details.  Regarding the details, the Eiffel books cited in the bibliography include many rules, some petty at first sight, about such low-level aspects as the choice of names for classes and features (including their grammatical categories), the indentation of software texts, the style for comments (including the presence or absence of a final period), the use of spaces.  Applying these rules does not, of course, guarantee quality; but they are part of a quality-oriented process, along with the more ambitious principles of design.  In addition they are particularly important for the construction of quality libraries, one of the central goals of Eiffel.  </paragraph>
+		<paragraph>Of course not everyone using Eiffel can, any more than in another approach, guarantee that the ideal just presented will always hold.  But it is theoretical scheme to which the method tends.  It explains Eiffel's emphasis on getting everything right: the grandiose and the mundane, the structure and the details.  Regarding the details, the Eiffel books cited in the bibliography include many rules, some petty at first sight, about such low-level aspects as the choice of names for classes and features (including their grammatical categories), the indentation of software texts, the style for comments (including the presence or absence of a final period), the use of spaces.  Applying these rules does not, of course, guarantee quality; but they are part of a quality-oriented process, along with the more ambitious principles of design.  In addition they are particularly important for the construction of quality libraries, one of the central goals of Eiffel.  </paragraph>
 		<paragraph>Whenever they are compatible with the space constraints, the present chapter and the rest of this book apply these rules to their Eiffel examples.  </paragraph>
 	</paragraph></document>

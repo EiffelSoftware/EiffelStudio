@@ -38,7 +38,7 @@
 				<link>
 					<url>../../../reference/10_browsing_tools/10_address_bars/10_main_address_bar.xml</url>
 					<label>address bar</label>
-				</link>. If you type this name in the feature field of thebar (using "*" and "?" wildcards if you want to), the editor will be centered on the right class if necessary (i.e. if the feature is inherited) and scroll to the position of the text of the feature.
+				</link>. If you type this name in the feature field of the bar (using "*" and "?" wildcards if you want to), the editor will be centered on the right class if necessary (i.e. if the feature is inherited) and scroll to the position of the text of the feature.
 			</item>
 		</list>
 	</paragraph></document>

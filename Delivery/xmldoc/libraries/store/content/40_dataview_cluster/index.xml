@@ -33,7 +33,7 @@
 		</list>
 		<paragraph>For instance, an interface can display a multi-column list of table rows. A given row can be selected in the list and its information can be then edited through a set of text fields and combo-boxes.</paragraph>
 		<paragraph>The standard cluster usage is to define a GUI that will associate a given frame/window to a given database table, that is, the information that is displayed in a GUI area will be determined at compile-time. This enables to adapt the GUI display to the type of information displayed, which is recommended when creating a GUI for non-developer users (or any people that should not be aware of the database structure and functioning). Nevertheless, determining the type of information displayed by a frame/window at runtime is still possible as not hard-coded.</paragraph>
-		<paragraph>Abstracting database in the GUI might not be as easy as only changing database attribute fields names. Information to display may not match the database tables structure. However, for consistency reasons, we can assume thatt he information to display within a GUI area belongs to a set of associated tables. The easiest solution is to create database views that directly contain the information to display on the GUI area. This implies though that the database has to be modified for the GUI needs.</paragraph>
+		<paragraph>Abstracting database in the GUI might not be as easy as only changing database attribute fields names. Information to display may not match the database tables structure. However, for consistency reasons, we can assume that he information to display within a GUI area belongs to a set of associated tables. The easiest solution is to create database views that directly contain the information to display on the GUI area. This implies though that the database has to be modified for the GUI needs.</paragraph>
 		<paragraph>DataView cluster affords a second solution:</paragraph>
 		<list ordered="false">
 			<item>Model-View separation enables to merge graphically information that is  separated in the process part (i.e. that is from a different table).</item>
@@ -81,14 +81,14 @@
 				<bold>view</bold>: implements the handle interface with EiffelVision2  widgets.
 			</item>
 		</list>
-		<paragraph>The abstract database interface is defined in the EiffelStore generation.tables_accesscluster. This cluster can indeed been usedindependently from the DataView cluster.</paragraph>
+		<paragraph>The abstract database interface is defined in the EiffelStore generation.tables_access cluster. This cluster can indeed been used independently from the DataView cluster.</paragraph>
 		<heading>
 			<size>3</size>3.3. Model cluster structure
 		</heading>
 		<paragraph>The 
 			<bold>model</bold> cluster processes the information retrieved from the GUI and the database and update then both GUI and database.
 		</paragraph>
-		<paragraph>The cluster is based on the <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> class which objects representsa database relational table (or view).</paragraph>
+		<paragraph>The cluster is based on the <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> class which objects represents a database relational table (or view).</paragraph>
 		<paragraph>DV_TABLE_COMPONENT objects can be interconnected to match the table associations. The <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> class has been designed to work with 3rd Normal Form relational databases. <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> achieves most of the work to retrieve associated table rows for a 3NF database. For instance, when deleting a table row, the component ensures that every associated table row is also deleted.</paragraph>
 		<paragraph><link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> objects can be customized by adding some subcomponents to it. Subcomponents enable to display table rows content on screen, to navigate among table rows and to perform different database queries.</paragraph>
 		<paragraph>
@@ -142,7 +142,7 @@
 		<heading>
 			<size>2</size>4. Cluster interface
 		</heading>
-		<paragraph>This part describes how to use the table component class and itssubcomponents classes:</paragraph>
+		<paragraph>This part describes how to use the table component class and its subcomponents classes:</paragraph>
 		<list ordered="false">
 			<item>The <link><url>../../reference/dataview/processing/dv_searcher_chart.xml</url><label>DV_SEARCHER</label></link> class to 
 				<link>
@@ -233,8 +233,8 @@
 		</heading>
 		<paragraph>This handler is specific to the application. It must inherit from <code><class_name>ABSTRACT_DB_TABLE_MANAGER</class_name></code>. Since it is specific to the program, it can be set before creating any <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object through {DV_DATABASE_HANDLER}.set_database_handler.The <link><url>../../reference/generation/tables_access/db_table_manager_chart.xml</url><label>DB_TABLE_MANAGER</label></link> class is the default database handler for EiffelStore.</paragraph>
 		<heading>4.1.3. Action controllers</heading>
-		<paragraph>No subcomponent is associated to 'write', 'refresh' and 'delete' actionssince these actions does not require specific behavioral choices.</paragraph>
-		<paragraph>To perform 'write', 'refresh' and 'delete' at runtime, a controller isassociated to each of these actions. This controller triggers the action when adetermined user event is grabbed, for instance, when the user clicks a button.</paragraph>
+		<paragraph>No subcomponent is associated to 'write', 'refresh' and 'delete' actions since these actions does not require specific behavioral choices.</paragraph>
+		<paragraph>To perform 'write', 'refresh' and 'delete' at runtime, a controller is associated to each of these actions. This controller triggers the action when a determined user event is grabbed, for instance, when the user clicks a button.</paragraph>
 		<paragraph>
 			<link>
 				<anchor_name>dv_s_control</anchor_name>
@@ -280,7 +280,7 @@
 		<heading>
 			<size>4</size>4.2.1. Overview
 		</heading>
-		<paragraph><link><url>../../reference/dataview/processing/dv_searcher_chart.xml</url><label>DV_SEARCHER</label></link> is responsible for retrieving table rows from the database. Letus see how it interacts with a table component:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/dv_searcher_chart.xml</url><label>DV_SEARCHER</label></link> is responsible for retrieving table rows from the database. Let us see how it interacts with a table component:</paragraph>
 		<paragraph>
 			<image> 
 				<url>component-search_relation.png</url>
@@ -410,7 +410,7 @@
 			<link>
 				<anchor_name>dv_s_control</anchor_name>
 				<label> controllers</label>
-			</link> for "previous" and"next" actions. A 3rd controller, "edit list", enables toshow or raise the display list.
+			</link> for "previous" and"next" actions. A 3rd controller, "edit list", enables to show or raise the display list.
 		</paragraph>
 		<warning>
 			<bold>Caution</bold>: Notice that DV_CONTROL_NAVIGATOR only manages this controller sensitivity.
@@ -640,7 +640,7 @@
 		<heading>
 			<size>3</size>5.5. DV_TABLEROW_LIST class
 		</heading>
-		<paragraph>The <link><url>../../reference/dataview/user_interactions/dv_tablerow_list_chart.xml</url><label>DV_TABLEROW_LIST</label></link> class provides an interface to display a set of tablerows so that the user can select a particular row.</paragraph>
+		<paragraph>The <link><url>../../reference/dataview/user_interactions/dv_tablerow_list_chart.xml</url><label>DV_TABLEROW_LIST</label></link> class provides an interface to display a set of table rows so that the user can select a particular row.</paragraph>
 		<list ordered="false">
 			<item>The model can be informed of a row selection or deselection: the class  accepts actions (implemented by 
 				<italic>agents</italic>) that are triggered when a row  is selected or deselected.

@@ -67,11 +67,11 @@
 		<heading>
 			<size>3</size>JAVA_CLASS
 		</heading>
-		<paragraph> Access to Java classes. Static methods and attributes are accessedvia this class.This is the Eiffel representation of a Java Class. </paragraph>
+		<paragraph> Access to Java classes. Static methods and attributes are accessed via this class.This is the Eiffel representation of a Java Class. </paragraph>
 		<heading>
 			<size>3</size>JAVA_OBJECT
 		</heading>
-		<paragraph> This class gives Eiffel access to Java objects. You can use itdirectly or inherit from to and create a more convienient Eiffel class that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object. </paragraph>
+		<paragraph> This class gives Eiffel access to Java objects. You can use it directly or inherit from to and create a more convenient Eiffel class that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object. </paragraph>
 		<warning>
 			<bold>Warning:</bold> to access the static fields or routines of a Java Class, you have to use the features of a JAVA_CLASS instance!!
 		</warning>

@@ -1,6 +1,6 @@
 <document title="Default values for keyword completion preferences" output="studio">
 	<meta_data>
-		<help/>
+		<help></help>
 	</meta_data>
 	<paragraph>
 		<paragraph>This document contains the description of default completion for recognized keywords. The 
@@ -8,7 +8,7 @@
 				<url>./20_keyword_completion_customization.xml</url>
 				<label>syntax</label>
 			</link> used is the one used to redefine keyword completion in the preferences.
-			<line_break/> Four tables list default values for each of the 
+			<line_break></line_break> Four tables list default values for each of the 
 			<link>
 				<url>10_automatic_keyword_completion.xml</url>
 				<label>four preferences</label>
@@ -21,7 +21,7 @@
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customized autocomplete (Space after keyword was typed)"</label>
 					</link>
-					<line_break/>
+					<line_break></line_break>
 				</paragraph>
 				<table><border>1</border>
 					<row>
@@ -57,7 +57,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
-						<cell>requireelse</cell>
+						<cell>require else</cell>
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
@@ -89,7 +89,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
-						<cell>ensurethen</cell>
+						<cell>ensure then</cell>
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
@@ -110,7 +110,7 @@
 					</row>
 					<row>
 						<cell>inspect</cell>
-						<cell>"$cursor$%N$indent$whenthen%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</cell>
+						<cell>"$cursor$%N$indent$when then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</cell>
 					</row>
 					<row>
 						<cell>when</cell>
@@ -181,7 +181,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 				</table>
-				<line_break/>
+				<line_break></line_break>
 			</item>
 			<item>
 				<paragraph>Default value for 
@@ -189,7 +189,7 @@
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customized autocomplete (Return after keyword was typed)"</label>
 					</link>
-					<line_break/>
+					<line_break></line_break>
 				</paragraph>
 				<table><border>1</border>
 					<row>
@@ -225,7 +225,7 @@
 						<cell>"%N$indent$%T$cursor$"</cell>
 					</row>
 					<row>
-						<cell>requireelse</cell>
+						<cell>require else</cell>
 						<cell>"%N$indent$%T$cursor$"</cell>
 					</row>
 					<row>
@@ -257,7 +257,7 @@
 						<cell>"%N$indent$%T$cursor$"</cell>
 					</row>
 					<row>
-						<cell>ensurethen</cell>
+						<cell>ensure then</cell>
 						<cell>"%N$indent$%T$cursor$"</cell>
 					</row>
 					<row>
@@ -278,7 +278,7 @@
 					</row>
 					<row>
 						<cell>inspect</cell>
-						<cell>"%N$indent$%T$cursor$%N$indent$whenthen%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</cell>
+						<cell>"%N$indent$%T$cursor$%N$indent$when then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end"</cell>
 					</row>
 					<row>
 						<cell>when</cell>
@@ -349,7 +349,7 @@
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 				</table>
-				<line_break/>
+				<line_break></line_break>
 			</item>
 			<item>
 				<paragraph>Default value for 
@@ -357,7 +357,7 @@
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customized autocomplete (Space, other cases)"</label>
 					</link>
-					<line_break/>
+					<line_break></line_break>
 				</paragraph>
 				<table><border>1</border>
 					<row>
@@ -393,7 +393,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
-						<cell>requireelse</cell>
+						<cell>require else</cell>
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
@@ -425,7 +425,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
-						<cell>ensurethen</cell>
+						<cell>ensure then</cell>
 						<cell>"$cursor$"</cell>
 					</row>
 					<row>
@@ -517,7 +517,7 @@
 						<cell>"$cursor$"</cell>
 					</row>
 				</table>
-				<line_break/>
+				<line_break></line_break>
 			</item>
 			<item>
 				<paragraph>Default value for 
@@ -525,7 +525,7 @@
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customized autocomplete (Return, other cases)"</label>
 					</link>
-					<line_break/>
+					<line_break></line_break>
 				</paragraph>
 				<table><border>1</border>
 					<row>
@@ -561,7 +561,7 @@
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 					<row>
-						<cell>requireelse</cell>
+						<cell>require else</cell>
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 					<row>
@@ -685,21 +685,22 @@
 						<cell>"%N$indent$$cursor$"</cell>
 					</row>
 				</table>
-				<line_break/>
+				<line_break></line_break>
 			</item>
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>./10_automatic_keyword_completion.xml</url>
 				<label>Keywords automatic completion preferences</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>./20_keyword_completion_customization.xml</url>
 				<label>Keyword completion customization</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 		</seealso>
-	</paragraph></document>
+		</paragraph>
+</document>

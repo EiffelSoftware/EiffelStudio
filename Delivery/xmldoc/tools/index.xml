@@ -1,5 +1,5 @@
 <document title="Tools" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>
@@ -15,12 +15,12 @@
 				</link>
 			</item>
 			<item><link><url>resource_bench/index.xml</url><label>ResourceBench</label></link>
+			</item>
 			<item>
 				<link>
 					<url>wizards/index.xml</url>
 					<label>Wizards</label>
 				</link>
-			</item>
 			</item>
 		</list>
 	</paragraph></document>

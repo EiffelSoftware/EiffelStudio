@@ -27,7 +27,7 @@
 		<list ordered="false">
 			<item> Go to your application's 'EIFGEN\W_code' directory and open the file called ' 
 				<italic>SystemName</italic>. lnk, where 
-				<italic>'SystemName'</italic> is the name of your system as specified in the .ace file, in your favourite text editor. 
+				<italic>'SystemName'</italic> is the name of your system as specified in the .ace file, in your favorite text editor. 
 			</item>
 			<item> Add the following at the  of the file:
 				<line_break/>

@@ -23,7 +23,7 @@
 		<list ordered="true">
 			<item>Enter a name in the "New metric name" field.</item>
 			<item>Select a metric for numerator in the "Metric" combo box of the "Numerator" frame to change the numerator in the "Ratio" field. </item>
-			<item>Select a metric for denominator in the "Metric" combo box ofthe "Denominator" frame to change the denominator in the "Ratio" field. </item>
+			<item>Select a metric for denominator in the "Metric" combo box of the "Denominator" frame to change the denominator in the "Ratio" field. </item>
 			<item>If you want to change again either numerator or denominator repeat operations 2. or 3. as many times as needed.</item>
 			<item>If you want to display measures, when evaluating this metric, in a percentage style, select "Display as percentage".</item>
 			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>

@@ -1,11 +1,10 @@
 <document title="EiffelBuild Notation">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>This page contains descriptions of terms found within the EiffelBuild documentation. 
-			<link/>
+			<link></link>
 		</paragraph>
 		<heading>
-		<anchor>object</anchor>
 			<size>2</size>Object
 		</heading>
 		<paragraph>An EiffelBuild object is a representation of a Vision2 component and its properties. When developing with EiffelBuild, you manipulate objects to build the desired interface.</paragraph>
@@ -73,13 +72,13 @@
 				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url><anchor_name>delete_component</anchor_name>
 				<label> delete</label>
 			</link> it. 
-			<link/>
+			<link></link>
 		</paragraph>
 		<anchor>pick_and_drop</anchor>
 		<heading>
 			<size>2</size>Pick and Drop
 		</heading>
-		<paragraph>The pick and drop mechanism is one of ISE's exclusive technologies and is provided by 
+		<paragraph>The pick and drop mechanism is one of  Eiffel Software 's exclusive technologies and is provided by 
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>

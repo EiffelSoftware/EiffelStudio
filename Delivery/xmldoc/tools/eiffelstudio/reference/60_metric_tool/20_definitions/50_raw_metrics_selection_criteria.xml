@@ -38,7 +38,7 @@
 			<line_break/> A 
 			<bold>derived metric</bold> is an elementary metric defined from a raw metric by counting only the patterns satisfying a certain combination of its selection criteria.
 		</note>
-		<paragraph>The metric menu of the metric tool classifies raw and derivedmetric:</paragraph>
+		<paragraph>The metric menu of the metric tool classifies raw and derived metric:</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/metrics_png/raw_derived.png</url>

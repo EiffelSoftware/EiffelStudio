@@ -9,17 +9,17 @@
 		<paragraph>Writing client-server applications, especially their communication aspects, is an arduous task; developers must master many tricky details of socket programming and other low-level mechanisms. EiffelNet hides this complexity by providing ready-made classes addressing the most common cases, so that developers only have to describe what is specific to their application, letting EiffelNet handle the whole process of communication and synchronization between clients and servers. This part of EiffelNet is known as the 
 			<italic>predefined level</italic> and for many uses this is the only one that you will need to learn about. For developments requiring a finer degree of control, all the major mechanisms of socket programming are still accessible in a convenient form through more specialized classes.
 		</paragraph>
-		<paragraph>In offering these varying levels of abstraction and control, EiffelNet follows the principles set by other libraries of the ISE Eiffel environment (see for example the discussion of EiffelLex in reference [ 
+		<paragraph>In offering these varying levels of abstraction and control, EiffelNet follows the principles set by other libraries of the Eiffel Software Eiffel environment (see for example the discussion of EiffelLex in reference [ 
 			<link>
 				<url>95_bibliography.xml</url>
 				<label>2</label>
-			</link>]). Some users require a mechanism that will be very easy to learn and will hide all the details in common cases; other users (or the same at later stagesof their work) need to access the whole array of facilities available at the level of the underlying hardware or software. The various components of the library should address all these needs.
+			</link>]). Some users require a mechanism that will be very easy to learn and will hide all the details in common cases; other users (or the same at later stages of their work) need to access the whole array of facilities available at the level of the underlying hardware or software. The various components of the library should address all these needs.
 		</paragraph>
 		<paragraph>This manual describes how to use EiffelNet at its various levels of abstraction.</paragraph>
 		<heading>
 			<size>3</size>Background and prerequisites
 		</heading>
-		<paragraph>EiffelNet is a component of the ISE Eiffel 5 development environment. Please contact your Eiffel Software to find out how to acquire EiffelNet if it is not already part of your delivery.</paragraph>
+		<paragraph>EiffelNet is a component of the  Eiffel Software  Eiffel 5 development environment. Please contact your Eiffel Software to find out how to acquire EiffelNet if it is not already part of your delivery.</paragraph>
 		<paragraph>This manual assumes the following prerequisites:</paragraph>
 		<list ordered="false">
 			<item>Familiarity with the basic Eiffel concepts: classes, inheritance, features, assertions, exception handling (see reference [ 
@@ -57,7 +57,7 @@
 			<link>
 				<url>30_predefined_level.xml</url>
 				<label>Section 4</label>
-			</link> describes the predefined level: a set of high-level classes that provide a complete framework, covering the most common uses and limiting the developer'swork to the strict minimum. Sections 
+			</link> describes the predefined level: a set of high-level classes that provide a complete framework, covering the most common uses and limiting the developer's work to the strict minimum. Sections 
 			<link>
 				<url>40_examples.xml</url>
 				<label>5</label>

@@ -10,7 +10,7 @@
 		<heading>
 			<size>2</size>Requirements
 		</heading>
-		<paragraph>This sample demonstates Unicode compatibilty.  It therefore assumes a fully Unicode compatible operating system and recommends the system has more than one input locale installed.  The system used to generate the above screenshot shows the sample running on Windows 2000 with the Korean IME installed.  Since Windows 95/98/Me does not provide full built-in support for Unicode please refer to "Compiling WEL for Unicode on Windows 95/98/Me" before attempting to run this example. </paragraph>
+		<paragraph>This sample demonstrates Unicode compatibility.  It therefore assumes a fully Unicode compatible operating system and recommends the system has more than one input locale installed.  The system used to generate the above screenshot shows the sample running on Windows 2000 with the Korean IME installed.  Since Windows 95/98/Me does not provide full built-in support for Unicode please refer to "Compiling WEL for Unicode on Windows 95/98/Me" before attempting to run this example. </paragraph>
 		<heading>
 			<size>2</size>Compiling
 		</heading>
@@ -56,7 +56,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>There is one <code><class_name>MAIN_WINDOW</class_name></code> class used for all the controls. The feature <code><feature_name>init_locale_list</feature_name></code> is used to determine the systems available input locales and populate the corresponding "Input Locales" combo box.  The features 'change_font' and 'change_control' are used to change the applications font (in case the curently selected font does not correctly display Unicode characters), and to set the <code><feature_name>text</feature_name></code> property of all controls to the same as that in the rich-edit box. 
+		<paragraph>There is one <code><class_name>MAIN_WINDOW</class_name></code> class used for all the controls. The feature <code><feature_name>init_locale_list</feature_name></code> is used to determine the systems available input locales and populate the corresponding "Input Locales" combo box.  The features 'change_font' and 'change_control' are used to change the applications font (in case the currently selected font does not correctly display Unicode characters), and to set the <code><feature_name>text</feature_name></code> property of all controls to the same as that in the rich-edit box. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
 					<item><code><class_name>UNICODE_DEMO</class_name></code></item>

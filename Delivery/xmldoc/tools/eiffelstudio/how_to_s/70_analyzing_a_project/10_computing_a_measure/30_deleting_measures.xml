@@ -28,7 +28,7 @@
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>delete</anchor_name>
 					<label>delete<image><url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url></image></label>
-				</link> button. Selected row (s) will disappear from both multi column list and from the recording file located in the "Metrics" subfolder of the current project.
+				</link> button. Selected row (s) will disappear from both multi column list and from the recording file located in the "Metrics" sub folder of the current project.
 			</item>
 		</list>
 		<warning>

@@ -1,7 +1,7 @@
 <document output="envision" title="Adding a New Project">
 	<meta_data/>
 	<paragraph>
-		<paragraph>  A selection of wizards have been provided which enable you to quicky and easily  start new Eiffel for .NET projects.</paragraph>
+		<paragraph>  A selection of wizards have been provided which enable you to quickly and easily  start new Eiffel for .NET projects.</paragraph>
 		<paragraph>Each wizard is composed of a series of `pages' from which you can modify the  settings for the new project. Upon completion of the wizard, a new Eiffel  System will be created for you.</paragraph>
 		<paragraph>To access the wizards, select 
 			<bold>New</bold>, 

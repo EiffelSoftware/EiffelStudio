@@ -52,7 +52,7 @@
 			<span><code><class_name>COMBO_BOX</class_name></code></span>. Clicking on this 
 			<span><code><class_name>COMBO_BOX</class_name></code></span> and a 
 			<span><code><class_name>CALENDAR</class_name></code></span> control will appear showing the same date than in the 
-			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the the right side of the main window are the commands to control the format of the displayed date and the style of the 
+			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the right side of the main window are the commands to control the format of the displayed date and the style of the 
 			<span><code><class_name>CALENDAR</class_name></code></span> control.
 		</paragraph>
 		<paragraph>Clicking on the "Change font" button and a 
@@ -108,7 +108,7 @@
 		<heading>
 			<size>2</size>Notes
 		</heading>
-		<paragraph>This sample is translated from the example located in theQuickStart\winforms\samples\controlReference\dateTimePickersubdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
+		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\controlReference\dateTimePicker sub-directory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
 		<paragraph/>
 		<paragraph/>
 	</paragraph></document>

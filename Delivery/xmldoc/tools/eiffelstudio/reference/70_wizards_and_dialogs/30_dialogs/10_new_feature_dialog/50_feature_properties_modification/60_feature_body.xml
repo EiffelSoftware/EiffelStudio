@@ -21,7 +21,7 @@
 	<keyword>end</keyword></code_block>
 			</item>
 			<item>
-				<bold>deferred</bold>: this creates a routine of deferred type. The local and body fields grey out as they serve no use anymore.
+				<bold>deferred</bold>: this creates a routine of deferred type. The local and body fields gray out as they serve no use anymore.
 				<code_block>
 <feature_name>do_something</feature_name> <keyword>is</keyword>
 	<keyword>deferred</keyword>

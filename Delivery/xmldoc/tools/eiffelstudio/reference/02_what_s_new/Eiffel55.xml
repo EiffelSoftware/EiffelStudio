@@ -1,6 +1,6 @@
 <document title="Release notes of EiffelStudio 5.5" output="studio">
 	<meta_data>
-		<help/>
+		<help></help>
 	</meta_data>
 	<paragraph>
 		<heading><size>2</size>Graphical environment</heading>
@@ -21,7 +21,7 @@
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
-				<item>Enabled conditional breakpoing and expression evaluation for .NET</item>
+				<item>Enabled conditional breakpoint and expression evaluation for .NET</item>
 				<item>Improved expression evaluation abilities (full range of Eiffel expressions are now supported).</item>
 				<item>Improved object viewer window (word wrapping for large text, ability to see the whole content in one click without having to enter the lower and upper index of a range).</item>
 			</list>
@@ -42,19 +42,19 @@
 		<list ordered="false">
 			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
 			<item>Removed <code><feature_name>Void</feature_name></code> from <code><class_name>ANY</class_name></code> as <code><keyword>Void</keyword></code> is now a keyword.</item>
-			<item>Added <feature_name>for_all</feature_name>, <feature_name>do_all</feature_name>, <feature_name>do_if</feature_name> and <feature_name>there_exists</feature_name> to <class_name>ARRAY</class_name>. As a consequence descendants of <class_name>ARRAY</class_name> which also inherit from <class_name>LINEAR</class_name> have to select the proper version of those routines as they also appear in <class_name>LINEAR</class_name>.</item>
-			<item>Fixed <feature_name>dynamic_type_from_string</feature_name> from <class_name>INTERNAL</class_name> under .NET which was not working if you were using the .NET naming convention or if you specified a namespace.</item>
-			<item>Added <feature_name>generic_count</feature_name>, <feature_name>generic_count_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out how many generic parameter a type has.</item>
-			<item>Added <feature_name>generic_dynamic_type_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out the type of the i-th generic parameter of a given type.</item>
-			<item>Added <feature_name>memory_map</feature_name> and <feature_name>memory_count_map</feature_name> to give you a precise accounting of all living objects in the running system. It will help you find out any potential memory leak because objects are still referenced where they should not.</item>
-			<item>Improved performance of <class_name>FILE</class_name> objects creation by not allocating the <feature_name>last_string</feature_name> internal buffer until it is needed.</item>
-			<item>On Windows, removed side effects of <feature_name>put</feature_name> from <class_name>EXECUTION_ENVIRONMENT</class_name>. Before it was setting also some registry keys, now it only set the environment variable for the running process and its children when launched.</item>
-			<item>Allowed zero sized <class_name>MANAGED_POINTER</class_name>. Allowed <class_name>MANAGED_POINTER</class_name> to share a pointer rather than doing a full memory copy at creation time.</item>
-			<item>Fixed issue with agents where GC did not collect passed arguments to <feature_name>call</feature_name> or <feature_name>item</feature_name> from <class_name>ROUTINE</class_name>/<class_name>FUNCTION</class_name>. Thus arguments stayed alive until the next call to <feature_name>call</feature_name> or <feature_name>item</feature_name>.</item>
+			<item>Added <code><feature_name>for_all</feature_name></code>, <code><feature_name>do_all</feature_name></code>, <code><feature_name>do_if</feature_name></code> and <code><feature_name>there_exists</feature_name></code> to <code><class_name>ARRAY</class_name></code>. As a consequence descendants of <code><class_name>ARRAY</class_name></code> which also inherit from <code><class_name>LINEAR</class_name> </code>have to select the proper version of those routines as they also appear in <code><class_name>LINEAR</class_name></code>.</item>
+			<item>Fixed <code><feature_name>dynamic_type_from_string</feature_name></code> from <code><class_name>INTERNAL</class_name></code> under .NET which was not working if you were using the .NET naming convention or if you specified a namespace.</item>
+			<item>Added <code><feature_name>generic_count</feature_name></code>, <code><feature_name>generic_count_with_type</feature_name></code> in <code><class_name>INTERNAL</class_name></code> to find out how many generic parameter a type has.</item>
+			<item>Added <code><feature_name>generic_dynamic_type_with_type</feature_name></code> in <code><class_name>INTERNAL</class_name></code> to find out the type of the i-th generic parameter of a given type.</item>
+			<item>Added <code><feature_name>memory_map</feature_name></code> and <code><feature_name>memory_count_map</feature_name></code> to give you a precise accounting of all living objects in the running system. It will help you find out any potential memory leak because objects are still referenced where they should not.</item>
+			<item>Improved performance of <code><class_name>FILE</class_name></code> objects creation by not allocating the <code><feature_name>last_string</feature_name></code> internal buffer until it is needed.</item>
+			<item>On Windows, removed side effects of <code><feature_name>put</feature_name></code> from <code><class_name>EXECUTION_ENVIRONMENT</class_name></code>. Before it was setting also some registry keys, now it only set the environment variable for the running process and its children when launched.</item>
+			<item>Allowed zero sized <code><class_name>MANAGED_POINTER</class_name></code>. Allowed <code><class_name>MANAGED_POINTER</class_name></code> to share a pointer rather than doing a full memory copy at creation time.</item>
+			<item>Fixed issue with agents where GC did not collect passed arguments to <code><feature_name>call</feature_name></code> or <code><feature_name>item</feature_name></code> from <code><class_name>ROUTINE</class_name></code>/<code><class_name>FUNCTION</class_name>.</code> Thus arguments stayed alive until the next call to <code><feature_name>call</feature_name></code> or <code><feature_name>item</feature_name></code>.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">
-			<item>Added <feature_name>close_socket</feature_name> in <class_name>SOCKET</class_name> which only close the socket for the current process. It will not close it for all processes which are using this socket (e.g. obtained after a fork on Unix platform).</item>
+			<item>Added <code><feature_name>close_socket</feature_name></code> in <code><class_name>SOCKET</class_name></code> which only close the socket for the current process. It will not close it for all processes which are using this socket (e.g. obtained after a fork on Unix platform).</item>
 		</list>
 		<heading><size>3</size>EiffelTime</heading>
 		<list ordered="false">
@@ -67,7 +67,7 @@
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">
-			<item>Added a new C routine <feature_name>eif_thread_fork</feature_name> for Unix based system for users who would like to use a forking mechanism in a multithreaded system, as the default version of <feature_name>fork</feature_name> will most likely causes some deadlock.</item>
+			<item>Added a new C routine <code><feature_name>eif_thread_fork</feature_name></code> for Unix based system for users who would like to use a forking mechanism in a multithreaded system, as the default version of <code><feature_name>fork</feature_name></code> will most likely causes some deadlock.</item>
 		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
@@ -75,16 +75,16 @@
 		</list>
 		<heading><size>3</size>WEL</heading>
 		<list ordered="false">
-			<item>Added various missing constants in <class_name>WEL_*_CONSTANTS</class_name> classes.</item>
-			<item>Added creation procedure <feature_name>make_permanent</feature_name> in <class_name>WEL_DLL</class_name> so that the loaded DLL is loaded until the very end of program's execution. Now <class_name>WEL_RICH_EDIT_DLL</class_name> and <class_name>WEL_COMMON_CONTROLS_DLL</class_name> are using this new creation procedure. It fixes the issue where a program using <class_name>WEL_RICH_EDIT</class_name> would crash when exiting.</item>
-			<item>Fixed a possible C compilation error when using <class_name>WEL_RICH_EDIT</class_name> due to a bug in the Microsoft Platform SDK header file for RichEdit.</item>
-			<item>Fixed <class_name>WEL_SCROLL_BAR</class_name> to return a valid position when position is more than 65535.</item>
-			<item>Added <feature_name>string_size_extended</feature_name> in <class_name>WEL_FONT</class_name> to better know where to draw a string using a specified font on screen,</item>
-			<item>Added <feature_name>height_in_points</feature_name>, <feature_name>height_in_pixels</feature_name>, <feature_name>height_in_twips</feature_name>, and <feature_name>log_font</feature_name> in <class_name>WEL_CHARACTER_FORMAT</class_name>. Made <feature_name>height </feature_name>and <feature_name>set_height</feature_name> obsolete.</item>
-			<item>Changed implementation of <class_name>WEL_REGISTRY_KEY_VALUE</class_name> in order to fix <feature_name>set_dword_value</feature_name> which was writting incorrect data to the registry keys. Enhanced the typing of values, thus making the non-typed routines obsolete.</item>
-			<item>Made <feature_name>default_key_value</feature_name> obsolete in <class_name>WEL_REGISTRY</class_name>.</item>
-			<item>Properly defined <feature_name>is_equal</feature_name> and <feature_name>copy</feature_name> in <class_name>WEL_STRUCTURE</class_name>, possibly causing some compilation errors while analyzing the inheritance structure of your classes.</item>
-			<item>Changed signature of non exported routine <feature_name>cwin_destroy_window</feature_name> from <class_name>WEL_WINDOW</class_name> to now return a value.</item>
+			<item>Added various missing constants in <code><class_name>WEL_*_CONSTANTS</class_name></code> classes.</item>
+			<item>Added creation procedure <code><feature_name>make_permanent</feature_name></code> in <code><class_name>WEL_DLL</class_name></code> so that the loaded DLL is loaded until the very end of program's execution. Now <code><class_name>WEL_RICH_EDIT_DLL</class_name></code> and <code><class_name>WEL_COMMON_CONTROLS_DLL</class_name></code> are using this new creation procedure. It fixes the issue where a program using <code><class_name>WEL_RICH_EDIT</class_name></code> would crash when exiting.</item>
+			<item>Fixed a possible C compilation error when using <code><class_name>WEL_RICH_EDIT</class_name></code> due to a bug in the Microsoft Platform SDK header file for RichEdit.</item>
+			<item>Fixed <code><class_name>WEL_SCROLL_BAR</class_name> </code>to return a valid position when position is more than 65535.</item>
+			<item>Added <code><feature_name>string_size_extended</feature_name></code> in <code><class_name>WEL_FONT</class_name></code> to better know where to draw a string using a specified font on screen,</item>
+			<item>Added <code><feature_name>height_in_points</feature_name></code>, <code><feature_name>height_in_pixels</feature_name></code>, <code><feature_name>height_in_twips</feature_name></code>, and <code><feature_name>log_font</feature_name></code> in <code><class_name>WEL_CHARACTER_FORMAT</class_name></code>. Made <code><feature_name>height </feature_name></code> and <code><feature_name>set_height</feature_name></code> obsolete.</item>
+			<item>Changed implementation of <code><class_name>WEL_REGISTRY_KEY_VALUE</class_name></code> in order to fix <code><feature_name>set_dword_value</feature_name></code> which was writing incorrect data to the registry keys. Enhanced the typing of values, thus making the non-typed routines obsolete.</item>
+			<item>Made <code><feature_name>default_key_value</feature_name></code> obsolete in <code><class_name>WEL_REGISTRY</class_name></code>.</item>
+			<item>Properly defined <code><feature_name>is_equal</feature_name></code> and <code><feature_name>copy</feature_name></code> in <code><class_name>WEL_STRUCTURE</class_name></code>, possibly causing some compilation errors while analyzing the inheritance structure of your classes.</item>
+			<item>Changed signature of non exported routine <code><feature_name>cwin_destroy_window</feature_name></code> from <code><class_name>WEL_WINDOW</class_name></code> to now return a value.</item>
 			<item>Fixed issues when using WEL in a multithreaded application. It would crash if a non WEL thread was trying to destroy a WEL window.</item>
 		</list>
 	</paragraph>

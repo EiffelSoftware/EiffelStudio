@@ -30,13 +30,13 @@
 		</list>
 		<paragraph>All the available metrics (except for scope comparison ones, since) are then evaluated over the system scope. Measures are saved in the specified file.</paragraph>
 		<note>
-			<bold>Note</bold>: A warning dialog will inform you incase an error occurs (the created file already exists, or you cannot create a file in current location).
+			<bold>Note</bold>: A warning dialog will inform you in case an error occurs (the created file already exists, or you cannot create a file in current location).
 		</note>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>20_updating_an_archive.xml</url>
+				<url>.xml</url>
 				<label>Updating an archive</label>
 			</link>
 			<line_break/>

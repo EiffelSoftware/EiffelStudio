@@ -81,7 +81,7 @@
 				<class_name>WINDOW</class_name>
 			</code>, close to actual classes in EiffelVision 2.  Windows have 
 			<bold>graphical</bold> features: a height, a width, a position, routines to scale windows, move them, and other graphical operations.  The system permits windows to be nested, so that a window also has 
-			<bold>hierarchical</bold> features: access to subwindows and the parent window, adding a subwindow, deleting a subwindow, attaching to another parent and so on.  Rather than writing complex class that would contain specific implementations for all of these features, it is preferable to inherit all hierarchical features from 
+			<bold>hierarchical</bold> features: access to sub windows and the parent window, adding a sub window, deleting a sub window, attaching to another parent and so on.  Rather than writing complex class that would contain specific implementations for all of these features, it is preferable to inherit all hierarchical features from 
 			<code>
 				<class_name>TREE</class_name>
 			</code> (a class in EiffelBase describing trees), and all graphical features from a class 

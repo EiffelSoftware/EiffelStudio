@@ -23,7 +23,7 @@
 				<label>Cluster Tree</label>
 			</link>. The path name will be used by the compiler to find the classes it needs to complete the compilation of your system. The 'Namespace' field is applicable to .NET compiled systems and indicates the namespace of the currently selected cluster.
 		</paragraph>
-		<paragraph>You can also specify if the cluster is an "override" one. An override cluster is a cluster in which its classes take precendence over classes located in other non-override clusters. This functionality is often used in conjonction with a source control system such as CVS, SourceSafe... to provide an easy way to edit classes without having to modify the original copy.</paragraph>
+		<paragraph>You can also specify if the cluster is an "override" one. An override cluster is a cluster in which its classes take precedence over classes located in other non-override clusters. This functionality is often used in conjunction with a source control system such as CVS, SourceSafe... to provide an easy way to edit classes without having to modify the original copy.</paragraph>
 		<paragraph>To make it easy to find classes you can specify either the `library' or `all' option. They will both have the same effect when looking for classes, i.e. the compiler will look at all Eiffel classes located in the specified directory and its subdirectories. The difference between these two options is that when you select `library', the classes will not be editable from the EiffelStudio environment.
 		</paragraph>
 		<paragraph>The idea is that you should use `library' when reusing a library made by someone else over which you have no control. For example, EiffelBase is a such a library. You should use `all' for the libraries you are working on.</paragraph>

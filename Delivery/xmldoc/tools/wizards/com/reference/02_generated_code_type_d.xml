@@ -1,7 +1,7 @@
 <document title="Generated Code Type Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph> The first dialog asks whether you want to access or to build a component. If you want to access an existing component then the generated code will be for a client. If you choose to build a new one, the generated code will be for a COM server. Choose the server or client checkbox to specify which kind of project you want to work on. You may specify both in the case where both the component and its client(s)will be written in Eiffel.</paragraph>
+		<paragraph> The first dialog asks whether you want to access or to build a component. If you want to access an existing component then the generated code will be for a client. If you choose to build a new one, the generated code will be for a COM server. Choose the server or client check box to specify which kind of project you want to work on. You may specify both in the case where both the component and its client(s)will be written in Eiffel.</paragraph>
 		<heading>
 			<size>2</size>Generated Code Type Dialog
 		</heading>
@@ -13,7 +13,7 @@
 		<paragraph>In-Process: These components are Dynamic Link Libraries (DLLs) that will be loaded into the client process. The server runs in the same process as the client.</paragraph>
 		<paragraph>Out-of-process: These components are executable files that can be accessed through the network. Clients and servers run in different processes and may even run on different machines.</paragraph>
 		<paragraph>In-process components are Active-X like components; they are usually smaller than local or remote components and used by bigger application (often through a high level language). Local components run on the same machine as a client. Remote components run on different machine and can act as middleware in a three-tier client server architecture. Choose the kind of component you want to access or create.</paragraph>
-		<paragraph>If you do not want to compile the generated code automatically, check the checkboxes at the bottom of the dialog.</paragraph>
+		<paragraph>If you do not want to compile the generated code automatically, check the check boxes at the bottom of the dialog.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

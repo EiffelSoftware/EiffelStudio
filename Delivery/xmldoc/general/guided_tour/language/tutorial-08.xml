@@ -194,7 +194,7 @@ extend <symbol>(</symbol><local_variable>val</local_variable><symbol>:</symbol> 
 				<bold>unconstrained</bold> because the formal generic parameter, 
 				<code>
 					<class_name>G</class_name>
-				</code> in the example, represents an arbitrary type.  You may also want to use types that are guaranteed to have certai operations available.  This is known as 
+				</code> in the example, represents an arbitrary type.  You may also want to use types that are guaranteed to have certain operations available.  This is known as 
 				<bold>constrained</bold> genericity and will be studied with inheritance.  
 			</info>
 			<heading>

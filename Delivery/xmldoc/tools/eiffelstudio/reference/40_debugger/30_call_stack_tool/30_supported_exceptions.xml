@@ -32,7 +32,7 @@
 			<bold>Loop invariant violated</bold>: A condition that should be checked when executing a loop is not verified. The tag should give the name of the violated invariant.
 		</paragraph>
 		<paragraph>
-			<bold>Floating point exception</bold> (signal SIGFPE): An error occured while processing floating point numbers. This may be for example a FPU overflow, a division by zero, or an invalid operation.
+			<bold>Floating point exception</bold> (signal SIGFPE): An error occurred while processing floating point numbers. This may be for example a FPU overflow, a division by zero, or an invalid operation.
 		</paragraph>
 		<paragraph>
 			<bold>Unmatched inspect value</bold>: An inspect clause couldn't find the value it was passed among the `when' clauses. If any value maybe passed to the `when' clause, adding an `else' clause will solve this problem.

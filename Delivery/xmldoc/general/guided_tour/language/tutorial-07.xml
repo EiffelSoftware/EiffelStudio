@@ -21,7 +21,7 @@
 			<size>2</size>
 			<content>Objects, fields, values and references</content>
 		</heading>
-		<paragraph>A class was defined as the static description of a a type of run-time data structures.  The data structures described by a ca class are called 
+		<paragraph>A class was defined as the static description of a type of run-time data structures.  The data structures described by a ca class are called 
 			<bold>instances</bold> of the class, which in turn is called their 
 			<bold>generating class</bold> (or just "generator").  An instance of 
 			<code>
@@ -37,7 +37,7 @@
 		<paragraph>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution.  Although is possible to define a class whose instances represent classes (as class 
 			<code>
 				<class_name>E_CLASS</class_name>
-			</code> in the ISE libraries, used to access properties of classes at run time), this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
+			</code> in the  Eiffel Software  libraries, used to access properties of classes at run time), this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
 		</paragraph>
 		<paragraph>An object is either an atomic object (integer, real, boolean, double) or a composite object made of a number of 
 			<bold>fields</bold>, represented by adjacent rectangles on the conventional run-time diagrams:
@@ -606,7 +606,7 @@
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
 				<label>19</label>
-			</link>), this form is the same for calls to attributes and to functions without arguments.  In thisexample, feature 
+			</link>), this form is the same for calls to attributes and to functions without arguments.  In this example, feature 
 			<code>
 				<string>count</string>
 			</code> from class 
@@ -929,13 +929,13 @@
 			</code>, but an 
 			<code>
 				<feature_name>engine</feature_name>
-			</code> belongs to just one car.   References represent the modeling relation "knows about"; subobjects, as permitted by expanded types, represent the relation "has part", also known as aggregation.  The key difference is that sharing ispossible in the former case but not in the latter.
+			</code> belongs to just one car.   References represent the modeling relation "knows about"; subobjects, as permitted by expanded types, represent the relation "has part", also known as aggregation.  The key difference is that sharing is possible in the former case but not in the latter.
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Basic operations</content>
 		</heading>
-		<paragraph>To assign, copy and compare values, you can rely on a number of mechanisms.  Two of them, assignment and equality testing, are language constructs; the others are library features, coming fromthe top-level class 
+		<paragraph>To assign, copy and compare values, you can rely on a number of mechanisms.  Two of them, assignment and equality testing, are language constructs; the others are library features, coming from the top-level class 
 			<code>
 				<class_name>ANY</class_name>
 			</code> seen earlier (page 
@@ -1237,7 +1237,7 @@
 			and 
 			<code>
 				<symbol>/=</symbol>
-			</code> were language constructres, 
+			</code> were language constructions, 
 			<code>
 				<feature_name>copy</feature_name>
 			</code>, 
@@ -1377,7 +1377,7 @@
 		<paragraph>As the name suggests, 
 			<code>
 				<string>Some_file_or_network_connection</string>
-			</code> can be an external medium of various possible kinds, not just a file but possibly a database or network.  ISE's EiffelNet client-server library indeed uses the 
+			</code> can be an external medium of various possible kinds, not just a file but possibly a database or network.   Eiffel Software 's EiffelNet client-server library indeed uses the 
 			<code>
 				<string>store</string>
 			</code>
@@ -1415,7 +1415,7 @@
 				<feature_name>clone</feature_name>
 			</code> and the like, leading to thrashing and eventually to catastrophic termination.
 		</paragraph>
-		<paragraph>Tthe Eiffel method suggests that the task of detecting and reclaiming such unused object space should be handled by an automatic mechanism (part of the Eiffel run-time environment), not manually by developers (through calls to procedures such as Pascal's 
+		<paragraph>The Eiffel method suggests that the task of detecting and reclaiming such unused object space should be handled by an automatic mechanism (part of the Eiffel run-time environment), not manually by developers (through calls to procedures such as Pascal's 
 			<code>
 				<feature_name>dispose</feature_name>
 			</code> and C/C++'s 
@@ -1429,7 +1429,7 @@
 		<paragraph>
 			<bold>Reliability</bold> : memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.
 		</paragraph>
-		<paragraph>ISE Eiffel provides a sophisticated 
+		<paragraph> Eiffel Software  Eiffel provides a sophisticated 
 			<bold>garbage collector</bold> which efficiently handles the automatic reclamation process, while causing no visible degradation of a system's performance and response time.
 		</paragraph>
 		<heading>

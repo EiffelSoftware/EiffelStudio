@@ -9,11 +9,11 @@
 	<paragraph>
 		<paragraph>   The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
 			<link>
-				<url>/libraries/vision2/content/10_widgets/index.xml</url>
+				<url>/libraries/vision2/content//index.xml</url>
 				<label>widgets</label>
-			</link> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.  
+			</link> (buttons, windows, list views) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.  
 		</paragraph>
-		<paragraph>  EiffelVision has played a major role in ISE Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.  EiffelStudio is totally reliant on EiffelVision for its graphical  elements and overall interaction with the user. </paragraph>
+		<paragraph>  EiffelVision has played a major role in  Eiffel Software  Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.  EiffelStudio is totally reliant on EiffelVision for its graphical  elements and overall interaction with the user. </paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -62,7 +62,7 @@
 		<heading>
 			<size>2</size>Features
 		</heading>
-		<paragraph>  As stated before, the library has undergone some drastic changes since the previous release. Names have been changed to improve consistency. Contracts are added whereever possible. Following is a summary of the other re-engineered aspects of the library: </paragraph>
+		<paragraph>  As stated before, the library has undergone some drastic changes since the previous release. Names have been changed to improve consistency. Contracts are added wherever possible. Following is a summary of the other re-engineered aspects of the library: </paragraph>
 		<list ordered="false">
 			<item>Taking full advantage of the 
 				<bold>agent</bold> mechanism of Eiffel, 
@@ -127,7 +127,7 @@
 		<heading>
 			<size>2</size>Implementation
 		</heading>
-		<paragraph>  For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependant component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the 
+		<paragraph>  For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependent component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the 
 			<link>
 				<url>/libraries/vision2/reference/interface/index.xml</url>
 				<label>interface</label>

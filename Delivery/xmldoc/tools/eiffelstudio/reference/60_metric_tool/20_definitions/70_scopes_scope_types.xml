@@ -36,6 +36,6 @@
 			</image> 
 		</paragraph>
 		<paragraph>Unlike the other tables, which list their entries alphabetically, the above list shows scope types in order of size. This list indeed defines an 
-			<bold>order relation</bold> between scop etypes, which follows from the containment relation of the corresponding software units: every class contains features; every cluster contains classes; and so on.
+			<bold>order relation</bold> between scope types, which follows from the containment relation of the corresponding software units: every class contains features; every cluster contains classes; and so on.
 		</paragraph>
 	</paragraph></document>

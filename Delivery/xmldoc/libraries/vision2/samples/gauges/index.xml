@@ -45,7 +45,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph> The change_actions of each EV_GAUGE are used to synchronise all of the gauges. </paragraph>
+		<paragraph> The change_actions of each EV_GAUGE are used to synchronize all of the gauges. </paragraph>
 		<paragraph>This sample contains the following class: 
 			<list ordered="false">
 				<item>GAUGES</item>

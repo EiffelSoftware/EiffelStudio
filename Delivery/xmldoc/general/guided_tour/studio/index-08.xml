@@ -188,7 +188,7 @@
 				</code>
 				<code>
 					<keyword>Preferences</keyword>
-				</code>.  (Now's not the time.  )
+				</code>.  (Now is not the time.  )
 			</item>
 		</list>
 		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing.  Here is the beginning of the 
@@ -259,7 +259,7 @@
 			</code> itself.  Note how EiffelStudio, when producing the flat form, adds a line of the form
 		</paragraph>
 		<code_block>
-	<comment>-- (From CLASS_OF_ORIGIN)</comment>
+	<comment>-- (From)</comment>
 </code_block>
 		<paragraph>to the header comments of inherited routines, to document where they come from.  </paragraph>
 		<paragraph>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the possibly rich inheritance structure that led to it.  Looking at the Flat view of 

@@ -11,7 +11,7 @@
 	<paragraph>
 		<paragraph>The aim of Eiffel is to help specify, design, implement and modify quality software.  This goal of quality in software is a combination of many factors; the language design concentrated on the three factors which, in the current state of the industry, are in direct need of improvements: 
 			reusability, 
-			 extendibilityand 
+			 extendibility and 
 			 reliability.  Also important were other factors such as 
 			efficiency, 
 			openness and 

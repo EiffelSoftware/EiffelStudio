@@ -25,7 +25,7 @@
 				</code> clause may execute a 
 				<code>
 					<keyword>retry</keyword>
-				</code>  instruction, which causes the routine to restart its execution from the beginning, attempting again to fulfil its contract, usually through another strategy.  This assumes that the instructions of the 
+				</code>  instruction, which causes the routine to restart its execution from the beginning, attempting again to fulfill its contract, usually through another strategy.  This assumes that the instructions of the 
 				<code>
 					<keyword>rescue</keyword>
 				</code> clause, before the 

@@ -10,7 +10,7 @@
 		<paragraph>Most of the Eiffel mechanisms are supported in 5. 2. All missing features listed below are planned for addition in future releases: </paragraph>
 		<list ordered="false">
 			<item>No creation of Eiffel expanded class support</item>
-			<item>Partial implementation of generic conformance (same as what was supported up to and including ISE Eiffel 4.2). </item>
+			<item>Partial implementation of generic conformance (same as what was supported up to and including  Eiffel Software  Eiffel 4.2). </item>
 		</list>
 		<paragraph>Eiffel for .NET supports:</paragraph>
 		<list ordered="false">
@@ -19,7 +19,7 @@
 			<item>Exception handling</item>
 			<item>Genericity</item>
 			<item>Covariance</item>
-			<item>Compilation of any existing Eiffel libraries as long as it does not include C externals that call into the ISE C runtime</item>
+			<item>Compilation of any existing Eiffel libraries as long as it does not include C externals that call into the  Eiffel Software  C runtime</item>
 		</list>
 		<heading>
 			<size>3</size>Added to Eiffel and Eiffel for .NET

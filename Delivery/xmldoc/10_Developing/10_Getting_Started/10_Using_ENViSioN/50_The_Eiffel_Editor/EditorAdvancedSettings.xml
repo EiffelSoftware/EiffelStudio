@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The features and style of the editor viewer can be configured to suit your  preferencesand needs. To configure these select 
+		<paragraph>  The features and style of the editor viewer can be configured to suit your  preferences and needs. To configure these select 
 			<bold>Options..</bold>  from the Visual Studio 
 			<bold>Tools </bold>menu.This will display the Options  dialog, and in the list to the left of the dialog, select 'Text Editor' and  then 'Eiffel' to browse to the editor settings for Eiffel source code.  The dialog should then have the following appearance:
 		</paragraph>

@@ -9,11 +9,11 @@
 			</row>
 			<row>
 				<cell>Link the context tool with other tools by default?</cell>
-				<cell>This boolean preference sets whether, by default, the editor and the context tools display information about the same element (Class, Featureor Cluster). The default value is True.</cell>
+				<cell>This boolean preference sets whether, by default, the editor and the context tools display information about the same element (Class, Feature or Cluster). The default value is True.</cell>
 			</row>
 			<row>
 				<cell>Show ALL classes in the diagram?</cell>
-				<cell>You can choose not to display some classes in the Diagram Tool. Ifyou set this property to False, you will be given the opportunity to define the list of excluded classes (see below). The default value is False.</cell>
+				<cell>You can choose not to display some classes in the Diagram Tool. If you set this property to False, you will be given the opportunity to define the list of excluded classes (see below). The default value is False.</cell>
 			</row>
 			<row>
 				<cell>Names of classes that should not appear in generated diagrams.</cell>
@@ -29,7 +29,7 @@
 			</row>
 			<row>
 				<cell>Show syntactical suppliers (as opposed to actual suppliers) in the`suppliers' view.</cell>
-				<cell>There are two types of suppliers for a given class. On one hand, there are the syntactical suppliers, i.e. the ones the name of which appear inthe class text. On the other hand, there are the actual suppliers, i.e.the ones features of which are used in the class. This preference allows you to choose what type you want to be displayed when you select the `suppliers' view in the class tool. If it is True, syntactical suppliers will be shown.The default value is False.</cell>
+				<cell>There are two types of suppliers for a given class. On one hand, there are the syntactical suppliers, i.e. the ones the name of which appear in the class text. On the other hand, there are the actual suppliers, i.e.the ones features of which are used in the class. This preference allows you to choose what type you want to be displayed when you select the `suppliers' view in the class tool. If it is True, syntactical suppliers will be shown.The default value is False.</cell>
 			</row>
 			<row>
 				<cell>Indexing items that need not be included in class views.</cell>
@@ -37,7 +37,7 @@
 			</row>
 			<row>
 				<cell>Class view that is selected by default.</cell>
-				<cell>This is the index of the view that be used by default in the Classtool. To find the index associated with a view, refer to 
+				<cell>This is the index of the view that be used by default in the Class tool. To find the index associated with a view, refer to 
 					<link>
 						<anchor_name>classnb</anchor_name>
 						<label>the table below.</label>

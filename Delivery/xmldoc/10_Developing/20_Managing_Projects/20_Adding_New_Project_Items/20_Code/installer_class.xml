@@ -1,7 +1,7 @@
 <document output="envision" title="Installer Class">
 	<meta_data/>
 	<paragraph>
-					<paragraph>  The Installer Class isto be invoked at set-up time. The class contains  all of the defaultimplmentation required to create a installer  class. </paragraph>
+					<paragraph>  The Installer Class is to be invoked at set-up time. The class contains  all of the default implementation required to create a installer  class. </paragraph>
 					<paragraph>Please ensure you have the 
 						<code>
 							<class_name>System.Configuration.Install</class_name>

@@ -6,7 +6,7 @@
 		<paragraph>
 			<bold>Availability</bold>: Enterprise and Free versions.
 		</paragraph>
-		<paragraph>This wizard enables you to import an EiffelStudio (version 5.2 or greater) project into a new Eiffel ENViSoion! project.</paragraph>
+		<paragraph>This wizard enables you to import an EiffelStudio (version 5.2 or greater) project into a new Eiffel ENViSioN!! project.</paragraph>
 		<heading>
 			<size>2</size>Page content
 		</heading>
@@ -25,12 +25,12 @@
 		<heading>
 			<size>2</size>Requirements
 		</heading>
-		<paragraph>The Import From EiffelStudio Project Wizard at a minimum requires the EiffelStudio project ace file, used in the importing into VisualStudio.NET, to have been created for EiffelStudio version 5.2 or better. Supplying an corrupt or incorrect ace file will result in the presentation of the project wizards error page. You cannot continue past this point until a correct ace file has been specified.</paragraph>
+		<paragraph>The Import From EiffelStudio Project Wizard at a minimum requires the EiffelStudio project ace file, used in the importing into Visual Studio.NET, to have been created for EiffelStudio version 5.2 or better. Supplying an corrupt or incorrect ace file will result in the presentation of the project wizards error page. You cannot continue past this point until a correct ace file has been specified.</paragraph>
 		<heading>
-			<size>2</size>EiffelStudio5.5 Enterprise or Free Edition Project Selection Page
+			<size>2</size>EiffelStudio.5 Enterprise or Free Edition Project Selection Page
 		</heading>
-		<paragraph>The first page of the wizard is the only functioning page for this wizard. It asks for the EiffelStudio project Ace file (*.ace) to import the project setting from. This must be an ace file used for a EiffelStudio5.2 (or better) Enterprise or Free edition, and must be a valid Eiffel for .NET ace file.</paragraph>
-		<paragraph>You may optionally select to duplicate the project files (Eiffel classes, resources etc.) by checking the 'Duplicate project files' option. If you do not want to duplicate the exiting EiffelStudio project files then they will be shared between Eiffel ENViSioN! and EiffelStudio, however each will have their repective independent project configuration file(s). Upon checking the 'Duplicate project files' option the 'Project Root Cluster Path' becomes active to allow you to specify the root path to copy the project files from. If you have chosen to duplicate the project files then this path must point to a valid project path and cannot be left empty.</paragraph>
+		<paragraph>The first page of the wizard is the only functioning page for this wizard. It asks for the EiffelStudio project Ace file (*.ace) to import the project setting from. This must be an ace file used for a EiffelStudio.2 (or better) Enterprise or Free edition, and must be a valid Eiffel for .NET ace file.</paragraph>
+		<paragraph>You may optionally select to duplicate the project files (Eiffel classes, resources etc.) by checking the 'Duplicate project files' option. If you do not want to duplicate the exiting EiffelStudio project files then they will be shared between Eiffel ENViSioN! and EiffelStudio, however each will have their respective independent project configuration file(s). Upon checking the 'Duplicate project files' option the 'Project Root Cluster Path' becomes active to allow you to specify the root path to copy the project files from. If you have chosen to duplicate the project files then this path must point to a valid project path and cannot be left empty.</paragraph>
 		<paragraph>
 			<image>
 				<alt_text>Import EiffelStudio Wizard</alt_text>

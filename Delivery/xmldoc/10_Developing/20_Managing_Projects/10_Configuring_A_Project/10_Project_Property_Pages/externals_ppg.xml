@@ -44,7 +44,7 @@
 		<heading>
 			<size>2</size>  Object Files
 		</heading>
-		<paragraph>Object files are pre-compiled binary files that can be linked with the header  files used by Eiffel external classes making use of C or C++. Failure to supply  and object file corresponding to a used header file will result in a linking  error when compiling any unmanagedC/C++ code. </paragraph>
+		<paragraph>Object files are pre-compiled binary files that can be linked with the header  files used by Eiffel external classes making use of C or C++. Failure to supply  and object file corresponding to a used header file will result in a linking  error when compiling any unmanaged C/C++ code. </paragraph>
 		<heading>
 			<size>3</size>Adding an Object File
 		</heading>
@@ -57,11 +57,11 @@
 		<heading>
 			<size>3</size>Removing An Object File
 		</heading>
-		<paragraph>To remove anobject file,select the item in theobject  fileslist to be removed and click the corresponding 'Remove' button. The  remove button will only become enabled once andobject filehas been  selected.</paragraph>
+		<paragraph>To remove an object file,select the item in the object  file's list to be removed and click the corresponding 'Remove' button. The  remove button will only become enabled once an object file has been  selected.</paragraph>
 		<heading>
 			<size>3</size>Renaming Object Files
 		</heading>
-		<paragraph> To rename anobject filedo as you would in Windows Explorer and  select the item to rename and then click it again. The bounding box will then  appear over the selected item allowing you to rename the object files. </paragraph>
+		<paragraph> To rename an object file do as you would in Windows Explorer and  select the item to rename and then click it again. The bounding box will then  appear over the selected item allowing you to rename the object files. </paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
@@ -77,7 +77,7 @@
 			<line_break/>
 			<link>
 				<url>advanced_ppg.xml</url>
-				<label>AdvancedProperty Page</label>
+				<label>Advanced Property Page</label>
 			</link>
 		</seealso>
 	</paragraph></document>

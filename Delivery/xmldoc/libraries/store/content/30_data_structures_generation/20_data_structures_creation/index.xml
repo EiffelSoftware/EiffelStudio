@@ -215,7 +215,7 @@
 					</row>
 				</table>
 				<heading>
-					<size>5</size>2.3.1.2. Attribute meta-datatags
+					<size>5</size>2.3.1.2. Attribute meta-data tags
 				</heading>
 				<table>
 					<border>1</border>
@@ -283,7 +283,7 @@
 				<heading>
 					<size>5</size>2.3.1.3. Enclosing tags
 				</heading>
-				<paragraph>The tag &lt;A:?:?&gt; &lt;/A&gt; encloses text that will bemapped to attributes matching criteria. These criteria are specified by the tagoptions:</paragraph>
+				<paragraph>The tag &lt;A:?:?&gt; &lt;/A&gt; encloses text that will be mapped to attributes matching criteria. These criteria are specified by the tag options:</paragraph>
 				<list ordered="false">
 					<item>First option: attribute type criterion</item>
 				</list>
@@ -364,12 +364,12 @@
 			</item>
 		</list>
 		<paragraph>
-			<bold>Note</bold>: several options can be selected forone criterion.
+			<bold>Note</bold>: several options can be selected for one criterion.
 		</paragraph>
 		<heading>
 			<size>4</size>2.3.2. Database content tags description
 		</heading>
-		<paragraph>The tags described above can be reused for database content:database content class mapping isequivalent to the previous mapping but within a different scope:</paragraph>
+		<paragraph>The tags described above can be reused for database content:database content class mapping is equivalent to the previous mapping but within a different scope:</paragraph>
 		<list ordered="false">
 			<item>class corresponds to the database rather than tables</item>
 			<item>class content deals with tables rather than table attributes</item>
@@ -620,7 +620,7 @@
 			<heading>
 				<size>3</size>3.2. Description classes
 			</heading>
-			<paragraph>For each selected database table, a class is also created froman unique template, mapping the database table. This template is:</paragraph>
+			<paragraph>For each selected database table, a class is also created from a unique template, mapping the database table. This template is:</paragraph>
 <code_block>
 	indexing
 		description: "Description of class &lt;CN:U&gt;"

@@ -26,7 +26,7 @@
 				<label>external editor</label>
 			</link> you have selected in the preferences. The project settings window will automatically vanish, to make sure there will not conflicts between its contents and the modified Ace file.
 		</paragraph>
-		<paragraph>If you decide to change your Ace file, simply click on the `Load from...' button, a standard open file selection dialog will popup and you can choose a new Ace file. If the Ace file is invalid, a warning dialog will appear and the Ace file change will not be taken into account. If the Ace file is valid, the project settings tab will be updated with the new values extracted from the Ace file.</paragraph>
+		<paragraph>If you decide to change your Ace file, simply click on the `Load from...' button, a standard open file selection dialog will pop up and you can choose a new Ace file. If the Ace file is invalid, a warning dialog will appear and the Ace file change will not be taken into account. If the Ace file is valid, the project settings tab will be updated with the new values extracted from the Ace file.</paragraph>
 		<paragraph>If you want to redo your Ace file, you can click on the Reset button. This will clear all settings to their default values and delete the list of included clusters. No warning is displayed so make sure you know all the consequences of doing so.</paragraph>
 		<paragraph> </paragraph>
 		<heading>

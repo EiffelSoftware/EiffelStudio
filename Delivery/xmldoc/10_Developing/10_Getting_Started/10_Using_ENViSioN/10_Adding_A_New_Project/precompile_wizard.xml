@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The Eiffel Class Library Project Wizard create a new Eiffel precompiled project  that may be used as a precompilelibrary from other Eiffel ENViSioN!  projects. </paragraph>
+		<paragraph>  The Eiffel Class Library Project Wizard create a new Eiffel precompiled project  that may be used as a precompiled library from other Eiffel ENViSioN!  projects. </paragraph>
 		<heading>
 			<size>2</size>Page content
 		</heading>
@@ -37,14 +37,14 @@
 				<url>precompile_wizard.png</url>
 			</image>
 		</paragraph>
-		<paragraph>By default the precompile project wizard will create a new precompile project  using the existing Eiffel Base Class (eBCL) precompile library. You may turn  this option off by un-checking the 'Use eBCL precompile?' option. If eBCL is  not used then you may select the Eiffel libraries you would like to include in  your procompile project via the 'Include Library' list.</paragraph>
+		<paragraph>By default the precompile project wizard will create a new precompile project  using the existing Eiffel Base Class (eBCL) precompile library. You may turn  this option off by un-checking the 'Use eBCL precompile?' option. If eBCL is  not used then you may select the Eiffel libraries you would like to include in  your precompiled project via the 'Include Library' list.</paragraph>
 		<paragraph>This page allows you to modify the settings for the system created when the  wizard is completed. The following settings may be modified:</paragraph>
 		<list ordered="false">
 			<item>
 				<bold>Use eBCL precompile?</bold>: Reuses the eBCL precompile allowing the new project to build upon  in.
 			</item>
 			<item>
-				<bold>Include Library</bold>: Allows you to addone or moreexisting  Eiffel library to your project. Unchecking Use eBCL precompile will enable this  option.
+				<bold>Include Library</bold>: Allows you to add one or more existing  Eiffel library to your project. Unchecking Use eBCL precompile will enable this  option.
 			</item>
 		</list>
 		<line_break/>

@@ -48,7 +48,7 @@
 			<link>
 				<url>/libraries/wel/content/common_concepts/index.xml</url><anchor_name>common_message_hooks</anchor_name>
 				<label>Common message hooks</label>
-			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occuring. 
+			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occurring. 
 		</paragraph>
 		<paragraph>If you look at closeable from <code><class_name>MAIN_WINDOW</class_name></code>, you will see that it has been redefined to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> and the result from this message box is used to generate the return value of closeable. If this Result is True, the window will be closed. 
 			<paragraph>This sample contains the following classes: 

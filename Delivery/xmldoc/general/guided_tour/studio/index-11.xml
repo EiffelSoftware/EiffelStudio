@@ -1,7 +1,7 @@
 <document title="10 RETARGETING THROUGH PICK-AND-DROP" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
-		<paragraph>You now know quite a few ways of retargeting a Development Window to a "development object" -- a class or a feature -- but haven't yet seen one of the most important: "Pick-and-Drop", which lets you pick a development object that you have spotted anywhere in the display, and retarget the current tool, or another, to it.  </paragraph>
+		<paragraph>You now know quite a few ways of re-targeting a Development Window to a "development object" -- a class or a feature -- but haven't yet seen one of the most important: "Pick-and-Drop", which lets you pick a development object that you have spotted anywhere in the display, and retarget the current tool, or another, to it.  </paragraph>
 		<div>
 			<heading>
 				<size>2</size>
@@ -242,7 +242,7 @@
 				</item>
 				<item>Pick-and-Drop makes it easy to cancel the operation if you change your mind: just left-click anywhere.  With Drag-and-Drop you have to find an invalid place to drop; this may be difficult, or even impossible! (Sometimes pressing the Escape key works, but this is not universal.  )</item>
 			</list>
-			<paragraph>If you are new to ISE Eiffel you may find Pick-and-Drop surprising at first.  We trust you will join the ranks of ISE Eiffel users who consistently rate it among the most convenient features of the environment.  </paragraph>
+			<paragraph>If you are new to  Eiffel Software  Eiffel you may find Pick-and-Drop surprising at first.  We trust you will join the ranks of  Eiffel Software  Eiffel users who consistently rate it among the most convenient features of the environment.  </paragraph>
 		</div>
 		<div>
 			<heading>

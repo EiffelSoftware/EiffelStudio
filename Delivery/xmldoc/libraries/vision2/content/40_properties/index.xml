@@ -54,7 +54,7 @@
 						<label>EV_COLORIZABLE</label>
 					</link>
 					<list ordered="false">
-						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/ev_colorizable_chart.xml</url><label>EV_COLORIZABLE</label></link> it has facilites   for modifying its foreground and background colors.
+						<item>   If a Vision2 component inherits <link><url>../../reference/interface/properties/ev_colorizable_chart.xml</url><label>EV_COLORIZABLE</label></link> it has facilities   for modifying its foreground and background colors.
 							<line_break/>   Use <code><feature_name>set_foreground_color</feature_name></code> to set the <code><feature_name>foreground_color</feature_name></code> and   <code><feature_name>set_background_color</feature_name></code> to set the <code><feature_name>background_color</feature_name></code>.
 							<line_break/>   Use <code><feature_name>set_default_colors</feature_name></code> to restore the colors to their defaults.
 						</item>

@@ -66,7 +66,7 @@
 		</link>. This means you can 
 		<link>
 			<url>/tools/eiffelbuild/how_to_s/50_reparent_an_object/index.xml</url>
-			<label> reparent objects</label>
+			<label> re-parent objects</label>
 		</link>, using the 
 		<link>
 			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>

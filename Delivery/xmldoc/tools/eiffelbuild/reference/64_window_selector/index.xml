@@ -50,7 +50,7 @@
 			<size>2</size>Root Window
 		</heading>
 		<paragraph>The root window of a project is launched by the application class of the generated EiffelBuild project when executed. By assigning a window as a root, you ensure that it will be displayed on screen as the "root" window of the generated system when the system is launched.</paragraph>
-		<paragraph>The root window of the project is highlighted with a star, indicating that it is the root. Looking at the screenshot at the top of this page, the window named "main_window" is currently flagged as the root window of the project. To set a window as the the root window of the project, select the window in the Window Selector, and press the 
+		<paragraph>The root window of the project is highlighted with a star, indicating that it is the root. Looking at the screenshot at the top of this page, the window named "main_window" is currently flagged as the root window of the project. To set a window as the root window of the project, select the window in the Window Selector, and press the 
 			<image> 
 				<url>/images/eiffelbuild/icons/icon_titled_window_main_small_color.png</url>
 			</image> button displayed at the top of the Window Selector.

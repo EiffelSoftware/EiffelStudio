@@ -12,7 +12,7 @@
 				<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 			</link>
 		</paragraph>
-		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
+		<note>This document is available both locally, as part of the  Eiffel Software  Eiffel delivery, and on the 
 			<link>
 				<url>http://docs.eiffel.com/general/guided_tour/language/tutorial-00.xml</url>
 				<label>http://docs.eiffel.com</label>
@@ -22,7 +22,7 @@
 					<url>../index.xml</url>
 					<label>list of introductory documents</label>
 				</link>. This is 
-				<bold>not</bold> an introduction to the EiffelStudio development environment. Followthe preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
+				<bold>not</bold> an introduction to the EiffelStudio development environment. Follow the preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
 			</output>
 		</note>
 		<heading>

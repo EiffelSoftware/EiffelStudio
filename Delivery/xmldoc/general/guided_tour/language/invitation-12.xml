@@ -52,7 +52,7 @@
 		</paragraph>
 		<paragraph>This corresponds to the intuitive idea that a value of a more specialized type may be assigned to an entity of a less specialized type -- but not the reverse.  (As an analogy, consider that if you request vegetables, getting green vegetables is fine, but if you ask for green vegetables, receiving a dish labeled just "vegetables" is not acceptable, as it could include, say, carrots.)</paragraph>
 		<paragraph>What makes this possibility particularly powerful is the complementary facility: 
-			<bold>feature redefinition</bold>.  A class may redefine some or all of the features which it inherits from its parents.  For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original's routine body by a new one.
+			<bold>feature redefinition</bold>.  A class may redefine some or all of the features which it inherits from its parents.  For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original routine body by a new one.
 		</paragraph>
 		<paragraph>Assume for example a class 
 			<code>
@@ -92,7 +92,7 @@
 			</code> for rectangles as there is a simpler and more efficient algorithm.  Note the explicit 
 			<code>
 				<keyword>redefine</keyword>
-			</code> subclause (which would come after the 
+			</code> sub clause (which would come after the 
 			<code>
 				<keyword>rename</keyword>
 			</code> if present).

@@ -124,11 +124,11 @@
 			<item>Setting directly year, month and day with set_year, set_month and set_day. Arguments must satisfy the rules of creation. These rules are more complicated than those of 
 				<code>
 					<class_name>TIME</class_name>
-				</code>. For example it is not allowed to set day to 31 if the current month is April, whereas it is allowed if the month isJanuary. It is the same rules as for make. The same thing for years: It is not allowed to set year to a non-leap year if thecurrent date is February 29th of a leap year. However, two features are available to set month and year even if dayis too large: set_month_cut_days and set_year_cut_days will cut day down to the largest value allowed.
+				</code>. For example it is not allowed to set day to 31 if the current month is April, whereas it is allowed if the month is January. It is the same rules as for make. The same thing for years: It is not allowed to set year to a non-leap year if the current date is February 29th of a leap year. However, two features are available to set month and year even if day is too large: set_month_cut_days and set_year_cut_days will cut day down to the largest value allowed.
 			</item>
-			<item>Adding years, months and days with features year_add, month_add andday_add. There is no requirement to add a year or a month. However, these features have to return a correct result, i.e. day is checked before each addi-tion. Adding one month to August 31st will yield September 30th. 31 is cut to 30 since there are only 30 days in september. Features add and + take an instance of DATE_DURATION in argument and add it to the current date. It is written so that years and months are added first, the days last.(see DATE_DURATION below)</item>
+			<item>Adding years, months and days with features year_add, month_add and day_add. There is no requirement to add a year or a month. However, these features have to return a correct result, i.e. day is checked before each addition-. Adding one month to August 31st will yield September 30th. 31 is cut to 30 since there are only 30 days in September. Features add and + take an instance of DATE_DURATION in argument and add it to the current date. It is written so that years and months are added first, the days last.(see DATE_DURATION below)</item>
 			<item>Moving to the next or the previous year, month or day with features year_forth, year_back, month_forth, month_back, day_forth and day_back. It is the same but faster to use these features rather than those upper (year_back &lt;-&gt; year_add (-1)).</item>
-			<item>Features relative_duration and definite_duration return the duration between the current date and the argument. The first one returns a result which is canonical (See definitionsbelow), while the second one returns a definite result but may be not canonical.</item>
+			<item>Features relative_duration and definite_duration return the duration between the current date and the argument. The first one returns a result which is canonical (See definitions below), while the second one returns a definite result but may be not canonical.</item>
 		</list>
 		<paragraph>For example, date1 is April 20th and date2 is May 28th. Both features will yield instances of DURATION; however, relative_duration will yield 1 month and 8 days whereas definite_duration will yield 38 days.</paragraph>
 		<heading>
@@ -164,7 +164,7 @@
 				</code> with an instance of 
 				<code>
 					<class_name>TIME</class_name>
-				</code> (make_by_date_time).This feature copies only the references of its arguments, so that if the time (or the date) ischanged, the instance previously initialized will be also changed. If this effect has to be avoided, cloning the arguments is required.
+				</code> (make_by_date_time).This feature copies only the references of its arguments, so that if the time (or the date) is changed, the instance previously initialized will be also changed. If this effect has to be avoided, cloning the arguments is required.
 			</item>
 			<item>by encapsulating an instance of 
 				<code>

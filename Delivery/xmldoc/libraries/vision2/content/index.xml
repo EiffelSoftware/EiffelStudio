@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  EiffelVision 2 is a platform independent Graphical User Interface  (GUI) library that allows easy, simultaneous development of Windowed  applications for both Windows &amp; Unix based platforms. Heavily  relying on ISE's premier EiffelBase library, EiffelVision 2 has been  designed primarily with ease of use in mind. By reusing EiffelBase  structures, existing, as well as new Eiffel users will find EiffelVision  to be surprising intuitive and easy to use. In no time, users  will be producing good-looking Windowed application skeletons, of which  will run on a multitude of platforms with no manipulation of code. </paragraph>  The EiffelVision 2 library includes the following interface clusters:  
+		<paragraph>  EiffelVision 2 is a platform independent Graphical User Interface  (GUI) library that allows easy, simultaneous development of Windowed  applications for both Windows &amp; Unix based platforms. Heavily  relying on  Eiffel Software 's premier EiffelBase library, EiffelVision 2 has been  designed primarily with ease of use in mind. By reusing EiffelBase  structures, existing, as well as new Eiffel users will find EiffelVision  to be surprising intuitive and easy to use. In no time, users  will be producing good-looking Windowed application skeletons, of which  will run on a multitude of platforms with no manipulation of code. </paragraph>  The EiffelVision 2 library includes the following interface clusters:  
 		<list ordered="false">
 			<item>A 
 				<link>

@@ -11,7 +11,7 @@
 			<link>
 				<url>index.xml</url>
 				<label>Object Browser</label>
-			</link>, there will be a set of child nodes that  you may expand in order to explore relevent information regarding the current  node. For example, if the current node represents a cluster, then the child  nodes will be all Eiffel Classes in that cluster. If you subsequently open up  one of the child nodes representing an Eiffel Class, you will be presented with  a new set of nodes, applicable only to an Eiffel Class.
+			</link>, there will be a set of child nodes that  you may expand in order to explore relevant information regarding the current  node. For example, if the current node represents a cluster, then the child  nodes will be all Eiffel Classes in that cluster. If you subsequently open up  one of the child nodes representing an Eiffel Class, you will be presented with  a new set of nodes, applicable only to an Eiffel Class.
 		</paragraph>
 		<paragraph>  Each node in the 
 			<link>
@@ -230,7 +230,7 @@
 					</image>
 				</cell>
 				<cell>Assembly</cell>
-				<cell>Referenced Assmblies</cell>
+				<cell>Referenced Assemblies</cell>
 			</row>
 			<row>
 				<cell>

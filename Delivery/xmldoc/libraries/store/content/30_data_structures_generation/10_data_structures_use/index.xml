@@ -165,7 +165,7 @@
 					<label>table access classes</label>
 				</link>  describes the database tables and gives access to both table and description classes.
 			</paragraph>
-			<paragraph>Each database-specific (generated) class inherits from an abstract class. These abstract classes gathers all the facilities that are not specific to your database, and so that can be inherited by all the database-specificclasses.</paragraph>
+			<paragraph>Each database-specific (generated) class inherits from an abstract class. These abstract classes gathers all the facilities that are not specific to your database, and so that can be inherited by all the database-specific classes.</paragraph>
 			<paragraph>Let us see abstract and database-specific classes relationship:</paragraph>
 			<paragraph>
 				<image> 
@@ -184,7 +184,7 @@
 			<heading>
 				<size>3</size>2.1. Table classes
 			</heading>
-			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can be considered as databasetable rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <code><class_name>DB_TABLE</class_name></code>. </paragraph>
+			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can be considered as database table rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <code><class_name>DB_TABLE</class_name></code>. </paragraph>
 			<paragraph>Each of these classes are associated to a description class. </paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use table classes to 
@@ -305,11 +305,11 @@
 			<paragraph>The DB_TABLES_ACCESS class provides an interface for the 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> class which is non-specific to the database. This canbe used by non database-specific code (for instance the 
+				</code> class which is non-specific to the database. This can be used by non database-specific code (for instance the 
 				<link>
 					<url>../../40_dataview_cluster/index.xml</url>
 					<label>DataView cluster</label>
-				</link>) toaccess database tables.
+				</link>) to access database tables.
 			</paragraph>
 			<paragraph>Unique table description objects and table codes are of course not directly available from this class, but the following features are still available:</paragraph>
 			<list ordered="false">

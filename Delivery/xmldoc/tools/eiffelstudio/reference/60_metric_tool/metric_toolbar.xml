@@ -42,7 +42,7 @@
 					<url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>calculate</class_name></code>: evaluate a metric over ascope.
+				<code><class_name>calculate</class_name></code>: evaluate a metric over a scope.
 			</item>
 			<item>
 				<image>
@@ -95,7 +95,7 @@
 					<width>16</width>
 					<url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url>
 					<border>0</border>
-				</image> <code><class_name>hide details</class_name></code>: hide details of ameasure.
+				</image> <code><class_name>hide details</class_name></code>: hide details of a measure.
 			</item>
 			<item>
 				<code><class_name>archive</class_name></code>: create, update or compare archive files.

@@ -18,10 +18,10 @@
 		</note>
 		<paragraph/>
 		<paragraph>on Windows, with MS VC++:</paragraph>
-		<code_block>link [your link flags] -OUT:[name of your cecil executable] [your Cobject files and archives] lib&amp;lt;system name&amp;gt;.lib [other Windowslibraries]</code_block>
+		<code_block>link [your link flags] -OUT:[name of your cecil executable] [your C object files and archives] lib&amp;lt;system name&amp;gt;.lib [other Windows libraries]</code_block>
 		<paragraph/>
 		<paragraph>on Windows with Borland:</paragraph>
-		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecilexecutable],,EIFGEN\W_code\lib&amp;lt;system name&amp;gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
+		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecil executable],,EIFGEN\W_code\lib&amp;lt;system name&amp;gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
 		<paragraph/>
 		<paragraph>
 			<bold>Notes for compiling CECIL C files:</bold>

@@ -250,7 +250,7 @@
 					<feature_name>balance</feature_name>
 				</code> would be the same if this feature were a function rather than an attribute.
 			</paragraph>
-			<paragraph>You will find in ISE's EiffelStudio automatic tools to produce the Contract Form of a class.  You can also get the 
+			<paragraph>You will find in Eiffel Software's EiffelStudio automatic tools to produce the Contract Form of a class.  You can also get the 
 				<bold>Flat Contract</bold> form, based on the same ideas but including inherited features along with those introduced in the class itself.  EiffelStudio can produce these forms, and other documentation views of a class, in a variety of output formats including HTML, so that collaborative projects can automatically post the latest versions of their class interfaces on the Internet or an Intranet.
 			</paragraph>
 			<heading>
@@ -259,5 +259,5 @@
 			</heading>
 			<paragraph>Under EiffelStudio you may also set up compilation options, for the whole system or specific classes only, to evaluate assertions at run time, to uncover potential errors ("bugs").  EiffelStudio provides several levels of assertion monitoring: preconditions only, postconditions etc.  When monitoring is on, an assertion which evaluates to true has no further effect on the execution.  An assertion that evaluates to false will trigger an exception, as described next; unless you have written an appropriate exception handler, the exception will cause an error message and termination with a precise message and a call trace.  </paragraph>
 			<paragraph>This ability to check assertions provides a powerful testing and debugging mechanism, in particular because the classes of the EiffelBase Libraries, widely used in Eiffel software development, are protected by carefully written assertions.  </paragraph>
-			<paragraph>Run-time monitoring, however, is only one application of assertions, whose role as design and documentation aids, as part of the theory of Design by Contract&amp;#153;, exerts a pervasive influence on the Eiffel style of software development.  </paragraph>
+			<paragraph>Run-time monitoring, however, is only one application of assertions, whose role as design and documentation aids, as part of theory of Design by Contract&amp;#153;, exerts a pervasive influence on the Eiffel style of software development.  </paragraph>
 	</paragraph></document>

@@ -41,7 +41,7 @@
 				</link>.
 			</item>
 			<item>  
-				<bold>Quick Find Symbol</bold>: Performs a quick find using the text of the curent target as the search argument. 
+				<bold>Quick Find Symbol</bold>: Performs a quick find using the text of the current target as the search argument. 
 			</item>
 			<item>  
 				<bold>Copy</bold>: Copies the text of the current target to the clipboard. 

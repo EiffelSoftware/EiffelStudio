@@ -53,7 +53,7 @@
 			</code> and a certain 
 			<code>
 				<feature_name>event</feature_name>
-			</code>.  The mechanism is not just simple; it's also independent of your application, since it doesn't need to know about any particular control, event or operation (it will find them in the object structure).  So it can be programmed once and for all, as part of a library such as ISE's EiffelVision 2 for platform-independent graphics.
+			</code>.  The mechanism is not just simple; it's also independent of your application, since it doesn't need to know about any particular control, event or operation (it will find them in the object structure).  So it can be programmed once and for all, as part of a library such as  Eiffel Software 's EiffelVision 2 for platform-independent graphics.
 		</paragraph>
 		<paragraph>To build an object structure, we need objects.  A 
 			<code>
@@ -156,7 +156,7 @@
 			</code>, representing agents) applicable to any agent, whereas the direct call refers explicitly to 
 			<code>
 				<local_variable>r</local_variable>
-			</code> and hencerequires arguments 
+			</code> and hence requires arguments 
 			<code>
 				<local_variable>a</local_variable>
 			</code> and 

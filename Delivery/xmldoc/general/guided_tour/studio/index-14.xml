@@ -332,7 +332,7 @@
 					<string>HEIR</string>
 				</code>.  Note that all objects are identified by their addresses in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object.  The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- be different from the ones appearing here.
 			</paragraph>
-			<paragraph>Note that since the ISE Eiffel garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.  </paragraph>
+			<paragraph>Note that since the  Eiffel Software  Eiffel garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.  </paragraph>
 			<paragraph>To see the details of the object, pick-and-drop its identifier in place (that is to say, drop it in the Object Tool itself).  A new object entry appears, showing the object:</paragraph>
 			<div>
 				<image_link>

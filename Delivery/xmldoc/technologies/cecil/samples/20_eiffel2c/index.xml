@@ -41,7 +41,7 @@ Displaying from C
 		<code_block>
 --give_to_c (o1)
 give_to_c_by_pointer ($o1) -- Choose the way you pass it
-</code_block>When you choose the firt possibility (commented by default), give_to_c will use the CECIL API eif_adopt to keep a reference on the Eiffel object. When you choose the second possibility, give_to_c_by_pointer will use the CECIL API eif_protect to keep a reference on the Eiffel object. Until forget_from_c is called from the C side, the object o1 will not be collected since we have protected it through the call to give_to_c or give_to_c_by_pointer. At the end after the object o1 is collected, we try to perform an operation on it which will fail with a call on void target exception. A typical output will be:
+</code_block>When you choose the first possibility (commented by default), give_to_c will use the CECIL API eif_adopt to keep a reference on the Eiffel object. When you choose the second possibility, give_to_c_by_pointer will use the CECIL API eif_protect to keep a reference on the Eiffel object. Until forget_from_c is called from the C side, the object o1 will not be collected since we have protected it through the call to give_to_c or give_to_c_by_pointer. At the end after the object o1 is collected, we try to perform an operation on it which will fail with a call on void target exception. A typical output will be:
 		<code_block>
 $ cecil
 Creating o1

@@ -19,9 +19,37 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a radio box with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, True)
+		ensure
+			parent_set: parent = a_parent;
+			identifer_set: identifier.is_equal (a_name);
+			managed: managed
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a radio box with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, False)
+		ensure
+			parent_set: parent = a_parent;
+			identifer_set: identifier.is_equal (a_name);
+			not_managed: not managed
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a radio box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -31,7 +59,7 @@ feature -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.radio_box (Current);
+			implementation:= toolkit.radio_box (Current, man);
 			set_default
 		ensure
 			Parent_set: parent = a_parent;

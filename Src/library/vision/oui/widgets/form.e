@@ -12,9 +12,8 @@ class FORM
 inherit
 
 	BULLETIN
-		rename
-			make as bulletin_make
 		redefine
+			make, make_unmanaged, create_ev_widget,
 			implementation
 		end
 
@@ -22,26 +21,36 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a form with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
-		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, True)
+		ensure then
+			--default_fraction_base_is_100: fraction_base = 100
+		end; 
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged form with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			create_ev_widget (a_name, a_parent, False)
+		ensure then
+			--default_fraction_base_is_100: fraction_base = 100
+		end; 
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a form with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.form (Current);
+			implementation:= toolkit.form (Current, man);
 			set_default
-		ensure
-			Parent_set: parent = a_parent;
-			Identifer_set: identifier.is_equal (a_name);
-			Fraction_base_is_100: fraction_base = 100
 		end; 
-
 	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

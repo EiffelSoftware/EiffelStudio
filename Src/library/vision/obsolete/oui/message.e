@@ -13,19 +13,43 @@ class MESSAGE
 inherit
 
 	TERMINAL_OUI
-		rename
-			make as bulletin_make
 		redefine
+			make, make_unmanaged, create_ev_widget,
 			implementation
 		end
 
-
 creation
 
-	make
+	make, make_unmanaged
 
-	
-feature 
+feature {NONE} -- Creation
+
+	make (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a message box with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			create_ev_widget (a_name, a_parent, True)
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged message box with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			create_ev_widget (a_name, a_parent, False)
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a message box with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			depth := a_parent.depth+1;
+			widget_manager.new (Current, a_parent);
+			identifier:= clone (a_name);
+			implementation:= toolkit.message (Current, man);
+			set_default
+		end;
+
+feature
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -52,23 +76,6 @@ feature
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_ok_action (a_command, argument)
-		end;
-
-	make (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create a message box with `a_name' as identifier,
-			-- `a_parent' as parent and call `set_default'.
-		require
-			name_not_void: not (a_name = Void);
-			parent_not_void: not (a_parent = Void)
-		do
-			depth := a_parent.depth+1;
-			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
-			implementation:= toolkit.message (Current);
-			set_default
-		ensure
-			parent = a_parent;
-			identifier.is_equal (a_name)
 		end;
 
 	hide_cancel_button is

@@ -61,6 +61,14 @@ feature -- Status setting
 			end
 		end
 
+	pnd_motion (x, y, a_x, a_y: INTEGER) is
+		deferred
+		end
+
+	pnd_press (x, y, button, a_x, a_y: INTEGER) is
+		deferred
+		end
+
 feature {EV_ITEM_LIST_I} -- Implementation
 
 	on_parented is
@@ -103,6 +111,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/30 19:49:21  rogers
+--| Added pnd_motion and pnd_press as deferred.
+--|
 --| Revision 1.17  2000/03/24 19:17:30  rogers
 --| Changed export status of on_parented and on_orphaned to EV_ITEM_LIST_I from NONE.
 --|

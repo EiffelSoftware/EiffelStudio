@@ -19,7 +19,7 @@
 #ifdef GEN_CONF_DEBUG
 rt_public void log_puts (char *);
 rt_public void log_puti (int);
-#define logfile "c:gentypes.log"
+#define logfile "c:\gentypes.log"
 #endif
 
 /*------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ rt_public int16  *eif_cid_map = (int16 *) 0;
 /* e.g. for `strip'. RTUD(no)                                       */
 /*------------------------------------------------------------------*/
 
-rt_public int egc_any_dtype = 2; /* Precise value determined in init */
+/* Declared in eif_project.h and eif_project.c */
 
 /*------------------------------------------------------------------*/
 /* Structure representing a generic derivation. We also use this    */

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SERVER
+deferred class
+
+	SERVER
 
 inherit
 
@@ -17,13 +19,13 @@ inherit
 
 feature -- Access
 
-	in : SOCKET
-			-- Receive socket.
+	in : SOCKET;
+			-- Listen socket.
 
-	outflow : like in
-			-- Send socket
+	outflow : like in;
+			-- Service socket
 
-	received: STORABLE
+	received: STORABLE;
 			-- Last message from socket
 
 	execute is
@@ -32,19 +34,19 @@ feature -- Access
 			until
 				false
 			loop
-				receive
-				process_message
-				respond
+				receive;
+				process_message;
+				respond;
 				close
 			end
-		end
+		end;
 
-	queued: INTEGER
+	queued: INTEGER;
 
 	resend (msg: STORABLE) is
 		do
 			msg.general_store (outflow)
-		end
+		end;
 
 	set_queued (n:INTEGER) is
 		require
@@ -53,23 +55,23 @@ feature -- Access
 			queued := n
 		ensure 
 			assigned_queued: queued = n
-		end
+		end;
 
 	cleanup is
 		deferred
-		end
+		end;
 
 	close is
 		deferred
-		end
+		end;
 
 	process_message is 
 		deferred
-		end
+		end;
 
 	respond is
 		do
-		end
+		end;
 
 	receive is
 		deferred

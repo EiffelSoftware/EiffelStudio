@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PACKET
+class
+
+	PACKET
 
 inherit
 
@@ -37,7 +39,7 @@ creation
 feature -- Initialization
 
 	make (size: INTEGER) is
-			-- create a packet
+			-- Create a packet.
 		require
 			valid_size: size >= 0
 		do
@@ -47,7 +49,7 @@ feature -- Initialization
 feature -- Access
 
 	element (pos: INTEGER): CHARACTER is
-			-- return element at position `pos'
+			-- Element at position `pos'
 		require
 			pos_valid: valid_position (pos)
 		do
@@ -57,15 +59,15 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER is
-			-- number of elements in packet
+			-- Number of elements in packet
 		do
 			Result := data.count
 		end
 
-feature -- Comparsion
+feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- is Current equal to other
+			-- Is current packet equal to `other' ?
 		do
 			Result := data.is_equal (other.data)
 		end
@@ -73,28 +75,30 @@ feature -- Comparsion
 feature -- Status report
 
 	valid_position (pos: INTEGER): BOOLEAN is
-			-- Is position `pos' valid for this packet
+			-- Is position `pos' valid for this packet ?
 		do
 			Result := (pos >= 0 and pos < count)
 		end
 
 feature -- Element change
 
-	put_element (a_item: CHARACTER; pos: INTEGER) is
+	put_element (an_item: CHARACTER; pos: INTEGER) is
+			-- Put element `an_item' at position `pos'.
+			-- Fist element has position 0.
 		require
 			pos_valid: valid_position (pos)
 		do
-			data.put (a_item, pos)
+			data.put (an_item, pos)
 		end
 
 feature -- Duplication
 
 	copy (other: like Current) is
-			-- Reinitialize by copying the characters of `other'.
-			-- (This is also used by `clone'.)
+			-- Reinitialize by copying characters of `other'.
+			-- (This is also used by `clone')
 		do
-			old_copy (other)
-			make (other.count)
+			old_copy (other);
+			make (other.count);
 			data.copy (other.data)
 		ensure then
 			size_valid: count = other.count
@@ -104,7 +108,8 @@ invariant
 
 	data_not_equal_void: data /= Void
 
-end -- class packet
+end -- class PACKET
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.
@@ -118,4 +123,3 @@ end -- class packet
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
-

@@ -251,8 +251,8 @@ feature {NONE} -- Handle mouse clicks
 							end
 						end
 						invalidate_line (l_cursor.y_in_lines, False)
---					elseif quadruple_click_enabled and then click_count > 3 then
---						select_all						
+					elseif editor_preferences.quadruple_click_enabled and then click_count > 3 then
+						select_all						
 					else						
 						l_cursor.go_start_line
 						text_displayed.set_selection_cursor (l_cursor)

@@ -43,6 +43,20 @@ feature -- Element change
 			assigned: y_offset = a_y
 		end
 
+	set_offset (an_x, a_y: INTEGER) is
+			-- Assign `an_x' to `x_offset'.
+			-- Assign `a_y' to `y_offset'.
+		require
+			an_x_within_bounds: an_x >= 0
+			a_y_within_bounds: a_y >= 0
+		do
+			set_x_offset (an_x)
+			set_y_offset (a_y)
+		ensure
+			assigned: x_offset = an_x
+			assigned: y_offset = a_y
+		end
+
 end -- class EV_VIEWPORT_I
 
 --!-----------------------------------------------------------------------------
@@ -66,6 +80,9 @@ end -- class EV_VIEWPORT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/24 16:04:18  brendel
+--| Added set_offset.
+--|
 --| Revision 1.4  2000/04/21 22:01:56  brendel
 --| Complies with interface.
 --|

@@ -270,15 +270,6 @@ feature -- Event -- removing command association
 
 feature {EV_MESSAGE_DIALOG, EV_MESSAGE_DIALOG_I} -- Implementation
 
-	interface: EV_MESSAGE_DIALOG
-		-- Interface of the current implementation.
-
-	set_interface (an_interface: EV_MESSAGE_DIALOG) is
-			-- Make `an_interface' the new interface.
-		do
-			interface := an_interface
-		end
-
 	set_default (a_msg, a_title: STRING) is
 			-- Set default settings
 		deferred

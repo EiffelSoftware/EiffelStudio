@@ -36,10 +36,10 @@ link_mtwline='$compiler_path\bin\lib -OUT:$@ $(MT_WOBJECTS) $link_debug'
 #
 #
 optimize='-O2 -Ogityb2 -Gs'
-#optimize=''
 debug=''
-#debug='-Zi'
 link_debug=''
+#optimize=''
+#debug='-Zi'
 #link_debug='-DEBUGTYPE:BOTH'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
 #

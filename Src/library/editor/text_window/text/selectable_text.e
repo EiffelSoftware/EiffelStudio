@@ -99,7 +99,7 @@ feature -- Status report
 			-- Is there a selection?
 		do
 			if selection_cursor /= Void then
-				Result := internal_has_selection and then  not selection_cursor.is_equal (cursor)
+				Result := internal_has_selection and then not selection_cursor.is_equal (cursor)
 			end
 		end
 
@@ -245,9 +245,9 @@ feature -- Search
 				end
 				line_number := line_number + 1
 				if found_index > 0 then
-					full_found_index := full_found_index + found_index
+					full_found_index := full_found_index + found_index + 1
 				else
-					full_found_index := full_found_index + current_line.image.count
+					full_found_index := full_found_index + current_line.image.count + 1
 				end
 
 					-- Prepare next iteration.

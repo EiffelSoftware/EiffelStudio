@@ -100,12 +100,10 @@ feature -- Status setting
 			-- If `a_width' is greater than `width', assign `a_width' to `width'
 			-- update display if necessary.
 		do
-			widget.set_minimum_width (a_width)						
-			if width /= buffered_screen.width then
-				buffered_screen.set_size (a_width, margin_area.height)
-				update_buffered_screen (0, margin_area.height)								
-				update_display
-			end			
+			widget.set_minimum_width (a_width)
+			buffered_screen.set_size (a_width, margin_area.height)
+			update_buffered_screen (0, margin_area.height)												
+			update_display
 		end
 		
 	synchronize_with_text_panel (old_line: INTEGER)is
@@ -120,7 +118,7 @@ feature -- Status setting
 			if diff /= 0 then				
 				if diff.abs < text_panel.number_of_lines_displayed then
 					if diff < 0 then
-						y_offset := buffered_screen.height + diff * text_panel.line_height
+						y_offset := (buffered_screen.height + diff * text_panel.line_height).abs
 						create zone.make (0, 0, buffered_screen.width, y_offset)
 						buffered_screen.draw_sub_pixmap (0, - diff * text_panel.line_height, buffered_screen, zone)
 						update_buffered_screen (0, - diff * text_panel.line_height)
@@ -257,13 +255,13 @@ feature {TEXT_PANEL} -- Display functions
  			last_line_to_draw	: INTEGER
  			curr_y				: INTEGER
  		do
- 			if text_panel.display_margin then
+ 			if text_panel.line_numbers_visible then
 				buffered_screen.set_background_color (editor_preferences.margin_background_color)
 			else
 				buffered_screen.set_background_color (editor_preferences.normal_background_color)
 			end
 			buffered_screen.clear_rectangle (0, top, buffered_screen.width, bottom - top)
-			set_margin_width (width)
+--			set_margin_width (width)
 
  				-- Draw all lines
  			first_line_to_draw := (text_panel.first_line_displayed + top // text_panel.line_height ).max (1)
@@ -308,7 +306,6 @@ feature {TEXT_PANEL} -- Display functions
 			-- new size (`a_width', `a_height'). 
 			--| Note: This feature is called during the creation of the window
 		local
-			fld: INTEGER
 			old_height: INTEGER
 			w,h: INTEGER
 		do
@@ -317,24 +314,14 @@ feature {TEXT_PANEL} -- Display functions
 				in_resize := True				
 
 				if buffered_screen.width < a_width then
---					if in_resize then
-						w := width.max (a_width)
-						h := a_height.max (1)
---					else
---						w := margin_width.max (a_width).max (buffered_screen.width)
---						h := a_height.max (1).max (buffered_screen.height)
---					end
+					w := width.max (a_width)
+					h := a_height.max (1)
 					buffered_screen.set_size (w, h)
 					update_buffered_screen (0, h)
 				else
 					old_height := buffered_screen.height
---					if in_resize then
-						w := width.max (margin_area.width)
-						h := a_height.max (1)
---					else
---						w := editor_width.max (editor_area.width - left_margin_width).max (buffered_screen.width)
---						h := a_height.max (1).max (buffered_screen.height)
---					end
+					w := width.max (margin_area.width)
+					h := a_height.max (1)
 					buffered_screen.set_size (w, h)
 					if old_height < a_height then
 						update_buffered_screen (old_height - 1, h)
@@ -347,7 +334,6 @@ feature {TEXT_PANEL} -- Display functions
 	display_line (xline: INTEGER; a_line: EDITOR_LINE) is
  			-- Display `a_line' on the buffered screen.
  		local
--- 			bp_token			: EDITOR_TOKEN_BREAKPOINT
  			line_token			: EDITOR_TOKEN_LINE_NUMBER
  			curr_token			: EDITOR_TOKEN
  			curr_y, max_chars	: INTEGER
@@ -376,19 +362,12 @@ feature {TEXT_PANEL} -- Display functions
  				a_line.after or else not curr_token.is_margin_token
  			loop 						
 				if curr_token.is_margin_token then
---					bp_token ?= curr_token
---					if bp_token /= Void and then not hidden_breakpoints then						
---						bp_token.display (curr_y, buffered_screen, text_panel) 	
---					elseif bp_token /= Void then						
---						bp_token.hide
---					else
-						line_token ?= curr_token
-						if line_token /= Void and then line_numbers_visible then
-							line_token.display (curr_y, buffered_screen, text_panel) 	
-						elseif line_token /= Void then						
-							line_token.hide
-						end
---					end
+					line_token ?= curr_token
+					if line_token /= Void and then line_numbers_visible then
+						line_token.display (curr_y, buffered_screen, text_panel) 	
+					elseif line_token /= Void then						
+						line_token.hide
+					end
 				end
 				a_line.forth 				
 				curr_token := a_line.item

@@ -25,18 +25,15 @@ create
 
 feature -- Initialisation
 
-	make (text: STRING) is--; size_cell: CELL [INTEGER]) is
+	make (text: STRING) is
 		require
---| FIXME VB Failed: text_valid: text /= Void and then text.count > 0
-			no_eol_in_text: not text.has ('%N')
+--			no_eol_in_text: not text.has ('%N')
 		do
 			image := text
 			length := text.count
 			pos_in_text := -1
---			tab_size_cell := size_cell
 		ensure
 			image_not_void: image /= Void
---| FIXME VB Failed: length_positive: length > 0
 		end
 
 feature -- Miscellaneous
@@ -55,6 +52,7 @@ feature -- Miscellaneous
 			-- `n' characters of the current string.
 		local
 			i: INTEGER
+			l_string: STRING
 		do
 			if n = 0 then
 				Result := 0
@@ -62,29 +60,32 @@ feature -- Miscellaneous
 				if image.has ('%T') then
 					from
 						i := 1
+						create l_string.make_filled (' ', 1)
 					until
 						i > n or else i > image.count
 					loop
 						if image @ i = '%T' then
 							Result := ((((position + Result) // tabulation_width) + 1 ) * tabulation_width ) - position
 						else
-							Result := Result + font.string_width(image.item (i).out)
+							l_string.put (image.item (i), 1)
+							Result := Result + font.string_width (l_string)
 						end
 						i := i + 1 
 					end
 				else
-					Result := font.string_width(image.substring(1,n))
+					Result := font.string_width (image.substring (1, n.min (image.count)))
 				end
 			end
 		end
 
-	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local
 			current_position: INTEGER
 			current_width	: INTEGER
 			next_width	: INTEGER
+			l_count: INTEGER
 		do
 				-- precompute an estimation of the current_position
 			current_position := (a_width // font.width).min (length)
@@ -94,11 +95,15 @@ feature -- Miscellaneous
 			from
 				current_width := get_substring_width (current_position)
 				next_width := get_substring_width (current_position + 1)
+				l_count := image.count
 			until
-				a_width >= current_width and then a_width < next_width
+				(a_width >= current_width and then a_width < next_width) or current_position > l_count
 			loop
 				if a_width < current_width then
 					current_position := current_position - 1
+--					check
+--						current_position_positive: current_position > 0
+--					end
 					next_width := current_width
 					current_width := get_substring_width (current_position)
 				else
@@ -121,13 +126,6 @@ feature -- Miscellaneous
 				display_with_colors (d_y, gray_text_color , background_color, device)
 			end
 		end
-
---	display_grayed (d_y: INTEGER; device: EV_PIXMAP; panel: TEXT_PANEL) is
---			-- Display the current token on device context `dc'
---			-- at the coordinates (`position',`d_y')
---		do
---			display_with_colors (d_y, selected_text_color , gray_text_color, device)
---		end
 
 	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `device'

@@ -203,6 +203,27 @@ feature -- Element Change
 			current_line := line (i)
 		end
 
+	update_line (a_line: INTEGER) is
+			-- Update line tokens
+		require
+			line_index_valid: a_line > 0 and a_line <= number_of_lines
+		local
+			l_line: EDITOR_LINE
+			t: EDITOR_TOKEN
+		do			
+			l_line := line (a_line)			
+--			from
+--				t := l_line.first_token
+--			until
+--				t = l_line.eol_token
+--			loop				
+--				t.update_position
+--				t := t.next
+--			end
+			l_line.first_token.update_position		
+			l_line.set_width (l_line.eol_token.position)
+		end		
+
 feature -- Status report
 
 	is_empty: BOOLEAN is

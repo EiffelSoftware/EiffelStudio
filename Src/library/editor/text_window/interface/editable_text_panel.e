@@ -37,7 +37,9 @@ inherit
 			set_offset,
 			on_key_down,
 			left_margin_width,
-			on_key_up
+			on_key_up,
+			draw_cursor,
+			internal_draw_cursor
 		end
 	
 feature {NONE} -- Initialization
@@ -76,6 +78,8 @@ feature -- Access
 	  	do
 	  	  	Result := editor_preferences.blinking_cursor 
 	  	end		
+
+	copy_cut_cursor: TEXT_CURSOR
 
 feature -- Content change
 
@@ -117,7 +121,6 @@ feature -- Text status report
 	is_editable: BOOLEAN is
 			-- Is the text editable?
 		do
-			print ("is_editable called, status now:" + text_displayed.text_being_processed.out + "%N")
 			Result := allow_edition and then not text_displayed.text_being_processed and then not open_backup
 		end
 
@@ -399,14 +402,6 @@ feature {NONE} -- Handle keystokes
 				else
 					display_not_editable_warning_message
 				end
---			when key_period then
---				if not shifted_key then
---					if is_editable then
---						handle_character ('.')
---					else
---						display_not_editable_warning_message
---					end
---				end
 			else
 				Precursor (ev_key)
 			end
@@ -483,6 +478,56 @@ feature -- Text status report
 			not_empty: not is_empty
 		do
 			Result := text_displayed.cursor.y_in_lines
+		end
+
+	 draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
+			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.		
+		local
+			width_cursor: INTEGER
+			l_cursor: TEXT_CURSOR
+		do
+			l_cursor := text_displayed.cursor
+			
+				-- Compute the width of the current character (used to display plain cursor)
+			width_cursor := l_cursor.token.get_substring_width (l_cursor.pos_in_token) - l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
+			width_cursor := width_cursor.max (cursor_width)
+					
+						-- Draw the cursor
+			if overwrite_mode then
+				Precursor (buffered_screen, x, y, width_cursor)
+    		else
+    			Precursor (buffered_screen, x, y, width)
+			end			
+ 		end
+
+	draw_copy_cut_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
+			-- Draw the copy cut cursor block defined by the rectangle associated with the copy_cut_cursor at `y' and on `media'.		
+		require
+			copy_cut_cursor_not_void: copy_cut_cursor /= Void
+		local
+			width_cursor: INTEGER
+		do			
+				-- Compute the width of the current character (used to display plain cursor)
+			width_cursor := copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token) - copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token - 1)
+			width_cursor := width_cursor.max (cursor_width)
+					
+			media.set_xor_mode
+			media.set_foreground_color (editor_preferences.plain_gray)
+			media.fill_rectangle (x, y, width, line_height)
+			media.set_copy_mode
+ 		end
+
+	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN) is
+			-- Internal cursor drawing.  Draws cursor on `media' at position `x' and `y'.
+		do		
+			if not mouse_copy_cut then
+				Precursor (media, x, y, width_cursor, ln_height, do_show)
+			else
+				media.set_xor_mode
+				media.set_foreground_color (editor_preferences.plain_gray)
+				media.fill_rectangle (x, y, width_cursor, ln_height)			
+				media.set_copy_mode	
+			end					
 		end
 
 feature -- Edition Operations on text
@@ -619,7 +664,7 @@ feature -- Edition Operations on text
 				if open_backup then
 					show_warning_message ("Backup_file_not_editable")
 				elseif not allow_edition then
-					if not_editable_warning_message = Void or else not_editable_warning_message.is_empty then
+					if not_editable_warning_message /= Void and not not_editable_warning_message.is_empty then
 						wm := not_editable_warning_message
 					end	
 					show_warning_message (wm)
@@ -696,40 +741,44 @@ feature {NONE} -- Mouse copy cut
 	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
 		local
 			x_cur, y_cur: INTEGER
-			tok: EDITOR_TOKEN
-			copy_cut_cursor: TEXT_CURSOR		
+			tok: EDITOR_TOKEN					
 		do
 			if mouse_left_button_down and then mouse_copy_cut then
-				x_cur := (a_screen_x - editor_x + offset - left_margin_width).min (editor_width).max (1)
+					-- Position the temporary copy/cut cursor at the best location based on mouse co-ordinates
+				wipe_copy_cut_cursor_out
+				x_cur := (a_screen_x - editor_x + offset - left_margin_width).min (editor_width).max (1)				
 				y_cur := (a_screen_y - editor_y).min (editor_area.height).max (1)
 				create copy_cut_cursor.make_from_integer (1, text_displayed)
 				position_cursor (copy_cut_cursor, x_cur, y_cur)
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
-				if not cursor_is_in_selection (copy_cut_cursor) then
+				if not cursor_is_in_selection (copy_cut_cursor) then						
 					tok := copy_cut_cursor.token
-					x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token - 1) +left_margin_width
+					if prev_x_cur > 0 and prev_x_cur > x_cur then
+						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token) + left_margin_width
+					else
+						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token - 1) + left_margin_width	
+					end					
 					y_cur := copy_cut_cursor.y_in_lines
 					if prev_x_cur /= x_cur or else prev_y_cur /= y_cur then
 						if prev_x_cur /= 0 or else prev_y_cur /= 0 then
-							if position_is_displayed (prev_x_cur, prev_y_cur) then
-								wipe_cursor_out
-							end
+--							if position_is_displayed (prev_x_cur, prev_y_cur) then
+--								wipe_cursor_out
+--							end
 							prev_x_cur := 0
 							prev_y_cur := 0
 						end
 						if position_is_displayed (x_cur, y_cur) then
 							prev_x_cur := x_cur
 							prev_y_cur := y_cur
---							draw_cursor (editor_area, x_cur - offset, (y_cur - first_line_displayed) * line_height, cursor_width, line_height, False)
-							draw_cursor (editor_area, (y_cur - first_line_displayed) * line_height)
+							draw_copy_cut_cursor (editor_area, x_cur - offset, (y_cur - first_line_displayed) * line_height, cursor_width)
 						end
 					end
 				elseif prev_x_cur /= 0 or else prev_y_cur /= 0 then
-					if position_is_displayed (prev_x_cur, prev_y_cur) then
-						wipe_cursor_out
-					end
+--					if position_is_displayed (prev_x_cur, prev_y_cur) then
+--						wipe_cursor_out
+--					end
 					prev_x_cur := 0
-					prev_y_cur := 0				
+					prev_y_cur := 0
 				end
 			elseif not forget_mouse_moves then
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
@@ -746,7 +795,7 @@ feature {NONE} -- Mouse copy cut
 				autoscroll.set_interval (0)
 			end
 			check_cursor_position
-			wipe_cursor_out
+			wipe_copy_cut_cursor_out
 		end
 
 	lose_focus is
@@ -784,10 +833,8 @@ feature {NONE} -- Mouse copy cut
 		do
 			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
 				if position_is_displayed (prev_x_cur, prev_y_cur) and then prev_y_cur < first_line_displayed + number_of_lines_displayed then
-					wipe_cursor_out
+					wipe_copy_cut_cursor_out
 				end
-				prev_x_cur := 0
-				prev_y_cur := 0
 			end
 			Precursor (fld, refresh_if_necessary)
 		end
@@ -797,28 +844,30 @@ feature {NONE} -- Mouse copy cut
 		do
 			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
 				if position_is_displayed (prev_x_cur, prev_y_cur) and then prev_y_cur < first_line_displayed + number_of_lines_displayed then
-					wipe_cursor_out
+					wipe_copy_cut_cursor_out
+				else
+					prev_x_cur := 0
+					prev_y_cur := 0
 				end
-				prev_x_cur := 0
-				prev_y_cur := 0
 			end
 			Precursor (an_offset)
 		end
 		
-	wipe_cursor_out is
+	wipe_copy_cut_cursor_out is
 			-- Wipe copy cut cursor out from then editor.
 		local
-			zone: EV_RECTANGLE
 			x_p, y_p: INTEGER
 		do
 			y_p := (prev_y_cur - first_line_displayed) * line_height
-			if y_p >= 0 and then y_p < editor_area.height then
-					-- wipe the cursor out if it is at a position that is still on screen.
+			if y_p >= 0 and then y_p < editor_area.height then				
+					-- Wipe the cursor out if it is at a position that is still on screen.
 				x_p := prev_x_cur - offset
-				create zone.make (x_p - left_margin_width + offset, y_p, cursor_width, line_height) --x_p + cursor_width - left_margin_width, y_p + line_height)
---				editor_area.draw_sub_pixmap (x_p, y_p, buffered_screen, zone)
+				editor_area.redraw_rectangle (x_p, y_p, cursor_width, line_height)
 				editor_area.flush
 			end
+			prev_x_cur := 0
+			prev_y_cur := 0
+			copy_cut_cursor := Void
 		end
 		
 	on_key_down (ev_key: EV_KEY)is
@@ -861,80 +910,6 @@ feature {NONE} -- Mouse copy cut
 		
 feature {NONE} -- Text Loading
 
---	load_file (a_file_name: FILE_NAME) is
---			-- Load file named `a_file_name' in the editor.
---		local
---			test_file, test_file_2: RAW_FILE
---		do
---				-- Reset the editor state
---			reset
---
---			load_file_error := False
---			create file_name.make_from_string (a_file_name)
---			create test_file.make (a_file_name)
---			file_name.add_extension ("swp")
---			create test_file_2.make (file_name)
---			if test_file_2.exists 
---					and then
---				test_file_2.is_readable
---					and then
---				((not test_file.exists) or else test_file.date < test_file_2.date)
---			then
---				ask_if_opens_backup
---				if not open_backup then
---					test_file_2.delete
---					file_name := a_file_name
---				end
---				load_chosen_file
---			else
---				file_name := a_file_name
---				create test_file.make (file_name)
---				if test_file.exists and then test_file.is_readable then
---					load_chosen_file
---				else
---					load_file_error := True
---				end
---			end
---		end
-
---	load_chosen_file is
---			-- Load file named `file_name' in the editor.
---		local
---			retried: BOOLEAN
---			text_to_load: STRING
---			fl: RAW_FILE
---		do
---			if retried then
---				load_file_error := True
---			else
---				editor_area.disable_sensitive
---
---					-- read the file
---				create fl.make_open_read (file_name)
---				date_of_file_when_loaded := fl.date
---				fl.read_stream (fl.count)
---				text_to_load := fl.last_string
---				fl.close
---
---				is_unix_file := text_to_load.substring_index ("%R%N", 1) = 0
---				if not is_unix_file then
---					text_to_load.replace_substring_all ("%R%N", "%N")
---				end
---
---					-- Read and parse the file.
---				text_displayed.set_first_read_block_size (number_of_lines_displayed)
---				text_displayed.load_string (text_to_load)
---	
---					-- Setup the editor (scrollbar, ...)
---				setup_editor
---				editor_area.enable_sensitive
---
---			end
---		rescue
---			retried := True
---			retry
---		end
-
 	reset is
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
@@ -951,6 +926,7 @@ feature {NONE} -- Text Loading
 			if open_backup then
 				text_observer_manager.set_changed (True, True)
 			end
+			enable_editable
 		end
 
 feature {NONE} -- retrieving backup
@@ -968,16 +944,6 @@ feature {NONE} -- retrieving backup
 		end
 
 feature {NONE} -- Implementation
-
---	scrolling_quantum: INTEGER is
---			-- Number of lines to scroll per mouse wheel scroll increment.
---		do
---			if Editor_preferences.mouse_wheel_scroll_full_page then
---				Result := number_of_lines_displayed - 2
---			else
---				Result := Editor_preferences.mouse_wheel_scroll_size
---			end
---		end
 
 	maximum_top_line_index: INTEGER is
 			-- Number of the last possible line that can be displayed
@@ -999,33 +965,6 @@ feature {NONE} -- Implementation
 				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
 		end 
-
---	normal_background_color: EV_COLOR is
---			-- Default color for editor background.
---		do
---			Result := Editor_preferences.normal_background_color
---		end
-
---	quadruple_click_enabled: BOOLEAN is
---			-- Should a quadruple click result in the selection of the entire text?
---		do
---			Result := Editor_preferences.quadruple_click_enabled
---		end
-
---	internal_reference_window: EV_WINDOW
-			-- Window which dialogs will be shown relative to.
-			
---	draw_cursor (media: EV_DRAWABLE; y: INTEGER) is
---			-- Draw the cursor block defined by the rectangle
---			-- (`x1',`y1')- (`x1' + `width_cursor',`y1' + `ln_height') on `media'.
---			-- The cursor is black if `in_black', gray otherwise.
---		do		
---			if overwrite_mode then
---				Precursor (media, y)
---			else
---				Precursor (media, y)
---			end
---		end
 
 feature -- Clipboard
 

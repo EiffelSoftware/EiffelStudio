@@ -56,8 +56,6 @@ feature {NONE} -- Process Vision2 events
 
 				if abs_x_pos >= 0 and then y_pos > 0 and then y_pos <= editor_area.height then
 					x_pos := abs_x_pos + offset 
---					if x_pos <= margin_area.width then
---						on_click_in_margin (x_pos, y_pos, button, a_screen_x, a_screen_y)
 					if abs_x_pos <= editor_area.width then
 						on_click_in_text (x_pos - left_margin_width, y_pos, button, a_screen_x, a_screen_y)
 					end
@@ -111,16 +109,6 @@ feature {NONE} -- Process Vision2 events
 			queue_mouse_up (button)
 		end
 
---	lose_focus is
---			-- Update the panel as it has just lost the focus.
---		do
---			show_cursor := False
---			invalidate_cursor_rect (True)
---			if blinking_timeout /= Void then
---				blinking_timeout.set_interval (0)
---			end
---		end
-
 feature {NONE} -- Scroll Management
 
 	scroll is
@@ -170,11 +158,24 @@ feature {NONE} -- Handle mouse clicks
 				mouse_right_button_down := False
 				l_number := (y_pos // line_height) + first_line_displayed
 				if (click_count \\ 2) /= 1 then
-					if shifted_key and then (not text_displayed.has_selection) then
-							-- No selection? We have to start one.						
-						text_displayed.set_selection_cursor (text_displayed.cursor.twin)
-						text_displayed.enable_selection
-						old_l_number := text_displayed.cursor.y_in_lines
+					if shifted_key then
+						if not text_displayed.has_selection then
+								-- No selection? We have to start one.						
+							text_displayed.set_selection_cursor (text_displayed.cursor.twin)
+							text_displayed.enable_selection
+							old_l_number := text_displayed.cursor.y_in_lines
+						else
+							if l_number < first_line_displayed then
+									-- We are going up
+								if text_displayed.selection_start > text_displayed.selection_end then								
+									old_l_number := text_displayed.selection_start.y_in_lines
+								else								
+									old_l_number :=	text_displayed.selection_end.y_in_lines
+								end
+							else
+								old_l_number := text_displayed.cursor.y_in_lines
+							end
+						end
 					end
 					process_left_click (x_pos.max (1), y_pos, a_screen_x, a_screen_y)
 					if shifted_key then
@@ -301,11 +302,7 @@ feature {NONE} -- Handle mouse clicks
 					l_cursor := text_displayed.cursor
 					if l_cursor.token /= Void then
 						l_num := l_cursor.y_in_lines
---						if cursor.token = cursor.line.real_first_token then
---							cursor.make_from_character_pos (1, l_num, text_displayed)
---						else
-							l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
---						end
+						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
 						invalidate_line (l_num, False)
 						invalidate_line (l_cursor.y_in_lines, True)
 						if l_click_count < 4 then			
@@ -448,8 +445,10 @@ feature {NONE} -- Handle mouse clicks
 			l_number := ((y_pos // line_height) + first_line_displayed)
 
 			if click_count = 1 and then not mouse_left_button_down then
+			
 				text_displayed.disable_selection
 			elseif click_count = 2 then
+			
 					-- movement after double click : word by word selection
 				create cur.make_from_integer (1, text_displayed)
 				position_cursor (cur, x_pos, y_pos)
@@ -518,6 +517,7 @@ feature {NONE} -- Handle mouse clicks
 				end
 				l_number := l_cursor.y_in_lines
 			elseif click_count = 3 then
+			
 					-- movement after double click : line by line selection
 				i := l_cursor.y_in_lines
 				if selection_cursor <= l_cursor then
@@ -548,12 +548,14 @@ feature {NONE} -- Handle mouse clicks
 					end
 				end
 			else
+			
 				position_cursor (l_cursor, x_pos, y_pos)
 			end
 
 			if text_displayed.has_selection and then l_cursor.is_equal (selection_cursor) then
 					-- Forget selection if nothing is selected.
 				text_displayed.disable_selection
+				
 			end
 
 			if l_number /= former_pointed_line then
@@ -571,6 +573,7 @@ feature {NONE} -- Handle mouse clicks
 				invalidate_line (l_number,true)
 				former_pointed_char := l_cursor.x_in_characters
 			end
+			
 		end
 
 feature {NONE} -- Private Characteristics of the window

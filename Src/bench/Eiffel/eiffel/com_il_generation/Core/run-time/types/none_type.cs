@@ -8,7 +8,7 @@ indexing
 using System;
 namespace ISE.Runtime {
 
-public class ANCHORED_TYPE: TYPE {
+public class NONE_TYPE: TYPE {
 }
 
 }

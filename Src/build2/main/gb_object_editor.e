@@ -258,6 +258,8 @@ feature -- Status setting
 	editor_item_by_type (a_type: STRING): GB_OBJECT_EDITOR_ITEM is
 			-- `Result' is editor item of type `a_type', contained
 			-- in `Current'. Void if none exists.
+		require
+			type_starts_ev: a_type.count > 3 and a_type.substring (1, 3).is_equal ("EV_")
 		local
 			editor_item: GB_OBJECT_EDITOR_ITEM
 		do
@@ -267,7 +269,7 @@ feature -- Status setting
 				item_parent.off or Result /= Void
 			loop
 				editor_item ?= item_parent.item
-				if editor_item /= Void then
+				if editor_item /= Void and (editor_item.type_represented).is_equal (a_type) then
 					Result := editor_item
 				end
 				item_parent.forth

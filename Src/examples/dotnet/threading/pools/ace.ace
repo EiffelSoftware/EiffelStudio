@@ -44,7 +44,7 @@ external
 
 	object:
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
  		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
  		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 

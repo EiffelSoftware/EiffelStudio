@@ -153,10 +153,12 @@ feature {NONE}-- Initialization
 			check_all_button.set_tooltip ("Check all items, for inclusion as new pixmap constants")
 			uncheck_all_button.set_text ("Uncheck all")
 			uncheck_all_button.set_tooltip ("Uncheck all items")
+			l_ev_horizontal_box_6.set_padding_width (large_padding)
 			l_ev_horizontal_box_6.disable_item_expand (pixmap_location_label)
 			pixmap_location_label.disable_sensitive
-			pixmap_location_label.set_text ("Pixmap location")
+			pixmap_location_label.set_text ("Pixmap location:")
 			pixmap_location_label.align_text_left
+			pixmap_path_label.align_text_left
 			built_from_frame.disable_sensitive
 			built_from_frame.set_text ("Built from")
 			l_ev_vertical_box_4.set_padding_width (5)

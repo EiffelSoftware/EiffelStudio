@@ -15,9 +15,6 @@ inherit
 	EV_MENU_ITEM_CONTAINER_IMP
 
 	WEL_MENU
-		rename
-			make as wel_make
-		end
 
 creation
 	make,
@@ -25,21 +22,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_CONTAINER) is
-			-- Create an empty menu.
-		do
-			make_with_text (par, "")
-		end
-
-	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is
+	make_with_text (label: STRING) is
 			-- Create an empty menu with `label' as label. 
 		do
-			wel_make
-			parent ?= par.implementation
-			check
-				valid_container: parent /= Void
-			end
-			ev_children := parent.ev_children
+			make
 			set_text (label)
 		end	
 
@@ -76,12 +62,26 @@ feature -- Element change
 			text := str
 		end
 
+	set_parent (par: EV_MENU_CONTAINER) is
+			-- Make `par' the new parent of the item.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_menu (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				ev_children := parent_imp.ev_children
+				parent_imp.add_menu (Current)
+			end
+		end
+
 feature -- Event association
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
 		do
-			parent.on_selection_changed (sitem)
+			parent_imp.on_selection_changed (sitem)
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -92,7 +92,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			Result := Current
 		end
 
-	parent: EV_MENU_CONTAINER_IMP
+	parent_imp: EV_MENU_CONTAINER_IMP
 			-- EV parent of the current menu
 
 end -- class EV_MENU_IMP

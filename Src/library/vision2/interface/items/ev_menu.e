@@ -25,18 +25,18 @@ feature {NONE} -- Initialization
 	make (par: EV_MENU_CONTAINER) is
 			-- Create an empty menu.
 		do
-			!EV_MENU_IMP!implementation.make (par)
+			!EV_MENU_IMP!implementation.make
 			implementation.set_interface (Current)
-			par.implementation.add_menu (Current)
+			set_parent (par)
 		end
 
 	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is         
 			-- Create a menu widget with `par' as
 			-- parent
 		do
-			!EV_MENU_IMP!implementation.make_with_text (par, label)
+			!EV_MENU_IMP!implementation.make_with_text (label)
 			implementation.set_interface (Current)
-			par.implementation.add_menu (Current)
+			set_parent (par)
 		end	
 
 feature -- Access
@@ -47,6 +47,16 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.text
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_MENU_CONTAINER) is
+			-- Make `par' the new parent of the item.
+		require
+			exists: not destroyed
+		do
+			implementation.set_parent (par)
 		end
 
 feature -- Implementation

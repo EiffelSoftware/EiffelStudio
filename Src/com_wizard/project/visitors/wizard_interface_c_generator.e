@@ -28,12 +28,14 @@ feature -- Access
 			create func_generator
 
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
+			cpp_class_writer.set_namespace (a_descriptor.namespace)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.name, a_descriptor.guid))
 
 			if a_descriptor.inherited_interface /= Void then
-				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name, Public)
+				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name, 
+						a_descriptor.inherited_interface.namespace, Public)
 				if 
 					a_descriptor.inherited_interface.c_header_file_name /= Void and then
 					not a_descriptor.inherited_interface.c_header_file_name.empty

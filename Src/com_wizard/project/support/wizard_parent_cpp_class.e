@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; an_export_status: INTEGER) is
+	make (a_name: STRING; a_namespace: STRING; an_export_status: INTEGER) is
 			-- Initialize
 		require
 			non_void_name: a_name /= Void
@@ -23,6 +23,7 @@ feature -- Initialization
 			valid_export_status: is_valid_export_status (an_export_status)
 		do
 			name := clone (a_name)
+			namespace := clone (a_namespace)
 			export_status := an_export_status
 		ensure
 			non_void_name: name /= Void
@@ -34,6 +35,9 @@ feature -- Access
 
 	name: STRING
 			-- Name of parent.
+
+	namespace: STRING 
+			-- Namespace of parent
 
 	export_status: INTEGER
 			-- Export status.

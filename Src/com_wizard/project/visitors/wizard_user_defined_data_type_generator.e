@@ -59,7 +59,9 @@ feature -- Processing
 			a_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			a_type_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			c_type := clone (alias_descriptor.c_type_name)
+			create c_type.make (100)
+			c_type.append (alias_descriptor.c_type_name)
+			
 			create c_post_type.make (100)
 			c_header_file := clone (alias_descriptor.c_header_file_name)
 			eiffel_type := clone (alias_descriptor.eiffel_class_name)
@@ -155,7 +157,16 @@ feature -- Processing
 			else
 				vt_type := Vt_unknown
 			end
-			c_type := clone (coclass_descriptor.default_interface_descriptor.c_type_name)
+			
+			create c_type.make (100)
+			if 
+				coclass_descriptor.default_interface_descriptor.namespace /= Void and then
+				not coclass_descriptor.default_interface_descriptor.namespace.empty
+			then
+			c_type.append (coclass_descriptor.default_interface_descriptor.namespace + "::")
+			end
+			c_type.append (coclass_descriptor.default_interface_descriptor.c_type_name)
+			
 			create c_post_type.make (100)
 			c_header_file := clone (coclass_descriptor.default_interface_descriptor.c_header_file_name)
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
@@ -200,7 +211,12 @@ feature -- Processing
 	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- process interface
 		do
-			c_type := clone (interface_descriptor.c_type_name)
+			create c_type.make (100)
+			if interface_descriptor.namespace /= Void and then not interface_descriptor.namespace.empty then
+				c_type.append (interface_descriptor.namespace + "::")
+			end
+			c_type.append (interface_descriptor.c_type_name)
+			
 			create c_post_type.make (0)
 			c_header_file := clone (interface_descriptor.c_header_file_name)
 			eiffel_type := clone (interface_descriptor.eiffel_class_name)
@@ -239,6 +255,13 @@ feature -- Processing
 				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 			else
+				if 
+					interface_descriptor.namespace /= Void and then
+					not interface_descriptor.namespace.empty
+				then
+					c_type.prepend ("::")
+					c_type.prepend (interface_descriptor.namespace)
+				end
 				if 
 					interface_descriptor.inherit_from_dispatch or
 					interface_descriptor.dual or 
@@ -295,7 +318,12 @@ feature -- Processing
 			-- process structure
 		do
 			vt_type := Vt_record
-			c_type := clone (record_descriptor.c_type_name)
+			create c_type.make (100)
+			if record_descriptor.namespace /= Void and then not record_descriptor.namespace.empty then
+				c_type.append (record_descriptor.namespace + "::")
+			end
+			c_type.append (record_descriptor.c_type_name)
+			
 			create c_post_type.make (100)
 			c_header_file := clone (record_descriptor.c_header_file_name)
 			eiffel_type := clone (record_descriptor.eiffel_class_name)

@@ -28,10 +28,9 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c client for record.
 		local
-			struct_def, forward_def, a_mapper_include: STRING
+			struct_def, forward_def: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
-			a_windows_structure: WIZARD_WINDOWS_STRUCTURE
 		do
 			create c_writer.make
 			create c_writer_impl.make
@@ -46,22 +45,29 @@ feature -- Access
 			end
 
 			create forward_def.make (100)
-			if windows_structures.has (a_descriptor.c_type_name) then
-				a_windows_structure := windows_structures.item (a_descriptor.c_type_name)
-				forward_def.append (Hash_if_ndef)
-				forward_def.append (Space)
-				forward_def.append (a_windows_structure.file_protector)
-				forward_def.append (New_line)
-				if 
-					a_windows_structure.structure_protector /= Void and then 
-					not a_windows_structure.structure_protector.empty
-				then
-					forward_def.append (Hash_if_ndef)
-					forward_def.append (Space)
-					forward_def.append (a_windows_structure.structure_protector)
-					forward_def.append (New_line)
-				end
-			end
+			
+			forward_def.append ("namespace ")
+			forward_def.append (a_descriptor.namespace)
+			forward_def.append (New_line)
+			forward_def.append (Open_curly_brace)
+			forward_def.append (New_line)
+			
+--			if windows_structures.has (a_descriptor.c_type_name) then
+--				a_windows_structure := windows_structures.item (a_descriptor.c_type_name)
+--				forward_def.append (Hash_if_ndef)
+--				forward_def.append (Space)
+--				forward_def.append (a_windows_structure.file_protector)
+--				forward_def.append (New_line)
+--				if 
+--					a_windows_structure.structure_protector /= Void and then 
+--					not a_windows_structure.structure_protector.empty
+--				then
+--					forward_def.append (Hash_if_ndef)
+--					forward_def.append (Space)
+--					forward_def.append (a_windows_structure.structure_protector)
+--					forward_def.append (New_line)
+--				end
+--			end
 			forward_def.append (typedef)
 			forward_def.append (Space)
 			if a_descriptor.is_union then
@@ -75,39 +81,48 @@ feature -- Access
 			forward_def.append (Space)
 			forward_def.append (a_descriptor.c_type_name)
 			forward_def.append (Semicolon)
-			if a_windows_structure /= Void then
-				forward_def.append (New_line)
-				forward_def.append (Hash_end_if)
-				if 
-					a_windows_structure.structure_protector /= Void and then 
-					not a_windows_structure.structure_protector.empty
-				then
-					forward_def.append (New_line)
-					forward_def.append (Hash_end_if)
-				end
-			end
+--			if a_windows_structure /= Void then
+--				forward_def.append (New_line)
+--				forward_def.append (Hash_end_if)
+--				if 
+--					a_windows_structure.structure_protector /= Void and then 
+--					not a_windows_structure.structure_protector.empty
+--				then
+--					forward_def.append (New_line)
+--					forward_def.append (Hash_end_if)
+--				end
+--			end
+			forward_def.append (New_line)
+			forward_def.append (Close_curly_brace)
 			c_writer.add_other_forward (forward_def)
 
 			create struct_def.make (1000)
-			if a_windows_structure /= Void then
-				struct_def.append (Hash_if_ndef)
-				struct_def.append (Space)
-				struct_def.append (a_windows_structure.file_protector)
-				struct_def.append (New_line)
-				if 
-					a_windows_structure.structure_protector /= Void and then 
-					not a_windows_structure.structure_protector.empty
-				then
-					struct_def.append (Hash_if_ndef)
-					struct_def.append (Space)
-					struct_def.append (a_windows_structure.structure_protector)
-					struct_def.append (New_line)
-					struct_def.append (Hash_define)
-					struct_def.append (Space)
-					struct_def.append (a_windows_structure.structure_protector)
-					struct_def.append (New_line)
-				end
-			end
+			
+			struct_def.append ("namespace ")
+			struct_def.append (a_descriptor.namespace)
+			struct_def.append (New_line)
+			struct_def.append (Open_curly_brace)
+			struct_def.append (New_line)
+
+--			if a_windows_structure /= Void then
+--				struct_def.append (Hash_if_ndef)
+--				struct_def.append (Space)
+--				struct_def.append (a_windows_structure.file_protector)
+--				struct_def.append (New_line)
+--				if 
+--					a_windows_structure.structure_protector /= Void and then 
+--					not a_windows_structure.structure_protector.empty
+--				then
+--					struct_def.append (Hash_if_ndef)
+--					struct_def.append (Space)
+--					struct_def.append (a_windows_structure.structure_protector)
+--					struct_def.append (New_line)
+--					struct_def.append (Hash_define)
+--					struct_def.append (Space)
+--					struct_def.append (a_windows_structure.structure_protector)
+--					struct_def.append (New_line)
+--				end
+--			end
 
 			if a_descriptor.is_union then
 				struct_def.append (Union)
@@ -142,17 +157,19 @@ feature -- Access
 			end
 			struct_def.append (Close_curly_brace)
 			struct_def.append (Semicolon)
-			if windows_structures.has (a_descriptor.c_type_name) then
-				struct_def.append (New_line)
-				struct_def.append (Hash_end_if)
-				if 
-					a_windows_structure.structure_protector /= Void and then 
-					not a_windows_structure.structure_protector.empty
-				then
-					struct_def.append (New_line)
-					struct_def.append (Hash_end_if)
-				end
-			end
+--			if windows_structures.has (a_descriptor.c_type_name) then
+--				struct_def.append (New_line)
+--				struct_def.append (Hash_end_if)
+--				if 
+--					a_windows_structure.structure_protector /= Void and then 
+--					not a_windows_structure.structure_protector.empty
+--				then
+--					struct_def.append (New_line)
+--					struct_def.append (Hash_end_if)
+--				end
+--			end
+			struct_def.append (New_line)
+			struct_def.append (Close_curly_brace)
 
 			c_writer.add_other (struct_def)
 
@@ -187,12 +204,14 @@ feature {NONE} -- Implementation
 			non_void_record_descriptor: a_record_descriptor /= Void
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
-			macro_name: STRING
+			macro_name, c_type: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			macro_name := macro_accesser_name (a_record_descriptor.name, a_field_descriptor)
 
 			a_data_visitor := a_field_descriptor.data_type.visitor 
+
+			c_type := (a_record_descriptor.namespace + "::" + a_record_descriptor.c_type_name)
 
 			create Result.make (1000)
 			Result.append (Sharp)
@@ -214,7 +233,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (a_record_descriptor.c_type_name)
+				Result.append (c_type)
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Close_parenthesis)
@@ -230,7 +249,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (a_record_descriptor.c_type_name)
+				Result.append (c_type)
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Close_parenthesis)
@@ -264,7 +283,7 @@ feature {NONE} -- Implementation
 
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (a_record_descriptor.c_type_name)
+				Result.append (c_type)
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Close_parenthesis)
@@ -294,13 +313,14 @@ feature {NONE} -- Implementation
 			non_void_record_descriptor: a_record_descriptor /= Void
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
-			macro_name: STRING
+			macro_name, c_type: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 			i, array_count: INTEGER
 		do
 			macro_name := macro_setter_name (a_record_descriptor.name, a_field_descriptor)
 			a_data_visitor := a_field_descriptor.data_type.visitor 
+			c_type := (a_record_descriptor.namespace + "::" + a_record_descriptor.c_type_name)
 
 			create Result.make (1000)
 			Result.append (Sharp)
@@ -338,7 +358,7 @@ feature {NONE} -- Implementation
 					Result.append (Open_parenthesis)
 					Result.append (Open_parenthesis)
 					Result.append (Open_parenthesis)
-					Result.append (a_record_descriptor.c_type_name)
+					Result.append (c_type)
 					Result.append (Space)
 					Result.append (Asterisk)
 					Result.append (Close_parenthesis)
@@ -382,7 +402,7 @@ feature {NONE} -- Implementation
 					Result.append (Comma_space)
 					Result.append (Ampersand)
 					Result.append (Open_parenthesis)
-					Result.append (a_record_descriptor.c_type_name)
+					Result.append (c_type)
 					Result.append (Space)
 					Result.append (Asterisk)
 					Result.append (Close_parenthesis)
@@ -400,7 +420,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (a_record_descriptor.c_type_name)
+				Result.append (c_type)
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Close_parenthesis)
@@ -427,7 +447,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (a_record_descriptor.c_type_name)
+				Result.append (c_type)
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Close_parenthesis)

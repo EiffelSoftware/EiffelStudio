@@ -137,7 +137,7 @@ feature -- Duplication
 			i, j: INTEGER
 		do
 			from
-				!!temp.make (1, n);
+				!! temp.make (1, n);
 				i := 1;
 			until
 				i <= n
@@ -157,7 +157,7 @@ feature -- Duplication
 				j := j - 1;
 			end;
 			from
-				Result.make (n);
+				!! Result.make (n);
 				i := 1;
 			until
 				i > n

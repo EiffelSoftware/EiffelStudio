@@ -8,7 +8,13 @@ class
 
 inherit
 	EV_APPLICATION
-
+	
+	SHARED_OBJECTS
+		undefine
+			default_create,
+			copy
+		end
+	
 create
 	make_and_launch 
 
@@ -21,15 +27,24 @@ feature {NONE} -- Initialization
 			thread: SYSTEM_THREAD
 			l_args: ARGUMENTS_PARSER
 		do	
-			initialize_temp_directories
+			debug ("trace")
+				print ("system launched%N")
+			end
+			initialize_temp_directories		
 			create l_args.make
 			if l_args.is_gui then
+				debug ("trace")
+					print ("in gui mode%N")
+				end
 				create thread_start.make (Current, $make_gui)
 				create thread.make (thread_start)
 				thread.set_apartment_state (feature {APARTMENT_STATE}.sta)
 				thread.start
 				thread.join
-			elseif l_args.args_ok then				
+			elseif l_args.args_ok then
+				debug ("trace")
+					print ("in command line mode%N")
+				end
 				l_args.launch_command_line
 			else
 				io.put_string (l_args.argument_error)
@@ -47,30 +62,38 @@ feature {NONE} -- Initialization
 				default_create
 					-- create and initialize the first window.
 				prepare
-				launch			
-			else
-				is_launched := False
-				post_launch_actions.wipe_out
-				post_launch_actions.extend (agent show_exception_dialog)
-				launch
+				if interface_initialized then					
+					launch
+				end	
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	prepare is
 			-- Prepare the interface window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
+		local
+			retried: BOOLEAN
 		do
-			create interface
-			interface.Shared_constants.Application_constants.set_gui_mode (True)
-			interface.show
+			if not retried then	
+				debug ("trace")
+					print ("preparing interface for launching%N")
+				end
+				setup_preferences
+				create interface
+				interface_initialized := True
+				interface.Shared_constants.Application_constants.set_gui_mode (True)
+				interface.show
+			else
+				interface_initialized := False
+			end
 		end
 		
 	interface: DOC_BUILDER_WINDOW
 			-- Application window
+			
+	interface_initialized: BOOLEAN
+			-- Has the interface been correctly initialized?
 
 	initialize_temp_directories is
 		-- Initialize directory for storage of temporary information.  Currently this is a directory
@@ -125,5 +148,11 @@ feature {NONE} -- Initialization
 			l_dialog.set_exception_trace (l_exceptions.exception_trace)
 			l_dialog.show_modal_to_window (interface)
 		end
+
+	setup_preferences is
+			-- Initialize preference library						
+		do
+			shared_preferences.initialize
+		end			
 
 end -- class DOC_BUILDER

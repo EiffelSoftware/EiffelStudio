@@ -445,14 +445,21 @@ feature -- Basic operation
 			-- change an attribute.
 		local
 			an_index: INTEGER
+			locked_in_here: BOOLEAN
 		do
 				-- Flag `is_in_reset_button' to `True', preventing resizing occurring.
 			is_in_reset_button := True
-			lock_window_update
+			
+			if application_imp.locked_window = Void then
+				locked_in_here := True
+				lock_window_update
+			end
 			an_index := internal_get_index (but) + 1
 			remove_item (but)
 			insert_item (but, an_index)
-			unlock_window_update
+			if locked_in_here then
+				unlock_window_update
+			end
 			is_in_reset_button := False
 			notify_change (2 + 1, Current)
 		end

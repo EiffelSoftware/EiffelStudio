@@ -125,7 +125,7 @@ feature -- Store/Retrieve
 			end
 
 			wd := working_directory.path
-			if wd /= Void then
+			if not wd.is_empty then
 				defaults.extend (new_special_option_sd ("working_directory", wd, True))
 			end
 			if Workbench.system_defined then

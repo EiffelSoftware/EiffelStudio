@@ -34,11 +34,21 @@ feature -- IL code generation
 
 			left.generate_il
 			if not l_same_type and then l_type = l_right_type then
-				il_generator.convert_to (l_type)
+					-- FIXME: Manu 1/29/2002: When evaluating inherited assertions where
+					-- type is formal, type is not properly computed and therefore we do
+					-- not get a basic type, but a formal one instead.
+					-- When this bug will be fixed, we can remove the if statement for
+					-- a basic type and replace it by a check statement.
+				if l_type.is_basic then
+					il_generator.convert_to (l_type)
+				end
 			end
 			right.generate_il
 			if not l_same_type and then l_type = l_left_type then
-				il_generator.convert_to (l_type)
+					-- FIXME: See above fixme.
+				if l_type.is_basic then
+					il_generator.convert_to (l_type)
+				end
 			end
 			
 			il_generator.generate_binary_operator (il_operator_constant)

@@ -116,6 +116,9 @@ feature -- IL code generation
 				if not source_type.same_type (target_type) then
 					l_type := source_type.heaviest (target_type)
 					if l_type = target_type then
+						check
+							valid_type: l_type.is_basic
+						end
 						il_generator.convert_to (l_type)
 					end
 				end

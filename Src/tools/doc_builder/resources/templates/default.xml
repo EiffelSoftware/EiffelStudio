@@ -1,0 +1,34 @@
+<EIFFEL_DOCUMENT>		
+		
+	<PREF NAME="editor.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor"><INTEGER>8</INTEGER></PREF>
+		<PREF NAME="editor.margin_background_color" DESCRIPTION="Background color of line number margin"><COLOR>0;255;0</COLOR></PREF>
+		<PREF NAME="editor.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor"><COLOR>0;0;0</COLOR></PREF>
+		<PREF NAME="editor.line_number_text_color" DESCRIPTION="Color of line number text"><COLOR>0;0;255</COLOR></PREF>
+		<PREF NAME="editor.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
+		<PREF NAME="editor.mouse_wheel_scroll_full_page" DESCRIPTION="Mouse wheel scroll full page"><BOOLEAN>False</BOOLEAN></PREF>
+		<PREF NAME="editor.mouse_wheel_scroll_size" DESCRIPTION="Mouse wheel scroll size"><INTEGER>3</INTEGER></PREF>
+		<PREF NAME="editor.remove_trailing_white_space" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
+		<PREF NAME="editor.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
+		<PREF NAME="editor.automatic_update" DESCRIPTION="Automatic update when the file has not been modified"><BOOLEAN>True</BOOLEAN></PREF>
+		<PREF NAME="editor.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+		<PREF NAME="editor.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
+		<PREF NAME="editor.header_font" DESCRIPTION="Editor header font. (Requires restart)"><FONT>Courier New-r-regular-11-typewriter</FONT></PREF>
+		<PREF NAME="editor.tab_step" DESCRIPTION="Tabulation size in characters"><INTEGER>4</INTEGER></PREF>
+		<PREF NAME="editor.normal_text_color" DESCRIPTION=""><COLOR>0;0;0</COLOR></PREF>
+		<PREF NAME="editor.normal_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+		<PREF NAME="editor.selection_text_color" DESCRIPTION=""><COLOR>255;255;128</COLOR></PREF>
+		<PREF NAME="editor.selection_background_color" DESCRIPTION=""><COLOR>0;0;128</COLOR></PREF>
+		<PREF NAME="editor.string_text_color" DESCRIPTION=""><COLOR>115;85;0</COLOR></PREF>	
+		<PREF NAME="editor.string_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+		<PREF NAME="editor.keyword_text_color" DESCRIPTION=""><COLOR>0;0;128</COLOR></PREF>
+		<PREF NAME="editor.keyword_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>	
+		<PREF NAME="editor.spaces_text_color" DESCRIPTION=""><COLOR>128;128;128</COLOR></PREF>
+		<PREF NAME="editor.spaces_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+		<PREF NAME="editor.comments_text_color" DESCRIPTION=""><COLOR>128;0;0</COLOR></PREF>
+		<PREF NAME="editor.comments_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+		<PREF NAME="editor.operator_text_color" DESCRIPTION=""><COLOR>255;0;0</COLOR></PREF>
+		<PREF NAME="editor.operator_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+		<PREF NAME="editor.number_text_color" DESCRIPTION=""><COLOR>128;0;255</COLOR></PREF>
+	<PREF NAME="editor.number_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+	
+</EIFFEL_DOCUMENT>

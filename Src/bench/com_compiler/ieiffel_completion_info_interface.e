@@ -10,6 +10,20 @@ inherit
 
 feature -- Status Report
 
+	add_local_user_precondition (name: STRING; type: STRING): BOOLEAN is
+			-- User-defined preconditions for `add_local'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	add_argument_user_precondition (name: STRING; type: STRING): BOOLEAN is
+			-- User-defined preconditions for `add_argument'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	target_features_user_precondition (target: STRING; feature_name: STRING; file_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `target_features'.
 			-- Redefine in descendants if needed.
@@ -17,7 +31,34 @@ feature -- Status Report
 			Result := True
 		end
 
+	target_feature_user_precondition (target: STRING; feature_name: STRING; file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `target_feature'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
+
+	add_local (name: STRING; type: STRING) is
+			-- Add a local variable used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		require
+			add_local_user_precondition: add_local_user_precondition (name, type)
+		deferred
+
+		end
+
+	add_argument (name: STRING; type: STRING) is
+			-- Add an argument used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		require
+			add_argument_user_precondition: add_argument_user_precondition (name, type)
+		deferred
+
+		end
 
 	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
 			-- Features accessible from target.
@@ -26,6 +67,17 @@ feature -- Basic Operations
 			-- `file_name' [in].  
 		require
 			target_features_user_precondition: target_features_user_precondition (target, feature_name, file_name)
+		deferred
+
+		end
+
+	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+			-- Feature information
+			-- `target' [in].  
+			-- `feature_name' [in].  
+			-- `file_name' [in].  
+		require
+			target_feature_user_precondition: target_feature_user_precondition (target, feature_name, file_name)
 		deferred
 
 		end

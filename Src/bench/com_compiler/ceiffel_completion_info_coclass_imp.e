@@ -35,8 +35,33 @@ feature -- Basic Operations
 			item := ccom_create_item (Current)
 		end
 
+	add_local (name: STRING; type: STRING) is
+			-- Add a local variable used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	add_argument (name: STRING; type: STRING) is
+			-- Add an argument used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
 			-- Features accessible from target.
+			-- `target' [in].  
+			-- `feature_name' [in].  
+			-- `file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+			-- Feature information
 			-- `target' [in].  
 			-- `feature_name' [in].  
 			-- `file_name' [in].  

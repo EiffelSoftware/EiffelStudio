@@ -61,6 +61,18 @@ feature -- Access
 			Result := ccom_description (initializer)
 		end
 
+	parameters: IENUM_PARAMETER_INTERFACE is
+			-- Feature parameters.
+		do
+			Result := ccom_parameters (initializer)
+		end
+
+	return_type: STRING is
+			-- Feature return type.
+		do
+			Result := ccom_return_type (initializer)
+		end
+
 	all_callers: IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		do
@@ -288,6 +300,18 @@ feature {NONE}  -- Externals
 
 	ccom_description (cpp_obj: POINTER): STRING is
 			-- Feature description.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_parameters (cpp_obj: POINTER): IENUM_PARAMETER_INTERFACE is
+			-- Feature parameters.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_return_type (cpp_obj: POINTER): STRING is
+			-- Feature return type.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

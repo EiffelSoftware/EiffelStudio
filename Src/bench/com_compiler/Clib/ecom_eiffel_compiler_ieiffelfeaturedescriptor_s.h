@@ -29,6 +29,16 @@ class IEiffelFeatureDescriptor;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumParameter_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumParameter_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumParameter;
+}
+#endif
+
+
+
 #ifndef __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -73,6 +83,18 @@ public:
 	Feature description.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Feature parameters.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP parameters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumParameter * * params ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Feature return type.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP return_type(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

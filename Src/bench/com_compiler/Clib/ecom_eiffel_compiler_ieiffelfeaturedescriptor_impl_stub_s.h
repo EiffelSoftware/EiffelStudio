@@ -83,6 +83,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Feature parameters.
+	-----------------------------------------------------------*/
+	STDMETHODIMP parameters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumParameter * * params );
+
+
+	/*-----------------------------------------------------------
+	Feature return type.
+	-----------------------------------------------------------*/
+	STDMETHODIMP return_type(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
 	STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number );

@@ -319,53 +319,52 @@ feature -- Access
 			l_real: REAL
 			l_double: DOUBLE
 			l_pointer: POINTER
+			l_dtype: INTEGER
 		do
-			l_obj := field_of_type (i, object, dynamic_type (object))
-			Result ?= l_obj
-			if l_obj /= Void and then Result = Void then
-					-- We are most likely facing a basic type or a non-Eiffel type
-				inspect
-					field_type (i, object)
-				when Pointer_type then
-					l_pointer ?= l_obj
-					Result := l_pointer
+			l_dtype := dynamic_type (object)
+			l_obj := field_of_type (i, object, l_dtype)
+			inspect
+				field_type_of_type (i, l_dtype)
+			when Pointer_type then
+				l_pointer ?= l_obj
+				Result := l_pointer
 
-				when Character_type then
-					l_char ?= l_obj
-					Result := l_char
+			when Character_type then
+				l_char ?= l_obj
+				Result := l_char
 
-				when Boolean_type then
-					l_boolean ?= l_obj
-					Result := l_boolean
+			when Boolean_type then
+				l_boolean ?= l_obj
+				Result := l_boolean
 
-				when Integer_8_type then
-					l_int8 ?= l_obj
-					Result := l_int8
+			when Integer_8_type then
+				l_int8 ?= l_obj
+				Result := l_int8
 
-				when Integer_16_type then
-					l_int16 ?= l_obj
-					Result := l_int16
+			when Integer_16_type then
+				l_int16 ?= l_obj
+				Result := l_int16
 
-				when Integer_32_type then
-					l_int32 ?= l_obj
-					Result := l_int32
+			when Integer_32_type then
+				l_int32 ?= l_obj
+				Result := l_int32
 
-				when Integer_64_type then
-					l_int64 ?= l_obj
-					Result := l_int64
+			when Integer_64_type then
+				l_int64 ?= l_obj
+				Result := l_int64
 
-				when Real_type then
-					l_real ?= l_obj
-					Result := l_real
+			when Real_type then
+				l_real ?= l_obj
+				Result := l_real
 
-				when Double_type then
-					l_double ?= l_obj
-					Result := l_double
-				else
-					-- Not a valid Eiffel type.
-				end
+			when Double_type then
+				l_double ?= l_obj
+				Result := l_double
+			
+			else
+					-- A reference, so nothing to be done
+				Result := l_obj
 			end
-
 		end
 
 	field_name (i: INTEGER; object: ANY): STRING is

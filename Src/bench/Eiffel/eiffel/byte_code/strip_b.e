@@ -74,7 +74,6 @@ feature
 		do
 			cl_type := Context.class_type;
 			attr_names := attribute_names;
-			ba.append (Bc_current);
 			from
 				attr_names.start
 			until

@@ -38,11 +38,16 @@ feature -- Byte code generation
 			Result := Bc_eq
 		end;
 
-	expanded_operator_constant: CHARACTER is
-			-- Byte code constant associated to current expanded
-			-- equality
+    make_expanded_eq_test (ba: BYTE_ARRAY) is
+            -- Make byte code for current expanded equality
 		do
-			Result := Bc_standard_equal;
+			ba.append (Bc_standard_equal);
+		end;
+
+    make_bit_eq_test (ba: BYTE_ARRAY) is
+            -- Make byte code for current bit equality
+		do
+			ba.append (Bc_bit_standard_equal);
 		end;
 
 	obvious_operator_constant: CHARACTER is 

@@ -199,15 +199,17 @@ end;
 			entry: POLY_TABLE [ENTRY];
 			table_name: STRING;
 			offset_class_type: CLASS_TYPE;
+			type_c: TYPE_C
 		do
+			type_c := real_type (type).c_type;
 			entry := Eiffel_table.item_id (rout_id);
-				-- No need to use dereferencing if object is an expanded.
-			if not typ.is_expanded then
+				-- No need to use dereferencing if object is an expanded
+				-- or if it is a bit.
+			if not typ.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				generated_file.putchar ('*');
 					-- ...followed by the appropriate access cast
-				real_type (type).c_type.generate_access_cast
-					(generated_file);
+				type_c.generate_access_cast (generated_file);
 			end;
 			generated_file.putchar ('(');
 			reg.print_register;

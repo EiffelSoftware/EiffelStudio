@@ -100,7 +100,7 @@ feature {NONE}
 	Bc_false_compar:	CHARACTER is '%/092/';
 	Bc_true_compar:		CHARACTER is '%/093/';
 	Bc_standard_equal:	CHARACTER is '%/094/';
-	Bc_not_standard_equal:	CHARACTER is '%/095/';
+	Bc_bit_standard_equal:	CHARACTER is '%/095/';
 	Bc_cont:			CHARACTER is '%/096/';
 	Bc_bit:				CHARACTER is '%/097/';
 	Bc_array:			CHARACTER is '%/098/';
@@ -109,5 +109,6 @@ feature {NONE}
 	Bc_old:				CHARACTER is '%/101/';
 	Bc_add_strip:		CHARACTER is '%/102/';
 	Bc_end_strip:		CHARACTER is '%/103/';
+	Bc_lbit_assign:		CHARACTER is '%/104/';
 
 end

@@ -84,9 +84,8 @@ feature
 					generated_file.putstring (register_name);
 				end;
 			else
-				type_i := real_type (context.byte_code.result_type);
-				type_i.c_type.generate_cast (generated_file);
-				generated_file.putchar ('0');
+				type_i := real_type (type);
+				type_i.c_type.generate_initial_value (generated_file);
 			end;
 		end;
 

@@ -97,7 +97,6 @@ feature -- Byte code generation
 		local
 			nb_protections, i, local_count: INTEGER;
 			param: EXPR_B;
-			inst_cont_type: TYPE_I;
 		do
 			if parameters /= Void then
 				from
@@ -117,11 +116,8 @@ feature -- Byte code generation
 					parameters.forth;
 				end;
 			end;
-		
-			inst_cont_type := context_type;
-			standard_make_code (ba, flag, 
-				require_metamorphosis (inst_cont_type),
-				inst_cont_type);
+
+			standard_make_code (ba, flag);
 	
 				-- Generation hector realease if any
 			if nb_protections > 0 then

@@ -18,9 +18,9 @@ inherit
 
 creation
 
-	make_shell, make_form
+	make_shell
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_shell (a_shell: EB_SHELL) is
 			-- Create an assembly tool.
@@ -38,7 +38,7 @@ feature -- Initialization
 			end;
 			set_icon_name (tool_name);
 			eb_shell.set_delete_command (quit.associated_command);
-			text_window.set_font_to_default;
+			set_font_to_default;
 			set_composite_attributes (a_shell)
 		end;
 
@@ -57,26 +57,19 @@ feature -- Initialization
 
 feature -- Standard Interface
 
-	build_text_window is
-			-- Create `text_window' different ways whether
-			-- the tabulation mecanism is disable or not
-		do
-			!!text_window.make (new_name, Current, Current)
-		end;
-
 	build_widgets is
 			-- Build system widget.
 		do
 			if is_a_shell then
 				set_default_size
 			end;
-			build_text_window;
+			build_text_windows;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 			attach_all
 		end;
 
@@ -123,14 +116,14 @@ feature -- Standard Interface
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
@@ -199,10 +192,25 @@ feature -- Standard Interface
 			global_form.attach_right (edit_bar, 0);
 			global_form.attach_top_widget (menu_bar, edit_bar, 0);
 
-			global_form.attach_left (text_window, 0);
-			global_form.attach_right (text_window, 0);
-			global_form.attach_bottom_widget (format_bar, text_window, 0);
-			global_form.attach_top_widget (edit_bar, text_window, 0);
+			if editable_text_window /= read_only_text_window then
+				global_form.attach_left (editable_text_window.widget, 0);
+				global_form.attach_right (editable_text_window.widget, 0);
+				global_form.attach_bottom_widget (format_bar, 
+						editable_text_window.widget, 0);
+				global_form.attach_top_widget (edit_bar, 
+						editable_text_window.widget, 0);
+				global_form.attach_left (read_only_text_window.widget, 0);
+				global_form.attach_right (read_only_text_window.widget, 0);
+				global_form.attach_bottom_widget (format_bar, 
+						read_only_text_window.widget, 0);
+				global_form.attach_top_widget (edit_bar, 
+						read_only_text_window.widget, 0);
+			else
+				global_form.attach_left (text_window.widget, 0);
+				global_form.attach_right (text_window.widget, 0);
+				global_form.attach_bottom_widget (format_bar, text_window.widget, 0);
+				global_form.attach_top_widget (edit_bar, text_window.widget, 0);
+			end;
 
 			global_form.attach_left (format_bar, 0);
 			global_form.attach_right (format_bar, 0);
@@ -288,15 +296,6 @@ feature -- Window Implementation
 			eb_shell.raise
 		end;
 
-	realize is
-			-- Realize Current.
-		require else
-			is_a_shell: is_a_shell
-		do
-			set_default_position;
-			eb_shell.realize
-		end;
-
 	create_edit_buttons is
 			-- Create the edit buttons needed for the edit bar.
 		local
@@ -321,11 +320,11 @@ feature -- Window Implementation
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
@@ -355,7 +354,7 @@ feature -- Window Settings
 	set_default_format is
 			-- Default format of windows.
 		do
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 		end;
 
 	set_default_size is
@@ -432,10 +431,6 @@ feature -- Window Properties
 
 	menu_bar: BAR;
 
-	file_menu: MENU_PULL;
-
-	edit_menu: MENU_PULL;
-
 	format_menu: MENU_PULL;
 
 	special_menu: MENU_PULL;
@@ -474,9 +469,6 @@ feature -- Window Properties
 			-- Is Current window editable (default is false)?
 		do
 		end;
-
-	search_cmd_holder: COMMAND_HOLDER;
-			-- Command to search for a text.
 
 	change_font_cmd_holder: COMMAND_HOLDER
 			-- Command to change the font.
@@ -537,5 +529,9 @@ feature -- Properties
 feature {NONE} -- Properties
 
 	bar_and_text_name_chooser: NAME_CHOOSER_W
+
+invariant
+
+	text_window_not_void: text_window /= Void
 
 end -- class BAR_AND_TEXT

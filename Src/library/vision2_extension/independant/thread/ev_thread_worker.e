@@ -1,7 +1,6 @@
 indexing
 	description: "Worker thread that execute work and calls GUI processing when%
-					%events are posted by worker threads. Uses mutex to synchronize%
-					%worker thread with GUI."
+					%events are posted."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,6 +24,7 @@ feature {NONE} -- Initialization
 			create events_queue.make (20)
 			create mutex
 			create environment
+			done := True
 		end
 
 feature -- Status Report
@@ -107,5 +107,7 @@ feature {NONE} -- Implementation
 	
 invariant
 	non_void_events_queue: events_queue /= Void
+	non_void_mutex: mutex /= Void
+	non_void_environment: environment /= Void
 
 end -- class EV_THREAD_WORKER

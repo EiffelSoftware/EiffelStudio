@@ -54,7 +54,10 @@ feature -- Basic Operations
 			cpp_class_writer.set_header_file_name (a_component.c_header_file_name)
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
 
-			if shared_wizard_environment.server then
+			if 
+				shared_wizard_environment.server and
+				not system_descriptor.coclasses.empty
+			then
 				cpp_class_writer.add_import ("server_registration.h")
 			end
 
@@ -90,8 +93,8 @@ feature -- Basic Operations
 			non_void_cpp_class_writer: cpp_class_writer /= Void	
 		do
 			add_constructor (a_component)
-			add_constructor_from_object
-			add_destructor
+			add_constructor_from_object  (a_component)
+			add_destructor (a_component)
 
 			-- Implement IUnknown interface
 			add_release_function
@@ -109,7 +112,9 @@ feature -- Basic Operations
 			member_writer: WIZARD_WRITER_C_MEMBER
 		do
 			-- Add type library id
-			cpp_class_writer.add_other_source (libid_definition (a_component.type_library_descriptor.name, a_component.type_library_descriptor.guid))
+			cpp_class_writer.add_other_source (libid_definition 
+					(a_component.type_library_descriptor.name, 
+					a_component.type_library_descriptor.guid))
 
 			-- member (ITypeInfo * pTypeInfo)
 			create member_writer.make
@@ -124,7 +129,23 @@ feature -- Basic Operations
 			dispatch_invoke_function (a_component)
 		end
 
-	constructor_from_object_body: STRING is
+	constructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+			-- Constructor addition.
+		do
+			create Result.make (0)
+		ensure
+			non_void_addition: Result /= Void
+		end
+
+	destructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+			-- Destructor addition.
+		do
+			create Result.make (0)
+		ensure
+			non_void_addition: Result /= Void
+		end
+
+	constructor_from_object_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
 			-- Body of constructor from Eiffel object.
 		do
 			create Result.make (1000)
@@ -156,9 +177,18 @@ feature -- Basic Operations
 				Result.append (Zero)
 				Result.append (Semicolon)
 			end
+			Result.append (constructor_addition (a_component))
+			if 
+				shared_wizard_environment.server and
+				shared_wizard_environment.out_of_process_server and
+				not system_descriptor.coclasses.empty
+			then
+				Result.append (New_line_tab)
+				Result.append ("LockModule ();")
+			end
 		end
 
-	add_constructor_from_object is
+	add_constructor_from_object (a_component: WIZARD_COMPONENT_DESCRIPTOR)is
 			-- Add constructor from Eiffel object.
 		local
 			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
@@ -172,7 +202,7 @@ feature -- Basic Operations
 			a_signature.append ("eif_obj")
 			constructor_writer.set_signature (a_signature)
 
-			constructor_writer.set_body (constructor_from_object_body)
+			constructor_writer.set_body (constructor_from_object_body (a_component))
 			check
 				valid_constructor_writer: constructor_writer.can_generate
 			end
@@ -184,7 +214,7 @@ feature -- Basic Operations
 			end
 		end
 
-	constructor_body: STRING is
+	constructor_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
 			-- Body of constructor.
 		do
 			create Result.make (1000)
@@ -254,8 +284,13 @@ feature -- Basic Operations
 				Result.append (Zero)
 				Result.append (Semicolon)
 			end
+			Result.append (constructor_addition (a_component))
 
-			if shared_wizard_environment.server then
+			if 
+				shared_wizard_environment.server and
+				shared_wizard_environment.out_of_process_server and
+				not system_descriptor.coclasses.empty
+			then
 				Result.append (New_line_tab)
 				Result.append ("LockModule ();")
 			end
@@ -270,7 +305,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	add_destructor is
+	add_destructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 		local
 			tmp_body: STRING
 		do
@@ -319,8 +354,7 @@ feature -- Basic Operations
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
 
-
-			tmp_body.append (Tab)
+			tmp_body.append (New_line_tab)
 			tmp_body.append (Eif_wean)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Eiffel_object)
@@ -338,7 +372,12 @@ feature -- Basic Operations
 				tmp_body.append (Release_function)
 			end
 
-			if shared_wizard_environment.server then
+			tmp_body.append (destructor_addition (a_component))
+			if 
+				shared_wizard_environment.server and
+				shared_wizard_environment.out_of_process_server and
+				not system_descriptor.coclasses.empty
+			then
 				tmp_body.append (New_line_tab)
 				tmp_body.append ("UnlockModule ();")
 			end
@@ -358,7 +397,7 @@ feature -- Basic Operations
 			create tmp_body.make (1000)
 
 			tmp_body.append (tab)
-			tmp_body.append ("if (itinfo != 0) %N%T%Treturn ResultFromScode(DISP_E_BADINDEX);")
+			tmp_body.append ("if ((itinfo != 0) || (pptinfo == NULL))%N%T%Treturn E_INVALIDARG;")
 			tmp_body.append (New_line_tab)
 
 			tmp_body.append ("*pptinfo = NULL;")
@@ -886,7 +925,6 @@ feature -- Basic Operations
 			non_void_body: a_case_body /= Void
 			non_empty_body: not a_case_body.empty 
 			valid_body_start: a_case_body.substring_index ("%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%N%T%T%Tif", 1) = 1
---			valid_body_end: a_case_body.substring (a_case_body.count - 4, a_case_body.count).is_equal ("%N%T%T%T%>") 
 		do
 			create Result.make (1000)
 			Result.append (New_line_tab_tab)
@@ -1051,6 +1089,11 @@ feature -- Basic Operations
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 
+			-- pTypeLib->Release ();
+			
+			Result.append (Type_lib_variable_name + Release_function)
+			Result.append (New_line_tab_tab)
+			
 			-- If (FAILED(tmp_hr))
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)

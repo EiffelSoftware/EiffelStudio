@@ -12,10 +12,17 @@ inherit
 
 	WIZARD_COMPONENT_C_SERVER_GENERATOR
 		redefine
-			generate
+			generate,
+			constructor_addition,
+			destructor_addition
 		end
 
 	ECOM_VAR_TYPE
+		export
+			{NONE} all
+		end
+
+	WIZARD_SOURCE_INTERFACE_HELPER
 		export
 			{NONE} all
 		end
@@ -68,14 +75,23 @@ feature -- Basic operations
 
 			if dispatch_interface then
 				dispatch_interface_features (a_coclass)
+			else
+				-- Add type library id
+				cpp_class_writer.add_other_source (libid_definition 
+						(a_coclass.type_library_descriptor.name, 
+						a_coclass.type_library_descriptor.guid))
 			end
+			cpp_class_writer.add_parent ("IProvideClassInfo2", Void, Public)
 
 			if source then
 				cpp_class_writer.add_parent ("IConnectionPointContainer", Void, Public)
-				add_source_functions
+				add_source_functions (a_coclass)
 			end
 
 			standard_functions (a_coclass)
+			cpp_class_writer.add_function (get_class_info_function (a_coclass), Public)
+			cpp_class_writer.add_function (get_guid_function (a_coclass), Public)
+
 			check
 				valid_cpp_class_writer: cpp_class_writer.can_generate
 			end
@@ -129,6 +145,79 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	default_source_dispinterface_name (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
+			-- Name of default dispinterface.
+		do
+			if 
+				a_coclass_descriptor.default_source_dispinterface_name /= Void and then
+				not a_coclass_descriptor.default_source_dispinterface_name.empty
+			then
+				Result := clone (a_coclass_descriptor.default_source_dispinterface_name)
+			elseif 
+				a_coclass_descriptor.source_interface_descriptors /= Void and then
+				not a_coclass_descriptor.source_interface_descriptors.empty
+			then
+				from 
+					a_coclass_descriptor.source_interface_descriptors.start
+				until
+					a_coclass_descriptor.source_interface_descriptors.after or
+					Result /= Void
+				loop
+					if
+						a_coclass_descriptor.source_interface_descriptors.item.dispinterface or
+						a_coclass_descriptor.source_interface_descriptors.item.dual
+					then
+						Result := clone (a_coclass_descriptor.source_interface_descriptors.item.name)
+					end
+					a_coclass_descriptor.source_interface_descriptors.forth
+				end
+			end
+		end
+
+	constructor_addition (a_coclass: WIZARD_COCLASS_DESCRIPTOR): STRING is
+			-- Constructor addition.
+		do
+			create Result.make (0)
+			if 
+				a_coclass.source_interface_descriptors /= Void and then
+				not a_coclass.source_interface_descriptors.empty
+			then
+				from
+					a_coclass.source_interface_descriptors.start
+				until
+					a_coclass.source_interface_descriptors.after
+				loop
+					Result.append ("%N%T" + 
+							connection_point_attrubute_name 
+								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + 
+							" = new " + connection_point_inner_class_name 
+								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + 
+							" (this, eiffel_object, type_id);")
+					a_coclass.source_interface_descriptors.forth
+				end
+			end
+		end
+
+	destructor_addition (a_coclass: WIZARD_COCLASS_DESCRIPTOR): STRING is
+			-- Destructor addition.
+		do
+			create Result.make (0)
+			if 
+				a_coclass.source_interface_descriptors /= Void and then
+				not a_coclass.source_interface_descriptors.empty
+			then
+				from
+					a_coclass.source_interface_descriptors.start
+				until
+					a_coclass.source_interface_descriptors.after
+				loop
+					Result.append ("%N%Tdelete " + connection_point_attrubute_name 
+								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + ";")
+					a_coclass.source_interface_descriptors.forth
+				end
+			end
+		end
+
 	add_constructor (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add constructor.
 		local
@@ -150,7 +239,7 @@ feature {NONE} -- Implementation
 			a_constructor_body.append (Space_equal_space)
 			a_constructor_body.append (Type_id_variable_name)
 			a_constructor_body.append (Semicolon)
-			a_constructor_body.append (constructor_body)
+			a_constructor_body.append (constructor_body (a_coclass))
 			constructor_writer.set_body (a_constructor_body)
 		
 			check
@@ -185,12 +274,24 @@ feature {NONE} -- Implementation
 				a_coclass_descriptor.interface_descriptors.first.namespace,
 				Iunknown_clsid))
 
+			tmp_body.append (Space)
+			tmp_body.append (case_body_in_query_interface 
+				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
+				a_coclass_descriptor.interface_descriptors.first.namespace,
+				iid_name ("IProvideClassInfo")))
+
+			tmp_body.append (Space)
+			tmp_body.append (case_body_in_query_interface 
+				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
+				a_coclass_descriptor.interface_descriptors.first.namespace,
+				iid_name ("IProvideClassInfo2")))
 
 			if dispatch_interface then
 				tmp_body.append (Space)
 				tmp_body.append (case_body_in_query_interface 
 						(default_dispinterface_name (a_coclass_descriptor),
-						Void, iid_name (Idispatch_type)))
+						a_coclass_descriptor.interface_descriptors.first.namespace, 
+						iid_name (Idispatch_type)))
 
 			end
 
@@ -292,13 +393,14 @@ feature {NONE} -- Implementation
 			valid_body: not Result.empty
 		end
 	
-	add_source_functions is
+	add_source_functions (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add source functions.
 		require
 			source: source
+			non_void_coclass: a_coclass /= Void
 		do
 			cpp_class_writer.add_function (enum_connection_points_function, Public)
-			cpp_class_writer.add_function (find_connection_point_function, Public)
+			cpp_class_writer.add_function (find_connection_point_function (a_coclass), Public)
 		end
 		
 	enum_connection_points_function: WIZARD_WRITER_C_FUNCTION is
@@ -322,10 +424,11 @@ feature {NONE} -- Implementation
 			can_generate: Result.can_generate
 		end
 	
-	find_connection_point_function: WIZARD_WRITER_C_FUNCTION is
+	find_connection_point_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
 			-- FindConnectionPoin
 		require
 			source: source
+			non_void_coclass: a_coclass_descriptor /= Void
 		local
 			body: STRING
 		do
@@ -336,11 +439,112 @@ feature {NONE} -- Implementation
 			Result.set_signature ("/* [in] */ REFIID riid, /* [out] */ IConnectionPoint ** ppCP")
 			
 			create body.make (100)
-			body.append ("%Treturn E_NOTIMPL;")
+			body.append (Tab)
+			from
+				a_coclass_descriptor.source_interface_descriptors.start
+			until
+				a_coclass_descriptor.source_interface_descriptors.after
+			loop
+				body.append (case_body_in_find_connection_point 
+						(a_coclass_descriptor.source_interface_descriptors.item, 
+						iid_name (a_coclass_descriptor.source_interface_descriptors.item.c_type_name)))
+				a_coclass_descriptor.source_interface_descriptors.forth
+			end
+			body.append ("%N%T{%N%T%T*ppCP = NULL;%N%T%Treturn CONNECT_E_NOCONNECTION;%N%T}%N%T")
+			body.append ("(*ppCP)->AddRef ();%N%T")
+			body.append ("return S_OK;")
 			Result.set_body (body)
 		ensure
 			non_void_function: Result /= Void
 			can_generate: Result.can_generate
+		end
+
+	case_body_in_find_connection_point (an_interface: WIZARD_INTERFACE_DESCRIPTOR; interface_id: STRING): STRING is
+			-- Case body in FindConnectionPoint function implemenatation.
+		require
+			non_void_interface: an_interface /= Void
+			non_void_interface_id: interface_id /= Void
+			valid_interface_id: not interface_id.empty
+		do
+			create Result.make (200)
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (Riid)
+			Result.append (C_equal)
+			Result.append (interface_id)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab)
+			Result.append ("* ppCP")
+			Result.append (Space_equal_space)
+
+			Result.append (connection_point_attrubute_name (an_interface, cpp_class_writer))
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			Result.append (Else_keyword)
+			Result.append (Space)
+		ensure
+			non_void_body: Result /= Void
+			valid_body: not Result.empty
+		end
+
+	get_class_info_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+			-- GetClassInfo of IProvideClassInfo.
+		do
+			create Result.make
+			Result.set_comment ("GetClassInfo")
+			
+			Result.set_name ("GetClassInfo")
+			Result.set_result_type (Std_method_imp)
+			
+			Result.set_signature ("ITypeInfo ** ppti")
+			
+			Result.set_body ("%Tif (ppti == NULL)%N%T%T%
+									%return E_POINTER;%N%T%
+								%ITypeLib * ptl = NULL;%N%T%
+								%HRESULT hr = LoadRegTypeLib (" + libid_name (a_coclass.type_library_descriptor.name) + ", 1, 0, 0, &ptl);%N%T%
+								%if (SUCCEEDED (hr))%N%T%
+								%{%N%T%T%
+									%hr = ptl->GetTypeInfoOfGuid (" + clsid_name (a_coclass.name) + ", ppti);%N%T%T%
+									%ptl->Release ();%N%T%
+								%}%N%T%
+								%return hr;")
+		ensure
+			non_void: Result /= Void
+			valid: Result.can_generate
+		end
+		
+	get_guid_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+			-- GetGUID of IProvideClassInfo.
+		local
+			body, source_name: STRING
+		do
+			create Result.make
+			Result.set_comment ("GetGUID")
+			
+			Result.set_name ("GetGUID")
+			Result.set_result_type (Std_method_imp)
+			
+			Result.set_signature ("DWORD dwKind, GUID * pguid")
+			
+			create body.make (200)
+			body.append ("%Tif ((dwKind != GUIDKIND_DEFAULT_SOURCE_DISP_IID) ||(!pguid))%N%T%T%
+									%return E_INVALIDARG;%N%T")
+			body.append ("*pguid = ")
+			source_name := default_source_dispinterface_name (a_coclass)
+			if
+				source_name /= Void and then
+				not source_name.empty
+			then
+				body.append (iid_name (source_name))
+			else
+				body.append ("IID_NULL")
+			end
+								
+			body.append (";%N%Treturn S_OK;")
+			Result.set_body (body)
+		ensure
+			non_void: Result /= Void
+			valid: Result.can_generate
 		end
 		
 end -- class WIZARD_COCLASS_C_SERVER_GENERATOR

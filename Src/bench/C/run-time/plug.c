@@ -84,6 +84,7 @@ register4 long nbr;
 	stripped_nbr = nbr_attr - nbr;
 	array = emalloc(arr_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, &array); 	/* Protect address in case it moves */
+	nstcall = 0;
 	(arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 	sp = *(char **) array;
@@ -165,7 +166,9 @@ register2 int len;
 
 	string = emalloc(str_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, &string);		/* Protect address in case it moves */
+	nstcall = 0;
 	(strmake)(string, len);			/* Call feature `make' in class STRING */
+	nstcall = 0;
 	(strset)(string, len);			/* Call feature `set_count' in STRING */
 
 	/* Copy C string `s' in special object `area' of the new string
@@ -240,6 +243,10 @@ char *spobject;
  * Invariant checking
  */
 
+private char *inv_mark_table;		/* Marking table to avoid checking the same 
+									 * invariant several times
+									 */
+
 public void chkinv (obj, where)
 char *obj;
 int where;		/* Invariant is beeing checked before or after compound? */
@@ -248,20 +255,32 @@ int where;		/* Invariant is beeing checked before or after compound? */
 
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
+	int i;
 
-	if (
-#ifdef WORKBENCH
-		WASC(dtype) & CK_INVARIANT &&
-#endif
-		!(zone->ov_flags & EO_INV)
-	) {
+	inv_mark_table = (char *) cmalloc (scount * sizeof(char));
+	for (i=0; i<scount; i++) inv_mark_table[i]=(char) 0;
+
+	if (!(zone->ov_flags & EO_INV)) {
 		epush(&loc_stack, &obj);				/* Protect against GC moves */
 		zone->ov_flags |= EO_INV;				/* Avoid loops in checks */
 		recursive_chkinv(dtype, obj, where);	/* Recurive invariant check */
 		HEADER(obj)->ov_flags &= ~EO_INV;		/* Unmark the object */
 		epop(&loc_stack, 1);					/* Release GC protection */
 	}
+
+	xfree(inv_mark_table);
 }
+
+#ifdef WORKBENCH
+public void chkcinv(obj)
+char *obj;
+{
+	/* Check invariant of `obj' after creation. */
+
+	if (~in_assertion & (WASC(Dtype(obj))) & CK_INVARIANT) {
+		chkinv(obj,1);}
+}
+#endif
 
 private void recursive_chkinv(dtype, obj, where)
 int dtype;
@@ -277,6 +296,13 @@ int where;		/* Invariant is being checked before or after compound? */
 #ifdef WORKBENCH
 	int32 inv_body_id;			/* Invariant body id */
 #endif
+
+	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
+
+	if ((char) 0 != inv_mark_table[dtype])	/* Already checked */
+		return;
+	else
+		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
 
 	epush(&loc_stack, &obj);		/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
@@ -300,15 +326,17 @@ int where;		/* Invariant is being checked before or after compound? */
 		struct item *last;
 
 		CBodyIdx(body_index,INVARIANT_ID,dtype);
-		body_id = dispatch[body_index];
-		if (body_id < zeroc) { 		/* Frozen invariant */
-			((void (*)()) frozen[body_id])(obj, where);
-		} else {					/* Melted invariant */
-			last = iget();
-			last->type = SK_REF;
-			last->it_ref = obj;
-			IC = melt[body_id];
-			xiinv(IC, where);
+		if (body_index != -1) {
+			body_id = dispatch[body_index];
+			if (body_id < zeroc) { 		/* Frozen invariant */
+				((void (*)()) frozen[body_id])(obj, where);
+			} else {					/* Melted invariant */
+				last = iget();
+				last->type = SK_REF;
+				last->it_ref = obj;
+				IC = melt[body_id];
+				xiinv(IC, where);
+			}
 		}
 	}
 #endif
@@ -406,13 +434,14 @@ char *parent;	/* Parent (enclosing object) */
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
-			if (feature_id) 
-				wexp(static_id, feature_id, exp_dtype, l[0] + offset);
-										/* Call creation routine */
 
 			/* If expanded object is composite also, initialize it. */
 			if (System(exp_dtype).cn_composite)
 				wstdinit(l[0] + offset, l[1]);
+
+			if (feature_id) 
+				wexp(static_id, feature_id, exp_dtype, l[0] + offset);
+										/* Call creation routine */
 			}
 			break;
 		case SK_BIT:

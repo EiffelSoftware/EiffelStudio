@@ -2634,10 +2634,9 @@ rt_private void interpret(int flag, int where)
 		}
 #endif
 		{
-			int32 origin, ooffset;
 			long nbr_of_items;
 			EIF_REFERENCE new_obj;
-			short stype, dtype, feat_id;
+			short dtype;
 			unsigned long stagval;
 			int curr_pos = 1;	/* 1 because tuple starts at 1 */
 			struct item *it;
@@ -2645,8 +2644,6 @@ rt_private void interpret(int flag, int where)
 			EIF_BOOLEAN is_atomic;
  
 			if (code == BC_PTUPLE) {
-				origin = get_long();		/* Get the origin class id */
-				ooffset = get_long();		/* Get the offset in origin */
 				dtype = get_short();			/* Get the static type */
 
 					/*GENERIC CONFORMANCE */
@@ -2659,23 +2656,19 @@ rt_private void interpret(int flag, int where)
 	 
 				new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
 			} else {
-				stype = get_short();			/* Get the static type */
 				dtype = get_short();			/* Get the static type */
 
 					/*GENERIC CONFORMANCE */
 				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-				feat_id = get_short();		  	/* Get the feature id */
 				nbr_of_items = get_long();	  	/* Number of items in tuple */
-				is_atomic = get_long();
+				is_atomic = EIF_TEST(get_long());
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 	 
-					new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
+				new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
 			}
 
 			IC = OLD_IC;

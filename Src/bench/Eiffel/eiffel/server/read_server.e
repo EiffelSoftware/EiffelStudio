@@ -18,7 +18,6 @@ inherit
 		rename
 			make as tbl_make,
 			item as tbl_item,
-			change_key as tbl_change_key,
 			has as tbl_has,
 			remove as tbl_remove,
 			put as tbl_put

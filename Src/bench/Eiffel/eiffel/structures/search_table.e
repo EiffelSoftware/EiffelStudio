@@ -15,8 +15,6 @@ inherit
 			count as array_count
 		export
 			{SEARCH_TABLE} area, lower, upper
-		redefine
-			sequential_representation
 		end;
 	ARRAY [H]
 		rename
@@ -29,7 +27,7 @@ inherit
 		export
 			{SEARCH_TABLE} area, lower, upper
 		redefine
-			clear_all, sequential_representation
+			clear_all
 		select
 			clear_all
 		end
@@ -174,34 +172,6 @@ feature -- Insertion, deletion
 			count := 0;
 			control := 0;
 			position := 0
-		end;
-
-feature -- Transformation
-
-	sequential_representation: ARRAYED_LIST [H] is
-				-- Sequential representation of `Current'.
-				-- This feature enables you to manipulate each
-				-- item of `Current' regardless of its
-				-- actual structure.
-		local
-			i, table_size: INTEGER;
-			key: H;
-		do
-			from
-				!!Result.make (count);
-				table_size := upper;
-			until
-				i > table_size
-			loop
-				key := array_item (i);
-				if valid_key (key) then
-					Result.extend (key);
-				end;
-				i := i + 1
-			end;
-		ensure then
-			Result_exists: Result /= Void;
-			good_count: Result.count = count
 		end;
 
 feature -- Number of elements

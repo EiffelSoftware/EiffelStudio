@@ -11,7 +11,6 @@ inherit
 
 	TWO_WAY_LIST [TEXT_ITEM]
 		rename
-			position as chain_position,
 			extend as twl_extend,
 			put_right as twl_put_right,
 			put_left as twl_put_left,
@@ -23,8 +22,6 @@ inherit
 		end;
 
 	TWO_WAY_LIST [TEXT_ITEM]
-		rename
-			position as chain_position
 		export
 			{NONE}
 				all;

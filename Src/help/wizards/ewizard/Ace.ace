@@ -5,7 +5,9 @@ root
 	WIZARD_PROJECT_MANAGER (wizard_library): "make_and_launch"
 
 default
+	assertion (require)
 	assertion (ensure)
+	assertion (check)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)

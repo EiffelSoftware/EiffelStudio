@@ -27,7 +27,7 @@ feature -- Validity
 			done: BOOLEAN
 		do
 				-- Check if class has one formal generic parameter
-			if generics = Void or else generics.count /= 1 then -- or else not is_frozen then
+			if generics = Void or else generics.count /= 1 or else not is_frozen then
 				create special_error.make (special_case_1, Current)
 				Error_handler.insert_error (special_error)
 			end

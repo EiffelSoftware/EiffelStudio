@@ -19,13 +19,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_TOOL_BAR) is
 		local
 			cmd: SAVE_PROJECT
 		do
 			{EB_BUTTON} Precursor (par)
 			create cmd
-			add_click_command (cmd, Void)
+			add_select_command (cmd, Void)
 		end
 
 feature {NONE} -- Button

@@ -55,9 +55,15 @@ feature
 		end;
 
 	is_system_level: BOOLEAN is
+		local
+			opt: INTEGER
 		do
-			Result := is_valid and then
-				valid_options.item (option_name) /= dynamic
+			if is_valid then
+				opt := valid_options.item (option_name)
+				Result := opt /= dynamic and then 
+					opt /= hide and then
+					opt /= profile
+			end;
 		end;
 
 	is_precompiled: BOOLEAN is
@@ -84,7 +90,7 @@ feature {NONE}
 	code_replication, fail_on_rescue, check_vape,
 	array_optimization, inlining, inlining_size,
 	server_file_size, extendible, extending,
-	dynamic: INTEGER is UNIQUE;
+	dynamic, hide, profile: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -104,6 +110,8 @@ feature {NONE}
 			Result.force (extendible, "extendible");
 			Result.force (extending, "extending");
 			Result.force (dynamic, "dynamic");
+			Result.force (hide, "hide");
+			Result.force (profile, "profile");
 		end;
 
 feature
@@ -116,49 +124,21 @@ feature
 		require else
 			is_valid
 		local
-			dynamic_feat: DYNAMIC_FEAT_I;
-			v: DYNAMIC_I;
-			feat_name, class_name: STRING
+			dynamic_sd: DYNAMIC_SD;
+			hide_sd: HIDE_SD;
+			profile_sd: PROFILE_SD;
+			opt: INTEGER
 		do
-			if valid_options.item (option_name) = dynamic then
-				if value /= Void then
-					if value.is_all then
-						v := All_dynamic
-					elseif value.is_name then
-						feat_name := clone (value.value);
-						feat_name.to_lower;
-						!! dynamic_feat.make;
-						dynamic_feat.extend (feat_name);
-						v := dynamic_feat
-					else
-						error (value)
-					end
-				else
-					v := No_dynamic
-				end;
-				if v /= Void then
-					if list = Void then
-						from
-							classes.start
-						until
-							classes.after
-						loop
-							classes.item_for_iteration.set_dynamic_calls (v);
-							classes.forth
-						end
-					else
-						from
-							list.start
-						until
-							list.after
-						loop
-							class_name := clone (list.item);
-							class_name.to_lower;
-							classes.item (class_name).set_dynamic_calls (v);
-							list.forth
-						end
-					end
-				end
+			opt := valid_options.item (option_name);
+			if opt = dynamic then
+				!! dynamic_sd;
+				dynamic_sd.adapt (value, classes, list)	
+			elseif opt = hide then
+				!! hide_sd;
+				hide_sd.adapt (value, classes, list)	
+			elseif opt = profile then
+				!! profile_sd;
+				profile_sd.adapt (value, classes, list)	
 			end
 		end;
 
@@ -304,6 +284,10 @@ feature
 					-- Do nothing: the normal case has already been solved
 				end
 			when dynamic then
+					-- This has been taken care of in `adapt'.
+			when hide then
+					-- This has been taken care of in `adapt'.
+			when profile then
 					-- This has been taken care of in `adapt'.
 			else
 				error_found := True

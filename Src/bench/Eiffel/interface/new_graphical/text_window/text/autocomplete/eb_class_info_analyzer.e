@@ -226,7 +226,12 @@ feature {NONE} -- Click ast exploration
 										j := j + 1
 									end
 									if j /= 1 and then pos_in_txt < inherit_clauses @ j then
-										class_name := parents.i_th (j - 1).associated_class (current_class_c).name
+										a_class := parents.i_th (j - 1).associated_class (current_class_c)
+										if a_class /= Void then
+											class_name := a_class.name
+										else
+											class_name := Void
+										end
 									end
 								end
 							end
@@ -1404,7 +1409,7 @@ feature {NONE} -- Implementation
 		local
 			class_i: CLASS_I
 		do
-			context_initialized_successfully := not Workbench.is_compiling
+			context_initialized_successfully := Workbench.is_already_compiled and then not Workbench.is_compiling
 			if context_initialized_successfully and then Universe /= Void then
 				class_i := Universe.class_named (current_class_name, Universe.cluster_of_name (cluster_name))
 				if class_i /= Void and then class_i.compiled then

@@ -1,8 +1,7 @@
---| FIXME Not for release
 indexing
 	description:
 		"Eiffel Vision radio button. A labels check box that may be grouped%N%
-		%mutualy exclusive selection."
+		%for mutualy exclusive selection."
 	status: "See notice at end of class"
 	keywords: "toggle, radio, button"
 	date: "$Date$"
@@ -34,7 +33,6 @@ feature -- Implementation
 			Create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
 	
-	
 end -- class EV_RADIO_BUTTON
 
 --!-----------------------------------------------------------------------------
@@ -58,6 +56,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/17 02:20:08  oconnor
+--| released
+--|
 --| Revision 1.11  2000/02/17 01:42:05  king
 --| Removed deprecated radio grouping features
 --|

@@ -1,0 +1,439 @@
+indexing
+
+	description: "COM ITypeInfo interface"
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	EOLE_TYPE_INFO
+
+inherit
+	EOLE_UNKNOWN
+
+	EOLE_METHOD_FLAGS
+	
+	EOLE_TYPEKIND
+
+creation
+	make
+		
+feature -- Message Transmission
+
+	address_of_member (member_id, invoke_ind: INTEGER): POINTER is
+			-- Addresses of static functions or variables
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			Result := ole2_tinfo_address_of_member (ole_interface_ptr, member_id, invoke_ind)
+		end
+
+	create_instance (punk_outer: POINTER; clsid: STRING): POINTER is
+			-- Create new instance of type that describes component object class.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+			is_com_class: get_type_attr.typekind = Tkind_coclass
+		local
+			wel_string: WEL_STRING
+		do
+			!! wel_string.make (clsid)
+			Result := ole2_tinfo_create_instance (ole_interface_ptr, punk_outer, wel_string.item)
+		end
+
+	get_containing_typelib: EOLE_TYPE_LIB is
+			-- Containing type library and index of type description within that type library
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		local
+			ptr: POINTER
+		do
+			!! Result.make
+			ole2_tinfo_get_containing_typelib (ole_interface_ptr, $ptr)
+			if ptr /= default_pointer then
+				Result.attach_ole_interface_ptr (ptr)
+			end
+		end
+
+	get_dll_entry (mem_id, invoke_ind: INTEGER): EOLE_DLL_ENTRY is
+			-- Description or specification for entry point of
+			-- function with member identifier `mem_id' and member
+			-- kind `invoke_kind'.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			Result := ole2_tinfo_get_dll_entry (ole_interface_ptr, mem_id, invoke_ind)
+		end
+
+	get_documentation (member_id: INTEGER): EOLE_DOCUMENTATION is
+			-- Documentation string and complete Help file name 
+			-- and path for Help topic for `member_id'. 
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result
+			ole2_tinfo_get_documentation (ole_interface_ptr, member_id, Result.name.ole_ptr, 
+						Result.doc_string.ole_ptr, Result.help_file.ole_ptr)
+		end
+
+	get_func_desc (index: INTEGER): EOLE_FUNCDESC is
+			-- Description of function at `index'
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result
+			Result.attach (ole2_tinfo_get_func_desc (ole_interface_ptr, index))
+		end
+
+	get_ids_of_names (names: ARRAY [STRING]): ARRAY [INTEGER] is
+			-- Map between member names and member IDs, 
+			-- and parameter names and parameter IDs.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+			valid_names: names /= Void
+		local
+			i, count: INTEGER;
+			wel_string: WEL_STRING
+		do
+			ole2_auto_erase_names
+			from
+				i := names.lower
+			until
+				i > names.upper
+			loop
+				!! wel_string.make (names.item (i))
+				ole2_auto_add_name (wel_string.item)
+				i := i + 1
+			end
+			ole2_tinfo_map_names (ole_interface_ptr)
+			count := names.upper - names.lower + 1
+			!! Result.make (1, count)
+			from
+				i := 0
+			until
+				i >= count
+			loop
+				Result.put (ole2_auto_get_name_id (i), i + 1)
+				i := i + 1
+			end
+		ensure
+			good_mapping: names.count = Result.count
+		end
+
+	get_impl_type_flags (index: INTEGER): INTEGER is
+			-- Enumeration for one implemented interface or base interface in a type description
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			Result := ole2_tinfo_get_impl_type_flags (ole_interface_ptr, index)
+		end
+
+	get_mops (member_id: INTEGER): EOLE_BSTR is
+			-- Marshaling information
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result.make_from_ptr (ole2_tinfo_get_mops (ole_interface_ptr, member_id))
+		end
+
+	get_names (member_id: INTEGER): ARRAY [STRING] is
+			-- Retrieve variable (or name of property or method
+			-- and its parameters) that correspond to `member_id'
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		local
+			i, count: INTEGER;
+			str: STRING
+		do
+			count := ole2_tinfo_get_names_and_count (ole_interface_ptr, member_id)
+			!! Result.make (1, count);
+			from
+				i := 0
+			until
+				i >= count
+			loop
+				!! str.make (0)
+				str.from_c (ole2_tinfo_get_name (ole_interface_ptr, i))
+				Result.put (str, i + 1)
+				i := i + 1
+			end
+		end
+
+	get_ref_type_info (type_ref_handle: INTEGER): EOLE_TYPE_INFO is
+			-- Referenced type descriptions (if any)
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		local
+			ptypeinfo: POINTER
+		do
+			ptypeinfo := ole2_tinfo_get_ref_type_info (ole_interface_ptr, type_ref_handle)
+			if ptypeinfo /= default_pointer then
+				!! Result.make
+				Result.attach_ole_interface_ptr (ptypeinfo)
+			end
+		end
+
+	get_ref_type_of_impl_type (index: INTEGER): INTEGER is
+			-- Implemented type handle at `index'
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			Result := ole2_tinfo_get_ref_type_of_impl_type (ole_interface_ptr, index)
+		end
+
+	get_type_attr: EOLE_TYPEATTR is
+			-- Attributes of type description
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		local
+			ptypeattr: POINTER
+		do
+			ptypeattr := ole2_tinfo_get_type_attr (ole_interface_ptr)
+			if ptypeattr /= default_pointer then
+				!! Result
+				Result.attach (ptypeattr)
+			end
+		end
+
+	get_type_comp: POINTER is
+			-- ITypeComp interface for type description
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			Result := ole2_tinfo_get_type_comp (ole_interface_ptr)
+		end
+
+	get_var_desc (var_index: INTEGER): EOLE_VARDESC is
+			-- Description of variable at `var_index'.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result
+			Result.attach (ole2_tinfo_get_var_desc (ole_interface_ptr, var_index))
+		end
+
+	invoke (dispid, flag: INTEGER; params: EOLE_DISPPARAMS; res: EOLE_VARIANT; exception: EOLE_EXCEPINFO) is
+			-- Invoke method, or access property of object defined by `dispid'.
+			-- See class EOLE_METHODFLAGS for `flag' value.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+			valid_method_flag: is_valid_method_flag (flag)
+			valid_params: params /= Void and then params.ole_ptr /= default_pointer
+			valid_res: res /= Void and then res.ole_ptr /= default_pointer
+			valid_exception: exception /= Void and then exception.ole_ptr /= default_pointer
+		do
+			ole2_tinfo_invoke (ole_interface_ptr, dispid, flag, params.ole_ptr, res.ole_ptr, exception.ole_ptr)
+		end
+
+	release_func_desc (fd: EOLE_FUNCDESC) is
+			-- Release `fd'.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			ole2_tinfo_release_func_desc (ole_interface_ptr, fd.ole_ptr)
+		end
+
+	release_type_attr (ta: EOLE_TYPEATTR) is
+			-- Release `ta'.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+			valid_typeattr: ta /= Void and then ta.ole_ptr /= default_pointer
+		do
+			ole2_tinfo_release_type_attr (ole_interface_ptr, ta.ole_ptr)
+		end
+
+	release_var_desc (vd: EOLE_VARDESC) is
+			-- Release `vd'.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+			valid_var_desc: vd /= Void and then vd.ole_ptr /= default_pointer
+		do
+			ole2_tinfo_release_var_desc (ole_interface_ptr, vd.ole_ptr)
+		end
+
+feature {NONE} -- Externals
+
+	ole2_create_disp_type_info (idata: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_create_disp_type_info"
+		end
+
+	ole2_tinfo_address_of_member (this: POINTER; member_id, invoke_ind: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_address_of_member"
+		end
+
+	ole2_tinfo_create_instance (this, punk_outer, clsid: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_create_instance"
+		end
+
+	ole2_tinfo_get_containing_typelib (this, ptypelib: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_containing_typelib"
+		end
+
+	ole2_tinfo_get_dll_entry (this: POINTER; mem_id, invoke_ind: INTEGER): EOLE_DLL_ENTRY is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_dll_entry"
+		end
+
+	ole2_tinfo_get_documentation (this: POINTER; member_id: INTEGER; name, doc_string, help_file: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_documentation"
+		end
+
+	ole2_tinfo_get_func_desc (this: POINTER; index: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_func_desc"
+		end
+
+	ole2_auto_erase_names is
+		external
+			"C"
+		alias
+			"eole2_auto_erase_names"
+		end
+
+	ole2_auto_add_name (str: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_auto_add_name"
+		end
+
+	ole2_tinfo_map_names (this: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_map_names"
+		end
+
+	ole2_auto_get_name_id (i: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"eole2_auto_get_name_id"
+		end
+
+	ole2_tinfo_get_impl_type_flags (this: POINTER; index: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_impl_type_flags"
+		end
+
+	ole2_tinfo_get_mops (this: POINTER; mem_id: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_mops"
+		end
+
+	ole2_tinfo_get_names_and_count (this: POINTER; mem_id: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_names_and_count"
+		end
+
+	ole2_tinfo_get_name (this: POINTER; i: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_name"
+		end
+
+	ole2_tinfo_get_ref_type_info (this: POINTER; type_ref_handle: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_ref_type_info"
+		end
+
+	ole2_tinfo_get_ref_type_of_impl_type (this: POINTER; index: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_ref_type_of_impl_type"
+		end
+
+	ole2_tinfo_get_type_attr (this: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_type_attr"
+		end
+
+	ole2_tinfo_get_type_comp (this: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_type_comp"
+		end
+
+	ole2_tinfo_get_var_desc (this: POINTER; var_index: INTEGER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_tinfo_get_var_desc"
+		end
+
+	ole2_tinfo_invoke (this: POINTER; dispid, flags: INTEGER; params, res, exception: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_invoke"
+		end
+
+	ole2_tinfo_release_func_desc (this, fd: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_release_func_desc"
+		end
+
+	ole2_tinfo_release_type_attr (this, ta: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_release_type_attr"
+		end
+
+	ole2_tinfo_release_var_desc (this, vd: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_tinfo_release_var_desc"
+		end
+	
+end -- class EOLE_TYPE_INFO
+
+--|-------------------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license.
+--| Contact ISE for any other use.
+--| Based on WINE library, copyright (C) Object Tools, 1996-1997.
+--| Modifications and extensions: copyright (C) ISE, 1997. 
+--|
+--| Interactive Software Engineering Inc.
+--| 270 Storke Road, ISE Building, second floor, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

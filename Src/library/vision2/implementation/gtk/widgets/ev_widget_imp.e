@@ -621,10 +621,13 @@ feature {NONE} -- Implementation
 		end
 
 	aux_info_struct: POINTER is
+		local
+			aux_info_string: ANY
 		do
+			aux_info_string := ("gtk-aux-info").to_c
 			Result := C.gtk_object_get_data (
 				c_object,
-				eiffel_to_c ("gtk-aux-info")
+				$aux_info_string
 			)
 		end
 

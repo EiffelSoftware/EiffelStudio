@@ -1,1420 +1,1481 @@
 ///////////////////////////////////////////////////////////////////////////////
-// ISE.Compiler.IDL     : Interface definitions for COM Compiler
+// ISE.Compiler.IDL		: Interface definitions for COM Compiler
 //
-// Last commit by       : $Author$
-// Date                 : $Date$
-// Revision             : $Revision$
+// Last commit by		: $Author$
+// Date				: $Date$
+// Revision			: $Revision$
 //
-// Notes                : Interfaces, enums and structs relating to ENViSioN! 2.0
+// Notes			: Interfaces, enums and structs relating to ENViSioN! 2.0
 
 // GUID's for type library
 #include "ise_compiler_guid.h"
 
-// Depenancies
+// Dependencies
 import "oaidl.idl";
 
 // =========================================================================
 //                                                 EiffelComCompiler Library
 [
-    uuid (UUID_LibEiffelCompiler),
-    version(2.0),
-    helpstring ("Eiffel language compiler library.")
+	uuid (UUID_LibEiffelCompiler),
+	version(2.0),
+	helpstring ("Eiffel language compiler library.")
 ]
 library EiffelComCompiler
 {
-    // =========================================================================
-    //                                                Dendant IDL/Type libraries
-    
-    importlib ("stdole2.tlb");
-    importlib ("stdole2.tlb");
-
-    // =========================================================================
-    //                                                      Forward Declarations
-
-    enum EIF_ENTITY_IMAGES;
-    enum EIF_FEATURE_TYPES;
-    enum EIF_EXCEPTIONS;
-    enum EIF_PROJECT_TYPES;
-    enum EIF_ASSERTIONS;
-    enum EIF_CLUSTER_NAMESPACE_GENERATION;
-    enum EIF_COMPILATION_MODE;
-
-    interface IEiffelProject;
-    interface IEiffelProjectProperties;
-    
-    interface IEiffelCompiler;
-    interface IEiffelCompilerEvents;
-    
-    interface IEiffelCompletionInfo;
-    
-    interface IEiffelHtmlDocumentationGenerator;
-    interface IEiffelHtmlDocumentationEvents;    
-    
-    interface IEiffelSystemBrowser;
-    interface IEnumCluster;
-    interface IEiffelClusterDescriptor;
-    interface IEnumEiffelClass;
-    interface IEiffelClassDescriptor;
-    interface IEnumFeature;
-    interface IEiffelFeatureDescriptor;
-    interface IEnumParameter;
-    interface IEiffelParameterDescriptor;    
-    
-    interface IEiffelSystemClusters;
-    interface IEnumClusterProp;
-    interface IEiffelClusterProperties;
-    interface IEnumClusterExcludes;
-    
-    interface IEiffelSystemExternals;
-    interface IEnumIncludePaths;
-    interface IEnumObjectFiles;
-    
-    interface IEiffelSystemAssemblies;
-    interface IEnumAssembly;
-    interface IEiffelAssemblyProperties;
-
-    interface IEiffelException;
-
-    // =========================================================================
-    //                                                      CoClass Declarations
-
-    [uuid (UUID_CEiffelProject)]
-    coclass CEiffelProject
-    {
-        [default] interface IEiffelProject;
-    };
-
-    [uuid (UUID_CEiffelCompiler), noncreatable]
-    coclass CEiffelCompiler
-    {
-        [default] interface IEiffelCompiler;
-        [default, source] interface IEiffelCompilerEvents;
-    };
-
-    [uuid (UUID_CEiffelCompletionInfo), noncreatable]
-    coclass CEiffelCompletionInfo
-    {
-        [default] interface IEiffelCompletionInfo;
-    };
-
-
-    // =========================================================================
-    //                                                         Enum Declarations
-
-    [
-        uuid (UUID_EnumEIF_EXCEPTIONS),
-        helpstring ("Eiffel Exception Codes")
-    ]
-    typedef enum EIF_EXCEPTIONS
-    {
-        EIF_EXCEPTIONS_Unspecified = 0,
-        EIF_EXCEPTIONS_Successful,
-
-        // IEiffelProject Exceptions
-        EIF_EXCEPTIONS_NoProjectLoaded,
-        EIF_EXCEPTIONS_ProjectIncompatible,
-        EIF_EXCEPTIONS_ProjectFileCorrupted,
-        EIF_EXCEPTIONS_UnableToRemoveProject,
-        EIF_EXCEPTIONS_UnableToCreateProject,
-        EIF_EXCEPTIONS_InvalidAceFile,
-        EIF_EXCEPTIONS_ProjectNotCompiled,
-        EIF_EXCEPTIONS_AceFileDoesNotExists,
-        EIF_EXCEPTIONS_ProjectAlreadyInitialized,
-        EIF_EXCEPTIONS_ProjectIncomplete,
-        EIF_EXCEPTIONS_IOError,
-        EIF_EXCEPTIONS_NonDotnetProject,
-
-        // IEiffelSystemAssemblies Exceptions
-        EIF_EXCEPTIONS_AssemblyAlreadyAdded,
-        EIF_EXCEPTIONS_InvalidAssemblyPrefix
-
-    } EIF_EXCEPTIONS;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_COMPILATION_MODE),
-        helpstring ("Various modes of compilation.")
-    ]
-    typedef enum EIF_COMPILATION_MODE
-    {
-        EIF_COMPILATION_MODE_Workbench = 0,
-        EIF_COMPILATION_MODE_Finalize = 1,
-        EIF_COMPILATION_MODE_Precompile = 2
-    }EIF_COMPILATION_MODE;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_ASSERTIONS),
-        helpstring ("Assertion levels for project settings.")
-    ]
-    typedef enum EIF_ASSERTIONS
-    {
-        EIF_ASSERTIONS_None = 0,
-        EIF_ASSERTIONS_Require = 1,
-        EIF_ASSERTIONS_Ensure = 2,
-        EIF_ASSERTIONS_Check = 4,
-        EIF_ASSERTIONS_Invariant = 8,
-        EIF_ASSERTIONS_Loop = 16
-    }EIF_ASSERTIONS;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION),
-        helpstring ("Type of cluster namespace generation.")
-    ]
-    typedef enum EIF_CLUSTER_NAMESPACE_GENERATION
-    {
-        EIF_CLUSTER_NAMESPACE_GENERATION_None = 0,
-        EIF_CLUSTER_NAMESPACE_GENERATION_ClusterName = 1,
-        EIF_CLUSTER_NAMESPACE_GENERATION_FullClusterName = 2
-    }EIF_CLUSTER_NAMESPACE_GENERATION;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_PROJECT_TYPES),
-        helpstring ("Type of compilation for projects.")
-    ]
-    typedef enum EIF_PROJECT_TYPES
-    {
-        EIF_PROJECT_TYPES_ConsoleApplication = 0,
-        EIF_PROJECT_TYPES_WindowsApplication,
-        EIF_PROJECT_TYPES_ClassLibrary,
-        EIF_PROJECT_TYPES_PrecompiledLibrary
-    }EIF_PROJECT_TYPES;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_ENTITY_IMAGES),
-        helpstring ("Image indexes associated with a feature.")
-    ]
-    typedef enum EIF_ENTITY_IMAGES{
-        EIF_ENTITY_IMAGES_FrozenOnce = 24,
-        EIF_ENTITY_IMAGES_Obsolete = 23,
-        EIF_ENTITY_IMAGES_FrozenAttribute = 22,
-        EIF_ENTITY_IMAGES_Attribute = 19,
-        EIF_ENTITY_IMAGES_Once = 18,
-        EIF_ENTITY_IMAGES_FrozenExternal = 25,
-        EIF_ENTITY_IMAGES_FrozenFeature = 21,
-        EIF_ENTITY_IMAGES_ExternalFeature = 17,
-        EIF_ENTITY_IMAGES_Deferred = 16,
-        EIF_ENTITY_IMAGES_Feature = 4,
-        EIF_ENTITY_IMAGES_Variable = 26
-    } EIF_ENTITY_IMAGES;
-    //---------------------------------------------------------------------
-
-    [
-        uuid (UUID_EnumEIF_FEATURE_TYPES),
-        helpstring ("Type of Eiffel feature.")
-    ]
-    typedef enum EIF_FEATURE_TYPES
-    {
-        EIF_FEATURE_TYPES_Attribute = 1,
-        EIF_FEATURE_TYPES_Constant = 2,
-        EIF_FEATURE_TYPES_Deferred = 4,
-        EIF_FEATURE_TYPES_External = 8,
-        EIF_FEATURE_TYPES_Frozen = 16,
-        EIF_FEATURE_TYPES_Function = 32,
-        EIF_FEATURE_TYPES_Infix = 64,
-        EIF_FEATURE_TYPES_Obsolete = 128,
-        EIF_FEATURE_TYPES_Once = 256,
-        EIF_FEATURE_TYPES_Prefix = 512,
-        EIF_FEATURE_TYPES_Procedure = 1024
-    } EIF_FEATURE_TYPES;
-
-    // =========================================================================
-    //                                                    Interface Declarations
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelProject),
-        helpstring ("Eiffel Project.")
-    ]
-    interface IEiffelProject: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_RetrieveEiffelProject), helpstring ("Retrieve Eiffel Project")]
-        HRESULT RetrieveEiffelProject ([in] BSTR bstrProjectFileName);
-
-        [id (DISPID_EiffelComCompiler_CreateEiffelProject), helpstring ("Create new Eiffel project from an existing ace file.")]
-        HRESULT CreateEiffelProject ([in] BSTR bstrAceFileName, [in] BSTR bstrProjectDirectory);
-
-        [id (DISPID_EiffelComCompiler_GenerateNewEiffelProject), helpstring ("Create new Eiffel project from scratch.")]
-        HRESULT GenerateNewEiffelProject ([in] BSTR bstrProjectName, [in] BSTR bstrAceFileName, [in] BSTR bstrRootClassName, [in] BSTR bstrCreationRoutine, [in] BSTR bstrProjectDirectory);
-
-        [id (DISPID_EiffelComCompiler_ProjectFileName), helpstring ("Full path to .epr file."), propget]
-        HRESULT ProjectFileName ([out, retval] BSTR* pbstrProjectFileName);
-
-        [id (DISPID_EiffelComCompiler_AceFileName), helpstring ("Full path to Ace file."), propget]
-        HRESULT AceFileName ([out, retval] BSTR* pbstrAceFileName);
-
-        [id (DISPID_EiffelComCompiler_ProjectDirectory), helpstring ("Project directory."), propget]
-        HRESULT ProjectDirectory ([out, retval] BSTR* pbstrProjectDirectory);
-
-        [id (DISPID_EiffelComCompiler_IsValidProject), helpstring ("Is project valid?"), propget]
-        HRESULT IsValidProject ([out, retval] VARIANT_BOOL* pvbValid);
-
-        [id (DISPID_EiffelComCompiler_LastException), helpstring ("Last exception raised"), propget]
-        HRESULT LastException ([out, retval] IEiffelException** ppIEiffelException);
-
-        [id (DISPID_EiffelComCompiler_Compiler), helpstring ("Compiler."), propget]
-        HRESULT Compiler ([out, retval] IEiffelCompiler** ppIEiffelCompiler);
-
-        [id (DISPID_EiffelComCompiler_IsCompiled), helpstring ("Has system been compiled?"), propget]
-        HRESULT IsCompiled ([out, retval] VARIANT_BOOL* pvbCompiled);
-
-        [id (DISPID_EiffelComCompiler_ProjectHasUpdated), helpstring ("Has the project updated since last compilation?"), propget]
-        HRESULT ProjectHasUpdated ([out, retval] VARIANT_BOOL* pvbUpdated);
-
-        [id (DISPID_EiffelComCompiler_SystemBrowser), helpstring ("System Browser."), propget]
-        HRESULT SystemBrowser ([out, retval] IEiffelSystemBrowser** ppEiffelSystemBrowser);
-
-        [id (DISPID_EiffelComCompiler_ProjectProperties), helpstring ("Project Properties."), propget]
-        HRESULT ProjectProperties ([out, retval] IEiffelProjectProperties** ppIEiffelProjectProperties);
-
-        [id (DISPID_EiffelComCompiler_CompletionInformation), helpstring ("Completion information"), propget]
-        HRESULT CompletionInformation ([out, retval] IEiffelCompletionInfo** ppIEiffelCompletionInfo);
-
-        [id (DISPID_EiffelComCompiler_HtmlDocumentationGenerator), helpstring ("Help documentation generator"), propget]
-        HRESULT HtmlDocumentationGenerator ([out, retval] IEiffelHtmlDocumentationGenerator** ppIEiffelHtmlDocumentationGenerator);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelProjectProperties),
-        helpstring ("Eiffel Project Properties.")
-    ]
-    interface IEiffelProjectProperties: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_SystemName), helpstring ("System name."), propget]
-        HRESULT SystemName ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_SystemName), helpstring ("System name."), propput]
-        HRESULT SystemName ([in] BSTR bstrName);
-
-        [id (DISPID_EiffelComCompiler_RootClassName), helpstring ("Root class name."), propget]
-        HRESULT RootClassName ([out, retval] BSTR* pbstrClassName);
-
-        [id (DISPID_EiffelComCompiler_RootClassName), helpstring ("Root class name."), propput]
-        HRESULT RootClassName ([in] BSTR bstrClassName);
-
-        [id (DISPID_EiffelComCompiler_CreationRoutine), helpstring ("Creation routine name."), propget]
-        HRESULT CreationRoutine ([out, retval] BSTR* pbstrRoutineName);
-
-        [id (DISPID_EiffelComCompiler_CreationRoutine), helpstring ("Creation routine name."), propput]
-        HRESULT CreationRoutine ([in] BSTR bstrRoutineName);
-
-        [id (DISPID_EiffelComCompiler_NamespaceGeneration), helpstring ("Namespace generation for cluster"), propget]
-        HRESULT NamespaceGeneration ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penumClusterNamespaceGeneration);
-
-        [id (DISPID_EiffelComCompiler_NamespaceGeneration), helpstring ("Namespace generation for cluster"), propput]
-        HRESULT NamespaceGeneration ([in] EIF_CLUSTER_NAMESPACE_GENERATION enumClusterNamespaceGeneration);
-
-        [id (DISPID_EiffelComCompiler_DefaultNamespace), helpstring ("Default namespace."), propget]
-        HRESULT DefaultNamespace ([out, retval] BSTR* pbstrNamespace);
-
-        [id (DISPID_EiffelComCompiler_DefaultNamespace), helpstring ("Default namespace."), propput]
-        HRESULT DefaultNamespace ([in] BSTR bstrNamespace);
-
-        [id (DISPID_EiffelComCompiler_ProjectType), helpstring ("Project type"), propget]
-        HRESULT ProjectType ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
-
-        [id (DISPID_EiffelComCompiler_ProjectType), helpstring ("Project type"), propput]
-        HRESULT ProjectType ([in] EIF_PROJECT_TYPES enumProjectType);
-
-        [id (DISPID_EiffelComCompiler_TargetClrVersion), helpstring ("Version of CLR compiler should target"), propget]
-        HRESULT TargetClrVersion ([out, retval] BSTR* pbstrVersion);
-
-        [id (DISPID_EiffelComCompiler_TargetClrVersion), helpstring ("Version of CLR compiler should target"), propput]
-        HRESULT TargetClrVersion ([in] BSTR bstrVersion);
-
-        [id (DISPID_EiffelComCompiler_DotNetNamingConvention), helpstring (".NET Naming convention"), propget]
-        HRESULT DotNetNamingConvention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
-
-        [id (DISPID_EiffelComCompiler_DotNetNamingConvention), helpstring (".NET Naming convention"), propput]
-        HRESULT DotNetNamingConvention ([in] VARIANT_BOOL vbNamingConvention);
-
-        [id (DISPID_EiffelComCompiler_GenerateDebugInfo), helpstring ("Generate debug info?"), propget]
-        HRESULT GenerateDebugInfo ([out, retval] VARIANT_BOOL* pvbGenerate);
-
-        [id (DISPID_EiffelComCompiler_GenerateDebugInfo), helpstring ("Generate debug info?"), propput]
-        HRESULT GenerateDebugInfo ([in] VARIANT_BOOL vbGenerate);
-
-        [id (DISPID_EiffelComCompiler_PrecompiledLibrary), helpstring ("Precompiled file."), propget]
-        HRESULT PrecompiledLibrary ([out, retval] BSTR* pbstrPath);
-
-        [id (DISPID_EiffelComCompiler_PrecompiledLibrary), helpstring ("Precompiled file."), propput]
-        HRESULT PrecompiledLibrary ([in] BSTR bstrPath);
-
-        [id (DISPID_EiffelComCompiler_Assertions), helpstring ("Project assertions"), propget]
-        HRESULT Assertions ([out, retval] ULONG* pulAssertions);
-
-        [id (DISPID_EiffelComCompiler_Assertions), helpstring ("Project assertions"), propput]
-        HRESULT Assertions ([in] ULONG ulAssertions);
-
-        [id (DISPID_EiffelComCompiler_Clusters), helpstring ("Project Clusters."), propget]
-        HRESULT Clusters ([out, retval] IEiffelSystemClusters** ppIEiffelSystemClusters);
-
-        [id (DISPID_EiffelComCompiler_Externals), helpstring ("Externals."), propget]
-        HRESULT Externals ([out, retval] IEiffelSystemExternals** ppIEiffelSystemExternals);
-
-        [id (DISPID_EiffelComCompiler_Assemblies), helpstring ("Assemblies."), propget]
-        HRESULT Assemblies ([out, retval] IEiffelSystemAssemblies** ppIEiffelSystemAssemblies);
-
-        [id (DISPID_EiffelComCompiler_Title), helpstring ("Project title."), propget]
-        HRESULT Title ([out, retval] BSTR* pbstrTitle);
-
-        [id (DISPID_EiffelComCompiler_Title), helpstring ("Project title."), propput]
-        HRESULT Title ([in] BSTR bstrTitle);
-
-        [id (DISPID_EiffelComCompiler_Description), helpstring ("Project description."), propget]
-        HRESULT Description ([out, retval] BSTR* pbstrDescription);
-
-        [id (DISPID_EiffelComCompiler_Description), helpstring ("Project description."), propput]
-        HRESULT Description ([in] BSTR bstrDescription);
-
-        [id (DISPID_EiffelComCompiler_Company), helpstring ("Project company."), propget]
-        HRESULT Company ([out, retval] BSTR* pbstrCompany);
-
-        [id (DISPID_EiffelComCompiler_Company), helpstring ("Project company."), propput]
-        HRESULT Company ([in] BSTR bstrCompany);
-
-        [id (DISPID_EiffelComCompiler_Product), helpstring ("Product."), propget]
-        HRESULT Product ([out, retval] BSTR* ppbstrProduct);
-
-        [id (DISPID_EiffelComCompiler_Product), helpstring ("Product."), propput]
-        HRESULT Product ([in] BSTR bstrProduct);
-
-        [id (DISPID_EiffelComCompiler_Version), helpstring ("Project version."), propget]
-        HRESULT Version ([out, retval] BSTR* pbstrVersion);
-
-        [id (DISPID_EiffelComCompiler_Version), helpstring ("Project version."), propput]
-        HRESULT Version ([in] BSTR bstrVersion);
-
-        [id (DISPID_EiffelComCompiler_Trademark), helpstring ("Project trademark."), propget]
-        HRESULT Trademark ([out, retval] BSTR* pbstrTrademark);
-
-        [id (DISPID_EiffelComCompiler_Trademark), helpstring ("Project trademark."), propput]
-        HRESULT Trademark ([in] BSTR bstrTrademark);
-
-        [id (DISPID_EiffelComCompiler_Copyright), helpstring ("Project copyright."), propget]
-        HRESULT Copyright ([out, retval] BSTR* pbstrCopyright);
-
-        [id (DISPID_EiffelComCompiler_Copyright), helpstring ("Project copyright."), propput]
-        HRESULT Copyright ([in] BSTR bstrCopyright);
-
-        [id (DISPID_EiffelComCompiler_Culture), helpstring ("Asembly culture."), propget]
-        HRESULT Culture ([out, retval] BSTR* pbstrCultre);
-
-        [id (DISPID_EiffelComCompiler_Culture), helpstring ("Asssembly culture."), propput]
-        HRESULT Culture ([in] BSTR bstrCultre);
-
-        [id (DISPID_EiffelComCompiler_KeyFileName), helpstring ("Asembly signing key file name."), propget]
-        HRESULT KeyFileName ([out, retval] BSTR* pbstrFileName);
-
-        [id (DISPID_EiffelComCompiler_KeyFileName), helpstring ("Assembly signing key file name."), propput]
-        HRESULT KeyFileName ([in] BSTR bstrFileName);
-
-        [id (DISPID_EiffelComCompiler_WorkingDirectory), helpstring ("Project working directory"), propget]
-        HRESULT WorkingDirectory ([out, retval] BSTR* pbstrWorkingDirectory);
-
-        [id (DISPID_EiffelComCompiler_WorkingDirectory), helpstring ("Project working directory"), propput]
-        HRESULT WorkingDirectory ([in] BSTR bstrWorkingDirectory);
-
-        [id (DISPID_EiffelComCompiler_Apply), helpstring ("Apply changes")]
-        HRESULT Apply ();
-    };
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelCompiler),
-        helpstring ("Eiffel Compiler.")
-    ]
-    interface IEiffelCompiler: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_CompilerVersion), helpstring ("Compiler version."), propget]
-        HRESULT CompilerVersion ([out, retval] BSTR* pbstrVersion);
-
-        [id (DISPID_EiffelComCompiler_HasSignableGeneration), helpstring ("Is the compiler a trial version."), propget]
-        HRESULT HasSignableGeneration ([out, retval] VARIANT_BOOL* pvbSignable);
-
-        [id (DISPID_EiffelComCompiler_CanRun), helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
-        HRESULT CanRun ([out, retval] VARIANT_BOOL* pvbCanRun);
-
-        [id (DISPID_EiffelComCompiler_Compile), helpstring ("Compile.")]
-        HRESULT Compile ([in] EIF_COMPILATION_MODE mode);
-
-        [id (DISPID_EiffelComCompiler_CompileToPipe), helpstring ("Compile to an already established named pipe.")]
-        HRESULT CompileToPipe ([in] EIF_COMPILATION_MODE mode, [in] BSTR bstrPipeName);
-
-        [id (DISPID_EiffelComCompiler_WasCompilationSuccessful), helpstring ("Was last compilation successful?"), propget]
-        HRESULT WasCompilationSuccessful ([out, retval] VARIANT_BOOL* pvbSuccess);
-
-        [id (DISPID_EiffelComCompiler_FreezingOccurred), helpstring ("Did last compile warrant a call to finish_freezing?"), propget]
-        HRESULT FreezingOccurred ([out, retval] VARIANT_BOOL* pvbDidFreeze);
-
-        [id (DISPID_EiffelComCompiler_FreezeCommandName), helpstring ("Eiffel Freeze command name"), propget]
-        HRESULT FreezeCommandName ([out, retval] BSTR* pbstrCmdName);
-
-        [id (DISPID_EiffelComCompiler_FreezeCommandArguments), helpstring ("Eiffel Freeze command arguments"), propget]
-        HRESULT FreezeCommandArguments ([out, retval] BSTR* pbstrCmdArgs);
-
-        [id (DISPID_EiffelComCompiler_RemoveFileLocks), helpstring ("Remove file locks")]
-        HRESULT RemoveFileLocks ();
-
-        [id (DISPID_EiffelComCompiler_DisplayWarnings), helpstring ("Should warning events be raised when compilation raises a warning?"), propput]
-        HRESULT DisplayWarnings ([in] VARIANT_BOOL vbShowWarnings);
-
-        [id (DISPID_EiffelComCompiler_ExpandPath), helpstring ("Takes a path and expands it using the env vars.")]
-        HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
-
-        [id (DISPID_EiffelComCompiler_GenerateMsilKeyFileName), helpstring ("Generate a cyrptographic key filename.")]
-        HRESULT GenerateMsilKeyFileName ([in] BSTR bstrFileName);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelCompilerEvents),
-        helpstring ("Eiffel Compiler Events.")
-    ]
-    interface IEiffelCompilerEvents: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_BeginCompile), helpstring ("Beginning compilation.")]
-        HRESULT BeginCompile ();
-
-        [id (DISPID_EiffelComCompiler_BeginDegree), helpstring ("Start of new degree phase in compilation.")]
-        HRESULT BeginDegree ([in] LONG ulDegree);
-
-        [id (DISPID_EiffelComCompiler_EndCompile), helpstring ("Finished compilation.")]
-        HRESULT EndCompile ([in] VARIANT_BOOL vbSucessful);
-
-        [id (DISPID_EiffelComCompiler_ShouldContinue), helpstring ("Should compilation continue.")]
-        HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
-
-        [id (DISPID_EiffelComCompiler_OutputString), helpstring ("Output string.")]
-        HRESULT OutputString ([in] BSTR bstrOutput);
-
-        [id (DISPID_EiffelComCompiler_OutputError), helpstring ("Last error.")]
-        HRESULT OutputError ([in] BSTR bstrFullError, [in] BSTR bstrShortError, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
-
-        [id (DISPID_EiffelComCompiler_OutputWarning), helpstring ("Last warning.")]
-        HRESULT OutputWarning ([in] BSTR bstrFullWarning, [in] BSTR bstrShortWarning, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
-    };
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelCompletionInfo),
-        helpstring ("Eiffel Completion info.")
-    ]
-    interface IEiffelCompletionInfo: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_AddLocal), helpstring ("Add a local variable used for solving member completion list")]
-        HRESULT AddLocal ([in] BSTR bstrName, [in] BSTR bstrType);
-
-        [id (DISPID_EiffelComCompiler_AddArgument), helpstring ("Add an argument used for solving member completion list")]
-        HRESULT AddArgument ([in] BSTR bstrName, [in] BSTR bstrType);
-
-        [id (DISPID_EiffelComCompiler_TargetFeatures), helpstring ("Features accessible from target.")]
-        HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
-
-        [id (DISPID_EiffelComCompiler_TargetFeature), helpstring ("Feature information")]
-        HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
-
-        [id (DISPID_EiffelComCompiler_FlushCompletionFeatures), helpstring ("Flush temporary completion features for a specific file")]
-        HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
-
-        [id (DISPID_EiffelComCompiler_InitializeFeature), helpstring ("Initialize a feature for completion without compiltation")]
-        HRESULT InitializeFeature ([in] BSTR bstrName, [in] VARIANT varArguments, [in] VARIANT varArgumentTypes, [in] BSTR bstrReturnType, [in] ULONG ulFeatureType, [in] BSTR bstrFileName);
-    };
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelHtmlDocumentationGenerator),
-        helpstring ("Eiffel Project HTML Documentation Generator.")
-    ]
-    interface IEiffelHtmlDocumentationGenerator: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_AddExcludedCluster), helpstring ("Exclude a cluster from being generated.")]
-        HRESULT AddExcludedCluster ([in] BSTR bstrFullClusterName);
-
-        [id (DISPID_EiffelComCompiler_RemoveExcludedCluster), helpstring ("Include a cluster to be generated.")]
-        HRESULT RemoveExcludedCluster ([in] BSTR bstrFullClusterName);
-
-        [id (DISPID_EiffelComCompiler_StartGeneration), helpstring ("Generate the HTML documents into path.")]
-        HRESULT StartGeneration ([in] BSTR bstrGenerationPath);
-
-        [id (DISPID_EiffelComCompiler_AdviseStatusCallback), helpstring ("Add a callback interface.")]
-        HRESULT AdviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
-
-        [id (DISPID_EiffelComCompiler_UnadviseStatusCallback), helpstring ("Remove a callback interface.")]
-        HRESULT UnadviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelHtmlDocumentationEvents),
-        helpstring ("Callback interface for HTML Documentation Generator.")
-    ]
-    interface IEiffelHtmlDocumentationEvents: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_NotifyInitalizingDocumentation), helpstring ("Notify that documentation generating is initializing")]
-        HRESULT NotifyInitalizingDocumentation ();
-
-        [id (DISPID_EiffelComCompiler_NotifyPercentageComplete), helpstring ("Notify that the percentage completed has changed")]
-        HRESULT NotifyPercentageComplete ([in] ULONG ulPercent);
-
-        [id (DISPID_EiffelComCompiler_OutputHeader), helpstring ("Put a header message to the output")]
-        HRESULT OutputHeader ([in] BSTR bstrMsg);
-
-        [id (DISPID_EiffelComCompiler_OutputString), helpstring ("Put a string to the output")]
-        HRESULT OutputString ([in] BSTR bstrMsg);
-
-        [id (DISPID_EiffelComCompiler_OutputClassDocumentMessage), helpstring ("Put a class name to the output")]
-        HRESULT OutputClassDocumentMessage ([in] BSTR bstrMsg);
-
-        [id (DISPID_EiffelComCompiler_ShouldContinue), helpstring ("Should compilation continue.")]
-        HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelSystemBrowser),
-        helpstring ("System Browser.")
-    ]
-    interface IEiffelSystemBrowser: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_SystemClasses), helpstring ("List of classes in system.")]
-        HRESULT SystemClasses ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_ClassCount), helpstring ("Number of classes in system.")]
-        HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
-
-        [id (DISPID_EiffelComCompiler_SystemClusters), helpstring ("List of system's clusters.")]
-        HRESULT SystemClusters ([out, retval] IEnumCluster** ppIEnumCluster);
-
-        [id (DISPID_EiffelComCompiler_ExternalClusters), helpstring ("List of system's external clusters.")]
-        HRESULT ExternalClusters ([out, retval] IEnumCluster** ppIEnumCluster);
-
-        [id (DISPID_EiffelComCompiler_Assemblies), helpstring ("Returns all of the assemblies in an enumerator")]
-        HRESULT Assemblies ([out, retval] IEnumAssembly** ppIEnumAssembly);
-
-        [id (DISPID_EiffelComCompiler_ClusterCount), helpstring ("Number of top-level clusters in system.")]
-        HRESULT ClusterCount ([out, retval] ULONG* pulClusterCount);
-
-        [id (DISPID_EiffelComCompiler_RootCluster), propget, helpstring ("Number of top-level clusters in system.")]
-        HRESULT RootCluster ([out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
-
-        [id (DISPID_EiffelComCompiler_ClusterDescriptor), helpstring ("Cluster descriptor.")]
-        HRESULT ClusterDescriptor ([in] BSTR bstrClassName, [out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
-
-        [id (DISPID_EiffelComCompiler_ClassDescriptor), helpstring ("Class descriptor.")]
-        HRESULT ClassDescriptor ([in] BSTR bstrClusterName, [out, retval] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
-
-        [id (DISPID_EiffelComCompiler_FeatureDescriptor), helpstring ("Feature descriptor.")]
-        HRESULT FeatureDescriptor ([in] BSTR bstrClassName, [in] BSTR bstrFeatureName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
-
-        [id (DISPID_EiffelComCompiler_SearchClasses), helpstring ("Search classes with names matching `a_string'.")]
-        HRESULT SearchClasses ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_SearchFeatures), helpstring ("Search feature with names matching `a_string'.")]
-        HRESULT SearchFeatures ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumFeature ** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_DescriptionFromDotnetType), helpstring ("Retrieve description from dotnet type")]
-        HRESULT DescriptionFromDotnetType ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [out, retval] BSTR *pbstrDescription);
-
-        [id (DISPID_EiffelComCompiler_DescriptionFromDotnetFeature), helpstring ("Retrieve description from dotnet feature")]
-        HRESULT DescriptionFromDotnetFeature ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [in] BSTR bstrFeatureSignature, [out, retval] BSTR *pbstrDescription);
-
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumCluster),
-        helpstring ("Eiffel Cluster Enumeration.")
-    ]
-    interface IEnumCluster: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor, [out] ULONG *pulCount);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumCluster** ppIEnumCluster);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelClusterDescriptor),
-        helpstring ("Eiffel Cluster Descriptor.")
-    ]
-    interface IEiffelClusterDescriptor: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Cluster name."), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_Description), helpstring ("Cluster description."), propget]
-        HRESULT Description ([out, retval] BSTR* pbstrDescription);
-
-        [id (DISPID_EiffelComCompiler_ToolTip), helpstring ("Cluster Tool Tip."), propget]
-        HRESULT ToolTip ([out, retval] BSTR* pbstrToolTop);
-
-        [id (DISPID_EiffelComCompiler_Classes), helpstring ("List of classes in cluster.")]
-        HRESULT Classes ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_ClassCount), helpstring ("Number of classes in cluster.")]
-        HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
-
-        [id (DISPID_EiffelComCompiler_Clusters), helpstring ("List of subclusters in cluster.")]
-        HRESULT Clusters ([out, retval] IEnumCluster** ppIEnumCluster);
-
-        [id (DISPID_EiffelComCompiler_ClusterCount), helpstring ("Number of subclusters in cluster.")]
-        HRESULT ClusterCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propget]
-        HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
-
-        [id (DISPID_EiffelComCompiler_RelativePath), helpstring ("Relative path to cluster.")]
-        HRESULT RelativePath ([out, retval] BSTR* pbstrPath);
-
-        [id (DISPID_EiffelComCompiler_IsOverrideCluster), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
-        HRESULT IsOverrideCluster ([out, retval] VARIANT_BOOL* pvbOverride);
-
-        [id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propget]
-        HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumEiffelClass),
-        helpstring ("Eiffel Class Enumeration.")
-    ]
-    interface IEnumEiffelClass: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelClassDescriptor** ppIEiffelClassDescriptor, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelClassDescriptor),
-        helpstring ("Eiffel Class Descriptor.")
-    ]
-    interface IEiffelClassDescriptor: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Class name."), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_Description), helpstring ("Class description."), propget]
-        HRESULT Description ([out, retval] BSTR* pbstrDescription);
-
-        [id (DISPID_EiffelComCompiler_ExternalName), helpstring ("Class external name."), propget]
-        HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
-
-        [id (DISPID_EiffelComCompiler_ToolTip), helpstring ("Class Tool Tip."), propget]
-        HRESULT ToolTip ([out, retval] BSTR* pbstrToolTip);
-
-        [id (DISPID_EiffelComCompiler_IsInSystem), helpstring ("Is class in system?"), propget]
-        HRESULT IsInSystem ([out, retval] VARIANT_BOOL* pvbInSystem);
-
-        [id (DISPID_EiffelComCompiler_FeatureNames), helpstring ("List of names of class features.")]
-        HRESULT FeatureNames ([out, retval] SAFEARRAY (BSTR)* psabstrFeatureNames);
-
-        [id (DISPID_EiffelComCompiler_Features), helpstring ("List of class features.")]
-        HRESULT Features ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_FeatureCount), helpstring ("Number of class features.")]
-        HRESULT FeatureCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_FlatFeatures), helpstring ("List of class features including ancestor features.")]
-        HRESULT FlatFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_FlatFeatureCount), helpstring ("Number of flat class features.")]
-        HRESULT FlatFeatureCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_InheritedFeatures), helpstring ("List of class inherited features.")]
-        HRESULT InheritedFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_InheritedFeatureCount), helpstring ("Number of inherited features.")]
-        HRESULT InheritedFeatureCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_CreationRoutines), helpstring ("List of class creation routines.")]
-        HRESULT CreationRoutines ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_CreationRoutineCount), helpstring ("Number of creation routines.")]
-        HRESULT CreationRoutineCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_Clients), helpstring ("List of class clients.")]
-        HRESULT Clients ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_ClientCount), helpstring ("Number of class clients.")]
-        HRESULT ClientCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_Suppliers), helpstring ("List of class suppliers.")]
-        HRESULT Suppliers ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_SupplierCount), helpstring ("Number of class suppliers.")]
-        HRESULT SupplierCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_Ancestors), helpstring ("List of direct ancestors of class.")]
-        HRESULT Ancestors ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_AncestorCount), helpstring ("Number of direct ancestors.")]
-        HRESULT AncestorCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_Descendants), helpstring ("List of direct descendants of class.")]
-        HRESULT Descendants ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
-
-        [id (DISPID_EiffelComCompiler_DescendantCount), helpstring ("Number of direct descendants.")]
-        HRESULT DescendantCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_ClassPath), helpstring ("Full path to file."), propget]
-        HRESULT ClassPath ([out, retval] BSTR* pbstrPath);
-
-        [id (DISPID_EiffelComCompiler_IsDeferred), helpstring ("Is class deferred?"), propget]
-        HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDefferred);
-
-        [id (DISPID_EiffelComCompiler_IsExternal), helpstring ("Is class external?"), propget]
-        HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
-
-        [id (DISPID_EiffelComCompiler_IsGeneric), helpstring ("Is class generic?"), propget]
-        HRESULT IsGeneric ([out, retval] VARIANT_BOOL* pvbGeneric);
-
-        [id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Is class part of a library?"), propget]
-        HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumFeature),
-        helpstring ("Eiffel Feature Enumeration.")
-    ]
-    interface IEnumFeature: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG *ulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelFeatureDescriptor),
-        helpstring ("Eiffel Feature Descriptor.")
-    ]
-    interface IEiffelFeatureDescriptor: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Feature name."), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_ExternalName), helpstring ("Feature external name."), propget]
-        HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
-
-        [id (DISPID_EiffelComCompiler_WrittenClass), helpstring ("Name of class where feature is written in."), propget]
-        HRESULT WrittenClass ([out, retval] BSTR* pbstrClass);
-
-        [id (DISPID_EiffelComCompiler_EvaluatedClass), helpstring ("Name of class where feature was evaluated in."), propget]
-        HRESULT EvaluatedClass ([out, retval] BSTR* pbstrClass);
-
-        [id (DISPID_EiffelComCompiler_Signature), helpstring ("Feature signature."), propget]
-        HRESULT Signature ([out, retval] BSTR* pbstrSignature);
-
-        [id (DISPID_EiffelComCompiler_Description), helpstring ("Feature description."), propget]
-        HRESULT Description ([out, retval] BSTR* pbstrDescription);
-
-        [id (DISPID_EiffelComCompiler_Parameters), helpstring ("Feature parameters.")]
-        HRESULT Parameters ([out, retval] IEnumParameter** ppIEnumParameter);
-
-        [id (DISPID_EiffelComCompiler_ReturnType), helpstring ("Feature return type."), propget]
-        HRESULT ReturnType ([out, retval] BSTR* pbstrReturnType);
-
-        [id (DISPID_EiffelComCompiler_FeatureLocation), helpstring ("Feature location, full path to file and line number")]
-        HRESULT FeatureLocation ([out] BSTR* pbstrPath, [out] ULONG* pulLine);
-
-        [id (DISPID_EiffelComCompiler_AllCallers), helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
-        HRESULT AllCallers ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_AllCallersCount), helpstring ("Number of all callers.")]
-        HRESULT AllCallersCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_LocalCallers), helpstring ("List of feature callers.")]
-        HRESULT LocalCallers ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_LocalCallersCount), helpstring ("Number of local callers.")]
-        HRESULT LocalCallersCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_DescendantCallers), helpstring ("List of feature callers, including callers of descendant versions.")]
-        HRESULT DescendantCallers ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_DescendantCallersCount), helpstring ("Number of descendant callers.")]
-        HRESULT DescendantCallersCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_Implementers), helpstring ("List of implementers.")]
-        HRESULT Implementers ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_ImplementersCount), helpstring ("Number of feature implementers.")]
-        HRESULT ImplementersCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_AncestorVersions), helpstring ("List of ancestor versions.")]
-        HRESULT AncestorVersions ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_AncestorVersionsCount), helpstring ("Number of ancestor versions.")]
-        HRESULT AncestorVersionsCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_DescendantVersions), helpstring ("List of descendant versions.")]
-        HRESULT DescendantVersions ([out, retval] IEnumFeature** ppIEnumFeature);
-
-        [id (DISPID_EiffelComCompiler_DescendantVersionsCount), helpstring ("Number of descendant versions.")]
-        HRESULT DescendantVersionsCount ([out, retval] ULONG* pulCount);
-
-        [id (DISPID_EiffelComCompiler_ExportedToAll), helpstring ("Is feature exported to all classes?"), propget]
-        HRESULT ExportedToAll ([out, retval] VARIANT_BOOL* pvbExported);
-
-        [id (DISPID_EiffelComCompiler_IsOnce), helpstring ("Is once feature?"), propget]
-        HRESULT IsOnce ([out, retval] VARIANT_BOOL* pvbOnce);
-
-        [id (DISPID_EiffelComCompiler_IsExternal), helpstring ("Is external feature?"), propget]
-        HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
-
-        [id (DISPID_EiffelComCompiler_IsDeferred), helpstring ("Is deferred feature?"), propget]
-        HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDeferred);
-
-        [id (DISPID_EiffelComCompiler_IsConstant), helpstring ("Is constant?"), propget]
-        HRESULT IsConstant ([out, retval] VARIANT_BOOL* pvbConstant);
-
-        [id (DISPID_EiffelComCompiler_IsFrozen), helpstring ("is frozen feature?"), propget]
-        HRESULT IsFrozen ([out, retval] VARIANT_BOOL* pvbFroze);
-
-        [id (DISPID_EiffelComCompiler_IsInfix), helpstring ("Is infix?"), propget]
-        HRESULT IsInfix ([out, retval] VARIANT_BOOL* pvbInfix);
-
-        [id (DISPID_EiffelComCompiler_IsPrefix), helpstring ("Is prefix?"), propget]
-        HRESULT IsPrefix ([out, retval] VARIANT_BOOL* pvbPrefix);
-
-        [id (DISPID_EiffelComCompiler_IsAttribute), helpstring ("Is attribute?"), propget]
-        HRESULT IsAttribute ([out, retval] VARIANT_BOOL* pvbAttribute);
-
-        [id (DISPID_EiffelComCompiler_IsProcedure), helpstring ("Is procedure?"), propget]
-        HRESULT IsProcedure ([out, retval] VARIANT_BOOL* pvbProcedure);
-
-        [id (DISPID_EiffelComCompiler_IsFunction), helpstring ("Is function?"), propget]
-        HRESULT IsFunction ([out, retval] VARIANT_BOOL* pvbFunction);
-
-        [id (DISPID_EiffelComCompiler_IsUnique), helpstring ("Is unique?"), propget]
-        HRESULT IsUnique ([out, retval] VARIANT_BOOL* pvbUnique);
-
-        [id (DISPID_EiffelComCompiler_IsObsolete), helpstring ("Is obsolete feature?"), propget]
-        HRESULT IsObsolete ([out, retval] VARIANT_BOOL* pvbObsolete);
-
-        [id (DISPID_EiffelComCompiler_HasPrecondition), helpstring ("Does feature have precondition?"), propget]
-        HRESULT HasPrecondition([out, retval] VARIANT_BOOL* pvbPrecondition);
-
-        [id (DISPID_EiffelComCompiler_HasPostcondition), helpstring ("Does feature have postcondition?"), propget]
-        HRESULT HasPostcondition([out, retval] VARIANT_BOOL* pvbPostcondition);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEnumParameter),
-        helpstring ("Feature paramaters enumeration.")
-    ]
-    interface IEnumParameter: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor , [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumParameter** ppIEnumParameter);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG *ulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelParameterDescriptor),
-        helpstring ("Feature parameter info.")
-    ]
-    interface IEiffelParameterDescriptor: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Parameter name"), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_Display), helpstring ("Parameter display"), propget]
-        HRESULT Display ([out, retval] BSTR* pbstrDisplay);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumClusterProp),
-        helpstring ("Eiffel Cluster Properties Enumeration.")
-    ]
-    interface IEnumClusterProp: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelClusterProperties** ppIEiffelClusterProperties,[out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumClusterProp** ppIEnumClusterProp);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterProperties** ppIEiffelClusterProperties);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG *pulCount0);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelSystemClusters),
-        helpstring ("Eiffel System Clusters.")
-    ]
-    interface IEiffelSystemClusters: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_GetClusterTree ), helpstring( "Retrieve enumerator of clusters in tree form." )]
-        HRESULT GetClusterTree( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
-
-        [id (DISPID_EiffelComCompiler_GetAllClusters ), helpstring( "Retrieve enumerator of all defined clusters." )]
-        HRESULT GetAllClusters( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
-
-        [id (DISPID_EiffelComCompiler_GetClusterFullName ), helpstring( "Get a clusters full name from its name." )]
-        HRESULT GetClusterFullName( [in] BSTR bstrName, [out, retval] BSTR* pbstrFullName );
-
-        [id (DISPID_EiffelComCompiler_GetClusterProperties ), helpstring( "Retrieve a clusters properties by its name." )]
-        HRESULT GetClusterProperties( [in] BSTR bstrName, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
-
-        [id (DISPID_EiffelComCompiler_GetClusterPropertiesById ), helpstring( "Retrieve a clusters properties by its ID." )]
-        HRESULT GetClusterPropertiesById( [in] ULONG nClusterId, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
-
-        [id (DISPID_EiffelComCompiler_ChangeClusterName ), helpstring( "Change a clusters name." )]
-        HRESULT ChangeClusterName( [in] BSTR bstrName, [in] BSTR bstrNewName );
-
-        [id (DISPID_EiffelComCompiler_AddCluster ), helpstring( "Add a cluster to system clusters." )]
-        HRESULT AddCluster( [in] BSTR bstrName, [in] BSTR bstrParentName, [in] BSTR bstrPath);
-
-        [id (DISPID_EiffelComCompiler_RemoveCluster ), helpstring( "Remove a cluster from system clusters." )]
-        HRESULT RemoveCluster( [in] BSTR bstrName );
-
-        [id (DISPID_EiffelComCompiler_StoreClusters ), helpstring( "Persist current changes to disk" )]
-        HRESULT Store();
-
-        [id (DISPID_EiffelComCompiler_IsClusterNameAvailable ), helpstring( "Determins if 'bstrName' is available as a cluster name" )]
-        HRESULT IsClusterNameAvailable( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbAvailable );
-
-        [id (DISPID_EiffelComCompiler_IsValidClusterName ), helpstring( "Validates a cluster name" )]
-        HRESULT IsValidClusterName( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbValid );
-    };
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelClusterProperties),
-        helpstring ("Eiffel Cluster Properties (for Ace file).")
-    ]
-    interface IEiffelClusterProperties: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Cluster name."), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propget]
-        HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
-
-        [id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propput]
-        HRESULT ClusterPath ([in] BSTR bstrPath);
-
-        [id (DISPID_EiffelComCompiler_Override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
-        HRESULT Override ([out, retval] VARIANT_BOOL* pvbOverride);
-
-        [id (DISPID_EiffelComCompiler_Override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
-        HRESULT Override ([in] VARIANT_BOOL vbOverride);
-
-        [id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propget]
-        HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
-
-        [id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propput]
-        HRESULT IsLibrary ([in] VARIANT_BOOL vbLibrary);
-
-        [id (DISPID_EiffelComCompiler_All), helpstring ("Should all subclusters be included?"), propget]
-        HRESULT All ([out, retval] VARIANT_BOOL* pvbAll);
-
-        [id (DISPID_EiffelComCompiler_All), helpstring ("Should all subclusters be included?"), propput]
-        HRESULT All ([in] VARIANT_BOOL vbAll);
-
-        [id (DISPID_EiffelComCompiler_UseSystemDefault), helpstring ("Should use system default?"), propget]
-        HRESULT UseSystemDefault ([out, retval] VARIANT_BOOL* pvbUseDefaults);
-
-        [id (DISPID_EiffelComCompiler_UseSystemDefault), helpstring ("Should use system default?"), propput]
-        HRESULT UseSystemDefault ([in] VARIANT_BOOL vbUseDefaults);
-
-        [id (DISPID_EiffelComCompiler_EvaluateRequireByDefault), helpstring ("Should preconditions be evaluated by default?"), propget]
-        HRESULT EvaluateRequireByDefault ([out, retval] VARIANT_BOOL* pvbRequire);
-
-        [id (DISPID_EiffelComCompiler_EvaluateEnsureByDefault), helpstring ("Should postconditions be evaluated by default?"), propget]
-        HRESULT EvaluateEnsureByDefault ([out, retval] VARIANT_BOOL* pvbEnsure);
-
-        [id (DISPID_EiffelComCompiler_EvaluateCheckByDefault), helpstring ("Should check assertions be evaluated by default?"), propget]
-        HRESULT EvaluateCheckByDefault ([out, retval] VARIANT_BOOL* pvbCheck);
-
-        [id (DISPID_EiffelComCompiler_EvaluateLoopByDefault), helpstring ("Should loop assertions be evaluated by default?"), propget]
-        HRESULT EvaluateLoopByDefault ([out, retval] VARIANT_BOOL* pvbLoop);
-
-        [id (DISPID_EiffelComCompiler_EvaluateInvariantByDefault), helpstring ("Should class invariants be evaluated by default?"), propget]
-        HRESULT EvaluateInvariantByDefault ([out, retval] VARIANT_BOOL* pvbInvariant);
-
-        [id (DISPID_EiffelComCompiler_SetAssertions), helpstring ("Set assertions for cluster.")]
-        HRESULT SetAssertions ([in] VARIANT_BOOL vbCheck, [in] VARIANT_BOOL vbRequire, [in] VARIANT_BOOL vbEnsure, [in] VARIANT_BOOL vbLoop, [in] VARIANT_BOOL vbInvariant);
-
-        [id (DISPID_EiffelComCompiler_Excluded), helpstring ("List of excluded directories.")]
-        HRESULT Excluded ([out, retval] IEnumClusterExcludes** ppIEnumClusterExcludes);
-
-        [id (DISPID_EiffelComCompiler_AddExclude), helpstring ("Add a item to exclude.")]
-        HRESULT AddExclude ([in] BSTR bstrName);
-
-        [id (DISPID_EiffelComCompiler_RemoveExclude), helpstring ("Remove a item from being excluded.")]
-        HRESULT RemoveExclude ([in] BSTR bstrName);
-
-        [id (DISPID_EiffelComCompiler_ParentName), helpstring ("Name of the parent cluster."), propget]
-        HRESULT ParentName ([out, retval] BSTR* pbstrParentName);
-
-        [id (DISPID_EiffelComCompiler_HasParent), helpstring ("Does the current cluster have a parent cluster?"), propget]
-        HRESULT HasParent ([out, retval] VARIANT_BOOL* pvbHasParent);
-
-        [id (DISPID_EiffelComCompiler_Subclusters), helpstring ("List subclusters (list of IEiffelClusterProperties*)."), propget]
-        HRESULT Subclusters ([out, retval] IEnumClusterProp** ppIEnumClusterProp);
-
-        [id (DISPID_EiffelComCompiler_HasChildren), helpstring ("Does the current cluster have children?"), propget]
-        HRESULT HasChildren ([out, retval] VARIANT_BOOL* pvbHasChildren);
-
-        [id (DISPID_EiffelComCompiler_ClusterId), helpstring ("Cluster identifier."), propget]
-        HRESULT ClusterId ([out, retval] ULONG* pulId);
-
-        [id (DISPID_EiffelComCompiler_IsEiffelLibrary), helpstring ("Is the cluster in the Eiffel library")]
-        HRESULT IsEiffelLibrary ([out, retval] VARIANT_BOOL* pvbEiffelLibrary);
-
-        [id (DISPID_EiffelComCompiler_ExpandedClusterPath), helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
-        HRESULT ExpandedClusterPath ([out, retval] BSTR* pbstrExpandedPath);
-
-        [id (DISPID_EiffelComCompiler_ClusterNamespace), helpstring ("Cluster namespace."), propget]
-        HRESULT ClusterNamespace ([out, retval] BSTR* pbstrNamespace);
-
-        [id (DISPID_EiffelComCompiler_ClusterNamespace), helpstring ("Cluster namespace."), propput]
-        HRESULT ClusterNamespace ([in] BSTR bstrNamespace);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(CA8DB208-5E92-426e-953D-2660C131C618),
-        helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
-    ]
-    interface IEnumClusterExcludes: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrExclude, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumClusterExcludes** ppIEnumClusterExcludes);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrExclude);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG *pulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelSystemExternals),
-        helpstring ("Eiffel System Externals.")
-    ]
-    interface IEiffelSystemExternals: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_AddIncludePath), helpstring ("Add a include path to the project.")]
-        HRESULT AddIncludePath ([in] BSTR bstrPath);
-
-        [id (DISPID_EiffelComCompiler_RemoveIncludePath), helpstring ("Remove a include path from the project.")]
-        HRESULT RemoveIncludePath ([in] BSTR bstrPath);
-
-        [id (DISPID_EiffelComCompiler_ReplaceIncludePath), helpstring ("Replace an include path in the project.")]
-        HRESULT ReplaceIncludePath ([in] BSTR bstrPath, [in] BSTR bstrOldPath);
-
-        [id (DISPID_EiffelComCompiler_IncludePaths), helpstring ("Include paths.")]
-        HRESULT IncludePaths ([out, retval] IEnumIncludePaths** ppIEnumIncludePaths);
-
-        [id (DISPID_EiffelComCompiler_AddObjectFile), helpstring ("Add a object file to the project.")]
-        HRESULT AddObjectFile ([in] BSTR bstrFileName);
-
-        [id (DISPID_EiffelComCompiler_RemoveObjectFile), helpstring ("Remove a object file from the project.")]
-        HRESULT RemoveObjectFile ([in] BSTR bstrFileName);
-
-        [id (DISPID_EiffelComCompiler_ReplaceObjectFile), helpstring ("Replace an object file in the project.")]
-        HRESULT ReplaceObjectFile ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
-
-        [id (DISPID_EiffelComCompiler_ObjectFiles), helpstring ("Object files.")]
-        HRESULT ObjectFiles ([out, retval] IEnumObjectFiles** ppIEnumObjectFiles);
-
-        [id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
-        HRESULT Store ();
-    }; 
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumIncludePaths),
-        helpstring ("Include Path Enumeration.")
-    ]
-    interface IEnumIncludePaths: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrIncludePath, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumIncludePaths** ppIEnumIncludePaths);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrIncludePath);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-    //---------------------------------------------------------------------
-    
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumObjectFiles),
-        helpstring ("Object File Enumeration.")
-    ]
-    interface IEnumObjectFiles: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrObjectFile, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumObjectFiles** ppIEnumObjectFiles);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrObjectFile);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelSystemAssemblies),
-        helpstring ("Eiffel System Assemblies.")
-    ]
-    interface IEiffelSystemAssemblies: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_FlushAssemblies), helpstring ("Wipe out current list of assemblies")]
-        HRESULT FlushAssemblies ();
-
-        [id (DISPID_EiffelComCompiler_AddAssembly), helpstring ("Add an assembly to the project.")]
-        HRESULT AddAssembly ([in] BSTR bstrPrefix, [in] BSTR bstrClusterName, [in] BSTR bstrFileName, VARIANT_BOOL vbCopyLocally);
-
-        [id (DISPID_EiffelComCompiler_LastException), helpstring ("Last execption to occur"), propget]
-        HRESULT LastException ([out, retval] IEiffelException** pException);
-
-        [id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
-        HRESULT Store ();
-    };
-
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumAssembly),
-        helpstring ("Eiffel Assembly Enumeration.")
-    ]
-    interface IEnumAssembly: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumAssembly** ppIEnumAssembly);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulCount, [out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        object,
-        uuid (UUID_IEiffelAssemblyProperties),
-        helpstring ("Eiffel Assembly Properties (for Ace file).")
-    ]
-    interface IEiffelAssemblyProperties: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Name), helpstring ("Assembly name."), propget]
-        HRESULT Name ([out, retval] BSTR* pbstrName);
-
-        [id (DISPID_EiffelComCompiler_Version), helpstring ("Assembly version."), propget]
-        HRESULT Version ([out, retval] BSTR* pbstrVersion);
-
-        [id (DISPID_EiffelComCompiler_Culture), helpstring ("Assembly culture."), propget]
-        HRESULT Culture ([out, retval] BSTR* pbstrVersion);
-
-        [id (DISPID_EiffelComCompiler_PublicKeyToken), helpstring ("Assembly public key token"), propget]
-        HRESULT PublicKeyToken ([out, retval] BSTR* pvbPublicKeyToken);
-
-        [id (DISPID_EiffelComCompiler_IsLocal), helpstring ("Is the assembly local"), propget]
-        HRESULT IsLocal ([out, retval] VARIANT_BOOL* pvbIsLocal);
-
-        [id (DISPID_EiffelComCompiler_ClusterName), helpstring ("Assembly cluster name."), propget]
-        HRESULT ClusterName ([out, retval] BSTR* pbstrClusterName);
-
-        [id (DISPID_EiffelComCompiler_Prefix), helpstring ("Prefix."), propget]
-        HRESULT Prefix ([out, retval] BSTR* pbstrPrefix);
-
-        [id (DISPID_EiffelComCompiler_Prefix), helpstring ("Prefix."), propput]
-        HRESULT Prefix ([in] BSTR bstrPrefix);
-    };
-    //---------------------------------------------------------------------
-
-    [
-        dual,
-        oleautomation,
-        uuid (UUID_IEiffelException),
-        helpstring ("A single exception object")
-    ]
-    interface IEiffelException: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_InnerException), helpstring ("Get inner exception"), propget]
-        HRESULT InnerException ([out, retval] IEiffelException** ppIEiffelException);
-
-        [id (DISPID_EiffelComCompiler_Message), helpstring ("Get exception message"), propget]
-        HRESULT Message ([out, retval] BSTR* pbstrMessage);
-
-        [id (DISPID_EiffelComCompiler_ExceptionCode), helpstring ("Retrieve exception type"), propget]
-        HRESULT ExceptionCode ([out, retval] EIF_EXCEPTIONS* pEIF_EXCEPTIONS);
-    };
-    //---------------------------------------------------------------------
-
-}; // End EiffelComCompiler Library
+	importlib ("stdole2.tlb");
+
+	enum EIF_ENTITY_IMAGES;
+	enum EIF_FEATURE_TYPES;
+	enum EIF_EXCEPTIONS;
+	enum EIF_PROJECT_TYPES;
+	enum EIF_ASSERTIONS;
+	enum EIF_CLUSTER_NAMESPACE_GENERATION;
+	enum EIF_COMPILATION_MODE;
+
+	interface IEiffelProject;
+	interface IEiffelProjectProperties;
+	interface IEiffelCompiler;
+	interface IEiffelCompilerEvents;
+	interface IEiffelCompletionInfo;
+	interface IEiffelHtmlDocumentationGenerator;
+	interface IEiffelHtmlDocumentationEvents;	
+	interface IEiffelSystemBrowser;
+	interface IEnumCluster;
+	interface IEiffelClusterDescriptor;
+	interface IEnumEiffelClass;
+	interface IEiffelClassDescriptor;
+	interface IEnumFeature;
+	interface IEiffelFeatureDescriptor;
+	interface IEnumParameter;
+	interface IEiffelParameterDescriptor;	
+	interface IEiffelSystemClusters;
+	interface IEnumClusterProp;
+	interface IEiffelClusterProperties;
+	interface IEnumClusterExcludes;
+	interface IEiffelSystemExternals;
+	interface IEnumIncludePaths;
+	interface IEnumObjectFiles;
+	interface IEiffelSystemAssemblies;
+	interface IEnumAssembly;
+	interface IEiffelAssemblyProperties;
+	interface IEiffelException;
+
+	// =========================================================================
+	//                                                      CoClass Declarations
+
+	//---------------------------------------------------------------------
+	// CEiffelProject
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelProject)]
+	coclass CEiffelProject
+	{
+		[default] interface IEiffelProject;
+	};
+
+	//---------------------------------------------------------------------
+	// CEiffelCompiler
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelCompiler), noncreatable]
+	coclass CEiffelCompiler
+	{
+		[default] interface IEiffelCompiler;
+		[default, source] interface IEiffelCompilerEvents;
+	};
+
+	//---------------------------------------------------------------------
+	// CEiffelCompletionInfo
+	//---------------------------------------------------------------------
+	[uuid (UUID_CEiffelCompletionInfo), noncreatable]
+	coclass CEiffelCompletionInfo
+	{
+		[default] interface IEiffelCompletionInfo;
+	};
+
+	// =========================================================================
+	//                                                         Enum Declarations
+
+	//---------------------------------------------------------------------
+	// Eiffel Exception Codes
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_EXCEPTIONS),
+		helpstring ("Eiffel Exception Codes")
+	]
+	typedef enum EIF_EXCEPTIONS
+	{
+		EIF_EXCEPTIONS_Unspecified = 0,
+		EIF_EXCEPTIONS_Successful,
+
+		// IEiffelProject Exceptions
+		EIF_EXCEPTIONS_NoProjectLoaded,
+		EIF_EXCEPTIONS_ProjectIncompatible,
+		EIF_EXCEPTIONS_ProjectFileCorrupted,
+		EIF_EXCEPTIONS_UnableToRemoveProject,
+		EIF_EXCEPTIONS_UnableToCreateProject,
+		EIF_EXCEPTIONS_InvalidAceFile,
+		EIF_EXCEPTIONS_ProjectNotCompiled,
+		EIF_EXCEPTIONS_AceFileDoesNotExists,
+		EIF_EXCEPTIONS_ProjectAlreadyInitialized,
+		EIF_EXCEPTIONS_ProjectIncomplete,
+		EIF_EXCEPTIONS_IOError,
+		EIF_EXCEPTIONS_NonDotnetProject,
+
+		// IEiffelSystemAssemblies Exceptions
+		EIF_EXCEPTIONS_AssemblyAlreadyAdded,
+		EIF_EXCEPTIONS_InvalidAssemblyPrefix
+
+	} EIF_EXCEPTIONS;
+
+	//---------------------------------------------------------------------
+	// Various modes of compilation
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_COMPILATION_MODE),
+		helpstring ("Various modes of compilation.")
+	]
+	typedef enum EIF_COMPILATION_MODE
+	{
+		EIF_COMPILATION_MODE_Workbench = 0,
+		EIF_COMPILATION_MODE_Finalize = 1,
+		EIF_COMPILATION_MODE_Precompile = 2
+	} EIF_COMPILATION_MODE;
+
+	//---------------------------------------------------------------------
+	// Assertion levels for project settings
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_ASSERTIONS),
+		helpstring ("Assertion levels for project settings.")
+	]
+	typedef enum EIF_ASSERTIONS
+	{
+		EIF_ASSERTIONS_None = 0,
+		EIF_ASSERTIONS_Require = 1,
+		EIF_ASSERTIONS_Ensure = 2,
+		EIF_ASSERTIONS_Check = 4,
+		EIF_ASSERTIONS_Invariant = 8,
+		EIF_ASSERTIONS_Loop = 16
+	} EIF_ASSERTIONS;
+
+	//---------------------------------------------------------------------
+	// Type of cluster namespace generation
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION),
+		helpstring ("Type of cluster namespace generation.")
+	]
+	typedef enum EIF_CLUSTER_NAMESPACE_GENERATION
+	{
+		EIF_CLUSTER_NAMESPACE_GENERATION_None = 0,
+		EIF_CLUSTER_NAMESPACE_GENERATION_ClusterName = 1,
+		EIF_CLUSTER_NAMESPACE_GENERATION_FullClusterName = 2
+	} EIF_CLUSTER_NAMESPACE_GENERATION;
+
+	//---------------------------------------------------------------------
+	// Type of compilation for projects
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_PROJECT_TYPES),
+		helpstring ("Type of compilation for projects.")
+	]
+	typedef enum EIF_PROJECT_TYPES
+	{
+		EIF_PROJECT_TYPES_ConsoleApplication = 0,
+		EIF_PROJECT_TYPES_WindowsApplication,
+		EIF_PROJECT_TYPES_ClassLibrary,
+		EIF_PROJECT_TYPES_PrecompiledLibrary
+	} EIF_PROJECT_TYPES;
+
+	//---------------------------------------------------------------------
+	// Image indexes associated with a feature
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_ENTITY_IMAGES),
+		helpstring ("Image indexes associated with a feature.")
+	]
+	typedef enum EIF_ENTITY_IMAGES{
+		EIF_ENTITY_IMAGES_FrozenOnce = 24,
+		EIF_ENTITY_IMAGES_Obsolete = 23,
+		EIF_ENTITY_IMAGES_FrozenAttribute = 22,
+		EIF_ENTITY_IMAGES_Attribute = 19,
+		EIF_ENTITY_IMAGES_Once = 18,
+		EIF_ENTITY_IMAGES_FrozenExternal = 25,
+		EIF_ENTITY_IMAGES_FrozenFeature = 21,
+		EIF_ENTITY_IMAGES_ExternalFeature = 17,
+		EIF_ENTITY_IMAGES_Deferred = 16,
+		EIF_ENTITY_IMAGES_Feature = 4,
+		EIF_ENTITY_IMAGES_Variable = 26
+	} EIF_ENTITY_IMAGES;
+
+	//---------------------------------------------------------------------
+	// Type of Eiffel feature
+	//---------------------------------------------------------------------
+	[
+		uuid (UUID_EnumEIF_FEATURE_TYPES),
+		helpstring ("Type of Eiffel feature.")
+	]
+	typedef enum EIF_FEATURE_TYPES
+	{
+		EIF_FEATURE_TYPES_Attribute = 1,
+		EIF_FEATURE_TYPES_Constant = 2,
+		EIF_FEATURE_TYPES_Deferred = 4,
+		EIF_FEATURE_TYPES_External = 8,
+		EIF_FEATURE_TYPES_Frozen = 16,
+		EIF_FEATURE_TYPES_Function = 32,
+		EIF_FEATURE_TYPES_Infix = 64,
+		EIF_FEATURE_TYPES_Obsolete = 128,
+		EIF_FEATURE_TYPES_Once = 256,
+		EIF_FEATURE_TYPES_Prefix = 512,
+		EIF_FEATURE_TYPES_Procedure = 1024
+	} EIF_FEATURE_TYPES;
+
+	// =========================================================================
+	//                                                    Interface Declarations
+
+	//---------------------------------------------------------------------
+	// IEiffelProject
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelProject),
+		helpstring ("Eiffel Project.")
+	]
+	interface IEiffelProject: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_RetrieveEiffelProject), helpstring ("Retrieve Eiffel Project")]
+		HRESULT RetrieveEiffelProject ([in] BSTR bstrProjectFileName);
+
+		[id (DISPID_EiffelComCompiler_CreateEiffelProject), helpstring ("Create new Eiffel project from an existing ace file.")]
+		HRESULT CreateEiffelProject ([in] BSTR bstrAceFileName, [in] BSTR bstrProjectDirectory);
+
+		[id (DISPID_EiffelComCompiler_GenerateNewEiffelProject), helpstring ("Create new Eiffel project from scratch.")]
+		HRESULT GenerateNewEiffelProject ([in] BSTR bstrProjectName, [in] BSTR bstrAceFileName, [in] BSTR bstrRootClassName, [in] BSTR bstrCreationRoutine, [in] BSTR bstrProjectDirectory);
+
+		[id (DISPID_EiffelComCompiler_ProjectFileName), helpstring ("Full path to .epr file."), propget]
+		HRESULT ProjectFileName ([out, retval] BSTR* pbstrProjectFileName);
+
+		[id (DISPID_EiffelComCompiler_AceFileName), helpstring ("Full path to Ace file."), propget]
+		HRESULT AceFileName ([out, retval] BSTR* pbstrAceFileName);
+
+		[id (DISPID_EiffelComCompiler_ProjectDirectory), helpstring ("Project directory."), propget]
+		HRESULT ProjectDirectory ([out, retval] BSTR* pbstrProjectDirectory);
+
+		[id (DISPID_EiffelComCompiler_IsValidProject), helpstring ("Is project valid?"), propget]
+		HRESULT IsValidProject ([out, retval] VARIANT_BOOL* pvbValid);
+
+		[id (DISPID_EiffelComCompiler_LastException), helpstring ("Last exception raised"), propget]
+		HRESULT LastException ([out, retval] IEiffelException** ppIEiffelException);
+
+		[id (DISPID_EiffelComCompiler_Compiler), helpstring ("Compiler."), propget]
+		HRESULT Compiler ([out, retval] IEiffelCompiler** ppIEiffelCompiler);
+
+		[id (DISPID_EiffelComCompiler_IsCompiled), helpstring ("Has system been compiled?"), propget]
+		HRESULT IsCompiled ([out, retval] VARIANT_BOOL* pvbCompiled);
+
+		[id (DISPID_EiffelComCompiler_ProjectHasUpdated), helpstring ("Has the project updated since last compilation?"), propget]
+		HRESULT ProjectHasUpdated ([out, retval] VARIANT_BOOL* pvbUpdated);
+
+		[id (DISPID_EiffelComCompiler_SystemBrowser), helpstring ("System Browser."), propget]
+		HRESULT SystemBrowser ([out, retval] IEiffelSystemBrowser** ppEiffelSystemBrowser);
+
+		[id (DISPID_EiffelComCompiler_ProjectProperties), helpstring ("Project Properties."), propget]
+		HRESULT ProjectProperties ([out, retval] IEiffelProjectProperties** ppIEiffelProjectProperties);
+
+		[id (DISPID_EiffelComCompiler_CompletionInformation), helpstring ("Completion information"), propget]
+		HRESULT CompletionInformation ([out, retval] IEiffelCompletionInfo** ppIEiffelCompletionInfo);
+
+		[id (DISPID_EiffelComCompiler_HtmlDocumentationGenerator), helpstring ("Help documentation generator"), propget]
+		HRESULT HtmlDocumentationGenerator ([out, retval] IEiffelHtmlDocumentationGenerator** ppIEiffelHtmlDocumentationGenerator);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelProjectProperties
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelProjectProperties),
+		helpstring ("Eiffel Project Properties.")
+	]
+	interface IEiffelProjectProperties: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_SystemName), helpstring ("System name."), propget]
+		HRESULT SystemName ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_SystemName), helpstring ("System name."), propput]
+		HRESULT SystemName ([in] BSTR bstrName);
+
+		[id (DISPID_EiffelComCompiler_RootClassName), helpstring ("Root class name."), propget]
+		HRESULT RootClassName ([out, retval] BSTR* pbstrClassName);
+
+		[id (DISPID_EiffelComCompiler_RootClassName), helpstring ("Root class name."), propput]
+		HRESULT RootClassName ([in] BSTR bstrClassName);
+
+		[id (DISPID_EiffelComCompiler_CreationRoutine), helpstring ("Creation routine name."), propget]
+		HRESULT CreationRoutine ([out, retval] BSTR* pbstrRoutineName);
+
+		[id (DISPID_EiffelComCompiler_CreationRoutine), helpstring ("Creation routine name."), propput]
+		HRESULT CreationRoutine ([in] BSTR bstrRoutineName);
+
+		[id (DISPID_EiffelComCompiler_NamespaceGeneration), helpstring ("Namespace generation for cluster"), propget]
+		HRESULT NamespaceGeneration ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penumClusterNamespaceGeneration);
+
+		[id (DISPID_EiffelComCompiler_NamespaceGeneration), helpstring ("Namespace generation for cluster"), propput]
+		HRESULT NamespaceGeneration ([in] EIF_CLUSTER_NAMESPACE_GENERATION enumClusterNamespaceGeneration);
+
+		[id (DISPID_EiffelComCompiler_DefaultNamespace), helpstring ("Default namespace."), propget]
+		HRESULT DefaultNamespace ([out, retval] BSTR* pbstrNamespace);
+
+		[id (DISPID_EiffelComCompiler_DefaultNamespace), helpstring ("Default namespace."), propput]
+		HRESULT DefaultNamespace ([in] BSTR bstrNamespace);
+
+		[id (DISPID_EiffelComCompiler_ProjectType), helpstring ("Project type"), propget]
+		HRESULT ProjectType ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
+
+		[id (DISPID_EiffelComCompiler_ProjectType), helpstring ("Project type"), propput]
+		HRESULT ProjectType ([in] EIF_PROJECT_TYPES enumProjectType);
+
+		[id (DISPID_EiffelComCompiler_TargetClrVersion), helpstring ("Version of CLR compiler should target"), propget]
+		HRESULT TargetClrVersion ([out, retval] BSTR* pbstrVersion);
+
+		[id (DISPID_EiffelComCompiler_TargetClrVersion), helpstring ("Version of CLR compiler should target"), propput]
+		HRESULT TargetClrVersion ([in] BSTR bstrVersion);
+
+		[id (DISPID_EiffelComCompiler_DotNetNamingConvention), helpstring (".NET Naming convention"), propget]
+		HRESULT DotNetNamingConvention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
+
+		[id (DISPID_EiffelComCompiler_DotNetNamingConvention), helpstring (".NET Naming convention"), propput]
+		HRESULT DotNetNamingConvention ([in] VARIANT_BOOL vbNamingConvention);
+
+		[id (DISPID_EiffelComCompiler_GenerateDebugInfo), helpstring ("Generate debug info?"), propget]
+		HRESULT GenerateDebugInfo ([out, retval] VARIANT_BOOL* pvbGenerate);
+
+		[id (DISPID_EiffelComCompiler_GenerateDebugInfo), helpstring ("Generate debug info?"), propput]
+		HRESULT GenerateDebugInfo ([in] VARIANT_BOOL vbGenerate);
+
+		[id (DISPID_EiffelComCompiler_PrecompiledLibrary), helpstring ("Precompiled file."), propget]
+		HRESULT PrecompiledLibrary ([out, retval] BSTR* pbstrPath);
+
+		[id (DISPID_EiffelComCompiler_PrecompiledLibrary), helpstring ("Precompiled file."), propput]
+		HRESULT PrecompiledLibrary ([in] BSTR bstrPath);
+
+		[id (DISPID_EiffelComCompiler_Assertions), helpstring ("Project assertions"), propget]
+		HRESULT Assertions ([out, retval] ULONG* pulAssertions);
+
+		[id (DISPID_EiffelComCompiler_Assertions), helpstring ("Project assertions"), propput]
+		HRESULT Assertions ([in] ULONG ulAssertions);
+
+		[id (DISPID_EiffelComCompiler_Clusters), helpstring ("Project Clusters."), propget]
+		HRESULT Clusters ([out, retval] IEiffelSystemClusters** ppIEiffelSystemClusters);
+
+		[id (DISPID_EiffelComCompiler_Externals), helpstring ("Externals."), propget]
+		HRESULT Externals ([out, retval] IEiffelSystemExternals** ppIEiffelSystemExternals);
+
+		[id (DISPID_EiffelComCompiler_Assemblies), helpstring ("Assemblies."), propget]
+		HRESULT Assemblies ([out, retval] IEiffelSystemAssemblies** ppIEiffelSystemAssemblies);
+
+		[id (DISPID_EiffelComCompiler_Title), helpstring ("Project title."), propget]
+		HRESULT Title ([out, retval] BSTR* pbstrTitle);
+
+		[id (DISPID_EiffelComCompiler_Title), helpstring ("Project title."), propput]
+		HRESULT Title ([in] BSTR bstrTitle);
+
+		[id (DISPID_EiffelComCompiler_Description), helpstring ("Project description."), propget]
+		HRESULT Description ([out, retval] BSTR* pbstrDescription);
+
+		[id (DISPID_EiffelComCompiler_Description), helpstring ("Project description."), propput]
+		HRESULT Description ([in] BSTR bstrDescription);
+
+		[id (DISPID_EiffelComCompiler_Company), helpstring ("Project company."), propget]
+		HRESULT Company ([out, retval] BSTR* pbstrCompany);
+
+		[id (DISPID_EiffelComCompiler_Company), helpstring ("Project company."), propput]
+		HRESULT Company ([in] BSTR bstrCompany);
+
+		[id (DISPID_EiffelComCompiler_Product), helpstring ("Product."), propget]
+		HRESULT Product ([out, retval] BSTR* ppbstrProduct);
+
+		[id (DISPID_EiffelComCompiler_Product), helpstring ("Product."), propput]
+		HRESULT Product ([in] BSTR bstrProduct);
+
+		[id (DISPID_EiffelComCompiler_Version), helpstring ("Project version."), propget]
+		HRESULT Version ([out, retval] BSTR* pbstrVersion);
+
+		[id (DISPID_EiffelComCompiler_Version), helpstring ("Project version."), propput]
+		HRESULT Version ([in] BSTR bstrVersion);
+
+		[id (DISPID_EiffelComCompiler_Trademark), helpstring ("Project trademark."), propget]
+		HRESULT Trademark ([out, retval] BSTR* pbstrTrademark);
+
+		[id (DISPID_EiffelComCompiler_Trademark), helpstring ("Project trademark."), propput]
+		HRESULT Trademark ([in] BSTR bstrTrademark);
+
+		[id (DISPID_EiffelComCompiler_Copyright), helpstring ("Project copyright."), propget]
+		HRESULT Copyright ([out, retval] BSTR* pbstrCopyright);
+
+		[id (DISPID_EiffelComCompiler_Copyright), helpstring ("Project copyright."), propput]
+		HRESULT Copyright ([in] BSTR bstrCopyright);
+
+		[id (DISPID_EiffelComCompiler_Culture), helpstring ("Asembly culture."), propget]
+		HRESULT Culture ([out, retval] BSTR* pbstrCultre);
+
+		[id (DISPID_EiffelComCompiler_Culture), helpstring ("Asssembly culture."), propput]
+		HRESULT Culture ([in] BSTR bstrCultre);
+
+		[id (DISPID_EiffelComCompiler_KeyFileName), helpstring ("Asembly signing key file name."), propget]
+		HRESULT KeyFileName ([out, retval] BSTR* pbstrFileName);
+
+		[id (DISPID_EiffelComCompiler_KeyFileName), helpstring ("Assembly signing key file name."), propput]
+		HRESULT KeyFileName ([in] BSTR bstrFileName);
+
+		[id (DISPID_EiffelComCompiler_WorkingDirectory), helpstring ("Project working directory"), propget]
+		HRESULT WorkingDirectory ([out, retval] BSTR* pbstrWorkingDirectory);
+
+		[id (DISPID_EiffelComCompiler_WorkingDirectory), helpstring ("Project working directory"), propput]
+		HRESULT WorkingDirectory ([in] BSTR bstrWorkingDirectory);
+
+		[id (DISPID_EiffelComCompiler_Apply), helpstring ("Apply changes")]
+		HRESULT Apply ();
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelCompiler
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelCompiler),
+		helpstring ("Eiffel Compiler.")
+	]
+	interface IEiffelCompiler: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_CompilerVersion), helpstring ("Compiler version."), propget]
+		HRESULT CompilerVersion ([out, retval] BSTR* pbstrVersion);
+
+		[id (DISPID_EiffelComCompiler_HasSignableGeneration), helpstring ("Is the compiler a trial version."), propget]
+		HRESULT HasSignableGeneration ([out, retval] VARIANT_BOOL* pvbSignable);
+
+		[id (DISPID_EiffelComCompiler_CanRun), helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
+		HRESULT CanRun ([out, retval] VARIANT_BOOL* pvbCanRun);
+
+		[id (DISPID_EiffelComCompiler_Compile), helpstring ("Compile.")]
+		HRESULT Compile ([in] EIF_COMPILATION_MODE mode);
+
+		[id (DISPID_EiffelComCompiler_CompileToPipe), helpstring ("Compile to an already established named pipe.")]
+		HRESULT CompileToPipe ([in] EIF_COMPILATION_MODE mode, [in] BSTR bstrPipeName);
+
+		[id (DISPID_EiffelComCompiler_WasCompilationSuccessful), helpstring ("Was last compilation successful?"), propget]
+		HRESULT WasCompilationSuccessful ([out, retval] VARIANT_BOOL* pvbSuccess);
+
+		[id (DISPID_EiffelComCompiler_FreezingOccurred), helpstring ("Did last compile warrant a call to finish_freezing?"), propget]
+		HRESULT FreezingOccurred ([out, retval] VARIANT_BOOL* pvbDidFreeze);
+
+		[id (DISPID_EiffelComCompiler_FreezeCommandName), helpstring ("Eiffel Freeze command name"), propget]
+		HRESULT FreezeCommandName ([out, retval] BSTR* pbstrCmdName);
+
+		[id (DISPID_EiffelComCompiler_FreezeCommandArguments), helpstring ("Eiffel Freeze command arguments"), propget]
+		HRESULT FreezeCommandArguments ([out, retval] BSTR* pbstrCmdArgs);
+
+		[id (DISPID_EiffelComCompiler_RemoveFileLocks), helpstring ("Remove file locks")]
+		HRESULT RemoveFileLocks ();
+
+		[id (DISPID_EiffelComCompiler_DisplayWarnings), helpstring ("Should warning events be raised when compilation raises a warning?"), propput]
+		HRESULT DisplayWarnings ([in] VARIANT_BOOL vbShowWarnings);
+
+		[id (DISPID_EiffelComCompiler_ExpandPath), helpstring ("Takes a path and expands it using the env vars.")]
+		HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
+
+		[id (DISPID_EiffelComCompiler_GenerateMsilKeyFileName), helpstring ("Generate a cyrptographic key filename.")]
+		HRESULT GenerateMsilKeyFileName ([in] BSTR bstrFileName);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelCompilerEvents
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelCompilerEvents),
+		helpstring ("Eiffel Compiler Events.")
+	]
+	interface IEiffelCompilerEvents: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_BeginCompile), helpstring ("Beginning compilation.")]
+		HRESULT BeginCompile ();
+
+		[id (DISPID_EiffelComCompiler_BeginDegree), helpstring ("Start of new degree phase in compilation.")]
+		HRESULT BeginDegree ([in] LONG ulDegree);
+
+		[id (DISPID_EiffelComCompiler_EndCompile), helpstring ("Finished compilation.")]
+		HRESULT EndCompile ([in] VARIANT_BOOL vbSucessful);
+
+		[id (DISPID_EiffelComCompiler_ShouldContinue), helpstring ("Should compilation continue.")]
+		HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
+
+		[id (DISPID_EiffelComCompiler_OutputString), helpstring ("Output string.")]
+		HRESULT OutputString ([in] BSTR bstrOutput);
+
+		[id (DISPID_EiffelComCompiler_OutputError), helpstring ("Last error.")]
+		HRESULT OutputError ([in] BSTR bstrFullError, [in] BSTR bstrShortError, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
+
+		[id (DISPID_EiffelComCompiler_OutputWarning), helpstring ("Last warning.")]
+		HRESULT OutputWarning ([in] BSTR bstrFullWarning, [in] BSTR bstrShortWarning, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelCompletionInfo
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelCompletionInfo),
+		helpstring ("Eiffel Completion info.")
+	]
+	interface IEiffelCompletionInfo: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_AddLocal), helpstring ("Add a local variable used for solving member completion list")]
+		HRESULT AddLocal ([in] BSTR bstrName, [in] BSTR bstrType);
+
+		[id (DISPID_EiffelComCompiler_AddArgument), helpstring ("Add an argument used for solving member completion list")]
+		HRESULT AddArgument ([in] BSTR bstrName, [in] BSTR bstrType);
+
+		[id (DISPID_EiffelComCompiler_TargetFeatures), helpstring ("Features accessible from target.")]
+		HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
+
+		[id (DISPID_EiffelComCompiler_TargetFeature), helpstring ("Feature information")]
+		HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
+
+		[id (DISPID_EiffelComCompiler_FlushCompletionFeatures), helpstring ("Flush temporary completion features for a specific file")]
+		HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
+
+		[id (DISPID_EiffelComCompiler_InitializeFeature), helpstring ("Initialize a feature for completion without compiltation")]
+		HRESULT InitializeFeature ([in] BSTR bstrName, [in] VARIANT varArguments, [in] VARIANT varArgumentTypes, [in] BSTR bstrReturnType, [in] ULONG ulFeatureType, [in] BSTR bstrFileName);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelHtmlDocumentationGenerator
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelHtmlDocumentationGenerator),
+		helpstring ("Eiffel Project HTML Documentation Generator.")
+	]
+	interface IEiffelHtmlDocumentationGenerator: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_AddExcludedCluster), helpstring ("Exclude a cluster from being generated.")]
+		HRESULT AddExcludedCluster ([in] BSTR bstrFullClusterName);
+
+		[id (DISPID_EiffelComCompiler_RemoveExcludedCluster), helpstring ("Include a cluster to be generated.")]
+		HRESULT RemoveExcludedCluster ([in] BSTR bstrFullClusterName);
+
+		[id (DISPID_EiffelComCompiler_StartGeneration), helpstring ("Generate the HTML documents into path.")]
+		HRESULT StartGeneration ([in] BSTR bstrGenerationPath);
+
+		[id (DISPID_EiffelComCompiler_AdviseStatusCallback), helpstring ("Add a callback interface.")]
+		HRESULT AdviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
+
+		[id (DISPID_EiffelComCompiler_UnadviseStatusCallback), helpstring ("Remove a callback interface.")]
+		HRESULT UnadviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelHtmlDocumentationEvents
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelHtmlDocumentationEvents),
+		helpstring ("Callback interface for HTML Documentation Generator.")
+	]
+	interface IEiffelHtmlDocumentationEvents: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_NotifyInitalizingDocumentation), helpstring ("Notify that documentation generating is initializing")]
+		HRESULT NotifyInitalizingDocumentation ();
+
+		[id (DISPID_EiffelComCompiler_NotifyPercentageComplete), helpstring ("Notify that the percentage completed has changed")]
+		HRESULT NotifyPercentageComplete ([in] ULONG ulPercent);
+
+		[id (DISPID_EiffelComCompiler_OutputHeader), helpstring ("Put a header message to the output")]
+		HRESULT OutputHeader ([in] BSTR bstrMsg);
+
+		[id (DISPID_EiffelComCompiler_OutputString), helpstring ("Put a string to the output")]
+		HRESULT OutputString ([in] BSTR bstrMsg);
+
+		[id (DISPID_EiffelComCompiler_OutputClassDocumentMessage), helpstring ("Put a class name to the output")]
+		HRESULT OutputClassDocumentMessage ([in] BSTR bstrMsg);
+
+		[id (DISPID_EiffelComCompiler_ShouldContinue), helpstring ("Should compilation continue.")]
+		HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelSystemBrowser
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelSystemBrowser),
+		helpstring ("System Browser.")
+	]
+	interface IEiffelSystemBrowser: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_SystemClasses), helpstring ("List of classes in system.")]
+		HRESULT SystemClasses ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_ClassCount), helpstring ("Number of classes in system.")]
+		HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
+
+		[id (DISPID_EiffelComCompiler_SystemClusters), helpstring ("List of system's clusters.")]
+		HRESULT SystemClusters ([out, retval] IEnumCluster** ppIEnumCluster);
+
+		[id (DISPID_EiffelComCompiler_ExternalClusters), helpstring ("List of system's external clusters.")]
+		HRESULT ExternalClusters ([out, retval] IEnumCluster** ppIEnumCluster);
+
+		[id (DISPID_EiffelComCompiler_Assemblies), helpstring ("Returns all of the assemblies in an enumerator")]
+		HRESULT Assemblies ([out, retval] IEnumAssembly** ppIEnumAssembly);
+
+		[id (DISPID_EiffelComCompiler_ClusterCount), helpstring ("Number of top-level clusters in system.")]
+		HRESULT ClusterCount ([out, retval] ULONG* pulClusterCount);
+
+		[id (DISPID_EiffelComCompiler_RootCluster), propget, helpstring ("Number of top-level clusters in system.")]
+		HRESULT RootCluster ([out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
+
+		[id (DISPID_EiffelComCompiler_ClusterDescriptor), helpstring ("Cluster descriptor.")]
+		HRESULT ClusterDescriptor ([in] BSTR bstrClassName, [out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
+
+		[id (DISPID_EiffelComCompiler_ClassDescriptor), helpstring ("Class descriptor.")]
+		HRESULT ClassDescriptor ([in] BSTR bstrClusterName, [out, retval] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
+
+		[id (DISPID_EiffelComCompiler_FeatureDescriptor), helpstring ("Feature descriptor.")]
+		HRESULT FeatureDescriptor ([in] BSTR bstrClassName, [in] BSTR bstrFeatureName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
+
+		[id (DISPID_EiffelComCompiler_SearchClasses), helpstring ("Search classes with names matching `a_string'.")]
+		HRESULT SearchClasses ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_SearchFeatures), helpstring ("Search feature with names matching `a_string'.")]
+		HRESULT SearchFeatures ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumFeature ** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_DescriptionFromDotnetType), helpstring ("Retrieve description from dotnet type")]
+		HRESULT DescriptionFromDotnetType ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [out, retval] BSTR *pbstrDescription);
+
+		[id (DISPID_EiffelComCompiler_DescriptionFromDotnetFeature), helpstring ("Retrieve description from dotnet feature")]
+		HRESULT DescriptionFromDotnetFeature ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [in] BSTR bstrFeatureSignature, [out, retval] BSTR *pbstrDescription);
+
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumCluster
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumCluster),
+		helpstring ("Eiffel Cluster Enumeration.")
+	]
+	interface IEnumCluster: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor, [out] ULONG *pulCount);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumCluster** ppIEnumCluster);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG* pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelClusterDescriptor
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelClusterDescriptor),
+		helpstring ("Eiffel Cluster Descriptor.")
+	]
+	interface IEiffelClusterDescriptor: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Cluster name."), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_Description), helpstring ("Cluster description."), propget]
+		HRESULT Description ([out, retval] BSTR* pbstrDescription);
+
+		[id (DISPID_EiffelComCompiler_ToolTip), helpstring ("Cluster Tool Tip."), propget]
+		HRESULT ToolTip ([out, retval] BSTR* pbstrToolTop);
+
+		[id (DISPID_EiffelComCompiler_Classes), helpstring ("List of classes in cluster.")]
+		HRESULT Classes ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_ClassCount), helpstring ("Number of classes in cluster.")]
+		HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
+
+		[id (DISPID_EiffelComCompiler_Clusters), helpstring ("List of subclusters in cluster.")]
+		HRESULT Clusters ([out, retval] IEnumCluster** ppIEnumCluster);
+
+		[id (DISPID_EiffelComCompiler_ClusterCount), helpstring ("Number of subclusters in cluster.")]
+		HRESULT ClusterCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propget]
+		HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
+
+		[id (DISPID_EiffelComCompiler_RelativePath), helpstring ("Relative path to cluster.")]
+		HRESULT RelativePath ([out, retval] BSTR* pbstrPath);
+
+		[id (DISPID_EiffelComCompiler_IsOverrideCluster), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
+		HRESULT IsOverrideCluster ([out, retval] VARIANT_BOOL* pvbOverride);
+
+		[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propget]
+		HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumEiffelClass
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumEiffelClass),
+		helpstring ("Eiffel Class Enumeration.")
+	]
+	interface IEnumEiffelClass: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelClassDescriptor** ppIEiffelClassDescriptor, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG* pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelClassDescriptor
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelClassDescriptor),
+		helpstring ("Eiffel Class Descriptor.")
+	]
+	interface IEiffelClassDescriptor: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Class name."), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_Description), helpstring ("Class description."), propget]
+		HRESULT Description ([out, retval] BSTR* pbstrDescription);
+
+		[id (DISPID_EiffelComCompiler_ExternalName), helpstring ("Class external name."), propget]
+		HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
+
+		[id (DISPID_EiffelComCompiler_ToolTip), helpstring ("Class Tool Tip."), propget]
+		HRESULT ToolTip ([out, retval] BSTR* pbstrToolTip);
+
+		[id (DISPID_EiffelComCompiler_IsInSystem), helpstring ("Is class in system?"), propget]
+		HRESULT IsInSystem ([out, retval] VARIANT_BOOL* pvbInSystem);
+
+		[id (DISPID_EiffelComCompiler_FeatureNames), helpstring ("List of names of class features.")]
+		HRESULT FeatureNames ([out, retval] SAFEARRAY (BSTR)* psabstrFeatureNames);
+
+		[id (DISPID_EiffelComCompiler_Features), helpstring ("List of class features.")]
+		HRESULT Features ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_FeatureCount), helpstring ("Number of class features.")]
+		HRESULT FeatureCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_FlatFeatures), helpstring ("List of class features including ancestor features.")]
+		HRESULT FlatFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_FlatFeatureCount), helpstring ("Number of flat class features.")]
+		HRESULT FlatFeatureCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_InheritedFeatures), helpstring ("List of class inherited features.")]
+		HRESULT InheritedFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_InheritedFeatureCount), helpstring ("Number of inherited features.")]
+		HRESULT InheritedFeatureCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_CreationRoutines), helpstring ("List of class creation routines.")]
+		HRESULT CreationRoutines ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_CreationRoutineCount), helpstring ("Number of creation routines.")]
+		HRESULT CreationRoutineCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_Clients), helpstring ("List of class clients.")]
+		HRESULT Clients ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_ClientCount), helpstring ("Number of class clients.")]
+		HRESULT ClientCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_Suppliers), helpstring ("List of class suppliers.")]
+		HRESULT Suppliers ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_SupplierCount), helpstring ("Number of class suppliers.")]
+		HRESULT SupplierCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_Ancestors), helpstring ("List of direct ancestors of class.")]
+		HRESULT Ancestors ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_AncestorCount), helpstring ("Number of direct ancestors.")]
+		HRESULT AncestorCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_Descendants), helpstring ("List of direct descendants of class.")]
+		HRESULT Descendants ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+
+		[id (DISPID_EiffelComCompiler_DescendantCount), helpstring ("Number of direct descendants.")]
+		HRESULT DescendantCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_ClassPath), helpstring ("Full path to file."), propget]
+		HRESULT ClassPath ([out, retval] BSTR* pbstrPath);
+
+		[id (DISPID_EiffelComCompiler_IsDeferred), helpstring ("Is class deferred?"), propget]
+		HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDefferred);
+
+		[id (DISPID_EiffelComCompiler_IsExternal), helpstring ("Is class external?"), propget]
+		HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
+
+		[id (DISPID_EiffelComCompiler_IsGeneric), helpstring ("Is class generic?"), propget]
+		HRESULT IsGeneric ([out, retval] VARIANT_BOOL* pvbGeneric);
+
+		[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Is class part of a library?"), propget]
+		HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumFeature
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumFeature),
+		helpstring ("Eiffel Feature Enumeration.")
+	]
+	interface IEnumFeature: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG *ulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelFeatureDescriptor
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelFeatureDescriptor),
+		helpstring ("Eiffel Feature Descriptor.")
+	]
+	interface IEiffelFeatureDescriptor: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Feature name."), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_ExternalName), helpstring ("Feature external name."), propget]
+		HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
+
+		[id (DISPID_EiffelComCompiler_WrittenClass), helpstring ("Name of class where feature is written in."), propget]
+		HRESULT WrittenClass ([out, retval] BSTR* pbstrClass);
+
+		[id (DISPID_EiffelComCompiler_EvaluatedClass), helpstring ("Name of class where feature was evaluated in."), propget]
+		HRESULT EvaluatedClass ([out, retval] BSTR* pbstrClass);
+
+		[id (DISPID_EiffelComCompiler_Signature), helpstring ("Feature signature."), propget]
+		HRESULT Signature ([out, retval] BSTR* pbstrSignature);
+
+		[id (DISPID_EiffelComCompiler_Description), helpstring ("Feature description."), propget]
+		HRESULT Description ([out, retval] BSTR* pbstrDescription);
+
+		[id (DISPID_EiffelComCompiler_Parameters), helpstring ("Feature parameters.")]
+		HRESULT Parameters ([out, retval] IEnumParameter** ppIEnumParameter);
+
+		[id (DISPID_EiffelComCompiler_ReturnType), helpstring ("Feature return type."), propget]
+		HRESULT ReturnType ([out, retval] BSTR* pbstrReturnType);
+
+		[id (DISPID_EiffelComCompiler_FeatureLocation), helpstring ("Feature location, full path to file and line number")]
+		HRESULT FeatureLocation ([out] BSTR* pbstrPath, [out] ULONG* pulLine);
+
+		[id (DISPID_EiffelComCompiler_AllCallers), helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
+		HRESULT AllCallers ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_AllCallersCount), helpstring ("Number of all callers.")]
+		HRESULT AllCallersCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_LocalCallers), helpstring ("List of feature callers.")]
+		HRESULT LocalCallers ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_LocalCallersCount), helpstring ("Number of local callers.")]
+		HRESULT LocalCallersCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_DescendantCallers), helpstring ("List of feature callers, including callers of descendant versions.")]
+		HRESULT DescendantCallers ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_DescendantCallersCount), helpstring ("Number of descendant callers.")]
+		HRESULT DescendantCallersCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_Implementers), helpstring ("List of implementers.")]
+		HRESULT Implementers ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_ImplementersCount), helpstring ("Number of feature implementers.")]
+		HRESULT ImplementersCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_AncestorVersions), helpstring ("List of ancestor versions.")]
+		HRESULT AncestorVersions ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_AncestorVersionsCount), helpstring ("Number of ancestor versions.")]
+		HRESULT AncestorVersionsCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_DescendantVersions), helpstring ("List of descendant versions.")]
+		HRESULT DescendantVersions ([out, retval] IEnumFeature** ppIEnumFeature);
+
+		[id (DISPID_EiffelComCompiler_DescendantVersionsCount), helpstring ("Number of descendant versions.")]
+		HRESULT DescendantVersionsCount ([out, retval] ULONG* pulCount);
+
+		[id (DISPID_EiffelComCompiler_ExportedToAll), helpstring ("Is feature exported to all classes?"), propget]
+		HRESULT ExportedToAll ([out, retval] VARIANT_BOOL* pvbExported);
+
+		[id (DISPID_EiffelComCompiler_IsOnce), helpstring ("Is once feature?"), propget]
+		HRESULT IsOnce ([out, retval] VARIANT_BOOL* pvbOnce);
+
+		[id (DISPID_EiffelComCompiler_IsExternal), helpstring ("Is external feature?"), propget]
+		HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
+
+		[id (DISPID_EiffelComCompiler_IsDeferred), helpstring ("Is deferred feature?"), propget]
+		HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDeferred);
+
+		[id (DISPID_EiffelComCompiler_IsConstant), helpstring ("Is constant?"), propget]
+		HRESULT IsConstant ([out, retval] VARIANT_BOOL* pvbConstant);
+
+		[id (DISPID_EiffelComCompiler_IsFrozen), helpstring ("is frozen feature?"), propget]
+		HRESULT IsFrozen ([out, retval] VARIANT_BOOL* pvbFroze);
+
+		[id (DISPID_EiffelComCompiler_IsInfix), helpstring ("Is infix?"), propget]
+		HRESULT IsInfix ([out, retval] VARIANT_BOOL* pvbInfix);
+
+		[id (DISPID_EiffelComCompiler_IsPrefix), helpstring ("Is prefix?"), propget]
+		HRESULT IsPrefix ([out, retval] VARIANT_BOOL* pvbPrefix);
+
+		[id (DISPID_EiffelComCompiler_IsAttribute), helpstring ("Is attribute?"), propget]
+		HRESULT IsAttribute ([out, retval] VARIANT_BOOL* pvbAttribute);
+
+		[id (DISPID_EiffelComCompiler_IsProcedure), helpstring ("Is procedure?"), propget]
+		HRESULT IsProcedure ([out, retval] VARIANT_BOOL* pvbProcedure);
+
+		[id (DISPID_EiffelComCompiler_IsFunction), helpstring ("Is function?"), propget]
+		HRESULT IsFunction ([out, retval] VARIANT_BOOL* pvbFunction);
+
+		[id (DISPID_EiffelComCompiler_IsUnique), helpstring ("Is unique?"), propget]
+		HRESULT IsUnique ([out, retval] VARIANT_BOOL* pvbUnique);
+
+		[id (DISPID_EiffelComCompiler_IsObsolete), helpstring ("Is obsolete feature?"), propget]
+		HRESULT IsObsolete ([out, retval] VARIANT_BOOL* pvbObsolete);
+
+		[id (DISPID_EiffelComCompiler_HasPrecondition), helpstring ("Does feature have precondition?"), propget]
+		HRESULT HasPrecondition([out, retval] VARIANT_BOOL* pvbPrecondition);
+
+		[id (DISPID_EiffelComCompiler_HasPostcondition), helpstring ("Does feature have postcondition?"), propget]
+		HRESULT HasPostcondition([out, retval] VARIANT_BOOL* pvbPostcondition);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumParameter
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEnumParameter),
+		helpstring ("Feature paramaters enumeration.")
+	]
+	interface IEnumParameter: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor , [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumParameter** ppIEnumParameter);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG *ulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelParameterDescriptor
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelParameterDescriptor),
+		helpstring ("Feature parameter info.")
+	]
+	interface IEiffelParameterDescriptor: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Parameter name"), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_Display), helpstring ("Parameter display"), propget]
+		HRESULT Display ([out, retval] BSTR* pbstrDisplay);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumClusterProp
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumClusterProp),
+		helpstring ("Eiffel Cluster Properties Enumeration.")
+	]
+	interface IEnumClusterProp: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelClusterProperties** ppIEiffelClusterProperties,[out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumClusterProp** ppIEnumClusterProp);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterProperties** ppIEiffelClusterProperties);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG *pulCount0);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelSystemClusters
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelSystemClusters),
+		helpstring ("Eiffel System Clusters.")
+	]
+	interface IEiffelSystemClusters: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_GetClusterTree ), helpstring( "Retrieve enumerator of clusters in tree form." )]
+		HRESULT GetClusterTree( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
+
+		[id (DISPID_EiffelComCompiler_GetAllClusters ), helpstring( "Retrieve enumerator of all defined clusters." )]
+		HRESULT GetAllClusters( [out, retval] IEnumClusterProp** ppIEnumClusterProp);
+
+		[id (DISPID_EiffelComCompiler_GetClusterFullName ), helpstring( "Get a clusters full name from its name." )]
+		HRESULT GetClusterFullName( [in] BSTR bstrName, [out, retval] BSTR* pbstrFullName );
+
+		[id (DISPID_EiffelComCompiler_GetClusterProperties ), helpstring( "Retrieve a clusters properties by its name." )]
+		HRESULT GetClusterProperties( [in] BSTR bstrName, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
+
+		[id (DISPID_EiffelComCompiler_GetClusterPropertiesById ), helpstring( "Retrieve a clusters properties by its ID." )]
+		HRESULT GetClusterPropertiesById( [in] ULONG nClusterId, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
+
+		[id (DISPID_EiffelComCompiler_ChangeClusterName ), helpstring( "Change a clusters name." )]
+		HRESULT ChangeClusterName( [in] BSTR bstrName, [in] BSTR bstrNewName );
+
+		[id (DISPID_EiffelComCompiler_AddCluster ), helpstring( "Add a cluster to system clusters." )]
+		HRESULT AddCluster( [in] BSTR bstrName, [in] BSTR bstrParentName, [in] BSTR bstrPath);
+
+		[id (DISPID_EiffelComCompiler_RemoveCluster ), helpstring( "Remove a cluster from system clusters." )]
+		HRESULT RemoveCluster( [in] BSTR bstrName );
+
+		[id (DISPID_EiffelComCompiler_StoreClusters ), helpstring( "Persist current changes to disk" )]
+		HRESULT Store();
+
+		[id (DISPID_EiffelComCompiler_IsClusterNameAvailable ), helpstring( "Determins if 'bstrName' is available as a cluster name" )]
+		HRESULT IsClusterNameAvailable( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbAvailable );
+
+		[id (DISPID_EiffelComCompiler_IsValidClusterName ), helpstring( "Validates a cluster name" )]
+		HRESULT IsValidClusterName( [in] BSTR bstrName, [out, retval] VARIANT_BOOL* pvbValid );
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelClusterProperties
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelClusterProperties),
+		helpstring ("Eiffel Cluster Properties (for Ace file).")
+	]
+	interface IEiffelClusterProperties: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Cluster name."), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propget]
+		HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
+
+		[id (DISPID_EiffelComCompiler_ClusterPath), helpstring ("Full path to cluster."), propput]
+		HRESULT ClusterPath ([in] BSTR bstrPath);
+
+		[id (DISPID_EiffelComCompiler_Override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
+		HRESULT Override ([out, retval] VARIANT_BOOL* pvbOverride);
+
+		[id (DISPID_EiffelComCompiler_Override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
+		HRESULT Override ([in] VARIANT_BOOL vbOverride);
+
+		[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propget]
+		HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+
+		[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propput]
+		HRESULT IsLibrary ([in] VARIANT_BOOL vbLibrary);
+
+		[id (DISPID_EiffelComCompiler_All), helpstring ("Should all subclusters be included?"), propget]
+		HRESULT All ([out, retval] VARIANT_BOOL* pvbAll);
+
+		[id (DISPID_EiffelComCompiler_All), helpstring ("Should all subclusters be included?"), propput]
+		HRESULT All ([in] VARIANT_BOOL vbAll);
+
+		[id (DISPID_EiffelComCompiler_UseSystemDefault), helpstring ("Should use system default?"), propget]
+		HRESULT UseSystemDefault ([out, retval] VARIANT_BOOL* pvbUseDefaults);
+
+		[id (DISPID_EiffelComCompiler_UseSystemDefault), helpstring ("Should use system default?"), propput]
+		HRESULT UseSystemDefault ([in] VARIANT_BOOL vbUseDefaults);
+
+		[id (DISPID_EiffelComCompiler_EvaluateRequireByDefault), helpstring ("Should preconditions be evaluated by default?"), propget]
+		HRESULT EvaluateRequireByDefault ([out, retval] VARIANT_BOOL* pvbRequire);
+
+		[id (DISPID_EiffelComCompiler_EvaluateEnsureByDefault), helpstring ("Should postconditions be evaluated by default?"), propget]
+		HRESULT EvaluateEnsureByDefault ([out, retval] VARIANT_BOOL* pvbEnsure);
+
+		[id (DISPID_EiffelComCompiler_EvaluateCheckByDefault), helpstring ("Should check assertions be evaluated by default?"), propget]
+		HRESULT EvaluateCheckByDefault ([out, retval] VARIANT_BOOL* pvbCheck);
+
+		[id (DISPID_EiffelComCompiler_EvaluateLoopByDefault), helpstring ("Should loop assertions be evaluated by default?"), propget]
+		HRESULT EvaluateLoopByDefault ([out, retval] VARIANT_BOOL* pvbLoop);
+
+		[id (DISPID_EiffelComCompiler_EvaluateInvariantByDefault), helpstring ("Should class invariants be evaluated by default?"), propget]
+		HRESULT EvaluateInvariantByDefault ([out, retval] VARIANT_BOOL* pvbInvariant);
+
+		[id (DISPID_EiffelComCompiler_SetAssertions), helpstring ("Set assertions for cluster.")]
+		HRESULT SetAssertions ([in] VARIANT_BOOL vbCheck, [in] VARIANT_BOOL vbRequire, [in] VARIANT_BOOL vbEnsure, [in] VARIANT_BOOL vbLoop, [in] VARIANT_BOOL vbInvariant);
+
+		[id (DISPID_EiffelComCompiler_Excluded), helpstring ("List of excluded directories.")]
+		HRESULT Excluded ([out, retval] IEnumClusterExcludes** ppIEnumClusterExcludes);
+
+		[id (DISPID_EiffelComCompiler_AddExclude), helpstring ("Add a item to exclude.")]
+		HRESULT AddExclude ([in] BSTR bstrName);
+
+		[id (DISPID_EiffelComCompiler_RemoveExclude), helpstring ("Remove a item from being excluded.")]
+		HRESULT RemoveExclude ([in] BSTR bstrName);
+
+		[id (DISPID_EiffelComCompiler_ParentName), helpstring ("Name of the parent cluster."), propget]
+		HRESULT ParentName ([out, retval] BSTR* pbstrParentName);
+
+		[id (DISPID_EiffelComCompiler_HasParent), helpstring ("Does the current cluster have a parent cluster?"), propget]
+		HRESULT HasParent ([out, retval] VARIANT_BOOL* pvbHasParent);
+
+		[id (DISPID_EiffelComCompiler_Subclusters), helpstring ("List subclusters (list of IEiffelClusterProperties*)."), propget]
+		HRESULT Subclusters ([out, retval] IEnumClusterProp** ppIEnumClusterProp);
+
+		[id (DISPID_EiffelComCompiler_HasChildren), helpstring ("Does the current cluster have children?"), propget]
+		HRESULT HasChildren ([out, retval] VARIANT_BOOL* pvbHasChildren);
+
+		[id (DISPID_EiffelComCompiler_ClusterId), helpstring ("Cluster identifier."), propget]
+		HRESULT ClusterId ([out, retval] ULONG* pulId);
+
+		[id (DISPID_EiffelComCompiler_IsEiffelLibrary), helpstring ("Is the cluster in the Eiffel library")]
+		HRESULT IsEiffelLibrary ([out, retval] VARIANT_BOOL* pvbEiffelLibrary);
+
+		[id (DISPID_EiffelComCompiler_ExpandedClusterPath), helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
+		HRESULT ExpandedClusterPath ([out, retval] BSTR* pbstrExpandedPath);
+
+		[id (DISPID_EiffelComCompiler_ClusterNamespace), helpstring ("Cluster namespace."), propget]
+		HRESULT ClusterNamespace ([out, retval] BSTR* pbstrNamespace);
+
+		[id (DISPID_EiffelComCompiler_ClusterNamespace), helpstring ("Cluster namespace."), propput]
+		HRESULT ClusterNamespace ([in] BSTR bstrNamespace);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumClusterExcludes
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(CA8DB208-5E92-426e-953D-2660C131C618),
+		helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
+	]
+	interface IEnumClusterExcludes: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] BSTR *pbstrExclude, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumClusterExcludes** ppIEnumClusterExcludes);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrExclude);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG *pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelSystemExternals
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelSystemExternals),
+		helpstring ("Eiffel System Externals.")
+	]
+	interface IEiffelSystemExternals: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_AddIncludePath), helpstring ("Add a include path to the project.")]
+		HRESULT AddIncludePath ([in] BSTR bstrPath);
+
+		[id (DISPID_EiffelComCompiler_RemoveIncludePath), helpstring ("Remove a include path from the project.")]
+		HRESULT RemoveIncludePath ([in] BSTR bstrPath);
+
+		[id (DISPID_EiffelComCompiler_ReplaceIncludePath), helpstring ("Replace an include path in the project.")]
+		HRESULT ReplaceIncludePath ([in] BSTR bstrPath, [in] BSTR bstrOldPath);
+
+		[id (DISPID_EiffelComCompiler_IncludePaths), helpstring ("Include paths.")]
+		HRESULT IncludePaths ([out, retval] IEnumIncludePaths** ppIEnumIncludePaths);
+
+		[id (DISPID_EiffelComCompiler_AddObjectFile), helpstring ("Add a object file to the project.")]
+		HRESULT AddObjectFile ([in] BSTR bstrFileName);
+
+		[id (DISPID_EiffelComCompiler_RemoveObjectFile), helpstring ("Remove a object file from the project.")]
+		HRESULT RemoveObjectFile ([in] BSTR bstrFileName);
+
+		[id (DISPID_EiffelComCompiler_ReplaceObjectFile), helpstring ("Replace an object file in the project.")]
+		HRESULT ReplaceObjectFile ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
+
+		[id (DISPID_EiffelComCompiler_ObjectFiles), helpstring ("Object files.")]
+		HRESULT ObjectFiles ([out, retval] IEnumObjectFiles** ppIEnumObjectFiles);
+
+		[id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
+		HRESULT Store ();
+	}; 
+
+	//---------------------------------------------------------------------
+	// IEnumIncludePaths
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumIncludePaths),
+		helpstring ("Include Path Enumeration.")
+	]
+	interface IEnumIncludePaths: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] BSTR *pbstrIncludePath, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumIncludePaths** ppIEnumIncludePaths);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrIncludePath);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG* pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumObjectFiles
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumObjectFiles),
+		helpstring ("Object File Enumeration.")
+	]
+	interface IEnumObjectFiles: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] BSTR *pbstrObjectFile, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumObjectFiles** ppIEnumObjectFiles);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrObjectFile);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG* pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelSystemAssemblies
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelSystemAssemblies),
+		helpstring ("Eiffel System Assemblies.")
+	]
+	interface IEiffelSystemAssemblies: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_FlushAssemblies), helpstring ("Wipe out current list of assemblies")]
+		HRESULT FlushAssemblies ();
+
+		[id (DISPID_EiffelComCompiler_AddAssembly), helpstring ("Add an assembly to the project.")]
+		HRESULT AddAssembly ([in] BSTR bstrPrefix, [in] BSTR bstrClusterName, [in] BSTR bstrFileName, VARIANT_BOOL vbCopyLocally);
+
+		[id (DISPID_EiffelComCompiler_LastException), helpstring ("Last execption to occur"), propget]
+		HRESULT LastException ([out, retval] IEiffelException** pException);
+
+		[id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
+		HRESULT Store ();
+	};
+
+	//---------------------------------------------------------------------
+	// IEnumAssembly
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid(UUID_IEnumAssembly),
+		helpstring ("Eiffel Assembly Enumeration.")
+	]
+	interface IEnumAssembly: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+		HRESULT Next([out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties, [out] ULONG *pulFetched);
+
+		[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+		HRESULT Skip([in] ULONG ulCount);
+
+		[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+		HRESULT Reset();
+
+		[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+		HRESULT Clone([out] IEnumAssembly** ppIEnumAssembly);
+
+		[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+		HRESULT IthItem ([in] ULONG ulCount, [out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties);
+
+		[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+		HRESULT Count ([out, retval] ULONG* pulCount);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelAssemblyProperties
+	//---------------------------------------------------------------------
+	[
+		dual,
+		object,
+		uuid (UUID_IEiffelAssemblyProperties),
+		helpstring ("Eiffel Assembly Properties (for Ace file).")
+	]
+	interface IEiffelAssemblyProperties: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_Name), helpstring ("Assembly name."), propget]
+		HRESULT Name ([out, retval] BSTR* pbstrName);
+
+		[id (DISPID_EiffelComCompiler_Version), helpstring ("Assembly version."), propget]
+		HRESULT Version ([out, retval] BSTR* pbstrVersion);
+
+		[id (DISPID_EiffelComCompiler_Culture), helpstring ("Assembly culture."), propget]
+		HRESULT Culture ([out, retval] BSTR* pbstrVersion);
+
+		[id (DISPID_EiffelComCompiler_PublicKeyToken), helpstring ("Assembly public key token"), propget]
+		HRESULT PublicKeyToken ([out, retval] BSTR* pvbPublicKeyToken);
+
+		[id (DISPID_EiffelComCompiler_IsLocal), helpstring ("Is the assembly local"), propget]
+		HRESULT IsLocal ([out, retval] VARIANT_BOOL* pvbIsLocal);
+
+		[id (DISPID_EiffelComCompiler_ClusterName), helpstring ("Assembly cluster name."), propget]
+		HRESULT ClusterName ([out, retval] BSTR* pbstrClusterName);
+
+		[id (DISPID_EiffelComCompiler_Prefix), helpstring ("Prefix."), propget]
+		HRESULT Prefix ([out, retval] BSTR* pbstrPrefix);
+
+		[id (DISPID_EiffelComCompiler_Prefix), helpstring ("Prefix."), propput]
+		HRESULT Prefix ([in] BSTR bstrPrefix);
+	};
+
+	//---------------------------------------------------------------------
+	// IEiffelException
+	//---------------------------------------------------------------------
+	[
+		dual,
+		oleautomation,
+		uuid (UUID_IEiffelException),
+		helpstring ("A single exception object")
+	]
+	interface IEiffelException: IDispatch
+	{
+		[id (DISPID_EiffelComCompiler_InnerException), helpstring ("Get inner exception"), propget]
+		HRESULT InnerException ([out, retval] IEiffelException** ppIEiffelException);
+
+		[id (DISPID_EiffelComCompiler_Message), helpstring ("Get exception message"), propget]
+		HRESULT Message ([out, retval] BSTR* pbstrMessage);
+
+		[id (DISPID_EiffelComCompiler_ExceptionCode), helpstring ("Retrieve exception type"), propget]
+		HRESULT ExceptionCode ([out, retval] EIF_EXCEPTIONS* pEIF_EXCEPTIONS);
+	};
+
+};
 
 //|--------------------------------------------------------------------
 //| Eiffel ENViSioN!: A Visual Studio .NET plugin from Eiffel Software.

@@ -100,7 +100,17 @@ feature -- Access
 			create Result.make
 		end
 		
+	expand_layout_tree_command: GB_EXPAND_LAYOUT_TREE_COMMAND is
+			-- Command representing expansion of the layout constructor.
+		once
+			create Result.make
+		end
 		
+	collapse_layout_tree_command: GB_COLLAPSE_LAYOUT_TREE_COMMAND is
+			-- Command representing collapse of the layout constructor.
+		once
+			create Result.make
+		end
 
 feature -- Basic operation
 

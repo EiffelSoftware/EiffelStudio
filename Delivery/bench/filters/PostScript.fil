@@ -11,7 +11,7 @@ Suffix	|ps
 
 Cluster_declaration, Class_declaration		|%
 	%%%!PS-Adobe-1.0%N%
-	%%%%%Creator: ISE Eiffel 4%N%
+	%%%%%Creator: $generator$%N%
 	%%%%%DocumentFonts: Times-Roman Times-Italic Times-Bold Times-BoldItalic%N%
 	%%N%
 	%/inch {72 mul} def%N%

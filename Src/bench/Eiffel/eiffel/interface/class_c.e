@@ -3447,8 +3447,20 @@ feature -- Validity class
 
 	check_validity is
 			-- Special classes validity check.
+		local
+			l_cor_mism: FEATURE_I
 		do
-			-- Do nothing
+			if System.any_class = lace_class then
+					-- We are checking ANY.
+				l_cor_mism := feature_table.item_id (names_heap.Correct_mismatch_name_id)
+				if
+					l_cor_mism = void or else 
+					not l_cor_mism.is_procedure or l_cor_mism.argument_count > 0
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class STRING must have a procedure `correct_mismatch' with no arguments", Current))
+				end				
+			end-- Do nothing
 		end
 
 feature -- default_rescue routine

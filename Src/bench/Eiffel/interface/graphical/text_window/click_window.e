@@ -11,6 +11,8 @@ inherit
 
 	TEXT_STRUCT;
 	TEXT_WINDOW
+		rename
+			count as text_count
 		export
 			{ANY} process_text
 		undefine

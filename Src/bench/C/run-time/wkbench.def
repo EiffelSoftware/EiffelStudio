@@ -458,8 +458,8 @@ EXPORTS
 	eifsibit
 	eifribit
 	eifbcln
-	eifvisexp
-	eifuvisexp
+	eifvisex
+	eifuvisex
 	eifreturntype
 	eifrout
 	eiflocate

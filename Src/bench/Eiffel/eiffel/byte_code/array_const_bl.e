@@ -154,6 +154,8 @@ feature {NONE} -- C code generation
 			is_expanded: BOOLEAN;
 			position: INTEGER;
 			buf: GENERATION_BUFFER
+			l_target_type: CL_TYPE_I
+			l_exp_class_type: CLASS_TYPE
 		do
 			is_expanded := target_type.is_true_expanded;
 			array_area_reg.print_register;
@@ -196,13 +198,42 @@ feature {NONE} -- C code generation
 					expr.generate;
 				end;
 				if is_expanded then
-					buf.put_string ("ecopy(");
-					expr.print_register;
-					buf.put_string (gc_comma);
-					array_area_reg.print_register;
-					buf.put_string (" + OVERHEAD + elem_size * ");
-					buf.put_integer (position);
-					buf.put_character (')');
+					if context.workbench_mode then
+						buf.put_string ("ecopy(");
+						expr.print_register;
+						buf.put_string (gc_comma);
+						array_area_reg.print_register;
+						buf.put_string (" + OVERHEAD + elem_size * ");
+						buf.put_integer (position);
+						buf.put_character (')');
+					else
+						l_target_type ?= target_type
+						check
+							l_target_type_not_void_since_expanded: l_target_type /= Void
+						end
+						l_exp_class_type := l_target_type.associated_class_type
+						if l_exp_class_type.skeleton.has_references then
+							buf.put_string ("ecopy(");
+							expr.print_register;
+							buf.put_string (gc_comma);
+							array_area_reg.print_register;
+							buf.put_string (" + OVERHEAD + elem_size * ");
+							buf.put_integer (position);
+							buf.put_character (')');
+						else
+							buf.put_string ("memcpy(")
+							array_area_reg.print_register
+							buf.put_string (" + ")
+							buf.put_integer (position)
+							buf.put_string (" * ")
+							l_exp_class_type.skeleton.generate_size (buf)
+							buf.put_string (",")
+							expr.print_register
+							buf.put_string (", ")
+							l_exp_class_type.skeleton.generate_size (buf)
+							buf.put_character (')')
+						end
+					end
 				else
 					buf.put_character ('*');
 					buf.put_character ('(');

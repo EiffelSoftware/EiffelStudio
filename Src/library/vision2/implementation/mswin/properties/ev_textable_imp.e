@@ -14,7 +14,7 @@ inherit
 feature -- Access
 
 	text: STRING is
-			-- Text displayed in label.
+			-- Text displayed in `Current'.
 		do
 			Result := wel_text
 			if Result.empty then
@@ -157,7 +157,7 @@ feature -- Obsolete
 
 end -- class EV_TEXTABLE_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -171,13 +171,16 @@ end -- class EV_TEXTABLE_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/05 19:43:21  rogers
+--| Minor formatting and comment change.
+--|
 --| Revision 1.20  2000/03/29 20:32:56  brendel
 --| Fixed bugs in implementation and postconditions.
 --|

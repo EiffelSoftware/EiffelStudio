@@ -39,7 +39,7 @@ feature -- Initialization
 			!! first_child_table.make (1, i+1)
 		ensure
 			is_above: above;
-			is_empty: empty
+			is_empty: is_empty
 		end;
 
 feature -- Access
@@ -156,7 +156,7 @@ feature -- Status report
 	full: BOOLEAN is false;
 			-- Is tree filled to capacity? (Answer: no.)
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 		do
 			Result := count = 0
 		end;
@@ -285,8 +285,8 @@ feature -- Cursor movement
 			index := first_child_table.item (active);
 			if above then
 				above := false
-				below := empty
-				before := empty
+				below := is_empty
+				before := is_empty
 				after := false
 			elseif index <= 0 then
 				below := true;
@@ -397,7 +397,7 @@ feature -- Element change
 
 	put_front (v: G) is
 			-- Add a leaf `v' as first child.
-			-- If `above' and `empty', make `v' the root value
+			-- If `above' and `is_empty', make `v' the root value
 		local
 			old_active: like active;
 			new: INTEGER;
@@ -439,7 +439,7 @@ feature -- Element change
 		do
 			new := new_cell_index;
 			old_index := active;
-			if empty then
+			if is_empty then
 				active := new;
 				item_table.put (v, new);
 				next_sibling_table.put (0, new);

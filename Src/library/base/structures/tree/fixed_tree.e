@@ -20,6 +20,10 @@ class FIXED_TREE [G] inherit
 		end;
 
 	TREE [G]
+		rename
+			empty as fl_empty
+		export
+			{NONE} fl_empty
 		undefine
 			child_off, child_after, child_before,
 			is_equal, copy,
@@ -52,7 +56,8 @@ class FIXED_TREE [G] inherit
 			remove as fl_remove,
 			linear_representation as fl_lin_rep,
 			count as arity,
-			empty as is_leaf,
+			empty as fl_empty,
+			is_empty as is_leaf,
 			full as fl_full,
 			start as child_start,
 			finish as child_finish,
@@ -74,14 +79,14 @@ class FIXED_TREE [G] inherit
 				fl_put, fl_replace,
 				fl_writable, fl_extendible,
 				fl_remove, fl_make, fl_make_filled, fl_has, fl_readable,
-				fl_lin_rep,
+				fl_lin_rep, fl_empty,
 				fl_fill, fl_full;
 			{FIXED_TREE}
 				array_item
 		undefine
 			is_leaf, child_isfirst, child_islast,
 			valid_cursor_index, compare_references,
-			compare_objects
+			compare_objects, fl_empty
 		redefine
 			duplicate, first_child
 		end

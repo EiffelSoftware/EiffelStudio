@@ -22,14 +22,22 @@ feature -- Access
 			-- based on `object_comparison'.)
 		deferred
 		ensure
-			not_found_in_empty: Result implies not empty
+			not_found_in_empty: Result implies not is_empty
 		end;
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is there no element?
 		deferred
+		end;
+
+	empty: BOOLEAN is
+			-- Is there no element?
+		obsolete
+			"ELKS 2000: Use `is_empty' instead"
+		do
+			Result := is_empty
 		end;
 
 	object_comparison: BOOLEAN;

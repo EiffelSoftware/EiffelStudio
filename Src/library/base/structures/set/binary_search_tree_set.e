@@ -77,7 +77,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 		do
 			Result := tree = Void
 		end;
@@ -124,7 +124,7 @@ feature -- Cursor movement
 		do
 			if before then
 				before := false;
-				if empty then
+				if is_empty then
 					after:= true
 				end;
 			else
@@ -156,7 +156,7 @@ feature -- Cursor movement
 		do
 			if after then
 				after := false;
-				if empty then
+				if is_empty then
 					before:= true
 				end;
 			else

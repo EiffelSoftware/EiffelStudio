@@ -170,7 +170,7 @@ feature -- Status report
 			Result := child_index = arity + 1
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is structure empty of items?
 		do
 			Result := false

@@ -43,7 +43,7 @@ class LINKED_TREE [G] inherit
 			count as arity,
 			cursor as child_cursor,
 			duplicate as ll_duplicate,
-			empty as is_leaf,
+			is_empty as is_leaf,
 			extend as child_extend,
 			extendible as child_extendible,
 			fill as ll_fill,

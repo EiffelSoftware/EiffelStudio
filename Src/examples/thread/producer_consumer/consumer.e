@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (buf: BUFFER; i: INTEGER; finish: BOOLEAN_REF) is
+	make (buf: PC_BUFFER; i: INTEGER; finish: BOOLEAN_REF) is
 			-- Initialize parameters, set proxies,  and launch thread.
 		do
 			buffer := buf
@@ -25,7 +25,7 @@ feature -- Initialization
 
 feature	-- Shared access
 
-	buffer: BUFFER
+	buffer: PC_BUFFER
 			-- Shared buffer.
 
 	finished: BOOLEAN_REF

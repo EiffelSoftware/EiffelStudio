@@ -41,7 +41,7 @@ cluster
 
 	all wel:		"$ISE_EIFFEL\library\wel"
 
-	thread:		"$ISE_EIFFEL\library\thread"
+	all thread:		"$ISE_EIFFEL\library\thread"
 
 external
 

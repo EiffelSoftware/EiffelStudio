@@ -26,15 +26,8 @@ feature -- Licence managment
 		do
 			licence.get_registration_info;
 			licence.set_version (3);
-			licence.set_application_name ("eiffelbench");
-			licence.register;
-			if licence.registered then
-				licence.open_licence;
-				Result := licence.licenced
-				if not Result then
-					licence.unregister
-				end;
-			end;
+			licence.set_application_name ("EiffelBench");
+			Result := licence.connected
 		end;
 
 feature 
@@ -50,13 +43,13 @@ feature
 			if not retried then
 					-- Check that environment variables
 					-- are properly set.
-				temp := env_variable ("EIFFEL3");
+				temp := Execution_environment.get ("EIFFEL3");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
 					die (-1)
 				end;
-				temp := env_variable ("PLATFORM");
+				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
@@ -75,14 +68,14 @@ feature
 					set_batch_mode (True);
 					if init_licence then
 						!!batch_compiler.make;
-						discard_license;
+						discard_licence;
 					end;
 				end;
 			else
 				-- Ensure clean exit in case of exception
 			end;
 		rescue
-			discard_license;
+			discard_licence;
 			if not batch_mode then
 					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");

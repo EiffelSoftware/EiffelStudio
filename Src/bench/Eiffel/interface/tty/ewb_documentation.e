@@ -139,7 +139,7 @@ feature -- Execution
 			if do_parents then
 				cmd.set_do_parents
 			end;
-			cmd.set_error_window (Term_window);
+			cmd.set_error_window (Error_window);
 			cmd.set_feature_clause_order
 				(Class_tool_resources.feature_clause_order.actual_value);
 			cmd.execute;

@@ -14,6 +14,7 @@ inherit
 			system_clusters,
 			external_clusters,
 			cluster_count,
+			root_cluster,
 			class_descriptor,
 			feature_descriptor,
 			cluster_descriptor,
@@ -164,6 +165,23 @@ feature -- Access
 						
 					end
 					list.forth
+				end
+			end
+		end
+		
+	root_cluster: IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+			-- Root cluster of current project
+		local
+			rc: CLASS_I
+			ci: CLUSTER_I
+		do
+			if Eiffel_project.initialized then
+				rc := Eiffel_project.system.root_class
+				if rc /= Void then
+					ci := rc.cluster	
+				end
+				if ci /= Void then
+					create {CLUSTER_DESCRIPTOR} Result.make_with_cluster_i (ci)
 				end
 			end
 		end

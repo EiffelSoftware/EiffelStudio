@@ -140,8 +140,7 @@ feature {NONE} -- Implementation
 			item_imp: EV_TREE_ITEM_IMP
 		do
 			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_tree_widget_imp (Void)
-			C.gtk_tree_item_remove_subtree (item_imp.c_object)	
+			item_imp.set_tree_widget_imp (Void)	
 			Precursor (a_position)
 		end
 
@@ -185,6 +184,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/24 21:40:08  king
+--| Removed calling of subtree removal from item removal
+--|
 --| Revision 1.23  2000/02/24 20:11:05  king
 --| corrected indentation
 --|

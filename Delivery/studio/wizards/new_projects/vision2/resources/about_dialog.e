@@ -17,7 +17,7 @@ inherit
 		export
 			{NONE} all
 		undefine
-			default_create
+			default_create, copy
 		end
 
 create

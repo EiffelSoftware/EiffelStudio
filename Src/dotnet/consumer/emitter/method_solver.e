@@ -116,7 +116,7 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		do
 			if arguments.count = other.arguments.count then
-				Result := not internal_method.is_public
+				Result := internal_method.is_public and not other.internal_method.is_public
 			else
 				Result := arguments.count < other.arguments.count
 			end

@@ -33,6 +33,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+		
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -56,16 +66,29 @@ feature -- Basic Operation
 		local
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
+			directory_exists_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create temp_file_name.make_from_string (generated_path.string)
 			temp_file_name.extend (directory_name)	
 			create directory.make (temp_file_name)
 			if not directory.exists then
-				-- Only create the directory if it is not already present on the disk.
+					-- Only create the directory if it is not already present on the disk.
 				create_directory (directory)
 				directory_added_succesfully := True
+			else
+				create directory_exists_dialog.make_initialized (2, show_adding_existing_directory_warning,
+								"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.")
+				directory_exists_dialog.set_ok_action (agent set_directory_added_succesfully)
+				directory_exists_dialog.show_modal_to_window (main_window)
 			end
 		end
+		
+	set_directory_added_succesfully is
+			-- Assign `True' to `directory_added_succesfully'
+		do
+			directory_added_succesfully := True
+		end
+		
 		
 	directory_added_succesfully: BOOLEAN
 		-- Was last call to `create_directory' successful?

@@ -243,6 +243,8 @@ feature {NONE} -- Implementation
 				end
 				reg.close_key (p)
 			end
+		ensure
+			no_ending_separator: Result /= Void implies Result.item (Result.count) /= Operating_environment.Directory_separator
 		end
 		
 feature -- Constants

@@ -379,8 +379,10 @@ feature -- Interaction with .Net Debugger
 				l_controller := icor_debug_controller
 				l_controller.continue (False)
 				last_dbg_call_success := l_controller.last_call_success
-				if last_dbg_call_success /= 0 then
-					io.error.put_string ("EIFNET_DEBUGGER.do_continue failed %N")
+				debug ("debugger_trace_eifnet")
+					if last_dbg_call_success /= 0 then
+						io.error.put_string ("EIFNET_DEBUGGER.do_continue failed %N")
+					end
 				end
 			end
 		end

@@ -1267,9 +1267,13 @@ feature {NONE}-- Implementation for save and load task
 								end
 								l_retrieved_object.set_modules_debugger_info (l_patched_dbg_info_modules)
 								l_retrieved_object.set_project_path (l_current_project_path)
-								io.error.put_string (" done.%N")
+								debug ("debugger_il_info_trace")
+									io.error.put_string (" done.%N")
+								end
 								save_storable_data (l_retrieved_object, Il_info_file_name)
-								io.error.put_string (" [!] Updated data saved.%N")
+								debug ("debugger_il_info_trace")
+									io.error.put_string (" [!] Updated data saved.%N")
+								end
 
 								l_dbg_info_modules := l_retrieved_object.modules_debugger_info
 								l_dbg_info_project_path	:= l_retrieved_object.project_path
@@ -1291,7 +1295,7 @@ feature {NONE}-- Implementation for save and load task
 								l_info_module := l_dbg_info_modules.item_for_iteration
 								update_imported_precompilation_info_module (a_system_name, l_info_module)
 								debug ("debugger_il_info_trace")
-									print (" :: Importing Module from [" + l_info_module.module_filename + "] %N")
+									io.error.put_string (" :: Importing Module from [" + l_info_module.module_filename + "] %N")
 								end
 								if dbg_info_modules.has (l_info_module.module_filename) then
 									dbg_info_modules.item (l_info_module.module_filename).merge (l_info_module)

@@ -29,7 +29,6 @@ feature -- Initialization
 			-- Initialize the window.
 		do
 			text_field_make (name, a_parent);
-			!! new_class_win.make (a_tool);
 			add_activate_action (Current, Void);
 			init_from_tool (a_tool);
 		end;
@@ -146,6 +145,9 @@ feature {NONE} -- Execution
 								tool.process_classi (classi_stone);
 							end;
 						else
+							if new_class_win = Void then
+								!! new_class_win.make (tool);
+							end;
 							new_class_win.call (cname, tool.cluster)
 						end
 					end;

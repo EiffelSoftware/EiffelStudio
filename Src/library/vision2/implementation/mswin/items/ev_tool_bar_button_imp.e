@@ -174,9 +174,6 @@ feature -- Status report
 	has_gray_pixmap: BOOLEAN
 			-- Has Current a gray pixmap?
 
-	image_index: INTEGER
-			-- Index of the pixmaps in the imagelists.
-
 feature -- Status setting
 
 	enable_sensitive is
@@ -315,10 +312,29 @@ feature -- Element change
 			pixmap_position: INTEGER
 		do
 			default_imagelist := parent_imp.default_imagelist
+			if parent_imp.has_false_image_list and has_pixmap then
+					-- In this situation, a false image list is being used in `parent_imp' to
+					-- ensure buttons are displayed at their minimum sizes. We remove this image
+					-- list as `Current' has an image and we wish to use this with a new image list.
+				parent_imp.remove_image_list
+				default_imagelist := Void
+			end
 				-- Create the image list and associate it
 				-- to the control if it's not already done.
 			if default_imagelist = Void then
-				parent_imp.setup_image_list (private_pixmap.width, private_pixmap.height)
+				if has_pixmap then
+					parent_imp.setup_image_list (private_pixmap.width, private_pixmap.height)
+					parent_imp.disable_false_image_list					
+				else
+						-- Now set up an empty image list in `parent_imp' with a size 1x1.
+						-- This ensures that when no pixmap is associated with an item, the button is
+						-- approximately the size of the text only.
+					parent_imp.enable_false_image_list
+					parent_imp.setup_image_list (1, 1)
+					default_imagelist := parent_imp.default_imagelist
+					hot_imagelist := parent_imp.hot_imagelist
+					image_index := -1
+				end
 			end
 
 			if private_pixmap = Void and private_gray_pixmap = Void then

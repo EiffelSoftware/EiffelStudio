@@ -19,23 +19,17 @@ inherit
 
 	IL_CONST
 
-	SHARED_NAMES_HEAP
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
-	has (feature_name: STRING; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
-			-- Does Current have `feature_name'?
+	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+			-- Does Current have `feature_name_id'?
 		require
-			feature_name_not_void: feature_name /= Void
-			feature_name_exists: feature_name.count > 0
+			valid_feature_name_id: feature_name_id > 0
 		local
 			char: CHAR_I
 		do
 			if compilation_type then
-				Result := c_type_table.has (feature_name)
+				Result := c_type_table.has (feature_name_id)
 				if Result then
 					function_type := c_type_table.found_item
 					if function_type = out_type and then target_type.is_char then
@@ -44,7 +38,7 @@ feature -- Access
 					end
 				end
 			else
-				Result := byte_type_table.has (feature_name)
+				Result := byte_type_table.has (feature_name_id)
 				if Result then
 					function_type := byte_type_table.found_item
 				end
@@ -175,84 +169,84 @@ feature -- C special code generation
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
-	c_type_table: HASH_TABLE [INTEGER, STRING] is
+	c_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (40)
-			Result.put (equal_type, "is_equal")
-			Result.put (equal_type, "standard_is_equal")
-			Result.put (equal_type, "deep_equal")
-			Result.put (equal_type, "standard_deep_equal")
-			Result.put (out_type, "out")
-			Result.put (hash_code_type, "hash_code")
-			Result.put (hash_code_type, "code")
-			Result.put (max_type, "max")
-			Result.put (min_type, "min")
-			Result.put (abs_type, "abs")
-			Result.put (zero_type, "zero")
-			Result.put (one_type, "one")
-			Result.put (generator_type, "generator")
-			Result.put (generator_type, "generating_type")
-			Result.put (to_integer_32_type, "truncated_to_integer")
-			Result.put (to_integer_8_type, "to_integer_8")
-			Result.put (to_integer_16_type, "to_integer_16")
-			Result.put (to_integer_32_type, "to_integer")
-			Result.put (to_integer_32_type, "to_integer_32")
-			Result.put (to_integer_64_type, "to_integer_64")
-			Result.put (offset_type, "_infix_plus")
-			Result.put (default_type, "default")
-			Result.put (bit_and_type, "bit_and")
-			Result.put (bit_and_type, "_infix_&")
-			Result.put (bit_or_type, "bit_or")
-			Result.put (bit_or_type, "_infix_|")
-			Result.put (bit_xor_type, "bit_xor")
-			Result.put (bit_not_type, "bit_not")
-			Result.put (bit_shift_left_type, "bit_shift_left")
-			Result.put (bit_shift_left_type, "_infix_|<<")
-			Result.put (bit_shift_right_type, "bit_shift_right")
-			Result.put (bit_shift_right_type, "_infix_|>>")
-			Result.put (bit_test_type, "bit_test")
-			Result.put (memory_copy, "memory_copy")
-			Result.put (memory_move, "memory_move")
-			Result.put (memory_set, "memory_set")
---			Result.put (set_item_type, "set_item")
---			Result.put (set_item_type, "copy")
---			Result.put (set_item_type, "deep_copy")
---			Result.put (set_item_type, "standard_copy")
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_deep_equal_name_id)
+			Result.put (out_type, feature {PREDEFINED_NAMES}.out_name_id)
+			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.hash_code_name_id)
+			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.code_name_id)
+			Result.put (max_type, feature {PREDEFINED_NAMES}.max_name_id)
+			Result.put (min_type, feature {PREDEFINED_NAMES}.min_name_id)
+			Result.put (abs_type, feature {PREDEFINED_NAMES}.abs_name_id)
+			Result.put (zero_type, feature {PREDEFINED_NAMES}.zero_name_id)
+			Result.put (one_type, feature {PREDEFINED_NAMES}.one_name_id)
+			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
+			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
+			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
+			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
+			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
+			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
+			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.infix_and_name_id)
+			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.bit_or_name_id)
+			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.infix_or_name_id)
+			Result.put (bit_xor_type, feature {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_not_type, feature {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.bit_shift_left_name_id)
+			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.bit_shift_right_name_id)
+			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (memory_copy, feature {PREDEFINED_NAMES}.memory_copy_name_id)
+			Result.put (memory_move, feature {PREDEFINED_NAMES}.memory_move_name_id)
+			Result.put (memory_set, feature {PREDEFINED_NAMES}.memory_set_name_id)
+--			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
+--			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
+--			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
+--			Result.put (set_item_type, feature {PREDEFINED_NAMES}.standard_copy_name_id)
 		end
 
-	byte_type_table: HASH_TABLE [INTEGER, STRING] is
+	byte_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (25)
-			Result.put (equal_type, "is_equal")
-			Result.put (equal_type, "standard_is_equal")
-			Result.put (equal_type, "deep_equal")
-			Result.put (equal_type, "standard_deep_equal")
-			Result.put (max_type, "max")
-			Result.put (min_type, "min")
-			Result.put (generator_type, "generator")
-			Result.put (generator_type, "generating_type")
-			Result.put (offset_type, "_infix_plus")
-			Result.put (zero_type, "zero")
-			Result.put (one_type, "one")
-			Result.put (default_type, "default")
-			Result.put (bit_and_type, "bit_and")
-			Result.put (bit_and_type, "_infix_&")
-			Result.put (bit_or_type, "_infix_|")
-			Result.put (bit_or_type, "bit_or")
-			Result.put (bit_xor_type, "bit_xor")
-			Result.put (bit_not_type, "bit_not")
-			Result.put (bit_shift_left_type, "bit_shift_left")
-			Result.put (bit_shift_left_type, "_infix_|<<")
-			Result.put (bit_shift_right_type, "bit_shift_right")
-			Result.put (bit_shift_right_type, "_infix_|>>")
-			Result.put (bit_test_type, "bit_test")
-			Result.put (to_integer_32_type, "truncated_to_integer")
-			Result.put (to_integer_8_type, "to_integer_8")
-			Result.put (to_integer_16_type, "to_integer_16")
-			Result.put (to_integer_32_type, "to_integer")
-			Result.put (to_integer_32_type, "to_integer_32")
-			Result.put (to_integer_64_type, "to_integer_64")
---			Result.put (set_item_type, "set_item")
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)
+			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_deep_equal_name_id)
+			Result.put (max_type, feature {PREDEFINED_NAMES}.max_name_id)
+			Result.put (min_type, feature {PREDEFINED_NAMES}.min_name_id)
+			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
+			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
+			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (zero_type, feature {PREDEFINED_NAMES}.zero_name_id)
+			Result.put (one_type, feature {PREDEFINED_NAMES}.one_name_id)
+			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
+			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
+			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.infix_and_name_id)
+			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.bit_or_name_id)
+			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.infix_or_name_id)
+			Result.put (bit_xor_type, feature {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_not_type, feature {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.bit_shift_left_name_id)
+			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.bit_shift_right_name_id)
+			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
+			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
+			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
+			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+--			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
 feature {NONE} -- Fast access to feature name
@@ -414,7 +408,7 @@ feature {NONE} -- C code generation
 				buffer.putstring (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
 
 					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
-				shared_include_queue.put (Names_heap.eif_plug_header_name_id)
+				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_plug_header_name_id)
 			else
 				inspect
 					type_of_basic
@@ -440,7 +434,7 @@ feature {NONE} -- C code generation
 				buffer.putchar (')')
 
 					-- Add `eif_out.h' for C compilation where all output functions are declared.
-				shared_include_queue.put (Names_heap.eif_out_header_name_id)
+				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_out_header_name_id)
 			end
 		end
 
@@ -600,7 +594,7 @@ feature {NONE} -- C code generation
 				f_type = memory_set
 			valid_parameters: parameters.count = 2
 		do
-			shared_include_queue.put (Names_heap.string_header_name_id)
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.string_header_name_id)
 			if f_type = memory_move then
 				buffer.putstring ("memmove((void *)")
 			elseif f_type = memory_copy then
@@ -687,7 +681,7 @@ feature {NONE} -- C code generation
 			buffer.putchar (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (Names_heap.eif_misc_header_name_id)
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is

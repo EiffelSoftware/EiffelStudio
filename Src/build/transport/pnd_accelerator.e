@@ -12,6 +12,8 @@ inherit
 
 	WINDOWS
 
+	ERROR_POPUPER
+
 feature -- Command
 
 	execute (arg: EV_ARGUMENT1 [ANY]; ev_data: EV_BUTTON_EVENT_DATA) is
@@ -24,6 +26,9 @@ feature -- Command
 				nm ?= arg.first
 				if nm /= Void then
 					change_name (nm)
+				else
+					error_dialog.popup (Current,
+										Messages.cannot_rename_er, Void)
 				end
 			elseif ev_data.control_key_pressed then
 					-- Create editor command

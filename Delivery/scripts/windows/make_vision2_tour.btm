@@ -24,5 +24,4 @@ move vision2_tour.exe %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM\bin
 
 move /s %EIFFEL_SRC\vision2_tour\tests %INSTALL_DIR\vision2_tour\tests
 move /s %EIFFEL_SRC\vision2_tour\flatshort %INSTALL_DIR\vision2_tour\flatshort
-move %EIFFEL_SRC\vision2_tour\bitmaps\ico\*.ico %INSTALL_DIR\vision2_tour\bitmaps\ico
 move %EIFFEL_SRC\vision2_tour\bitmaps\png\*.png %INSTALL_DIR\vision2_tour\bitmaps\png

@@ -41,11 +41,16 @@ cluster
 	all thread_net:	"$ISE_EIFFEL/library.net/thread"
 
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
 
-	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
 			system_dll_
+		end
+
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"XML_"
 		end
 
 end

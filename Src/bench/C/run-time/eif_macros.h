@@ -14,6 +14,7 @@
 #define _eif_macros_h_
 
 #include "eif_config.h"
+#include "eif_equal.h"
 #include "eif_globals.h"
 #include "eif_project.h"
 #include "eif_malloc.h"

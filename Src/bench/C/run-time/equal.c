@@ -33,22 +33,22 @@ rt_private struct s_table *table;		/* Search table for deep equal */
  * Routines declarations
  */
 
-rt_private int e_field_equal(register char *target, register char *source, int16 dtype);		/* Field-by-field equality */
-rt_private int e_field_iso(register char *target, register char *source, int16 dtype);			/* Field-by-field isomorhphism */
-rt_private int rdeepiso(char *target, char *source);				/* Recursive isomorphism */
-rt_private int rdeepiter(register char *target, register char *source);			/* Iteration on normal objects */
+rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dtype);		/* Field-by-field equality */
+rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dtype);			/* Field-by-field isomorhphism */
+rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target, EIF_REFERENCE source);				/* Recursive isomorphism */
+rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REFERENCE source);			/* Iteration on normal objects */
 
 /*
  * Routine definitions
  */
 
-rt_public int xequal(char *ref1, char *ref2)
+rt_public EIF_BOOLEAN xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 {
 	/* Expanded equality. */
 	char *tmp;
 
 	if (ref1 == (char *) 0 && ref2 == (char *) 0)
-		return 1;
+		return EIF_TRUE;
 
 	if (ref1 != (char *) 0 && ref2 != (char *) 0) {
 		if (econfg(ref2, ref1)) {
@@ -60,10 +60,10 @@ rt_public int xequal(char *ref1, char *ref2)
 		return eequal(ref1, ref2);
 	}
 
-	return 0;
+	return EIF_FALSE;
 }
 
-rt_public int eequal(register char *target, register char *source)
+rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Eiffel standard equality: it assumes that dynamic type of Eiffel
 	 * object refered by `source' conforms to dynamic type of Eiffel
@@ -94,17 +94,17 @@ rt_public int eequal(register char *target, register char *source)
 		 * the target.
 		 */
 		if (!(s_flags & EO_COMP))	/* Perform a block comparison */
-			return (char) (!bcmp(source, target, Size(s_type)));
+			return EIF_TEST(!bcmp(source, target, Size(s_type)));
 		else
 			return e_field_equal(target, source, s_type);
 	}
 	
 	/* Field by field comparison */
 
-	return FALSE;
+	return EIF_FALSE;
 }
 
-rt_public int spequal(register char *target, register char *source)
+rt_public EIF_BOOLEAN spequal(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Eiffel standard equality on special objects: type check assumes
 	 * the comparison is on areas of the same type (containing the same
@@ -124,17 +124,17 @@ rt_public int spequal(register char *target, register char *source)
 	s_ref = (char *) (source + s_size - LNGPAD_2);
 	t_ref = (char *) (target + t_size - LNGPAD_2);
 	if (*(long *) s_ref != *(long *) t_ref)
-		return FALSE;
+		return EIF_FALSE;
 
 	/* Since dynamic type of `source' conforms to dynamic type of
 	 * `target', the element size must be the same. No need to test it.
 	 */
 
 	/* Second condition: block equality */
-	return (char) (!bcmp(source, target, s_size * sizeof(char)));
+	return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
 }
 
-rt_public int eiso(char *target, char *source)
+rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
 {
 	/* Compare `source ' and `target' in term of their structure:
 	 * 1/ direct instances should be equal.
@@ -149,7 +149,7 @@ rt_public int eiso(char *target, char *source)
 	int16 dtype;	/* Dynamic type */
 
 	if (target == source)
-		return TRUE;
+		return EIF_TRUE;
 
 	s_flags = HEADER(source)->ov_flags;
 	t_flags = HEADER(target)->ov_flags;
@@ -161,21 +161,21 @@ rt_public int eiso(char *target, char *source)
 #endif
 
 	if (s_flags & EO_C)
-		return FALSE;
+		return EIF_FALSE;
 
 	if (t_flags & EO_C)
-		return FALSE;
+		return EIF_FALSE;
 
 	/* Check if the dynamic types are the same */
 	dtype = Deif_bid(s_flags);
 	if (dtype != Deif_bid(t_flags))
-		return FALSE;
+		return EIF_FALSE;
 	else
 		/* Check iomorphism */
 		return e_field_iso(target, source, dtype);
 }
 	
-rt_public int spiso(register char *target, register char *source)
+rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Compare two special objects in term of their structures. `source'
 	 * and `target' are refering two special objects. There is three cases:
@@ -199,7 +199,7 @@ rt_public int spiso(register char *target, register char *source)
 	char *s_field, *t_field;
 
 	if (source == target)
-		return TRUE;
+		return EIF_TRUE;
 
 	s_zone = HEADER(source);
 	t_zone = HEADER(target);
@@ -218,17 +218,17 @@ rt_public int spiso(register char *target, register char *source)
 
 	count = *(long *) s_ref;
 	if (count != *(long *) t_ref)
-		return FALSE;
+		return EIF_FALSE;
    
 	/* Second condition: same element size */
 	elem_size = *(long *) (s_ref + sizeof(long));
 	if (elem_size != *(long *) (t_ref + sizeof(long)))
-		return FALSE;
+		return EIF_FALSE;
 
 	s_flags = s_zone->ov_flags;
 	if (!(s_flags & EO_REF))
 		/* Case 1: specials filled with direct instances: block comparison */
-		return (char) (!bcmp(source, target, s_size * sizeof(char)));
+		return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
 
 	if (!(s_flags & EO_COMP)) {
 		/* Case 2: specials filled with references: we have to check fields
@@ -255,9 +255,9 @@ rt_public int spiso(register char *target, register char *source)
 				continue;
 			else
 				/* No ismorphism */
-				return FALSE;
+				return EIF_FALSE;
 		}
-		return TRUE;
+		return EIF_TRUE;
 	}
 
 	/* Case 3: special objects filled with (non-special) expanded objects.
@@ -270,13 +270,13 @@ rt_public int spiso(register char *target, register char *source)
 	) {
 		/* Iteration on expanded elements */
 		if (!eiso(t_ref, s_ref))
-			return FALSE;
+			return EIF_FALSE;
 	}
 
-	return TRUE;
+	return EIF_TRUE;
 }
 
-rt_public int ediso(char *target, char *source)
+rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 {
 	/* Compare recursively the structure attached to `target' to the
 	 * one attached to `source'. This is the standard Eiffel feature
@@ -287,7 +287,7 @@ rt_public int ediso(char *target, char *source)
 
 	EIF_GET_CONTEXT
 	char g_status = g_data.status;		/* Save GC status */
-	int result;
+	EIF_BOOLEAN result;
 
 	g_data.status |= GC_STOP;			/* Stop GC */
 	table = s_create(100);				/* Create search table */	
@@ -299,7 +299,7 @@ rt_public int ediso(char *target, char *source)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private int rdeepiso(char *target, char *source)
+rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 {
 	/* Recursive isomorphism test.
 	 * Return a boolean.
@@ -314,7 +314,7 @@ rt_private int rdeepiso(char *target, char *source)
 
 	/* Check if the object has already been inspected */
 	if (s_put(table, target) == EIF_SEARCH_CONFLICT)
-		return TRUE;
+		return EIF_TRUE;
 
 	/* Isomorphism test between `source' and `target'.
 	 * Two cases: either a normal object or a special object.
@@ -322,11 +322,11 @@ rt_private int rdeepiso(char *target, char *source)
 	if (flags & EO_SPEC) {
 		/* Special objects */
 		if (!spiso(target, source))
-			return FALSE;
+			return EIF_FALSE;
 
 		if (!(flags & EO_REF))
 			/* No reference to inspect */
-			return TRUE;
+			return EIF_TRUE;
 
 		/* Evaluation of the count of the target special object */
 		t_ref = (char *) (target + (zone->ov_size & B_SIZE) - LNGPAD_2);
@@ -354,11 +354,11 @@ rt_private int rdeepiso(char *target, char *source)
 				else if ((char *) 0 != s_field && (char *) 0 != t_field) {
 					/* Recursion on references of the special object */
 					if (!rdeepiso(t_field, s_field))
-						return FALSE;
+						return EIF_FALSE;
 				} else
-					return FALSE;
+					return EIF_FALSE;
 			}
-			return TRUE;
+			return EIF_TRUE;
 		} else {
 			/* Special objects filled with (non-special) expanded objects.
 			 * we call then standard isomorphism test on normal objects.
@@ -373,23 +373,23 @@ rt_private int rdeepiso(char *target, char *source)
 				 * objects
 				 */
 				if (!(rdeepiter(t_ref, s_ref)))
-					return FALSE;
+					return EIF_FALSE;
 			}
 		}
 	}
 	else {
 		/* Normal object */
 		if (!eiso(target, source))
-			return FALSE;
+			return EIF_FALSE;
 
 		/* Iteration on references */
 		return rdeepiter(target, source);
 	}
 	/* NOTREACHED */
-	return FALSE;
+	return EIF_FALSE;
 }
 
-rt_private int rdeepiter(register char *target, register char *source)
+rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Iterate deep isomorphism on normal objects `target' and `source'.
 	 * It assumes that `source' and `target' are not NULL and isomorphic.
@@ -417,16 +417,16 @@ rt_private int rdeepiter(register char *target, register char *source)
 			if (t_ref == 0)
 				continue;
 			else
-				return FALSE;
+				return EIF_FALSE;
 		else if (t_ref == 0)
-			return FALSE;
+			return EIF_FALSE;
 		else if (!(rdeepiso(*(char **)target, s_ref)))
-			return FALSE;
+			return EIF_FALSE;
 	}
-	return TRUE;
+	return EIF_TRUE;
 }
 
-rt_private int e_field_equal(register char *target, register char *source, int16 dtype)
+rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dtype)
 {
 	/* Eiffel standard field-by-field equality:
 	 * Since target and source have the same dynamic type `dtype' we iterate
@@ -478,23 +478,23 @@ rt_private int e_field_equal(register char *target, register char *source, int16
 		case SK_BOOL:
 		case SK_CHAR:
 			if (*t_ref != *s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_INT:
 			if (*(long *) t_ref != *(long *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_FLOAT:
 			if (*(float *) t_ref != *(float *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_DOUBLE:
 			if (*(double *) t_ref != *(double *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_POINTER:
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_BIT:
 				/* BITS attribute */
@@ -502,7 +502,7 @@ rt_private int e_field_equal(register char *target, register char *source, int16
 				 * as we have the references for the source and the target
 				 * -- Fabrice */
 			if (!b_equal(s_ref, t_ref))
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_EXP:
 				/* Source and target attribute are expanded of the same type.
@@ -510,18 +510,18 @@ rt_private int e_field_equal(register char *target, register char *source, int16
 				 * itself else field-by-field comparison.
 				 */
 			if (!eequal(t_ref, s_ref))
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		default:
 			if (*(char **)t_ref != *(char **)s_ref)
 				/* Check equality of references */
-				return FALSE;
+				return EIF_FALSE;
 		}
 	}
-	return TRUE;
+	return EIF_TRUE;
 }
 
-rt_private int e_field_iso(register char *target, register char *source, int16 dtype)
+rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dtype)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -575,23 +575,23 @@ rt_private int e_field_iso(register char *target, register char *source, int16 d
 		case SK_BOOL:
 		case SK_CHAR:
 			if (*t_ref != *s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_INT:
 			if (*(long *) t_ref != *(long *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_FLOAT:
 				if (*(float *) t_ref != *(float *) s_ref)
-					return FALSE;
+					return EIF_FALSE;
 			break;
 		case SK_DOUBLE:
 			if (*(double *) t_ref != *(double *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		case SK_POINTER:
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
-				return FALSE;
+				return EIF_FALSE;
 			break;
 		default:
 			if ((attribute_type & SK_HEAD) == SK_BIT) {
@@ -602,7 +602,7 @@ rt_private int e_field_iso(register char *target, register char *source, int16 d
 				 * itself else field-by-field comparison.
 				 */
 				if (!eiso(t_ref, s_ref))
-					return FALSE;
+					return EIF_FALSE;
 			} else { 
 				/* Check isomorphism of references: either the two
 				* references are Void or they refer object of the.
@@ -617,9 +617,9 @@ rt_private int e_field_iso(register char *target, register char *source, int16 d
 						(0 != ref2) &&
 						(Dtype(ref1) == Dtype(ref2)))
 					continue;
-				return FALSE;
+				return EIF_FALSE;
 			}
 		}
 	}
-	return TRUE;
+	return EIF_TRUE;
 }

@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 		do
 			parent_imp ?= par.implementation
 			wel_make
-		ensure
+		ensure then
 			valid_parent: parent_imp /= Void and then parent_imp.exists
 		end
 
@@ -47,6 +47,14 @@ feature -- Status setting
 		do
 			win ?= parent_imp
 			activate (win)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the dialog.
+		do
+			parent_imp ?= par.implementation
 		end
 
 feature {NONE} -- Implementation

@@ -161,6 +161,12 @@ feature -- Element change
 			message := str
 		end
 
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the dialog.
+		do
+			parent_imp ?= par.implementation
+		end
+
 feature -- Event - command association
 
 	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

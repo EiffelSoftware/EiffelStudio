@@ -17,7 +17,7 @@ inherit
 		end;
 	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
 		end
@@ -254,6 +254,9 @@ feature -- Output
 			end;
 			st.add_column_number (26);
 
+			if is_melted then
+				st.add_string ("*")
+			end;
 			st.add_feature_name (routine_name, oc);
 			if oc /= c then
 				st.add_string (" (From ");

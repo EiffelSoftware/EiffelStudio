@@ -54,7 +54,7 @@ rt_private int is_first;	/* First item dumped? (matters for pending exception) *
  * variables inside a routine, while in fact dumping the whole stack at a
  * higher level).
  */
-rt_private struct dump *(*stk_next)();		/* Function used to perform dump */
+rt_private struct dump *(*stk_next)(void);		/* Function used to perform dump */
 
 /* Routine declarations */
 #ifdef EIF_WIN32
@@ -395,7 +395,6 @@ rt_private struct dump *variable(void)
 	 */
 
 	struct dump *dp;					/* Partial dump pointer */
-	static struct dump dumped;			/* Item returned */
 	static int arg_done = 0;			/* True when arguments processed */
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */

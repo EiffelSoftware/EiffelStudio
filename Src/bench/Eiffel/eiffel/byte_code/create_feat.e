@@ -6,7 +6,7 @@ inherit
 
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code, generate_reverse
 		end
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
@@ -49,7 +49,7 @@ feature
 		do
 			if context.final_mode then
 				entry := Eiffel_table.poly_table (rout_id);
-				if not entry.has_one_type or else is_generic then
+				if entry /= Void and then (not entry.has_one_type or else is_generic) then
 					context.mark_current_used;
 					context.add_dt_current;
 				end;
@@ -66,48 +66,69 @@ feature
 			table_name: STRING;
 			rout_info: ROUT_INFO;
 			gen_type: GEN_TYPE_I;
-			buffer: GENERATION_BUFFER
+			buffer: GENERATION_BUFFER;
+			type_set: ROUT_ID_SET
 		do
 			buffer := context.buffer;
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id);
-				if table.has_one_type then
-						-- There is a table, but with only one type id
-					gen_type ?= table.first.type
 
-					if gen_type /= Void then
-						buffer.putstring ("typres")
-					else
-						buffer.putint (table.first.feature_type_id - 1)
-					end
+				if table = Void then
+					-- Creation with `like feature' where
+					-- feature is deferred and has no effective
+					-- version anywhere.
+					-- Create anything - cannot be called anyway
+
+					buffer.putint (0)
 				else
-						-- Attribute is polymorphic
-					table_name := rout_id.type_table_name;
+					if table.has_one_type then
+							-- There is a table, but with only one type
+						gen_type ?= table.first.type
 
-					buffer.putstring ("RTFCID(")
-					buffer.putint (context.current_type.generated_id (context.final_mode))
-					buffer.putchar (',')
-					buffer.putchar ('(');
-					buffer.putstring (table_name);
-					buffer.putchar ('-');
-					buffer.putint (table.min_type_id - 1);
-					buffer.putstring ("), (");
+						if gen_type /= Void then
+							buffer.putstring ("typres")
+						else
+							buffer.putint (table.first.feature_type_id - 1)
+						end
+					else
+							-- Attribute is polymorphic
+						table_name := rout_id.type_table_name;
 
-					buffer.putstring (table_name);
-					buffer.putstring ("_gen_type");
-					buffer.putchar ('-');
-					buffer.putint (table.min_type_id - 1);
-					buffer.putstring ("), ");
-					context.Current_register.print_register_by_name
-					buffer.putchar (')')
+						buffer.putstring ("RTFCID(")
+						buffer.putint (context.current_type.generated_id (context.final_mode))
+						buffer.putchar (',')
+						buffer.putchar ('(');
+						buffer.putstring (table_name);
+						buffer.putchar ('-');
+						buffer.putint (table.min_type_id - 1);
+						buffer.putstring ("), (");
 
-						-- Side effect. This is not nice but
-						-- unavoidable.
-						-- Mark routine id used
-					Eiffel_table.mark_used (rout_id);
-						-- Remember extern declaration
-					Extern_declarations.add_type_table (clone (table_name));
-				end;
+						buffer.putstring (table_name);
+						buffer.putstring ("_gen_type");
+						buffer.putchar ('-');
+						buffer.putint (table.min_type_id - 1);
+						buffer.putstring ("), ");
+						context.Current_register.print_register_by_name
+						buffer.putchar (')')
+
+							-- Side effect. This is not nice but
+							-- unavoidable.
+							-- Mark routine id used
+						Eiffel_table.mark_used (rout_id);
+							-- Remember extern declaration
+						Extern_declarations.add_type_table (clone (table_name));
+
+						-- Make sure that `rout_id' is in type_set
+
+						type_set := System.type_set
+
+						if not type_set.has (rout_id) then
+							-- We found a new routine id which was not in the
+							-- table before, we have to insert it into `type_set'
+							type_set.force (rout_id)
+						end
+					end;
+				end
 			else
 				if
 					Compilation_modes.is_precompiling or
@@ -127,12 +148,12 @@ feature
 					buffer.putstring (gc_comma);
 					buffer.putint (feature_id);
 				end;
+
 				buffer.putstring (gc_comma);
 				context.Current_register.print_register_by_name
-
 				buffer.putchar (')');
-			end;
-		end;
+			end
+		end
 
 feature -- Byte code generation
 
@@ -143,6 +164,7 @@ feature -- Byte code generation
 		do
 			if context.current_type.base_class.is_precompiled then
 				ba.append (Bc_pclike);
+				ba.append_short_integer (context.class_type.id.id-1)
 				rout_info := System.rout_info_table.item (rout_id);
 				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset);
@@ -182,16 +204,16 @@ feature -- Genericity
 				table := Eiffel_table.poly_table (rout_id)
 
 				if table = Void then
-					-- Creation with `like_feature' where feature is
-					-- deferred and has no effective version anywhere.
-					-- Create anything - cannot be called anyway.
+						-- Creation with `like feature' where feature is
+						-- deferred and has no effective version anywhere.
+						-- Create anything - cannot be called anyway
 					buffer.putstring ("-10, -10, ")
 				else
-					-- Feature has at least one effective version	
+					-- Feature has at least one effective version
 					if table.has_one_type then
-							-- There is a table, but with only one type id
+							-- There is a table, but with only one type
 						gen_type ?= table.first.type
-	
+
 						if gen_type /= Void then
 							buffer.putstring ("-10, ")
 							gen_type.generate_cid (buffer, final_mode, True)
@@ -202,7 +224,7 @@ feature -- Genericity
 					else
 							-- Attribute is polymorphic
 						table_name := rout_id.type_table_name
-	
+
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putstring (",(")
@@ -210,7 +232,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), (")
-	
+
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
 						buffer.putstring ("-")
@@ -218,7 +240,7 @@ feature -- Genericity
 						buffer.putstring ("), ")
 						buffer.putstring (context.Current_register.register_name)
 						buffer.putstring ("), ")
-	
+
 							-- Side effect. This is not nice but
 							-- unavoidable.
 							-- Mark routine id used
@@ -226,12 +248,13 @@ feature -- Genericity
 							-- Remember extern declaration
 						Extern_declarations.add_type_table (clone (table_name))
 
-							-- Make sure that `rout_id' is in `type_set'
+						-- Make sure that `rout_id' is in type_set
+
 						type_set := System.type_set
 
 						if not type_set.has (rout_id) then
-								-- We found a new routine ìd which was not in the
-								-- table before, we need to insert it into `type_set'.
+							-- We found a new routine id which was not in the
+							-- table before, we have to insert it into `type_set'
 							type_set.force (rout_id)
 						end
 					end
@@ -267,6 +290,7 @@ feature -- Genericity
 		do
 			if context.current_type.base_class.is_precompiled then
 				ba.append_short_integer (-13)
+				ba.append_short_integer (context.class_type.id.id-1)
 				rout_info := System.rout_info_table.item (rout_id)
 				ba.append_integer (rout_info.origin.id)
 				ba.append_integer (rout_info.offset)
@@ -284,13 +308,100 @@ feature -- Genericity
 			table : POLY_TABLE [ENTRY]
 		do
 			if context.final_mode then
-				table := Eiffel_table.poly_table (rout_id);
+				table := Eiffel_table.poly_table (rout_id)
 
-				if table.has_one_type then
+				if table /= Void and then table.has_one_type then
 					Result ?= table.first.type
 				end
-			end;
-		end;
+			end
+		end
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+
+		local
+			table: POLY_TABLE [ENTRY];
+			table_name: STRING;
+			rout_info: ROUT_INFO;
+			type_set: ROUT_ID_SET
+		do
+			if context.final_mode then
+				table := Eiffel_table.poly_table (rout_id)
+
+				if table = Void then
+					-- Creation with `like feature' where
+					-- feature is deferred and has no effective
+					-- version anywhere.
+					-- Create anything - cannot be called anyway
+
+					buffer.putstring ("0")
+				else
+					-- Feature has at least one effective version
+					if table.has_one_type then
+							-- There is a table, but with only one type
+
+						buffer.putint (table.first.feature_type_id - 1)
+					else
+							-- Attribute is polymorphic
+						table_name := rout_id.type_table_name
+
+						buffer.putstring ("RTFCID(")
+						buffer.putint (context.current_type.generated_id (context.final_mode))
+						buffer.putstring (",(")
+						buffer.putstring (table_name)
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), (")
+
+						buffer.putstring (table_name)
+						buffer.putstring ("_gen_type")
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), ")
+						buffer.putstring (context.Current_register.register_name)
+						buffer.putstring (")")
+
+							-- Side effect. This is not nice but
+							-- unavoidable.
+							-- Mark routine id used
+						Eiffel_table.mark_used (rout_id)
+							-- Remember extern declaration
+						Extern_declarations.add_type_table (clone (table_name))
+
+							-- Make sure that `rout_id' is in type_set
+
+						type_set := System.type_set
+
+						if not type_set.has (rout_id) then
+								-- We found a new routine id which was not in the
+								-- table before, we have to insert it into `type_set'
+							type_set.force (rout_id);
+						end
+					end
+				end
+			else
+				if
+					Compilation_modes.is_precompiling or
+					context.current_type.base_class.is_precompiled
+				then
+					buffer.putstring ("RTWPCT(")
+					context.class_type.id.generated_id (buffer)
+					buffer.putstring (gc_comma)
+					rout_info := System.rout_info_table.item (rout_id)
+					rout_info.origin.generated_id (buffer)
+					buffer.putstring (gc_comma)
+					buffer.putint (rout_info.offset)
+				else
+					buffer.putstring ("RTWCT(")
+					buffer.putint
+						(context.current_type.associated_class_type.id.id - 1)
+					buffer.putstring (gc_comma)
+					buffer.putint (feature_id)
+				end
+				buffer.putstring (gc_comma)
+				buffer.putstring (context.Current_register.register_name)
+				buffer.putstring (")")
+			end
+		end
 
 feature -- Debug
 
@@ -301,6 +412,4 @@ feature -- Debug
 			io.error.putstring (feature_name);
 			io.error.new_line;
 		end
-
-
 end

@@ -6,7 +6,8 @@ inherit
 
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code,
+			generate_reverse
 		end
 	SHARED_GENERATION
 
@@ -59,7 +60,6 @@ feature -- Generic conformance
 
 		do
 			ba.append_short_integer (-12)
-			ba.append_short_integer (0)
 		end
 
 	type_to_create : CL_TYPE_I is
@@ -69,6 +69,16 @@ feature -- Generic conformance
 			-- If Current is generic it already
 			-- carries all the info in it's header.
 		end;
+
+feature -- Assignment attempt
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+
+		do
+			buffer.putstring ("Dftype(")
+			context.Current_register.print_register_by_name
+			buffer.putstring (")")
+		end
 
 feature -- Debug
 

@@ -10,8 +10,6 @@ class
 inherit
 
 	ICOR_OBJECT
-		export
-			{EIFNET_DEBUGGER_INFO} release
 		redefine
 			init_icor, clean_on_dispose
 		end

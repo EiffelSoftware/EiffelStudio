@@ -63,6 +63,12 @@ feature -- Status setting
 			already_confirmed_no_save := b
 		end
 
+	set_already_kill_confirmed (b: BOOLEAN) is
+			-- Set a flag saying a kill dialog was already displayed => do not ask again.
+		do
+			already_confirmed := True
+		end
+
 feature {NONE} -- Callbacks
 
 	confirm_stop_debug is
@@ -70,7 +76,7 @@ feature {NONE} -- Callbacks
 		local
 			cd: EV_CONFIRMATION_DIALOG
 		do
-			if Application.is_running then
+			if not already_confirmed and Application.is_running then
 				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
 				cd.button ("OK").select_actions.extend (~confirm_and_exit)
 				cd.show_modal_to_window (window_manager.last_focused_window.window)

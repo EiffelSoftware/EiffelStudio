@@ -44,7 +44,18 @@ feature
 	cluster_number: INTEGER;
 			-- Last number use for default cluster name
 
+	was_generated_from_bench: BOOLEAN;
+			-- Was Current generated from bench?
+
 feature -- Setting values
+
+	set_was_generated_from_bench is
+			-- Set was_generated_from_bench to True.
+		do
+			was_generated_from_bench := True;
+		ensure
+			was_generated_from_bench: was_generated_from_bench
+		end;
 
 	set_grid_details (is_vis, is_mag: BOOLEAN; spacing: INTEGER) is
 			-- Set is_grid_visible to `is_vis', 

@@ -13,7 +13,7 @@ feature
 			-- Informal description of Current
 
 	client_links: FIXED_LIST [S_CLI_SUP_DATA];
-			-- List of client/supplier relations for which current
+			-- List of supplier relations for which current
 			-- is the client
 
 	heir_links: FIXED_LIST [S_RELATION_DATA];

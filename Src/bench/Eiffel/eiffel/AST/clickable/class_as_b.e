@@ -194,4 +194,33 @@ feature -- formatting
 			ctxt.commit;
 		end;
 
+feature -- Case storage 
+
+	header_storage_info: S_CLASS_DATA is
+			-- Header storage information for Current
+			-- (such as index, class name, & generics)
+		local
+			f_l: LINKED_LIST [S_FEATURE_DATA];
+			i_l: FIXED_LIST [S_TEXT_DATA];
+			s_chart: S_CLASS_CHART;
+		do
+			!! Result.make (class_name.string_value);
+			--!! s_chart;
+			--if indexes /= Void then
+				--from
+					--!! i_l.make (indexes.count);
+					--i_l.start;
+					--indexes.start
+				--until
+					--indexes.after
+				--loop
+					--i_l.replace (indexes.item.storage_info);
+					--i_l.forth;
+					--indexes.forth
+				--end
+				--s_chart.set_indexes (i_l);
+			--end
+			--Result.set_chart (s_chart)
+		end;
+
 end

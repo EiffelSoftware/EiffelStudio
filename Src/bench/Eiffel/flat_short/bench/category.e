@@ -155,6 +155,19 @@ feature
 				clauses.forth
 			end;
 			ctxt.commit;
+		end;
+
+	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+		do
+			!! Result.make;
+			from
+				clauses.start
+			until
+				clauses.after
+			loop
+				Result.append (clauses.item.features_storage_info);
+				clauses.forth
+			end;
 		end;	
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -163,7 +176,12 @@ feature
 			or else (other.comment /= void
 				and then comment < other.comment)
 		end;
-				
+			
+	wipe_out is
+		do
+			clauses.wipe_out;	
+			comment := Void
+		end;	
 
 end
 

@@ -25,13 +25,11 @@ feature
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
 			p: INTEGER;
-			l_list: LINKED_LIST [EIFFEL_LINE];
-			c_list: LINKED_LIST [EIFFEL_COMMENTS];	
 		do
 			from
 				f.open_read;
-				!!l_list.make;
-				!!c_list.make;
+				!! lines.make (0);
+				!! comments.make (20);
 			until
 				f.end_of_file or else p > end_pos
 			loop
@@ -46,32 +44,19 @@ feature
 						p_line.discard_comment;
 						p_line.right_adjust;
 						if comment = void then
-							!!comment.make (comment_line.position);
+							!! comment.make (comment_line.position);
 						end;
 						comment.add (comment_line.text);
 					else
-						c_list.extend (comment);
+						if comment /= Void and then not comment.text.empty then
+							comments.extend (comment);
+						end;
 						comment := void;
 					end;
 				end;
 			end;
-			from
-				c_list.start
-			until
-				c_list.after
-			loop
-				if 
-					c_list.item = void
-					or else c_list.item.text.empty  
-				then
-					c_list.remove
-				else
-					c_list.forth;
-				end;
-			end;
-			create_lists (l_list, c_list);
-			l_list.start;
-			c_list.start;
+			lines.start;
+			comments.start;
 			position_in_line := 1;
 			f.close;
 		end;
@@ -86,13 +71,11 @@ feature
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
 			p: INTEGER;
-			l_list: LINKED_LIST [EIFFEL_LINE];
-			c_list: LINKED_LIST [EIFFEL_COMMENTS];	
 		do
 			from
 				f.open_read;
-				!! l_list.make;
-				!! c_list.make;
+				!! lines.make (20);
+				!! comments.make (20);
 			until
 				f.end_of_file
 			loop
@@ -106,47 +89,19 @@ feature
 					p_line.discard_comment;
 					p_line.right_adjust;
 					if comment = void then
-						!!comment.make (comment_line.position);
+						!! comment.make (comment_line.position);
 					end;
 					comment.add (comment_line.text);
 				else
-					c_list.extend (comment);
+					if comment /= Void and then not comment.text.empty then
+						comments.extend (comment);
+					end;
 					comment := void;
 				end;
 				if not p_line.empty then
-					l_list.extend (p_line);
+					lines.extend (p_line);
 				end;
 			end;
-			from
-				l_list.start
-			until
-				l_list.after
-			loop
-				if 
-					l_list.item = void
-					or else l_list.item.empty
-				then
-					l_list.remove
-				else
-					l_list.forth;
-				end;
-			end;
-			from
-				c_list.start
-			until
-				c_list.after
-			loop
-				if 
-					c_list.item = void
-					or else c_list.item.text.empty  
-				then
-					c_list.remove
-				else
-					c_list.forth;
-				end;
-			end;
-				
-			create_lists (l_list, c_list);
 			lines.start;
 			comments.start;
 			position_in_line := 1;
@@ -388,36 +343,7 @@ feature
 			end;
 		end;
 
-feature {}
-
-	create_lists (l_list: LINKED_LIST [EIFFEL_LINE]; 
-					c_list: LINKED_LIST [EIFFEL_COMMENTS]) is
-			-- Create lines and comments using `l_list' and	
-			-- `c_list'.
-		do
-			from
-				l_list.start;
-				!! lines.make_filled (l_list.count);
-				lines.start;
-			until
-				l_list.after
-			loop
-				lines.replace (l_list.item);
-				lines.forth;	
-				l_list.forth
-			end;
-			from
-				c_list.start;
-				!! comments.make_filled (c_list.count);
-				comments.start;
-			until
-				c_list.after
-			loop
-				comments.replace (c_list.item);
-				comments.forth;
-				c_list.forth
-			end;
-		end
+feature {NONE}
 
 	trace is
 		do

@@ -60,6 +60,8 @@ feature
 
 	Short_abb: CHARACTER is 's';
 
+	Storage_abb: CHARACTER is 's';
+
 	System_abb: CHARACTER is 's';
 
 	Text_abb: CHARACTER is 't';

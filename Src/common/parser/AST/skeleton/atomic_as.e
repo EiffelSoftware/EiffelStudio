@@ -81,4 +81,9 @@ feature -- Type check and dead code removal
 		do
 		end;
 
+	string_value: STRING is
+		do
+			Result := value_i.dump
+		end;
+
 end

@@ -84,7 +84,7 @@ feature
 		do
 		end;
 
-	process_BEFORE_CLASS (t: BEFORE_CLASS) is
+	process_before_class (t: BEFORE_CLASS) is
 		do
 		end;
 

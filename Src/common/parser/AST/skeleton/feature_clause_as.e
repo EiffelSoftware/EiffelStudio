@@ -66,4 +66,19 @@ feature -- Formatting
 			ctxt.commit;
 		end;
 
+	storage_info: LINKED_LIST [S_FEATURE_DATA] is
+			-- Storage information of Current
+		do
+			from
+				!! Result.make;
+				features.start
+			until
+				features.after
+			loop
+				Result.put_right (features.item.storage_info);
+				Result.forth;	
+				features.forth
+			end;
+		end;
+
 end

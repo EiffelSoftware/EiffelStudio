@@ -51,7 +51,6 @@ feature -- Dynamic Library file
 			dynamic_lib_def_file_name: FILE_NAME
 			C_dynamic_lib_file: INDENT_FILE
 			is_dll_generated: BOOLEAN
-			eiffel_def_file: PLAIN_TEXT_FILE
 			dynamic_lib: E_DYNAMIC_LIB
 
 			args: E_FEATURE_ARGUMENTS

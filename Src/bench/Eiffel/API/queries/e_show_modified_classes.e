@@ -9,7 +9,7 @@ class E_SHOW_MODIFIED_CLASSES
 
 inherit
 
-	E_CMD;
+	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -85,9 +85,9 @@ feature {NONE} -- Implementation
 					a_classi := classes.item (sorted_class_names.item);
 					a_classe := a_classi.compiled_eclass;
 					if a_classe /= Void then
-						a_classe.append_clickable_signature (output_window)
+						a_classe.append_signature (output_window)
 					else
-						a_classi.append_clickable_name (output_window);
+						a_classi.append_name (output_window);
 						output_window.put_string ("  (not in system)")
 					end;
 					output_window.new_line;

@@ -12,8 +12,6 @@ deferred class
 inherit
 	EV_FIGURE_DRAWING_ROUTINES
 
-feature {NONE} -- Initialization
-
 feature -- Basic operations
 
 	register_figure (a_figure: EV_FIGURE;
@@ -82,7 +80,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
 	draw_routines: ARRAY [PROCEDURE [ANY, TUPLE [EV_FIGURE]]]
@@ -111,11 +108,13 @@ feature {NONE} -- Implementation
 		end
 
 	Default_colors: EV_STOCK_COLORS is
+			-- Once access to `EV_STOCK_COLORS'.
 		once
 			create Result
 		end
 
 	Default_pixmaps: EV_STOCK_PIXMAPS is
+			-- Once access to `EV_STOCK_PIXMAPS'.
 		once
 			create Result
 		end

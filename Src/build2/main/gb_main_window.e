@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 				info_string := info_string.substring (index + 1, info_string.count)
 				
 				index := info_string.index_of ('_', 1)
-				stored_heights.extend (info_string.substring (1, index - 1).to_integer)
+				stored_widths.extend (info_string.to_integer)
 				info_string := info_string.substring (index + 1, info_string.count)
 				
 					-- Note that we convert from the stored name to the real name for the second argument.

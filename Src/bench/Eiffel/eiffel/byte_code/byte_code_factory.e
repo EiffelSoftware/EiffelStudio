@@ -114,7 +114,6 @@ feature {NONE} -- Implementation: status report
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_string_b: STRING_B
-			l_hector_b: HECTOR_B
 		do
 			if
 				System.il_generation and
@@ -123,8 +122,7 @@ feature {NONE} -- Implementation: status report
 				l_string_b ?= a_expr
 				Result := l_string_b /= Void
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
-				l_hector_b ?= a_expr
-				Result := l_hector_b /= Void
+				Result := True
 			end
 		end
 		
@@ -153,11 +151,12 @@ feature {NONE} -- Implementation: Byte node
 				Result := l_string_b
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				l_hector_b ?= a_expr
-				check
-					l_hector_b_not_void: l_hector_b /= Void
+				if l_hector_b /= Void then
+					l_hector_b.set_is_pointer
+					Result := l_hector_b
+				else
+					Result := a_expr
 				end
-				l_hector_b.set_is_pointer
-				Result := l_hector_b
 			end			
 		end
 

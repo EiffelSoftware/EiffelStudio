@@ -9,25 +9,36 @@ class
 
 inherit
 	WIZARD_DISPATCH_INVOKE_GENERATOR_HELPER
+		export 
+			{NONE} all
+		end
 
 	ECOM_FUNC_KIND
 		export 
 			{NONE} all
 		end
 
+	ECOM_PARAM_FLAGS
+		export 
+			{NONE} all
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_func_desc: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Initialize
+		require
+			non_void_descriptor: a_func_desc /= Void
 		do
 			create body.make (10000)
 			create local_buffer.make (10000)
+			func_desc := a_func_desc
 		ensure
-			postcondition_clause: -- Your postcondition here
+			non_void_body: body /= Void
+			non_void_buffer: local_buffer /= Void
 		end
 
 feature -- Access
@@ -36,14 +47,99 @@ feature -- Access
 			-- Case body.
 		
 	local_buffer: STRING 
-			-- Addeitional buffer.
+			-- Additional buffer.
+	
+	func_desc: WIZARD_FUNCTION_DESCRIPTOR
+			-- Function descriptor.
 
+feature -- Staus report.
+
+	is_dispatch_function: BOOLEAN is
+			-- Is function described as dispatch function?
+		do
+			Result := func_desc.func_kind = func_dispatch
+		end
+		
+	argument_count: INTEGER is
+			-- Number of arguments.
+		local
+			cursor: CURSOR
+		do
+			if is_dispatch_function then
+				Result := func_desc.argument_count
+			else
+				if func_desc.argument_count > 0 then
+					cursor := func_desc.arguments.cursor
+					func_desc.arguments.go_i_th (func_desc.argument_count)
+					if is_paramflag_fretval (func_desc.arguments.item.flags) then
+						Result := func_desc.argument_count - 1
+					else
+						Result := func_desc.argument_count
+					end
+					func_desc.arguments.go_to (cursor)
+				end
+			end
+		end
+	
+	has_arguments: BOOLEAN is
+			-- Does function have arguments?
+		do
+			Result := argument_count > 0
+		end
+		
+	has_result: BOOLEAN is
+			-- Does routine have result?
+		local
+			cursor: CURSOR
+		do
+			if is_dispatch_function then
+				Result := not func_desc.return_type.name.is_equal (Void_c_keyword)
+			else
+				if func_desc.argument_count > 0 then
+					cursor := func_desc.arguments.cursor
+					func_desc.arguments.go_i_th (func_desc.argument_count)
+					Result := is_paramflag_fretval (func_desc.arguments.item.flags)
+					func_desc.arguments.go_to (cursor)
+				end
+			end
+		end
+		
+	result_type_visitor: WIZARD_DATA_TYPE_VISITOR is
+			-- Return type visitor.
+		require
+			has_result: has_result
+		local
+			pointed: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			cursor: CURSOR
+		do
+			if is_dispatch_function then
+				Result := func_desc.return_type.visitor
+			else
+				cursor := func_desc.arguments.cursor
+				func_desc.arguments.go_i_th (func_desc.argument_count)
+				pointed ?= func_desc.arguments.item.type
+				if pointed /= Void then
+					Result := pointed.pointed_data_type_descriptor.visitor
+				end
+				func_desc.arguments.go_to (cursor)
+			end
+		ensure
+			non_void_visitor: Result /= Void
+		end
+	
+	return_hresult: BOOLEAN is
+			-- Does Vtable function return HRESULT?
+		do
+			Result := is_dispatch_function or
+				func_desc.return_type.type = Vt_hresult
+		end
+	
 feature -- Basic operations
 
-	process_arguments (func_desc: WIZARD_FUNCTION_DESCRIPTOR) is
-			--
+	process_arguments is
+			-- Process function arguments.
 		require
-			has_arguments: not func_desc.arguments.empty
+			has_arguments: has_arguments
 		local
 			counter: INTEGER
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -57,7 +153,7 @@ feature -- Basic operations
 			body.append (Close_parenthesis)
 			body.append (Co_task_mem_alloc)
 			body.append (Space_open_parenthesis)
-			body.append_integer (func_desc.argument_count)
+			body.append_integer (argument_count )
 			body.append (Asterisk)
 			body.append (Sizeof)
 			body.append (Space_open_parenthesis)
@@ -180,7 +276,7 @@ feature -- Basic operations
 				func_desc.arguments.start
 				counter := 0
 			until
-				func_desc.arguments.after
+				counter = argument_count 
 			loop
 				visitor := func_desc.arguments.item.type.visitor
 
@@ -225,7 +321,7 @@ feature -- Basic operations
 						(func_desc.arguments.item.type, 
 						"arg_" + counter.out, 
 						Tmp_variable_name + " %(" + counter.out +"%)", 
-						counter, func_desc.arguments.empty))
+						counter, has_arguments))
 
 				if is_paramflag_fout (func_desc.arguments.item.flags) then
 					local_buffer.append (Tmp_variable_name)
@@ -281,24 +377,17 @@ feature -- Basic operations
 					local_buffer.append (New_line_tab_tab_tab)	
 					local_buffer.append (Tab)
 				end
-				if func_desc.argument_count > 0 then
-				end
 
 				counter := counter + 1
 				func_desc.arguments.forth
 			end
-		ensure
 		end
 	
-	process_result (func_desc: WIZARD_FUNCTION_DESCRIPTOR) is
-			--
+	process_result (visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Process function result.
 		require
-			function: not func_desc.return_type.name.is_equal (Void_c_keyword) 
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			non_void_visitor: visitor /= Void
 		do
-			visitor := func_desc.return_type.visitor
-
 			body.append (visitor.c_type)
 			body.append (Space)
 			body.append (C_result)
@@ -354,24 +443,27 @@ feature -- Basic operations
 		ensure
 		end
 	
-	call_vtable_function (func_desc: WIZARD_FUNCTION_DESCRIPTOR) is
-			--
+	call_vtable_function is
+			-- Generate call to Vtable function.
 		require
+			non_void_descriptor: func_desc /= Void
 		local
 			counter: INTEGER
 		do
-			body.append (Hresult_variable_name)
-			body.append (Space_equal_space)
+			if return_hresult then
+				body.append (Hresult_variable_name)
+				body.append (Space_equal_space)
+			end
 			body.append (func_desc.name)
 			body.append (Space_open_parenthesis)
 
 
-			if not func_desc.arguments.empty then
+			if has_arguments then
 
 				from
 					counter := 0
 				until
-					counter = func_desc.argument_count
+					counter = argument_count 
 				loop
 
 					body.append (Space)
@@ -382,12 +474,12 @@ feature -- Basic operations
 
 					counter := counter + 1
 				end
-				if func_desc.return_type.name.is_equal (Void_c_keyword) then
+				if not has_result  then
 					body.remove (body.count)
 				end
 			end
 
-			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if has_result  then
 				body.append (Ampersand)
 				body.append (C_result)
 			end
@@ -396,10 +488,9 @@ feature -- Basic operations
 			body.append (Semicolon)
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
-		ensure
 		end
 		
-	function_case_body (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	function_case_body: STRING is
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -424,7 +515,7 @@ feature -- Basic operations
 			body.append (Space)
 			body.append (C_not_equal)
 			body.append (Space)
-			body.append_integer (func_desc.argument_count)
+			body.append_integer (argument_count )
 			body.append (Close_parenthesis)
 			body.append (New_line_tab_tab_tab)
 
@@ -437,18 +528,22 @@ feature -- Basic operations
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
 
-			if func_desc.argument_count > 0 then
-				process_arguments (func_desc)
+			if has_arguments then
+				process_arguments 
 			end
 			
-			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
-				process_result (func_desc)
+			if has_result  then
+				process_result (result_type_visitor )
 			end
-
-			call_vtable_function (func_desc)
 			
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab)
 
-			body.append (check_failer (func_desc.arguments.empty, excepinfo_setting, "DISP_E_EXCEPTION"))
+			call_vtable_function 
+			
+			if return_hresult then
+				body.append (check_failer (not has_arguments, excepinfo_setting, "DISP_E_EXCEPTION"))
+			end
 
 			if not local_buffer.empty then
 				body.append (Tab)
@@ -456,7 +551,7 @@ feature -- Basic operations
 				body.append (New_line_tab_tab_tab)
 			end
 
-			if not func_desc.arguments.empty then
+			if has_arguments  then
 				body.append (Tab)
 				body.append (If_keyword)
 				body.append (Space_open_parenthesis)
@@ -579,6 +674,9 @@ feature -- Basic operations
 			non_void_body: Result /= Void
 			valid_body: not Result.empty
 		end
+
+invariant
+	non_void_function_descriptor: func_desc /= Void
 
 end -- class WIZARD_DISPATCH_INVOKE_CASE_BODY_GENERATOR
 

@@ -29,11 +29,6 @@ inherit
 			set_peer_address
 		end
 
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
-
 creation {NETWORK_STREAM_SOCKET}
 
 	create_from_descriptor
@@ -67,37 +62,27 @@ feature -- Initialization
 			h_address: HOST_ADDRESS;
 			i, code: INTEGER;
 			is_hostname: BOOLEAN
-			retried: BOOLEAN
 		do
-			if not retried then
-				make;
-				from
-					i := 1
-				until
-					i > a_peer_host.count or is_hostname
-				loop
-					code := a_peer_host.item_code (i);
-					is_hostname := (code /= 46 and then 
-						(code < 48 or else code > 57));
-					i := i + 1
-				end;
-				create h_address.make;
-				if is_hostname then
-					h_address.set_address_from_name (a_peer_host)
-				else
-					h_address.set_host_address (a_peer_host)
-				end;
-				create peer_address.make;
-				peer_address.set_host_address (h_address);
-				peer_address.set_port (a_peer_port)
-			end
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
-				retried := True
-				retry
-			end
+			make;
+			from
+				i := 1
+			until
+				i > a_peer_host.count or is_hostname
+			loop
+				code := a_peer_host.item_code (i);
+				is_hostname := (code /= 46 and then 
+					(code < 48 or else code > 57));
+				i := i + 1
+			end;
+			create h_address.make;
+			if is_hostname then
+				h_address.set_address_from_name (a_peer_host)
+			else
+				h_address.set_host_address (a_peer_host)
+			end;
+			create peer_address.make;
+			peer_address.set_host_address (h_address);
+			peer_address.set_port (a_peer_port)
 		end;
 
 	make_server_by_port (a_port: INTEGER) is
@@ -106,24 +91,14 @@ feature -- Initialization
 			valid_port: a_port >= 0
 		local
 			h_address: HOST_ADDRESS
-			retried: BOOLEAN
 		do
-			if not retried then
-				make;
-				create h_address.make;
-				h_address.set_in_address_any;
-				create address.make;
-				address.set_host_address (h_address);
-				address.set_port (a_port);
-				bind
-			end
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
-				retried := True
-				retry
-			end
+			make;
+			create h_address.make;
+			h_address.set_in_address_any;
+			create address.make;
+			address.set_host_address (h_address);
+			address.set_port (a_port);
+			bind
 		end
 
 feature -- Status report

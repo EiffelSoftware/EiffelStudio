@@ -77,9 +77,11 @@ feature {NONE} -- Processing
 		require
 			a_class_not_void: a_class /= Void
 		do
+				-- Process creation feature of `a_class'.
+			a_class.process_creation_feature
+
 				-- Type checking and maybe byte code production for `a_class'.
 			a_class.pass3
-			a_class.set_reverse_engineered (False)
 			if System.il_generation then
 				a_class.update_anchors			
 			end

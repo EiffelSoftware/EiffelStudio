@@ -857,7 +857,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 
 /*
 doc:	<routine name="spmalloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Memory allocation for an Eiffel special object. It either succeeds or raises the "No more memory" exception. The routine returns the pointer on a new special object holding at least 'nbytes'. `atomic' means that it is a special object without references.
+doc:		<summary>Memory allocation for an Eiffel special object. It either succeeds or raises the "No more memory" exception. The routine returns the pointer on a new special object holding at least 'nbytes'. `atomic' means that it is a special object without references.</summary>
 doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocate.</param>
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current special object to create has reference or not? True means no.</param>
 doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
@@ -1522,7 +1522,7 @@ rt_private EIF_REFERENCE malloc_free_list (unsigned int nbytes, union overhead *
 /*
 doc:	<routine name="free_unused" export="private">
 doc:		<summary>???</summary>
-doc:		<thread_safety>Not safe<thread_safety>
+doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
@@ -1547,7 +1547,7 @@ rt_private void free_unused (void)
 doc:	<routine name="chunk_free" return_type="int" export="private">
 doc:		<summary>???</summary>
 doc:		<param name="ck" type="struct chunk *">??</param>
-doc:		<thread_safety>Safe<thread_safety>
+doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */
 
@@ -1564,7 +1564,7 @@ doc:		<summary>Given a correctly padded size 'nbytes', we try to find a free blo
 doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
 doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block.</param>
 doc:		<return>Return the address of the (splited) block if found, a null pointer otherwise.</return>
-doc:		<thread_safety>Safe<thread_safety>
+doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
 doc:	</routine>
 */
@@ -2032,7 +2032,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 /*
 doc:	<routine name="rel_core" export="shared">
 doc:		<summary>Release core if possible, giving pages back to the kernel. This will shrink the size of the process accordingly. To release memory, we need at least two free chunks at the end (i.e. near the break), and of course, a chunk not reserved for next partial scavenging as a 'to' zone.</summary>
-doc:		<thread_safety>Not safe<thread_safety>
+doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
@@ -2048,7 +2048,7 @@ rt_shared void rel_core(void)
 doc:	<routine name="free_last_chunk" return_type="int" export="private">
 doc:		<summary>The last chunk in memory is freed (i.e. given back to the kernel) and the break value is updated. The status from sbrk() is returned. Great care is taken to ensure that the last chunk does not contain anything referenced by the process (otherwise, you get a free ticket for a memory fault)--RAM. Only called by `rel_core'.</summary>
 doc:		<return>An error condition of -2 means the last chunk is not near the break for whatever reason and hence cannot be wiped out from the process, sorry. A -3 means that there is no way the last chunk can be freed. -4 is returned when there are no more chunks to be freed</return>
-doc:		<thread_safety>Not safe<thread_safety>
+doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
@@ -2472,7 +2472,7 @@ rt_public EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize)
 #ifdef ISE_GC
 /*
 doc:	<routine name="xfreeblock" export="private">
-doc:		<summary>Put the memory block starting at 'zone' into the free_list. Note that zone points at the beginning of the memory block (beginning of the header) and not at an object data area.
+doc:		<summary>Put the memory block starting at 'zone' into the free_list. Note that zone points at the beginning of the memory block (beginning of the header) and not at an object data area.</summary>
 doc:		<param name="zone" type="union overhead *">Zone to be freed.</param>
 doc:		<param name="r" type="uint32">Size of block.</param>
 doc:		<thread_safety>Not safe</thread_safety>
@@ -2794,8 +2794,8 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 #ifdef ISE_GC
 /*
-doc:	<routine name="emallinfo" return_type="struct emallinfo *" export="public">
-doc:		<summary>Return the pointer to the static data held in m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.
+doc:	<routine name="meminfo" return_type="struct emallinfo *" export="public">
+doc:		<summary>Return the pointer to the static data held in m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.</summary>
 doc:		<param name="type" type="int">Type of memory (M_C or M_EIFFEL or M_ALL) to get info from.</param>
 doc:		<return>Pointer to an internal structure used by `malloc.c'.</return>
 doc:		<thread_safety>Not Safe</thread_safety>

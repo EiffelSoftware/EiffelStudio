@@ -797,7 +797,7 @@ rt_private int counter = 0;
 /*
 doc:	<routine name="eif_is_synchronized" return_type="int" export="shared">
 doc:		<summary>Check if all threads are in a paused state, so that GC can safely be performed.</summary>
-doc:		<return_value>1 when synchronized, 0 otherwise</return_value>
+doc:		<return>1 when synchronized, 0 otherwise</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>

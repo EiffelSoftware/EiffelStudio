@@ -66,7 +66,7 @@ rt_shared void eif_rwl_init(EIF_RWL_TYPE *rwlp)
 
 /*
 doc:	<routine name="eif_rwl_rdlock" export="shared">
-doc:		<summary>Acquire a read lock. Multiple readers can go if there are no writer.</summary
+doc:		<summary>Acquire a read lock. Multiple readers can go if there are no writer.</summary>
 doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be locked.</param>
 doc:		<exception>EN_EXT when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -88,7 +88,7 @@ rt_shared void eif_rwl_rdlock (EIF_RWL_TYPE *rwlp)
 
 /*
 doc:	<routine name="eif_rwl_wrlock" export="shared">
-doc:		<summary>Acquire a write lock. Only a single write can proceed.</summary
+doc:		<summary>Acquire a write lock. Only a single write can proceed.</summary>
 doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be locked.</param>
 doc:		<exception>EN_EXT when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -112,7 +112,7 @@ rt_shared void eif_rwl_wrlock (EIF_RWL_TYPE *rwlp)
 
 /*
 doc:	<routine name="eif_rwl_unlock" export="shared">
-doc:		<summary>Unlock a read or write lock.</summary
+doc:		<summary>Unlock a read or write lock.</summary>
 doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be unlocked.</param>
 doc:		<exception>EN_EXT when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -153,7 +153,7 @@ rt_shared void eif_rwl_unlock (EIF_RWL_TYPE *rwlp)
 
 /*
 doc:	<routine name="eif_rwl_destroy" export="shared">
-doc:		<summary>Destroy a read/write lock.</summary
+doc:		<summary>Destroy a read/write lock.</summary>
 doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be destroyed.</param>
 doc:		<exception>EN_EXT when it fails</exception>
 doc:		<thread_safety>Not safe</thread_safety>

@@ -75,17 +75,10 @@ feature -- Status report
 				-- local variable created to get the tree_widget Pointer
 				-- which is specific to EV_TREE_IMP and is not in EV_TREE_ITEM_HOLDER_IMP
 		do
-			par_imp ?= parent_imp
-			if (par_imp /= void) then
-				-- the parent is a EV_TREE_IMP. Therefore the parent
-				-- of the tree item is tree_widget.
-				Result := c_gtk_tree_item_is_selected (par_imp.tree_widget, widget)
-			else
-				-- the parent is not a EV_TREE_IMP but a EV_TREE_ITEM_IMP. Therefore the parent
-				-- of the tree item is widget.
-				Result := c_gtk_tree_item_is_selected (GTK_TREE_ITEM_SUBTREE(parent_imp.widget), widget)
+			check
+				To_be_tested: False
 			end
-				
+			Result := c_gtk_tree_item_is_selected (tree_parent_imp.tree_widget, widget)				
 		end
 
 	is_expanded: BOOLEAN is
@@ -159,8 +152,8 @@ feature -- Event : command association
 			-- executed when the selection subtree
 			-- expanded or collapsed.
 		do
-			add_command ("expand", cmd, arg)
-			add_command ("collapse", cmd, arg)
+			add_command (widget, "expand", cmd, arg)
+			add_command (widget, "collapse", cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -169,8 +162,8 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the selection subtree is expanded or collapsed.
 		do
-			remove_commands (expand_id)
-			remove_commands (collapse_id)
+			remove_commands (widget, expand_id)
+			remove_commands (widget, collapse_id)
 		end
 
 feature {NONE} -- Implementation
@@ -179,19 +172,40 @@ feature {NONE} -- Implementation
 			-- Add `item' to the list
 		local
 			p: POINTER
+			par_imp: EV_TREE
 		do
+			-- If the tree item does not have any items children,
+			-- we need to add a tree under it to be able to add tree items
+			-- (we make it become a subtree).
 			if GTK_TREE_ITEM_SUBTREE(widget) = default_pointer then
 				p := gtk_tree_new
 				gtk_tree_item_set_subtree (widget, p)
 				c_gtk_tree_set_single_selection_mode (GTK_TREE_ITEM_SUBTREE(widget))
 			end
+
+			-- add the tree item to the current tree which is a subtree.
 			gtk_tree_append (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
+
+			-- Set the `tree_parent_widget' of the tree_item:
+			item_imp.set_tree_parent_imp (tree_parent_imp)
+
+			-- We need to update the parent (the tree)
+			-- `ev_children' by adding the new menu_item:
+			tree_parent_imp.ev_children.force (item_imp)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Remove `item_imp' from the list.
 		do
+			-- remove the gtk_tree_item of the gtk_tree_item:
 			gtk_tree_remove_item (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
+
+			-- Set the `tree_parent_widget' of the tree item to Void:
+			set_tree_parent_imp (Void)
+
+			-- Remove the item from the array `ev_children' of the tree parent.
+			tree_parent_imp.ev_children.search (item_imp)
+			tree_parent_imp.ev_children.remove
 		end
 
 end -- class EV_TREE_ITEM_IMP

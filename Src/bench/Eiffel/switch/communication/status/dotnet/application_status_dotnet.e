@@ -12,7 +12,8 @@ inherit
 		redefine
 			display_status,
 			current_stack_element,
-			where
+			where,
+			update
 		end
 		
 	EIFNET_DEBUGGER_INFO_ACCESSOR
@@ -74,6 +75,16 @@ feature -- Values
 	is_evaluating: BOOLEAN
 			-- Is the debugged application evaluating expression ?	
 
+feature -- Update
+
+	update is
+			-- Update data once the application is really stopped
+		do
+			if application.imp_dotnet.exception_occured and is_stopped then
+				exception_tag := application.imp_dotnet.exception_message			
+			end
+		end
+		
 feature -- settings
 
 	set_is_evaluating (b: BOOLEAN) is

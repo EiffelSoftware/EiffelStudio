@@ -34,7 +34,7 @@ inherit
 --	do_nothing
 
 
-feature
+feature -- Callstack
 
 	reload_call_stack is
 			-- reload the call stack from application (after having edited an
@@ -158,6 +158,13 @@ feature -- Access
 			end
 		end
 
+feature -- Update
+
+	update is
+			-- Update data which need update after application is really stopped
+		do
+		end
+		
 feature -- Setting
 
 	set_is_stopped (b: BOOLEAN) is

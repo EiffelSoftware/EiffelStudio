@@ -27,11 +27,12 @@ feature -- Execution
 			else
 				process
 			end
-			if s /= Void and then s.clickable then
+			if (s /= Void and then s.clickable) and then not user_asked then
 --				not data.control_key_pressed then
 --					-- click requires a confirmation, control-click doesn't.
 
 				create cfd.make_default (Current)
+				user_asked := True
 			else
 				process
 			end
@@ -45,13 +46,14 @@ feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 		do
 				-- The user wants to execute this format,
 				-- even though it's a long format.
-			if not f.tool.text_window.changed then
+			if not (f.tool.text_window.changed) or else user_warned then
 --					create mp.set_watch_cursor
 --					execute_licensed (s)
 					f.format (s)
 --					mp.restore
 			else
 				create csd.make_and_launch (f.tool, Current, Callback)
+				user_warned := True
 			end
 		end
 
@@ -68,5 +70,7 @@ feature -- Implementation
 		once
 			create Result.make (Void)
 		end
+
+	user_asked: BOOLEAN
 
 end -- class EB_LONG_FORMAT_COMMAND

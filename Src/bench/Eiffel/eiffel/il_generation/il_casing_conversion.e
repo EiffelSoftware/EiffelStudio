@@ -32,6 +32,7 @@ feature -- Naming convention
 			valid_type: type = lower_case or type = upper_case
 		local
 			i, nb: INTEGER
+			l_c: CHARACTER
 		do
 			Result := name
 			if System.dotnet_naming_convention then
@@ -43,14 +44,17 @@ feature -- Naming convention
 				until
 					i > nb
 				loop
-						-- When we encounter a '_' we delete it
-						-- if it is not the last one in `Result'
-						-- and the character following the `_'
-						-- has its case changed  to upper.
-					if Result.item (i) = '_' and i < nb then
-						Result.remove (i)
-						nb := nb - 1
-						Result.put (Result.item (i).upper, i)
+						-- When we encounter a '_' we delete it if it is not the last one
+						-- in `Result' and the character following the `_' has its case
+						-- changed  to upper.
+					l_c := Result.item (i)
+					if l_c = '_' and i < nb then
+						l_c := Result.item (i + 1)
+						if l_c.upper /= l_c then
+							Result.remove (i)
+							nb := nb - 1
+							Result.put (l_c.upper, i)
+						end
 					end
 					i := i + 1
 				end
@@ -71,6 +75,7 @@ feature -- Naming convention
 			name_not_empty: not name.is_empty
 		local
 			i, nb: INTEGER
+			l_c: CHARACTER
 		do
 			Result := name
 			if System.dotnet_naming_convention then
@@ -81,14 +86,17 @@ feature -- Naming convention
 				until
 					i > nb
 				loop
-						-- When we encounter a '_' we delete it
-						-- if it is not the last one in `Result'
-						-- and the character following the `_'
-						-- has its case changed  to upper.
-					if Result.item (i) = '_' and i < nb then
-						Result.remove (i)
-						nb := nb - 1
-						Result.put (Result.item (i).upper, i)
+						-- When we encounter a '_' we delete it if it is not the last one
+						-- in `Result' and the character following the `_' has its case
+						-- changed  to upper.
+					l_c := Result.item (i)
+					if l_c = '_' and i < nb then
+						l_c := Result.item (i + 1)
+						if l_c.upper /= l_c then
+							Result.remove (i)
+							nb := nb - 1
+							Result.put (l_c.upper, i)
+						end
 					end
 					i := i + 1
 				end

@@ -502,6 +502,14 @@ feature {NONE} -- Cluster display and saving
 					tree_item.set_text (cluster_name.text)
 					clusters.remove (cl_name)
 					clusters.force (cl, cluster_name.text)
+
+					if override_cluster_names.has (cl_name) then
+							-- Remove old override cluster name.
+						override_cluster_names.remove (cl_name)
+					end
+					if override_cluster_check.is_selected then
+						override_cluster_names.force (cluster_name.text)
+					end
 				end
 					-- If previously there were some double quotes, we add them again.
 				cl.set_cluster_name (new_id_sd (cluster_name.text, cl.cluster_name.is_string))

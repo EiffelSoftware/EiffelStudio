@@ -82,6 +82,7 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 					show_element (contents_cell.item, main_window)
 				end				
 				replace_all_instances_with_up_to_date_xml (contents_cell.item)
+				remove_nodes_recursive (contents_cell.item, root_window_string)
 				if system_status.is_in_debug_mode then
 					show_element (contents_cell.item, main_window)
 				end				

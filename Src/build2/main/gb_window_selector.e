@@ -505,7 +505,7 @@ feature {GB_XML_LOAD} -- Implementation
 		end
 		
 	select_main_window is
-			--
+			-- Select window marked as root of system.
 		local
 			object: GB_TITLED_WINDOW_OBJECT
 			found: BOOLEAN
@@ -546,6 +546,7 @@ feature {GB_XML_LOAD} -- Implementation
 				forth
 			end
 			Layout_constructor.set_root_window (object)
+			update_display_and_builder_windows (object)
 			check
 				found: found
 			end

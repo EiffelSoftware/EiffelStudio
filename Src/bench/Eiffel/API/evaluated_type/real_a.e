@@ -27,15 +27,15 @@ feature -- Property
 			Result := True;
 		end;
 
+feature -- Access
+
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := associated_class.e_class;
-				--- **** TO BE FIXED System should not
-				-- have COMPILED class but E_CLASS
+			Result := System.real_class.compiled_eclass;
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?

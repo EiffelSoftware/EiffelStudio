@@ -11,7 +11,7 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, meta_type, is_deep_equal,
-			valid_base_type
+			has_associated_class
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -20,6 +20,9 @@ creation
 	make
 
 feature -- Properties
+
+	actual_type: TYPE_A;
+			-- Actual type of the anchored type in a given class
 
 	class_id: INTEGER;
 			-- Class ID of the class where the anchor is referenced
@@ -33,18 +36,32 @@ feature -- Properties
 			Result := True;
 		end;
 
-feature -- Access
-
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
 		do
 			Result := evaluated_type.is_basic;
 		end;
 
-    valid_base_type: BOOLEAN is
-            -- Is the base type valid
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			other_like_feat: LIKE_FEATURE;
+		do
+			other_like_feat ?= other;
+			Result := 	other_like_feat /= Void
+						and then
+						other_like_feat.rout_id = rout_id
+						and then
+						other_like_feat.feature_id = feature_id
+		end;
+
+    has_associated_class: BOOLEAN is
+            -- Does Current have an associated class?
         do
-            Result := evaluated_type.valid_base_type
+			Result := evaluated_type /= Void and then
+            		evaluated_type.has_associated_class
         end;
 
 	associated_eclass: E_CLASS is
@@ -66,16 +83,18 @@ feature -- Output
 			Result.append (s);
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
+		local
+			ec: E_CLASS;
 		do
-			a_clickable.put_string ("[like feature]: ");
-			actual_type.append_clickable_signature (a_clickable);
+			ec := Eiffel_system.class_of_id (class_id)
+			ow.put_string ("[like ");
+			ow.put_feature_name (feature_name, ec);
+			ow.put_string ("]: ");
+			actual_type.append_to (ow);
 		end;
 
-feature
-
-	actual_type: TYPE_A;
-			-- Actual type of the anchored type in a given class
+feature {COMPILER_EXPORTER}
 
 	feature_id: INTEGER;
 			-- Feature ID of the anchor
@@ -224,19 +243,6 @@ end;
 			Result := actual_type.meta_type
 		end;
 
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_like_feat: LIKE_FEATURE;
-		do
-			other_like_feat ?= other;
-			Result := 	other_like_feat /= Void
-						and then
-						other_like_feat.rout_id = rout_id
-						and then
-						other_like_feat.feature_id = feature_id
-		end;
-
 	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			like_feat: LIKE_FEATURE
@@ -258,7 +264,7 @@ end;
 			Result.set_feature_name (feature_name);
 		end
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

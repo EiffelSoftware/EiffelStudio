@@ -8,10 +8,13 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, is_like_current,
-			meta_type, is_deep_equal, valid_base_type
+			meta_type, is_deep_equal, has_associated_class
 		end
 
-feature -- Property
+feature -- Properties
+
+	actual_type: TYPE_A;
+			-- Actual type of the type `like Current' in a given class
 
 	is_like_current: BOOLEAN is
 			-- Is the current type an anchored type on Current ?
@@ -25,19 +28,25 @@ feature -- Property
 			Result := True;
 		end;
 
-feature -- Access
-
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
 		do
 			Result := actual_type.is_basic;
 		end;
 
-    valid_base_type: BOOLEAN is
-            -- Is the base type valid
-        do
-            Result := evaluated_type /= Void
-        end;
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		do
+			Result := other.is_like_current
+		end;
+
+	has_associated_class: BOOLEAN is
+			-- Does Current have an associated class?
+		do
+			Result := evaluated_type /= Void
+		end;
 
 	associated_eclass: E_CLASS is
 			-- Associated class
@@ -58,16 +67,13 @@ feature -- Output
 			Result.append (actual_dump);
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("(like Current)");
-			actual_type.append_clickable_signature (a_clickable);
+			ow.put_string ("(like Current) ");
+			actual_type.append_to (ow);
 		end;
 
-feature -- Primitives
-
-	actual_type: TYPE_A;
-			-- Actual type of the type `like Current' in a given class
+feature {COMPILER_EXPORTER} -- Primitives
 
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
@@ -120,12 +126,6 @@ feature -- Primitives
 			Result := True;
 		end;
 
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			Result := other.is_like_current
-		end;
-
 	type_i: TYPE_I is
 			-- Reduced type of `actual_type'
 		do
@@ -155,7 +155,7 @@ feature -- Primitives
 			!!Result
 		end;
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

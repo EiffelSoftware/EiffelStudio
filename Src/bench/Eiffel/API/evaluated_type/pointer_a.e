@@ -19,7 +19,7 @@ inherit
 			internal_conform_to
 		end
 
-feature -- Properties
+feature -- Property
 
 	is_pointer: BOOLEAN is
 			-- Is the current type a pointer type ?
@@ -27,15 +27,15 @@ feature -- Properties
 			Result := True;
 		end;
 
+feature -- Access
+
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := associated_class.e_class;
-				--- **** TO BE FIXED System should not
-				-- have COMPILED class but E_CLASS
+			Result := System.pointer_class.compiled_eclass;
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
 	type_i: POINTER_I is
 			-- Pointer C type

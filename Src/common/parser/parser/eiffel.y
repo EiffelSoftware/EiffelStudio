@@ -15,7 +15,7 @@ inherit
 	SHARED_NAMES_HEAP
 
 create
-	make, make_il_parser, make_type_parser, make_expression_parser, make_indexing_parser
+	make, make_il_parser, make_type_parser, make_expression_parser, make_indexing_parser, make_entity_declaration_parser
 %}
 
 %start		Eiffel_parser
@@ -182,30 +182,37 @@ create
 Eiffel_parser:
 		Class_declaration
 			{
-				if type_parser or expression_parser or indexing_parser then
+				if type_parser or expression_parser or indexing_parser or entity_declaration_parser then
 					raise_error
 				end
 			}
 	|	Identifier_as_lower Type
 			{
-				if not type_parser or expression_parser or indexing_parser then
+				if not type_parser or expression_parser or indexing_parser or entity_declaration_parser then
 					raise_error
 				end
 				type_node := $2
 			}
 	|	TE_FEATURE Expression
 			{
-				if not expression_parser or type_parser or indexing_parser then
+				if not expression_parser or type_parser or indexing_parser or entity_declaration_parser then
 					raise_error
 				end
 				expression_node := $2
 			}
 	|	Indexing
 			{
-				if not indexing_parser or type_parser or expression_parser then
+				if not indexing_parser or type_parser or expression_parser or entity_declaration_parser then
 					raise_error
 				end
 				indexing_node := $1
+			}
+	|	TE_LOCAL Local_entity_declaration_list_opt
+			{
+				if not entity_declaration_parser or type_parser or expression_parser or indexing_parser then
+					raise_error
+				end
+				local_node := $2
 			}
 	;
 

@@ -50,10 +50,11 @@ feature -- Access
 			frame_box: EV_VERTICAL_BOX
 		do
 			create Result
+			initialize_attribute_editor (Result)
+			
 				-- Tool bar and menu separators do inherit from EV_PIXMAPABLE,
 				-- however, the facilities are not exported.
 			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then
-				initialize_attribute_editor (Result)
 				create horizontal_box
 				horizontal_box.set_padding_width (object_editor_padding_width)
 				horizontal_box.set_border_width (Object_editor_padding_width)

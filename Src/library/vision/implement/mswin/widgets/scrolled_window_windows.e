@@ -119,6 +119,12 @@ feature -- Status setting
 				realized := True
 				set_scroll_range
 				set_scroll_position
+				if scroller /= Void then
+					scroller.set_horizontal_line (client_rect.width // 4)
+					scroller.set_horizontal_page (client_rect.width)
+					scroller.set_vertical_line (client_rect.height // 4)
+					scroller.set_vertical_page (client_rect.height)
+				end
 			end
 		end
 
@@ -162,6 +168,13 @@ feature -- Element change
 			if exists then
 				working_area.set_x_y (0, 0)
 				set_scroll_range
+				set_scroll_position
+				if scroller /= Void then
+					scroller.set_horizontal_line (client_rect.width // 4)
+					scroller.set_horizontal_page (client_rect.width)
+					scroller.set_vertical_line (client_rect.height // 4)
+					scroller.set_vertical_page (client_rect.height)
+				end
 			end
 		end
 

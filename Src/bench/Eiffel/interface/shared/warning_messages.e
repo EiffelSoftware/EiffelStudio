@@ -220,7 +220,23 @@ feature -- File warnings
 			Result.append (file_name)
 			Result.append ("%Nis not writable.%NPlease check permissions.")
 		end
-
+		
+	w_Still_referenced (a_class_name: STRING): STRING is
+		require
+			a_class_name_not_void: a_class_name /= Void
+		do
+			create Result.make (30)
+			Result.append ("Can't delete class " + a_class_name)
+			Result.append (" because it is referenced by%N")
+		end
+		
+	w_Recompile_to_remove_references (a_class_name: STRING): STRING is
+		require
+			a_class_name_not_void: a_class_name /= Void
+		do
+			Result := "Can't delete class " + a_class_name + " because it is referenced.%NPlease recompile the system and try again."
+		end
+		
 	w_File_modified_by_another_editor: STRING is "This file has been modified by another editor."
 
 	w_File_exists (file_name: STRING): STRING is
@@ -370,6 +386,16 @@ feature -- Cluster tree warnings
 			Result.append (cluster_name.as_upper)
 			Result.append ("%Nbecause it is either a precompiled%N%
 							%or a library cluster.")
+		end
+		
+	w_Cannot_delete_none_empty_cluster (cluster_name: STRING): STRING is
+		require
+			cluster_name_not_void: cluster_name /= Void
+		do
+			create Result.make (100)
+			Result.append ("Cannot delete cluster ")
+			Result.append (cluster_name.as_upper)
+			Result.append ("%Nbecause cluster is not empty")
 		end
 
 	w_Cannot_add_to_library_cluster (cluster_name: STRING): STRING is

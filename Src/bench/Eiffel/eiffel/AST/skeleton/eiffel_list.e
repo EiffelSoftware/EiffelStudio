@@ -19,6 +19,8 @@ inherit
 		end
 
 	CONSTRUCT_LIST [T]
+		export
+			{ANY} area
 		redefine
 			make, make_filled
 		end
@@ -47,15 +49,16 @@ feature -- Access
 	number_of_stop_points: INTEGER is
 			-- Number of stop points for AST
 		local
-			i, l_count: INTEGER
+			i, nb: INTEGER
+			l_area: SPECIAL [T]
 		do
 			from
-				i := 1
-				l_count := count
+				l_area := area
+				nb := count
 			until
-				i > l_count
+				i = nb
 			loop
-				Result := Result + i_th (i).number_of_stop_points
+				Result := Result + l_area.item (i).number_of_stop_points
 				i := i + 1
 			end
 		end
@@ -68,19 +71,22 @@ feature -- Element change
 		require
 			other_fits: other.count <= count - p
 		local
-			pos: INTEGER
+			i, max: INTEGER
 			cur: CURSOR
+			l_area: SPECIAL [T]
 		do
 			from
-				pos := p + 1
+				l_area := area
+				i := p
+				max := p + other.count 
 				cur := other.cursor
 				other.start
 			until
-				pos = p + other.count + 1
+				i = max
 			loop
-				put_i_th (other.item, pos)
+				l_area.put (other.item, i)
 				other.forth
-				pos := pos + 1
+				i := i + 1
 			end
 
 			other.go_to (cur)
@@ -91,18 +97,19 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		local
+			l_area, o_area: SPECIAL [T]
 			i, nb: INTEGER
 		do
 			nb := other.count
 			if count = nb then
 				from
-					i := 1
+					l_area := area
+					o_area := other.area
 					Result := True
 				until
-					not Result or else i > nb
+					not Result or else i = nb
 				loop
-					Result := equivalent (i_th (i),
-						other.i_th (i))
+					Result := equivalent (l_area.item (i), o_area.item (i))
 					i := i + 1
 				end
 			end
@@ -114,14 +121,15 @@ feature -- Type check, byte code and dead code removal
 			-- Type check iteration
 		local
 			i, nb: INTEGER
+			l_area: SPECIAL [T]
 		do
 			from
+				l_area := area
 				nb := count
-				i := 1
 			until
-				i > nb
+				i = nb
 			loop
-				i_th (i).type_check
+				l_area.item (i).type_check
 				i := i + 1
 			end
 		end
@@ -129,16 +137,19 @@ feature -- Type check, byte code and dead code removal
 	byte_node: BYTE_LIST [BYTE_NODE] is
 			-- Byte code list
 		local
+			l_area: SPECIAL [T]
+			r_area: SPECIAL [BYTE_NODE]
 			i, nb: INTEGER
 		do
 			from
 				nb := count
 				!! Result.make_filled (nb)
-				i := 1
+				r_area := Result.area
+				l_area := area
 			until
-				i > nb
+				i = nb
 			loop
-				Result.put_i_th (i_th (i).byte_node, i)
+				r_area.put (l_area.item (i).byte_node, i)
 				i := i + 1
 			end
 		end
@@ -146,16 +157,20 @@ feature -- Type check, byte code and dead code removal
 	reversed_byte_node: BYTE_LIST [BYTE_NODE] is
 			-- Byte code list generated in reverse order
 		local
-			i, nb: INTEGER
+			l_area: SPECIAL [T]
+			r_area: SPECIAL [BYTE_NODE]
+			i, nb, max: INTEGER
 		do
 			from
 				nb := count
 				!! Result.make_filled (nb)
-				i := 1
+				r_area := Result.area
+				l_area := area
+				max := nb - 1
 			until
-				i > nb
+				i = nb
 			loop
-				Result.put_i_th (i_th (i).byte_node, nb - i + 1)
+				r_area.put (l_area.item (i).byte_node, max - i)
 				i := i + 1
 			end
 		end
@@ -165,15 +180,16 @@ feature -- Debugger
 	find_breakable is
 			-- Look for breakable instructions.
 		local
-			i, l_count: INTEGER
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				i := 1
-				l_count := count
+				l_area := area
+				nb := count
 			until
-				i > l_count
+				i = nb
 			loop
-				i_th (i).find_breakable
+				l_area.item (i).find_breakable
 				i := i + 1
 			end
 		end
@@ -266,16 +282,17 @@ feature -- Replication
 			-- find calls to Current
 		local
 			new_list: like l
-			i, l_count: INTEGER
+			i, nb: INTEGER
+			l_area: SPECIAL [T]
 		do
 			from
 				!! new_list.make
-				i := 1
-				l_count := count
+				l_area := area
+				nb := count
 			until
-				i > l_count
+				i = nb
 			loop
-				i_th (i).fill_calls_list (new_list)
+				l_area.item (i).fill_calls_list (new_list)
 				l.merge (new_list)
 				new_list.make
 				i := i + 1
@@ -285,16 +302,18 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		local
-			i, l_count: INTEGER
+			l_area, r_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			Result := clone (Current)
+			l_area := area
+			r_area := Result.area
 			from 
-				i := 1
-				l_count := count
+				nb := count
 			until
-				i > l_count
+				i = nb
 			loop
-				Result.put_i_th (i_th (i).replicate (ctxt.new_ctxt), i)
+				r_area.put (l_area.item (i).replicate (ctxt.new_ctxt), i)
 				i := i + 1
 			end
 		end

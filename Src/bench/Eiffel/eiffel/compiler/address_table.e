@@ -1,4 +1,5 @@
-class ADDRESS_TABLE
+class
+	ADDRESS_TABLE
 
 inherit
 	EXTEND_TABLE [TWO_WAY_SORTED_SET [INTEGER], CLASS_ID]
@@ -6,21 +7,25 @@ inherit
 			has as class_has_dollar_operator,
 			cursor as ht_cursor
 		export
-			{NONE} all;
+			{NONE} all
 			{ANY} class_has_dollar_operator, merge
 		end
+
 	SHARED_CODE_FILES
 		undefine
 			is_equal, copy
 		end
+
 	SHARED_TABLE
 		undefine
 			is_equal, copy
 		end
+
 	SHARED_DECLARATIONS
 		undefine
 			is_equal, copy
 		end
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy
@@ -38,11 +43,11 @@ feature -- Access
 				Result := item (class_id).has (feature_id)
 			end
 debug ("DOLLAR")
-	io.putstring ("ADDRESS_TABLE.has ");
-	io.putstring (class_id.dump);
-	io.putchar (' ');
+	io.putstring ("ADDRESS_TABLE.has ")
+	io.putstring (class_id.dump)
+	io.putchar (' ')
 	io.putint (feature_id)
-	io.putchar (' ');
+	io.putchar (' ')
 	io.putbool (Result)
 	io.new_line
 end
@@ -58,9 +63,9 @@ feature -- Insert
 			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
 		do
 debug ("DOLLAR")
-	io.putstring ("ADDRESS_TABLE.record ");
-	io.putstring (class_id.dump);
-	io.putchar (' ');
+	io.putstring ("ADDRESS_TABLE.record ")
+	io.putstring (class_id.dump)
+	io.putchar (' ')
 	io.putint (feature_id)
 	io.new_line
 end
@@ -82,8 +87,8 @@ feature -- Generation
 
 	generate (final_mode: BOOLEAN) is
 		local
-			class_id: CLASS_ID;
-			feature_id: INTEGER;
+			class_id: CLASS_ID
+			feature_id: INTEGER
 			features: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			gen_file := Address_table_file (final_mode)
@@ -96,7 +101,7 @@ feature -- Generation
 				gen_file.putstring (Dot_h)
 				gen_file.putstring ("%"%N%N")
 			elseif Compilation_modes.is_precompiling then
-				System.class_counter.generate_extern_offsets (gen_file);
+				System.class_counter.generate_extern_offsets (gen_file)
 				System.static_type_id_counter.generate_extern_offsets (gen_file)
 				gen_file.new_line
 			end
@@ -107,7 +112,7 @@ feature -- Generation
 				after
 			loop
 				class_id := key_for_iteration
-				a_class := System.class_of_id (class_id);
+				a_class := System.class_of_id (class_id)
 				if a_class /= Void then
 					features := item_for_iteration
 					from
@@ -126,9 +131,9 @@ feature -- Generation
 									-- Feature is not dead code removed
 
 debug ("DOLLAR")
-	io.putstring ("ADDRESS_TABLE.generate_feature ");
-	io.putstring (a_class.name);
-	io.putchar (' ');
+	io.putstring ("ADDRESS_TABLE.generate_feature ")
+	io.putstring (a_class.name)
+	io.putchar (' ')
 	io.putstring (a_feature.feature_name)
 	io.new_line
 end
@@ -156,7 +161,7 @@ end
 
 				gen_file.open_write
 
-				gen_file.putstring ("#include %"eif_eiffel.h%"%N");
+				gen_file.putstring ("#include %"eif_eiffel.h%"%N")
 
 				gen_file.close
 
@@ -226,8 +231,8 @@ feature {NONE} -- Generation
 
 					type_id_array.put (a_type.type_id, a_type.id.id)
 
-					gen_file.putstring ("char *(*");
-					gen_file.putstring (dle_prefix);
+					gen_file.putstring ("char *(*")
+					gen_file.putstring (dle_prefix)
 					gen_file.putstring ("eif_address_t")
 					gen_file.putint (a_type.id.id)
 					gen_file.putstring ("[])() = {%N")
@@ -240,7 +245,7 @@ feature {NONE} -- Generation
 					loop
 						if sorted_set.has (i) then
 							gen_file.putstring ("(char *(*)())")
-							gen_file.putstring (dle_prefix);
+							gen_file.putstring (dle_prefix)
 							gen_file.putstring (a_type.id.address_table_name (i))
 							gen_file.putstring (",%N")
 						else
@@ -258,7 +263,7 @@ feature {NONE} -- Generation
 			end
 
 			gen_file.putstring ("%N%Nstatic fnptr *")
-			gen_file.putstring (dle_prefix);
+			gen_file.putstring (dle_prefix)
 			gen_file.putstring ("eif_address_table[] = {%N")
 
 			from
@@ -384,7 +389,7 @@ feature {NONE} -- Generation
 
 			table_name, function_name: STRING
 			entry: POLY_TABLE [ENTRY]
-			cursor: CURSOR;
+			cursor: CURSOR
 			rout_info: ROUT_INFO
 		do
 			feature_id := a_feature.feature_id
@@ -412,7 +417,7 @@ feature {NONE} -- Generation
 				a_type.type.dump (gen_file)
 				gen_file.putstring (" ")
 				gen_file.putstring (a_feature.feature_name)
-				gen_file.putstring (" */%N");
+				gen_file.putstring (" */%N")
 
 				c_return_type := solved_type (return_type)
 				return_type_string := c_return_type.c_string
@@ -424,21 +429,21 @@ feature {NONE} -- Generation
 					a_types := arg_types (args)
 					gen_file.generate_function_signature
 						(return_type_string, f_name, True, gen_file,
-					 	arg_names (args.count), a_types);
+					 	arg_names (args.count), a_types)
 				else
 					a_types := <<"EIF_REFERENCE">>
 					gen_file.generate_function_signature
 						(return_type_string, f_name, True, gen_file,
-						<<"Current">>, a_types);
+						<<"Current">>, a_types)
 				end
-				gen_file.putstring ("%N%T");
+				gen_file.putstring ("%N%T")
 
 				if final_mode then
 					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						gen_file.putstring ("RTNR();");
+						gen_file.putstring ("RTNR();")
 					else
 						if a_feature.is_function then
 							gen_file.putstring ("return ")
@@ -479,17 +484,17 @@ feature {NONE} -- Generation
 						Compilation_modes.is_precompiling or else
 						a_type.associated_class.is_precompiled
 					then
-						rout_info := System.rout_info_table.item (rout_id);
+						rout_info := System.rout_info_table.item (rout_id)
 						gen_file.putstring ("RTWPF(")
-						gen_file.putstring (rout_info.origin.generated_id);
+						gen_file.putstring (rout_info.origin.generated_id)
 						gen_file.putstring (", ")
-						gen_file.putint (rout_info.offset);
+						gen_file.putint (rout_info.offset)
 					else
 						gen_file.putstring ("RTWF(")
 						gen_file.putint (a_type.id.id - 1)
 						gen_file.putstring (", ")
 						gen_file.putint (feature_id)
-					end;
+					end
 					gen_file.putstring (", Dtype (Current)))(Current")
 					if has_arguments then
 						generate_arg_list (args.count)

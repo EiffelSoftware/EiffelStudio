@@ -1,15 +1,16 @@
 class CPP_EXTENSION_AS_B
 
 inherit
-	CPP_EXTENSION_AS;
 	EXTERNAL_EXTENSION_AS_B
 		undefine
 			parse_special_part
 		redefine
-			byte_node, type_check, type_check_signature
+			need_encapsulation, byte_node, type_check, type_check_signature
 		end
 
-feature
+	CPP_EXTENSION_AS
+
+feature -- Get the C++ extension
 
 	extension_i (external_as: EXTERNAL_AS): CPP_EXTENSION_I is
 			-- EXTERNAL_EXT_I corresponding to current extension
@@ -20,6 +21,12 @@ feature
 			Result.set_class_name (class_name)
 			Result.set_class_header_file (class_header_file)
 		end
+
+feature -- Encapsulation
+
+	need_encapsulation: BOOLEAN is True
+			-- A C++ call needs to be encapsulated for polymorphic purpose.
+			-- FIXME: Is it really usefull to encapsulate a C++ call?
 
 feature -- Type check
 

@@ -7,11 +7,10 @@ indexing
 class ACCESS_ADDRESS_AS_B
 
 inherit
-
 	ACCESS_ADDRESS_AS
 		redefine
 			feature_name, parameters
-		end;
+		end
 
 	ACCESS_ID_AS_B
 		undefine
@@ -21,6 +20,8 @@ inherit
 			fill_calls_list, replicate,
 			feature_name, parameters
 		end
+
+	SHARED_TYPES
 
 creation
 

@@ -1,69 +1,61 @@
 deferred class BASIC_I
 
 inherit
-
 	CL_TYPE_I
 		rename
-			is_void as cl_type_is_void,
-			same_type as general_same_type
+			is_void as cl_type_is_void
 		undefine
 			type_a
 		redefine
 			is_basic, is_reference, c_type, base_class, is_valid,
 			cecil_value
-		end;
+		end
+
 	TYPE_C
 		undefine
 			is_bit
-		end;
-	SHARED_C_LEVEL
-		rename
-			same_type as general_same_type
 		end
+
+	SHARED_C_LEVEL
 
 feature
 
 	c_type: TYPE_C is
 			-- C type
 		do
-			Result := Current;
-		end;
+			Result := Current
+		end
 
-	is_reference: BOOLEAN is false;
+	is_reference: BOOLEAN is False
 			-- Type is not a reference.
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN is True
 			-- Type is a basic type.
-		do
-			Result := True;
-		end;
 
-	is_valid: BOOLEAN is
-		do
-			Result := True;
-		end;
+	is_valid: BOOLEAN is True
+			-- A Basic type is always in the system
 
 	byte_code_cast: CHARACTER is
 			-- Code for the interpreter cast
 		do	
-		end;
+		end
 
 	associated_reference: CLASS_TYPE is
 			-- Reference class associated with simple type
 		deferred
-		end;
+		end
 
 	associated_dtype: INTEGER is
 			-- Dynamic type of associated reference class
 		do
-			Result := associated_reference.type_id - 1;
-		end;
+			Result := associated_reference.type_id - 1
+		end
 
 	base_class: CLASS_C is
 			-- Associated class
 		do
 			Result := associated_reference.associated_class
-		end;
+		end
 
 	metamorphose
 	(reg, value: REGISTRABLE; file: INDENT_FILE; workbench_mode: BOOLEAN) is
@@ -71,33 +63,33 @@ feature
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
 		require
-			valid_reg: reg /= Void;
-			valid_value: value /= Void;
+			valid_reg: reg /= Void
+			valid_value: value /= Void
 			valid_file: file /= Void
 		do
-			reg.print_register;
-			file.putstring (" = ");
-			file.putstring("RTLN(");
+			reg.print_register
+			file.putstring (" = ")
+			file.putstring("RTLN(")
 			if workbench_mode then
-				file.putstring ("RTUD(");
-				file.putstring (associated_reference.id.generated_id);
-				file.putchar (')');
+				file.putstring ("RTUD(")
+				file.putstring (associated_reference.id.generated_id)
+				file.putchar (')')
 			else
-				file.putint (associated_dtype);
-			end;
-			file.putchar (')');
-			file.putchar (',');
-			file.putchar (' ');
-			file.putchar ('*');
-			generate_access_cast (file);
-			reg.print_register;
-			file.putstring (" = ");
-			value.print_register;
-		end;
+				file.putint (associated_dtype)
+			end
+			file.putchar (')')
+			file.putchar (',')
+			file.putchar (' ')
+			file.putchar ('*')
+			generate_access_cast (file)
+			reg.print_register
+			file.putstring (" = ")
+			value.print_register
+		end
 
 	cecil_value: INTEGER is
 		do
 			Result := sk_value
-		end;
+		end
 
 end

@@ -1,58 +1,66 @@
 -- Table of inherited features sorted by name: feature `pass2' is the
 -- second pass of the compiler.
 
-class INHERIT_TABLE 
+class
+	INHERIT_TABLE 
 
 inherit
-
 	EXTEND_TABLE [INHERIT_FEAT, STRING]
 		rename
 			make as extend_tbl_make,
 			merge as extend_table_merge
-		end;
+		end
+
 	SHARED_SERVER
 		export
 			{ANY} all
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_SELECTED
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_ERROR_HANDLER
 		export
 			{ANY} error_handler
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_INST_CONTEXT
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_ORIGIN_TABLE
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_ID_TABLES
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_PASS
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_RESCUE_STATUS
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
-        undefine
-            copy, is_equal
-        end;
+		undefine
+			copy, is_equal
+		end
 
 creation
-
 	make
 
 	

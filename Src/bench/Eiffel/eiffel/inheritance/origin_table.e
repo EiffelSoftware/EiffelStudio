@@ -21,27 +21,28 @@
 class ORIGIN_TABLE 
 
 inherit
+	EXTEND_TABLE [SELECTION_LIST, ROUTINE_ID]
 
-	EXTEND_TABLE [SELECTION_LIST, ROUTINE_ID];
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
-		end;
+		end
 
 creation
-
 	make
 	
 feature 

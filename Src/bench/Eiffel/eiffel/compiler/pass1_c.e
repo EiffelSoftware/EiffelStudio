@@ -52,7 +52,7 @@ end
 					-- a server
 				ast_not_void: ast /= Void;
 			end;
-			associated_class.end_of_pass1 (ast);
+			associated_class.end_of_pass1 (ast, new_compilation);
 
 				-- No syntax error happened: set the compilation status
 				-- of the current changed class.

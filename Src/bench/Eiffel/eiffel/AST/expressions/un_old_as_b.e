@@ -15,6 +15,8 @@ inherit
 			replicate, fill_calls_list, expr
 		end;
 
+	SHARED_TYPES
+
 feature -- Property
 
 	expr: EXPR_AS_B

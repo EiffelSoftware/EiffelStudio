@@ -1,9 +1,9 @@
 -- Old/New table
 
-class O_N_TABLE [G -> COMPILER_ID]
+class
+	O_N_TABLE [G -> COMPILER_ID]
 
 inherit
-
 	EXTEND_TABLE [G, G]
 		rename
 			put as tbl_put,
@@ -15,7 +15,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature
@@ -39,8 +38,8 @@ end;
 					after
 				loop
 					if equal (item_for_iteration, latest_old) then
-						content.put (new_value, pos_for_iter);
-						control := Changed_constant;
+						content.put (new_value, iteration_position);
+						set_replaced
 					end;
 					forth
 				end;
@@ -76,11 +75,11 @@ end;
 				if equal (item_for_iteration, latest_new) then
 debug
 	io.error.putstring ("FOUND ");
-	io.error.putint (pos_for_iter);
+	io.error.putint (iteration_position);
 	io.error.new_line;
 end;
-					content.put (old_value, pos_for_iter);
-					control := Changed_constant;
+					content.put (old_value, iteration_position);
+					set_replaced
 				end;
 				forth
 			end;

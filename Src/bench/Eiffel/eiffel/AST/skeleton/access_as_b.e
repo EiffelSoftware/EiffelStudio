@@ -9,13 +9,14 @@ indexing
 deferred class ACCESS_AS_B
 
 inherit
-
-	ACCESS_AS;
+	ACCESS_AS
 
 	CALL_AS_B
 		redefine
 			byte_node
 		end
+
+	SHARED_ARG_TYPES
 
 feature
 

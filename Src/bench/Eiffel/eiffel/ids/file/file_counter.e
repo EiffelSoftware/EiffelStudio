@@ -1,9 +1,9 @@
 -- System level server file counter.
 
-class FILE_COUNTER
+class
+	FILE_COUNTER
 
 inherit
-
 	COMPILER_COUNTER
 		redefine
 			next_id, current_subcounter

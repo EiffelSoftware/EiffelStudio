@@ -3,7 +3,6 @@
 class SHARED_DECLARATIONS
 
 inherit
-
 	SHARED_WORKBENCH
 
 feature

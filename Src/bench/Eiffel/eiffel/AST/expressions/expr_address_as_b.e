@@ -9,7 +9,6 @@ indexing
 class EXPR_ADDRESS_AS_B
 
 inherit
-
 	EXPR_ADDRESS_AS
 		redefine
 			is_allowed, expr
@@ -20,6 +19,8 @@ inherit
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end
+
+	SHARED_TYPES
 
 feature {NONE} -- Implementation
 

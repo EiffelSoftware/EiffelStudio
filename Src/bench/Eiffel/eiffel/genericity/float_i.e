@@ -1,7 +1,6 @@
 class FLOAT_I
 
 inherit
-
 	BASIC_I
 		redefine
 			dump,
@@ -10,61 +9,53 @@ inherit
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
 			byte_code_cast
-		end;
-	BYTE_CONST
-		rename
-			same_type as general_same_type
 		end
+
+	BYTE_CONST
 
 feature
 
 	level: INTEGER is
 			-- Internal code for generation
 		do
-			Result := C_float;
-		end;
+			Result := C_float
+		end
 
 	byte_code_cast: CHARACTER is
 			-- Code for interpreter cast
 		do
-			Result := Bc_cast_float;
-		end;
+			Result := Bc_cast_float
+		end
 
-	is_float: BOOLEAN is
+	is_float: BOOLEAN is True
 			-- Is the type a float type ?
-		do
-			Result := True;
-		end;
 
-	is_numeric: BOOLEAN is
+	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
-		do
-			Result := True;
-		end;
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := other.is_float;
-		end;
+			Result := other.is_float
+		end
 
 	dump (file: FILE) is
 			-- Debug purpose
 		do
-			file.putstring ("FLOAT");
-		end;
+			file.putstring ("FLOAT")
+		end
 
 	description: REAL_DESC is
 			-- Type description for skeleton
 		do
 			!!Result
-		end;
+		end
 
 	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate Cecil type value.
 		do
-			file.putstring ("SK_FLOAT");
-		end;
+			file.putstring ("SK_FLOAT")
+		end
 
 	c_string: STRING is "EIF_REAL"
 			-- String generated for the type.
@@ -78,57 +69,57 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
-			file.putstring ("EIF_REAL ");
-		end;
+			file.putstring ("EIF_REAL ")
+		end
 
 	generate_cast (file: INDENT_FILE) is
 			-- Generate C cast in file `file'.
 		do
-			file.putstring ("(EIF_REAL) ");
-		end;
+			file.putstring ("(EIF_REAL) ")
+		end
 
 	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		do
-			file.putstring ("(EIF_REAL *) ");
-		end;
+			file.putstring ("(EIF_REAL *) ")
+		end
 
 	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(EIF_REAL)");
-		end;
+			file.putstring ("sizeof(EIF_REAL)")
+		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Real_code;
-		end;
+			Result := Real_code
+		end
 
 	associated_reference: CLASS_TYPE is
 			-- Reference class associated with simple type
 		do
-			Result := system.real_ref_class.compiled_class.types.first;
-		end;
+			Result := system.real_ref_class.compiled_class.types.first
+		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
-			Result := Sk_float;
-		end;
+			Result := Sk_float
+		end
 
 	generate_union (file: INDENT_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
 		do
-			file.putstring ("it_float");
-		end;
+			file.putstring ("it_float")
+		end
 
 	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		do
-			file.putstring ("SK_FLOAT");
-		end;
+			file.putstring ("SK_FLOAT")
+		end
 
 	type_a: REAL_A is
 		do

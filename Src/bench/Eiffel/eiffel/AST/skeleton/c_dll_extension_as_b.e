@@ -1,15 +1,16 @@
 class C_DLL_EXTENSION_AS_B
 
 inherit
-	C_DLL_EXTENSION_AS;
 	C_EXTENSION_AS_B
 		undefine
 			parse_special_part
 		redefine
-			type_check, extension_i, byte_node
+			type_check, extension_i, byte_node, need_encapsulation
 		end
 
-feature
+	C_DLL_EXTENSION_AS
+
+feature -- Get the dll extension
 
 	extension_i (external_as: EXTERNAL_AS): C_DLL_EXTENSION_I is
 			-- EXTERNAL_EXT_I corresponding to current extension
@@ -17,6 +18,11 @@ feature
 			!! Result
 			Result.set_dll_type (dll_type)
 		end
+
+feature -- Encapsulation
+
+	need_encapsulation: BOOLEAN is False
+			-- A dll call does not need to be encapsulated for polymorphic purpose.
 
 feature
 

@@ -1,28 +1,28 @@
 indexing
-
-	description:
-			"Abstract description of a call as an instruction, %
-			%Version for Bench.";
+	description: "Abstract description of a call as an instruction, %
+				%Version for Bench.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INSTR_CALL_AS_B
+class
+	INSTR_CALL_AS_B
 
 inherit
-
 	INSTR_CALL_AS
 		redefine
 			call
-		end;
+		end
 
 	INSTRUCTION_AS_B
 		redefine
 			byte_node, fill_calls_list, replicate
 		end
 
+	SHARED_TYPES
+
 feature -- Attributes
 
-	call: CALL_AS_B;
+	call: CALL_AS_B
 			-- Call instruction
 
 feature -- Type check, byte code and dead code removal

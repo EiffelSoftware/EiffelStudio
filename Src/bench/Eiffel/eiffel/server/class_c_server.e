@@ -1,9 +1,9 @@
 -- Warning: this is not a real server!
 
-class CLASS_C_SERVER
+class
+	CLASS_C_SERVER
 
 inherit
-
 	HASH_TABLE [ARRAY [CLASS_C], INTEGER]
 		rename
 			put as ht_put,
@@ -11,12 +11,12 @@ inherit
 			has as ht_has,
 			make as ht_make,
 			count as ht_count
-		end;
+		end
 
 	SHARED_COUNTER
 		undefine
 			is_equal, copy
-		end;
+		end
 
 	COMPILER_EXPORTER
 		undefine
@@ -24,7 +24,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Initialization

@@ -1,24 +1,19 @@
-deferred class COMPILER_COUNTER
+deferred class
+	COMPILER_COUNTER
 
 inherit
-
-	HASH_TABLE [COMPILER_SUBCOUNTER, INTEGER]
-		rename
-			make as ht_make,
-			item as ht_item
-		end;
 	HASH_TABLE [COMPILER_SUBCOUNTER, INTEGER]
 		rename
 			make as ht_make
 		redefine
-			item 
-		select
 			item
-		end;
+		end
+
 	SHARED_WORKBENCH
 		undefine
 			is_equal, copy, consistent, setup
-		end;
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy, setup, consistent
@@ -94,7 +89,7 @@ feature -- Access
 	item (i: INTEGER): like current_subcounter is
 			-- Subcounter associted with compilation `i'
 		do
-			Result ?= ht_item (i)
+			Result ?= {HASH_TABLE} precursor (i)
 		end
 
 	current_count: INTEGER is

@@ -1,13 +1,15 @@
-class ADDRESS_CURRENT_AS_B
+class
+	ADDRESS_CURRENT_AS_B
 
 inherit
-
-	ADDRESS_CURRENT_AS;
+	ADDRESS_CURRENT_AS
 
 	EXPR_AS_B
 		redefine
 			type_check, byte_node
 		end
+
+	SHARED_TYPES
 
 feature -- Type check, byte code and dead code removal
 

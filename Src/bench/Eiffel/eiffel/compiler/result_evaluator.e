@@ -1,20 +1,21 @@
 -- Evalauator of result type
 
-class RESULT_EVALUATOR 
+class
+	RESULT_EVALUATOR 
 
 inherit
-
 	TYPE_EVALUATOR
-		redefine
-			new_error
-		end
 	
 feature
 
 	new_error: VTAT1R is
 			-- New error message
 		do
-			!!Result;
-		end;
+			!! Result
+		end
+
+	update (error_msg: VTAT1) is
+		do
+		end
 
 end

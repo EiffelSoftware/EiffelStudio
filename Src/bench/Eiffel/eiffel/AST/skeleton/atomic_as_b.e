@@ -1,32 +1,32 @@
 indexing
-
-	description:
-		"Atomic node: strings, integers, reals etc. %
-		%Version for Bench version.";
-	date: "$Date$";
+	description:"Atomic node: strings, integers, reals etc. %
+				%Version for Bench version."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class ATOMIC_AS_B
 
 inherit
-
-	ATOMIC_AS;
+	ATOMIC_AS
 
 	AST_EIFFEL_B
 		redefine
 			byte_node
 		end
 
+	SHARED_TYPES
+
 feature -- Type check and dead code removal
 
 	byte_node: EXPR_B is
 		do
-		end;
+			-- Do nothing
+		end
 
 	value_i: VALUE_I is
 		do
 			-- Do nothing
-		end;
+		end
 
 feature {COMPILER_EXPORTER} -- Type check and dead code removal
 
@@ -36,7 +36,7 @@ feature {COMPILER_EXPORTER} -- Type check and dead code removal
 			good_integer
 		do
 			-- Do nothing
-		end;
+		end
 
 	make_character: CHAR_VAL_B is
 			-- Character value.
@@ -44,6 +44,6 @@ feature {COMPILER_EXPORTER} -- Type check and dead code removal
 			good_character
 		do
 			-- Do nothing
-		end;
+		end
 
 end -- class ATOMIC_AS_B

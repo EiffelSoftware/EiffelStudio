@@ -5,7 +5,7 @@ inherit
 	BIN_EQ_AS
 		redefine
 			left, right
-		end;
+		end
 
 	BINARY_AS_B
 		undefine
@@ -14,6 +14,8 @@ inherit
 		redefine
 			type_check, byte_node, replicate, left, right
 		end
+
+	SHARED_TYPES
 
 feature -- Properties
 

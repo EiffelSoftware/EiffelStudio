@@ -9,7 +9,7 @@ inherit
 
 	BIN_EQ_AS_B
 		undefine
-			operator_name
+			operator_name, infix_function_name
 		redefine
 			byte_anchor, left, right
 		end

@@ -28,9 +28,9 @@ feature -- Cursor for iteration
 	go (p: INTEGER) is
 			-- set position_for_iteration to p
 		do
-			pos_for_iter := p;
+			iteration_position := p;
 			if p < keys.lower then
-				pos_for_iter := keys.lower - 1	
+				iteration_position := keys.lower - 1	
 			end;
 		end;
 

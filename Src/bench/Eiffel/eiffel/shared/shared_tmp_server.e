@@ -1,10 +1,6 @@
 -- Shared access to temporary servers
 
 class SHARED_TMP_SERVER
-
-inherit
-
-	SHARED_WORKBENCH
 	
 feature {NONE}
 

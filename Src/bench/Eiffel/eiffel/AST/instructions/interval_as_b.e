@@ -23,6 +23,8 @@ inherit
 
 	SHARED_INSPECT;
 
+	SHARED_TYPES
+
 feature -- Attributes
 
 	lower: ATOMIC_AS_B;

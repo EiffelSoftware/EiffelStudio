@@ -1,25 +1,19 @@
 indexing
-
-	description: "Abstract node produce by yacc. Version for Bench.";
-	date: "$Date$";
+	description: "Abstract node produce by yacc. Version for Bench."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class AST_EIFFEL_B
 
 inherit
-
 	AST_EIFFEL
 		undefine
 			number_of_stop_points
-		end;
+		end
 
-	SHARED_WORKBENCH;
+	SHARED_WORKBENCH
 
-	SHARED_TYPES;
-
-	SHARED_ARG_TYPES;
-
-	SHARED_AST_CONTEXT;
+	SHARED_AST_CONTEXT
 
 	COMPILER_EXPORTER
 
@@ -29,13 +23,13 @@ feature -- Type check, byte code and dead code removal
 			-- Recursive type check
 		do
 			-- Do nothing
-		end;
+		end
 
 	byte_node: BYTE_NODE is
 			-- Byte node associated to node
 		do
 			-- Do nothing
-		end;
+		end
 
 feature -- Debugger
  
@@ -43,7 +37,7 @@ feature -- Debugger
 			-- Recursive traversal of the AST to record breakable points.
 		do
 			-- Do nothing
-		end;
+		end
  
 	record_break_node is
 			-- Record node in instruction FIFO stack.
@@ -59,7 +53,7 @@ feature -- Formatter
 			valid_ctxt: ctxt /= Void
 		do
 			simple_format (ctxt)
-		end;
+		end
 		
 feature -- Replication
 
@@ -67,12 +61,12 @@ feature -- Replication
 			-- find calls to Current
 		do
 			-- Do nothing
-		end;
+		end
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- adapt to replication
 		do
 			Result := clone (Current)
-		end;
+		end
 		
 end -- class AST_YACC_B

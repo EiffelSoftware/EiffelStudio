@@ -36,11 +36,11 @@
 
 #include "eif_err_msg.h"
 
-#ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
+#ifdef EIF_WIN32
 #include <windows.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <direct.h>
 #endif
 
 #if !defined CUSTOM || defined NEED_UMAIN_H
@@ -116,7 +116,6 @@ char starting_working_directory [MAX_PATH];	/* Store the working directory durin
 rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT
-	register long i;
 
 	/* At this point 'EIF_bonce_count' has already been
 	   computed (by update) */

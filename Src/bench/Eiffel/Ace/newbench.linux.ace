@@ -149,7 +149,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"CVS"; "hact"; "se"; "ve"; "base"; "other";
+			"CVS"; "hact"; "se"; "ve"; "base"; "other"; "xm_named_node.e"; "xm_formatter.e";
 		end
 
 	all case:		"$EIFFEL_SRC/Eiffel/case"

@@ -34,6 +34,9 @@ feature -- Initialization
 			--
 			-- The flag `masked_bitmap' specify whether we are using Bitmaps with mask, or plain
 			-- bitmaps.
+		require
+			valid_width: given_width > 0
+			valid_height: given_height > 0
 		local
 			mask_flag: INTEGER
 		do
@@ -55,6 +58,17 @@ feature -- Initialization
 					)
 		end
 
+feature  -- Removal
+
+	destroy is
+			-- destroy `item' by calling the
+			-- corresponding Windows function and
+			-- set `item' to `default_pointer'.
+		do
+			destroy_item
+		end
+
+
 feature {NONE} -- Removal
 
 	destroy_item is
@@ -65,6 +79,7 @@ feature {NONE} -- Removal
 		do
 				-- destroy the list.
 			cwel_imagelist_destroy(item)
+			item := Default_pointer
 		end
 
 
@@ -96,6 +111,7 @@ feature -- Basic operations
 			bitmap_not_void: bitmap_to_add /= Void
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+			exists: exists
 		do
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
 		end
@@ -108,6 +124,7 @@ feature -- Basic operations
 			not_use_masked_bitmap: not use_masked_bitmap
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
+			exists: exists
 		do
 			cwel_imagelist_replace(item, index, bitmap_to_add.item, Default_pointer)
 		end
@@ -123,6 +140,7 @@ feature -- Basic operations
 			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
 			compatible_height_for_mask: bitmap_mask.height = bitmaps_height
 			masked_bitmap_in_use: use_masked_bitmap
+			exists: exists
 		do
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, bitmap_mask.item)
 		end
@@ -141,6 +159,7 @@ feature -- Basic operations
 			masked_bitmap_in_use: use_masked_bitmap
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
+			exists: exists
 		do
 			cwel_imagelist_replace(item, index, bitmap_to_add.item, bitmap_mask.item)
 		end
@@ -158,6 +177,7 @@ feature -- Basic operations
 			mask_color_not_void: mask_color /= Void
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+			exists: exists
 		do
 			last_position := cwel_imagelist_add_masked(item, bitmap_to_add.item, mask_color.item)
 		end
@@ -166,6 +186,7 @@ feature -- Basic operations
 			-- Adds the icon or cursor `icon_to_add' to this image list
 		require
 			icon_not_void: icon_to_add /= Void
+			exists: exists
 		do
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
 		end
@@ -177,6 +198,7 @@ feature -- Basic operations
 			icon_not_void: icon_to_add /= Void
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
+			exists: exists
 		do
 			cwel_imagelist_replace_icon(item, index, icon_to_add.item)
 		end
@@ -192,6 +214,7 @@ feature -- Basic operations
 		require
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
+			exists: exists
 		local
 			success: INTEGER
 		do
@@ -203,6 +226,8 @@ feature -- Basic operations
 
 	remove_all_images (index: INTEGER) is
 			-- Remove all images from the image list.
+		require
+			exists: exists
 		local
 			success: INTEGER
 		do
@@ -216,6 +241,7 @@ feature -- Basic operations
 			-- Sets the background color for this image list.
 		require
 			new_color_not_void: new_color /= Void
+			exists: exists
  		do
 			cwel_imagelist_set_bkcolor (item, new_color.item)
 		end
@@ -230,6 +256,8 @@ feature -- Status report
 
 	get_background_color: WEL_COLOR_REF is
 			-- Retrieves the current background color for this image list. 
+		require
+			exists: exists
 		do
 			create Result.make_by_color(cwel_imagelist_get_bkcolor(item))
 		ensure

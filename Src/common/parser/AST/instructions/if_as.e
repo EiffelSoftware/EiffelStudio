@@ -96,7 +96,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.new_line;
 			ctxt.put_breakable 
 			if elsif_list /= void then
-				ctxt.set_separator (Void);
+				ctxt.set_separator (ti_Empty);
 				ctxt.set_no_new_line_between_tokens;
 				ctxt.format_ast (elsif_list);
 				ctxt.set_separator (ti_Semi_colon);

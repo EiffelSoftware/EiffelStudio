@@ -104,7 +104,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.new_line
 			ctxt.indent
 			ctxt.set_new_line_between_tokens
-			ctxt.set_separator (Void)
+			ctxt.set_separator (ti_Empty)
 			features_simple_format (ctxt)
 			ctxt.exdent
 			end_position := ctxt.text.position

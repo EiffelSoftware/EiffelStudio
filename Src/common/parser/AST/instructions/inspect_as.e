@@ -77,7 +77,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.exdent;
 			ctxt.new_line;
 			if case_list /= void then
-				ctxt.set_separator (Void);
+				ctxt.set_separator (ti_Empty);
 				ctxt.set_no_new_line_between_tokens;
 				ctxt.reversed_format_list (case_list);
 			end;

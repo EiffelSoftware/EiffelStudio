@@ -176,6 +176,7 @@ feature {AST_EIFFEL} -- Output
 				end;
 				ctxt.format_ast (type)
 			end;
+			ctxt.set_separator (ti_Empty)
 			if content /= void then
 				ctxt.format_ast (content)
 			end;

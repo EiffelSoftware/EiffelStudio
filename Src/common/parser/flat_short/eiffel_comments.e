@@ -8,7 +8,7 @@ class EIFFEL_COMMENTS
 inherit
 	COMPARABLE
 		undefine
-			copy, setup
+			copy
 		redefine
 			is_equal
 		end
@@ -40,7 +40,7 @@ feature -- Comparison
 			i: INTEGER;
 			txt, other_item: STRING
 		do
-			if other /= void then
+			if other /= Void then
 				from
 					i := 1
 				until 

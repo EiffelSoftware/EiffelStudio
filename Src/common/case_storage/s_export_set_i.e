@@ -14,7 +14,7 @@ inherit
 
 	S_EXPORT_I
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		redefine
 			is_all, is_none, is_set
 		end

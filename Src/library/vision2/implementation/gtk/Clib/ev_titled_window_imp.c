@@ -49,7 +49,6 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 		g_return_val_if_fail (window != NULL, 0);
 	// do
 		priv = (GdkWindowPrivate *) window;
-		XMapRaised (priv->xdisplay, priv->xwindow);
 		xattr.map_state = IsUnmapped;
 		XGetWindowAttributes (priv->xdisplay, priv->xwindow, &xattr);
 		return (xattr.map_state == IsUnmapped);
@@ -76,6 +75,9 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2000/03/08 20:10:00  brendel
+// Fixed bug in c_gdk_window_is_iconified.
+//
 // Revision 1.4  2000/03/08 16:42:33  brendel
 // Added header comments.
 // Removed c_gdk_window_get_geometry.

@@ -30,6 +30,14 @@ feature -- Status setting
 			description_set: description = new_description
 		end		
 	
+	set_hidden (a_flag: BOOLEAN) is
+			-- Set if this is hidden from user view.
+		do
+			is_hidden := a_flag
+		ensure
+			value_set: is_hidden = a_flag
+		end		
+	
 	set_default_value (a_value: STRING) is
 			-- Set the value to be used for default in the event `value' is not set.
 		require
@@ -120,6 +128,9 @@ feature -- Query
 				Result := string_value.as_lower.is_equal (default_value.as_lower)
 			end
 		end		
+
+	is_hidden: BOOLEAN
+			-- Should Current be hidden from user view?
 
 	valid_value_string (a_string: STRING): BOOLEAN is
 			-- Is `a_string' valid for this resource type to convert into a value?

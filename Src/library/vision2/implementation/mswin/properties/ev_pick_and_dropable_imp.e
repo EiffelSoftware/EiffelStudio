@@ -43,7 +43,8 @@ feature -- Status setting
 			when
 				Ev_pnd_start_transport
 			then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				start_transport
+					(a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
 			when
 				Ev_pnd_end_transport
 			then
@@ -90,8 +91,11 @@ feature -- Implementation
 				print ("start transport%N")
 				interface.pointer_motion_actions.block
 				create env
+				if pebble_function /= Void then
+					pebble_function.call ([a_x, a_y])
+					pebble := pebble_function.last_result
+				end
 				env.application.pick_actions.call ([pebble])
-	
 				interface.pick_actions.call ([a_x, a_y])
 
 				if mode_is_pick_and_drop then
@@ -161,6 +165,9 @@ feature -- Implementation
 				set_pointer_style (standard_cursor)
 			end
 			press_action := Ev_pnd_start_transport
+			if pebble_function /= Void then
+				pebble := Void
+			end
 		end
 
 	pointed_target: EV_PICK_AND_DROPABLE is
@@ -216,12 +223,13 @@ feature -- Implementation
 							-- Return list item at cursor position.
 					if list_item /= Void then
 						if not list_item.interface.drop_actions.empty then
-								-- If the cursor is over an item and the item is a
-								-- pick and drop target then we set the target id to that of the
-								-- item, as the items are conceptually 'above' the list and so
-								-- if a list and one of its items are pnd targets then the 
-								-- item should recieve.
-							current_target_object_id := list_item.interface.object_id
+				-- If the cursor is over an item and the item is a
+				-- pick and drop target then we set the target id to that of the
+				-- item, as the items are conceptually 'above' the list and so
+				-- if a list and one of its items are pnd targets then the 
+				-- item should recieve.
+							current_target_object_id :=
+								list_item.interface.object_id
 						end
 					end
 				end
@@ -238,12 +246,13 @@ feature -- Implementation
 							-- Return list item at cursor position.
 					if tree_item /= Void then
 						if not tree_item.interface.drop_actions.empty then
-								-- If the cursor is over an item and the item is a
-								-- pick and drop target then we set the target id to that of the
-								-- item, as the items are conceptually 'above' the list and so
-								-- if a list and one of its items are pnd targets then the 
-								-- item should recieve.
-							current_target_object_id := tree_item.interface.object_id
+				-- If the cursor is over an item and the item is a
+				-- pick and drop target then we set the target id to that of the
+				-- item, as the items are conceptually 'above' the list and so
+				-- if a list and one of its items are pnd targets then the 
+				-- item should recieve.
+							current_target_object_id :=
+								tree_item.interface.object_id
 						end
 					end
 				end
@@ -261,12 +270,13 @@ feature -- Implementation
 							-- Return list item at cursor position.
 					if mcl_item /= Void then
 						if not mcl_item.interface.drop_actions.empty then
-								-- If the cursor is over an item and the item is a
-								-- pick and drop target then we set the target id to that of the
-								-- item, as the items are conceptually 'above' the list and so
-								-- if a list and one of its items are pnd targets then the 
-								-- item should recieve.
-							current_target_object_id := mcl_item.interface.object_id
+				-- If the cursor is over an item and the item is a
+				-- pick and drop target then we set the target id to that of the
+				-- item, as the items are conceptually 'above' the list and so
+				-- if a list and one of its items are pnd targets then the 
+				-- item should recieve.
+							current_target_object_id :=
+								mcl_item.interface.object_id
 						end
 					end
 				end
@@ -338,7 +348,8 @@ feature {EV_ANY_I} -- Implementation
 	real_draw_rubber_band is
 		do
 			pnd_screen.set_invert_mode
-			pnd_screen.draw_segment (pick_x, pick_y, old_pointer_x, old_pointer_y)
+			pnd_screen.draw_segment
+				(pick_x, pick_y, old_pointer_x, old_pointer_y)
 		end
 
 	erase_rubber_band  is
@@ -379,7 +390,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -393,22 +404,27 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/27 19:42:56  oconnor
+--| added support for pebble_funtion
+--|
 --| Revision 1.19  2000/03/22 20:26:57  rogers
---| Added support for tree_items and multi_column_list_rows in pointed_target. This implementation is not comlete and needs to be reduced.
+--| Added support for tree_items and multi_column_list_rows in pointed_target.
+--| This implementation is not comlete and needs to be reduced.
 --|
 --| Revision 1.18  2000/03/21 01:27:45  rogers
 --| End transport now returns the cursor to the previous state before PND.
 --|
 --| Revision 1.17  2000/03/17 23:36:06  rogers
---| Fixed pointed_target, and implemented ability for a list_item to be a target. Added the following features : curosr_imp, pnd_stored_cursor_imp, set_pointer_style and cursor_on_widget.
+--| Fixed pointed_target, and implemented ability for a list_item to be a
+--| target. Added the following features : curosr_imp, pnd_stored_cursor_imp,
+--| set_pointer_style and cursor_on_widget.
 --|
 --| Revision 1.16  2000/03/16 17:19:43  brendel
 --| Fixed creation of EV_CURSOR_CODE.
@@ -446,14 +462,14 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --| Added features en/dis-able_capture.
 --|
 --| Revision 1.8.8.1.2.2  1999/12/17 21:33:02  rogers
---| this file now contains EV_PICK_AND_DROPABLE. This now replaces EV_PND_SOURCE, EV_PND_TARGET and EV_PND_TRANSPORTER.
+--| this file now contains EV_PICK_AND_DROPABLE. This now replaces
+--| EV_PND_SOURCE, EV_PND_TARGET and EV_PND_TRANSPORTER.
 --|
 --| Revision 1.8.8.1.2.1  1999/11/24 17:30:19  oconnor
 --| merged with DEVEL branch
 --|
 --| Revision 1.8.6.2  1999/11/02 17:20:07  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -41,7 +41,7 @@ feature -- Initialization
 		do
 			!! history.make
 			System_resources.add_user (Current)
-		end;
+		end
 
 feature -- Dispatch Resource
 

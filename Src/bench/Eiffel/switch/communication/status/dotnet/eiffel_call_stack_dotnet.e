@@ -26,6 +26,11 @@ inherit
 			is_equal, copy
 		end
 
+	EIFNET_EXPORTER
+		undefine
+			is_equal, copy
+		end
+		
 	ICOR_EXPORTER
 		undefine
 			is_equal, copy

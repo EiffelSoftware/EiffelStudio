@@ -22,8 +22,9 @@ inherit
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		export
 			{NONE} all
-			{ANY} icor_debug_app_domain, icor_debug_breakpoint, icor_debug_process, icor_debug_thread
-			{ANY} Eifnet_debugger_info, data_changed, reset_data_changed
+			{ANY} icor_debug_process
+			{EIFNET_EXPORTER} icor_debug_thread,
+			      Eifnet_debugger_info, data_changed, reset_data_changed
 		end	
 
 	EIFNET_DEBUGGER_SYNCHRO

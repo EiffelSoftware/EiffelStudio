@@ -5,7 +5,7 @@ set INSTALL_LOG=g:\50dev_deliv\install.log
 REM NB: The following directory is where a new version of ec.exe will be finalized.
 set FINALIZATION_DIR=g:\50dev_deliv
 REM NB: The following directory must contain document.exe
-set DOCUMENT_DIR=g:\Delivery
+set DOCUMENT_DIR=g:\Deliv_53
 REM Tag to export files in CVS
 set DEFAULT_CVS_TAG=HEAD
 REM NB: The following directory will be erased!

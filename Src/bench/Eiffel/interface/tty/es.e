@@ -46,7 +46,7 @@ feature -- Input/Output
 			io.putstring ("Usage:%N%T");
 			io.putstring (argument (0));
 			io.putstring (" [-help|-freeze|-finalize|-precompile|-clean|%N%
-				%%T-flatshort [-troff] class|-flat class|%N%
+				%%T-flatshort [-troff] class|-flat class|-short [-troff] class%N%
 				%%T-descendants class|-ancestors class|%N%
 				%%T-aversions class feature|-dversions class feature|%N%
 				%%T-callers class feature|-dependents class feature|%N%
@@ -68,6 +68,7 @@ feature -- Input/Output
 			print_one_help ("-ancestors", "print the ancestors of a class");
 			print_one_help ("-flatshort", "print the flat-short form of a class");
 			print_one_help ("-flat", "print the flat form of a class");
+			print_one_help ("-short", "print the short form of a class");
 			print_one_help ("-aversions", "print the ancestor versions of a class feature");
 			print_one_help ("-dversions", "print the descendant versions of a class feature");
 			print_one_help ("-dependents", "print the classes depending on a class feature")
@@ -134,7 +135,8 @@ feature -- Command line options
 		local
 			option: STRING;
 			cn, fn: STRING;
-			troffed: BOOLEAN
+			troffed: BOOLEAN;
+			current_class_only: BOOLEAN
 		do
 			option := argument (current_option);	
 
@@ -220,7 +222,10 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
-			elseif option.is_equal ("-flatshort") then
+			elseif 
+				option.is_equal ("-short") or else
+				option.is_equal ("-flatshort") 
+			then
 				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
@@ -235,8 +240,11 @@ feature -- Command line options
 							end;
 						end;
 						if not option_error then
+							if option.is_equal ("-short") then
+								current_class_only := True
+							end;
 							cn := argument (current_option);
-							!EWB_FS!command.make (cn, troffed)
+							!EWB_FS!command.make (cn, troffed, current_class_only)
 						end
 					end;
 				else

@@ -1,5 +1,5 @@
 system
-	cec
+	"cec"
 
 root
 	ecom_ise_registration: make
@@ -10,7 +10,82 @@ default
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	assertion (require)
+	disabled_debug (yes)
+	disabled_debug ("activity")
+	disabled_debug ("actual_replication")
+	disabled_debug ("anchored_features")
+	disabled_debug ("assertion")
+	disabled_debug ("assertions")
+	disabled_debug ("byte_code")
+	disabled_debug ("c_debugger")
+	disabled_debug ("cache")
+	disabled_debug ("cache_compiler")
+	disabled_debug ("cache_research")
+	disabled_debug ("cache_server")
+	disabled_debug ("cache_stat")
+	disabled_debug ("cecil")
+	disabled_debug ("check_expanded")
+	disabled_debug ("class_of_id")
+	disabled_debug ("com_object")
+	disabled_debug ("comments")
+	disabled_debug ("count")
+	disabled_debug ("dead_code")
+	disabled_debug ("dead_code_removal")
+	disabled_debug ("debbugger_hook")
+	disabled_debug ("debugger_hook")
+	disabled_debug ("debugger_il_info_trace")
+	disabled_debug ("disable_assertions")
+	disabled_debug ("dle topo")
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("document")
+	disabled_debug ("documentation")
+	disabled_debug ("dollar")
+	disabled_debug ("filters")
+	disabled_debug ("flat_short")
+	disabled_debug ("flush_file")
+	disabled_debug ("formal_generic")
+	disabled_debug ("gelex")
+	disabled_debug ("genericity")
+	disabled_debug ("geyacc")
+	disabled_debug ("has_calls")
+	disabled_debug ("il_info_trace")
+	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("md out-of-order")
+	disabled_debug ("optimization")
+	disabled_debug ("options")
+	disabled_debug ("parse")
+	disabled_debug ("profile_convert")
+	disabled_debug ("regexp")
+	disabled_debug ("remove_class")
+	disabled_debug ("replication")
+	disabled_debug ("resource_validate")
+	disabled_debug ("sep_debug")
+	disabled_debug ("server")
+	disabled_debug ("show_prof_query")
+	disabled_debug ("trace_table")
+	disabled_debug ("transfer")
+	disabled_debug ("type_check")
+	disabled_debug ("verbose")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_parser")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
 	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
 
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
@@ -70,6 +145,8 @@ cluster
 			ieiffel_html_documentation_generator_impl_stub
 				end
 			ieiffel_exception_impl_stub
+				end
+			ieiffel_support_impl_stub
 				end
 			descriptions_enumerator
 				end
@@ -140,6 +217,8 @@ cluster
 			definition_search_result
 				end
 			definition_search_result_feature
+				end
+			com_compiler_support
 				end
 		end
 
@@ -410,8 +489,8 @@ cluster
 		end
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
-	
-	documentation_manager: "$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager"
+
+	documentation_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager"
 
 	doc_manager_interface:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Interfaces"
 

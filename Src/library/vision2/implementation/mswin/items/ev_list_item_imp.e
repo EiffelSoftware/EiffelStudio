@@ -71,15 +71,7 @@ feature -- Status setting
 
 feature -- Access
 
-	index: INTEGER is
-			-- Index of the current item.
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.ev_children.index_of (Current, 1)
-			end
-		end
-
-	parent_imp: EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+	parent_imp: EV_LIST_ITEM_LIST_IMP
 		-- Parent of `Current'
 	
 	set_parent (a_parent: like parent) is
@@ -130,16 +122,13 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	wel_text: STRING is
 			-- Text of `Current'
 		do
 			Result := clone (real_text)
 		end
-
-	real_text: STRING
-			-- Internal `text'.
 
 	wel_set_text (a_text: STRING) is
 			-- Make `a_text' the new label of the item.
@@ -150,20 +139,49 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_LIST_IMP} -- Implementation.
+feature {NONE} -- Implementation
+
+	real_text: STRING
+			-- Internal `text'.
+
+feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
 
 	relative_y: INTEGER is
 			-- `Result' is relative y coordinate in pixels to parent.
 		require
 			parent_not_void: parent_imp /= Void
-		local
-			list_imp: EV_LIST_IMP
 		do
-			list_imp ?= parent_imp
-			check
-				Parent_is_a_list_imp : list_imp /= Void
+			Result := (displayed_index - 1) * parent_imp.item_height
+		end
+
+	is_displayed: BOOLEAN is
+			-- Can the user view `Current'?
+		do
+			if parent_imp /= Void then
+				check
+					to_be_implemented: False
+				end
 			end
-			Result := (index - list_imp.top_index - 1) * list_imp.item_height
+		end
+
+	displayed_index: INTEGER is
+			-- Position relative to top item displayed in list.
+			-- (If `Current' is top item, returns 1.)
+		require
+			parent_imp_not_void: parent_imp /= Void
+		do
+			Result := list_index - parent_imp.top_index
+		end
+
+	list_index: INTEGER is
+			-- Position inside list.
+		require
+			parent_imp_not_void: parent_imp /= Void
+		do
+			Result := parent_imp.index_of_item_imp (Current)
+		ensure
+			Result_within_bounds: Result > 0 and then
+				Result <= parent_imp.ev_children.count
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -241,6 +259,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/30 17:46:30  brendel
+--| Changed type of parent_imp to EV_LIST_ITEM_LIST_IMP.
+--| `relative_y' now uses `displayed_index'.
+--|
 --| Revision 1.43  2000/03/30 16:35:52  rogers
 --| Changed parent_imp from EV_LIST_IMP to
 --| EV_ITEM_LIST_IMP [EV_LIST_ITEM]

@@ -394,8 +394,8 @@ feature {NONE} -- WEL Implementation
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
-			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
+				pt := client_to_screen (x_pos, y_pos)
 				offsets := it.relative_position
 				it.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -477,6 +477,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/13 22:39:03  rogers
+--| Moved the client_to_screen feature call to within the if statement in on_mouse_move.
+--|
 --| Revision 1.48  2000/03/13 20:50:03  rogers
 --| Tree item's events now are called with the relative x and relative y positions instead of 0 0..
 --|

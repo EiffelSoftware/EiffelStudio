@@ -48,27 +48,27 @@ feature -- Basic Operations
 			write_bench_notification_ok (wizard_information)
 			
 				-- Compilation
-			if wizard_information.compile_project then
-				project_name_lowercase := clone (wizard_information.project_name)
-				project_name_lowercase.to_lower
-				project_location := wizard_information.project_location
-				
-				ec_command_line := ec_location
-				if is_incremental_compilation_possible then
-					ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
-				else
-					create eifgen_directory.make (project_location + Back_slash + Eifgen)
-					if eifgen_directory.exists then
-						eifgen_directory.recursive_delete
-					end
-					create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
-					if epr_file.exists then
-						epr_file.delete
-					end
-					ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
-				end
-				(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
-			end
+		--	if wizard_information.compile_project then
+		--		project_name_lowercase := clone (wizard_information.project_name)
+		--		project_name_lowercase.to_lower
+		--		project_location := wizard_information.project_location
+		--		
+		--		ec_command_line := ec_location
+		--		if is_incremental_compilation_possible then
+		--			ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
+		--		else
+		--			create eifgen_directory.make (project_location + Back_slash + Eifgen)
+		--			if eifgen_directory.exists then
+		--				eifgen_directory.recursive_delete
+		--			end
+		--			create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
+		--			if epr_file.exists then
+		--				epr_file.delete
+		--			end
+		--			ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
+		--		end
+		--		(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
+		--	end
 			Precursor
 		end
 
@@ -90,7 +90,7 @@ feature -- Access
 					if not wizard_information.local_assemblies.is_empty then
 						message_text_field.set_text (Common_message +
 							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line + assemblies_string (wizard_information.local_dependencies))
+							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))-- + New_line + assemblies_string (wizard_information.local_dependencies))
 					else
 						message_text_field.set_text (Common_message +
 							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))
@@ -98,8 +98,8 @@ feature -- Access
 				else
 					if not wizard_information.local_assemblies.is_empty then
 						message_text_field.set_text (Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-							l_Dependencies + Space + New_line + assemblies_string (wizard_information.local_dependencies))
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string)-- + New_line +	
+						--	l_Dependencies + Space + New_line + assemblies_string (wizard_information.local_dependencies))
 					else
 						message_text_field.set_text (Common_message +
 							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies))						

@@ -41,7 +41,7 @@ feature {NONE} -- GUI
 			!! field_and_menu_toggle_b.make ("Field + menu", select_radio_box)
 			!! menu_choice_label.make ("Menu choices:", bottom_form)
 			!! menu_choice_sc_l.make ("", bottom_form)
-			!! add_menu_label.make ("Add menu:", bottom_form)
+			!! add_menu_label.make ("Menu entry:", bottom_form)
 			!! menu_text_field.make ("", bottom_form)
 			!! delete_button.make ("Delete", bottom_form)
 			set_values
@@ -61,7 +61,11 @@ feature {NONE} -- GUI
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
 			deactivate_menu_fields
-			test_text_field.set_insensitive
+			if object_tool_generator.precondition_test.state then
+				test_toggle_b.arm
+			else	
+				test_text_field.set_insensitive
+			end
 		end
 
 	attach_all is
@@ -119,8 +123,15 @@ feature {NONE} -- GUI
 
 	update_interface is
 			-- Update the interface after setting `query'.
+		local
+			error_message: STRING
 		do
 			query_label.set_text (query.value)
+			!! error_message.make (0)
+			error_message.append ("Incorrect %"")
+			error_message.append (query.query_name)
+			error_message.append ("%" field")
+			test_text_field.set_text(error_message)
 			update_procedure_opt_pull
 		end
 
@@ -171,7 +182,7 @@ feature {NONE} -- GUI attributes
 			-- to edit the query
 
 	test_toggle_b,
-			-- Precondition test label
+			-- Precondition test field
 
 	field_toggle_b,
 			-- 'Field' field

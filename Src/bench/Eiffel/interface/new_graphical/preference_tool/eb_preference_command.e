@@ -5,22 +5,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class EB_PREFERENCE_COMMAND
+deferred class
+	EB_PREFERENCE_COMMAND
 
 inherit
-	EV_COMMAND
-		export
-			{EB_PREFERENCE_COMMAND} execute
-		end
-
-feature {NONE} -- Initialization
-
-	make (a_tool: EB_PREFERENCE_TOOL) is
-			-- Initialize Current.
-		require
-			a_tool_not_void: a_tool /= Void
-		do
-			tool := a_tool
+	EB_TOOL_COMMAND
+		redefine
+			tool
 		end
 
 feature -- Properties

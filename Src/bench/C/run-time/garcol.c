@@ -300,7 +300,12 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 #ifdef WORKBENCH
 rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int move);		/* Marks operational stack */
 
+#ifdef CONCURRENT_EIFFEL
+#define DISP(x,y) \
+	(x == scount)?sep_obj_dispose(y):call_disp(x,y)
+#else
 #define DISP(x,y) call_disp(x,y)
+#endif
 
 #else
 /* Do the exception stack need to be traversed to update references to
@@ -1580,107 +1585,214 @@ marked:		/* I need this goto label to avoid code duplication */
 
 #ifdef HYBRID_MARKING
 rt_private char *hybrid_mark(char *root)
+
 {
-	union overhead *zone;
-	uint32 flags;
-	long offset;
-	uint32 size;
-	char **object;
+	/* Mark all the objects referenced by the root object. This is almost the
+	 * same routine as recursive_mark() with one major change: the tail
+	 * recursion has been removed. All the attributes of an object are 
+	 * recursively marked, except the last one. This brings a noticeable
+	 * improvement with structures like LINKED_LIST.
+	 */
 
-	char *current;
-	char **prev;
-	long count;
+	union overhead *zone;		/* Malloc info zone fields */
+	uint32 flags;				/* Eiffel flags */
+	long offset;				/* Reference's offset */
+	uint32 size;				/* Size of an item (for array of expanded) */
+	char **object;				/* Sub-objects scanned */
+	char *current;				/* Object currently inspected */
+	char **prev;				/* Holder of current (for update) */
+	long count;					/* Number of references */
 
+	/* If 'root' is a void reference, return immediately. This is redundant
+	 * with the beginning of the loop, but this case occurs quite often.
+	 */
 	if (root == (char *) 0)
 		return (char *) 0;
 
+	/* Initialize the variables for the loop */
 	current = root;
 	prev = (char **) 0;
 
 	do {
 		if (current == (char *) 0)		/* No further exploration */
-			goto done;
+			goto done;					/* Exit the procedure */
 
-		zone = HEADER(current);
-		flags = zone->ov_flags;
+		zone = HEADER(current);			/* Malloc info zone */
+		flags = zone->ov_flags;			/* Fetch Eiffel flags */
 
-		offset = (uint32) g_data.status;
+#ifdef DEBUG
+	if (zone->ov_size & B_FWD) {
+		dprintf(16)("hybrid_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
+			current,
+			zone->ov_fwd,
+			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE);
+	} else {
+		dprintf(16)("hybrid_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
+			current,
+			zone->ov_flags & EO_MARK ? "marked " : "",
+			zone->ov_flags & EO_OLD ? "old " : "",
+			zone->ov_flags & EO_REM ? "remembered " : "",
+			zone->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE);
+	}
+	flush;
+#endif
+
+		/* Deal with scavenging here, namely scavenge the reached object if it
+		 * belongs to a 'from' space. Leave a forwarding pointer behind and mark
+		 * the object as forwarded. Scavenging while marking avoids another pass
+		 * for scavenging the 'from' zone and another entire pass to update the
+		 * references, so it should be a big win--RAM. Note that scavenged
+		 * objects are NOT marked: the fact that they have been forwarded is the
+		 * mark. The expanded objects are never scavenged (only the object which
+		 * holds them is).
+		 */
+		offset = (uint32) g_data.status;		/* Garbage collector's status */
 
 		if (offset & (GC_PART | GC_GEN)) {
 
+			/* If we enter here, then we are currently running a scavenging
+			 * algorithm of some sort. Depending on the garbage collector's
+			 * flag, we are able to see if the current object is in a 'from'
+			 * zone (i.e. has to be scavenged). Note that the generation
+			 * scavenging process does not usually call this routine (tenuring
+			 * can fail, and we are in a process that is not allowed to fail).
+			 * Here, the new generation is simply scavenged, with no tenuring.
+			 * Detecting whether an object is in the scavenge zone or not is
+			 * easy and fast: all the objects in the scavenge zone have their
+			 * B_BUSY flag reset.
+			 */
+
 			size = zone->ov_size;
-			if (size & B_FWD) {
-				if(prev)
+			if (size & B_FWD) {			/* Can't be true if expanded */
+				if(prev)				/* Update the referencing address */
 					*prev = zone->ov_fwd;
-				goto done;
+				goto done;				/* So it has been already processed */
 			}
 
-			if (flags & (EO_MARK | EO_C))		/* Object did not move */
-				goto done;
+			if (flags & (EO_MARK | EO_C))	/* Already marked or C object */
+				goto done;				/* Object processed and did not move */
 
 			if (offset & GC_GEN && !(size & B_BUSY)) {
-				current = scavenge(current, &sc_to);
-				zone = HEADER(current);
-				flags = zone->ov_flags;
+				current = scavenge(current, &sc_to);	/* Simple scavenging */
+				zone = HEADER(current);					/* Update zone */
+				flags = zone->ov_flags;					/* And Eiffel flags */
 				if (prev)					/* Update referencing pointer */
 					*prev = current;
 				goto marked;
 			} else
 				if (offset & GC_PART &&
 				  current > ps_from.sc_arena && current <= ps_from.sc_end) {
-					current = scavenge(current, &ps_to);
-					zone = HEADER(current);
-					flags = zone->ov_flags;
+					current = scavenge(current, &ps_to);/* Partial scavenge */
+					zone = HEADER(current);				/* Update zone */
+					flags = zone->ov_flags;				/* And Eiffel flags */
 					if (prev)
 						*prev = current;	/* Update referencing pointer */
 					goto marked;
 				}
 		}
 
+		/* This part of code, until the 'marked' label is executed only when the
+		 * object does not belong any scavenging space, or no scavenging is to
+		 * ever be done.
+		 */
+
+		/* If current object is already marked, it has been (or is)
+		 * studied. So return immediately. Idem if object is a C one.
+		 */
 		if (flags & (EO_MARK | EO_C))
 			goto done;
 
+
+		/* Expanded objects have no 'ov_size' field. Instead, they have a
+		 * pointer to the object which holds them. This is needed by the
+		 * scavenging process, so that we can update the internal references
+		 * to the expanded in the scavenged object.
+		 * It's useless to mark an expanded, because it has only one reference
+		 * on itself, in the object which holds it.
+		 */
 		if (!(flags & EO_EXP)) {
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
 		}
 
-marked:
+marked: /* Goto label needed to avoid code duplication */
+
+		/* Now explore all the references of the current object.
+		 * For each object of type 'type', References(type) gives the number
+		 * of references in the objects. The references are placed at the
+		 * beginning of the data space by the Eiffel compiler. Expanded
+		 * objects have a reference to them, so no special treatment is
+		 * required. Special objects full of references are also explored.
+		 */
 
 		if (flags & EO_SPEC) {
+
+			/* Special objects may have no references (e.g. an array of
+			 * integer or a string), so we have to skip those.
+			 */
 
 			if (!(flags & EO_REF)) /* If object moved, reference updated */
 				goto done;
 
-			size = zone->ov_size & B_SIZE;
-			size -= LNGPAD(2);
-			count = offset = *(long *) (current + size);
+			/* At the end of the special data zone, there are two long integers
+			 * which give informations to the run-time about the content of the
+			 * zone: the first is the 'count', i.e. the number of items, and the
+			 * second is the size of each item (for expandeds, the overhead of
+			 * the header is not taken into account).
+			 */
+			size = zone->ov_size & B_SIZE;			/* Fetch size of block */
+			size -= LNGPAD(2);						/* Go backward to 'count' */
+			count = offset = *(long *) (current + size);	/* Get # of items */
 
+			/* Treat arrays of expanded object here, because we have a special
+			 * way of looping over the array (we must take the size of each item
+			 * into account). Code below is somewhat duplicated with the normal
+			 * code for regular objects or arrays of references, but this is
+			 * because we have to increment our pointers by size and I do not
+			 * want to to slow down the normal loop--RAM.
+			 */
 			if (flags & EO_COMP) {
-				size = *(long *) (current + size + sizeof(long));
-				if (g_data.status & (GC_PART | GC_GEN)) {
-					object = (char **) (current + OVERHEAD);
-					for (; offset > 1; offset--) {
+				size = *(long *) (current + size + sizeof(long));	/* Item's size */
+				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
+					object = (char **) (current + OVERHEAD);/* First expanded */
+					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_mark(*object);
 						object = (char **) ((char *) object + size);
 					}
-				} else {
-					object = (char **) (current + OVERHEAD);
-					for (; offset > 1; offset--) {
+				} else {								/* Object can't move */
+					object = (char **) (current + OVERHEAD);/* First expanded */
+					for (; offset > 1; offset--) {		/* Loop over array */
 						(void) hybrid_mark(*object);
 						object = (char **) ((char *) object + size);
 					}
 				}
-					if (count >= 1) {
+				/* Keep iterating if and only if the current object has at
+				 * least one attribute.
+				 */
+				if (count >= 1) {
 					prev = object;
 					current = *object;
 					continue;
 				} else
-					goto done;
+					goto done;		/* End of iteration; exit procedure */
 			}
 
 		} else
-			count = offset = References(flags & EO_TYPE);
+			count = offset = References(flags & EO_TYPE);	/* # items */
+
+#ifdef DEBUG
+	dprintf(16)("hybrid_mark: %d references for 0x%lx\n", offset, current);
+	if (DEBUG & 16 && debug_ok(16)) {
+		int i;
+		for (i = 0; i < offset; i++)
+			printf("\t0x%lx\n", *((char **) current + i));
+	}
+	flush;
+#endif
+
+		/* Mark all objects under root, updating the references if scavenging */
 
 		if (g_data.status & (GC_PART | GC_GEN))
 			for (object = (char **) current; offset > 1; offset--, object++)
@@ -1698,6 +1810,7 @@ marked:
 	} while(current);
 
 done:
+	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
 }
@@ -3580,91 +3693,179 @@ rt_private char *generation_mark(char *root)
 
 #ifdef HYBRID_MARKING
 rt_private char *hybrid_gen_mark(char *root)
+
 {
-	union overhead *zone;
-	uint32 flags;
-	long offset;
-	uint32 size;
-	char **object;
+	/* This function is the half-recursive half-iterative version of
+	 * generation_mark(). Instead of recursively marking all the attributes
+	 * of an object, the (n-1) first attributes are marked by a recursive call
+	 * to hybrid_gen_mark() while the last one is treated in the main loop
+	 * (suppression of tail recursion).
+	 */
 
-	char *current;
-	char **prev;
-	long count;
+	union overhead *zone;		/* Malloc info zone fields */
+	uint32 flags;				/* Eiffel flags */
+	long offset;				/* Reference's offset */
+	uint32 size;				/* Size of items (for array of expanded) */
+	char **object;				/* Sub-objects scanned */
+	char *current;				/* Object currently inspected */
+	char **prev;				/* Holder of current (for update) */
+	long count;					/* Number of references */
 
+	/* If 'root' is a void reference, return immediately. This is redundant
+	 * with the beginning of the loop, but this case occurs quite often.
+	 */
 	if (root == (char *) 0)
 		return (char *) 0;
 
+	/* Initialize the variables for the loop */
 	current = root;
 	prev = (char **) 0;
 
 	do {
-		if (current == (char *) 0)
-			goto done;
+		if (current == (char *) 0)		/* No further exploration */
+			goto done;					/* Exit the procedure */
 
-		zone = HEADER(current);
+		zone = HEADER(current);			/* Malloc info zone */
 
-		if (zone->ov_size & B_FWD) {
+#ifdef DEBUG
+	if (zone->ov_size & B_FWD) {
+		dprintf(16)("hybrid_gen_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
+			current,
+			zone->ov_fwd,
+			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE);
+	 } else {
+		dprintf(16)("hybrid_gen_mark: 0x%lx %s%s%s%s(DT %d, %d bytes)\n",
+			current,
+			zone->ov_flags & EO_MARK ? "marked " : "",
+			zone->ov_flags & EO_OLD ? "old " : "",
+			zone->ov_flags & EO_NEW ? "new " : "",
+			zone->ov_flags & EO_REM ? "remembered " : "",
+			zone->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE);
+	}
+	flush;
+#endif
+
+		/* If we reach a marked object or a forwarded object, return
+		 * immediately: the object has been already processed. Otherwise, an old
+		 * object which is not remembered is not processed, as it can't
+		 * reference any new objects. Old remembered objects are marked when
+		 * they are processed, otherwise it would be possible to process it
+		 * twice (once via a reference from another object and once because it's
+		 * in the remembered list).
+		 */
+
+		if (zone->ov_size & B_FWD) {	/* Object was forwarded (scavenged) */
 			if(prev)
-				*prev = zone->ov_fwd;
-			goto done;
+				*prev = zone->ov_fwd;	/* Update with its new location */
+			goto done;					/* Exit the procedure */
 		}
 
-		flags = zone->ov_flags;
-		if (flags & (EO_MARK | EO_C))
-			goto done;
+		flags = zone->ov_flags;			/* Fetch Eiffel flags */
+		if (flags & (EO_MARK | EO_C))	/* Object has been already processed? */
+			goto done;					/* Exit the procedure */
 
-		if (flags & EO_OLD) {
-			if (flags & EO_REM)
+		if (flags & EO_OLD) {			/* Old object unmarked */
+			if (flags & EO_REM)		/* But remembered--mark it as processed */
 				zone->ov_flags = flags | EO_MARK;
-			else
-				goto done;
+			else						/* Old object is not remembered */
+				goto done;				/* Skip it--object did not move */
 		}
 
+		/* If we reach an expanded object, then we already dealt with the object
+		 * which holds it. If this object has been forwarded, we need to update
+		 * the reference field. Of course object with EO_OLD set are ignored.
+		 * It's easy to know whether a normal object has to be scavenged or
+		 * marked. The new objects outside the scavenge zone carry the EO_NEW
+		 * mark.
+		 */
 		if (!(flags & EO_OLD) || (flags & EO_EXP)) {
-			current = gscavenge(current);
-			zone = HEADER(current);
-			flags = zone->ov_flags;
-			if (prev)					/* Update referencing pointer */
+			current = gscavenge(current);	/* Generation scavenging */
+			zone = HEADER(current);			/* Update zone */
+			flags = zone->ov_flags;			/* And Eiffel flags */
+			if (prev)						/* Update referencing pointer */
 				*prev = current;
 		}
 
+		/* It's useless to mark an expanded, because it has only one reference
+		 * on itself, in the object which holds it. Scavengend objects need not
+		 * any mark either, as the forwarding mark tells that they are alive.
+		 */
 		if (!(flags & EO_EXP) && (flags & EO_NEW)) {
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
 		}
 
-		if (flags & EO_SPEC) {
-			if (!(flags & EO_REF))
-				goto done;
+		/* Now explore all the references of the current object.
+		 * For each object of type 'type', Reference[type] gives the number
+		 * of references in the objects. The references are placed at the
+		 * beginning of the data space by the Eiffel compiler. Expanded
+		 * objects have a reference to them, so no special treatment is
+		 * required. Special objects full of references are also explored.
+		 */
+		if (flags & EO_SPEC) {				/* Special object */
 
-			size = zone->ov_size & B_SIZE;
-			size -= LNGPAD(2);
-			count = offset = *(long *) (current + size);
+			/* Special objects may have no references (e.g. an array of
+			 * integer or a string), so we have to skip those.
+			 */
+			if (!(flags & EO_REF))
+				goto done;				/* Skip if no references */
+
+			/* At the end of the special data zone, there are two long integers
+			 * which give informations to the run-time about the content of the
+			 * zone: the first is the 'count', i.e. the number of items, and the
+			 * second is the size of each item (for expandeds, the overhead of
+			 * the header is not taken into account).
+			 */
+			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
+			size -= LNGPAD(2);					/* Go backward to 'count' */
+			count = offset = *(long *) (current + size);	/* Get # items */
+
+			/* Treat arrays of expanded object here, because we have a special
+			 * way of looping over the array (we must take the size of each item
+			 * into account).
+			 */
 
 			if (flags & EO_COMP) {
-				size = *(long *) (current + size + sizeof(long));
-				if (gen_scavenge & GS_ON) {
-					object = (char **) (current + OVERHEAD);
-					for (; offset > 1; offset--) {
+				size = *(long *) (current + size + sizeof(long));	/* Item's size */
+				if (gen_scavenge & GS_ON) {					/* Moving objects */
+					object = (char **) (current + OVERHEAD);/* First expanded */
+					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_gen_mark(*object);
 						object = (char **) ((char *) object + size);
 					}
-				} else {
-					object = (char **) (current + OVERHEAD);
-					for (; offset > 1; offset--) {
+				} else {							/* Object can't move */
+					object = (char **) (current + OVERHEAD);/* First expanded */
+					for (; offset > 1; offset--) {		/* Loop over array */
 						(void) hybrid_gen_mark(*object);
 						object = (char **) ((char *) object + size);
 					}
 				}
+				/* Keep iterating if and only if the current object has at
+				 * least one attribute.
+				 */
 				if (count >= 1) {
 					prev = object;
 					current = *object;
 					continue;
 				} else
-					goto done;
+					goto done;		/* End of iteration; exit procedure */
 			}
 		} else
-			count = offset = References(flags & EO_TYPE);
+			count = offset = References(flags & EO_TYPE); /* # of references */
+
+#ifdef DEBUG
+	dprintf(16)("hybrid_gen_mark: %d references for 0x%lx\n", offset, current);
+	if (DEBUG & 16 && debug_ok(16)) {
+		int i;
+		for (i = 0; i < offset; i++)
+			printf("\t0x%lx\n", *((char **) current + i));
+	}
+	flush;
+#endif
+
+		/* Mark all objects under root, updating the references if scavenging */
 
 		if (gen_scavenge & GS_ON) {
 			for (object = (char **) current; offset > 1; offset--, object++)
@@ -3683,6 +3884,7 @@ rt_private char *hybrid_gen_mark(char *root)
 	} while(current);
 
 done:
+	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
 }

@@ -732,7 +732,7 @@ rt_private char *rcsid =
  */
 /*
 doc:	<routine name="acollect" return_type="int" export="shared">
-doc:		<summary>This is the main dispatcher for garbage collection. Calls are based on a threshold th_alloc. Statistics are gathered while performing collection. We run the collect() most of the time (for a generational mark and sweep and/or a generation scavenging) and a full collection once every 'plsc_per' (aka the period) calls. If `clsc_per' is set, then each time `nb_calls' is 0 or each time `nb_calls' is `clsc_per' we perform a full coalesc of the memory. Our experience shows that it is more efficient to do the coalesc just after a full collection, doing it in between degrades the performance.</summary>
+doc:		<summary>This is the main dispatcher for garbage collection. Calls are based on a threshold th_alloc. Statistics are gathered while performing collection. We run the collect() most of the time (for a generational mark and sweep and/or a generation scavenging) and a full collection once every 'plsc_per' (aka the period) calls. Each time we run a full collection, we perform a full coalesc of the memory. Our experience shows that it is more efficient to do the coalesc just after a full collection, doing it in between degrades the performance.</summary>
 doc:		<return>0 if collection was done, -1 otherwise.</return>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Through `trigger_gc_mutex'.</synchronization>
@@ -799,6 +799,11 @@ rt_shared int acollect(void)
 	if (plsc_per) {				/* Can we run full collections?.*/
 		if (force_plsc || (0 == nb_calls % plsc_per)) {	/* Full collection required */
 			plsc();
+				/* This is the best time to run a full_coalesc of the memory. Not doing
+				 * it kills the performance of the GC as memory is more fragmented at this
+				 * point due to many small blocks of the memory that returned to the
+				 * free list. */
+			full_coalesc (ALL_T);
 			status = 0;
 				/* Reset `force_plsc' since we don't want to have a second full
 				 * collection right after this one. */
@@ -813,16 +818,6 @@ rt_shared int acollect(void)
 	} else {						/* Generation-base collector called, since
 									 * there is no Full Collection. */
 		status = collect();
-	}
-
-	/* We may want to run periodically a full coalescing (Eiffel and C objects).
-	 * Note that the user can also set his own period of full coalescing. 
-	 */
-
-	if (clsc_per) {
-		if (0 == nb_calls % clsc_per) {
-			full_coalesc (ALL_T);
-		}
 	}
 
 #ifdef DEBUG
@@ -945,10 +940,10 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 
 	if (nb_full != g_data.nb_full) {
 			/* We are during a full collection cycle. This is were we
-			 * will update value of `clsc_per' and `plsc_per' to a better
-			 * value. We only increase their values if the ratio freed memory
+			 * will update value of `plsc_per' to a better value.
+			 * We only increase its value if the ratio freed memory
 			 * used memory is less than 1/3, betwen 1/3 and 2/3 we do not change
-			 * anything, and above 2/3 we decrease their value. */
+			 * anything, and above 2/3 we decrease its value. */
 		long partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
 		long freed_memory;
 		if (mem_used > (long) g_data.mem_used) {
@@ -956,15 +951,57 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		} else {
 			freed_memory = 0;
 		}
-		if (freed_memory <= partial_used_memory) {
-			plsc_per += 4;
-			clsc_per = 2 * plsc_per;
-		} else if (freed_memory > 2 * partial_used_memory) {
-			plsc_per -= 4;
-			if (plsc_per < PLSC_PER) {
-				plsc_per = PLSC_PER;
+		if (freed_memory == 0) {
+			/* Gogo stage. That is to say new memory has been allocated
+			 * while we were collecting (moving young objects to old).
+			 * Therefore there is nothing we can say about increasing or
+			 * decreasing the full collection perido, so we don't change
+			 * anything. */
+		} else if (freed_memory <= partial_used_memory) {
+				/* Perform a dichotomic increase */
+			if (plsc_per < 100) {
+				if (plsc_per < 50) {
+					if (plsc_per < 8) {
+						if (plsc_per < 4) {
+							plsc_per += 1;
+						} else {
+							plsc_per += 2;
+						}
+					} else {
+						plsc_per += 4;
+					}
+				} else {
+					plsc_per += 8;
+				}  
+			} else {
+				plsc_per += 16;
 			}
-			clsc_per = 2 * plsc_per;
+			if (plsc_per < 0) {
+					/* Overflow here, so restore back the max positive integer value */
+				plsc_per = 0x7FFFFFFF;
+			}
+		} else if (freed_memory > 2 * partial_used_memory) {
+				/* Perform a dichotomic decrease */
+			if (plsc_per <= 100) {
+				if (plsc_per <= 50) {
+					if (plsc_per <= 8) {
+						if (plsc_per <= 4) {
+							plsc_per -= 1;
+						} else {
+							plsc_per -= 2;
+						}
+					} else {
+						plsc_per -= 4;
+					}
+				} else {
+					plsc_per -= 8;
+				}  
+			} else {
+				plsc_per -= 16;
+			}
+			if (plsc_per < 1) {
+				plsc_per = 1;
+			}
 		}
 	} else {
 		e_mem_used -= e_data.ml_used + e_data.ml_over;

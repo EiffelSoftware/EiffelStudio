@@ -356,36 +356,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_FONT_IMP} implementation.make (Current)
 		end
-			
-feature -- Obsolete
-		
-	set_preferred_face (a_preferred_face: STRING) is
-			-- Set `a_preferred_face' to `preferred_face'.
-		obsolete "Use `preferred_faces.extend' instead"
-		require
-			a_preferred_face_not_void: a_preferred_face /= Void
-		do
-			preferred_faces.extend (a_preferred_face)
-		ensure
-			preferred_face_assigned: preferred_face = a_preferred_face
-		end
-
-	remove_preferred_face is
-			-- Set `a_preferred_face' to Void.
-		obsolete "Use `prefered_faces.wipe_out' instead"
-		do
-			preferred_faces.wipe_out
-		ensure
-			preferred_face_void: preferred_face = Void
- 		end
-		
-	preferred_face: STRING is
-			-- Preferred typeface.
-			-- Overrides `family' if found on current system.
-		obsolete "Use `prefered_faces.first' instead"
-		do
-			Result := preferred_faces.first
-		end 
 
 invariant
 	family_valid: is_initialized implies valid_family (family)

@@ -158,29 +158,6 @@ feature  {EV_ANY_I} -- Implementation
 	
 	implementation: EV_BOX_I
 			-- Responsible for interaction with the native graphics toolkit.
-
-feature -- Obsolete
-
-	is_child_expanded (child: EV_WIDGET): BOOLEAN is
-		obsolete
-			"use is_item_expanded"
-		do
-			Result := is_item_expanded (child)
-		end
-
-	enable_child_expand (child: EV_WIDGET) is
-		obsolete
-			"use enable_item_expand"
-		do
-			enable_item_expand (child)
-		end
-
-	disable_child_expand (child: EV_WIDGET) is
-		obsolete
-			"use disable_item_expand"
-		do
-			disable_item_expand (child)
-		end
 			
 end -- class EV_BOX
 

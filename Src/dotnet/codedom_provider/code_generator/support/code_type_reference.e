@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			create members_cache.make (8)
+			search_for_members := True
 		ensure
 			name_set: name = a_name
 		end
@@ -298,7 +299,38 @@ feature -- Access
 				Result := dotnet_member_from_name (a_name)
 			end
 		end
-		
+	
+	members: LIST [LIST [CODE_MEMBER_REFERENCE]] is
+			-- All members of dotnet type
+			-- Ordered by .NET name
+		require
+			is_external: dotnet_type /= Void
+		local
+			l_features: LIST [CODE_MEMBER_REFERENCE]
+		do
+			if search_for_members then
+				l_features := Metadata_provider.all_features (dotnet_type)
+				if l_features /= Void then
+					from
+						l_features.start
+					until
+						l_features.after
+					loop
+						add_member (l_features.item)
+						l_features.forth
+					end
+				end
+				Result := members_cache.linear_representation
+				search_for_members := False
+			else
+				Result := members_cache.linear_representation
+			end
+		ensure
+			members_searched: not search_for_members
+			non_void_list: Result /= Void
+			-- valid_ordering: all list items of a list item of result have the same .NET name
+		end
+
 feature -- Status Report
 
 	initialized: BOOLEAN
@@ -520,6 +552,9 @@ feature {NONE} -- Private Access
 			
 	search_for_element_type: BOOLEAN
 			-- Should call to `element_type' trigger a search?
+
+	search_for_members: BOOLEAN
+			-- Should call to `members' trigger a search?
 
 	internal_eiffel_name: STRING
 			-- Cached Eiffel name

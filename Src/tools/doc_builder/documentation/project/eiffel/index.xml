@@ -1,0 +1,78 @@
+<document title="Writing Eiffel Documentation">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Writing Eiffel Documentation</heading>
+		<paragraph>This document contains information specific to writing Eiffel documentation.  For details of how to use the document tool please refer to the other documents in this help.</paragraph>
+		<heading>
+			<size>3</size>Overview
+		</heading>
+		<paragraph>The eiffel documentation files are written in XML format and must conform to this 
+			<link>
+				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Src/tools/doc_builder/resources/xml/schema/document.xsd</url>
+				<label>schema definition</label>
+			</link>.  The actual documents are found in 
+			<link>
+				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/</url>
+				<label>http://cvs.ise/cgi-bin/viewcvs.cgi/Delivery/xmldoc/</label>
+			</link>.  To begin editing or writing documents checkout these files and create a new project in this directory.  Then attach the schema using the project settings, and attach this HTML stylesheet file also: 
+			<link>
+				<label>stylesheet</label>
+				<url>http://cvs.ise/cgi-bin/viewcvs.cgi/Src/tools/doc_builder/resources/xml/styles/</url>
+			</link>.
+		</paragraph>
+		<heading>
+			<size>3</size>Schema Structure
+		</heading>
+		<paragraph>Most of the available schema tags are self-explanatory, but some do require a little explanation.  </paragraph>
+		<list ordered="false">
+			<item>
+				<bold>&lt;document title="a_title"&gt;: </bold>Every document uses the root tag 'document', which has a required attribute 'title'.  The title is automatically inserted at the start of the document when generated for help, so use a relevant title here and don't repeat it at the start of a document in a heading.  The title is also used as the topic title when the document is part of a help table of contents.  For this reason avoid non-ascii characters.  if you need to change the toc title to something other than this you can do so in the 'meta_data' tag...
+			</item>
+			<item>
+				<bold>&lt;meta_data&gt;: </bold>The meta data tag contains meta-information about the document.  It can include a header_file, footer_file, script code or help-related information.  For eiffel documentation you will be mostly concerned with the 'help' section.  This section contains 'meta', 'toc' and 'xml' child tags.  The 'meta' is for adding HTML meta keywords to the document for use by search engines and so on and is a direct equivalent of the HTML meta tag.  The 'toc' tag is used to configure how a particular document may be appear in a table of contents.  It has 3 options, appearing for EiffelStudio and ENViSioN! respectively:
+				<list ordered="false">
+					<item>
+						<italic>location: </italic>a path to the location where the document should appear in the table of contents.  The path is taken as a separated string of titles.  For example a document with the location 
+						<italic>Libraries/EiffelBase/Content/</italic> will appear in the toc under the topic Libraries, EiffelBase, Content.  You will use this option for documents which must appear in both EiffelStudio and ENViSioN! table of contents, specifying a location for one, or both, according to the their structure.  Remember, the value is a separated list of toc 
+						<italic>titles</italic>, 
+						<bold>not</bold> a physical url.
+					</item>
+					<item>
+						<italic>title: </italic>determines the title to be used in when present in the toc.  Use this to provide different titles between EiffelStudio and ENViSion!.  If there is not value here the document title attribute is taken as default.
+					</item>
+					<item>
+						<italic>pseudo_name: </italic>Used to allow alphabetical ordering in the toc.  Since a document may appear in both EiffelStudio and ENViSioN! help this is used to reflect the ordering of the document 
+						<bold>within it's parent topic</bold>.  Use the number convention of '10', '20', '21'.  Be sure also to check the pseudo values of sibling documents when using this in case they have the same value.
+					</item>
+				</list>
+			</item>
+			<item>
+				<bold>&lt;code&gt;: </bold>  Defines inline code.  Use to refer to code elements (class names, keywords) 
+				<bold>within text</bold>.
+			</item>
+			<item>
+				<bold>&lt;code_block&gt;: </bold>  Defines a block of code.  Use to illustrate Eiffel formatted source code.  Code block elements are outputted exactly as they written, so no formatting is applied other than that which you apply yourself.  They are also ignored when pretty-print an xml document since otherwise the formatting would be lost.  To make life a little easy you can copy Eiffel code from EiffelStudio (or ENViSioN!) and paste it into a code_block element directly.  Then you can highlight the code and click the 'Pretty Code Format' toolbar button.  This will add the XML tags for keywords, class names and operator symbols.  It does not add them for feature names though, and is not perfect so you should add these yourself and check the display is correct before commiting.  (Expect a better formatter soon).
+				<warning>
+					<bold>Warning: </bold>If you have a block of code with all the keywords and class names and features nicely formatted then clicking on the pretty code format button will cause some of the formatting to be lost.  Therefore, format automatically 
+					<bold>first</bold> and add the missing information after, not the other way around.
+				</warning>
+			</item>
+		</list>
+		<heading>
+			<size>3</size>Output filters
+		</heading>
+		<paragraph>Output filters are defined for ENViSiON, EiffelStudio, and then for EiffelStudio for Mac, Windows and Linux respectively.  If you wish to add your own please ask before doing so.</paragraph>
+		<heading>
+			<size>3</size>Table of Contents
+		</heading>
+		<paragraph>A separate table of contents reflecting the most recent release can found here.  If you wish to view the EiffelStudio or ENViSioN! toc in the tool you can use these files for quick loading.  Alternatively you can generate them yourself using the TOC sorting options.  The sort options to use are:
+			<list ordered="false">
+				<item>EiffelStudio: index filename 'index.xml', automatically make root nodes, include sub directories of skipped directories, sort for EiffelStudio</item>
+				<item>ENViSioN!: index filename 'index.xml', automatically make root nodes, include sub directories of skipped directories, order alphabetically, sort for ENViSioN!</item>
+			</list>If you use these options the resulting toc will be identical to the previous release, excluding any changes you have made in your local document copies.  
+		</paragraph>
+		<note>
+			<bold>Note:</bold> It is 
+			<bold>much</bold> faster to sort the tocs using a finalized non .NET system.
+		</note>
+	</paragraph></document>

@@ -1,0 +1,73 @@
+<document title="XML">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>XML</heading>
+		<heading>
+			<size>3</size>Formatting
+		</heading>
+		<paragraph>To pretty format an XML document for easier reading and editing click the 
+			<image>
+				<url>prettyxmltoolbar.png</url>
+			</image> toolbar button.  For this to work the document must be a valid XML document.
+		</paragraph>
+		<heading>
+			<size>3</size>Schemas
+		</heading>
+		<paragraph>To load an XML schema for the project go to 
+			<bold>Project</bold> -&gt; 
+			<bold>Settings</bold>
+		</paragraph>
+		<paragraph>Then load the schema through the 'Schema' tab.  Once the schema is loaded you can view the types and document elements in the the 'Types' and 'Schema Elements' tabs in the main navigator.</paragraph>
+		<image>
+			<url>schemaelementselector.png</url>
+		</image>
+		<image>
+			<url>schematypeselector.png</url>
+		</image>
+		<paragraph>Once a schema is loaded you can validate the currently loaded document to the schema structure by clicking this toolbar button: 
+			<image>
+				<url>schemavalidatortoolbar.png</url>
+			</image>.  In the case of errors an error dialog will appear.  Double-clicking on a particular schema error will highlight that error in the editor for a quick fix.  If you wish to validate the entire project XML documents to the schema go to 
+			<bold>Tools</bold> -&gt; 
+			<bold>Validator</bold> and select the option 'Validate project documents against schema definition'.  All files not schema valid will be listed in the error list and can be clicked to open each document.
+		</paragraph>
+		<image>
+			<url>validatortool.png</url>
+		</image>
+		<heading>
+			<size>3</size>Quick tags
+		</heading>
+		<paragraph>To quickly input tags that are known to the editor through the loaded just right-click in the text and the editor will display a drop down list of available tags based upon the cursor position.</paragraph>
+		<image>
+			<url>taglist.png</url>
+		</image>
+		<paragraph>If you right click over highlighted text and select a tag it will enclose the highlighted text in that tag</paragraph>
+		<heading>
+			<size>3</size>Headers and Footers
+		</heading>
+		<paragraph>You may define a external header or footer file to be included when transforming your XML documents to another output format.  Go to 
+			<bold>Project</bold> -&gt; 
+			<bold>Settings</bold>
+		</paragraph>
+		<paragraph>Then load the header or footer through the 'Includes' tab.</paragraph>
+		<heading>
+			<size>3</size>Document Properties
+		</heading>
+		<paragraph>If your document is valid XML click the 
+			<image>
+				<url>docprops.png</url>
+			</image> toolbar button to view document specific properties.  The dialog allows you to specify meta-information about the document regarding the 
+			<link>
+				<url>..\..\filters\index.xml</url>
+				<label>output filter</label>
+			</link> to which the document relates, plus information for producing 
+			<link>
+				<url>../../help_projects/index.xml</url>
+				<label>help projects</label>
+			</link> and 
+			<link>
+				<url>../../toc/index.xml</url>
+				<label>toc related information</label>
+			</link>.
+		</paragraph>
+	</paragraph></document>

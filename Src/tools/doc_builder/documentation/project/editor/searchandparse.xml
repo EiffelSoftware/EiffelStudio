@@ -1,0 +1,24 @@
+<document title="Searching and Parsing">
+	<meta_data/>	
+	<paragraph>
+		<heading><size>2</size>Searching and Parsing</heading>
+		<paragraph>The document tool provides a nifty parsing tool for applying certain basic expression to the text in your project documents.  To load the Expression Builder go to 
+			<bold>Tools</bold> -&gt; Expression 
+			<bold>Builder</bold>
+		</paragraph>
+		<heading>
+			<size>3</size>Regular Expressions
+		</heading>
+		<paragraph>The first tab in the Expression Builder is the regular expression tab.  Here you can define one or many regular expression statements to find textual patterns in your documents.</paragraph>
+		<image>
+			<url>regexpsdialog.png</url>
+		</image>
+		<paragraph>Enter your regular expression in the 'Expression' text field, followed by the text you would like to replace any found occurences with.  Then click the 'Add' button to add this complete expression rule to the list of expressions above.  When you finished you can save the list of expression rules to a file for later use by selecting 'Save', and can re-open previous defined expressions from a file by clicking 'Open'.  Once you are happy with your expressions just click run or apply to have them executed on your documents.</paragraph>
+		<note>
+			<bold>Note: </bold>Regular expressions appearing the list are executed in the order they appear from top to bottom.  Be aware therefore any changes to your text from a previous expression will effect the succeeding expressions.
+		</note>
+		<heading>
+			<size>3</size>XML Expressions
+		</heading>
+		<paragraph>If a schema is loaded you can perform basic text and element editing via the 'XML Parsing' tab.  Select the type of element you wish to modify and then change the name, or provide an regular expression to apply to the character data of that particular type of element.  This is useful for when you only want to change the content of a certain kind of element (such as urls for example), but where the expression would match in other elements too since it only acts upon the element chosen in the schema tree.</paragraph>
+	</paragraph></document>

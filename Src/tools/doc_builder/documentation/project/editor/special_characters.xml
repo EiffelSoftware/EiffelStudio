@@ -1,0 +1,14 @@
+<document title="Special Characters">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>2</size>Special Characters
+		</heading>
+		<paragraph>XML and HTML special characters can be inserted into the document using the special character dialog.  Go to 
+			<bold>Tools</bold> -&gt; 
+			<bold>Character Codes</bold> to view a list of available characters.  Double-click the character your require and the appropriate escape sequence will be inserted into the document at the current cursor position.
+		</paragraph>
+		<image>
+			<url>specialchars.png</url>
+		</image>
+	</paragraph></document>

@@ -1,0 +1,32 @@
+<document title="Editor">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Editor</heading>
+		<paragraph>The editor allows you to define the content for you documentation.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<label>Basics</label>
+					<url>basics.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>Searching and Parsing</label>
+					<url>searchandparse.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>Handy Shortcuts and Tips</label>
+					<url>tips.xml</url>
+				</link>
+			</item>
+<item>
+				<link>
+					<label>Special Characters</label>
+					<url>special_characters.xml</url>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

@@ -1,0 +1,58 @@
+<document title="Table of Contents">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Table of Contents</heading>
+		<paragraph>Based upon your project document you can create a table of contents to structure you documents in different ways.  Once you have a table of contents you can then take advantage of the help features and generate a help project from the table of contents.  To create a new table of contents click the new icon in the 'TOC View' tab toolbar.</paragraph>
+		<image>
+			<url>tocempty.png</url>
+		</image>
+		<paragraph>This will display a dialog asking for a name for the new table of of contents, and then the option to create an empty toc or create the toc with the same structure as the project directory.</paragraph>
+		<image>
+			<url>tocnewdialog.png</url>
+		</image>
+		<paragraph>If you wish to manually build toc by hand it is probably easiest to start with an empty toc and add the topic files one by one.  If however you have a large project, or if your project documents contain meta-information regarding their relation to a table of contents you should et the toc start as a copy of the project directory structure.  As you can see in the screenshot below I created a tabel of content based on the directory structure of this documentation you are now reading.</paragraph>
+		<image>
+			<url>tocnotempty.png</url>
+		</image>
+		<heading>
+			<size>3</size>Saving and Loading
+		</heading>
+		<paragraph>You can save table of contents by clicking the save icon in the toc toolbar, and can open it later on by clicking the open icon.  Saving tocs is useful when dealing with large tocs since there are many topic nodes and it can take longer to automatically generate them every time than simply loading the information from a file.</paragraph>
+		<heading>
+			<size>3</size>Working with topics
+		</heading>
+		<paragraph>To define a new topic for the table of contents click 'New Topic Heading' or the 'New Topic File' toolbar button to the left of the toc tree.  A new topic will be inserted into the toc tree.  To remove a topic click the 'Delete Topic' and the selected topic in the tree will be removed along with all it's children.  To move a topic right click on it and then right click again on the topic where you want to move it to.</paragraph>
+		<image>
+			<url>tocmovetopic.png</url>
+		</image>
+		<paragraph>Clicking on a topic in the toc tree will cause the small box below the toc tree to update with information about that toc topic.  </paragraph>
+		<image>
+			<url>tocnodeproperties.png</url>
+		</image>
+		<paragraph>The information presented is simply the title of the topic and the file which it refers to.  By default the title is the filename minus the directory information, so a node refering to C:/my_project/my_file.xml will have the title 'my_file.xml' in the toc.  To change this title to something meaningful double-click the title and a small edit box will appear for entering a new value.  Likewise, to refer to topic to a different file double-click the 'File Url' item in the list and write in the new file in the text box.</paragraph>
+		<heading>
+			<size>3</size>Sorting
+		</heading>
+		<paragraph>Okay, so you got your toc which is a copy of a 1000 files directory structure, now what?  Well, you can sort your toc by clicking the 
+			<image>
+				<url>tocsorttoolbar.png</url>
+			</image> toolbar button.  This will provide a list of sorting options:
+		</paragraph>
+		<image>
+			<url>tocsortdialog.png</url>
+		</image>
+		<paragraph>
+			<list ordered="false">
+				<item><italic>Textual Description: </italic>A name for the new toc which will be created from the sort options (the current toc is not overwritten, a new one is created).</item>
+<item><italic>Index Filename: </italic>Specifies the name to identify that a file is an index file.  For example, 'index.xml' indicates all files called index.xml are treated as index files.</item>
+<item><italic>Automatically make root nodes from index files: </italic>Option to decide if index files are supposed to be topic headings.</item>
+<item><italic>Include empty directories: </italic>Option to indocate of empty directories are to be kept in the toc after sorting.</item>
+<item><italic>Include directories without index file: </italic>Indicates if directories without an index file are to be included in the sorted toc.</item>
+<item><italic>Include directories of skipped sub-directories</italic>Indicates if directories which are not empty, but which are sub-directories of directories which may have been filtered out (i.e empty directories, directories without an index file), should be included or not.</item>
+<item><italic>Order alphabetically: </italic>Determines if the resulting nodes are sorted alphabetically once filtered.  If the documents contain meta-information this is used first, if not then the order is determined based upon file/directory name.</item>
+<item><italic>Sort for: </italic>Sorts the toc according to the filter chosen.  Documents containing meta-information may be included only for certain filters and not others.  If a document has no meta-information it is always included in the toc.</item>
+			</list>
+		</paragraph>
+		<paragraph>The diagram below show a sorted toc.  You will notice also a drop-down list displaying different toc names.  Use this list to work with multiple tocs at the same time.</paragraph>
+		<image><url>tocsortedwithlist.png</url></image>
+	</paragraph></document>

@@ -1,0 +1,35 @@
+<document title="Working with Filters">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Working with Filters</heading>
+		<paragraph>
+			<heading>
+				<size>3</size>What are filters?
+			</heading>
+			<paragraph>Filters enable you to add content to your XML documentation which is associated with specific output types.  By marking a paragraph, or an image or any kind of content as applying to a filter, this will ensure only the enclosing content is included in the output 
+				<bold>if the transformation filter matches the tag filter.</bold>  To clarify, consider 3 filters, 'customers', 'executives' and 'managers'.  I want my customers filter to remove all content that  is associated with any filter that is not the customer filter.  Likewise I want all all documents filtered for executives to include only content relavant to executives, and finally I want the managers filter to includes both customer and executive information.  Using the 'Filter' tab in the <link><url>../projects/index.xml</url><label>Project Settings Dialog</label></link> I can create three filters, one called '<italic>customers</italic>', one called '<italic>executives</italic>' and one called '<italic>managers</italic>'.</paragraph>
+			<image><url>filtertab.png</url></image>
+			<paragraph>Then for each filter I can add the text tags which are used when transformation occurs.  The text tags defined for a filter indicate that when a document is transformed only the tags matching those found in the filter are processed.  As a working example consider the following document structure:</paragraph>
+			<code_block>
+	&lt;document&gt;
+		&lt;paragraph&gt;
+			A normal paragraph
+		&lt;/paragraph&gt;
+
+		&lt;paragraph&gt;
+			&lt;output output="customer"&gt;
+				A paragraph denoted with the tag 'customer'
+			&lt;/output&gt;
+		&lt;/paragraph&gt;
+		&lt;paragraph&gt;
+			&lt;output output="executive"&gt;
+				A paragraph denoted with the tag 'executive'
+			&lt;/output&gt;
+		&lt;/paragraph&gt;
+	&lt;/document&gt;
+			</code_block>
+			<paragraph>Now using the <italic>output</italic> tag and setting the corresponding <italic>output="tagname"</italic> attribute you can dictate the resulting output.  The customer filter simply has the tag 'customer', the executives has 'executive', and the manager filter has both 'customer' and 'executive'.  You can think of the manager filter as inheriting the customer and executive filters, being therefore an instance of both.</paragraph>
+		<paragraph>All filters containg the default filter tag 'all', which simply means unfiltered.  Using an 'all' tag is equivalent to not using the filter at all since it will always be included in transformed output.</paragraph>
+		<paragraph>Filters are an easy but powerful way to create complete document structures the differ according to the type of output you require for different document sets.</paragraph>
+			</paragraph>
+	</paragraph></document>

@@ -1,0 +1,85 @@
+<document title="Managing Projects">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Managing Projects</heading>
+		<paragraph>
+			<heading>
+				<size>3</size>Creating Projects
+			</heading>
+			<paragraph>To create a new project go to 
+				<bold>File</bold> -&gt; 
+				<bold>New..</bold>
+			</paragraph>
+			<paragraph>A template dialog shall appear, so select 'Project', and then enter a name for the project and the root directory in which your new or existing project files reside.</paragraph>
+			<image>
+				<url>templatedialog.png</url>
+			</image>
+		</paragraph>
+		<paragraph>
+			<heading>
+				<size>3</size>Projects Settings
+			</heading>
+			<paragraph>Go to 
+				<bold>Project</bold> -&gt; 
+				<bold>Settings...</bold>
+			</paragraph>The project settings dialog allows you to configure basic project settings.</paragraph>
+			<image>
+				<url>projectsettings.png</url>
+			</image>
+			<paragraph>
+				<bold>General Tab: </bold>Specifies general settings, such as project name.
+			</paragraph>
+			<paragraph>
+				<bold>Schema Tab: </bold>Allows you to specify a XML Schema for the project.  For more see 
+				<link>
+					<url>../xml/index.xml</url>
+					<label>XML</label>
+				</link>
+			</paragraph>
+			<paragraph>
+				<bold>HTML Tab: </bold>Allows you to specify a HTML Cascading Stylesheet.  When your project documents are tranformed to HTML this stylesheet will be included into the transformed document.  Please note, the specified stylesheet must be in the project directory or one of it sub-directories.
+			</paragraph>
+			<paragraph>
+				<bold>Includes Tab: </bold>Include options for transforming documents to another format such as HTMl or pdf.  Here you can specify an external include file for a header or footer in the document.  This will then be included in your transformed document at the top or bottom of the document respectively.  Please note that, like any document you tranform from XML into another format the originating document must be valid XML to guarantee a successful and accurate conversion of all the content.  Likewise the same is true for the header and footer files: they must be valid XML to be successfully included in the transformation output.
+			</paragraph>
+			<paragraph>
+				<bold>Conversion Tab: </bold>Specifies details specific to document conversion.  Here is a list of available options and what they mean:
+				<list ordered="false">
+					<item>
+						<italic>Process include tags: (not currently implemented)</italic> indicates if include directives in the document undergoing transformation should be used.  An include directive is simply a tag in your xml document of the form
+						<code_block>&lt;include&gt;&lt;url&gt;my_url.xml&lt;/url&gt;&lt;/include&gt;</code_block> If the option is turned on then the XML file specified in the include will be inserted into this location of the document.  As with all documents undergoing transformation the include files should be valid xml to guarantee successful transformation.  Includes are a powerful way to incorporate regularly used or dynamic document data into your documents.  They mean you only have to only one file (the include file), and the changes will be effective in al documents which include this.  
+					</item>
+					<item>
+						<italic>Include header/footer: </italic>Determines if the header or footer specified in the 'Includes' Tab should actually be included in the transformation
+					</item>
+					<item>
+						<italic>Include HTML Stylesheet for HTML transformations:</italic>Indicates if the Cascading Sdtyle Sheet specified in the 'HTML' Tab should be included in the transformation
+					</item>
+					<item>
+						<italic>Add navigation links: </italic>When you are transforming a complete project you will use a Table of Contents to determine the resulting structure of the output.  This option dictates if the tool generates quick navigation links based upon that structure in each document for easy navigation and reference.  For more on this see about working with 
+						<link>
+							<url>../toc/index.xml</url>
+							<label>Table of Contents</label>
+						</link>
+					</item>
+					<item>
+						<italic>Generate DHTML combo box: </italic>When transforming a project to HTML this option indicates if a combo box should be included to choose different document views based upon various filters.  For more detailed information see 
+						<link>
+							<url>../help_projects/index.xml</url>
+							<label>Creating Help</label>
+						</link> and 
+						<link>
+							<url>../filters/index.xml</url>
+							<label>Working with Filters</label>
+						</link>
+					</item>
+				</list>
+			</paragraph>
+			<paragraph>
+				<bold>Filters Tab:</bold> Use this tab to define basic filter rules to be used when transforming documents.  For more information see 
+				<link>
+					<url>../filters/index.xml</url>
+					<label>Working with Filters</label>
+				</link>
+			</paragraph>
+	</paragraph></document>

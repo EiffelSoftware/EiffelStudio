@@ -19,6 +19,11 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
+			enable_transport,
+			disable_transport,
+			pre_pick_steps,
+			post_drop_steps,
+			start_transport_filter,
 			initialize,
 			pointer_over_widget,
 			interface,
@@ -285,7 +290,7 @@ feature -- Access
 			-- possibility to set colors on the rows.
 		--| FIXME IEK FG Redefine to return list widget color.
 		do
-				Result := {EV_PRIMITIVE_IMP} Precursor
+			Result := {EV_PRIMITIVE_IMP} Precursor
 		end
 
 feature -- Status report
@@ -494,6 +499,101 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			end
 		end
 
+feature -- Implementation
+
+	enable_transport is
+		do
+			connect_pnd_callback
+		end
+
+	connect_pnd_callback is
+		do
+
+			check
+				button_release_not_connected: button_release_connection_id = 0
+			end
+			if button_press_connection_id > 0 then
+				signal_disconnect (button_press_connection_id)
+			end
+			signal_connect ("button-press-event", ~start_transport_filter, default_translate)
+			button_press_connection_id := last_signal_connection_id
+			is_transport_enabled := True
+		end
+
+	disable_transport is
+		do
+			Precursor
+			update_pnd_status
+		end
+
+	update_pnd_status is
+			-- Update PND status of list and its children.
+		local
+			a_enable_flag: BOOLEAN
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after or else a_enable_flag
+			loop
+				a_enable_flag := ev_children.item.is_transport_enabled
+				ev_children.forth
+			end
+
+			if not is_transport_enabled then
+				if a_enable_flag or pebble /= Void then
+					connect_pnd_callback
+				end
+			elseif not a_enable_flag and pebble = Void then
+				disable_transport
+			end
+		end
+
+	start_transport_filter (
+			a_type: INTEGER
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Initialize a pick and drop transport.
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_from_y_coord (a_y)
+
+			if a_row_index > 0 then
+				pnd_row_imp := ev_children.i_th (a_row_index)
+				if pnd_row_imp.is_transport_enabled then
+					print (" Start PND for ROW "+ a_row_index.out + "%N")
+				else
+					pnd_row_imp := Void
+				end
+			elseif pebble /= Void then
+				print ("Start PND for MC LIST%N")
+			end
+			
+			Precursor (
+			a_type,
+			a_x, a_y, a_button,
+			a_x_tilt, a_y_tilt, a_pressure,
+			a_screen_x, a_screen_y)			
+		end
+
+	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			-- Implementation object of the current row if in PND transport.
+
+
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+		do
+			Precursor (a_x, a_y, a_screen_x, a_screen_y)
+		end
+
+	post_drop_steps is
+		do
+			Precursor
+			pnd_row_imp := Void
+		end
+
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_from_y_coord (a_y: INTEGER): INTEGER is
@@ -577,7 +677,8 @@ feature {NONE} -- Implementation
 				an_index := C.c_gtk_clist_append_row (list_widget)
 				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
-			end		
+			end
+			update_pnd_status		
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -592,6 +693,7 @@ feature {NONE} -- Implementation
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
+			update_pnd_status
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -681,6 +783,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/04/05 17:06:19  king
+--| Initial PND structure to work with rows
+--|
 --| Revision 1.58  2000/04/04 20:54:08  oconnor
 --| updated signal connection for new marshaling scheme
 --|

@@ -168,6 +168,12 @@ Y
 ev_text_flatshort.rtf
 
 I
+EV_RICH_TEXT
+RTF
+Y
+ev_rich_text_flatshort.rtf
+
+I
 EV_TEXT_FIELD
 RTF
 Y

@@ -96,6 +96,9 @@ typedef struct tag_rt_globals
 	char *inv_mark_table_cx;			/* Marking table to avoid checking the same invariant several times */
 #endif
 
+		/* gen_conf.c */
+	int16 cid_array_cx[3];
+
 		/* out.c */
 	char buffero_cx[TAG_SIZE];			/* Buffer for printing an object in a string */
 	char *tagged_out_cx;				/* String where the tagged out is written */
@@ -288,6 +291,9 @@ rt_private rt_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) {
 #define saved_stop			(rt_globals->saved_stop_cx)	/* rt_private */
 #define inv_mark_table		(rt_globals->inv_mark_table_cx)	/* rt_private */
 #endif	/* WORKBENCH */
+
+	/* gen_conf.c */
+#define cid_array			(rt_globals->cid_array_cx)
 
 	/* out.c */
 #define buffero				(rt_globals->buffero_cx)		/* rt_private */

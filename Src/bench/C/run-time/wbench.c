@@ -24,6 +24,7 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
 #include "eif_except.h"
 #include "eif_interp.h"
 #include "eif_plug.h"
+#include "rt_gen_conf.h"
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:

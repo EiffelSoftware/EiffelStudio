@@ -36,7 +36,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_sig.h"
 #include "rt_urgent.h"
 #include "rt_search.h"
-#include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
+#include "rt_gen_conf.h"	/* For eif_gen_conf_cleanup () */
 #include "rt_gen_types.h"	/* For tuple marking */
 #include "eif_cecil.h"
 #include "x2c.h"		/* For macro LNGPAD */

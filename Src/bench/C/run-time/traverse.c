@@ -32,6 +32,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_traverse.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include "x2c.h"		/* For LNGPAD macros... */
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"

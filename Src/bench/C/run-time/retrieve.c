@@ -33,6 +33,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_traverse.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include "rt_globals.h"
 #include "rt_compress.h"
 #include "x2c.h"	/* For macro LNGPAD */

@@ -90,16 +90,18 @@ feature -- Generation
 					location := (create {PROJECT_CONTEXT}).Workbench_generation_path
 				end
 				
+					-- Set information about current assembly.
+				create assembly_info.make (System.name)
+				if System.msil_version /= Void and then not System.msil_version.is_empty then
+					assembly_info.set_version (System.msil_version)
+				end
+
 				l_key_file_name := System.msil_key_file_name
 				if l_key_file_name /= Void then
 					l_key_file_name := (create {ENV_INTERP}).interpreted_string (l_key_file_name)
 				end
 				il_generator.start_assembly_generation (System.name, file_name,
-					l_key_file_name, location)
-				
-					-- Create data of current assembly
-				create assembly_info.make (System.name)
-				il_generator.set_public_key_token (assembly_info)
+					l_key_file_name, location, assembly_info)
 
 				create output_file_name.make_from_string (location)
 				output_file_name.set_file_name (file_name)
@@ -405,10 +407,11 @@ feature {NONE} -- Type description
 							if not l_class_processed then
 								degree_output.put_degree_minus_1 (class_c, j)
 								System.set_current_class (class_c)
-								class_c.set_assembly_info (assembly_info)
 								l_class_processed := True
 								j := j - 1
 							end
+
+							cl_type.set_assembly_info (assembly_info)
 
 								-- Generate entity to represent current Eiffel implementation class
 							il_generator.generate_il_implementation (class_c, cl_type)

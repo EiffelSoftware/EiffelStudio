@@ -1212,6 +1212,7 @@ feature {NONE} -- open new class
 						had_selection := False
 					end
 				end
+				is_typing := True
 			end
 		end
 
@@ -1220,6 +1221,9 @@ feature {NONE} -- open new class
 
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
+
+	is_typing: BOOLEAN
+			-- Is the user typing in the address combo box (we don't complete otherwise).
 
 	had_selection: BOOLEAN
 			-- Did the class address had a selection when the user hit the key?
@@ -1246,12 +1250,13 @@ feature {NONE} -- open new class
 				str.right_adjust
 				str.to_lower
 				nb := str.count
-				do_not_complete := last_key_was_delete or not enable_complete
+				do_not_complete := (last_key_was_delete or not enable_complete) or not is_typing
 				if nb > 0 and last_key_was_backspace and had_selection then
 					str.head (nb - 1)
 					nb := nb - 1
 				end
 			end
+			is_typing := False
 			
 			if not do_not_complete and nb > 1 then
 				list := System.classes

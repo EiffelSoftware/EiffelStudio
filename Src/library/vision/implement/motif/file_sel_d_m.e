@@ -17,8 +17,11 @@ inherit
 	DIALOG_M;
 
 	FILE_SELEC_M
+		rename
+			make as file_select_make
 		undefine
-			make, lower, raise, action_target
+			lower, raise, action_target,
+			show, hide, shown, destroy_xt_widget
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			set_x, set_y, set_x_y, is_stackable
@@ -28,7 +31,7 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_file_select_dialog: FILE_SEL_D) is
 			-- Create a motif file selection dialog.
@@ -43,8 +46,6 @@ feature -- Creation
 			forbid_resize;
 			action_target := screen_object;
 		end;
-
-	is_stackable: BOOLEAN is do end;
 
 feature {ALL_CURS_X}
 
@@ -63,6 +64,8 @@ feature {ALL_CURS_X}
 		end;
 
 feature 
+
+	is_stackable: BOOLEAN is do end;
 
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x'

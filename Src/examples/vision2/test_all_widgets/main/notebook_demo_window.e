@@ -13,7 +13,11 @@ class
 inherit
 
 	DEMO_WINDOW
-	
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 
 creation
 
@@ -29,15 +33,19 @@ feature -- Access
 feature -- Access
 
 	button1: EV_BUTTON
-	p1, p2: EV_PIXMAP
-			-- Push buttons
+	box: EV_VERTICAL_BOX
+	button_box: EV_BUTTON
+	
 feature -- Status setting
 	
 	set_widgets is
 		do
 			!!button1.make (main_widget)
-			!! p1.make_from_file (main_widget, "../pixmaps/vision.xpm")
-			!! p2.make_from_file (main_widget, "../pixmaps/vision_tower.xpm")
+			!!box.make (main_widget)
+			!!button_box.make_with_text (box, "button 1")
+			!!button_box.make_with_text (box, "button 2")
+			!!button_box.make_with_text (box, "button 3")
+			!!button_box.make_with_text (box, "button 4")
 		end
 	
 feature -- Status setting
@@ -45,10 +53,9 @@ feature -- Status setting
 	set_values is
 		do
 			set_title ("Notebook demo")
-			button1.set_text ("Button")
+			button1.set_text ("Button")			
 			main_widget.append_page (button1, "Button")
-			main_widget.append_page (p1, "Pixmap 1")
-			main_widget.append_page (p2, "Pixmap 2")
+			main_widget.append_page (box, "Pixmap 2")
 		end
 
 

@@ -13,6 +13,11 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 	
 creation
 
@@ -20,65 +25,66 @@ creation
 
 feature -- Access
 
-	main_widget: EV_MENU_BAR is
+	main_widget: EV_OPTION_BUTTON is
 		once
 			!!Result.make (Current)
+			Result.set_minimum_size(300,100)
 		end
 	
-	
-	file_m: EV_MENU
-	new_i: EV_MENU_ITEM
-	open_i: EV_MENU_ITEM
-	save_i: EV_MENU_ITEM
-	quit_i: EV_MENU_ITEM
-	
-	edit_m: EV_MENU
-	cut_i: EV_MENU_ITEM
-	copy_i: EV_MENU_ITEM
-	paste_i: EV_MENU_ITEM
-	
-	test_m: EV_MENU
-	test_sub_m: EV_MENU
-	test_sub_i: EV_MENU_ITEM
-	test_sub1_i: EV_MENU_ITEM
-	test_sub2_i: EV_MENU_ITEM
-	test_sub3_i: EV_MENU_ITEM
+	static: EV_STATIC_MENU_BAR
+	menu: EV_MENU
+	menu2: EV_MENU_ITEM
+	menu_item: EV_MENU_ITEM
+	check_menu_item: EV_CHECK_MENU_ITEM
+	menu_item2: EV_RADIO_MENU_ITEM
+	menu_item3: EV_RADIO_MENU_ITEM
+	menu_item4: EV_RADIO_MENU_ITEM
 
-			-- Push buttons
 feature -- Status setting
-	
+
 	set_widgets is
 		local
 			c: DESTROY_COMMAND
 			a: EV_ARGUMENT1 [EV_WIDGET]
+			pixmap: EV_PIXMAP
 		do
-			!!file_m.make_with_text (main_widget, "File")
+			!! menu.make_with_text (main_widget, "Menu")
+			!! menu_item.make_with_text (menu, "Item 1")
+--			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
+			!! menu_item.make_with_text (menu, "Item 2")
+--			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
+			menu_item.set_insensitive (True)
+			!! menu_item.make_with_text (menu, "Item 3")
+--			!! pixmap.make_from_file (menu_item, the_parent.pixname("menu.xpm"))
+			!! menu2.make_with_text (menu, "Menu 2")
+			!! menu_item.make_with_text (menu2, "Item 1")
+			!! menu_item.make_with_text (menu2, "Item 2")
+			!! menu_item.make_with_text (menu2, "Item 3")
 
-			!!new_i.make_with_text (file_m, "New")
-			!!open_i.make_with_text (file_m, "Open")
-			!!save_i.make_with_text (file_m, "Save")
-			!!quit_i.make_with_text (file_m, "Quit")
-			
+			!!static.make (Current)
+			!!menu.make_with_text (static, "File")
+			!!menu_item.make_with_text (menu, "New")
+			!!menu_item.make_with_text (menu, "Open")
+			!!menu_item.make_with_text (menu, "Save")
+			menu_item.set_insensitive (True)
+			!!check_menu_item.make_with_text (menu, "Auto save")
+			!!menu_item.make_with_text (menu, "Quit")
 			!!c
 			!!a.make (Current)
-			quit_i.add_activate_command (c, a)
+			menu_item.add_activate_command (c, a)
 						
-			!!edit_m.make_with_text (main_widget, "Edit")
+			!!menu.make_with_text (static, "Edit")
+			!!menu_item.make_with_text (menu, "Cut")
+			!!menu_item.make_with_text (menu, "Copy")
+--			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
+			!!menu_item.make_with_text (menu, "Paste")
 			
-			!!cut_i.make_with_text (edit_m, "Cut")
-			!!copy_i.make_with_text (edit_m, "Copy")
-			!!paste_i.make_with_text (edit_m, "Paste")
-			
-			  			  
-			!!test_m.make_with_text (main_widget, "Test")
+			!!menu.make_with_text (static, "Test")
+			!!menu_item.make_with_text (menu, "Sub menu1")
+			!!menu_item2.make_with_text (menu_item, "Selection 1")
+			!!menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
+			!!menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
 
-			!!test_sub_m.make_with_text (test_m, "Sub menu1")
-			
-			!!test_sub1_i.make_with_text (test_sub_m, "Selection 1")
-			!!test_sub2_i.make_with_text (test_sub_m, "Selection 2")
-			!!test_sub3_i.make_with_text (test_sub_m, "Selection 3")
-			
-			
 		end
 	
 feature -- Status setting
@@ -86,7 +92,6 @@ feature -- Status setting
 	set_values is
 		do
 			set_title ("Menu demo")
-	--		save_i.set_insensitive (True)
 		end
 
 end

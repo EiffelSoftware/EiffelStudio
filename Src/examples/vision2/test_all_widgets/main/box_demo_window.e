@@ -14,7 +14,10 @@ inherit
 
 	DEMO_WINDOW
 		redefine
-			actions_window
+			actions_window,
+			main_widget,
+			set_widgets,
+			set_values
 		end
 	
 creation
@@ -26,6 +29,7 @@ feature -- Access
 	main_widget: EV_HORIZONTAL_BOX is
 		once
 			!!Result.make (Current)
+			Result.set_border_width (10)
 		end
 	
 feature -- Access

@@ -13,6 +13,11 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 	
 creation
 	
@@ -23,6 +28,7 @@ feature -- Access
 	main_widget: EV_LABEL is
 		once
 			!!Result.make (Current)
+			Result.set_minimum_size(200,200)
 		end
 	
 feature -- Status setting

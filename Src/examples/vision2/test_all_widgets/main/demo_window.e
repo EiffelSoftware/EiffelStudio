@@ -36,24 +36,24 @@ feature --Access
 	
 	actions_window: ACTIONS_WINDOW
 			-- Actions window related to this demo
-	
+
 	effective_button: EV_TOGGLE_BUTTON
 			-- Button which was pressed when this demo 
 			-- window was opened
 	
 feature -- Initialization
 	
-	make (par: EV_WINDOW) is
+	make (par: MAIN_WINDOW) is
 		do
 			the_parent := par
-			parent_make (the_parent) 
+			parent_make (the_parent)
 			set_widgets
 			set_values
 		end
 	
 feature -- Access
 
-	the_parent: EV_WINDOW
+	the_parent: MAIN_WINDOW
 
 feature -- Status setting
         
@@ -80,13 +80,18 @@ feature -- Show the window
 	activate (win: MAIN_WINDOW) is
 		local
 			a: EV_ARGUMENT1[DEMO_WINDOW]
+			w: EV_ARGUMENT1[EV_WIDGET]
+			destroy_c: DESTROY_COMMAND
 		do
 			show
 			!!actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
+			!!destroy_c
+			!!w.make (actions_window)
+			actions_window.add_close_command (destroy_c, w)
 			win.set_insensitive (True)
 			!!a.make (Current)
-			add_destroy_command (win, a)
+			add_close_command (win, a)
 		end
 
 end

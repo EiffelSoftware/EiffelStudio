@@ -273,7 +273,47 @@ feature -- Access
 		do
 			Result := implementation.are_tree_node_connectors_shown
 		end
-
+		
+	virtual_x_position: INTEGER is
+			-- Horizontal offset of virtual area in pixels, relative to left edge of `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_x_position
+		ensure
+			result_not_positive: Result <= 0
+		end
+		
+	virtual_y_position: INTEGER is
+			-- Vertical offset of virtual area in pixels, relative to top edge of `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_y_position
+		ensure
+			result_not_positive: Result <= 0
+		end
+		
+	virtual_width: INTEGER is
+			-- Width of virtual area in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_width
+		ensure
+			result_greater_or_equal_to_width: Result >= width
+		end
+		
+	virtual_height: INTEGER is
+			-- Hieght of virtual area in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_height
+		ensure
+			result_greater_or_equal_to_height: Result >= height
+		end
+		
 feature -- Status setting
 
 	enable_tree is

@@ -47,8 +47,8 @@ feature
 			create finished_file.make (finished_file_name)
 			has_finished_file := finished_file.exists
 
-				-- Clean up previous conversion
-			if not is_root then
+				-- Clean up previous conversion if really needed.
+			if not is_root and then not has_finished_file then
 				l_file_name := path (big_file_name) + ".x"
 				create l_file.make (l_file_name)
 				if l_file.exists then
@@ -99,7 +99,12 @@ feature
 								-- If the name is not greater than 3 and does not contain ".", it means that
 							   	-- we are not handling with Eiffel generated files which have always the
 								-- following format: "eaxxxx.c".
-							if string_count > 3 and then l_file_name.substring_index (".", 1) /= 0 then
+							if
+								not l_file_name.is_equal ("edynlib.c") and then
+								not l_file_name.is_equal ("egc_dynlib.c") and then
+								not l_file_name.is_equal ("emain.c") and then
+								string_count > 3 and then l_file_name.substring_index (".", 1) /= 0
+							then
 								if
 									l_file_name.substring_index (".c",1) = string_count - 1 or else
 									l_file_name.substring_index (".cpp",1) = string_count - 3

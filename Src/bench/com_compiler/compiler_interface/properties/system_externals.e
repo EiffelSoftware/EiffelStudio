@@ -259,7 +259,7 @@ feature -- Basic operations
 			
 			store_externals (include_paths_list, include_path_keyword, True)
 			store_externals (object_files_list, object_keyword, True)
-			store_externals (dotnet_resources_list, dotnet_resource_keyword, True)
+			store_externals (dotnet_resources_list, dotnet_resource_keyword, False)
 			ace_accesser.apply
 		end
 
@@ -293,14 +293,14 @@ feature {NONE} -- Implementation
 			until
 				external_list.after or not can_add
 			loop
-				if is_external_equal (external_item, external_list.item) then
+				if is_external_equal (formatted_path, external_list.item) then
 					can_add := false
 				end
 				external_list.forth
 			end
 			
 			if can_add then
-				external_list.extend (external_item)
+				external_list.extend (formatted_path)
 			end
 		end
 		

@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 					exp_name := rescue_match
 				end
 				create temp_font.make (exp_name)
-				preloaded.extend (temp_font, try_string)
+				preloaded.put (temp_font, try_string)
 			end
 			full_name := temp_font.full_name
 			c_object := temp_font.c_object
@@ -526,6 +526,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/08 17:09:05  brendel
+--| Replaced `extend' with `put' on hash-table.
+--|
 --| Revision 1.12  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

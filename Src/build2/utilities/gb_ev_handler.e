@@ -40,6 +40,7 @@ feature -- Access
 			Result.extend ("gb_ev_container")
 			Result.extend ("gb_ev_pixmap")
 			Result.extend ("gb_ev_progress_bar")
+			Result.extend ("gb_ev_tool_bar")
 		end
 	
 	--| FIXME This version has been commented, so that we do not need to have

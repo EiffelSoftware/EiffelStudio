@@ -1,0 +1,99 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value="sample\root_cluster\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="APPLICATION"><param name="Local" value="sample\root_cluster\application_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="array"><param name="Local" value="sample\root_cluster\application.html#f_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="console"><param name="Local" value="sample\root_cluster\application.html#f_console"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="encoding"><param name="Local" value="sample\root_cluster\application.html#f_encoding"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="environment"><param name="Local" value="sample\root_cluster\application.html#f_environment"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="sample\root_cluster\application.html#f_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="file"><param name="Local" value="sample\root_cluster\application.html#f_file"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_error"><param name="Local" value="sample\root_cluster\application.html#f_no_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="show_usage"><param name="Local" value="sample\root_cluster\application.html#f_show_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string"><param name="Local" value="sample\root_cluster\application.html#f_string"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="ARG_PARSER"><param name="Local" value="sample\root_cluster\arg_parser_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="case_sensitive"><param name="Local" value="sample\root_cluster\arg_parser.html#f_case_sensitive"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="switches"><param name="Local" value="sample\root_cluster\arg_parser.html#f_switches"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="symbols"><param name="Local" value="sample\root_cluster\arg_parser.html#f_symbols"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="sample\root_cluster\arg_parser.html#f_parse"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="usage"><param name="Local" value="sample\root_cluster\arg_parser.html#f_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="array"><param name="Local" value="sample\root_cluster\arg_parser.html#f_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="console"><param name="Local" value="sample\root_cluster\arg_parser.html#f_console"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="encoding"><param name="Local" value="sample\root_cluster\arg_parser.html#f_encoding"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="environment"><param name="Local" value="sample\root_cluster\arg_parser.html#f_environment"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="sample\root_cluster\arg_parser.html#f_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="file"><param name="Local" value="sample\root_cluster\arg_parser.html#f_file"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_error"><param name="Local" value="sample\root_cluster\arg_parser.html#f_no_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="show_usage"><param name="Local" value="sample\root_cluster\arg_parser.html#f_show_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string"><param name="Local" value="sample\root_cluster\arg_parser.html#f_string"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="STATICS"><param name="Local" value="sample\root_cluster\statics_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="array"><param name="Local" value="sample\root_cluster\statics.html#f_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="console"><param name="Local" value="sample\root_cluster\statics.html#f_console"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="encoding"><param name="Local" value="sample\root_cluster\statics.html#f_encoding"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="environment"><param name="Local" value="sample\root_cluster\statics.html#f_environment"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="sample\root_cluster\statics.html#f_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="file"><param name="Local" value="sample\root_cluster\statics.html#f_file"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_error"><param name="Local" value="sample\root_cluster\statics.html#f_no_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="show_usage"><param name="Local" value="sample\root_cluster\statics.html#f_show_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string"><param name="Local" value="sample\root_cluster\statics.html#f_string"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="WORD_COUNTER"><param name="Local" value="sample\root_cluster\word_counter_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="count_stats"><param name="Local" value="sample\root_cluster\word_counter.html#f_count_stats"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="pnum_bytes"><param name="Local" value="sample\root_cluster\word_counter.html#f_pnum_bytes"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="pnum_chars"><param name="Local" value="sample\root_cluster\word_counter.html#f_pnum_chars"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="pnum_lines"><param name="Local" value="sample\root_cluster\word_counter.html#f_pnum_lines"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="pnum_words"><param name="Local" value="sample\root_cluster\word_counter.html#f_pnum_words"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_bytes"><param name="Local" value="sample\root_cluster\word_counter.html#f_total_bytes"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_chars"><param name="Local" value="sample\root_cluster\word_counter.html#f_total_chars"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_lines"><param name="Local" value="sample\root_cluster\word_counter.html#f_total_lines"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_words"><param name="Local" value="sample\root_cluster\word_counter.html#f_total_words"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="unique_words"><param name="Local" value="sample\root_cluster\word_counter.html#f_unique_words"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="word_counter"><param name="Local" value="sample\root_cluster\word_counter.html#f_word_counter"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="words_alphabetically_enumerator"><param name="Local" value="sample\root_cluster\word_counter.html#f_words_alphabetically_enumerator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="words_by_occurence_enumerator"><param name="Local" value="sample\root_cluster\word_counter.html#f_words_by_occurence_enumerator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="array"><param name="Local" value="sample\root_cluster\word_counter.html#f_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="console"><param name="Local" value="sample\root_cluster\word_counter.html#f_console"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="encoding"><param name="Local" value="sample\root_cluster\word_counter.html#f_encoding"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="environment"><param name="Local" value="sample\root_cluster\word_counter.html#f_environment"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="sample\root_cluster\word_counter.html#f_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="file"><param name="Local" value="sample\root_cluster\word_counter.html#f_file"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_error"><param name="Local" value="sample\root_cluster\word_counter.html#f_no_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="show_usage"><param name="Local" value="sample\root_cluster\word_counter.html#f_show_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string"><param name="Local" value="sample\root_cluster\word_counter.html#f_string"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="WORD_COUNT_ARG_PARSER"><param name="Local" value="sample\root_cluster\word_count_arg_parser_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="aphabetical_usage_showed"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_aphabetical_usage_showed"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="case_sensitive"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_case_sensitive"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="occurence_usage_showed"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_occurence_usage_showed"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="output_filename"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_output_filename"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="switches"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_switches"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="symbols"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_symbols"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="non_switch_value"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_non_switch_value"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_parse"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="pathname_enumerator"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_pathname_enumerator"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="process_post_parsing"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_process_post_parsing"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="switch_value"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_switch_value"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="usage"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="array"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_array"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="console"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_console"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="encoding"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_encoding"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="environment"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_environment"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="file"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_file"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="no_error"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_no_error"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="show_usage"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_show_usage"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="string"><param name="Local" value="sample\root_cluster\word_count_arg_parser.html#f_string"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="WORD_OCCURENCE"><param name="Local" value="sample\root_cluster\word_occurence_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="occurences"><param name="Local" value="sample\root_cluster\word_occurence.html#f_occurences"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="word"><param name="Local" value="sample\root_cluster\word_occurence.html#f_word"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="sample\root_cluster\word_occurence.html#f_compare_to"></OBJECT>
+		</UL>
+	</UL>

@@ -15,7 +15,8 @@ inherit
 		redefine
 			create_implementation,
 			create_action_sequences,
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 	EV_TEXT_FIELD
@@ -24,7 +25,8 @@ inherit
 		redefine
 			create_implementation,
 			create_action_sequences,
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 create
@@ -46,6 +48,15 @@ feature {NONE} -- Implementation
 		end
 
 	implementation: EV_SPIN_BUTTON_I
+
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := {EV_GAUGE} Precursor and then
+				{EV_TEXT_FIELD} Precursor
+		end
 
 end -- class EV_SPIN_BUTTON
 
@@ -70,6 +81,9 @@ end -- class EV_SPIN_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/15 16:33:52  brendel
+--| Added `is_in_default_state'.
+--|
 --| Revision 1.3  2000/02/14 11:40:53  oconnor
 --| merged changes from prerelease_20000214
 --|

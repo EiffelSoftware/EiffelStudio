@@ -109,6 +109,7 @@
 <item>
 						<bold>EV_COMBO_BOX</bold> - Fixed tooltips which were  never displayed.
 					</item>
+					<item><bold>EV_TOOL_BAR</bold> - Fixed resizing issue which caused it to overdraw its parent container. For example, placing an EV_TOOL_BAR directly inside a frame caused the bottom of the frame to be hidden.</item>
 				</list>
 			</item>
 			<item>

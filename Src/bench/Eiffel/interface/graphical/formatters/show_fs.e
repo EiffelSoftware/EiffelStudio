@@ -7,7 +7,8 @@ inherit
 	FORMATTER
 		redefine
 			dark_symbol
-		end
+		end;
+	SHARED_FORMAT_TABLES
 
 creation
 
@@ -38,14 +39,8 @@ feature {NONE}
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
-		local
-			ctxt: FORMAT_CONTEXT;
 		do
-			!!ctxt.make (c.class_c);
-			ctxt.set_in_bench_mode;
-			ctxt.set_is_short;
-			ctxt.execute;
-			text_window.process_text (ctxt.text);	
+			text_window.process_text (flatshort_context (c).text)
 		end
 
 end

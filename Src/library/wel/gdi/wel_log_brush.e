@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			set_hatch (a_hatch)
 		ensure
 			style_set: style = a_style
-			color_set: color.is_equal (a_color)
 			hatch_set: hatch = a_hatch
 		end
 

@@ -449,6 +449,12 @@ feature -- IL Generation
 			il_generation_started: il_generation_started
 		end
 
+	start_il_generation (type_id: INTEGER) is
+			-- Start code generation on class of type `type_id.
+		do
+			implementation.start_il_generation (type_id)
+		end
+
 	generate_feature_il (feature_id: INTEGER) is
 			-- Specifies for which feature of `feature_id' written in class of `type_id'
 			-- IL code will be generated.

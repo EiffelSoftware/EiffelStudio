@@ -140,6 +140,11 @@ feature {NONE} -- Initialization
 
 			initialized := False -- Reset the flag since initialization is not yet complete.
 			set_up_accelerators
+			
+				-- Create the toolbars.
+			build_toolbars_area
+			container.put_front (toolbars_area)
+			container.disable_item_expand (toolbars_area)
 
 				-- Update widgets visibilities
 			update

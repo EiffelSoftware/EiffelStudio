@@ -220,8 +220,8 @@ feature -- Events
 				lw2 := lw / 2
 				ax := (min_x - lw2).truncated_to_integer
 				ay := (min_y - lw2).truncated_to_integer
-				w := (max_x - min_x + lw).truncated_to_integer + 1
-				h := (max_y - min_y + lw).truncated_to_integer + 1
+				w := (max_x - min_x + lw).truncated_to_integer + 2
+				h := (max_y - min_y + lw).truncated_to_integer + 2
 				create Result.set (ax, ay, w, h)
 				internal_bounding_box := Result.twin
 			end

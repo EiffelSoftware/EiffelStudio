@@ -7,7 +7,6 @@ indexing
 deferred class
 	WIZARD_COCLASS_INTERFACE_PROCESSOR
 
-
 feature -- Access
 
 	coclass: WIZARD_COCLASS_DESCRIPTOR

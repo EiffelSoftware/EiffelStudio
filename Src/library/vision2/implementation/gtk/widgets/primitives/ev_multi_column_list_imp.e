@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
@@ -402,7 +401,7 @@ feature -- Access
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
 			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
+			-- `selected_items' for a single selection list.
 		local
 			i: INTEGER
 			an_index: INTEGER
@@ -446,7 +445,7 @@ feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN
 			-- True if the user can choose several items
-			-- False otherwise
+			-- False otherwise.
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
@@ -462,7 +461,7 @@ feature -- Status report
 feature -- Status setting
 
 	destroy is
-			-- Destroy screen widget implementation and EV_LIST_ITEM objects
+			-- Destroy screen widget implementation and EV_LIST_ITEM objects.
 		do
 			clear_items
 			{EV_PRIMITIVE_IMP} Precursor 
@@ -483,7 +482,7 @@ feature -- Status setting
 	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
-			-- For constants, see EV_GTK_CONSTANTS
+			-- For constants, see EV_GTK_CONSTANTS.
 		do
 			multiple_selection_enabled := True
 			if selection_mode_is_single then
@@ -502,7 +501,7 @@ feature -- Status setting
 	disable_multiple_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
-			-- For constants, see EV_GTK_CONSTANTS
+			-- For constants, see EV_GTK_CONSTANTS.
 		do
 			multiple_selection_enabled := False
 			selection_mode_is_single := True

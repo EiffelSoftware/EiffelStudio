@@ -16,10 +16,10 @@ inherit
 			implementation
 		end
 	
---	EV_PIXMAP_CONTAINER
---		redefine
---			implementation
---		end
+	EV_PIXMAP_CONTAINER
+		redefine
+			implementation
+		end
 
 	EV_MENU_ITEM_CONTAINER
 		redefine

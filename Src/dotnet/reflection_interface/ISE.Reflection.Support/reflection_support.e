@@ -146,9 +146,83 @@ feature -- Access
 			create_error (error_messages.No_type_description, error_messages.No_type_description_message)
 			retry
 		end
+
+feature -- Basic Operations
+
+	clean_assemblies is
+		indexing
+			description: "Remove read and write locks from the `assemblies' folder."
+			external_name: "CleanAssemblies"
+		local
+			xml_reader: SYSTEM_XML_XMLTEXTREADER
+			index_path: STRING
+			assembly_path: STRING
+			file: SYSTEM_IO_FILE
+			retried: BOOLEAN		
+		do
+			if not retried then
+				index_path := Eiffel_delivery_path
+				index_path := index_path.Concat_String_String_String_String (index_path, Assemblies_folder_path, dictionary.Index_filename, dictionary.Xml_extension)
+
+				create xml_reader.make_xmltextreader_10 (index_path)
+					-- WhitespaceHandling = None
+				xml_reader.set_WhitespaceHandling (2)
+				xml_reader.ReadStartElement_String (xml_elements.Assemblies_element)
+				from
+				until
+					not xml_reader.Name.Equals_String (xml_elements.Assembly_filename_element)
+				loop
+					assembly_path := xml_reader.ReadElementString_String (xml_elements.Assembly_filename_element)	
+					assembly_path := assembly_path.replace (Eiffel_key, Eiffel_delivery_path)
+					if support.has_read_lock (assembly_path) then
+						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.read_lock_filename))
+					elseif support.has_write_lock (assembly_path) then
+						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.write_lock_filename))	
+					end
+				end
+				xml_reader.ReadEndElement
+				xml_reader.Close
+			end
+		rescue
+			retried := True
+			retry
+		end
+	
+	clean_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		indexing
+			description: "Remove read and write locks from folder corresponding to `a_descriptor'."
+			external_name: "CleanAssembly"
+		local
+			assembly_path: STRING
+			file: SYSTEM_IO_FILE
+			retried: BOOLEAN		
+		do
+			if not retried then
+				assembly_path := Eiffel_delivery_path
+				assembly_path := assembly_path.concat_string_string (assembly_path, Assembly_folder_path_from_info (a_descriptor))
+				if support.has_read_lock (assembly_path) then
+					file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.read_lock_filename))
+				elseif support.has_write_lock (assembly_path) then
+					file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.write_lock_filename))	
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
 		
 feature {NONE} -- Implementation
 
+	support: CODE_GENERATION_SUPPORT is
+		indexing
+			description: "Support"
+			external_name: "Support"
+		once
+			create Result.make
+		ensure
+			support_created: Result /= Void
+		end
+			
 	Key: STRING is "ISE_EIFFEL"
 		indexing
 			description: "Environment variable for Eiffel delivery path"
@@ -171,6 +245,16 @@ feature {NONE} -- Implementation
 		indexing
 			description: "Filename of XML file describing the assembly"
 			external_name: "AssemblyDescriptionFilename"
+		end
+	
+	xml_elements: XML_ELEMENTS is
+		indexing
+			description: "XML elements"
+			external_name: "XmlElements"
+		once
+			create Result
+		ensure
+			elements_created: Result /= Void
 		end
 		
 end -- class REFLECTION_SUPPPORT

@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 					a_method_info ?= members.item (i)
 					if a_method_info /= Void then
 						a_feature := eiffel_class.routinefrominfo (a_method_info)
-						is_inherited := not (a_method_info.declaringtype.assemblyqualifiedname = a_type.assemblyqualifiedname)
+						is_inherited := not (a_method_info.basetype.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower))
 						if a_feature /= Void and then not features_table.contains (a_feature) then
 							features_table.add (a_feature.eiffelname, is_inherited)
 						end
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 						a_field_info ?= members.item (i)
 						if a_field_info /= Void then
 							a_feature := eiffel_class.attributefrominfo (a_field_info)
-							is_inherited := not (a_field_info.declaringtype.assemblyqualifiedname = a_type.assemblyqualifiedname)
+							is_inherited := not (a_field_info.basetype.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower))
 							if a_feature /= Void and then not features_table.contains (a_feature) then
 								features_table.add (a_feature.eiffelname, is_inherited)
 							end
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 								a_get_method_info := a_property_info.getgetmethod
 								if a_get_method_info /= Void then
 									a_get_feature := eiffel_class.routinefrominfo (a_get_method_info)
-									is_inherited := not (a_get_method_info.declaringtype.assemblyqualifiedname = a_type.assemblyqualifiedname)
+									is_inherited := not (a_get_method_info.basetype.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower))
 									if a_get_feature /= Void and then not features_table.contains (a_get_feature) then
 										features_table.add (a_get_feature.eiffelname, is_inherited)
 									end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 								a_set_method_info := a_property_info.getsetmethod
 								if a_set_method_info /= Void then
 									a_set_feature := eiffel_class.routinefrominfo (a_set_method_info)
-									is_inherited := not (a_set_method_info.declaringtype.assemblyqualifiedname = a_type.assemblyqualifiedname)
+									is_inherited := not (a_set_method_info.basetype.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower))
 									if a_set_feature /= Void and then not features_table.contains (a_set_feature) then
 										features_table.add (a_set_feature.eiffelname, is_inherited)
 									end

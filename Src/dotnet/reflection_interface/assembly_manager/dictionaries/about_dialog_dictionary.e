@@ -16,10 +16,10 @@ feature -- Access
 			external_name: "CompanyName"
 		end
 
-	Country: STRING is "USA"
+	Dotnet_web_address: STRING is "http://dotnetexperts.com"
 		indexing
-			description: "Company address: the country"
-			external_name: "Country"
+			description: ".NET experts Web address"
+			external_name: "DotnetWebAddress"
 		end
 		
 	Fax: STRING is "Fax.: (805)685-6869"
@@ -45,6 +45,12 @@ feature -- Access
 			description: "Label text middle center alignment"
 			external_name: "MiddleCenterAlignment"
 		end
+	
+	Powered_by_eiffel_sharp: STRING is "Powered by Eiffel#"
+		indexing
+			description: "Powered by Eiffel#"
+			external_name: "PoweredByEiffelSharp"
+		end
 		
 	Product_name: STRING is "ISE Assembly Manager (Version 1.0.0)"
 		indexing
@@ -64,7 +70,7 @@ feature -- Access
 			external_name: "Telephone"
 		end
 		
-	Town: STRING is "Goleta, CA 93117"
+	Town: STRING is "Goleta, CA 93117, USA."
 		indexing
 			description: "Company address: the town"
 			external_name: "Town"

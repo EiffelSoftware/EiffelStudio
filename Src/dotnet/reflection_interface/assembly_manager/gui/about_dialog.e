@@ -101,13 +101,14 @@ feature {NONE} -- Implementation
 			external_name: "DisplayText"
 		do
 			create_panel_label (dictionary.Product_name, 2 * dictionary.Margin, True)
-			create_panel_label (dictionary.Company_name, 4 * dictionary.Margin + dictionary.Label_height, False)
-			create_panel_label (dictionary.Street, 4 * dictionary.Margin + 2 * dictionary.Label_height, False)
-			create_panel_label (dictionary.Town, 4 * dictionary.Margin + 3 * dictionary.Label_height, False)
-			create_panel_label (dictionary.Country, 4 * dictionary.Margin + 4 * dictionary.Label_height, False)
+			create_panel_label (dictionary.Powered_by_eiffel_sharp, 3 * dictionary.Margin + dictionary.Label_height, True)
+			create_panel_label (dictionary.Company_name, 4 * dictionary.Margin + 2 * dictionary.Label_height, False)
+			create_panel_label (dictionary.Street, 4 * dictionary.Margin + 3 * dictionary.Label_height, False)
+			create_panel_label (dictionary.Town, 4 * dictionary.Margin + 4 * dictionary.Label_height, False)
 			create_panel_label (dictionary.Telephone, 4 * dictionary.Margin + 5 * dictionary.Label_height, False)		
 			create_panel_label (dictionary.Fax, 4 * dictionary.Margin + 6 * dictionary.Label_height, False)	
 			create_panel_label (dictionary.Web_address, 4 * dictionary.Margin + 7 * dictionary.Label_height, False)		
+			create_panel_label (dictionary.Dotnet_web_address, 4 * dictionary.Margin + 8 * dictionary.Label_height, True)		
 		end
 	
 	create_panel_label (a_text: STRING; y_position: INTEGER; is_bold_style: BOOLEAN) is

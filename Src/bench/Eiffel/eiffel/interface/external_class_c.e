@@ -1000,10 +1000,11 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if c.is_by_ref then
-					-- We need to create an instance of TYPED_POINTER here.
-				Result := new_typed_pointer (Result)
-			end
+-- FIXME: Manu 05/29/2003: Keep code below commented until we implement BYREF correctly.
+--			if c.is_by_ref then
+--					-- We need to create an instance of TYPED_POINTER here.
+--				Result := new_typed_pointer (Result)
+--			end
 		ensure
 			result_not_void: force_compilation implies Result /= Void
 		end

@@ -8,6 +8,9 @@ class
 
 inherit
 	EV_STOCK_PIXMAPS
+		rename
+			implementation as stock_pixmaps_implementation
+		end
 
 	EIFFEL_ENV
 		export

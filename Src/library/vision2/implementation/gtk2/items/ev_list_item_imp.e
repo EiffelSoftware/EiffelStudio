@@ -51,7 +51,7 @@ feature -- PND
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
-			--	parent_imp.update_pnd_connection (True)
+				parent_imp.update_pnd_connection (True)
 			end
 		end
 
@@ -59,8 +59,15 @@ feature -- PND
 		do
 			is_transport_enabled := False
 			if parent_imp /= Void then
-			--	parent_imp.update_pnd_status
+				parent_imp.update_pnd_status
 			end
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is the row able to transport data with `a_button' click.
+			-- (export status {EV_MULTI_COLUMN_LIST_IMP})
+		do
+			Result := is_transport_enabled and ((a_button = 1 and mode_is_drag_and_drop) or (a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
 		end
 
 	draw_rubber_band is

@@ -17,7 +17,7 @@ inherit
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
-	initialize (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER; is_byref, is_enum: BOOLEAN) is
+	initialize (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER; is_byref: BOOLEAN) is
 			-- Create EXTERNAL_TYPE_AS node
 		require
 			id_not_void: id /= Void

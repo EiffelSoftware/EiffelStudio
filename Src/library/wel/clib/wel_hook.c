@@ -72,7 +72,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 	DWORD dwMousePos;
 	MOUSEHOOKSTRUCT *pInfo = (MOUSEHOOKSTRUCT *) lParam;
 	RECT rect;
-	LRESULT retValue = 0;					// Regular case: forward message to window.
+	LRESULT retValue;						// Regular case: forward message to window.
 
 	if (hMouseHook == NULL) 				// We do not know our hook handle
 		return 0;
@@ -124,16 +124,12 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 				SendMessage(hHookWindow, Msg, 0, dwMousePos);
 				return 1;
 				}
-			else
-				{
-				/* The current window IS the window that
-				 * has requested the hook, we do not want
-				 * to duplicate the mouse message So we
-				 * ignore this message & tell the system
-				 * to pass it to the target window. */
-				return retValue;
-				}
-			break;
+			/* The current window IS the window that
+			 * has requested the hook, we do not want
+			 * to duplicate the mouse message So we
+			 * ignore this message & tell the system
+			 * to pass it to the target window. */
+			return retValue;
 
 		case WM_NCMOUSEMOVE:
 			SendMessage(hHookWindow, WM_MOUSEMOVE, 0, dwMousePos);

@@ -91,6 +91,7 @@ feature {NONE}
 						end;
 					end;
 					new_file.close;
+					text_window.clear_clickable;
 					text_window.set_changed (false);
 					if text_window.file_name = Void then
 						text_window.set_file_name (new_file.name);

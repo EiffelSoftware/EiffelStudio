@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -44,6 +43,9 @@ end -- class EV_TREE_ITEM_HOLDER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/07 00:28:36  rogers
+--| Removed --FIXME Not for release.
+--|
 --| Revision 1.12  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

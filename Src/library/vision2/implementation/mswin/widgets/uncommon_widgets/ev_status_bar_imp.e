@@ -18,7 +18,10 @@ inherit
 			set_parent
 		end
 
-	EV_ITEM_HOLDER_IMP
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
+		redefine
+			move_item
+		end
 
 	WEL_STATUS_WINDOW
 		rename
@@ -78,7 +81,7 @@ feature -- Access
 		end
 
 	count: INTEGER is
-			-- Number of children in the status bar.
+			-- Number of direct children of the holder.
 		do
 			Result := ev_children.count
 		end
@@ -111,10 +114,21 @@ feature -- Element change
 			end
 		end
 
-	add_item (an_item: EV_STATUS_BAR_ITEM_IMP) is
-			-- Add a new item to the status bar.
+	insert_item (item_imp: EV_STATUS_BAR_ITEM_IMP; index: INTEGER) is
+			-- Insert an item at `index' position
 		do
-			ev_children.extend (an_item)
+			ev_children.go_i_th (index)
+			ev_children.put_left (item_imp)
+			update_edges
+			update_texts
+		end
+
+	move_item (item_imp: like item_type; index: INTEGER) is
+			-- Move `item_imp' to the `index' position.
+		do
+			ev_children.prune_all (item_imp)
+			ev_children.go_i_th (index)
+			ev_children.put_left (item_imp)
 			update_edges
 			update_texts
 		end
@@ -125,6 +139,13 @@ feature -- Element change
 			ev_children.prune_all (an_item)
 			update_edges
 			update_texts
+		end
+
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			ev_children.wipe_out
+			update_edges
 		end
 
 feature -- Basic operation
@@ -138,6 +159,12 @@ feature -- Basic operation
 			set_text_part (idi, txt)
 		end
 
+	internal_get_index (item_imp: EV_STATUS_BAR_ITEM_IMP): INTEGER is
+			-- Return the index of `item' in the list.
+		do
+			Result := ev_children.index_of (item_imp, 1) - 1
+		end
+
 feature -- Implementation
 
 	update_edges is
@@ -147,34 +174,39 @@ feature -- Implementation
 			array: ARRAY [INTEGER]
 		do
 			clist := ev_children
-			if clist.last.width /= -1 then
-				!! array.make (1, clist.count + 1)
-				from
-					clist.start
-					array.put (clist.item.width, clist.index)
-					clist.forth
-				until
-					clist.after
-				loop
-					array.put (clist.item.width + array.item (clist.index - 1), clist.index)
-					clist.forth
-				end
-				array.put (-1, clist.count + 1)
+			if clist.empty then
+				set_simple_mode
+				set_simple_text ("")	
 			else
-				!! array.make (1, clist.count)
-				from
-					clist.start
+				if clist.last.width /= -1 then
+					!! array.make (1, clist.count + 1)
+					from
+						clist.start
+						array.put (clist.item.width, clist.index)
+						clist.forth
+					until
+						clist.after
+					loop
+						array.put (clist.item.width + array.item (clist.index - 1), clist.index)
+						clist.forth
+					end
+					array.put (-1, clist.count + 1)
+				else
+					!! array.make (1, clist.count)
+					from
+						clist.start
+						array.put (clist.item.width, clist.index)
+						clist.forth
+					until
+						clist.islast
+					loop
+						array.put (clist.item.width + array.item (clist.index - 1), clist.index)
+						clist.forth
+					end
 					array.put (clist.item.width, clist.index)
-					clist.forth
-				until
-					clist.islast
-				loop
-					array.put (clist.item.width + array.item (clist.index - 1), clist.index)
-					clist.forth
 				end
-				array.put (clist.item.width, clist.index)
+				set_parts (array)
 			end
-			set_parts (array)
 		end
 
 	update_texts is
@@ -194,6 +226,16 @@ feature -- Implementation
 			if number_of_parts > count then
 				set_text_part (number_of_parts - 1, "")
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	item_type: EV_STATUS_BAR_ITEM_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
+		do
 		end
 
 feature {NONE} -- WEL Implementation

@@ -200,7 +200,7 @@ feature -- Element change
 			System.set_current_class (current_class);
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TParsing & Registering class: ");
-	io.error.putstring (current_class.class_name);
+	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
 			current_ast := current_class_ast;
@@ -323,7 +323,7 @@ end;
 				ancestors.after
 			loop
 				current_class := ancestors.item;
-				inv_as ?= current_class.e_class.invariant_ast;
+				inv_as ?= current_class.invariant_ast;
 				if inv_as /= Void then
 					register_invariant (inv_as)
 				end;
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 			then
 debug ("FLAT_SHORT")
 	io.error.putstring ("Retrieving class ast: ");
-	io.error.putstring (current_class.class_name);
+	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
 				current_feature_table := current_class.feature_table;
@@ -443,7 +443,7 @@ end;
 			else
 debug ("FLAT_SHORT")
 	io.error.putstring ("Reparsing class ast: ");
-	io.error.putstring (current_class.class_name);
+	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
 				class_file_name := current_class.file_name;
@@ -502,7 +502,7 @@ end;
 				System.set_current_class (current_class);
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TParsing & Registering class: ");
-	io.error.putstring (current_class.class_name);
+	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
 				current_ast := current_class_ast;
@@ -531,7 +531,7 @@ end
 				l.after
 			loop
 				current_class := l.item;
-				inv_as ?= current_class.e_class.invariant_ast;
+				inv_as ?= current_class.invariant_ast;
 				if inv_as /= Void then
 					register_invariant (inv_as)
 				end;
@@ -572,11 +572,11 @@ end
 				debug ("COMMENTS")
 					if class_comments = Void then
 						io.error.putstring ("Comments not exist for class: ")
-						io.error.putstring (current_class.class_name);
+						io.error.putstring (current_class.name);
 						io.error.new_line;
 					else
 						io.error.putstring ("Comments for class: ")
-						io.error.putstring (current_class.class_name);
+						io.error.putstring (current_class.name);
 						io.error.new_line;
 						class_comments.trace
 					end;

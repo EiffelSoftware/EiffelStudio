@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 			item.set_data (Current)
 			item.pointer_motion_actions.force_extend (agent display_type)
 			item.set_pebble_function (agent generate_transportable)
+			item.drop_actions.extend (agent replace_layout_item (?))
+			item.drop_actions.set_veto_pebble_function (agent can_drop_object)
 		end
 
 feature -- Access

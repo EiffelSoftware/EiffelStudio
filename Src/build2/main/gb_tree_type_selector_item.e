@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 			create pixmaps
 			item.set_pixmap (pixmaps.pixmap_by_name (type.as_lower))
 			item.set_pebble_function (agent generate_transportable)
+			item.drop_actions.extend (agent replace_layout_item (?))
+			item.drop_actions.set_veto_pebble_function (agent can_drop_object)
 		end
 
 feature -- Access

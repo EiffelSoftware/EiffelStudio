@@ -18,7 +18,7 @@ mtlibs='-lsocket -lnsl -lm -ldl -lthread'
 
 optimize='-O'
 wkoptimize=''
-command_makefile='make'
+command_makefile='make -f'
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

@@ -1,7 +1,7 @@
 indexing
-	description	: "Process redefined features. Formulate the assertion id set for a feature."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Process redefined features. Formulate the assertion id set for a feature."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class REDEF_FEAT
 
@@ -63,17 +63,17 @@ feature {NONE} -- Implementation
 	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I) is
 			-- Update assert_id_set of `new_feat' from `features'.
 		require
-			valid_features		: features /= Void
-			features_not_empty	: not features.is_empty
-			valid_name			: new_feat /= Void
+			valid_features: features /= Void
+			features_not_empty: not features.is_empty
+			valid_name: new_feat /= Void
 		local
-			feat				: FEATURE_I
-			feat_body_index		: INTEGER
-			info				: INH_ASSERT_INFO
-			new_assert_id_set	: ASSERT_ID_SET
-			has_precondition	: BOOLEAN
-			feat_assert_id_set	: ASSERT_ID_SET
-			processed_features	: ARRAYED_LIST [INTEGER]
+			feat: FEATURE_I
+			feat_body_index: INTEGER
+			info: INH_ASSERT_INFO
+			new_assert_id_set: ASSERT_ID_SET
+			has_precondition: BOOLEAN
+			feat_assert_id_set: ASSERT_ID_SET
+			processed_features: ARRAYED_LIST [INTEGER]
 		do
 			if not new_feat.is_attribute then
 
@@ -102,7 +102,10 @@ feature {NONE} -- Implementation
 					feat_assert_id_set := feat.assert_id_set
 
 						-- Merge in inherited assertion info for this routine.
-					if feat_assert_id_set /= Void and then (not processed_features.has (feat_body_index)) then
+					if
+						feat_assert_id_set /= Void and then
+						not processed_features.has (feat_body_index)
+					then
 						new_assert_id_set.merge (feat_assert_id_set)
 						processed_features.extend (feat_body_index)
 					end

@@ -68,10 +68,6 @@ feature {NONE} -- Initialization
 			editor.drop_actions.extend (~on_stone_dropped)
 		end
 
-feature -- Access
-
-feature -- Measurement
-
 feature -- Status report
 
 	is_destroyed: BOOLEAN is
@@ -141,28 +137,6 @@ feature -- Status setting
 
 	--| FIXME XR: Maybe we should add advanced positioning methods (set_position, set_size,...).
 	--| FIXME XR: Anyway they wouldn't be used at the moment.
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 

@@ -34,6 +34,19 @@ void ca_zero(char *area, long int size)
 	memset (area, 0, size * sizeof(char));
 }
 
+void ca_int64 (char *area, EIF_INTEGER_64 val, long int strchr)
+{
+	/* Write long integer `val' in array of character `area', starting
+	 * at the index `index'. */
+
+	char *p;
+	int i;
+
+	p = (char *) &val;
+	for (i = 0; i < sizeof(EIF_INTEGER_64); i++)
+		*(area + i + index) = *p++;
+}
+
 void ca_wlong (char *area, long int val, long int strchr)
 {
 	/* Write long integer `val' in array of character `area', starting

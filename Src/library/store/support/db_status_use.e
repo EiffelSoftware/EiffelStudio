@@ -34,18 +34,7 @@ feature {NONE} -- Status report
 	is_ok: BOOLEAN is
 			-- Is last SQL statement ok ?
 		do
-			--if handle.status.is_ok_mat /= Void then
-			--	Result := handle.status.is_ok_mat or handle.status.error_code = 0
-			--else 
-			--end
 			Result := error_code = 0
-		end
-
-	is_ok_mat: BOOLEAN is
-			-- Is last SQL statement ok ?
-			-- Only for OODBMS (MATISSE)
-		do
-			Result := handle.status.is_ok_mat
 		end
 
 	error_message: STRING is

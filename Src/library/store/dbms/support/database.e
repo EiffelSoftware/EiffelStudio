@@ -15,14 +15,6 @@ feature
 
 feature -- For DATABASE_STATUS
 
-	is_ok_mat: BOOLEAN is
-			-- Is last SQL statement ok ?
-			-- Only for OODBMS (MATISSE)
-			-- The matisse handle is not yet implemented
-			-- using the genericity
-		deferred
-		end
-
 	is_error_updated: BOOLEAN is
 			-- Has a database function been called since last update which may have
 			-- updated error code, error message or warning message?

@@ -22,8 +22,6 @@ feature
 
 feature -- For DATABASE_STATUS
 
-	is_ok_mat: BOOLEAN
-	
 	is_error_updated: BOOLEAN
 			-- Has an Oracle function been called since last update which may have
 			-- updated error code, error message or warning message?

@@ -10,9 +10,9 @@ inherit
 
 	DB_STATUS_USE
 		export
-			{DB_STATUS} error_message, error_code, warning_message, is_ok_mat, reset
+			{DB_STATUS} error_message, error_code, warning_message, reset
 		redefine
-			error_message, error_code, warning_message, is_ok_mat, reset
+			error_message, error_code, warning_message, reset
 		end
 
 	HANDLE_SPEC [G]
@@ -44,13 +44,6 @@ feature -- Status report
 		do
 			create Result.make (10)
 			Result.from_c (db_spec.get_warn_message)
-		end
-
-	is_ok_mat: BOOLEAN is
-			-- Is last SQL statement ok?
-			-- Only for OODBMS (MATISSE)
-		do
-			Result := db_spec.is_ok_mat
 		end
 
 	found: BOOLEAN is

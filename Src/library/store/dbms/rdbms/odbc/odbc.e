@@ -36,8 +36,6 @@ feature
 
 feature -- For DATABASE_STATUS
 
-	is_ok_mat: BOOLEAN
-
 	is_error_updated: BOOLEAN
 			-- Has an ODBC function been called since last update which may have
 			-- updated error code, error message or warning message?
@@ -1234,8 +1232,5 @@ feature {NONE} -- External features
 		external
 			"C"
 		end
-
-invariant
-		test_false : is_ok_mat = False
 
 end -- class ODBC

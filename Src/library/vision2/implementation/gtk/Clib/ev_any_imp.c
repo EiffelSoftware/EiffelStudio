@@ -147,7 +147,8 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
             eif_reference =
                 c_ev_any_imp_get_eif_reference_from_object_id (c_object);
             g_assert (eif_reference != NULL);
-            eif_object = eif_protect (eif_reference);
+            //eif_object = eif_protect (eif_reference);
+		eif_object = c_ev_any_imp_get_eif_reference_from_object_id (c_object);
             gtk_object_set_data_full (
                 GTK_OBJECT (c_object),
                 "eif_object",
@@ -156,7 +157,7 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
             );
     
             if (c_ev_any_imp_eif_object_references_c_object (c_object)) {
-                gtk_object_unref (GTK_OBJECT (c_object));
+//                gtk_object_unref (GTK_OBJECT (c_object));
                 gtk_object_remove_data (
                     GTK_OBJECT (c_object),
                     "ref_from_eif"
@@ -189,7 +190,7 @@ void c_ev_any_imp_set_eiffel_controls_object_life (GtkWidget* c_object)
             g_assert (! c_ev_any_imp_eif_object_references_c_object (c_object));
     // do
             gtk_object_remove_data (GTK_OBJECT (c_object), "eif_object");
-            gtk_object_ref (GTK_OBJECT (c_object));
+ //           gtk_object_ref (GTK_OBJECT (c_object));
             gtk_object_set_data (
                 GTK_OBJECT (c_object),
                 "ref_from_eif",
@@ -284,6 +285,7 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
 				);
 				g_assert (GTK_OBJECT (c_object)->ref_count == 2);
             } else {
+//gtk_object_ref (GTK_OBJECT (c_object));
                 gtk_signal_connect (
                     GTK_OBJECT (c_object),
                     "parent-set",
@@ -316,7 +318,7 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 rt_private void c_eif_wean (gpointer data)
 	/* Call `eif_wean' on Eiffel object represented by `data'. */
 {
-	(void) eif_wean ((EIF_OBJECT) data);
+//	(void) eif_wean ((EIF_OBJECT) data);
 }
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
@@ -339,6 +341,9 @@ rt_private void c_eif_wean (gpointer data)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.10  2001/09/17 00:26:04  king
+// All mem man is now done via Eiffel GC
+//
 // Revision 1.9  2001/08/08 16:51:35  manus
 // Avoid a useless local variable declaration.
 //

@@ -337,7 +337,7 @@ feature -- Update
 			-- Analyze the options entered by the user.
 		do
 					-- Default Project Options
-			Project_directory_name.set_directory (clone (Execution_environment.current_working_directory))
+			Project_directory_name.set_directory (Execution_environment.current_working_directory)
 			from
 				current_option := 1
 			until

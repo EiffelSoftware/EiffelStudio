@@ -1,12 +1,12 @@
-/**********************************************
-
-EiffelVision/GTK 
-
-external C library
-					       
-  Date: 5/22/98
-
-**************************************** */
+/***************************
+ *			   *		     
+ *   EiffelVision/GTK      *
+ *                         *
+ *   external C library    *
+ *			   *	       
+ *   Date: 5/22/98         *
+ *                         *
+ ***************************/
 
 #include "gtk_eiffel.h"
 #include "gdk_eiffel.h"
@@ -15,6 +15,11 @@ external C library
 static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
 					      gpointer   client_data);
 
+/*********************************
+ *
+ * Function `c_free_call_back_block'
+ *
+ *********************************/
 
 void c_free_call_back_block (callback_data_t *p) 
 {
@@ -22,15 +27,29 @@ void c_free_call_back_block (callback_data_t *p)
 	free (p);
 }
 
-/* Pass command line arguments to the GTK initialization code */
-/* In ISE's runtime there are references to these in "argv.h" */
+/*********************************
+ *
+ * Function `c_gtk_init_toolkit'
+ *
+ * Note : Pass command line arguments to the GTK initialization code
+ *       In ISE's runtime there are references to these in "argv.h"
+ *
+ *********************************/
+
 void c_gtk_init_toolkit () 
 {
     gtk_init (&eif_argc, &eif_argv);
 }
 
-/* This function is actually called when the event occurs */
-/* and it in turn calls Eiffel.                            */
+/*********************************
+ *
+ * Function `c_signal_callback'
+ *
+ * Note : This function is actually called when the event occurs
+ *        and it in turn calls Eiffel.       
+ *
+ *********************************/
+
 void c_signal_callback (GtkObject *w, gpointer data) 
 {
     callback_data_t *pcbd;
@@ -40,9 +59,16 @@ void c_signal_callback (GtkObject *w, gpointer data)
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
 }
 
-/* This function is actually called when the event occurs */
-/* and it in turn calls Eiffel.                            */
-/* This function is called for signals named "*_event".  XXXX */
+/*********************************
+ *
+ * Function `c_event_callback'
+ *
+ * Note : This function is actually called when the event occurs
+ *        and it in turn calls Eiffel.
+ *        This function is called for signals named "*_event".     
+ *
+ *********************************/
+
 void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data) 
 {
     callback_data_t *pcbd;
@@ -73,7 +99,14 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 }
 
 
-/* Function to call when signal is disconnected */
+/*********************************
+ *
+ * Function `c_gtk_signal_destroy_data'
+ *
+ * Note : Function to call when signal is disconnected
+ *
+ *********************************/
+
 void c_gtk_signal_destroy_data (gpointer data)
 {
     callback_data_t *pcbd;
@@ -87,26 +120,35 @@ void c_gtk_signal_destroy_data (gpointer data)
 }
 
 
-/* Connect a callback to a widget/event pair 
+/*********************************
+ *
+ * Function `c_gtk_signal_connect'
+ *
+ * Note : Connect a callback to a widget/event pair 
+ *  
+ * > widget = gtk widget
+ * > name = name of the signal
+ * > execute_func = address of eiffel routine execute in class EV_COMMAND
+ * > object = eiffel object of type EV_COMMAND
+ * > argument = object of type EV_ARGUMENTS which will be passed to 
+ *   object.execute when it is executed
+ * > ev_data = object of type EV_EVENT_DATA. The fields of this object are
+ *   filled in 'event_data_rtn' which is called in 'c_event_callback' 
+ *   according to the C(gdk) event struct
+ *
+ * > mouse_button = number of mouse button. Only applicable in button events.
+ * > double_click = tells whether we are interested in double click events.
+ *   Only applicable in button events.
+ *
+ * > argument can be NULL which means that there is no arguments for
+ *   execute (the corresponding ev_data can be NULL which means that event
+ *   data is not needed for this event
+ *
+ * Note2: This function handles both gtk events and gtk signals. It
+ * should be separated
+ *
+ *********************************/
 
-   widget = gtk widget
-   name = name of the signal
-   execute_func = address of eiffel routine execute in class EV_COMMAND
-   object = eiffel object of type EV_COMMAND
-   argument = object of type EV_ARGUMENTS which will be passed to object.execute when it is executed
-   ev_data = object of type EV_EVENT_DATA. The fields of this object are filled in 'event_data_rtn' which is called in 'c_event_callback' according to the C(gdk) event struct
-
-   mouse_button = number of mouse button. Only applicable in button events.
-   double_click = tells whether we are interested in double click events. Only applicable in button events.
-
-   argument can be NULL which means that there is no arguments for excute (the corresponding
-   ev_data can be NULL which means that event data is not needed for this event
-
-   
-   Note: This function handles both gtk events and gtk signals. It
-   should be separated
-
-*/
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
@@ -153,8 +195,14 @@ gint c_gtk_signal_connect (GtkObject *widget,
 				(gpointer)pcbd));
 }
 
+/*********************************
+ *
+ * Function `c_gtk_signal_disconnect'
+ *
+ * Note :  Disconnect a call back of a widget/event pair
+ *
+ *********************************/
 
-/* Disconnect a call back of a widget/event pair */
 void c_gtk_signal_disconnect (GtkObject *widget, 
 			      EIF_PROC func,
 			      EIF_OBJ object,
@@ -170,18 +218,39 @@ void c_gtk_signal_disconnect (GtkObject *widget,
     gtk_signal_disconnect_by_data (widget, (gpointer)&cbd);
 }
 
-/* True, if widget is destroyed */
+/*********************************
+ *
+ * Function `c_gtk_widget_destroyed'
+ *
+ * Note : True, if widget is destroyed
+ *
+ *********************************/
+
 int c_gtk_widget_destroyed (GtkWidget *widget)
 {
     return (GTK_OBJECT_DESTROYED (GTK_OBJECT (widget)));
 }
 
+/*********************************
+ *
+ * Function `c_gtk_widget_set_flags'
+ *
+ * Note : Set widget flags
+ *
+ *********************************/
 
-/* Set widget flags */
 void c_gtk_widget_set_flags (GtkWidget *widget, int flags) 
 {
     GTK_WIDGET_SET_FLAGS (widget, flags);
 }
+
+/*********************************
+ *
+ * Function `c_gtk_widget_visible'
+ *
+ * Note :
+ *
+ *********************************/
 
 EIF_BOOLEAN c_gtk_widget_visible (GtkWidget *w) 
 {
@@ -193,54 +262,107 @@ EIF_BOOLEAN c_gtk_widget_visible (GtkWidget *w)
     return (0);*/
 }
 
-/*  
-    c_gtk_widget_realized  (GtkWidget *w) 
+/*********************************
+ *
+ * Function `c_gtk_widget_realized'
+ *
+ * Note : Is widget realised
+ *
+ * Author : Samik
+ *
+ *********************************/
 
-    Is widget realised
-    Author: samik
-*/
 EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w) 
 {
     return (GTK_WIDGET_REALIZED(w));
 }
 
-/*  
-    c_gtk_widget_sensitive  (GtkWidget *w) 
+/*********************************
+ *
+ * Function `c_gtk_widget_sensitive'
+ *
+ * Note : Is widget sensitive
+ *
+ * Author : Samik
+ *
+ *********************************/
 
-   Is widget sensitive
-    Author: samik
-*/
 EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w) 
 {
     return (GTK_WIDGET_SENSITIVE(w));
 }
 
-/*  
-    the width of widget
-    Author: samik
-*/
+/*********************************
+ *
+ * Function `c_gtk_widget_x'
+ *          `c_gtk_widget_y'
+ *
+ * Note : Return the x and y coordinates of a widget
+ * Note2 : The gtk function sent an `signed short' (gint16), but it 
+ *         seems compatible with the EIF_INTEGER.
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+EIF_INTEGER c_gtk_widget_x (GtkWidget *w) 
+{
+  if (!GTK_WIDGET_VISIBLE (w))
+    gtk_widget_size_allocate (w, &w->allocation);
+  return (GTK_WIDGET(w)->allocation.x);
+}
+
+EIF_INTEGER c_gtk_widget_y (GtkWidget *w) 
+{
+  if (!GTK_WIDGET_VISIBLE (w))
+    gtk_widget_size_allocate (w, &w->allocation);
+  return (GTK_WIDGET(w)->allocation.y);
+}
+
+/*********************************
+ *
+ * Function `c_gtk_widget_width'
+ *          `c_gtk_widget_height'
+ *
+ * Note : Return the width and the height of a widget
+ *
+ * Author : Samik
+ *
+ *********************************/
+
 EIF_INTEGER c_gtk_widget_width (GtkWidget *w) 
 {
-    GtkRequisition r;
-    gtk_widget_size_request (w, &r);
-    return r.width;
+  //  GtkRequisition r;
+   //  gtk_widget_size_request (w, &r);
+   //  return r.width;
+   //    return (GTK_WIDGET(w)->requisition.width);
+  if (!GTK_WIDGET_VISIBLE (w))
+    gtk_widget_queue_resize (w);
+  return (GTK_WIDGET(w)->allocation.width);
 }
 
-/*  
-    the height of widget
-    Author: samik
-*/
 EIF_INTEGER c_gtk_widget_height (GtkWidget *w) 
 {
-    GtkRequisition r;
-    gtk_widget_size_request (w, &r);
-    return r.height;
+  //   GtkRequisition r;
+   //gtk_widget_size_request (w, &r);
+  // return r.height;
+  //return (GTK_WIDGET(w)->requisition.height);
+  if (!GTK_WIDGET_VISIBLE (w))
+    gtk_widget_queue_resize (w);
+   return (GTK_WIDGET(w)->allocation.height);
 }
 
-/*  
-    the minimum width of widget
-    Author: samik
-*/
+/*********************************
+ *
+ * Function `c_gtk_widget_minimum_width'
+ *          `c_gtk_widget_minimum_height'
+ *
+ * Note : Return the minimum width and height of a widget
+ *
+ * Author : Samik
+ *
+ *********************************/
+
 EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w) 
 {
     GtkRequisition r;
@@ -248,10 +370,6 @@ EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w)
     return r.width;
 }
 
-/*  
-    the mimimum height of widget
-    Author: samik
-*/
 EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w) 
 {
     GtkRequisition r;
@@ -259,9 +377,16 @@ EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w)
     return r.height;
 }
 
-/* 
-   Allocates the widget size
-*/
+/*********************************
+ *
+ * Function `c_gtk_widget_set_size'
+ *
+ * Note : Allocates the widget size
+ *
+ * Author : Samik
+ *
+ *********************************/
+
 void c_gtk_widget_set_size (GtkWidget *w, int width, int height) 
 {
     GtkAllocation a;
@@ -271,8 +396,14 @@ void c_gtk_widget_set_size (GtkWidget *w, int width, int height)
     gtk_widget_size_allocate (w, &a);
 }
 
+/*********************************
+ *
+ * Function `c_toolbar_callback'
+ *
+ * Note : Call back for toolbar buttons
+ *
+ *********************************/
 
-/* Call back for toolbar buttons */
 void c_toolbar_callback (GtkObject *w, gpointer data) 
 {
     callback_data_t *cbd;
@@ -282,9 +413,14 @@ void c_toolbar_callback (GtkObject *w, gpointer data)
     (cbd->rtn)(cbd->obj);
 }
 
+/*********************************
+ *
+ * Function `c_gtk_toolbar_append_item'
+ *
+ * Note : Call back for buttons on a tool bar
+ *
+ *********************************/
 
-
-/* Call back for buttons on a tool bar */
 void c_gtk_toolbar_append_item (GtkToolbar *toolbar, 
 				const char *text, 
 				const char *tip,
@@ -304,27 +440,33 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 			     (GtkSignalFunc)c_toolbar_callback, cbd);
 }
 						   
+/*********************************
+ *
+ * Function : `c_gtk_widget_get_name'
+ *            `c_gtk_widget_set_name'
+ *
+ * Note : respectively returns and set  widget name 
+ *
+ *********************************/
 
-
-/*samik*/
-
-				/* return widget name */
 EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget)
 {
     return RTMS (gtk_widget_get_name (widget));
 }
 
-				/* set widget name */
 void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name)
 {
     gtk_widget_set_name (widget, name);
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_create_message_d_buttons'
+ *
+ * Note : Create message dialog buttons
+ *
+ *********************************/
 
-				/* message dialog */
-
-
-				/* Create message dialog buttons */
 void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
 				     GtkWidget *cancel, GtkWidget *help)
 {
@@ -336,19 +478,29 @@ void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
 			TRUE, TRUE, 0);
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_create_message_d_label'
+ *
+ * Note : Message dialog text
+ *
+ *********************************/
 
-				/* Message dialog text */
 void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label)
 {
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, TRUE,
 			TRUE, 0);
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_create_button_with_label'
+ *
+ * out : label_widget pointer to buttons label widget
+ * in  : label_text  text of label
+ *
+ *********************************/
 
-/* 
-   out: label_widget pointer to buttons label widget
-   in: label_text  text of label
- */
 /*GtkWidget* c_gtk_create_button_with_label (GtkWidget *label_widget,
 					  const gchar *label_text)
 {
@@ -365,10 +517,15 @@ void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label)
 }
 */
 
-/*
-  Returns the label widget of button. 
-  There has to be only a label inside the widget.
-*/
+/*********************************
+ *
+ * Function : `c_gtk_get_label_widget'
+ *
+ * Note : Returns the label widget of button. 
+ *        There has to be only a label inside the widget.
+ *
+ *********************************/
+
 GtkWidget* c_gtk_get_label_widget (GtkWidget *widget)
 {
     GList            *glist;
@@ -377,25 +534,35 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *widget)
     return GTK_WIDGET( glist->data );
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_get_text_length'
+ *            `c_gtk_get_text_max_lenght'
+ *
+ * Note : The length of the string in text widget.
+ *        The maximum length of string in text widget.
+ *
+ *********************************/
 
-				/* Text */
-
-/* The length of the string in text widget */
 int c_gtk_get_text_length (GtkWidget* text)
 {
     return GTK_ENTRY (text)->text_length;
 }
 
-/* The maximum length of string in text widget */
 int c_gtk_get_text_max_length (GtkWidget* text)
 {
     return GTK_ENTRY (text)->text_max_length;
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_widget_show_children'
+ *
+ * Note : Show the children of widget recursively
+ *
+ *********************************/
 
-/* Show the children of widget recursively */
-void
-c_gtk_widget_show_children (GtkWidget *widget)
+void c_gtk_widget_show_children (GtkWidget *widget)
 {
     g_return_if_fail (widget != NULL);
     
@@ -405,23 +572,40 @@ c_gtk_widget_show_children (GtkWidget *widget)
 			       NULL);
 }
 
-/* Toggle button */
+/*********************************
+ *
+ * Function : `c_gtk_toggle_button_active'
+ *
+ * Note : Return a state of a toggle button
+ *
+ *********************************/
 
-/* Return a state of a toggle button */
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button) 
 {
     return (GTK_TOGGLE_BUTTON(button)->active);
 }
 
-				/* Pixmap */
-				
-/* Data for empty pixmap of size 1x1 */
+/*********************************
+ *
+ * Data : `xpm_data'
+ *
+ * Note : Data for empty pixmap of size 1x1
+ *
+ *********************************/
+
 static char * xpm_data[] = {
       "1 1 1 1",
       "       c None",
       " "};
 
-/* Create an empty pixmap */
+/*********************************
+ *
+ * Function : `c_gtk_pixmap_create_empty'
+ *
+ * Note : Create an empty pixmap
+ *
+ *********************************/
+
 GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget)
 {
     GdkBitmap *mask;
@@ -437,9 +621,15 @@ GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget)
     return (gtk_pixmap_new (pixmap, mask));
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_pixmap_create_from_xpm'
+ *
+ * Note : Create a pixmap widget from an xpm file
+ *        file must exist an be in xpm format
+ *
+ *********************************/
 
-/* Create a pixmap widget from an xpm file */
-/* file must exist an be in xpm format */
 GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname) 
 {
     GdkBitmap *mask;
@@ -455,8 +645,15 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
     return (gtk_pixmap_new (pixmap, mask));
 }
 
-/* Read the pixmap for xpm file */
-/* file must exist an be in xpm format */
+/*********************************
+ *
+ * Function : `c_gtk_pixmap_read_from_xpm'
+ *
+ * Note : Read the pixmap for xpm file
+ *        file must exist an be in xpm format
+ *
+ *********************************/
+
 void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name )
@@ -474,10 +671,16 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
     gtk_pixmap_set (pixmap, gdk_pixmap, mask);
 }
 
-				/* List */
-
-/* Add a listItem in a list. The item is first added in a Glist and then,
- * the Glist is added to the list. */
+/*********************************
+ *
+ * Function : `c_gtk_add_list_item'
+ *
+ * Note : Add a listItem in a list. The item is first added in a Glist,
+ *        then the Glist is added to the list.
+ *
+ * Author : Leila
+ *
+ *********************************/
 
 void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
 {
@@ -489,9 +692,15 @@ void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
 	gtk_widget_show(item);
 }
 
-				/* static functions */
-static void
-c_gtk_widget_show_children_recurse (GtkWidget *widget,
+/*********************************
+ *
+ * Function : `c_gtk_widget_show_children_recurse'
+ *
+ * Note : static functions
+ *
+ *********************************/
+
+static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
                                   gpointer   client_data)
 {
     gtk_widget_show (widget);

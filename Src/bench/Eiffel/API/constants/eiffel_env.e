@@ -6,7 +6,8 @@ class EIFFEL_ENV
 inherit
 
 	SYSTEM_CONSTANTS;
-	SHARED_EXEC_ENVIRONMENT
+	SHARED_EXEC_ENVIRONMENT;
+	SHARED_RESOURCES
 	
 feature {NONE}
 
@@ -75,19 +76,26 @@ feature {NONE}
 
 	filter_path: STRING is
 		local
-			c: CHARACTER
+			c: CHARACTER;
+			temp: STRING
 		once
+			c := Directory_separator;
 			Result := Execution_environment.get ("EIF_FILTER_PATH");
 			if Result = Void or else Result.empty then
 					-- EIF_FILTER_PATH was not set.
-				c := Directory_separator;
-				!!Result.make (50); 
-				Result.append (Eiffel3_dir_name);
-				Result.extend (c);
-				Result.append ("bench");
-				Result.extend (c);
-				Result.append ("filters");
-				Result.extend (c)
+				!!temp.make (50); 
+				temp.append (Eiffel3_dir_name);
+				temp.extend (c);
+				temp.append ("bench");
+				temp.extend (c);
+				temp.append ("filters")
+				Result := resources.get_string (r_Filter_path, temp);
+				if Result.empty then
+					result := temp
+				end
+			end;
+			if Result.item (Result.count) /= c then
+				 Result.extend (c)
 			end
 		end;
 end

@@ -526,6 +526,8 @@ feature {NONE} -- Implementation
 			second := objects @ 2
 			second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end
 		
 	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
@@ -537,6 +539,8 @@ feature {NONE} -- Implementation
 			second := objects @ 2
 			second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end
 		
 	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
@@ -548,6 +552,8 @@ feature {NONE} -- Implementation
 			second := objects @ 2
 			second.set_item_width (second @ first.index_of (widget, 1), new_width)
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end
 		
 	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
@@ -559,6 +565,8 @@ feature {NONE} -- Implementation
 			second := objects @ 2
 			second.set_item_height (second @ first.index_of (widget, 1), new_height)
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end	
 		
 

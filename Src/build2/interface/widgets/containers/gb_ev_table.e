@@ -587,6 +587,8 @@ feature {NONE} -- Implementation
 			(objects @ 2).set_item_span (second_widget, columns, rows)
 				-- Flag that notification is required for all corresponding editors.
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
@@ -602,6 +604,8 @@ feature {NONE} -- Implementation
 			(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
 				-- Flag that notification is required for all corresponding editors.
 			must_update_editors := True
+				-- Update project.
+			enable_project_modified
 		end
 		
 

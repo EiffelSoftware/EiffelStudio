@@ -307,7 +307,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 /*	long saved_objectCount = objectCount;
 
 	if (objectCount == 0)
-		eiffel_panic("no object to retrieve");*/
+		eif_panic("no object to retrieve");*/
 #endif
 	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
@@ -408,15 +408,15 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 			if (
 					rt_info->rt_status == UNSOLVED &&
 					rt_info->rt_list != (struct rt_cell *) 0) {
-				eiffel_panic("retrieve incomplete");
+				eif_panic("retrieve incomplete");
 			}
 			if (rt_info->rt_status == SOLVED)
 				nb_retrieved++;
 		}
 		if (nb_retrieved != saved_objectCount)
-			eiffel_panic("retrieve failure");
+			eif_panic("retrieve failure");
 		if (saved_objectCount != nomark(newadd))
-			eiffel_panic("retrieve inconsistecy");
+			eif_panic("retrieve inconsistecy");
 	} */
 #endif
 	return newadd;
@@ -641,7 +641,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 /*	long saved_objectCount = objectCount;
 
 	if (objectCount == 0)
-		eiffel_panic("no object to retrieve");*/
+		eif_panic("no object to retrieve");*/
 #endif
 	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
@@ -699,7 +699,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 				for (;;) {
 #if DEBUG & 1
 					if (*gt_type == SK_INVALID)
-						eiffel_panic("corrupted cecil table");
+						eif_panic("corrupted cecil table");
 #endif
 					if ((*gt_type++ & SK_DTYPE) == (int16) spec_type)
 						break;
@@ -808,15 +808,15 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 			if (
 					rt_info->rt_status == UNSOLVED &&
 					rt_info->rt_list != (struct rt_cell *) 0) {
-				eiffel_panic("retrieve incomplete");
+				eif_panic("retrieve incomplete");
 			}
 			if (rt_info->rt_status == SOLVED)
 				nb_retrieved++;
 		}
 		if (nb_retrieved != saved_objectCount)
-			eiffel_panic("retrieve failure");
+			eif_panic("retrieve failure");
 		if (saved_objectCount != nomark(newadd))
-			eiffel_panic("retrieve inconsistecy");
+			eif_panic("retrieve inconsistecy");
 	} */
 #endif
 	return newadd;
@@ -904,7 +904,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJ new)
 
 #ifdef MAY_PANIC
 	if (rt_info->rt_status == SOLVED)
-		eiffel_panic("cannot already be solved");
+		eif_panic("cannot already be solved");
 #endif
 
 	/* First, solve references if any. */
@@ -921,7 +921,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJ new)
 			rt_solved == (struct rt_struct *) 0
 			|| rt_solved->rt_status != SOLVED
 		)
-			eiffel_panic("should be solved");
+			eif_panic("should be solved");
 #endif
 
 		/* Attachement to hector pointer dereference */
@@ -1342,7 +1342,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		if (num_attrib == System(new_dtype).cn_nbattr) {
 			int i, chk_attrib = num_attrib;
 
-			if (num_attrib != 0) {			/* Only eiffel_malloc memory and process if 
+			if (num_attrib != 0) {			/* Only eif_malloc memory and process if 
 								 * the object has attributes.
 								 */
 				attrib_order = (int *) xmalloc (num_attrib * sizeof (int), C_T, GC_OFF);
@@ -1917,7 +1917,7 @@ rt_private void object_read (char *object, char *parent)
 				for (;;) {
 #if DEBUG & 1
 					if (*gt_type == SK_INVALID)
-						eiffel_panic("corrupted cecil table");
+						eif_panic("corrupted cecil table");
 #endif
 					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
 						break;

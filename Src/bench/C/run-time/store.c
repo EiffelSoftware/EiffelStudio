@@ -763,7 +763,7 @@ rt_private void object_write(char *object)
 				for (;;) {
 #if DEBUG &1
 					if (*gt_type == SK_INVALID)
-						eiffel_panic("corrupted cecil table");
+						eif_panic("corrupted cecil table");
 #endif
 					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
 						break;
@@ -952,7 +952,7 @@ rt_private void make_header(EIF_CONTEXT_NOARG)
 			for (;;) {
 #if DEBUG &1
 				if (*gt_type == SK_INVALID)
-					eiffel_panic("corrupted cecil table");
+					eif_panic("corrupted cecil table");
 #endif
 				if ((*gt_type++ & SK_DTYPE) == (int16) i)
 					break;
@@ -1126,7 +1126,7 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 			for (;;) {
 #if DEBUG &1
 				if (*gt_type == SK_INVALID)
-					eiffel_panic("corrupted cecil table");
+					eif_panic("corrupted cecil table");
 #endif
 				if ((*gt_type++ & SK_DTYPE) == (int16) i)
 					break;

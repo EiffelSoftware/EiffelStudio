@@ -367,7 +367,7 @@ rt_public EIF_OBJ hector_addr(char *root)
 				return (EIF_OBJ) arena;				/* Return indirection ptr */
 	}
 
-	eiffel_panic(MTC "hector stack inconsistency");		/* We must have found it */
+	eif_panic(MTC "hector stack inconsistency");		/* We must have found it */
 	/* NOTREACHED */
 	return 0; /* to avoid a warning */
 	EIF_END_GET_CONTEXT

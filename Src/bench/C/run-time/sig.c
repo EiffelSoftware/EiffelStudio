@@ -111,7 +111,7 @@ rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 
 	if (esigblk) {					/* Signals are blocked */
 		if (dangerous(sig))			/* Harmful signal in critical section */
-			eiffel_panic(MTC "unexpected harmful signal");
+			eif_panic(MTC "unexpected harmful signal");
 		spush(sig);					/* Record sig on FIFO stack */
 		return;						/* That's all for now */
 	}
@@ -520,7 +520,7 @@ rt_private void spush(int sig)
 #endif
 
 	if (sig_stk.s_max == sig_stk.s_min)
-		eiffel_panic(MTC "signal stack overflow");
+		eif_panic(MTC "signal stack overflow");
 	
 	/* We do not stack multiple consecutive occurences of the same signal (the
 	 * kernel doesn't do that anyway), and "dangerous" signals raise a panic
@@ -528,7 +528,7 @@ rt_private void spush(int sig)
 	 */
 	if (dangerous(sig) && esig[sig] == (Signal_t (*)(int)) 0) { /* %%ss added cast int */
 		sprintf(desc, "%s", signame(sig));	/* Translate into English name */
-		eiffel_panic(MTC desc);						/* And raise a run-time eiffel_panic */
+		eif_panic(MTC desc);						/* And raise a run-time eif_panic */
 	} else {
 		int last = (sig_stk.s_max ? sig_stk.s_max : SIGSTACK) - 1;
 		if (sig == sig_stk.s_buf[last])
@@ -1111,7 +1111,7 @@ rt_private int bufstate(void)
 }
 
 /* Functions not provided here */
-rt_public void eiffel_panic(char *s)
+rt_public void eif_panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);

@@ -21,14 +21,14 @@ rt_public EIF_POINTER file_def(int file)
 	 *       0 : standard input file descriptor
 	 *       1 : standard output file descriptor
 	 *       2 : standard error file descriptor
-	 *      otherwise : eiffel_panic
+	 *      otherwise : eif_panic
 	 */
 
 	switch (file) {
 	case 0: return (EIF_POINTER) stdin;
 	case 1: return (EIF_POINTER) stdout;
 	case 2: return (EIF_POINTER) stderr;
-	default: eiffel_panic(MTC "invalid file request");
+	default: eif_panic(MTC "invalid file request");
 	}
 
 	/* NOTREACHED */

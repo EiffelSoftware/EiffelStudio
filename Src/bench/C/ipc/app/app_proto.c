@@ -451,7 +451,7 @@ rt_private void inspect(int s, Opaque *what)
 		val = ivalue(MTC IV_RESULT,0);		/* %%zs misuse, added ",0" */
 		break;
 	default:
-		eiffel_panic("BUG inspect");
+		eif_panic("BUG inspect");
 	}
 
 	if (what->op_first != IN_ADDRESS)	/* Not an address request */
@@ -492,7 +492,7 @@ rt_private void once_inspect(int s, Opaque *what)
 														/* arguments to be passed */
 		break;
 	default:
-		eiffel_panic("BUG once inspect");
+		eif_panic("BUG once inspect");
 	}
 }
 

@@ -9,13 +9,16 @@
 
 	Malloc library functions.
 
-	This file is intended to be linked with an Eiffel application which
-	uses external C software (object files or libraries like X11 or curses).
-	This way, the eiffel_malloc() used implemented here will be the one from the Eiffel run-time.
-	Manuelt.
+  This file provides an Eiffel implementation of malloc, calloc, realloc,
+  an free which are eif_malloc, eif_calloc, eif_realloc,. and
+  eif_free but only for the Unix/Linux platforms in NON-multithreaded 
+  mode. The other platforms call the features provided in the C library
+ (malloc, realloc ...). For VXWORKS, we are not supposed to link this file
+ to the run-time but we can do this to performing test for us ( but don't
+ forget to remove it in the delivery to HP (the HP's engineers have their
+  own malloc, ... we do not have, so we call our malloc in the C library).
+  Manuelt.
 */
-
-#ifndef EIF_THREADS
 
 #include "eif_config.h"
 #include "eif_portable.h"
@@ -40,8 +43,35 @@ rt_private char *rcsid =
  * wanted, but that makes a difference only when we are short in memory--RAM.
  */
 
-rt_public Malloc_t eiffel_malloc(register unsigned int nbytes)
+rt_public Malloc_t eif_malloc(register unsigned int nbytes)
 {
+
+#ifdef EIF_WIN32
+/* For the Windows platforms we use malloc() implemented in the C-library */
+	malloc (nbytes);
+#else
+#ifdef VXWORKS
+/* For VXWORKS, we have a special run-time. HP provides their own malloc ()
+ *we do not have, so we call malloc() from the C-library to perform test */
+#warning: file should not be linked for VXWORKS runtime. 
+	malloc (nbytes);
+#endif
+#else
+#ifdef EIF_THREADS 
+
+/* In multithreaded mode, we do not want to use the eiffel implementation * 
+ * of eif_malloc () because when calling reclaim () in a thread we want*
+ * the thread to give back the memory to the system and not to the        *
+ * free-list. Otherwise, the creation of thread would be quite costly     *
+ * manuelt. */
+
+	malloc (nbytes);
+
+#endif /* EIf_THREADS */	
+#else 
+/* all the other platforms (Unix/Linux) use an eiffel implementation *
+ * for eif_malloc() */ 
+
 	char *arena;
 
 	/* The C object does not use its Eiffel flags field in the header. However,
@@ -54,32 +84,76 @@ rt_public Malloc_t eiffel_malloc(register unsigned int nbytes)
 		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
 
 	return (Malloc_t) arena;
+
+#endif /* EIF_WIN32 */
 }
 
-rt_public Malloc_t eiffel_calloc(unsigned int nelem, unsigned int elsize)
+rt_public Malloc_t eif_calloc(unsigned int nelem, unsigned int elsize)
 {
+#ifdef EIF_WIN32
+	calloc (nelem, elsize);
+#else
+#ifdef VXWORKS
+#warning: file should not be linked for VXWORKS runtime.
+	calloc (nelem, elsize);
+#endif
+#ifdef EIF_THREADS 
+	malloc (nbytes);
+#endif /* EIf_THREADS */	
+#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
+      /* for eif_realloc() */ 
 	register1 unsigned int nbytes = nelem * elsize;
 	register2 Malloc_t allocated;
 
-	allocated = eiffel_malloc(nbytes);
+	allocated = eif_malloc(nbytes);
 	if (allocated != (Malloc_t) 0)
 		bzero(allocated, nbytes);
 
 	return allocated;
+
+#endif /* EIF_WIN32 */
 }
 
-rt_public Malloc_t eiffel_realloc(register void *ptr, register unsigned int nbytes)
+rt_public Malloc_t eif_realloc(register void *ptr, register unsigned int nbytes)
 {
+#ifdef EIF_WIN32
+	realloc (ptr, nbytes);
+#else
+#ifdef VXWORKS
+#warning: file should not be linked for VXWORKS runtime.
+	realloc (ptr,nbytes);
+#endif
+#ifdef EIF_THREADS 
+	malloc (nbytes);
+#endif /* EIf_THREADS */	
+#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
+      /* for eif_realloc() */ 
+
 	/* A realloc with a null pointer has to be equivalent to a single malloc */
 
 	if (ptr == (Malloc_t) 0)
-		return eiffel_malloc(nbytes);
+		return eif_malloc(nbytes);
 
 	return (Malloc_t) xrealloc(ptr, nbytes, GC_OFF);
+
+endif /* EIF_WIN32 */
 }
 
-void eiffel_free(register void *ptr)
+void eif_free(register void *ptr)
 {
+#ifdef EIF_WIN32
+	free (ptr);
+#else
+#ifdef VXWORKS
+#warning: file should not be linked for VXWORKS runtime
+	free (ptr);
+#endif
+#ifdef EIF_THREADS 
+	malloc (nbytes);
+#endif /* EIf_THREADS */	
+#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
+      /* for eif_free() */ 
+
 	/* Free is guaranteed to work enven with a null pointer, while xfree will
 	 * most probably dump a core...
 	 */
@@ -88,6 +162,7 @@ void eiffel_free(register void *ptr)
 		return;
 
 	xfree(ptr);
+
+#endif /* EIF_WIN32 */
 }
 
-#endif /* EIF_THREADS */

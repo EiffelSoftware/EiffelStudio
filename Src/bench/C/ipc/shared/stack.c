@@ -67,7 +67,7 @@ rt_private void stk_start(int what);			/* Initialize automaton */
 rt_private void stk_end(int what);				/* Reset saved stack contexts */
 rt_private struct dump *pending(void);		/* List pending exceptions */
 rt_private struct dump *execution(void);	/* List execution stack */
-rt_private struct dcall *safe_dtop(void);	/* Perform a safe dtop() without eiffel_panic */
+rt_private struct dcall *safe_dtop(void);	/* Perform a safe dtop() without eif_panic */
 rt_private void init_var_dump(struct dcall *call);		/* Initialize register context */
 rt_private struct dump *variable(void);	/* Dump variables */
 rt_private struct dump *local(int n);		/* Return local by number */
@@ -161,7 +161,7 @@ rt_private void stk_start(EIF_CONTEXT int what)
 		stk_next = once;
 		break;
 	default:
-		eiffel_panic("illegal dump request");
+		eif_panic("illegal dump request");
 	}
 	EIF_END_GET_CONTEXT
 }
@@ -357,7 +357,7 @@ rt_private struct dump *execution(void)
 rt_private struct dcall *safe_dtop(void)
 {
 	/* This is a wrapper to the dtop() feature, which tests whether the stack
-	 * is empty before calling it: the dtop() routine will raise a eiffel_panic if
+	 * is empty before calling it: the dtop() routine will raise a eif_panic if
 	 * there is nothing on the stack. Here, we only return a null pointer.
 	 */
 
@@ -421,7 +421,7 @@ rt_private struct dump *variable(void)
 		dp = local(locn++);				/* Get next local then */
 		break;
 	default:
-		eiffel_panic("illegal variable request");
+		eif_panic("illegal variable request");
 	}
 
 	if (dp == (struct dump *) 0) {		/* Finished: reset static vars */

@@ -32,51 +32,6 @@
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
 
-
-/*
- * Various casts.
- */
-
-rt_public EIF_CHARACTER chconv(EIF_INTEGER i)
-{
-	return (EIF_CHARACTER) i;	/* (EIF_INTEGER) -> (EIF_CHARACTER) */
-}
-
-rt_public EIF_INTEGER chcode(EIF_CHARACTER c)
-{
-	return (EIF_INTEGER) c;	/* (EIF_CHARACTER) -> (EIF_INTEGER) */
-}
-
-rt_public EIF_POINTER conv_pp(EIF_POINTER p)
-{
-	return p;	/* (EIF_POINTER) -> (EIF_POINTER) */
-}
-
-rt_public EIF_INTEGER conv_pi(EIF_POINTER p)
-{
-	return (EIF_INTEGER) p;	/* (EIF_POINTER) -> (EIF_INTEGER) */
-}
-
-rt_public EIF_REAL conv_ir(EIF_INTEGER v)
-{
-	return (EIF_REAL) v;	/* (EIF_INTEGER) -> (EIF_REAL) */
-}
-
-rt_public EIF_INTEGER conv_ri(EIF_REAL v)
-{
-	return (EIF_INTEGER) v;	/* (EIF_REAL) -> (EIF_INTEGER) */
-}
-
-rt_public EIF_REAL conv_dr (EIF_DOUBLE d)
-{
-	return (EIF_REAL) d;	/* (EIF_DOUBLE) -> (EIF_REAL) */
-}
-
-rt_public EIF_INTEGER conv_di(EIF_DOUBLE d)
-{
-	return (EIF_INTEGER) d;		/* (EIF_DOUBLE) -> (EIF_INTEGER) */
-}
-
 rt_public EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 {
 	/* Return the greatest integer less or equal to the
@@ -95,60 +50,6 @@ rt_public EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 	return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
-/*
- * Character conversions
- */
-
-
-rt_public EIF_CHARACTER chupper(EIF_CHARACTER c)
-{
-	return (EIF_CHARACTER)toupper(c);
-}
-
-rt_public EIF_CHARACTER chlower(EIF_CHARACTER c)
-{
-	return (EIF_CHARACTER)tolower(c);
-}
-
-rt_public EIF_BOOLEAN chis_upper(EIF_CHARACTER c)
-{
-	return EIF_TEST(isupper(c));
-}
-
-rt_public EIF_BOOLEAN chis_lower(EIF_CHARACTER c)
-{
-	return EIF_TEST(islower(c));
-}
-
-rt_public EIF_BOOLEAN chis_digit(EIF_CHARACTER c)
-{
-	return EIF_TEST(isdigit(c));
-}
-
-rt_public EIF_BOOLEAN chis_alpha(EIF_CHARACTER c)
-{
-	return EIF_TEST(isalpha(c));
-}
-
-rt_public EIF_INTEGER eschar_size(void)
-{
-	return BYTSIZ*CHRSIZ;
-}
-
-rt_public EIF_INTEGER esreal_size(void)
-{
-	return BYTSIZ*FLTSIZ;
-}
-
-rt_public EIF_INTEGER esint_size(void)
-{
-	return BYTSIZ*LNGSIZ;
-}
-
-rt_public EIF_INTEGER esdouble_size(void)
-{
-	return BYTSIZ*DBLSIZ;
-}
 
 /*
  * Protected call to system
@@ -319,7 +220,7 @@ rt_public char * eif_getenv (char * k)
 
 /***************************************/
 
-rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
+rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 {
 	/* Reallocation of memory for an array's `area' for new count `i', keeping
 	 * the old content.(starts at `j' and is `k' long).

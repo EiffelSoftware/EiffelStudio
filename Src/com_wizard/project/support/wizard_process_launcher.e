@@ -28,14 +28,14 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (an_output_window: like output_window) is
-			-- Set `output_window' with `an_output_window'.
+	make (a_message_output: like message_output) is
+			-- Set `message_output' with `a_message_output'.
 		require
-			non_void_output_window: an_output_window /= Void
+			non_void_message_output: a_message_output /= Void
 		do
-			output_window := an_output_window
+			message_output := a_message_output
 		ensure
-			ouput_window_set: output_window = an_output_window
+			message_output_set: message_output = a_message_output
 		end
 
 feature -- Basic Operations
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			until
 				not output_pipe.last_read_successful
 			loop
-				output_window.add_message (output_pipe.last_string)
+				message_output.add_message (Current, output_pipe.last_string)
 				output_pipe.read_stream (Block_size)
 			end
 			an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
@@ -95,8 +95,8 @@ feature -- Basic Operations
 		
 feature -- Access
 
-	output_window: WIZARD_OUTPUT_WINDOW
-			-- Process output display window
+	message_output: WIZARD_MESSAGE_OUTPUT
+			-- Output processor
 
 	last_launch_successful: BOOLEAN
 			-- Was last call to `launch' successful (i.e. was process started)?
@@ -187,7 +187,7 @@ feature {NONE} -- Externals
 
 invariant
 
-	non_void_ouptut_window: output_window /= Void
+	non_void_ouptut_message: message_output /= Void
 	
 end -- class PROCESS_LAUNCHER
 

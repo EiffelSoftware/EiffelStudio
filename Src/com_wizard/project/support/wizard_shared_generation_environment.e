@@ -27,10 +27,10 @@ feature -- Access
 			Result := System_descriptor_cell.item
 		end
 
-	output_window: WIZARD_OUTPUT_WINDOW is
+	message_output: WIZARD_MESSAGE_OUTPUT is
 			-- Shared message output
 		do
-			Result := Output_window_cell.item
+			Result := message_output_cell.item
 		end
 
 	Ce_mapper: STRING is "rt_ce"
@@ -154,9 +154,9 @@ feature -- Access
 	Shared_process_launcher: WIZARD_PROCESS_LAUNCHER is
 			-- Process launcher
 		require
-			non_void_output_window: output_window /= Void
+			non_void_message_output: message_output /= Void
 		once
-			create Result.make (output_window)
+			create Result.make (message_output)
 		end
 
 	Formatter: STRING is "f"
@@ -287,14 +287,14 @@ feature {WIZARD_MANAGER} -- Element Change
 			descriptor_set: system_descriptor = a_descriptor
 		end
 
-	set_output_window (a_window: like output_window) is
-			-- Set `output_window' with `a_window'.
+	set_message_output (a_window: like message_output) is
+			-- Set `message_output' with `a_window'.
 		require
 			non_void_window: a_window /= Void
 		do
-			Output_window_cell.replace (a_window)
+			message_output_cell.replace (a_window)
 		ensure
-			output_window_set: output_window = a_window
+			message_output_set: message_output = a_window
 		end
 
 feature {NONE} -- Implementation
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	Output_window_cell: CELL [WIZARD_OUTPUT_WINDOW] is
+	message_output_cell: CELL [WIZARD_MESSAGE_OUTPUT] is
 			-- Output window shell
 		once
 			create Result.put (Void)

@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 	compiler: WIZARD_COMPILER is
 			-- IDL/C compiler
 		once
-			create Result.make (parent)
+			create Result.make (message_output)
 		end
 
 	intialize_file_directories is

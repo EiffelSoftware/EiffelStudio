@@ -79,6 +79,7 @@ feature {NONE} -- Implementation
 		do
 			paint_dc.select_pen (a_pen)
 			paint_dc.line (0, a_y, width, a_y)
+			paint_dc.unselect_pen
 		end
 
 	interface: EV_HORIZONTAL_SEPARATOR

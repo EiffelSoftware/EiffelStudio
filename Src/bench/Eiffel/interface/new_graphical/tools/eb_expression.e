@@ -98,7 +98,6 @@ feature {NONE} -- Initialization
 			on_object := True
 			context_address := obj.object_address
 			context_class := obj.dtype
-			Debugger_manager.kept_objects.extend (obj.object_address)
 			set_expression (new_expr)
 		end
 

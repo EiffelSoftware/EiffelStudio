@@ -26,11 +26,11 @@ copy generated\Server\Include Clib
 
 copy generated\Common\Include Clib
 
-rename generated\ISE.tlb ISE.Compiler.tlb
+rename generated\ISE.tlb cec.tlb
 
-copy generated\ISE.Compiler.tlb ace_file\.
+copy generated\cec.tlb ace_file\.
 
-copy generated\ISE.Compiler.tlb .\
+copy generated\cec.tlb .\
 
 copy to_replace\*.e .\
 

@@ -17,6 +17,8 @@ feature -- Access
 	foreground_color: WEL_COLOR_REF is
 			-- foreground color used for the text of the
 			-- control
+		require
+			exists: exists
 		deferred
 		ensure
 			color_not_void: foreground_color /= Void
@@ -25,6 +27,8 @@ feature -- Access
 	background_color: WEL_COLOR_REF is
 			-- Background color used for the background of the
 			-- control
+		require
+			exists: exists
 		deferred
 		ensure
 			color_not_void: background_color /= Void

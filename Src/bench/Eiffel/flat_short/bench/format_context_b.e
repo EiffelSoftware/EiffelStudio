@@ -22,7 +22,7 @@ inherit
 			formal_name, put_origin_comment,
 			format_ast, is_feature_visible,
 			reversed_format_list, put_current_feature,
-			set_type_creation
+			set_type_creation, put_class_name
 		end;
 	SHARED_SERVER;
 	SHARED_INST_CONTEXT;
@@ -113,6 +113,9 @@ feature -- Properties
 	current_class_only: BOOLEAN;
 			-- Is Current only processing `class_c' and not
 			-- its ancestors?
+
+	feature_clause_order: ARRAY [STRING];
+            -- Array of feature clause comment ordering
 
 	is_clickable_format: BOOLEAN is
 			-- Is the generated format the "clickable" format?
@@ -214,6 +217,14 @@ feature -- Access
 		end;
 
 feature -- Setting
+
+	set_feature_clause_order (fco: like feature_clause_order) is
+            -- Set `feature_clause_order' to `fco'
+        do
+            feature_clause_order := fco
+        ensure
+            set: feature_clause_order = fco
+        end;
 
 	set_type_creation (t: TYPE) is
 			-- Set last_class_printed to the actual type of `t'.
@@ -365,6 +376,7 @@ feature -- Execution
 					client := system.any_class.compiled_class;
 				end;
 				!! format_registration.make (class_c, client);
+				format_registration.set_feature_clause_order (feature_clause_order);
 				format_registration.fill (current_class_only);
 				System.set_current_class (class_c);
 				if format_registration.target_ast /= void then
@@ -442,20 +454,26 @@ feature -- Update
 
 feature -- Element change
 
-	put_class_name (c: CLASS_C) is
+	put_class_name (s: STRING) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			s: STRING
+			tmp: STRING;
+			classi: CLASS_I
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			s := clone (c.class_name);
-			s.to_upper;
-			text.add_classi (c.lace_class, s)
+			tmp := clone (s);
+			tmp.to_lower;
+			classi := Universe.class_named (tmp, class_c.cluster);
+			if classi = Void then
+				text.add_default_string (s)
+			else
+				text.add_classi (classi, s)
+			end
 		end;
 
-	put_classi_name (c: CLASS_I) is
+	put_classi (c: CLASS_I) is
 			-- Append class name to 'text', treated as a stone.
 		local
 			s: STRING;
@@ -492,7 +510,7 @@ feature -- Element change
 				text.add_space;
 				put_comment_text ("(from ");
 				c := global_adapt.source_enclosing_class;
-				put_class_name (c);
+				put_classi (c.lace_class);
 				put_comment_text (")");
 				new_line
 			end;
@@ -672,7 +690,7 @@ feature {NONE} -- Implementation
 				if feature_i /= void and then in_bench_mode then
 					c := adapt.target_class.e_class;
 					!FEATURE_TEXT! item.make (f_name, 
-						feature_i.api_feature (c.id), c);
+						feature_i.api_feature (c.id));
 				else			
 					!! item.make (f_name)
 				end;
@@ -726,7 +744,7 @@ feature {NONE} -- Implementation
 			last_was_printed := True;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class.e_class;
-				!! ot.make (f_name, feature_i.api_feature (c.id), c)
+				!! ot.make (f_name, feature_i.api_feature (c.id))
 				if is_key then
 					ot.set_is_keyword
 				end;
@@ -785,7 +803,7 @@ feature {NONE} -- Implementation
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class.e_class;
-				!! ot.make (f_name, feature_i.api_feature (c.id), c)
+				!! ot.make (f_name, feature_i.api_feature (c.id))
 				if is_key then
 					ot.set_is_keyword
 				end;

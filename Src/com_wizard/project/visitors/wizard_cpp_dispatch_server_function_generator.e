@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 					visitor.visit (func_desc.arguments.item.type)
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
-						pointed_data_type_descriptor ?= func_desc.arguments.item
+						pointed_data_type_descriptor ?= func_desc.arguments.item.type
 						if pointed_data_type_descriptor = Void then
 			 				message_output.add_warning (Current, message_output.Not_pointer_type)
 						end							

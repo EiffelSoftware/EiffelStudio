@@ -371,6 +371,7 @@ feature {NONE} -- WEL Implementation
 			multi_column_list: EV_MULTI_COLUMN_LIST_IMP
 			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW_I
 			l_zero: INTEGER
+			checkable_tree: EV_CHECKABLE_TREE_IMP
 		do
 			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
@@ -431,6 +432,11 @@ feature {NONE} -- WEL Implementation
 				rich_text ?= info.window_from
 				create selchange.make_by_nmhdr (info)
 				rich_text.on_en_selchange (selchange.selection_type, selchange.character_range)
+			elseif info.code = feature {WEL_NM_CONSTANTS}.nm_click then
+				checkable_tree ?= info.window_from
+				if checkable_tree /= Void then
+					checkable_tree.on_nm_click				
+				end
 			end
 		end
 		
@@ -781,7 +787,7 @@ feature {NONE} -- Implementation
 			-- `process_message'.
 		do
 			if not process_menu_message(msg, wparam, lparam) then
-				Precursor (msg, wparam, lparam)
+				Precursor {EV_WIDGET_IMP} (msg, wparam, lparam)
 			end
 		end
 

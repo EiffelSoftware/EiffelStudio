@@ -132,6 +132,7 @@ feature -- C code generation
 				generate_header (file);
 				type_i := type.actual_type.type_i;
 				internal_name := Encoder.feature_name (class_type.id, body_id); 
+				add_in_log (class_type, internal_name);
 					-- Generation of function's header
 				type_i.c_type.generate (file);
 				file.putstring (internal_name);
@@ -182,7 +183,8 @@ feature -- C code generation
 				file.putchar ('}');
 				file.new_line;
 				file.new_line;
-
+			elseif  not System.is_used (Current) then
+				System.removed_log_file.add (class_type, feature_name)
 			end;
 		end;
 

@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Precusor and create new_item_actions.
 		do
+			create shared_pointer
 			Precursor
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
@@ -76,21 +77,29 @@ feature -- Element change
 		end
 	
 feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
-	
-	radio_group: POINTER
-			-- GSList with all radio items of this container.
 
-	radio_dummy: BOOLEAN
-			-- Is this container merged with another?
+	shared_pointer: POINTER_REF
+			-- Reference to `radio_group'. Used to share the
+			-- pointer `radio_group' with merged containers even when
+			-- its value is still `Default_pointer'.
 
-	enable_radio_dummy is
-			-- Make this container a dummy.
-		require
-			not_yet_a_dummy: not radio_dummy
+	set_shared_pointer (p: POINTER_REF) is
+			-- Assign `p' to `shared_pointer'.
 		do
-			radio_dummy := True
-		ensure
-			radio_dummy: radio_dummy
+			shared_pointer := p
+		end
+
+	set_radio_group (p: POINTER) is
+			-- Assign `p' to `radio_group'.
+		do
+			shared_pointer.set_item (p)
+		end
+
+	radio_group: POINTER is
+			-- GSList with all radio items of this container.
+			-- `Current' Shares reference with merged containers.
+		do
+			Result := shared_pointer.item
 		end
 
 feature -- Status setting
@@ -114,32 +123,26 @@ feature -- Status setting
 		end
 
 	connect_radio_grouping (a_container: EV_CONTAINER) is
-			-- Join radio grouping of `a_container' to Current.
+			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: LINKED_LIST [POINTER]
 			peer: EV_CONTAINER_IMP
-			rbi: EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
-			peer.enable_radio_dummy
-
-			from
+			if shared_pointer /= peer.shared_pointer then
 				l := gslist_to_eiffel (peer.radio_group)
-				l.start
-			until
-				l.off
-			loop
-				C.gtk_radio_button_set_group (l.item, radio_group)
-				radio_group := C.gtk_radio_button_group (l.item)
-				C.gtk_toggle_button_set_active (l.item, False)
-				l.forth
+				from
+					l.start
+				until
+					l.off
+				loop
+					C.gtk_radio_button_set_group (l.item, radio_group)
+					set_radio_group (C.gtk_radio_button_group (l.item))
+					C.gtk_toggle_button_set_active (l.item, False)
+					l.forth
+				end
+				peer.set_shared_pointer (shared_pointer)
 			end
-
-			--| FIXME to be verified:
-			peer.new_item_actions.prune (peer~add_radio_button)
-			peer.new_item_actions.extend (~add_radio_button)
-			peer.remove_item_actions.prune (peer~remove_radio_button)
-			peer.remove_item_actions.extend (~remove_radio_button)
 		end
 
 	add_radio_button (w: EV_WIDGET) is
@@ -156,7 +159,7 @@ feature -- Status setting
 				else
 					C.gtk_toggle_button_set_active (r.c_object, False)
 				end
-				radio_group := C.gtk_radio_button_group (r.c_object)
+				set_radio_group (C.gtk_radio_button_group (r.c_object))
 			end
 		end
 
@@ -169,7 +172,7 @@ feature -- Status setting
 		do
 			r ?= w.implementation
 			if r /= Void then
-				radio_group := C.g_slist_remove (radio_group, r.c_object)
+				set_radio_group (C.g_slist_remove (radio_group, r.c_object))
 				if r.is_selected then
 					if radio_group /= Default_pointer then
 						C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
@@ -235,6 +238,10 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/29 23:18:11  brendel
+--| Fully implemented radio group merging by sharing the radio_group pointer
+--| using POINTER_REF.
+--|
 --| Revision 1.27  2000/02/29 02:22:20  brendel
 --| Finished first imp of radio group merging.
 --|

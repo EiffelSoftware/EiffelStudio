@@ -1,5 +1,5 @@
 -- This Ace file requires the following environment variables:
--- * "LIBRARY" should be set to the Eiffel library directory (e.g. $ISE_EIFFEL\library)
+-- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
 
 system
 	com_wizard
@@ -13,35 +13,35 @@ default
 
 cluster
 	
-	root_cluster: "d:\com_wizard\root"
+	root_cluster: "..\root"
 
-	all e2_idl: "d:\com_wizard\eiffeltoidl";
+	all e2_idl: "..\eiffeltoidl";
 
-	descriptors: "d:\com_wizard\project\descriptors"
+	descriptors: "..\project\descriptors"
 		default
 			assertion (all)
 		end;
 	
-	visitors: "d:\com_wizard\project\visitors"
+	visitors: "..\project\visitors"
 		default
 			assertion (all)
 		end;
 
-	gui: "d:\com_wizard\project\gui"
+	gui: "..\project\gui"
 
-	support: "d:\com_wizard\project\support"
+	support: "..\project\support"
 		default
 			assertion (all)
 		end;
 
-	wizard_library_constants: "D:\com_wizard\project\library\constants"
+	wizard_library_constants: "..\project\library\constants"
 
-	wizard_library_interfaces: "D:\com_wizard\project\library\interfaces"
+	wizard_library_interfaces: "..\project\library\interfaces"
 		visible
 			ECOM_TYPE_INFO;
 		end;
 
-	wizard_library_structures: "D:\com_wizard\project\library\structures"
+	wizard_library_structures: "..\project\library\structures"
 		option
 			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
@@ -56,55 +56,55 @@ cluster
 		end;
 
 	-- EiffelBase
-	base_kernel:						"$ISE_EIFFEL\library\base\kernel"
+	base_kernel:						"$EIFFEL_SRC\library\base\kernel"
 		visible
 			ARRAY;
 			STRING;
 		end;
 
-	all base_desc:					"$ISE_EIFFEL\library\base\desc"
+	all base_desc:					"$EIFFEL_SRC\library\base\desc"
 
-	all base_structures:				"$ISE_EIFFEL\library\base\structures"
+	all base_structures:				"$EIFFEL_SRC\library\base\structures"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end
 
-	all base_support:					"$ISE_EIFFEL\library\base\support"
+	all base_support:					"$EIFFEL_SRC\library\base\support"
 
 	-- WEL
-	all wel:						"$ISE_EIFFEL\library\wel"
+	all wel:						"$EIFFEL_SRC\library\wel"
 		default
 			assertion (no)
 		end;
 
 	-- EiffelCOM
-	ecom_constants:					"$ISE_EIFFEL\library\com\Constants"
+	ecom_constants:					"$EIFFEL_SRC\library\com\Constants"
 
-	ecom_Interfaces:					"$ISE_EIFFEL\library\com\Interfaces"
+	ecom_Interfaces:					"$EIFFEL_SRC\library\com\Interfaces"
 
-	ecom_Support:					"$ISE_EIFFEL\library\com\Support"
+	ecom_Support:					"$EIFFEL_SRC\library\com\Support"
 
-	ecom_Structures:					"$ISE_EIFFEL\library\com\Structures"
+	ecom_Structures:					"$EIFFEL_SRC\library\com\Structures"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
 		end;
 
 	-- EiffelTime
-	all time:						"$ISE_EIFFEL\library\time"
+	all time:						"$EIFFEL_SRC\library\time"
 		exclude
 			"french";
 			"german"
 		end;
 
 external
-	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include",
-					"$ISE_EIFFEL\library\time\clib",
-					"$ISE_EIFFEL\library\com\spec\windows\include"
+	include_path:	"$EIFFEL_SRC\library\wel\spec\windows\include",
+					"$EIFFEL_SRC\library\time\clib",
+					"$EIFFEL_SRC\library\com\spec\windows\include"
 
-	object: 		"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-					"$ISE_EIFFEL\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
-					"$ISE_EIFFEL\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-					"$ISE_EIFFEL\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib";
+	object: 		"$EIFFEL_SRC\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+					"$EIFFEL_SRC\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib";
 end

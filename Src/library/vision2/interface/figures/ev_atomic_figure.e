@@ -22,6 +22,12 @@ inherit
 			out
 		end
 
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create,
+			out
+		end
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -68,6 +74,23 @@ feature -- Status setting
 			mode_valid: mode >= 0 and then mode <= 15
 		do
 			logical_function_mode := mode
+		end
+
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- Pixmap displaying `Current'.
+		local
+			p: EV_PIXMAP
+			a_world: EV_FIGURE_WORLD
+			a_projector: EV_STANDARD_PROJECTION
+		do
+			create p.make_with_size (100, 200)
+			create a_world
+			a_world.extend (Current)
+			create a_projector.make (a_world, p)
+			a_projector.project
+			Result := p
 		end
 
 invariant

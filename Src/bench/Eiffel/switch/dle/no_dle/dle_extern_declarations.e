@@ -1,9 +1,0 @@
-class DLE_EXTERN_DECLARATIONS inherit
-
-	EXTERN_DECLARATIONS
-
-creation
-
-	make
-
-end -- class DLE_EXTERN_DECLARATIONS

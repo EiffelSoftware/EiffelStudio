@@ -88,9 +88,8 @@ feature -- Basic operations
 		
 	hide_label is
 			-- Ensure that label is hidden.
-			-- Not used by the tour, only by EiffelBuild so
-			-- no implementation is required.
 		do
+			label.parent.prune_all (label)
 		end
 
 feature -- Access
@@ -106,8 +105,11 @@ feature -- Access
 feature {GB_EV_EDITOR_CONSTRUCTOR}
 
 	update_constant_display (a_value: STRING) is
-			--
+			-- Update displayed constant to `a_value'.
 		do
+			text_entry.change_actions.block
+			text_entry.set_text (a_value)
+			text_entry.change_actions.resume
 		end
 
 feature {NONE} -- Implementation
@@ -125,7 +127,9 @@ feature {NONE} -- Implementation
 	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 		
-		
+	label: EV_LABEL
+		-- Label used to display text associated with `Current'.
+
 	object: GB_OBJECT
 		-- Object referenced by `Current'.
 
@@ -175,8 +179,6 @@ feature {NONE} -- Implementation
 			-- tooltip `tooltip'.
 		require
 			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
-		local
-			label: EV_LABEL
 		do
 			create label.make_with_text (label_text)
 			label.set_tooltip (tooltip)

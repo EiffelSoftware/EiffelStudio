@@ -23,6 +23,8 @@ libs='-L/usr/X11R6/lib -lXext -lSM -lICE -lbsd -lm'
 ccflags=''
 
 suffix='.a'
+shared_suffix='.so'
+shared_prefix='lib'
 wkeiflib='wkbench'
 
 

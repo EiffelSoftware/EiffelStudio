@@ -26,7 +26,8 @@ ccflags=''
 sharedccflags='-fPIC'
 
 suffix='.a'
-sharedsuffix='.so'
+shared_suffix='.so'
+shared_prefix='lib'
 sharedlibversion='.1.0'
 wkeiflib='wkbench'
 

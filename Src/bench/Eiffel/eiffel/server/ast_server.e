@@ -3,11 +3,9 @@
 class AST_SERVER 
 
 inherit
-
 	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
 
 creation
-
 	make
 	
 feature 
@@ -21,9 +19,13 @@ feature
 	Cache: AST_CACHE is
 			-- Cache for routine tables
 		once
-			!!Result.make
-		end;
+			!! Result.make
+		end
 
-	Size_limit: INTEGER is 20;
+	Size_limit: INTEGER is 100
+			-- Size of the AST_SERVER file (100 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

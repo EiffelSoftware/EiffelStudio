@@ -99,6 +99,10 @@ feature
 			end;
 		end;
 
-	Size_limit: INTEGER is 15;
+	Size_limit: INTEGER is 150
+			-- Size of the BYTE_SERVER file (150 Ko)
+
+	Chunk: INTEGER is 500
+			-- Size of a HASH_TABLE block
 
 end

@@ -3,13 +3,10 @@
 class DEPEND_SERVER 
 
 inherit
-
 	COMPILER_SERVER [CLASS_DEPENDANCE, CLASS_ID]
 
 creation
-
 	make
-
 	
 feature 
 
@@ -25,6 +22,10 @@ feature
 			!!Result.make;
 		end;
 
-	Size_limit: INTEGER is 10;
+	Size_limit: INTEGER is 50
+			-- Size of the DEPEND_SERVER file (50 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

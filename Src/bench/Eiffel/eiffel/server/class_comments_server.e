@@ -135,6 +135,10 @@ feature {NONE} -- Implementation
 		do
 		end;
 
-	Size_limit: INTEGER is 10;
+	Size_limit: INTEGER is 50
+			-- Size of the CLASS_COMMENTS_SERVER file (50 Ko)
+
+	Chunk: INTEGER is 50
+			-- Size of a HASH_TABLE block
 
 end

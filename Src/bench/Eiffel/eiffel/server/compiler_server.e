@@ -3,19 +3,6 @@
 deferred class COMPILER_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-
-	SHARED_SCONTROL
-		export
-			{NONE} all
-		redefine
-			copy, is_equal
-		end;
-	SHARED_SERVER
-		export
-			{NONE} all
-		redefine
-			copy, is_equal
-		end;
 	EXTEND_TABLE [SERVER_INFO, H]
 		rename
 			make as tbl_make,
@@ -26,8 +13,23 @@ inherit
 			has as tbl_has
 		redefine
 			copy, is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
+		redefine
+			copy, is_equal
+		end
+
+	SHARED_SCONTROL
+		export
+			{NONE} all
+		redefine
+			copy, is_equal
+		end
+
+	SHARED_SERVER
+		export
+			{NONE} all
 		redefine
 			copy, is_equal
 		end
@@ -92,8 +94,11 @@ feature
 			tbl_make (Chunk);
 		end;
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER is
 			-- Hash table chunk
+			-- We will add `Chunk' element during resizing.
+		deferred
+		end
 
 	set_current_id is
 			-- Set `current_id' to a new value.
@@ -167,7 +172,7 @@ end;
 		do
 			server_file := Server_controler.file_of_id (current_id);
 			if
-				server_file.count > Size_limit * Server_controler.chunk_size
+				server_file.count > Size_limit * Server_controler.block_size
 				or else server_file.precompiled
 				or else server_file.is_static
 			then 
@@ -180,9 +185,8 @@ end;
 
 			an_id := id (t);
 			init_file (server_file);
-			position := store_append
-				(server_file.descriptor, $t, $make_index, $need_index, $Current);
-			!!info.make (position, server_file.id);
+			position := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current);
+			!! info.make (position, server_file.id);
 			server_file.add_occurence;
 
 			old_info := tbl_item (an_id);
@@ -201,7 +205,7 @@ end;
 		require
 			good_argument: server_file /= Void
 		do
-			c_sv_init (server_file.descriptor);
+			server_file.go (server_file.count);
 		end;
 
 	remove (an_id: H) is
@@ -443,7 +447,7 @@ end;
 				old_server_file := Server_controler.file_of_id (file_id);
 				if old_server_file /= Void then
 debug ("SERVER")
-	io.putstring ("--> Removing the file%N");
+	io.putstring ("==> Removing the file%N");
 end;
 				if not old_server_file.precompiled then
 					Server_controler.remove_file (old_server_file);
@@ -586,11 +590,6 @@ feature {NONE} -- External features
 		end;
 
 	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is
-		external
-			"C"
-		end;
-
-	c_sv_init (f_desc: INTEGER) is
 		external
 			"C"
 		end;

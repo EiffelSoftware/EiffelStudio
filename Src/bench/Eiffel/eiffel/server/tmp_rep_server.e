@@ -5,24 +5,12 @@
 class TMP_REP_SERVER 
 
 inherit
-
-	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
-		rename
-			make as basic_make,
-			put as old_put
-		redefine
-			make_index, need_index, init_file
-		end;
-
 	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		redefine
 			put, make_index, need_index, make, init_file
-		select
-			put, make
 		end
 
 creation
-
 	make
 	
 feature 
@@ -42,15 +30,15 @@ feature
 	make is
 			-- Initialization
 		do
-			basic_make;
-			!!index.make (50);
-		end;
+			{COMPILER_SERVER} precursor
+			!! index.make (50)
+		end
 
 	Cache: REP_CACHE is
 			-- Cache for routine tables
 		once
-			!!Result.make;
-		end;
+			!! Result.make
+		end
 
 	id (t: REP_FEATURES): CLASS_ID is
 			-- Id associated with `t'
@@ -64,18 +52,15 @@ feature
 			index.clear_all;
 			last_id := t.class_id;
 				-- Write data structure in file `file'
-			old_put (t);
+			{COMPILER_SERVER} precursor (t);
 		end;
 
 	init_file (server_file: SERVER_FILE) is
 			-- Initialize server file `server_file' before writing in
 			-- it.
-		local
-			file_desc: INTEGER
 		do
-			file_desc := server_file.descriptor;
-			c_sv_init (file_desc);
-			last_offset := fpos2 (file_desc);
+			{COMPILER_SERVER} precursor (server_file);
+			last_offset := server_file.position;
 		end;
 
 	make_index (obj: ANY; file_position, object_count: INTEGER) is
@@ -108,13 +93,10 @@ feature
 			index.clear_all
 		end;
 
-	Size_limit: INTEGER is 20;
+	Size_limit: INTEGER is 75
+			-- Size of the TMP_REP_SERVER file (75 Ko)
 
-feature {NONE} -- External features
-
-	fpos2 (f_desc: INTEGER): INTEGER is
-		external
-			"C"
-		end;
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

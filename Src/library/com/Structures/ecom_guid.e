@@ -31,7 +31,7 @@ feature -- Basic operation
 	generate is
 			-- Generate a new GUID
 		do
-			item := ccom_generate_guid (item)
+			ccom_generate_guid (item)
 		end
 
 feature {NONE} -- Initialization

@@ -72,7 +72,10 @@ feature {COMPILER_EXPORTER}
 				-- conform to NONE.
 				--| When doing the check for `is_basic', we also check that `other'
 				--| can be a BIT type, so we do not need to add the check `other.is_bits'.
-			Result := not (other.is_basic or else other.is_expanded)
+-- FIXME: This test needs to be done, but since it's causing to much trouble for now
+-- we just desactivated it and we are back to the previous implementation
+--			Result := not (other.is_basic or else other.is_expanded)
+			Result := True
 		end
 
     storage_info, storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is

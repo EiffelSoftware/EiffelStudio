@@ -18,6 +18,10 @@ creation {ERROR_HANDLER}
 
 	init
 
+creation
+
+	make
+
 feature -- Property
 
 	syntax_message: STRING is

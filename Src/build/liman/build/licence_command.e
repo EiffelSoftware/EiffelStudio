@@ -3,18 +3,18 @@ deferred class LICENCE_COMMAND
 
 inherit
 
-	COMMAND;
+	EV_COMMAND
+
 	LICENSED_COMMAND
-		rename
-			execute_licensed as execute
-		end;
+
 	WINDOWS
 
 feature {NONE} -- License manager
 
-	parent_window: COMPOSITE is
+	parent_window: EV_WINDOW is
 		once
-			Result := Main_panel.base
+			Result := main_window
 		end
 
-end
+end -- class LICENCE_COMMAND
+

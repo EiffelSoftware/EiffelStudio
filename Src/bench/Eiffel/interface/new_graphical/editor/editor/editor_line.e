@@ -117,6 +117,27 @@ feature -- Access
 	eol_token: EDITOR_TOKEN_EOL
 		-- Last token of the line.
 
+	identation: STRING is
+			-- Create a line with same identation as `ref_line'.
+		local
+			t_blank: EDITOR_TOKEN_BLANK
+		do
+			t_blank ?= first_token
+			if t_blank = Void then
+				Result := ""
+			else
+				Result := t_blank.image	
+				from
+					t_blank ?= t_blank.next
+				until
+					t_blank = Void
+				loop
+					Result.append (t_blank.image)
+					t_blank ?= t_blank.next
+				end
+			end
+		end
+
 feature -- Status Report
 
 	after: BOOLEAN is

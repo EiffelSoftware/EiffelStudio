@@ -57,7 +57,7 @@ feature -- Status report
 			Result := implementation.is_child_expandable (child)
 		end
 
-feature -- Statu setting
+feature -- Status setting
 	
 	set_homogeneous (flag: BOOLEAN) is
 			-- Homogenous controls whether each object in

@@ -13,6 +13,9 @@ inherit
 
 feature -- Properties
 
+	last_format_2: FORMAT_HOLDER;
+			-- Last format used.
+
 	tool: TOOL_W;
 			-- Tool window to which Current belongs.
 
@@ -71,6 +74,25 @@ feature -- Status setting
 	set_changed (b: BOOLEAN) is
 			-- Set `changed' to b.
 		deferred
+		end;
+
+	set_last_format_2 (f: like last_format_2) is
+			-- Assign `f' to `last_format_2'.
+		require
+			format_exists: f /= Void
+		do
+			if last_format_2 /= f then
+				if not history.islast then
+					history.extend (root_stone)
+				end;
+				if last_format_2 /= Void then
+					last_format_2.associated_button.darken (False)
+				end;
+				last_format_2 := f;
+				last_format_2.associated_button.darken (True)
+			end
+		ensure
+			last_format_2 = f
 		end;
 
 feature -- Execution

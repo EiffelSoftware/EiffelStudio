@@ -868,7 +868,9 @@ feature -- getting the status of a specified breakpoint
 	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
 			-- Returns 0 if the breakpoint is not set,
 			--         1 if the breakpoint is set,
-			--        -1 if the breakpoint is disabled
+			--		   2 if the breakpoint is enabled and has a condition,
+			--         -1 if the breakpoint is set but disabled,
+			--		   -2 if the breakpoint is disabled and has a condition
 		local
 			bp: BREAKPOINT
 		do
@@ -880,9 +882,17 @@ feature -- getting the status of a specified breakpoint
 					if breakpoints.has(bp) then
 						bp := breakpoints.found_item
 						if bp.is_enabled then
-							Result := 1
+							if bp.condition = Void then
+								Result := 1
+							else
+								Result := 2
+							end
 						elseif bp.is_disabled then
-							Result := -1
+							if bp.condition = Void then
+								Result := -1
+							else
+								Result := -2
+							end
 						end
 					end
 				else

@@ -824,2043 +824,545 @@ feature -- GTK Macros
 	
 feature -- C enums
 
-	G_date_april_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
+	frozen gdk_control_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_CONTROL_MASK"
+		end
+
+
+	frozen gdk_mod1_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_MOD1_MASK"
+		end
+
+
+	frozen gdk_shift_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_SHIFT_MASK"
+		end
+
+
+	frozen gdk_button_press_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON_PRESS"
+		end
+
+
+	frozen gdk_2button_press_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_2BUTTON_PRESS"
+		end
+
+
+	frozen gdk_3button_press_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_3BUTTON_PRESS"
+		end
+
+
+	frozen gtk_state_normal_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_STATE_NORMAL"
+		end
+
+	frozen gtk_state_prelight_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_STATE_PRELIGHT"
+		end
+
+	frozen gtk_state_selected_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_STATE_SELECTED"
+		end
+
+	frozen gtk_state_active_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_STATE_ACTIVE"
+		end
+
+	frozen gtk_state_insensitive_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_STATE_NORMAL"
+		end
+
+	frozen gtk_sensitive_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SENSITIVE"
+		end
+
+	frozen gtk_mapped_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_MAPPED"
+		end
+
+	frozen gdk_invert_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_INVERT"
+		end
+
+	frozen gdk_include_inferiors_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_INCLUDE_INFERIORS"
+		end
+
+	frozen gtk_justify_center_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_JUSTIFY_CENTER"
+		end
+
+	frozen gtk_justify_left_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_JUSTIFY_LEFT"
+		end
+
+	frozen gtk_justify_right_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_JUSTIFY_RIGHT"
+		end
+
+	frozen gtk_justify_fill_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_JUSTIFY_FILL"
+		end
+
+	frozen gtk_shadow_none_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SHADOW_NONE"
+		end
+
+	frozen gtk_shadow_etched_in_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SHADOW_ETCHED_IN"
+		end
+
+	frozen gtk_shadow_etched_out_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SHADOW_ETCHED_OUT"
+		end
+
+	frozen gtk_shadow_in_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SHADOW_IN"
+		end
+
+	frozen gtk_shadow_out_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SHADOW_OUT"
+		end
+
+	frozen gdk_exposure_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_EXPOSURE_MASK"
+		end
+
+	frozen gdk_pointer_motion_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_POINTER_MOTION_MASK"
+		end
+
+	frozen gdk_button1_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON1_MASK"
+		end
+
+	frozen gdk_button2_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON2_MASK"
+		end
+
+	frozen gdk_button3_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON3_MASK"
+		end
+
+	frozen gdk_button_press_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON_PRESS_MASK"
+		end
+
+	frozen gdk_button_release_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON_RELEASE_MASK"
+		end
+
+	frozen gdk_button_motion_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON_MOTION_MASK"
+		end
+
+	frozen gdk_key_press_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_KEY_PRESS"
+		end
+
+	frozen gdk_key_release_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_KEY_RELEASE"
+		end
+
+	frozen gdk_key_press_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_KEY_PRESS_MASK"
+		end
+
+	frozen gdk_key_release_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_KEY_RELEASE_MASK"
+		end
+
+	frozen gdk_enter_notify_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_ENTER_NOTIFY_MASK"
+		end
+
+	frozen gdk_leave_notify_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_LEAVE_NOTIFY_MASK"
+		end
+
+	frozen gdk_focus_change_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FOCUS_CHANGE_MASK"
+		end
+
+	frozen gdk_visibility_notify_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_VISIBILITY_NOTIFY_MASK"
+		end
+
+	frozen gtk_has_focus_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_HAS_FOCUS"
+		end
+
+	frozen gtk_has_grab_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_HAS_GRAB"
+		end
+
+	frozen gtk_visible_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_VISIBLE"
+		end
+
+	frozen gtk_window_toplevel_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WINDOW_TOPLEVEL"
+		end
+
+	frozen gdk_decor_all_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_ALL"
+		end
+
+	frozen gdk_decor_border_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_BORDER"
+		end
+
+	frozen gdk_hint_max_size_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_HINT_MAX_SIZE"
+		end
+
+	frozen gtk_realized_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_REALIZED"
+		end
+
+	frozen gtk_win_pos_center_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WIN_POS_CENTER"
+		end
+
+	frozen gtk_win_pos_none_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WIN_POS_NONE"
+		end
+
+	frozen gdk_func_close_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_CLOSE"
+		end
+
+	frozen gdk_func_move_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_MOVE"
+		end
+
+	frozen gdk_func_resize_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_RESIZE"
+		end
+
+	frozen gtk_can_focus_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CAN_FOCUS"
+		end
+
+	frozen gtk_policy_automatic_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_POLICY_AUTOMATIC"
+		end
+
+	frozen gtk_policy_always_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_POLICY_ALWAYS"
+		end
+
+	frozen gtk_policy_never_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_POLICY_NEVER"
+		end
+
+	frozen gtk_corner_top_left_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CORNER_TOP_LEFT"
+		end
+
+	frozen gtk_selection_browse_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SELECTION_BROWSE"
+		end
+
+	frozen gtk_selection_single_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SELECTION_SINGLE"
+		end
+
+	frozen gtk_selection_multiple_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SELECTION_MULTIPLE"
+		end
+
+	frozen gtk_selection_extended_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_SELECTION_EXTENDED"
+		end
+
+	frozen gtk_relief_normal_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_RELIEF_NORMAL"
+		end
+
+	frozen gtk_relief_none_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_RELIEF_NONE"
+		end
+
+
+	frozen gdk_copy_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_COPY"
+		end
+
+	frozen gdk_copy_invert_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_COPY_INVERT"
+		end
+
+	frozen gdk_xor_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_XOR"
+		end
+
+	frozen gdk_and_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_AND"
+		end
+
+	frozen gdk_or_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_OR"
+		end
+
+	frozen gdk_line_on_off_dash_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_LINE_ON_OFF_DASH"
+		end
+
+	frozen gdk_line_solid_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_LINE_SOLID"
+		end
+
+	frozen gdk_tiled_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_TILED"
+		end
+
+	frozen gdk_solid_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_SOLID"
+		end
+
+	frozen gdk_cap_butt_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_CAP_BUTT"
+		end
+
+	frozen gdk_join_bevel_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_JOIN_BEVEL"
+		end
+
+	frozen gdk_rgb_dither_normal_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_RGB_DITHER_NORMAL"
+		end
 
-	G_date_august_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	G_date_bad_month_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_date_bad_weekday_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_date_day_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_date_december_enum: INTEGER is 12
-			-- (from GTK_ENUMS)
-
-	G_date_february_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_date_friday_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	G_date_january_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_date_july_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	G_date_june_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	G_date_march_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_date_may_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	G_date_monday_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_date_month_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_date_november_enum: INTEGER is 11
-			-- (from GTK_ENUMS)
-
-	G_date_october_enum: INTEGER is 10
-			-- (from GTK_ENUMS)
-
-	G_date_saturday_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	G_date_september_enum: INTEGER is 9
-			-- (from GTK_ENUMS)
-
-	G_date_sunday_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	G_date_thursday_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	G_date_tuesday_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_date_wednesday_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_date_year_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_err_digit_radix_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	G_err_float_malformed_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	G_err_float_radix_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	G_err_non_digit_in_const_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	G_err_unexp_eof_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_err_unexp_eof_in_comment_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_err_unexp_eof_in_string_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_err_unknown_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_hook_flag_active_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_hook_flag_in_call_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_hook_flag_mask_enum: INTEGER is 15
-			-- (from GTK_ENUMS)
-
-	G_in_order_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_io_err_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	G_io_error_again_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_io_error_inval_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_io_error_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_io_error_unknown_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_io_hup_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	G_io_in_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_io_nval_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	G_io_out_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	G_io_pri_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_level_order_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_log_flag_fatal_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_log_flag_recursion_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_log_level_critical_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	G_log_level_debug_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	G_log_level_error_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	G_log_level_info_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	G_log_level_mask_enum: INTEGER is -4
-			-- (from GTK_ENUMS)
-
-	G_log_level_message_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	G_log_level_warning_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	G_post_order_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_pre_order_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_seek_cur_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_seek_end_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	G_seek_set_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_token_eof_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	G_token_left_curly_enum: INTEGER is 123
-			-- (from GTK_ENUMS)
-
-	G_token_left_paren_enum: INTEGER is 40
-			-- (from GTK_ENUMS)
-
-	G_token_right_curly_enum: INTEGER is 125
-			-- (from GTK_ENUMS)
-
-	G_token_right_paren_enum: INTEGER is 41
-			-- (from GTK_ENUMS)
-
-	G_traverse_all_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_traverse_leafs_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	G_traverse_mask_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	G_traverse_non_leafs_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_2button_press_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_3button_press_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gdk_action_ask_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_action_copy_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_action_default_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_action_link_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_action_move_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_action_private_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_all_events_mask_enum: INTEGER is 1048575
-			-- (from GTK_ENUMS)
-
-	Gdk_and_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_and_invert_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gdk_and_reverse_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_ignore_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_last_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_pressure_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_x_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_xtilt_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_y_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_axis_ytilt_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_button1_mask_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gdk_button1_motion_mask_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_button2_mask_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gdk_button2_motion_mask_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_button3_mask_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gdk_button3_motion_mask_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gdk_button4_mask_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gdk_button5_mask_enum: INTEGER is 4096
-			-- (from GTK_ENUMS)
-
-	Gdk_button_motion_mask_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_button_press_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_button_press_mask_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gdk_button_release_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gdk_button_release_mask_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gdk_cap_butt_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_cap_not_last_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_cap_projecting_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_cap_round_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_bw_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_my_gray_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_palette_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_std_cmap_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_true_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_cc_mode_undefined_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_clear_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_client_event_enum: INTEGER is 28
-			-- (from GTK_ENUMS)
-
-	Gdk_clip_by_children_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_configure_enum: INTEGER is 13
-			-- (from GTK_ENUMS)
-
-	Gdk_control_mask_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_copy_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_copy_invert_enum: INTEGER is 11
-			-- (from GTK_ENUMS)
-
-	Gdk_crossing_grab_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_crossing_normal_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_crossing_ungrab_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_all_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_border_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_maximize_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_menu_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_minimize_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_resizeh_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_decor_title_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_delete_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_destroy_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_enter_enum: INTEGER is 22
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_leave_enum: INTEGER is 23
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_motion_enum: INTEGER is 24
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_proto_motif_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_proto_none_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_proto_rootwin_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_proto_xdnd_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_drag_status_enum: INTEGER is 25
-			-- (from GTK_ENUMS)
-
-	Gdk_drop_finished_enum: INTEGER is 27
-			-- (from GTK_ENUMS)
-
-	Gdk_drop_start_enum: INTEGER is 26
-			-- (from GTK_ENUMS)
-
-	Gdk_enter_notify_enum: INTEGER is 10
-			-- (from GTK_ENUMS)
-
-	Gdk_enter_notify_mask_enum: INTEGER is 4096
-			-- (from GTK_ENUMS)
-
-	Gdk_equiv_enum: INTEGER is 9
-			-- (from GTK_ENUMS)
-
-	Gdk_error_enum: INTEGER is -1
-			-- (from GTK_ENUMS)
-
-	Gdk_error_file_enum: INTEGER is -3
-			-- (from GTK_ENUMS)
-
-	Gdk_error_mem_enum: INTEGER is -4
-			-- (from GTK_ENUMS)
-
-	Gdk_error_param_enum: INTEGER is -2
-			-- (from GTK_ENUMS)
-
-	Gdk_even_odd_rule_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_expose_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_exposure_mask_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_extension_events_all_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_extension_events_cursor_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_extension_events_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_filter_continue_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_filter_remove_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_filter_translate_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_focus_change_enum: INTEGER is 12
-			-- (from GTK_ENUMS)
-
-	Gdk_focus_change_mask_enum: INTEGER is 16384
-			-- (from GTK_ENUMS)
-
-	Gdk_font_font_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_font_fontset_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_func_all_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_func_close_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_func_maximize_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_func_minimize_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_func_move_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_func_resize_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_background_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_cap_style_enum: INTEGER is 65536
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_clip_mask_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_clip_x_origin_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_clip_y_origin_enum: INTEGER is 4096
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_exposures_enum: INTEGER is 8192
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_fill_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_font_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_foreground_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_function_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_join_style_enum: INTEGER is 131072
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_line_style_enum: INTEGER is 32768
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_line_width_enum: INTEGER is 16384
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_stipple_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_subwindow_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_tile_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_ts_x_origin_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gdk_gc_ts_y_origin_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_aspect_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_base_size_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_max_size_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_min_size_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_pos_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_hint_resize_inc_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_all_req_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_client_window_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_cursor_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_filter_events_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_focus_window_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_line_spacing_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_area_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_area_needed_enum: INTEGER is 4096
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_area_req_enum: INTEGER is 3072
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_background_enum: INTEGER is 16384
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_colormap_enum: INTEGER is 65536
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_fontset_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_foreground_enum: INTEGER is 8192
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_pixmap_enum: INTEGER is 32768
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_preedit_position_req_enum: INTEGER is 3088
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_spot_location_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_area_enum: INTEGER is 4194304
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_area_needed_enum: INTEGER is 8388608
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_area_req_enum: INTEGER is 6291456
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_background_enum: INTEGER is 33554432
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_colormap_enum: INTEGER is 134217728
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_fontset_enum: INTEGER is 2097152
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_foreground_enum: INTEGER is 16777216
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_status_pixmap_enum: INTEGER is 67108864
-			-- (from GTK_ENUMS)
-
-	Gdk_ic_style_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_area_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_callbacks_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_mask_enum: INTEGER is 31
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_none_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_nothing_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_im_preedit_position_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_im_status_area_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gdk_im_status_callbacks_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gdk_im_status_mask_enum: INTEGER is 3840
-			-- (from GTK_ENUMS)
-
-	Gdk_im_status_none_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gdk_im_status_nothing_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gdk_image_fastest_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_image_normal_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_image_shared_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_include_inferiors_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_input_exception_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_input_only_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_input_output_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_input_read_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_input_write_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_invert_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_join_bevel_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_join_miter_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_join_round_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_key_press_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_key_press_mask_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gdk_key_release_enum: INTEGER is 9
-			-- (from GTK_ENUMS)
-
-	Gdk_key_release_mask_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gdk_leave_notify_enum: INTEGER is 11
-			-- (from GTK_ENUMS)
-
-	Gdk_leave_notify_mask_enum: INTEGER is 8192
-			-- (from GTK_ENUMS)
-
-	Gdk_line_double_dash_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_line_on_off_dash_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_line_solid_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_lock_mask_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_lsb_first_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_map_enum: INTEGER is 14
-			-- (from GTK_ENUMS)
-
-	Gdk_mod1_mask_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_mod2_mask_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_mod3_mask_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_mod4_mask_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_mod5_mask_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gdk_mode_disabled_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_mode_screen_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_mode_window_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_modifier_mask_enum: INTEGER is 16383
-			-- (from GTK_ENUMS)
-
-	Gdk_motion_notify_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_msb_first_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_nand_enum: INTEGER is 13
-			-- (from GTK_ENUMS)
-
-	Gdk_no_expose_enum: INTEGER is 30
-			-- (from GTK_ENUMS)
-
-	Gdk_noop_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gdk_nothing_enum: INTEGER is -1
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_ancestor_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_inferior_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_nonlinear_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_nonlinear_virtual_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_unknown_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_notify_virtual_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_ok_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_opaque_stippled_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_or_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_or_invert_enum: INTEGER is 12
-			-- (from GTK_ENUMS)
-
-	Gdk_or_reverse_enum: INTEGER is 10
-			-- (from GTK_ENUMS)
-
-	Gdk_overlap_rectangle_in_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_overlap_rectangle_out_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_overlap_rectangle_part_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_pointer_motion_hint_mask_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_pointer_motion_mask_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_prop_mode_append_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_prop_mode_prepend_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_prop_mode_replace_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_property_change_mask_enum: INTEGER is 65536
-			-- (from GTK_ENUMS)
-
-	Gdk_property_delete_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_property_new_value_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_property_notify_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_proximity_in_enum: INTEGER is 20
-			-- (from GTK_ENUMS)
-
-	Gdk_proximity_in_mask_enum: INTEGER is 262144
-			-- (from GTK_ENUMS)
-
-	Gdk_proximity_out_enum: INTEGER is 21
-			-- (from GTK_ENUMS)
-
-	Gdk_proximity_out_mask_enum: INTEGER is 524288
-			-- (from GTK_ENUMS)
-
-	Gdk_release_mask_enum: INTEGER is 8192
-			-- (from GTK_ENUMS)
-
-	Gdk_rgb_dither_max_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_rgb_dither_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_rgb_dither_normal_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_clear_enum: INTEGER is 17
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_notify_enum: INTEGER is 19
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_primary_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_request_enum: INTEGER is 18
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_secondary_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_atom_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_bitmap_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_colormap_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_drawable_enum: INTEGER is 17
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_integer_enum: INTEGER is 19
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_pixmap_enum: INTEGER is 20
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_string_enum: INTEGER is 31
-			-- (from GTK_ENUMS)
-
-	Gdk_selection_type_window_enum: INTEGER is 33
-			-- (from GTK_ENUMS)
-
-	Gdk_set_enum: INTEGER is 14
-			-- (from GTK_ENUMS)
-
-	Gdk_shift_mask_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_solid_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_source_cursor_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_source_eraser_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_source_mouse_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_source_pen_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_stippled_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_structure_mask_enum: INTEGER is 32768
-			-- (from GTK_ENUMS)
-
-	Gdk_substructure_mask_enum: INTEGER is 1048576
-			-- (from GTK_ENUMS)
-
-	Gdk_target_bitmap_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_target_colormap_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gdk_target_drawable_enum: INTEGER is 17
-			-- (from GTK_ENUMS)
-
-	Gdk_target_pixmap_enum: INTEGER is 20
-			-- (from GTK_ENUMS)
-
-	Gdk_target_string_enum: INTEGER is 31
-			-- (from GTK_ENUMS)
-
-	Gdk_tiled_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_unmap_enum: INTEGER is 15
-			-- (from GTK_ENUMS)
-
-	Gdk_visibility_fully_obscured_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_visibility_notify_enum: INTEGER is 29
-			-- (from GTK_ENUMS)
-
-	Gdk_visibility_notify_mask_enum: INTEGER is 131072
-			-- (from GTK_ENUMS)
-
-	Gdk_visibility_partial_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_visibility_unobscured_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_direct_color_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_grayscale_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_pseudo_color_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_static_color_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_static_gray_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_visual_true_color_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_colormap_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_cursor_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_noredir_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_title_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_visual_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_wmclass_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_x_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_wa_y_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gdk_winding_rule_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_window_child_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gdk_window_dialog_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gdk_window_foreign_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gdk_window_pixmap_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gdk_window_root_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gdk_window_temp_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gdk_window_toplevel_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gdk_xor_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_accel_locked_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_accel_mask_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_accel_signal_visible_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_accel_visible_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_center_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_e_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_east_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_n_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_ne_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_north_east_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_north_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_north_west_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_nw_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_s_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_se_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_south_east_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_south_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_south_west_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_sw_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_w_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_anchor_west_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_app_paintable_enum: INTEGER is 524288
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_child_arg_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_construct_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_construct_only_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_mask_enum: INTEGER is 31
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_readable_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_readwrite_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_arg_writable_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_arrow_down_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_arrow_left_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_arrow_right_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_arrow_up_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_button_drags_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_button_expands_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_button_ignored_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_button_selects_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_buttonbox_default_style_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_buttonbox_edge_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_buttonbox_end_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_buttonbox_spread_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_buttonbox_start_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_calendar_no_month_change_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_calendar_show_day_names_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_calendar_show_heading_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_calendar_show_week_numbers_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_calendar_week_start_monday_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_can_default_enum: INTEGER is 8192
-			-- (from GTK_ENUMS)
-
-	Gtk_can_focus_enum: INTEGER is 2048
-			-- (from GTK_ENUMS)
-
-	Gtk_cell_empty_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_cell_pixmap_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_cell_pixtext_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_cell_text_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_cell_widget_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_centimeters_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_add_mode_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_auto_resize_blocked_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_auto_sort_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_child_has_focus_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_drag_after_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_drag_before_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_drag_into_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_drag_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_draw_drag_line_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_draw_drag_rect_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_in_drag_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_reorderable_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_row_height_set_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_show_titles_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_clist_use_drag_icons_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gtk_composite_child_enum: INTEGER is 131072
-			-- (from GTK_ENUMS)
-
-	Gtk_connected_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_constructed_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_corner_bottom_left_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_corner_bottom_right_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_corner_top_left_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_corner_top_right_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expander_circular_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expander_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expander_square_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expander_triangle_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_collapse_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_collapse_recursive_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_expand_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_expand_recursive_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_toggle_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_expansion_toggle_recursive_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_lines_dotted_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_lines_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_lines_solid_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_lines_tabbed_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_pos_after_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_pos_as_child_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_ctree_pos_before_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_curve_type_free_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_curve_type_linear_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_curve_type_spline_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_debug_dnd_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_debug_misc_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_debug_objects_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_debug_plugsocket_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_debug_signals_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_dest_default_all_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_dest_default_drop_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_dest_default_highlight_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_dest_default_motion_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_destroyed_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_down_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_left_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_right_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_tab_backward_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_tab_forward_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_dir_up_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_direction_left_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_direction_right_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_expand_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_fill_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_fill_x_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_fill_y_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_floating_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_font_all_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_font_bitmap_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_font_filter_base_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_font_filter_user_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_font_metric_pixels_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_font_metric_points_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_font_scalable_bitmap_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_font_scalable_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_has_default_enum: INTEGER is 16384
-			-- (from GTK_ENUMS)
-
-	Gtk_has_focus_enum: INTEGER is 4096
-			-- (from GTK_ENUMS)
-
-	Gtk_has_grab_enum: INTEGER is 32768
-			-- (from GTK_ENUMS)
-
-	Gtk_inches_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_justify_center_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_justify_fill_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_justify_left_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_justify_right_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_left_right_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_mapped_enum: INTEGER is 128
-			-- (from GTK_ENUMS)
-
-	Gtk_match_all_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_match_all_tail_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_match_exact_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_match_head_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_match_last_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_match_tail_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_dir_child_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_dir_next_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_dir_parent_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_dir_prev_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_factory_menu_bar_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_factory_menu_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_menu_factory_option_menu_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_no_reparent_enum: INTEGER is 262144
-			-- (from GTK_ENUMS)
-
-	Gtk_no_window_enum: INTEGER is 32
-			-- (from GTK_ENUMS)
-
-	Gtk_orientation_horizontal_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_orientation_vertical_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_pack_end_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_pack_expand_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_pack_start_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_parent_sensitive_enum: INTEGER is 1024
-			-- (from GTK_ENUMS)
-
-	Gtk_path_class_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_application_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_gtk_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_highest_enum: INTEGER is 15
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_lowest_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_mask_enum: INTEGER is 15
-			-- (from GTK_ENUMS)
-
-	Gtk_path_prio_rc_enum: INTEGER is 12
-			-- (from GTK_ENUMS)
-
-	Gtk_path_widget_class_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_path_widget_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_pixels_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_policy_always_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_policy_automatic_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_policy_never_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_pos_bottom_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_pos_left_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_pos_right_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_pos_top_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_preview_color_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_preview_grayscale_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_bottom_to_top_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_continuous_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_discrete_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_left_to_right_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_right_to_left_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_progress_top_to_bottom_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_base_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_bg_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_fg_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_style_enum: INTEGER is 65536
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_text_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_active_enum: INTEGER is 273
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_application_enum: INTEGER is 293
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_base_enum: INTEGER is 279
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_bg_enum: INTEGER is 278
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_bg_pixmap_enum: INTEGER is 283
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_bind_enum: INTEGER is 287
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_binding_enum: INTEGER is 286
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_class_enum: INTEGER is 290
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_engine_enum: INTEGER is 296
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_fg_enum: INTEGER is 277
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_font_enum: INTEGER is 281
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_fontset_enum: INTEGER is 282
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_gtk_enum: INTEGER is 292
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_highest_enum: INTEGER is 295
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_include_enum: INTEGER is 271
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_insensitive_enum: INTEGER is 276
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_invalid_enum: INTEGER is 270
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_last_enum: INTEGER is 298
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_lowest_enum: INTEGER is 291
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_module_path_enum: INTEGER is 297
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_normal_enum: INTEGER is 272
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_pixmap_path_enum: INTEGER is 284
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_prelight_enum: INTEGER is 274
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_rc_enum: INTEGER is 294
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_selected_enum: INTEGER is 275
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_style_enum: INTEGER is 285
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_text_enum: INTEGER is 280
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_widget_class_enum: INTEGER is 289
-			-- (from GTK_ENUMS)
-
-	Gtk_rc_token_widget_enum: INTEGER is 288
-			-- (from GTK_ENUMS)
-
-	Gtk_realized_enum: INTEGER is 64
-			-- (from GTK_ENUMS)
-
-	Gtk_receives_default_enum: INTEGER is 1048576
-			-- (from GTK_ENUMS)
-
-	Gtk_relief_half_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_relief_none_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_relief_normal_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_resize_immediate_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_resize_parent_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_resize_queue_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_run_action_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_run_both_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_run_first_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_run_last_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_run_no_hooks_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_run_no_recurse_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_jump_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_page_backward_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_page_forward_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_step_backward_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_scroll_step_forward_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_selection_browse_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_selection_extended_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_selection_multiple_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_selection_single_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_sensitive_enum: INTEGER is 512
-			-- (from GTK_ENUMS)
-
-	Gtk_shadow_etched_in_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_shadow_etched_out_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_shadow_in_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_shadow_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_shadow_out_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_shrink_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_side_bottom_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_side_left_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_side_right_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_side_top_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_sort_ascending_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_sort_descending_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_end_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_home_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_page_backward_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_page_forward_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_step_backward_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_step_forward_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_spin_user_defined_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gtk_state_active_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_state_insensitive_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_state_normal_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_state_prelight_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_state_selected_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_target_same_app_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_target_same_widget_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_both_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_child_button_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_child_radiobutton_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_child_space_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_child_togglebutton_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_child_widget_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_icons_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_space_empty_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_space_line_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_toolbar_text_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_top_bottom_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_toplevel_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_trough_end_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_trough_jump_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_trough_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_trough_start_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_type_args_enum: INTEGER is 17
-			-- (from GTK_ENUMS)
-
-	Gtk_type_bool_enum: INTEGER is 4
-			-- (from GTK_ENUMS)
-
-	Gtk_type_boxed_enum: INTEGER is 14
-			-- (from GTK_ENUMS)
-
-	Gtk_type_c_callback_enum: INTEGER is 19
-			-- (from GTK_ENUMS)
-
-	Gtk_type_callback_enum: INTEGER is 18
-			-- (from GTK_ENUMS)
-
-	Gtk_type_char_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_type_double_enum: INTEGER is 10
-			-- (from GTK_ENUMS)
-
-	Gtk_type_enum_enum: INTEGER is 12
-			-- (from GTK_ENUMS)
-
-	Gtk_type_flags_enum: INTEGER is 13
-			-- (from GTK_ENUMS)
-
-	Gtk_type_float_enum: INTEGER is 9
-			-- (from GTK_ENUMS)
-
-	Gtk_type_foreign_enum: INTEGER is 20
-			-- (from GTK_ENUMS)
-
-	Gtk_type_int_enum: INTEGER is 5
-			-- (from GTK_ENUMS)
-
-	Gtk_type_invalid_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_type_long_enum: INTEGER is 7
-			-- (from GTK_ENUMS)
-
-	Gtk_type_none_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_type_object_enum: INTEGER is 21
-			-- (from GTK_ENUMS)
-
-	Gtk_type_pointer_enum: INTEGER is 15
-			-- (from GTK_ENUMS)
-
-	Gtk_type_signal_enum: INTEGER is 16
-			-- (from GTK_ENUMS)
-
-	Gtk_type_string_enum: INTEGER is 11
-			-- (from GTK_ENUMS)
-
-	Gtk_type_uchar_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_type_uint_enum: INTEGER is 6
-			-- (from GTK_ENUMS)
-
-	Gtk_type_ulong_enum: INTEGER is 8
-			-- (from GTK_ENUMS)
-
-	Gtk_update_always_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_update_continuous_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_update_delayed_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_update_discontinuous_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_update_if_valid_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_visibility_full_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_visibility_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_visibility_partial_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_visible_enum: INTEGER is 256
-			-- (from GTK_ENUMS)
-
-	Gtk_win_pos_center_always_enum: INTEGER is 3
-			-- (from GTK_ENUMS)
-
-	Gtk_win_pos_center_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_win_pos_mouse_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_win_pos_none_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-
-	Gtk_window_dialog_enum: INTEGER is 1
-			-- (from GTK_ENUMS)
-
-	Gtk_window_popup_enum: INTEGER is 2
-			-- (from GTK_ENUMS)
-
-	Gtk_window_toplevel_enum: INTEGER is 0
-			-- (from GTK_ENUMS)
-	
 feature -- External C functions
 
 	frozen g_allocator_free (a_allocator: POINTER) is
@@ -15505,6 +14007,11 @@ feature -- External C functions
 			"C (): gint | <gtk/gtk.h>"
 		end
 
+	frozen gtk_statusbar_new: POINTER is
+		external
+			"C signature (): GtkWidget* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_vbox_get_type: INTEGER is
 			-- GtkType	   gtk_vbox_get_type (void);
 			-- (from C_GTK_VBOX)
@@ -22807,14 +21314,6 @@ feature -- External C structs
 			"htimer"
 		end
 
---	set_gtk_clist_struct_row_center_offset (a_c_struct: POINTER; a_row_center_offset: INTEGER) is
---			-- (from C_GTK_CLIST_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkCList, gint)"
---		alias
---			"row_center_offset"
---		end
-
 	frozen set_gtk_clist_struct_row_height (a_c_struct: POINTER; a_row_height: INTEGER) is
 			-- (from C_GTK_CLIST_STRUCT)
 		external
@@ -23006,14 +21505,6 @@ feature -- External C structs
 		alias
 			"ok_button"
 		end
-
---	set_gtk_color_selection_dialog_struct_reset_button (a_c_struct: POINTER; a_reset_button: POINTER) is
---			-- (from C_GTK_COLOR_SELECTION_DIALOG_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog, GtkWidget*)"
---		alias
---			"reset_button"
---		end
 
 	frozen set_gtk_combo_struct_activate_id (a_c_struct: POINTER; a_activate_id: INTEGER) is
 			-- (from C_GTK_COMBO_STRUCT)
@@ -23247,13 +21738,6 @@ feature -- External C structs
 			"sibling"
 		end
 
-	--set_gtk_ctree_struct_clist (a_c_struct: POINTER; a_clist: POINTER) is
-	--		-- `a_clist' is pointer to GtkCList.
-	--		-- (from C_GTK_CTREE_STRUCT)
-	--	do
-	--		(gtk_ctree_struct_clist (a_c_struct)).memory_copy (a_clist, c_gtk_clist_struct_size)
-	--	end
-
 	frozen set_gtk_ctree_struct_drag_compare (a_c_struct: POINTER; a_drag_compare: POINTER) is
 			-- (from C_GTK_CTREE_STRUCT)
 		external
@@ -23341,214 +21825,6 @@ feature -- External C structs
 		alias
 			"draw_data"
 		end
-
---	set_gtk_editable_struct_clipboard_text (a_c_struct: POINTER; a_clipboard_text: POINTER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, gchar*)"
---		alias
---			"clipboard_text"
---		end
-
---	set_gtk_editable_struct_current_pos (a_c_struct: POINTER; a_current_pos: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"current_pos"
---		end
-
---	set_gtk_editable_struct_editable (a_c_struct: POINTER; a_editable: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"editable"
---		end
-
---	set_gtk_editable_struct_has_selection (a_c_struct: POINTER; a_has_selection: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"has_selection"
---		end
-
---	set_gtk_editable_struct_ic (a_c_struct: POINTER; a_ic: POINTER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, GdkIC*)"
---		alias
---			"ic"
---		end
-
---	set_gtk_editable_struct_ic_attr (a_c_struct: POINTER; a_ic_attr: POINTER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, GdkICAttr*)"
---		alias
---			"ic_attr"
---		end
-
---	set_gtk_editable_struct_selection_end_pos (a_c_struct: POINTER; a_selection_end_pos: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"selection_end_pos"
---		end
-
---	set_gtk_editable_struct_selection_start_pos (a_c_struct: POINTER; a_selection_start_pos: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"selection_start_pos"
---		end
-
---	set_gtk_editable_struct_visible (a_c_struct: POINTER; a_visible: INTEGER) is
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
---		alias
---			"visible"
---		end
-
---	set_gtk_entry_struct_backing_pixmap (a_c_struct: POINTER; a_backing_pixmap: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, GdkPixmap*)"
---		alias
---			"backing_pixmap"
---		end
-
---	set_gtk_entry_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
---		alias
---			"button"
---		end
-
---	set_gtk_entry_struct_char_offset (a_c_struct: POINTER; a_char_offset: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, gint*)"
---		alias
---			"char_offset"
---		end
-
---	set_gtk_entry_struct_cursor (a_c_struct: POINTER; a_cursor: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, GdkCursor*)"
---		alias
---			"cursor"
---		end
-
---	set_gtk_entry_struct_scroll_offset (a_c_struct: POINTER; a_scroll_offset: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, gint)"
---		alias
---			"scroll_offset"
---		end
-
---	set_gtk_entry_struct_text (a_c_struct: POINTER; a_text: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, GdkWChar*)"
---		alias
---			"text"
---		end
-
---	set_gtk_entry_struct_text_area (a_c_struct: POINTER; a_text_area: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, GdkWindow*)"
---		alias
---			"text_area"
---		end
-
---	set_gtk_entry_struct_text_length (a_c_struct: POINTER; a_text_length: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
---		alias
---			"text_length"
---		end
-
---	set_gtk_entry_struct_text_max_length (a_c_struct: POINTER; a_text_max_length: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
---		alias
---			"text_max_length"
---		end
-
---	set_gtk_entry_struct_text_mb (a_c_struct: POINTER; a_text_mb: POINTER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, gchar*)"
---		alias
---			"text_mb"
---		end
-
---	set_gtk_entry_struct_text_mb_dirty (a_c_struct: POINTER; a_text_mb_dirty: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
---		alias
---			"text_mb_dirty"
---		end
---
---	set_gtk_entry_struct_text_size (a_c_struct: POINTER; a_text_size: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
---		alias
---			"text_size"
---		end
-
---	set_gtk_entry_struct_timer (a_c_struct: POINTER; a_timer: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint32)"
---		alias
---			"timer"
---		end
-
---	set_gtk_entry_struct_use_wchar (a_c_struct: POINTER; a_use_wchar: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
---		alias
---			"use_wchar"
---		end
-
---	set_gtk_entry_struct_visible (a_c_struct: POINTER; a_visible: INTEGER) is
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
---		alias
---			"visible"
---		end
-
---	set_gtk_file_selection_struct_action_area (a_c_struct: POINTER; a_action_area: POINTER) is
---			-- (from C_GTK_FILE_SELECTION_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFileSelection, GtkWidget*)"
---		alias
---			"action_area"
---		end
-
---	set_gtk_file_selection_struct_button_area (a_c_struct: POINTER; a_button_area: POINTER) is
---			-- (from C_GTK_FILE_SELECTION_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFileSelection, GtkWidget*)"
---		alias
---			"button_area"
---		end
 
 	frozen set_gtk_file_selection_struct_cancel_button (a_c_struct: POINTER; a_cancel_button: POINTER) is
 			-- (from C_GTK_FILE_SELECTION_STRUCT)
@@ -23750,54 +22026,6 @@ feature -- External C structs
 			"ok_button"
 		end
 
---	set_gtk_frame_struct_label (a_c_struct: POINTER; a_label: POINTER) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gchar*)"
---		alias
---			"label"
---		end
-
---	set_gtk_frame_struct_label_height (a_c_struct: POINTER; a_label_height: INTEGER) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
---		alias
---			"label_height"
---		end
-
---	set_gtk_frame_struct_label_width (a_c_struct: POINTER; a_label_width: INTEGER) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
---		alias
---			"label_width"
---		end
-
---	set_gtk_frame_struct_label_xalign (a_c_struct: POINTER; a_label_xalign: REAL) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
---		alias
---			"label_xalign"
---		end
-
---	set_gtk_frame_struct_label_yalign (a_c_struct: POINTER; a_label_yalign: REAL) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
---		alias
---			"label_yalign"
---		end
-
---	set_gtk_frame_struct_shadow_type (a_c_struct: POINTER; a_shadow_type: INTEGER) is
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
---		alias
---			"shadow_type"
---		end
-
 	frozen set_gtk_input_dialog_struct_axis_list (a_c_struct: POINTER; a_axis_list: POINTER) is
 			-- (from C_GTK_INPUT_DIALOG_STRUCT)
 		external
@@ -23821,14 +22049,6 @@ feature -- External C structs
 		alias
 			"close_button"
 		end
-
---	set_gtk_input_dialog_struct_current_device (a_c_struct: POINTER; a_current_device: INTEGER) is
---			-- (from C_GTK_INPUT_DIALOG_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkInputDialog, guint32)"
---		alias
---			"current_device"
---		end
 
 	frozen set_gtk_input_dialog_struct_keys_list (a_c_struct: POINTER; a_keys_list: POINTER) is
 			-- (from C_GTK_INPUT_DIALOG_STRUCT)
@@ -23877,38 +22097,6 @@ feature -- External C structs
 		alias
 			"label"
 		end
-
---	set_gtk_label_struct_label_wc (a_c_struct: POINTER; a_label_wc: POINTER) is
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkLabel, GdkWChar*)"
---		alias
---			"label_wc"
---		end
-
---	set_gtk_label_struct_max_width (a_c_struct: POINTER; a_max_width: INTEGER) is
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkLabel, guint)"
---		alias
---			"max_width"
---		end
-
---	set_gtk_label_struct_pattern (a_c_struct: POINTER; a_pattern: POINTER) is
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkLabel, gchar*)"
---		alias
---			"pattern"
---		end
-
---	set_gtk_label_struct_words (a_c_struct: POINTER; a_words: POINTER) is
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkLabel, GtkLabelWord*)"
---		alias
---			"words"
---		end
 
 	frozen set_gtk_label_struct_wrap (a_c_struct: POINTER; a_wrap: BOOLEAN) is
 			-- (from C_GTK_LABEL_STRUCT)
@@ -24030,22 +22218,6 @@ feature -- External C structs
 			"vtimer"
 		end
 
---	set_gtk_menu_bar_struct_shadow_type (a_c_struct: POINTER; a_shadow_type: INTEGER) is
---			-- (from C_GTK_MENU_BAR_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkMenuBar, GtkShadowType)"
---		alias
---			"shadow_type"
---		end
-
---	set_gtk_menu_item_struct_accelerator_signal (a_c_struct: POINTER; a_accelerator_signal: INTEGER) is
---			-- (from C_GTK_MENU_ITEM_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkMenuItem, guint)"
---		alias
---			"accelerator_signal"
---		end
-
 	frozen set_gtk_menu_item_struct_accelerator_width (a_c_struct: POINTER; a_accelerator_width: INTEGER) is
 			-- (from C_GTK_MENU_ITEM_STRUCT)
 		external
@@ -24069,14 +22241,6 @@ feature -- External C structs
 		alias
 			"show_submenu_indicator"
 		end
-
---	set_gtk_menu_item_struct_show_toggle_indicator (a_c_struct: POINTER; a_show_toggle_indicator: INTEGER) is
---			-- (from C_GTK_MENU_ITEM_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkMenuItem, guint)"
---		alias
---			"show_toggle_indicator"
---		end
 
 	frozen set_gtk_menu_item_struct_submenu (a_c_struct: POINTER; a_submenu: POINTER) is
 			-- (from C_GTK_MENU_ITEM_STRUCT)
@@ -24302,102 +22466,6 @@ feature -- External C structs
 			"ypad"
 		end
 
---	set_gtk_notebook_page_struct_child (a_c_struct: POINTER; a_child: POINTER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
---		alias
---			"child"
---		end
-
---	set_gtk_notebook_page_struct_default_menu (a_c_struct: POINTER; a_default_menu: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
---		alias
---			"default_menu"
---		end
-
---	set_gtk_notebook_page_struct_default_tab (a_c_struct: POINTER; a_default_tab: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
---		alias
---			"default_tab"
---		end
-
---	set_gtk_notebook_page_struct_expand (a_c_struct: POINTER; a_expand: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
---		alias
---			"expand"
---		end
-
---	set_gtk_notebook_page_struct_fill (a_c_struct: POINTER; a_fill: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
---		alias
---			"fill"
---		end
-
---	set_gtk_notebook_page_struct_menu_label (a_c_struct: POINTER; a_menu_label: POINTER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
---		alias
---			"menu_label"
---		end
-
---	set_gtk_notebook_page_struct_pack (a_c_struct: POINTER; a_pack: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
---		alias
---			"pack"
---		end
-
---	set_gtk_notebook_page_struct_tab_label (a_c_struct: POINTER; a_tab_label: POINTER) is
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
---		alias
---			"tab_label"
---		end
---
---	set_gtk_notebook_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"button"
---		end
-
---	set_gtk_notebook_struct_child_has_focus (a_c_struct: POINTER; a_child_has_focus: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"child_has_focus"
---		end
-
---	set_gtk_notebook_struct_children (a_c_struct: POINTER; a_children: POINTER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, GList*)"
---		alias
---			"children"
---		end
-
---	set_gtk_notebook_struct_click_child (a_c_struct: POINTER; a_click_child: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"click_child"
---		end
-
 	frozen set_gtk_notebook_struct_cur_page (a_c_struct: POINTER; a_cur_page: POINTER) is
 			-- (from C_GTK_NOTEBOOK_STRUCT)
 		external
@@ -24437,54 +22505,6 @@ feature -- External C structs
 		alias
 			"homogeneous"
 		end
-
---	set_gtk_notebook_struct_in_child (a_c_struct: POINTER; a_in_child: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"in_child"
---		end
-
---	set_gtk_notebook_struct_menu (a_c_struct: POINTER; a_menu: POINTER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, GtkWidget*)"
---		alias
---			"menu"
---		end
-
---	set_gtk_notebook_struct_need_timer (a_c_struct: POINTER; a_need_timer: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"need_timer"
---		end
-
---	set_gtk_notebook_struct_panel (a_c_struct: POINTER; a_panel: POINTER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, GdkWindow*)"
---		alias
---			"panel"
---		end
---
---	set_gtk_notebook_struct_scrollable (a_c_struct: POINTER; a_scrollable: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"scrollable"
---		end
-
-----	set_gtk_notebook_struct_show_border (a_c_struct: POINTER; a_show_border: INTEGER) is
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
---		alias
---			"show_border"
---		end
 
 	frozen set_gtk_notebook_struct_show_tabs (a_c_struct: POINTER; a_show_tabs: INTEGER) is
 			-- (from C_GTK_NOTEBOOK_STRUCT)
@@ -24533,30 +22553,6 @@ feature -- External C structs
 		alias
 			"flags"
 		end
-
---	set_gtk_object_struct_klass (a_c_struct: POINTER; a_klass: POINTER) is
---			-- (from C_GTK_OBJECT_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkObject, GtkObjectClass*)"
---		alias
---			"klass"
---		end
-
---	set_gtk_object_struct_object_data (a_c_struct: POINTER; a_object_data: POINTER) is
---			-- (from C_GTK_OBJECT_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkObject, GData*)"
---		alias
---			"object_data"
---		end
-
---	set_gtk_object_struct_ref_count (a_c_struct: POINTER; a_ref_count: INTEGER) is
---			-- (from C_GTK_OBJECT_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkObject, guint)"
---		alias
---			"ref_count"
---		end
 
 	frozen set_gtk_paned_struct_child1 (a_c_struct: POINTER; a_child1: POINTER) is
 			-- (from C_GTK_PANED_STRUCT)
@@ -24613,62 +22609,6 @@ feature -- External C structs
 		alias
 			"child2_shrink"
 		end
-
---	set_gtk_paned_struct_gutter_size (a_c_struct: POINTER; a_gutter_size: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
---		alias
---			"gutter_size"
---		end
-
---	set_gtk_paned_struct_handle (a_c_struct: POINTER; a_handle: POINTER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, GdkWindow*)"
---		alias
---			"handle"
---		end
-
---	set_gtk_paned_struct_handle_size (a_c_struct: POINTER; a_handle_size: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
---		alias
---			"handle_size"
---		end
-
---	set_gtk_paned_struct_handle_xpos (a_c_struct: POINTER; a_handle_xpos: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, gint16)"
---		alias
---			"handle_xpos"
---		end
-
---	set_gtk_paned_struct_handle_ypos (a_c_struct: POINTER; a_handle_ypos: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, gint16)"
---		alias
---			"handle_ypos"
---		end
-
---	set_gtk_paned_struct_in_drag (a_c_struct: POINTER; a_in_drag: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, guint)"
---		alias
---			"in_drag"
---		end
-
---	set_gtk_paned_struct_last_allocation (a_c_struct: POINTER; a_last_allocation: INTEGER) is
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkPaned, gint)"
---		alias
---			"last_allocation"
---		end
 
 	frozen set_gtk_paned_struct_max_position (a_c_struct: POINTER; a_max_position: INTEGER) is
 			-- (from C_GTK_PANED_STRUCT)
@@ -24878,150 +22818,6 @@ feature -- External C structs
 			"adjustment"
 		end
 
---	set_gtk_range_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint8)"
---		alias
---			"button"
---		end
-
---	set_gtk_range_struct_click_child (a_c_struct: POINTER; a_click_child: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint)"
---		alias
---			"click_child"
---		end
-
---	set_gtk_range_struct_digits (a_c_struct: POINTER; a_digits: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gint8)"
---		alias
---			"digits"
---		end
-
---	set_gtk_range_struct_in_child (a_c_struct: POINTER; a_in_child: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint)"
---		alias
---			"in_child"
---		end
-
---	set_gtk_range_struct_need_timer (a_c_struct: POINTER; a_need_timer: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint)"
---		alias
---			"need_timer"
---		end
---
---	set_gtk_range_struct_old_lower (a_c_struct: POINTER; a_old_lower: REAL) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gfloat)"
---		alias
---			"old_lower"
---		end
---
---	set_gtk_range_struct_old_page_size (a_c_struct: POINTER; a_old_page_size: REAL) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gfloat)"
---		alias
---			"old_page_size"
---		end
---
---	set_gtk_range_struct_old_upper (a_c_struct: POINTER; a_old_upper: REAL) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gfloat)"
---		alias
---			"old_upper"
---		end
---
---	set_gtk_range_struct_old_value (a_c_struct: POINTER; a_old_value: REAL) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gfloat)"
---		alias
---			"old_value"
---		end
-
---	set_gtk_range_struct_policy (a_c_struct: POINTER; a_policy: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint)"
---		alias
---			"policy"
---		end
-
---	set_gtk_range_struct_scroll_type (a_c_struct: POINTER; a_scroll_type: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint)"
---		alias
---			"scroll_type"
---		end
---
---	set_gtk_range_struct_slider (a_c_struct: POINTER; a_slider: POINTER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
---		alias
---			"slider"
---		end
---
---	set_gtk_range_struct_step_back (a_c_struct: POINTER; a_step_back: POINTER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
---		alias
---			"step_back"
---		end
-
---	set_gtk_range_struct_step_forw (a_c_struct: POINTER; a_step_forw: POINTER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
---		alias
---			"step_forw"
---		end
-
---	set_gtk_range_struct_timer (a_c_struct: POINTER; a_timer: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, guint32)"
---		alias
---			"timer"
---		end
-
---	set_gtk_range_struct_trough (a_c_struct: POINTER; a_trough: POINTER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
---		alias
---			"trough"
---		end
-
---	set_gtk_range_struct_x_click_point (a_c_struct: POINTER; a_x_click_point: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
---		alias
---			"x_click_point"
---		end
-
---	set_gtk_range_struct_y_click_point (a_c_struct: POINTER; a_y_click_point: INTEGER) is
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
---		alias
---			"y_click_point"
---		end
-
 	frozen set_gtk_requisition_struct_height (a_c_struct: POINTER; a_height: INTEGER) is
 			-- (from C_GTK_REQUISITION_STRUCT)
 		external
@@ -25126,14 +22922,6 @@ feature -- External C structs
 			"button"
 		end
 
---	set_gtk_spin_button_struct_click_child (a_c_struct: POINTER; a_click_child: INTEGER) is
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkSpinButton, guint)"
---		alias
---			"click_child"
---		end
-
 	frozen set_gtk_spin_button_struct_climb_rate (a_c_struct: POINTER; a_climb_rate: REAL) is
 			-- (from C_GTK_SPIN_BUTTON_STRUCT)
 		external
@@ -25141,30 +22929,6 @@ feature -- External C structs
 		alias
 			"climb_rate"
 		end
-
---	set_gtk_spin_button_struct_digits (a_c_struct: POINTER; a_digits: INTEGER) is
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkSpinButton, guint)"
---		alias
---			"digits"
---		end
---
---	set_gtk_spin_button_struct_ev_time (a_c_struct: POINTER; a_ev_time: INTEGER) is
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkSpinButton, guint32)"
---		alias
---			"ev_time"
---		end
-
---	set_gtk_spin_button_struct_in_child (a_c_struct: POINTER; a_in_child: INTEGER) is
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkSpinButton, guint)"
---		alias
---			"in_child"
---		end
 
 	frozen set_gtk_spin_button_struct_need_timer (a_c_struct: POINTER; a_need_timer: INTEGER) is
 			-- (from C_GTK_SPIN_BUTTON_STRUCT)
@@ -25189,14 +22953,6 @@ feature -- External C structs
 		alias
 			"panel"
 		end
-
---	set_gtk_spin_button_struct_shadow_type (a_c_struct: POINTER; a_shadow_type: INTEGER) is
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkSpinButton, GtkShadowType)"
---		alias
---			"shadow_type"
---		end
 
 	frozen set_gtk_spin_button_struct_snap_to_ticks (a_c_struct: POINTER; a_snap_to_ticks: INTEGER) is
 			-- (from C_GTK_SPIN_BUTTON_STRUCT)
@@ -25278,38 +23034,6 @@ feature -- External C structs
 			"depth"
 		end
 
---	set_gtk_style_struct_engine (a_c_struct: POINTER; a_engine: POINTER) is
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle, GtkThemeEngine*)"
---		alias
---			"engine"
---		end
---
---	set_gtk_style_struct_engine_data (a_c_struct: POINTER; a_engine_data: POINTER) is
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle, gpointer)"
---		alias
---			"engine_data"
---		end
-
---	set_gtk_style_struct_font (a_c_struct: POINTER; a_font: POINTER) is
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle, GdkFont*)"
---		alias
---			"font"
---		end
-
---	set_gtk_style_struct_klass (a_c_struct: POINTER; a_klass: POINTER) is
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle, GtkStyleClass*)"
---		alias
---			"klass"
---		end
-
 	frozen set_gtk_style_struct_rc_style (a_c_struct: POINTER; a_rc_style: POINTER) is
 			-- (from C_GTK_STYLE_STRUCT)
 		external
@@ -25317,14 +23041,6 @@ feature -- External C structs
 		alias
 			"rc_style"
 		end
-
---	set_gtk_style_struct_ref_count (a_c_struct: POINTER; a_ref_count: INTEGER) is
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle, gint)"
---		alias
---			"ref_count"
---		end
 
 	frozen set_gtk_style_struct_styles (a_c_struct: POINTER; a_styles: POINTER) is
 			-- (from C_GTK_STYLE_STRUCT)
@@ -25422,22 +23138,6 @@ feature -- External C structs
 			"draw_indicator"
 		end
 
---	set_gtk_tooltips_data_struct_font (a_c_struct: POINTER; a_font: POINTER) is
---			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GdkFont*)"
---		alias
---			"font"
---		end
-
---	set_gtk_tooltips_data_struct_row (a_c_struct: POINTER; a_row: POINTER) is
---			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GList*)"
---		alias
---			"row"
---		end
-
 	frozen set_gtk_tooltips_data_struct_tip_private (a_c_struct: POINTER; a_tip_private: POINTER) is
 			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
 		external
@@ -25470,14 +23170,6 @@ feature -- External C structs
 			"widget"
 		end
 
---	set_gtk_tooltips_data_struct_width (a_c_struct: POINTER; a_width: INTEGER) is
---			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltipsData, gint)"
---		alias
---			"width"
---		end
-
 	frozen set_gtk_tooltips_struct_active_tips_data (a_c_struct: POINTER; a_active_tips_data: POINTER) is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
 		external
@@ -25485,14 +23177,6 @@ feature -- External C structs
 		alias
 			"active_tips_data"
 		end
-
---	set_gtk_tooltips_struct_background (a_c_struct: POINTER; a_background: POINTER) is
---			-- (from C_GTK_TOOLTIPS_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltips, GdkColor*)"
---		alias
---			"background"
---		end
 
 	frozen set_gtk_tooltips_struct_delay (a_c_struct: POINTER; a_delay: INTEGER) is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -25509,22 +23193,6 @@ feature -- External C structs
 		alias
 			"enabled"
 		end
-
---	set_gtk_tooltips_struct_foreground (a_c_struct: POINTER; a_foreground: POINTER) is
---			-- (from C_GTK_TOOLTIPS_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltips, GdkColor*)"
---		alias
---			"foreground"
---		end
-
---	set_gtk_tooltips_struct_gc (a_c_struct: POINTER; a_gc: POINTER) is
---			-- (from C_GTK_TOOLTIPS_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkTooltips, GdkGC*)"
---		alias
---			"gc"
---		end
 
 	frozen set_gtk_tooltips_struct_timer_tag (a_c_struct: POINTER; a_timer_tag: INTEGER) is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -25670,14 +23338,6 @@ feature -- External C structs
 			"style"
 		end
 
---	set_gtk_widget_struct_window (a_c_struct: POINTER; a_window: POINTER) is
---			-- (from C_GTK_WIDGET_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkWidget, GdkWindow*)"
---		alias
---			"window"
---		end
---
 	frozen set_gtk_window_struct_allow_grow (a_c_struct: POINTER; a_allow_grow: INTEGER) is
 			-- (from C_GTK_WINDOW_STRUCT)
 		external
@@ -25693,14 +23353,6 @@ feature -- External C structs
 		alias
 			"allow_shrink"
 		end
-
---	set_gtk_window_struct_auto_shrink (a_c_struct: POINTER; a_auto_shrink: INTEGER) is
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
---		alias
---			"auto_shrink"
---		end
 
 	frozen set_gtk_window_struct_default_widget (a_c_struct: POINTER; a_default_widget: POINTER) is
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -25718,14 +23370,6 @@ feature -- External C structs
 			"focus_widget"
 		end
 
---	set_gtk_window_struct_handling_resize (a_c_struct: POINTER; a_handling_resize: INTEGER) is
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
---		alias
---			"handling_resize"
---		end
-
 	frozen set_gtk_window_struct_modal (a_c_struct: POINTER; a_modal: INTEGER) is
 			-- (from C_GTK_WINDOW_STRUCT)
 		external
@@ -25741,14 +23385,6 @@ feature -- External C structs
 		alias
 			"position"
 		end
-
---	set_gtk_window_struct_resize_count (a_c_struct: POINTER; a_resize_count: INTEGER) is
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkWindow, gushort)"
---		alias
---			"resize_count"
---		end
 
 	frozen set_gtk_window_struct_title (a_c_struct: POINTER; a_title: POINTER) is
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -25773,14 +23409,6 @@ feature -- External C structs
 		alias
 			"type"
 		end
-
---	set_gtk_window_struct_use_uposition (a_c_struct: POINTER; a_use_uposition: INTEGER) is
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
---		alias
---			"use_uposition"
---		end
 
 	frozen set_gtk_window_struct_wmclass_class (a_c_struct: POINTER; a_wmclass_class: POINTER) is
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -25861,1553 +23489,36 @@ feature -- Externals (XTEST extension)
 	
 feature -- Memory allocation
 
-	frozen c_gdk_color_struct_allocate: POINTER is
-			-- New GdkColor struct allocaded by calloc.
-			-- (from C_GDK_COLOR_STRUCT)
-		external
-			"C [macro <stdlib.h>]"
-		alias
-			"calloc (sizeof(GdkColor), 1)"
-		end
-
---	c_gdk_color_struct_free (a_c_struct: POINTER) is
---			-- Free GdkColor struct allocaded by calloc.
---			-- (from C_GDK_COLOR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_colormap_struct_allocate: POINTER is
---			-- New GdkColormap struct allocaded by calloc.
---			-- (from C_GDK_COLORMAP_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkColormap), 1)"
---		end
-
---	c_gdk_colormap_struct_free (a_c_struct: POINTER) is
---			-- Free GdkColormap struct allocaded by calloc.
---			-- (from C_GDK_COLORMAP_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gdk_event_any_struct_allocate: POINTER is
---			-- New GdkEventAny struct allocaded by calloc.
---			-- (from C_GDK_EVENT_ANY_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventAny), 1)"
---		end
-
---	c_gdk_event_any_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventAny struct allocaded by calloc.
---			-- (from C_GDK_EVENT_ANY_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_event_button_struct_allocate: POINTER is
---			-- New GdkEventButton struct allocaded by calloc.
---			-- (from C_GDK_EVENT_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventButton), 1)"
---		end
-
---	c_gdk_event_button_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventButton struct allocaded by calloc.
---			-- (from C_GDK_EVENT_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_event_configure_struct_allocate: POINTER is
---			-- New GdkEventConfigure struct allocaded by calloc.
---			-- (from C_GDK_EVENT_CONFIGURE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventConfigure), 1)"
---		end
---
---	c_gdk_event_configure_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventConfigure struct allocaded by calloc.
---			-- (from C_GDK_EVENT_CONFIGURE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gdk_event_expose_struct_allocate: POINTER is
---			-- New GdkEventExpose struct allocaded by calloc.
---			-- (from C_GDK_EVENT_EXPOSE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventExpose), 1)"
---		end
-
---	c_gdk_event_expose_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventExpose struct allocaded by calloc.
---			-- (from C_GDK_EVENT_EXPOSE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_event_key_struct_allocate: POINTER is
---			-- New GdkEventKey struct allocaded by calloc.
---			-- (from C_GDK_EVENT_KEY_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventKey), 1)"
---		end
-
---	c_gdk_event_key_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventKey struct allocaded by calloc.
---			-- (from C_GDK_EVENT_KEY_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_event_motion_struct_allocate: POINTER is
---			-- New GdkEventMotion struct allocaded by calloc.
---			-- (from C_GDK_EVENT_MOTION_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkEventMotion), 1)"
---		end
-
---	c_gdk_event_motion_struct_free (a_c_struct: POINTER) is
---			-- Free GdkEventMotion struct allocaded by calloc.
---			-- (from C_GDK_EVENT_MOTION_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_font_struct_allocate: POINTER is
---			-- New GdkFont struct allocaded by calloc.
---			-- (from C_GDK_FONT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkFont), 1)"
---		end
-
---	c_gdk_font_struct_free (a_c_struct: POINTER) is
---			-- Free GdkFont struct allocaded by calloc.
---			-- (from C_GDK_FONT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
-	frozen c_gdk_gcvalues_struct_allocate: POINTER is
-			-- New GdkGCValues struct allocaded by calloc.
-			-- (from C_GDK_GCVALUES_STRUCT)
-		external
-			"C [macro <stdlib.h>]"
-		alias
-			"calloc (sizeof(GdkGCValues), 1)"
-		end
-
---	c_gdk_gcvalues_struct_free (a_c_struct: POINTER) is
---			-- Free GdkGCValues struct allocaded by calloc.
---			-- (from C_GDK_GCVALUES_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
-	frozen c_gdk_geometry_struct_allocate: POINTER is
-			-- New GdkGeometry struct allocaded by calloc.
-			-- (from C_GDK_GEOMETRY_STRUCT)
-		external
-			"C [macro <stdlib.h>]"
-		alias
-			"calloc (sizeof(GdkGeometry), 1)"
-		end
-
---	c_gdk_geometry_struct_free (a_c_struct: POINTER) is
---			-- Free GdkGeometry struct allocaded by calloc.
---			-- (from C_GDK_GEOMETRY_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_point_struct_allocate: POINTER is
---			-- New GdkPoint struct allocaded by calloc.
---			-- (from C_GDK_POINT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkPoint), 1)"
---		end
-
---	c_gdk_point_struct_free (a_c_struct: POINTER) is
---			-- Free GdkPoint struct allocaded by calloc.
---			-- (from C_GDK_POINT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
 	frozen c_gdk_rectangle_struct_allocate: POINTER is
-			-- New GdkRectangle struct allocaded by calloc.
-			-- (from C_GDK_RECTANGLE_STRUCT)
+			-- New GdkColor struct allocaded by calloc.
 		external
 			"C [macro <stdlib.h>]"
 		alias
 			"calloc (sizeof(GdkRectangle), 1)"
 		end
 
---	c_gdk_rectangle_struct_free (a_c_struct: POINTER) is
---			-- Free GdkRectangle struct allocaded by calloc.
---			-- (from C_GDK_RECTANGLE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gdk_visual_struct_allocate: POINTER is
---			-- New GdkVisual struct allocaded by calloc.
---			-- (from C_GDK_VISUAL_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GdkVisual), 1)"
---		end
-
---	c_gdk_visual_struct_free (a_c_struct: POINTER) is
---			-- Free GdkVisual struct allocaded by calloc.
---			-- (from C_GDK_VISUAL_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_glist_struct_allocate: POINTER is
---			-- New GList struct allocaded by calloc.
---			-- (from C_GLIST_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GList), 1)"
---		end
-
---	c_glist_struct_free (a_c_struct: POINTER) is
---			-- Free GList struct allocaded by calloc.
---			-- (from C_GLIST_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gslist_struct_allocate: POINTER is
---			-- New GSList struct allocaded by calloc.
---			-- (from C_GSLIST_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GSList), 1)"
---		end
-
---	c_gslist_struct_free (a_c_struct: POINTER) is
---			-- Free GSList struct allocaded by calloc.
---			-- (from C_GSLIST_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_adjustment_struct_allocate: POINTER is
---			-- New GtkAdjustment struct allocaded by calloc.
---			-- (from C_GTK_ADJUSTMENT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkAdjustment), 1)"
---		end
-
---	c_gtk_adjustment_struct_free (a_c_struct: POINTER) is
---			-- Free GtkAdjustment struct allocaded by calloc.
---			-- (from C_GTK_ADJUSTMENT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_alignment_struct_allocate: POINTER is
---			-- New GtkAlignment struct allocaded by calloc.
---			-- (from C_GTK_ALIGNMENT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkAlignment), 1)"
---		end
-
---	c_gtk_alignment_struct_free (a_c_struct: POINTER) is
---			-- Free GtkAlignment struct allocaded by calloc.
---			-- (from C_GTK_ALIGNMENT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_allocation_struct_allocate: POINTER is
---			-- New GtkAllocation struct allocaded by calloc.
---			-- (from C_GTK_ALLOCATION_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkAllocation), 1)"
---		end
-
---	c_gtk_allocation_struct_free (a_c_struct: POINTER) is
---			-- Free GtkAllocation struct allocaded by calloc.
---			-- (from C_GTK_ALLOCATION_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_bin_struct_allocate: POINTER is
---			-- New GtkBin struct allocaded by calloc.
---			-- (from C_GTK_BIN_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkBin), 1)"
---		end
-
---	c_gtk_bin_struct_free (a_c_struct: POINTER) is
---			-- Free GtkBin struct allocaded by calloc.
---			-- (from C_GTK_BIN_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_box_struct_allocate: POINTER is
---			-- New GtkBox struct allocaded by calloc.
---			-- (from C_GTK_BOX_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkBox), 1)"
---		end
-
---	c_gtk_box_struct_free (a_c_struct: POINTER) is
---			-- Free GtkBox struct allocaded by calloc.
---			-- (from C_GTK_BOX_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_button_struct_allocate: POINTER is
---			-- New GtkButton struct allocaded by calloc.
---			-- (from C_GTK_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkButton), 1)"
---		end
-
---	c_gtk_button_struct_free (a_c_struct: POINTER) is
---			-- Free GtkButton struct allocaded by calloc.
---			-- (from C_GTK_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_check_button_struct_allocate: POINTER is
---			-- New GtkCheckButton struct allocaded by calloc.
---			-- (from C_GTK_CHECK_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCheckButton), 1)"
---		end
-
---	c_gtk_check_button_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCheckButton struct allocaded by calloc.
---			-- (from C_GTK_CHECK_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_check_menu_item_struct_allocate: POINTER is
---			-- New GtkCheckMenuItem struct allocaded by calloc.
---			-- (from C_GTK_CHECK_MENU_ITEM_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCheckMenuItem), 1)"
---		end
-
---	c_gtk_check_menu_item_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCheckMenuItem struct allocaded by calloc.
---			-- (from C_GTK_CHECK_MENU_ITEM_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_clist_cell_info_struct_allocate: POINTER is
---			-- New GtkCListCellInfo struct allocaded by calloc.
---			-- (from C_GTK_CLIST_CELL_INFO_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCListCellInfo), 1)"
---		end
---
---	c_gtk_clist_cell_info_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCListCellInfo struct allocaded by calloc.
---			-- (from C_GTK_CLIST_CELL_INFO_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_clist_row_struct_allocate: POINTER is
---			-- New GtkCListRow struct allocaded by calloc.
---			-- (from C_GTK_CLIST_ROW_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCListRow), 1)"
---		end
---
---	c_gtk_clist_row_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCListRow struct allocaded by calloc.
---			-- (from C_GTK_CLIST_ROW_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_clist_struct_allocate: POINTER is
---			-- New GtkCList struct allocaded by calloc.
---			-- (from C_GTK_CLIST_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCList), 1)"
---		end
-
---	c_gtk_clist_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCList struct allocaded by calloc.
---			-- (from C_GTK_CLIST_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_color_selection_dialog_struct_allocate: POINTER is
---			-- New GtkColorSelectionDialog struct allocaded by calloc.
---			-- (from C_GTK_COLOR_SELECTION_DIALOG_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkColorSelectionDialog), 1)"
---		end
---
---	c_gtk_color_selection_dialog_struct_free (a_c_struct: POINTER) is
---			-- Free GtkColorSelectionDialog struct allocaded by calloc.
---			-- (from C_GTK_COLOR_SELECTION_DIALOG_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_combo_struct_allocate: POINTER is
---			-- New GtkCombo struct allocaded by calloc.
---			-- (from C_GTK_COMBO_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCombo), 1)"
---		end
-
---	c_gtk_combo_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCombo struct allocaded by calloc.
---			-- (from C_GTK_COMBO_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_container_struct_allocate: POINTER is
---			-- New GtkContainer struct allocaded by calloc.
---			-- (from C_GTK_CONTAINER_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkContainer), 1)"
---		end
---
---	c_gtk_container_struct_free (a_c_struct: POINTER) is
---			-- Free GtkContainer struct allocaded by calloc.
---			-- (from C_GTK_CONTAINER_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_ctree_row_struct_allocate: POINTER is
---			-- New GtkCTreeRow struct allocaded by calloc.
---			-- (from C_GTK_CTREE_ROW_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCTreeRow), 1)"
---		end
---
---	c_gtk_ctree_row_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCTreeRow struct allocaded by calloc.
---			-- (from C_GTK_CTREE_ROW_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_ctree_struct_allocate: POINTER is
---			-- New GtkCTree struct allocaded by calloc.
---			-- (from C_GTK_CTREE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkCTree), 1)"
---		end
-
---	c_gtk_ctree_struct_free (a_c_struct: POINTER) is
---			-- Free GtkCTree struct allocaded by calloc.
---			-- (from C_GTK_CTREE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_dialog_struct_allocate: POINTER is
---			-- New GtkDialog struct allocaded by calloc.
---			-- (from C_GTK_DIALOG_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkDialog), 1)"
---		end
---
---	c_gtk_dialog_struct_free (a_c_struct: POINTER) is
---			-- Free GtkDialog struct allocaded by calloc.
---			-- (from C_GTK_DIALOG_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_drawing_area_struct_allocate: POINTER is
---			-- New GtkDrawingArea struct allocaded by calloc.
---			-- (from C_GTK_DRAWING_AREA_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkDrawingArea), 1)"
---		end
-
---	c_gtk_drawing_area_struct_free (a_c_struct: POINTER) is
---			-- Free GtkDrawingArea struct allocaded by calloc.
---			-- (from C_GTK_DRAWING_AREA_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_editable_struct_allocate: POINTER is
---			-- New GtkEditable struct allocaded by calloc.
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkEditable), 1)"
---		end
-
---	c_gtk_editable_struct_free (a_c_struct: POINTER) is
---			-- Free GtkEditable struct allocaded by calloc.
---			-- (from C_GTK_EDITABLE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_entry_struct_allocate: POINTER is
---			-- New GtkEntry struct allocaded by calloc.
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkEntry), 1)"
---		end
-
---	c_gtk_entry_struct_free (a_c_struct: POINTER) is
---			-- Free GtkEntry struct allocaded by calloc.
---			-- (from C_GTK_ENTRY_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_event_box_struct_allocate: POINTER is
---			-- New GtkEventBox struct allocaded by calloc.
---			-- (from C_GTK_EVENT_BOX_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkEventBox), 1)"
---		end
-
---	c_gtk_event_box_struct_free (a_c_struct: POINTER) is
---			-- Free GtkEventBox struct allocaded by calloc.
---			-- (from C_GTK_EVENT_BOX_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_file_selection_struct_allocate: POINTER is
---			-- New GtkFileSelection struct allocaded by calloc.
---			-- (from C_GTK_FILE_SELECTION_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkFileSelection), 1)"
---		end
---
---	c_gtk_file_selection_struct_free (a_c_struct: POINTER) is
---			-- Free GtkFileSelection struct allocaded by calloc.
---			-- (from C_GTK_FILE_SELECTION_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_fixed_struct_allocate: POINTER is
---			-- New GtkFixed struct allocaded by calloc.
---			-- (from C_GTK_FIXED_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkFixed), 1)"
---		end
-
---	c_gtk_fixed_struct_free (a_c_struct: POINTER) is
---			-- Free GtkFixed struct allocaded by calloc.
---			-- (from C_GTK_FIXED_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_font_selection_dialog_struct_allocate: POINTER is
---			-- New GtkFontSelectionDialog struct allocaded by calloc.
---			-- (from C_GTK_FONT_SELECTION_DIALOG_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkFontSelectionDialog), 1)"
---		end
-
---	c_gtk_font_selection_dialog_struct_free (a_c_struct: POINTER) is
---			-- Free GtkFontSelectionDialog struct allocaded by calloc.
---			-- (from C_GTK_FONT_SELECTION_DIALOG_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_frame_struct_allocate: POINTER is
---			-- New GtkFrame struct allocaded by calloc.
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkFrame), 1)"
---		end
-
---	c_gtk_frame_struct_free (a_c_struct: POINTER) is
---			-- Free GtkFrame struct allocaded by calloc.
---			-- (from C_GTK_FRAME_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_hbox_struct_allocate: POINTER is
---			-- New GtkHBox struct allocaded by calloc.
---			-- (from C_GTK_HBOX_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkHBox), 1)"
---		end
---
---	c_gtk_hbox_struct_free (a_c_struct: POINTER) is
---			-- Free GtkHBox struct allocaded by calloc.
---			-- (from C_GTK_HBOX_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_hpaned_struct_allocate: POINTER is
---			-- New GtkHPaned struct allocaded by calloc.
---			-- (from C_GTK_HPANED_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkHPaned), 1)"
---		end
-
---	c_gtk_hpaned_struct_free (a_c_struct: POINTER) is
---			-- Free GtkHPaned struct allocaded by calloc.
---			-- (from C_GTK_HPANED_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_hscale_struct_allocate: POINTER is
---			-- New GtkHScale struct allocaded by calloc.
---			-- (from C_GTK_HSCALE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkHScale), 1)"
---		end
-
---	c_gtk_hscale_struct_free (a_c_struct: POINTER) is
---			-- Free GtkHScale struct allocaded by calloc.
---			-- (from C_GTK_HSCALE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_hscrollbar_struct_allocate: POINTER is
---			-- New GtkHScrollbar struct allocaded by calloc.
---			-- (from C_GTK_HSCROLLBAR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkHScrollbar), 1)"
---		end
-
---	c_gtk_hscrollbar_struct_free (a_c_struct: POINTER) is
---			-- Free GtkHScrollbar struct allocaded by calloc.
---			-- (from C_GTK_HSCROLLBAR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_hseparator_struct_allocate: POINTER is
---			-- New GtkHSeparator struct allocaded by calloc.
---			-- (from C_GTK_HSEPARATOR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkHSeparator), 1)"
---		end
-
---	c_gtk_hseparator_struct_free (a_c_struct: POINTER) is
---			-- Free GtkHSeparator struct allocaded by calloc.
---			-- (from C_GTK_HSEPARATOR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_input_dialog_struct_allocate: POINTER is
---			-- New GtkInputDialog struct allocaded by calloc.
---			-- (from C_GTK_INPUT_DIALOG_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkInputDialog), 1)"
---		end
-
---	c_gtk_input_dialog_struct_free (a_c_struct: POINTER) is
---			-- Free GtkInputDialog struct allocaded by calloc.
---			-- (from C_GTK_INPUT_DIALOG_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_item_struct_allocate: POINTER is
---			-- New GtkItem struct allocaded by calloc.
---			-- (from C_GTK_ITEM_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkItem), 1)"
---		end
-
---	c_gtk_item_struct_free (a_c_struct: POINTER) is
---			-- Free GtkItem struct allocaded by calloc.
---			-- (from C_GTK_ITEM_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_label_struct_allocate: POINTER is
---			-- New GtkLabel struct allocaded by calloc.
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkLabel), 1)"
---		end
-
---	c_gtk_label_struct_free (a_c_struct: POINTER) is
---			-- Free GtkLabel struct allocaded by calloc.
---			-- (from C_GTK_LABEL_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_list_item_struct_allocate: POINTER is
---			-- New GtkListItem struct allocaded by calloc.
---			-- (from C_GTK_LIST_ITEM_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkListItem), 1)"
---		end
---
---	c_gtk_list_item_struct_free (a_c_struct: POINTER) is
---			-- Free GtkListItem struct allocaded by calloc.
---			-- (from C_GTK_LIST_ITEM_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_list_struct_allocate: POINTER is
---			-- New GtkList struct allocaded by calloc.
---			-- (from C_GTK_LIST_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkList), 1)"
---		end
---
---	c_gtk_list_struct_free (a_c_struct: POINTER) is
---			-- Free GtkList struct allocaded by calloc.
---			-- (from C_GTK_LIST_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_menu_bar_struct_allocate: POINTER is
---			-- New GtkMenuBar struct allocaded by calloc.
---			-- (from C_GTK_MENU_BAR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkMenuBar), 1)"
---		end
---
---	c_gtk_menu_bar_struct_free (a_c_struct: POINTER) is
---			-- Free GtkMenuBar struct allocaded by calloc.
---			-- (from C_GTK_MENU_BAR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_menu_item_struct_allocate: POINTER is
---			-- New GtkMenuItem struct allocaded by calloc.
---			-- (from C_GTK_MENU_ITEM_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkMenuItem), 1)"
---		end
-
---	c_gtk_menu_item_struct_free (a_c_struct: POINTER) is
---			-- Free GtkMenuItem struct allocaded by calloc.
---			-- (from C_GTK_MENU_ITEM_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_menu_shell_struct_allocate: POINTER is
---			-- New GtkMenuShell struct allocaded by calloc.
---			-- (from C_GTK_MENU_SHELL_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkMenuShell), 1)"
---		end
-
---	c_gtk_menu_shell_struct_free (a_c_struct: POINTER) is
---			-- Free GtkMenuShell struct allocaded by calloc.
---			-- (from C_GTK_MENU_SHELL_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_menu_struct_allocate: POINTER is
---			-- New GtkMenu struct allocaded by calloc.
---			-- (from C_GTK_MENU_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkMenu), 1)"
---		end
-
---	c_gtk_menu_struct_free (a_c_struct: POINTER) is
---			-- Free GtkMenu struct allocaded by calloc.
---			-- (from C_GTK_MENU_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_misc_struct_allocate: POINTER is
---			-- New GtkMisc struct allocaded by calloc.
---			-- (from C_GTK_MISC_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkMisc), 1)"
---		end
-
---	c_gtk_misc_struct_free (a_c_struct: POINTER) is
---			-- Free GtkMisc struct allocaded by calloc.
---			-- (from C_GTK_MISC_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_notebook_page_struct_allocate: POINTER is
---			-- New GtkNotebookPage struct allocaded by calloc.
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkNotebookPage), 1)"
---		end
-
---	c_gtk_notebook_page_struct_free (a_c_struct: POINTER) is
---			-- Free GtkNotebookPage struct allocaded by calloc.
---			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_notebook_struct_allocate: POINTER is
---			-- New GtkNotebook struct allocaded by calloc.
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkNotebook), 1)"
---		end
-
---	c_gtk_notebook_struct_free (a_c_struct: POINTER) is
---			-- Free GtkNotebook struct allocaded by calloc.
---			-- (from C_GTK_NOTEBOOK_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_object_struct_allocate: POINTER is
---			-- New GtkObject struct allocaded by calloc.
---			-- (from C_GTK_OBJECT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkObject), 1)"
---		end
-
---	c_gtk_object_struct_free (a_c_struct: POINTER) is
---			-- Free GtkObject struct allocaded by calloc.
---			-- (from C_GTK_OBJECT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_paned_struct_allocate: POINTER is
---			-- New GtkPaned struct allocaded by calloc.
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkPaned), 1)"
---		end
-
---	c_gtk_paned_struct_free (a_c_struct: POINTER) is
---			-- Free GtkPaned struct allocaded by calloc.
---			-- (from C_GTK_PANED_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_pixmap_struct_allocate: POINTER is
---			-- New GtkPixmap struct allocaded by calloc.
---			-- (from C_GTK_PIXMAP_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkPixmap), 1)"
---		end
-
---	c_gtk_pixmap_struct_free (a_c_struct: POINTER) is
---			-- Free GtkPixmap struct allocaded by calloc.
---			-- (from C_GTK_PIXMAP_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_progress_bar_struct_allocate: POINTER is
---			-- New GtkProgressBar struct allocaded by calloc.
---			-- (from C_GTK_PROGRESS_BAR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkProgressBar), 1)"
---		end
-
---	c_gtk_progress_bar_struct_free (a_c_struct: POINTER) is
---			-- Free GtkProgressBar struct allocaded by calloc.
---			-- (from C_GTK_PROGRESS_BAR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_progress_struct_allocate: POINTER is
---			-- New GtkProgress struct allocaded by calloc.
---			-- (from C_GTK_PROGRESS_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkProgress), 1)"
---		end
-
---	c_gtk_progress_struct_free (a_c_struct: POINTER) is
---			-- Free GtkProgress struct allocaded by calloc.
---			-- (from C_GTK_PROGRESS_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_radio_button_struct_allocate: POINTER is
---			-- New GtkRadioButton struct allocaded by calloc.
---			-- (from C_GTK_RADIO_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkRadioButton), 1)"
---		end
-
---	c_gtk_radio_button_struct_free (a_c_struct: POINTER) is
---			-- Free GtkRadioButton struct allocaded by calloc.
---			-- (from C_GTK_RADIO_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_radio_menu_item_struct_allocate: POINTER is
---			-- New GtkRadioMenuItem struct allocaded by calloc.
---			-- (from C_GTK_RADIO_MENU_ITEM_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkRadioMenuItem), 1)"
---		end
-
---	c_gtk_radio_menu_item_struct_free (a_c_struct: POINTER) is
---			-- Free GtkRadioMenuItem struct allocaded by calloc.
---			-- (from C_GTK_RADIO_MENU_ITEM_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_range_struct_allocate: POINTER is
---			-- New GtkRange struct allocaded by calloc.
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkRange), 1)"
---		end
-
---	c_gtk_range_struct_free (a_c_struct: POINTER) is
---			-- Free GtkRange struct allocaded by calloc.
---			-- (from C_GTK_RANGE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_requisition_struct_allocate: POINTER is
---			-- New GtkRequisition struct allocaded by calloc.
---			-- (from C_GTK_REQUISITION_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkRequisition), 1)"
---		end
---
---	c_gtk_requisition_struct_free (a_c_struct: POINTER) is
---			-- Free GtkRequisition struct allocaded by calloc.
---			-- (from C_GTK_REQUISITION_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_scale_struct_allocate: POINTER is
---			-- New GtkScale struct allocaded by calloc.
---			-- (from C_GTK_SCALE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkScale), 1)"
---		end
-
---	c_gtk_scale_struct_free (a_c_struct: POINTER) is
---			-- Free GtkScale struct allocaded by calloc.
---			-- (from C_GTK_SCALE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_scrollbar_struct_allocate: POINTER is
---			-- New GtkScrollbar struct allocaded by calloc.
---			-- (from C_GTK_SCROLLBAR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkScrollbar), 1)"
---		end
-
---	c_gtk_scrollbar_struct_free (a_c_struct: POINTER) is
---			-- Free GtkScrollbar struct allocaded by calloc.
---			-- (from C_GTK_SCROLLBAR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_scrolled_window_struct_allocate: POINTER is
---			-- New GtkScrolledWindow struct allocaded by calloc.
---			-- (from C_GTK_SCROLLED_WINDOW_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkScrolledWindow), 1)"
---		end
-
---	c_gtk_scrolled_window_struct_free (a_c_struct: POINTER) is
---			-- Free GtkScrolledWindow struct allocaded by calloc.
---			-- (from C_GTK_SCROLLED_WINDOW_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_separator_struct_allocate: POINTER is
---			-- New GtkSeparator struct allocaded by calloc.
---			-- (from C_GTK_SEPARATOR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkSeparator), 1)"
---		end
-
---	c_gtk_separator_struct_free (a_c_struct: POINTER) is
---			-- Free GtkSeparator struct allocaded by calloc.
---			-- (from C_GTK_SEPARATOR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_spin_button_struct_allocate: POINTER is
---			-- New GtkSpinButton struct allocaded by calloc.
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkSpinButton), 1)"
---		end
-
---	c_gtk_spin_button_struct_free (a_c_struct: POINTER) is
---			-- Free GtkSpinButton struct allocaded by calloc.
---			-- (from C_GTK_SPIN_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_style_struct_allocate: POINTER is
---			-- New GtkStyle struct allocaded by calloc.
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkStyle), 1)"
---		end
-
---	c_gtk_style_struct_free (a_c_struct: POINTER) is
---			-- Free GtkStyle struct allocaded by calloc.
---			-- (from C_GTK_STYLE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_table_struct_allocate: POINTER is
---			-- New GtkTable struct allocaded by calloc.
---			-- (from C_GTK_TABLE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkTable), 1)"
---		end
-
---	c_gtk_table_struct_free (a_c_struct: POINTER) is
---			-- Free GtkTable struct allocaded by calloc.
---			-- (from C_GTK_TABLE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_toggle_button_struct_allocate: POINTER is
---			-- New GtkToggleButton struct allocaded by calloc.
---			-- (from C_GTK_TOGGLE_BUTTON_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkToggleButton), 1)"
---		end
-
---	c_gtk_toggle_button_struct_free (a_c_struct: POINTER) is
---			-- Free GtkToggleButton struct allocaded by calloc.
---			-- (from C_GTK_TOGGLE_BUTTON_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_tooltips_data_struct_allocate: POINTER is
---			-- New GtkTooltipsData struct allocaded by calloc.
---			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkTooltipsData), 1)"
---		end
-
---	c_gtk_tooltips_data_struct_free (a_c_struct: POINTER) is
---			-- Free GtkTooltipsData struct allocaded by calloc.
---			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_tooltips_struct_allocate: POINTER is
---			-- New GtkTooltips struct allocaded by calloc.
---			-- (from C_GTK_TOOLTIPS_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkTooltips), 1)"
---		end
-
---	c_gtk_tooltips_struct_free (a_c_struct: POINTER) is
---			-- Free GtkTooltips struct allocaded by calloc.
---			-- (from C_GTK_TOOLTIPS_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_vbox_struct_allocate: POINTER is
---			-- New GtkVBox struct allocaded by calloc.
---			-- (from C_GTK_VBOX_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkVBox), 1)"
---		end
-
---	c_gtk_vbox_struct_free (a_c_struct: POINTER) is
---			-- Free GtkVBox struct allocaded by calloc.
---			-- (from C_GTK_VBOX_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_viewport_struct_allocate: POINTER is
---			-- New GtkViewport struct allocaded by calloc.
---			-- (from C_GTK_VIEWPORT_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkViewport), 1)"
---		end
-
---	c_gtk_viewport_struct_free (a_c_struct: POINTER) is
---			-- Free GtkViewport struct allocaded by calloc.
---			-- (from C_GTK_VIEWPORT_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_vpaned_struct_allocate: POINTER is
---			-- New GtkVPaned struct allocaded by calloc.
---			-- (from C_GTK_VPANED_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkVPaned), 1)"
---		end
---
---	c_gtk_vpaned_struct_free (a_c_struct: POINTER) is
---			-- Free GtkVPaned struct allocaded by calloc.
---			-- (from C_GTK_VPANED_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_vscale_struct_allocate: POINTER is
---			-- New GtkVScale struct allocaded by calloc.
---			-- (from C_GTK_VSCALE_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkVScale), 1)"
---		end
-
---	c_gtk_vscale_struct_free (a_c_struct: POINTER) is
---			-- Free GtkVScale struct allocaded by calloc.
---			-- (from C_GTK_VSCALE_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_vscrollbar_struct_allocate: POINTER is
---			-- New GtkVScrollbar struct allocaded by calloc.
---			-- (from C_GTK_VSCROLLBAR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkVScrollbar), 1)"
---		end
-
---	c_gtk_vscrollbar_struct_free (a_c_struct: POINTER) is
---			-- Free GtkVScrollbar struct allocaded by calloc.
---			-- (from C_GTK_VSCROLLBAR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_vseparator_struct_allocate: POINTER is
---			-- New GtkVSeparator struct allocaded by calloc.
---			-- (from C_GTK_VSEPARATOR_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkVSeparator), 1)"
---		end
---
---	c_gtk_vseparator_struct_free (a_c_struct: POINTER) is
---			-- Free GtkVSeparator struct allocaded by calloc.
---			-- (from C_GTK_VSEPARATOR_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
---
---	c_gtk_widget_aux_info_struct_allocate: POINTER is
---			-- New GtkWidgetAuxInfo struct allocaded by calloc.
---			-- (from C_GTK_WIDGET_AUX_INFO_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkWidgetAuxInfo), 1)"
---		end
---
---	c_gtk_widget_aux_info_struct_free (a_c_struct: POINTER) is
---			-- Free GtkWidgetAuxInfo struct allocaded by calloc.
---			-- (from C_GTK_WIDGET_AUX_INFO_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_widget_struct_allocate: POINTER is
---			-- New GtkWidget struct allocaded by calloc.
---			-- (from C_GTK_WIDGET_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkWidget), 1)"
---		end
-
---	c_gtk_widget_struct_free (a_c_struct: POINTER) is
---			-- Free GtkWidget struct allocaded by calloc.
---			-- (from C_GTK_WIDGET_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-
---	c_gtk_window_struct_allocate: POINTER is
---			-- New GtkWindow struct allocaded by calloc.
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C [macro <stdlib.h>]"
---		alias
---			"calloc (sizeof(GtkWindow), 1)"
---		end
-
---	c_gtk_window_struct_free (a_c_struct: POINTER) is
---			-- Free GtkWindow struct allocaded by calloc.
---			-- (from C_GTK_WINDOW_STRUCT)
---		external
---			"C | <stdlib.h>"
---		alias
---			"free"
---		end
-	
-end -- class EV_GTK_EXTERNALS
-
+	frozen c_gdk_color_struct_allocate: POINTER is
+			-- New GdkColor struct allocaded by calloc.
+		external
+			"C [macro <stdlib.h>]"
+		alias
+			"calloc (sizeof(GdkColor), 1)"
+		end
+
+	frozen c_gdk_gcvalues_struct_allocate: POINTER is
+			-- New GdkGCValues struct allocaded by calloc.
+		external
+			"C [macro <stdlib.h>]"
+		alias
+			"calloc (sizeof(GdkGCValues), 1)"
+		end
+
+	frozen c_gdk_geometry_struct_allocate: POINTER is
+			-- New GdkGeometry struct allocaded by calloc.
+		external
+			"C [macro <stdlib.h>]"
+		alias
+			"calloc (sizeof(GdkGeometry), 1)"
+		end
+
+end

@@ -51,6 +51,32 @@ feature {NONE} -- Initialization
 			gtk_misc_set_padding (label_widget, 21, 0)
 		end
 
+feature -- Access
+
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+		end
+
+	get_item (pos: INTEGER): EV_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `pos'.
+		do
+		end
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+		end
+
+feature -- Status report
+
+	is_insensitive: BOOLEAN is
+			-- Is current widget insensitive?
+   		do
+                        Result := not c_gtk_widget_sensitive (widget)
+		end
+
 feature -- Status setting
 
 	set_selected (flag: BOOLEAN) is
@@ -89,6 +115,12 @@ feature -- Element change
 				show
 				gtk_object_unref (widget)
 			end
+		end
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item in the
+			-- list.
+		do
 		end
 
 feature -- Assertion

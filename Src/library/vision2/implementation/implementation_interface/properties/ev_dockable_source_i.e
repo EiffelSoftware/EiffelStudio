@@ -253,7 +253,6 @@ feature -- Basic operations
 							dockable_dialog_target.set_original_parent (original_parent)
 							dockable_dialog_target.set_original_parent_index (position_in_parent (widget_source_being_docked))
 						else
-							-- Note that this will not work with tree items as it is not recursive.
 							temp_widget_parent ?= item_source_being_docked.parent_imp
 							check
 								parent_is_widget: temp_widget_parent /= Void
@@ -269,6 +268,18 @@ feature -- Basic operations
 								item_was_tool_bar_button: tool_bar_button_imp /= Void
 							end
 							dockable_dialog_target.set_original_parent_index (position_in_parent (tool_bar_button_imp))
+						
+								-- Now update the tool bar button to the left of the original position.
+								-- On Windows, it does not return back to its original state.
+							tool_bar ?= temp_parent
+							check
+								tool_bar_not_void: tool_bar /= Void
+							end
+							temp_index := dockable_dialog_target.original_parent_index - 1
+							if (not tool_bar.is_empty) and temp_index >= 1 then
+									-- We protected against the state of the toolbar after the transport.
+								update_buttons (tool_bar, temp_index, temp_index)		
+							end
 						end
 						
 							-- Now check to see whether `source_being_docked' was originally 
@@ -913,6 +924,9 @@ feature {NONE} -- Implementation
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		require
+			start_index_valid: start_index >= 1
+			end_index_valid: end_index <= a_parent.count
 		deferred
 		end
 

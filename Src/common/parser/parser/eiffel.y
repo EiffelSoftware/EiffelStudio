@@ -195,7 +195,7 @@ Class_declaration:
 
 				if real_class_end_position = 0 then
 					root_node.set_text_positions (
-						start_position,
+						current_position.start_position,
 						$12.start_position,
 						$9.start_position,
 						formal_generics_start_position,
@@ -481,7 +481,7 @@ Feature_clause: Feature_client_clause
 Feature_client_clause: TE_FEATURE
 			{
 				inherit_context := False
-				fclause_pos := current_position.end_position
+				fclause_pos := clone (current_position)
 			}
 		Clients
 			{ $$ := $3 }
@@ -593,12 +593,12 @@ Constant_or_routine: Dotnet_indexing
 
 Feature_value: Manifest_constant Dotnet_indexing
 			{
-				$$ := new_constant_as (new_value_as ($1))
+				$$ := new_constant_as (create {VALUE_AS}.initialize ($1))
 				feature_indexes := $2
 			}
 	|	TE_UNIQUE Dotnet_indexing
 			{
-				$$ := new_constant_as (new_value_as (new_unique_as))
+				$$ := new_constant_as (create {VALUE_AS}.initialize (new_unique_as))
 				feature_indexes := $2
 			}
 	|	Dotnet_indexing_opt Routine
@@ -635,13 +635,13 @@ Parent_list: Parent
 Parent: Position Parent_clause
 			{
 				$$ := $2
-				$2.set_text_positions ($1.start_position)
+				$2.set_location ($1)
 			}
 	|	Position Parent_clause TE_SEMICOLON
 			{
 				inherit_context := False
 				$$ := $2
-				$2.set_text_positions ($1.start_position)
+				$2.set_location ($1)
 			}
 	;
 
@@ -678,7 +678,7 @@ Parent_clause: Clickable_identifier Generics_opt
 	|	Clickable_identifier Generics_opt TE_END
 			{
 				inherit_context := True
-				real_class_end_position := end_position - 3
+				real_class_end_position := current_position.end_position - 3
 				$$ := new_parent_clause ($1, $2, Void, Void, Void, Void, Void)
 			}
 	;
@@ -886,7 +886,7 @@ Routine:
 		Postcondition
 		Rescue
 		TE_END
-			{ $$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos) }
+			{ $$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos, current_position) }
 	;
 
 Routine_body: Internal
@@ -902,9 +902,8 @@ External: TE_EXTERNAL External_language External_name
 	;
 
 External_language:
-			{ set_position (current_position) }
-		Non_empty_string
-			{ $$ := new_external_lang_as ($2, yacc_position) }
+		Position Non_empty_string
+			{ $$ := new_external_lang_as ($2, $1) }
 	;
 
 External_name: -- Empty
@@ -1037,9 +1036,9 @@ Assertion_clause: Set_position Assertion_clause_impl ASemi
 	;
 
 Assertion_clause_impl: Expression
-			{ $$ := new_tagged_as (Void, $1, yacc_position, yacc_line_number) }
+			{ $$ := new_tagged_as (Void, $1, current_position) }
 	|	Identifier TE_COLON Expression
-			{ $$ := new_tagged_as ($1, $3, yacc_position, yacc_line_number) }
+			{ $$ := new_tagged_as ($1, $3, current_position) }
 	|	Identifier TE_COLON 
 			-- { $$ := Void }
 	;
@@ -1121,14 +1120,14 @@ Type_list: Type
 Formal_generics:
 			{
 				-- $$ := Void
-				formal_generics_start_position := start_position
+				formal_generics_start_position := current_position.start_position
 				formal_generics_end_position := 0
 			}
 	|	Position TE_LSQURE Formal_generic_list_opt TE_RSQURE
 			{
 				$$ := $3
 				formal_generics_start_position := $1.start_position
-				formal_generics_end_position := start_position
+				formal_generics_end_position := current_position.start_position
 			}
 	;
 
@@ -1182,8 +1181,7 @@ Creation_constraint: -- Empty
 
 Conditional: Position TE_IF Expression TE_THEN Compound Elseif_list_opt Else_part TE_END
 			{
-				set_position ($1)
-				$$ := new_if_as ($3, $5, $6, $7, yacc_position, yacc_line_number)
+				$$ := new_if_as ($3, $5, $6, $7, $1)
 			}
 	;
 
@@ -1205,8 +1203,8 @@ Elseif_list: Elseif_part
 			}
 	;
 
-Elseif_part: TE_ELSEIF Expression TE_THEN Compound
-			{ $$ := new_elseif_as ($2, $4, yacc_line_number) }
+Elseif_part: Position TE_ELSEIF Expression TE_THEN Compound
+			{ $$ := new_elseif_as ($3, $5, $1) }
 	;
 
 Else_part: -- Empty
@@ -1215,10 +1213,9 @@ Else_part: -- Empty
 			{ $$ := $2 }
 	;
 
-Multi_branch: Position TE_INSPECT Expression When_part_list_opt Inspect_default TE_END
+Multi_branch: TE_INSPECT Position Expression When_part_list_opt Inspect_default TE_END
 			{
-				set_position ($1)
-				$$ := new_inspect_as ($3, $4, $5, yacc_position, yacc_line_number)
+				$$ := new_inspect_as ($3, $4, $5, $2)
 			}
 	;
 
@@ -1240,8 +1237,8 @@ When_part_list: When_part
 			}
 	;
 
-When_part: TE_WHEN Choices TE_THEN Compound
-			{ $$ := new_case_as ($2, $4, yacc_line_number) }
+When_part: TE_WHEN Position Choices TE_THEN Compound
+			{ $$ := new_case_as ($3, $5, $2) }
 	;
 
 Choices: Choice
@@ -1306,10 +1303,9 @@ Inspect_default: -- Empty
 			}
 	;
  
-Loop: Position TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
+Loop: TE_FROM Compound Invariant Variant TE_UNTIL Position Expression TE_LOOP Compound TE_END
 			{
-				set_position ($1)
-				$$ := new_loop_as ($3, $4, $5, $7, $9, yacc_position, yacc_line_number)
+				$$ := new_loop_as ($2, $3, $4, $7, $9, $6)
 			}
 	;
 
@@ -1334,15 +1330,14 @@ Class_invariant: -- Empty
 Variant: -- Empty
 			-- { $$ := Void }
 	|	TE_VARIANT Identifier TE_COLON Expression
-			{ $$ := new_variant_as ($2, $4, yacc_position, yacc_line_number) }
+			{ $$ := new_variant_as ($2, $4, current_position) }
 	|	TE_VARIANT Expression
-			{ $$ := new_variant_as (Void, $2, yacc_position, yacc_line_number) }
+			{ $$ := new_variant_as (Void, $2, current_position) }
 	;
 
 Debug: Position TE_DEBUG Debug_keys Compound TE_END 
 			{
-				set_position ($1)
-				$$ := new_debug_as ($3, $4, yacc_position, yacc_line_number)
+				$$ := new_debug_as ($3, $4, $1)
 			}
 	;
 
@@ -1367,7 +1362,7 @@ Debug_key_list: Non_empty_string
 	;
 
 Retry: TE_RETRY
-			{ $$ := new_retry_as (yacc_line_number) }
+			{ $$ := new_retry_as (current_position) }
 	;
 
 Rescue: -- Empty
@@ -1381,16 +1376,16 @@ Rescue: -- Empty
 			}
 	;
 
-Assignment: Identifier TE_ASSIGN Expression
-			{ $$ := new_assign_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number) }
-	|	TE_RESULT TE_ASSIGN Expression
-			{ $$ := new_assign_as (new_result_as, $3, yacc_position, yacc_line_number) }
+Assignment: Position Identifier TE_ASSIGN Expression
+			{ $$ := new_assign_as (new_access_id_as ($2, Void), $4, $1) }
+	|	Position TE_RESULT TE_ASSIGN Expression
+			{ $$ := new_assign_as (new_result_as, $4, $1) }
     ;
 
-Reverse_assignment: Identifier TE_ACCEPT Expression
-			{ $$ := new_reverse_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number) }
-	|	TE_RESULT TE_ACCEPT Expression
-			{ $$ := new_reverse_as (new_result_as, $3, yacc_position, yacc_line_number) }
+Reverse_assignment: Position Identifier TE_ACCEPT Expression
+			{ $$ := new_reverse_as (new_access_id_as ($2, Void), $4, $1) }
+	|	Position TE_RESULT TE_ACCEPT Expression
+			{ $$ := new_reverse_as (new_result_as, $4, $1) }
     ;
 
 Creators: -- Empty
@@ -1525,18 +1520,18 @@ Delayed_actual: TE_QUESTION
 			{ $$ := new_operand_as ($2, Void, Void) }
 	;
 
-Creation: TE_BANG Creation_type TE_BANG Creation_target Creation_call
-			{ $$ := new_creation_as ($2, $4, $5, yacc_position, yacc_line_number) }
-	|	TE_CREATE Creation_target Creation_call
-			{ $$ := new_creation_as (Void, $2, $3, yacc_position, yacc_line_number) }
-	|	TE_CREATE TE_LCURLY Type TE_RCURLY Creation_target Creation_call
-			{ $$ := new_creation_as ($3, $5, $6, yacc_position, yacc_line_number) }
+Creation: Position TE_BANG Creation_type TE_BANG Creation_target Creation_call
+			{ $$ := new_creation_as ($3, $5, $6, $1) }
+	|	Position TE_CREATE Creation_target Creation_call
+			{ $$ := new_creation_as (Void, $3, $4, $1) }
+	|	Position TE_CREATE TE_LCURLY Type TE_RCURLY Creation_target Creation_call
+			{ $$ := new_creation_as ($4, $6, $7, $1) }
 	;
 
-Creation_expression: TE_CREATE TE_LCURLY Type TE_RCURLY Creation_call
-			{ $$ := new_creation_expr_as ($3, $5, yacc_position, yacc_line_number) }
-	|	TE_BANG Type TE_BANG Creation_call
-			{ $$ := new_creation_expr_as ($2, $4, yacc_position, yacc_line_number) }
+Creation_expression: TE_CREATE TE_LCURLY Type TE_RCURLY Position Creation_call
+			{ $$ := new_creation_expr_as ($3, $6, $5) }
+	|	TE_BANG Type TE_BANG Position Creation_call
+			{ $$ := new_creation_expr_as ($2, $5, $4) }
 	;
 
 Creation_type: -- Empty
@@ -1561,31 +1556,28 @@ Creation_call: -- Empty
 -- Instruction call
 
  
-Call: A_feature
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_result
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_feature
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_current
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_expression
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	A_precursor
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_precursor
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	A_static_call
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
-	|	Call_on_static
-			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
+Call: Position A_feature
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_result
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_feature
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_current
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_expression
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position A_precursor
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_precursor
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position A_static_call
+			{ $$ := new_instr_call_as ($2, $1) }
+	|	Position Call_on_static
+			{ $$ := new_instr_call_as ($2, $1) }
 	;
 
 Check: Position TE_CHECK Assertion TE_END
-			{
-				set_position ($1)
-				$$ := new_check_as ($3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_check_as ($3, $1) }
 	;
 
 
@@ -1593,11 +1585,11 @@ Check: Position TE_CHECK Assertion TE_END
  
 
 Expression: Expression_constant
-			{ $$ := new_value_as ($1) }
+			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Manifest_array
-			{ $$ := new_value_as ($1) }
+			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Manifest_tuple
-			{ $$ := new_value_as ($1) }
+			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Feature_call
 			{ $$ := new_expr_call_as ($1) }
 	|	Agent_call
@@ -2091,8 +2083,8 @@ Manifest_tuple: TE_LSQURE Expression_list_opt TE_RSQURE
 			{ $$ := new_tuple_as ($2) }
 	;
 
-Set_position: -- Empty
-			{ set_position (current_position) }
+Set_position:	-- Empty
+		-- Not yet reimplemented.
 	;
 
 Position: -- Empty

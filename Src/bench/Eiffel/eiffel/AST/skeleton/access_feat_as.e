@@ -82,6 +82,7 @@ feature -- Type check, byte code and dead code removal
 			id_type: TYPE_A
 		do
 			id_type := access_type
+			Error_handler.checksum
 			check
 				id_type_exists: id_type /= Void
 			end

@@ -176,7 +176,7 @@ feature {NONE} -- Actions
 		end
 
 	new_class_description (n: PAIR [ID_AS, CLICK_AST]; is_d, is_e, is_s: BOOLEAN;
-		ind: EIFFEL_LIST [INDEX_AS]; g: EIFFEL_LIST [FORMAL_DEC_AS];
+		first_ind, last_ind: EIFFEL_LIST [INDEX_AS]; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
 		s: SUPPLIERS_AS; o: STRING_AS; cl: CLICK_LIST; e: INTEGER): CLASS_AS is
@@ -188,7 +188,18 @@ feature {NONE} -- Actions
 			click_ast_not_void: n.second /= Void
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
+		local
+			ind: EIFFEL_LIST [INDEX_AS]
 		do
+				-- Merging of the two indexing clauses
+			if first_ind /= Void then
+				ind := first_ind
+				if last_ind /= Void then
+					ind.append (last_ind)
+				end
+			else
+				ind := last_ind
+			end
 			Result := new_class_as (n.first, is_d, is_e, is_s, ind, g, p, c, f, inv, s, o, cl, e)
 			n.second.set_node (Result)
 		ensure
@@ -197,7 +208,8 @@ feature {NONE} -- Actions
 			is_deferred_set: Result.is_deferred = is_d
 			is_expanded_set: Result.is_expanded = is_e
 			is_separate_set: Result.is_separate = is_s
-			indexes_set: Result.indexes = ind
+			first_indexes_set: first_ind /= Void implies Result.indexes = first_ind
+			last_indexes_set: first_ind = Void implies Result.indexes = last_ind
 			generics_set: Result.generics = g
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c

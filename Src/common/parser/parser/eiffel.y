@@ -172,11 +172,12 @@ Class_declaration:
 		Creators
 		Features
 		Class_invariant
+		Indexing
 		TE_END
 			{
 				root_node := new_class_description ($4,
 					is_deferred, is_expanded, is_separate,
-					$1, $5, $7, $8, $9, $10, suppliers, $6, click_list,
+					$1, $11, $5, $7, $8, $9, $10, suppliers, $6, click_list,
 					current_position.start_position)
 			}
 	;

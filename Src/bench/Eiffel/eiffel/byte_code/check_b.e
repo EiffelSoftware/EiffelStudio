@@ -87,14 +87,25 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for a check instruction.
+		local
+			l_label: IL_LABEL
 		do
 			if
 				check_list /= Void and then
-				context.class_type.associated_class.assertion_level.check_check
+				(context.workbench_mode or else
+					context.class_type.associated_class.assertion_level.check_check)
 			then
+				l_label := Il_label_factory.new_label
+				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_check)
+				il_generator.branch_on_false (l_label)
+				il_generator.put_boolean_constant (True)
+				il_generator.generate_set_assertion_status
 				context.set_assertion_type (In_check)
 				generate_il_line_info
 				check_list.generate_il
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
+				Il_generator.mark_label (l_label)
 			end
 		end
 

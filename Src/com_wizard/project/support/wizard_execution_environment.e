@@ -32,9 +32,9 @@ feature -- Access
 			create directory.make (Eiffel4_location + "\bench\spec\windows\bin")
 			if directory.exists then
 				if directory.has_entry ("ec.exe") then
-					Result := "ec"
-				elseif directory.has_entry ("es4.exe")then
-					Result := "es4"
+					Result := Eiffel4_location + "\bench\spec\windows\bin\" + "ec.exe"
+				elseif directory.has_entry ("es4.exe") then
+					Result :=  Eiffel4_location + "\bench\spec\windows\bin\" + "es4.exe"
 				end
 			end
 		ensure

@@ -1,5 +1,5 @@
 indexing
-	description	: "Command to show/hide a tool."
+	description	: "Command to show/hide the builder window."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

@@ -86,7 +86,7 @@ feature -- Query
 					elseif file.exists then 
 						l_file_type := file_type (short_name (file.name))
 						if shared_constants.application_constants.allowed_file_types.has (l_file_type) then
-							l_file_pixmap := shared_constants.application_constants.allowed_file_types.item (l_file_type)	
+							l_file_pixmap := shared_constants.application_constants.file_type_icons.item (l_file_type)	
 							create file_node.make_with_text (root_dir.lastentry)
 							file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
 							file_node.set_pixmap (l_file_pixmap)

@@ -134,7 +134,7 @@ rt_private char *rcsid =
 /* Convenience functions */
 
 /* Set the default buffer_size to a certain value */
-rt_public void set_buffer_size (int new_size) 
+rt_public void set_buffer_size (EIF_INTEGER new_size) 
 {
 	buffer_size = new_size;
 }
@@ -217,7 +217,7 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
-rt_public long stream_estore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
+rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		store_write,
@@ -268,7 +268,7 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
-rt_public long stream_eestore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
+rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		store_write,
@@ -321,7 +321,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	rt_reset_store ();
 }
 
-rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGER *real_size)
+rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		(void (*)(void)) 0,
@@ -365,7 +365,7 @@ rt_public void independent_free_store (char *object)
 }
 
 /* Stream allocation */
-rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
+rt_public EIF_POINTER *stream_malloc (EIF_INTEGER stream_size)	/*08/04/98*/
 {
 	char *buffer;
 	char **real_buffer;

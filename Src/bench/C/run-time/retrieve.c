@@ -83,7 +83,7 @@ rt_private int r_fides;			/* File descriptor use for retrieve */
  * Function declations
  */
 rt_public char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
-rt_public EIF_REFERENCE stream_eretrieve(char **, long, long, EIF_INTEGER *);	/* Retrieve object store in stream */
+rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *);	/* Retrieve object store in stream */
 rt_public char *portable_retrieve(int (*char_read_function)(char *, int));
 
 rt_public char *irt_make(void);			/* Do the independant retrieve */
@@ -181,10 +181,10 @@ rt_public char *eretrieve(EIF_INTEGER file_desc)
 	return portable_retrieve(char_read);
 }
 
-rt_public EIF_REFERENCE stream_eretrieve(char **buffer, long size, long start_pos, EIF_INTEGER *real_size)
+rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *buffer, EIF_INTEGER size, EIF_INTEGER start_pos, EIF_INTEGER *real_size)
 {
 	EIF_REFERENCE new_object;
-	stream_buffer = *buffer;
+	stream_buffer = (char *) *buffer;
 	stream_buffer_size = size;
 	stream_buffer_position = start_pos;
 

@@ -62,7 +62,7 @@ extern int current_position;
 extern char * general_buffer;
 extern long buffer_size;
 extern int end_of_buffer;
-RT_LNK void set_buffer_size (int);
+RT_LNK void set_buffer_size (EIF_INTEGER);
 
 /* compression */
 extern char * cmps_general_buffer;
@@ -106,12 +106,12 @@ RT_LNK void estore(EIF_INTEGER file_desc, char *object);
 RT_LNK void eestore(EIF_INTEGER file_desc, char *object);
 RT_LNK void sstore (EIF_INTEGER file_desc, char *object);
 
-RT_LNK long stream_estore(char **stream, long size, char *object, EIF_INTEGER *);
-RT_LNK long stream_eestore(char **stream, long size, char *object, EIF_INTEGER *);
-RT_LNK long stream_sstore (char **stream, long size, char *object, EIF_INTEGER *);
+RT_LNK EIF_INTEGER stream_estore(EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *);
+RT_LNK EIF_INTEGER stream_eestore(EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *);
+RT_LNK EIF_INTEGER stream_sstore (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *);
 
-RT_LNK char **stream_malloc (int stream_size);
-RT_LNK void stream_free (char **stream);
+RT_LNK EIF_POINTER *stream_malloc (EIF_INTEGER stream_size);
+RT_LNK void stream_free (EIF_POINTER *stream);
 
 RT_LNK EIF_BOOLEAN eif_is_new_independent_format;	/* Do we use the 4.5 independent
 													   storable mechanism? */

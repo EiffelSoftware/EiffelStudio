@@ -64,6 +64,7 @@ feature -- Generation
 			il_md_gen: IL_META_DATA_GENERATOR
 			classes: ARRAY [CLASS_C]
 			output_file: RAW_FILE
+			l_last_error_msg: STRING
 		do
 			if not retried then
 				create il_md_gen
@@ -77,7 +78,8 @@ feature -- Generation
 					-- raise any exception, if it does `is_error_available' will be 
 					-- False which will cause not to be used in case of an exception
 					-- (See rescue clause below).
-				is_error_available := il_generator.last_error /= Void
+				l_last_error_msg := il_generator.last_error
+				is_error_available := True
 
 				il_generator.set_meta_data_generator (il_md_gen)
 
@@ -147,7 +149,12 @@ feature -- Generation
 					Error_handler.insert_error (create {IL_ERROR}.make_com_error)
 				else
 					if deletion_successful then
-						Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+						l_last_error_msg := il_generator.last_error
+						if l_last_error_msg = Void or else l_last_error_msg.is_empty then
+							Error_handler.insert_error (create {IL_ERROR}.make (Error_handler.exception_trace))
+						else						
+							Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+						end
 					else
 						check
 							file_name_not_void: file_name /= Void

@@ -113,6 +113,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 	add_root_item (layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Add `layout_item' as a root item of `Current'.
+		require
+			layout_item_not_void: layout_item /= Void
 		do
 			extend (layout_item)
 		ensure
@@ -123,6 +125,8 @@ feature {GB_WINDOW_SELECTOR} -- Implementation
 
 	set_root_window (a_window: GB_TITLED_WINDOW_OBJECT) is
 			-- Ensure that `a_window' is displayed in `Current'.
+		require
+			window_not_void: a_window /= Void
 		do
 			wipe_out
 			add_root_item (a_window.layout_item)
@@ -135,8 +139,10 @@ feature {NONE} -- Implementation
 
 	expand_layout_item (an_object: GB_OBJECT) is
 			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
+		require
+			an_object_not_void: an_object /= Void
 		do
-			if an_object.is_expanded then
+			if an_object.is_expanded and an_object.layout_item.is_expandable then
 				an_object.layout_item.expand				
 			end
 		end

@@ -11,6 +11,7 @@
 */
 
 #include "eif_macros.h"
+#include "x2c.h"	/* Needed for OFFSETS macros */
 
 /*
  * Declarations

@@ -89,12 +89,12 @@ feature {NONE}
 	dead_code, exception_stack_managed, collect, precompilation,
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
-	dynamic, hide, profile: INTEGER is UNIQUE;
+	dynamic, hide, profile, override_cluster: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (14);
+			!!Result.make (16);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -110,6 +110,7 @@ feature {NONE}
 			Result.force (dynamic, "dynamic");
 			Result.force (hide, "hide");
 			Result.force (profile, "profile");
+			Result.force (override_cluster, "override_cluster");
 		end;
 
 feature
@@ -266,6 +267,18 @@ feature
 					error_found := True
 				else
 					-- Do nothing: the normal case has already been solved
+				end
+			when override_cluster then
+				if value = void or else not value.is_name then
+					error_found := true
+				elseif compilation_modes.is_precompiling then
+					error_found := true
+				elseif universe.has_override_cluster then
+					error_found := true
+				elseif universe.has_cluster_of_name (value.value) then
+					universe.set_override_cluster_name (value.value)
+				else
+					error_found := true
 				end
 			when dynamic, hide, profile then
 					-- This has been taken care of in `adapt'.

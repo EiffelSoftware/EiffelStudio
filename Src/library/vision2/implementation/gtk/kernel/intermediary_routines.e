@@ -285,9 +285,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_component_imp: EV_TEXT_COMPONENT_IMP
 		do
 			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_component_imp.toggle_in_change_action (True)
 			a_text_component_imp.on_change_actions
-			a_text_component_imp.toggle_in_change_action (False)
 		end
 		
 	text_field_return_intermediary (a_c_object: POINTER) is

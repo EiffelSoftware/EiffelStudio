@@ -18,7 +18,9 @@ inherit
 	EV_MENU_ITEM_IMP
 		redefine
 			make_with_text,
-			parent_imp
+			parent_imp,
+			set_selected,
+			is_selected
 		end
 
 creation
@@ -53,6 +55,12 @@ feature -- Status report
 			Result := c_gtk_check_menu_item_active (widget)
 		end 
 	
+	is_selected: BOOLEAN is
+			-- Is current menu-item checked ?.
+		do
+			Result := c_gtk_check_menu_item_active (widget)
+		end 
+	
 feature -- Status setting
 
 	set_state (flag: BOOLEAN) is
@@ -61,9 +69,16 @@ feature -- Status setting
 			gtk_check_menu_item_set_active (widget, flag)
 		end
 
+	set_selected (flag: BOOLEAN) is
+			-- Make `flag' the new state of the menu-item.
+		do
+			gtk_check_menu_item_set_active (widget, flag)
+		end
+
 feature -- Event : command association
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		do
@@ -72,7 +87,8 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_deactivate_commands is
+--	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is deactivated.
 		do	

@@ -160,6 +160,9 @@ feature -- Element change
 			-- Do not move cursor.
 		do
 			if child_before then
+				if is_leaf then
+					last_child := n
+				end;
 				n.bl_put_right (first_child);
 				first_child := n;
 				child := n

@@ -37,9 +37,10 @@ feature {NONE} -- Initialization
 			create {EV_WINDOW_IMP} implementation.make_root
 			widget_make (Void)
 		ensure then
---			False
-			--! FIXME  Are we the aplication root?
-			--!        do we exist? - sam 19990920
+			window_exists: not destroyed
+		--	False
+			--| fix_me Are we the aplication root?
+			--|        do we exist? - sam 19990920
 		end
 
 	make_top_level is
@@ -49,9 +50,8 @@ feature {NONE} -- Initialization
 			create {EV_WINDOW_IMP} implementation.make
 			widget_make (Void)
 		ensure then
---			False
-			--! FIXME  Are we a parentless window?
-			--!        do we exist? - sam 19990920
+			parentless: parent = Void
+			window_exists: not destroyed		
 		end
 
 	make (par: EV_WINDOW) is
@@ -61,9 +61,8 @@ feature {NONE} -- Initialization
 			create {EV_WINDOW_IMP} implementation.make_with_owner (par)
 			widget_make (par)
 		ensure then
---			False
-			--! FIXME  Are we a parented by `par'?
-			--!        do we exist? - sam 19990920
+			has_correct_parent: parent = par
+			window_exists: not destroyed
 		end
 
 feature  -- Access
@@ -76,9 +75,6 @@ feature  -- Access
 		do
 			Result := implementation.icon_name
 		ensure
-			--! FIXME  What if implementation.icon_name clones the string it returns?
-			--!        perhaps we want to say Result.is_equal (implementation.icon_name)
-			--!        -sam 19990920
 			valid_result: Result = implementation.icon_name
 		end 
 	
@@ -89,10 +85,7 @@ feature  -- Access
 		do
 			Result := implementation.icon_mask
 		ensure
-			--! FIXME  What if implementation.icon_mask clones the pixmap it returns?
-			--!        perhaps we want to say Result.is_equal (implementation.icon_mask)
-			--!        -sam 19990920
-			valid_result: Result = implementation.icon_mask
+			valid_result: Result.is_equal (implementation.icon_mask)
 		end
 
 	icon_pixmap: EV_PIXMAP is
@@ -102,10 +95,7 @@ feature  -- Access
 		do
 			Result := implementation.icon_pixmap
 		ensure
-			--! FIXME  What if implementation.icon_pixmap clones the pixmap it returns?
-			--!        perhaps we want to say Result.is_equal (implementation.icon_pixmap)
-			--!        -sam 19990920
-			valid_result: Result = implementation.icon_pixmap
+			valid_result: Result.is_equal (implementation.icon_pixmap)
 		end
 
 feature -- Status report
@@ -138,9 +128,9 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.raise
-		ensure
---			False
-			--! FIXME  wee need to check if we are indeed above all other windows. - sam 19990920
+		--ensure
+		--	False
+			--| fix_me wee need to check if we are indeed above all other windows. - sam 19990920
 		end
 
 	lower is
@@ -150,9 +140,9 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.lower
-		ensure
---			False
-			--! FIXME  wee need to check if we are indeed below all other windows. - sam 19990920
+		--ensure
+		--	False
+			--| fix_me wee need to check if we are indeed below all other windows. - sam 19990920
 		end
 
 	minimize is
@@ -197,8 +187,7 @@ feature -- Element change
 		do
 			implementation.set_icon_name (txt)
 		ensure
---			False
-			--! FIXME  has the icon name been set? - sam 19990920
+			icon_name_set: icon_name = txt
 		end
 
 	set_icon_mask (pixmap: EV_PIXMAP) is
@@ -209,8 +198,7 @@ feature -- Element change
 		do
 			implementation.set_icon_mask (pixmap)
 		ensure
---			False
-			--! FIXME  has the mask name been set? - sam 19990920
+			icon_mask_set: icon_mask.is_equal (pixmap)
 		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
@@ -221,8 +209,7 @@ feature -- Element change
 		do
 			implementation.set_icon_pixmap (pixmap)
 		ensure
---			False
-			--! FIXME  has the pixmap name been set? - sam 19990920
+			icon_pixmap_set: icon_pixmap.is_equal (pixmap)
 		end
 
 feature -- Implementation

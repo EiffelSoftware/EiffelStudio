@@ -569,8 +569,19 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
-			elseif visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer then
+			elseif 
+				visitor.is_array_basic_type or 
+				visitor.is_structure_pointer
+			then
 				Result.append (New_line_tab)
+				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
+
+			elseif
+				visitor.is_interface_pointer or
+				visitor.is_coclass_pointer
+			then
+				Result.append (New_line_tab)
+				Result.append (add_ref_in_interface_pointer (name))
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
 			elseif is_variant (type) then

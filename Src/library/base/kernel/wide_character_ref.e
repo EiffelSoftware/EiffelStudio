@@ -1,8 +1,5 @@
 indexing
-
-	description:
-		"References to objects containing a character value"
-
+	description: "References to objects containing a unicode character value"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,18 +19,12 @@ class WIDE_CHARACTER_REF inherit
 feature -- Access
 
 	item: WIDE_CHARACTER
-			-- Character value
+			-- Unicde character value
 
-	code: INTEGER is
-			-- Associated integer value
+	hash_code, code: INTEGER is
+			-- Associated integer value and hash code value
 		do
 			Result := chcode (item)
-		end
-
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := code
 		end
 
 feature -- Status report

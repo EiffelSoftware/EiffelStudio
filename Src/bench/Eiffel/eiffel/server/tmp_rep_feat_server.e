@@ -5,7 +5,7 @@ class TMP_REP_FEAT_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		rename
 			clear as old_clear,
 			make as basic_make,
@@ -13,7 +13,7 @@ inherit
 		redefine
 			ontable, updated_id
 		end;
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		redefine
 			clear, make, ontable, updated_id, has
 		select

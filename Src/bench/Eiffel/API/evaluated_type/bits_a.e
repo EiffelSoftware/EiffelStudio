@@ -121,7 +121,7 @@ feature
 						other_bits.base_type = base_type
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.put_string ("BIT ");
 			ctxt.put_string (base_type.out);

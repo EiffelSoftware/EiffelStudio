@@ -84,10 +84,10 @@ feature
 	display_indexing (classc: CLASS_C) is
 			-- Display the indexing clause of `classc' if any.
 		local
-			indexes: EIFFEL_LIST [INDEX_AS];
-			index_list: EIFFEL_LIST [ATOMIC_AS];
+			indexes: EIFFEL_LIST_B [INDEX_AS_B];
+			index_list: EIFFEL_LIST_B [ATOMIC_AS_B];
 			index_tag: STRING;
-			index: INDEX_AS
+			index: INDEX_AS_B
 		do
 			if Ast_server.has (classc.id) then
 				indexes := Ast_server.item (classc.id).indexes;

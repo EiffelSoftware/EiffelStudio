@@ -64,7 +64,7 @@ feature
 		local
 			class_c: CLASS_C;
 			class_i: CLASS_I;
-			ctxt: FORMAT_CONTEXT;
+			ctxt: FORMAT_CONTEXT_B;
 			troffer: TROFF_FORMATTER;
 			text_filter: TEXT_FILTER
 		do

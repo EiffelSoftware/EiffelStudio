@@ -4,7 +4,7 @@ deferred class TYPE_A
 
 inherit
 
-	TYPE
+	TYPE_B
 		rename
 			position as comment_position
 		undefine
@@ -394,7 +394,7 @@ feature
 
 feature
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.put_string (dump);

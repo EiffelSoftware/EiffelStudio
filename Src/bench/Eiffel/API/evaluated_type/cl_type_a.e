@@ -188,7 +188,7 @@ feature
 
 -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_B; class_id: INTEGER): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		local
@@ -302,7 +302,7 @@ feature
 			Result.set_type (type_i);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			--
 		do
 			ctxt.put_class_name (associated_class);

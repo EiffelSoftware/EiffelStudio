@@ -67,7 +67,7 @@ feature
 			Result := not other.is_all;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 		end;
 

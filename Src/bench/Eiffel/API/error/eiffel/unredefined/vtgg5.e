@@ -11,16 +11,16 @@ inherit
 
 feature 
 
-	actual_type: TYPE;
+	actual_type: TYPE_B;
 
-	c_type: TYPE;
+	c_type: TYPE_B;
 
-	set_actual_type (a_type: TYPE) is
+	set_actual_type (a_type: TYPE_B) is
 		do
 			actual_type := a_type;
 		end;
 
-	set_constraint_type (a_type: TYPE) is
+	set_constraint_type (a_type: TYPE_B) is
 		do
 			c_type := a_type;
 		end;

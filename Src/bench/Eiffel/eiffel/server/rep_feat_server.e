@@ -4,7 +4,7 @@ class REP_FEAT_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		rename
 			item as server_item,
 			has as server_has,
@@ -15,7 +15,7 @@ inherit
 			ontable, updated_id
 		end;
 
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		redefine
 			has, item, ontable, updated_id, change_id
 		select
@@ -55,7 +55,7 @@ feature
 			Result := Tmp_rep_feat_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: INTEGER): FEATURE_AS is
+	item (an_id: INTEGER): FEATURE_AS_B is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do

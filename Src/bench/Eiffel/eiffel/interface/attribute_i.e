@@ -34,7 +34,7 @@ inherit
 
 feature 
 
-	type: TYPE;
+	type: TYPE_B;
 			-- Attribute type
 
 	has_function_origin: BOOLEAN;
@@ -95,7 +95,7 @@ feature
 			-- Do nothing
 		end;
 
-	set_type (t: TYPE) is
+	set_type (t: TYPE_B) is
 			-- Assign `t' to `type'.
 		do
 			type := t

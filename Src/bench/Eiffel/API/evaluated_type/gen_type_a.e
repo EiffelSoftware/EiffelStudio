@@ -369,7 +369,7 @@ feature -- Primitives
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations ?
 		local
-			base_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			base_generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			i, generic_count: INTEGER;
 		do
 			base_generics := associated_class.generics;
@@ -389,7 +389,7 @@ feature -- Primitives
 
 	error_generics: VTUG is
 		local
-			base_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			base_generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			i, generic_count: INTEGER;
 		do
 			base_generics := associated_class.generics;
@@ -493,7 +493,7 @@ feature -- Primitives
 			end;
 		end;
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			other_gen_type: GEN_TYPE_A;
 			i, nb: INTEGER;
@@ -592,7 +592,7 @@ feature -- Primitives
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		local
 			i, count: INTEGER;
 		do

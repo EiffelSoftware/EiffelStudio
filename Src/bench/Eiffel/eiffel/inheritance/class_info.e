@@ -35,7 +35,7 @@ feature
 	invariant_info: READ_INFO;
 			-- Index of invariant clause
 
-	creators: EIFFEL_LIST [CREATE_AS];
+	creators: EIFFEL_LIST_B [CREATE_AS_B];
 			-- Creators
 
 	unique_values: HASH_TABLE [INTEGER, STRING];
@@ -77,7 +77,7 @@ feature
 			unique_values := u;
 		end;
 
-	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
+	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B] is
 			-- Feature abstract syntax
 		require
 			ast_server_ok: Tmp_ast_server.has (id) or else Ast_server.has (id);
@@ -97,9 +97,9 @@ feature
 			feature_name: STRING;
 			a_class: CLASS_C;
 			a_feature: FEATURE_I;
-			feature_list: EIFFEL_LIST [FEATURE_NAME];
-			clients: CLIENT_AS;
-			c_reation: CREATE_AS;
+			feature_list: EIFFEL_LIST_B [FEATURE_NAME_B];
+			clients: CLIENT_AS_B;
+			c_reation: CREATE_AS_B;
 			export_status: EXPORT_I;
 			vgcp1: VGCP1;
 			vgcp2: VGCP2;

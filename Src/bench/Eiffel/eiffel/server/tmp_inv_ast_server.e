@@ -5,12 +5,12 @@ class TMP_INV_AST_SERVER
 
 inherit
 
-	READ_SERVER [INVARIANT_AS]
+	READ_SERVER [INVARIANT_AS_B]
 		rename
 			clear as old_clear,
 			make as basic_make
 		end;
-	READ_SERVER [INVARIANT_AS]
+	READ_SERVER [INVARIANT_AS_B]
 		redefine
 			clear, make
 		select

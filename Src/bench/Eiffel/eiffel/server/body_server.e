@@ -4,7 +4,7 @@ class BODY_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		rename
 			item as server_item,
 			change_id as server_change_id
@@ -13,7 +13,7 @@ inherit
 		redefine
 			ontable, updated_id, trace
 		end;
-	READ_SERVER [FEATURE_AS]
+	READ_SERVER [FEATURE_AS_B]
 		redefine
 			item, ontable, updated_id, change_id, trace
 		select
@@ -61,7 +61,7 @@ end;
 			Result := Ast_server;
 		end;
 
-	item (an_id: INTEGER): FEATURE_AS is
+	item (an_id: INTEGER): FEATURE_AS_B is
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
 		require else

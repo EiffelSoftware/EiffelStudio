@@ -68,7 +68,7 @@ feature
 			-- Syntactical clients of the class
 			--| Useful for class removal
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS];
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			-- Formal generical parameters
 
 	topological_id: INTEGER;
@@ -204,7 +204,7 @@ feature
 			Result := Ast_server.has (id);
 		end;
 
-	build_ast: CLASS_AS is
+	build_ast: CLASS_AS_B is
 			-- Parse the file and generate the AST
 		local
 			file: RAW_FILE;
@@ -253,14 +253,14 @@ feature
 			end;
 		end;
 	
-	end_of_pass1 (ast: CLASS_AS) is
+	end_of_pass1 (ast: CLASS_AS_B) is
 				-- End of the first pass after syntax analysis
 		local
-			supplier_list: LINKED_LIST [ID_AS];
+			supplier_list: LINKED_LIST [ID_AS_B];
 			class_info: CLASS_INFO;
 				-- Temporary structure to build about the current class
 				-- which will be useful for second pass.
-			parent_list: EIFFEL_LIST [PARENT_AS];
+			parent_list: EIFFEL_LIST_B [PARENT_AS_B];
 			invariant_info: READ_INFO;
 			old_syntactical_suppliers: like syntactical_suppliers;
 		do
@@ -395,7 +395,7 @@ feature -- Expanded rues validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			generic_dec: FORMAL_DEC_AS;
+			generic_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_A;
 		do
 debug ("CHECK_EXPANDED");
@@ -458,7 +458,7 @@ feature -- Third pass: byte code production and type check
 			temp: STRING
 
 				-- Invariant
-			invar_clause: INVARIANT_AS;
+			invar_clause: INVARIANT_AS_B;
 			invar_byte: INVARIANT_B;
 			invariant_changed: BOOLEAN;
 			inv_melted_info: INV_MELTED_INFO;
@@ -983,7 +983,7 @@ end;
 --			good_argument2: changed implies new_suppliers /= Void;
 --			good_argument3: melt_set /= Void;
 --		local
---			invar_clause: INVARIANT_AS;
+--			invar_clause: INVARIANT_AS_B;
 --			invar_byte: INVARIANT_B;
 --			f_suppliers: FEATURE_DEPENDANCE;
 --			invariant_changed: BOOLEAN;
@@ -1445,17 +1445,17 @@ changed4 := False;
 
 feature -- Class initialization
 
-	init (ast: CLASS_AS; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
+	init (ast: CLASS_AS_B; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast /= Void;
 		local
 			old_parents: like parents;
 			old_generics: like generics;
-			parents_as: EIFFEL_LIST [PARENT_AS];
-			p: ARRAY [PARENT_AS];
+			parents_as: EIFFEL_LIST_B [PARENT_AS_B];
+			p: ARRAY [PARENT_AS_B];
 			lower, upper: INTEGER;
-			raw_type: CLASS_TYPE_AS;
+			raw_type: CLASS_TYPE_AS_B;
 			cl_type: CLASS_TYPE;
 			parent_type: CL_TYPE_A;
 			parent_class: CLASS_C;
@@ -1943,8 +1943,8 @@ feature
 		require
 			generics_exists: generics /= Void;
 		local
-			generic_dec, next_dec: FORMAL_DEC_AS;
-			generic_name: ID_AS;
+			generic_dec, next_dec: FORMAL_DEC_AS_B;
+			generic_name: ID_AS_B;
 			pos: INTEGER;
 			vcfg1: VCFG1;
 			vcfg2: VCFG2;
@@ -2000,8 +2000,8 @@ feature
 		require
 			generics_exists: generics /= Void;
 		local
-			generic_dec: FORMAL_DEC_AS;
-			generic_name: ID_AS;
+			generic_dec: FORMAL_DEC_AS_B;
+			generic_name: ID_AS_B;
 			vcfg1: VCFG1;
 		do
 			from
@@ -2027,8 +2027,8 @@ feature
 		require
 			generics_exists: generics /= Void;
 		local
-			generic_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE;
+			generic_dec: FORMAL_DEC_AS_B;
+			constraint_type: TYPE_B;
 		do
 			Inst_context.set_cluster (cluster);
 			from
@@ -2115,7 +2115,7 @@ feature -- Supplier checking
 			end;
 		end;
 
-	check_suppliers (supplier_list: LINKED_LIST [ID_AS]) is
+	check_suppliers (supplier_list: LINKED_LIST [ID_AS_B]) is
 			-- Check the supplier ids of the current parsed class
 			-- and add perhaps classes to the system.
 		require
@@ -2136,7 +2136,7 @@ feature -- Supplier checking
 			end;
 		end;
 
-	check_parent_classes (parent_list: EIFFEL_LIST [PARENT_AS]) is
+	check_parent_classes (parent_list: EIFFEL_LIST_B [PARENT_AS_B]) is
 			-- Check the parents of the current parsed class
 			-- and add perhaps classes to the system.
 		require
@@ -2974,7 +2974,7 @@ feature -- Process the creation feature
 
 feature {NONE} -- External features
 
-	c_parse (f: POINTER; s: POINTER): CLASS_AS is
+	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
 		external
 			"C"
 		end;
@@ -2984,8 +2984,8 @@ feature -- PS
 	signature: STRING is
 		obsolete "Use `append_clickable_signature'"
 		local
-			formal_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE;
+			formal_dec: FORMAL_DEC_AS_B;
+			constraint_type: TYPE_B;
 			error: BOOLEAN;
 			old_cluster: CLUSTER_I;
 		do
@@ -3032,8 +3032,8 @@ feature -- PS
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 			-- Append the signature of current class in `a_clickable'
 		local
-			formal_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE;
+			formal_dec: FORMAL_DEC_AS_B;
+			constraint_type: TYPE_B;
 			c_name: STRING;
 			error: BOOLEAN;
 			old_cluster: CLUSTER_I;
@@ -3224,7 +3224,7 @@ end;
 			old_feat, new_feat: FEATURE_I;
 			old_body_id, new_body_id: INTEGER;
 			rep_table: REP_FEATURES;
-			new_feat_as, old_feat_as: FEATURE_AS;
+			new_feat_as, old_feat_as: FEATURE_AS_B;
 			rep_features: LINKED_LIST [S_REP_NAME];
 		do
 			rep_class_info := Tmp_rep_info_server.item (id);
@@ -3303,7 +3303,7 @@ end;
 				-- and its corresponding read_info
 		local
 			index: EXTEND_TABLE [READ_INFO, INTEGER];
-			feature_as: FEATURE_AS;
+			feature_as: FEATURE_AS_B;
 			read_info: READ_INFO;
 			rep_body_table: EXTEND_TABLE [READ_INFO, INTEGER];
 		do

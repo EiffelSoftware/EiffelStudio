@@ -300,7 +300,7 @@ feature {NONE} -- Class information
 		local
 			classc: CLASS_C;
 			flat_struct: FLAT_STRUCT;
-			class_ast: CLASS_AS;
+			class_ast: CLASS_AS_B;
 			i: INTEGER;
 			s_class_data: S_CLASS_DATA;
 			class_path: STRING;

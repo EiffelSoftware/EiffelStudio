@@ -45,7 +45,7 @@ feature
 	execute is
 		local
 			class_c: CLASS_C;
-			ctxt: FORMAT_CONTEXT;
+			ctxt: FORMAT_CONTEXT_B;
 			class_i: CLASS_I;
 			text_filter: TEXT_FILTER
 		do

@@ -4,7 +4,7 @@ class INV_AST_SERVER
 
 inherit
 
-	READ_SERVER [INVARIANT_AS]
+	READ_SERVER [INVARIANT_AS_B]
 		rename
 			item as server_item,
 			has as server_has
@@ -12,7 +12,7 @@ inherit
 			{ANY} server_has, server_item, merge
 		end;
 
-	READ_SERVER [INVARIANT_AS]
+	READ_SERVER [INVARIANT_AS_B]
 		redefine
 			has, item
 		select
@@ -38,7 +38,7 @@ feature
 			Result := Tmp_inv_ast_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: INTEGER): INVARIANT_AS is
+	item (an_id: INTEGER): INVARIANT_AS_B is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do

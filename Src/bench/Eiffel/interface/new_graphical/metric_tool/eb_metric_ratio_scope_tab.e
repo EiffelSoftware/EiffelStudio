@@ -54,8 +54,8 @@ feature -- Initialization
 
 					create name_field
 					name_field.set_minimum_height (22)
-					name_field.key_press_actions.extend (~dialog_key_press_action (?, name_field))
-					name_field.key_press_string_actions.extend (~change_in_name)
+					name_field.key_press_actions.extend (agent dialog_key_press_action (?, name_field))
+					name_field.key_press_string_actions.extend (agent change_in_name)
 					hb.extend (name_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -73,7 +73,7 @@ feature -- Initialization
 					unit_field.set_minimum_height (22)
 					unit_field.disable_edit
 					unit_field.set_text (interface_names.metric_ratio_unit) 
-					unit_field.key_press_actions.extend (~dialog_key_press_action (?, unit_field))
+					unit_field.key_press_actions.extend (agent dialog_key_press_action (?, unit_field))
 					hb.extend (unit_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -91,8 +91,8 @@ feature -- Initialization
 						interface.fill_metric_combobox (metric_combobox)
 						metric_combobox.first.enable_select
 						metric_combobox.disable_edit
-						metric_combobox.select_actions.extend (~select_metric)
-						metric_combobox.key_press_actions.extend (~dialog_key_press_action (?, metric_combobox))
+						metric_combobox.select_actions.extend (agent select_metric)
+						metric_combobox.key_press_actions.extend (agent dialog_key_press_action (?, metric_combobox))
 						vb_min.extend (metric_combobox)
 						vb_min.disable_item_expand (metric_combobox)
 
@@ -107,7 +107,7 @@ feature -- Initialization
 						vb_min.extend (definition_field)
 						vb_min.disable_item_expand (definition_field)
 
-						metric_combobox.select_actions.extend (~display_formula (metric_combobox, definition_field))
+						metric_combobox.select_actions.extend (agent display_formula (metric_combobox, definition_field))
 
 					frame.extend (vb_min)
 				extend (frame)
@@ -128,8 +128,8 @@ feature -- Initialization
 						first_scope_combobox.set_minimum_width (140)
 						fill_scope_combobox (first_scope_combobox)
 						first_scope_combobox.disable_edit
-						first_scope_combobox.select_actions.extend (~add_num_action)
-						first_scope_combobox.key_press_actions.extend (~dialog_key_press_action (?, first_scope_combobox))
+						first_scope_combobox.select_actions.extend (agent add_num_action)
+						first_scope_combobox.key_press_actions.extend (agent dialog_key_press_action (?, first_scope_combobox))
 					vb_min.extend (first_scope_combobox)
 
 					frame.extend (vb_min)
@@ -147,8 +147,8 @@ feature -- Initialization
 						create second_scope_combobox
 						second_scope_combobox.set_minimum_width (140)
 						fill_scope_combobox (second_scope_combobox)
-						second_scope_combobox.select_actions.extend (~add_den_action)
-						second_scope_combobox.key_press_actions.extend (~dialog_key_press_action (?, second_scope_combobox))
+						second_scope_combobox.select_actions.extend (agent add_den_action)
+						second_scope_combobox.key_press_actions.extend (agent dialog_key_press_action (?, second_scope_combobox))
 						second_scope_combobox.disable_edit
 						vb_min.extend (second_scope_combobox)
 
@@ -170,11 +170,11 @@ feature -- Initialization
 					create vb_min
 					vb_min.set_padding (5)
 						create new_button
-						new_button.select_actions.extend (~preset)
+						new_button.select_actions.extend (agent preset)
 						new_button.set_minimum_size (22, 22)
 						new_button.set_tooltip ("New metric")
 						new_button.set_pixmap (Pixmaps.Icon_new_metric @ 1)
-						new_button.key_press_actions.extend (~dialog_key_press_action (?, new_button))
+						new_button.key_press_actions.extend (agent dialog_key_press_action (?, new_button))
 						vb_min.extend (new_button)
 						vb_min.disable_item_expand (new_button)
 
@@ -192,7 +192,7 @@ feature -- Initialization
 					hb.set_padding (5)
 
 					create percentage_button.make_with_text ("Display as percentage.")
-					percentage_button.select_actions.extend (~enable_save)
+					percentage_button.select_actions.extend (agent enable_save)
 					hb.extend (percentage_button)
 					hb.disable_item_expand (percentage_button)
 
@@ -214,9 +214,9 @@ feature -- Initialization
 				create scope_info
 				min_scope := scope_info.System_scope
 
-				name_field.key_press_actions.extend (~following_widget (?, metric_combobox))
-				metric_combobox.key_press_actions.extend (~following_widget (?, first_scope_combobox))
-				first_scope_combobox.key_press_actions.extend (~following_widget (?, second_scope_combobox))
+				name_field.key_press_actions.extend (agent following_widget (?, metric_combobox))
+				metric_combobox.key_press_actions.extend (agent following_widget (?, first_scope_combobox))
+				first_scope_combobox.key_press_actions.extend (agent following_widget (?, second_scope_combobox))
 		end
 
 

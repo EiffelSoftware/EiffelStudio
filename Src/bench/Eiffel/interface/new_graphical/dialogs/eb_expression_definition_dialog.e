@@ -55,11 +55,11 @@ feature {NONE} -- Initialization
 
 				--| Create and set up the radio buttons.
 			create class_radio.make_with_text (Interface_names.t_Class)
-			class_radio.select_actions.extend (~on_class_radio_selected)
+			class_radio.select_actions.extend (agent on_class_radio_selected)
 			create object_radio.make_with_text (Interface_names.l_Object)
-			object_radio.select_actions.extend (~on_object_radio_selected)
+			object_radio.select_actions.extend (agent on_object_radio_selected)
 			create context_radio.make_with_text (Interface_names.l_Current_context)
-			context_radio.select_actions.extend (~on_context_radio_selected)
+			context_radio.select_actions.extend (agent on_context_radio_selected)
 			
 				--| Create and set up the text fields.
 			create class_field
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			create expression_field
 			class_field.disable_sensitive
 			address_field.disable_sensitive
-			expression_field.change_actions.extend (~on_expression_changed)
+			expression_field.change_actions.extend (agent on_expression_changed)
 			if
 				not application.is_running or
 				not Application.is_stopped
@@ -82,9 +82,9 @@ feature {NONE} -- Initialization
 			
 				--| Create and set up the buttons.
 			create ok_button.make_with_text (Interface_names.b_Ok)
-			ok_button.select_actions.extend (~on_ok_pressed)
+			ok_button.select_actions.extend (agent on_ok_pressed)
 			create cb.make_with_text (Interface_names.b_Cancel)
-			cb.select_actions.extend (~destroy)
+			cb.select_actions.extend (agent destroy)
 			Layout_constants.set_default_size_for_button (ok_button)
 			Layout_constants.set_default_size_for_button (cb)
 			
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			dialog.set_maximum_height (dialog.minimum_height)
 			dialog.set_default_push_button (ok_button)
 			dialog.set_default_cancel_button (cb)
-			dialog.show_actions.extend (~on_shown)
+			dialog.show_actions.extend (agent on_shown)
 			focused_widget := expression_field
 		end
 

@@ -19,7 +19,7 @@ feature {NONE} -- Initialisation
 			-- Initialize Current
 		do
 			default_create
-			ok_action := close_request_actions~call
+			ok_action := agent close_request_actions.call
 		end
 
 

@@ -38,9 +38,9 @@ feature {NONE} -- Initialization
 			dialog.set_icon_pixmap (Pixmaps.Icon_pretty_print)
 				--| FIXME XR: Implement the save to file.
 			create exit_button.make_with_text (Interface_names.b_Close)
-			exit_button.select_actions.extend (~destroy)
+			exit_button.select_actions.extend (agent destroy)
 			create slice_button.make_with_text (Interface_names.b_Slice)
-			slice_button.select_actions.extend (slice_cmd~execute)
+			slice_button.select_actions.extend (agent slice_cmd.execute)
 			slice_button.disable_sensitive
 			
 				-- Setting up the editor.
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			dialog.extend (vb)
 			dialog.set_default_cancel_button (exit_button)
 			dialog.set_default_push_button (slice_button)
-			editor.drop_actions.extend (~on_stone_dropped)
+			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)
 		end
 

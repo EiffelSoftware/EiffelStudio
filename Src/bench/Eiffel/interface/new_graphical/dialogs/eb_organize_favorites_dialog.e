@@ -40,8 +40,8 @@ feature {NONE} -- Initialization
 		do
 			favorites_manager := a_favorites_manager
 			create favorites_tree.make (a_favorites_manager, False)
-			favorites_tree.select_actions.extend (~on_selection_change)
-			favorites_tree.deselect_actions.extend (~on_selection_change)
+			favorites_tree.select_actions.extend (agent on_selection_change)
+			favorites_tree.deselect_actions.extend (agent on_selection_change)
 			default_create
 			set_title (Interface_names.t_Organize_favorites)
 			prepare
@@ -60,20 +60,20 @@ feature {NONE} -- Initialization
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
 	
-			create button.make_with_text_and_action (Interface_names.b_New_favorite_class, ~new_favorite_class)
+			create button.make_with_text_and_action (Interface_names.b_New_favorite_class, agent new_favorite_class)
 			extend_no_expand (buttons_box, button)
-			create button.make_with_text_and_action (Interface_names.b_Create_folder, ~create_folder)
+			create button.make_with_text_and_action (Interface_names.b_Create_folder, agent create_folder)
 			extend_no_expand (buttons_box, button)
-			create move_button.make_with_text_and_action (Interface_names.b_Move_to_folder, ~move_to_folder)
+			create move_button.make_with_text_and_action (Interface_names.b_Move_to_folder, agent move_to_folder)
 			move_button.disable_sensitive
 			extend_no_expand (buttons_box, move_button)
-			create remove_button.make_with_text_and_action (Interface_names.b_Remove, ~remove)
+			create remove_button.make_with_text_and_action (Interface_names.b_Remove, agent remove)
 			remove_button.disable_sensitive
 			extend_no_expand (buttons_box, remove_button)
 			create cell
 			cell.set_minimum_height (Layout_constants.dialog_unit_to_pixels(20))
 			buttons_box.extend (cell)
-			create close_button.make_with_text_and_action (Interface_names.b_Close, ~close)
+			create close_button.make_with_text_and_action (Interface_names.b_Close, agent close)
 			extend_no_expand (buttons_box, close_button)
 
 				-- Pack the buttons_box and the favorites tree
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			extend_no_expand (hb, buttons_box)
 			extend (hb)
 			set_default_cancel_button (close_button)
-			show_actions.extend (button~set_focus)
+			show_actions.extend (agent button.set_focus)
 		end
 
 feature {NONE} -- Implementation

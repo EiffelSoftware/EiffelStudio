@@ -15,7 +15,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make_default
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			tool := t
-			pick_actions.extend (~start_pnd)
+			pick_actions.extend (agent start_pnd)
 		end
 
 feature -- Access

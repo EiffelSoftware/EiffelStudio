@@ -21,7 +21,7 @@ inherit
 			refresh
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization

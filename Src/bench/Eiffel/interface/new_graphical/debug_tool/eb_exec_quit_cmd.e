@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_f5),
 				False, False, True)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature -- Formatting
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			create cd.make_initialized (2, "confirm_kill", 
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again)
-			cd.set_ok_action (~kill)
+			cd.set_ok_action (agent kill)
 			cd.show_modal_to_window (debugger_manager.debugging_window.window)
 		end
 

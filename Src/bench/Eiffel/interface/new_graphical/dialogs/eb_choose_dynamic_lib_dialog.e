@@ -21,7 +21,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make_default
 
 feature {NONE} -- Initialization
@@ -44,15 +44,15 @@ feature {NONE} -- Initialization
 			create i.make_with_text (Interface_names.b_Browse)
 			hb.extend (i)
 			hb.disable_item_expand (i)
-			i.select_actions.extend (~execute (Browse_it))
+			i.select_actions.extend (agent execute (Browse_it))
 			create i.make_with_text (Interface_names.b_Default)
 			hb.extend (i)
 			hb.disable_item_expand (i)
-			i.select_actions.extend (~execute (Build_it))
+			i.select_actions.extend (agent execute (Build_it))
 			create i.make_with_text (Interface_names.b_Cancel)
 			hb.extend (i)
 			hb.disable_item_expand (i)
-			i.select_actions.extend (~execute (Void))
+			i.select_actions.extend (agent execute (Void))
 			vb.extend (hb)
 			extend (vb)
 			disable_user_resize

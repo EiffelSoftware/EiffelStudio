@@ -44,7 +44,7 @@ inherit
 			on_application_stopped
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization

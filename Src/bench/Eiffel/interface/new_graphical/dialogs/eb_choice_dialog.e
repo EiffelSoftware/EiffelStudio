@@ -21,7 +21,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 
 	make_default
 
@@ -36,11 +36,11 @@ feature -- Initialization
 
 			create list
 			list.hide_title_row
-			list.pointer_button_release_actions.extend (~on_select)
+			list.pointer_button_release_actions.extend (agent on_select)
 
-			list.key_press_actions.extend (~key_actions)
+			list.key_press_actions.extend (agent key_actions)
 
-			create exit_b.make_with_text_and_action (Interface_names.b_Cancel, ~destroy)
+			create exit_b.make_with_text_and_action (Interface_names.b_Cancel, agent destroy)
 
 			create vb
 			vb.set_padding (3)
@@ -56,7 +56,7 @@ feature -- Initialization
 --			set_default_push_button (exit_b)
 --			set_default_cancel_button (exit_b)
 
-			show_actions.extend (~on_shown)
+			show_actions.extend (agent on_shown)
 			enable_user_resize
 		end
 
@@ -150,9 +150,9 @@ feature
 --			exit_b.focus_out_actions.wipe_out
 --			exit_b.focus_out_actions.extend (~one_lost_focus)
 			list.focus_out_actions.wipe_out
-			list.focus_out_actions.extend (~one_lost_focus)
+			list.focus_out_actions.extend (agent one_lost_focus)
 			focus_out_actions.wipe_out
-			focus_out_actions.extend (~one_lost_focus)
+			focus_out_actions.extend (agent one_lost_focus)
 		end
 
 feature {NONE} -- Properties

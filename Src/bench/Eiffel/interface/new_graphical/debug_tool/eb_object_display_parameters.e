@@ -159,8 +159,8 @@ feature -- Status report
 				ost.set_associated_tree_item (attr_item)
 				main_item.extend (attr_item)
 				attr_item.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
-				attr_item.expand_actions.extend (~on_expand (attributes_id))
-				attr_item.collapse_actions.extend (~on_unexpand (attributes_id))
+				attr_item.expand_actions.extend (agent on_expand (attributes_id))
+				attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
 				if
 					display_attributes and
 					display
@@ -175,8 +175,8 @@ feature -- Status report
 				create item.make_with_text (Interface_names.l_Dummy)
 					--|  Add expand actions.
 				once_item.extend (item)
-				once_item.expand_actions.extend (~on_expand (onces_id))
-				once_item.collapse_actions.extend (~on_unexpand (onces_id))
+				once_item.expand_actions.extend (agent on_expand (onces_id))
+				once_item.collapse_actions.extend (agent on_unexpand (onces_id))
 				if
 					display_onces and
 					display
@@ -187,8 +187,8 @@ feature -- Status report
 			if display then
 				main_item.expand
 			end
-			main_item.expand_actions.extend (~on_expand (main_id))
-			main_item.collapse_actions.extend (~on_unexpand (main_id))
+			main_item.expand_actions.extend (agent on_expand (main_id))
+			main_item.collapse_actions.extend (agent on_unexpand (main_id))
 		end
 
 feature -- Status setting
@@ -270,8 +270,8 @@ feature -- Status setting
 					end
 				end
 				attr_item.expand
-				attr_item.expand_actions.extend (~on_expand (attributes_id))
-				attr_item.collapse_actions.extend (~on_unexpand (attributes_id))
+				attr_item.expand_actions.extend (agent on_expand (attributes_id))
+				attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
 			end
 		end
 
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			Result.set_data (dv)
 			if dv.expandable then
 				Result.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
-				Result.expand_actions.extend (~fill_item (Result))
+				Result.expand_actions.extend (agent fill_item (Result))
 			end
 			if dv.address /= Void then
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 						--| Add expand actions.
 					folder_item.extend (new_item)
 					folder_item.set_data (dv)
-					folder_item.expand_actions.extend (~fill_onces (folder_item))
+					folder_item.expand_actions.extend (agent fill_onces (folder_item))
 				end
 			end
 				-- We remove the dummy item.

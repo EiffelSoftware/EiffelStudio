@@ -41,10 +41,10 @@ feature -- Initialization
 			tool := tl
 			min_scope := minimal
 			create processors.make (Feature_scope, System_scope)
-			processors.put (~default_feature_value, Feature_scope)
-			processors.put (~default_class_value, Class_scope)
-			processors.put (~default_cluster_value, Cluster_scope)
-			processors.put (~default_system_value, System_scope)
+			processors.put (agent default_feature_value, Feature_scope)
+			processors.put (agent default_class_value, Class_scope)
+			processors.put (agent default_cluster_value, Cluster_scope)
+			processors.put (agent default_system_value, System_scope)
 
 			from
 				i := agent_array.lower

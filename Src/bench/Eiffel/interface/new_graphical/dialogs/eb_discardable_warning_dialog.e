@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			Result.align_text_center
 			Result.set_text (a_text)
 			Layout_constants.set_default_size_for_button (Result)
-			Result.select_actions.extend (~destroy)
+			Result.select_actions.extend (agent destroy)
 		end
 
 	dialog_title: STRING is

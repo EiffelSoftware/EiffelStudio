@@ -185,10 +185,10 @@ feature -- Access
 				create sep
 				Result.extend (sep)
 				create mit.make_with_text ("raise")
-				mit.select_actions.extend (~force_raise)
+				mit.select_actions.extend (agent force_raise)
 				Result.extend (mit)
 				create mit.make_with_text ("unraise")
-				mit.select_actions.extend (~force_unraise)
+				mit.select_actions.extend (agent force_unraise)
 				Result.extend (mit)
 			end
 
@@ -612,7 +612,7 @@ feature -- Debugging events
 				observers.forth
 			end
 			if Application.status.reason = Pg_overflow then
-				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<~do_nothing, ~relaunch_application>>)
+				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent relaunch_application>>)
 				cd.show_modal_to_window (debugging_window.window)
 			end
 			
@@ -782,7 +782,7 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.set_tooltip (Interface_names.e_Bkpt_info)
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
 			bkpt_info_cmd.set_name ("Bkpt_info")
-			bkpt_info_cmd.add_agent (~display_breakpoints)
+			bkpt_info_cmd.add_agent (agent display_breakpoints)
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 
@@ -797,12 +797,12 @@ feature {NONE} -- Implementation
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")
-			system_info_cmd.add_agent (output_manager~display_system_info)
+			system_info_cmd.add_agent (agent output_manager.display_system_info)
 			toolbarable_commands.extend (system_info_cmd)
 
 			create set_critical_stack_depth_cmd.make
 			set_critical_stack_depth_cmd.set_menu_name (Interface_names.m_Set_critical_stack_depth)
-			set_critical_stack_depth_cmd.add_agent (~change_critical_stack_depth)
+			set_critical_stack_depth_cmd.add_agent (agent change_critical_stack_depth)
 			set_critical_stack_depth_cmd.enable_sensitive
 
 			create display_error_help_cmd.make
@@ -859,9 +859,9 @@ feature {NONE} -- Implementation
 			end
 
 				-- Enable/Disable commands on project loading/unloading.
-			Eiffel_project.manager.create_agents.extend (~enable_commands_on_project_created)
-			Eiffel_project.manager.load_agents.extend (~enable_commands_on_project_loaded)
-			Eiffel_project.manager.close_agents.extend (~disable_commands_on_project_unloaded)
+			Eiffel_project.manager.create_agents.extend (agent enable_commands_on_project_created)
+			Eiffel_project.manager.load_agents.extend (agent enable_commands_on_project_loaded)
+			Eiffel_project.manager.close_agents.extend (agent disable_commands_on_project_unloaded)
 		end
 
 	enable_commands_on_project_created is
@@ -1027,14 +1027,14 @@ feature {NONE} -- Implementation
 			element_nb.set_minimum_width (100)
 			
 				-- Set up actions.
-			cancelb.select_actions.extend (~close_dialog)
-			okb.select_actions.extend (~accept_dialog)
-			show_all_radio.select_actions.extend (element_nb~disable_sensitive)
-			rb2.select_actions.extend (element_nb~enable_sensitive)
+			cancelb.select_actions.extend (agent close_dialog)
+			okb.select_actions.extend (agent accept_dialog)
+			show_all_radio.select_actions.extend (agent element_nb.disable_sensitive)
+			rb2.select_actions.extend (agent element_nb.enable_sensitive)
 			dialog.set_default_push_button (okb)
 			dialog.set_default_cancel_button (cancelb)
 			if element_nb.is_sensitive then
-				dialog.show_actions.extend (element_nb~set_focus)
+				dialog.show_actions.extend (agent element_nb.set_focus)
 			end
 			
 			dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)

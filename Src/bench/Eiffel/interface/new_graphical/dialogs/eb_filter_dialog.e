@@ -25,7 +25,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 
 	make
 	
@@ -57,11 +57,11 @@ feature -- Initialization
 				extend (text_field)
 				create display_button.make_with_text (Interface_names.b_Display)
 				extend (display_button)
-				display_button.select_actions.extend (~display)
+				display_button.select_actions.extend (agent display)
 			end
 			create execute_button.make_with_text (Interface_names.b_Execute)
 			extend (execute_button)
-			execute_button.select_actions.extend (~execute)
+			execute_button.select_actions.extend (agent execute)
 
 			create cancel_button.make_with_text (Interface_names.b_Cancel)			
 			extend (cancel_button)

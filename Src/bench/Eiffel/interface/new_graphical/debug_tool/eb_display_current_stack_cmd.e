@@ -11,7 +11,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 	make
 
 feature -- Access

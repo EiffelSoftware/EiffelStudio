@@ -120,30 +120,30 @@ feature {NONE} -- Initialization
 				vb.extend (output_line)
 				create address_dialog
 				address_dialog.set_title (Interface_names.t_Select_location)
-				address_dialog.close_request_actions.extend (address_dialog~hide)
+				address_dialog.close_request_actions.extend (agent address_dialog.hide)
 				address_dialog.extend (vb)
 				generate_header_info
 
-				cluster_address.key_release_actions.extend (~cluster_key_up)
-				cluster_address.key_press_actions.extend (~cluster_key_down)
-				cluster_address.change_actions.extend (~type_cluster)
-				cluster_address.select_actions.extend (~change_hist_to_cluster)
+				cluster_address.key_release_actions.extend (agent cluster_key_up)
+				cluster_address.key_press_actions.extend (agent cluster_key_down)
+				cluster_address.change_actions.extend (agent type_cluster)
+				cluster_address.select_actions.extend (agent change_hist_to_cluster)
 
-				cluster_address.focus_out_actions.extend (~one_lost_focus)
-				class_address.focus_out_actions.extend (~one_lost_focus)
-				feature_address.focus_out_actions.extend (~one_lost_focus)
+				cluster_address.focus_out_actions.extend (agent one_lost_focus)
+				class_address.focus_out_actions.extend (agent one_lost_focus)
+				feature_address.focus_out_actions.extend (agent one_lost_focus)
 			end
 
-			class_address.key_release_actions.extend (~class_key_up)
-			class_address.key_press_actions.extend (~class_key_down)
-			class_address.change_actions.extend (~type_class)
-			class_address.select_actions.extend (~change_hist_to_class)
+			class_address.key_release_actions.extend (agent class_key_up)
+			class_address.key_press_actions.extend (agent class_key_down)
+			class_address.change_actions.extend (agent type_class)
+			class_address.select_actions.extend (agent change_hist_to_class)
 
-			feature_address.key_release_actions.extend (~feature_key_up)
-			feature_address.key_press_actions.extend (~feature_key_down)
-			feature_address.select_actions.extend (~change_hist_to_feature)
-			feature_address.change_actions.extend (~type_feature)
-			feature_address.focus_in_actions.extend (~update_current_typed_class)
+			feature_address.key_release_actions.extend (agent feature_key_up)
+			feature_address.key_press_actions.extend (agent feature_key_down)
+			feature_address.select_actions.extend (agent change_hist_to_feature)
+			feature_address.change_actions.extend (agent type_feature)
+			feature_address.focus_in_actions.extend (agent update_current_typed_class)
 		end
 
 feature -- Access
@@ -212,7 +212,7 @@ feature -- Element change
 				l_cnt > 5 
 			loop
 				but := known_formatters.i_th (l_cnt).new_button
-				but.drop_actions.set_veto_pebble_function (~is_not_feature_stone (?))
+				but.drop_actions.set_veto_pebble_function (agent is_not_feature_stone (?))
 				formatters_combo.extend (but)
 				l_cnt := l_cnt + 1
 			end
@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 				if cluster_names.count = 1 then
 					process_cluster_callback (1)
 				else
-					create choice.make_default (~process_cluster_callback (?))
+					create choice.make_default (agent process_cluster_callback (?))
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 				if class_names.count = 1 then
 					process_class_callback (1)
 				else
-					create choice.make_default (~process_class_callback (?))
+					create choice.make_default (agent process_class_callback (?))
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
@@ -891,7 +891,7 @@ feature {NONE} -- Implementation
 				if feature_names.count = 1 then
 					process_feature_callback (1)
 				else
-					create choice.make_default (~process_feature_callback (?))
+					create choice.make_default (agent process_feature_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
@@ -1882,20 +1882,20 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			feature_label.set_foreground_color (def_col.Dark_green)
 				-- This should be green.
 
-			cluster_label.pointer_enter_actions.extend (~highlight_label (cluster_label))
-			cluster_label.pointer_leave_actions.extend (~unhighlight_label (cluster_label))
-			class_label.pointer_enter_actions.extend (~highlight_label (class_label))
-			class_label.pointer_leave_actions.extend (~unhighlight_label (class_label))
-			feature_label.pointer_enter_actions.extend (~highlight_label (feature_label))
-			feature_label.pointer_leave_actions.extend (~unhighlight_label (feature_label))
+			cluster_label.pointer_enter_actions.extend (agent highlight_label (cluster_label))
+			cluster_label.pointer_leave_actions.extend (agent unhighlight_label (cluster_label))
+			class_label.pointer_enter_actions.extend (agent highlight_label (class_label))
+			class_label.pointer_leave_actions.extend (agent unhighlight_label (class_label))
+			feature_label.pointer_enter_actions.extend (agent highlight_label (feature_label))
+			feature_label.pointer_leave_actions.extend (agent unhighlight_label (feature_label))
 
-			cluster_label.pointer_button_release_actions.extend (~button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			class_label.pointer_button_release_actions.extend (~button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			feature_label.pointer_button_release_actions.extend (~button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			cluster_label.pointer_button_release_actions.extend (agent button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			class_label.pointer_button_release_actions.extend (agent button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			feature_label.pointer_button_release_actions.extend (agent button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			
-			class_label.drop_actions.extend (~drop_class)
-			feature_label.drop_actions.extend (~drop_feature)
-			cluster_label.drop_actions.extend (~drop_cluster)
+			class_label.drop_actions.extend (agent drop_class)
+			feature_label.drop_actions.extend (agent drop_feature)
+			cluster_label.drop_actions.extend (agent drop_cluster)
 
 			cluster_label.enable_sensitive
 			class_label.enable_sensitive

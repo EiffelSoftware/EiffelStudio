@@ -19,7 +19,7 @@ inherit
 	EB_SHARED_INTERFACE_TOOLS
 	NEW_EB_CONSTANTS
 
-creation
+create
 
 	make, 
 	non_gui_make

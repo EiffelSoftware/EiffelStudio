@@ -55,10 +55,10 @@ feature {NONE} -- Initialization
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
 	
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~on_ok)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, ~on_cancel)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
 			extend_button (buttons_box, cancel_button)
 
 			buttons_box.extend (create {EV_CELL})
@@ -86,8 +86,8 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			classes_tree.associate_textable_with_classes (class_name_entry)
-			classes_tree.add_double_click_action_to_classes (~on_class_double_click)
-			show_actions.extend (class_name_entry~set_focus)
+			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
+			show_actions.extend (agent class_name_entry.set_focus)
 		end
 
 feature -- Access

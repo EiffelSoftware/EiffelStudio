@@ -29,7 +29,7 @@ feature -- Initialization
 			w_width := Layout_constants.dialog_unit_to_pixels(560)
 			w_height := Layout_constants.dialog_unit_to_pixels(360)
 			close_request_actions.wipe_out
-			close_request_actions.extend (~exit)
+			close_request_actions.extend (agent exit)
 			prepare
 			create final_toolbar.make (20)
 		end
@@ -61,15 +61,15 @@ feature -- Initialization
 			create main_container
 
 			create pool_list.make (True)
-			pool_list.drop_actions.extend (~move_to_pool_list)
+			pool_list.drop_actions.extend (agent move_to_pool_list)
 			pool_list.disable_multiple_selection
-			pool_list.select_actions.extend (~on_pool_select)
-			pool_list.deselect_actions.extend (~on_pool_deselect)
+			pool_list.select_actions.extend (agent on_pool_select)
+			pool_list.deselect_actions.extend (agent on_pool_deselect)
 			create current_list.make (False)
-			current_list.drop_actions.extend (~move_to_current_list)
+			current_list.drop_actions.extend (agent move_to_current_list)
 			current_list.disable_multiple_selection
-			current_list.select_actions.extend (~on_current_select)
-			current_list.deselect_actions.extend (~on_current_deselect)
+			current_list.select_actions.extend (agent on_current_select)
+			current_list.deselect_actions.extend (agent on_current_deselect)
 
 			create combo_strings.make (1,2)
 			combo_strings.put (Interface_names.l_Put_text_right_text, 1)
@@ -106,27 +106,27 @@ feature -- Initialization
 			current_label.align_text_left
 
 			create add_button.make_with_text (Interface_names.b_Add_text)
-			add_button.select_actions.extend (~add_to_displayed)
+			add_button.select_actions.extend (agent add_to_displayed)
 			Layout_constants.set_default_size_for_button (add_button)
 			add_button.disable_sensitive
 			create remove_button.make_with_text (Interface_names.b_Remove_text)
 			Layout_constants.set_default_size_for_button (remove_button)
-			remove_button.select_actions.extend (~remove_from_displayed)
+			remove_button.select_actions.extend (agent remove_from_displayed)
 			remove_button.disable_sensitive
 			create up_button.make_with_text (Interface_names.b_Up_text)
 			Layout_constants.set_default_size_for_button (up_button)
-			up_button.select_actions.extend (~move_up)
+			up_button.select_actions.extend (agent move_up)
 			up_button.disable_sensitive
 			create down_button.make_with_text (Interface_names.b_Down_text)
 			Layout_constants.set_default_size_for_button (down_button)
-			down_button.select_actions.extend (~move_down)
+			down_button.select_actions.extend (agent move_down)
 			down_button.disable_sensitive
 			create ok_button.make_with_text (Interface_names.b_Ok_text)
 			Layout_constants.set_default_size_for_button (ok_button)
-			ok_button.select_actions.extend (~generate_toolbar)
-			ok_button.select_actions.extend (~exit)
+			ok_button.select_actions.extend (agent generate_toolbar)
+			ok_button.select_actions.extend (agent exit)
 			create cancel_button.make_with_text (Interface_names.b_Cancel_text)
-			cancel_button.select_actions.extend (~exit)
+			cancel_button.select_actions.extend (agent exit)
 			Layout_constants.set_default_size_for_button (cancel_button)
 
 			list_container1.set_padding (Layout_constants.Small_border_size)
@@ -507,8 +507,8 @@ feature {NONE} -- Internal data
 		require
 			valid_it: it /= Void
 		do
-			it.pointer_double_press_actions.extend (~mouse_move (it, ?, ?, ?, ?, ?, ?, ?, ?))
-			it.drop_actions.extend (~drop2 (?, it))
+			it.pointer_double_press_actions.extend (agent mouse_move (it, ?, ?, ?, ?, ?, ?, ?, ?))
+			it.drop_actions.extend (agent drop2 (?, it))
 		end
 
 	drop2 (src, dst: EB_CUSTOMIZABLE_LIST_ITEM) is
@@ -544,7 +544,7 @@ feature {NONE} -- Internal data
 			pool_list.wipe_out
 			current_list.wipe_out
 			create n.make (create {EB_TOOLBARABLE_SEPARATOR})
-			n.pointer_double_press_actions.extend (~mouse_move (n, ?, ?, ?, ?, ?, ?, ?, ?))
+			n.pointer_double_press_actions.extend (agent mouse_move (n, ?, ?, ?, ?, ?, ?, ?, ?))
 			pool_list.extend (n)
 			from
 				toolbar.start

@@ -17,7 +17,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -29,7 +29,7 @@ feature -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_f5),
 				True, False, False)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature {NONE} -- Attributes

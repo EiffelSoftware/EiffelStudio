@@ -87,6 +87,8 @@ feature -- Initialization
 		do
 			area := s.area;
 			count := s.count
+		ensure
+			shared_implementation: shared_with (s)
 		end;
 
 	adapt (s: STRING): like Current is
@@ -507,6 +509,44 @@ feature -- Element change
  		  new_count: count = old count + s.count;
 		end;
 
+	prepend_boolean (b: BOOLEAN) is
+			-- Prepend the string representation of `b' at front.
+		do
+			prepend (b.out)
+		end;
+
+	prepend_character (c: CHARACTER) is
+			-- Prepend the string representation of `c' at front.
+		do
+			prepend (c.out)
+		end;
+
+	prepend_double (d: DOUBLE) is
+			-- Prepend the string representation of `d' at front.
+		do
+			prepend (d.out)
+		end;
+
+	prepend_integer (i: INTEGER) is
+			-- Prepend the string representation of `i' at front.
+		do
+			prepend (i.out)
+		end;
+
+	prepend_real (r: REAL) is
+			-- Prepend the string representation of `r' at front.
+		do
+			prepend (r.out)
+		end;
+
+	prepend_string (s: STRING) is
+			-- Prepend a copy of `s', if not void, at front.
+		do
+			if s /= Void then
+				prepend (s)
+			end
+		end;
+
 	append (s: STRING) is
 			-- Append a copy of `s' at end.
 		require
@@ -537,21 +577,18 @@ feature -- Element change
 			
 	append_integer (i: INTEGER) is
 			-- Append the string representation of `i' at end.
-			--| Should use `sprintf'
 		do
 			append (i.out);
 		end;
 
 	append_real (r: REAL) is
 			-- Append the string representation of `r' at end.
-			--| Should use `sprintf'
 		do
 			append (r.out);
 		end;
 
 	append_double (d: DOUBLE) is
 			-- Append the string representation of `d' at end.
-			--| Should use `sprintf'
 		do
 			append (d.out);
 		end;
@@ -570,7 +607,6 @@ feature -- Element change
 
 	append_boolean (b: BOOLEAN) is
 			-- Append the string representation of `b' at end.
-			--| Should use `sprintf'
 		do
 			append (b.out);
 		end;

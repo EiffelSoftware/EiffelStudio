@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end;
 
-	search_equal (v: like item) is
+	search_equal (v: G) is
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where `item' and `v' are equal.
@@ -90,18 +90,29 @@ feature -- Access
 			-- `exhausted' becomes true and the cursor
 			-- ends up `off' if `Current'
 			-- does not include `v'.
+		local
+			done: BOOLEAN;
+			temp: G
 		do
 			if before then forth end;
 			from
 			until
-				after or else equal (active.item, v)
+				after or else done
 			loop
-				if active.right = Void then
-					after := true
-				else
-					active := active.right
-				end
-			end
+				temp := active.item;
+				if v = Void then
+					done := temp = Void
+				elseif temp /= Void then
+					done := v.is_equal (temp)
+				end;
+				if not done then
+					if active.right = Void then
+						after := true
+					else
+						active := active.right
+					end;
+				end;
+			end;
 		end;
 
 	index: INTEGER is

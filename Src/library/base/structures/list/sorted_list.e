@@ -112,14 +112,22 @@ feature -- Access
             		-- `Current' doesn't include `v'
             		-- `exhausted' becomes true if `Current'
             		-- does not include `v'.
+			local
+				done: BOOLEAN
         	do
             		from
                 		if before then forth end;
             		until
-                		exhausted
-                		or else equal (v, item) 
+                		exhausted or else done
             		loop
-                		forth;
+						if v = Void then
+							done := item = Void
+						elseif item /= Void then
+							done := v.is_equal (item)
+						end;
+						if not done then
+                			forth;
+						end;
             		end
         	end;
 

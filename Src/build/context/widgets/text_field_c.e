@@ -36,10 +36,12 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
-			widget.set_single_line_mode
+--			widget.set_single_line_mode
 		end;
 
-	widget: TEXT;
+--	widget: TEXT;
+	widget: TEXT_FIELD
+
 
 feature {NONE}
 

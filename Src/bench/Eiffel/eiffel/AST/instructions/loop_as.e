@@ -138,6 +138,9 @@ end
 	byte_node: LOOP_B is
 			-- Associated byte code
 		do
+				-- Current feature has a loop.
+			context.set_has_loop (True)
+
 			!!Result
 			if from_part /= Void then
 				Result.set_from_part (from_part.byte_node)

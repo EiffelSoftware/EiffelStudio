@@ -31,6 +31,7 @@ inherit
 			text as wel_text,
 			set_text as wel_set_text
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,

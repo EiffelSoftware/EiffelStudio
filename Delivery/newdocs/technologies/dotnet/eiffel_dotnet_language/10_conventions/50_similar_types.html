@@ -1,0 +1,165 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Similar Types Occurring in Both Libraries</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		</LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK></LINK>
+		<h1>Similar Types Occurring in Both Libraries</h1>
+		<p>&nbsp;</p>
+		<h2>Whose String is it anyway?</h2>
+		<P>&nbsp;</P>
+		<P>Over the last 15 years or so, the Eiffel class libraries have been a source for
+			reusable software components for developers.
+		</P>
+		<p>The Eiffel Base library contains classes for commonly used objects like
+			different kinds of numbers, strings, files, and data structures.
+		</p>
+		<P>But there are also libaries of Eiffel classes for sophisticated purposes like
+			lexical analysis and&nbsp;parsing, data access,&nbsp;and graphical user
+			interface development.
+		</P>
+		<P>Likewise .NET is delivered with assemblies containing thousands of powerful
+			types with similar purposes.
+		</P>
+		<P>&nbsp;</P>
+		<h3>Working in Both Worlds</h3>
+		<P>When we build software that has access to both the rich Eiffel libraries and the
+			many useful .NET types, we inevitably run into types from both worlds that have
+			similar names and purposes, but are still different types with different
+			semantics.
+		</P>
+		<h3>The Case of Strings</h3>
+		<P>The example of these similar types which will almost certainly get in your face
+			is the string types. You may remember that we looked briefly at the case of the
+			string types in
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="naming conventions">Naming Conventions and Name
+Handling</MSHELP:LINK>.
+		</P>
+		<P>The Eiffel Base Library contains class <SPAN CLASS="eclass">STRING</SPAN>; the .NET assembly contains type
+			<SPAN CLASS="eclass">System.String</SPAN>, which Eiffel for .NET&nbsp;users see as <SPAN CLASS="eclass">SYSTEM_STRING</SPAN>. At an
+			abstract level both of these model sequences of characters. But they are not
+			the same type. In fact, they are different in some important ways. For example,
+			instances of <SPAN CLASS="eclass">System.String</SPAN> are immutable. So you cannot append to an instance
+			of <SPAN CLASS="eclass">System.String</SPAN>. If you want to build a string by appending, you should use an
+			instance of <SPAN CLASS="eclass">System.Text.StringBuilder</SPAN> to do the appending, then extract the
+			instance of <SPAN CLASS="eclass">System.String</SPAN> from it. With <SPAN CLASS="eclass">STRING</SPAN> it is permissible to append, so
+			you don't need a helper like&nbsp;the <SPAN CLASS="eclass">System.Text.StringBuilder</SPAN> type.
+		</P>
+		<P>So the two types are similar at an abstract level, but different semantically.
+			There are reasonable arguments for the design of each.
+		</P>
+		<P>Many types in the delivered assemblies have properties which are strings or
+			methods which return or take strings as arguments. In all these cases, the
+			strings in question are instances of <SPAN CLASS="eclass">System.String</SPAN>.
+		</P>
+		<P>Many classes in the delivered Eiffel libraries have features involving strings,
+			that is&nbsp;
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="attribute">attributes</MSHELP:LINK>
+			which are strings or
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="routine">routines</MSHELP:LINK>
+			which return or take strings as
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="argument">arguments</MSHELP:LINK>.
+			In all these cases, the strings are instances of <SPAN CLASS="eclass">STRING</SPAN> (except for those
+			designed for .NET compliance).
+		</P>
+		<P>In C# and VB.NET, if you specify a quoted string like <SPAN CLASS="estring">"Hello World!"</SPAN> in your
+			code, that string will conform to type <SPAN CLASS="eclass">System.String</SPAN>. If you do the same in
+			Eiffel, then <SPAN CLASS="estring">"Hello World!"</SPAN> will be an instance of <SPAN CLASS="eclass">STRING</SPAN>. In Eiffel
+			terminology, <SPAN CLASS="estring">"Hello World!"</SPAN> appearing in source code is a
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="manifest string">manifest string</MSHELP:LINK>.</P>
+		<P>What all this means to you is that you cannot use an instance of <SPAN CLASS="eclass">System.String</SPAN>
+			when an instance of <SPAN CLASS="eclass">STRING</SPAN> is called for, and vice versa. Three out of
+			four&nbsp;of the executable lines&nbsp;in the following code sample&nbsp;are
+			invalid:</P>
+		<P>&nbsp;</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">local</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN>:&nbsp;<SPAN CLASS="eclass">STRING</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_system_string</SPAN>: <SPAN CLASS="eclass">SYSTEM_STRING</SPAN>
+				<BR>
+				<SPAN CLASS="ekeyword">do</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_system_string</SPAN> := <SPAN CLASS="estring">"Hello
+				World!"</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Invalid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN> := <SPAN CLASS="estring">"Hello
+				World!"</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;<SPAN CLASS="ecomment">--&nbsp;Valid</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN> :=
+				<SPAN CLASS="efeature">my_system_string</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--&nbsp;Invalid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_system_string</SPAN> :=
+				<SPAN CLASS="efeature">my_string</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--&nbsp;Invalid</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<BR>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>&nbsp;</P>
+		<P>To handle this issue, the Eiffel for .NET class <SPAN CLASS="eclass">STRING</SPAN> has two features which
+			can be used when a string of the other type is needed.&nbsp;</P>
+		<P>The first&nbsp;of these features is&nbsp;a query <SPAN CLASS="efeature">to_cil</SPAN> which returns an
+			object of type <SPAN CLASS="eclass">System.String</SPAN> which has&nbsp;a sequence of characters equivalent
+			to that of the <SPAN CLASS="eclass">STRING</SPAN> to which <SPAN CLASS="efeature">to_cil</SPAN> is applied. The <SPAN CLASS="efeature">to_cil</SPAN> can be applied
+			to manifest strings by enclosing the manifest string in parentheses.
+		</P>
+		<P>The other feature is a creation procedure named <SPAN CLASS="efeature">make_from_cil</SPAN> which takes as
+			an argument an instance of <SPAN CLASS="eclass">System.String</SPAN> and initializes its target <SPAN CLASS="eclass">STRING</SPAN> with
+			a sequence of characters equivalent to that of the argument.</P>
+		<P>In the following sample,&nbsp;we use these features of <SPAN CLASS="eclass">STRING</SPAN> to make all the
+			lines&nbsp;from the previous sample valid.</P>
+		<P>&nbsp;</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">local</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN>:&nbsp;<SPAN CLASS="eclass">STRING</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_system_string</SPAN>: <SPAN CLASS="eclass">SYSTEM_STRING</SPAN>
+				<BR>
+				<SPAN CLASS="ekeyword">do</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_system_string</SPAN> := (<SPAN CLASS="estring">"Hello
+				World!"</SPAN>).<SPAN CLASS="efeature">to_cil</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Valid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN> := <SPAN CLASS="estring">"Hello
+				World!"</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;<SPAN CLASS="ecomment">--&nbsp;Valid</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_string</SPAN>.<SPAN CLASS="efeature">make_from_cil</SPAN> (<SPAN CLASS="efeature">my_system_string</SPAN>)&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--&nbsp;Valid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_system_string</SPAN> :=
+				<SPAN CLASS="efeature">my_string</SPAN>.<SPAN CLASS="efeature">to_cil</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;<SPAN CLASS="ecomment">--&nbsp;Valid</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<BR>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>&nbsp;</P>
+		<DIV class="note" style="WIDTH: 80%">
+			<P><STRONG>Note:</STRONG> As shown in the above example, it is necessary to apply
+				<SPAN CLASS="efeature">to_cil</SPAN> to a manifest string if you are assigning it to a <SPAN CLASS="eclass">System.String</SPAN> or
+				passing it as an argument where a <SPAN CLASS="eclass">System.String</SPAN> is called for.
+			</P>
+			<P>This is expected to change in a future release. It should be come unnecesary to
+				apply <SPAN CLASS="efeature">to_cil</SPAN> to manifest strings. Instead, whether a <SPAN CLASS="eclass">STRING</SPAN> or <SPAN CLASS="eclass">System.String</SPAN>
+				is needed will be determined by the context in which the manifest string is
+				being used, and the proper type of object will be generated.</P>
+		</DIV>
+		<P>&nbsp;</P>
+		<h3>Other Similar Types</h3>
+		<P>
+			There are many other cases of types available from the .NET assemblies which
+			have similar purpose and semantics to those found in the Eiffel
+			libraries.&nbsp;Fortunately, there is none that you will have to deal with as
+			often as strings.
+		</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

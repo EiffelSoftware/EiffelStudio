@@ -1,0 +1,122 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Exception Mechanism</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+	</HEAD>
+	<BODY>
+		<P><LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK></P>
+		<h1>Exception Mechanism</h1>
+		<h2>Motivation: Concerning Robustness</h2>
+		<p>The notion of software correctness that we saw in&nbsp;<A href="../../eiffel_for_dotnet/60_Design_By_Contract.htm">Design
+				by Contract and Assertions</A>&nbsp;is half of the formula for software
+			reliability. Correctness covers what the software is supposed to do, that is,
+			its specification.&nbsp;
+		</p>
+		<P>Of course,&nbsp;there is always a potential for things to go out of the bounds
+			of the specification. This happens, for example&nbsp;if a client makes a call
+			to a routine from a state in which the routine's precondition is not true.
+		</P>
+		<P>How well software responds to situations which outside specification is called
+			robustness. Together correctness and robustness define software reliability.</P>
+		<H2>Consequences of Contracts</H2>
+		<P>In the presence of Design by Contract, what happens&nbsp;to running software
+			boils down to a simple rule:</P>
+		<P>A routine call&nbsp;can complete in one of only two ways:
+		</P>
+		<OL>
+			<LI>
+			The routine&nbsp;fulfills its contract.
+			<LI>
+				The routine fails&nbsp;to fulfill its contract.</LI></OL>
+		<P>As a follow-on, we can add that:
+		<UL>
+			<LI>Any routine that fails to fulfill its contract
+				must cause an exception in its caller.
+		</UL>
+		</P>
+		<H2>Reacting to Exceptions</H2>
+		<P>Again, because of Design by Contract, we can state the following rule for
+			dealing with exceptions:</P>
+		<P>A routine that incurs an exeception can react in one of only two ways:</P>
+		<OL>
+			<LI>
+			It can return the instance to a stable state and retry the entire routine with
+			the same or a different strategy.
+			<LI>
+				It can fail, causing an exception in its caller.</LI></OL>
+		<P>There is an Eiffel mechanism called the rescue clause which facilitates the
+			first alternative.</P>
+		<H3>The Rescue Clause</H3>
+		<P>The <SPAN CLASS="ekeyword">rescue</SPAN> clause is part of the routine structure we saw in <A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">
+				Adding Class Features</A>. The rescue clause is a sequence of instructions
+				introduced by the keyword "<SPAN CLASS="ekeyword">rescue</SPAN>".
+			At the point that an exception occurs, the processing of the normal
+			instructions in the routine body will cease, and the instructions in the rescue
+			clause will be executed instead.</P>
+		<P>If the instructions in the rescue clause can set things up so that it
+			might&nbsp;prove fruitful to attempt to retry the routine, it can do so by
+			issuing a <SPAN CLASS="ekeyword">retry</SPAN> instruction. When the <SPAN CLASS="ekeyword">retry</SPAN> instruction is executed, the
+			routine is restarted from its beginning, although local entities are not
+			re-initialized. You will see why in&nbsp;the example below.</P>
+		<P>If the rescue clause exits without issuing a <SPAN CLASS="ekeyword">retry</SPAN> instruction, then the routine
+			fails.</P>
+		<P>It should be noted that rescue clauses and retry instructions are not something
+			that are used commonly. Out of the approximately 2000 class in the delivered
+			Eiffel libraries, there are only 16 occurrences. Many of these are oriented
+			toward network and database operations for which some reasonable recovery might
+			be possible.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">transmit</SPAN>: (<SPAN CLASS="eitag">p</SPAN>:
+			<SPAN CLASS="eclass">PACKET</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Transmit
+			packet `p'</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">packet_not_void</SPAN>: <SPAN CLASS="eitag">p</SPAN> /= <SPAN CLASS="ekeyword">Void</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">current_retries</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">r</SPAN>:
+			<SPAN CLASS="eclass">RANDOM_NUMBER_GENERATOR</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">line</SPAN>.<SPAN CLASS="efeature">send</SPAN>
+			(<SPAN CLASS="eitag">p</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rescue</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">if</SPAN>
+			<SPAN CLASS="eitag">current_retries</SPAN> &lt; <SPAN CLASS="efeature">max_retries</SPAN> <SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">r</SPAN>.<SPAN CLASS="efeature">next</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">wait_millisecs</SPAN> (<SPAN CLASS="eitag">r</SPAN>.<SPAN CLASS="efeature">value_between</SPAN> (20, 500))&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">current_retries</SPAN> := <SPAN CLASS="eitag">current_retries</SPAN> + 1&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">retry</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>In the example above, <SPAN CLASS="ekeyword">rescue</SPAN> is used to recover from a situation in which an
+			exception occurs in trying to send a packet. When the exception occurs the
+			rescue clause will, if the maximum number of retries has not been reached, wait
+			for some random length of time. Then, after having updated the number of
+			retries, it will issue the <SPAN CLASS="ekeyword">retry</SPAN> instruction. If the maximum number of retries
+			is reached, the rescue clause will exit without executing the retry,
+			constituting a failure.</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

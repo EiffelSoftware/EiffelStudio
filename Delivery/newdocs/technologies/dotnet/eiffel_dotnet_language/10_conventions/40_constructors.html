@@ -1,0 +1,122 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Constructors and Creation Procedures</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+	</HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK>
+		<h1>Constructors and Creation Procedures</h1>
+		<p>&nbsp;</p>
+		<p>This section deals with what happens when objects, that is runtime instances of 
+			types, get created and initialized. When a new instance is created, there is an 
+			opportunity to initialize the state of the instance. This is done with a 
+			constructor in .NET, and with a creation procedure in Eiffel.
+		</p>
+		<P>&nbsp;</P>
+		<h2>Eiffel Creation Procedures</h2>
+		<p>&nbsp;</p>
+		<P>Eiffel
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="creation procedure">creation procedures</MSHELP:LINK>
+			are features of a class which can be used to initialize instances. Classes can 
+			have&nbsp;more than one creation procedure available. However, each creation 
+			procedure&nbsp;must ensure that the
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="class invariant">class invariant</MSHELP:LINK>
+			holds when the procedure completes execution. In other words, the creation 
+			procedure is there to initialize a newly created instance, and the class 
+			invariant guarantees that a newly initialized instance is actually valid.
+		</P>
+		<P>There is nothing special about creation procedures themselves, they are just 
+			ordinary procedures (although by convention their names usually begin with the 
+			word "<SPAN CLASS="efeature">make</SPAN>"). What makes them creation procedures 
+			is the fact that their names are listed as creation procedures in the class 
+			text.</P>
+		<P>In Eiffel, a creation procedure can be applied to an instance at any time (not 
+			just at object creation). This is done sometimes to reinitialize existing 
+			instances.</P>
+		<P>&nbsp;</P>
+		<h2>Constructors in .NET</h2>
+		<p>&nbsp;</p>
+		<p>Like creation procedures in Eiffel, .NET constructors are used to initialize new 
+			instances of types. Constructors manifest themselves differently depending upon 
+			which .NET language you use. In C#, constructors always appear as a method 
+			having the same name as the class on which they are implemented. In Visual 
+			Basic .NET, they always appear as a Sub with the name
+			<SPAN CLASS="efeature">New</SPAN>. Once compiled into an assembly, the metadata 
+			labels constructors as
+			<SPAN CLASS="efeature">.ctor</SPAN>.
+		</p>
+		<P>Constructors can have multiple versions by overloading. That is, each version 
+			would have a different set of argument types.
+		</P>
+		<P>Constructors can only be applied when a new instance is created.</P>
+		<h3>
+			Constructors as Eiffel Creation Procedures</h3>
+		<p>
+			When types from .NET assemblies are made available to Eiffel systems, the 
+			constructors are presented as creation procedures. Just as constructors show up 
+			in the C# and VB.NET environments with names appropriate to those languages, so 
+			it is with Eiffel for .NET. Always, constructors will have feature names which 
+			begin with the word "<SPAN CLASS="efeature">make</SPAN>", the convention for 
+			creation procedure naming in Eiffel.
+		</p>
+		<P>If there is only one version of the constructor, that version will be mapped to 
+			a single feature named
+			<SPAN CLASS="efeature">make</SPAN>. However, if there are overloaded versions 
+			of the constructor, then these versions given names starting with "<SPAN CLASS="efeature">make_with_</SPAN>" 
+			and then followed with the argument names from the assembly metadata separated 
+			with the conjunction "<SPAN CLASS="efeature">_and_</SPAN>". Let's look at an 
+			example.</P>
+		<P>The .NET type
+			<SPAN CLASS="eclass">System.Drawing.Size</SPAN>
+			has an overloaded constructor with two versions.&nbsp;In the
+			<SPAN CLASS="ecluster">System.Drawing</SPAN>
+			assembly metadata, these two constructor versions look like this:
+		</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">void</SPAN>
+				<SPAN CLASS="efeature">.ctor</SPAN>(<SPAN CLASS="eclass">int32</SPAN>
+				<SPAN CLASS="eitag">width</SPAN>,
+				<SPAN CLASS="eclass">int32</SPAN>
+				<SPAN CLASS="eitag">height</SPAN>)<br>
+				<SPAN CLASS="ekeyword">void</SPAN>
+				<SPAN CLASS="efeature">.ctor</SPAN>(<SPAN CLASS="eclass">System.Drawing.Point</SPAN>
+				<SPAN CLASS="eitag">pt</SPAN>)</P>
+		</CODE>
+		<P>So the argument names for the first version are
+			<SPAN CLASS="eitag">width</SPAN>
+			and
+			<SPAN CLASS="eitag">height</SPAN>. For the second version there is only one 
+			argument named
+			<SPAN CLASS="eitag">pt</SPAN>. The constructor versions as presented to Eiffel 
+			programmers as creation procedures look like this:</P>
+		<CODE>
+			<P><SPAN CLASS="efeature">make_from_width_and_height</SPAN>
+				(<SPAN CLASS="eitag">width</SPAN>:
+				<SPAN CLASS="eclass">INTEGER</SPAN>;
+				<SPAN CLASS="eitag">height</SPAN>:
+				<SPAN CLASS="eclass">INTEGER</SPAN>)<br>
+				<SPAN CLASS="efeature">make_from_pt</SPAN>
+				(<SPAN CLASS="eitag">pt</SPAN>:
+				<SPAN CLASS="eclass">DRAWING_POINT</SPAN>)</P>
+		</CODE>
+		<P>Presenting the names in this format handles the conflicts of overloading and 
+			provides reasonably intuitive names that comply with Eiffel naming conventions.</P>
+		<h3>
+			Eiffel Creation Procedures as Constructors?</h3>
+		<p>
+			Eiffel creation procedures do not map to constructors when Eiffel classes are 
+			compiled into assemblies. Rather, they are actually manifested as functions on 
+			a factory class in the namespace
+			<SPAN CLASS="eclass">Create</SPAN>
+			in the assembly. These functions return an initialized instance. In the section
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="type organization">Type
+  Organization</MSHELP:LINK>
+			there is more information about the organization of the types in assemblies 
+			built with Eiffel for .NET, along with an example of using types from such an 
+			assembly.
+		</p>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

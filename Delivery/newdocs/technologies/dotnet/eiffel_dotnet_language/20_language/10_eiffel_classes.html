@@ -1,0 +1,428 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Eiffel Classes</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet">
+				<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<P></LINK></LINK></LINK></P>
+		<h1>Eiffel Classes</h1>
+		<p>The unit of software reuse in Eiffel is the
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="class">class</MSHELP:LINK>.</p>
+		<P>The unit of
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="module">modularity</MSHELP:LINK>
+			in Eiffel is the class.</P>
+		<P>The unit of
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="type">type</MSHELP:LINK>
+			modeling in Eiffel is the class.</P>
+		<P>All Eiffel code&nbsp;must exist within&nbsp;the context of a class.</P>
+		<P>In Eiffel, application systems, or simply <FONT color="#000000">
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="system">systems,</MSHELP:LINK>
+				are created by assembling a set of related classes. The classes in a system
+				will be related only by one or both of the two allowable
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="relationship">relationships</MSHELP:LINK>
+				in object-oriented design. </FONT>
+		</P>
+		<P>Having read the above, you should be convinced that the concept of class is
+			important and far-reaching.&nbsp;The fact that we have&nbsp;precise rules about
+			classes simplifies life a lot. The only kind of module in Eiffel is a class.
+			Each class exists in one source file (which contains <EM>only</EM> that class),
+			and contains the code necessary to provide a static definition of a data type.
+			Every runtime entity, i.e. every object, must be an instance of a class.
+			Because we can depend upon these things in Eiffel, we have consistency and
+			predictabililty in the inherently complex world of software development.</P>
+		<P>Let's take a look at how classes are structured.</P>
+		<h2>Structure of a Class</h2>
+		<P>The code that makes up an Eiffel&nbsp;class is divided into&nbsp;the following
+			parts:</P>
+		<UL>
+			<LI>
+				<A href="#indexing">Indexing</A>
+			<LI>
+				<A href="#class header">Class header</A>
+			<LI>
+				<A href="#formal generics">Formal generics</A>
+			<LI>
+				<A href="#obsolete">Obsolete</A>
+			<LI>
+				<A href="#inheritance">Inheritance</A>
+			<LI>
+				<A href="#creators">Creators</A>
+			<LI>
+				<A href="#features">Features</A>
+			<LI>
+				<A href="#invariant">Invariant</A>
+			</LI>
+		</UL>
+		<P>All of the above, except Class header, are optional.&nbsp;&nbsp;So the simplest
+			Eiffel class you could build would look like this:</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">class</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">SIMPLE</SPAN>
+			<br>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			</CODE>
+		<P>Okay, so class SIMPLE is <EM>only</EM> interesting in its simplicity. Let's look
+			at a more useful&nbsp;example:</P>
+		<CODE><SPAN CLASS="ekeyword">indexing</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">description</SPAN>: <SPAN CLASS="estring">“Objects that model&nbsp;lists”</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">revision</SPAN>: <SPAN CLASS="estring">“$Revision$”</SPAN><br>
+			<br>
+			<SPAN CLASS="ekeyword">class</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]<br>
+			<br>
+			<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"This class is obsolete, use <SPAN CLASS="eclass">LINKED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;instead"</SPAN><br>
+			<br>
+			<SPAN CLASS="eclass">inherit</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]<br>
+			<br>
+			<SPAN CLASS="ekeyword">create</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><br>
+			<br>
+			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Initialization</SPAN>
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Create an
+			empty list.
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">before</SPAN> :=
+			<SPAN CLASS="ekeyword">True</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="eitag">is_before</SPAN>: <SPAN CLASS="efeature">before</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			<br>
+			<br>
+			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access</SPAN>
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">item</SPAN>: <SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Current
+			item
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="efeature">active</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">first</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="efeature">item</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Item at
+			first position
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="efeature">first_element</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<EM>(other features omitted)</EM><br>
+			<br>
+			<SPAN CLASS="ekeyword">invariant</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">before_constraint</SPAN>: <SPAN CLASS="efeature">before</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">first_element</SPAN>)
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">after_constraint</SPAN>: <SPAN CLASS="efeature">after</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">last_element</SPAN>) </CODE>
+		<P>Here is a class&nbsp;that, although somewhat contrived,&nbsp;utilizes all of the
+			required and optional parts of the class. Let's look at each part individually.
+		</P>
+		<A name="indexing"></A>
+		<h3>Indexing</h3>
+		<P></P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">indexing</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">description</SPAN>: <SPAN CLASS="estring">“Objects that model&nbsp;lists”</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">revision</SPAN>: <SPAN CLASS="estring">“$Revision$”
+</SPAN>			</P>
+		</CODE>
+		<P>The indexing part of a class is there to allow you as a producer to record
+			information of your choice which will help you or other reuse consumers&nbsp;at
+			some later time to locate understand the class. This important in Eiffel
+			because we try to treat every class as if someday it will become reusable.
+		</P>
+		<P>Information in indexing does not change the semantics of the class.
+		</P>
+		<P>The indexing in the class above is typical. It is introduced with the language
+			keyword <SPAN CLASS="ekeyword">indexing</SPAN>, and contains two index clauses, each of which is comprised
+			of an index and a single index value. You can&nbsp;code index clauses with
+			indexes that you devise yourself, so there is nothing inherently special about
+			"<SPAN CLASS="eitag">description</SPAN>" and "<SPAN CLASS="eitag">revision</SPAN>" as used above. But, these indexes could be
+			special&nbsp;to tools which analyze libraries of classes use them. Although
+			these clauses have only one index value each, it is permissible to put more,
+			separated by commas.</P>
+		<A name="class header"></A>
+		<h3>Class Header</h3>
+		<P></P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> <FONT color="darkgray">[G]</FONT></P>
+		</CODE>
+		<P>The class header is introduced by the keyword "class", which in turn can be
+			preceded by one of three keywords which mark the class as&nbsp;<SPAN CLASS="ekeyword">deferred</SPAN>,
+			<SPAN CLASS="ekeyword">expanded</SPAN>, or <SPAN CLASS="ekeyword">external</SPAN>. In our example, the class has none of these
+			markings, so it is an
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="effective class">effective
+class</MSHELP:LINK>
+			whose instances are access by
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="reference type">reference</MSHELP:LINK>.
+		</P>
+		<P>The keyword class is followed by the class name, in this case
+			"<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN>".</P>
+		<P>Of the three keywords for header marks, the one which you will encounter most
+			often is <SPAN CLASS="ekeyword">deferred</SPAN>. A class is
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="deferred class">deferred</MSHELP:LINK>
+			if it contains one or more
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="deferred feature">features that are deferred</MSHELP:LINK>,
+			that is, features which have been specified in the class but for which no
+			implementation has been provided.
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="proper descendants">Proper
+descendants</MSHELP:LINK>
+			of a deferred class will provide implementations for its deferred features.</P>
+		<A name="formal generics"></A>
+		<h3>Formal Generics</h3>
+		<P></P>
+		<CODE>
+			<P><FONT color="darkgray">class
+					<BR>
+					&nbsp;&nbsp;&nbsp; OLD_FASHIONED_LIST</FONT> [<SPAN CLASS="egeneric">G</SPAN>]
+			</P>
+		</CODE>
+		<P>In this example the class name is followed by the specification of one formal
+			generic parameter "<SPAN CLASS="egeneric">G</SPAN>". The presence of one or more formal generic parameters
+			will designate a class as a
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="generic class">generic class</MSHELP:LINK>.
+			The formal generic parameter is a place holder for a class&nbsp;name which will
+			be provided by reuse consumers. For example if we wrote a class which was a
+			client to <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> we would substitute the class name for the type of
+			objects that we would want to build an <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN>&nbsp;of.
+			We&nbsp;might make this declaration:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_list_of_cats</SPAN>: <SPAN CLASS="eclass">OLD_FASHION_LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>]
+			</P>
+		</CODE>
+		<P>The entity <SPAN CLASS="efeature">my_list_of_cats</SPAN> could then be attached at runtime to an
+			<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> of objects of type <SPAN CLASS="eclass">CAT</SPAN>. So the class <SPAN CLASS="eclass">CAT</SPAN> becomes an actual
+			generic parameter and substitutes for <SPAN CLASS="egeneric">G</SPAN> in the declaration.</P>
+		<P>Of course formal generic parameters cannot be the same name as a class name in
+			the same universe. If multiple formal generic parameters are used, they are
+			separated by commas.</P>
+		<P>You will learn more about generic classes in the section titled <A href="40_genericity.html">
+				Genericity</A>.</P>
+		<A name="obsolete"></A>
+		<h3>Obsolete</h3>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"This class is obsolete, use <SPAN CLASS="eclass">LINKED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;instead"</SPAN></P>
+		</CODE>
+		<P><SPAN CLASS="eclass">OLD_FASHION_LIST</SPAN>s are obsolete ... and the class is marked as such by include
+			the line above. The manifest string contains an explanation, instructions,
+			and/or recommended alternatives. Compilers and other language tools can deliver
+			this message to potential reuse consumers. As with indexing, obsolete has no
+			effect on the semantics of the class.</P>
+		<P>Obsolete is rarely used because of the nature of certain elements of the Eiffel
+			methodology. For example, if implementations are well-hidden
+			behind&nbsp;implementation-independent specifications, then those
+			implementations may be changed to adapt the class to changing execution
+			environments in such a way that clients are unaffected.
+		</P>
+		<A name="inheritance"></A>
+		<h3>Inheritance</h3>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">inherit</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]
+			</P>
+		</CODE>
+		<P>One of the two possible
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="relationship">relationships</MSHELP:LINK>
+			between classes,
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="inheritance">inheritance</MSHELP:LINK>
+			is also a powerful software reuse mechanism. In this example class
+			<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> declares itself to be a&nbsp;
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="proper descendants">proper
+descendant</MSHELP:LINK>
+			of class <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN>.</P>
+		<P>There will be more in the section called . For now though, be aware of two
+			important implications of this declaration:</P>
+		<UL>
+			<LI>
+			Every feature of <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> is available to <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> and
+			potentially available to its clients.
+			<LI>
+				Whenever an instance of <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> is called for, then an instance of
+				<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> will suffice.</LI></UL>
+		<A name="creators"></A>
+		<h3>Creators</h3>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">create</SPAN> <BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN>
+			</P>
+		</CODE>
+		<P>The creators part of a class declares a procedure as being a
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="creation procedure">creation
+procedure</MSHELP:LINK>. In this case the procedure in question is the one named <SPAN CLASS="efeature">make</SPAN>. By
+			convention, creation procedure names begin with the word "<SPAN CLASS="efeature">make</SPAN>".
+		</P>
+		<P>Let's take a&nbsp;quick look at object creation.&nbsp;Consider this declaration:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_list_of_cats</SPAN>: <SPAN CLASS="eclass">OLD_FASHION_LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>]
+			</P>
+		</CODE>
+		<P>Here the entity <SPAN CLASS="efeature">my_list_of_cats</SPAN> can be attached to an object of type
+			<SPAN CLASS="eclass">OLD_FASHION_LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>] at runtime. The process of converting <SPAN CLASS="efeature">my_list_of_cats</SPAN>
+			from holding a void reference to holding a reference to a object modeling a
+			list of cats, starts when a creation instruction is executed. The creation
+			instruction creates the instance and may apply a creation procedure to
+			initialize the instance. A creation instruction for the declaration above would
+			look like this:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="efeature">my_list_of_cats</SPAN>.<SPAN CLASS="efeature">make</SPAN></P>
+		</CODE>
+		<P>The <SPAN CLASS="ekeyword">create</SPAN> keyword is used to introduce a creation instruction. This
+			instruction causes the following four things to happen:</P>
+		<UL>
+			<LI>
+				A shell of a&nbsp;new instance of <SPAN CLASS="eclass">OLD_FASHION_LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>] is created&nbsp;in
+				memory with a memory field for every
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="attribute">attribute</MSHELP:LINK>
+			<LI>
+				Each field is initialized&nbsp;with standard default values
+				<UL>
+					<LI>
+					False for type <SPAN CLASS="eclass">BOOLEAN</SPAN>
+					<LI>
+					Null character for type <SPAN CLASS="eclass">CHARACTER</SPAN>
+					<LI>
+					The appropriate form of zero for number types
+					<LI>
+						<SPAN CLASS="ekeyword">Void</SPAN> for reference types</LI></UL>
+			<LI>
+			Attach the new instance to the entity <SPAN CLASS="efeature">my_list_of_cats</SPAN>
+			<LI>
+				Apply the creation procedure <SPAN CLASS="efeature">make</SPAN></LI></UL>
+		<P>Once these steps complete successfully, <SPAN CLASS="efeature">my_list_of_cats</SPAN> will be attached to a
+			valid instance (i.e., an instance in which the
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="class invariant">class
+invariant</MSHELP:LINK>
+			&nbsp;is true)&nbsp;of <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>].</P>
+		<A name="features"></A>
+		<h3>Features</h3>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Initialization</SPAN>
+				<BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Create an
+				empty list.
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">before</SPAN> :=
+				<SPAN CLASS="ekeyword">True</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="eitag">is_before</SPAN>: <SPAN CLASS="efeature">before</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+			<P><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access</SPAN>
+				<BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">item</SPAN>: <SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Current
+				item
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">active</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+				<BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">first</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="efeature">item</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Item at
+				first position
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">first_element</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>The features part of a class is the area in which we feel that most of the
+			"programming" is done. It is here that we define those things that instances of
+			a class have and can do. We will learn more about features in the next section <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\30_Adding_Class_Features.htm">
+				Adding Class Features</A>.
+		</P>
+		<P>Until then let's just take a quick look at how features fit into a class. Notice
+			that in our example the features part is introduced by the keyword "<SPAN CLASS="ekeyword">feature</SPAN>".
+			In fact there are two occurrences of <SPAN CLASS="ekeyword">feature</SPAN> in this example, each followed
+			by a comment.
+		</P>
+		<P>You may declare multiple <SPAN CLASS="ekeyword">feature</SPAN> statements. This helps you group features in
+			a manner that makes sense. Here we see the first group contains those features
+			which are listed as creation procedures in the creators part of the class. The
+			second group of features labeled "<SPAN CLASS="ecomment">Access</SPAN>"&nbsp;contains a set of queries
+			available to clients of the class.</P>
+		<P>Although the words "<SPAN CLASS="ecomment">Initialization</SPAN>" and "<SPAN CLASS="ecomment">Access</SPAN>" are actually in comments after
+			the <SPAN CLASS="ekeyword">feature</SPAN> keyword, some language processing tools apply some significance to
+			these, for example, ordering the groups in "pretty-printed" views of a class.
+			Also, some tools allow you to build templates for creating new&nbsp;classes
+			which have <SPAN CLASS="ekeyword">feature</SPAN> clauses already in place for predetermined groups.</P>
+		<p><DIV class="tip" style="WIDTH: 80%">
+				<B>Tip:</B> There is not a technical requirement governing the grouping or
+				ordering of features in a class. It is&nbsp;the option of&nbsp;the producer of
+				a class to group and order the features in some fashion that has some meaning.
+				Many years of Eiffel development experience&nbsp;are reflected in the classes
+				in the Eiffel Base Library.&nbsp;This is a good place to look for examples of
+				well constructed classes.
+			</DIV>
+		</p>
+		<A name="invariant"></A>
+		<h3>Invariant</h3>
+		<P></P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">invariant</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">before_constraint</SPAN>: <SPAN CLASS="efeature">before</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">first_element</SPAN>)
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">after_constraint</SPAN>: <SPAN CLASS="efeature">after</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">last_element</SPAN>)
+			</P>
+		</CODE>
+		<P>Here's the last word in a class definition ... both literally and figuratively.
+			The invariant part, introduced not surprisingly by the keyword "<SPAN CLASS="ekeyword">invariant</SPAN>", is
+			that portion of the class in which we can state what it means for an object to
+			be a valid instance of this class.
+		</P>
+		<P>We will learn more about&nbsp;
+			<MSHELP:LINK tabIndex="0" keywords="class invariant" indexMoniker="!DefaultKeywordIndex">class
+invariants</MSHELP:LINK>
+			in the section titled <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\60_Design_By_Contract.htm">
+				Design by Contract and Assertions</A>.</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

@@ -1,0 +1,64 @@
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Eiffel for .NET Conventions</TITLE>
+		<meta name="vs_targetSchema" content="HTML 4.0">
+	</HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK>
+		<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK>
+		<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK>
+		<h1>Eiffel for .NET Conventions</h1>
+		<p>In this section, you'll find information about how the conventions that are
+			normally used in Eiffel programming are affected by working in the presence of
+			.NET.</p>
+		<p>Also, you'll find out how .NET types sometimes look a little different in the
+			presence of Eiffel.</p>
+		<p>
+		Because there are differences in the underlying object models upon which .NET
+		and Eiffel have been designed, before .NET types can be made available to
+		Eiffel developers, the assemblies in which they reside must be processed by a
+		utility called the Eiffel Metadata Consumer. Fortunately, this all happens
+		behind the scenes for you. You need only be aware that when you are looking at
+		.NET types from within ENViSioN, you're seeing them through Eiffel-tinted
+		lenses.
+		<p>This is really the same thing that happens with other .NET languages with Visual
+			Studio .NET support. For example, if you look at a constructor in a .NET type
+			using the "ildasm" utility, the constructor will be named <SPAN CLASS="efeature">.ctor</SPAN>. But, if
+			you're in C# and look at the same constructor in the Visual Studio .NET Object
+			Browser, the constructor will have the same name as the type ... it's a C#
+			convention. Likewise, the same constructor viewed in Visual Basic .NET will
+			have the name <SPAN CLASS="efeature">New</SPAN> ... that's the Visual Basic .NET convention. So, when you
+			use ENViSioN, you see things as presented using Eiffel Conventions.
+		</p>
+		<p>Consider what happens when you look at .NET types using ENViSioN. When you look,
+			for example at the type <SPAN CLASS="eclass">System.EventArgs</SPAN>, you will see it represented as an
+			Eiffel class called <SPAN CLASS="eclass">EVENT_ARGS</SPAN>. The members of the .NET type will show up as
+			features of the Eiffel class. Of course, you can also see the corresponding
+			.NET names as they exist in the assembly metadata.</p>
+		<p>The documents in this section tell you what you need to know in order to use
+			.NET types in Eiffel, and vice versa.</p>
+		<h2>Eiffel for .NET Conventions Documentation</h2>
+		<UL>
+			<li>
+				<a href="10_terminology.html">Terminology</a>
+			<li>
+				<a href="20_names.html">Conventions and
+					Name Handling</a>
+			<li>
+				<a href="30_type_organization.html">Type
+					Organization</a>
+			<li>
+				<a href="40_constructors.html">Constructors
+					and Creation Procedures</a>
+			<li>
+				<a href="50_similar_types.html">Similar
+					Types Occurring in Both Libraries</a>
+			<li>
+				<a href="60_reserved_keywords.html">Eiffel
+					Language Reserved Keywords</a>
+			</li>
+		</UL>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

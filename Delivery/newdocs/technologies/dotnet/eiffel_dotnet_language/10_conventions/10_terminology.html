@@ -1,0 +1,466 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Eiffel for .NET Terminology</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+	</HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK>
+		<h1>Eiffel Terminology</h1>
+		<b></b>
+		<h2>Eiffel Terminology Defined for C# and VB.NET Programmers</h2>
+		<p>Eiffel programmers feel that it is important to have a set of precise terms with 
+			which to communicate about our method of software development. Like everything 
+			else in Eiffel, the use of certain terms is not accidental. They were chosen 
+			carefully to impart particular meaning. Many of the Terms that Eiffel 
+			programmers use are different from those used by&nbsp;developers 
+			using&nbsp;other object-oriented languages. But that does not mean that their 
+			meanings will be foreign to you. If you have some understanding of 
+			object-oriented technology, you will find that in many cases the Eiffel terms 
+			describe concepts with which you were already familiar, just under different 
+			names, and possibly with slightly different meanings.
+		</p>
+		<p>The intention of this glossary is to give you a list of these terms with 
+			extended definitions that will relate the Eiffel terms to language with which 
+			you may be more familiar. Also, you will find an occasional term which comes 
+			from other programming cultures but is not used in Eiffel.
+		</p>
+		<b></b>
+		<table cellSpacing="8">
+			<tr>
+				<td>Term
+				</td>
+				<td>Definition</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<TR>
+				<A NAME="ancestors"></A>
+				<TD>Ancestors</TD>
+				<TD>The set of Classes from which a particular Class Inherits, including the Class 
+					itself. Somewhat analogous to Bases and Interfaces in C# and VB.NET (see Proper 
+					Ancestors).</TD>
+			</TR>
+			<TR>
+				<A NAME="argument"></A>
+				<TD>Argument</TD>
+				<TD>An object which is passed to a routine. Called a Parameter in C# and VB.NET.</TD>
+			</TR>
+			<TR>
+				<A NAME="assertion"></A>
+				<TD>Assertion</TD>
+				<TD>A declaritive expression that evaluates to true or false. Assertions in Eiffel 
+					are of different types and are used primarily for expressing software 
+					specification to potential Reuse Consumers and ensuring that executing software 
+					complies with specification. Any violation of an assertion causes an exception, 
+					and is generally indicative of a defect in the software system.
+				</TD>
+			</TR>
+			<tr>
+				<A NAME="attribute"></A>
+				<td>Attribute</td>
+				<td>A Feature which represents storage used in every instance of a class. Used like 
+					a Field member in C#.
+				</td>
+			</tr>
+			<tr>
+				<A NAME="class"></A>
+				<td>Class</td>
+				<td>Software text which is the static definition of a Type (or the pattern for a 
+					Type in the case of a Generic Class). Used in very nearly the same way as in 
+					C#. In C# Classes are used for reference types and Structures for value types. 
+					In Eiffel, Classes are used for both, but see Expanded Class.</td>
+			</tr>
+			<TR>
+				<A NAME="class invariant"></A>
+				<TD>Class Invariant</TD>
+				<TD>An Assertion on a Class which defines the valid or stable state for objects 
+					which are instances of the Class. All instances of the Class must comply with 
+					the Class Invariant at any time that they are accessible to Clients.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="client"></A>
+				<TD>Client</TD>
+				<TD>A Class whose role is that of Client in a Client/Supplier Relationship with 
+					another Class.</TD>
+			</TR>
+			<TR>
+				<A NAME="client/supplier relationship"></A>
+				<TD>Client/Supplier Relationship</TD>
+				<TD>One of the two Relationships that can exist between Classes. Client/Supplier is 
+					characterized by a situation in which one Class, called the Client, has or 
+					uses, instances of the other Class, called the Supplier. For example, if class 
+					"X" declares an entity "y" of type STRING, then Class X becomes a Client to 
+					Class STRING as a result. At the same time, Class STRING becomes a Supplier to 
+					class X.</TD>
+			</TR>
+			<TR>
+				<A NAME="cluster"></A>
+				<TD>Cluster</TD>
+				<TD>A group of classes (or recursively, clusters) which share some criteria which 
+					justifies their being grouped together. Classes are usually clustered together 
+					because they model similar entities or have similar functionality. For example, 
+					in the Eiffel Base Library, there is a cluster called "structures" which 
+					contains clusters for data structures. One cluster is "list" which contains 
+					classes like LINKED_LIST and TWO_WAY_LIST. Another "structures" cluster is 
+					"dispensers" which contains classes like "ARRAYED_STACK" and "PRIORITY_QUEUE". 
+					When .NET assemblies are made available to Eiffel programmers, each assembly is 
+					viewed as a cluster.</TD>
+			</TR>
+			<TR>
+				<A NAME="command"></A>
+				<TD>Command</TD>
+				<TD>
+					<P>A Class Feature which can change the state of the instance to which it is 
+						applied, and does not return a result. It is the Reuse Consumer's view of a 
+						Procedure.</P>
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="contract"></A>
+				<TD>Contract</TD>
+				<TD>Like a contract between human parties, a software Contract is a formal 
+					agreement between software components, Classes in the case of Eiffel. The 
+					contract is written in the Assertions of a Supplier Class and specifies in 
+					precise terms those conditions with which potential Clients may interact with 
+					the Supplier. The contract for a particular Class is composed of the contracts 
+					for each Exported Routine of the Class as well as the Class Invariant.</TD>
+			</TR>
+			<TR>
+				<A NAME="creation procedure"></A>
+				<TD>Creation Procedure</TD>
+				<TD>A Procedure which can be used to initialize and instance of a Class. Similar to 
+					a Constructor in C# or VB.NET, but slightly different. A Creation Procedure can 
+					be applied when an object is being created, but can also be applied later to 
+					reinitialize an existing object (such is not the case with Constructors). Also, 
+					Creation Procedures are responsible for ensuring that newly created objects 
+					comply with their Class Invariants.</TD>
+			</TR>
+			<TR>
+				<A NAME="deferred class"></A>
+				<TD>Deferred Class</TD>
+				<TD>A class which has at least one Deferred Feature.&nbsp;The term "Deferred" is 
+					used in the Eiffel culture like the term "Abstract" in .NET.&nbsp;Like an 
+					abstract class in C# or VB.NET, it is not possible to make direct runtime 
+					instances of a Deferred Class.</TD>
+			</TR>
+			<TR>
+				<A NAME="deferred feature"></A>
+				<TD>Deferred Feature</TD>
+				<TD>A Class Feature which has not implementation. Like a virtual method in C#. Can 
+					apply to Commands or Queries.</TD>
+			</TR>
+			<TR>
+				<A NAME="descendants"></A>
+				<TD>Descendants</TD>
+				<TD>The set of all Classes which Inherit from a particular Class, including the 
+					Class itself. Somewhat analogous to subclasses in C# and VB.NET (see Proper 
+					Descendants).</TD>
+			</TR>
+			<TR>
+				<A NAME="design by contract"></A>
+				<TD>Design by Contract</TD>
+				<TD>A method of developing software in which a System is composed of&nbsp;a set of 
+					interacting&nbsp;Classes which cooperate based upon precisely defined 
+					Contracts.</TD>
+			</TR>
+			<TR>
+				<A NAME="direct instance"></A>
+				<TD>Direct Instance</TD>
+				<TD>A runtime Object of some type, based directly on the definition from a specific 
+					Effective Class. See Instance for more information. Usually used in conjunction 
+					with the class name, e.g. "an instance of class POLYGON".
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="effective class"></A>
+				<TD>Effective Class</TD>
+				<TD>A Class which has no Deferred Features. Only if a Class is Effective can it 
+					have direct runtime instances. Effective classes are called Concrete Classes in 
+					some programming cultures.</TD>
+			</TR>
+			<TR>
+				<A NAME="eiffel metadata consumer"></A>
+				<TD>Eiffel Metadata Consumer</TD>
+				<TD>Applicable to&nbsp;Eiffel for .NET only, this is a mechanism that works behind 
+					the scenes to make Types from .NET assemblies available to Eiffel programmers. 
+					The Metadata Consumer reconciles the differences between the naming conventions 
+					of Eiffel and .NET by providing an Eiffel compliant view of the Types in .NET 
+					assemblies.</TD>
+			</TR>
+			<TR>
+				<A NAME="expanded class"></A>
+				<TD>Expanded Class</TD>
+				<TD>Like a value type in C#, but with some restrictions. .NET value types are 
+					viewed to Eiffel programmers as Expanded Classes. For reference types, an 
+					object field holds a reference to a runtime object (or is Void). For value 
+					types, the object field holds the fields of the runtime object. A Type based on 
+					an Expanded Class is an Expanded Type.</TD>
+			</TR>
+			<TR>
+				<A NAME="exported feature"></A>
+				<TD>Exported Feature</TD>
+				<TD>A Feature which is available to Client Classes. Analogous to "public" in C# and 
+					VB.NET. However, Exporting in Eiffel has fine granularity. It is possible to 
+					make certain Features available to Clients of all types or only to Clients 
+					which conform to certain named Classes (vs Public, Protected, Private)</TD>
+			</TR>
+			<tr>
+				<A NAME="feature"></A>
+				<td>Feature</td>
+				<td>Any of a Class's Attributes or Routines. Used similarly to the term Member as 
+					in C#. In Eiffel class features can be only Attributes or Routines.</td>
+			</tr>
+			<TR>
+				<A NAME="feature application"></A>
+				<TD>Feature Application</TD>
+				<TD>The process of using the Class Features on instances of the Class. The model 
+					for Feature Application is "x.f(a,...)" where "x" is an entity which will be 
+					attached to some object at runtime, "f" is some Feature of the Class on which x 
+					is based, and "a,..." is an optional list of arguments which may be appropriate 
+					for some Routines. Feature "f" is "applied" to the object attached to "x". 
+					Feature Application may involve calling Routines, or may only involve returning 
+					the value of an Attribute from memory. Feature application is sometimes called 
+					"feature call".</TD>
+			</TR>
+			<TR>
+				<A NAME="function"></A>
+				<TD>Function</TD>
+				<TD>A Routine that returns a result. In C# function results can be typed as "void", 
+					meaning that there is no result returned. Eiffel functions cannot be typed 
+					"void" (see Procedure). All Functions must specify a result type. Of course, if 
+					the result type is a reference type, there could be cases in which the 
+					reference resulting from some specific&nbsp;call&nbsp;might be Void.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="generic class"></A><A NAME="genericity"></A>
+				<TD>Generic Class</TD>
+				<TD>A Class which is written using parameters to represent other Classes or Types 
+					to enhance its reusability. For example, the Class LINKED_LIST [G] is a generic 
+					class in which "G" represents some other Class. So, LINKED_LIST is written 
+					independent of the items an instance of the list will hold. We cannot declare a 
+					LINKED_LIST without specifiying a Class to substitute for "G". If we want a 
+					list of cats we can declare one by using the Type: LINKED_LIST [CAT]. Generic 
+					Classes are not currently implemented in .NET, so there's no corresponding 
+					concept in C#.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="inheritance"></A>
+				<TD>Inheritance</TD>
+				<TD>One of the two Relationships that can exist between Classes. If Class B 
+					inherits from Class A, then every feature in Class A is potentially available 
+					to instances of Class B. Also, when ever an instance of Class A is required, an 
+					instance of Class B will suffice. Inheritance is used in Eiffel much the same 
+					as in C#. The Eiffel model allows full, controlled multiple inheritance, 
+					though. Eiffel Classes may inherit from multiple Concrete Classes and name 
+					clashes are handled through a process called Feature Adaptation.</TD>
+			</TR>
+			<TR>
+				<A NAME="heir"></A>
+				<TD>Heir</TD>
+				<TD>The adjacent Proper Descendants of a Class. If class C inherits from class B 
+					and class B inherits from class A, then class A's Proper Descendants include B 
+					and C, but A's Heirs only include B.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="instance"></A>
+				<TD>Instance</TD>
+				<TD>A runtime Object of some type, based on the definition from a Class. Usually 
+					used in conjunction with the class name, e.g. "an instance of class POLYGON". 
+					In contrast with Direct Instance, an Instance of class POLYGON is a Direct 
+					Instance of POLYGON or any Proper Descendant of POLYGON such, perhaps, as 
+					RECTANGLE. So it its possible to have Objects which are Instances of Deferred 
+					Classes, but it is impossible to have Objects which are Direct Instances of 
+					Deferred Classes.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="interface"></A>
+				<TD>Interface</TD>
+				<TD>Not supported as such in Eiffel. Used in C# and VB.NET, Interfaces provide sets 
+					of specific Class Features which must be effected by any Concrete Class that 
+					"implements" the Interface. There is no concept of Interface in Eiffel that is 
+					separate from the concept of Class. So, Interfaces from .NET appear to Eiffel 
+					programmers to be completely Deferred (abstract) Classes.</TD>
+			</TR>
+			<TR>
+				<A NAME="manifest string"></A>
+				<TD>Manifest String</TD>
+				<TD>A quoted string used in source code, for example the "Hello World!" in:
+					<p>&nbsp;&nbsp;&nbsp; my_string := "Hello World!"</p>
+					This is often called a "literal" string in other languages. In Eiffel, the 
+					quoted string "Hello World!" above&nbsp;is, by virtue of its presence, an 
+					instance of the Eiffel STRING class. In Eiffel there are manifest constants of 
+					other types as well, like numbers coded&nbsp;explicitly in software text, 
+					&nbsp;and the keywords True and False as the manifest booleans.</TD>
+			</TR>
+			<TR>
+				<A NAME="module"></A>
+				<TD>Module</TD>
+				<TD>A syntactical grouping of software text. Source code is divided into Modules in 
+					order to help organize it in some meaningful way or to achieve some goal.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="object"></A>
+				<TD>Object</TD>
+				<TD>An instance of a Class during system execution. As such, Objects only exist at 
+					runtime.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="overloading"></A>
+				<TD>Overloading</TD>
+				<TD>Not supported in Eiffel. Overloading is the ability to have more than one 
+					Feature with the same name, varying only by the Types of its Arguments. 
+					Overloading is supported by the underlying object model in .NET.&nbsp;As a 
+					result&nbsp;many classes in .NET assemblies have overloaded methods. The Eiffel 
+					Metadata Consumer disambiguates the overloaded names so that by the time you 
+					see them in the Eiffel context they appear no longer to be overloaded.</TD>
+			</TR>
+			<TR>
+				<A NAME="parent"></A>
+				<TD>Parent</TD>
+				<TD>The adjacent Proper Ancestors of a Class. If class C inherits from class B and 
+					class B inherits from class A, then class C's Proper Ancestors include A and B, 
+					but C's Parents only include B.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="postcondition"></A>
+				<TD>Postcondition</TD>
+				<TD>An assertion coded on a Routine which defines the conditions will be true upon 
+					successful completion of the Routine. It is the responsibility of the Routine 
+					to ensure that the Postcondition holds after the Routine executes.</TD>
+			</TR>
+			<TR>
+				<A NAME="precondition"></A>
+				<TD>Precondition</TD>
+				<TD>An assertion coded on a Routine which defines the conditions under which the 
+					Routine can complete successfully. It is the responsibility of the Client to 
+					ensure that the Precondition holds before attempting to call the Routine.</TD>
+			</TR>
+			<TR>
+				<A NAME="procedure"></A>
+				<TD>Procedure</TD>
+				<TD>A Routine that does not return a result. Much like a "void" function in C#.</TD>
+			</TR>
+			<TR>
+				<A NAME="proper ancestors"></A>
+				<TD>Proper Ancestors</TD>
+				<TD>The set of all Classes&nbsp;from which&nbsp;a particular Class Inherits, 
+					excluding the Class itself.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="proper descendants"></A>
+				<TD>Proper Descendants</TD>
+				<TD>The set of all Classes which Inherit from a particular Class, excluding the 
+					Class itself.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="query"></A>
+				<TD>Query</TD>
+				<TD>A Class Feature which returns information from the instance to which it is 
+					applied. Queries are the Reuse Consumer's view of Attributes and Functions.
+				</TD>
+			</TR>
+			<TR>
+				<TD>Reference Type</TD>
+				<A NAME="reference type"></A>
+				<TD>A type whose instances are accessed via a reference. For reference types, an 
+					object field holds a reference to a runtime object (or is Void). This is in 
+					contrast to&nbsp;value types, in which case, the object field holds the fields 
+					of the runtime object. In Eiffel, reference types are based on reference 
+					classes, i.e.,&nbsp;any class which is not an Expanded Class.</TD>
+			</TR>
+			<TR>
+				<A NAME="relationship"></A>
+				<TD>Relationship</TD>
+				<TD>An association between two classes. There are only two types of Relationships 
+					that can exist between classes: Client/Supplier and Inheritance.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="reuse consumer"></A>
+				<TD>Reuse Consumer</TD>
+				<TD>The role&nbsp;a&nbsp;software engineer assumes when in the process of making 
+					use of Classes or Types already in existence. As a reuse consumer, the engineer 
+					is interested primarily in the specification of those Classes or Types being 
+					used, rather than their implementation.</TD>
+			</TR>
+			<TR>
+				<A NAME="reuse producer"></A>
+				<TD>Reuse Producer</TD>
+				<TD>The role a&nbsp;software engineer assumes when&nbsp;in the process or creating 
+					a new Class.&nbsp;In this role the engineer attempts to&nbsp;produce a product 
+					which will be reusable by&nbsp;him or herself and other engineers in the 
+					future.&nbsp;In the Eiffel culture, whenever a software engineer creates a 
+					class, it is as a Reuse Producer, and with the thought that each new class has 
+					the potential to become reusable.</TD>
+			</TR>
+			<TR>
+				<A NAME="root class"></A>
+				<TD>Root Class</TD>
+				<TD>For any System, the Class which will be instantiated to start the system. 
+					Specified by project settings.</TD>
+			</TR>
+			<TR>
+				<A NAME="root procedure"></A>
+				<TD>Root Procedure</TD>
+				<TD>A Creation Procedure of the Root Class of a System which will be applied to an 
+					initial instance of the Root Class at System startup. Similar to Main() in C# 
+					and VB.NET, but with the important difference that the fact that a particular 
+					Creation Procedure&nbsp;is the Root Procedure for a System is not define in the 
+					Class itself as with Main(). Rather, it is specified outside the Class in 
+					project settings. This helps Reuse Producers keep Classes more autonomous and 
+					therefore potentially more reusable.</TD>
+			</TR>
+			<tr>
+				<A NAME="routine"></A>
+				<td>Routine</td>
+				<td>A computational Class Feature which is either a Function or Procedure. Routines 
+					are the executable parts of a Class. Routines are similar to Methods in C#.</td>
+			</tr>
+			<TR>
+				<A NAME="software specification"></A>
+				<TD>Software Specification</TD>
+				<TD>A statement of how a software element is to be used and what it will do when 
+					executed. Ideally, this is stated in terms that do not betray how the software 
+					does what it does.
+					<p>
+						In Eiffel, specification is included in the code, rather than a separate 
+						document. For a routine, it consists of its call signature and its contract. 
+						For a class, it consists of the signatures and contracts for all public 
+						features.
+					</p>
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="supplier"></A>
+				<TD>Supplier</TD>
+				<TD>A Class whose role is that of Supplier in a Client/Supplier Relationship with 
+					another Class.</TD>
+			</TR>
+			<TR>
+				<A NAME="system"></A>
+				<TD>System</TD>
+				<TD>A set of Classes related by the two Relationships which can be compiled to 
+					produce an executable.
+				</TD>
+			</TR>
+			<TR>
+				<A NAME="type"></A>
+				<TD>Type</TD>
+				<TD>The description of a set of Objects equipped with certain Features.</TD>
+			</TR>
+		</table>
+	</BODY>
+</HTML>

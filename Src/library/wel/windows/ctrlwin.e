@@ -1,5 +1,5 @@
 indexing
-	description: "Window which can be moved outside the parent window."
+	description: "Window which can be used to design custom control."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,37 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_coordinates
+
+feature {NONE} -- Intialization
+
+	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
+			a_x, a_y, a_width, a_height: INTEGER) is
+			-- Make a control using `a_parent' as parent and
+			-- `a_name' as name. `a_x', `a_y', `a_width', and
+			-- `a_height' are used to place and size the control
+			-- at the creation.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
+			a_name_not_void: a_name /= Void
+			a_width_small_enough: a_width <= maximal_width
+			a_width_large_enough: a_width >= minimal_width
+			a_height_small_enough: a_height <= maximal_height
+			a_height_large_enough: a_height >= minimal_height
+		do
+			register_class
+			internal_window_make (a_parent, a_name, default_style,
+				a_x, a_y, a_width, a_height, default_id,
+				default_pointer)
+		ensure
+			parent_set: parent = a_parent
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
+		end
 
 feature -- Status report
 
@@ -44,13 +74,16 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			cwin_move_window (item, a_x, a_y, a_width, a_height, repaint)
+			cwin_move_window (item, a_x, a_y, a_width, a_height,
+				repaint)
 		end
 
 	move (a_x, a_y: INTEGER) is
 			-- Move the window to `a_x', `a_y' position.
 		do
-			move_absolute (a_x, a_y)
+			cwin_set_window_pos (item, default_pointer,
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
 		end
 
 feature {NONE} -- Implementation

@@ -22,7 +22,9 @@ feature {NONE} -- Initialization
 		local
 			s: STRING
 			description: STRING
+			l_array_res: ARRAY_RESOURCE
 		do
+			resource := res
 			description := res.description
 			if description /= Void and then not description.is_empty then
 				s := clone (description)
@@ -34,9 +36,15 @@ feature {NONE} -- Initialization
 			s.prune_all ('%T')
 			s.prune_all ('%R')	
 			default_create
+				-- Here we add the string values to the list columns.
 			extend (s)
-			extend (res.value)
-			resource := res
+			l_array_res ?= resource
+			if l_array_res /= Void and then l_array_res.selected_value /= Void then
+				s := clone (l_array_res.selected_value)
+				extend (s)
+			else
+				extend (resource.value)
+			end
 		ensure
 			resource_consistent: resource = res
 		end
@@ -56,7 +64,6 @@ feature -- Element change
 		do
 			row_number := a_number
 		end
-		
 
 feature -- Basic operations
 

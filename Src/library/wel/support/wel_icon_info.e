@@ -50,12 +50,6 @@ feature -- Status Report
 			create Result.make_by_pointer(hbmColor_ext (item))
 		end
 
-	set_fIcon (is_icon: BOOLEAN) is
-			-- Assign `is_icon' to fIcon.
-		do
-			set_fIcon_ext (item, is_icon)
-		end
-
 feature -- Status Setting
 
 	set_xHotspot (xvalue: INTEGER) is
@@ -82,42 +76,18 @@ feature -- Status Setting
 			set_hbmColor_ext (item, a_color_bitmap.item)
 		end
 
+	set_fIcon (is_icon: BOOLEAN) is
+			-- Assign `is_icon' to fIcon.
+		do
+			set_fIcon_ext (item, is_icon)
+		end
+
 feature --  Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_iconinfo
-		end
-
-feature  -- Obsolete
-
-	hbmMask: POINTER is
-		obsolete "To retrieve the mask, use `mask_bitmap' instead."
-			-- Pointer to the icon bitmask bitmap.
-		do
-			Result := hbmMask_ext (item)
-		end
-
-	hbmColor: POINTER is
-		obsolete "To retrieve the image, use `color_bitmap' instead."
-			-- Pointer to the icon color bitmap.
-		do
-			Result := hbmColor_ext (item)
-		end
-
-	set_hbmMask (mask_pointer: POINTER) is
-		obsolete "To set the mask, use `set_mask_bitmap' instead."
-			-- Assign `mask_pointer' to hbmMask
-		do
-			set_hbmMask_ext (item, mask_pointer)
-		end
-
-	set_hbmColor (color_pointer: POINTER) is
-		obsolete "To set the image, use `set_color_bitmap' instead."
-			-- Assign `color_pointer' to hbmColor
-		do
-			set_hbmColor_ext (item, color_pointer)
 		end
 
 feature {NONE} -- Externals

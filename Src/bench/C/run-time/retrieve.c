@@ -25,7 +25,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "eif_hector.h"
 #include "eif_cecil.h"
 #include "eif_retrieve.h"
-#include "eif_store.h"
+#include "rt_store.h"
 #include "eif_bits.h"
 #include "eif_run_idr.h"
 #include "eif_error.h"
@@ -545,6 +545,17 @@ doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is r
 doc:	</attribute>
 */
 rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
+
+/*
+doc:	<attribute name="end_of_buffer" return_type="int" export="shared">
+doc:		<summary>Size after decompression of decompressed data.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared int end_of_buffer = 0;
 
 /*
  * Convenience functions

@@ -15,7 +15,7 @@ inherit
 
 	NAME_SOLVER
 	
-	METHOD_RETRIVER
+	METHOD_RETRIEVER
 
 create
 	make
@@ -128,8 +128,9 @@ feature {NONE} -- Initialization
 		ensure
 			non_void_consumed_type: consumed_type /= Void
 			non_void_internal_constructors: internal_constructors /= Void
-			non_void_internal_fields: internal_fields /= Void
-			non_void_internal_methods: internal_members /= Void
+			non_void_internal_members: internal_members /= Void
+--			non_void_internal_fields: internal_fields /= Void
+--			non_void_internal_methods: internal_members /= Void
 --			non_void_internal_methods: internal_methods /= Void
 			non_void_internal_properties: internal_properties /= Void
 			non_void_internal_events: internal_events /= Void
@@ -185,9 +186,9 @@ feature -- Basic Operation
 			if not rescued then
 				check
 					non_void_internal_constructors: internal_constructors /= Void
-					non_void_internal_fields: internal_fields /= Void
-					non_void_internal_methods: internal_members /= Void
-					--non_void_internal_methods: internal_methods /= Void
+					non_void_internal_member: internal_members /= Void
+--					non_void_internal_fields: internal_fields /= Void
+--					non_void_internal_methods: internal_methods /= Void
 					non_void_internal_properties: internal_properties /= Void
 					non_void_internal_events: internal_events /= Void
 				end
@@ -578,18 +579,11 @@ feature {NONE} -- Implementation
 			end
 
 			create dotnet_name.make_from_cil (info.name)
-			if l_raise_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_raise_method.get_parameters.item (0).parameter_type)
-			elseif l_add_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).parameter_type)
-			elseif l_remove_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).parameter_type)
-			end
 			if l_remover /= Void or l_raiser /= Void or l_adder /= Void then
 				create Result.make (
 					dotnet_name,
 					True,
-					l_parameter_type,
+					referenced_type_from_type (info.declaring_type),
 					l_raiser,
 					l_adder,
 					l_remover
@@ -692,10 +686,10 @@ feature {NONE} -- Implementation
 			-- Type members used to initialize `features'
 
 --	internal_methods: NATIVE_ARRAY [METHOD_INFO]
-			-- Methods.
+--			-- Methods.
 
-	internal_fields: NATIVE_ARRAY [FIELD_INFO]
-			-- Fields.
+--	internal_fields: NATIVE_ARRAY [FIELD_INFO]
+--			-- Fields.
 
 	internal_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			-- Properties from type and parents
@@ -710,11 +704,11 @@ feature {NONE} -- Implementation
 			-- Representation of Current if it was used 
 			-- for CONSUMED_REFERENCED_TYPE.
 
-	Default_creation_routine_name: STRING is "make"
-			-- Default Eiffel creation routine name
+--	Default_creation_routine_name: STRING is "make"
+--			-- Default Eiffel creation routine name
 
-	Argument_prefix: STRING is "arg_"
-			-- Argument names prefix
+--	Argument_prefix: STRING is "arg_"
+--			-- Argument names prefix
 	
 	Constructor_overload_resolution: INTEGER is 3
 			-- Number of arguments in a constructor for which we always expand

@@ -59,11 +59,9 @@ feature -- Processing
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
 		do
-			if not is_typeflag_fhidden (implemented_interface_descriptor.interface_descriptor.flags) then
-				Precursor (implemented_interface_descriptor)
-				implemented_interface_generator.initialize
-				implemented_interface_generator.generate (implemented_interface_descriptor)
-			end
+			Precursor (implemented_interface_descriptor)
+			implemented_interface_generator.initialize
+			implemented_interface_generator.generate (implemented_interface_descriptor)
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is

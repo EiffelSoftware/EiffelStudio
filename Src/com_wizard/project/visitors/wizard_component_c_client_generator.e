@@ -35,62 +35,60 @@ feature -- Basic operations
 			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
 			property_generator: WIZARD_CPP_CLIENT_PROPERTY_GENERATOR
 		do
-			if not is_typeflag_fhidden (a_desc.flags) then
-				if not a_desc.properties.empty then
-					from
-						a_desc.properties.start
-					until
-						a_desc.properties.off
-					loop
-						create property_generator
+			if not a_desc.properties.empty then
+				from
+					a_desc.properties.start
+				until
+					a_desc.properties.off
+				loop
+					create property_generator
 
-						property_generator.generate (a_desc.name, a_desc.lcid, a_desc.properties.item)
-						cpp_class_writer.add_function (property_generator.c_access_feature, Public)
-						cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+					property_generator.generate (a_desc.name, a_desc.lcid, a_desc.properties.item)
+					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
+					cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
 
-						a_desc.properties.forth
-					end
+					a_desc.properties.forth
 				end
+			end
 
-				if not a_desc.functions.empty then
-					from
-						a_desc.functions.start
-					until
-						a_desc.functions.off
-					loop
-						if a_desc.functions.item.func_kind =  Func_dispatch then
+			if not a_desc.functions.empty then
+				from
+					a_desc.functions.start
+				until
+					a_desc.functions.off
+				loop
+					if a_desc.functions.item.func_kind =  Func_dispatch then
 
-							create disp_func_generator
-							disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
-							cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
+						create disp_func_generator
+						disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
+						cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
 
-						else
-							create function_generator
-							function_generator.generate (a_desc.name, a_desc.functions.item)
-							cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
-							from
-								function_generator.c_header_files.start
-							until
-								function_generator.c_header_files.after
-							loop
-								if not cpp_class_writer.import_files.has (function_generator.c_header_files.item) then
-									cpp_class_writer.add_import (function_generator.c_header_files.item)
-								end
-								function_generator.c_header_files.forth
+					else
+						create function_generator
+						function_generator.generate (a_desc.name, a_desc.functions.item)
+						cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
+						from
+							function_generator.c_header_files.start
+						until
+							function_generator.c_header_files.after
+						loop
+							if not cpp_class_writer.import_files.has (function_generator.c_header_files.item) then
+								cpp_class_writer.add_import (function_generator.c_header_files.item)
 							end
-
+							function_generator.c_header_files.forth
 						end
 
-						a_desc.functions.forth
 					end
+
+					a_desc.functions.forth
 				end
-				if 
-					a_desc.inherited_interface /= Void and then not
-					a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
-					not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
-				then
-					generate_functions_and_properties (a_component_descriptor, a_desc.inherited_interface)
-				end
+			end
+			if 
+				a_desc.inherited_interface /= Void and then not
+				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+			then
+				generate_functions_and_properties (a_component_descriptor, a_desc.inherited_interface)
 			end
 		end
 

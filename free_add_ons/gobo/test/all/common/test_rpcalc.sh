@@ -1,2 +1,0 @@
-#!/local/bin/bash
-

@@ -18,10 +18,17 @@ creation
 
 feature -- Access
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_WINDOWS is
+			-- Ms Windows implementation of `a_message'
+		do
+			!! Result.make (a_message, managed, oui_parent)
+		end;
+
 	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_WINDOWS is
 			-- Ms Windows implementation of `an_io_handler'
 		do
-			!! Result
+			!! Result.make (an_io_handler)
 		end;
 
 	label_g (a_label_gadget: LABEL_G; managed: BOOLEAN; 
@@ -38,7 +45,7 @@ feature -- Access
 		end;
 
 	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; 
-			oui_parent: COMPOSITE): SCROLL_L_WINDOWS is
+			oui_parent: COMPOSITE): SCROLL_LIST_WINDOWS is
 			-- Ms Windows implementation of `a_list'
 		do
 			!! Result.make (a_list, managed, is_fixed, oui_parent)

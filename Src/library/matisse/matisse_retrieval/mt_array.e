@@ -119,7 +119,7 @@ feature -- Access
 	wipe_out is
 			-- Make array empty.
 		do
-			array_wipe_out
+			discard_items
 			mt_remove_all
 		end
 	
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 	
 	wipe_out_at_reverting is
 		do
-			array_wipe_out
+			discard_items
 		end
 	
 end -- class MT_ARRAY

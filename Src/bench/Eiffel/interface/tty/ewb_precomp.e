@@ -21,10 +21,10 @@ creation
 
 feature -- Initialization
 
-	make (check_license: BOOLEAN) is
-			-- Set `licensed' to `check_license'
+	make (license_check: BOOLEAN) is
+			-- Set `licensed' to `license_check'
 		do
-			licensed := check_license
+			licensed := license_check
 		end
 
 feature -- Properties

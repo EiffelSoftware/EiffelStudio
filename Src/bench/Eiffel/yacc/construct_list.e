@@ -20,7 +20,7 @@ feature
 			-- (According to the discrimination rule used by `search')
 			-- 0 if none.
 		require
-			valid_occurence: n > 0
+			valid_occurrence: n > 0
 			valid_start_position: start_position > 0
 		local
 			a_occurrences: INTEGER

@@ -3,8 +3,10 @@
  ********************/
 
 #include "egc_dynlib.h"
+#include "eif_sig.h"
 
-static short is_rt_initialized = 0;
+static int is_rt_initialized = 0;
+extern void egc_init_plug(void);
 
 RT_LNK HANDLE ghInstance;
 RT_LNK HINSTANCE eif_hInstance;

@@ -8,8 +8,6 @@ class
 	TYPE_PRINTER
 
 inherit
-	CACHE_PATH
-	--CACHE
 	FINDER
 
 create
@@ -88,11 +86,9 @@ feature {NONE} -- Implementation
 		local
 			ct: CONSUMED_TYPE
 			eac: EAC_BROWSER
-			a_file_name: STRING
 		do
 			output.remove_text
 			create eac
-			a_file_name := absolute_type_path (relative_assembly_path (assembly_of_type), dotnet_type_name)
 			ct := eac.consumed_type (assembly_of_type, dotnet_type_name)
 			if ct /= Void then
 --				output.set_pebble (ct.eiffel_name)

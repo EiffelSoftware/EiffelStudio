@@ -9,7 +9,6 @@ class
 	FINDER
 
 inherit
-	CACHE_PATH
 	CACHE
 	
 feature -- Access
@@ -22,11 +21,9 @@ feature -- Access
 		local
 			i: INTEGER
 			eac: EAC_BROWSER
-			assemblies_info_path: STRING
 			ca: CACHE_INFO
 			l_type: SPECIFIC_TYPE
 		do
-			assemblies_info_path := Absolute_info_assemblies_path
 			create eac
 			ca := eac.info
 			from
@@ -54,12 +51,10 @@ feature -- Access
 		local
 			i: INTEGER
 			eac: EAC_BROWSER
-			assembly_info_path: STRING
 			cat: CONSUMED_ASSEMBLY_TYPES
 			ct: CONSUMED_TYPE
 			full_dotnet_type_name: STRING
 		do
-			assembly_info_path := absolute_info_assembly_path (an_assembly)
 			create eac
 			cat := eac.consumed_assembly (an_assembly)
 			from
@@ -89,11 +84,9 @@ feature -- Access
 		local
 			i: INTEGER
 			eac: EAC_BROWSER
-			assembly_info_path: STRING
 			cat: CONSUMED_ASSEMBLY_TYPES
 			full_dotnet_type_name: STRING
 		do
-			assembly_info_path := absolute_info_assembly_path (an_assembly)
 			create eac
 			cat := eac.consumed_assembly (an_assembly)
 			from
@@ -125,11 +118,9 @@ feature -- Access
 		local
 			i: INTEGER
 			eac: EAC_BROWSER
-			type_path: STRING
 			l_type: CONSUMED_TYPE
 		do
 			create eac
-			type_path := absolute_type_path (relative_assembly_path (an_assembly), a_dotnet_type_name)
 			l_type := eac.consumed_type (an_assembly, a_dotnet_type_name)
 			if l_type /= Void then
 				from

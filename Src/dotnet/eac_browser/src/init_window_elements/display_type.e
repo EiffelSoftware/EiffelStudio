@@ -8,7 +8,6 @@ class
 	DISPLAY_TYPE
 
 inherit
-	CACHE_PATH
 	CACHE
 	COLOR_CONSTANT
 	FINDER
@@ -155,6 +154,12 @@ feature {NONE} -- Implementation
 					output.set_foreground_color (selected_feature_color)
 					output.fill_rectangle (cursor_x_position + horizontal_scroll_bar.value * Nb_pixel_decal_h_scroll, cursor_y_position, output.width, Nb_pixel_line)
 				end
+
+--				if not l_line.path_icon.is_empty then
+--					output.draw_text_top_left (cursor_x_position, cursor_y_position, l_line.path_icon)
+--					cursor_x_position := cursor_x_position + (create {EV_FONT}).string_width (l_line.path_icon)
+--				end
+
 				from
 					l_line.entities.start
 				until

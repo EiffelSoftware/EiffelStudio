@@ -423,7 +423,7 @@ rt_public EIF_REFERENCE strmalloc(unsigned int nbytes)
 #endif 	/* STRMALLOC_DEBUG */
 
 	if (nbytes > eif_gs_limit)		/* Is string too big to be 
-								 * generational scavenge zone. */
+									 * in generational scavenge zone. */
 	{
 
 #ifdef STRMALLOC_DEBUG
@@ -3106,7 +3106,7 @@ rt_shared EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes)
 #endif  /* EIF_TID */
 
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
-	zone->ov_flags = EO_SPEC;	/* Object is special and new */
+	zone->ov_flags = EO_SPEC;	/* Object is special */
 
 	SIGRESUME;					/* End of critical section */
 

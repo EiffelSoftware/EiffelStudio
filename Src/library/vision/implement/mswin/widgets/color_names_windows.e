@@ -7,10 +7,16 @@ indexing
 class
 	COLOR_NAMES_WINDOWS
 
+inherit
+
+	WEL_COLOR_CONSTANTS
+
 feature -- Access
 
 	names: HASH_TABLE [RGB_TRIPLE, STRING] is
 			-- Fill the hash-table when called
+		local
+			color: WEL_COLOR_REF
 		once
 			!! Result.make (1000)
 			add_name (255, 250, 250, "snow")
@@ -760,6 +766,10 @@ feature -- Access
 			add_name (255, 255, 255, "grey100")
 			add_name (75, 0, 130, "Indigo")
 			add_name (220, 20, 60, "Crimson")
+			!! color.make_system (Color_window)
+			add_name (color.red, color.green, color.blue, "Color_window")
+			!! color.make_system (Color_windowtext)
+			add_name (color.red, color.green, color.blue, "Color_windowtext")
 		end
 
 feature {NONE} -- Implementation
@@ -774,7 +784,6 @@ feature {NONE} -- Implementation
 		do
 			!! rgb_tripple.make (r, g, b)
 			temp_string := clone (color_name)
-			temp_string.to_lower
 			names.put (rgb_tripple, temp_string)
 		end
 

@@ -40,6 +40,13 @@ inherit
 			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
 			item as wel_item
+		export
+			{SCALE_SCROLL_BAR_WINDOWS}
+				on_left_button_down,
+				on_left_button_up,
+				on_right_button_down,
+				on_right_button_up,
+				on_mouse_move
 		undefine
 			on_destroy,
 			on_left_button_up,
@@ -144,6 +151,7 @@ feature -- Status setting
 		end
 
 	realize is
+			-- Realize current widget.
 		local
 			wc: WEL_COMPOSITE_WINDOW
 		do
@@ -158,15 +166,15 @@ feature -- Status setting
 					if (width = 0) then
 						set_width (100)
 					end
-					!! text_static.make (Current,"", 0, 0, 0, 0, id_default)
+					!! text_static.make (Current, text, 0, value_height + scroll_height, width, (height - value_height - scroll_height).max (0), id_default)
 					!! value_static.make (Current, "" , 0, 0, 0, 0, id_default)
-					!! scroll_bar.make_horizontal (Current, 0, 0, width, height, scroll_bar_id)
+					!! scroll_bar.make_horizontal (Current, 0, text_height, width, scroll_height, scroll_bar_id)
 				else
 					if height = 0 then set_height (100) end
 					if width = 0 then set_width (20) end
-					!! text_static.make (Current, "", 0, 0, 0, 0, id_default)
+					!! text_static.make (Current, text, scroll_width + value_width, 0,(width  - value_width - scroll_width).max (0), 0, id_default)
 					!! value_static.make (Current, "", 0, 0, 0, 0, id_default)
-					!! scroll_bar.make_vertical (Current, 0, 0, width, height, scroll_bar_id)
+					!! scroll_bar.make_vertical (Current, value_width, 0, scroll_width, height, scroll_bar_id)
 				end
 				if not is_value_shown then 
 					value_static.hide
@@ -257,6 +265,7 @@ feature -- Element change
 			set_granularity (1)
 			show_value (True)
 			set_maximum_right_bottom (True)
+			set_text ("")
 		end
 
 	add_move_action (a_command: COMMAND; arg: ANY) is
@@ -295,10 +304,10 @@ feature {NONE} -- Implementation
 			-- Respond to a resize of current window.
 		do
 			if is_horizontal then
-				scroll_bar.resize (width, (height  - text_height * 2).max (0))
+				scroll_bar.resize (width, scroll_height)
 				scroll_bar.move (0, text_height)
-				text_static.resize (width, text_height)
-				text_static.move (0, (height - text_height).max (0))
+				text_static.resize (width, (height - value_height - scroll_height).max (0))
+				text_static.move (0, value_height + scroll_height)
 			else
 				scroll_bar.resize (scroll_width, height)
 				scroll_bar.move (value_width, 0)
@@ -417,7 +426,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-	scroll_bar: WEL_SCROLL_BAR
+	scroll_bar: SCALE_SCROLL_BAR_WINDOWS
 			-- Implementation of the scroll bar
 
 	scroll_bar_id: INTEGER is 100
@@ -432,10 +441,16 @@ feature {NONE} -- Implementation
 	text_height: INTEGER is 20
 			-- Default value of statics
 
+	value_height: INTEGER is 20
+			-- Default value of statics
+
 	value_width: INTEGER is 40
 			-- default value of the value static
 
-	scroll_width: INTEGER is 40
+	scroll_width: INTEGER is 12
+			-- default width of a vertical scroll bar
+
+	scroll_height: INTEGER is 12
 			-- default width of a vertical scroll bar
 
 	wel_font: WEL_FONT

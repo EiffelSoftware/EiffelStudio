@@ -133,11 +133,10 @@ feature -- Access
 			--|---------------------------------------------------------------
 			--| FIXME ARNAUD
 			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOALATION
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
 			--| with Compiler 4.6.008. To remove the hack, simply remove
 			--| this feature and replace "parent as wel_window_parent" with
 			--| "parent as wel_parent" in the inheritance clause of this class
-			--| for WEL_CONTROL_WINDOW.
 			--|---------------------------------------------------------------
 		do
 			Result := wel_window_parent
@@ -542,6 +541,10 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/02/22 18:21:01  pichery
+--| added 4 times the same small hack with `wel_parent' in order to
+--| avoid a Segmentation Violation with EiffelBench 4.6.008
+--|
 --| Revision 1.31  2000/02/22 01:56:15  pichery
 --| added the possibility to draw on the drawing area outside onPaint events.
 --|

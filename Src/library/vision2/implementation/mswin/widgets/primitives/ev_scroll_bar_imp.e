@@ -23,7 +23,7 @@ inherit
 
 	WEL_SCROLL_BAR
 		rename
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -71,6 +71,19 @@ feature {EV_SCROLL_BAR_IMP} -- Access
 		do
 			Result := 15
 			--| FIXME To be implemented as suggested by Arnaud.
+		end
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
 		end
 
 feature {NONE} -- Implementation
@@ -154,6 +167,10 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/22 18:21:01  pichery
+--| added 4 times the same small hack with `wel_parent' in order to
+--| avoid a Segmentation Violation with EiffelBench 4.6.008
+--|
 --| Revision 1.5  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.

@@ -52,7 +52,7 @@ inherit
 
 	WEL_FRAME_WINDOW
 		rename
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -125,6 +125,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOALATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	client_height: INTEGER is
 			-- Height of the client area of container
@@ -869,6 +882,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/22 18:21:01  pichery
+--| added 4 times the same small hack with `wel_parent' in order to
+--| avoid a Segmentation Violation with EiffelBench 4.6.008
+--|
 --| Revision 1.21  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

@@ -53,6 +53,7 @@ feature -- Method body definition
 		require
 			not_closed: not is_closed
 			last_one_has_been_emitted: is_previous_body_written
+			is_method_token: token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
 		do
 			Result := internal_method_body
 			if Result = Void then

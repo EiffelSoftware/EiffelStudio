@@ -48,8 +48,10 @@ JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
 SHAREDEIFLIB = $prefix$eiflib$sharedsuffix
 SHAREDWKEIFLIB = $prefix$wkeiflib$sharedsuffix
 LDSHAREDFLAGS = $ldsharedflags
+SHAREDLINK= $sharedlink
 L = $manext
 LIBS = $libs
+MTLIBS = $mtlibs
 LINT = lint
 LN = $ln 
 MANSRC = $installmansrc
@@ -507,7 +509,7 @@ local_realclean::
 
 libmtwkbench.so: $(MT_WOBJ)
 	$(RM) $@
-	$(CC) $(LDSHAREDFLAGS) -o $@ $(MT_WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_WOBJ)
 
 all:: libmtfinalized.so 
 
@@ -516,7 +518,7 @@ local_realclean::
 
 libmtfinalized.so: $(MT_LOBJ)
 	$(RM) $@
-	$(CC) $(LDSHAREDFLAGS) -o $@ $(MT_LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_LOBJ)
 	
 all:: libmtfinalized.a
 
@@ -546,7 +548,7 @@ local_realclean::
 
 libwkbench.so: $(WOBJ)
 	$(RM) $@
-	$(CC) $(LDSHAREDFLAGS) -o $@ $(WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(WOBJ)
 
 all:: libfinalized.so 
 
@@ -555,7 +557,7 @@ local_realclean::
 
 libfinalized.so: $(LOBJ)
 	$(RM) $@
-	$(CC) $(LDSHAREDFLAGS) -o $@ $(LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(LOBJ)
 	
 all:: libfinalized.a
 

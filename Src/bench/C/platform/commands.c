@@ -24,6 +24,7 @@
 #ifdef EIF_WINDOWS
 #define WIN32
 #include <windows.h>
+#include "..\extra\win32\ipc\shared\stream.h"
 #endif
 
 #ifdef EIF_OS2
@@ -67,7 +68,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 
 	char *cmd, *current_dir, *eiffel_dir;
 
-	current_dir = getcwd(NULL, PATH_MAX);
+	current_dir = (char *) getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
 	eiffel_dir = (char *) eif_getenv("EIFFEL3");
@@ -417,3 +418,44 @@ EIF_INTEGER a_date;
 	free (date_string);
 	return (EIF_REFERENCE) result;
 }
+
+#ifdef EIF_WIN32
+
+/* C routines for the communications of bench */
+
+extern STREAM *sp;
+
+typedef void (* EVENT_CALLBACK)(EIF_OBJ);
+EVENT_CALLBACK event_callback;
+EIF_OBJ event_object;
+
+VOID CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+
+void win_ioh_make_client(a, o)
+EIF_POINTER a;
+EIF_OBJ     o;
+{
+	FILE *a_file;
+	a_file = fopen ("comm.log", "wb");
+	fwrite ("IO created\n", 1, strlen ("IO created\n"), a_file);
+	fclose (a_file);
+
+	event_callback = (EVENT_CALLBACK) a;
+	event_object = eif_adopt (o);
+	SetTimer (NULL, 0, 100, (TIMERPROC) ioh_timer);
+}
+
+VOID CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+	FILE *a_file;
+	a_file = fopen ("comm.log", "wb");
+	fwrite ("Timer callback\n", 1, strlen ("Timer callback\n"), a_file);
+	fclose (a_file);
+
+	/* KillTimer */
+	if (WaitForSingleObject (readev(sp), 0) == WAIT_OBJECT_0)
+		(event_callback)(eif_access(event_object));
+	/* SetTimer */
+}
+
+#endif

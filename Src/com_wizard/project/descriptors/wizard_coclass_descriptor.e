@@ -40,6 +40,10 @@ feature -- Access
 	interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Coclass interfaces descriptors
 
+	source_interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
+			-- Interfaces to call back on client implementations,
+			-- not empty implies that coclass supports IConnectionPointConteiner.
+
 	lcid: INTEGER
 			-- Locale of member names and doc strings.
 
@@ -69,6 +73,17 @@ feature -- Access
 			-- List of feature Eiffel names.
 
 feature -- Element Change
+
+	set_source_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+			-- Set `source_interface_descriptors' with `some_descriptors'.
+		require
+			valid_descriptors: some_descriptors /= Void
+		do
+			source_interface_descriptors := some_descriptors
+		ensure
+			valid_descriptors: source_interface_descriptors /= Void and 
+				source_interface_descriptors = some_descriptors
+		end
 
 	set_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
 			-- Set `interface_descriptors' with `some_descriptors'.

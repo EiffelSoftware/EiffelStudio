@@ -101,17 +101,21 @@ feature -- Element change
 	extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
-			--| FIXME This means: item = old item or after = after or before = before.
-			--| and NOT: index = index!!!!!
 		local
 			w: EV_WIDGET_IMP
 			ww: WEL_WINDOW
+			was_after: BOOLEAN
 		do
 			w ?= v.implementation
 			check
 				new_item_implementation_not_void: w /= Void
 			end
+			was_after := ev_children.after
 			ev_children.extend (w)
+			if was_after then
+				--| This is to work around a difference in behaviour of ARRAYED_LIST.
+				ev_children.go_i_th (ev_children.count + 1)
+			end
 			ww ?= Current
 			w.wel_set_parent (ww)
 			w.set_top_level_window_imp (top_level_window_imp)
@@ -122,19 +126,20 @@ feature -- Element change
 	replace (v: like item) is
 			-- Replace current item by `v'.
 		local
-			w: EV_WIDGET_IMP
+			ww: WEL_WINDOW
+			child_imp: EV_WIDGET_IMP
+			a_parent_imp: EV_CONTAINER_IMP
 		do
 			remove
-			if ev_children.count < index then
-				extend (v)
-			elseif ev_children.isfirst then
-				put_front (v)
-				move (-1)
-			else
-				back
-				put_right (v)
-				move (1)	
-			end
+			child_imp ?= v.implementation
+			ev_children.put_left (child_imp)
+			ev_children.move (-1)
+
+			ww ?= Current
+			child_imp.wel_set_parent (ww)
+			child_imp.set_top_level_window_imp (top_level_window_imp)
+			notify_change (2 + 1)
+			new_item_actions.call ([item])
 		end
 
 	put_front (v: like item) is

@@ -42,7 +42,7 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 			litem: EV_TREE_ITEM
 		do
 			from
-				list := children
+				list := ev_children
 				list.start
 			until
 				list.after or Result/= Void

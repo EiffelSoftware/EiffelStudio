@@ -55,6 +55,10 @@ feature {NONE}
 
 	worked_on: STRING is
 		do
-		end; -- worked_on
+			!!Result.make (0)
+			if element /= Void then
+					Result.append (element.label)
+			end
+		end
 
 end

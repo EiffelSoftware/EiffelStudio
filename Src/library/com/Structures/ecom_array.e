@@ -33,9 +33,15 @@ inherit
 		end
 
 create
-	make, make_from_array
+	make, make_from_array, make_empty
 
 feature {NONE} -- Initialization
+
+	make_empty is
+			-- Create empty array.
+		do
+			make (1, <<1>>, <<0>>)
+		end
 
 	make (a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER]) is
 			-- Create `a_dimensional_count' dimensional array

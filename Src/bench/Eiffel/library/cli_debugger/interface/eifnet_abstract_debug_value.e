@@ -82,6 +82,17 @@ feature {NONE} -- Init
 			end
 		end
 		
+feature -- Special Dotnet status
+
+	is_static: BOOLEAN
+			-- Is a static value ?
+			
+	set_static (v: like is_static) is
+			-- Set `is_static' as `v'
+		do
+			is_static := v
+		end		
+		
 feature {NONE} -- Special childrens
 
 	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
@@ -105,10 +116,11 @@ feature {NONE} -- Special childrens
 			
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
-			l_att_debug_value: ABSTRACT_DEBUG_VALUE
+			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
 			l_att_name: STRING
 			l_error_message: STRING
+			l_is_static: BOOLEAN
 		do
 			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.interface_debug_object_value			
@@ -176,17 +188,20 @@ feature {NONE} -- Special childrens
 							l_error_message := Void
 							l_att_token := l_tokens_cursor.item
 							l_att_name := l_md_import.get_field_props (l_att_token)
-							
 							if l_att_name /= Void and then not l_md_import.last_field_is_literal then
 									--| If the field is not a constant at compiled time
 									--| then available only throught source code or
 									--| Meta Data
-								if l_md_import.last_field_is_static and l_icd_frame /= Void then
+								
+								l_is_static := l_md_import.last_field_is_static
+								if l_is_static and l_icd_frame /= Void then
 									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
 									if (l_icd_class.last_call_success & 0x0000FFFF) = feature {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
 										l_error_message := "Static not yet initialized"
 									end
-									l_att_name.prepend ("{S} ")
+									debug ("DBG_EXTRA_DISPLAY")
+										l_att_name.prepend ("{S} ")
+									end
 								end
 								if l_att_icd_debug_value = Void and l_error_message = Void then
 									l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
@@ -194,6 +209,7 @@ feature {NONE} -- Special childrens
 								if l_att_icd_debug_value /= Void then
 									l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
 									if l_att_debug_value /= Void then
+										l_att_debug_value.set_static (l_is_static)
 										l_att_debug_value.set_name (l_att_name)
 										Result.put_last (l_att_debug_value)
 									end
@@ -202,6 +218,18 @@ feature {NONE} -- Special childrens
 									if l_error_message /= Void then
 										l_error_debug_value.set_message (l_error_message)
 									end
+									Result.put_last (l_error_debug_value)
+								end
+							end
+							debug ("DBG_EXTRA_DISPLAY")
+								if l_att_name /= Void and then l_md_import.last_field_is_literal then
+									if l_md_import.last_field_is_static then
+										l_att_name.prepend ("{S C} ")
+									else
+										l_att_name.prepend ("{C} ")
+									end
+									create l_error_debug_value.make_with_name (l_att_name)
+									l_error_debug_value.set_message ("Const value are not displayed")
 									Result.put_last (l_error_debug_value)
 								end
 							end
@@ -215,7 +243,6 @@ feature {NONE} -- Special childrens
 feature -- Properties
 
 	icd_frame: ICOR_DEBUG_FRAME
-
 
 	icd_referenced_value: ICOR_DEBUG_VALUE
 			-- Original ICorDebugValue from Debugger

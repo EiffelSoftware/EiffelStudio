@@ -41,7 +41,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
 			-- Process class name text `t'.
 		do
-			put_string (text.image)
+			put_cluster (text.cluster_i, text.image)
 		end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is

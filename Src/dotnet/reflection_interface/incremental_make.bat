@@ -48,7 +48,7 @@ cd ace_file
 if not exist ISE.Reflection.EiffelComponents.epr goto generate_components
 if not exist EIFGEN goto generate_components
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.EiffelComponents.dll goto update_path_and_generate_components
 gacutil -u ISE.Reflection.EiffelComponents
 gacutil -i ISE.Reflection.EiffelComponents.dll
@@ -65,7 +65,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelComponents.dll
 copy .\ISE.Reflection.EiffelComponents.dll ..\..\..\..\bin
 cd..
@@ -97,7 +97,7 @@ cd ace_file
 if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.epr goto generate_notifier
 if not exist EIFGEN goto generate_notifier
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.dll goto update_path_and_generate_notifier
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
@@ -114,7 +114,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\..\..\bin
 cd ..
@@ -146,7 +146,7 @@ cd ace_file
 if not exist ISE.Reflection.Support.epr goto generate_support
 if not exist EIFGEN goto generate_support
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.Support.dll goto update_path_and_generate_support
 gacutil -u ISE.Reflection.Support
 gacutil -i ISE.Reflection.Support.dll
@@ -163,7 +163,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.Support.dll
 copy .\ISE.Reflection.Support.dll ..\..\..\..\bin
 cd ..
@@ -194,7 +194,7 @@ cd ace_file
 if not exist ISE.Reflection.EiffelAssemblyCacheHandler.epr goto generate_cache_handler
 if not exist EIFGEN goto generate_cache_handler
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.EiffelAssemblyCacheHandler.dll goto update_path_and_generate_cache_handler
 gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
@@ -211,7 +211,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\..\..\bin
 cd ..
@@ -243,7 +243,7 @@ cd ace_file
 if not exist ISE.Reflection.CodeGenerator.epr goto generate_code_generator
 if not exist EIFGEN goto generate_code_generator
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.CodeGenerator.dll goto update_path_and_generate_code_generator
 gacutil -u ISE.Reflection.CodeGenerator
 gacutil -i ISE.Reflection.CodeGenerator.dll
@@ -260,7 +260,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.CodeGenerator.dll
 copy .\ISE.Reflection.CodeGenerator.dll ..\..\..\..\bin
 cd ..
@@ -291,7 +291,7 @@ cd ace_file
 if not exist ISE.Reflection.ReflectionInterface.epr goto generate_reflection_interface
 if not exist EIFGEN goto generate_reflection_interface
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.Reflection.ReflectionInterface.dll goto update_path_and_generate_reflection_interface
 gacutil -u ISE.Reflection.ReflectionInterface
 gacutil -i ISE.Reflection.ReflectionInterface.dll
@@ -308,7 +308,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.ReflectionInterface.dll
 copy .\ISE.Reflection.ReflectionInterface.dll ..\..\..\..\bin
 cd ..
@@ -447,7 +447,7 @@ cd ace_file
 if not exist ISE.AssemblyManager.epr goto generate_assembly_manager
 if not exist EIFGEN goto generate_assembly_manager
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist ISE.AssemblyManager.dll goto update_path_and_generate_assembly_manager
 gacutil -u ISE.AssemblyManager
 gacutil -i ISE.AssemblyManager.exe
@@ -464,7 +464,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.AssemblyManager.exe
 copy ISE.AssemblyManager.exe ..\..\..\..\bin
 

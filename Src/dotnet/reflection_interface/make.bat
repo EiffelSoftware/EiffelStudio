@@ -27,7 +27,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelComponents.dll
 copy .\ISE.Reflection.EiffelComponents.dll ..\..\..\..\bin
 cd..
@@ -46,7 +46,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\..\..\bin
 cd ..
@@ -65,7 +65,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.Support.dll
 copy .\ISE.Reflection.Support.dll ..\..\..\..\bin
 cd ..
@@ -84,7 +84,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\..\..\bin
 cd ..
@@ -103,7 +103,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.CodeGenerator.dll
 copy .\ISE.Reflection.CodeGenerator.dll ..\..\..\..\bin
 cd ..
@@ -122,7 +122,7 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.Reflection.ReflectionInterface.dll
 copy .\ISE.Reflection.ReflectionInterface.dll ..\..\..\..\bin
 cd ..
@@ -207,6 +207,6 @@ del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
-cd W_code
+cd F_code
 gacutil -i ISE.AssemblyManager.exe
 copy ISE.AssemblyManager.exe ..\..\..\..\bin

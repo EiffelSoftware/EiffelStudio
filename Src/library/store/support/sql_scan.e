@@ -92,14 +92,14 @@ feature -- Basic operations
 					end
 				elseif is_double (obj) then
 					r_double ?= obj
-					if r_int.item = db_default_null_value.value then
+					if r_double.item = db_default_null_value.value then
 						str.append (Null_string)
 					else
 						str.append (r_double.out)
 					end
 				elseif is_real (obj) then
 					r_real ?= obj
-					if r_int.item = db_default_null_value.value.truncated_to_real then
+					if r_real.item = db_default_null_value.value.truncated_to_real then
 						str.append (Null_string)
 					else
 						str.append (r_real.out)

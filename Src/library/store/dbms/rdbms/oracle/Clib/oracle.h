@@ -47,8 +47,10 @@
 #define INT_TYPE					3
 #define FLOAT_TYPE					4
 #define STRING_TYPE					5
+#define LONG_TYPE					8
 #define ROWID_TYPE					11
 #define DATE_TYPE					12
+#define CHAR_TYPE					96
 
 /*  ORACLE error codes used in demonstration programs */
 #define VAR_NOT_IN_LIST       1007

@@ -13,6 +13,13 @@ creation
 
 	make 
 
+feature -- Initialization
+
+	make (code: INTEGER) is
+		do
+			request_code := code
+		end;
+
 feature -- Update
 
 	send_byte_code: BOOLEAN is
@@ -175,11 +182,6 @@ feature -- Update
 				bpts.forth
 			end;
 			bpts.wipe_out
-		end;
-
-	make (code: INTEGER) is
-		do
-			request_code := code
 		end;
 
 	send is

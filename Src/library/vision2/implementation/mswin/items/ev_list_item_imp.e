@@ -17,9 +17,9 @@ inherit
 	EV_ITEM_IMP
 		export {EV_LIST_IMP}
 			id,
-			set_id,
-			command,
-			arguments
+			set_id
+		redefine
+			parent_imp
 		end
 
 creation
@@ -30,28 +30,22 @@ feature {NONE} -- Initialization
 
 	make (par: EV_LIST) is
 			-- Add and create an item with an empty label.
-		local
-			par_imp: EV_LIST_IMP
 		do
-			par_imp ?= par.implementation
+			parent_imp ?= par.implementation
 			check
-				parent_not_void: par_imp /= Void
+				parent_not_void: parent_imp /= Void
 			end
-			list := par_imp
-			par_imp.set_name ("")
+			parent_imp.set_name ("")
 		end
 
 	make_with_text (par: EV_LIST; txt: STRING) is
 			-- Add and create an item with `txt' as label.
-		local
-			par_imp: EV_LIST_IMP
 		do
-			par_imp ?= par.implementation
+			parent_imp ?= par.implementation
 			check
-				parent_not_void: par_imp /= Void
+				parent_not_void: parent_imp /= Void
 			end
-			list := par_imp
-			par_imp.set_name (txt)
+			parent_imp.set_name (txt)
 		end
 
 feature -- Status report
@@ -59,7 +53,21 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := list.wel_window.is_selected (id)
+			Result := parent_imp.is_selected (id)
+		end
+
+	text: STRING is
+			-- Current label of the item
+		do
+			Result := parent_imp.i_th_text (id)
+		end
+
+	
+	destroyed: BOOLEAN is
+			-- Is current object destroyed ?
+			-- Yes if the item doesn't exist in the parent_imp.
+		do
+			Result := not parent_imp.ev_children.has (Current)
 		end
 
 feature -- Status setting
@@ -67,13 +75,13 @@ feature -- Status setting
 	destroy is
 			-- Destroy the actual item.
 		do
-			list.remove_item (id)
+			parent_imp.remove_item (id)
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
-			list.wel_window.select_item (id)
+			parent_imp.select_item (id)
 		end
 
 	toggle is
@@ -83,60 +91,34 @@ feature -- Status setting
 			set_selected (not is_selected)
 		end
 
-feature -- Status report -- Implementation
-
-	text: STRING is
-			-- Current label of the menu item
+	set_text (str: STRING) is
+			-- Set `text' to `str'.
 		do
-			Result := list.wel_window.i_th_text (id)
-		end
-
-	destroyed: BOOLEAN is
-			-- Is current object destroyed ?
-			-- Yes if the item doesn't exist in the list.
-		do
-			Result := not list.children.has (Current)
+			parent_imp.delete_string (id)
+			parent_imp.insert_string_at (str, id)
 		end
 
 feature -- Event : command association
 
-	add_double_click_command (a_command: EV_COMMAND; 
-			       arg: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
+	add_double_click_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the parent_imp of commands to be
 			-- executed when the item is double clicked
 		do
-			dc_command := a_command
-			dc_arguments := arg
-	end	
-
-feature {EV_LIST_IMP} -- Access for implementation
-
-	dc_command: EV_COMMAND
-		-- Command that must be called when the item is selected
-		-- by a double click of the left button of the mouse.
-
-	dc_arguments: EV_ARGUMENTS
-		-- Argument that goes with the `dc_command'
+			add_command (Cmd_item_dblclk, a_command, arguments)
+		end	
 
 feature {NONE} -- Access for implementation
 	
-	list: EV_LIST_IMP
+	parent_imp: EV_LIST_IMP
 		-- list that contains the current item.
 	
-feature -- Element change -- Implementation
+--feature -- Element change -- Implementation
 
-	set_text (str: STRING) is
-			-- Set `text' to `str'.
-		do
-			list.wel_window.delete_string (id)
-			list.wel_window.insert_string_at (str, id)
-		end
-
-	set_parent (new_list: EV_LIST_IMP) is
-			-- Set `list' to `new_list'.
-		do
-			list := new_list
-		end
+--	set_parent (new_list: EV_LIST_IMP) is
+--			-- Set `list' to `new_list'.
+--		do
+--			list := new_list
+--		end
 
 end -- class EV_LIST_ITEM_IMP
 

@@ -11,9 +11,6 @@ inherit
 	EV_KEY_EVENT_DATA_I
 
 	EV_EVENT_DATA_IMP
-		undefine
-			print_contents
-		end	
 
 end -- class EV_KEY_EVENT_DATA_IMP
 

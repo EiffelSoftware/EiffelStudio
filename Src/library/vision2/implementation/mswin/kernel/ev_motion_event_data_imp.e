@@ -11,9 +11,32 @@ inherit
 	EV_MOTION_EVENT_DATA_I
 
 	EV_EVENT_DATA_IMP
-		undefine
-			print_contents
-		end	
+
+feature -- Access	
+
+	absolute_x: INTEGER is
+			-- absolute x of the mouse pointer
+		local
+			ww: WEL_WINDOW
+			pt: WEL_POINT
+		do
+			ww ?= widget.implementation
+			!! pt.make (x, y)
+			pt.client_to_screen (ww)
+			Result := pt.x
+		end
+
+	absolute_y: INTEGER is
+			-- absolute y of the mouse pointer
+		local
+			ww: WEL_WINDOW
+			pt: WEL_POINT
+		do
+			ww ?= widget.implementation
+			!! pt.make (x, y)
+			pt.client_to_screen (ww)
+			Result := pt.y
+		end
 
 end -- class EV_MOTION_EVENT_DATA_IMP
 

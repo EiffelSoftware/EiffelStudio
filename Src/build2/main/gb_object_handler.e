@@ -85,6 +85,7 @@ feature -- Access
 			-- Is `child_object' a child (recursively) of `parent_object'?
 		require
 			parent_not_void: parent_object /= Void
+			child_object_not_void: child_object /= Void
 		do
 			object_contained_in_object_result := False
 			recursive_do_all (parent_object, agent is_child (child_object, ?))
@@ -1199,8 +1200,8 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implement
 				editor := editors.item
 					-- Update the editor if `Current' or a child of `Current'
 					-- is contained.
-				if object_contained_in_object (deleted_object, editor.object) or
-					deleted_object = editor.object then
+				if editor.object /= Void and (object_contained_in_object (deleted_object, editor.object) or
+					deleted_object = editor.object) then
 						-- If we are the docked object editor, then just empty it.
 						-- If not, we destroy the editor and the containing window.
 					if editor = docked_object_editor then

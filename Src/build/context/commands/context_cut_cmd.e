@@ -54,7 +54,9 @@ feature
 		do
 			context := argument;
 			parent ?= context.parent;
-			if (context.parent = Void) or else not context.parent.is_in_a_group then
+			if (context.parent = Void) or else 
+				not context.is_in_a_group 
+			then
 					-- a group can be destroyed but not its content
 				!!context_list.make;
 				!!set_parent_contexts.make;

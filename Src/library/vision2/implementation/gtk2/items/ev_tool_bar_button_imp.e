@@ -51,12 +51,6 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is do Result := False end
-	
-	event_widget: POINTER is
-			-- GtkWidget to which signals are connected
-		do
-			Result := visual_widget
-		end
 
 	make (an_interface: like interface) is
 			-- Create the tool bar button.
@@ -68,17 +62,25 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialization of button box and events.
 		do
-			Precursor {EV_ITEM_IMP}
-			initialize_events
-			connect_button_press_switch
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
+			
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
+			Precursor {EV_ITEM_IMP}
+			initialize_events
+			connect_button_press_switch
+
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 			align_text_center
 			create tooltip.make (0)
 			is_initialized := True
+		end
+
+	event_widget: POINTER is
+			-- Pointer to the Gtk widget that handles the events
+		do
+			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (pixmap_box)
 		end
 
 feature -- Access
@@ -139,7 +141,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (event_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

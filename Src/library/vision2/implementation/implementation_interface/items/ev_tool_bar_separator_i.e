@@ -21,7 +21,7 @@ feature -- Access
 			-- The parent of the Current widget
 			-- Can be void.
 		do
-			Result ?= {EV_SEPARATOR_ITEM_I} Precursor
+			Result ?= {EV_ITEM_I} Precursor
 		end
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
@@ -47,6 +47,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/10 20:00:58  brendel
+--| Fixed precursor construct.
+--|
 --| Revision 1.10  2000/04/10 18:30:25  brendel
 --| EV_TOOL_BAR_ITEM_I -> EV_ITEM_I since non-existent.
 --|

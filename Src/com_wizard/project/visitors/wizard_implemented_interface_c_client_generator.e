@@ -81,6 +81,10 @@ feature -- Basic operations
 				data_member.set_result_type (tmp_string)
 				data_member.set_comment (Excepinfo_variable_comment)
 				cpp_class_writer.add_member (data_member, Private)
+				cpp_class_writer.add_function (ccom_last_error_code_function, Public)
+				cpp_class_writer.add_function (ccom_last_source_of_exception_function, Public)
+				cpp_class_writer.add_function (ccom_last_error_description_function, Public)
+				cpp_class_writer.add_function (ccom_last_error_help_file_function, Public)
 
 			end
 

@@ -515,7 +515,7 @@ feature {NONE}  -- Implementation
 
 	ei_dtype (obj: POINTER): INTEGER is
 			-- Dynamic type of `obj'.
-		external "C | %"eif_gen_conf.h%""
+		external "C | %"eif_internal.h%""
 		end
 
 	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is

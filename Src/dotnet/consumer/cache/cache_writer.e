@@ -12,6 +12,9 @@ inherit
 	CACHE_ERRORS
 	
 	CACHE_SETTINGS
+		export
+			{NONE} all
+		end
 	
 	SHARED_CACHE_MUTEX_GUARD
 		export 
@@ -73,7 +76,7 @@ feature -- Basic Operations
 			l_dir: DIRECTORY
 			l_names: NATIVE_ARRAY [ASSEMBLY_NAME]
 			l_info: CACHE_INFO
-			l_consumed_path: STRING
+			l_assembly_path: STRING
 			l_assembly_info_updated: BOOLEAN
 			l_lower_path: like a_path
 			l_retried: BOOLEAN
@@ -81,68 +84,71 @@ feature -- Basic Operations
 		do
 			guard.lock
 			if not l_retried then
-				l_lower_path := a_path.as_lower
-				l_assembly := load_from_gac_or_path (l_lower_path)
-				
-					-- For assemblies that are in the GAC but are consumed
-					-- from a local path, when the version number changes that assembly
-					-- needs to be updated, regardless of the GAC path. Using ASSEMBLY.location
-					-- when an instance of ASSEMBLY is created my using feature{ASSEMLBY}.load
-					-- will alway return a different path if the version number changes. Whereas
-					-- feature{ASSEMLBY}.load_from/.location will always return the same path.
-				if cache_reader.is_assembly_in_cache (l_lower_path, False) then
-					l_consumed_path := l_lower_path
+				l_ca := cache_reader.consumed_assembly_from_path (a_path)
+				if l_ca = Void then
+					l_lower_path := a_path.as_lower
 				else
-					if cache_reader.is_assembly_in_cache (l_assembly.location, False) then
-						l_consumed_path := l_assembly.location
-					else
-						l_consumed_path := l_lower_path	
-					end
+					l_lower_path := l_ca.location
 				end
 				
+				l_assembly := load_from_gac_or_path (l_lower_path)
+			
+				create l_consumer.make (Current)
+				if l_assembly /= Void then
+					l_assembly_path := l_assembly.location.to_lower
+					
+					if l_ca = Void then
+							-- This case presents itself either when the assembly has never been consumed,
+							-- or when an assembly has been consumed as a referenced assembly, which means
+							-- it, at present, only has a GAC path.
+						l_ca := cache_reader.consumed_assembly_from_path (l_assembly_path)
+					end
+					
+					if l_ca /= Void and then l_ca.is_consumed then
+							-- Examine existing data and modify
+						if l_assembly.global_assembly_cache then	
+							if not l_ca.gac_path.is_equal (l_assembly_path) then
+								l_ca.set_gac_path (l_assembly_path)
+								l_ca.set_is_in_gac (True)
+								l_assembly_info_updated := True
+							end
+							if not l_ca.gac_path.is_equal (l_lower_path) and then not l_ca.location.is_equal (l_lower_path) then
+								l_ca.set_location (l_lower_path)
+								l_ca.set_is_in_gac (True)
+								l_assembly_info_updated := True
+							end
+						elseif not l_ca.location.is_equal (l_assembly_path) then
+							l_ca.set_location (l_assembly_path)
+							l_ca.set_is_in_gac (False)
+							l_assembly_info_updated := True
+								-- Do not reset GAC path, because it really does not affect anything.
+								-- Plus it should be preserved for future look ups, just because a GAC assembly in no longer
+								-- present doesn't mean that we cannot still look at it's consumed metadata
+						end
+						
+						if l_assembly_info_updated then
+								-- The assembly information requires updating
+							l_info := cache_reader.info
+							l_info.update_assembly (l_ca)
+							update_info (l_info)
+							update_client_assembly_mappings (l_ca)	
+						end
+						l_info := Void
+					end
+				end
+					
 					-- only consume `assembly' if assembly has not already been consumed,
 					-- corresponding assembly has been modified or if consumer tool has been 
 					-- modified.
-				if is_assembly_stale (l_consumed_path) then
-						-- update stale assembly
-					update_assembly (l_consumed_path)
+				if l_ca /= Void and then l_ca.is_consumed and then is_assembly_stale (l_lower_path) then
+						-- unconsume stale assembly
+					unconsume_assembly (l_lower_path)
 				end
-			
-				create l_consumer.make (Current)
+					
+					-- Reset update (for optimizations)
+				l_assembly_info_updated := False
 				
-				l_ca := consumed_assembly_from_path (l_consumed_path)
-				if l_ca /= Void then
-						-- The assembly information may require updating, so update what needs to be.
-					l_info := cache_reader.info
-					
-					if l_assembly.global_assembly_cache then
-						if not l_ca.gac_path.is_equal (l_assembly.location) then
-							l_ca.set_gac_path (l_assembly.location)
-							l_ca.set_is_in_gac (True)
-							l_assembly_info_updated := True
-						end
-						if not l_ca.gac_path.is_equal (l_lower_path) and then not l_ca.location.is_equal (l_lower_path) then
-							l_ca.set_location (l_lower_path)
-							l_ca.set_is_in_gac (True)
-							l_assembly_info_updated := True
-						end
-					end
-					if not l_assembly.global_assembly_cache and then not l_ca.location.is_equal (l_assembly.location) then
-						l_ca.set_location (l_assembly.location)
-						l_ca.set_is_in_gac (False)
-						l_assembly_info_updated := True
-							-- Do not reset GAC path, because it really does not affect anything.
-							-- Plus it should be preserved for future look ups, just because a GAC assembly in no longer
-							-- present doesn't mean that we cannot still look at it's consumed metadata
-					end
-					
-					if l_assembly_info_updated then
-						l_info.update_assembly (l_ca)
-						update_info (l_info)
-						update_client_assembly_mappings (l_ca)	
-					end
-				end
-				if cache_reader.is_assembly_in_cache (l_assembly.location, True) then
+				if l_ca /= Void and then l_ca.is_consumed then
 					if status_printer /= Void then
 						create l_string_tuple
 						l_string_tuple.put ("Up-to-date check: '" +	a_path +
@@ -150,6 +156,9 @@ feature -- Basic Operations
 						status_printer.call (l_string_tuple)
 					end
 				else
+					if l_ca = Void then
+						l_ca := consumed_assembly_from_path (l_lower_path)
+					end
 					l_assembly_folder := cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
 					create l_dir.make (l_assembly_folder)
 					if not l_dir.exists then
@@ -171,6 +180,7 @@ feature -- Basic Operations
 					if not l_consumer.successful then
 						set_error (Consume_error, a_path)
 					else
+						l_assembly_info_updated := True
 						l_info := cache_reader.info
 						l_ca.set_is_consumed (True)
 		 				l_info.update_assembly (l_ca)
@@ -186,19 +196,23 @@ feature -- Basic Operations
 						i = l_names.count
 					loop
 						l_name := l_names.item (i)
-						l_assembly := feature {ASSEMBLY}.load (l_name)
-						if not cache_reader.is_assembly_in_cache (l_assembly.location, True) or is_assembly_stale (l_assembly.location) then
+						l_assembly := load_assembly_by_name (l_name)
+						if l_assembly /= Void and then not cache_reader.is_assembly_in_cache (l_assembly.location, True) or else is_assembly_stale (l_assembly.location) then
 							add_assembly (l_assembly.location)
+							l_assembly_info_updated := True
 						end
 						i := i + 1
 					end
-					update_assembly_mappings (l_ca)
+					if l_assembly_info_updated then
+						update_assembly_mappings (l_ca)	
+					end
+					
 				end
 			else
 				if l_name /= Void then
 					set_error (Assembly_not_found_error, l_name.to_string)
 				elseif l_assembly /= Void then
-					set_error (Assembly_not_found_error, l_assembly.full_name)
+					set_error (Assembly_dependancies_not_found_error, l_assembly.full_name)
 				else
 					set_error (Assembly_not_found_error, a_path)
 				end
@@ -209,18 +223,24 @@ feature -- Basic Operations
 			retry
 		end
 
-	update_assembly (a_path: STRING) is
-			-- Updates assembly located at `a_path'
-			-- Removes assembly `a_path' but preserves it information in cache info.
+	unconsume_assembly (a_path: STRING) is
+			-- Unconsumes assembly at `a_path'. This means all consumed metadata in removed
+			-- and the consumed assembly entry is_consumed attribute is set to false.
+			-- Note: Does not update any assembly reference mappings. Call `update_client_assembly_mapppings' to
+			-- perform this.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
 			l_string_tuple: TUPLE [STRING]
+			l_dir: DIRECTORY
 			l_ca: CONSUMED_ASSEMBLY
 			l_info: CACHE_INFO
 			l_retried: BOOLEAN
 		do
+			check
+				assembly_exists: cache_reader.is_assembly_in_cache (a_path, True)
+			end
 			guard.lock
 			if not l_retried then
 				if status_printer /= Void then
@@ -229,12 +249,18 @@ feature -- Basic Operations
 						"' has been modified since last consumption.%N", 1)
 					status_printer.call (l_string_tuple)
 				end
-				l_ca := consumed_assembly_from_path (a_path)
-				l_info := cache_reader.info
-				remove_assembly_internal (a_path)
-				l_ca := create_consumed_assembly_from_path (l_ca.unique_id, l_ca.location)
-				l_info.update_assembly (l_ca)
-				update_info (l_info)
+				l_ca := cache_reader.consumed_assembly_from_path (a_path)
+				if l_ca /= Void then
+					l_info := cache_reader.info
+						-- Remove consumed metadata
+					create l_dir.make (cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
+					if l_dir.exists then
+						l_dir.recursive_delete
+					end
+					l_ca.set_is_consumed (False)
+					l_info.update_assembly (l_ca)
+					update_info (l_info)					
+				end
 			else
 				set_error (Update_error, a_path)
 			end
@@ -375,9 +401,8 @@ feature -- Basic Operations
 			l_info: CACHE_INFO
 		do
 			guard.lock
-			if cache_reader.is_assembly_in_cache (a_path, False) then
-				Result := cache_reader.consumed_assembly_from_path (a_path)
-			else
+			Result := cache_reader.consumed_assembly_from_path (a_path)
+			if Result = Void then
 				l_id := feature {GUID}.new_guid.to_string
 				l_id.to_upper
 				Result := create_consumed_assembly_from_path (l_id, a_path)
@@ -399,10 +424,15 @@ feature -- Basic Operations
 			serializer: EIFFEL_XML_SERIALIZER
 		do
 			guard.lock
-			l_absolute_xml_info_path := cache_reader.Absolute_info_path
-			create serializer
-			serializer.serialize (a_info, l_absolute_xml_info_path)
+			if a_info.is_dirty then
+				a_info.set_is_dirty (False)
+				l_absolute_xml_info_path := cache_reader.Absolute_info_path
+				create serializer
+				serializer.serialize (a_info, l_absolute_xml_info_path)
+			end
 			guard.unlock
+		ensure
+			not_info_is_dirty: not a_info.is_dirty
 		end
 
 feature {NONE} -- Implementation
@@ -421,8 +451,8 @@ feature {NONE} -- Implementation
 			l_so: SYSTEM_OBJECT
 			l_new_ca: CONSUMED_ASSEMBLY
 		do
-			if cache_reader.is_assembly_in_cache (a_path, True) then
-				l_ca := consumed_assembly_from_path (a_path)
+			l_ca := cache_reader.consumed_assembly_from_path (a_path)
+			if l_ca /= Void and then l_ca.is_consumed then
 				l_consume_path := cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
 
 				create l_dir_info.make (l_consume_path)
@@ -440,6 +470,8 @@ feature {NONE} -- Implementation
 					Result := feature {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 				end
 			end
+
+
 			debug ("assemblies_are_never_stale")
 				Result := False
 			end

@@ -29,6 +29,13 @@ feature -- Access
 
 	paragraph: PARAGRAPH
 
+	first_token: EDITOR_TOKEN
+		-- First token in the
+	
+	end_token: EDITOR_TOKEN
+		-- Last token of the line. It is ALWAYS
+		-- of type EDITOR_TOKEN_EOL
+
 feature -- Element change
 
 	set_width(a_width: INTEGER) is

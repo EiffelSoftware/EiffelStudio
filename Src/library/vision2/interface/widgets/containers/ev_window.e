@@ -315,8 +315,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	consistent_horizontal_bounds: maximum_width >= minimum_width 
-	consistent_vertical_bounds: maximum_height >= minimum_height
+	consistent_horizontal_bounds: is_usable implies maximum_width >= minimum_width 
+	consistent_vertical_bounds: is_usable implies maximum_height >= minimum_height
 
 	upper_bar_not_void: is_usable implies upper_bar /= Void
 	lower_bar_not_void: is_usable implies lower_bar /= Void

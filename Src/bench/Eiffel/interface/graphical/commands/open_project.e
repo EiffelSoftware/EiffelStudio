@@ -59,7 +59,9 @@ feature {NONE} -- Implementation
 		local
 			project_dir: PROJECT_DIRECTORY;
 			last_char: CHARACTER;
-			dir_name: STRING
+			dir_name: STRING;
+			expiration: INTEGER;
+			msg: STRING
 		do
 			if not project_tool.initialized then
 				if argument = project_tool then
@@ -67,13 +69,26 @@ feature {NONE} -- Implementation
 					last_name_chooser.hide_file_selection_list;
 					last_name_chooser.hide_file_selection_label;
 					last_name_chooser.set_title (l_Select_a_directory)
-					open_project (argument)
+					if not licence.is_unlimited then
+						expiration := licence.time_left
+						if expiration < 30 then
+							msg := "Your license will expire in ";
+							msg.append_integer (expiration);
+							msg.append (" days")
+						end
+					end;
+					if msg = Void then
+						open_project (argument)
+					else
+						warner (popup_parent).custom_call (Current,
+							msg, l_ok, Void, Void);
+					end
 				else
 					dir_name := clone (last_name_chooser.selected_file);
 					if dir_name.empty then
 						warner (popup_parent).custom_call (Current,
 							w_Directory_not_exist (dir_name), 
-							" OK ", Void, Void);
+							l_ok, Void, Void);
 					else
 						if dir_name.count > 1 then
 							last_char := dir_name.item (dir_name.count); 
@@ -190,7 +205,7 @@ feature -- Project Initialization
 			then
 				project_tool.set_initialized;
 				warner (popup_parent).custom_call (Current,
-						w_Read_only_project, " OK ", "Exit", Void)
+						w_Read_only_project, l_ok, "Exit", Void)
 			end;
 		end;
 

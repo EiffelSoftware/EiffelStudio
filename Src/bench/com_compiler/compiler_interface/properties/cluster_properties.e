@@ -137,10 +137,8 @@ feature -- Access
 	override: BOOLEAN is
 			-- Should this cluster classes take priority over other classes with same name.
 		do
-			if ace.is_valid then
-				if ace.override_cluster /= Void then
-					Result := name.is_equal (ace.override_cluster)
-				end
+			if ace.override_cluster /= Void then
+				Result := name.is_equal (ace.override_cluster)
 			end
 		end
 
@@ -453,22 +451,18 @@ feature -- Access
 			path: STRING
 			l_env_var: STRING
 		do
-			if ace.is_valid then
-				l_env_var := ace.ise_eiffel_envvar.as_lower
-				path := cluster_path.as_lower
-				if ace.library_path /= Void then
+			l_env_var := ace.ise_eiffel_envvar.as_lower
+			path := cluster_path.as_lower
+			if ace.library_path /= Void then
+				path.replace_substring_all (l_env_var, ace.ise_eiffel)
+				path.replace_substring_all ("/", "\")
+				Result := (path.substring_index (ace.library_path, 1) = 1)
+			else
+				if ace.library_dotnet_path /= Void then
 					path.replace_substring_all (l_env_var, ace.ise_eiffel)
 					path.replace_substring_all ("/", "\")
-					Result := (path.substring_index (ace.library_path, 1) = 1)
-				else
-					if ace.library_dotnet_path /= Void then
-						path.replace_substring_all (l_env_var, ace.ise_eiffel)
-						path.replace_substring_all ("/", "\")
-						Result := (path.substring_index (ace.library_dotnet_path, 1) = 1)
-					end
+					Result := (path.substring_index (ace.library_dotnet_path, 1) = 1)
 				end
-			else
-				Result := False
 			end
 		end
 		
@@ -593,10 +587,8 @@ feature -- Element change
 	set_override (return_value: BOOLEAN) is
 			-- Should this cluster classes take priority over other classes with same name.
 		do
-			if ace.is_valid then
-				if return_value then
-					ace.set_override_cluster (name)
-				end
+			if return_value then
+				ace.set_override_cluster (name)
 			end
 		end
 

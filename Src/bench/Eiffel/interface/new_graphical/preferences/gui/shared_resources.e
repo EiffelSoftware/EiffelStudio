@@ -142,6 +142,10 @@ feature -- Setting
 			r ?= resources.item (s)
 			if r /= Void then
 				r.set_actual_value (ni)
+			else
+				create r.make (s, ni)
+				resources.root_folder.resource_list.extend (r)
+				resources.put_resource (r)
 			end
 		end
 
@@ -152,6 +156,10 @@ feature -- Setting
 			r ?= resources.item (s)
 			if r /= Void then
 				r.set_actual_value (nb)
+			else
+				create r.make (s, nb)
+				resources.root_folder.resource_list.extend (r)
+				resources.put_resource (r)
 			end
 		end
 
@@ -162,6 +170,25 @@ feature -- Setting
 			r ?= resources.item (s)
 			if r /= Void then
 				r.set_value (ns)
+			else
+				create r.make (s, ns)
+				resources.root_folder.resource_list.extend (r)
+				resources.put_resource (r)
+			end
+		end
+
+	set_array (a_resource_name: STRING; a_value: ARRAY [STRING]) is
+			-- Set the value of `a_resource_name' to `a_value'.
+		local
+			resource_item: ARRAY_RESOURCE
+		do
+			resource_item ?= resources.item (a_resource_name)
+			if resource_item /= Void then
+				resource_item.set_actual_value (a_value)
+			else
+				create resource_item.make (a_resource_name, a_value)
+				resources.root_folder.resource_list.extend (resource_item)
+				resources.put_resource (resource_item)
 			end
 		end
 

@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 					if not not_first_time then
 						not_first_time := True
 					else
-						value.append (";%N")
+						value.append (";")
 					end;
 					value.append (actual_value.item (index))
 					index := index + 1

@@ -85,7 +85,7 @@ feature -- Implementation
 				create {STRING_RESOURCE} value.make (name, s)
 			elseif type = color_type then
 				create {COLOR_RESOURCE} value.make (name, s)
-			elseif type = integer_type and then s.is_integer then
+			elseif type = integer_type then
 				create {INTEGER_RESOURCE} value.make (name, key_value.dword_value)
 			elseif type = font_type then
 				create {FONT_RESOURCE} value.make (name, s)

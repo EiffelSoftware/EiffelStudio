@@ -21,9 +21,11 @@ feature -- Basic operations
 	terminate (a_result: INTEGER) is
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
+		local
+			l_result: INTEGER
 		do
 			result_id := a_result
-			cwin_destroy_window (item)
+			l_result := cwin_destroy_window (item)
 		end
 
 feature {NONE} -- Implementation

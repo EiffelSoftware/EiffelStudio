@@ -64,7 +64,7 @@ feature -- Update
 			-- Process system stone.
 		do
 			if text_window.changed then
-				showtext_command.execute (s);
+				showtext_frmt_holder.execute (s);
 			else
 				last_format.execute (s);
 				history.extend (s)

@@ -562,13 +562,12 @@ void exitprf(void)
 		subtract_time (execution_time, execution_time, init_date);
 #endif 
 
-/* NEED TO BE CHECKED BY GUILLAUME
-		if (gc_ran && !gc_running) {
-				/* Get time wasted by GC */
-/*			subtract_gc_time(&execution_time, last_gc_time);
-			gc_ran = 0;
-		}		
- */
+/* NEED TO BE CHECKED BY GUILLAUME */
+		/*if (gc_ran && !gc_running) {*/
+/*				 Get time wasted by GC */
+/*			subtract_gc_time(&execution_time, last_gc_time); */
+/*			gc_ran = 0;*/
+/*		}		*/
 
 		keys = class_table->h_keys;
 		f_values = (struct feat_table *) class_table->h_values;
@@ -941,7 +940,7 @@ void update_class_table(struct prof_info *item)
 			ht_force(f_t->htab, f_hcode, (char *) item);
 		} else {
 			register struct stchunk *current_chunk;
-			char **address;
+			char **address = NULL;
 			int found = 0;
 
 			p_i->number_of_calls += item->number_of_calls;

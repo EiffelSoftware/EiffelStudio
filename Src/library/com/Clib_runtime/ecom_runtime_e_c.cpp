@@ -226,7 +226,7 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_re
 
 IUnknown * ecom_runtime_ec::ccom_ec_unknown (EIF_REFERENCE a_ref)
 
-// Create IUnknown from Eiffel ECOM_GENERIC_INTERFACE
+// Create IUnknown from Eiffel ECOM_UNKNOWN_INTERFACE
 {
 	EIF_OBJECT an_interface;
 
@@ -243,7 +243,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_unknown (EIF_REFERENCE a_ref)
 
 IDispatch * ecom_runtime_ec::ccom_ec_dispatch (EIF_REFERENCE a_ref)
 
-// Create IDispatch from Eiffel ECOM_GENERIC_DISPINTERFACE
+// Create IDispatch from Eiffel ECOM_AUTOMATION_INTERFACE
 {
 	EIF_OBJECT an_interface;
 
@@ -1227,12 +1227,12 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
 
 	if (dimension > 1)
 	{
-		tid = eif_type_id ("ECOM_ARRAY[ECOM_GENERIC_DISPINTERFACE]");
+		tid = eif_type_id ("ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]");
 		f_item = eif_reference_function ("array_item", tid);
 	}
 	else
 	{
-		tid = eif_type_id ("ARRAY[ECOM_GENERIC_DISPINTERFACE]");
+		tid = eif_type_id ("ARRAY[ECOM_AUTOMATION_INTERFACE]");
 		f_item = eif_reference_function ("item", tid);
 	}
 	// Allocate memory
@@ -1278,12 +1278,12 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
 
 	if (dimension > 1)
 	{
-		tid = eif_type_id ("ECOM_ARRAY[ECOM_GENERIC_INTERFACE]");
+		tid = eif_type_id ("ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]");
 		f_item = eif_reference_function ("array_item", tid);
 	}
 	else
 	{
-		tid = eif_type_id ("ARRAY[ECOM_GENERIC_INTERFACE]");
+		tid = eif_type_id ("ARRAY[ECOM_UNKNOWN_INTERFACE]");
 		f_item = eif_reference_function ("item", tid);
 	}
 	// Allocate memory
@@ -1470,11 +1470,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -1494,22 +1492,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [CHARACTER]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect (eif_field(eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -1582,11 +1576,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -1600,28 +1592,23 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
 
-
 	// get dimensions, lower indexes, upper indexes, and elements counts from Eiffel ECOM_ARRAY object
 
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY[REAL]");
 	int_array_tid = eif_type_id ("ARRAY[INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int) eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -1694,11 +1681,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -1718,22 +1703,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [INTEGER]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -1806,11 +1787,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -1830,22 +1809,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [INTEGER]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -1918,11 +1893,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -1942,22 +1915,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [DOUBLE]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int) eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field(eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect (eif_field(eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2030,11 +1999,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2054,22 +2021,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [BOOLEAN]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int) eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2142,11 +2105,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2166,22 +2127,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [DATE_TIME]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2254,11 +2211,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2278,22 +2233,18 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_HRESULT]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2366,11 +2317,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2390,22 +2339,17 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_VARIANT]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2478,11 +2422,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2502,22 +2444,17 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_CURRENCY]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2590,11 +2527,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2614,22 +2549,17 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_DECIMAL]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2702,11 +2632,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2726,22 +2654,17 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 	ecom_array_tid = eif_type_id ("ECOM_ARRAY [STRING]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2814,11 +2737,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2835,25 +2756,20 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 
 	// get dimensions, lower indexes, upper indexes, and elements counts from Eiffel ECOM_ARRAY object
 
-	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]");
+	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -2926,11 +2842,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT eif_safe_array;
 	EIF_TYPE_ID ecom_array_tid, int_array_tid;
-	EIF_INTEGER_FUNCTION f_dimensions;
 	EIF_INTEGER * lower_indexes, * element_counts, * upper_indexes;
 	EIF_INTEGER * tmp_index;
 	int dimensions, loop_control, i;
-	EIF_REFERENCE_FUNCTION f_lower_indexes, f_element_counts, f_upper_indexes;
 	EIF_POINTER_FUNCTION f_to_c;
 	EIF_OBJECT tmp_object1, tmp_object2, tmp_object3, eif_index;
 	SAFEARRAYBOUND * array_bound;
@@ -2947,25 +2861,20 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 
 	// get dimensions, lower indexes, upper indexes, and elements counts from Eiffel ECOM_ARRAY object
 
-	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_INTERFACE]");
+	ecom_array_tid = eif_type_id ("ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]");
 	int_array_tid = eif_type_id ("ARRAY [INTEGER]");
 
-	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
-	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
-	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
-	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
-	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
 
-	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indeces", EIF_REFERENCE));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
-	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
+	tmp_object2 = eif_protect ( eif_field(eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
 
-	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indeces", EIF_REFERENCE));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
 	// create SAFEARRAYBOUND
@@ -3036,17 +2945,13 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void **
 
 // Create pointed pointer from CELL [POINTER].
 {
-	EIF_TYPE_ID type_id;
 	EIF_OBJECT eif_object;
-	EIF_POINTER_FUNCTION item;
 	void ** result;
 	
 	eif_object = eif_protect (eif_ref);
-	type_id = eif_type_id ("CELL [POINTER]");
-	item = eif_pointer_function ("item", type_id);
 
 	result = (void **) CoTaskMemAlloc (sizeof (void *));
-	* result = (void *)item (eif_access (eif_object));
+	* result = (void *) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 	eif_wean (eif_object);
 	if (old != NULL)
 	{

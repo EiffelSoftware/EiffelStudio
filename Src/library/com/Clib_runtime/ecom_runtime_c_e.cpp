@@ -59,16 +59,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT a_variant)
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_variant_id;
-	EIF_PROC make;
-	EIF_POINTER_FUNCTION item;
+	EIF_PROCEDURE make;
 	EIF_POINTER an_item;
 
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
-	make = eif_proc ("make", eif_variant_id);
+	make = eif_procedure ("make", eif_variant_id);
 	result = eif_create (eif_variant_id);
 	make (eif_access (result));
-	item = eif_pointer_function ("item", eif_variant_id);
-	an_item = item (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_variant, sizeof (VARIANT));
 	return eif_wean (result);
 };
@@ -81,16 +79,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID type_id;
-	EIF_PROC make;
-	EIF_POINTER_FUNCTION item;
+	EIF_PROCEDURE make;
 	EIF_POINTER an_item;
 
 	type_id = eif_type_id (a_class_name);
-	make = eif_proc ("make", type_id);
+	make = eif_procedure ("make", type_id);
 	result = eif_create (type_id);
 	make (eif_access (result));
-	item = eif_pointer_function ("item", type_id);
-	an_item = item (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_record_pointer, a_size);
 	return eif_wean (result);
 };
@@ -160,7 +156,7 @@ EIF_BOOLEAN ecom_runtime_ce::ccom_ce_boolean (VARIANT_BOOL a_bool)
 	}
 	else
 	{
-		return EIF_FALSE;
+		return EIF_TRUE;
 	}
 };
 //-------------------------------------------------------------------------
@@ -1538,7 +1534,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 	EIF_INTEGER * lower_indeces;
 	IUnknown * an_array_element;
 
-	type_id = eif_type_id ("ARRAY [ECOM_GENERIC_INTERFACE]");
+	type_id = eif_type_id ("ARRAY [ECOM_UNKNOWN_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 
@@ -1585,8 +1581,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
-			// Create ECOM_ARRAY [ECOM_GENERIC_INTERFACE]
-			type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_INTERFACE]");
+			// Create ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]");
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
@@ -1615,7 +1611,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 	EIF_INTEGER * lower_indeces;
 	IDispatch * an_array_element;
 
-	type_id = eif_type_id ("ARRAY [ECOM_GENERIC_DISPINTERFACE]");
+	type_id = eif_type_id ("ARRAY [ECOM_AUTOMATION_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 
@@ -1660,8 +1656,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
-			// Create ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]
-			type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]");
+			// Create ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]
+			type_id = eif_type_id ("ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]");
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
@@ -2603,7 +2599,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
 	EIF_TYPE_ID int_array_id, type_id, currency_id;
 	EIF_PROCEDURE make, put;
-	EIF_POINTER_FUNCTION item;
 	CURRENCY * sa_element;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
@@ -2665,7 +2660,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
 	currency_id = eif_type_id ("ECOM_CURRENCY");
 	make = eif_procedure ("make", currency_id);
-	item = eif_pointer_function ("item", currency_id);
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -2676,7 +2670,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
 		eif_array_element = eif_create (currency_id);
 		make (eif_access (eif_array_element));
-		sa_element = (CURRENCY *)item (eif_access (eif_array_element));
+		sa_element = (CURRENCY *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
@@ -2829,7 +2823,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
 	EIF_TYPE_ID int_array_id, type_id, decimal_id;
 	EIF_PROCEDURE make, put;
-	EIF_POINTER_FUNCTION item;
 	DECIMAL * sa_element;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
@@ -2891,7 +2884,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
 	decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_procedure ("make", decimal_id);
-	item = eif_pointer_function ("item", decimal_id);
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -2902,7 +2894,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
 		eif_array_element = eif_create (decimal_id);
 		make (eif_access (eif_array_element));
-		sa_element = (DECIMAL *)item (eif_access (eif_array_element));
+		sa_element = (DECIMAL *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
@@ -3055,7 +3047,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
 	EIF_TYPE_ID int_array_id, type_id, variant_id;
 	EIF_PROCEDURE make, put;
-	EIF_POINTER_FUNCTION item;
 	VARIANT * sa_element;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
@@ -3117,7 +3108,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
 	variant_id = eif_type_id ("ECOM_VARIANT");
 	make = eif_procedure ("make", variant_id);
-	item = eif_pointer_function ("item", variant_id);
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -3128,7 +3118,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
 		eif_array_element = eif_create (variant_id);
 		make (eif_access (eif_array_element));
-		sa_element = (VARIANT *)item (eif_access (eif_array_element));
+		sa_element = (VARIANT *)eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
@@ -3330,8 +3320,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 	eif_index = eif_create (int_array_id);
 	make (eif_access (eif_index), 1, dim_count);
 
-	// Create ECOM_ARRAY [ECOM_GENERIC_INTERFACE]
-	type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_INTERFACE]");
+	// Create ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]
+	type_id = eif_type_id ("ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
@@ -3439,8 +3429,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 	eif_index = eif_create (int_array_id);
 	make (eif_access (eif_index), 1, dim_count);
 
-	// Create ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]
-	type_id = eif_type_id ("ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE]");
+	// Create ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]
+	type_id = eif_type_id ("ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);

@@ -765,13 +765,6 @@ feature -- Delegated features
 			Result := interface.implementation.pointer_style
 		end
 
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-		do
-			promote_to_widget
-			interface.implementation.remove_tooltip
-		end
-
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen in pixels.
 		do

@@ -118,9 +118,9 @@ void c_gtk_signal_disconnect (GtkObject *widget,
  Key Event function
 ==============================================================================*/
 
-int c_gtk_event_keys_state (GdkEventMotion *p);
+int c_gtk_event_keys_state (GtkObject *p);
 
-void gtk_widget_set_all_events (GtkWidget *w);
+void c_gtk_widget_set_all_events (GtkObject *w);
 
 /*==============================================================================
  gtk_widget functions
@@ -181,8 +181,8 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
 // #define c_gtk_widget_minimum_height(p) (GTK_WIDGET(p)->requisition.height) /*integer*/
 
 /* gets minimum width and height */
-EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *widget); 
-EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *widget); 
+EIF_INTEGER c_gtk_widget_minimum_width (GtkObject *widget); 
+EIF_INTEGER c_gtk_widget_minimum_height (GtkObject *widget); 
 
 /* set size */
 void c_gtk_widget_set_size (GtkWidget *widget, int width, int height);
@@ -198,6 +198,37 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* 
 void c_gtk_widget_set_fg_color (GtkWidget *widget, int r, int g, int b);
 void c_gtk_widget_get_fg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
 
+
+void c_gtk_widget_get_color_info (GtkWidget* widget,
+	EIF_INTEGER* fgr,
+	EIF_INTEGER* fgg,
+	EIF_INTEGER* fgb,
+	EIF_INTEGER* fgpix,
+	EIF_INTEGER* textr,
+	EIF_INTEGER* textg,
+	EIF_INTEGER* textb,
+	EIF_INTEGER* textpix,
+	EIF_INTEGER* bgr,
+	EIF_INTEGER* bgg,
+	EIF_INTEGER* bgb,
+	EIF_INTEGER* bgpix,
+	EIF_INTEGER* baser,
+	EIF_INTEGER* baseg,
+	EIF_INTEGER* baseb,
+	EIF_INTEGER* basepix,
+	EIF_INTEGER* blackr,
+	EIF_INTEGER* blackg,
+	EIF_INTEGER* blackb,
+	EIF_INTEGER* blackpix,
+	EIF_INTEGER* whiter,
+	EIF_INTEGER* whiteg,
+	EIF_INTEGER* whiteb,
+	EIF_INTEGER* whitepix
+	);
+
+
+
+
 /*==============================================================================
  gtk_container functions
 ==============================================================================*/
@@ -206,10 +237,16 @@ void c_gtk_widget_get_fg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* 
 gint c_gtk_container_nb_children (GtkWidget *widget);
 
 /* I-th child of the container */
-GtkWidget* c_gtk_container_ith_child (GtkWidget *widget, guint i);
+EIF_POINTER c_gtk_container_ith_child (GtkWidget *widget, guint i);
 
 /* Does the container have the given child? */
 int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child);
+
+/* Add the widget to the scrollable area. */
+void c_gtk_scrollable_area_add (GtkWidget *scroll_area, GtkWidget *widget);
+
+/* Does the scrollable area have the given child? */
+int c_gtk_scrollable_area_has_child (GtkWidget *scroll_area, GtkWidget *child);
 
 /*==============================================================================
  gtk_toolbar functions
@@ -240,6 +277,12 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *widget);
 /* Return a state of a toggle button */
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
+/*==============================================================================
+ Option button functions
+==============================================================================*/
+
+EIF_POINTER c_gtk_option_button_selected_menu_item (GtkWidget *widget);
+EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkWidget *menu_item);
 
 /*==============================================================================
  text functions
@@ -256,15 +299,15 @@ int c_gtk_get_text_max_length (GtkWidget* text);
  gtk_combo functions
 ==============================================================================*/
 
-#define c_gtk_combo_entry(p) (GTK_COMBO(p)->entry)  /*GtkWidget**/
-#define c_gtk_combo_list(p)  (GTK_COMBO(p)->list)   /*GtkWidget**/
+#define c_gtk_combo_entry(p) ((EIF_POINTER) GTK_COMBO(p)->entry)  /*GtkWidget**/
+#define c_gtk_combo_list(p)  ((EIF_POINTER) GTK_COMBO(p)->list)   /*GtkWidget**/
 
 /*==============================================================================
  gtk_paned functions
 ==============================================================================*/
 
-#define c_gtk_paned_child1(p) (GTK_PANED(p)->child1)  /*GtkWidget**/
-#define c_gtk_paned_child2(p) (GTK_PANED(p)->child2)  /*GtkWidget**/
+#define c_gtk_paned_child1(p) ((EIF_POINTER) GTK_PANED(p)->child1)  /*GtkWidget**/
+#define c_gtk_paned_child2(p) ((EIF_POINTER) GTK_PANED(p)->child2)  /*GtkWidget**/
 
 /*==============================================================================
  gtk_pixmap functions
@@ -335,6 +378,7 @@ guint c_gtk_clist_selection_length (GtkWidget* list);
 /* Routines to get and set the number of rows and columns of a table. */
 EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget            );
 EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );
+void c_gtk_table_set_spacing_if_needed (GtkWidget *widget		  );
 
 
 /*==============================================================================
@@ -406,7 +450,7 @@ char* c_gtk_window_title(GtkWindow* window);
  gtk_menu functions
 ==============================================================================*/
 
-#define c_gtk_menu_item_submenu(p) (((GtkMenuItem*)p)->submenu)
+#define c_gtk_menu_item_submenu(p) ((EIF_POINTER) ((GtkMenuItem*)p)->submenu)
 /* GtkWidget* */
 
 #define c_gtk_check_menu_item_active(p) (((GtkCheckMenuItem*)p)->active)

@@ -182,7 +182,7 @@ feature -- Element Settings
 			-- Set `folder' with `a_config_folder'.
 		require
 			non_void_configuration_folder: a_config_folder /= Void
-			valid_folder: a_config_folder.item (a_config_folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			valid_folder: a_config_folder.count > 3 implies a_config_folder.item (a_config_folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
 		do
 			folder := a_config_folder
 		ensure
@@ -285,7 +285,7 @@ feature -- Element Settings
 		
 invariant
 	non_void_configuration_folder: folder /= Void
-	valid_configuration_folder: not folder.is_empty and then folder.item (folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+	valid_configuration_folder: not folder.is_empty and then folder.count > 3 implies (folder.item (folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator)
 	non_void_configuration_name: name /= Void
 	non_void_log_source_name: log_source_name /= Void
 	non_void_log_server_name: log_server_name /= Void

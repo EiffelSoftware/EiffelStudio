@@ -729,8 +729,8 @@ rt_private int mark_and_sweep(void)
 	 * all the local reference variables. I suppose no object is already
 	 * marked at the beginning of the processing.
 	 */
-
 	EIF_GET_CONTEXT
+
 	SIGBLOCK;			/* Block all signals during garbage collection */
 
 	/* The idea of having a global status for the garbage collector arose
@@ -753,9 +753,11 @@ rt_private void clean_up(void)
 	 * then dispatch signals which may have been stacked while in the GC process
 	 * and finally stop blocking signals.
 	 */
+	EIF_GET_CONTEXT
 
 	rel_core();				/* We may give some core back to the kernel */
 	SIGRESUME;				/* Dispatch any signal which has been queued */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void reclaim(void)
@@ -2467,12 +2469,14 @@ rt_private int partial_scavenging(void)
 	 * of a memory chunk (because this zone is skipped by doing pointer
 	 * comparaisons).
 	 */
+	EIF_GET_CONTEXT
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 	run_plsc();				/* Normal sequence */
 
 	return 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_plsc(void)
@@ -4930,7 +4934,7 @@ rt_shared int epush(register struct stack *stk, register char *value)
 	 * full, we try to allocate a new chunk. If this fails, nothing is done,
 	 * and -1 is returned to signal failure. Otherwise 0 is returned.
 	 */
-
+	EIF_GET_CONTEXT
 	register3 char **top = stk->st_top;		/* Current top of stack */
 
 	if (top == (char **) 0)	{					/* No stack yet? */
@@ -4969,6 +4973,7 @@ rt_shared int epush(register struct stack *stk, register char *value)
 	stk->st_top = top;		/* Points to next free location */
 
 	return 0;		/* Value was successfully pushed on the stack */
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared char **st_alloc(register struct stack *stk, register int size)
@@ -4976,7 +4981,7 @@ rt_shared char **st_alloc(register struct stack *stk, register int size)
                    					/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
-
+	EIF_GET_CONTEXT
 	register3 char **arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
@@ -4998,6 +5003,7 @@ rt_shared char **st_alloc(register struct stack *stk, register int size)
 	SIGRESUME;							/* End of critical section */
 
 	return arena;			/* Stack allocated */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int st_extend(register struct stack *stk, register int size)
@@ -5007,7 +5013,7 @@ rt_private int st_extend(register struct stack *stk, register int size)
 	/* The stack 'stk' is extended and the 'stk' structure updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
-
+	EIF_GET_CONTEXT
 	register3 char **arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
@@ -5029,6 +5035,7 @@ rt_private int st_extend(register struct stack *stk, register int size)
 	SIGRESUME;								/* End of critical section */
 
 	return 0;			/* Everything is ok */
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void st_truncate(register struct stack *stk)

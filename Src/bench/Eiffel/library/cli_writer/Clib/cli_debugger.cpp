@@ -228,7 +228,7 @@ rt_public void dbg_init_estudio_thread_handle () {
 			THREAD_SUSPEND_RESUME,
 			FALSE,
 			DUPLICATE_SAME_ACCESS);
-	CHECK(fSuccess = 0, "Ensure: DuplicateHandle failed !!")
+	CHECK(fSuccess == 0, "Ensure: DuplicateHandle failed !!")
 }
 
 rt_public void dbg_suspend_estudio_thread () {
@@ -334,14 +334,14 @@ rt_public void dbg_stop_timer () {
 /// dbg_timer_callback :: eStudio running               ///
 ///////////////////////////////////////////////////////////
 */
-rt_public void dbg_timer_callback () {
+rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 	DBGTRACE("[eStudio] timer callback");
 	if (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
 //<not 1>---------------------------------------------------------//
 #ifdef DBGTRACE_ENABLED	/*D*/
-		once_enter_ec_cb = (once_enter_ec_cb + 1) % 100;/*D*/
 		if (once_enter_ec_cb == 0) {/*D*/
 			DBGTRACE("1.-.[eStudio] ec waiting for dbg_state to be 1 ");/*D*/
+			once_enter_ec_cb = (once_enter_ec_cb + 1) % 100;/*D*/
 		}/*D*/
 #endif	/*D*/
 		return;
@@ -370,6 +370,9 @@ rt_public void dbg_timer_callback () {
 
 			Sleep (1); // maybe useless, spinlock instead ..
 		}
+#ifdef DBGTRACE_ENABLED	/*D*/
+		once_enter_ec_cb = 0;/*D*/
+#endif	/*D*/
 //<3>------------------------------------------------------------//
 		DBG_NOTIFY_ESTUDIO;
 		DBGTRACE("9 - [eStudio] exit ec waiting for dbg_state /= 2");/*D*/
@@ -386,7 +389,9 @@ rt_public void dbg_timer_callback () {
 
 rt_public void dbg_lock_and_wait_callback () {
 	/*** Local  ***/
-	UINT once_enter;
+#ifdef DBGTRACE_ENABLED	/*D*/
+	UINT once_enter; /*D*/
+#endif
 	BOOL eval_callback_proceed;
 	/*** Require  ***/
 	CHECK (dbg_timer != 0, "Require : Timer should be disable in this context (evaluating)")
@@ -471,6 +476,9 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	DBGTRACE2("ENTER CALLBACK = ", Callback_name(callback_id));/*D*/
 	// It is not possible to have 2 callbacks at the same time, 
 	// since it is supposed to be in the same thread ...
+#ifdef DBGTRACE_ENABLED	/*D*/
+	once_enter_cb = 0;
+#endif
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 3) {
 //<3>---< wait for ec to finish >--------------------------------//
 		if (callback_id == CB_CREATE_PROCESS) {
@@ -481,7 +489,7 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #ifdef DBGTRACE_ENABLED	/*D*/
 		if (once_enter_cb == 0) {/*D*/
 			DBGTRACE("1.5 - [Dbg] wait at entrance door");/*D*/
-			once_enter_cb = 1;/*D*/
+			once_enter_cb = (once_enter_cb + 1) % 500;/*D*/
 		}/*D*/
 #endif	/*D*/
 	}
@@ -506,7 +514,7 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #ifdef DBGTRACE_ENABLED	/*D*/
 		if (once_enter_cb == 0) {/*D*/
 			DBGTRACE("3.5 - [Dbg] wait at entrance door");/*D*/
-			once_enter_cb = 1;/*D*/
+			once_enter_cb = (once_enter_cb + 1) % 500;/*D*/
 		}/*D*/
 #endif	/*D*/
 	}

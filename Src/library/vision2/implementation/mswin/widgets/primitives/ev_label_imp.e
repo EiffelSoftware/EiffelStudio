@@ -182,7 +182,7 @@ feature {EV_ANY_I} -- Initialization
 			check
 				font_imp_not_void: font_imp /= Void
 			end
-			t := font_imp.string_width_and_height (wel_text)
+			t := font_imp.string_width_and_height (a_text)
 			internal_set_minimum_size (t.integer_item (1), t.integer_item (2))
 		end
 
@@ -286,6 +286,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/18 23:47:44  brendel
+--| Corrected error in accomodate_text.
+--|
 --| Revision 1.41  2000/04/18 23:46:41  brendel
 --| Last revision did not really change anything.
 --| Widget is now resized *before* the text is passed to WEL.

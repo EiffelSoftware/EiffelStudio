@@ -28,6 +28,6 @@
 
 EIF_POINTER ccom_guid_to_wide_string (GUID * guid);
 EIF_REFERENCE ccom_guid_to_defstring (GUID * guid);
-EIF_POINTER ccom_generate_guid ();
+void ccom_generate_guid (GUID * guid);
 
 #endif // !__ECOM_E_GUID_H_INC__

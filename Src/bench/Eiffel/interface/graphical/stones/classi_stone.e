@@ -65,14 +65,14 @@ feature -- Access
 	signature: STRING is
 			-- Name and indication that the class is not compiled
 		do
-			Result := clone (class_i.class_name)
+			Result := clone (class_i.name)
 			Result.to_upper;
 --			Result.append (" (not in system)")
 		end;
 
 	icon_name: STRING is
 		do
-			Result := clone (class_i.class_name)
+			Result := clone (class_i.name)
 			Result.to_upper
 		end;
 

@@ -183,7 +183,7 @@ feature -- Status setting
 			if c /= Void then
 				update_class_name (clone (c.e_class.name))
 			elseif ci /= Void then
-				update_class_name (clone (ci.class_i.class_name))
+				update_class_name (clone (ci.class_i.name))
 			end
 		end;
 

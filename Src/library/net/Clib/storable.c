@@ -11,6 +11,7 @@
 #include "eif_retrieve.h"
 #include "eif_compress.h"
 #include "eif_error.h"    	/* for eio() */
+#include "eif_traverse.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"
@@ -26,6 +27,10 @@
 #define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
 #define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
 
+#define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
+
+rt_private int socket_fides;
+extern void idr_flush (void);
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
 /* read = 0, check the socket to be rrready for writing */
@@ -46,15 +51,15 @@ int net_socket_ready (int read)
 	for (;;)
 	{
 		FD_ZERO (&fdset);
-		FD_SET (fides, &fdset);
+		FD_SET (socket_fides, &fdset);
 
 		if (read) {
 			/* Wait until the socket is ready for reading*/
-			num_active = select (fides + 1, &fdset, NULL, NULL,
+			num_active = select (socket_fides + 1, &fdset, NULL, NULL,
 					     &tm);
 		} else {
 				/* Wait until the socket is ready for writing*/
-			num_active = select (fides + 1, NULL, &fdset, NULL,
+			num_active = select (socket_fides + 1, NULL, &fdset, NULL,
 					     &tm);
 		}
 		
@@ -65,7 +70,7 @@ int net_socket_ready (int read)
 		}
 	} 
 
-	return (FD_ISSET (fides, &fdset));
+	return (FD_ISSET (socket_fides, &fdset));
 }
 
 int net_char_read(char *pointer, int size)
@@ -74,9 +79,9 @@ int net_char_read(char *pointer, int size)
 	int i;
 
 #ifdef EIF_WIN32
-	i = recv(r_fides, pointer, size, 0);
+	i = recv(socket_fides, pointer, size, 0);
 #else
-	i = read(r_fides, pointer, size);
+	i = read(socket_fides, pointer, size);
 #endif
 	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
@@ -98,9 +103,9 @@ int net_char_write(char *pointer, int size)
 	int i;
 
 #ifdef EIF_WIN32
-	i = send (fides, pointer, size, 0);
+	i = send (socket_fides, pointer, size, 0);
 #else
-	i = write(fides, pointer, size);
+	i = write(socket_fides, pointer, size);
 #endif
 	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
@@ -155,27 +160,63 @@ void net_store_write(void)
 
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
-	return portable_retrieve(file_desc, net_char_read);
+	EIF_GET_CONTEXT
+	socket_fides = file_desc;
+
+	return portable_retrieve(net_char_read);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
-	rt_init_store(net_store_write, net_char_write, 0);
-	estore(file_desc, object);
+	socket_fides = file_desc;
+
+	rt_init_store(
+			net_store_write,
+			net_char_write,
+			flush_st_buffer,
+			st_write,
+			make_header,
+			0,
+			EIF_BUFFER_SIZE);
+
+	basic_general_free_store(object);
+
 	rt_reset_store();
 }
 
 rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 {
-	rt_init_store(net_store_write, net_char_write, 0); 
-	eestore(file_desc, object);
+	socket_fides = file_desc;
+
+	rt_init_store(
+			net_store_write,
+			net_char_write,
+			flush_st_buffer,
+			gst_write,
+			make_header,
+			TR_ACCOUNT,
+			EIF_BUFFER_SIZE); 
+
+	basic_general_free_store(object);
+
 	rt_reset_store();
 }
 
 rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
-	rt_init_store(net_store_write, net_char_write, 0); 
-	sstore (file_desc, object);
+	socket_fides = file_desc;
+
+	rt_init_store(
+			net_store_write,
+		   	net_char_write,
+			idr_flush,
+			ist_write,
+			imake_header,
+			INDEPEND_ACCOUNT,
+			EIF_BUFFER_SIZE); 
+
+	independent_free_store (object);
 	rt_reset_store();
 }
 

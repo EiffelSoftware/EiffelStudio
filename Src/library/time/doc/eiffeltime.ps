@@ -1,0 +1,4553 @@
+%!
+%%BoundingBox: (atend)
+%%Pages: (atend)
+%%PageOrder: (atend)
+%%DocumentFonts: (atend)
+%%Creator: Frame 4.0
+%%DocumentData: Clean7Bit
+%%EndComments
+%%BeginProlog
+%
+% Frame ps_prolog 4.0, for use with Frame 4.0 products
+% This ps_prolog file is Copyright (c) 1986-1993 Frame Technology
+% Corporation.  All rights reserved.  This ps_prolog file may be
+% freely copied and distributed in conjunction with documents created
+% using FrameMaker, FrameBuilder and FrameViewer as long as this 
+% copyright notice is preserved.
+%
+% Frame products normally print colors as their true color on a color printer
+% or as shades of gray, based on luminance, on a black-and white printer. The
+% following flag, if set to True, forces all non-white colors to print as pure
+% black. This has no effect on bitmap images.
+/FMPrintAllColorsAsBlack             false def
+%
+% Frame products can either set their own line screens or use a printer's 
+% default settings. Three flags below control this separately for no 
+% separations, spot separations and process separations. If a flag
+% is true, then the default printer settings will not be changed. If it is
+% false, Frame products will use their own settings from a table based on
+% the printer's resolution.
+/FMUseDefaultNoSeparationScreen      true  def
+/FMUseDefaultSpotSeparationScreen    true  def
+/FMUseDefaultProcessSeparationScreen false def
+%
+% For any given PostScript printer resolution, Frame products have two sets of 
+% screen angles and frequencies for printing process separations, which are 
+% recomended by Adobe. The following variable chooses the higher frequencies
+% when set to true or the lower frequencies when set to false. This is only
+% effective if the appropriate FMUseDefault...SeparationScreen flag is false.
+/FMUseHighFrequencyScreens true def
+%
+% PostScript Level 2 printers contain an "Accurate Screens" feature which can
+% improve process separation rendering at the expense of compute time. This 
+% flag is ignored by PostScript Level 1 printers.
+/FMUseAcccurateScreens true def
+%
+% The following PostScript procedure defines the spot function that Frame
+% products will use for process separations. You may un-comment-out one of
+% the alternative functions below, or use your own.
+%
+% Dot function
+/FMSpotFunction {abs exch abs 2 copy add 1 gt 
+		{1 sub dup mul exch 1 sub dup mul add 1 sub }
+		{dup mul exch dup mul add 1 exch sub }ifelse } def
+%
+% Line function
+% /FMSpotFunction { pop } def
+%
+% Elipse function
+% /FMSpotFunction { dup 5 mul 8 div mul exch dup mul exch add 
+%		sqrt 1 exch sub } def
+%
+%
+/FMversion (4.0) def 
+/FMLevel1 /languagelevel where {pop languagelevel} {1} ifelse 2 lt def
+/FMPColor
+	FMLevel1 {
+		false
+		/colorimage where {pop pop true} if
+	} {
+		true
+	} ifelse
+def
+/FrameDict 400 dict def 
+systemdict /errordict known not {/errordict 10 dict def
+		errordict /rangecheck {stop} put} if
+% The readline in PS 23.0 doesn't recognize cr's as nl's on AppleTalk
+FrameDict /tmprangecheck errordict /rangecheck get put 
+errordict /rangecheck {FrameDict /bug true put} put 
+FrameDict /bug false put 
+mark 
+% Some PS machines read past the CR, so keep the following 3 lines together!
+currentfile 5 string readline
+00
+0000000000
+cleartomark 
+errordict /rangecheck FrameDict /tmprangecheck get put 
+FrameDict /bug get { 
+	/readline {
+		/gstring exch def
+		/gfile exch def
+		/gindex 0 def
+		{
+			gfile read pop 
+			dup 10 eq {exit} if 
+			dup 13 eq {exit} if 
+			gstring exch gindex exch put 
+			/gindex gindex 1 add def 
+		} loop
+		pop 
+		gstring 0 gindex getinterval true 
+		} bind def
+	} if
+/FMshowpage /showpage load def
+/FMquit /quit load def
+/FMFAILURE { 
+	dup = flush 
+	FMshowpage 
+	/Helvetica findfont 12 scalefont setfont
+	72 200 moveto
+	show FMshowpage 
+	FMquit 
+	} def 
+/FMVERSION {
+	FMversion ne {
+		(Frame product version does not match ps_prolog!) FMFAILURE
+		} if
+	} def 
+/FMBADEPSF { 
+	(PostScript Lang. Ref. Man., 2nd Ed., H.2.4 says EPS must not call X              )
+	dup dup (X) search pop exch pop exch pop length 
+	4 -1 roll 
+	putinterval 
+	FMFAILURE
+	} def
+/FMLOCAL {
+	FrameDict begin
+	0 def 
+	end 
+	} def 
+/concatprocs
+	{
+	/proc2 exch cvlit def/proc1 exch cvlit def/newproc proc1 length proc2 length add array def
+	newproc 0 proc1 putinterval newproc proc1 length proc2 putinterval newproc cvx
+}def
+FrameDict begin 
+/FMnone 0 def
+/FMcyan 1 def
+/FMmagenta 2 def
+/FMyellow 3 def
+/FMblack 4 def
+/FMcustom 5 def
+/FrameNegative false def 
+/FrameSepIs FMnone def 
+/FrameSepBlack 0 def
+/FrameSepYellow 0 def
+/FrameSepMagenta 0 def
+/FrameSepCyan 0 def
+/FrameSepRed 1 def
+/FrameSepGreen 1 def
+/FrameSepBlue 1 def
+/FrameCurGray 1 def
+/FrameCurPat null def
+/FrameCurColors [ 0 0 0 1 0 0 0 ] def 
+/FrameColorEpsilon .001 def	
+/eqepsilon {		
+	sub dup 0 lt {neg} if
+	FrameColorEpsilon le
+} bind def
+/FrameCmpColorsCMYK { 
+	2 copy 0 get exch 0 get eqepsilon {
+		2 copy 1 get exch 1 get eqepsilon {
+			2 copy 2 get exch 2 get eqepsilon {
+				3 get exch 3 get eqepsilon
+			} {pop pop false} ifelse
+		}{pop pop false} ifelse
+	} {pop pop false} ifelse
+} bind def
+/FrameCmpColorsRGB { 
+	2 copy 4 get exch 0 get eqepsilon {
+		2 copy 5 get exch 1 get eqepsilon {
+			6 get exch 2 get eqepsilon
+		}{pop pop false} ifelse
+	} {pop pop false} ifelse
+} bind def
+/RGBtoCMYK { 
+	1 exch sub 
+	3 1 roll 
+	1 exch sub 
+	3 1 roll 
+	1 exch sub 
+	3 1 roll 
+	3 copy 
+	2 copy 
+	le { pop } { exch pop } ifelse 
+	2 copy 
+	le { pop } { exch pop } ifelse 
+	dup dup dup 
+	6 1 roll 
+	4 1 roll 
+	7 1 roll 
+	sub 
+	6 1 roll 
+	sub 
+	5 1 roll 
+	sub 
+	4 1 roll 
+} bind def
+/CMYKtoRGB { 
+	dup dup 4 -1 roll add 						  
+	5 1 roll 3 -1 roll add 						  
+	4 1 roll add 								  
+	1 exch sub dup 0 lt {pop 0} if 3 1 roll 	  
+	1 exch sub dup 0 lt {pop 0} if exch 	      
+	1 exch sub dup 0 lt {pop 0} if exch	  		  
+} bind def
+/FrameSepInit {
+	1.0 RealSetgray
+} bind def
+/FrameSetSepColor { 
+	/FrameSepBlue exch def
+	/FrameSepGreen exch def
+	/FrameSepRed exch def
+	/FrameSepBlack exch def
+	/FrameSepYellow exch def
+	/FrameSepMagenta exch def
+	/FrameSepCyan exch def
+	/FrameSepIs FMcustom def
+	setCurrentScreen	
+} bind def
+/FrameSetCyan {
+	/FrameSepBlue 1.0 def
+	/FrameSepGreen 1.0 def
+	/FrameSepRed 0.0 def
+	/FrameSepBlack 0.0 def
+	/FrameSepYellow 0.0 def
+	/FrameSepMagenta 0.0 def
+	/FrameSepCyan 1.0 def
+	/FrameSepIs FMcyan def
+	setCurrentScreen	
+} bind def
+ 
+/FrameSetMagenta {
+	/FrameSepBlue 1.0 def
+	/FrameSepGreen 0.0 def
+	/FrameSepRed 1.0 def
+	/FrameSepBlack 0.0 def
+	/FrameSepYellow 0.0 def
+	/FrameSepMagenta 1.0 def
+	/FrameSepCyan 0.0 def
+	/FrameSepIs FMmagenta def
+	setCurrentScreen
+} bind def
+ 
+/FrameSetYellow {
+	/FrameSepBlue 0.0 def
+	/FrameSepGreen 1.0 def
+	/FrameSepRed 1.0 def
+	/FrameSepBlack 0.0 def
+	/FrameSepYellow 1.0 def
+	/FrameSepMagenta 0.0 def
+	/FrameSepCyan 0.0 def
+	/FrameSepIs FMyellow def
+	setCurrentScreen
+} bind def
+ 
+/FrameSetBlack {
+	/FrameSepBlue 0.0 def
+	/FrameSepGreen 0.0 def
+	/FrameSepRed 0.0 def
+	/FrameSepBlack 1.0 def
+	/FrameSepYellow 0.0 def
+	/FrameSepMagenta 0.0 def
+	/FrameSepCyan 0.0 def
+	/FrameSepIs FMblack def
+	setCurrentScreen
+} bind def
+ 
+/FrameNoSep { 
+	/FrameSepIs FMnone def
+	setCurrentScreen
+} bind def
+/FrameSetSepColors { 
+	FrameDict begin
+	[ exch 1 add 1 roll ]
+	/FrameSepColors  
+	exch def end
+	} bind def
+/FrameColorInSepListCMYK { 
+	FrameSepColors {  
+       		exch dup 3 -1 roll 
+       		FrameCmpColorsCMYK 
+       		{ pop true exit } if
+    	} forall 
+	dup true ne {pop false} if
+	} bind def
+/FrameColorInSepListRGB { 
+	FrameSepColors {  
+       		exch dup 3 -1 roll 
+       		FrameCmpColorsRGB 
+       		{ pop true exit } if
+    	} forall 
+	dup true ne {pop false} if
+	} bind def
+/RealSetgray /setgray load def
+/RealSetrgbcolor /setrgbcolor load def
+/RealSethsbcolor /sethsbcolor load def
+end 
+/setgray { 
+	FrameDict begin
+	FrameSepIs FMnone eq
+		{ RealSetgray } 
+		{ 
+		FrameSepIs FMblack eq 
+			{ RealSetgray } 
+			{ FrameSepIs FMcustom eq 
+			  FrameSepRed 0 eq and
+			  FrameSepGreen 0 eq and
+			  FrameSepBlue 0 eq and {
+			  	RealSetgray
+			  } {
+				1 RealSetgray pop 
+			  } ifelse
+			} ifelse
+		} ifelse
+	end
+} bind def
+/setrgbcolor { 
+	FrameDict begin
+	FrameSepIs FMnone eq
+	{  RealSetrgbcolor }
+	{
+		3 copy [ 4 1 roll ] 
+		FrameColorInSepListRGB
+		{
+				FrameSepBlue eq exch 
+			 	FrameSepGreen eq and exch 
+			 	FrameSepRed eq and
+			 	{ 0 } { 1 } ifelse
+		}
+		{
+			FMPColor {
+				RealSetrgbcolor
+				currentcmykcolor
+			} {
+				RGBtoCMYK
+			} ifelse
+			FrameSepIs FMblack eq
+			{1.0 exch sub 4 1 roll pop pop pop} {
+			FrameSepIs FMyellow eq
+			{pop 1.0 exch sub 3 1 roll pop pop} {
+			FrameSepIs FMmagenta eq
+			{pop pop 1.0 exch sub exch pop } {
+			FrameSepIs FMcyan eq
+			{pop pop pop 1.0 exch sub } 
+			{pop pop pop pop 1} ifelse } ifelse } ifelse } ifelse 
+		} ifelse
+		RealSetgray
+	} 
+	ifelse
+	end
+} bind def
+/sethsbcolor {
+	FrameDict begin
+	FrameSepIs FMnone eq 
+	{ RealSethsbcolor } 
+	{
+		RealSethsbcolor 
+		currentrgbcolor  
+		setrgbcolor 
+	} 
+	ifelse
+	end
+} bind def
+FrameDict begin
+/setcmykcolor where {
+	pop /RealSetcmykcolor /setcmykcolor load def
+} {
+	/RealSetcmykcolor {
+		4 1 roll
+		3 { 3 index add 0 max 1 min 1 exch sub 3 1 roll} repeat 
+		setrgbcolor pop
+	} bind def
+} ifelse
+userdict /setcmykcolor { 
+		FrameDict begin
+		FrameSepIs FMnone eq
+		{ RealSetcmykcolor } 
+		{
+			4 copy [ 5 1 roll ]
+			FrameColorInSepListCMYK
+			{
+				FrameSepBlack eq exch 
+				FrameSepYellow eq and exch 
+				FrameSepMagenta eq and exch 
+				FrameSepCyan eq and 
+				{ 0 } { 1 } ifelse
+			}
+			{
+				FrameSepIs FMblack eq
+				{1.0 exch sub 4 1 roll pop pop pop} {
+				FrameSepIs FMyellow eq
+				{pop 1.0 exch sub 3 1 roll pop pop} {
+				FrameSepIs FMmagenta eq
+				{pop pop 1.0 exch sub exch pop } {
+				FrameSepIs FMcyan eq
+				{pop pop pop 1.0 exch sub } 
+				{pop pop pop pop 1} ifelse } ifelse } ifelse } ifelse 
+			} ifelse
+			RealSetgray
+		}
+		ifelse
+		end
+	} bind put
+FMLevel1 not { 
+	
+	/patProcDict 5 dict dup begin
+		<0f1e3c78f0e1c387> { 3 setlinewidth -1 -1 moveto 9 9 lineto stroke 
+											4 -4 moveto 12 4 lineto stroke
+											-4 4 moveto 4 12 lineto stroke} bind def
+		<0f87c3e1f0783c1e> { 3 setlinewidth -1 9 moveto 9 -1 lineto stroke 
+											-4 4 moveto 4 -4 lineto stroke
+											4 12 moveto 12 4 lineto stroke} bind def
+		<8142241818244281> { 1 setlinewidth -1 9 moveto 9 -1 lineto stroke
+											-1 -1 moveto 9 9 lineto stroke } bind def
+		<03060c183060c081> { 1 setlinewidth -1 -1 moveto 9 9 lineto stroke 
+											4 -4 moveto 12 4 lineto stroke
+											-4 4 moveto 4 12 lineto stroke} bind def
+		<8040201008040201> { 1 setlinewidth -1 9 moveto 9 -1 lineto stroke 
+											-4 4 moveto 4 -4 lineto stroke
+											4 12 moveto 12 4 lineto stroke} bind def
+	end def
+	/patDict 15 dict dup begin
+		/PatternType 1 def		
+		/PaintType 2 def		
+		/TilingType 3 def		
+		/BBox [ 0 0 8 8 ] def 	
+		/XStep 8 def			
+		/YStep 8 def			
+		/PaintProc {
+			begin
+			patProcDict bstring known {
+				patProcDict bstring get exec
+			} {
+				8 8 true [1 0 0 -1 0 8] bstring imagemask
+			} ifelse
+			end
+		} bind def
+	end def
+} if
+/combineColor {
+    FrameSepIs FMnone eq
+	{
+		graymode FMLevel1 or not {
+			
+			[/Pattern [/DeviceCMYK]] setcolorspace
+			FrameCurColors 0 4 getinterval aload pop FrameCurPat setcolor
+		} {
+			FrameCurColors 3 get 1.0 ge {
+				FrameCurGray RealSetgray
+			} {
+				FMPColor graymode and {
+					0 1 3 { 
+						FrameCurColors exch get
+						1 FrameCurGray sub mul
+					} for
+					RealSetcmykcolor
+				} {
+					4 1 6 {
+						FrameCurColors exch get
+						graymode {
+							1 exch sub 1 FrameCurGray sub mul 1 exch sub
+						} {
+							1.0 lt {FrameCurGray} {1} ifelse
+						} ifelse
+					} for
+					RealSetrgbcolor
+				} ifelse
+			} ifelse
+		} ifelse
+	} { 
+		FrameCurColors 0 4 getinterval aload
+		FrameColorInSepListCMYK {
+			FrameSepBlack eq exch 
+			FrameSepYellow eq and exch 
+			FrameSepMagenta eq and exch 
+			FrameSepCyan eq and
+			FrameSepIs FMcustom eq and
+			{ FrameCurGray } { 1 } ifelse
+		} {
+			FrameSepIs FMblack eq
+			{FrameCurGray 1.0 exch sub mul 1.0 exch sub 4 1 roll pop pop pop} {
+			FrameSepIs FMyellow eq
+			{pop FrameCurGray 1.0 exch sub mul 1.0 exch sub 3 1 roll pop pop} {
+			FrameSepIs FMmagenta eq
+			{pop pop FrameCurGray 1.0 exch sub mul 1.0 exch sub exch pop } {
+			FrameSepIs FMcyan eq
+			{pop pop pop FrameCurGray 1.0 exch sub mul 1.0 exch sub } 
+			{pop pop pop pop 1} ifelse } ifelse } ifelse } ifelse 
+		} ifelse
+		graymode FMLevel1 or not {
+			
+			[/Pattern [/DeviceGray]] setcolorspace
+			FrameCurPat setcolor
+		} { 
+			graymode not FMLevel1 and {
+				
+				dup 1 lt {pop FrameCurGray} if
+			} if
+			RealSetgray
+		} ifelse
+	} ifelse
+} bind def
+/savematrix {
+	orgmatrix currentmatrix pop
+	} bind def
+/restorematrix {
+	orgmatrix setmatrix
+	} bind def
+/dmatrix matrix def
+/dpi    72 0 dmatrix defaultmatrix dtransform
+    dup mul exch   dup mul add   sqrt def
+	
+/freq dpi dup 72 div round dup 0 eq {pop 1} if 8 mul div def
+/sangle 1 0 dmatrix defaultmatrix dtransform exch atan def
+/dpiranges   [  2540    2400    1693     1270    1200     635      600      0      ] def
+/CMLowFreqs  [ 100.402  94.8683 89.2289 100.402  94.8683  66.9349  63.2456 47.4342 ] def
+/YLowFreqs   [  95.25   90.0    84.65    95.25   90.0     70.5556  66.6667 50.0    ] def
+/KLowFreqs   [  89.8026 84.8528 79.8088  89.8026 84.8528  74.8355  70.7107 53.033  ] def
+/CLowAngles  [  71.5651 71.5651 71.5651 71.5651  71.5651  71.5651  71.5651 71.5651 ] def
+/MLowAngles  [  18.4349 18.4349 18.4349 18.4349  18.4349  18.4349  18.4349 18.4349 ] def
+/YLowTDot    [  true    true    false    true    true     false    false   false   ] def
+/CMHighFreqs [ 133.87  126.491 133.843  108.503 102.523  100.402   94.8683 63.2456 ] def
+/YHighFreqs  [ 127.0   120.0   126.975  115.455 109.091   95.25    90.0    60.0    ] def
+/KHighFreqs  [ 119.737 113.137 119.713  128.289 121.218   89.8026  84.8528 63.6395 ] def
+/CHighAngles [  71.5651 71.5651 71.5651  70.0169 70.0169  71.5651  71.5651 71.5651 ] def
+/MHighAngles [  18.4349 18.4349 18.4349  19.9831 19.9831  18.4349  18.4349 18.4349 ] def
+/YHighTDot   [  false   false   true     false   false    true     true    false   ] def
+/PatFreq     [	10.5833 10.0     9.4055  10.5833 10.0	  10.5833  10.0	   9.375   ] def
+/screenIndex {
+	0 1 dpiranges length 1 sub { dup dpiranges exch get 1 sub dpi le {exit} {pop} ifelse } for
+} bind def
+/getCyanScreen {
+	FMUseHighFrequencyScreens { CHighAngles CMHighFreqs} {CLowAngles CMLowFreqs} ifelse
+		screenIndex dup 3 1 roll get 3 1 roll get /FMSpotFunction load
+} bind def
+/getMagentaScreen {
+	FMUseHighFrequencyScreens { MHighAngles CMHighFreqs } {MLowAngles CMLowFreqs} ifelse
+		screenIndex dup 3 1 roll get 3 1 roll get /FMSpotFunction load
+} bind def
+/getYellowScreen {
+	FMUseHighFrequencyScreens { YHighTDot YHighFreqs} { YLowTDot YLowFreqs } ifelse
+		screenIndex dup 3 1 roll get 3 1 roll get { 3 div
+			{2 { 1 add 2 div 3 mul dup floor sub 2 mul 1 sub exch} repeat
+			FMSpotFunction } } {/FMSpotFunction load } ifelse
+			0.0 exch
+} bind def
+/getBlackScreen  {
+	FMUseHighFrequencyScreens { KHighFreqs } { KLowFreqs } ifelse
+		screenIndex get 45.0 /FMSpotFunction load 
+} bind def
+/getSpotScreen {
+	getBlackScreen
+} bind def
+/getCompositeScreen {
+	getBlackScreen
+} bind def
+/FMSetScreen 
+	FMLevel1 { /setscreen load 
+	}{ {
+		8 dict begin
+		/HalftoneType 1 def
+		/SpotFunction exch def
+		/Angle exch def
+		/Frequency exch def
+		/AccurateScreens FMUseAcccurateScreens def
+		currentdict end sethalftone
+	} bind } ifelse
+def
+/setDefaultScreen {
+	FMPColor {
+		orgrxfer cvx orggxfer cvx orgbxfer cvx orgxfer cvx setcolortransfer
+	}
+	{
+		orgxfer cvx settransfer
+	} ifelse
+	orgfreq organgle orgproc cvx setscreen
+} bind def
+/setCurrentScreen {
+	FrameSepIs FMnone eq {
+		FMUseDefaultNoSeparationScreen {
+			setDefaultScreen
+		} {
+			getCompositeScreen FMSetScreen
+		} ifelse
+	} {
+		FrameSepIs FMcustom eq {
+			FMUseDefaultSpotSeparationScreen {
+				setDefaultScreen
+			} {
+				getSpotScreen FMSetScreen
+			} ifelse
+		} {
+			FMUseDefaultProcessSeparationScreen {
+				setDefaultScreen
+			} {
+				FrameSepIs FMcyan eq {
+					getCyanScreen FMSetScreen
+				} {
+					FrameSepIs FMmagenta eq {
+						getMagentaScreen FMSetScreen
+					} {
+						FrameSepIs FMyellow eq {
+							getYellowScreen FMSetScreen
+						} {
+							getBlackScreen FMSetScreen
+						} ifelse
+					} ifelse
+				} ifelse
+			} ifelse
+		} ifelse
+	} ifelse 
+} bind def
+end
+	/gstring FMLOCAL
+	/gfile FMLOCAL
+	/gindex FMLOCAL
+	/orgrxfer FMLOCAL
+	/orggxfer FMLOCAL
+	/orgbxfer FMLOCAL
+	/orgxfer FMLOCAL
+	/orgproc FMLOCAL
+	/orgrproc FMLOCAL
+	/orggproc FMLOCAL
+	/orgbproc FMLOCAL
+	/organgle FMLOCAL
+	/orgrangle FMLOCAL
+	/orggangle FMLOCAL
+	/orgbangle FMLOCAL
+	/orgfreq FMLOCAL
+	/orgrfreq FMLOCAL
+	/orggfreq FMLOCAL
+	/orgbfreq FMLOCAL
+	/yscale FMLOCAL
+	/xscale FMLOCAL
+	/edown FMLOCAL
+	/manualfeed FMLOCAL
+	/paperheight FMLOCAL
+	/paperwidth FMLOCAL
+/FMDOCUMENT { 
+	array /FMfonts exch def 
+	/#copies exch def
+	FrameDict begin
+	0 ne /manualfeed exch def
+	/paperheight exch def
+	/paperwidth exch def
+	0 ne /FrameNegative exch def 
+	0 ne /edown exch def 
+	/yscale exch def
+	/xscale exch def
+	FMLevel1 {
+		manualfeed {setmanualfeed} if
+		/FMdicttop countdictstack 1 add def 
+		/FMoptop count def 
+		setpapername 
+		manualfeed {true} {papersize} ifelse 
+		{manualpapersize} {false} ifelse 
+		{desperatepapersize} {false} ifelse 
+		{ (Can't select requested paper size for Frame print job!) FMFAILURE } if
+		count -1 FMoptop {pop pop} for
+		countdictstack -1 FMdicttop {pop end} for 
+		}
+		{{1 dict dup /PageSize [paperwidth paperheight]put setpagedevice}stopped
+		{ (Can't select requested paper size for Frame print job!) FMFAILURE } if
+		 {1 dict dup /ManualFeed manualfeed put setpagedevice } stopped pop }
+	ifelse 
+	
+	FMPColor {
+		currentcolorscreen
+			cvlit /orgproc exch def
+				  /organgle exch def 
+				  /orgfreq exch def
+			cvlit /orgbproc exch def
+				  /orgbangle exch def 
+				  /orgbfreq exch def
+			cvlit /orggproc exch def
+				  /orggangle exch def 
+				  /orggfreq exch def
+			cvlit /orgrproc exch def
+				  /orgrangle exch def 
+				  /orgrfreq exch def
+			currentcolortransfer 
+			FrameNegative {
+				1 1 4 { 
+					pop { 1 exch sub } concatprocs 4 1 roll
+				} for
+				4 copy
+				setcolortransfer
+			} if
+			cvlit /orgxfer exch def
+			cvlit /orgbxfer exch def
+			cvlit /orggxfer exch def
+			cvlit /orgrxfer exch def
+	} {
+		currentscreen 
+			cvlit /orgproc exch def
+				  /organgle exch def 
+				  /orgfreq exch def
+				  
+		currenttransfer 
+		FrameNegative {
+			{ 1 exch sub } concatprocs
+			dup settransfer
+		} if 
+		cvlit /orgxfer exch def
+	} ifelse
+	end 
+} def 
+/pagesave FMLOCAL
+/orgmatrix FMLOCAL
+/landscape FMLOCAL
+/pwid FMLOCAL
+/FMBEGINPAGE { 
+	FrameDict begin 
+	/pagesave save def
+	3.86 setmiterlimit
+	/landscape exch 0 ne def
+	landscape { 
+		90 rotate 0 exch dup /pwid exch def neg translate pop 
+	}{
+		pop /pwid exch def
+	} ifelse
+	edown { [-1 0 0 1 pwid 0] concat } if
+	0 0 moveto paperwidth 0 lineto paperwidth paperheight lineto 
+	0 paperheight lineto 0 0 lineto 1 setgray fill
+	xscale yscale scale
+	/orgmatrix matrix def
+	gsave 
+} def 
+/FMENDPAGE {
+	grestore 
+	pagesave restore
+	end 
+	showpage
+	} def 
+/FMFONTDEFINE { 
+	FrameDict begin
+	findfont 
+	ReEncode 
+	1 index exch 
+	definefont 
+	FMfonts 3 1 roll 
+	put
+	end 
+	} def 
+/FMFILLS {
+	FrameDict begin dup
+	array /fillvals exch def
+	dict /patCache exch def
+	end 
+	} def 
+/FMFILL {
+	FrameDict begin
+	 fillvals 3 1 roll put
+	end 
+	} def 
+/FMNORMALIZEGRAPHICS { 
+	newpath
+	0.0 0.0 moveto
+	1 setlinewidth
+	0 setlinecap
+	0 0 0 sethsbcolor
+	0 setgray 
+	} bind def
+	/fx FMLOCAL
+	/fy FMLOCAL
+	/fh FMLOCAL
+	/fw FMLOCAL
+	/llx FMLOCAL
+	/lly FMLOCAL
+	/urx FMLOCAL
+	/ury FMLOCAL
+/FMBEGINEPSF { 
+	end 
+	/FMEPSF save def 
+	/showpage {} def 
+% See Adobe's "PostScript Language Reference Manual, 2nd Edition", page 714.
+% "...the following operators MUST NOT be used in an EPS file:" (emphasis ours)
+	/banddevice {(banddevice) FMBADEPSF} def
+	/clear {(clear) FMBADEPSF} def
+	/cleardictstack {(cleardictstack) FMBADEPSF} def 
+	/copypage {(copypage) FMBADEPSF} def
+	/erasepage {(erasepage) FMBADEPSF} def
+	/exitserver {(exitserver) FMBADEPSF} def
+	/framedevice {(framedevice) FMBADEPSF} def
+	/grestoreall {(grestoreall) FMBADEPSF} def
+	/initclip {(initclip) FMBADEPSF} def
+	/initgraphics {(initgraphics) FMBADEPSF} def
+	/initmatrix {(initmatrix) FMBADEPSF} def
+	/quit {(quit) FMBADEPSF} def
+	/renderbands {(renderbands) FMBADEPSF} def
+	/setglobal {(setglobal) FMBADEPSF} def
+	/setpagedevice {(setpagedevice) FMBADEPSF} def
+	/setshared {(setshared) FMBADEPSF} def
+	/startjob {(startjob) FMBADEPSF} def
+	/lettertray {(lettertray) FMBADEPSF} def
+	/letter {(letter) FMBADEPSF} def
+	/lettersmall {(lettersmall) FMBADEPSF} def
+	/11x17tray {(11x17tray) FMBADEPSF} def
+	/11x17 {(11x17) FMBADEPSF} def
+	/ledgertray {(ledgertray) FMBADEPSF} def
+	/ledger {(ledger) FMBADEPSF} def
+	/legaltray {(legaltray) FMBADEPSF} def
+	/legal {(legal) FMBADEPSF} def
+	/statementtray {(statementtray) FMBADEPSF} def
+	/statement {(statement) FMBADEPSF} def
+	/executivetray {(executivetray) FMBADEPSF} def
+	/executive {(executive) FMBADEPSF} def
+	/a3tray {(a3tray) FMBADEPSF} def
+	/a3 {(a3) FMBADEPSF} def
+	/a4tray {(a4tray) FMBADEPSF} def
+	/a4 {(a4) FMBADEPSF} def
+	/a4small {(a4small) FMBADEPSF} def
+	/b4tray {(b4tray) FMBADEPSF} def
+	/b4 {(b4) FMBADEPSF} def
+	/b5tray {(b5tray) FMBADEPSF} def
+	/b5 {(b5) FMBADEPSF} def
+	FMNORMALIZEGRAPHICS 
+	[/fy /fx /fh /fw /ury /urx /lly /llx] {exch def} forall 
+	fx fw 2 div add fy fh 2 div add  translate
+	rotate
+	fw 2 div neg fh 2 div neg translate
+	fw urx llx sub div fh ury lly sub div scale 
+	llx neg lly neg translate 
+	/FMdicttop countdictstack 1 add def 
+	/FMoptop count def 
+	} bind def
+/FMENDEPSF {
+	count -1 FMoptop {pop pop} for 
+	countdictstack -1 FMdicttop {pop end} for 
+	FMEPSF restore
+	FrameDict begin 
+	} bind def
+FrameDict begin 
+/setmanualfeed {
+%%BeginFeature *ManualFeed True
+	 statusdict /manualfeed true put
+%%EndFeature
+	} bind def
+/max {2 copy lt {exch} if pop} bind def
+/min {2 copy gt {exch} if pop} bind def
+/inch {72 mul} def
+/pagedimen { 
+	paperheight sub abs 16 lt exch 
+	paperwidth sub abs 16 lt and
+	{/papername exch def} {pop} ifelse
+	} bind def
+	/papersizedict FMLOCAL
+/setpapername { 
+	/papersizedict 14 dict def 
+	papersizedict begin
+	/papername /unknown def 
+		/Letter 8.5 inch 11.0 inch pagedimen
+		/LetterSmall 7.68 inch 10.16 inch pagedimen
+		/Tabloid 11.0 inch 17.0 inch pagedimen
+		/Ledger 17.0 inch 11.0 inch pagedimen
+		/Legal 8.5 inch 14.0 inch pagedimen
+		/Statement 5.5 inch 8.5 inch pagedimen
+		/Executive 7.5 inch 10.0 inch pagedimen
+		/A3 11.69 inch 16.5 inch pagedimen
+		/A4 8.26 inch 11.69 inch pagedimen
+		/A4Small 7.47 inch 10.85 inch pagedimen
+		/B4 10.125 inch 14.33 inch pagedimen
+		/B5 7.16 inch 10.125 inch pagedimen
+	end
+	} bind def
+/papersize {
+	papersizedict begin
+		/Letter {lettertray letter} def
+		/LetterSmall {lettertray lettersmall} def
+		/Tabloid {11x17tray 11x17} def
+		/Ledger {ledgertray ledger} def
+		/Legal {legaltray legal} def
+		/Statement {statementtray statement} def
+		/Executive {executivetray executive} def
+		/A3 {a3tray a3} def
+		/A4 {a4tray a4} def
+		/A4Small {a4tray a4small} def
+		/B4 {b4tray b4} def
+		/B5 {b5tray b5} def
+		/unknown {unknown} def
+	papersizedict dup papername known {papername} {/unknown} ifelse get
+	end
+	statusdict begin stopped end 
+	} bind def
+/manualpapersize {
+	papersizedict begin
+		/Letter {letter} def
+		/LetterSmall {lettersmall} def
+		/Tabloid {11x17} def
+		/Ledger {ledger} def
+		/Legal {legal} def
+		/Statement {statement} def
+		/Executive {executive} def
+		/A3 {a3} def
+		/A4 {a4} def
+		/A4Small {a4small} def
+		/B4 {b4} def
+		/B5 {b5} def
+		/unknown {unknown} def
+	papersizedict dup papername known {papername} {/unknown} ifelse get
+	end
+	stopped 
+	} bind def
+/desperatepapersize {
+	statusdict /setpageparams known
+		{
+		paperwidth paperheight 0 1 
+		statusdict begin
+		{setpageparams} stopped 
+		end
+		} {true} ifelse 
+	} bind def
+/DiacriticEncoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /space /exclam /quotedbl
+/numbersign /dollar /percent /ampersand /quotesingle /parenleft
+/parenright /asterisk /plus /comma /hyphen /period /slash /zero /one
+/two /three /four /five /six /seven /eight /nine /colon /semicolon
+/less /equal /greater /question /at /A /B /C /D /E /F /G /H /I /J /K
+/L /M /N /O /P /Q /R /S /T /U /V /W /X /Y /Z /bracketleft /backslash
+/bracketright /asciicircum /underscore /grave /a /b /c /d /e /f /g /h
+/i /j /k /l /m /n /o /p /q /r /s /t /u /v /w /x /y /z /braceleft /bar
+/braceright /asciitilde /.notdef /Adieresis /Aring /Ccedilla /Eacute
+/Ntilde /Odieresis /Udieresis /aacute /agrave /acircumflex /adieresis
+/atilde /aring /ccedilla /eacute /egrave /ecircumflex /edieresis
+/iacute /igrave /icircumflex /idieresis /ntilde /oacute /ograve
+/ocircumflex /odieresis /otilde /uacute /ugrave /ucircumflex
+/udieresis /dagger /.notdef /cent /sterling /section /bullet
+/paragraph /germandbls /registered /copyright /trademark /acute
+/dieresis /.notdef /AE /Oslash /.notdef /.notdef /.notdef /.notdef
+/yen /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/ordfeminine /ordmasculine /.notdef /ae /oslash /questiondown
+/exclamdown /logicalnot /.notdef /florin /.notdef /.notdef
+/guillemotleft /guillemotright /ellipsis /.notdef /Agrave /Atilde
+/Otilde /OE /oe /endash /emdash /quotedblleft /quotedblright
+/quoteleft /quoteright /.notdef /.notdef /ydieresis /Ydieresis
+/fraction /currency /guilsinglleft /guilsinglright /fi /fl /daggerdbl
+/periodcentered /quotesinglbase /quotedblbase /perthousand
+/Acircumflex /Ecircumflex /Aacute /Edieresis /Egrave /Iacute
+/Icircumflex /Idieresis /Igrave /Oacute /Ocircumflex /.notdef /Ograve
+/Uacute /Ucircumflex /Ugrave /dotlessi /circumflex /tilde /macron
+/breve /dotaccent /ring /cedilla /hungarumlaut /ogonek /caron
+] def
+/ReEncode { 
+	dup 
+	length 
+	dict begin 
+	{
+	1 index /FID ne 
+		{def} 
+		{pop pop} ifelse 
+	} forall 
+	0 eq {/Encoding DiacriticEncoding def} if 
+	currentdict 
+	end 
+	} bind def
+FMPColor 
+	
+	{
+	/BEGINBITMAPCOLOR { 
+		BITMAPCOLOR} def
+	/BEGINBITMAPCOLORc { 
+		BITMAPCOLORc} def
+	/BEGINBITMAPTRUECOLOR { 
+		BITMAPTRUECOLOR } def
+	/BEGINBITMAPTRUECOLORc { 
+		BITMAPTRUECOLORc } def
+	}
+	
+	{
+	/BEGINBITMAPCOLOR { 
+		BITMAPGRAY} def
+	/BEGINBITMAPCOLORc { 
+		BITMAPGRAYc} def
+	/BEGINBITMAPTRUECOLOR { 
+		BITMAPTRUEGRAY } def
+	/BEGINBITMAPTRUECOLORc { 
+		BITMAPTRUEGRAYc } def
+	}
+ifelse
+/K { 
+	FMPrintAllColorsAsBlack {
+		dup 1 eq 2 index 1 eq and 3 index 1 eq and not
+			{7 {pop} repeat 0 0 0 1 0 0 0} if
+	} if 
+	FrameCurColors astore 
+	pop combineColor
+} bind def
+/graymode true def
+	/bwidth FMLOCAL
+	/bpside FMLOCAL
+	/bstring FMLOCAL
+	/onbits FMLOCAL
+	/offbits FMLOCAL
+	/xindex FMLOCAL
+	/yindex FMLOCAL
+	/x FMLOCAL
+	/y FMLOCAL
+/setPatternMode {
+	FMLevel1 {
+		/bwidth  exch def
+		/bpside  exch def
+		/bstring exch def
+		/onbits 0 def  /offbits 0 def
+		freq sangle landscape {90 add} if 
+			{/y exch def
+			 /x exch def
+			 /xindex x 1 add 2 div bpside mul cvi def
+			 /yindex y 1 add 2 div bpside mul cvi def
+			 bstring yindex bwidth mul xindex 8 idiv add get
+			 1 7 xindex 8 mod sub bitshift and 0 ne FrameNegative {not} if
+			 {/onbits  onbits  1 add def 1}
+			 {/offbits offbits 1 add def 0}
+			 ifelse
+			}
+			setscreen
+		offbits offbits onbits add div FrameNegative {1.0 exch sub} if
+		/FrameCurGray exch def
+	} { 
+		pop pop
+		dup patCache exch known {
+			patCache exch get
+		} { 
+			dup
+			patDict /bstring 3 -1 roll put
+			patDict 
+			9 PatFreq screenIndex get div dup matrix scale
+			makepattern
+			dup 
+			patCache 4 -1 roll 3 -1 roll put
+		} ifelse
+		/FrameCurGray 0 def
+		/FrameCurPat exch def
+	} ifelse
+	/graymode false def
+	combineColor
+} bind def
+/setGrayScaleMode {
+	graymode not {
+		/graymode true def
+		FMLevel1 {
+			setCurrentScreen
+		} if
+	} if
+	/FrameCurGray exch def
+	combineColor
+} bind def
+/normalize {
+	transform round exch round exch itransform
+	} bind def
+/dnormalize {
+	dtransform round exch round exch idtransform
+	} bind def
+/lnormalize { 
+	0 dtransform exch cvi 2 idiv 2 mul 1 add exch idtransform pop
+	} bind def
+/H { 
+	lnormalize setlinewidth
+	} bind def
+/Z {
+	setlinecap
+	} bind def
+	
+/PFill {
+	graymode FMLevel1 or not {
+		gsave 1 setgray eofill grestore
+	} if
+} bind def
+/PStroke {
+	graymode FMLevel1 or not {
+		gsave 1 setgray stroke grestore
+	} if
+	stroke
+} bind def
+	/fillvals FMLOCAL
+/X { 
+	fillvals exch get
+	dup type /stringtype eq
+	{8 1 setPatternMode} 
+	{setGrayScaleMode}
+	ifelse
+	} bind def
+/V { 
+	PFill gsave eofill grestore
+	} bind def
+/Vclip {
+	clip
+	} bind def
+/Vstrk {
+	currentlinewidth exch setlinewidth PStroke setlinewidth
+	} bind def
+/N { 
+	PStroke
+	} bind def
+/Nclip {
+	strokepath clip newpath
+	} bind def
+/Nstrk {
+	currentlinewidth exch setlinewidth PStroke setlinewidth
+	} bind def
+/M {newpath moveto} bind def
+/E {lineto} bind def
+/D {curveto} bind def
+/O {closepath} bind def
+	/n FMLOCAL
+/L { 
+ 	/n exch def
+	newpath
+	normalize
+	moveto 
+	2 1 n {pop normalize lineto} for
+	} bind def
+/Y { 
+	L 
+	closepath
+	} bind def
+	/x1 FMLOCAL
+	/x2 FMLOCAL
+	/y1 FMLOCAL
+	/y2 FMLOCAL
+/R { 
+	/y2 exch def
+	/x2 exch def
+	/y1 exch def
+	/x1 exch def
+	x1 y1
+	x2 y1
+	x2 y2
+	x1 y2
+	4 Y 
+	} bind def
+	/rad FMLOCAL
+/rarc 
+	{rad 
+	 arcto
+	} bind def
+/RR { 
+	/rad exch def
+	normalize
+	/y2 exch def
+	/x2 exch def
+	normalize
+	/y1 exch def
+	/x1 exch def
+	mark
+	newpath
+	{
+	x1 y1 rad add moveto
+	x1 y2 x2 y2 rarc
+	x2 y2 x2 y1 rarc
+	x2 y1 x1 y1 rarc
+	x1 y1 x1 y2 rarc
+	closepath
+	} stopped {x1 y1 x2 y2 R} if 
+	cleartomark
+	} bind def
+/RRR { 
+	/rad exch def
+	normalize /y4 exch def /x4 exch def
+	normalize /y3 exch def /x3 exch def
+	normalize /y2 exch def /x2 exch def
+	normalize /y1 exch def /x1 exch def
+	newpath
+	normalize moveto 
+	mark
+	{
+	x2 y2 x3 y3 rarc
+	x3 y3 x4 y4 rarc
+	x4 y4 x1 y1 rarc
+	x1 y1 x2 y2 rarc
+	closepath
+	} stopped
+	 {x1 y1 x2 y2 x3 y3 x4 y4 newpath moveto lineto lineto lineto closepath} if
+	cleartomark
+	} bind def
+/C { 
+	grestore
+	gsave
+	R 
+	clip
+	setCurrentScreen
+} bind def
+/CP { 
+	grestore
+	gsave
+	Y 
+	clip
+	setCurrentScreen
+} bind def
+	/FMpointsize FMLOCAL
+/F { 
+	FMfonts exch get
+	FMpointsize scalefont
+	setfont
+	} bind def
+/Q { 
+	/FMpointsize exch def
+	F 
+	} bind def
+/T { 
+	moveto show
+	} bind def
+/RF { 
+	rotate
+	0 ne {-1 1 scale} if
+	} bind def
+/TF { 
+	gsave
+	moveto 
+	RF
+	show
+	grestore
+	} bind def
+/P { 
+	moveto
+	0 32 3 2 roll widthshow
+	} bind def
+/PF { 
+	gsave
+	moveto 
+	RF
+	0 32 3 2 roll widthshow
+	grestore
+	} bind def
+/S { 
+	moveto
+	0 exch ashow
+	} bind def
+/SF { 
+	gsave
+	moveto
+	RF
+	0 exch ashow
+	grestore
+	} bind def
+/B { 
+	moveto
+	0 32 4 2 roll 0 exch awidthshow
+	} bind def
+/BF { 
+	gsave
+	moveto
+	RF
+	0 32 4 2 roll 0 exch awidthshow
+	grestore
+	} bind def
+/G { 
+	gsave
+	newpath
+	normalize translate 0.0 0.0 moveto 
+	dnormalize scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	closepath 
+	PFill fill
+	grestore
+	} bind def
+/Gstrk {
+	savematrix
+    newpath
+    2 index 2 div add exch 3 index 2 div sub exch 
+    normalize 2 index 2 div sub exch 3 index 2 div add exch 
+    translate
+    scale 
+    0.0 0.0 1.0 5 3 roll arc 
+    restorematrix
+    currentlinewidth exch setlinewidth PStroke setlinewidth
+    } bind def
+/Gclip { 
+	newpath
+	savematrix
+	normalize translate 0.0 0.0 moveto 
+	dnormalize scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	closepath 
+	clip newpath
+	restorematrix
+	} bind def
+/GG { 
+	gsave
+	newpath
+	normalize translate 0.0 0.0 moveto 
+	rotate 
+	dnormalize scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	closepath
+	PFill
+	fill
+	grestore
+	} bind def
+/GGclip { 
+	savematrix
+	newpath
+    normalize translate 0.0 0.0 moveto 
+    rotate 
+    dnormalize scale 
+    0.0 0.0 1.0 5 3 roll arc 
+    closepath
+	clip newpath
+	restorematrix
+	} bind def
+/GGstrk { 
+	savematrix
+    newpath
+    normalize translate 0.0 0.0 moveto 
+    rotate 
+    dnormalize scale 
+    0.0 0.0 1.0 5 3 roll arc 
+    closepath 
+	restorematrix
+    currentlinewidth exch setlinewidth PStroke setlinewidth
+	} bind def
+/A { 
+	gsave
+	savematrix
+	newpath
+	2 index 2 div add exch 3 index 2 div sub exch 
+	normalize 2 index 2 div sub exch 3 index 2 div add exch 
+	translate 
+	scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	restorematrix
+	PStroke
+	grestore
+	} bind def
+/Aclip {
+	newpath
+	savematrix
+	normalize translate 0.0 0.0 moveto 
+	dnormalize scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	closepath 
+	strokepath clip newpath
+	restorematrix
+} bind def
+/Astrk {
+	Gstrk
+} bind def
+/AA { 
+	gsave
+	savematrix
+	newpath
+	
+	3 index 2 div add exch 4 index 2 div sub exch 
+	
+	normalize 3 index 2 div sub exch 4 index 2 div add exch
+	translate 
+	rotate 
+	scale 
+	0.0 0.0 1.0 5 3 roll arc 
+	restorematrix
+	PStroke
+	grestore
+	} bind def
+/AAclip {
+	savematrix
+	newpath
+    normalize translate 0.0 0.0 moveto 
+    rotate 
+    dnormalize scale 
+    0.0 0.0 1.0 5 3 roll arc 
+    closepath
+	strokepath clip newpath
+	restorematrix
+} bind def
+/AAstrk {
+	GGstrk
+} bind def
+	/x FMLOCAL
+	/y FMLOCAL
+	/w FMLOCAL
+	/h FMLOCAL
+	/xx FMLOCAL
+	/yy FMLOCAL
+	/ww FMLOCAL
+	/hh FMLOCAL
+	/FMsaveobject FMLOCAL
+	/FMoptop FMLOCAL
+	/FMdicttop FMLOCAL
+/BEGINPRINTCODE { 
+	/FMdicttop countdictstack 1 add def 
+	/FMoptop count 7 sub def 
+	/FMsaveobject save def
+	userdict begin 
+	/showpage {} def 
+	FMNORMALIZEGRAPHICS 
+	3 index neg 3 index neg translate
+	} bind def
+/ENDPRINTCODE {
+	count -1 FMoptop {pop pop} for 
+	countdictstack -1 FMdicttop {pop end} for 
+	FMsaveobject restore 
+	} bind def
+/gn { 
+	0 
+	{	46 mul 
+		cf read pop 
+		32 sub 
+		dup 46 lt {exit} if 
+		46 sub add 
+		} loop
+	add 
+	} bind def
+	/str FMLOCAL
+/cfs { 
+	/str sl string def 
+	0 1 sl 1 sub {str exch val put} for 
+	str def 
+	} bind def
+/ic [ 
+	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0223
+	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0223
+	0
+	{0 hx} {1 hx} {2 hx} {3 hx} {4 hx} {5 hx} {6 hx} {7 hx} {8 hx} {9 hx}
+	{10 hx} {11 hx} {12 hx} {13 hx} {14 hx} {15 hx} {16 hx} {17 hx} {18 hx}
+	{19 hx} {gn hx} {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}
+	{13} {14} {15} {16} {17} {18} {19} {gn} {0 wh} {1 wh} {2 wh} {3 wh}
+	{4 wh} {5 wh} {6 wh} {7 wh} {8 wh} {9 wh} {10 wh} {11 wh} {12 wh}
+	{13 wh} {14 wh} {gn wh} {0 bl} {1 bl} {2 bl} {3 bl} {4 bl} {5 bl} {6 bl}
+	{7 bl} {8 bl} {9 bl} {10 bl} {11 bl} {12 bl} {13 bl} {14 bl} {gn bl}
+	{0 fl} {1 fl} {2 fl} {3 fl} {4 fl} {5 fl} {6 fl} {7 fl} {8 fl} {9 fl}
+	{10 fl} {11 fl} {12 fl} {13 fl} {14 fl} {gn fl}
+	] def
+	/sl FMLOCAL
+	/val FMLOCAL
+	/ws FMLOCAL
+	/im FMLOCAL
+	/bs FMLOCAL
+	/cs FMLOCAL
+	/len FMLOCAL
+	/pos FMLOCAL
+/ms { 
+	/sl exch def 
+	/val 255 def 
+	/ws cfs 
+	/im cfs 
+	/val 0 def 
+	/bs cfs 
+	/cs cfs 
+	} bind def
+400 ms 
+/ip { 
+	is 
+	0 
+	cf cs readline pop 
+	{	ic exch get exec 
+		add 
+		} forall 
+	pop 
+	
+	} bind def
+/rip { 
+	   
+	  
+	  bis ris copy pop 
+      is
+      0
+      cf cs readline pop 
+      {       ic exch get exec 
+              add 
+              } forall 
+	  pop pop 
+	  ris gis copy pop 
+	  dup is exch 
+	  
+      cf cs readline pop 
+      {       ic exch get exec 
+              add 
+              } forall 
+	  pop pop
+	  gis bis copy pop 
+	  dup add is exch 
+	  
+      cf cs readline pop 
+      {       ic exch get exec 
+              add 
+              } forall 
+      pop 
+      
+      } bind def
+/wh { 
+	/len exch def 
+	/pos exch def 
+	ws 0 len getinterval im pos len getinterval copy pop
+	pos len 
+	} bind def
+/bl { 
+	/len exch def 
+	/pos exch def 
+	bs 0 len getinterval im pos len getinterval copy pop
+	pos len 
+	} bind def
+/s1 1 string def
+/fl { 
+	/len exch def 
+	/pos exch def 
+	/val cf s1 readhexstring pop 0 get def
+	pos 1 pos len add 1 sub {im exch val put} for
+	pos len 
+	} bind def
+/hx { 
+	3 copy getinterval 
+	cf exch readhexstring pop pop 
+	} bind def
+	/h FMLOCAL
+	/w FMLOCAL
+	/d FMLOCAL
+	/lb FMLOCAL
+	/bitmapsave FMLOCAL
+	/is FMLOCAL
+	/cf FMLOCAL
+/wbytes { 
+      dup dup
+      24 eq { pop pop 3 mul }
+      { 8 eq {pop} {1 eq {7 add 8 idiv} {3 add 4 idiv} ifelse} ifelse } ifelse
+	} bind def
+/BEGINBITMAPBWc { 
+	1 {} COMMONBITMAPc
+	} bind def
+/BEGINBITMAPGRAYc { 
+	8 {} COMMONBITMAPc
+	} bind def
+/BEGINBITMAP2BITc { 
+	2 {} COMMONBITMAPc
+	} bind def
+/COMMONBITMAPc { 
+		 
+	/r exch def
+	/d exch def
+	gsave
+	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/lb w d wbytes def 
+	sl lb lt {lb ms} if 
+	/bitmapsave save def 
+	r                    
+	/is im 0 lb getinterval def 
+	ws 0 lb getinterval is copy pop 
+	/cf currentfile def 
+	w h d [w 0 0 h neg 0 h] 
+	{ip} image 
+	bitmapsave restore 
+	grestore
+	} bind def
+/BEGINBITMAPBW { 
+	1 {} COMMONBITMAP
+	} bind def
+/BEGINBITMAPGRAY { 
+	8 {} COMMONBITMAP
+	} bind def
+/BEGINBITMAP2BIT { 
+	2 {} COMMONBITMAP
+	} bind def
+/COMMONBITMAP { 
+	/r exch def
+	/d exch def
+	gsave
+	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/bitmapsave save def 
+	r                    
+	/is w d wbytes string def
+	/cf currentfile def 
+	w h d [w 0 0 h neg 0 h] 
+	{cf is readhexstring pop} image
+	bitmapsave restore 
+	grestore
+	} bind def
+/ngrayt 256 array def
+/nredt 256 array def
+/nbluet 256 array def
+/ngreent 256 array def
+	/gryt FMLOCAL
+	/blut FMLOCAL
+	/grnt FMLOCAL
+	/redt FMLOCAL
+	/indx FMLOCAL
+	/cynu FMLOCAL
+	/magu FMLOCAL
+	/yelu FMLOCAL
+	/k FMLOCAL
+	/u FMLOCAL
+FMLevel1 {
+/colorsetup {
+	currentcolortransfer
+	/gryt exch def
+	/blut exch def
+	/grnt exch def
+	/redt exch def
+	0 1 255 {
+		/indx exch def
+		/cynu 1 red indx get 255 div sub def
+		/magu 1 green indx get 255 div sub def
+		/yelu 1 blue indx get 255 div sub def
+		/k cynu magu min yelu min def
+		/u k currentundercolorremoval exec def
+%		/u 0 def
+		nredt indx 1 0 cynu u sub max sub redt exec put
+		ngreent indx 1 0 magu u sub max sub grnt exec put
+		nbluet indx 1 0 yelu u sub max sub blut exec put
+		ngrayt indx 1 k currentblackgeneration exec sub gryt exec put
+	} for
+	{255 mul cvi nredt exch get}
+	{255 mul cvi ngreent exch get}
+	{255 mul cvi nbluet exch get}
+	{255 mul cvi ngrayt exch get}
+	setcolortransfer
+	{pop 0} setundercolorremoval
+	{} setblackgeneration
+	} bind def
+}
+{
+/colorSetup2 {
+	[ /Indexed /DeviceRGB 255 
+		{dup red exch get 255 div 
+		 exch dup green exch get 255 div 
+		 exch blue exch get 255 div}
+	] setcolorspace
+} bind def
+} ifelse
+	/tran FMLOCAL
+/fakecolorsetup {
+	/tran 256 string def
+	0 1 255 {/indx exch def 
+		tran indx
+		red indx get 77 mul
+		green indx get 151 mul
+		blue indx get 28 mul
+		add add 256 idiv put} for
+	currenttransfer
+	{255 mul cvi tran exch get 255.0 div}
+	exch concatprocs settransfer
+} bind def
+/BITMAPCOLOR { 
+	/d 8 def
+	gsave
+	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/bitmapsave save def
+	FMLevel1 {	
+		colorsetup
+		/is w d wbytes string def
+		/cf currentfile def 
+		w h d [w 0 0 h neg 0 h] 
+		{cf is readhexstring pop} {is} {is} true 3 colorimage 
+	} {
+		colorSetup2
+		/is w d wbytes string def
+		/cf currentfile def 
+		7 dict dup begin
+			/ImageType 1 def
+			/Width w def
+			/Height h def
+			/ImageMatrix [w 0 0 h neg 0 h] def
+			/DataSource {cf is readhexstring pop} bind def
+			/BitsPerComponent d def
+			/Decode [0 255] def
+		end image	
+	} ifelse
+	bitmapsave restore 
+	grestore
+	} bind def
+/BITMAPCOLORc { 
+	/d 8 def
+	gsave
+	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/lb w d wbytes def 
+	sl lb lt {lb ms} if 
+	/bitmapsave save def 
+	FMLevel1 {	
+		colorsetup
+		/is im 0 lb getinterval def 
+		ws 0 lb getinterval is copy pop 
+		/cf currentfile def 
+		w h d [w 0 0 h neg 0 h] 
+		{ip} {is} {is} true 3 colorimage
+	} {
+		colorSetup2
+		/is im 0 lb getinterval def 
+		ws 0 lb getinterval is copy pop 
+		/cf currentfile def 
+		7 dict dup begin
+			/ImageType 1 def
+			/Width w def
+			/Height h def
+			/ImageMatrix [w 0 0 h neg 0 h] def
+			/DataSource {ip} bind def
+			/BitsPerComponent d def
+			/Decode [0 255] def
+		end image	
+	} ifelse
+	bitmapsave restore 
+	grestore
+	} bind def
+/BITMAPTRUECOLORc { 
+	/d 24 def
+        gsave
+ 	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/lb w d wbytes def 
+	sl lb lt {lb ms} if 
+        /bitmapsave save def 
+        
+	/is im 0 lb getinterval def	
+	/ris im 0 w getinterval def	
+	/gis im w w getinterval def	
+	/bis im w 2 mul w getinterval def 
+        
+        ws 0 lb getinterval is copy pop 
+        /cf currentfile def 
+        w h 8 [w 0 0 h neg 0 h] 
+        {w rip pop ris} {gis} {bis} true 3 colorimage
+        bitmapsave restore 
+        grestore
+        } bind def
+/BITMAPTRUECOLOR { 
+        gsave
+		
+		3 index 2 div add exch	
+		4 index 2 div add exch	
+		translate		
+		rotate			
+		1 index 2 div neg	
+		1 index 2 div neg	
+		translate		
+		scale			
+		/h exch def /w exch def
+        /bitmapsave save def 
+        /is w string def
+        /gis w string def
+        /bis w string def
+        /cf currentfile def 
+        w h 8 [w 0 0 h neg 0 h] 
+        { cf is readhexstring pop } 
+        { cf gis readhexstring pop } 
+        { cf bis readhexstring pop } 
+        true 3 colorimage 
+        bitmapsave restore 
+        grestore
+        } bind def
+/BITMAPTRUEGRAYc { 
+	/d 24 def
+        gsave
+	
+	3 index 2 div add exch	
+	4 index 2 div add exch	
+	translate		
+	rotate			
+	1 index 2 div neg	
+	1 index 2 div neg	
+	translate		
+	scale			
+	/h exch def /w exch def
+	/lb w d wbytes def 
+	sl lb lt {lb ms} if 
+        /bitmapsave save def 
+        
+	/is im 0 lb getinterval def	
+	/ris im 0 w getinterval def	
+	/gis im w w getinterval def	
+	/bis im w 2 mul w getinterval def 
+        ws 0 lb getinterval is copy pop 
+        /cf currentfile def 
+        w h 8 [w 0 0 h neg 0 h] 
+        {w rip pop ris gis bis w gray} image
+        bitmapsave restore 
+        grestore
+        } bind def
+/ww FMLOCAL
+/r FMLOCAL
+/g FMLOCAL
+/b FMLOCAL
+/i FMLOCAL
+/gray { 
+        /ww exch def
+        /b exch def
+        /g exch def
+        /r exch def
+        0 1 ww 1 sub { /i exch def r i get .299 mul g i get .587 mul
+			b i get .114 mul add add r i 3 -1 roll floor cvi put } for
+        r
+        } bind def
+/BITMAPTRUEGRAY { 
+        gsave
+		
+		3 index 2 div add exch	
+		4 index 2 div add exch	
+		translate		
+		rotate			
+		1 index 2 div neg	
+		1 index 2 div neg	
+		translate		
+		scale			
+		/h exch def /w exch def
+        /bitmapsave save def 
+        /is w string def
+        /gis w string def
+        /bis w string def
+        /cf currentfile def 
+        w h 8 [w 0 0 h neg 0 h] 
+        { cf is readhexstring pop 
+          cf gis readhexstring pop 
+          cf bis readhexstring pop w gray}  image
+        bitmapsave restore 
+        grestore
+        } bind def
+/BITMAPGRAY { 
+	8 {fakecolorsetup} COMMONBITMAP
+	} bind def
+/BITMAPGRAYc { 
+	8 {fakecolorsetup} COMMONBITMAPc
+	} bind def
+/ENDBITMAP {
+	} bind def
+end 
+	/ALDsave FMLOCAL
+	/ALDmatrix matrix def ALDmatrix currentmatrix pop
+/StartALD {
+	/ALDsave save def
+	 savematrix
+	 ALDmatrix setmatrix
+	} bind def
+/InALD {
+	 restorematrix
+	} bind def
+/DoneALD {
+	 ALDsave restore
+	} bind def
+/I { setdash } bind def
+/J { [] 0 setdash } bind def
+%%EndProlog
+%%BeginSetup
+(4.0) FMVERSION
+1 1 0 0 612 792 0 1 6 FMDOCUMENT
+0 0 /Times-Roman FMFONTDEFINE
+1 0 /Courier FMFONTDEFINE
+2 0 /Courier-Oblique FMFONTDEFINE
+3 0 /Times-Bold FMFONTDEFINE
+4 0 /Courier-Bold FMFONTDEFINE
+32 FMFILLS
+0 0 FMFILL
+1 0.1 FMFILL
+2 0.3 FMFILL
+3 0.5 FMFILL
+4 0.7 FMFILL
+5 0.9 FMFILL
+6 0.97 FMFILL
+7 1 FMFILL
+8 <0f1e3c78f0e1c387> FMFILL
+9 <0f87c3e1f0783c1e> FMFILL
+10 <cccccccccccccccc> FMFILL
+11 <ffff0000ffff0000> FMFILL
+12 <8142241818244281> FMFILL
+13 <03060c183060c081> FMFILL
+14 <8040201008040201> FMFILL
+16 1 FMFILL
+17 0.9 FMFILL
+18 0.7 FMFILL
+19 0.5 FMFILL
+20 0.3 FMFILL
+21 0.1 FMFILL
+22 0.03 FMFILL
+23 0 FMFILL
+24 <f0e1c3870f1e3c78> FMFILL
+25 <f0783c1e0f87c3e1> FMFILL
+26 <3333333333333333> FMFILL
+27 <0000ffff0000ffff> FMFILL
+28 <7ebddbe7e7dbbd7e> FMFILL
+29 <fcf9f3e7cf9f3f7e> FMFILL
+30 <7fbfdfeff7fbfdfe> FMFILL
+%%EndSetup
+%%Page: "15" 1
+%%BeginPaperSize: Letter
+%%EndPaperSize
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+J
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 15) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(            DATE_DURATION) 72 713.33 T
+(            DATE) 72 701.33 T
+(        DATE_TIME_VALUE...) 72 689.33 T
+(PART_COMPARABLE) 72 665.33 T
+(    DURATION) 72 653.33 T
+(        TIME_DURATION) 72 641.33 T
+(        DATE_TIME_DURATION) 72 629.33 T
+(        DATE_DURATION) 72 617.33 T
+(    INTERVAL [G -> ABSOLUTE]) 72 605.33 T
+(    COMPARABLE) 72 593.33 T
+(        ABSOLUTE) 72 581.33 T
+(            TIME) 72 569.33 T
+(            DATE_TIME) 72 557.33 T
+(            DATE) 72 545.33 T
+(GROUP_ELEMENT) 72 521.33 T
+(    DURATION) 72 509.33 T
+(        TIME_DURATION) 72 497.33 T
+(        DATE_TIME_DURATION) 72 485.33 T
+(        DATE_DURATION) 72 473.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "15" 1
+%%Page: "14" 2
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 14) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(\050instead of an INTEGER\051.) 72 713.33 T
+2 F
+(fine_second) 222 713.33 T
+1 F
+( is then set to this value.) 288 713.33 T
+1.8 (-) 72 701.33 P
+2 F
+1.8 (make_by_fine_seconds) 85.8 701.33 P
+1 F
+1.8 ( looks like) 205.8 701.33 P
+2 F
+1.8 (make_by_seconds) 283.2 701.33 P
+1 F
+1.8 ( but it takes a DOUBLE for) 373.2 701.33 P
+(argument \050instead of an INTEGER\051.) 72 689.33 T
+(Comparison \050common\051) 108 665.33 T
+4.5 (There are no new features. The same ones are available since they are) 72 653.33 P
+1 (written to deal with precision. It is possible to compare two instances, one) 72 641.33 P
+(with precision and the other one without.) 72 629.33 T
+(Measurement and access) 108 605.33 T
+(In TIME:) 72 593.33 T
+(-) 72 581.33 T
+2 F
+(fine_seconds) 84 581.33 T
+1 F
+( looks like) 156 581.33 T
+2 F
+(seconds) 228 581.33 T
+1 F
+( but it contains fractions.) 270 581.33 T
+(In TIME_DURATION:) 72 569.33 T
+(-) 72 557.33 T
+2 F
+(fine_seconds_count) 84 557.33 T
+1 F
+( looks like) 192 557.33 T
+2 F
+(seconds_count) 264 557.33 T
+1 F
+( but it contains fractions.) 342 557.33 T
+(Element change) 108 533.33 T
+1 (-) 72 521.33 P
+2 F
+1 (set_fine_second) 85 521.33 P
+1 F
+1 ( allows to set directly) 175 521.33 P
+2 F
+1 (fine_second) 324 521.33 P
+1 F
+1 ( to a DOUBLE. In TIME, a) 390 521.33 P
+(precondition requires that the argument stands in the allowed range.) 72 509.33 T
+2.4 (-) 72 497.33 P
+2 F
+2.4 (set_fractionals) 86.4 497.33 P
+1 F
+2.4 ( allows to set directly) 176.4 497.33 P
+2 F
+2.4 (fractional_second) 332.4 497.33 P
+1 F
+2.4 ( to a DOUBLE. In) 434.4 497.33 P
+1.64 (TIME a precondition requires that the argument is positive and smaller than) 72 485.33 P
+2.18 (one. In TIME_DURATION the precondition is particular: it is not allowed to) 72 473.33 P
+2.5 (have an argument with a different sign than) 72 461.33 P
+2 F
+2.5 (second) 356 461.33 P
+1 F
+2.5 (. Otherwise, as long as) 392 461.33 P
+2 F
+1.2 (fractional_second) 72 449.33 P
+1 F
+1.2 ( and) 174 449.33 P
+2 F
+1.2 (second) 206.4 449.33 P
+1 F
+1.2 ( are linked to) 242.4 449.33 P
+2 F
+1.2 (fine_second) 337.2 449.33 P
+1 F
+1.2 (, such a setting would) 403.2 449.33 P
+2.73 (mean that) 72 437.33 P
+2 F
+2.73 (second) 137.46 437.33 P
+1 F
+2.73 ( is also changed and) 173.46 437.33 P
+2 F
+2.73 (fractional_second) 313.09 437.33 P
+1 F
+2.73 ( set to a different) 415.09 437.33 P
+(value. For example if) 72 425.33 T
+2 F
+(fine_second) 204 425.33 T
+1 F
+( = 4.5 \050then) 270 425.33 T
+2 F
+(second) 348 425.33 T
+1 F
+( = 4 and) 384 425.33 T
+2 F
+(fractional_second) 438 425.33 T
+1 F
+(= 0.5\051 and - 0.8 is the argument of) 72 413.33 T
+2 F
+(set_fractionals) 288 413.33 T
+1 F
+(.) 378 413.33 T
+5.54 (The result of that would be) 72 401.33 P
+2 F
+5.54 (fine_second) 273.23 401.33 P
+1 F
+5.54 ( = 3.2 \050then) 339.23 401.33 P
+2 F
+5.54 (second) 439.38 401.33 P
+1 F
+5.54 ( = 3 and) 475.38 401.33 P
+2 F
+(fractional_second) 72 389.33 T
+1 F
+( = 0.2\051. It is better to prohibit that.) 174 389.33 T
+1.2 (Comment: feature) 72 365.33 P
+2 F
+1.2 (set_second) 176.4 365.33 P
+1 F
+1.2 ( \050from both TIME and TIME_DURATION\051 will cut down) 236.4 365.33 P
+2 F
+(fractional_second) 72 353.33 T
+1 F
+( to zero.) 174 353.33 T
+(Operations) 108 329.33 T
+(-) 72 317.33 T
+2 F
+(fine_second_add) 84 317.33 T
+1 F
+( looks like) 174 317.33 T
+2 F
+(second_add) 246 317.33 T
+1 F
+( but takes a DOUBLE for argument.) 306 317.33 T
+(In TIME_DURATION:) 72 305.33 T
+1.8 (-) 72 293.33 P
+2 F
+1.8 (canonical) 85.8 293.33 P
+1 F
+1.8 ( and) 139.8 293.33 P
+2 F
+1.8 (to_canonical) 173.4 293.33 P
+1 F
+1.8 ( deals already with precision. There is nothing) 245.4 293.33 P
+(different.) 72 281.33 T
+3 14 Q
+(APPENDIX) 72 228.67 T
+1 10 Q
+(A.The inheritance tree) 72 209.33 T
+(TIME_UTILITY) 72 185.33 T
+(    TIME_CONSTANTS) 72 173.33 T
+(        TIME_VALUE) 72 161.33 T
+(            TIME_DURATION) 72 149.33 T
+(            TIME) 72 137.33 T
+(        DATE_TIME_VALUE) 72 125.33 T
+(            DATE_TIME_DURATION) 72 113.33 T
+(            DATE_TIME) 72 101.33 T
+(    DATE_CONSTANTS) 72 89.33 T
+(        DATE_VALUE) 72 77.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "14" 2
+%%Page: "13" 3
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 13) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+3.82 (and) 72 713.33 P
+2 F
+3.82 (formatted) 99.82 713.33 P
+1 F
+3.82 ( may be used together to provide a formatted and justified) 153.82 713.33 P
+(representation of a date \050or time\051.) 72 701.33 T
+4 F
+(4.2.2. FORMAT [TIME] and FORMAT [DATE].) 72 671.33 T
+1 F
+(These classes have several common points.) 72 659.33 T
+1 (- They are clients of LOCALIZER. LOCALIZER provides them data to format date) 72 647.33 P
+3.27 (or time. The creation procedure has its first argument which conforms to) 72 635.33 P
+(LOCALIZER. It is possible to change) 72 623.33 T
+2 F
+(localizer) 288 623.33 T
+1 F
+( with) 342 623.33 T
+2 F
+(set_localizer) 378 623.33 T
+1 F
+(.) 456 623.33 T
+1.64 (- In these classes, feature) 72 611.33 P
+2 F
+1.64 (formatted) 248.18 611.33 P
+1 F
+1.64 ( is effective and provides a formatted) 302.18 611.33 P
+4 (representation of the its argument.) 72 599.33 P
+2 F
+4 (formatted) 308 599.33 P
+1 F
+4 ( includes many options \050the) 362 599.33 P
+(attributes of the class\051.) 72 587.33 T
+4 F
+(4.2.3. FORMAT [DATE_TIME].) 72 557.33 T
+1 F
+1 (FORMAT [DATE_TIME] inherits from FORMAT. It is a client of FORMAT [TIME] and) 72 545.33 P
+(FORMAT [DATE]. An instance of this class gathers one instance of FORMAT [TIME]) 72 533.33 T
+(and one of FORMAT [DATE]. Several options are then available \050which are not in) 72 521.33 T
+(FORMAT\051:) 72 509.33 T
+(- to have date before or after time with) 72 497.33 T
+2 F
+(set_date_first) 318 497.33 T
+1 F
+( and) 402 497.33 T
+2 F
+(set_time_first) 432 497.33 T
+1 F
+(.) 516 497.33 T
+1.85 (- to justify the date and the time before they are formatted together with) 72 485.33 P
+2 F
+(justify_date) 72 473.33 T
+1 F
+( and) 144 473.33 T
+2 F
+(justify_time) 174 473.33 T
+1 F
+(.) 246 473.33 T
+1 (- to change element such as the separator, or the attributes) 72 461.33 P
+2 F
+1 (format_date) 449 461.33 P
+1 F
+1 ( and) 515 461.33 P
+2 F
+24 (format_time) 72 449.33 P
+1 F
+24 ( \050with) 138 449.33 P
+2 F
+24 (set_separator_date_time) 228 449.33 P
+1 F
+24 (,) 366 449.33 P
+2 F
+24 (set_format_date) 402 449.33 P
+1 F
+24 ( and) 492 449.33 P
+2 F
+(set_format_time) 72 437.33 T
+1 F
+(\051.) 162 437.33 T
+1.71 (A special care has to be brought to the attribute) 72 425.33 P
+2 F
+1.71 (width) 389.14 425.33 P
+1 F
+1.71 ( since it must keep) 419.14 425.33 P
+2.77 (larger or equal to the sum of the formatted date plus the formatted time) 72 413.33 P
+(plus the separator length.) 72 401.33 T
+3 14 Q
+(5. Mor) 72 348.67 T
+(e pr) 112.18 348.67 T
+(ecision in TIME) 135.64 348.67 T
+1 10 Q
+1 (TIME and TIME_DURATION are designed to deal with high precision in time. The) 72 317.33 P
+(only limit is the one from number representation.) 72 305.33 T
+2 (The classes TIME and TIME_DURATION have an attribute) 72 293.33 P
+2 F
+2 (fine_second) 406 293.33 P
+1 F
+2 ( \050inherited) 472 293.33 P
+2 (from TIME_VALUE\051 which allows high precision. This attribute represents the) 72 281.33 P
+2.5 (number of seconds with fractions \050it is an instance of DOUBLE\051. From this) 72 269.33 P
+1.5 (attribute are calculated) 72 257.33 P
+2 F
+1.5 (second) 226.5 257.33 P
+1 F
+1.5 ( and) 262.5 257.33 P
+2 F
+1.5 (fractional_second) 295.5 257.33 P
+1 F
+1.5 ( \050which are functions\051:) 397.5 257.33 P
+2 F
+7.5 (second) 72 245.33 P
+1 F
+7.5 ( is the truncated-to-integer part and) 108 245.33 P
+2 F
+7.5 (fractional_second) 381 245.33 P
+1 F
+7.5 ( is the) 483 245.33 P
+4 (difference between the two previous one, so that the sum of) 72 233.33 P
+2 F
+4 (second) 476 233.33 P
+1 F
+4 ( and) 512 233.33 P
+2 F
+9 (fractional_second) 72 221.33 P
+1 F
+9 ( is always equal to) 174 221.33 P
+2 F
+9 (fine_second) 339 221.33 P
+1 F
+9 (\050see invariant in) 420 221.33 P
+(TIME_VALUE\051.) 72 209.33 T
+1 (As a result of this, when) 72 197.33 P
+2 F
+1 (fine_second) 234 197.33 P
+1 F
+1 ( is positive \0503.55 for example\051,) 300 197.33 P
+2 F
+1 (second) 504 197.33 P
+1 F
+3 (and) 72 185.33 P
+2 F
+3 (fractional_second) 99 185.33 P
+1 F
+3 ( are also positive \0503 and 0.55\051. When) 201 185.33 P
+2 F
+3 (fine_second) 453 185.33 P
+1 F
+3 ( is) 519 185.33 P
+6.67 (negative \050- 3.55 for example\051,) 72 173.33 P
+2 F
+6.67 (second) 291.33 173.33 P
+1 F
+6.67 ( and) 327.33 173.33 P
+2 F
+6.67 (fractional_second) 370.67 173.33 P
+1 F
+6.67 ( are also) 472.67 173.33 P
+(negative \050- 3 and - 0.55\051.) 72 161.33 T
+1.2 (Manipulation on) 72 149.33 P
+2 F
+1.2 (second) 170.4 149.33 P
+1 F
+1.2 ( and) 206.4 149.33 P
+2 F
+1.2 (fractional_second) 238.8 149.33 P
+1 F
+1.2 ( are in fact always made through) 340.8 149.33 P
+2 F
+2.77 (fine_second) 72 137.33 P
+1 F
+2.77 (. Users who do not want to deal with precision do not need to) 138 137.33 P
+(care about this.) 72 125.33 T
+(Features dealing with) 72 113.33 T
+2 F
+(fine_second) 204 113.33 T
+1 F
+( and) 270 113.33 T
+2 F
+(fractional_second) 300 113.33 T
+1 F
+( are described here.) 402 113.33 T
+(Creation \050common to TIME and to TIME_DURATION\051) 108 89.33 T
+2.77 (-) 72 77.33 P
+2 F
+2.77 (make_fine) 86.77 77.33 P
+1 F
+2.77 ( looks like) 140.77 77.33 P
+2 F
+2.77 (make) 221.08 77.33 P
+1 F
+2.77 ( but it takes a DOUBLE for its third argument) 245.08 77.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "13" 3
+%%Page: "12" 4
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 12) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+1.2 (country and for each habit a different set of data has to be used. For this) 72 713.33 P
+5.4 (reason data and formatting features which use the data are completely) 72 701.33 P
+1.85 (separated in EiffelTime. This makes it easy to switch from one set of data) 72 689.33 P
+(to another.) 72 677.33 T
+6 (Data are organized in classes which inherit from LOCALIZER. They are) 72 665.33 P
+1.8 (classified by their type: BOOLEAN, STRING, ARRAY [STRING] and INTEGER. Each) 72 653.33 P
+(piece of information is stored with a key and manipulated with it.) 72 641.33 T
+(Formatting features are organized in classes which inherit from FORMAT: FORMAT) 72 629.33 T
+([TIME], FORMAT [DATE], FORMAT [DATE_TIME], they are clients of LOCALIZER.) 72 617.33 T
+3 12 Q
+(4.1. Storing data) 72 580 T
+4 10 Q
+(4.1.1. LOCALIZER.) 72 546.33 T
+1 F
+3.5 (The class is written so that all the common operations are available to) 72 534.33 P
+3 (manipulate data. Four types of data are available: BOOLEAN, STRING, ARRAY) 72 522.33 P
+([STRING] and INTEGER. For each of them features are present.) 72 510.33 T
+20.4 (- to record data:) 72 498.33 P
+2 F
+20.4 (record_boolean_value) 261.6 498.33 P
+1 F
+20.4 (,) 381.6 498.33 P
+2 F
+20.4 (record_integer_value) 414 498.33 P
+1 F
+20.4 (,) 534 498.33 P
+2 F
+2.25 (record_string_array_value) 72 486.33 P
+1 F
+2.25 ( and) 222 486.33 P
+2 F
+2.25 (record_string_value) 256.5 486.33 P
+1 F
+2.25 (. A value is stored with a) 370.5 486.33 P
+1.38 (key. If the key is already present, nothing happens. To force the system to) 72 474.33 P
+2.25 (record a new value, features) 72 462.33 P
+2 F
+2.25 (force_boolean) 257.25 462.33 P
+1 F
+2.25 (,) 335.25 462.33 P
+2 F
+2.25 (force_integer) 349.5 462.33 P
+1 F
+2.25 (,) 427.5 462.33 P
+2 F
+2.25 (force_string) 441.75 462.33 P
+1 F
+2.25 ( and) 513.75 462.33 P
+2 F
+(force_string_array) 72 450.33 T
+1 F
+( are available, with the same signature.) 180 450.33 T
+6.75 (- to test the presence of data:) 72 438.33 P
+2 F
+6.75 (has_boolean_entry) 311.25 438.33 P
+1 F
+6.75 (,) 413.25 438.33 P
+2 F
+6.75 (has_integer_entry) 432 438.33 P
+1 F
+6.75 (,) 534 438.33 P
+2 F
+(has_string_array_entry) 72 426.33 T
+1 F
+( and) 204 426.33 T
+2 F
+(has_string_entry) 234 426.33 T
+1 F
+(.) 330 426.33 T
+9.43 (- to remove data:) 72 414.33 P
+2 F
+9.43 (remove_boolean) 217.71 414.33 P
+1 F
+9.43 (,) 301.71 414.33 P
+2 F
+9.43 (remove_integer) 323.14 414.33 P
+1 F
+9.43 (,) 407.14 414.33 P
+2 F
+9.43 (remove_string) 428.57 414.33 P
+1 F
+9.43 ( and) 506.57 414.33 P
+2 F
+(remove_string_array) 72 402.33 T
+1 F
+(.) 186 402.33 T
+6.86 (- to access data:) 72 390.33 P
+2 F
+6.86 (boolean_value) 207.43 390.33 P
+1 F
+6.86 (,) 285.43 390.33 P
+2 F
+6.86 (integer_value) 304.29 390.33 P
+1 F
+6.86 (,) 382.29 390.33 P
+2 F
+6.86 (string_array_value) 401.14 390.33 P
+1 F
+6.86 ( and) 509.14 390.33 P
+2 F
+4.2 (string_value) 72 378.33 P
+1 F
+4.2 (. To keep the access process convenient, a default value is) 144 378.33 P
+(required for each access. This is to avoid the client of the class testing for) 72 366.33 T
+3.23 (each request. It is a little bit disturbing for arrays but much time is) 72 354.33 P
+(saved while accessing data.) 72 342.33 T
+(LOCALIZER is not specific to EiffelTime. It will be useful for other libraries) 72 318.33 T
+(and users applications.) 72 306.33 T
+4 F
+(4.1.2. TIME_LOCALIZER.) 72 276.33 T
+1 F
+3.27 (The class represents a more specific type of data structure. It inherits) 72 264.33 P
+1.09 (from LOCALIZER. Invariants are present to ensure that data needed in classes) 72 252.33 P
+(FORMAT and its heirs are well defined.) 72 240.33 T
+3 12 Q
+(4.2. Formatting date and time) 72 203 T
+4 10 Q
+(4.2.1. FORMAT.) 72 169.33 T
+1 F
+1.64 (The class is deferred and generic. It contains features to justify strings.) 72 157.33 P
+4.29 (Four options are available:) 72 145.33 P
+2 F
+4.29 (left_justified) 257.14 145.33 P
+1 F
+4.29 (,) 341.14 145.33 P
+2 F
+4.29 (centered) 357.43 145.33 P
+1 F
+4.29 (,) 405.43 145.33 P
+2 F
+4.29 (right_justified) 421.71 145.33 P
+1 F
+4.29 ( and) 511.71 145.33 P
+2 F
+2.4 (not_justified) 72 133.33 P
+1 F
+2.4 (. The total width \050) 150 133.33 P
+2 F
+2.4 (width) 273.6 133.33 P
+1 F
+2.4 (\051 has to be defined \050generally during) 303.6 133.33 P
+1.2 (initialization\051. Function) 72 121.33 P
+2 F
+1.2 (justify) 230.4 121.33 P
+1 F
+1.2 ( returns a new string whose length is equal) 272.4 121.33 P
+1.64 (to width, and which contains the string argument justified according to the) 72 109.33 P
+(current parameters.) 72 97.33 T
+1.33 (Only its heirs provide effective formatting feature:) 72 85.33 P
+2 F
+1.33 (formatted) 399.33 85.33 P
+1 F
+1.33 (. Then) 453.33 85.33 P
+2 F
+1.33 (justify) 498 85.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "12" 4
+%%Page: "11" 5
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 11) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(the) 72 713.33 T
+2 F
+(end_bound) 96 713.33 T
+1 F
+(Creation) 108 689.33 T
+3.33 (The features) 72 677.33 P
+2 F
+3.33 (make) 156.67 677.33 P
+1 F
+3.33 (,) 180.67 677.33 P
+2 F
+3.33 (set_start_bound) 196 677.33 P
+1 F
+3.33 ( and) 286 677.33 P
+2 F
+3.33 (set_end_bound) 322.67 677.33 P
+1 F
+3.33 ( take clones of their) 400.67 677.33 P
+2.4 (arguments, so that if these arguments are changed, the interval previously) 72 665.33 P
+(created is not.) 72 653.33 T
+2 (It would have been possible to create intervals with references to date or) 72 641.33 P
+4 (time, but a modification of the dates would have been effective in the) 72 629.33 P
+2.77 (interval so that only the invariant would have been able to check if the) 72 617.33 P
+2 F
+(start_bound) 72 605.33 T
+1 F
+( is still before the) 138 605.33 T
+2 F
+(end_bound) 264 605.33 T
+1 F
+(.) 318 605.33 T
+(Interval measurement) 108 569.33 T
+(The measure of intervals is made by) 72 557.33 T
+2 F
+(duration) 288 557.33 T
+1 F
+(: the result is an instance of the) 336 557.33 T
+1.8 (class DURATION. However, as DURATION is the common parent of TIME_DURATION,) 72 545.33 P
+7.5 (DATE_DURATION and DATE_TIME_DURATION, it does not have many features) 72 533.33 P
+(available. Some features in class TIME, DATE, DATE_TIME return the same result) 72 521.33 T
+(and are more efficient to use. DURATION has to be use as the last solution.) 72 509.33 T
+(Comparison) 108 485.33 T
+(It includes intersection, inclusion and a special comparison.) 72 473.33 T
+(-) 72 461.33 T
+2 F
+(is_equal) 84 461.33 T
+1 F
+( is present and compare values, not references.) 132 461.33 T
+1.8 (- Feature) 72 449.33 P
+2 F
+1.8 (intersects) 135.6 449.33 P
+1 F
+1.8 ( returns the mathematical result of the intersection of) 195.6 449.33 P
+(two intervals.) 72 437.33 T
+5 (-) 72 425.33 P
+2 F
+5 (is_strict_included_by) 89 425.33 P
+1 F
+5 (,) 215 425.33 P
+2 F
+5 (strict_includes) 232 425.33 P
+1 F
+5 (,) 322 425.33 P
+2 F
+5 (is_included_by) 339 425.33 P
+1 F
+5 ( and) 423 425.33 P
+2 F
+5 (includes) 463 425.33 P
+1 F
+5 ( are) 511 425.33 P
+(connected to the same notion of inclusion.) 72 413.33 T
+0.71 (-) 72 401.33 P
+2 F
+0.71 (<) 84.71 401.33 P
+1 F
+0.71 (,) 90.71 401.33 P
+2 F
+0.71 (+) 103.41 401.33 P
+0.71 (>) 116.12 401.33 P
+1 F
+0.71 ( and) 122.12 401.33 P
+2 F
+0.71 (>=) 153.53 401.33 P
+1 F
+0.71 ( use a special rule to compare intervals. int1 < int2 is true) 165.53 401.33 P
+3 (if int1 starts and ends strictly before int2. The other features use the) 72 389.33 P
+(same rule and) 72 377.33 T
+2 F
+(is_equal) 156 377.33 T
+1 F
+( if needed.) 204 377.33 T
+4.5 (-) 72 365.33 P
+2 F
+4.5 (overlaps) 88.5 365.33 P
+1 F
+4.5 ( looks like intersects but the argument has to be after the) 136.5 365.33 P
+(current interval.) 72 353.33 T
+2 F
+(is_overlapped) 180 353.33 T
+1 F
+( is the opposite.) 258 353.33 T
+(-) 72 341.33 T
+2 F
+(meets) 84 341.33 T
+1 F
+( and) 114 341.33 T
+2 F
+(is_met) 144 341.33 T
+1 F
+( are used to test if two intervals have a common bound.) 180 341.33 T
+(Status Report) 108 317.33 T
+(The main part of the functions need an argument from the same generic type and) 72 305.33 T
+(return a BOOLEAN value.) 72 293.33 T
+(-) 72 281.33 T
+2 F
+(empty) 84 281.33 T
+1 F
+( tests if the bounds are equal.) 114 281.33 T
+1.09 (-) 72 269.33 P
+2 F
+1.09 (has) 85.09 269.33 P
+1 F
+1.09 (,) 103.09 269.33 P
+2 F
+1.09 (strict_before) 116.18 269.33 P
+1 F
+1.09 (,) 194.18 269.33 P
+2 F
+1.09 (strict_after) 207.27 269.33 P
+1 F
+1.09 (,) 279.27 269.33 P
+2 F
+1.09 (before) 292.36 269.33 P
+1 F
+1.09 ( and) 328.36 269.33 P
+2 F
+1.09 (after) 360.55 269.33 P
+1 F
+1.09 ( test the position of an) 390.55 269.33 P
+(element relatively to the current interval.) 72 257.33 T
+(Element change) 108 233.33 T
+2 F
+(set_start_bound) 72 221.33 T
+1 F
+( and) 162 221.33 T
+2 F
+(set_end_bound) 192 221.33 T
+1 F
+( are available to change the bounds.) 270 221.33 T
+(Operations) 108 197.33 T
+2 F
+2 (union) 72 185.33 P
+1 F
+2 ( and) 102 185.33 P
+2 F
+2 (intersection) 136 185.33 P
+1 F
+2 ( are the mathematical functions.) 208 185.33 P
+2 F
+2 (gather) 416 185.33 P
+1 F
+2 ( requires that) 452 185.33 P
+(two intervals meet each other and then yields the union.) 72 173.33 T
+3 14 Q
+(4. Format) 72 120.67 T
+1 10 Q
+(The aim of classes dealing with format is to get a printable representation of) 72 89.33 T
+2.31 (date \050or time\051 which conforms to the local habits. It means that for each) 72 77.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "11" 5
+%%Page: "10" 6
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 10) 508.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+1.85 (set to zero, i.e. 0:0:0. The attribute) 72 713.33 P
+2 F
+1.85 (date) 318.92 713.33 P
+1 F
+1.85 ( is set with the same reference) 342.92 713.33 P
+(than the argument.) 72 701.33 T
+(Access) 108 677.33 T
+2 F
+(Seconds_count) 72 665.33 T
+1 F
+( is the amount of seconds of the time part only. To get the total) 150 665.33 T
+3.5 (amount of seconds of the current duration, first shift it to a definite) 72 653.33 P
+2.14 (duration, then multiply) 72 641.33 P
+2 F
+2.14 (day) 222.43 641.33 P
+1 F
+2.14 ( by the number of seconds in day and add to it) 240.43 641.33 P
+2 F
+1.38 (seconds_count) 72 629.33 P
+1 F
+1.38 (. Take care that the duration is not more than 68 years. If it) 150 629.33 P
+1.29 (is, the number of seconds will be larger than 2 billion, which is the upper) 72 617.33 P
+(limit for INTEGER \0504 bytes\051.) 72 605.33 T
+(Comparison) 108 581.33 T
+1.85 (The rules are the same than those for DATE_DURATION. Features) 72 569.33 P
+2 F
+1.85 (<) 462.46 569.33 P
+1 F
+1.85 (,) 468.46 569.33 P
+2 F
+1.85 (>) 482.31 569.33 P
+1 F
+1.85 (,) 488.31 569.33 P
+2 F
+1.85 (<=) 502.15 569.33 P
+1 F
+1.85 ( and) 514.15 569.33 P
+2 F
+4.91 (>=) 72 557.33 P
+1 F
+4.91 ( are available. If both instances are definite, numbers of days are) 84 557.33 P
+(compared. If one of them is non definite, the result is False.) 72 545.33 T
+(Element change) 108 521.33 T
+(It is possible to change reference of) 72 509.33 T
+2 F
+(time) 300 509.33 T
+1 F
+( and) 324 509.33 T
+2 F
+(date) 354 509.33 T
+1 F
+( with the features) 378 509.33 T
+2 F
+(set_time) 492 509.33 T
+1 F
+2.18 (and) 72 497.33 P
+2 F
+2.18 (set_date) 98.18 497.33 P
+1 F
+2.18 (. To change only one element \050for example) 146.18 497.33 P
+2 F
+2.18 (hour) 415.64 497.33 P
+1 F
+2.18 (\051, features from) 439.64 497.33 P
+(TIME_DURATION or DATE_DURATION have to be used.) 72 485.33 T
+(Operation) 108 461.33 T
+2 (- DATE_TIME_DURATION inherits from GROUP_ELEMENT. infix and prefix) 72 449.33 P
+2 F
+2 (+) 490 449.33 P
+1 F
+2 (, infix) 496 449.33 P
+(and prefix) 72 437.33 T
+2 F
+(-) 138 437.33 T
+1 F
+( are available to compose instances to each other.) 144 437.33 T
+7.09 (- Only) 72 425.33 P
+2 F
+7.09 (day_add) 128.18 425.33 P
+1 F
+7.09 ( is present. To add only one element, features from) 170.18 425.33 P
+(TIME_DURATION or DATE_DURATION have to be used.) 72 413.33 T
+(Conversion) 108 389.33 T
+1.5 (-) 72 377.33 P
+2 F
+1.5 (canonical) 85.5 377.33 P
+1 F
+1.5 ( and) 139.5 377.33 P
+2 F
+1.5 (to_canonical) 172.5 377.33 P
+1 F
+1.5 ( are available in the class. To be canonical an) 244.5 377.33 P
+1 (instance of the class must have its attributes) 72 365.33 P
+2 F
+1 (time) 362 365.33 P
+1 F
+1 ( and) 386 365.33 P
+2 F
+1 (date) 418 365.33 P
+1 F
+1 ( canonical. Then) 442 365.33 P
+2 F
+(time) 72 353.33 T
+1 F
+( must have the same sign than the one of the current duration. The sign of) 96 353.33 T
+4.91 (the current instance is determined by adding it to the argument \050from) 72 341.33 P
+2.31 (DATE_TIME\051. That will yield a final date. If this final date is after the) 72 329.33 P
+6 (origin \050= the argument\051, the current duration is considered positive.) 72 317.33 P
+1 (Otherwise, it is considered negative. Finally) 72 305.33 P
+2 F
+1 (time) 354 305.33 P
+1 F
+1 ( must be less than one day) 378 305.33 P
+(\050if positive\051 or more than minus one day \050if negative\051.) 72 293.33 T
+2 F
+4.8 (to_canonical) 72 281.33 P
+1 F
+4.8 ( returns a duration equivalent to the current one \050for the) 144 281.33 P
+(argument\051 and canonical.) 72 269.33 T
+2.4 (-) 72 257.33 P
+2 F
+2.4 (time_to_canonical) 86.4 257.33 P
+1 F
+2.4 ( looks like) 188.4 257.33 P
+2 F
+2.4 (to_canonical) 267.6 257.33 P
+1 F
+2.4 ( but focuses mainly on time. It) 339.6 257.33 P
+1.85 (requires a definite duration so that it is possible to compare it to) 72 245.33 P
+2 F
+1.85 (zero) 510 245.33 P
+1 F
+1.85 (.) 534 245.33 P
+1 (It yields a definite duration equivalent to the current one with a canonical) 72 233.33 P
+0.67 (time.) 72 221.33 P
+2 F
+0.67 (hour) 108.67 221.33 P
+1 F
+0.67 ( is then cut so that it stands in the range of one day \0500 to 23 if) 132.67 221.33 P
+1.85 (positive and -23 to 0 if negative\051. The attributes) 72 209.33 P
+2 F
+1.85 (day) 394.61 209.33 P
+1 F
+1.85 ( is also modified to) 412.61 209.33 P
+(keep the result equivalent to the current duration.) 72 197.33 T
+2 F
+(time_to_canonical) 384 197.33 T
+1 F
+( does not) 486 197.33 T
+(need any argument because only) 72 185.33 T
+2 F
+(time) 258 185.33 T
+1 F
+( and) 282 185.33 T
+2 F
+(day) 312 185.33 T
+1 F
+( are modified.) 330 185.33 T
+3 14 Q
+(3. INTER) 72 132.67 T
+(V) 129.85 132.67 T
+(AL) 138.15 132.67 T
+1 10 Q
+1.64 (Class INTERVAL deals with intervals between two instances of the same class) 72 101.33 P
+2.4 (which conform to ABSOLUTE \050DATE, TIME, DATE_TIME\051. The notions of interval) 72 89.33 P
+1.5 (is directly linked with the notion of order. The) 72 77.33 P
+2 F
+1.5 (start_bound) 379.5 77.33 P
+1 F
+1.5 ( must be before) 445.5 77.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "10" 6
+%%Page: "9" 7
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 9) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(Creation) 108 713.33 T
+1.2 (Two creation features are available:) 72 701.33 P
+2 F
+1.2 (make) 300 701.33 P
+1 F
+1.2 ( takes three arguments \050year, month) 324 701.33 P
+5 (and day\051. If year and month are null, the duration will be definite;) 72 689.33 P
+2 F
+3.6 (make_by_days) 72 677.33 P
+1 F
+3.6 ( takes only the number of day. The duration is automatically) 144 677.33 P
+(definite.) 72 665.33 T
+(Comparison) 108 641.33 T
+3.5 (Features) 72 629.33 P
+2 F
+3.5 (<) 129.5 629.33 P
+1 F
+3.5 (,) 135.5 629.33 P
+2 F
+3.5 (>) 151 629.33 P
+1 F
+3.5 (,) 157 629.33 P
+2 F
+3.5 (<=) 172.5 629.33 P
+1 F
+3.5 ( and) 184.5 629.33 P
+2 F
+3.5 (>=) 221.5 629.33 P
+1 F
+3.5 ( are available. If both instances are definite,) 233.5 629.33 P
+1.29 (numbers of days are compared. If one of them is non definite, the result is) 72 617.33 P
+(False.) 72 605.33 T
+(Element change) 108 581.33 T
+2.18 (Features) 72 569.33 P
+2 F
+2.18 (set_day) 128.18 569.33 P
+1 F
+2.18 (,) 170.18 569.33 P
+2 F
+2.18 (set_month) 184.36 569.33 P
+1 F
+2.18 ( and) 238.36 569.33 P
+2 F
+2.18 (set_year) 272.73 569.33 P
+1 F
+2.18 ( are available to set one of these) 320.73 569.33 P
+(three attributes) 72 557.33 T
+2 F
+(day) 174 557.33 T
+1 F
+(,) 192 557.33 T
+2 F
+(month) 204 557.33 T
+1 F
+(,) 234 557.33 T
+2 F
+(year) 246 557.33 T
+1 F
+(.) 270 557.33 T
+(Operation) 108 533.33 T
+(- Add years, months and days with features) 72 521.33 T
+2 F
+(year_add) 330 521.33 T
+1 F
+(,) 378 521.33 T
+2 F
+(month_add) 390 521.33 T
+1 F
+( and) 444 521.33 T
+2 F
+(day_add) 474 521.33 T
+1 F
+(.) 516 521.33 T
+2.4 (- DATE_DURATION inherits from GROUP_ELEMENT. infix and prefix) 72 509.33 P
+2 F
+2.4 (+) 463.2 509.33 P
+1 F
+2.4 (, infix and) 469.2 509.33 P
+(prefix) 72 497.33 T
+2 F
+(-) 114 497.33 T
+1 F
+( are available to compose instances of each other.) 120 497.33 T
+(Conversion) 108 473.33 T
+(-) 72 461.33 T
+2 F
+(to_canonical) 84 461.33 T
+1 F
+( is used to get a new duration equivalent to the current one and) 156 461.33 T
+3.5 (canonical. It needs an argument from class DATE, which is the origin of) 72 449.33 P
+(calculations.) 72 437.33 T
+2.31 (-) 72 425.33 P
+2 F
+2.31 (to_definite) 86.31 425.33 P
+1 F
+2.31 ( is used to get a new duration equivalent to the current one) 152.31 425.33 P
+(and definite. As with the previous feature, one argument is needed.) 72 413.33 T
+3.27 (-) 72 401.33 P
+2 F
+3.27 (to_date_time) 87.27 401.33 P
+1 F
+3.27 ( is used to get an instance of DATE_TIME_DURATION. It will) 159.27 401.33 P
+(have the same) 72 389.33 T
+2 F
+(date) 156 389.33 T
+1 F
+( of the current duration and) 180 389.33 T
+2 F
+(time) 354 389.33 T
+1 F
+( set to) 378 389.33 T
+2 F
+(zero) 426 389.33 T
+1 F
+(.) 450 389.33 T
+3 12 Q
+(2.3. DA) 72 340 T
+(TE_TIME_DURA) 109.44 340 T
+(TION) 203.22 340 T
+1 10 Q
+1.33 (DATE_TIME_DURATION is client of DATE_DURATION and TIME_DURATION. Most of the) 72 312.33 P
+(common features described in DATE_DURATION are present in the class. The class) 72 300.33 T
+(deals with its attributes) 72 288.33 T
+2 F
+(date) 228 288.33 T
+1 F
+( and) 252 288.33 T
+2 F
+(time) 282 288.33 T
+1 F
+( in the same way as DATE_TIME.) 306 288.33 T
+(There are, as in DATE_DURATION, definite and non definite durations. It is the) 72 264.33 T
+(date part which gives the definite / non definite status.) 72 252.33 T
+2.25 (Features) 72 240.33 P
+2 F
+2.25 (canonical) 128.25 240.33 P
+1 F
+2.25 ( and) 182.25 240.33 P
+2 F
+2.25 (to_canonical) 216.75 240.33 P
+1 F
+2.25 ( are present in DATE_TIME_DURATION. They) 288.75 240.33 P
+(have to deal with the attributes) 72 228.33 T
+2 F
+(time) 270 228.33 T
+1 F
+(.) 294 228.33 T
+(Creation) 108 204.33 T
+(There are still several ways to create an instance:) 72 192.33 T
+(- by choosing values for all the attributes of) 72 180.33 T
+2 F
+(date) 354 180.33 T
+1 F
+( and) 378 180.33 T
+2 F
+(time) 408 180.33 T
+1 F
+( \050) 432 180.33 T
+2 F
+(make) 444 180.33 T
+1 F
+(\051.) 468 180.33 T
+0.8 (- by choosing a value for day and values for all the attributes of time. The) 72 168.33 P
+(instance is then definite \050) 72 156.33 T
+2 F
+(make_definite) 234 156.33 T
+1 F
+(\051.) 312 156.33 T
+10.36 (- by gathering an instance of DATE with an instance of TIME) 72 144.33 P
+1.33 (\050) 72 132.33 P
+2 F
+1.33 (make_by_date_time) 78 132.33 P
+1 F
+1.33 (\051. This feature copies the references of its arguments, so) 180 132.33 P
+(that if the time \050or the date\051 is changed, the instance previously initialized) 72 120.33 T
+0.8 (will be also changed. If this effect has to be avoided, the use of clones is) 72 108.33 P
+(required.) 72 96.33 T
+1.09 (- by encapsulating an instance of DATE \050) 72 84.33 P
+2 F
+1.09 (make_by_date) 319.64 84.33 P
+1 F
+1.09 (\051. The attribute) 391.64 84.33 P
+2 F
+1.09 (time) 496.91 84.33 P
+1 F
+1.09 ( is) 520.91 84.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "9" 7
+%%Page: "8" 8
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 8) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+4 F
+0 X
+(2.2.1. Relative date_duration.) 72 695.33 T
+1 F
+3 (Relative duration can not be compared with any other durations \050including) 72 683.33 P
+1.6 (zero\051. The reason is simple. It is not possible to say if 30 days are less) 72 671.33 P
+2.25 (than 1 month: it depends on the date: it is true in August \050in a 31 days) 72 659.33 P
+(month\051 and it is false in February.) 72 647.33 T
+0.75 (If feature) 72 635.33 P
+2 F
+0.75 (>) 139.5 635.33 P
+1 F
+0.75 ( \050or) 145.5 635.33 P
+2 F
+0.75 (<) 177 635.33 P
+1 F
+0.75 (,) 183 635.33 P
+2 F
+0.75 (+) 195.75 635.33 P
+0.75 (+) 208.5 635.33 P
+1 F
+0.75 ( is called with at least one non definite member \050the) 214.5 635.33 P
+(current instance or the argument\051, the result will be always False.) 72 623.33 T
+1.85 (We may only know if two durations are equal, with the feature) 72 611.33 P
+2 F
+1.85 (is_equal) 466.15 611.33 P
+1 F
+1.85 (. It) 514.15 611.33 P
+(compares field by field the two durations.) 72 599.33 T
+0.92 (When adding a relative date_duration to a date, the years and the months are) 72 587.33 P
+1.6 (added first, then the date may be cut \050June 31 -> June 30\051 and finally the) 72 575.33 P
+1.29 (days are added. For example, if one month is added to the date August 31st,) 72 563.33 P
+(the result is September 30th.) 72 551.33 T
+5.4 (Nevertheless there is a way to compare relative durations: a relative) 72 539.33 P
+7.2 (date_duration may be canonical. It means that the duration has its) 72 527.33 P
+(attributes) 72 515.33 T
+2 F
+(month) 138 515.33 T
+1 F
+( and) 168 515.33 T
+2 F
+(day) 198 515.33 T
+1 F
+( in a fixed range.) 216 515.33 T
+2 F
+(month) 330 515.33 T
+1 F
+( must be between 1 and 12, and) 360 515.33 T
+2 F
+(day) 72 503.33 T
+1 F
+( larger than 1 and less than a value between 27 and 30. This value is fixed) 90 503.33 T
+3.69 (simply: \050in the case of a positive duration\051 when setting) 72 491.33 P
+2 F
+3.69 (day) 456.92 491.33 P
+1 F
+3.69 ( to 0 and) 474.92 491.33 P
+1.38 (adding one more month, the addition of the start date and this new duration) 72 479.33 P
+1.38 (must yield a date strictly after the final date \050yielded by adding date and) 72 467.33 P
+1.85 (tested duration\051. For example is 0/0/30 \050i.e. 0 year, 0 month and 30 days\051) 72 455.33 P
+(canonical?) 72 443.33 T
+0.8 (- If the origin date is 01/15 \05015th of January\051, the final date is 02/14. We) 72 431.33 P
+(can not convert 30 days into 1 month in this case. The duration is canonical.) 72 419.33 T
+1.2 (- If the origin date is 04/15 \05015th of april\051, the final date is 05/15. The) 72 407.33 P
+(duration is not canonical since it is possible to convert days into 1 month.) 72 395.33 T
+3 (The origin date is used to determine whether the duration is positive or) 72 371.33 P
+2.31 (not. If the final date is after the origin date the duration is positive,) 72 359.33 P
+0.86 (otherwise it is negative. That does not mean we can compare it to) 72 347.33 P
+2 F
+0.86 (zero) 479.14 347.33 P
+1 F
+0.86 (, that) 503.14 347.33 P
+5 (is only used to determine the sign of the canonical standard. If the) 72 335.33 P
+(duration is negative, it is canonical only if all the attributes are negative.) 72 323.33 T
+1.85 (A way to compare two relative durations is to make them canonical from the) 72 299.33 P
+3 (same date, and then to compare the fields. It is the same as adding the) 72 287.33 P
+(durations to the same date, and to compare the final dates to each other.) 72 275.33 T
+4 F
+(2.2.2. Definite date_duration.) 72 233.33 T
+1 F
+(Definite durations are characterized by the attribute) 72 221.33 T
+2 F
+(day) 396 221.33 T
+1 F
+(. Whenever a duration) 414 221.33 T
+5.5 (has its attributes) 72 209.33 P
+2 F
+5.5 (year) 202.5 209.33 P
+1 F
+5.5 ( and) 226.5 209.33 P
+2 F
+5.5 (month) 267.5 209.33 P
+1 F
+5.5 ( equal to 0, this duration is then) 297.5 209.33 P
+2.14 (definite. On the other hand, if one of these two attributes is not 0, the) 72 197.33 P
+(duration is not definite anymore.) 72 185.33 T
+5.08 (The number of days between an origin date and the result of \050date +) 72 173.33 P
+(duration\051 does not depend on the origin date.) 72 161.33 T
+1 (It is possible to compare definite date_duration to each other. The order is) 72 149.33 P
+(the one of day.) 72 137.33 T
+1.85 (A definite duration may be canonical or not. It is canonical if the number) 72 125.33 P
+(of day is small enough.) 72 113.33 T
+4 F
+(2.2.3. General description.) 72 83.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "8" 8
+%%Page: "7" 9
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 7) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(prefix) 72 713.33 T
+2 F
+(-) 114 713.33 T
+1 F
+( are available to compose instances of each other.) 120 713.33 T
+(Conversion) 108 689.33 T
+4 (Two features ensure a link with the notion of day:) 72 677.33 P
+2 F
+4 (to_days) 418 677.33 P
+1 F
+4 ( returns the) 460 677.33 P
+2.18 (number of days equivalent to the current duration. For example, a duration) 72 665.33 P
+(such as 23:60:0 is equivalent to one day. For negative duration, the result is) 72 653.33 T
+(never 0. -1 hour is equivalent to -1 day \050i.e. the result of the function is -) 72 641.33 T
+1.33 (1\051. To_days is associated with) 72 629.33 P
+2 F
+1.33 (time_modulo_day) 264.67 629.33 P
+1 F
+1.33 (. This second function returns) 354.67 629.33 P
+(an instance of TIME_DURATION. The result represents the difference between the) 72 617.33 T
+1.5 (current duration and the number of days yielded by) 72 605.33 P
+2 F
+1.5 (to_days) 391.5 605.33 P
+1 F
+1.5 (. It implies that) 433.5 605.33 P
+(the result is always positive and less than one day.) 72 593.33 T
+1.64 (For example, the current duration is 25:70:600.) 72 581.33 P
+2 F
+1.64 (to_days) 371.45 581.33 P
+1 F
+1.64 ( will returns 1 \050one) 413.45 581.33 P
+3.6 (day\051 and) 72 569.33 P
+2 F
+3.6 (time_modulo_day) 133.2 569.33 P
+1 F
+3.6 ( will return 2:20:0:. If the current duration is) 223.2 569.33 P
+8 (negative: -23:-80:300,) 72 557.33 P
+2 F
+8 (to_days) 226 557.33 P
+1 F
+8 ( will return -2 \050minus two days\051 and) 268 557.33 P
+2 F
+(time_modulo_day) 72 545.33 T
+1 F
+( will return 23:45:0.) 162 545.33 T
+4.2 (- Durations may be canonical or not canonical \050BOOLEAN) 72 521.33 P
+2 F
+4.2 (canonical) 439.8 521.33 P
+1 F
+4.2 (\051. That) 493.8 521.33 P
+(means the features) 72 509.33 T
+2 F
+(hour) 186 509.33 T
+1 F
+(,) 210 509.33 T
+2 F
+(minute) 222 509.33 T
+1 F
+( and) 258 509.33 T
+2 F
+(second) 288 509.33 T
+1 F
+( are included in a particular range,) 324 509.33 T
+(or not. An instance of TIME_DURATION is canonical if:) 72 497.33 T
+2.4 (- in the case of a positive duration \050>) 216 485.33 P
+2 F
+2.4 (zero) 477.6 485.33 P
+1 F
+2.4 (\051, all) 501.6 485.33 P
+1.29 (of the three features have to be positive or 0,) 72 473.33 P
+2 F
+1.29 (minute) 372.86 473.33 P
+1 F
+1.29 ( and) 408.86 473.33 P
+2 F
+1.29 (second) 441.43 473.33 P
+1 F
+1.29 ( less than) 477.43 473.33 P
+(60.) 72 461.33 T
+2.4 (- in the case of a negative duration \050<) 216 449.33 P
+2 F
+2.4 (zero) 477.6 449.33 P
+1 F
+2.4 (\051, all) 501.6 449.33 P
+1.85 (of the three features have to be negative or 0,) 72 437.33 P
+2 F
+1.85 (minute) 378.46 437.33 P
+1 F
+1.85 ( and) 414.46 437.33 P
+2 F
+1.85 (second) 448.15 437.33 P
+1 F
+1.85 ( strictly) 484.15 437.33 P
+(greater than -60.) 72 425.33 T
+(The function) 72 413.33 T
+2 F
+(canonical) 150 413.33 T
+1 F
+( tests if the duration is canonical or not, the function) 204 413.33 T
+2 F
+6 (to_canonical) 72 401.33 P
+1 F
+6 ( yields a new duration equivalent to the current one and) 144 401.33 P
+(canonical.) 72 389.33 T
+3 12 Q
+(2.2. DA) 72 340 T
+(TE_DURA) 109.44 340 T
+(TION) 165.22 340 T
+1 10 Q
+10.2 (Dealing with the gregorian calendar is not so easy because of) 72 312.33 P
+2.14 (irregularities. A duration of one month may be equal to 28 up to 31 days,) 72 300.33 P
+0.86 (depending on the current date! On the other hand, it could be useful to deal) 72 288.33 P
+(with precise duration. This point leads to an original design of the class:) 72 276.33 T
+(A separation is made between two kinds of instances. The definite ones and the) 72 264.33 T
+2.73 (relative ones. The function) 72 252.33 P
+2 F
+2.73 (definite) 250.91 252.33 P
+1 F
+2.73 ( which returns a BOOLEAN, is true for) 298.91 252.33 P
+(definite duration and false otherwise.) 72 240.33 T
+1.29 (An instance is definite if and only if its attributes month and year are 0.) 72 228.33 P
+(Then only the number of days is used.) 72 216.33 T
+1.8 (Relative \050non definite\051 durations have their attributes) 72 204.33 P
+2 F
+1.8 (year) 420.6 204.33 P
+1 F
+1.8 (,) 444.6 204.33 P
+2 F
+1.8 (month) 458.4 204.33 P
+1 F
+1.8 ( and) 488.4 204.33 P
+2 F
+1.8 (day) 522 204.33 P
+1 F
+1.85 (meaningful but it is then impossible to compare them to each other \050is one) 72 192.33 P
+(month greater than 30 days?, is one year greater than 365 days?\051.) 72 180.33 T
+(The main difference appears when a duration is added to a date. In the case of) 72 168.33 T
+0.92 (a definite duration, there is no ambiguity. A given number of days are added) 72 156.33 P
+1.71 (to the date, taking care of the calendar. In the other case, the result is) 72 144.33 P
+(relative to the origin date. For example, a one month duration may be equal to) 72 132.33 T
+(28 days if the date is in February or 31 days if the date is in August.) 72 120.33 T
+3.27 (A duration becomes definite when its attributes) 72 108.33 P
+2 F
+3.27 (year) 382.91 108.33 P
+1 F
+3.27 ( and) 406.91 108.33 P
+2 F
+3.27 (month) 443.45 108.33 P
+1 F
+3.27 ( become 0.) 473.45 108.33 P
+4.8 (However it is possible to deal with instances of DATE_DURATION without) 72 96.33 P
+(taking care of this distinction.) 72 84.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "7" 9
+%%Page: "6" 10
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 6) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+3 14 Q
+0 X
+(2. DURA) 72 710.67 T
+(TION) 125.4 710.67 T
+1 10 Q
+(TIME_DURATION, DATE_DURATION AND DATE_TIME_DURATION) 72 691.33 T
+9 (The classes dealing with duration inherit DURATION, which inherits) 72 667.33 P
+(GROUP_ELEMENT and PART_COMPARABLE. An instance of TIME_DURATION, DATE_DURATION) 72 655.33 T
+2.77 (or DATE_TIME_DURATION is an element of a group, i.e. there is a zero and) 72 643.33 P
+(addition operations \050infix) 72 631.33 T
+2 F
+(+) 234 631.33 T
+1 F
+(, infix) 240 631.33 T
+2 F
+(-) 288 631.33 T
+1 F
+(, prefix) 294 631.33 T
+2 F
+(+) 348 631.33 T
+1 F
+( and prefix) 354 631.33 T
+2 F
+(-) 426 631.33 T
+1 F
+(\051.) 432 631.33 T
+(Duration is used as an amount of time, without link to an origin.) 72 619.33 T
+2 (It may be added to the respective absolute notion \050time + time_duration is) 72 607.33 P
+2.25 (possible, not time + date_time_duration nor date_time + time_duration...see) 72 595.33 P
+(classes TIME, DATE and DATE_TIME\051.) 72 583.33 T
+-0.43 (Attributes are allowed to take negative values or values which do not stand in) 72 571.33 P
+0.86 (the usual range \050) 72 559.33 P
+2 F
+0.86 (hour) 176.57 559.33 P
+1 F
+0.86 ( = -1,) 200.57 559.33 P
+2 F
+0.86 (minute) 245.14 559.33 P
+1 F
+0.86 ( = 75,) 281.14 559.33 P
+2 F
+0.86 (day) 325.71 559.33 P
+1 F
+0.86 ( = 40...\051. However, features are) 343.71 559.33 P
+6.6 (available in each class to convert instances into the usual format:) 72 547.33 P
+(functions) 72 535.33 T
+2 F
+(canonical) 132 535.33 T
+1 F
+( and) 186 535.33 T
+2 F
+(to_canonical) 216 535.33 T
+1 F
+( are present in each class. An instance is) 288 535.33 T
+(canonical \050canonical = True\051 if its attributes stand into the usual range. For) 72 523.33 T
+3 (example, an instance of TIME_DURATION such as 12:-10:60 is not canonical.) 72 511.33 P
+2 F
+3.43 (to_canonical) 72 499.33 P
+1 F
+3.43 ( will return 11:51:0. In DATE_DURATION and DATE_TIME_DURATION,) 144 499.33 P
+(these features are also present.) 72 487.33 T
+(The order is partially implemented. TIME_DURATION has a complete order whereas) 72 463.33 T
+(DATE_DURATION and DATE_TIME_DURATION are more specific.) 72 451.33 T
+3 12 Q
+(2.1. TIME_DURA) 72 414 T
+(TION) 164.77 414 T
+1 10 Q
+(creation) 108 374.33 T
+(- Two ways are possible: by choosing the value of each attributes) 72 362.33 T
+2 F
+(hour) 468 362.33 T
+1 F
+(,) 492 362.33 T
+2 F
+(minute) 504 362.33 T
+1 F
+10.8 (and) 72 350.33 P
+2 F
+10.8 (second) 106.8 350.33 P
+1 F
+10.8 ( \050feature) 142.8 350.33 P
+2 F
+10.8 (make) 224.4 350.33 P
+1 F
+10.8 (\051, or by giving an amount of seconds) 248.4 350.33 P
+1.09 (\050) 72 338.33 P
+2 F
+1.09 (make_by_seconds) 78 338.33 P
+1 F
+1.09 (\051. Any integer value is accepted. It is possible to create a) 168 338.33 P
+(duration with 1 hour and -60 minutes.) 72 326.33 T
+(Access) 108 302.33 T
+2 F
+(Zero) 72 290.33 T
+1 F
+( is a once feature with 0 hour, 0 minute and 0 second.) 96 290.33 T
+1.38 (The total amount of second of the current duration is the result of feature) 72 278.33 P
+2 F
+(seconds_count) 72 266.33 T
+1 F
+(.) 150 266.33 T
+(Comparison) 108 242.33 T
+1 (Instances of TIME_DURATION may be compared easily. The order is the order of) 72 230.33 P
+1.09 (the respective total amount of second. 1:-40:0 is less than 0:0:1800, etc...) 72 218.33 P
+3 (Functions) 72 206.33 P
+2 F
+3 (<) 135 206.33 P
+1 F
+3 (,) 141 206.33 P
+2 F
+3 (>) 156 206.33 P
+1 F
+3 (,) 162 206.33 P
+2 F
+3 (<=) 177 206.33 P
+1 F
+3 ( and) 189 206.33 P
+2 F
+3 (>=) 225 206.33 P
+1 F
+3 ( are available.) 237 206.33 P
+2 F
+3 (Is_equal) 342 206.33 P
+1 F
+3 ( tests equality,) 390 206.33 P
+2 F
+3 (=) 501 206.33 P
+1 F
+3 ( will) 507 206.33 P
+(compare references.) 72 194.33 T
+(Element change) 108 170.33 T
+6 (- Set directly) 72 158.33 P
+2 F
+6 (hour) 180 158.33 P
+1 F
+6 (,) 204 158.33 P
+2 F
+6 (minute) 222 158.33 P
+1 F
+6 ( and) 258 158.33 P
+2 F
+6 (second) 300 158.33 P
+1 F
+6 ( with) 336 158.33 P
+2 F
+6 (set_hour) 384 158.33 P
+1 F
+6 (,) 432 158.33 P
+2 F
+6 (set_minute) 450 158.33 P
+1 F
+6 ( and) 510 158.33 P
+2 F
+(set_second) 72 146.33 T
+1 F
+(. Arguments do not need to satisfy any range rule.) 132 146.33 T
+(Operations) 108 122.33 T
+2.4 (- Adding hours, minutes and seconds with features) 72 110.33 P
+2 F
+2.4 (hour_add) 391.2 110.33 P
+1 F
+2.4 (,) 439.2 110.33 P
+2 F
+2.4 (minute_add) 453.6 110.33 P
+1 F
+2.4 ( and) 513.6 110.33 P
+2 F
+(second_add) 72 98.33 T
+1 F
+(.) 132 98.33 T
+2.4 (- TIME_DURATION inherits from GROUP_ELEMENT. infix and prefix) 72 86.33 P
+2 F
+2.4 (+) 463.2 86.33 P
+1 F
+2.4 (, infix and) 469.2 86.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "6" 10
+%%Page: "5" 11
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 5) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+1.5 (ABSOLUTE\051. Functions) 72 713.33 P
+2 F
+1.5 (<) 201 713.33 P
+1 F
+1.5 (,) 207 713.33 P
+2 F
+1.5 (+) 220.5 713.33 P
+1.5 (>) 234 713.33 P
+1 F
+1.5 ( and) 240 713.33 P
+2 F
+1.5 (>=) 273 713.33 P
+1 F
+1.5 ( are available. Function) 285 713.33 P
+2 F
+1.5 (is_equal) 441 713.33 P
+1 F
+1.5 ( must be) 489 713.33 P
+(used to test equality,) 72 701.33 T
+2 F
+(=) 210 701.33 T
+1 F
+( will compare references.) 216 701.33 T
+(Measurement) 108 677.33 T
+3.33 (Function) 72 665.33 P
+2 F
+3.33 (duration) 129.33 665.33 P
+1 F
+3.33 ( gathers functions duration from the attributes time and) 177.33 665.33 P
+(date. The result is an instance of DATE_TIME_DURATION.) 72 653.33 T
+(Element change) 108 629.33 T
+(It is possible to change reference of) 72 617.33 T
+2 F
+(time) 300 617.33 T
+1 F
+( and) 324 617.33 T
+2 F
+(date) 354 617.33 T
+1 F
+( with the features) 378 617.33 T
+2 F
+(set_time) 492 617.33 T
+1 F
+2.18 (and) 72 605.33 P
+2 F
+2.18 (set_date) 98.18 605.33 P
+1 F
+2.18 (. To change only one element \050for example) 146.18 605.33 P
+2 F
+2.18 (hour) 415.64 605.33 P
+1 F
+2.18 (\051, features from) 439.64 605.33 P
+(TIME or DATE have to be used.) 72 593.33 T
+(Operations) 108 569.33 T
+1.64 (Addition of hours, minutes and seconds are available directly in the class.) 72 557.33 P
+(The reason is that adding one second may have a consequence on the date. Using) 72 545.33 T
+2 F
+(second_add) 72 533.33 T
+1 F
+( from TIME is also possible but the date will not be modified in the) 132 533.33 T
+(case time makes a cycle. It is of course the same for) 72 521.33 T
+2 F
+(minute) 396 521.33 T
+1 F
+( and) 432 521.33 T
+2 F
+(hour) 462 521.33 T
+1 F
+(.) 486 521.33 T
+2 F
+2.73 (day_add) 72 509.33 P
+1 F
+2.73 ( is also available directly since it is frequently used within the) 114 509.33 P
+(class.) 72 497.33 T
+1.64 (Features) 72 485.33 P
+2 F
+1.64 (+) 127.64 485.33 P
+1 F
+1.64 ( and) 133.64 485.33 P
+2 F
+1.64 (add) 166.91 485.33 P
+1 F
+1.64 ( take an instance of DATE_TIME_DURATION in arguments. The) 184.91 485.33 P
+5.45 (date duration is added first then the time duration. Adding the time) 72 473.33 P
+2.73 (duration first would have yield some different result as in this example:) 72 461.33 P
+(the current date is August 30th 23:59:59. The duration to add is one month and) 72 449.33 T
+1.09 (one second. Feature) 72 437.33 P
+2 F
+1.09 (add) 195.27 437.33 P
+1 F
+1.09 ( returns October 1st 0:0:0, whereas adding the second) 213.27 437.33 P
+3.6 (first would return September 30th 0:0:0! The same difference occurs with) 72 425.33 P
+(leap years.) 72 413.33 T
+1.71 (Feature) 72 401.33 P
+2 F
+1.71 (relative_duration) 121.71 401.33 P
+1 F
+1.71 ( and) 223.71 401.33 P
+2 F
+1.71 (definite_duration) 257.14 401.33 P
+1 F
+1.71 ( returns the duration between) 359.14 401.33 P
+4 (the current date \050with time\051 and the argument. The first one returns a) 72 389.33 P
+4.2 (result which is canonical \050see definitions below\051, while the second one) 72 377.33 P
+(returns a result definite but may be not canonical. It is the same notion than) 72 365.33 T
+(in DATE.) 72 353.33 T
+3 12 Q
+(1.4. DA) 72 304 T
+(TE and DA) 109.44 304 T
+(TE_TIME) 167.23 304 T
+1 10 Q
+(Another way to process would have been to make DATE_TIME inherit from DATE, as) 72 276.33 T
+1.71 (long as DATE_TIME is a DATE, with more precision. The choice was to have a) 72 264.33 P
+1.2 (client relation between them. Otherwise DATE should have known the existence) 72 252.33 P
+6 (of DATE_TIME, and many assignment attempts would have been useful in) 72 240.33 P
+(features such as infix) 72 228.33 T
+2 F
+(+) 210 228.33 T
+1 F
+(.) 216 228.33 T
+(So DATE_TIME is client of DATE.) 72 216.33 T
+4.5 (However, it could be useful to mix instances of DATE of DATE_TIME. As) 72 204.33 P
+1.29 (DATE_TIME is client of DATE with its attribute) 72 192.33 P
+2 F
+1.29 (date) 364.29 192.33 P
+1 F
+1.29 (, it is easy to get only) 388.29 192.33 P
+6 (the date from instances of DATE_TIME. On the other way features are) 72 180.33 P
+1.64 (available to convert objects from DATE to DATE_TIME. In class DATE, feature) 72 168.33 P
+2 F
+6 (to_date_time) 72 156.33 P
+1 F
+6 ( builds an instance of DATE_TIME with the origin of time) 144 156.33 P
+1.2 (\0500,0,0\051. In the class DATE_TIME, the creation procedure) 72 144.33 P
+2 F
+1.2 (make_by_date) 417.6 144.33 P
+1 F
+1.2 ( has the) 489.6 144.33 P
+(same effect. \050The same feature exists for duration, replacing origin by zero\051.) 72 132.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "5" 11
+%%Page: "4" 12
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 4) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+4 (large:) 72 713.33 P
+2 F
+4 (set_month_cut_days) 118 713.33 P
+1 F
+4 ( and) 226 713.33 P
+2 F
+4 (set_year_cut_days) 264 713.33 P
+1 F
+4 ( will cut) 366 713.33 P
+2 F
+4 (day) 438 713.33 P
+1 F
+4 ( down to the) 456 713.33 P
+(largest value allowed.) 72 701.33 T
+(- Adding years, months and days with features) 72 689.33 T
+2 F
+(year_add) 348 689.33 T
+1 F
+(,) 396 689.33 T
+2 F
+(month_add) 408 689.33 T
+1 F
+( and) 462 689.33 T
+2 F
+(day_add) 492 689.33 T
+1 F
+(.) 534 689.33 T
+(There is no requirement to add a year or a month. However, these features have) 72 677.33 T
+1 (to return a correct result, i.e. day is checked before each addition. Adding) 72 665.33 P
+2.14 (one month to August 31st will yield September 30th. 31 is cut to 30 since) 72 653.33 P
+(there are only 30 days in september.) 72 641.33 T
+(Features) 72 629.33 T
+2 F
+(add) 126 629.33 T
+1 F
+( and) 144 629.33 T
+2 F
+(+) 174 629.33 T
+1 F
+( take an instance of DATE_DURATION in argument and add it to) 180 629.33 T
+2.31 (the current date. It is written so that years and months are added first,) 72 617.33 P
+(the days last. \050see DATE_DURATION below\051) 72 605.33 T
+4.15 (- Moving to the next or the previous year, month or day with features) 72 593.33 P
+2 F
+3.43 (year_forth) 72 581.33 P
+1 F
+3.43 (,) 132 581.33 P
+2 F
+3.43 (year_back) 147.43 581.33 P
+1 F
+3.43 (,) 201.43 581.33 P
+2 F
+3.43 (month_forth) 216.86 581.33 P
+1 F
+3.43 (,) 282.86 581.33 P
+2 F
+3.43 (month_back) 298.29 581.33 P
+1 F
+3.43 (,) 358.29 581.33 P
+2 F
+3.43 (day_forth) 373.71 581.33 P
+1 F
+3.43 ( and) 427.71 581.33 P
+2 F
+3.43 (day_back) 464.57 581.33 P
+1 F
+3.43 (. It) 512.57 581.33 P
+5 (is the same but faster to use these features rather than those upper) 72 569.33 P
+(\050) 72 557.33 T
+2 F
+(year_back) 78 557.33 T
+1 F
+( <->) 132 557.33 T
+2 F
+(year_add \050-1\051) 162 557.33 T
+1 F
+(\051.) 240 557.33 T
+(- Features) 72 545.33 T
+2 F
+(relative_duration) 138 545.33 T
+1 F
+( and) 240 545.33 T
+2 F
+(definite_duration) 270 545.33 T
+1 F
+( return the duration between) 372 545.33 T
+1.85 (the current date and the argument. The first one returns a result which is) 72 533.33 P
+2.4 (canonical \050See definitions below\051, while the second one returns a definite) 72 521.33 P
+(result but may be not canonical.) 72 509.33 T
+1.85 (For example, date1 is April 20th and date2 is May 28th. Both features will) 72 497.33 P
+(yield instances of DURATION; however,) 72 485.33 T
+2 F
+(relative_duration) 300 485.33 T
+1 F
+( will yield 1 month and) 402 485.33 T
+(8 days whereas) 72 473.33 T
+2 F
+(definite_duration) 162 473.33 T
+1 F
+( will yield 38 days.) 264 473.33 T
+3 12 Q
+(1.3. DA) 72 424 T
+(TE_TIME) 109.44 424 T
+1 10 Q
+0.8 (The aim is to gather the time with the date. DATE_TIME is client of TIME and) 72 384.33 P
+(DATE \050see inheritance relation\051.) 72 372.33 T
+1 (Some features from DATE and TIME are re-written since they are useful within) 72 360.33 P
+3.27 (the class. Many other features may be called indirectly with the correct) 72 348.33 P
+(attribute \050) 72 336.33 T
+2 F
+(time) 138 336.33 T
+1 F
+( or) 162 336.33 T
+2 F
+(date) 186 336.33 T
+1 F
+(\051.) 210 336.33 T
+(Creation) 108 312.33 T
+(There are still several ways to create an instance:) 72 300.33 T
+(- by choosing value for all the attributes of the date and the time \050) 72 288.33 T
+2 F
+(make) 486 288.33 T
+1 F
+(\051.) 510 288.33 T
+(- by getting the time from the system \050) 72 276.33 T
+2 F
+(make_now) 306 276.33 T
+1 F
+(\051.) 354 276.33 T
+10.36 (- by gathering an instance of DATE with an instance of TIME) 72 264.33 P
+(\050) 72 252.33 T
+2 F
+(make_by_date_time) 78 252.33 T
+1 F
+(\051. This feature copies only the references of its arguments,) 180 252.33 T
+4.5 (so that if the time \050or the date\051 is changed, the instance previously) 72 240.33 P
+1.5 (initialized will be also changed. If this effect has to be avoided, cloning) 72 228.33 P
+(the arguments is required.) 72 216.33 T
+1.09 (- by encapsulating an instance of DATE \050) 72 204.33 P
+2 F
+1.09 (make_by_date) 319.64 204.33 P
+1 F
+1.09 (\051. The attribute) 391.64 204.33 P
+2 F
+1.09 (time) 496.91 204.33 P
+1 F
+1.09 ( is) 520.91 204.33 P
+3.69 (set to the origin, i.e. 0:0:0. The attribute) 72 192.33 P
+2 F
+3.69 (date) 371.54 192.33 P
+1 F
+3.69 ( is set with the same) 395.54 192.33 P
+(reference as the argument \050See comment of the previous section\051.) 72 180.33 T
+(Access) 108 156.33 T
+0.86 (To make it easier calls to features of TIME and DATE, the most useful access) 72 144.33 P
+4.8 (features are written as features in DATE_TIME \050) 72 132.33 P
+2 F
+4.8 (days) 387.6 132.33 P
+1 F
+4.8 (,) 411.6 132.33 P
+2 F
+4.8 (seconds) 428.4 132.33 P
+1 F
+4.8 ( and their) 470.4 132.33 P
+(associated duration) 72 120.33 T
+2 F
+(date_duration) 192 120.33 T
+1 F
+( and) 270 120.33 T
+2 F
+(time_duration) 300 120.33 T
+1 F
+(\051.) 378 120.33 T
+(Comparison) 108 96.33 T
+8 (Instances of DATE_TIME are totally ordered \050the class inherit from) 72 84.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "4" 12
+%%Page: "3" 13
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 3) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(argument and add it to the current time.) 72 713.33 T
+2.31 (- Moving to the next or the previous hour, minute or second with features) 72 701.33 P
+2 F
+14.4 (hour_forth) 72 689.33 P
+1 F
+14.4 (,) 132 689.33 P
+2 F
+14.4 (hour_back) 158.4 689.33 P
+1 F
+14.4 (,) 212.4 689.33 P
+2 F
+14.4 (minute_forth) 238.8 689.33 P
+1 F
+14.4 (,) 310.8 689.33 P
+2 F
+14.4 (minute_back) 337.2 689.33 P
+1 F
+14.4 (,) 403.2 689.33 P
+2 F
+14.4 (second_forth) 429.6 689.33 P
+1 F
+14.4 ( and) 501.6 689.33 P
+2 F
+3.82 (second_back) 72 677.33 P
+1 F
+3.82 (. It is faster to use these features rather than those above) 138 677.33 P
+(\050) 72 665.33 T
+2 F
+(hour_back) 78 665.33 T
+1 F
+( <->) 132 665.33 T
+2 F
+(hour_add \050-1\051) 162 665.33 T
+1 F
+(\051.) 240 665.33 T
+3 12 Q
+(1.2. DA) 72 628 T
+(TE) 109.44 628 T
+1 10 Q
+1.85 (DATE deals with year, month and day. It is more complicated since there is) 72 603.33 P
+2.31 (no regular period in dates: each month contains its own total of days and) 72 591.33 P
+(there are leap years. That is why some peculiarities appear while manipulating) 72 579.33 T
+(objects of this class.) 72 567.33 T
+1.71 (There is no limit for a date \050inside the class\051. The only limit comes from) 72 555.33 P
+2.18 (INTEGER representation. If INTEGER size is 32 bits \050most common case\051, and) 72 543.33 P
+0.67 (as long as the basic unit is a day, the range for a date is from \050- 2^31\051 to) 72 531.33 P
+(2^31 \050days\051, i.e. 5.8 million years from the origin.) 72 519.33 T
+(Creation) 108 495.33 T
+(There are also three ways to create an instance of the class DATE: by choosing) 72 483.33 T
+(the date \050) 72 471.33 T
+2 F
+(make) 132 471.33 T
+1 F
+(,) 156 471.33 T
+2 F
+(make_month_day_year) 168 471.33 T
+1 F
+(,) 282 471.33 T
+2 F
+(make_day_month_year) 294 471.33 T
+1 F
+(\051, by getting the date) 408 471.33 T
+(from the system \050) 72 459.33 T
+2 F
+(make_now) 174 459.33 T
+1 F
+(\051, or by choosing the number of days elapsed from the) 222 459.33 T
+4.67 (origin \050) 72 447.33 P
+2 F
+4.67 (make_by_days) 124.67 447.33 P
+1 F
+4.67 (\051. The arguments of each creation procedure have to) 196.67 447.33 P
+(respect the common range \050See preconditions\051.) 72 435.33 T
+(Origin) 108 411.33 T
+(The origin is 01/01/1600.) 72 399.33 T
+(Comparison) 108 375.33 T
+2.31 (Instances of DATE may be compared. Functions) 72 363.33 P
+2 F
+2.31 (<) 358.15 363.33 P
+1 F
+2.31 (,) 364.15 363.33 P
+2 F
+2.31 (+) 378.46 363.33 P
+2.31 (>) 392.77 363.33 P
+1 F
+2.31 ( and) 398.77 363.33 P
+2 F
+2.31 (>=) 433.38 363.33 P
+1 F
+2.31 ( are available.) 445.38 363.33 P
+(Function) 72 351.33 T
+2 F
+(is_equal) 126 351.33 T
+1 F
+( must be use to test equality,) 174 351.33 T
+2 F
+(=) 360 351.33 T
+1 F
+( will compare references.) 366 351.33 T
+(Measurement) 108 327.33 T
+2.18 (Each instance of DATE has a function \050) 72 315.33 P
+2 F
+2.18 (duration) 315.27 315.33 P
+1 F
+2.18 (\051 which returns the duration) 363.27 315.33 P
+9.27 (since the origin until the current date \050it is an instance of) 72 303.33 P
+2.4 (DATE_DURATION\051. This duration is definite, i.e. it contains only days \050See) 72 291.33 P
+(below\051.) 72 279.33 T
+7 (However, it may be useful to deal directly with days \050no need of) 72 267.33 P
+1 (DATE_DURATION\051. In this case, the function) 72 255.33 P
+2 F
+1 (days) 336 255.33 P
+1 F
+1 ( of DATE yields the number of) 360 255.33 P
+(days since origin.) 72 243.33 T
+(Status Report) 108 219.33 T
+1.5 (Much information may be gotten from functions written in this part. Most of) 72 207.33 P
+(them are used within the class, but they are exported at the same time.) 72 195.33 T
+(Operations) 108 171.33 T
+(DATE operations looks like TIME operations:) 72 159.33 T
+1.09 (- Setting directly) 72 147.33 P
+2 F
+1.09 (year) 189.27 147.33 P
+1 F
+1.09 (,) 213.27 147.33 P
+2 F
+1.09 (month) 226.36 147.33 P
+1 F
+1.09 ( and) 256.36 147.33 P
+2 F
+1.09 (day) 288.55 147.33 P
+1 F
+1.09 ( with) 306.55 147.33 P
+2 F
+1.09 (set_year) 344.73 147.33 P
+1 F
+1.09 (,) 392.73 147.33 P
+2 F
+1.09 (set_month) 405.82 147.33 P
+1 F
+1.09 ( and) 459.82 147.33 P
+2 F
+1.09 (set_day) 492 147.33 P
+1 F
+1.09 (.) 534 147.33 P
+(Arguments must satisfy the rules of creation. These rules are more complicated) 72 135.33 T
+1.88 (than those of TIME. For example it is not allowed to set) 72 123.33 P
+2 F
+1.88 (day) 436.5 123.33 P
+1 F
+1.88 ( to 31 if the) 454.5 123.33 P
+0.86 (current month is April, whereas it is allowed if the month is January. It is) 72 111.33 P
+(the same rules as for) 72 99.33 T
+2 F
+(make) 204 99.33 T
+1 F
+(. The same thing for years: It is not allowed to set) 228 99.33 T
+2 F
+(year) 72 87.33 T
+1 F
+( to a non-leap year if the current date is February 29th of a leap year.) 96 87.33 T
+0.86 (However, two features are available to set) 72 75.33 P
+2 F
+0.86 (month) 336 75.33 P
+1 F
+0.86 ( and) 366 75.33 P
+2 F
+0.86 (year) 397.71 75.33 P
+1 F
+0.86 ( even if) 421.71 75.33 P
+2 F
+0.86 (day) 478.29 75.33 P
+1 F
+0.86 ( is too) 496.29 75.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "3" 13
+%%Page: "2" 14
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 2) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+0.92 (kinds of heirs which are the absolute notion of time \050classes DATE, TIME and) 72 713.33 P
+1.5 (DATE_TIME\051 and the notion of duration \050classes DATE_DURATION, TIME_DURATION,) 72 701.33 P
+(DATE_TIME_DURATION\051.) 72 689.33 T
+5.4 (DATE, TIME and DATE_TIME inherit from the deferred class ABSOLUTE. It) 72 677.33 P
+4.91 (implies that instances of these classes are used as absolutes. We can) 72 665.33 P
+3.6 (imagine an oriented axis on which are reported values. ABSOLUTE inherits) 72 653.33 P
+5.45 (COMPARABLE, there is a complete order inside the class and its heir.) 72 641.33 P
+4 (ABSOLUTE is a client of DURATION, so that each instance of ABSOLUTE is) 72 629.33 P
+2 (linked with the duration between the origin and itself. The default way to) 72 617.33 P
+3.6 (compare absolute objects is to compare their respective duration to each) 72 605.33 P
+(other.) 72 593.33 T
+3 12 Q
+(1.1 TIME) 72 544 T
+1 10 Q
+5.5 (TIME deals with hour, minute and second. Is is possible to use more) 72 516.33 P
+1.38 (precision for time \050there is no limit inside the class\051. See below \0505. More) 72 504.33 P
+(precision in TIME\051 for documentation. This section deals only with second.) 72 492.33 T
+(Creation) 108 468.33 T
+2.31 (There are three ways to create an instance of the class TIME: by choosing) 72 456.33 P
+4 (the time \050) 72 444.33 P
+2 F
+4 (make) 140 444.33 P
+1 F
+4 (\051, by getting the time from the system \050) 164 444.33 P
+2 F
+4 (make_now) 436 444.33 P
+1 F
+4 (\051, or by) 484 444.33 P
+3.33 (choosing the number of seconds elapsed from the origin \050) 72 432.33 P
+2 F
+3.33 (make_by_seconds) 438 432.33 P
+1 F
+3.33 (\051.) 528 432.33 P
+0.92 (The arguments of) 72 420.33 P
+2 F
+0.92 (make) 176.77 420.33 P
+1 F
+0.92 ( and) 200.77 420.33 P
+2 F
+0.92 (make_by_seconds) 232.62 420.33 P
+1 F
+0.92 ( have to respect the range of a day) 322.61 420.33 P
+(\050see preconditions\051.) 72 408.33 T
+(Origin and cyclic representation) 108 384.33 T
+(The origin is 0 hour 0 minute and 0 second.) 72 372.33 T
+1.85 (Notion of time is relative to a day in a cyclic representation: days begin) 72 360.33 P
+(at 0:0:0 and end at 23:59:59. If a second is added to 23:59:59 then the result) 72 348.33 T
+(will be 0:0:0. Subtracting a minute to 0:0:0 will yield 23:59:0.) 72 336.33 T
+(Comparison) 108 312.33 T
+2.31 (Instances of TIME may be compared. Functions) 72 300.33 P
+2 F
+2.31 (<) 358.15 300.33 P
+1 F
+2.31 (,) 364.15 300.33 P
+2 F
+2.31 (+) 378.46 300.33 P
+2.31 (>) 392.77 300.33 P
+1 F
+2.31 ( and) 398.77 300.33 P
+2 F
+2.31 (>=) 433.38 300.33 P
+1 F
+2.31 ( are available.) 445.38 300.33 P
+(Function) 72 288.33 T
+2 F
+(is_equal) 126 288.33 T
+1 F
+( must be use to test equality.) 174 288.33 T
+2 F
+(=) 360 288.33 T
+1 F
+( will compare references.) 366 288.33 T
+(Measurement) 108 264.33 T
+(The duration linked to an instance of TIME \050attribute) 72 252.33 T
+2 F
+(duration) 396 252.33 T
+1 F
+(\051 is an instance) 444 252.33 T
+(of TIME_DURATION. It is the duration from the origin until the current time.) 72 240.33 T
+2.73 (The function) 72 228.33 P
+2 F
+2.73 (seconds) 155.46 228.33 P
+1 F
+2.73 ( returns the number of seconds since the origin. This) 197.46 228.33 P
+(function may be useful to get the number of seconds between two events.) 72 216.33 T
+5.45 (The feature) 72 204.33 P
+2 F
+5.45 (-) 154.91 204.33 P
+1 F
+5.45 ( creates an interval between two instances of TIME. The) 160.91 204.33 P
+2.18 (duration of this interval is given by the function) 72 192.33 P
+2 F
+2.18 (duration) 397.64 192.33 P
+1 F
+2.18 (. However, this) 445.64 192.33 P
+4.2 (duration is not canonical \050See Duration, section 2, for precisions\051. In) 72 180.33 P
+4.67 (TIME, the feature) 72 168.33 P
+2 F
+4.67 (relative_duration) 194 168.33 P
+1 F
+4.67 ( returns the same duration, but more) 296 168.33 P
+(efficiently and also it is canonical.) 72 156.33 T
+(Operations) 108 132.33 T
+6 (- Set directly) 72 120.33 P
+2 F
+6 (hour,) 180 120.33 P
+6 (minute) 222 120.33 P
+1 F
+6 ( and) 258 120.33 P
+2 F
+6 (second) 300 120.33 P
+1 F
+6 ( with) 336 120.33 P
+2 F
+6 (set_hour) 384 120.33 P
+1 F
+6 (,) 432 120.33 P
+2 F
+6 (set_minute) 450 120.33 P
+1 F
+6 ( and) 510 120.33 P
+2 F
+(set_second) 72 108.33 T
+1 F
+(. Arguments must satisfy the rules of creation.) 132 108.33 T
+2.4 (- Adding hours, minutes and seconds with features) 72 96.33 P
+2 F
+2.4 (hour_add) 391.2 96.33 P
+1 F
+2.4 (,) 439.2 96.33 P
+2 F
+2.4 (minute_add) 453.6 96.33 P
+1 F
+2.4 ( and) 513.6 96.33 P
+2 F
+4.36 (second_add) 72 84.33 P
+1 F
+4.36 (. Features) 132 84.33 P
+2 F
+4.36 (add) 206.73 84.33 P
+1 F
+4.36 ( and) 224.73 84.33 P
+2 F
+4.36 (+) 263.45 84.33 P
+1 F
+4.36 ( take an instance of TIME_DURATION as an) 269.45 84.33 P
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "2" 14
+%%Page: "1" 15
+612 792 0 FMBEGINPAGE
+[0 0 0 1 0 0 0]
+[ 0 0 0 0 1 1 1]
+[ 0 1 1 0 1 0 0]
+[ 1 0 1 0 0 1 0]
+[ 1 1 0 0 0 0 1]
+[ 1 0 0 0 0 1 1]
+[ 0 1 0 0 1 0 1]
+[ 0 0 1 0 1 1 0]
+ 8 FrameSetSepColors
+FrameNoSep
+0 0 0 1 0 0 0 K
+72 746 540 756 R
+7 X
+0 0 0 1 0 0 0 K
+V
+72 33.32 540 43.32 R
+V
+0 10 Q
+0 X
+(Page 1) 513.06 36.5 T
+0 0 0 1 0 0 0 K
+0 0 0 1 0 0 0 K
+72 72 540 720 R
+7 X
+V
+1 F
+0 X
+(Short documentation for EIFFELTIME library) 144 653.33 T
+(Thierry CHOPARD, ISE.) 144 629.33 T
+(Introduction) 144 569.33 T
+(1.Absolute time) 144 557.33 T
+(1.1 TIME) 216 545.33 T
+(1.2 DATE) 216 533.33 T
+(1.3 DATE_TIME) 216 521.33 T
+(1.4.DATE and DATE_TIME) 216 509.33 T
+(2.Duration) 144 497.33 T
+(2.1 TIME_DURATION) 216 485.33 T
+(2.2 DATE_DURATION) 216 473.33 T
+(2.3 DATE_TIME_DURATION) 216 461.33 T
+(3.Interval) 144 449.33 T
+(4.Format) 144 437.33 T
+(5.More precision for TIME) 144 425.33 T
+(Appendix) 144 401.33 T
+(A. The architecture) 216 389.33 T
+3 14 Q
+(Intr) 72 312.67 T
+(oduction) 95.86 312.67 T
+1 10 Q
+4.36 (The library EiffelTime is built on three notions of time. The absolute) 72 281.33 P
+0.8 (notion \050for example, what time is it? 3:45 pm\051 is used for events. It may be) 72 269.33 P
+3.5 (useful also to deal with an interval between two events \050the meeting is) 72 257.33 P
+1 (between 3:45 pm and 6:00 pm\051. Finally EiffelTime has the notion of duration,) 72 245.33 P
+(which is the length of an interval \050the meeting will take 2:15\051. The notion of) 72 233.33 T
+(absolute is linked with duration by the use of an origin.) 72 221.33 T
+3 14 Q
+(1. ABSOLUTE TIME) 72 156.67 T
+1 10 Q
+(The classes dealing with date and those dealing with time have almost the same) 72 101.33 T
+2 (construction. At the top of the hierarchy are the constants and the notion) 72 89.33 P
+(of value \050TIME_VALUE, DATE_VALUE, DATE_TIME_VALUE\051. From this notion comes two) 72 77.33 T
+0 0 0 1 0 0 0 K
+FMENDPAGE
+%%EndPage: "1" 15
+%%Trailer
+%%BoundingBox: 0 0 612 792
+%%PageOrder: Descend
+%%Pages: 15
+%%DocumentFonts: Times-Roman
+%%+ Courier
+%%+ Courier-Oblique
+%%+ Times-Bold
+%%+ Courier-Bold
+%%EOF

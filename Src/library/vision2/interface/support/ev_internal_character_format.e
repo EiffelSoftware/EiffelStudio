@@ -84,7 +84,7 @@ feature -- Basic operation
 			loop
 				i := r.item
 				r.forth
-				text.select_region (i, r.item + 1)
+				text.select_region (i, r.item)
 				text.set_character_format (format)
 				r.forth
 			end

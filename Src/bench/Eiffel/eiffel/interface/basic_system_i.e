@@ -33,6 +33,10 @@ feature -- Access
 	integer_32_class, integer_64_class: CLASS_I
 			-- Class INTEGER 8, 16, 32 and 64 btis
 
+	natural_8_class, natural_16_class,
+	natural_32_class, natural_64_class: CLASS_I
+			-- Class NATURAL 8, 16, 32 and 64 btis
+
 	real_32_class: CLASS_I
 			-- Class REAL
 
@@ -89,6 +93,10 @@ feature -- Access: XX_REF classes
 	integer_8_ref_class, integer_16_ref_class,
 	integer_32_ref_class, integer_64_ref_class: CLASS_I
 			-- Class INTEGER_REF 8, 16, 32 and 64 bits
+
+	natural_8_ref_class, natural_16_ref_class,
+	natural_32_ref_class, natural_64_ref_class: CLASS_I
+			-- Class NATURAL_REF 8, 16, 32 and 64 bits
 
 	real_32_ref_class: CLASS_I
 			-- Class REAL_REF
@@ -290,6 +298,28 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
+	natural_ref_type_id (n: INTEGER): INTEGER is
+			-- Dynamic type_id of class NATURAL_REF with `n' bits.
+		require
+			int_ref_class_exists: natural_8_ref_class /= Void and then
+						natural_16_ref_class /= Void and then
+						natural_32_ref_class /= Void and then
+						natural_64_ref_class /= Void
+			compiled: natural_8_ref_class.is_compiled and then
+						natural_16_ref_class.is_compiled and then
+						natural_32_ref_class.is_compiled and then
+						natural_64_ref_class.is_compiled
+		do
+			inspect n
+			when 8 then Result := natural_8_ref_class.compiled_class.types.first.type_id
+			when 16 then Result := natural_16_ref_class.compiled_class.types.first.type_id
+			when 32 then Result := natural_32_ref_class.compiled_class.types.first.type_id
+			when 64 then Result := natural_64_ref_class.compiled_class.types.first.type_id
+			end
+		ensure
+			valid_result: Result > 0
+		end
+
 	boolean_ref_type_id: INTEGER is
 			-- Dynamic type_id of class BOOLEAN_REF
 		require
@@ -406,6 +436,24 @@ feature -- Settings
 			integer_16_class_set: n = 16 implies integer_16_class = c
 			integer_32_class_set: n = 32 implies integer_32_class = c
 			integer_64_class_set: n = 64 implies integer_64_class = c
+		end
+
+	set_natural_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `natural_n_class'.
+		require
+			c_not_void: c /= Void
+		do
+			inspect n
+			when 8 then natural_8_class := c
+			when 16 then natural_16_class := c
+			when 32 then natural_32_class := c
+			when 64 then natural_64_class := c
+			end
+		ensure
+			natural_8_class_set: n = 8 implies natural_8_class = c
+			natural_16_class_set: n = 16 implies natural_16_class = c
+			natural_32_class_set: n = 32 implies natural_32_class = c
+			natural_64_class_set: n = 64 implies natural_64_class = c
 		end
 
 	set_real_32_class (c: CLASS_I) is
@@ -611,6 +659,24 @@ feature -- Settings: XX_REF classes
 			integer_16_ref_class_set: n = 16 implies integer_16_ref_class = c
 			integer_32_ref_class_set: n = 32 implies integer_32_ref_class = c
 			integer_64_ref_class_set: n = 64 implies integer_64_ref_class = c
+		end
+
+	set_natural_ref_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `natural_n_ref_class'.
+		require
+			c_not_void: c /= Void
+		do
+			inspect n
+			when 8 then natural_8_ref_class := c
+			when 16 then natural_16_ref_class := c
+			when 32 then natural_32_ref_class := c
+			when 64 then natural_64_ref_class := c
+			end
+		ensure
+			natural_8_ref_class_set: n = 8 implies natural_8_ref_class = c
+			natural_16_ref_class_set: n = 16 implies natural_16_ref_class = c
+			natural_32_ref_class_set: n = 32 implies natural_32_ref_class = c
+			natural_64_ref_class_set: n = 64 implies natural_64_ref_class = c
 		end
 
 	set_real_32_ref_class (c: CLASS_I) is

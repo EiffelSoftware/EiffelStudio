@@ -122,8 +122,10 @@ feature -- Code generation
 			gen_type: GEN_TYPE_I
 			gen_param: TYPE_I
 			int_i: INTEGER_I
+			nat_i: NATURAL_I
 			char_i: CHAR_I
-			dtype, char_dtype, int8_dtype, int16_dtype,
+			dtype, char_dtype, uint8_dtype, uint16_dtype,
+			uint32_dtype, uint64_dtype, int8_dtype, int16_dtype,
 			int32_dtype, int64_dtype, wchar_dtype,
 			real32_dtype, real64_dtype,
 			pointer_dtype, boolean_dtype, ref_dtype: INTEGER
@@ -131,6 +133,10 @@ feature -- Code generation
 			from
 				char_dtype := -1
 				wchar_dtype := -1
+				uint8_dtype := -1
+				uint16_dtype := -1
+				uint32_dtype := -1
+				uint64_dtype := -1
 				int8_dtype := -1
 				int16_dtype := -1
 				int32_dtype := -1
@@ -155,7 +161,15 @@ feature -- Code generation
 					else
 						char_dtype := dtype
 					end
-				elseif gen_param.is_long then
+				elseif gen_param.is_natural then
+					nat_i ?= gen_param
+					inspect nat_i.size
+					when 8 then uint8_dtype := dtype
+					when 16 then uint16_dtype := dtype
+					when 32 then uint32_dtype := dtype
+					when 64 then uint64_dtype := dtype
+					end
+				elseif gen_param.is_integer then
 					int_i ?= gen_param
 					inspect int_i.size
 					when 8 then int8_dtype := dtype
@@ -182,6 +196,14 @@ feature -- Code generation
 			buffer.put_integer (wchar_dtype)
 			buffer.put_string (";%N%Tegc_sp_bool = (uint32)")
 			buffer.put_integer (boolean_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint8 = (uint32)")
+			buffer.put_integer (uint8_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint16 = (uint32)")
+			buffer.put_integer (uint16_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint32 = (uint32)")
+			buffer.put_integer (uint32_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint64 = (uint32)")
+			buffer.put_integer (uint64_dtype)
 			buffer.put_string (";%N%Tegc_sp_int8 = (uint32)")
 			buffer.put_integer (int8_dtype)
 			buffer.put_string (";%N%Tegc_sp_int16 = (uint32)")

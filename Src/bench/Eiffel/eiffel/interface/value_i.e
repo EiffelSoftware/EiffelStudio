@@ -47,6 +47,11 @@ feature -- Status report
 			-- Is the constant an integer constant ?
 		do
 		end
+		
+	is_natural: BOOLEAN is
+			-- Is constant a natural constant ?
+		do
+		end
 
 	is_boolean: BOOLEAN is
 			-- Is the constant a real constant ?
@@ -129,6 +134,7 @@ feature -- Settings
 			-- Same thing with BIT_VALUE_I
 		require
 			t_not_void: t /= Void
+			valid_type: valid_type (t)
 		do
 		end
 

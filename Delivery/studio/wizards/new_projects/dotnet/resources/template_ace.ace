@@ -11,6 +11,7 @@ default
 	assertion (no)
 	msil_generation (yes)
 	msil_generation_type ("<FL_APPLICATION_TYPE>")
+	console_application (<FL_CONSOLE_APPLICATION>)
 	line_generation (no)
 
 cluster

@@ -1,0 +1,21 @@
+[OPTIONS]
+root=d:\rb\rb_documentation\docrb
+bmroot=d:\rb\rb_documentation\docrb
+errorlog=d:\rb\rb_documentation\docrb\rb_help.err
+title=Resource Bench's help
+copyright=Created with EasyHelp/Web +44(0)973 209667
+compress=no
+[FILES]
+rb_help.rtf
+[WINDOWS]
+main="Resource Bench's help",(46,53,922,913),0,,(255,255,192), 0
+aux="Second Help Window (aux)",(346,353,422,413),,,, 0
+third="Third Help Window (third)",(346,353,422,413),,,, 0
+fourth="Fourth Help Window (fourth)",(346,353,422,413),,,, 0
+[CONFIG]
+BrowseButtons()
+
+CB("","&Unregistered","")
+
+[MAP]
+#include <d:\rb\rb_documentation\docrb\rb_help.h>

@@ -248,7 +248,7 @@ feature
 				
 			file.putstring ("%TRTLE;%N");
 
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 
 		end;
 

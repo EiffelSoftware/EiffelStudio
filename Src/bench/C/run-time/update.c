@@ -39,6 +39,8 @@
 #include "eif_err_msg.h"
 #include "eif_main.h"
 #include "eif_gen_conf.h"
+#include "eif_error.h"					/* for error_tag() */
+#include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */
 
 #ifdef DEBUG
 #include "eif_interp.h"					/* For idump() */
@@ -91,8 +93,8 @@ rt_public void update(char ignore_updt)
 	meltpath = eif_getenv ("MELT_PATH");
 
 		/* We add 10 to the length of `filename' which corresponds to the size of
-		 * ".melted" plus an extra 3 characters needed for the different platform
-		 * directory separators */
+		 * ".melted" (7) plus an extra 3 characters needed for the different platform
+		 * directory separators and a nul terminator */
 	if (meltpath) {
 		filename = (char *)cmalloc (strlen (meltpath) + strlen (egc_system_name) + 10);
 	}
@@ -106,20 +108,28 @@ rt_public void update(char ignore_updt)
 		exit (1);
 	}
 
+#ifdef EIF_VMS
+	if (meltpath)
+		if (!strcasecmp (meltpath, "MELT_PATH"))
+		    strcpy (filename, "MELT_PATH:");
+		else 
+		    strcpy (filename, meltpath);
+	else 
+		strcpy (filename, "[]");
+#else
 	if (meltpath)
 		strcpy (filename, meltpath);
 	else 
-#ifdef __VMS
-		strcpy (filename, "[]");
-#else
 		strcpy (filename, ".");
-#endif /* __VMS */
+#endif /* EIF_VMS */
+
 
 #ifdef EIF_WIN32
 	strcat(filename, "\\");
-#elif !(defined __VMS)
-	strcat(filename, "/");
+#elif defined EIF_VMS	/* append path separator only if necessary */
+	if (!eifrt_vms_has_path_terminator (filename))
 #endif
+	strcat(filename, "/");
 
 	strcat (filename, egc_system_name);
 	strcat (filename, ".melted");
@@ -130,8 +140,13 @@ rt_public void update(char ignore_updt)
 #endif
 
 	if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-		print_err_msg(stderr, "Error: could not open Eiffel update file %s\n", filename);
+		int err = errno;
+#ifdef EIF_VMS
+		if (err == EVMSERR) err = vaxc$errno;
+#endif
+		print_err_msg(stderr, "Error could not open Eiffel update file %s\n", filename);
 		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
+		print_err_msg(stderr, "Error %d: %s\n", err, error_tag(err));
 #ifdef EIF_WIN32
 		eif_console_cleanup();
 #endif

@@ -300,8 +300,6 @@ feature -- Actions
 			if fd.file_name /= Void and then not fd.file_name.is_empty then
 				if (fd.file_name.substring_index (".dll", fd.file_name.count - 4) > 0)
 					or (fd.file_name.substring_index (".exe", fd.file_name.count - 4) > 0) then
-							-- Initialize COM.
-						(create {CLI_COM}).initialize_com
 						create assembly_interface.make
 						if assembly_interface.signed 
 								(create {STRING}.make_from_string (fd.file_name)) then
@@ -545,8 +543,6 @@ feature -- Implementation
 			list_row: EV_MULTI_COLUMN_LIST_ROW
 			add_to_gac_dialog: BOOLEAN
 		do
-			(create {CLI_COM}).initialize_com
-
 			create assembly_interface.make
 			from
 				assembly_list.wipe_out

@@ -269,7 +269,7 @@ rt_public char *emalloc(uint32 type)
 		if (object != (char *) 0)
 			{
 #ifdef EMCHK
-			rt_public char *ret_val;
+			char *ret_val;
 
 			ret_val = eif_set(object, nbytes, type);	/* Set for Eiffel use */
 			printf("--- End of emalloc (malloc_from_zone) ---\n");

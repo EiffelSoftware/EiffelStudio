@@ -12,29 +12,35 @@ class
 inherit
 	EV_MESSAGE_DIALOG
 		redefine
-			implementation,
-			make_default,
-			make
+			implementation
 		end
 
 creation
 	make,
-	make_default
+	make_default,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
-			-- Create the dialog box.
-		do
-			!EV_WARNING_DIALOG_IMP!implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par)
-		end
-
-	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
-			-- Create with default_options
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
 		do
 			!EV_WARNING_DIALOG_IMP! implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par, msg, dtitle)
+		end
+
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
+		do
+			!EV_WARNING_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
+		end
+
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create the default message dialog with `par' as
+			-- parent, `a_title' as title and `a_msg' as message
+			-- and displays it.
+		do
+			!EV_WARNING_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
 		end
 
 feature {NONE} -- Implementation

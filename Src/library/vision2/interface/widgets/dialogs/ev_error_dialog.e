@@ -12,78 +12,35 @@ class
 inherit
 	EV_MESSAGE_DIALOG
 		redefine
-			implementation,
-			make_default,
-			make
+			implementation
 		end
 
 creation
 	make,
-	make_default
+	make_default,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
-			-- Create the dialog box.
-		do
-			!EV_ERROR_DIALOG_IMP!implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par)
-		end
-
-	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
-			-- Create with default_options
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
 		do
 			!EV_ERROR_DIALOG_IMP! implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par, msg, dtitle)
 		end
 
-feature -- Status settings
-
-	add_abortretryignore_buttons is
-			-- Add three buttons Abort, Retry and Ignore.
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
 		do
-			implementation.add_abortretryignore_buttons
+			!EV_ERROR_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
 		end
 
-	add_retrycancel_buttons is
-			-- Add two buttons Retry and Cancel.
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create the default message dialog with `par' as
+			-- parent, `a_title' as title and `a_msg' as message
+			-- and displays it.
 		do
-			implementation.add_retrycancel_buttons
-		end
-
-feature -- Event - command association
-
-	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Abort button is pressed.
-			-- If there is no Abort button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_abort_command (cmd, arg)
-		end
-
-	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Retry button is pressed.
-			-- If there is no Retry button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_retry_command (cmd, arg)
-		end
-
-	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Ignore button is pressed.
-			-- If there is no Ignore button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_ignore_command (cmd, arg)
+			!EV_ERROR_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
 		end
 
 feature {NONE} -- Implementation
@@ -107,4 +64,3 @@ end -- class EV_ERROR_DIALOG
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

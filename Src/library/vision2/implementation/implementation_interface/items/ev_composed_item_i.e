@@ -65,7 +65,7 @@ feature -- Element change
 			-- When there is a parent, the item has the
 			-- count done by the parent.
 		require
-			--no_parent: parent_imp = Void
+			has_no_parent: parent_imp = Void
 			valid_value: value > 0
 		deferred
 		ensure
@@ -239,6 +239,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/17 21:53:20  king
+--| Uncommented no_parent precond
+--|
 --| Revision 1.9  2000/02/16 23:01:43  king
 --| Removed make_with_text
 --|

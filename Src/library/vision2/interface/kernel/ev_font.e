@@ -45,8 +45,6 @@ feature {NONE} -- Initialization
 			a_weight_valid: valid_weight (a_weight)
 			a_shape_valid: valid_shape (a_shape)
 			a_height_bigger_than_zero: a_height > 0
-		local
-			empty_list: ACTIVE_LIST [STRING]
 		do
 			default_create
 			implementation.set_values (

@@ -77,8 +77,6 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			last_call_success := cpp_has_queued_callbacks (item, l_icd_th_ptr, $l_result)
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
-		ensure
-			success: last_call_success = 0
 		end
 
 	enumerate_threads: ICOR_DEBUG_THREAD_ENUM is

@@ -625,7 +625,7 @@ feature -- Status report
 		local
 			s: STRING
 		do
-			s := clone (Current)
+			s := twin
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
@@ -1088,7 +1088,7 @@ feature -- Element change
 			insert_string (s, i)
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
-				+ old clone (s) + old substring (i, count))
+				+ old (s.twin) + old substring (i, count))
 		end
 
 	insert_string (s: STRING; i: INTEGER) is
@@ -1105,7 +1105,7 @@ feature -- Element change
 			end
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
-				+ old clone (s) + old substring (i, count))
+				+ old (s.twin) + old substring (i, count))
 		end
 
 	insert_character (c: CHARACTER; i: INTEGER) is
@@ -1306,7 +1306,7 @@ feature -- Conversion
 	as_lower: like Current is
 			-- New object with all letters in lower case.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.to_lower
 		ensure
 			length: Result.count = count
@@ -1318,7 +1318,7 @@ feature -- Conversion
 	as_upper: like Current is
 			-- New object with all letters in upper case
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.to_upper
 		ensure
 			length: Result.count = count
@@ -1515,7 +1515,7 @@ feature -- Conversion
 		local
 			s: STRING
 		do
-			s := clone (Current)
+			s := twin
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
@@ -1604,7 +1604,7 @@ feature -- Conversion
 			-- Mirror image of string;
 			-- result for "Hello world" is "dlrow olleH".
 		do
-			Result := clone (Current)
+			Result := twin
 			if count > 0 then
 				Result.mirror
 			end
@@ -1665,7 +1665,7 @@ feature -- Duplication
 			s: STRING
 			i: INTEGER
 		do
-			s := clone (Current)
+			s := twin
 			grow (n * count)
 			from
 				i := n

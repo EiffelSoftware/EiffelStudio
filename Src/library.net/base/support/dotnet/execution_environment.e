@@ -46,7 +46,7 @@ feature -- Access
 		do
 			user_environment_variables.search (s)
 			if user_environment_variables.found then
-				Result := clone (user_environment_variables.found_item)
+				Result := user_environment_variables.found_item.twin
 			else
 				cs := s.to_cil
 				cs := e.get_environment_variable (cs)
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 				end
 			else
 					-- Let's split up the argument into `executable' and `arguments'.
-				l_comspec := clone (s)
+				l_comspec := s.twin
 				l_comspec.left_adjust
 				l_pos := l_comspec.index_of (' ', 1)
 				if l_pos > 0 then

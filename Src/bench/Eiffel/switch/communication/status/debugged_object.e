@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Object being debugged.";
-	date: "$Date$";
+	description: "Object being debugged."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class DEBUGGED_OBJECT
 
 inherit
-
 	SHARED_APPLICATION_EXECUTION
 
 	SHARED_EIFFEL_PROJECT
@@ -17,9 +14,9 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
-
-	make
+create
+	make,
+	make_with_class
 
 feature
 
@@ -60,6 +57,29 @@ feature
 			set: addr = object_address
 		end;	
 
+	make_with_class (addr: like object_address; a_class: CLASS_C) is
+			-- Make debugged object with hector address `addr' and
+			-- ensure that `dtype' and `class_type' will default to `a_class'.
+			-- To ensure consistency, class associated to `addr' should
+			-- conform to `a_class'.
+		require
+			non_void_addr: addr /= Void;
+			valid_addr: Application.is_valid_object_address (addr);
+			class_not_void: a_class /= Void
+			class_has_types: a_class.has_types
+		do
+			make (addr, 0, 1)
+			check
+				conformance: dtype.simple_conform_to (a_class)
+			end
+			dtype := a_class
+			class_type := dtype.types.first
+		ensure
+			set: addr = object_address
+			dtype_set: dtype = a_class
+			class_type_set: class_type = dtype.types.first
+		end
+		
 feature -- Properties
 
 	attributes: LIST [ABSTRACT_DEBUG_VALUE];

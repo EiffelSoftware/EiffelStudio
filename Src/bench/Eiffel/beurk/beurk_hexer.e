@@ -12,8 +12,7 @@ feature {NONE}
 			temp: STRING;
 			char: CHARACTER
 		do
-			temp := clone (s)
-			temp.to_lower;
+			temp := s.as_lower
 			nb := temp.count
 
 			if nb >= 2 and then temp.item (2) = 'x' then

@@ -57,8 +57,7 @@ feature -- Execution
 				prev_class := System.current_class
 				prev_cluster := Inst_context.cluster
 				execution_error := False
-				class_name := clone (consumed_t.eiffel_name)
-				class_name.to_upper
+				class_name := consumed_t.eiffel_name.as_upper
 				
 				if current_class_only then
 					ast.set_current_class_only (True)

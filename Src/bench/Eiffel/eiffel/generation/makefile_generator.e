@@ -197,7 +197,6 @@ feature -- Cecil
 			make_file.putstring ("%T$(RANLIB) ")
 			make_file.putstring ("$(STATIC_CECIL)%N")
 			make_file.putstring ("%T$(RM) $(RCECIL) ")
-			make_file.putstring ("$(OBJECTS)")
 			make_file.new_line
 			make_file.new_line
 

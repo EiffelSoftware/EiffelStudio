@@ -526,7 +526,7 @@ feature {NONE} -- Implementation / Attributes
 			-- String indicating the .NET debugger to launch if specified in the
 			-- Preferences Tool.
 		do
-			Result := preferences.debugger_data.dotnet_debugger -- Void)
+			Result := preferences.debugger_data.dotnet_debugger.item (1)
 		end
 
 end -- class EB_DEBUG_RUN_COMMAND

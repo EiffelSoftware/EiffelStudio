@@ -15,6 +15,11 @@ inherit
 	EV_SCROLLABLE_AREA_I
 		
 	EV_CONTAINER_IMP
+		redefine
+			add_child,
+			child_added,
+			is_child
+		end
 	
 creation
 	
@@ -32,6 +37,32 @@ feature {NONE} -- Initialization
 							gtk_policy_automatic, 
 							gtk_policy_automatic)
 		end	
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite.
+			-- We redefine this feature because, there
+			-- is 2 ways to add a child in a scrollable
+			-- window depending on whether the child is scrollable
+			-- or not.
+		do
+			c_gtk_scrollable_area_add (widget, child_imp.widget)
+		end
+
+feature -- Assertion test
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := c_gtk_scrollable_area_has_child (widget, a_child.widget)
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+ 			Result := c_gtk_scrollable_area_has_child (widget, a_child.widget)
+		end
 
 end -- class EV_SCROLLABLE_AREA_IMP
 

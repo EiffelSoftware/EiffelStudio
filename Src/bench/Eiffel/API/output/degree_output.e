@@ -340,14 +340,11 @@ feature {NONE} -- Implementation
 			total_nbr_out := total_number.out;
 			!! Result.make (7);
 			Result.append ("[");
-			perc := 100 - (nbr_to_go*100//total_number);
+			perc := percentage_calculation (nbr_to_go);
 			if perc < 10 then
 				Result.append ("  ");
-			elseif perc < 100 then
+			else
 				Result.extend (' ')
-			elseif nbr_to_go /= 0 then
-				Result.extend (' ');
-				perc := 99
 			end;
 			Result.append_integer (perc);
 			Result.append_string ("%% - ");
@@ -383,6 +380,17 @@ feature {NONE} -- Implementation
 			if Result = 100 and then to_go /= 0 then
 				Result := 99
 			end	
+		end;
+
+feature 
+
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+			-- Display degree `deg_nbr' with entity `a_class'.
+		do
+			total_number := total;
+			io.error.putstring (percentage_output (to_go));
+			io.error.putstring (deg_nbr);
+			io.error.new_line
 		end;
 
 feature {NONE} -- Constants

@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 feature -- Access	
 
 	keycode: INTEGER is
-			-- Server-dependent code corresponding to the keystroke
+			-- Platform dependent code corresponding to the keystroke
+			-- See class EV_KEY_CODE for values.
 		do
 			Result := implementation.keycode
 		end

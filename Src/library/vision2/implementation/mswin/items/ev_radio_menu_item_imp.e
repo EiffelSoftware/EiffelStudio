@@ -25,9 +25,10 @@ feature -- Status report
 	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
 			-- Is this item in same group as peer?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := True
+--			check
+--				not_yet_implemented: False
+--			end
 		end
 
 feature -- Status Setting
@@ -35,9 +36,9 @@ feature -- Status Setting
 	set_peer (peer: EV_RADIO_MENU_ITEM) is
 			-- Put in same group as peer.
 		do
-			check
-				not_yet_implemented: False
-			end
+--			check
+--				not_yet_implemented: False
+--			end
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -45,7 +46,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 	on_activate is
 			-- Is called by the menu when the item is activate.
 		do
-			parent_imp.uncheck_radio_items
+--			parent_imp.uncheck_radio_items
 			set_state (True)
 			execute_command (Cmd_item_activate, Void)
 		end

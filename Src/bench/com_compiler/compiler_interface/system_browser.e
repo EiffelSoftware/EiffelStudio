@@ -16,8 +16,8 @@ inherit
 			class_descriptor,
 			feature_descriptor,
 			cluster_descriptor,
-			substring_search_classes,
-			substring_search_features
+			search_classes,
+			search_features
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -147,16 +147,58 @@ feature -- Basic Operations
 			end
 		end
 
-	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+	search_classes (a_string: STRING; is_substring: BOOLEAN): CLASS_ENUMERATOR is
 			-- Search classes with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
+		local
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			matching_classes: LINKED_LIST [CLASS_I]
+			classes: ARRAY [CLASS_C]
+			class_desc: CLASS_DESCRIPTOR
+			count, i: INTEGER
+			matcher: KMP_MATCHER
 		do
-			-- Put Implementation here.
+			if Eiffel_project.initialized and then a_string /= Void then
+				if is_substring then
+					classes := Eiffel_system.Workbench.system.classes.sorted_classes
+					count := Eiffel_system.Workbench.system.classes.count
+					create res.make (count)
+					create matcher.make_empty
+					matcher.disable_case_sensitive
+					matcher.set_pattern (a_string)
+					from
+						i := 1
+					until
+						i > count
+					loop
+						matcher.set_text (classes.item (i).lace_class.name)
+						if matcher.search_for_pattern then
+							create class_desc.make_with_class_i (classes.item (i).lace_class)
+							res.extend (class_desc)
+						end
+						i := i + 1
+					end
+				else
+					matching_classes := Eiffel_universe.compiled_classes_with_name (a_string)
+					from
+						matching_classes.start
+					until
+						matching_classes.after
+					loop
+						create res.make (matching_classes.count)
+						create class_desc.make_with_class_i (matching_classes.item)
+						matching_classes.forth
+					end
+				end
+				create Result.make (res)
+			end
 		end
 
-	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
+			-- `is_substring' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -71,7 +71,9 @@ feature
 					(i > count) or else
 					(not Result)
 				loop
-					Result := item (i).conform_to (generic_param);
+					Result := item (i).conform_to (generic_param) 
+								and then not (item(i).is_expanded 
+									and not generic_param.is_expanded);
 					i := i + 1;
 				end;
 			end;

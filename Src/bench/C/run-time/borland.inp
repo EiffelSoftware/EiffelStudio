@@ -35,6 +35,6 @@
 +console.obb &
 +run_idr.obb &
 +..\extra\win32\networku\networku.lbb &
-+path_nam.obb &
-+object_i.obb &
++path_name.obb &
++object_id.obb &
 +..\extra\win32\console\econsole.lbb

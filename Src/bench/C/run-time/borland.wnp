@@ -42,6 +42,6 @@
 +wrun_idr.obb & 
 +..\idrs\idr.lbb & 
 +..\extra\win32\networku\networku.lbb & 
-+wpath_na.obb & 
-+wobject_.obb & 
++wpath_name.obb & 
++wobject_id.obb & 
 +..\extra\win32\console\econsole.lbb

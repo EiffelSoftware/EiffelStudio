@@ -16,6 +16,16 @@ feature
 
 	h_name: STRING;
 
+	h_gender: BOOLEAN;
+
+	h_initial: CHARACTER;
+
+	h_age: INTEGER;
+
+	h_weight: REAL
+
+	h_height: DOUBLE
+
 	h_birthday: DATE_TIME;
 
 	h_country: ARRAY [COUNTRY]

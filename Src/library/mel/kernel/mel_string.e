@@ -12,17 +12,7 @@ class
 
 inherit
 
-	MEMORY
-		rename
-			free as memory_free
-		export
-			{NONE} all
-		redefine
-			dispose, is_equal
-		end;
-	ANY
-		export
-			{ANY} all
+	MEL_MEMORY
 		redefine
 			is_equal
 		end
@@ -98,20 +88,7 @@ feature {NONE} -- Initialization
 			exists: not is_destroyed
 		end;
 
-	make_from_existing (a_xm_string: POINTER) is
-			-- Create the MEL_STRING object from an existing compound string.
-		require	
-			xm_string_not_null: a_xm_string /= default_pointer
-		do
-			handle := a_xm_string;
-		ensure
-			exists: not is_destroyed
-		end;
-
 feature -- Access
-
-	handle: POINTER;
-			-- Associated C handle
 
 	has_substring (a_compound_string: MEL_STRING): BOOLEAN is
 			-- Does compound_string have sub-string `a_compound_string'?
@@ -131,7 +108,7 @@ feature -- Measurement
 			exists: not is_destroyed;
 			font_list_exists: a_font_list /= Void and then a_font_list.is_valid
 		do
-			-- Result := xm_string_baseline (, handle)
+			Result := xm_string_baseline (a_font_list.handle, handle)
 		ensure
 			baseline_large_enough: Result >= 0
 		end;
@@ -140,7 +117,7 @@ feature -- Measurement
 			-- Line height of a compound string
 		require
 			exists: not is_destroyed;
-			a_font_list_exists:
+			font_list_exists: a_font_list /= Void and then a_font_list.is_valid
 		do
 			Result := xm_string_height (a_font_list.handle, handle)
 		ensure
@@ -151,7 +128,7 @@ feature -- Measurement
 			-- Line width of a compound string
 		require
 			exists: not is_destroyed;
-			a_font_list_exists:
+			font_list_exists: a_font_list /= Void and then a_font_list.is_valid
 		do
 			Result := xm_string_width (a_font_list.handle, handle)
 		ensure
@@ -202,22 +179,6 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
-			-- Is compound string valid?
-		do
-			Result := handle /= default_pointer
-		ensure
-			valid_result: Result implies handle /= default_pointer
-		end;
-
-	is_destroyed: BOOLEAN is
-			-- Is compound string destroyed?
-		do
-			Result := not is_valid
-		ensure
-			valid_result: Result = not is_valid
-		end;
-
 	empty: BOOLEAN is
 			-- Does the compound string have any text segments?
 		require
@@ -238,31 +199,17 @@ feature -- Element change
 			temp: pointer
 		do
 			temp := xm_string_concat (handle, a_compound_string.handle);
-			free;
+			destroy;
 			handle := temp
 		end;
 
 feature -- Removal
 
-	dispose is
-			-- GC calls this automatically when current object is
-			-- not reference. By default, it destroys the associated
-			-- C `handle'.
-		do
-			if not is_destroyed then
-				free
-			end
-		end;
-
-	free is
+	destroy is
 			-- Free the memory used by the compound string.
-		require
-			exists: not is_destroyed
 		do
 			xm_string_free (handle);
 			handle := default_pointer
-		ensure
-			is_destroyed: is_destroyed
 		end;
 
 feature -- Conversion
@@ -277,25 +224,10 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end;
 
-	to_string: MEL_STRING is
-			-- Create MEL_STRING that will automatically free 
-			-- the C pointer
-		do
-			!! Result.make_from_existing (handle)
-		end;
-
-	to_shared_string: MEL_SHARED_STRING is
-			-- Create shared MEL_STRING that doesn't 
-			-- automatically free the C pointer (has to
-			-- be freed by the programmer)
-		do
-			!! Result.make_from_existing (handle)
-		end;
-
 feature -- Duplication
 
 	duplicate: MEL_STRING is
-			-- Copy af this compound string
+			-- Copy this compound string
 		require else
 			exists: not is_destroyed
 		do

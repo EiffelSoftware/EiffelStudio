@@ -11,11 +11,6 @@ class
 
 inherit
 
-	MEL_PIXMAP_CONSTANTS
-		undefine
-			is_equal
-		end;
-
 	MEL_DRAWABLE
 		undefine
 			is_equal
@@ -54,26 +49,30 @@ feature {NONE} -- Initialization
 				$int6, $c_depth))
 			then
 				depth := c_depth
-			end
+			end;
+			shared := True	
 		ensure
-			set: display_handle = a_drawable.display_handle
+			set: display_handle = a_drawable.display_handle;
+			shared: shared
 		end;
 
-    make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER) is
-            -- Create a MEL resource from an `a_handle'
-            -- for display `a_display'.
-        require
-            valid_display: a_display /= Void and then a_display.is_valid;
-            handle_not_null: a_handle /= default_pointer;
+	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER) is
+			-- Create a MEL resource from an `a_handle'
+			-- for display `a_display'.
+		require
+			valid_display: a_display /= Void and then a_display.is_valid;
+			handle_not_null: a_handle /= default_pointer;
 			valid_depth: a_depth > 0
-        do
-            identifier := a_handle;
-            display_handle := a_display.handle;
-			depth := a_depth
-        ensure
-            set: identifier = a_handle and then depth = a_depth;
-            has_valid_display: has_valid_display;
-        end;
+		do
+			identifier := a_handle;
+			display_handle := a_display.handle;
+			depth := a_depth;
+			shared := True
+		ensure
+			set: identifier = a_handle and then depth = a_depth;
+			has_valid_display: has_valid_display;
+			shared: shared
+		end;
 
 feature -- Access
 
@@ -94,15 +93,14 @@ feature -- Access
 
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free the pixmap.
-		require
-			not_destroyed: not is_destroyed
 		do
+			check
+				valid_display: display_handle /= default_pointer
+			end;
 			x_free_pixmap (display_handle, identifier);
 			identifier := default_pointer
-		ensure
-			destroyed: is_destroyed
 		end;
 
 feature {NONE} -- External features

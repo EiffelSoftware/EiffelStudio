@@ -236,8 +236,16 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	Border_width: INTEGER is 2
+	border_width: INTEGER is
 			-- Number of pixels taken up by border.
+		do
+			inspect frame_style
+				when Ev_frame_lowered then Result := 1
+				when Ev_frame_raised then Result := 1
+				when Ev_frame_etched_in then Result := 2
+				when Ev_frame_etched_out then Result := 2
+			end
+		end
 
 	Text_padding: INTEGER is 4
 			-- Number of pixels left and right to `text'.
@@ -262,8 +270,8 @@ feature {NONE} -- WEL Implementation
 			font_imp: EV_FONT_IMP
 		do
 			inspect frame_style
-				when Ev_frame_lowered then wel_style := Edge_sunken
-				when Ev_frame_raised then wel_style := Edge_raised
+				when Ev_frame_lowered then wel_style := Bdr_sunkenouter
+				when Ev_frame_raised then wel_style := Bdr_raisedouter
 				when Ev_frame_etched_in then wel_style := Edge_etched
 				when Ev_frame_etched_out then wel_style := Edge_bump
 			else
@@ -275,6 +283,13 @@ feature {NONE} -- WEL Implementation
 			draw_edge (paint_dc, create {WEL_RECT}.make (
 					0, text_height // 2, width, height
 				), wel_style, Bf_rect)
+			if wel_style.bit_and (Bdr_raisedouter) = Bdr_raisedouter then
+				--| FIXME This is to work around a bug where the 3D highlight
+				--| does not seem to appear.
+				paint_dc.select_pen (highlight_pen)
+				paint_dc.line (0, text_height // 2, width, text_height // 2)
+				paint_dc.line (0, text_height // 2, 0, height - 1)
+			end
 
 			if text /= Void then
 				if alignment.is_left_aligned then
@@ -327,6 +342,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/28 21:03:38  brendel
+--| Changed border to be of width 1 when lowered or raised.
+--|
 --| Revision 1.33  2000/04/28 16:32:03  brendel
 --| Changed Text_padding and Border_width to nice value.
 --|

@@ -162,5 +162,16 @@ feature -- Access
 	rtf_user_props: STRING is "*"
 	
 	rtf_info: STRING is "info"
+	
+	rtf_stylesheet: STRING is "stylesheet"
+
+	rtf_font_charset: STRING is "fcharset"
+	
+	rtf_red_tag: STRING is "red"
+	
+	rtf_green_tag: STRING is "green"
+	
+	rtf_blue_tag: STRING is "blue"
 
 end -- class EV_RICH_TEXT_CONSTANTS_I
+

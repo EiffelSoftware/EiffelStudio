@@ -43,25 +43,10 @@ feature -- Access
 	background_pixmap: EV_PIXMAP
 			-- the background pixmap
 	
-feature {EV_RADIO_BUTTON_IMP} -- Access --| FIXME apparently not.
+feature {EV_RADIO_BUTTON_IMP} -- Access
 	
-	radio_button_group: POINTER is
-			-- Gtk radio button group for this container. 
-			-- If no radio buttons are added inside this 
-			-- container, return Default_pointer
-		do
-			if rbg_pointer = Void then
-				Result := Default_pointer
-			else
-				Result := rbg_pointer
-			end
-		end
-	
-	set_rbg_pointer (new_rbg_pointer: POINTER) is
-			-- FIXME What's this?
-		do
-			rbg_pointer := new_rbg_pointer
-		end
+	radio_group: POINTER
+			-- GSList with all radio items of this container.
 	
 feature -- Element change
 
@@ -94,10 +79,6 @@ feature -- Element change
 		end
 			-- FIXME NPC
 
-feature {NONE} -- Implementation
-	
-	rbg_pointer: POINTER
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER
@@ -127,6 +108,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/25 22:35:51  brendel
+--| Revised already existent radio grouping features.
+--|
 --| Revision 1.22  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

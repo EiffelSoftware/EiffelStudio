@@ -121,7 +121,7 @@ feature -- Element change
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
 				file.open_write
-				file.general_store (Current)
+				file.independent_store (Current)
 				file.close
 			else
 				a := ("write permission failure").to_c

@@ -19,6 +19,8 @@ inherit
 
 	SHARED_ASSEMBLY_MAPPING
 
+	NAME_FORMATTER
+
 create
 	default_create
 
@@ -40,7 +42,7 @@ feature -- Basic Operations
 			end
 			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
-			count := referenced_assemblies.get_length
+			count := referenced_assemblies.count
 			create assembly_ids.make (1, count + 1)
 			create ca.make (ass)
 			assembly_ids.put (ca, 1)
@@ -110,40 +112,119 @@ feature {NONE} -- Implementation
 			non_void_assembly: ass /= Void
 		local
 			modules: NATIVE_ARRAY [MODULE]
-			i, j: INTEGER
+			i, j, type_count, module_count, generated_count: INTEGER
 			done: BOOLEAN
 			type_consumer: TYPE_CONSUMER
-			types: NATIVE_ARRAY [TYPE]
+			module_types: NATIVE_ARRAY [TYPE]
 			t: TYPE
+			type_name: CONSUMED_TYPE_NAME
+			simple_name, dotnet_name: STRING
+			list: SORTED_TWO_WAY_LIST [CONSUMED_TYPE_NAME]
+			used_names: HASH_TABLE [STRING, STRING]
+			names: HASH_TABLE [SORTED_TWO_WAY_LIST [CONSUMED_TYPE_NAME], STRING]
 		do
-			create type_consumers.make (1024)
+			modules := ass.get_modules
+			module_count := modules.count
+			create names.make (1024)
 			from
-				modules := ass.get_modules
 				i := 0
 			until
-				i >= modules.get_length or done
+				i >= module_count or done
 			loop
 				from
-					types := modules.item (i).get_types
+					module_types := modules.item (i).get_types
+					type_count := module_types.count
 					j := 0
 				until
-					j >= types.get_length or done
+					j >= type_count
 				loop
-					t := types.item (j)
+					t := module_types.item (j)
 					if is_consumed_type (t) then
-						create type_consumer.make (t)
-						type_consumers.put (type_consumer, type_consumer.consumed_type.dotnet_name)
-						if status_printer /= Void then
-							status_printer.call (["Analyzed " + type_consumer.consumed_type.dotnet_name])
-						end
-						if status_querier /= Void then
-							status_querier.call ([])
-							done := status_querier.last_result
+						generated_count := generated_count + 1
+						create type_name.make (t)
+						simple_name := type_name.simple_name
+						names.search (simple_name)
+						if names.found then
+							names.found_item.extend (type_name)
+						else
+							create list.make
+							list.extend (type_name)
+							names.put (list, simple_name)
 						end
 					end
 					j := j + 1
 				end
+				if status_querier /= Void then
+					status_querier.call ([])
+					done := status_querier.last_result
+				end
 				i := i + 1
+			end
+			create used_names.make (generated_count)
+			create type_consumers.make (generated_count)
+			from
+				names.start
+			until
+				names.after or done
+			loop
+				list := names.item_for_iteration
+				from
+					list.start
+				until
+					list.after
+				loop
+					type_name := list.item
+					create dotnet_name.make_from_cil (type_name.internal_type.get_full_name)
+					simple_name := formatted_type_name (dotnet_name, 0)
+					from
+						used_names.search (simple_name)
+						i := 1
+					until
+						not used_names.found
+					loop
+						simple_name := formatted_type_name (dotnet_name, i)
+						i := i + 1
+						used_names.search (simple_name)
+					end
+					used_names.put (simple_name, simple_name)
+					type_name.set_eiffel_name (simple_name)
+					list.forth
+				end
+				if status_querier /= Void then
+					status_querier.call ([])
+					done := status_querier.last_result
+				end
+				names.forth
+			end
+			used_names := Void
+			from
+				names.start
+			until
+				names.after or done
+			loop
+				list := names.item_for_iteration
+				from
+					list.start
+				until
+					list.after
+				loop
+					type_name := list.item
+					create type_consumer.make (type_name.internal_type, type_name.eiffel_name)
+					type_consumers.put (type_consumer, type_name.eiffel_name)
+					if status_printer /= Void then
+						status_printer.call (["Analyzed " + create {STRING}.make_from_cil (t.get_full_name)])
+					end
+					if status_querier /= Void then
+						status_querier.call ([])
+						done := status_querier.last_result
+					end
+					list.forth
+				end
+				if status_querier /= Void then
+					status_querier.call ([])
+					done := status_querier.last_result
+				end
+				names.forth
 			end
 		end
 		
@@ -160,7 +241,7 @@ feature {NONE} -- Implementation
 		do
 			(create {DIRECTORY}.make (destination_path + Classes_path)).create_dir
 			create serializer
-			create types.make (type_consumers.count)
+			create types.make (type_consumers.count)			
 			from
 				type_consumers.start
 			until

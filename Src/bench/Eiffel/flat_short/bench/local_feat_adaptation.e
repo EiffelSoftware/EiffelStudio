@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 		local
 			last_constrained: TYPE_A;
 			last_id: INTEGER;
-			old_cluster, type_cluster: CLUSTER_I;
+			old_cluster: CLUSTER_I;
 			last_class: CLASS_C;
 			formal_type: FORMAL_A
 		do
@@ -468,8 +468,7 @@ feature {NONE} -- Implementation
 			end;
 			if last_type.is_formal and then Result.is_formal then
 				old_cluster := Inst_context.cluster;
-				type_cluster := last_class.cluster;
-				Inst_context.set_cluster (type_cluster);
+				Inst_context.set_cluster (last_class.cluster);
 				formal_type ?= Result;
 				Result := last_constrained.generics.item (formal_type.position)
 				Inst_context.set_cluster (old_cluster);

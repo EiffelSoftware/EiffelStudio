@@ -93,7 +93,8 @@ feature -- Implementation of inherited deferred features
 						-- There is a dependance between `f' and the `anchor_feature'
 						-- Record it for the propagation of the recompilations
 					!!depend_unit.make (anchor_feature.written_in, anchor_feature.feature_id);
-					context.supplier_ids.add (depend_unit);
+--					context.supplier_ids.add (depend_unit);
+io.error.putstring ("LIKE_ID_AS depend_unit not inserted!!!%N");
 				end;
 			else
 				argument_position := f.argument_position (anchor);

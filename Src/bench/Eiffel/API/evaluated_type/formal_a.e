@@ -141,11 +141,10 @@ feature {COMPILER_EXPORTER}
 			Result.set_position (position)
 		end
 
-	create_info: CREATE_TYPE is
+	create_info: CREATE_FORMAL_TYPE is
+			-- Create formal type info.
 		do
-			-- Do nothing
-		ensure then
-			False
+			create Result.make (type_i)
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

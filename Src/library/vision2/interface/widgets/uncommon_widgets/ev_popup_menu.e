@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision popup menu. A popup menu can appear%
 		 %anywhere in the window. It contains menus."
@@ -12,31 +11,58 @@ class
 	EV_POPUP_MENU
 
 inherit
-
-	EV_MENU_ITEM_CONTAINER 
+	EV_ANY
 		redefine
 			implementation
 		end
 
-	EV_WIDGET
+	EV_MENU_ITEM_HOLDER
 		redefine
 			implementation
 		end
 
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
 	
 	make (par: EV_CONTAINER) is         
-			-- Create a menu widget with `par' as
-                        -- parent
+			-- Create an empty popup menu with `par' as parent.
 		do
-			!EV_POPUP_MENU_IMP!implementation.make (par)
-			widget_make (par)
+			!EV_POPUP_MENU_IMP!implementation.make
+			implementation.set_interface (Current)
+			set_parent (par)
 		end	
-	
+
+feature -- Access
+
+	parent: EV_CONTAINER is
+			-- Parent of the popup.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.parent
+		end
+
+feature -- Status setting
+
+	show_at_position (x, y: INTEGER) is
+			-- Show the popup menu at the given position
+		require
+			exists: not destroyed
+			valid_parent: is_valid (parent)
+		do
+			implementation.show_at_position (x, y)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the popup.
+		do
+			implementation.set_parent (par)
+		end
+
 feature {NONE} -- Implementation
 	
 	implementation: EV_POPUP_MENU_I	

@@ -37,7 +37,7 @@ inherit
 			out
 		end
 
-creation 
+create 
 	make
 
 feature -- Initialization
@@ -290,7 +290,7 @@ feature -- Basic operations
 			other_exists: other /= Void;
 			intersects: intersects (other)
 		do
-			!! Result.make (start_bound.min (other.start_bound), end_bound.max (other.end_bound))
+			create Result.make (start_bound.min (other.start_bound), end_bound.max (other.end_bound))
 		ensure
 			result_exists: Result /= Void;
 			result_includes_current: Result.includes (Current);
@@ -307,7 +307,7 @@ feature -- Basic operations
 			s := start_bound.max (other.start_bound);
 			e := end_bound.min (other.end_bound);
 			if s <= e then
-				!! Result.make(s, e)
+				create Result.make(s, e)
 			end
 		ensure
 			intersects_validity: intersects (other) implies Result /= Void;
@@ -321,7 +321,7 @@ feature -- Basic operations
 			other_exist: other /= Void;
 			meeting_interval: meets (other)
 		do
-			!! Result.make (start_bound, other.end_bound)
+			create Result.make (start_bound, other.end_bound)
 		ensure
 			result_exist: Result /= Void;
 			result_same_as_union: Result.is_equal (union (other))

@@ -39,7 +39,7 @@ feature -- Access
 
 	date_time_tools: DATE_TIME_TOOLS is
 		once
-			!! Result
+			create Result
 		end
 
 

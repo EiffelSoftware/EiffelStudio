@@ -31,7 +31,7 @@ inherit
 			copy, is_equal, out
 		end
 
-creation
+create
 
 	make,
 	make_fine,
@@ -49,8 +49,8 @@ feature -- Initialization
 		require 
 			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
 		do
-			!! date.make (y, mo, d);
-			!! time.make (h, mi, s)
+			create date.make (y, mo, d);
+			create time.make (h, mi, s)
 		ensure
 			year_set: year = y;
 			month_set: month = mo;
@@ -66,8 +66,8 @@ feature -- Initialization
 		require
 			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
 		do
-			!! date.make (y, mo, d);
-			!! time.make_fine (h, mi, s)
+			create date.make (y, mo, d);
+			create time.make_fine (h, mi, s)
 		ensure
 			year_set: year = y;
 			month_set: month = mo;
@@ -96,7 +96,7 @@ feature -- Initialization
 			d_exists: d /= Void; 
 		do 
 			date := d;
-			!! time.make (0,0,0); 
+			create time.make (0,0,0); 
 		ensure 
 			date_set: date = d; 
 			time_set: time.is_equal (time.origin) 
@@ -139,7 +139,7 @@ feature -- Initialization
 			code_string: DATE_TIME_CODE_STRING
 			date_time: DATE_TIME
 		do
-			!! code_string.make (code)
+			create code_string.make (code)
 			date_time := code_string.create_date_time (s)
 			make_by_date_time (date_time.date, date_time.time)
 		end
@@ -155,7 +155,7 @@ feature -- Access
 	origin: DATE_TIME is
 			-- Origin date with origin time
 		once
-			!! Result.make_by_date_time (date.origin, time.origin)
+			create Result.make_by_date_time (date.origin, time.origin)
 		end;
 
 	date_duration: DATE_DURATION is
@@ -203,7 +203,7 @@ feature -- Measurement
 	duration: DATE_TIME_DURATION is 
 			-- Definite duration elapsed from `origin' 
 		do
-			!! Result.make_by_date_time (date_duration, time_duration)
+			create Result.make_by_date_time (date_duration, time_duration)
 		ensure then
 			definite_result: Result.definite 
 		end 
@@ -265,7 +265,7 @@ feature -- Basic operations
 	relative_duration (other: like Current): DATE_TIME_DURATION is
 			-- Duration from `other' to the current date, expressed in year, month, day and time
 		do
-			!! Result.make_fine (0, 0, days - other.days, hour - other.hour, minute - other.minute, fine_second - other.fine_second);
+			create Result.make_fine (0, 0, days - other.days, hour - other.hour, minute - other.minute, fine_second - other.fine_second);
 			Result := Result.to_canonical (other)
 		end;
 
@@ -365,7 +365,7 @@ feature -- Output
 		local
 			code: DATE_TIME_CODE_STRING
 		do
-			!! code.make (s)
+			create code.make (s)
 			Result := code.create_string (Current)
 		end
 

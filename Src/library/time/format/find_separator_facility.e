@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			int: ARRAY [INTEGER]
 			j, int_tmp: INTEGER
 		do
-			!! int.make (0, 5)
+			create int.make (0, 5)
 			int.put (s.index_of (':', i), 0)
 			int.put (s.index_of ('/', i), 1)
 			int.put (s.index_of ('-', i), 2)

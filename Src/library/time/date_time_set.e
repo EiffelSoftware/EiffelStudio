@@ -6,7 +6,7 @@ indexing
 class
 	DATE_TIME_SET
 
-creation
+create
 	make
 
 feature -- Creation
@@ -17,8 +17,8 @@ feature -- Creation
 		require
 			n_not_void: n /= Void
 		do
-			!! date_set.make (n)
-			!! time_set.make (n)
+			create date_set.make (n)
+			create time_set.make (n)
 			last := 0
 		end
 
@@ -29,7 +29,7 @@ feature -- Access
 		require
 			i_not_void: i /= Void
 		do
-			!! Result.make_by_date_time (date_set.item (i), time_set.item (i))
+			create Result.make_by_date_time (date_set.item (i), time_set.item (i))
 		end
 
 	last: INTEGER

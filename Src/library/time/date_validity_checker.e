@@ -30,7 +30,7 @@ feature -- Preconditions
 			code: DATE_TIME_CODE_STRING
 			date: DATE
 		do
-			!! code.make (code_string)
+			create code.make (code_string)
 			if code.precise_date and code.correspond (s) and 
 				code.is_date (s) then
 				date := code.create_date (s)

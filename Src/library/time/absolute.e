@@ -46,7 +46,7 @@ feature -- Basic operations
 			other_exists: other /= Void;
 			other_smaller_than_current: other <= Current
 		do
-			!! Result.make (other, Current)
+			create Result.make (other, Current)
 		ensure
 			result_exists: Result /= Void;
 			result_set: Result.start_bound.is_equal (other) and then 

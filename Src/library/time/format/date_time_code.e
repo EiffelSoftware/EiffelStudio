@@ -6,7 +6,7 @@ indexing
 class 
 	DATE_TIME_CODE
 
-creation
+create
 	make
 
 feature -- Creation

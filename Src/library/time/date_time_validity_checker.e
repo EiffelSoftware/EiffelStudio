@@ -28,7 +28,7 @@ feature -- Preconditions
 		local
 			code: DATE_TIME_CODE_STRING
 		do
-			!! code.make (code_string)
+			create code.make (code_string)
 			Result := code.precise and code.correspond (s) and then
 				code.is_date_time (s)
 		end

@@ -25,7 +25,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
  
 	make, make_by_days
 
@@ -61,7 +61,7 @@ feature -- Access
 			-- Neutral element for "+" and "-"
 			-- It is a definite duration
 		once
-				!! Result.make_by_days (0)
+				create Result.make_by_days (0)
 		end;
 
 feature -- Attribute
@@ -128,13 +128,13 @@ feature -- Status report
 		do
 			final_date := date + Current;
 			if final_date >= date then
-					!! d.make (year, month + 1, 0);
+					create d.make (year, month + 1, 0);
 					limit_date := date + d; 
 					Result := (year >= 0) and then (month >= 0) and then
 						(month < Months_in_year) and then
 						(day >= 0) and then (final_date < limit_date)
 			else
-					!! d.make (year, month - 1, 0);
+					create d.make (year, month - 1, 0);
 					limit_date := date + d; 
 					Result := (year <= 0) and then (month <= 0)
 						and then (month > - Months_in_year)
@@ -191,13 +191,13 @@ feature -- basic operation
 	infix "+" (other: like Current): like Current is
 			-- Sum of current object with `other'
 		do
-			!! Result.make (year + other.year, month + other.month, day + other.day)
+			create Result.make (year + other.year, month + other.month, day + other.day)
 		end;
 	
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
-			!! Result.make (year - other.year, month - other.month, day - other.day)
+			create Result.make (year - other.year, month - other.month, day - other.day)
 		end;
 
 	prefix "+": like Current is
@@ -209,7 +209,7 @@ feature -- basic operation
 	prefix "-": like Current is
 			-- Unary minus
 		do
-			!! Result.make(-year, -month, -day)
+			create Result.make(-year, -month, -day)
 		end;
 
 feature -- Conversion
@@ -230,25 +230,25 @@ feature -- Conversion
 				date_tmp.month_add (d1);
 				if final_date >= start_date then
 					if date_tmp <= final_date then
-						!! Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day - date_tmp.day);
+						create Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day - date_tmp.day);
 					else
 						d1 := d1 - 1;
 						date_tmp.month_back;
 						if start_date.days_in_i_th_month (date_tmp.month, date_tmp.year) < start_date.day then 
-							!! Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day);
+							create Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day);
 						else 
-							!! Result.make (d1 // Months_in_year, d1 \\ Months_in_year,
+							create Result.make (d1 // Months_in_year, d1 \\ Months_in_year,
 								final_date.day + start_date.days_in_i_th_month (date_tmp.month, date_tmp.year) 
 								- start_date.day) 
 						end
 					end
 				else 
 					if date_tmp >= final_date then 
-						!! Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day - date_tmp.day);
+						create Result.make (d1 // Months_in_year, d1 \\ Months_in_year, final_date.day - date_tmp.day);
 					else
 						d1 := d1 + 1;
 						date_tmp.month_forth;
-						!! Result.make (d1 // Months_in_year, d1 \\ Months_in_year,
+						create Result.make (d1 // Months_in_year, d1 \\ Months_in_year,
 							final_date.day - start_date.days_in_i_th_month (final_date.month, final_date.year) 
 							- date_tmp.day) 
 					end 
@@ -276,7 +276,7 @@ feature -- Conversion
 	to_date_time: DATE_TIME_DURATION is
 			-- Date-time version, with a zero time component
 		do
-			!! Result.make (year, month, day, 0, 0, 0)
+			create Result.make (year, month, day, 0, 0, 0)
 		ensure
 			result_exists: Result /= Void;
 			year_set: Result.year = year;

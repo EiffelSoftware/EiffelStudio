@@ -353,6 +353,8 @@ feature -- Basic operation
 			add_new_window (window_object)
 			window_object.set_name (initial_main_window_name)
 			window_selector.set_item_for_prebuilt_window (window_object)
+			window_selector.extend (window_object.window_selector_item)
+			window_object.window_selector_item.enable_select
 			window_object.set_as_root_window
 		ensure
 			root_window_set: root_window_object /= Void

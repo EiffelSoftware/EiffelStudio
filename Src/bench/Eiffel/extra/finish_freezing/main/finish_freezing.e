@@ -54,8 +54,9 @@ feature -- Initialization
 				create translator.make (mapped_path)
 
 				translator.translate
-				if index_of_word_option ("vs") = 0 then
-					-- We do not want to run nmake if launched from VS.Net
+				if index_of_word_option ("vs") = 0 and translator.has_makefile_sh then
+						-- We do not want to run nmake if launched from VS.Net
+						-- Nor to be launched when there was not Makefile.SH file
 					translator.run_make
 					c_error := c_compilation_error
 				end
@@ -67,7 +68,7 @@ feature -- Initialization
 				unc_mapper := Void
 			end
 
-			if index_of_word_option ("silent") = 0 then
+			if index_of_word_option ("silent") = 0 and translator.has_makefile_sh then
 				make_util := translator.options.get_string ("make", "make utility")
 				create status_box.make (make_util, retried, c_error, False, False)
 			end

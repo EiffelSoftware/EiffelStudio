@@ -59,6 +59,30 @@ feature {NONE} -- Implementation
 			Result := list_widget
 		end
 		
+feature -- Status report
+
+	has_vertical_button_style: BOOLEAN is
+			-- Is the `pixmap' displayed vertically above `text' for
+			-- all buttons contained in `Current'? If `False', then
+			-- the `pixmap' is displayed to left of `text'.
+		do
+			--| FIXME IEK Implement me
+		end
+		
+feature -- Status setting
+
+	enable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `True'.
+		do
+			--| FIXME IEK Implement me
+		end
+		
+	disable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `False'.
+		do
+			--| FIXME IEK Implement me
+		end
+		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		
 	block_selection_for_docking is

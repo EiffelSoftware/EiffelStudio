@@ -31,14 +31,14 @@ feature {NONE}
 
 	work (argument: ANY) is
 		local
-			format_storage: FORMAT_CASE_STORAGE
+			format_storage: E_STORE_CASE_INFO
 		do
 			if 
 				argument = control_click or
 				(last_confirmer /= Void and argument = last_confirmer)
 			then
 				set_global_cursor (watch_cursor);
-				!! format_storage;
+				!! format_storage.make (Error_window);
 				format_storage.execute;
 				restore_cursors
 			else

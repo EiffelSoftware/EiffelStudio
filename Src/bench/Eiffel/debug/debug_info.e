@@ -420,7 +420,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 
 feature {APPLICATION_STATUS}
 
-	breakable_index (f: E_FEATURE; ct: CLASS_TYPE; offset: INTEGER): INTEGER is
+	breakable_index (f: E_FEATURE; origin_ct: CLASS_TYPE; offset: INTEGER): INTEGER is
 		local
 			sd: like sent_debuggables
 			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
@@ -442,12 +442,12 @@ feature {APPLICATION_STATUS}
 
 				if debuggable_list.count > 1 then
 						--| Get a dispatch unit for `f.associated_feature_i'.
-
 					from
+						i := origin_ct.type_id;
 						debuggable_list.start
 					until
 						debuggable_list.after or else
-						debuggable_list.item.class_type.is_equal (ct)
+						i = debuggable_list.item.class_type.type_id
 					loop
 						debuggable_list.forth
 					end
@@ -908,7 +908,7 @@ feature {NONE} -- Implementation
 			new_debuggables.clear_all;
 			once_debuggables.clear_all;
 			new_once_debuggables.clear_all
-		end; -- clear_debuggables
+		end; 
 
 	feature_of_body_id (list: LINKED_LIST [E_FEATURE]; body_id: BODY_ID): E_FEATURE is
 			-- Feature of body id `body_id' stored in `list';

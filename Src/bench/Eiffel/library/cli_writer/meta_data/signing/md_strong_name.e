@@ -9,9 +9,25 @@ class
 inherit
 	IL_ENVIRONMENT
 
+create
+	make
+
+feature {NONE} -- Initialize
+
+	make is
+			-- Initialize Current. Initialize `exists' accordingly.
+		do
+			exists := is_present
+		end
+	
 feature -- Status report
 
-	present: BOOLEAN is
+	exists: BOOLEAN
+			-- Is `mscorsn.dll' available?
+
+feature {NONE} -- Status report
+
+	is_present: BOOLEAN is
 			-- True if `mscorsn.dll' is available, False otherwise.
 			-- Append path to `mscorsn.dll' to PATH environment variable.
 		local

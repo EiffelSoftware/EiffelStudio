@@ -700,22 +700,34 @@
 						</Directory>
 						<Directory Id="kernel" Name="kernel">
 							<Component Id="kernel" Guid="2FEF5439-326D-499C-9E2C-44EA40A4F414">
-								<File Id="integer_ref.e" Name="INBBE7~1.E" LongName="integer_ref.e" KeyPath="yes" />
 								<File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
-								<File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
-								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
 								<File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
+								<File Id="hashable.e" Name="hashable.e" />
+								<File Id="integer_8.e" Name="INTEGE~1.E" LongName="integer_8.e" />
+								<File Id="integer_16.e" Name="INTEGE~2.E" LongName="integer_16.e" />
+								<File Id="integer.e" Name="integer.e" />
+								<File Id="integer_64.e" Name="INTEGE~4.E" LongName="integer_64.e" />
+								<File Id="integer_8_ref.e" Name="INTEGE~5.E" LongName="integer_8_ref.e" />
+								<File Id="integer_16_ref.e" Name="INTEGE~6.E" LongName="integer_16_ref.e" />
+								<File Id="integer_ref.e" Name="INTEGE~7.E" LongName="integer_ref.e" />
+								<File Id="integer_64_ref.e" Name="INTEGE~8.E" LongName="integer_64_ref.e" />
+								<File Id="integer_interval.e" Name="INTEGE~9.E" LongName="integer_interval.e" />
+								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
+								<File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
+								<File Id="natural_8.e" Name="NATURA~1.E" LongName="natural_8.e" />
+								<File Id="natural_16.e" Name="NATURA~2.E" LongName="natural_16.e" />
+								<File Id="natural_32.e" Name="NATURA~3.E" LongName="natural_32.e" />
+								<File Id="natural_64.e" Name="NATURA~4.E" LongName="natural_64.e" />
+								<File Id="natural_8_ref.e" Name="NATURA~5.E" LongName="natural_8_ref.e" />
+								<File Id="natural_16_ref.e" Name="NATURA~6.E" LongName="natural_16_ref.e" />
+								<File Id="natural_32_ref.e" Name="NATURA~7.E" LongName="natural_32_ref.e" />
+								<File Id="natural_64_ref.e" Name="NATURA~8.E" LongName="natural_64_ref.e" />
+								<File Id="numeric.e" Name="numeric.e" />
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
-								<File Id="integer_64_ref.e" Name="INTEGE~3.E" LongName="integer_64_ref.e" />
-								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
-								<File Id="integer_interval.e" Name="INTEGE~4.E" LongName="integer_interval.e" />
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
-								<File Id="integer_16_ref.e" Name="INTEGE~1.E" LongName="integer_16_ref.e" />
-								<File Id="hashable.e" Name="hashable.e" />
-								<File Id="integer_8_ref.e" Name="INTEGE~5.E" LongName="integer_8_ref.e" />
-								<File Id="numeric.e" Name="numeric.e" />
+								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 							</Component>
 							<Directory Id="classic1" Name="classic">
 								<Component Id="classic1" Guid="5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB">
@@ -733,12 +745,10 @@
 									<File Id="raw_file.e" Name="raw_file.e" />
 									<File Id="console.e" Name="console.e" />
 									<File Id="stream.e" Name="stream.e" />
-									<File Id="integer_64.e" Name="INTEGE~2.E" LongName="integer_64.e" />
 									<File Id="double.e" Name="double.e" />
 									<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
 									<File Id="bit_ref.e" Name="bit_ref.e" />
 									<File Id="wide_character_ref.e" Name="WIDE_C~2.E" LongName="wide_character_ref.e" />
-									<File Id="integer.e" Name="integer.e" />
 									<File Id="directory_name.e" Name="DIRECT~2.E" LongName="directory_name.e" />
 									<File Id="string.e" Name="string.e" />
 									<File Id="storable.e" Name="storable.e" />
@@ -757,8 +767,6 @@
 									<File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
 									<File Id="exceptions.e" Name="EXCEPT~1.E" LongName="exceptions.e" />
 									<File Id="double_ref.e" Name="DOUBLE~1.E" LongName="double_ref.e" />
-									<File Id="integer_8.e" Name="INTEGE~6.E" LongName="integer_8.e" />
-									<File Id="integer_16.e" Name="INTEGE~7.E" LongName="integer_16.e" />
 									<File Id="directory.e" Name="DIRECT~1.E" LongName="directory.e" />
 									<File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
 									<File Id="any.e" Name="any.e" />

@@ -26,13 +26,13 @@ feature -- Basic operations
 			pointed_visitor: WIZARD_DATA_TYPE_VISITOR
 			a_type: INTEGER
 			local_counter: INTEGER
-			tmp_string: STRING
 		do
 			is_pointed := True
 			pointed_visitor := a_descriptor.pointed_data_type_descriptor.visitor 
 
 			if 
-				pointed_visitor.is_interface and 
+				(pointed_visitor.is_interface or
+				pointed_visitor.is_coclass) and 
 				(is_unknown (pointed_visitor.vt_type) or
 				is_dispatch (pointed_visitor.vt_type))
 			then

@@ -241,7 +241,7 @@ feature -- Element change
 			if a_position = a_text.count then
 				a_text.append (s)
 			else
-				a_text.insert (s, a_position + 1)
+				a_text.insert_string (s, a_position + 1)
 			end
 			set_text (a_text)
 		end
@@ -253,7 +253,7 @@ feature -- Element change
 		do
 			a_text := clone (text)
 			if from_position = to_position then
-				a_text.insert (s, from_position + 1)
+				a_text.insert_string (s, from_position + 1)
 			else
 				a_text.replace_substring (s, from_position + 1, to_position)
 			end

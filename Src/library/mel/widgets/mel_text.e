@@ -255,7 +255,8 @@ feature -- Extras
 		local
 			lower_text: STRING
 			lower_pattern: STRING
-			pattern, text: ANY
+			pattern: ANY
+--			text: ANY
 --			dummy_object: like screen_object
 		do
 			if match_case then

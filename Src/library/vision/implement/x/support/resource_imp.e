@@ -58,7 +58,7 @@ feature {NONE} -- Update
 		local
 			area: SPECIAL [WIDGET];
 			w: WIDGET_IMP;
-			real_users, saved_nbr_of_users, i, ct: INTEGER;
+			saved_nbr_of_users, i, ct: INTEGER;
 		do
 			if number_of_users /= 0 then
 debug ("VISION")

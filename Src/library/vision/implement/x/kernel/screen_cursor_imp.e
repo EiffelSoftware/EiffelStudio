@@ -53,8 +53,6 @@ feature {NONE} -- Initialization
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
-		local
-			mel_display: MEL_DISPLAY
 		do
 			type := X_cursor;
 			display ?= a_screen.implementation;
@@ -97,9 +95,6 @@ feature -- Status setting
 			-- Note that `pixmap' and `mask' are not kept by the cursor,
 			-- they may be disposed, and if they change, cursor will be
 			-- altered.
-		local
-			pixmap_implementation: PIXMAP_IMP;
-			mask_implementation: PIXMAP_IMP
 		do
 			dispose;
 			type := User_defined_pixmap;

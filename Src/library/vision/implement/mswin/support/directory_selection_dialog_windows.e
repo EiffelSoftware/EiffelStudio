@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 				if pos > 1 then
 					fill_recently_used
 					directory := clone (directories_list)
-					directory.head (directory.index_of (';', 1) - 1)
+					directory.keep_head (directory.index_of (';', 1) - 1)
 				else
 					directory := current_working_directory
 				end
@@ -219,8 +219,8 @@ feature {NONE} -- Implementation
 		do
 			if notify_code = cbn_selchange then
 				directory := drive_list.selected_string
-				directory.head (directory.count - 2)
-				directory.tail (directory.count - 2)
+				directory.keep_head (directory.count - 2)
+				directory.keep_tail (directory.count - 2)
 				directory.append (":\")
 				selection_made := true
 				update_directories

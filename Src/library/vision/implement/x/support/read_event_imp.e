@@ -47,8 +47,6 @@ feature {NONE} -- Implementation
 
 	buttons_state (state: INTEGER): BUTTONS is
 			-- State of buttons when the event occurs
-		local
-			i: INTEGER
 		do
 			create Result.make (5);
 			Result.put (and_masks (state, Button1Mask), 1);
@@ -61,7 +59,6 @@ feature {NONE} -- Implementation
 	modifiers_state (state: INTEGER): KEYBOARD is
 			-- State of modifier keys
 		local
-			i: INTEGER;
 			mod: ARRAY [BOOLEAN]
 		do
 			create Result.make (5);
@@ -100,7 +97,6 @@ feature {NONE} -- Implementation
 		local
 			clip: CLIP;
 			coord: COORD_XY;
-			count: INTEGER;
 			e: MEL_EXPOSE_EVENT
 		do
 			e ?= event;

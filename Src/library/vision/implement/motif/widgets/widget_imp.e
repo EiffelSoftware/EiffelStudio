@@ -130,7 +130,6 @@ feature -- Status Setting
 		require
 			a_cursor_exists: a_cursor /= Void
 		local
-			display_pointer: POINTER;
 			cursor_implementation: SCREEN_CURSOR_IMP
 		do
 			cursor_implementation ?= a_cursor.implementation;
@@ -269,7 +268,6 @@ feature -- Element change
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
 			a_mask: INTEGER;
-			list: VISION_COMMAND_LIST
 		do
 			inspect number 
 			when 1 then
@@ -568,8 +566,6 @@ feature {NONE} -- Implementation
 
 	button_click_actions: BUTTON_CLICK_HAND_X is
 			-- Button click actions for Current widget
-		local
-			list: VISION_COMMAND_LIST
 		do
 			Result := click_actions_table.item (screen_object);
 			if Result = Void then	

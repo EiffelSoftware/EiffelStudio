@@ -101,7 +101,6 @@ feature -- Removal
 			number_in_range: number >= 1 and number <= 5
 		local
 			command_info: COMMAND_EXEC;
-			is_removed: BOOLEAN;
 			list: LINKED_LIST [COMMAND_EXEC]
 		do
 			create command_info.make (a_command, argument);

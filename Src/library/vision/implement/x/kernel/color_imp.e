@@ -49,8 +49,6 @@ feature {NONE} -- Initialization
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
-		local
-			mel_display: MEL_DISPLAY
 		do
 			display ?= a_screen.implementation;
 			check

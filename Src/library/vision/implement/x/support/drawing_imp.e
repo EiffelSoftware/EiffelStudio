@@ -140,8 +140,6 @@ feature -- Output
 
 	draw_image_text (base: COORD_XY; text: STRING) is
 			-- Draw text
-		local
-			ext_name: ANY
 		do
 			draw_image_string (Current, base.x, base.y, text)
 		end;

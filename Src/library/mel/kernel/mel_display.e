@@ -30,9 +30,6 @@ feature {NONE} -- Initialization
 			application_context_not_null: application_context.is_valid;
 		local
 			disp_name, app_name_ext, app_class_name_ext: ANY;
-			nb_screens: INTEGER;
-			a_screen: MEL_SCREEN;
-			i: INTEGER;
 			a_display: POINTER
 		do
 			if a_display_name /= Void then

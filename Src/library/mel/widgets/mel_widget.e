@@ -338,7 +338,6 @@ feature -- Removal
 			a_mask_not_null: a_mask /= 0;
 		local
 			a_key: MEL_CALLBACK_KEY;
-			ext_string: ANY
 		do
 			create a_key.make_xt_event (a_mask);
 			if remove_from_callbacks (a_key) then

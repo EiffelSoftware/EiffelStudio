@@ -45,7 +45,6 @@ feature -- Status report
 	pixmap: PIXMAP is
 			-- Pixmap for Current
 		local
-			ext_name: ANY;
 			pixmap_x: PIXMAP_IMP
 		do
 			if private_pixmap = Void then
@@ -66,7 +65,6 @@ feature -- Status setting
 			-- Set pixmap to `a_pixmap'.
 		local
 			pixmap_implementation: PIXMAP_IMP;
-			ext_name: ANY
 		do
 			if private_pixmap /= Void then
 				pixmap_implementation ?= private_pixmap.implementation;

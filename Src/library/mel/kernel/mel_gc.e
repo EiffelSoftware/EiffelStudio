@@ -139,7 +139,7 @@ feature -- Status setting
 		require
 			is_valid: is_valid;
 			dash_list_not_null: a_dash_list /= Void;
-			dash_list_not_empty: not a_dash_list.empty
+			dash_list_not_empty: not a_dash_list.is_empty
 		local
 			an_array_of_char: STRING;
 			ext_name: ANY

@@ -26,7 +26,7 @@ void ev_gtk_log (
 	const gchar* message,
 	gpointer user_data
 ) {
-	char buf[1000];
+	static char buf[1000];
 	char* level;
 	int fatal = FALSE;
 	int a_debug_mode;
@@ -113,6 +113,9 @@ void enable_ev_gtk_log (int a_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.10  2001/08/30 19:17:09  king
+// Made log message buffer static
+//
 // Revision 1.9  2001/08/24 20:50:08  king
 // Removed unused external
 //

@@ -1,4 +1,4 @@
-SRCLIST = newemitter.cs renameclauses.cs redefineclauses.cs undefineclauses.cs selectclauses.cs eiffelclassfactory.cs newemittermain.cs globals.cs eiffelmethodfactory.cs neweiffelclassgenerator.cs eiffelcreationroutine.cs argparser.cs
+SRCLIST = ..\..\..\tools\emitter\newemitter.cs ..\..\..\tools\emitter\renameclauses.cs ..\..\..\tools\emitter\redefineclauses.cs ..\..\..\tools\emitter\undefineclauses.cs ..\..\..\tools\emitter\selectclauses.cs ..\..\..\tools\emitter\eiffelclassfactory.cs ..\..\..\tools\emitter\newemittermain.cs ..\..\..\tools\emitter\globals.cs ..\..\..\tools\emitter\eiffelmethodfactory.cs neweiffelclassgenerator.cs ..\..\..\tools\emitter\eiffelcreationroutine.cs ..\..\..\tools\emitter\argparser.cs
 
 .SUFFIXES: .exe .cs
 

@@ -22,63 +22,64 @@ feature {NONE} -- Initialization
 	make is
 			-- Entry point.
 		local
-			dummy: SYSTEM_OBJECT
+			res: SYSTEM_OBJECT
 			mi_file, mi_format: WINFORMS_MENU_ITEM
 			l_array_menu_item: NATIVE_ARRAY [WINFORMS_MENU_ITEM]
+			l_text: STRING
 		do
 			initialize_component
 
 				--  Initialize Fonts - use generic fonts to avoid problems across
 				--  different versions of the OS
-			create mono_space_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
-			create sans_serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
-			create serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			create mono_space_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
+			create sans_serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
+			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
 				-- Add File Menu
-			mi_file := main_menu.menu_items.add (("&File").to_cil)
-			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $file_open_clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
-			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
-			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
+			mi_file := main_menu.menu_items.add ("&File")
+			res := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make ("&Open...", create {EVENT_HANDLER}.make (Current, $file_open_clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
+			res := mi_file.menu_items.add ("-")
+			res := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make ("E&xit", create {EVENT_HANDLER}.make (Current, $file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
 
 				-- Add Format Menu
-			mi_format := main_menu.menu_items.add (("F&ormat").to_cil)
+			mi_format := main_menu.menu_items.add ("F&ormat")
 
 				-- Font Face sub-menu
-			create mmi_sans_serif.make_from_text_and_on_click (
-				(("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			l_text := "&1. "
+			l_text.append (sans_serif_font_family.name)
+			create mmi_sans_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			mmi_sans_serif.set_checked (True)
 			mmi_sans_serif.set_default_item (True)
-			create mmi_serif.make_from_text_and_on_click (
-				(("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
-			create mmi_mono_space.make_from_text_and_on_click (
-				(("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			l_text := "&2. "
+			l_text.append (serif_font_family.name)
+			create mmi_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
+			l_text := "&3. "
+			l_text.append (mono_space_font_family.name)
+			create mmi_mono_space.make (l_text, create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
 			l_array_menu_item.put (1, mmi_serif)
 			l_array_menu_item.put (2, mmi_mono_space)
-			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
+			res := mi_format.menu_items.add ("Font &Face", l_array_menu_item)
 
 				-- Font Size sub-menu
-			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
-			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_small.make ("&Small", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_medium.make ("&Medium", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			mmi_medium.set_checked (True) 
 			mmi_medium.set_default_item (True) 
-			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_large.make ("&Large", create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_small)
 			l_array_menu_item.put (1, mmi_medium)
 			l_array_menu_item.put (2, mmi_large)
-			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
+			res := mi_format.menu_items.add ("Font &Size", l_array_menu_item)
 
 				-- Add Format to label context menu
 				-- Note have to add a clone because menus can't belong to 2 parents
-			dummy := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
+			res := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
 
 				--  Set up the context menu items - we use these to check and uncheck items
 			cmi_sans_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (0)
@@ -147,21 +148,21 @@ feature {NONE} -- Implementation
 			create label_1.make
 			create label_1_context_menu.make
 
-			set_text (("Menus 'R Us").to_cil)
-			l_size.make_from_width_and_height (5, 13)
+			set_text ("Menus 'R Us")
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (392, 117)
+			l_size.make (392, 117)
 			set_client_size (l_size)
 			create main_menu.make
 			set_menu (main_menu)
 
 			label_1.set_back_color (feature {DRAWING_COLOR}.light_steel_blue)
-			l_point.make_from_x_and_y (16, 24)
+			l_point.make (16, 24)
 			label_1.set_location (l_point)
 			label_1.set_tab_index (0)
-			l_size.make_from_width_and_height (360, 50)
+			l_size.make (360, 50)
 			label_1.set_size (l_size)
-			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)
+			label_1.set_text ("Right Click on me - I have a context menu!")
 			label_1.set_context_menu (label_1_context_menu)
 
 			font_size := font_sizes ("Medium")
@@ -200,9 +201,9 @@ feature {NONE} -- Implementation
 	file_open_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Open Menu item handler
 		local
-			dummy: WINFORMS_DIALOG_RESULT
+			res: WINFORMS_DIALOG_RESULT
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (("And why would this open a file?").to_cil)
+			res := feature {WINFORMS_MESSAGE_BOX}.show ("And why would this open a file?")
 		end
 
 	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -232,7 +233,7 @@ feature {NONE} -- Implementation
 			mi_main_format_font_checked.set_checked (True)
 			mi_context_format_font_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
+			label_1.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
 	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -248,11 +249,11 @@ feature {NONE} -- Implementation
 
 			font_size_string := mi_clicked.text
 
-			if font_size_string.equals (("&Small").to_cil) then
+			if ("&Small").is_equal (font_size_string) then
 				mi_main_format_size_checked := mmi_small
 				mi_context_format_size_checked := cmi_small
 				font_size := font_sizes ("Small")
-			elseif font_size_string.equals (("&Large").to_cil) then
+			elseif ("&Large").is_equal (font_size_string) then
 				mi_main_format_size_checked := mmi_large
 				mi_context_format_size_checked := cmi_large
 				font_size := font_sizes ("Large")
@@ -265,7 +266,7 @@ feature {NONE} -- Implementation
 			mi_main_format_size_checked.set_checked (True)
 			mi_context_format_size_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
+			label_1.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
 invariant
@@ -284,5 +285,3 @@ invariant
 	non_void_mmi_large: mmi_large /= Void
 
 end -- Class MENU
-
-

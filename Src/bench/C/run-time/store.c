@@ -11,7 +11,7 @@
 */
 #include "eif_portable.h"
 #include "eif_project.h" /* for egc_ce_gtype */
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_malloc.h"
 #include "eif_except.h"
 #include "eif_store.h"

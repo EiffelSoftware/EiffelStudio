@@ -19,7 +19,7 @@
 #include "eif_struct.h"
 #include "eif_tools.h"
 #include "eif_eiffel.h"				/* Need string header */
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_lmalloc.h"
 #include "eif_project.h"
 #include "rt_threads.h"

@@ -14,6 +14,7 @@
 #define _rt_macros_h_
 
 #include "eif_macros.h"
+#include "rt_wbench.h"
 
 #ifdef __cplusplus
 extern "C" {

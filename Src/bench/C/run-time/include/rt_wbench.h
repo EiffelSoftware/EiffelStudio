@@ -14,6 +14,8 @@
 #ifndef _rt_wbench_h_
 #define _rt_wbench_h_
 
+#ifdef WORKBENCH
+
 #include "eif_wbench.h"	
 
 #ifdef __cplusplus
@@ -62,5 +64,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* WORKBENCH */
 
 #endif

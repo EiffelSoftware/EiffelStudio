@@ -28,13 +28,6 @@ inherit
 			{NONE} all
 		end
 
-	MEMORY
-		rename
-			free as memory_free
-		export
-			{NONE} all
-		end
-
 	OPERATING_ENVIRONMENT
 		export
 			{NONE} all
@@ -91,27 +84,21 @@ feature -- Basic operations
 			if not Shared_wizard_environment.abort then
 				process_type_descriptors 
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_implemented_interfaces
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_registration_code
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_mappers_and_c_alias
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_ace_and_resource 
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_makefiles 
 			end
-			full_collect
 			if not Shared_wizard_environment.abort then
 				message_output.add_warning (Current, Generation_Successful)
 			end

@@ -18,14 +18,13 @@ In a file called `launch_ec' you can have the following:
 #!/bin/sh<BR><BR>
 output_file="/output_path/OUTPUT"<BR><BR>
 cd /your_project_path<BR><BR>
-#LaunchEiffel compilation<BR>
-ec -batch -ace Ace.ace -finalize 2> $output_file<BR><BR>
+#Launch Eiffel compilation<BR>
+ec -batch -ace Ace.ace -finalize -c_compile 2> $output_file<BR><BR>
+#Since only C compilation for finalized code is done<br>
 #Launch C compilation for frozen code<BR><BR>
-cd EIFGEN/W_code finish_freezing > $output_file<BR>
-#Launch C compilation for finalized code<BR><BR>
-cd EIFGEN/F_code finish_freezing > $output_file<BR>
-</CODE>
-</P>
+cd EIFGEN/W_code<br>
+finish_freezing > $output_file<BR>
+&nbsp;</CODE></P>
 <P>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `/output_path/OUTPUT'.</P>
 		<P CLASS="Note">
 		<B>Note:</B> All output from <B>ec</B> are going to the error output, so do not forget to redirect the error output when you want to see the result.</P>
@@ -34,15 +33,11 @@ cd EIFGEN/F_code finish_freezing > $output_file<BR>
 In a file called `launched_ec.bat' you can have the following:
 <P><CODE>
 #Launch Eiffel compilation<BR>
-ec -batch -ace Ace.ace -finalize > c:\output_path\OUTPUT<BR><BR>
-#Launch C compilation for frozen code<BR>
-cd EIFGEN\W_code finish_freezing > c:\output_path\OUTPUT<BR><BR>
-#Launch C compilation for finalized code<BR>
-cd EIFGEN\F_code<BR>
-finish_freezing > c:\output_path\OUTPUT
-</CODE>
-</P>
-<p>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `c:\output_path/OUTPUT'.</P>
+ec -batch -ace Ace.ace -finalize -c_compile > c:\output_path\OUTPUT<BR><BR>
+#Since only C compilation for finalized code is done<br>
+#Launch C compilation for frozen code<BR>cd EIFGEN\W_code<br>
+finish_freezing > c:\output_path\OUTPUT<BR>&nbsp;</CODE></P>
+<p>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `c:\output_path\OUTPUT'.</P>
 
 <p CLASS="seealso"><b>See Also</b>
 <br><a href="10_command_line_options.html">command

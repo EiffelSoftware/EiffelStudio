@@ -670,6 +670,19 @@ feature -- IL Generation
 		do
 		end
 
+	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
+		is
+			-- Get token for feature specified by `base_name' and `member_name'
+		require
+			base_name_not_void: base_name /= Void
+			base_name_empty: not base_name.is_empty
+			member_name_not_void: member_name /= Void
+			member_name_not_empty: not member_name.is_empty
+			valid_external_type: valid_type (ext_kind)
+		do
+		end
+
 	internal_generate_external_call (an_assembly_token, a_type_token: INTEGER; base_name: STRING;
 			member_name: STRING; ext_kind: INTEGER;
 			parameters_string: ARRAY [STRING]; return_type: STRING;

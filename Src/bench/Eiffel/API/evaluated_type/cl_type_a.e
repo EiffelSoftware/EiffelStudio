@@ -6,14 +6,13 @@ indexing
 class CL_TYPE_A
 
 inherit
-	TYPE_A
+	NAMED_TYPE_A
 		redefine
-			is_true_expanded, is_separate, instantiation_in, valid_generic,
+			is_expanded, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format, convert_to
+			has_expanded, is_valid, format, convert_to, reference_actual_type,
+			is_full_named_type, is_external
 		end
-
-	HASHABLE
 
 	DEBUG_OUTPUT
 
@@ -27,13 +26,17 @@ feature {NONE} -- Initialization
 			valid_class_id: a_class_id > 0
 		do
 			class_id := a_class_id
+			if is_basic then
+				is_expanded := True
+			end
 		ensure
 			class_id_set: class_id = a_class_id
+			is_expanded_set: is_basic implies is_expanded
 		end
 
 feature -- Properties
 
-	is_true_expanded: BOOLEAN
+	is_expanded: BOOLEAN
 			-- Is the type expanded ?
 
 	is_separate: BOOLEAN
@@ -45,19 +48,47 @@ feature -- Properties
 		do
 			Result := associated_class /= Void
 		end
+		
+	is_full_named_type: BOOLEAN is
+			-- Current is a full named type.
+		do
+			Result := True
+		end
+		
+	is_external: BOOLEAN is
+			-- Is current type based on an external calss?
+		local
+			l_base_class: like associated_class
+		do
+			l_base_class := associated_class
+			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
+		end
+		
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := is_true_expanded = other.is_true_expanded and then
+			Result := is_expanded = other.is_expanded and then
 				is_separate = other.is_separate and then
 				class_id = other.class_id
 		end
 
 feature -- Access
 
+	reference_actual_type: CL_TYPE_A is
+			-- `actual_type' if not `is_expanded'.
+			-- Otherwise associated reference of `actual type'
+		do
+			if not is_expanded then
+				Result := Current
+			else
+				Result := twin
+				Result.set_is_expanded (False)
+			end
+		end
+		
 	hash_code: INTEGER is
 			-- Hash code value.
 		do
@@ -74,7 +105,7 @@ feature -- Access
 		do
 			other_class_type ?= other
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
-						and then is_true_expanded = other_class_type.is_true_expanded
+						and then is_expanded = other_class_type.is_expanded
 						and then is_separate = other_class_type.is_separate
 		end
 
@@ -88,8 +119,11 @@ feature -- Output
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			if is_true_expanded then
+			if is_expanded and not associated_class.is_expanded then
 				st.add (ti_expanded_keyword)
+				st.add_space
+			elseif not is_expanded and associated_class.is_expanded then
+				st.add (ti_reference_keyword)
 				st.add_space
 			elseif is_separate then
 				st.add (ti_separate_keyword)
@@ -104,9 +138,12 @@ feature -- Output
 			class_name: STRING
 		do
 			class_name := associated_class.name_in_upper
-			if is_true_expanded then
+			if is_expanded and not associated_class.is_expanded then
 				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
+			elseif not is_expanded and associated_class.is_expanded then
+				create Result.make (class_name.count + 10)
+				Result.append ("reference ")
 			elseif is_separate then
 				create Result.make (class_name.count + 9)
 				Result.append ("separate ")
@@ -116,14 +153,14 @@ feature -- Output
 			Result.append (class_name)
 		end
 
-feature {COMPILER_EXPORTER}
+feature {COMPILER_EXPORTER} -- Settings
 
-	set_is_true_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_true_expanded'.
+	set_is_expanded (b: BOOLEAN) is
+			-- Assign `b' to `is_expanded'.
 		do
-			is_true_expanded := b
+			is_expanded := b
 		ensure
-			is_true_expanded_set: is_true_expanded = b
+			is_expanded_set: is_expanded = b
 		end
 
 	set_is_separate (b: BOOLEAN) is
@@ -138,14 +175,14 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		do
 			create Result.make (class_id)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 			Result.set_is_separate (is_separate)
 		end
 
 	meta_type: TYPE_I is
 			-- Meta type of the type
 		do
-			if is_true_expanded then
+			if is_expanded then
 				Result := type_i
 			else
 				Result := Reference_c_type
@@ -169,76 +206,42 @@ feature {COMPILER_EXPORTER}
 	has_expanded: BOOLEAN is
 			-- Has the current type some expanded types in its declration ?
 		do
-			Result := is_true_expanded
+			Result := is_expanded
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance
 
-	convert_to (a_class: CLASS_C; other: TYPE_A): BOOLEAN is
-			-- Does current convert to `other'?
-			-- Update `supplier_ids' of AST_CONTEXT if True.
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+			-- Does current convert to `a_target_type' in `a_context_class'?
+			-- Update `last_conversion_info' of AST_CONTEXT.
 		local
-			l_class, l_other_class: CLASS_C
-			l_type: CL_TYPE_A
-			l_feat: FEATURE_I
-			l_depend_unit: DEPEND_UNIT
+			l_checker: CONVERTIBILITY_CHECKER
 		do
-			l_type ?= other
-			if l_type /= Void then
-				l_class := associated_class
-				l_other_class := l_type.associated_class
-				if
-					l_other_class.convert_from /= Void and then
-					l_other_class.convert_from.has (Current)
-				then
-					l_feat := l_other_class.feature_table.
-						item_id (l_other_class.convert_from.item (Current))
-					check
-						l_feat_not_void: l_feat /= Void
-					end
-					create l_depend_unit.make (l_other_class.class_id, l_feat)
-					Result := l_feat.is_exported_for (a_class)
-				elseif (l_class.convert_to /= Void and then l_class.convert_to.has (l_type)) then
-					l_feat := l_class.feature_table.item_id (l_class.convert_to.item (l_type))
-					check
-						l_feat_not_void: l_feat /= Void
-					end
-					create l_depend_unit.make (l_class.class_id, l_feat)
-					Result := l_feat.is_exported_for (a_class)
-				end
-			end
+			create l_checker
+			l_checker.check_conversion (a_context_class, Current, a_target_type)
+			Result := l_checker.last_conversion_check_successful
 			if Result then
-					-- Process for incrementality and finalization.
-				Context.supplier_ids.extend (l_depend_unit)
+				context.set_last_conversion_info (l_checker.last_conversion_info)
+			else
+				context.set_last_conversion_info (Void)
 			end
 		end
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		local
-			current_class, parent_class: CLASS_C
 			other_class_type: CL_TYPE_A
 		do
-				-- FIXME???: separate
 			other_class_type ?= other.actual_type
 			if other_class_type /= Void then
-					-- `other' is also a class type
-				if other_class_type.is_none then
-						-- No type conforms directly to NONE
-					Result := False
-				elseif other_class_type.is_true_expanded then
-						-- No type conforms directly to `other'.
-					current_class := associated_class
-					parent_class := other_class_type.associated_class
-					Result := ((not in_generics) and then same_class_type (other_class_type))
-								or else (is_true_expanded and then
-								current_class.conform_to (parent_class))
+				if other_class_type.is_expanded then
+						-- It should be the exact same base class for expanded.
+					Result := is_expanded and then class_id = other_class_type.class_id
+						and then other_class_type.valid_generic (Current)
 				else
-					current_class := associated_class
-					parent_class := other_class_type.associated_class
-					Result := 	(not (in_generics and then is_true_expanded))
-								and then current_class.conform_to (parent_class)
-								and then other_class_type.valid_generic (Current)
+					Result := not is_expanded
+						and then associated_class.conform_to (other_class_type.associated_class)
+						and then other_class_type.valid_generic (Current)
 				end
 			end
 		end
@@ -268,7 +271,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 				i > count or else Result
 			loop
 				parent_actual_type := parent_type (parents.i_th (i))
-				Result := parent_actual_type.internal_conform_to (gen_type, True)
+				Result := parent_actual_type.conform_to (gen_type)
 				i := i + 1
 			end
 		end
@@ -380,12 +383,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			Result := twin
 		end
 
-	same_class_type (other: CL_TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			Result := class_id = other.class_id
-		end
-
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
@@ -404,10 +401,13 @@ feature -- Debugging
 			-- Display name of associated class.
 		do
 			if is_valid then
-				Result := associated_class.name_in_upper
+				Result := dump
 			else
 				Result := "Class not in system anymore"
 			end
 		end
+
+invariant
+	class_id_positive: class_id > 0
 
 end -- class CL_TYPE_A

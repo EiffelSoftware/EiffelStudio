@@ -163,6 +163,13 @@ feature -- Access
 			"OFN_SHAREWARN"
 		end
 
+	Ofn_explorer: INTEGER is
+		external
+			"C [macro %"cdlg.h%"]"
+		alias
+			"OFN_EXPLORER"
+		end
+
 end -- class WEL_OFN_CONSTANTS
 
 --|----------------------------------------------------------------

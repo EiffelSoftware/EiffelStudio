@@ -64,6 +64,58 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	null_separated_strings: LINKED_LIST[STRING] is
+			-- retrieve all string contained in `item'. String are
+			-- NULL separared inside `item'.
+		local
+			current_string: STRING
+			current_pos: POINTER
+		do
+			from
+				create Result.make
+				current_pos := item
+				create current_string.make_from_c (current_pos)
+			until
+				current_string.is_equal("")
+			loop
+				Result.extend(current_string)
+				current_pos := current_pos + current_string.count + 1
+				create current_string.make_from_c (current_pos)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	space_separated_strings: LINKED_LIST[STRING] is
+			-- retrieve all string contained in `item'. String are
+			-- space-separared inside `item'.
+		local
+			curr_space: INTEGER
+			next_space: INTEGER
+			long_string: STRING
+		do
+			create long_string.make_from_c (item)
+			create Result.make
+			
+				-- Add each "word" of the long_string to the Result-list
+			from
+				curr_space := 1
+				next_space := long_string.index_of(' ',curr_space)
+			until
+				next_space = 0
+			loop
+				Result.extend(long_string.substring(curr_space, next_space - 1))
+				curr_space := next_space + 1
+				next_space := long_string.index_of(' ',curr_space)
+			end
+				-- no space left, extract the last string: from the last space until
+				-- the end of the string.
+			Result.extend(long_string.substring(curr_space, long_string.count))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 		
 	length: INTEGER is
 			-- String length

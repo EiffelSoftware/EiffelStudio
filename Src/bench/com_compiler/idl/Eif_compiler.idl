@@ -66,7 +66,7 @@ interface IEiffelProject: IUnknown
   HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
   
 };
-
+//---------------------------------------------------------------------
 [
   oleautomation,
   uuid (590282FD-2BEE-44a1-91B3-61C926BAD512),
@@ -80,6 +80,7 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Was last compilation successful?")]
   HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
 };
+//---------------------------------------------------------------------
 
 [
   oleautomation,
@@ -97,6 +98,87 @@ interface IEiffelCompilerEvents: IUnknown
   [helpstring ("Last error.")]
   HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
 };
+//---------------------------------------------------------------------
+
+[
+    object,
+    uuid(F09831BB-B43F-42db-821F-D1B3821397F0),
+    pointer_default(unique)
+]
+
+interface IEnumClass : IUnknown
+{
+    HRESULT Next(
+        [in] ULONG celt,
+        [out] IEiffelClassDescriptor **rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumClass ** ppenum);
+        
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClassDescriptor **rgelt); 
+    
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    object,
+    uuid(7D904660-5A31-435a-B154-10CACDBD363C),
+    pointer_default(unique)
+]
+
+interface IEnumCluster : IUnknown
+{
+    HRESULT Next(
+        [in] ULONG celt,
+        [out] IEiffelClusterDescriptor **rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumCluster ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterDescriptor **rgelt); 
+    
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    object,
+    uuid(30BF27F2-86DD-4589-AD8A-8E40FF3D4D07),
+    pointer_default(unique)
+]
+interface IEnumFeature : IUnknown
+{
+    HRESULT Next(
+        [in] ULONG celt,
+        [out] IEiffelFeatureDescriptor **rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumFeature ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelFeatureDescriptor **rgelt); 
+    
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
 
 [
   oleautomation,
@@ -106,13 +188,13 @@ interface IEiffelCompilerEvents: IUnknown
 interface IEiffelSystemBrowser: IUnknown
 { 
   [helpstring ("List of classes in system.")]
-  HRESULT system_classes ([out, retval] SAFEARRAY (BSTR) * names);
+  HRESULT system_classes ([out, retval] IEnumClass ** some_classes);
 
   [helpstring ("Number of classes in system.")]
-  HRESULT class_count ([out, retval] LONG * return_value);
+  HRESULT class_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of system's clusters.")]
-  HRESULT system_clusters ([out, retval] SAFEARRAY (BSTR) * names);
+  HRESULT system_clusters ([out, retval] IEnumCluster ** some_clusters);
   
   [helpstring ("Number of top-level clusters in system.")]
   HRESULT cluster_count ([out, retval] LONG * return_value);
@@ -126,6 +208,7 @@ interface IEiffelSystemBrowser: IUnknown
   [helpstring ("Feature descriptor.")]
   HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
 };
+//---------------------------------------------------------------------
 
 
 [
@@ -142,20 +225,21 @@ interface IEiffelClusterDescriptor: IUnknown
   HRESULT description ([out, retval] BSTR * return_value);
   
   [helpstring ("List of classes in cluster.")]
-  HRESULT classes ([out, retval] VARIANT * some_classes);
+  HRESULT classes ([out, retval] IEnumClass ** some_classes);
 
   [helpstring ("Number of classes in cluster.")]
-  HRESULT class_count ([out, retval] LONG * return_value);
+  HRESULT class_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of subclusters in cluster.")]
-  HRESULT clusters ([out, retval] VARIANT * some_clusters);
+  HRESULT clusters ([out, retval] IEnumCluster ** some_clusters);
 
   [helpstring ("Number of subclusters in cluster.")]
-  HRESULT cluster_count ([out, retval] LONG * return_value);
+  HRESULT cluster_count ([out, retval] ULONG * return_value);
 
   [helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([out, retval] BSTR * path);
 };
+//---------------------------------------------------------------------
 
 [
   oleautomation,
@@ -177,40 +261,40 @@ interface IEiffelClassDescriptor: IUnknown
   HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
 
   [helpstring ("List of class features.")]
-  HRESULT features ([out, retval] VARIANT * some_features);
+  HRESULT features ([out, retval] IEnumFeature ** some_features);
 
   [helpstring ("Number of class features.")]
-  HRESULT feature_count ([out, retval] LONG * return_value);
+  HRESULT feature_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of class features including ancestor features.")]
-  HRESULT flat_features ([out, retval] VARIANT * some_features);
+  HRESULT flat_features ([out, retval] IEnumFeature ** some_features);
 
   [helpstring ("Number of flat class features.")]
-  HRESULT flat_feature_count ([out, retval] LONG * return_value);
+  HRESULT flat_feature_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of class clients.")]
-  HRESULT clients ([out, retval] VARIANT * some_clients);
+  HRESULT clients ([out, retval] IEnumClass ** some_clients);
 
   [helpstring ("Number of class clients.")]
-  HRESULT client_count ([out, retval] LONG * return_value);
+  HRESULT client_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of class suppliers.")]
-  HRESULT suppliers ([out, retval] VARIANT * some_suppliers);
+  HRESULT suppliers ([out, retval] IEnumClass ** some_suppliers);
 
   [helpstring ("Number of class suppliers.")]
-  HRESULT supplier_count ([out, retval] LONG * return_value);
+  HRESULT supplier_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of direct ancestors of class.")]
-  HRESULT ancestors ([out, retval] VARIANT * some_ancestors);
+  HRESULT ancestors ([out, retval] IEnumClass ** some_ancestors);
 
   [helpstring ("Number of direct ancestors.")]
-  HRESULT ancestor_count ([out, retval] LONG * return_value);
+  HRESULT ancestor_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of direct descendants of class.")]
-  HRESULT descendants ([out, retval] VARIANT * some_descendants);
+  HRESULT descendants ([out, retval] IEnumClass ** some_descendants);
 
   [helpstring ("Number of direct descendants.")]
-  HRESULT descendant_count ([out, retval] LONG * return_value);
+  HRESULT descendant_count ([out, retval] ULONG * return_value);
   
   [helpstring ("Full path to file.")]
   HRESULT class_path ([out, retval] BSTR * path);
@@ -224,6 +308,7 @@ interface IEiffelClassDescriptor: IUnknown
   [helpstring ("Is class generic?")]
   HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
 };
+//---------------------------------------------------------------------
 
 [
   oleautomation,
@@ -255,40 +340,40 @@ interface IEiffelFeatureDescriptor: IUnknown
   HRESULT signature ([out, retval] BSTR * return_value);
   
   [helpstring ("List of all feature callers, includding callers of ancestor and descendant versions.")]
-  HRESULT all_callers ([out, retval] VARIANT * some_callers);
+  HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
 
   [helpstring ("Number of all callers.")]
-  HRESULT all_callers_count ([out, retval] LONG * return_value);
+  HRESULT all_callers_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of feature callers.")]
-  HRESULT local_callers ([out, retval] VARIANT * some_callers);
+  HRESULT local_callers ([out, retval] IEnumFeature ** some_callers);
 
   [helpstring ("Number of local callers.")]
-  HRESULT local_callers_count ([out, retval] LONG * return_value);
+  HRESULT local_callers_count ([out, retval] ULONG * return_value);
 
   [helpstring ("List of feature callers, including callers of descendant versions.")]
-  HRESULT descendant_callers ([out, retval] VARIANT * some_callers);
+  HRESULT descendant_callers ([out, retval] IEnumFeature ** some_callers);
 
   [helpstring ("Number of descendant callers.")]
-  HRESULT descendant_callers_count ([out, retval] LONG * return_value);
+  HRESULT descendant_callers_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of implementers.")]
-  HRESULT implementers ([out, retval] VARIANT * some_implementers);
+  HRESULT implementers ([out, retval] IEnumFeature ** some_implementers);
 
   [helpstring ("Number of feature implementers.")]
-  HRESULT implementer_count ([out, retval] LONG * return_value);
+  HRESULT implementer_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of ancestor versions.")]
-  HRESULT ancestor_versions ([out, retval] VARIANT * some_implementers);
+  HRESULT ancestor_versions ([out, retval] IEnumFeature ** some_implementers);
 
   [helpstring ("Number of ancestor versions.")]
-  HRESULT ancestor_version_count ([out, retval] LONG * return_value);
+  HRESULT ancestor_version_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of descendant versions.")]
-  HRESULT descendant_versions ([out, retval] VARIANT * some_implementers);
+  HRESULT descendant_versions ([out, retval] IEnumFeature ** some_implementers);
 
   [helpstring ("Number of descendant versions.")]
-  HRESULT descendant_version_count ([out, retval] LONG * return_value);
+  HRESULT descendant_version_count ([out, retval] ULONG * return_value);
   
   [helpstring ("List of classes, to which feature is exported.")]
   HRESULT exported_to ([out, retval] SAFEARRAY (BSTR) * names);
@@ -335,6 +420,7 @@ interface IEiffelFeatureDescriptor: IUnknown
   [helpstring ("Does feature have postcondition?")]
   HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
 };
+//---------------------------------------------------------------------
 
 [
   dual, object,
@@ -445,6 +531,7 @@ interface IEiffelProjectProperties: IDispatch
   [id (118), helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_path);  
 };
+//---------------------------------------------------------------------
 
 [
   dual, object,
@@ -528,6 +615,7 @@ interface IEiffelClusterProperties: IDispatch
   [helpstring ("Remove a directory to exclude.")]
   HRESULT remove_exclude ([in] BSTR dir_name);  
 };
+//---------------------------------------------------------------------
 
 [
   uuid (A81CA1A9-3EEF-4e47-BEAE-C16325EEFA3F)

@@ -14,26 +14,27 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	generator: STRING is
+	frozen generator: STRING is
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
-				-- FIXME: Should take into account Eiffel name, not
-				-- CIL name.
-			Result := create {STRING}.make_from_cil (get_type.get_name)
+ 			create Result.make_from_cil (feature {ISE_RUNTIME}.generator (Current))
+		ensure
+			result_not_void: Result /= Void
 		end
 
- 	generating_type: STRING is
+ 	frozen generating_type: STRING is
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
  		do
-				-- FIXME: Should take into account genericity.
- 			Result := create {STRING}.make_from_cil (get_type.get_name)
+ 			create Result.make_from_cil (feature {ISE_RUNTIME}.generating_type (Current))
+ 		ensure
+ 			result_not_void: Result /= Void
  		end
 
 feature -- Status report
 
-	conforms_to (other: ANY): BOOLEAN is
+	frozen conforms_to (other: ANY): BOOLEAN is
 			-- Does type of current object conform to type
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		require
@@ -42,7 +43,7 @@ feature -- Status report
 			Result := get_type.is_instance_of_type (other)
 		end
 
-	same_type (other: ANY): BOOLEAN is
+	frozen same_type (other: ANY): BOOLEAN is
 			-- Is type of current object identical to type of `other'?
 		require
 			other_not_void: other /= Void

@@ -11,7 +11,7 @@ inherit
 		rename
 			make as stack_make
 		export
-			{ARRAYED_STACK, ACCESS_FEAT_AS, PRECURSOR_AS} array_valid_index
+			{ANY} valid_index
 			{ACCESS_FEAT_AS, PRECURSOR_AS, AST_CONTEXT} i_th
 		end
 

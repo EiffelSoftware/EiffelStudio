@@ -27,13 +27,13 @@ feature -- Status setting
 			end
 		end
 
-      set_parent (par: like parent) is
-                       -- Make `par' the new parent of the widget.
-                       -- `par' can be Void then the parent is the screen.
-               deferred
-               ensure
-                       parent_set: parent_set (par)
-               end
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		deferred
+		ensure
+			parent_set: parent_set (par)
+		end
 
 	align_text_center is
 			-- Set text alignment of current label to center.
@@ -94,6 +94,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/23 02:13:59  brendel
+--| Changed spaces with tabs.
+--|
 --| Revision 1.10  2000/02/22 23:08:37  rogers
 --| Added parent_set which was taken from EV_ITEM_I, and improved comment on implementation feature clause.
 --|

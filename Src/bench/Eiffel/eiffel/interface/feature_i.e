@@ -1343,6 +1343,7 @@ feature -- Signature checking
 			vtug: VTUG
 			vtcg1: VTCG1
 		do
+			context.set_current_feature (Current)
 			if type.has_like and then is_once then
 					-- We have an anchored type.
 					-- Check if the feature is not a once feature

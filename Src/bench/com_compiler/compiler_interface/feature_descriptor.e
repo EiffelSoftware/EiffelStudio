@@ -27,7 +27,7 @@ inherit
 			ancestor_version_count,
 			descendant_versions,
 			descendant_version_count,
-			exported_to,
+			exported_to_all,
 			is_once,
 			is_external,
 			is_deferred,
@@ -279,31 +279,10 @@ feature -- Access
 			Result := descendant_versions_internal.count
 		end
 		
-	exported_to: ECOM_ARRAY [STRING] is
-			-- List of classes, to which feature is exported.
-		local
-			res: ARRAY [STRING]
-			classes: ARRAY [CLASS_C]
-			i, nb_classes: INTEGER
+	exported_to_all: BOOLEAN is
+			-- Is feature exported to all classes?
 		do
-			classes := Eiffel_system.Workbench.system.classes.sorted_classes
-			create res.make (1, Eiffel_system.Workbench.system.classes.count)
-			from
-				i := 1
-				nb_classes := 1
-			until
-				i > res.count
-			loop
-				if compiler_feature.is_exported_for (classes.item (i)) then
-					res.put (classes.item (i).name, nb_classes)
-					nb_classes := nb_classes + 1
-				end
-				i := i + 1
-			end
-			if nb_classes > 1 then
-				res.resize (1, nb_classes - 1)
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
-			end
+			Result := compiler_feature.export_status.is_all
 		end
 
 	is_once: BOOLEAN is

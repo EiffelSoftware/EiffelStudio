@@ -10,6 +10,8 @@ inherit
 			item as tbl_item
 		export
 			{NONE} all
+			{O_N_TABLE} start, after, forth,
+				item_for_iteration, key_for_iteration
 		end
 
 creation
@@ -96,6 +98,23 @@ end;
 				Result := i
 			end;
 		end;
+
+	append (other: like Current) is
+			-- Append items of `other' into current.
+			-- Do not append items which are already there.
+		require
+			other_not_void: other /= Void
+		local
+			old_bid: G
+		do
+			from other.start until other.after loop
+				old_bid := other.key_for_iteration;
+				if not has (old_bid) then
+					put (other.item_for_iteration, old_bid)
+				end;
+				other.forth
+			end
+		end
 
 feature -- Trace
 

@@ -76,6 +76,7 @@ feature -- Access
 			current_type: INTEGER
 			container: GB_CONTAINER_OBJECT
 			cell: GB_CELL_OBJECT
+			primitive: GB_PRIMITIVE_OBJECT
 			can_drop: BOOLEAN
 			constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
@@ -100,6 +101,15 @@ feature -- Access
 				can_drop := False
 			end
 			
+			primitive ?= constructor_item.object
+			if primitive /= Void  then
+					-- We cannot directly query the count of a primitive
+					-- as only some primitives support items. Checking the count
+					-- of the layout item achieves this in a general way.
+				if primitive.layout_item.count > 0 then
+					can_drop := False
+				end
+			end
 			
 			
 			cell ?= constructor_item.object
@@ -137,6 +147,16 @@ feature -- Access
 						
 					end
 				end
+				
+				
+				
+			check
+				parent_of_object_not_void: object.parent_object /= Void
+			end
+			
+			if not object.parent_object.accepts_child (type) then
+				can_drop := False
+			end
 
 				--| We must override if the type represented by `object' is a window.
 				--| Currently, windows are fixed and may not be replaced.

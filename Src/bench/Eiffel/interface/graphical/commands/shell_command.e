@@ -2,7 +2,8 @@ class SHELL_COMMAND
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	SHARED_RESOURCES
 
 creation
 
@@ -21,7 +22,7 @@ feature
 			if (edit_command = Void) or else (edit_command.empty) then
 					-- EIF_COMMAND was not set then use 
 					-- use default command (vi editor)
-				Result.append ("xterm -geometry 80x40 -e vi +$line $target")
+				Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
 			else
 				Result.append (edit_command);
 			end;

@@ -136,7 +136,9 @@ feature -- Status setting
 				radio_group.go_to (cur)
 			end
 			set_checked
-			select_actions.call ([])
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])	
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -30,12 +30,6 @@ feature
 
 feature {NONE}
 
-	generate_code_only: ANY is
-			-- Used to comile the Eiffel code without starting the C compilation
-		once
-			!! Result
-		end
-
 	reset_debugger is
 		do
 			debug_info.wipe_out;
@@ -207,7 +201,7 @@ feature {NONE}
 				elseif compilation_allowed then
 					if Lace.file_name /= Void then
 						confirm_and_compile (arg);
-						if resources.get_boolean (r_Raise_on_error, false) then
+						if resources.get_boolean (r_Raise_on_error, true) then
 							project_tool.raise
 						end
 					elseif arg = Void then
@@ -218,16 +212,26 @@ feature {NONE}
 						name_chooser.call (Current)
 					elseif arg = name_chooser then
 						fn := clone (name_chooser.selected_file);
-						!! f.make (fn);
-						if
-							f.exists and then f.is_readable and then f.is_plain
-						then
-							Lace.set_file_name (fn);
-							work (Current)
+						if not fn.empty then
+							!! f.make (fn);
+							if
+								f.exists and then 
+								f.is_readable and then 
+								f.is_plain
+							then
+								Lace.set_file_name (fn);
+								work (Current)
+							elseif f.exists and then not f.is_plain then
+								warner (text_window).custom_call (Current,
+								w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
+							else
+								warner (text_window).custom_call
+									(Current, w_Cannot_read_file_retry (fn),
+									" OK ", Void, "Cancel");
+							end
 						else
-							warner (text_window).custom_call
-								(Current, w_Cannot_read_file_retry (fn),
-								" OK ", Void, "Cancel");
+							warner (text_window).custom_call (Current,
+								w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
 						end
 					else
 						warner (text_window).custom_call (Current,

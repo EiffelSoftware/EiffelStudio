@@ -20,6 +20,27 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\hello_world\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
@@ -29,19 +50,22 @@
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the 
-			<span>FORM</span> class, and just set the title with 
-			<span>"Hello world"</span> with the inherited feature 
-			<span>set_title</span>.
-		</paragraph>
-		<code>set_title (("Hello world"). to_cil)</code>
-		<paragraph>The application is launched in a PROCESS with this command line:</paragraph>
-		<code>feature {WINFORMS_APPLICATION}. run_form (Current). </code>
+			<span><code><class_name>FORM</class_name></code></span> class, and just set the title with 
+			<span><code>"<string>Hello world</string>"</code></span> with the inherited feature 
+			<span><code><feature_name>set_title</feature_name></code></span>.
+		</paragraph><code_block>
+	<feature_name>set_title</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>Hello world</string>"<symbol>)</symbol><feature_name></feature_name>.<feature_name></feature_name>to_cil<symbol>)</symbol>
+</code_block>
+		<paragraph>The application is launched in a <code><class_name>PROCESS</class_name></code> with this command line:</paragraph>
+		<code_block>
+	<keyword>feature</keyword> <symbol>{</symbol><class_name>WINFORMS_APPLICATION</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name></feature_name><feature_name>run_form</feature_name> <symbol>(</symbol><keyword>Current</keyword><symbol>)</symbol><feature_name></feature_name>.
+</code_block>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span>FORM</span>
+				<span><code><class_name>FORM</class_name></code></span>
 			</item>
-			<item>WINFORMS_APPLICATION</item>
+			<item><code><class_name>WINFORMS_APPLICATION</class_name></code></item>
 		</list>
 		<heading>
 			<size>2</size>Notes

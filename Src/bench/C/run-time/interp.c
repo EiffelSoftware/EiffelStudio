@@ -1754,6 +1754,75 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Creation instruction for SPECIAL instance.
+	 */
+	case BC_SPCREATE:
+		{
+			EIF_REFERENCE new_obj;						/* New object */
+			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit;
+			uint32 elem_size = 0, bit_size = 0, i = 0;
+			uint32 flags = 0;
+			struct item *nb_item;
+			uint32 nb;
+
+			type = get_creation_type ();
+
+			is_ref = EIF_TEST(*IC++);
+			is_basic = EIF_TEST(*IC++);
+			is_bit = EIF_TEST(*IC++);
+			is_expanded = EIF_TEST(*IC++);
+
+			if (is_expanded) {
+				elem_size = OVERHEAD + EIF_Size(RTUD(get_short ()));
+			} else {
+				switch (get_uint32() & SK_HEAD) {
+					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
+					case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
+					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+					case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+					case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+					case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+					case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+					case SK_REAL: elem_size = sizeof(EIF_REAL); break;
+					case SK_DOUBLE: elem_size = sizeof(EIF_DOUBLE); break;
+					case SK_POINTER: elem_size = sizeof(EIF_POINTER); break;
+					case SK_REF: elem_size = sizeof(EIF_REFERENCE); break;
+					default:
+						eif_panic ("Illegal type");
+				}
+			}
+
+			nb_item = opop();
+			switch (nb_item->type & SK_HEAD) {
+				case SK_INT8: nb = (uint32) nb_item->it_int8; break;
+				case SK_INT16: nb = (uint32) nb_item->it_int16; break;
+				case SK_INT32: nb = (uint32) nb_item->it_int32; break;
+				default:
+					eif_panic ("Illegal count for SPECIAL creation.");
+			}
+
+			if (is_expanded) {
+				flags = EO_COMP;
+			} else if (is_ref || is_bit) {
+				flags = EO_REF;
+			}
+			new_obj = RTLNSP(type | flags, nb, elem_size, is_basic);	/* Create new object */
+			last = iget();				/* Push a new value onto the stack */
+			last->type = SK_REF;	
+			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			opush (last);				/* We need to push object on stack to check invariants */
+
+			if (is_bit) {
+				bit_size = get_uint32();
+				for (i = 0; i < nb; i++) {
+					*((EIF_REFERENCE *) new_obj + i) = RTLB(bit_size);
+					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
+				}
+			}
+		}
+		break;
+
+	/*
 	 * Once case of multi-branch instruction (when part).
 	 */
 	case BC_RANGE:

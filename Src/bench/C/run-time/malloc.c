@@ -773,6 +773,49 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 }
 
 /*
+doc:	<routine name="special_malloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Allocated new SPECIAL object with flags `flags' (flags includes the full dynamic type). Elements are zeroed, It initializes elements of a special of expanded.</summary>
+doc:		<param name="flags" type="uint32">Dynamic type of TUPLE object to create along with flags.</param>
+doc:		<param name="nb" type="EIF_INTEGER">Number of element in special.</param>
+doc:		<param name="element_size" type="uint32">Size of element in special.</param>
+doc:		<param name="atomic" type="EIF_BOOLEAN">Is this a special of basic types?</param>
+doc:		<return>A newly allocated SPECIAL object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic)
+{
+	EIF_REFERENCE result = NULL;
+	EIF_REFERENCE offset;
+	union overhead *zone;
+
+	result = spmalloc (CHRPAD(nb * element_size) + LNGPAD(2), atomic);
+
+		/* At this stage we are garanteed to have an initialized object, otherwise an
+		 * exception would have been thrown by the call to `spmalloc'. */
+	CHECK("result not null", result);
+
+	zone = HEADER(result);
+	zone->ov_flags |= flags;
+
+	offset = result + (zone->ov_size & B_SIZE) - LNGPAD(2);
+
+	RT_SPECIAL_COUNT_WITH_INFO(offset) = nb;
+	RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) = element_size;
+
+	if (flags & EO_COMP) {
+			/* It is a composite object, that is to say a special of expanded,
+			 * we need to initialize every entry properly. */
+		uint32 exp_dtype = eif_gen_param_id (-1, result, 1);
+		result = sp_init (result, exp_dtype, 0, nb - 1);
+	}
+	return result;
+}
+
+/*
 doc:	<routine name="tuple_malloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Allocated new TUPLE object of type `ftype'. It internally calls `tuple_malloc_specific' therefore it computes `count' of TUPLE to create as wekl as determines if TUPLE is atomic or not.</summary>
 doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>

@@ -133,6 +133,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNSMART(x) allocates a new object of dftype 'x'
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
  *  RTLNC(x) creates a new non-initialized instance of 'x'.
+ *  RTLNSP(t,n,e,b) allocates a new special array
  *  initializes it with the routine pointer 'y', the true routine pointer 'z',
  *  argument tuple 'a', open map 'o' and closed map 'c'
  *  RTLB(x) allocated a new bit object of size 'x'
@@ -151,6 +152,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
 #define RTLNR2(x,y,z,a,o)	rout_obj_create2((x),(y),(z),(a),(o))
 #define RTLNC(x)			eclone(x)
+#define RTLNSP(t,n,e,b)		special_malloc(t,n,e,b)
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)
 #define RTXB(x,y)			b_copy(x,y)

@@ -1318,7 +1318,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			left_button_down_implementation.replace (true);
+			left_button_down_implementation.set_item (true);
 			left_button_down_widget_implementation.replace (Current);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
@@ -1342,7 +1342,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			left_button_down_implementation.replace (false);
+			left_button_down_implementation.set_item (false);
 			left_button_down_widget_implementation.replace (void);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
@@ -1364,7 +1364,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			right_button_down_implementation.replace (true);
+			right_button_down_implementation.set_item (true);
 			right_button_down_widget_implementation.replace (Current);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
@@ -1388,7 +1388,7 @@ feature {NONE} -- Implementation
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			right_button_down_implementation.replace (true);
+			right_button_down_implementation.set_item (true);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
 			right_button_down_widget_implementation.replace (void);
@@ -1541,12 +1541,6 @@ feature {NONE} -- Implementation
 
 	private_attributes: PRIVATE_ATTRIBUTES_WINDOWS
 			-- Private attributes
-
-	last_focus: CELL [POINTER] is
-			-- The screen object that had the focus before get_focus was called.
-		once
-			!! Result.put (default_pointer)
-		end;
 
 	old_cursor_id: POINTER;
 			-- the cursor id as it was before a grab.

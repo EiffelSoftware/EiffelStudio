@@ -209,13 +209,6 @@ feature -- Access
 			end
 		end
 
-	tab_length: INTEGER is
-			-- Tab length of text
-			-- (Default is 8)
-		do	
-			Result := 8
-		end
- 
 feature -- Status report
 
 	begin_of_selection: INTEGER is
@@ -371,12 +364,9 @@ feature -- Status report
 
 	top_character_position: INTEGER is
 			-- Character position of first character displayed
-		local
-			win_pos: INTEGER
 		do
 			if exists then
-				win_pos := line_index (first_visible_line)
-				Result := win_pos
+				Result := line_index (first_visible_line)
 			end
 		end
 
@@ -537,9 +527,8 @@ feature -- Status setting
 			private_cursor_position := pos
 			if exists then
 				if not has_selection then
-					enable_scroll_caret_at_selection
-					set_caret_position (pos)
-					disable_scroll_caret_at_selection
+					set_selection (pos, pos)
+					move_to_selection
 				end
 			end
 		end

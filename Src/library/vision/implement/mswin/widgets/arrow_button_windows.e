@@ -32,31 +32,31 @@ feature -- Initialization
 feature -- Status report
 
 	center_alignment: BOOLEAN
-                        -- Is this ARROW_B currently center_aligned?	
+			-- Is this ARROW_B currently center_aligned?	
 
 	down: BOOLEAN is
-                        -- Is current direction down?
-                do
-                        Result := (direction = down_direction)
-                end
+			-- Is current direction down?
+		do
+			Result := (direction = down_direction)
+		end
 
 	left: BOOLEAN is
 			-- Is current direction left?
-                do
-                        Result := (direction = left_direction)
-                end
+		do
+			Result := (direction = left_direction)
+		end
 
 	right: BOOLEAN is
 			-- Is current direction right?
-                do
-                        Result := (direction = right_direction)
-                end
+		do
+			Result := (direction = right_direction)
+		end
 
 	up: BOOLEAN is
 			-- Is current direction up?
-                do
-                        Result := (direction = up_direction)
-                end
+		do
+			Result := (direction = up_direction)
+		end
 
 feature -- Status setting
 

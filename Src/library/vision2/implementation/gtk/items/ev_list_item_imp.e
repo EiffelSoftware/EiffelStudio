@@ -137,15 +137,15 @@ feature -- element change
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
 		local
-			--FIXME combo_par: EV_COMBO_BOX_IMP
+			combo_par: EV_COMBO_BOX_IMP
 		do
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 
 			-- the gtk part if the parent is a combo_box
-			--FIXME combo_par ?= parent_imp
-			--FIXME if (combo_par /= Void) then
-			--FIXME 	C.gtk_combo_set_item_string (combo_par.c_object, c_object, eiffel_to_c (txt))
-			--FIXME end
+			combo_par ?= parent_imp
+			if (combo_par /= Void) then
+				C.gtk_combo_set_item_string (combo_par.c_object, c_object, eiffel_to_c (txt))
+			end
 		end
 
 feature -- Assertion
@@ -185,6 +185,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/15 19:21:06  king
+--| Uncommented combo box item setting in set_text
+--|
 --| Revision 1.25  2000/02/14 20:38:35  oconnor
 --| mergerd from HACK-O-RAMA
 --|

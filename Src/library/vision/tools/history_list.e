@@ -23,14 +23,13 @@ inherit
 			wipe_out as list_wipe_out
 		export
 			{NONE} all;
-			{ANY} before, isfirst, islast, count, index, first, last, i_th, empty
+			{ANY} off, after, before, isfirst, islast, count, index, first, last, i_th, empty
 		end
 
 creation
-
 	make
 
-feature -- Creation
+feature -- Initialization
 
     make is
             -- Create a history based on a list.
@@ -39,49 +38,38 @@ feature -- Creation
             !! history_windows.make
         end;
 
-feature {HISTORY_L_W}
-
-	add_history_window (history_window: HISTORY_L_W) is
-			-- Add `history_window' to the list of the current history.
-		require
-			not (history_window = Void)
-		do
-			history_windows.finish;
-			history_windows.put_right (history_window)
-		end;
-
-feature 
+feature -- Cursor movement
 
 	back is
 			-- Move cursor backward one position.
 		require
-			not_offleft: index > 0
+			not_off: not off
 		do
 			item.undo;
 			list_back;
 			from
 				history_windows.start
 			until
-				history_windows.off
+				history_windows.after
 			loop
 				history_windows.item.back;
 				history_windows.forth
 			end
 		ensure
---			position = old position - 1
+			position = old position - 1
 		end;
 
 	forth is
 			-- Move cursor forward one position.
 		require
-			not_empty_nor_islast: count > 0 and then index < count
+			not_after: not after
 		do
 			list_forth;
 			item.redo;
 			from
 				history_windows.start
 			until
-				history_windows.off
+				history_windows.after
 			loop
 				history_windows.item.forth;
 				history_windows.forth
@@ -105,7 +93,7 @@ feature
 					list_forth;
 					item.redo
 				end
-				elseif i < index then
+			elseif i < index then
 				from
 				until
 					i = index
@@ -117,7 +105,7 @@ feature
 			from
 				history_windows.start
 			until
-				history_windows.off
+				history_windows.after
 			loop
 				history_windows.item.go_i_th (i);
 				history_windows.forth
@@ -126,12 +114,7 @@ feature
 			index = i
 		end;
 
-feature {NONE}
-
-	history_windows: LINKED_LIST [HISTORY_L_W];
-			-- List of popup windows representing current history
-
-feature 
+feature -- Element change
 
 	record (a_command: UNDOABLE) is
 			-- Insert `a_command' after the cursor position, and place
@@ -142,12 +125,14 @@ feature
 			from
 				history_windows.start
 			until
-				history_windows.off
+				history_windows.after
 			loop
-				history_windows.item.record (a_command.name);
+				history_windows.item.record (a_command);
 				history_windows.forth
 			end
 		end;
+
+feature -- Removal
 
 	remove_after is
 			-- Remove all commands after the cursor position.
@@ -161,33 +146,29 @@ feature
 				until
 					islast or else (i > n)
 				loop
+					from
+						history_windows.start
+					until
+						history_windows.after
+					loop
+						history_windows.item.remove_after;
+						history_windows.forth
+					end;
 					remove_right;
 					i := i + 1
 				end
 				from
 					history_windows.start
 				until
-					history_windows.off
+					history_windows.after
 				loop
-					history_windows.item.remove_after;
+					history_windows.item.update_widgets;
 					history_windows.forth
-				end
+				end;
 			end
 		ensure
 			islast_unless_empty: (not empty) implies islast
 		end;
-
-feature {HISTORY_L_W}
-
-	remove_history_window (history_window: HISTORY_L_W) is
-			-- Remove `history_window' to the list of the current history.
-		require
-			not (history_window = Void)
-		do
-			-- not currently implemented
-		end;
-
-feature 
 
 	wipe_out is
 			-- Make history empty.
@@ -203,12 +184,30 @@ feature
 			end
 		end;
 
-invariant
+feature {HISTORY_L_W} -- Implementation
 
-	not_offright_unless_empty: (not empty) implies (not after)
+	history_windows: LINKED_LIST [HISTORY_L_W];
+			-- List of popup windows representing current history
 
-end
+	add_history_window (history_window: HISTORY_L_W) is
+			-- Add `history_window' to the list of the current history.
+		require
+			not (history_window = Void)
+		do
+			history_windows.finish;
+			history_windows.put_right (history_window)
+		end;
 
+	remove_history_window (history_window: HISTORY_L_W) is
+			-- Remove `history_window' to the list of the current history.
+		require
+			history_window_not_void: history_window /= Void
+		do
+			history_windows.start;
+			history_windows.prune (history_window)
+		end;
+
+end -- class HISTORY_LIST
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -86,24 +86,19 @@ rt_public void update(char ignore_updt)
 	}
 
 /* TEMPORARY */
-#define UPDTLEN 16
-
-#ifdef EIF_WIN32
-#	define UPDT_NAME "\\melted.eif"
-#elif defined __VMS
-#	define UPDT_NAME "melted.eif"
-#else
-#	define UPDT_NAME "/melted.eif"
-#endif
+#define UPDTLEN 255
 
 	meltpath = eif_getenv ("MELT_PATH");
 
+		/* We add 10 to the length of `filename' which corresponds to the size of
+		 * ".melted" plus an extra 3 characters needed for the different platform
+		 * directory separators */
 	if (meltpath) {
-		filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
+		filename = (char *)cmalloc (strlen (meltpath) + strlen (egc_system_name) + 10);
 	}
 	else {
 		meltpath = NULL;
-		filename = (char *)cmalloc (UPDTLEN + 3);
+		filename = (char *)cmalloc (UPDTLEN + 10);
 	}
 
 	if (filename == (char *)0){
@@ -120,7 +115,14 @@ rt_public void update(char ignore_updt)
 		strcpy (filename, ".");
 #endif /* __VMS */
 
-	strcat(filename, UPDT_NAME);
+#ifdef EIF_WIN32
+	strcat(filename, "\\");
+#elif not defined __VMS
+	strcat(filename, "/");
+#endif
+
+	strcat (filename, egc_system_name);
+	strcat (filename, ".melted");
 
 #ifdef DEBUG
 	dprintf(1)("Frozen level = %d\n", zeroc);
@@ -130,6 +132,9 @@ rt_public void update(char ignore_updt)
 	if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		print_err_msg(stderr, "Error: could not open Eiffel update file %s\n", filename);
 		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
+#ifdef EIF_WIN32
+		eif_console_cleanup();
+#endif
 		exit(1);
 	}
 	xfree (filename);

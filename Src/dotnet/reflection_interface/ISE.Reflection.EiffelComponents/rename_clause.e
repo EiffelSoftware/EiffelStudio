@@ -76,7 +76,7 @@ feature -- Status Report
 
 	equals (obj: RENAME_CLAUSE): BOOLEAN is
 		indexing
-			description: "Is Current equals to `obj'?"
+			description: "Is Current equal to `obj'?"
 			external_name: "Equals"
 		do
 			Result := source_name.to_lower.equals_string (obj.source_name.to_lower) and target_name.to_lower.equals_string (obj.target_name.to_lower)

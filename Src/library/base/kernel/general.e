@@ -31,7 +31,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			Result := c_conforms_to ($Current, $other)
+			Result := c_conforms_to ($other, $Current)
 		end;
 
 feature -- Comparison

@@ -40,6 +40,16 @@ feature {NONE}
 			Result := file_name
 		end;
 
+	Default_class_file: STRING is
+		local
+			file_name: FILE_NAME
+		once
+			!! file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "help", "defaults">>);
+			file_name.set_file_name (Default_Class_filename);
+			Result := file_name
+		end;
+
 	Default_ace_name: STRING is
 		local
 			file_name: FILE_NAME

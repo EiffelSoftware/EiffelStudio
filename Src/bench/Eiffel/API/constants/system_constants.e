@@ -30,6 +30,8 @@ feature {NONE}
 
 	Default_Ace_file: STRING is "default.ace";
 
+	Default_Class_filename: STRING is "default.cls";
+
 	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Descriptor_suffix: STRING is "D"

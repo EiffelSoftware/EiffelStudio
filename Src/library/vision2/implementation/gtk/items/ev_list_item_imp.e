@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			-- 
 		do
 			check_box := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
-			gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 		end
 		
 	set_parent_imp (a_container: EV_CONTAINER_IMP) is

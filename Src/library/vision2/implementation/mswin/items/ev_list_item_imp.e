@@ -11,12 +11,7 @@ class
 inherit
 	EV_LIST_ITEM_I
 
-	EV_PIXMAPABLE_IMP
-
 	EV_ITEM_IMP
-		export {EV_LIST_ITEM_CONTAINER_IMP}
-			id,
-			set_id
 		redefine
 			parent
 		end
@@ -45,9 +40,14 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: parent /= Void
 			end
-			parent.set_name (txt)
+			text := txt
 			initialize_list (item_command_count)
 		end
+
+feature -- Access
+
+	text: STRING 
+			-- Current label of the item
 
 feature -- Status report
 
@@ -57,17 +57,12 @@ feature -- Status report
 			Result := parent.is_selected (id)
 		end
 
-	text: STRING is
-			-- Current label of the item
-		do
-			Result := parent.i_th_text (id)
-		end
-
 	destroyed: BOOLEAN is
 			-- Is current object destroyed ?
 			-- Yes if the item doesn't exist in the parent.
 		do
-			Result := not parent.ev_children.has (Current)
+			Result := False
+				--not parent.ev_children.has (Current)
 		end
 
 	index: INTEGER is
@@ -111,15 +106,6 @@ feature -- Status setting
 			set_selected (not is_selected)
 		end
 
-feature -- Element change
-
-	set_text (str: STRING) is
-			-- Set `text' to `str'.
-		do
-			parent.delete_string (id)
-			parent.insert_string_at (str, id)
-		end
-
 --	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void.
@@ -142,6 +128,19 @@ feature -- Element change
 --			end
 --		end
 
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Make `txt' the new label of the item.
+		do
+			text := txt
+--			parent.invalidate
+			if parent /= Void then
+				parent.delete_string (id)
+				parent.insert_string_at (txt, id)
+			end
+		end
+
 feature -- Event : command association
 
 	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
@@ -151,7 +150,12 @@ feature -- Event : command association
 			add_command (Cmd_item_dblclk, cmd, arg)
 		end	
 
-feature {EV_LIST_ITEM_CONTAINER_IMP} -- Implementation
+feature {NONE} -- Implementation
+
+	parent: EV_LIST_ITEM_CONTAINER_IMP
+			-- list that contains the current item.
+
+feature {EV_LIST_ITEM_CONTAINER_IMP} -- Implementation for drawing
 
 	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
 			-- Draw the current item according to the given
@@ -186,17 +190,7 @@ feature {EV_LIST_ITEM_CONTAINER_IMP} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	wel_window: WEL_WINDOW is
-			-- Window used to create the pixmap. It has to be
-			-- a wel_control.
-		do
-			Result ?= parent
-		end
-
-	parent: EV_LIST_ITEM_CONTAINER_IMP
-			-- list that contains the current item.
+feature {NONE} -- Implementation for drawing
 
 	draw_focus (dc: WEL_DC; rect: WEL_RECT) is
 			-- Draw the focus line around the button.

@@ -67,6 +67,19 @@ feature {NONE}
 			Result.append (upper_name)
 		end;
 
+	w_Cannot_find_cluster (cluster_name: STRING): STRING is
+		require
+			cluster_name_not_void: cluster_name /= Void
+		local
+			lower_name: STRING
+		do
+			!!Result.make (30);
+			Result.append ("Cannot find cluster ");
+			lower_name := clone (cluster_name);
+			lower_name.to_upper;
+			Result.append (lower_name)
+		end;
+
 	w_Cannot_find_feature (feat_name, class_name: STRING): STRING is
 		require
 			feat_name_not_void: feat_name /= Void;

@@ -24,8 +24,8 @@ feature
 		local
 			dir: PLAIN_TEXT_FILE;
 			bpdir: PLAIN_TEXT_FILE;
-			restore_name: STRING;
-			storage_name: STRING;
+			restore_name: FILE_NAME;
+			storage_name: FILE_NAME;
 			char: CHARACTER;	
 			storer: STORER;
 			restore_file: PLAIN_TEXT_FILE;
@@ -42,17 +42,15 @@ feature
 			end;	
 			!! dir.make (proj_dir);
 			if dir.exists then
-				!!restore_name.make (0);
-				restore_name.append (Environment.restore_directory);
-				restore_name.extend (Environment.directory_separator);
-				restore_name.append (Environment.interface_file_name);
+				!! restore_name.make_from_string (Environment.restore_directory);
+				restore_name.extend (Environment.restore_directory);
+				restore_name.set_file_name (Environment.interface_file_name);
 				!! restore_file.make (restore_name);
-				!! bpdir.make(Environment.storage_directory);
+				!! bpdir.make (Environment.storage_directory);
 				if bpdir.exists then
-					!!storage_name.make (0);
-					storage_name.append (Environment.storage_directory);
-					storage_name.extend (Environment.directory_separator);
-					storage_name.append (Environment.interface_file_name);
+					!! storage_name.make_from_string (Environment.storage_directory);
+					storage_name.extend (Environment.storage_directory);
+					storage_name.set_file_name (Environment.interface_file_name);
 					!! storage_file.make (storage_name);
 					if 
 						restore_file.exists and then
@@ -76,10 +74,10 @@ feature
 			if box = question_box then
 				if yes then
 					retrieve_project (Environment.restore_directory)
-					history_window.set_saved_application;
-				else
-					retrieve_project (Environment.storage_directory)
 					history_window.set_unsaved_application;
+				else
+					retrieve_project (Environment.storage_directory);
+					history_window.set_saved_application;
 				end;
 			end
 		end;	
@@ -101,10 +99,6 @@ feature {NONE}
 				mp.set_watch_shape;
 				!!storer.make;
 				storer.retrieve (dir);
-				if not main_panel.project_initialized then
-					display_init_windows;
-				end;
-				storer.display_retrieved_windows;
 				init_main_panel;
 				mp.restore;
 			else

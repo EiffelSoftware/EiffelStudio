@@ -44,6 +44,29 @@ feature -- Access
 			Result := implementation.get_item(index)
 		end
 
+	selected_item: EV_LIST_ITEM is
+			-- Item which is currently selected, for a multiple
+			-- selection, it gives the item which has the focus.
+		require
+			exists: not destroyed
+			item_selected: selected
+		do
+			Result := implementation.selected_item
+		end
+
+	selected_items: LINKED_LIST [EV_LIST_ITEM] is
+			-- List of all the selected items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
+		require
+			exists: not destroyed
+			item_selected: selected
+		do
+			Result := implementation.selected_items
+		end
+
 feature -- Status report
 
 	count: INTEGER is

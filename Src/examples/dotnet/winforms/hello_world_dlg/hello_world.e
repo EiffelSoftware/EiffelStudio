@@ -4,6 +4,14 @@ indexing
 class
 	HELLO_WORLD
 
+inherit
+	
+	WINFORMS_FORM
+		rename
+			make as make_form
+		redefine
+			dispose_boolean
+		end
 
 create
 	make
@@ -13,19 +21,12 @@ feature {NONE} -- Initialization
 	make is
 		indexing
 			description: "Entry point."
-		local
-			dummy: SYSTEM_OBJECT
 		do
-			create my_window.make
 			initialize_components
-			
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
@@ -49,17 +50,17 @@ feature -- Implementation
 			create my_text_box.make
 			
 				-- Initialize window.
-			my_window.set_text (("Hello world").to_cil)
---			my_window.set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
+			set_text (("Hello world").to_cil)
+--			set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
-			my_window.set_accessible_role (feature {WINFORMS_ACCESSIBLE_ROLE}.window)
-			my_window.set_accessible_name (("AccessibleForm").to_cil)
-			my_window.set_accept_button (my_button)
-			my_window.set_accessible_description (("Simple Form that demonstrates accessibility").to_cil)
+			set_auto_scale_base_size (l_size)
+			set_accessible_role (feature {WINFORMS_ACCESSIBLE_ROLE}.window)
+			set_accessible_name (("AccessibleForm").to_cil)
+			set_accept_button (my_button)
+			set_accessible_description (("Simple Form that demonstrates accessibility").to_cil)
 --			set_client_size_size (create {DRAWING_SIZE}.make_from_width_and_height (392, 117))
 			l_size.make_from_width_and_height (392, 117)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 			
 				-- Initialize my_button.
 			my_button.set_accessible_description (("Once you've entered some text push this my_button").to_cil)
@@ -88,19 +89,26 @@ feature -- Implementation
 			l_size.make_from_width_and_height (360, 20)
 			my_text_box.set_size (l_size)
 			
-			my_window.controls.add (my_button)
-			my_window.controls.add (my_text_box)
+			controls.add (my_button)
+			controls.add (my_text_box)
 		end
 
 
 feature {NONE} -- Implementation
 
-	dispose is
-			-- method call when form is disposed.
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
 		local
 			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (("Disposed !").to_cil)
+			if not retried then
+				dummy := feature {WINFORMS_MESSAGE_BOX}.show (("Disposed !").to_cil)
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
 		end
 	
 	my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is

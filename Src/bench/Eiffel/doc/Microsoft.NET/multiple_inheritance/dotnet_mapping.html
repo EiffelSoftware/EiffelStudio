@@ -91,6 +91,67 @@ constructor, and the second one through a factory call. Both will be implemented
 in case there is no way to use the .NET constructor mechanism, but we will try
 to stick as much as possible on the use of .NET constructor.</p>
 
+<h2>
+A real example</h2>
+
+<p>
+Let's suppose we have the following example. In which we do most of what can be
+seen in an Eiffel library that uses multiple inheritance.
+<pre>class
+	A
+feature
+	f is do ... end
+	g (x: X) is do ... end
+end</pre>
+<pre>class B
+inherit
+	A
+		rename f as h
+		redefine g
+		end
+feature
+	g (y: Y) is do ... end
+end</pre>
+<pre>class C
+inherit
+	A
+end</pre>
+<pre>class
+	D
+inherit
+	B
+		select
+			g
+		end
+	C
+		rename
+			g as A_g
+		select
+			f
+		end
+end</pre>
+<pre>deferred class F
+feature
+	f is
+		do
+		end
+end</pre>
+<pre>class E
+inherit
+	C
+		undefine f end
+	F
+end</pre>
+<pre>class X
+end</pre>
+<pre>class Y
+inherit X
+end</pre>
+<p>This is better described by the following BON diagram:<p align="center"><img border="0" src="diamond_inheritance.png" width="484" height="216"><p>Let's
+have a look at what we should generate as an inheritance hierarchy:<p align="center"><img border="0" src="diamond_inheritance_on_dotnet.png" width="661" height="476">
+<p>The hierarchy is quite complex, but it is required to export the Eiffel
+multiple inheritance to other languages. So far not other simple solutions have
+been found, apart from implemented natively multiple inheritance on .NET.</p>
 </body>
 
 </html>

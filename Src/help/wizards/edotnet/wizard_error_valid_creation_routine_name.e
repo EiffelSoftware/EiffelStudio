@@ -31,16 +31,8 @@ feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("Creation Routine Name Error")
-			message.set_text (
-				"The creation routine name that you have specified does not conform%N%
-				%the lace specification.%N%
-				%%N%
-				%A valid creation routine name is not empty and only contains letters,%N%
-				%figures, and underscores. The first character must%N%
-				%be a letter.%N%
-				%%N%
-				%Click Back and choose a valid creation routine name.")
+			title.set_text (interface_names.t_Creation_routine_name_error)
+			message.set_text (interface_names.m_Creation_routine_name_error)
 		end
 
 	final_message: STRING is
@@ -52,7 +44,7 @@ feature {WIZARD_STATE_WINDOW}
 	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Wizard
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
+			create Result.make_from_string (Wizard_icon_name)
 			Result.add_extension (pixmap_extension)
 		end
 	

@@ -31,11 +31,8 @@ feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text (".NET Assembly Filename Error")
-			message.set_text (
-				"The .NET Assembly filename that you have chosen is not valid.%N%
-				%%N%
-				%Please click Back and choose another filename.")
+			title.set_text (interface_names.t_Filename_error)
+			message.set_text (interface_names.m_Filename_error)
 		end
 
 	final_message: STRING is
@@ -47,7 +44,7 @@ feature {WIZARD_STATE_WINDOW}
 	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Wizard
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
+			create Result.make_from_string (Wizard_icon_name)
 			Result.add_extension (pixmap_extension)
 		end
 	

@@ -53,14 +53,14 @@ feature -- Basic Operation
 				
 				-- Create tables.
 			create references_to_add
-			references_to_add.set_column_titles (<< "Available assemblies Name", "Version", "Culture", "Public Key" >>)
+			references_to_add.set_column_titles (<< interface_names.l_Available_assemblies_name, interface_names.l_Version, interface_names.l_Culture, interface_names.l_Public_key >>)
 			references_to_add.set_column_widths (default_column_widths)
 			references_to_add.set_minimum_height (Dialog_unit_to_pixels(110))
 			references_to_add.select_actions.extend (agent update_buttons_state)
 			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
-			added_references.set_column_titles (<< "Selected assemblies Name", "Version", "Culture", "Public Key" >>)
+			added_references.set_column_titles (<< interface_names.l_Selected_assemblies_name, interface_names.l_Version, interface_names.l_Culture, interface_names.l_Public_key >>)
 			added_references.set_column_widths (default_column_widths)
 			added_references.set_minimum_height (Dialog_unit_to_pixels(70))
 			added_references.select_actions.extend (agent update_buttons_state)
@@ -68,19 +68,19 @@ feature -- Basic Operation
 			fill_lists
 			
 				-- Create buttons.
-			create add_button.make_with_text ("Add")
+			create add_button.make_with_text (interface_names.b_Add)
 			add_button.select_actions.extend (agent select_assembly)
 			set_default_size_for_button (add_button)
 			
-			create remove_button.make_with_text ("Remove")
+			create remove_button.make_with_text (interface_names.b_Remove)
 			remove_button.select_actions.extend (agent unselect_assembly)
 			set_default_size_for_button (remove_button)
 
-			create import_button.make_with_text ("ISE Assembly Manager")
+			create import_button.make_with_text (interface_names.b_Assembly_manager)
 			import_button.select_actions.extend (agent import_assembly)
 			set_default_size_for_button (import_button)
 
-			create emit_button.make_with_text ("Import Local Assemblies")
+			create emit_button.make_with_text (interface_names.b_Import_local_assemblies)
 			emit_button.select_actions.extend (agent emit_assembly)
 			set_default_size_for_button (emit_button)
 			
@@ -179,8 +179,8 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Disable the caption text for this state.
 		do
-			title.set_text ("Assembly selection")
-			subtitle.set_text ("Choose the .NET assemblies the Eiffel project should include")
+			title.set_text (interface_names.t_Third_state)
+			subtitle.set_text (Subtitle_text)
 			message_box.hide
 		end
 
@@ -428,4 +428,7 @@ feature {NONE} -- Implementation
 			(create {EV_ENVIRONMENT}).application.process_events
 		end
 
+	Subtitle_text: STRING is "Choose the .NET assemblies the Eiffel project should include"
+			-- Third state subtitle
+			
 end -- class WIZARD_THIRD_STATE

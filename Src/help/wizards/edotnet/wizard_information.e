@@ -20,10 +20,10 @@ feature  -- Initialization
 		do
 			Precursor
 			icon_location := wizard_resources_path
-			icon_location := icon_location + "\eiffel.ico"
+			icon_location := icon_location + Icon_relative_filename
 			generate_dll := False
-			root_class_name := "APPLICATION"
-			creation_routine_name := "make"
+			root_class_name := Default_root_class_name
+			creation_routine_name := Default_creation_routine_name
 			dotnet_assembly_filename := Empty_string
 			emit_directory := Default_directory
 			eiffel_formatting := True
@@ -100,7 +100,7 @@ feature -- Access
 			-- If set to False, it will generate an EXE.
 	
 	root_class_name: STRING
-			-- Name of the root class of the Eiffel # project
+			-- Name of the root class of the Eiffel.NET project
 
 	creation_routine_name: STRING
 			-- Name of the creation routine of the root class
@@ -129,9 +129,9 @@ feature -- Access
 			-- "dll" if `generate_dll' is set, "exe" otherwise
 		do
 			if generate_dll then
-				Result := "dll"
+				Result := Dll_type
 			else
-				Result := "exe"
+				Result := Exe_type
 			end
 		end
 	
@@ -168,7 +168,7 @@ feature -- Access
 					an_assembly_dependencies.after
 				loop
 					a_dependency := an_assembly_dependencies.item					
-					if not a_dependency.name.is_equal ("mscorlib") and not has_assembly (tmp_list, a_dependency) then
+					if not a_dependency.name.is_equal (Mscorlib_name) and not has_assembly (tmp_list, a_dependency) then
 						tmp_list.extend (a_dependency)
 					end
 					an_assembly_dependencies.forth
@@ -278,7 +278,7 @@ feature -- Basic operation
 			until
 				found or available_assemblies.after
 			loop
-				if available_assemblies.item.name.is_equal ("mscorlib") then
+				if available_assemblies.item.name.is_equal (Mscorlib_name) then
 					found := True
 					--selected_assemblies.extend (available_assemblies.item)
 					available_assemblies.remove
@@ -301,7 +301,7 @@ feature -- Basic operation
 			loop
 				an_assembly_name := clone (available_assemblies.item.name)
 				an_assembly_name.to_lower
-				if an_assembly_name.is_equal ("system") then
+				if an_assembly_name.is_equal (System_name) then
 					found := True
 					if not has_assembly (selected_assemblies, available_assemblies.item) then
 						selected_assemblies.extend (available_assemblies.item)
@@ -380,8 +380,8 @@ feature {NONE} -- Implementation
 				a_culture := imported_assemblies.array_item (i + 2)
 				a_public_key := imported_assemblies.array_item (i + 3)
 				a_path := imported_assemblies.array_item (i + 4)
-				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index ("$ISE_EIFFEL", 1) > 0 then
-					a_path.replace_substring_all ("$ISE_EIFFEL", Eiffel_installation_dir_name)
+				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_key, 1) > 0 then
+					a_path.replace_substring_all (Eiffel_key, Eiffel_installation_dir_name)
 				end
 				create an_assembly_info.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
 				available_assemblies.extend (an_assembly_info)
@@ -395,26 +395,20 @@ feature {NONE} -- Implementation
 			buttons_labels: ARRAY [STRING]
 		do
 			create buttons_labels.make (1, 3)
-			buttons_labels.put ("Abort", 1)
-			buttons_labels.put ("Retry", 2)
-			buttons_labels.put ("Ignore", 3)
+			buttons_labels.put (interface_names.b_Abort, 1)
+			buttons_labels.put (interface_names.b_Retry, 2)
+			buttons_labels.put (Interface_names.b_Ignore, 3)
 			create confirmation_dialog.make_with_text (Confirmation_message)
 			confirmation_dialog.set_buttons (buttons_labels)
-			confirmation_dialog.button ("Retry").select_actions.extend (~on_retry)
-			confirmation_dialog.button ("Ignore").select_actions.extend (~on_ignore)
-			confirmation_dialog.set_default_push_button (confirmation_dialog.button ("Abort"))
-			confirmation_dialog.set_title (".NET Wizard - Error")
+			confirmation_dialog.button (interface_names.b_Retry).select_actions.extend (~on_retry)
+			confirmation_dialog.button (interface_names.b_Ignore).select_actions.extend (~on_ignore)
+			confirmation_dialog.set_default_push_button (confirmation_dialog.button (interface_names.b_Abort))
+			confirmation_dialog.set_title (t_Confirmation_dialog)
 			confirmation_dialog.show
 		end
 
 	confirmation_dialog: EV_QUESTION_DIALOG
 			-- Confirmation dialog
-	
-	Confirmation_message: STRING is "The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
-						%- Abort: To close this dialog without doing anything.%N%
-						%- Retry: To retry in case the other process has exited.%N%
-						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache."
-			-- Confirmation message
 		
 	on_retry is
 			-- Retry assembly importation.
@@ -444,8 +438,43 @@ feature {NONE} -- Implementation
 			non_void_directory: Result /= Void
 			not_empty_directory: not Result.is_empty
 		end
-	
+
+feature {NONE} -- Constants
+
 	Dotnet_library_relative_path: STRING is "\library.net\"
 			-- Path to `library.net' folder relatively to the Eiffel delivery
-			
+	
+	Icon_relative_filename: STRING is "\eiffel.ico"
+			-- Filename of `eiffel.ico' relatively to `icon_location'
+	
+	Default_root_class_name: STRING is "APPLICATION"
+			-- Default root class name
+	
+	Default_creation_routine_name: STRING is "make"
+			-- Default creation routine name
+	
+	Dll_type: STRING is "dll"
+			-- DLL type
+	
+	Exe_type: STRING is "exe"
+			-- EXE type
+	
+	Mscorlib_name: STRING is "mscorlib"
+			-- Name of `mscorlib.dll'
+	
+	System_name: STRING is "system"
+			-- Name of `System.dll'
+	
+	Eiffel_key: STRING is "$ISE_EIFFEL"
+			-- Key of environment variable to the Eiffel delivery
+	
+	t_Confirmation_dialog: STRING is ".NET Wizard - Error"
+			-- Title of confirmation dialog
+
+	Confirmation_message: STRING is "The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
+						%- Abort: To close this dialog without doing anything.%N%
+						%- Retry: To retry in case the other process has exited.%N%
+						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache."
+			-- Confirmation message	
+	
 end -- class WIZARD_INFORMATION

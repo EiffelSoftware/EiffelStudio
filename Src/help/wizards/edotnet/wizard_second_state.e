@@ -1,8 +1,5 @@
 indexing
 	description	: "Page in which the user choose to create an EXE or a DLL"
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
 
 class
 	WIZARD_SECOND_STATE
@@ -38,17 +35,17 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do 
-			create rb_project_type_exe.make_with_text ("Executable")
-			create rb_project_type_dll.make_with_text ("Dynamic-Link Library")
+			create rb_project_type_exe.make_with_text (Exe_type)
+			create rb_project_type_dll.make_with_text (Dll_type)
 
 			create root_class_name.make (Current)
-			root_class_name.set_label_string_and_size ("Root class name", 10)
+			root_class_name.set_label_string_and_size (interface_names.l_Root_class_name, 10)
 			root_class_name.set_textfield_string (wizard_information.root_class_name)
 			root_class_name.generate
 			root_class_name.change_actions.extend (agent on_change_root_class_name)
 
 			create creation_routine_name.make (Current)
-			creation_routine_name.set_label_string_and_size ("Creation routine name", 10)
+			creation_routine_name.set_label_string_and_size (interface_names.l_Creation_routine_name, 10)
 			creation_routine_name.set_textfield_string (wizard_information.creation_routine_name)
 			creation_routine_name.generate
 			creation_routine_name.change_actions.extend (agent on_change_root_class_name)
@@ -138,11 +135,9 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text (".NET Application type and Project settings")
-			subtitle.set_text ("You can choose to create a .exe or a .dll file%N%
-						%and select the names of the root class and its creation routine.")
-			message.set_text (
-				"You can create an executable file (.exe) or  dynamic-link library (.dll)")
+			title.set_text (interface_names.t_Second_state)
+			subtitle.set_text (Subtitle_text)
+			message.set_text (interface_names.m_Second_state)
 		end
 
 	preview_pixmap: EV_PIXMAP
@@ -190,5 +185,16 @@ feature {NONE} -- Implementation
 			-- Action performed when the user changes the creation routine name of the application
 		do
 		end
-		
+
+feature {NONE} -- Constants
+
+	Exe_type: STRING is "Executable"
+			-- Meaning of EXE
+	
+	Dll_type: STRING is "Dynamic-Link Library"
+			-- Meaning of DLL
+	
+	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
+					%and select the names of the root class and its creation routine."
+
 end -- class WIZARD_SECOND_STATE

@@ -49,7 +49,7 @@ feature -- basic Operations
 	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
-			 create Result.make_from_string ("eiffel_wizard_icon")
+			 create Result.make_from_string (Wizard_icon_name)
 			 Result.add_extension (pixmap_extension)
 		end
 	

@@ -89,19 +89,25 @@ feature -- dragging
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			if fs_valid and then class_i /= Void then
-				Result := Universe.class_i (class_i.class_name) = class_i
-			else
-				Result := False
-			end
+			Result := fs_valid and then class_i /= Void
 		end;
 
 	synchronized_stone: STONE is
 			-- Clone of `Current' after a recompilation
-			-- (May be Void if not valid anymore)
+			-- (May be Void if not valid anymore. It may also 
+			-- be a classc_stone if the class is compiled now)
 		do
 			if class_i /= Void then
-				Result := clone (Universe.class_stone (class_i.class_name))
+				if
+					Universe.clusters.has (class_i.cluster) and then
+					class_i.cluster.classes.has_item (class_i)
+				then
+					if class_i.compiled then
+						Result := class_i.compiled_class.stone
+					else
+						Result := class_i.stone
+					end
+				end
 			end
 		end;
 

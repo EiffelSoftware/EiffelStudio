@@ -10,13 +10,13 @@ inherit
 		redefine
 			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_to_option_list, add_widget_callbacks 
+			add_widget_callbacks, remove_widget_callbacks
 		end;
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_to_option_list, add_widget_callbacks 
+			add_widget_callbacks, remove_widget_callbacks
 		select
 			context_initialization
 		end;
@@ -47,6 +47,22 @@ feature
 				end
 			end;
 		end;
+
+	remove_widget_callbacks is
+			-- Remove callbacks.
+			-- (Need to only remove callbacks part of a list
+			-- since set_action will overwrite previous callbacks).
+		local
+			ms_win: STRING
+		do
+			ms_win := "MS_WINDOW";
+			if not ms_win.is_equal (toolkit.name) then
+				widget.button.remove_pointer_motion_action 
+					(Eb_selection_mgr, first_arg)
+				widget.button.remove_enter_action (Eb_selection_mgr, Current);
+			end
+		end;
+
 
 feature 
 
@@ -99,14 +115,6 @@ feature {NONE}
 			!!Result.make ("Opt_pull");
 		end;
 
-	add_to_option_list (opt_list: ARRAY [INTEGER]) is
-		do
-			opt_list.put (Context_const.geometry_form_nbr,
-					Context_const.Geometry_format_nbr);
-			opt_list.put (Context_const.pulldown_sm_form_nbr,
-					Context_const.Submenu_format_nbr);
-		end;
-	
 feature 
 
 	eiffel_type: STRING is "OPT_PULL";

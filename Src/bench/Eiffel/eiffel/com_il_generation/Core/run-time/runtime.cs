@@ -115,6 +115,7 @@ feature -- Assertions
 		// Note that `val' is not a combination.
 	{
 		ASSERTION_LEVEL_ENUM type_assertion_level;
+		object obj;
 		bool Result;
 
 		#if ASSERTIONS
@@ -130,8 +131,13 @@ feature -- Assertions
 		Result = !in_assertion();
 		if (Result) {
 				// Let's extract the specified assertion level for type `t'.
-			if ((assertion_levels != null) && (assertion_levels.ContainsKey (t))) {
-				type_assertion_level = (ASSERTION_LEVEL_ENUM) assertion_levels [t];
+			if ((assertion_levels != null)) {
+				obj = assertion_levels [t];
+				if (obj != null) {
+					type_assertion_level = (ASSERTION_LEVEL_ENUM) obj;
+				} else {
+					type_assertion_level = ASSERTION_LEVEL_ENUM.no;
+				}
 			} else {
 				type_assertion_level = ASSERTION_LEVEL_ENUM.no;
 			}

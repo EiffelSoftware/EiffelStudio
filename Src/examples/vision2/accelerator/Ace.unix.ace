@@ -1,58 +1,88 @@
+system
+	"accelerator"
+
+root
+	ACCELERATOR: make_and_launch
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments (" ")
+	disabled_debug (yes)
+	disabled_debug ("ev_gtk_c_object_dispose")
+	disabled_debug ("ev_gtk_creation")
+	disabled_debug ("ev_gtk_destroy")
+	disabled_debug ("ev_gtk_dispose")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+
 --!----------------------------------------------------------------
 --! EiffelVision2-application Ace-file for the GTK platform.
 --!
 --! See notice at end of file.
 --! date: "$Date$
 --!----------------------------------------------------------------
-
-system
-	fig -- Your executable.
-
-root
-	ACCEL_TEST (accel): "make_and_launch"
-
-default
-	assertion (all)
-
-cluster
-
-	accel:					"."
-	devel:					"/home/brendel/local"
-	all base (devel):			"$/bbase/base"
-		exclude
-			"table_eiffel3"
-		end
-
-	all gel (devel):			"$/gel_remote"
-	new_event (devel):			"$/event"
-
-	all vision2 (devel):			"/home/brendel/hack-fig/vision2"
-		exclude 
-			"mswin"
-		end
-
-external
-	include_path:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib",
-		"`gtk-config --cflags`";
-	object:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-		"`gtk-config --libs`"
-
-end
-
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
+--! May be used only with ISE Eiffel, under terms of user license.
 --! Contact ISE for any other use.
 --!
 --! Interactive Software Engineering Inc.
 --! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
+--! 360 Storke Road, Goleta, CA 93117 USA
 --! Telephone 805-685-1006, Fax 805-685-6869
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+cluster
+	root_cluster:		"."
+
+
+	all base:		"$ISE_EIFFEL/library/base"
+		exclude
+			"table"; "desc"; "CVS"; 
+		end
+
+	gel:		"$ISE_EIFFEL/library/gel"
+		exclude
+			"CVS"; "clib"; 
+		end
+
+	all vision2_interface:		"$ISE_EIFFEL/library/vision2/interface"
+
+	all vision2_implementation:		"$EIFFEL_SRC/library/vision2/implementation"
+		exclude
+			"mswin"; "components"; "obsolete"; 
+		end
+
+external
+
+	include_path:
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(ISE_EIFFEL)/library/vision2/spec/include"
+
+	object:
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"-lpng -lz -lXtst"
+
+end

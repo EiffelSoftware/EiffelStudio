@@ -72,7 +72,11 @@ feature {NONE}
 				project_tool.set_changed (true);
 				Workbench.recompile;
 				if Workbench.successfull then
-					freezing_actions;
+						-- If a freezing already occured (due to a new external
+						-- or new derivation of SPECIAL), no need to freeze again.
+					if not System.freezing_occurred then
+						freezing_actions;
+					end
 					project_tool.set_changed (false);
 					project_tool.set_icon_name (System.system_name);
 					title := clone (l_Project);

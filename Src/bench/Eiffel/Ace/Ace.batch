@@ -12,18 +12,18 @@ cluster
 
 	-- EiffelBase
 
-		kernel:				"$EIFFEL4/library/base.old/kernel";
-		support:			"$EIFFEL4/library/base.old/support";
-		access:				"$EIFFEL4/library/base.old/structures/access";
-		cursors:			"$EIFFEL4/library/base.old/structures/cursors";
-		dispenser:			"$EIFFEL4/library/base.old/structures/dispenser";
-		list:				"$EIFFEL4/library/base.old/structures/list";
-		set:				"$EIFFEL4/library/base.old/structures/set";
-		sort:				"$EIFFEL4/library/base.old/structures/sort";
-		storage:			"$EIFFEL4/library/base.old/structures/storage";
-		table:				"$EIFFEL4/library/base.old/structures/table";
-		traversing:			"$EIFFEL4/library/base.old/structures/traversing";
-		tree:				"$EIFFEL4/library/base.old/structures/tree";
+		kernel:				"$EIFFEL4/library/base/kernel";
+		support:			"$EIFFEL4/library/base/support";
+		access:				"$EIFFEL4/library/base/structures/access";
+		cursors:			"$EIFFEL4/library/base/structures/cursors";
+		dispenser:			"$EIFFEL4/library/base/structures/dispenser";
+		list:				"$EIFFEL4/library/base/structures/list";
+		set:				"$EIFFEL4/library/base/structures/set";
+		sort:				"$EIFFEL4/library/base/structures/sort";
+		storage:			"$EIFFEL4/library/base/structures/storage";
+		table:				"$EIFFEL4/library/base/structures/table";
+		traversing:			"$EIFFEL4/library/base/structures/traversing";
+		tree:				"$EIFFEL4/library/base/structures/tree";
 
 	-- EiffelNet
 

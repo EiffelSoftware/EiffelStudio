@@ -242,7 +242,7 @@ feature
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 			-- Generate final portion of C code.
 		local
 			cpp_ext: CPP_EXTENSION_I
@@ -311,18 +311,12 @@ feature
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
 		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
-		local
-			is_class_separate: BOOLEAN
 		do
-			is_class_separate := class_type.is_separate
-
-			generate_end (gen_reg, class_type, is_class_separate)
+			generate_end (gen_reg, class_type)
 
 				-- Now generate the parameters of the call, if needed.
-			if not is_class_separate then
-				buf.putchar (')');
-				basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
-			end
+			buf.putchar (')');
+			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
 
 			if type.is_boolean then
 					-- macro EIF_TEST was generated

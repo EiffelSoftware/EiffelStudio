@@ -11,7 +11,7 @@ inherit
 			analyze, generate, unanalyze, enlarged, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call, generate_il, line_number, set_line_number
+			generate_il, line_number, set_line_number
 		end
 
 	ASSERT_TYPE
@@ -285,14 +285,6 @@ feature -- Inlining
 			expr := expr.inlined_byte_code
 		end
 
-feature -- Concurrent Eiffel
-
-	has_separate_call: BOOLEAN is
-			-- Is there a separate call in this byte node?
-		do
-			Result := expr.has_separate_call
-		end
-
 feature {NONE} -- Implementation 
 
 	make_precondition_byte_code (ba: BYTE_ARRAY) is
@@ -328,9 +320,6 @@ feature {NONE} -- Implementation
 
 				-- Assertion byte code
 			expr.make_byte_code (ba)
-			if System.has_separate and then expr.has_separate_call then
-				ba.append (Bc_sep_set)
-			end
 			ba.append (Bc_end_pre)
 			ba.mark_forward4
 

@@ -35,9 +35,6 @@ feature -- Access
 	once_index : INTEGER
 			-- Index of current once routine
 
-	il_external_creation: BOOLEAN
-			-- Is current call to external feature a creation one?
-
 	workbench_mode: BOOLEAN
 			-- Mode of generation: if set to True, generation of C code
 			-- for the workbench otherwise generation of C code in final
@@ -148,16 +145,6 @@ feature -- Access
 	is_argument_protected: BOOLEAN
 			-- Does current call need to protect some of its arguments?
 
-feature -- Concurrent Eiffel
-
-	has_separate_call_in_precondition: BOOLEAN
-		-- Is there separate feature call in precondition?
-
-	set_has_separate_call_in_precondition (v: BOOLEAN) is
-		do
-			has_separate_call_in_precondition := v
-		end
-
 feature -- Setting
 
 	set_first_precondition_block_generated (v: BOOLEAN) is
@@ -176,14 +163,6 @@ feature -- Setting
 			is_new_precondition_block_set: is_new_precondition_block = v
 		end
 
-	set_il_external_creation (v: BOOLEAN) is
-			-- Set `il_external_creation' with `v'.
-		do
-			il_external_creation := v
-		ensure
-			il_external_creation_set: il_external_creation = v
-		end
-		
 	set_is_argument_protected (v: BOOLEAN) is
 			-- Set `is_argument_protected' with `v'.
 		do
@@ -694,12 +673,6 @@ feature -- Setting
 			end
 		end
 
-	local_index (s: STRING): INTEGER is
-			-- Index in local variable array associated with string `s'.
-		do
-			Result := local_index_table.item (s)
-		end
-
 	need_gc_hook: BOOLEAN
 			-- Do we need to generate GC hooks?
 			-- Computed by compute_need_gc_hooks for each instance of BYTE_CODE.
@@ -830,17 +803,12 @@ feature -- Setting
 			inlined_dftype_current := 0
 			is_first_precondition_block_generated := False
 			is_new_precondition_block := False
-			has_separate_call_in_precondition := False
 			result_used := False
-			il_external_creation := False
 			current_feature := Void
 			current_used := False
 			current_used_count := 0
 			need_gc_hook := False
 			label := 0
-			if System.has_separate then
-				reservation_label :=0
-			end
 			non_gc_reg_vars := 0
 			non_gc_tmp_vars := 0
 			local_list.wipe_out
@@ -1077,16 +1045,12 @@ feature -- Setting
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			-- if more than, say, 20 local variables are to be initialized,
-			-- then it might be worthy to call bzero() instead of manually
-			-- setting the entries (beneficial both in code size and execution
-			-- time
+				-- if more than, say, 20 local variables are to be initialized,
+				-- then it might be worthy to call bzero() instead of manually
+				-- setting the entries (beneficial both in code size and execution
+				-- time
 				-- Current is needed only if used
-			if system.has_separate then
-				nb_refs := 2 * ref_var_used 
-			else
-				nb_refs := ref_var_used
-			end
+			nb_refs := ref_var_used
 
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
@@ -1098,9 +1062,6 @@ feature -- Setting
 				buf.putint (nb_refs)
 				buf.putstring (gc_rparan_semi_c)
 				buf.new_line
-				if system.has_separate then
-					reset_added_gc_hooks
-				end
 				from
 					hash_table := local_index_table
 					associated := associated_register_table
@@ -1310,51 +1271,6 @@ feature -- Inlining
 	set_inlined_current_register (r: REGISTRABLE) is
 		do
 			inlined_current_register := r
-		end
-
-feature -- Concurrent Eiffel
-	
-	print_concurrent_label is
-			-- Print label number `cur_label'.
-		local
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			buf.putstring ("cur_label_")
-			buf.putint (label)
-		end
-
-	reset_added_gc_hooks is 
-		local
-			i: INTEGER
-			buf: GENERATION_BUFFER
-		do
-			from 
-				i := ref_var_used - 1
-				buf := buffer
-			until
-				i < 0
-			loop
-				buf.reset_local_registration (ref_var_used + i)
-				buf.new_line
-				i := i - 1
-			end
-		end
-
-	reservation_label: INTEGER
-
-	inc_reservation_label is
-		do
-			reservation_label := reservation_label + 1
-		end
-
-	print_reservation_label is
-		local
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			buf.putstring ("res_label_")
-			buf.putint (reservation_label)
 		end
 
 end

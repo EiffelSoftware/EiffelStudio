@@ -446,11 +446,11 @@ end
 				end
 			else
 				class_type ?= type_i;	-- Cannot fail
-				generate_end (reg, class_type, class_type.is_separate)
+				generate_end (reg, class_type)
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 			-- Generate final portion of C code.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -460,20 +460,18 @@ end
 		do
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
-			if not is_class_separate then
-				if not is_attribute then
-					buf := buffer
-					buf.putchar ('(')
-				end
-				if is_feature_call then
-					gen_reg.print_register
-				end
-				if parameters /= Void then
-					generate_parameters_list
-				end
-				if not is_attribute then
-					buf.putchar (')')
-				end
+			if not is_attribute then
+				buf := buffer
+				buf.putchar ('(')
+			end
+			if is_feature_call then
+				gen_reg.print_register
+			end
+			if parameters /= Void then
+				generate_parameters_list
+			end
+			if not is_attribute then
+				buf.putchar (')')
 			end
 		end
 
@@ -485,19 +483,13 @@ end
 			meta_reg_not_void: meta_reg /= Void
 			basic_type_not_void: basic_type /= Void
 			buf_not_void: buf /= Void
-		local
-			is_class_separate: BOOLEAN
 		do
-			is_class_separate := class_type.is_separate
-
-			generate_end (gen_reg, class_type, is_class_separate)
+			generate_end (gen_reg, class_type)
 
 				-- Now generate the parameters of the call, if needed.
-			if not is_class_separate then
-				buf.putstring (");")
-				buf.new_line
-				basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
-			end
+			buf.putstring (");")
+			buf.new_line
+			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
 		end
 
 feature {NONE} -- Debug

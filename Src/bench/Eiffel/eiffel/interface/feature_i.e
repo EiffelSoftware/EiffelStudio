@@ -1995,27 +1995,14 @@ feature -- Byte code access
 			access_type_not_void: access_type /= Void
 		local
 			feature_b: FEATURE_B
-			feature_bs: FEATURE_BS
-			last_constrained_type: TYPE_A
 		do
-			last_constrained_type := context.last_constrained_type
-			if (last_constrained_type /= Void and then last_constrained_type.is_separate) then
-				create feature_bs
-				if static_type /= Void then
-					feature_bs.set_precursor_type (static_type)
-				end
-				feature_bs.init (Current)
-				feature_bs.set_type (access_type)
-				Result := feature_bs
-			else
-				create feature_b
-				if static_type /= Void then
-					feature_b.set_precursor_type (static_type)
-				end
-				feature_b.init (Current)
-				feature_b.set_type (access_type)
-				Result := feature_b
+			create feature_b
+			if static_type /= Void then
+				feature_b.set_precursor_type (static_type)
 			end
+			feature_b.init (Current)
+			feature_b.set_type (access_type)
+			Result := feature_b
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -2231,26 +2218,6 @@ feature {INHERIT_TABLE} -- Access
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
-		end
-
-feature -- Concurrent Eiffel
-
-	sep_process_pattern: BOOLEAN is
-			-- Process pattern of Current feature
-		local
-			p: PATTERN_TABLE
-		do
-			p := Pattern_table
-			Result := p.sep_insert (generation_class_id, pattern)
-			pattern_id := p.last_pattern_id
-debug ("SEP_DEBUG")
-if Result then
-io.putstring ("* Inserted a new pattern whose id is: ")
-io.putstring (" it's pattern_id: ")
-io.putint (pattern_id)
-io.new_line
-end
-end
 		end
 
 feature {NONE} -- Debug output

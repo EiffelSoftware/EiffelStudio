@@ -94,11 +94,4 @@ feature
 			create Result;
 		end;
 
-feature -- Concurrent Eiffel
-
-	is_separate: BOOLEAN is
-		do
-			
-		end;
-
 end

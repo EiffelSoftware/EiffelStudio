@@ -163,26 +163,6 @@ feature -- Access
 			create Result.make (is_wide)
 		end
 
-	separate_get_macro: STRING is
-			-- String generated to access the argument to a separate call
-		do
-			if is_wide then
-				Result := "CURGWC"
-			else
-				Result := "CURGC"
-			end
-		end
-
-	separate_send_macro: STRING is
-			-- String generated to return the result of a separate call
-		do
-			if is_wide then
-				Result := "CURSQRWC"
-			else
-				Result := "CURSQRC"
-			end
-		end
-
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.

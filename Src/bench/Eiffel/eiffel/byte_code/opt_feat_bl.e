@@ -106,7 +106,7 @@ feature -- Code generation
 			Result := System.remover.array_optimizer.array_item_type (id);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 		local
 			expr: EXPR_B
 			id: INTEGER;
@@ -152,6 +152,6 @@ feature -- Code generation
 		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
-			generate_end (gen_reg, class_type, class_type.is_separate)
+			generate_end (gen_reg, class_type)
 		end
 end

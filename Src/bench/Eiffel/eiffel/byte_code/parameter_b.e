@@ -159,10 +159,6 @@ feature -- Byte code generation
 						-- clone
 					ba.append (Bc_clone);
 				end;
-				if system.has_separate and then 
-				(target_type.is_separate and not source_type.is_separate) then
-					ba.append (Bc_sep_to_sep);
-				end;
 			end;
 		end;
 

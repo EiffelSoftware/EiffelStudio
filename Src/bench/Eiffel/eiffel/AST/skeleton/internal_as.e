@@ -109,7 +109,6 @@ feature -- Type check, byte code and dead code removal
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 			end
-			Result.record_separate_calls_on_arguments
 		end
 
 feature {AST_EIFFEL} -- Output

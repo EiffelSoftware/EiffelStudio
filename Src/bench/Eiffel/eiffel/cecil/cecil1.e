@@ -228,48 +228,4 @@ end;
 			end;
 		end;
 
-feature -- Concurrent Eiffel
-
-	generate_separate_pattern_id_table (buffer: GENERATION_BUFFER; type_id: INTEGER) is
-			-- Generation of the hash table
-		local
-			i: INTEGER;
-			feat: FEATURE_I;
-			written_class: CLASS_C;
-			class_type, written_type: CLASS_TYPE;
-			local_values: like values
-		do
-			buffer.putstring ("static EIF_INTEGER cpatid");
-			buffer.putint (type_id);
-			buffer.putstring ("[] = {%N");
-			from
-				local_values := values
-				i := 0;
-			until
-				i > upper
-			loop
-				feat := local_values.item (i);
-				if 
-					(feat = Void) or else 
-					feat.is_external or else
-					feat.is_deferred
-				then
-					buffer.putstring ("-1");
-				else
-					written_class := System.class_of_id (feat.written_in);
-					class_type := System.class_type_of_id (type_id);
-					if (written_class.generics = Void) then
-						written_type := written_class.types.first
-					else
-						written_type := written_class.meta_type 
-											(class_type.type).associated_class_type;
-					end;
-					buffer.putint (system.pattern_table.c_pattern_id(feat.pattern_id, written_type.type));
-				end;
-				buffer.putstring (",%N");
-				i := i + 1;
-			end;
-			buffer.putstring ("};%N%N");
-		end;
-
 end

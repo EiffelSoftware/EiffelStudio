@@ -10,8 +10,7 @@ inherit
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
-			inlined_byte_code, generate_il, need_target,
-			has_separate_call
+			inlined_byte_code, generate_il, need_target
 		end
 
 feature 
@@ -341,14 +340,6 @@ feature -- Inlining
 				target := target.inlined_byte_code
 			end
 			message := message.inlined_byte_code;
-		end
-
-feature -- Concurrent Eiffel
-
-	has_separate_call: BOOLEAN is
-		-- Is there separate feature call in the assertion?
-		do
-			Result := target.has_separate_call or message.has_separate_call;
 		end
 
 end

@@ -132,7 +132,6 @@ feature -- Element Change
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
-			attribute_bs: ATTRIBUTE_BS
 			external_b: EXTERNAL_B
 		do
 			if extension /= Void then
@@ -143,20 +142,10 @@ feature -- Element Change
 				external_b.set_extension (extension)
 				Result := external_b
 			else
-				if
-					context.last_constrained_type /= Void and then
-					context.last_constrained_type.is_separate
-				then
-					create attribute_bs
-					attribute_bs.init (Current)
-					attribute_bs.set_type (access_type)
-					Result := attribute_bs
-				else
-					create attribute_b
-					attribute_b.init (Current)
-					attribute_b.set_type (access_type)
-					Result := attribute_b
-				end
+				create attribute_b
+				attribute_b.init (Current)
+				attribute_b.set_type (access_type)
+				Result := attribute_b
 			end
 		end
 

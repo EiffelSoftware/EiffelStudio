@@ -1617,27 +1617,6 @@ feature -- Byte code generation
 			Result := ba.feature_table
 		end
 
-feature -- Cecil generation for Concurrent Eiffel
-
-	generate_separate_pattern (buffer: GENERATION_BUFFER) is
-			-- Generation of the Cecil table
-			-- Caller must guarantee it's called in Final mode
-		require
-			finalized_mode: byte_context.final_mode
-		do
-			if associated_class.has_visible then
-				buffer.putstring ("{(int32) ")
-				buffer.putint (associated_class.visible_table_size)
-				buffer.putstring (", sizeof(EIF_INTEGER), cl")
-				buffer.putint (associated_class.class_id)
-				buffer.putstring (", (char *) cpatid")
-				buffer.putint (type_id)
-				buffer.putchar ('}')
-			else
-				buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
-			end
-		end
-
 feature -- Debug
 
 	trace is

@@ -175,17 +175,10 @@ feature -- Generation
 				%#include %"eif_struct.h%"%N%
 				%#include %"eif_interp.h%"%N%N")
 	
-			if System.has_separate then
-				buffer.putstring ("%%#include %"eif_curextern.h%"%N%N")
-			end
-
 			buffer.start_c_specific_code
 
 			generate_pattern (buffer)
 
-			if System.has_separate then
-				generate_separate_pattern (buffer)
-			end
 				-- Generate pattern table
 			buffer.putstring ("struct p_interface egc_fpattern_init[] = {%N")
 			from
@@ -203,22 +196,6 @@ feature -- Generation
 			end
 			buffer.putstring ("};%N%N")
 
-			if System.has_separate then
-					-- Generate separate pattern table
-				buffer.putstring ("fnptr separate_pattern[] = {%N")
-				from
-					i := 1
-					nb := c_pattern_id_counter.value
-				until
-					i > nb
-				loop
-					buffer.putstring ("(fnptr) sepcall")
-					buffer.putint (i)
-					buffer.putstring (",%N")
-					i := i + 1
-				end
-				buffer.putstring ("};%N%N")
-			end
 			buffer.end_c_specific_code
 
 			create pattern_file.make_c_code_file (workbench_file_name (Epattern));
@@ -237,111 +214,6 @@ feature -- Generation
 			loop
 				c_patterns.item_for_iteration.generate_pattern (buffer)
 				c_patterns.forth
-			end
-		end
-
-feature -- Concurrent Eiffel
-
-	generate_separate_pattern (buffer: GENERATION_BUFFER) is
-			-- Generate pattern for separate calls
-		require
-			has_separate_calls: System.has_separate
-		do
-			from
-				c_patterns.start
-			until
-				c_patterns.after
-			loop
-				c_patterns.item_for_iteration.generate_separate_pattern (buffer)
-				c_patterns.forth
-			end
-		end
-
-	generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
-			-- Generate pattern for separate calls in FIANALIZE mode.
-		require
-			has_separate_calls: System.has_separate
-		do
-			from
-				c_patterns.start
-			until
-				c_patterns.after
-			loop
-				c_patterns.item_for_iteration.generate_only_separate_pattern (buffer)
-				c_patterns.forth
-			end
-		end
-
-	generate_in_finalized_mode is
-			-- Generate separate pattern in Finalize mode in FIANALIZE mode.
-		require
-			has_separate_calls: System.has_separate
-		local
-			i, nb: INTEGER
-			final_pattern_file: INDENT_FILE
-			buffer: GENERATION_BUFFER
-		do
-				-- Clear buffer for current generation
-			buffer := generation_buffer
-			buffer.clear_all
-
-			buffer.putstring ("%
-				%#include %"eif_macros.h%"%N%
-				%#include %"eif_struct.h%"%N%
-				%#include %"eif_interp.h%"%N%N")
-	
-			buffer.putstring ("%
-				%#include %"eif_curextern.h%"%N%N")
-
-			buffer.start_c_specific_code
-
-			generate_only_separate_pattern (buffer)
-
-				-- Generate separate pattern table
-			buffer.putstring ("fnptr separate_pattern[] = {%N")
-			from
-				i := 1
-				nb := c_pattern_id_counter.value
-			until
-				i > nb
-			loop
-				buffer.putstring ("(fnptr) sepcall")
-				buffer.putint (i)
-				buffer.putstring (",%N")
-				i := i + 1
-			end
-			buffer.putstring ("};%N%N")
-			buffer.end_c_specific_code
-
-			create final_pattern_file.make_c_code_file (gen_file_name (True, Epattern))
-			buffer.put_in_file (final_pattern_file)
-			final_pattern_file.close
-		end
-
-	sep_insert (written_in: INTEGER; pattern: PATTERN): BOOLEAN is
-		require
-			good_argument: pattern /= Void
-		local
-			other_pattern: PATTERN
-			info, other_info: PATTERN_INFO
-		do
-			create info.make (written_in, pattern)
-			other_info := item (info)
-			if other_info = Void then
-				other_pattern := patterns.item (pattern)
-				if other_pattern = Void then
-					Result := True
-					patterns.put (pattern)
-				else
-					info.set_pattern (other_pattern)
-				end
-				put (info)
-
-				last_pattern_id := pattern_id_counter.next_id
-				info.set_pattern_id (last_pattern_id)
-				info_array.put (info, last_pattern_id)
-			else
-				last_pattern_id := other_info.pattern_id
 			end
 		end
 

@@ -38,19 +38,19 @@ feature -- Basic operations
 		local
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
-			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
 			name := clone (a_documentation.name)
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
 
+			create guid.make_from_guid (a_type_info.type_attr.guid)
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
-			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			if name = Void or else name.empty then
 				create name.make (0)
 				name.append ("struct_")
-				name.append (tmp_lib_descriptor.name)
+				name.append (type_library_descriptor.name)
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
@@ -62,7 +62,7 @@ feature -- Basic operations
 			c_type_name.append (name)
 			
 			create c_header_file_name.make (0)
-			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
 				c_header_file_name.append ("ecom_")
 				c_header_file_name.append (name)
 				c_header_file_name.append (".h")
@@ -117,6 +117,7 @@ feature -- Basic operations
 				else
 					a_descriptor.set_description (No_description_available)
 				end
+				a_descriptor.set_type_library (type_library_descriptor)
 			end
 
 feature {NONE} -- Implementation
@@ -126,6 +127,9 @@ feature {NONE} -- Implementation
 
 	size_of_instance: INTEGER
 			-- Size of instance of this type
+
+	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			-- Type library descriptor
 
 end -- class WIZARD_RECORD_DESCRIPTOR_CREATOR
 

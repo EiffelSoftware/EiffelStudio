@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			!! button_form.make ("Button Form", global_form);
 			button_form.set_fraction_base (3);
 
-			!! ok_button.make ("OK", button_form);
+			!! ok_button.make ("Save", button_form);
 			ok_button.add_activate_action (ok_cmd, Void);
 			!! apply_button.make ("Apply", button_form);
 			apply_button.add_activate_action (apply_cmd, Void);

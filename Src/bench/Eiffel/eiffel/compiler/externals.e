@@ -124,7 +124,7 @@ feature -- Basic operatios
 	freeze is
 			-- Freeze external table
 		local
-			available_keys: like keys
+			available_keys: like current_keys
 			i, nb: INTEGER
 			external_name_id: INTEGER
 			info: EXTERNAL_INFO
@@ -188,7 +188,7 @@ feature -- Debug
 
 	trace is
 		local
-			available_keys: like keys
+			available_keys: like current_keys
 			i, nb: INTEGER
 			external_name_id: INTEGER
 			info: EXTERNAL_INFO

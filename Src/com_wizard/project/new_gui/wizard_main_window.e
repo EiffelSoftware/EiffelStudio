@@ -319,6 +319,7 @@ feature {NONE} -- Implementation
 				compile_eiffel_check_button_was_selected := compile_eiffel_check_button.is_selected
 				compile_eiffel_check_button.disable_select
 				compile_eiffel_check_button.disable_sensitive
+				environment.set_compile_eiffel (False)
 			end
 			environment.set_compile_c (compile_c_code_check_button.is_selected)
 			Profile_manager.save_active_profile

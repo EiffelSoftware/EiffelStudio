@@ -989,8 +989,7 @@ end
 										
 									-- Dependances update: add new
 									-- dependances for `feature_name'.
-
-								f_suppliers := clone (ast_context.supplier_ids)
+								f_suppliers := ast_context.supplier_ids
 
 								if
 									def_resc /= Void and then
@@ -1000,9 +999,14 @@ end
 									not feature_i.is_constant
 								then
 										-- Make it dependant on `default_rescue'
-									!!def_resc_depend.make (class_id, def_resc)
+									create def_resc_depend.make (class_id, def_resc)
 									f_suppliers.extend (def_resc_depend)
 								end
+
+									-- We need to duplicate `f_suppliers' now, otherwise
+									-- we will be wiped out in `ast_context.clear2'.
+								f_suppliers := clone (f_suppliers)
+
 								f_suppliers.set_feature_name_id (feature_name_id)
 								dependances.put (f_suppliers, feature_i.body_index)
 								if new_suppliers = Void then

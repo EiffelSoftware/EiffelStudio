@@ -23,9 +23,12 @@ cluster
 
 -- ES3 SPECIFIC CLUSTERS
 
-
-		liman_shared:		"$BENCH/Eiffel/limand/shared";
-		liman_client:		"$BENCH/Eiffel/limand/client";
+ 
+        liman_abstract:     "$BENCH/Eiffel/limand/abstract";
+        liman_graphical:        "$BENCH/Eiffel/limand/graphical";
+        liman_shared:       "$BENCH/Eiffel/limand/shared";
+        liman_client:       "$BENCBENCH/Eiffel/limand/client";
+ 
 		beurk:				"$BENCH/Eiffel/beurk";
 		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
@@ -131,7 +134,6 @@ cluster
 
 	-- graphical interface (bench):
 
-		archi_text:			"$BENCH/Eiffel/interface/graphical/archi_text";
 		bench_common:		"$BENCH/Eiffel/interface/graphical/common";
 		commands:			"$BENCH/Eiffel/interface/graphical/commands";
 		debugging:			"$BENCH/Eiffel/interface/graphical/debugging";
@@ -147,8 +149,9 @@ cluster
 		wizard_common:		"$BENCH/Eiffel/interface/graphical/wizard/common";
 		wizard_bench:		"$BENCH/Eiffel/interface/graphical/wizard/bench";
 
-		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
-		platform_spec:		"$BENCH/Eiffel/interface/graphical/spec/motif";
+		platform_common:		"$BENCH/Eiffel/interface/graphical/spec/widgets/common";
+		platform_motif:			"$BENCH/Eiffel/interface/graphical/spec/widgets/motif";
+		motif_graphical_window:	"$BENCH/Eiffel/interface/graphical/spec/graphical_window/motif";
 
 	-- Communications
 

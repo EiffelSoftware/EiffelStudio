@@ -46,7 +46,7 @@ inherit
 			remove_pixmap,
 			interface
 		end
-
+		
 	EV_FONTABLE_IMP
 		rename
 			interface as ev_fontable_interface
@@ -69,9 +69,7 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			font as wel_font,
 			shown as is_displayed,
-			set_font as wel_set_font,
 			destroy as wel_destroy,
 			item as wel_item,
 			enabled as is_sensitive,
@@ -84,6 +82,8 @@ inherit
 			move_and_resize as wel_move_and_resize,
 			text as wel_text,
 			set_text as wel_set_text,
+			font as wel_font,
+			set_font as wel_set_font,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			has_capture as wel_has_capture
@@ -127,12 +127,6 @@ inherit
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 	
-	WEL_CONSTANTS
-	
-	WEL_ODS_CONSTANTS
-	
-	WEL_DT_CONSTANTS
-
 creation
 	make
 
@@ -425,20 +419,20 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- match up well. See MSDN DRAWITEMSTRUCT for
 			-- more information regarding the allowable states.
 		once
-			Result := Ods_selected -- 1
+			Result := feature {WEL_ODS_CONSTANTS}.Ods_selected -- 1
 		end
 		
 	button_out: INTEGER is
 			-- Result is code used to determine if button is out.
 		once
-			Result := Ods_grayed -- 2
+			Result := feature {WEL_ODS_CONSTANTS}.Ods_grayed -- 2
 		end
 		
 	has_pushed_appearence (state: INTEGER): BOOLEAN is
 			-- Should `Current' have the appearence of being
 			-- pressed?
 		do
-			Result := flag_set (state, Ods_selected)			
+			Result := flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_selected)			
 		end
 		
 	pixmap_border: INTEGER is 4
@@ -506,7 +500,8 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- spacing required on left had side of image and text.
 				-- Equal to `image_pixmap_space' when there is a text, or
 				-- `pixmap_border' // 2 when there is no text.
-				
+			mask_bitmap: WEL_BITMAP
+				-- Mask bitmap of current image.
 			l_background_brush: WEL_BRUSH
 		do
 				-- Local access to information in `draw_item'.
@@ -541,8 +536,9 @@ feature {EV_ANY_I} -- Drawing implementation
 			color_ref := memory_dc.text_color
 			memory_dc.set_text_color (white)
 			l_background_brush := internal_background_brush
-			memory_dc.fill_rect (rect, l_background_brush)
-				-- We no longer use `l_background_brush'.
+			memory_dc.fill_rect (rect, internal_background_brush)
+				-- We no longer use `l_background_brush', but it is a local so that
+				-- can delete it later.
 			memory_dc.set_text_color (color_ref)
 			
 			
@@ -629,22 +625,45 @@ feature {EV_ANY_I} -- Drawing implementation
 					-- Retrieve the image of `Current'.
 				wel_bitmap := internal_pixmap_state.get_bitmap
 					-- Perform the drawing.
-				draw_bitmap_on_button (memory_dc, wel_bitmap, left_position, pixmap_border + height_offset , state)
+				if internal_pixmap_state.has_mask then
+					mask_bitmap := internal_pixmap_state.get_mask_bitmap
+				end
+				draw_bitmap_on_button (memory_dc, wel_bitmap, mask_bitmap, left_position, pixmap_border + height_offset , state)
 			end
 
 				-- If `Current' has the focus, then we must draw the focus rectangle.
-			if flag_set (state, Ods_focus) then
+			if flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_focus) then
 				draw_focus_rect (memory_dc, focus_rect)
 			end
 
 				-- Copy the image from `memory_dc' to `dc' which is the dc originally provided
 				-- in `draw_item_state'.
-			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy) -- copy_dc (dc, draw_item.rect_item)
+			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 
 				-- Clean up GDI objects created.
 			memory_dc.unselect_all
 			memory_dc.delete
 			l_background_brush.delete
+			if mask_bitmap /= Void then
+				mask_bitmap.decrement_reference	
+			end
+		end
+		
+	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON is
+			-- Extract the icon from `pixmap_imp'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+		do
+			pix_imp ?= a_pixmap_imp_state
+			if pix_imp /= Void then
+				Result := pix_imp.icon
+			end
+			if Result /= Void then
+				Result.increment_reference
+			else
+				Result := a_pixmap_imp_state.build_icon
+				Result.enable_reference_tracking
+			end
 		end
 		
 	text_format: INTEGER is
@@ -680,14 +699,18 @@ feature {EV_ANY_I} -- Drawing implementation
 			dc.set_text_color (old_text_color)
 		end
 		
-	draw_bitmap_on_button (dc: WEL_DC; a_bitmap: WEL_BITMAP; an_x, a_y, state: INTEGER) is
+	draw_bitmap_on_button (dc: WEL_DC; a_bitmap, mask_bitmap: WEL_BITMAP; an_x, a_y, state: INTEGER) is
 			-- Draw `a_bitmap' on `dc' at `an_x'. `a_y'. If `button_in' is set in `state' then draw bitmap
 			-- one pixel right, and one pixel down to simulate the button being depressed.
 			-- Take `is_sensitive' into acount, and draw `a_bitmap' greyed out if not `is_sensitive'.
 		local
 			actual_x, actual_y: INTEGER
 			draw_state_flags: INTEGER
+			buffer_dc: WEL_MEMORY_DC
+			wel_bitmap: WEL_BITMAP
 		do
+				-- Modify the coordinates of the image one pixel to right
+				-- and one pixel down if the button is currently depressed.
 			if flag_set (state, button_in) then
 				actual_x := an_x + 1
 				actual_y := a_y + 1
@@ -695,12 +718,39 @@ feature {EV_ANY_I} -- Drawing implementation
 				actual_x := an_x
 				actual_y := a_y
 			end
+				-- Initialize `draw_state_flags' dependent on current state of `is_sensitive'.
 			if is_sensitive then
-				draw_state_flags := Wel_drawing_constants.Dss_normal
+				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_normal
 			else
-				draw_state_flags := Wel_drawing_constants.Dss_disabled
+				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_disabled
 			end
-			dc.draw_state_bitmap (Void, a_bitmap, actual_x, actual_y, draw_state_flags)--, a_bitmap.width, a_bitmap.height)
+
+			if mask_bitmap = Void then
+					-- Draw directly to `dc' as there is no mask. i.e. the image is completely
+					-- rectangular.
+				dc.draw_state_bitmap (Void, a_bitmap, actual_x, actual_y, draw_state_flags)
+			else
+					-- As there is a mask, we must draw the image to a buffer, and then
+					-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
+					-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
+
+					-- Create the buffer					
+				create buffer_dc.make_by_dc (dc)
+					-- Create a bitmap for `buffer_dc'. This is set to the size of the image, as
+					-- the buffering is performed at 0x0.
+				create wel_bitmap.make_compatible (dc, a_bitmap.width, a_bitmap.height)
+				buffer_dc.select_bitmap (wel_bitmap)
+				
+					--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
+				buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
+					-- Copy the image from `buffer_dc' to `dc'.
+				dc.mask_blt (actual_x, actual_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
+					buffer_dc.make_rop4 (feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
+					-- Clean up GDI.
+				wel_bitmap.dispose
+				buffer_dc.unselect_all
+				buffer_dc.delete
+			end		
 		end
 		
 	draw_frame (dc: WEL_DC; r: WEL_RECT; state: INTEGER) is

@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current.
 		local
-			resources: RESOURCES
+			resources: EB_RESOURCES
 		do
 			!! resources.initialize;
 			System_resources.add_user (Current);

@@ -5,15 +5,17 @@ root
 	emitter: make
 
 default
+	arguments (" ")
 	assertion (no)
 	msil_generation (yes)
-	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
 	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
+	use_cluster_name_as_namespace (no)
+	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
 	namespace ("ISE.Cache")
 	version ("5.2.812.0")
@@ -61,12 +63,12 @@ assembly
 
 	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
-			SYSTEM_DLL_
+			system_dll_
 		end
 
 	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
-			XML_
+			xml_
 		end
 
 

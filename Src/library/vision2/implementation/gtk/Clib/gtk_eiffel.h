@@ -54,7 +54,8 @@ typedef  struct callback_data {
 void c_free_call_back_block (callback_data_t *p);
 
 /* Function to cast an integer to a pointer. */
-#define c_integer_to_pointer(p)      ((EIF_POINTER) p)      /*EIF_POINTER*/
+#define c_gtk_integer_to_pointer(p)      ((EIF_POINTER) p)      /*EIF_POINTER*/
+#define c_gtk_pointer_to_integer(p)      ((EIF_INTEGER) p)      /*EIF_INTEGER*/
 
 /*------------------------------------------------------------------------------
  Called by gtk when a signal is emitted, passes signal on to Eiffel.
@@ -259,6 +260,9 @@ int c_gtk_scrollable_area_has_child (GtkWidget *scroll_area, GtkWidget *child);
 /* Set the container background pixmap. */
 void c_gtk_container_set_bg_pixmap (GtkWidget *container, GtkWidget *pixmap);
 
+/* Remove all the children contained in the container. */
+void c_gtk_container_remove_all_children (GtkContainer *container);
+
 /*==============================================================================
  gtk_tooltips functions
 ==============================================================================*/
@@ -304,6 +308,12 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
 EIF_POINTER c_gtk_option_button_selected_menu_item (GtkWidget *widget);
 EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkWidget *menu_item);
+
+/*==============================================================================
+ Menu functions
+==============================================================================*/
+
+void c_gtk_menu_remove_all_items (GtkMenu *menu);
 
 /*==============================================================================
  text functions

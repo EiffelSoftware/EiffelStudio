@@ -880,17 +880,19 @@ EIF_INTEGER c_gtk_widget_minimum_height (GtkObject *widget)
 
 /*********************************
  *
- * Function : `c_gtk_container_nb_children' 	(1)
- *  		  `c_gtk_container_ith_child'   	(2)
- *  		  `c_gtk_container_has_child'		(3)
- *  		  `c_gtk_container_set_bg_pixmap'	(4)
+ * Function : `c_gtk_container_nb_children' 		(1)
+ *  		  `c_gtk_container_ith_child'   		(2)
+ *  		  `c_gtk_container_has_child'			(3)
+ *  		  `c_gtk_container_set_bg_pixmap'		(4)
+ *  		  `c_gtk_container_remove_all_children'	(5)
  *  		            
  * Note (1) : Return the number of children of a container.
  * 		(2)	: Return the i-th child of the container.
  * 		(3) : Tell if the given widget is a child of the container.
  * 		(4) : Set the container background pixmap to the given one.
+ * 		(5) : Remove all the children contained in the container.
  * 
- * Author : Leila
+ * Author : Leila, Alex
  *
  **********************************/
 
@@ -940,6 +942,21 @@ void c_gtk_container_set_bg_pixmap (GtkWidget *container, GtkWidget *pixmap)
  
   /* --- Set the style of the widget --- */
   gtk_widget_set_style (GTK_WIDGET (container), widgetStyle);
+}
+
+void c_gtk_container_remove_all_children (GtkContainer *container)
+{
+	GList *children;
+	GtkWidget *item;
+	
+	children = gtk_container_children (container);
+
+	while (children)
+    {
+      item = GTK_WIDGET (children->data);
+ 	  gtk_container_remove (container, item);
+      children = children->next;
+    }
 }
 
 /*********************************
@@ -1152,6 +1169,31 @@ EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkW
 	pos = g_list_index (GTK_MENU_SHELL (menu)->children, (gpointer) menu_item);
 
    	return pos;
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_menu_remove_all_items' (1)
+ *			  
+ * Note : (1) remove all the menu items of the given menu. 
+ * 
+ *********************************/
+
+void c_gtk_menu_remove_all_items (GtkMenu *menu)
+{
+	GtkMenuShell *menu_shell;
+	GList *children;
+	GtkWidget *item;
+	
+	menu_shell = GTK_MENU_SHELL (menu);
+	children = menu_shell->children;
+	
+	while (children)
+    {
+      item = GTK_WIDGET (children->data);
+      children = children->next;
+ 	  gtk_container_remove (GTK_CONTAINER (menu), item);
+    }
 }
 
 /*********************************

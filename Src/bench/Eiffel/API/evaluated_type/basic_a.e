@@ -46,9 +46,8 @@ feature {COMPILER_EXPORTER}
 				other_class := other.actual_type.associated_class
 					-- Note that Void type has no associated class
 				if other_class /= Void then
-					Result := 	(not other.is_expanded)
-								and then
-								associated_class.conform_to (other_class)
+					Result :=  (not other.is_expanded)
+							and then associated_class.conform_to (other_class)
 				end
 			end
 		end

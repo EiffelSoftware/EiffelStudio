@@ -34,6 +34,8 @@ feature {NONE}-- Initialization
 		end
 <CUSTOM_FEATURE>
 
+<ATTRIBUTE>
+
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
@@ -48,7 +50,6 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	<ATTRIBUTE>
 	<EVENT_DECLARATION>
 
 end -- class <CLASS_NAME>

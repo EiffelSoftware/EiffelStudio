@@ -1200,14 +1200,6 @@ feature -- Local variable info generation
 
 feature -- Object creation
 
-	create_like_current_object is
-			-- Create object of same type as current object.
-		require
-			il_generation_started: il_generation_started
-		do
-			implementation.create_like_current_object
-		end
-
 	create_object (type_i: TYPE_I) is
 			-- Create object of `type_i'.
 		require
@@ -1215,6 +1207,29 @@ feature -- Object creation
 			type_i_not_void: type_i /= Void
 		do
 			implementation.create_object (static_id_of (type_i))
+		end
+
+	create_like_object is
+			-- Create object of same type as object on top of stack.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.generate_external_call (generic_conformance_class_name,
+				"create_like_object", Static_type, <<type_info_class_name>>,
+				type_info_class_name,
+				False)			
+		end
+
+	create_formal_type is
+			-- Given info on stack, it will create a new instance of a generic formal
+			-- parameter.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.generate_external_call (generic_conformance_class_name,
+				"create_formal_generic", Static_type, <<type_class_name,
+				type_info_class_name>>, type_info_class_name,
+				False)			
 		end
 
 	create_attribute_object (type_i: TYPE_I; feature_id: INTEGER) is
@@ -2182,16 +2197,6 @@ feature -- Generic conformance
 			-- Generate a ANCHORED_TYPE instance corresponding to creation
 			-- of an object whose type matches type of `feat' in current context.
 		do
-		end
-
-	create_formal_type is
-			-- Given info on stack, it will create a new instance of a generic formal
-			-- parameter.
-		do
-			implementation.generate_external_call (generic_conformance_class_name,
-				"create_formal_generic", Static_type, <<type_class_name,
-				type_info_class_name>>, type_info_class_name,
-				True)			
 		end
 
 	assign_computed_type is

@@ -235,8 +235,6 @@ feature -- Basic Operations
 			get_option_key_path_user_precondition: get_option_key_path_user_precondition (pch_key, dw)
 		deferred
 
-		ensure
-			valid_pch_key: pch_key.item /= Void
 		end
 
 	get_drop_target (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]) is

@@ -85,6 +85,8 @@ feature
 					table_name := rout_id.type_table_name;
 
 					gen_file.putstring ("RTFCID(")
+					gen_file.putint (context.current_type.generated_id (context.final_mode))
+					gen_file.putchar (',')
 					gen_file.putchar ('(');
 					gen_file.putstring (table_name);
 					gen_file.putchar ('-');
@@ -112,6 +114,8 @@ feature
 					context.current_type.base_class.is_precompiled
 				then
 					gen_file.putstring ("RTWPCT(");
+					gen_file.putstring (context.class_type.id.generated_id)
+					gen_file.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id);
 					gen_file.putstring (rout_info.origin.generated_id);
 					gen_file.putstring (gc_comma);
@@ -190,7 +194,9 @@ feature -- Genericity
 						-- Attribute is polymorphic
 					table_name := rout_id.type_table_name
 
-					Result.append ("RTFCID((")
+					Result.append ("RTFCID(")
+					Result.append_integer (context.current_type.generated_id (context.final_mode))
+					Result.append (",(")
 					Result.append (table_name)
 					Result.append ("-")
 					Result.append_integer (table.min_type_id - 1)
@@ -217,6 +223,8 @@ feature -- Genericity
 					context.current_type.base_class.is_precompiled
 				then
 					Result.append ("RTWPCT(")
+					Result.append (context.class_type.id.generated_id)
+					Result.append (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id)
 					Result.append (rout_info.origin.generated_id)
 					Result.append (gc_comma)

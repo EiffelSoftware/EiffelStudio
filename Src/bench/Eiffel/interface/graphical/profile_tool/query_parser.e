@@ -219,15 +219,7 @@ feature {NONE} -- Implementation
 			from
 				index := idx
 			until
---				not chis_space (str @ index)
-					--| FIXME ***** Known integration problem...
-					--| Is going to be fixed...
-					--| The next two should be removed and the
-					--| previous one should be used instead...
-				str @ index /= ' ' and then
-				str @ index /= '%T' and then
-				str @ index /= '%R' and then
-				str @ index /= '%N'
+				not chis_space (str @ index)
 			loop
 				Result := Result + 1;
 				index := index + 1
@@ -242,10 +234,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
---	chis_space (c: CHARACTER): BOOLEAN is
---		external
---			"C"
---		end
-
+	chis_space (c: CHARACTER): BOOLEAN is
+		external
+			"C [macro %"ctype.h%"] (char): EIF_CHARACTER"
+		alias
+			"is_space"
+		end
 
 end -- class QUERY_PARSER

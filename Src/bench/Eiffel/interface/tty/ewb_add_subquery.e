@@ -27,8 +27,8 @@ feature {NONE} -- Execute
 					command_arguments := command_line_io.command_arguments;
 					!! query_parser
 				until
-					query_parser.parse (query_string (command_arguments), Current)
-						--| Guillaume - 09/18/97
+					command_arguments.argument_count = 3 and then query_parser.parse (query_string (command_arguments), Current)
+						--| Guillaume - 09/26/97
 				loop
 					io.putstring ("--> Subquery: ");
 					command_line_io.get_name;
@@ -95,12 +95,13 @@ feature {NONE} -- Implementation
 			i : INTEGER
 		do
 			from
-				i := 0
+				i := 1
 				!! Result.make (0)
 			until
-				i = command_arguments.argument_count
+				i > command_arguments.argument_count
 			loop
-				Result.append (command_arguments.item (i))
+				Result.append (command_arguments.entry (i))
+				Result.extend (' ')
 				i := i + 1
 			end
 		end

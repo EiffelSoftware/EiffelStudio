@@ -28,7 +28,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 		do
 			dollar_path := p;
 			update_path;
-			!! classes.make (10);
+			!! classes.make (30);
 			!! renamings.make;
 			!! ignore.make;
 			!! sub_clusters.make (3);
@@ -998,14 +998,19 @@ end;
 					-- this test since the value returned by `eif_directory_has_changed' will
 					-- be coherent
 					-- %%MANU
+
+				Result := True
+
+			elseif not Result then
+
 				from
 					classes.start
 				until
 					Result or else classes.after
 				loop
-					Result := classes.item_for_iteration.date_has_changed;
+					Result := classes.item_for_iteration.date_has_changed
 					classes.forth
-				end;
+				end
 
 --				if not Result then
 --					if inc_l = Void then

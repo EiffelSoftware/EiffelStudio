@@ -64,7 +64,10 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
+			
+			width := 1
+			height := 1
+			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, width, height, Default_color_depth)
 			gtk_image := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_new
 			set_c_object (gtk_image)
 			set_pixmap (gdkpix, gdkmask)
@@ -109,23 +112,11 @@ feature -- Drawing operations
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- width of the pixmap.
-		local
-			wid, hgt: INTEGER
-		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $wid, $hgt)
-			Result := wid
-		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- height of the pixmap.
-		local
-			wid, hgt: INTEGER
-		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $wid, $hgt)
-			Result := hgt
-		end
 
 feature -- Element change
 
@@ -370,7 +361,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
 				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 			end
-			set_pixmap (gdkpix, gdkmask)			
+			set_pixmap (gdkpix, gdkmask)	
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -386,6 +377,11 @@ feature {EV_ANY_I} -- Implementation
 	gtk_image: POINTER
 			-- Pointer to the gtk pixmap widget.
 
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
+
+	internal_xpm_data: POINTER
+		-- Pointer to the appropriate XPM image used for the default stock cursor if any
+
 feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
@@ -398,6 +394,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			if gdkmask /= NULL then
 				feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end
+			update_dimensions
 		end	
 
 	set_from_xpm_data (a_xpm_data: POINTER) is
@@ -407,6 +404,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		local
 			gdkpix, gdkmask: POINTER
 		do
+			internal_xpm_data := a_xpm_data
 			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)	
 			set_pixmap (gdkpix, gdkmask)
 		end
@@ -433,6 +431,12 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		end		
 
 feature {NONE} -- Implementation
+
+	update_dimensions is
+			-- Update `width' and `height' values
+		do
+			feature {EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $width, $height)
+		end
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- Save `Current' in `a_format' to `a_filename'

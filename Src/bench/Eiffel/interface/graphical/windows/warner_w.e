@@ -64,8 +64,8 @@ feature -- Graphical Interface
 				new_x := (screen.width - width) // 2;
 				new_y := (screen.height - height) // 2
 			elseif is_exclusive_grab then
-				new_x := window.x + (window.width - width) // 2;
-				new_y := window.y + (window.height - height) // 2
+				new_x := window.real_x + (window.width - width) // 2;
+				new_y := window.real_y + (window.height - height) // 2
 			else
 				new_x := window.real_x + (window.width - width) // 2;
 				new_y := window.real_y - height

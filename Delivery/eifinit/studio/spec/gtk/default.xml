@@ -50,6 +50,13 @@
 					<TEXT DESCRIPTION="+ Alt">autocomplete_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
 					<TEXT DESCRIPTION="+ Shift">autocomplete_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
 				</TOPIC>
+				<TOPIC TOPIC_ID="Class name autocomplete" ICON="icon_preferences_folder">
+					<HEAD>Class name autocomplete</HEAD>
+					<TEXT DESCRIPTION="Key">class_autocomplete_shortcut_key<STRING>Space</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">class_autocomplete_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">class_autocomplete_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">class_autocomplete_shortcut_shift<BOOLEAN>True</BOOLEAN></TEXT>
+				</TOPIC>
 				<TOPIC TOPIC_ID="Search selection" ICON="icon_preferences_folder">
 					<HEAD>Search selection</HEAD>
 					<TEXT DESCRIPTION="Key">search_selection_shortcut_key<STRING>F3</STRING></TEXT>

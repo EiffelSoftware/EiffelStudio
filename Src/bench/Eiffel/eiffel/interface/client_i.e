@@ -149,4 +149,28 @@ feature -- Debug purpose
 			end;
 		end;
 
+feature -- formatter
+
+    less_restrictive_than (other: like Current): BOOLEAN is
+        require
+            good_argument: other /= void
+        local
+            other_clients: FIXED_LIST [STRING];
+            other_cluster: CLUSTER_I;
+        do
+            other_clients := other.clients;
+            other_cluster := system.class_of_id (other.written_in).cluster;
+            from
+                other_clients.start ;
+                Result := true;
+            until
+                other_clients.offright or Result = false
+            loop
+                Result := valid_for ( Universe.class_named (
+                        other_clients.item, other_cluster).compiled_class);
+            end;
+        end;
+
+
+
 end

@@ -21,7 +21,7 @@ feature -- Access
 			description: "No button label"
 			external_name: "NoButtonLabel"
 		end
-		
+			
 	Title: STRING is "WARNING - ISE Assembly Manager"
 		indexing
 			description: "Window title"

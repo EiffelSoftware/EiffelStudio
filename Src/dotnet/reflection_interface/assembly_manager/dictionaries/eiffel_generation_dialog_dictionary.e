@@ -7,6 +7,9 @@ class
 
 inherit
 	GENERATION_DIALOG_DICTIONARY
+		redefine
+			Pixmap_not_found_error
+		end
 	
 feature -- Access
 	
@@ -42,6 +45,15 @@ feature -- Access
 		ensure
 			non_void_filename: Result /= Void
 			not_empty_filename: Result.get_length > 0
+		end
+
+	Pixmap_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dialog pixmap has not been found"
+			external_name: "PixmapNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Eiffel_generation_icon_filename, Pixmap_not_found_error_part_2)
 		end
 		
 	Title: STRING is "Generate Eiffel classes"

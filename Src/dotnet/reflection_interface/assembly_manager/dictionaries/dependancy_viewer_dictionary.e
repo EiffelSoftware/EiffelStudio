@@ -44,7 +44,7 @@ feature -- Access
 			not_empty_filename: Result.get_length > 0
 		end
 		
-	No_dependancies_text: STRING is "The selected assembly has no dependancy."
+	No_dependancies_text: STRING is "The selected assembly has no dependency."
 		indexing
 			description: "Text whenever selected assembly has no dependancy"
 			external_name: "NoDependanciesText"

@@ -10,6 +10,18 @@ inherit
 
 feature -- Access
 
+	Image_height: INTEGER is 250
+		indexing
+			description: "Image height"
+			external_name: "ImageHeight"
+		end
+	
+	Image_width: INTEGER is 150
+		indexing
+			description: "Image width"
+			external_name: "ImageWidth"
+		end
+		
 	Other_message: STRING is "This may take a few minutes. Please be patient."
 		indexing
 			description: "Other message"
@@ -20,6 +32,18 @@ feature -- Access
 		indexing
 			description: "Window title"
 			external_name: "Title"
+		end
+
+	Watch_pixmap_not_found_error: STRING is 
+		indexing
+			description: "Error message in case the watch pixmap was not found"
+			external_name: "WatchPixmapNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Watch_icon_filename, Pixmap_not_found_error_part_2)			
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
 		end
 	
 	Window_height: INTEGER is 120

@@ -123,6 +123,66 @@ feature -- Messages
 			description: "Message to the user before displaying the type view."
 			external_name: "EditAssemblyMessage"
 		end
+
+	Path_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the path toolbar icon has not been found"
+			external_name: "PathIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Path_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+		
+	Edit_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the edit toolbar icon has not been found"
+			external_name: "EditIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Edit_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+		
+	Remove_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the remove toolbar icon has not been found"
+			external_name: "RemoveIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Remove_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+		
+	Eiffel_generation_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the Eiffel generation toolbar icon has not been found"
+			external_name: "EiffelGenerationIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Eiffel_generation_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+		
+	Import_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the Import toolbar icon has not been found"
+			external_name: "ImportIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Import_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
 		
 feature -- Other constants
 	

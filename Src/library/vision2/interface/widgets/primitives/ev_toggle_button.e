@@ -85,6 +85,16 @@ feature -- Event - command association
 		do
 			implementation.add_unselect_command (cmd, arg)
 		end
+
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the button is selected.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_select_command (cmd, arg)
+		end
 	
 	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
@@ -105,6 +115,15 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_unselect_commands
+		end
+
+	remove_select_commands is	
+			-- Empty the list of commands to be executed
+			-- when the button is selected.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_select_commands
 		end
 
 	remove_toggle_commands is	

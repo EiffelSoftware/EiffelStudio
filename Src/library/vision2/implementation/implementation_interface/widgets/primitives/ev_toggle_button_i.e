@@ -54,6 +54,15 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		deferred
 		end
+
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the button is selected.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
 	
 	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add 'cmd' to the list of commands to be executed
@@ -69,6 +78,14 @@ feature -- Event -- removing command association
 	remove_unselect_commands is	
 			-- Empty the list of commands to be executed
 			-- when the button is unselected.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_select_commands is	
+			-- Empty the list of commands to be executed
+			-- when the button is selected.
 		require
 			exists: not destroyed
 		deferred

@@ -72,8 +72,28 @@ feature -- Event - command association
 			-- Add 'command' to the list of commands to be
 			-- executed when the button is toggled
 		do
-			add_command (widget, "toggled", command,  arguments, default_pointer)
+			add_command (widget, "toggled_on_off", command,  arguments, default_pointer)
 		end
+
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the item is `selected'.
+		do
+			add_command (widget, "toggled_on", cmd, arg, c_gtk_integer_to_pointer (toggled_on_state))
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is `unselected'.
+		do
+			add_command (widget, "toggled_off", cmd, arg, c_gtk_integer_to_pointer (toggled_off_state))
+		end
+
+	-- State id's for tool bar toggle button states
+
+	toggled_on_off_state: INTEGER is 1
+	toggled_on_state: INTEGER is 2
+	toggled_off_state: INTEGER is 3
 
 feature -- Event -- removing command association
 
@@ -81,8 +101,22 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the button is toggled.
 		do
-			remove_commands (widget, toggled_id)
-		end	
+			remove_commands (widget, toggled_on_off_id)
+		end
+
+	remove_select_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is `selected'.
+		do	
+			remove_commands (widget, toggled_on_id)
+		end
+
+	remove_unselect_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is `unselected'.
+		do	
+			remove_commands (widget, toggled_off_id)
+		end		
 
 end -- class EV_TOGGLE_BUTTON_IMP
 

@@ -30,18 +30,24 @@ feature -- Creation
 		require			
 			flag_not_void: a_output_flag /= Void
 			description_not_void: a_description /= Void
-			description_valid: not a_description.is_empty
 		do
 			make_basic_filter
 			create output_flags.make (1)
 			output_flags.compare_objects
+			add_output_flag (unfiltered_flag)
 			if not a_output_flag.is_empty then
-				output_flags.extend (a_output_flag)	
+				add_output_flag (a_output_flag)					
 			end
 			description := a_description
+			primary_output_flag := a_output_flag
+		ensure
+			has_description: description /= Void
 		end	
 		
 feature -- Access	
+
+	primary_output_flag: STRING
+			-- Primary output flag
 
 	output_flags: ARRAYED_LIST [STRING]
 			-- Output determinants
@@ -96,29 +102,29 @@ feature -- Processing
 		local
 			l_start_tag: STRING
 		do			
+			last := e
 			if not in_filterable_element then
 				can_output := True
-			end
+			end			
 		
 			if filterable_elements.has (e) then
-					-- This is a output tag.  Output is disabled because we don't want
-					-- to actually output the output tag in the document
-				can_output := False
+				last_was_filterable := True					
+				last_was_start := is_start
 				if is_start then
 					filter_depth := filter_depth + 1				
 				else
 					filter_depth := filter_depth - 1
-				end			
+				end
+			else
+				last_was_filterable := False
 			end
 			
 			if can_output then
-				if is_start then
-					l_start_tag := "<"
-				else
-					l_start_tag := "</"
+				if last_was_filterable and then	not last_was_start then
+					write_tag (e, is_start)
+				elseif not last_was_filterable then
+					write_tag (e, is_start)
 				end
-				output_string.append (l_start_tag + e + ">")
-				attribute_write_position := output_string.count
 			end
 		end
 
@@ -134,8 +140,15 @@ feature -- Processing
 			if in_filterable_element then
 				if a_name.is_equal ("output") and then (output_flags.has (a_value)) then
 					can_output := True
+				else
+					can_output := False
 				end
-			elseif can_output then							
+			end
+			
+			if can_output then
+				if last_was_filterable then
+					write_tag (last, last_was_start)
+				end
 				l_string := " " + a_name + "=%"" + a_value + "%""
 				output_string.insert_string (l_string, attribute_write_position)
 				attribute_write_position := output_string.count
@@ -149,6 +162,15 @@ feature {NONE} -- Implementation
 		do
 			Result := filter_depth > 0
 		end
+
+	last_was_filterable: BOOLEAN
+			-- Was last element a filterable one?
+		
+	last_was_start: BOOLEAN
+			-- Was last processed element a start element?
+
+	last: STRING
+			-- Last element name			
 
 	can_output: BOOLEAN
 			-- Can current node be output?	
@@ -166,5 +188,22 @@ feature {NONE} -- Implementation
 			Result.compare_objects
 			Result.extend ("output")
 		end		
+
+	write_tag (e: STRING; is_start: BOOLEAN) is
+			-- Write tag
+		local
+			l_start_tag: STRING
+		do
+			if is_start then
+				l_start_tag := "<"
+			else
+				l_start_tag := "</"
+			end
+			output_string.append (l_start_tag + e + ">")
+			attribute_write_position := output_string.count
+		end		
+
+invariant
+	has_description: description /= Void
 
 end -- class STUDIO_FILTER

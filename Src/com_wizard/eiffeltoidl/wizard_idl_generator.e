@@ -42,7 +42,7 @@ feature -- Basic operations
 				l_dir.create_dir
 			end
 			create l_cmd.make (100)
-			l_cmd.append ("ec -flatshort -filter com ")
+			l_cmd.append ("ec -short -filter com ")
 			l_cmd.append (environment.eiffel_class_name)
 			l_cmd.append (" -project ")
 			l_cmd.append (environment.eiffel_project_name)

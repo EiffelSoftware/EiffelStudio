@@ -26,6 +26,7 @@ feature -- Initialization
 			invariant_rout_id := next_rout_id
 			initialization_rout_id := next_rout_id
 			dispose_rout_id := next_rout_id
+			creation_rout_id := next_rout_id
 		end
 
 feature -- Access
@@ -51,6 +52,7 @@ feature -- Access
 	invariant_rout_id: INTEGER
 	initialization_rout_id: INTEGER
 	dispose_rout_id: INTEGER
+	creation_rout_id: INTEGER
             -- Predefined routine ids
 
 feature {NONE} -- Implementation

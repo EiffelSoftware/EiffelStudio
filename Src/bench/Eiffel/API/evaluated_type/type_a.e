@@ -231,10 +231,6 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := type_i
 		end
 
-	set is
-		do
-		end
-
 	is_numeric: BOOLEAN is
 			-- Is the current actual type a numeric type ?
 		do
@@ -272,6 +268,8 @@ feature {COMPILER_EXPORTER} -- Access
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' ?
+		require
+			other_not_void: other /= Void
 		do
 			Result := internal_conform_to (other, False)
 		end
@@ -286,6 +284,8 @@ feature {COMPILER_EXPORTER} -- Access
 
 	redeclaration_conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' for a redeclaration ?
+		require
+			other_not_void: other /= Void
 		do
 			Result := internal_conform_to (other, True)
 		end
@@ -390,7 +390,7 @@ feature {COMPILER_EXPORTER} -- Access
 			has_expanded
 		local
 			a_class: CLASS_C
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			creation_name: STRING
 			creation_feature: FEATURE_I
 		do

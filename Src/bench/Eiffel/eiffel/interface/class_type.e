@@ -68,6 +68,7 @@ feature
 			is_changed := True;
 			type_id := System.type_id_counter.next;
 			id := System.static_type_id_counter.next;
+			System.reset_melted_conformance_table;
 		end;
 
 feature -- Conveniences

@@ -41,7 +41,7 @@ feature
 				or else
 				area_feature.written_in /= id
 				or else
-				not deep_equal (area_feature.type.actual_type, Area_type)
+				not Area_type.is_deep_equal (area_feature.type.actual_type)
 			then
 				!!special_error.make (Case_2, Current);
 				Error_handler.insert_error (special_error);

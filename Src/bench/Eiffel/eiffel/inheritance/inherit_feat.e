@@ -414,7 +414,7 @@ feature
 							(features.item.parent.parent_type, written_id);
 							-- Same instantiated parent type for
 							-- sharing feature
-						Result := deep_equal (to_compair, written_type);
+						Result := written_type.is_deep_equal (to_compair);
 						features.forth;
 					end;
 				end;

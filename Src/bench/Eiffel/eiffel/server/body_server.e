@@ -11,11 +11,11 @@ inherit
 		export
 			{ANY} server_item, merge
 		redefine
-			ontable, updated_id
+			ontable, updated_id, trace
 		end;
 	READ_SERVER [FEATURE_AS]
 		redefine
-			item, ontable, updated_id, change_id
+			item, ontable, updated_id, change_id, trace
 		select
 			item, change_id
 		end
@@ -38,6 +38,15 @@ feature
 	updated_id (i: INTEGER): INTEGER is
 		do
 			Result := ontable.item (i)
+debug
+if result /= i then
+	io.error.putstring ("updated_id: ");
+	io.error.putint (i);
+	io.error.putstring (" to ");
+	io.error.putint (Result);
+	io.error.new_line;
+end;
+end;
 		end;
 
 	Cache: BODY_CACHE is
@@ -58,9 +67,19 @@ feature
 		require else
 			has_an_id: Tmp_body_server.has (an_id) or else has (an_id);
 	   do
+debug
+io.error.putstring ("item ");
+io.error.putint (an_id);
+end;
 			if Tmp_body_server.has (an_id) then
+debug
+io.error.putstring (" in tmp_server%N")
+end;
 				Result := Tmp_body_server.item (an_id);
 			else
+debug
+io.error.putstring (" in BODY_SERVER%N")
+end;
 				Result := server_item (an_id);
 			end;
 		end;
@@ -81,12 +100,51 @@ feature
 		require else
 			Tmp_body_server.has (old_value)
 		do
+debug
+io.error.putstring ("change_id ");
+io.error.putint (old_value);
+io.error.putstring (" to ");
+io.error.putint (new_value);
+io.error.new_line;
+end;
 			if has (old_value) then
+debug
+io.error.putstring ("Changed in BODY_SERVER%N");
+end;
 				server_change_id (new_value, old_value)
 			end;
 			if Tmp_body_server.has (old_value) then
+debug
+io.error.putstring ("Changed in TMP_BODY_SERVER%N");
+end;
 				Tmp_body_server.change_id (new_value, old_value)
 			end;
+debug
+io.error.putstring ("TRACE of TMP_BODY_SERVER%N");
+Tmp_body_server.trace
+end;
+		end;
+
+	trace is
+		local
+			i: INTEGER;
+		do
+			from
+				start
+				io.error.putstring ("Keys:%N");
+			until
+				after
+			loop
+				io.error.putstring ("%T");
+				io.error.putint (key_for_iteration);
+				if item_for_iteration = Void then
+					io.error.putstring (" VOID ELEMENT");
+				end;
+				io.error.new_line;
+				forth
+			end;
+			io.error.putstring ("O_N_TABLE:%N");
+			ontable.trace;
 		end;
 
 end

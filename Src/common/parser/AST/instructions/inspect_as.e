@@ -42,21 +42,23 @@ feature -- Type check, byte code and dead code removal
 		local
 			current_item: TYPE_A;
 			vomb1: VOMB1;
+			controler: INSPECT_CONTROL
 		do
 			switch.type_check;
 
 				-- Initialization of the multi-branch controler
-			Inspect_control.wipe_out;
-			Inspect_control.set_node (Current);
-			Inspect_control.set_feature_table (context.a_class.feature_table);
+			!!controler.make;
+			Inspect_controlers.add_front (controler);
+			controler.set_node (Current);
+			controler.set_feature_table (context.a_class.feature_table);
 
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			current_item := context.item;
 			if current_item.is_integer then		
-				Inspect_control.set_integer_type;
+				controler.set_integer_type;
 			elseif	current_item.is_character then
-				Inspect_control.set_character_type;
+				controler.set_character_type;
 			else
 					-- Error
 				!!vomb1;
@@ -77,6 +79,8 @@ feature -- Type check, byte code and dead code removal
 			if else_part /= Void then
 				else_part.type_check;
 			end;
+			Inspect_controlers.start;
+			Inspect_controlers.remove;
 		end;
 
 	byte_node: INSPECT_B is

@@ -37,6 +37,11 @@ inherit
 
 feature 
 
+	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, INTEGER] is
+		once
+			!!Result.make (2)
+		end;
+
 	rout_info_table: ROUT_INFO_TABLE;
 			-- Global routine info table
 			-- rout_id --> (origin/offset)			
@@ -802,11 +807,7 @@ end;
 					-- Clear the topo sorter
 				sorter.clear;
 
-					-- Mark the conformance table melted
-				is_conformance_table_melted := True;
-					-- Trigger the recompuation of the conformance table
-					-- byte code 
-				melted_conformance_table := Void;
+				reset_melted_conformance_table;
 			end;
 				-- Inheritance analysis: list `changed_classes' is
 				-- sorted by class ids so the parent come first the
@@ -1366,6 +1367,17 @@ end;
 			Update_file.close;
 		end;
 
+	reset_melted_conformance_table is
+			-- Forget the `melted_conformance_table', i.e. a new
+			-- class or class type has been added to the system.
+		do
+				-- Mark the conformance table melted
+			is_conformance_table_melted := True;
+				-- Trigger the recompuation of the conformance table
+				-- byte code
+			melted_conformance_table := Void;
+		end;
+
 	make_conformance_table_byte_code is
 			-- Generates conformance tables byte code.
 		local
@@ -1378,6 +1390,9 @@ end;
 			if is_conformance_table_melted then
 				if melted_conformance_table = Void then
 						-- Compute `melted_conformance_table'.
+debug ("ACTIVITY")
+	io.error.putstring ("Generating conformance table%N");
+end;
 					Byte_array.append ('%/001/');
 					from
 						i := 1;
@@ -1406,6 +1421,9 @@ end;
 				end;
 				to_append := melted_conformance_table;
 			else
+debug ("ACTIVITY")
+	io.error.putstring ("No changes in conformance table%N");
+end;
 				Byte_array.append ('%U');
 				to_append := Byte_array.character_array
 			end;

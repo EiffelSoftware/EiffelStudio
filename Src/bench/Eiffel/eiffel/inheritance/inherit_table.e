@@ -267,13 +267,13 @@ feature
 				No_error: not Error_handler.has_error;
 			end;
 			if not System.code_replication_off then
-            	if rep_parent_list.count > 0 then
-                	process_replicated_features (resulting_table);
-            	else
+				if rep_parent_list.count > 0 then
+					process_replicated_features (resulting_table);
+				else
 					if Rep_server.has (a_class.id) then
-                		--! Remove it from the server if it
-                		--! previously existed
-                		Rep_server.remove (a_class.id)
+							--! Remove it from the server if it
+							--! previously existed
+						Rep_server.remove (a_class.id)
 					end;
 					if Tmp_rep_info_server.has (a_class.id) then
 						--| An error may have occured during Degree 3
@@ -282,7 +282,7 @@ feature
 						--| these may have been removed.
 						Tmp_rep_info_server.remove (a_class.id)
 					end;
-            	end;
+				end;
 			end;
 
 				-- Pass2 controler evaluation
@@ -882,6 +882,7 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
+
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name (feature_name);
 			Result.set_written_in (a_class.id);
@@ -910,6 +911,7 @@ end;
 
 				-- Look for a previous definition of the feature
 			feature_i := feature_table.item (feature_name);
+
 			if feature_i /= Void then
 				old_feature_in_class := feature_i.written_in = a_class.id;
 				old_body_id := feature_i.original_body_id;
@@ -919,6 +921,11 @@ end;
 				then
 						-- Found a feature of same name and written in the
 						-- same class.
+debug ("ACTIVITY")
+	io.error.putstring ("Getting old_body ");
+	io.error.putint (old_body_id);
+	io.error.new_line;
+end;
 					old_description := Body_server.server_item (old_body_id);
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
@@ -939,6 +946,9 @@ end;
 							-- The check is done later anyway
 
 							--and then Result.same_interface (feature_i);
+						if is_the_same and unique_feature /= Void then
+							is_the_same := feature_i.is_unique and then unique_feature.same_value (feature_i)
+						end;
 debug ("ACTIVITY")
 	if not is_the_same then
 		if not old_description.is_body_equiv (yacc_feature) then

@@ -38,6 +38,17 @@ feature
 			end;
 		end;
 
+	same_value (other: FEATURE_I): BOOLEAN is
+		require
+			other /= Void
+			other.is_unique
+		local
+			other_unique: UNIQUE_I;
+		do
+			other_unique ?= other;
+			Result := value.int_val = other_unique.value.int_val
+		end;
+
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result
 		local

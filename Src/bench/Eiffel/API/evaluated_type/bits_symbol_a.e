@@ -6,7 +6,8 @@ inherit
 
 	BITS_A
 		redefine
-			solved_type, dump, append_clickable_signature
+			solved_type, dump, append_clickable_signature,
+			is_deep_equal
 		end;
 
 creation
@@ -84,6 +85,19 @@ feature
 				rout_id := - rout_id
 			end;
 			Result := twin;
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			bits_s: BITS_SYMBOL_A
+		do
+			bits_s ?= other;
+			Result := bits_s /= Void and then
+				bits_s.base_type = base_type and then
+				bits_s.is_expanded = is_expanded and then
+				bits_s.class_id = class_id and then
+				bits_s.rout_id = rout_id and then
+				feature_name.is_equal (bits_s.feature_name)
 		end;
 
 feature -- Trace

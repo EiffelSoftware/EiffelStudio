@@ -364,7 +364,8 @@ register1 struct stack *stk;			/* The stack to be extended */
 	chunk = (struct stchunk *) xmalloc(size * sizeof(char *), C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0) {
 		chunk = (struct stchunk *) uchunk();	/* Attempt with urgent mem */
-		size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
+		if (chunk != (struct stchunk *) 0)
+			size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
 	}
 	if (chunk == (struct stchunk *) 0)
 		return -1;		/* Malloc failed for some reason */

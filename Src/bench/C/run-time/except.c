@@ -2034,7 +2034,8 @@ register1 int size;					/* Size of new chunk to be added */
 	chunk = (struct stxchunk *) cmalloc(size);
 	if (chunk == (struct stxchunk *) 0) {
 		chunk = (struct stxchunk *) uchunk();	/* Attempt with urgent mem */
-		size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
+		if (chunk != (struct stxchunk *) 0)
+			size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
 	}
 	if (chunk == (struct stxchunk *) 0)
 		return -1;		/* Malloc failed for some reason */

@@ -36,11 +36,25 @@ feature -- Type check and byte code
 	check_for_veen (at_as: ATOMIC_AS) is
 		local
 			id_as: ID_AS;
-			veen: VEEN
+			veen: VEEN;
+			vomb2: VOMB2;
 		do
 			id_as ?= at_as;
 			if (id_as /= Void) then
-				if not context.a_class.feature_table.has (id_as) then
+				if
+					context.a_feature.argument_position (id_as) /= 0
+				or else
+					context.locals.item (id_as) /= Void
+				then
+					!!vomb2;
+					context.init_error (vomb2);
+					if Inspect_control.integer_type then
+						vomb2.set_type (integer_type);
+					else
+						vomb2.set_type (character_type);
+					end;
+					Error_handler.insert_error (vomb2);
+				elseif not context.a_class.feature_table.has (id_as) then
 					!! veen;
 					context.init_error (veen);
 					veen.set_identifier (id_as)

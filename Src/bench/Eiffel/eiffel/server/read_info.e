@@ -13,6 +13,17 @@ feature
 	object_count: INTEGER;
 			-- Number of objects to retrieve
 
+	trace is
+		do
+			io.error.putstring ("READ_INFO:%NOffset: ");
+			io.error.putint (offset);
+			io.error.putstring ("%NClass_id: ");
+			io.error.putint (class_id);
+			io.error.putstring ("%Nobject_count: ");
+			io.error.putint (object_count);
+			io.error.new_line;
+		end;
+
 	set_offset (i: INTEGER) is
 			-- Assign `i' to `offset'.
 		do

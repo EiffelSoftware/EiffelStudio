@@ -6,8 +6,12 @@ feature {NONE}
 
 	Inspect_control: INSPECT_CONTROL is
 			-- Controler of multi-branch instruction
-		once
-			!!Result.make
+		do
+			Result := Inspect_controlers.first
 		end;
 
+	Inspect_controlers: LINKED_LIST [INSPECT_CONTROL] is
+		once
+			!!Result.make;
+		end;
 end

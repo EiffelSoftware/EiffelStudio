@@ -10,7 +10,7 @@ inherit
 			set_base_type as set_rout_id
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
-			is_basic, instantiated_in, same_as, meta_type
+			is_basic, instantiated_in, same_as, meta_type, is_deep_equal
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -216,6 +216,19 @@ end;
 						other_like_feat.rout_id = rout_id
 						and then
 						other_like_feat.feature_id = feature_id
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			like_feat: LIKE_FEATURE
+		do
+			like_feat ?= other;
+			Result := like_feat /= Void and then
+				like_feat.rout_id = rout_id and then
+				like_feat.class_id = class_id and then
+				like_feat.feature_id = feature_id and then
+				like_feat.actual_type.is_deep_equal (actual_type) and then
+				feature_name.is_equal (like_feat.feature_name)
 		end;
 
 	create_info: CREATE_FEAT is

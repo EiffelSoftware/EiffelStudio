@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like, format, fill_calls_list, replicate
+			has_like, format, fill_calls_list, replicate, is_deep_equal
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -26,6 +26,15 @@ feature -- Initialization
 		end;
 
 feature -- Implementation of inherited deferred features
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			o: LIKE_ID_AS
+		do
+			o ?= other;
+			Result := o /= Void and then
+				anchor.is_equal (o.anchor);
+		end;
 
 	has_like: BOOLEAN is
 			-- Has the type anchored type in its definition ?

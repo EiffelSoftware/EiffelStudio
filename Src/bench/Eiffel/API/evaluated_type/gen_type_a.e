@@ -27,7 +27,8 @@ inherit
 			has_expanded,
 			same_as,
 			same_class_type,
-			format
+			format,
+			is_deep_equal
 		end;
 	CL_TYPE_A
 		redefine
@@ -51,7 +52,8 @@ inherit
 			valid_expanded_creation,
 			same_as,
 			same_class_type,
-			format
+			format,
+			is_deep_equal
 		select
 			dump, expanded_deferred, valid_expanded_creation,
 			is_valid, append_clickable_signature
@@ -481,6 +483,34 @@ feature -- Primitives
 					i > nb or else not Result
 				loop
 					Result := generics.item (i).same_as
+												(other_generics.item (i));
+					i := i + 1;
+				end;
+			end;
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			other_gen_type: GEN_TYPE_A;
+			i, nb: INTEGER;
+			other_generics: like generics;
+		do
+			other_gen_type ?= other;
+			if 	other_gen_type /= Void
+				and then
+				other_gen_type.base_type = base_type
+				and then
+				is_expanded = other_gen_type.is_expanded
+			then
+				from
+					i := 1;
+					nb := generics.count;
+					other_generics := other_gen_type.generics;
+					Result := nb = other_generics.count
+				until
+					i > nb or else not Result
+				loop
+					Result := generics.item (i).is_deep_equal
 												(other_generics.item (i));
 					i := i + 1;
 				end;

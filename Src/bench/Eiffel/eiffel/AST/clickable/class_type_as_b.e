@@ -7,7 +7,7 @@ inherit
 	TYPE
 		redefine
 			has_like, format, fill_calls_list, replicate,
-			check_constraint_type
+			check_constraint_type, is_deep_equal
 		end;
 	SHARED_INST_CONTEXT;
 	STONABLE
@@ -43,6 +43,41 @@ feature -- Conveniences
 			-- Assign `g' to `generics'.
 		do
 			generics := g;
+		end;
+
+	is_deep_equal (other: TYPE): BOOLEAN is
+		local
+			o: CLASS_TYPE_AS;
+			o_g: like generics;
+			p, o_p: INTEGER
+		do
+			o ?= other;
+			Result := o /= Void and then
+				class_name.is_equal (o.class_name)
+			if Result then
+				o_g := o.generics;
+				if generics = Void then
+					Result := o_g = Void
+				elseif o_g = Void then
+					Result := False
+				else
+					p := generics.index;
+					o_p := o_g.index;
+					from
+						generics.start;
+						o_g.start;
+						Result := o_g.count = generics.count
+					until
+						generics.after or else not Result
+					loop
+						Result := generics.item.is_deep_equal (o_g.item);
+						generics.forth;
+						o_g.forth
+					end;
+				end;
+				generics.go_i_th (p);
+				o_g.go_i_th (o_p);
+			end;
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is

@@ -100,6 +100,21 @@ feature -- Initialization
 			id := other.id;
 		end;
 
+	trace is
+		do
+			io.error.putstring ("FEATURE_AS");
+			io.error.putint (body_id);
+			io.error.new_line;
+			io.error.putint (end_position);
+			io.error.new_line;
+			io.error.putint (start_position);
+			io.error.new_line;
+			io.error.putstring (feature_names.first.internal_name);
+			io.error.new_line;
+			io.error.putint (id);
+			io.error.new_line;
+		end;
+
 feature -- Conveniences
 
 	set_body_id (i: INTEGER) is

@@ -10,12 +10,12 @@ feature
 
 	application_screen: SCREEN is
 		once
-			!! Result.make ("")
+			create Result.make ("")
 		end
 
 	init_toolkit: TOOLKIT_IMP is
 		once
-			!! Result.make ("")
+			create Result.make ("")
 		end
 
 	init_windowing is
@@ -30,7 +30,7 @@ feature
 
 	perm_wind1: PERM_WIND1 is
 		once
-			!! Result.make ("Perm_wind1", application_screen)
+			create Result.make ("Perm_wind1", application_screen)
 		end
 
 end -- class WINDOWS

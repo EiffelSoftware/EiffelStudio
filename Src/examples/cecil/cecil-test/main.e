@@ -1,7 +1,7 @@
 
 class MAIN
 
-creation
+create
 
 	make, nop
 
@@ -11,7 +11,7 @@ feature
 		local
 			a:ANY
 		do
-			!! a;
+			create a;
 			test_argument ("FOO", a, 30.343, 25);
 			test_linked_list;
 			test_memory;
@@ -34,7 +34,7 @@ feature
 			io.put_string ("Give string length (enter a high number for raising an Eiffel exception)%N")
 			io.read_integer
 			n := io.last_integer	
-			!! s.make (n);
+			create s.make (n);
 			io.put_string ("Memory OK%N")
 		end;
 
@@ -48,7 +48,7 @@ feature
 
 	test_linked_list is
 		do
-			!!linked_list.make;
+			create linked_list.make;
 
 			io.put_string ("Testing linked_list...%N") 
 			linked_list.extend ("1");

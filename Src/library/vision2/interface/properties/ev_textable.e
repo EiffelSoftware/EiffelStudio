@@ -74,7 +74,7 @@ feature -- Element change
 			-- Set text of current label to `txt'.
 		require
 			exists: not destroyed
-			not_a_text_void: txt /= Void
+			valid_text: txt /= Void
 		do
 			implementation.set_text (txt)
 		ensure

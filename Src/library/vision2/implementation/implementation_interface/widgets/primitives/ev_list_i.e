@@ -162,6 +162,7 @@ feature {EV_LIST_ITEM} -- Implementation
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
+			-- List of the children
 
 	clear_ev_children is
 			-- Clear all the items of the list.

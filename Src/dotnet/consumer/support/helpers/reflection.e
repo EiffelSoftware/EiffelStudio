@@ -56,6 +56,13 @@ feature -- Status Report
 			Result := a_field.is_public and not a_field.is_literal
 		end
 		
+	is_init_only_field (a_field: FIELD_INFO): BOOLEAN is
+			-- Is `a_field' a initonly field?
+		do
+			Result := a_field.is_init_only
+		end
+		
+		
 feature {NONE} -- Implementation
 
 	cls_compliant_attribute_type: TYPE is

@@ -1473,7 +1473,17 @@ feature {NONE} -- Implementation
 			Result.put ([10, 13], "icon_windows_color")
 			Result.put ([10, 14], "icon_word_wrap_color")
 			Result.put ([10, 15], "icon_zoom_in_color")
-			Result.put ([10, 16], "icon_zoom_out_color")			
+			Result.put ([10, 16], "icon_zoom_out_color")
+			Result.put ([11, 1], "icon_anchor")
+			Result.put ([11, 2], "icon_display_cluster_color")
+			Result.put ([11, 3], "icon_display_legend_color")
+			Result.put ([11, 4], "icon_fit_to_screen_color")
+			Result.put ([11, 5], "icon_remove_anchor_color")
+			Result.put ([11, 6], "icon_toggle_force_color")
+			Result.put ([11, 7], "icon_toggle_quality_color")
+			Result.put ([11, 8], "icon_uml_color")
+			Result.put ([11, 9], "icon_pin_closed_color")
+			Result.put ([11, 10], "icon_pin_open_color")
 
 			Result.compare_objects
 		end

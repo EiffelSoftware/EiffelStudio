@@ -350,35 +350,6 @@ feature -- Access
 			Result := str_str ($area, $a, count, other.count, start, fuzz)
 		end
 
-feature -- Status report
-
-	has (c: CHARACTER): BOOLEAN is
-			-- Does string include `c'?
-		local
-			counter: INTEGER
-		do
-			if not is_empty then
-				from
-					counter := 1
-				until
-					counter > count or else (item (counter) = c)
-				loop
-					counter := counter + 1
-				end
-				Result := (counter <= count)
-			end
-		end
-
-	has_substring (other: STRING): BOOLEAN is
-			-- Does `Current' contain `other'?
-		require
-			other_not_void: other /= Void
-		do
-			if other.count <= count then
-				Result := substring_index (other, 1) > 0
-			end
-		end
-
 feature -- Measurement
 
 	capacity: INTEGER is
@@ -466,6 +437,33 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	has (c: CHARACTER): BOOLEAN is
+			-- Does string include `c'?
+		local
+			counter: INTEGER
+		do
+			if not is_empty then
+				from
+					counter := 1
+				until
+					counter > count or else (item (counter) = c)
+				loop
+					counter := counter + 1
+				end
+				Result := (counter <= count)
+			end
+		end
+
+	has_substring (other: STRING): BOOLEAN is
+			-- Does `Current' contain `other'?
+		require
+			other_not_void: other /= Void
+		do
+			if other.count <= count then
+				Result := substring_index (other, 1) > 0
+			end
+		end
 
 	extendible: BOOLEAN is True
 			-- May new items be added? (Answer: yes.)
@@ -620,7 +618,7 @@ feature -- Element change
 			--	 item (index_pos + i) = old other.item (start_pos + i)
 		end
 
-	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
+	replace_substring (s: STRING; start_pos, end_pos: INTEGER) is
 			-- Replace characters from `start_pos' to `end_pos' with `s'.
 		require
 			string_exists: s /= Void
@@ -640,7 +638,9 @@ feature -- Element change
 			str_replace ($area, $s_area, count, s.count, start_pos, end_pos)
 			count := new_size
 		ensure
-			new_count: count = old count + s.count - end_pos + start_pos - 1
+			new_count: count = old count + old s.count - end_pos + start_pos - 1
+			replaced: is_equal (old (substring (1, start_pos - 1) +
+				s + substring (end_pos + 1, count)))
 		end
 
 	replace_substring_all (original, new: like Current) is
@@ -671,7 +671,7 @@ feature -- Element change
 	replace_blank is
 			-- Replace all current characters with blanks.
 		do
-			replace_character (' ')
+			fill_with (' ')
 		ensure
 			same_size: (count = old count) and (capacity = old capacity)
 			-- all_blank: For every `i' in 1..`count, `item' (`i') = `Blank'
@@ -687,13 +687,24 @@ feature -- Element change
 			-- all_blank: For every `i' in 1..`capacity', `item' (`i') = `Blank'
 		end
 
-	replace_character (c: CHARACTER) is
-			-- Replace all current characters with characters all equal to `c'.
+	fill_with (c: CHARACTER) is
+			-- Replace every character with `c'.
 		do
 			($area).memory_set (c.code, count)
 		ensure
-			same_size: (count = old count) and (capacity = old capacity)
-			-- all_char: For every `i' in 1..`count', `item' (`i') = `c'
+			same_count: (count = old count) and (capacity = old capacity)
+			filled: occurrences (c) = count
+		end
+
+	replace_character (c: CHARACTER) is
+			-- Replace every character with `c'.
+		obsolete
+			"ELKS 2001: use `fill_with' instead'"
+		do
+			fill_with (c)
+		ensure
+			same_count: (count = old count) and (capacity = old capacity)
+			filled: occurrences (c) = count
 		end
 
 	fill_character (c: CHARACTER) is
@@ -973,7 +984,8 @@ feature -- Element change
 		do
 			insert_string (s, i)
 		ensure
-			new_count: count = old count + s.count
+			inserted: is_equal (old substring (1, i - 1)
+				+ old clone (s) + old substring (i, count))
 		end
 		
 	insert_string (s: STRING; i: INTEGER) is
@@ -1051,7 +1063,7 @@ feature -- Removal
 		require
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index
+			meaningful_interval: start_index <= end_index + 1
 		local
 			i: INTEGER
 		do

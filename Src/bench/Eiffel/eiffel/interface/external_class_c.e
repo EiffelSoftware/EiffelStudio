@@ -162,6 +162,9 @@ feature -- Initialization
 				-- have been processed yet.
 			class_interface.process_features (l_feat_tbl)
 
+				-- Ensure .NET classes have a skeleton.
+			set_skeleton (l_feat_tbl.skeleton)
+
 				-- Save freshly computed feature table on disk.
 			Tmp_feat_tbl_server.put (l_feat_tbl)
 			external_class := Void

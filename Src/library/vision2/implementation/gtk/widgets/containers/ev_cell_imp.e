@@ -63,12 +63,14 @@ feature -- Element change
 		do
 			i := item
 			if i /= Void then
+				remove_item_actions.call ([i])
 				imp ?= i.implementation
 				C.gtk_container_remove (c_object, imp.c_object)
 			end
 			if v /= Void then
 				imp ?= v.implementation
 				C.gtk_container_add (c_object, imp.c_object)
+				new_item_actions.call ([v])
 			end
 		end
 
@@ -101,6 +103,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/26 01:27:03  brendel
+--| Added call to new_item_actions and remove_item_actions.
+--|
 --| Revision 1.3  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

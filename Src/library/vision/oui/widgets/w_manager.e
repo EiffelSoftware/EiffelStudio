@@ -274,17 +274,7 @@ feature -- Basic operations
 					nbr_to_remove := nbr_to_remove + 1
 				end
 			end;
-				-- Correctly destroy the widget's implementation
-			widget.implementation.destroy (list);
-				-- Remove the widget's implementation
-			from
-				list.start
-			until
-				list.after
-			loop
-				list.item.remove_implementation;
-				list.forth
-			end
+				
 					-- Remove widget(s) from Current.
 			count := count - nbr_to_remove;
 			from
@@ -303,6 +293,18 @@ feature -- Basic operations
 				widget_area.put (Void, nbr_to_remove + count - 1);
 				nbr_to_remove := nbr_to_remove - 1
 			end;
+
+				-- Correctly destroy the widget's implementation
+			widget.implementation.destroy (list);
+				-- Remove the widget's implementation
+			from
+				list.start
+			until
+				list.after
+			loop
+				list.item.remove_implementation;
+				list.forth
+			end
 		ensure
 			no_void_entries: not has_void_entries 
 		end;

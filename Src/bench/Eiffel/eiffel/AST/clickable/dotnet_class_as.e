@@ -464,7 +464,7 @@ feature {NONE} -- Formatting
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		local
-			a_category_list, not_exported: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]
+			a_category_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]
 		do
 			from
 				features.start

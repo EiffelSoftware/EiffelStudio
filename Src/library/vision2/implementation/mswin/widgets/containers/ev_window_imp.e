@@ -963,15 +963,9 @@ feature {EV_ANY_I} -- Implementation
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		local
-			app: EV_APPLICATION
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 			a_menu: WEL_MENU
 			titled_window: EV_TITLED_WINDOW_IMP
 		do
-			create env
-			app := env.application
-			app_imp ?= app.implementation
 				-- The `Wm_ncactive' message is sent by windows when the
 				-- non client area of Current needs to be changed to indicate an
 				-- active or non active state (Blue or Grey as default).
@@ -979,16 +973,16 @@ feature {EV_ANY_I} -- Implementation
 					-- `wparam' is equal to 1 then the non client area of
 					-- `Current' is being changed to indicate active.				
 				if wparam = 1 then
-					if app_imp.pick_and_drop_source /= Void or app_imp.awaiting_movement or
-						app_imp.transport_just_ended or app_imp.override_from_mouse_activate then
+					if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
+						application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
 						disable_default_processing
 						override_movement := False
-						app_imp.clear_transport_just_ended
+						application_imp.clear_transport_just_ended
 					end
 				else
-					if app_imp.override_from_mouse_activate then
+					if application_imp.override_from_mouse_activate then
 						disable_default_processing
-						app_imp.clear_override_from_mouse_activate
+						application_imp.clear_override_from_mouse_activate
 					end
 				end
 			elseif msg = Wm_activate then
@@ -1239,6 +1233,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2001/06/28 22:53:40  rogers
+--| `window_process_message' now  always uses `application_imp'.
+--|
 --| Revision 1.55  2001/06/13 20:16:37  pichery
 --| Moved features to their right "feature" clause.
 --|

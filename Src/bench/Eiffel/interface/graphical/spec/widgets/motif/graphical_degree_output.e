@@ -14,7 +14,6 @@ inherit
 	WINDOWS;
 	INTERFACE_W;
 	WINDOW_ATTRIBUTES;
-	SHARED_CURSORS;
 	G_ANY;
 	MEL_COMMAND;
 	SHARED_EIFFEL_PROJECT;
@@ -30,7 +29,9 @@ inherit
 			put_dead_code_removal_message, finish_degree_output,
 			put_start_reverse_engineering, put_case_cluster_message,
 			put_case_class_message, put_case_message, put_string,
-			put_resynchronizing_breakpoints_message
+			put_resynchronizing_breakpoints_message,
+			put_class_document_message,
+			put_start_documentation
 		end 
 
 feature -- Start output features
@@ -47,14 +48,13 @@ feature -- Start output features
 				just_created := True;
 				create_window
 			end;
-			parent.set_title (l_Compilation_progress);
+			parent.set_title (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
-			nbr_of_clusters := total_nbr;
 			current_degree := 6;
 
-			degree_l.set_label_as_string (l_Degree);
-			entity_l.set_label_as_string (l_Compilation_cluster);
-			nbr_to_go_l.set_label_as_string (l_Clusters_to_go);
+			degree_l.set_label_as_string (Interface_names.d_Degree);
+			entity_l.set_label_as_string (Interface_names.d_Compilation_cluster);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Clusters_to_go);
 			current_nbr_to_go_l.set_label_as_string (total_nbr.out);
 			current_degree_l.set_label_as_string (current_degree.out);
 			current_entity_l.set_label_as_string (Empty_string);
@@ -65,7 +65,7 @@ feature -- Start output features
 			progress_bar.reset_percentage;
 			i_name := clone (icon_name);
 			i_name.extend (' ');
-			i_name.append (l_Degree);
+			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
 			process_events;
@@ -74,12 +74,11 @@ feature -- Start output features
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			nbr_of_clusters := 0
 			progress_bar.increase_percentage (100);
 			update_interface (Empty_string, 0, 100);
-			entity_l.set_label_as_string (l_Compilation_class);
-			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
-			degree_l.set_label_as_string (l_Degree);
+			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
+			degree_l.set_label_as_string (Interface_names.d_Degree);
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
@@ -100,7 +99,7 @@ feature -- Start output features
 			progress_bar.reset_percentage;
 			i_name := clone (icon_name);
 			i_name.extend (' ');
-			i_name.append (l_Degree);
+			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
 			process_events
@@ -136,9 +135,8 @@ feature -- Start output features
 		do
 			set_project_icon_name (removing_dead_code_message)
 			put_non_degree_message (removing_dead_code_message);
-				-- FIXME ***** to be in INTERFACE_W
-			entity_l.set_label_as_string (l_features_processed);
-			nbr_to_go_l.set_label_as_string ("Features to go: ");
+			entity_l.set_label_as_string (Interface_names.d_Features_processed);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Features_to_go);
 		end;
 
 	put_end_dead_code_removal_message  is
@@ -155,7 +153,6 @@ feature -- Start output features
 				icon_name := Void;
 			end;
 			if not is_destroyed then
-				unrealize;
 				unmanage
 			end;
 		end;
@@ -163,15 +160,38 @@ feature -- Start output features
 	put_start_reverse_engineering (total_num: integer) is
 			-- initialize the reverse engineering part.
 		do
-			parent.set_title (l_Reverse_engineering);
+			parent.set_title (Interface_names.d_Reverse_engineering);
 			icon_name := Project_tool.icon_name;	
 			total_number := total_num;
 			processed := 0;
-			degree_l.set_label_as_string (l_Compilation_cluster);
-			entity_l.set_label_as_string (l_Compilation_class);
-			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
+			degree_l.set_label_as_string (Interface_names.d_Compilation_cluster);
+			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
 			current_nbr_to_go_l.set_label_as_string (total_num.out);
 			current_entity_l.set_label_as_string (Empty_string);
+		end;
+
+	put_start_documentation (total_num: INTEGER) is
+			-- Initialize the document generation.
+		do
+			total_number := total_num;
+			processed := 0;
+			if is_destroyed then	
+				create_window
+			end;
+			parent.set_title ("Documentation"); -- *** Fixme
+			icon_name := Project_tool.icon_name;	
+			total_number := total_num;
+			processed := 0;
+			degree_l.set_label_as_string (Interface_names.d_Compilation_cluster);
+			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
+			current_nbr_to_go_l.set_label_as_string (total_num.out);
+			current_entity_l.set_label_as_string (Empty_string);
+			cancel_b.set_insensitive;
+			if not is_managed then	
+				popup_window
+			end;
 		end;
 
 	put_case_message (a_message: STRING) is
@@ -187,6 +207,7 @@ feature -- Start output features
 				current_entity_l.set_label_as_string (Empty_string);
 				percentage_l.set_label_as_string (Zero_percent);
 			end;
+			cancel_b.set_insensitive;
 			if not is_managed then	
 				popup_window
 			end;
@@ -197,7 +218,7 @@ feature -- Start output features
 			-- Put a message to indicate that the
 			-- breakpoints are being resyncronized.
 		do
-			put_non_degree_message (l_Resynchronizing_breakpoints);
+			put_non_degree_message (Interface_names.d_Resynchronizing_breakpoints);
 		end;
 
 feature -- Output on per class
@@ -206,13 +227,15 @@ feature -- Output on per class
 			-- Put message to indicate that `a_cluster' is being
 			-- compiled during degree six' clusters to go. 
 		local
-			a_per: INTEGER
+			a_per: INTEGER;
+			nbr_of_clusters: INTEGER
 		do
-			a_per := percentage_calcuation (nbr_of_clusters, total_number);
+			nbr_of_clusters := total_number - processed;
+			a_per := percentage_calcuation (nbr_of_clusters);
 
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per);
-			nbr_of_clusters := nbr_of_clusters - 1;
+			processed := processed + 1;
 		end;
 
 	put_degree_5, put_degree_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
@@ -222,13 +245,22 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := percentage_calcuation (nbr_to_go, nbr_to_go + processed);
+			total_number := nbr_to_go + processed;
+			a_per := percentage_calcuation (nbr_to_go);
 			progress_bar.update_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 			processed := processed + 1;
 		end;
 
-	put_degree_3,
+	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during a degree pass with `nbr_to_go' 
+			-- classes to go.
+		do
+			processed := processed + 1; -- Used when error ocurrs
+			put_degree_2 (a_class, nbr_to_go)
+		end;
+
 	put_degree_2,
 	put_degree_1, 
 	put_degree_minus_1, 
@@ -242,7 +274,7 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := percentage_calcuation (nbr_to_go, total_number);
+			a_per := percentage_calcuation (nbr_to_go);
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 		end;
@@ -255,7 +287,8 @@ feature -- Output on per class
 			a_per: INTEGER
 		do
 			processed := features_done + processed;
-			a_per := percentage_calcuation (features_done, features_done + nbr_to_go);
+			total_number := processed + nbr_to_go;
+			a_per := percentage_calcuation (processed);
 			progress_bar.update_percentage (a_per);
 			update_interface (processed.out, nbr_to_go, a_per);
 		end;
@@ -272,13 +305,26 @@ feature -- Output on per class
 			process_events
 		end;
 
+	put_class_document_message (a_class: E_CLASS) is
+			-- Put message to indicate that `a_class' is being
+			-- generated for documentation.
+		local
+			a_per: INTEGER
+		do
+			a_per := percentage_calcuation (processed);
+			processed := processed + 1;
+			progress_bar.increase_percentage (a_per);
+			update_interface (a_class.name_in_upper,
+					total_number - processed, a_per)
+		end;
+
 	put_case_class_message (a_class: E_CLASS) is
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for case.
 		local
 			a_per: INTEGER
 		do
-			a_per := percentage_calcuation (processed, total_number);
+			a_per := percentage_calcuation (processed);
 			processed := processed + 1;
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_class.name_in_upper,
@@ -287,10 +333,10 @@ feature -- Output on per class
 
 feature {NONE} -- Implementation
 
-	percentage_calcuation (to_go, total: INTEGER): INTEGER is
-			-- Percentage calcuation based on `to_go' and `total'
+	percentage_calcuation (to_go: INTEGER): INTEGER is
+			-- Percentage calcuation based on `to_go' and `total_number'
 		do
-			Result := 100 - (100 * to_go) // total;
+			Result := 100 - (100 * to_go) // total_number;
 			if Result = 100 and then to_go /= 0 then
 				Result := 99
 			end	
@@ -446,6 +492,8 @@ feature {NONE} -- Implementation
 			update_resources;
 
 			percentage_l.set_bottom_offset (cancel_b.height + 10);
+			--disable_default_positioning;
+			realize;
 		end;
 
 	update_resources is
@@ -505,9 +553,13 @@ feature {NONE} -- Implementation
 			-- Popup the window.
 		local
 			cursor_imp: SCREEN_CURSOR_X;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			new_x, new_y: INTEGER
 		do
 			!! mp.do_nothing;
+			--new_x := parent.x + (parent.width - width) // 2;
+			--new_y := parent.y + (parent.height - height) // 2
+			--set_x_y (new_x, new_y);
 			manage;
 			parent.set_max_height (height);
 			parent.set_max_width (width);

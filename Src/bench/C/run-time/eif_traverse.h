@@ -27,8 +27,8 @@ extern "C" {
 #define INDEPEND_ACCOUNT 0x11
 #define RECOVER_ACCOUNT	0x15
 
-RT_LNK EIF_REFERENCE find_referers (EIF_REFERENCE target, int result_type);
-RT_LNK EIF_REFERENCE find_instance_of (int instance_type, int result_type);
+RT_LNK EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type);
+RT_LNK EIF_REFERENCE find_instance_of (EIF_INTEGER instance_type, EIF_INTEGER result_type);
 
 #ifdef __cplusplus
 }

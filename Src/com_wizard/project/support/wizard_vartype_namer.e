@@ -323,15 +323,12 @@ feature {NONE} -- Implementation
 	ec_array_function_names: HASH_TABLE [STRING, INTEGER]
 			-- EC conversion function names for arrays.
 
-	
-	
 invariant
 	non_void_c_names: c_names /= Void
 	non_void_eiffel_names: eiffel_names /= Void
 	non_void_variant_field_names: variant_field_names /= Void
 	non_void_ce_array_function_names: ce_array_function_names /= Void
 	non_void_ec_array_function_names: ec_array_function_names /= Void
-	
 
 end -- class WIZARD_VARTYPE_NAMER
 

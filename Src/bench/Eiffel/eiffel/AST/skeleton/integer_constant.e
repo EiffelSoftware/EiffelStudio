@@ -254,12 +254,22 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			buf.putchar ('(')
 			inspect size
-			when 8, 16, 32 then
+			when 8 then
+				buf.putstring (integer_8_cast)
+				buf.append_character ('(')
+				buf.putstring (lower.out)
+			when 16 then
+				buf.putstring (integer_16_cast)
+				buf.append_character ('(')
+				buf.putstring (lower.out)
+			when 32 then
+				buf.putstring (integer_32_cast)
+				buf.append_character ('(')
 				buf.putstring (lower.out)
 			when 64 then
-				buf.putstring ("EIF_INTEGER_64) (")
+				buf.putstring (integer_64_cast)
+				buf.append_character ('(')
 				buf.putstring (to_integer_64.out)
 			end
 			buf.putchar ('L')
@@ -324,6 +334,14 @@ feature {NONE} -- Integer_type constants
 		once
 			create Result.make_for_constant (32, 16)
 		end
+
+feature {NONE} -- Code generation string constants
+
+	integer_8_cast: STRING is "(EIF_INTEGER_8) "
+	integer_16_cast: STRING is "(EIF_INTEGER_16) "
+	integer_32_cast: STRING is "(EIF_INTEGER_32) "
+	integer_64_cast: STRING is "(EIF_INTEGER_64) "
+			-- String used to generate a cast.
 
 feature {NONE} -- Translation
 

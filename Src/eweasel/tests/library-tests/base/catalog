@@ -13,6 +13,7 @@ test	merge-arrayed-list						list004 tcf list +list
 test	remove-prune-arrayed-list				list005 tcf list +list
 test	duplicate-arrayed-list					list006 tcf list +list
 test	insert-arrayed-list						list007 tcf list +list
+test	arrayed-list-prune-all					list008 tcf list +list
 
 test	disjoint-sets							set001 tcf set
 test	disjoint-sets-expanded					set001a tcf set

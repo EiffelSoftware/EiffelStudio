@@ -155,14 +155,14 @@ feature {NONE} -- Implementation
 				
 					-- Now add the application class name. 0ne at start
 					-- and one at end of file, so do this twice.
-				application_class_name := project_Settings.application_class_name.as_lower
+				application_class_name := project_settings.application_class_name.as_upper
 				change_pos := application_text.substring_index (application_tag, 1)
 				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
 				change_pos := application_text.substring_index (application_tag, 1)
 				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
 				
 				application_file_name := clone (generated_path)
-				application_file_name.extend (application_class_name + eiffel_class_extension)
+				application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
 
 				create application_output_file.make_open_write (application_file_name)
 				application_output_file.start
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 
 				
 				set_progress (0.7)
-				-- Generate the widget declarations and creation lines.
+					-- Generate the widget declarations and creation lines.
 				generate_declarations (current_document.root_element, 1)
 				
 					-- Create storage for all parent child name pairs.

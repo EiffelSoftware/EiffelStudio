@@ -14,7 +14,7 @@ inherit
 		redefine
 			is_multi_type, deep_actual_type, is_equivalent,
 			dump, ext_append_to, conform_to, type_i,
-			create_info, instantiation_of
+			create_info, instantiation_of, generics
 		end
 
 	ARRAY [TYPE_A]
@@ -40,6 +40,12 @@ feature -- Property
 
 	last_type: GEN_TYPE_A
 			-- Last type conforming to Current
+
+	generics: ARRAY [TYPE_A] is
+			-- Actual generic types
+		do
+			Result := last_type.generics
+		end
 
 	is_multi_type: BOOLEAN is True
 			-- We are handling a manifest array.

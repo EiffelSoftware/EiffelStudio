@@ -77,6 +77,7 @@ feature -- Access
 			container: GB_CONTAINER_OBJECT
 			cell: GB_CELL_OBJECT
 			primitive: GB_PRIMITIVE_OBJECT
+			menu_bar: GB_MENU_BAR_OBJECT
 			can_drop: BOOLEAN
 			constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
@@ -148,7 +149,15 @@ feature -- Access
 					end
 				end
 				
-				
+				-- Special case for menu bar.
+				-- Menu bars are not widgets, or items, and can only
+				-- be replaced by other menu bars.
+			if type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_BAR")) then
+				menu_bar ?= constructor_item.object
+				if menu_bar = Void then
+					can_drop := False
+				end
+			end	
 				
 			check
 				parent_of_object_not_void: object.parent_object /= Void

@@ -29,6 +29,11 @@ inherit
 		
 	GB_SHARED_COMMAND_HANDLER
 	
+	GB_NAMING_UTILITIES
+		undefine
+			default_create, copy
+		end
+	
 	GB_WIDGET_UTILITIES
 		undefine
 			default_create, copy
@@ -244,18 +249,23 @@ feature {NONE} -- Implementation
 		end
 		
 	validate_name_change (index: INTEGER) is
-			--
+			-- text field, `all_text_fields' @ `index' has been modified, 
+			-- so validate, and update display accordingly.
 		local
 			current_text_field: EV_TEXT_FIELD
+			current_caret_position: INTEGER
 		do
 			current_text_field := all_text_fields @ index
-			if object_handler.name_in_use (current_text_field.text, Void) then
-				current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
+				if object_handler.name_in_use (current_text_field.text, Void) then
+					current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+				else
+					current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				end
 			else
-				current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				undo_last_character (current_text_field)
 			end
 		end
-		
 		
 	feature_name_of_object_event (info: GB_ACTION_SEQUENCE_INFO): STRING is
 			-- Does `object' have an event matching `info'. If so, then

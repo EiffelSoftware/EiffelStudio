@@ -83,7 +83,7 @@ feature -- Access
 		end;
 
 	has (key: H): BOOLEAN is
-			-- Is there an item in the table with key `key'?(d.H)
+			-- Is there an item in the table with key `key'?
 		do
 			internal_search (key);
 			Result := (control = Found_constant)

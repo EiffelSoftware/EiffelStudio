@@ -75,8 +75,6 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (~accepts_stone)
 		end
 
-feature -- Measurement
-
 feature -- Status report
 
 	associated_window: EV_WINDOW is
@@ -85,23 +83,14 @@ feature -- Status report
 			Result := tool.debugger_manager.debugging_window.window
 		end
 
-feature -- Status setting
+feature {EB_PRETTY_PRINT_DIALOG} -- Status report
 
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
+	accepts_stone (st: OBJECT_STONE): BOOLEAN is
+			-- Can the user drop `st'?
+		do
+			Result := (create {DUMP_VALUE}.make_object (st.object_address, st.dynamic_class)).
+				has_formatted_output
+		end
 
 feature -- Basic operations
 
@@ -137,10 +126,6 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {EB_PRETTY_PRINT_DIALOG} -- Dialog
 
 	remove_dialog (d: EB_PRETTY_PRINT_DIALOG) is
@@ -166,12 +151,6 @@ feature {NONE} -- Implementation
 		do
 			pop_up_new_dialog
 			last_opened_dialog.set_stone (st)
-		end
-
-	accepts_stone (st: OBJECT_STONE): BOOLEAN is
-			-- Can the user drop `st'?
-		do
-			Result := (create {DUMP_VALUE}.make_object (st.object_address, st.dynamic_class)).has_formatted_output
 		end
 
 	opened_dialogs: ARRAYED_LIST [EB_PRETTY_PRINT_DIALOG]

@@ -301,7 +301,7 @@ feature -- formatter
 			if content /= void then
 				content.format (ctxt)
 			end;
-			if not ctxt.no_internals then
+			if not ctxt.is_short then
 				ctxt.put_special(";");
 				routine_as ?= content;
 				if routine_as /= Void then
@@ -338,7 +338,7 @@ feature -- Replication
 			end
 		end;
 		
-feature {BODY_AS, FEATURE_FSAS}	-- Replication & Flat/short
+feature {BODY_AS, FEATURE_AS}	-- Replication & Flat/short
 
 	set_arguments (a: like arguments) is
 		do

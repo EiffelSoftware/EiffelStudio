@@ -50,7 +50,6 @@ feature -- formatter
 			ctxt.always_succeed;
 			if value then
 				ctxt.put_keyword ("true")
-
 			else
 				ctxt.put_keyword ("false")
 			end

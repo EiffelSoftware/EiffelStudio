@@ -12,16 +12,20 @@ creation
 
 feature -- Creation
 
-	make (cn: STRING; t: BOOLEAN) is
+	make (cn: STRING; t: BOOLEAN; b: BOOLEAN) is
 		do
 			class_name := cn;
 			class_name.to_lower;
-			troffed := t
+			troffed := t;
+			only_current_class := b
 		end;
 
 	class_name: STRING;
 
 	troffed: BOOLEAN;
+
+	only_current_class: BOOLEAN;
+		-- Only do short for current class
 
 feature
 
@@ -46,7 +50,12 @@ feature
 						io.error.putstring (class_name);
 						io.error.putstring (" is not in the system%N");
 					else
-						!!ctxt.make (class_c, True);
+						!!ctxt.make (class_c);
+						ctxt.set_is_short;
+						if only_current_class then
+							ctxt.set_current_class_only
+						end;
+						ctxt.execute;
 						if troffed then
 							!! troffer.make;
 							troffer.process_text (ctxt.text);

@@ -312,6 +312,7 @@ feature -- Type check, byte code and dead code removal
 			target.format (ctxt);
 			if  call /= void then
 				ctxt.need_dot;
+				ctxt.keep_types;
 				call.format (ctxt);
 			end;
 			ctxt.put_breakable;

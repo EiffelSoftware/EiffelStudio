@@ -115,22 +115,26 @@ feature
 			else
 				second_int := make_integer (upper);
 			end;
-			from
-				!!Result.make (first_int, second_int);
-				int_intervals.start;
-			until	
-				int_intervals.after
-			loop
-				if not Result.disjunction (int_intervals.item) then
-						-- Error
-					!!vomb3;
-					context.init_error (vomb3);
-					vomb3.set_interval (Result.intersection (int_intervals.item));
-					Error_handler.insert_error (vomb3);
+			!!Result.make (first_int, second_int);
+			if Result.is_good_range then
+				from
+					int_intervals.start;
+				until	
+					int_intervals.after
+				loop
+					if not Result.disjunction (int_intervals.item) then
+							-- Error
+						!!vomb3;
+						context.init_error (vomb3);
+						vomb3.set_interval (Result.intersection (int_intervals.item));
+						Error_handler.insert_error (vomb3);
+					end;
+					int_intervals.forth;
 				end;
-				int_intervals.forth;
+				int_intervals.add (Result);
+			else
+				Result := Void
 			end;
-			int_intervals.add (Result);
 		end;
 
 	character_interval: CHAR_INTER_B is
@@ -150,22 +154,26 @@ feature
 			else
 				second_char := upper.make_character;
 			end;
-			from
-				!!Result.make (first_char, second_char);
-				char_intervals.start;
-			until
-				char_intervals.after
-			loop
-				if not Result.disjunction (char_intervals.item) then
-						-- Error
-					!!vomb3;
-					context.init_error (vomb3);
-					vomb3.set_interval (Result.intersection (char_intervals.item));
-					Error_handler.insert_error (vomb3);
+			!!Result.make (first_char, second_char);
+			if Result.is_good_range then
+				from
+					char_intervals.start;
+				until
+					char_intervals.after
+				loop
+					if not Result.disjunction (char_intervals.item) then
+							-- Error
+						!!vomb3;
+						context.init_error (vomb3);
+						vomb3.set_interval (Result.intersection (char_intervals.item));
+						Error_handler.insert_error (vomb3);
+					end;
+					char_intervals.forth;
 				end;
-				char_intervals.forth;
+				char_intervals.add (Result);
+			else
+				Result := Void
 			end;
-			char_intervals.add (Result);
 		end;
 
 	make_integer (bound: ATOMIC_AS): INT_VAL_B is

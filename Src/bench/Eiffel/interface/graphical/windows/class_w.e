@@ -117,6 +117,7 @@ feature {NONE}
 			!!showtext_command.make (format_bar, text_window);
 			!!showflat_command.make (format_bar, text_window);
 			!!showflatshort_command.make (format_bar, text_window);
+			!!showshort_command.make (format_bar, text_window);
 			!!showancestors_command.make (format_bar, text_window);
 			!!showdescendants_command.make (format_bar, text_window);
 			!!showclients_command.make (format_bar, text_window);
@@ -134,8 +135,10 @@ feature {NONE}
 				format_bar.attach_left_widget (showtext_command, showflat_command, 0);
 				format_bar.attach_top (showflatshort_command, 0);
 				format_bar.attach_left_widget (showflat_command, showflatshort_command, 0);
+				format_bar.attach_top (showshort_command, 0);
+				format_bar.attach_left_widget (showflatshort_command, showshort_command, 0);
 				format_bar.attach_top (showancestors_command, 0);
-				format_bar.attach_left_widget (showflatshort_command, showancestors_command, 15);
+				format_bar.attach_left_widget (showshort_command, showancestors_command, 15);
 				format_bar.attach_top (showdescendants_command, 0);
 				format_bar.attach_left_widget (showancestors_command, showdescendants_command, 0);
 				format_bar.attach_top (showclients_command, 0);
@@ -187,6 +190,7 @@ feature {NONE}
 	showsuppliers_command: SHOW_SUPPLIERS;
 	showattributes_command: SHOW_ATTRIBUTES;
 	showroutines_command: SHOW_ROUTINES;
+	showshort_command: SHOW_SHORT;
 	showdeferreds_command: SHOW_DEFERREDS;
 	showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;

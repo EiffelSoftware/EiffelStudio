@@ -293,7 +293,7 @@ end;
 	position: INTEGER is
 			-- current position in the text
 		do
-			if lines.before then 
+			if lines.before or else lines.empty then 
 				Result := 0
 			elseif lines.after then
 				Result := lines.last.position + lines.last.text.count;

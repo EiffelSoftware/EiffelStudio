@@ -10,20 +10,8 @@ inherit
 creation
 
 	make
-
 	
 feature 
-
-	make (i, j: CHAR_VAL_B) is
-		do
-			if i < j then
-				lower := i;
-				upper := j;
-			else
-				lower := j;
-				upper := i;
-			end;
-		end;
 
 	lower: CHAR_VAL_B;
 			-- Lower bound
@@ -33,6 +21,8 @@ feature
 
 	generate is
 			-- Generate then interval
+		require else
+			is_good_range: is_good_range
 		local
 			low, up: INTEGER;
 		do

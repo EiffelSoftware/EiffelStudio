@@ -1,4 +1,3 @@
-
 -- Abstract description of an access to an Eiffel feature (note that this
 -- access can not be the first call of a nested expression).
 
@@ -95,7 +94,7 @@ feature -- Type check, byte code and dead code removal
 			obs_warn: OBS_FEAT_WARN;
 			context_export: EXPORT_I;
 			feature_export: EXPORT_I;
-			vape_check: BOOLEAN;
+			like_argument_detected, vape_check: BOOLEAN;
 			vape: VAPE;
 		do
 			last_type := context.item;
@@ -165,11 +164,19 @@ feature -- Type check, byte code and dead code removal
 						arg_type ?= a_feature.arguments.i_th (i);
 							-- Evaluation of the actual type of the
 							-- argument declaration
-						arg_type := arg_type.conformance_type;
-							-- Instantiation of it in the context of
-							-- the context of the target
-						arg_type := arg_type.instantiation_in
+						if arg_type.is_like_argument then
+							arg_type := arg_type.conformance_type;
+							arg_type := arg_type.instantiation_in
 											(last_type, last_id).actual_type;
+							if arg_type.is_basic then
+								like_argument_detected := True;
+							end;
+						else
+								-- Instantiation of it in the context of
+								-- the context of the target
+							arg_type := arg_type.instantiation_in
+											(last_type, last_id).actual_type;
+						end;
 							-- Conformance: take care of constrained
 							-- genericity
 						current_item := context.i_th (context_count + i); 
@@ -189,6 +196,9 @@ feature -- Type check, byte code and dead code removal
 							-- parameters line for byte code
 						Attachments.insert (arg_type);
 						i := i - 1;
+					end;
+					if like_argument_detected then
+						update_argument_type (a_feature);
 					end;
 				end;
 
@@ -321,6 +331,69 @@ feature -- Type check, byte code and dead code removal
 			Result := access_line.access;
 			Result.set_parameters (params);
 			access_line.forth;
+		end;
+
+	update_argument_type (feat: FEATURE_I) is
+			-- Update the argument types for like_argument.
+			-- Retrieve the corresponding argument type for the like
+			-- argument and update the like_argument type
+		local
+			args: FEAT_ARG;
+			arg_pos, i, nbr: INTEGER;
+			type_a: TYPE_A;
+			like_arg: LIKE_ARGUMENT;
+			pos: INTEGER;
+		do
+io.error.putstring ("feature call: ");
+io.error.putstring (feat.feature_name);
+io.error.new_line;
+			args := feat.arguments;
+				-- Attachment types are inserted in the reversal
+				-- order in `Attachments' during type check
+			pos := Attachments.cursor;
+			from
+				i := 1;
+				nbr := args.count; 
+			until
+				i > nbr
+			loop
+				like_arg ?= args.i_th (i);
+				if like_arg /= Void then
+					arg_pos := pos - like_arg.argument_position + 1;
+						--| Retrieve type in which like_argument is
+						--| referring to.
+					Attachments.go_i_th (arg_pos);
+					type_a := Attachments.item;
+io.error.putstring ("retrieve from pos: ");
+io.error.putint (arg_pos);
+io.error.putstring (" item: ")
+io.error.putstring (type_a.dump);
+io.error.new_line;
+						--| Replace item in like argument
+					Attachments.go_i_th (pos - i + 1);
+					if Attachments.item.is_basic then
+io.error.putstring ("updating pos: ");
+io.error.putint (pos - i + 1);
+io.error.putstring (" item: ")
+io.error.putstring (Attachments.item.dump);
+io.error.new_line;
+							--| Replace item in like argument
+						Attachments.change_item (type_a);
+					end;
+				end;
+				i := i + 1
+			end;	
+from
+	Attachments.start
+until
+	Attachments.item = Void
+loop
+	io.error.putint (Attachments.cursor);
+	io.error.putstring (Attachments.item.dump);
+	io.error.new_line;
+	Attachments.forth
+end
+			Attachments.go_i_th (pos);
 		end;
 		
 	Attachments: LINE [TYPE_A] is

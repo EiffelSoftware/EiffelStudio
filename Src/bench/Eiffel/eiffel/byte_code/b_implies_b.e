@@ -25,9 +25,9 @@ feature
 		do
 			generated_file.putchar ('(');
 			generated_file.putchar ('!');
-			left.generate;
+			left.print_register;
 			generated_file.putstring (" || ");
-			right.generate;
+			right.print_register;
 			generated_file.putchar (')');
 		end;
 

@@ -58,9 +58,25 @@ feature -- formatter
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			tmp: STRING;
+			i: INTEGER
 		do
+			!! tmp.make (0);
+			from
+				i := 1
+			until
+				i > value.count
+			loop
+				if value.item (i) = '%N' then
+					tmp.append ("%%N");
+				else
+					tmp.append_character (value.item (i))
+				end;
+				i := i + 1
+			end;
 			ctxt.put_special ("%"");
-			ctxt.put_string (value);
+			ctxt.put_string (tmp);
 			ctxt.put_special ("%"");
 			ctxt.always_succeed;
 		end;

@@ -43,11 +43,20 @@ feature -- Type check, byte code production, dead code removal
 
 	byte_node: CASE_B is
 			-- Associated byte code
+		local
+			tmp, tmp2: BYTE_LIST [BYTE_NODE]
 		do
-			!!Result;
-			Result.set_interval (interval.byte_node);
+			tmp := interval.byte_node;
+			tmp := tmp.remove_voids;
 			if compound /= Void then
-				Result.set_compound (compound.byte_node);
+				tmp2 := compound.byte_node
+			end;
+			if tmp /= Void then
+				!!Result;
+				Result.set_interval (tmp);
+				if compound /= Void then
+					Result.set_compound (tmp2);
+				end
 			end;
 		end;
 
@@ -71,7 +80,7 @@ feature -- Formatter
 			ctxt.set_separator (",");
 			ctxt.no_new_line_between_tokens;
 			interval.format (ctxt);
-			ctxt.put_keyword ("then ");
+			ctxt.put_keyword (" then ");
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;

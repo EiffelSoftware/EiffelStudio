@@ -22,6 +22,18 @@ feature
 		deferred
 		end;
 
+	is_good_range: BOOLEAN is
+			-- Is Current lower <= upper?
+		do
+			Result := (lower <= upper)
+		end;
+
+	make (i: like lower; j: like upper) is
+		do
+			lower := i;
+			upper := j;
+		end;
+
 	disjunction (other: like Current): BOOLEAN is
 			-- Is the intersection of Current and `other' null ?
 		require
@@ -29,7 +41,7 @@ feature
 		do
 			Result := 	lower > other.upper
 						or else
-						upper < other.lower;
+						upper < other.lower 
 		end;
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -51,6 +63,7 @@ feature -- Byte code generation
 			-- Generate byte code for interval range.
 		require
 			not (lower = Void or else upper = Void);
+			is_good_range: is_good_range
 		do
 			lower.make_byte_code (ba);
 			upper.make_byte_code (ba);

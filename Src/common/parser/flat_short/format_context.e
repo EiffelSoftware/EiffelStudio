@@ -2,60 +2,85 @@ class FORMAT_CONTEXT
 
 inherit
 
+	SPECIAL_AST;
 	SHARED_SERVER;
-	SHARED_INST_CONTEXT
+	SHARED_INST_CONTEXT;
 
 creation
 
 	make
 
-feature -- compilation test
+feature -- Flat and flat/short modes
 
-	flat_struct: FLAT_STRUCT
+	set_in_bench_mode is
+		do
+			in_bench_mode_bool.set_value (True);
+		end;
 
-feature -- commit / rollback system
+	set_current_class_only is
+		do
+			current_class_only := True;	
+		end
 
-	make (c: CLASS_C; is_short: BOOLEAN) is
+	set_is_short is
+		do
+			is_short_bool.set_value (True);
+		end;
+
+feature
+
+	make (c: CLASS_C) is
+		do
+			class_c := c;
+			current_class_only := False;
+			is_short_bool.set_value (False);
+		ensure
+			class_c_set: class_c = c;
+			batch_mode:	not in_bench_mode;
+			analyze_ancestors: not current_class_only;
+			do_flat: not is_short
+		end;
+
+	execute is
+				-- Execute the flat or flat_short.
+		require
+			class_set: class_c /= Void
 		local
 			first_format: LOCAL_FORMAT;
 			ast: CLASS_AS;
 			name: STRING;
 			file: UNIX_FILE;
 		do
-			class_c := c;
 			!!previous.make;
 			!!text.make;
-			!!first_format.make(c.actual_type, is_short);
-			upper_name := c.class_name.duplicate;
+			!!first_format.make(class_c.actual_type);
+			upper_name := class_c.class_name.duplicate;
 			upper_name.to_upper;
 			previous.add (first_format);
 			if is_short then
-				no_internals := true;
 				client := system.any_class.compiled_class;
 			end;
-			!!flat_struct.make (c, client, no_internals);
-			flat_struct.fill;
-			--!!file.make ("FLAT.FILE");
-			--if not file.exists then
-				if flat_struct.ast /= void then
-					prepare_class_text;
-					System.set_current_class (class_c);
-					Inst_context.set_cluster (class_c.cluster);
-					flat_struct.ast.format (Current);
-					System.set_current_class (Void);
-					Inst_context.set_cluster (Void);
-					--file.open_write;
-					--text.basic_store (file);
-					--file.close;
-				end
-			--else
-				--file.open_read;
-				--text ?= text.retrieved (file);
-				--file.close;
-			--end;
+			!!flat_struct.make (class_c, client);
+			flat_struct.fill (current_class_only);
+			if flat_struct.ast /= void then
+				prepare_class_text;
+				System.set_current_class (class_c);
+				Inst_context.set_cluster (class_c.cluster);
+				flat_struct.ast.format (Current);
+				System.set_current_class (Void);
+				Inst_context.set_cluster (Void);
+			end
 		end;
 
+	current_class_only: BOOLEAN;
+			-- Is Current only processing `class_c' and not
+			-- its ancestors?
+
+	flat_struct: FLAT_STRUCT
+			-- Structure used for processing the flat (or short)
+
 	class_c: CLASS_C;
+			-- Current class being processed
 	
 	upper_name: STRING; 
 
@@ -114,11 +139,7 @@ feature -- commit / rollback system
 
 	is_in_first_pass: BOOLEAN;
 
-
-
 feature -- text construction
-
-	no_internals: BOOLEAN;
 
 	client: CLASS_C;
 
@@ -147,7 +168,6 @@ feature -- text construction
 			end
 		end;
 
-
 	put_keyword(k : STRING) is
 			-- append k to 'text', known as a keyword
 		local
@@ -158,7 +178,6 @@ feature -- text construction
 			text.add (item);	
 		end;
 
-	
 	put_special(s : STRING) is
 		-- append s to 'text', known as a comment
 		local
@@ -169,11 +188,24 @@ feature -- text construction
 			text.add (item);	
 		end;
 
-
-	put_class_name(c : CLASS_C) is
+	put_class_name (c: CLASS_C) is
 			-- append class name to 'text', treated as a stone.
 		local
 			p : CLASSC_STONE;
+			s: STRING;
+			item: CLICKABLE_TEXT
+		do
+			!!p.make(c);
+			s := c.class_name.duplicate;
+			s.to_upper;
+			!!item.make (s, p);
+			text.add (item);
+		end;
+
+	put_classi_name (c: CLASS_I) is
+			-- append class name to 'text', treated as a stone.
+		local
+			p : CLASSI_STONE;
 			s: STRING;
 			item: CLICKABLE_TEXT
 		do
@@ -360,11 +392,22 @@ feature -- type control
 			
 
 	prepare_for_feature (name: STRING; arg: EIFFEL_LIST [EXPR_AS]) is
+			-- Prepare for features within main features
 		do
 			old_types := format.local_types;
 			new_types := format.local_types.new_adapt_feat (name);
 			format.set_local_types (new_types);
 			arguments := arg;
+		end;
+
+	prepare_for_main_feature is
+			-- Prepare for class features
+		do
+			set_types_back_to_global;
+			old_types := format.local_types;
+			new_types := format.local_types.main_adapt_feat;
+			format.set_local_types (new_types);
+			arguments := Void;
 		end;
 
 	prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
@@ -418,7 +461,7 @@ feature -- type control
 				put_dot
 			end;
 			f_name := format.local_types.final_name;
-			if feature_i /= void then
+			if feature_i /= void and then in_bench_mode then
 				stone := feature_i.stone (old_types.target_class);
 				!CLICKABLE_TEXT!item.make (f_name, stone);
 			else			
@@ -483,8 +526,6 @@ feature -- type control
 			end;
 		end;
 
-
-
 	put_infix is
 		local
 			arg: EXPR_AS;
@@ -541,7 +582,7 @@ feature -- type control
 		require
 			good_class: c /= void
 		do
-			format.set_classes (c, format.global_types.target_class, no_internals);
+			format.set_classes (c, format.global_types.target_class)
 		end;
 
 	set_context_features (source, target: FEATURE_I) is
@@ -553,11 +594,6 @@ feature -- type control
 		do
 			format.set_context_features (source, 
 				format.global_types.target_enclosing_feature);
-		end;
-
-	set_in_assertion (b: BOOLEAN) is
-		do
-			format.set_in_assertion (b);
 		end;
 
 	keep_types is
@@ -587,26 +623,26 @@ feature -- infix and prefix control
 			format.set_insertion_point(text.cursor);
 		end;
 
-    insert (s: STRING) is
+	insert (s: STRING) is
 		local
 			item: BASIC_TEXT;	
-        do
+		do
 			if 
 				s /= void 
 			then
 				!!item.make (s);
 				text.insert (format.insertion_point, item)
 			end;	
-        end;
+		end;
 
-    insert_special (s: STRING) is
+	insert_special (s: STRING) is
 		local
 			item: BASIC_TEXT;
-        do
+		do
 			!!item.make (s);
 			item.set_is_special;
 		 	text.insert (format.insertion_point, item);	
-        end;
+		end;
 	
 	need_dot is
 		do

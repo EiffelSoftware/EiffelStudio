@@ -212,7 +212,8 @@ feature -- Formatter
 			ctxt.set_separator(",");
 			ctxt.no_new_line_between_tokens;
 			ctxt.abort_on_failure;
-			feature_names.format (ctxt);
+				--| Should only be one feature name
+			feature_names.first.main_feature_format (ctxt)
 			if not ctxt.last_was_printed then
 				ctxt.rollback;
 				ctxt.rollback;
@@ -220,6 +221,29 @@ feature -- Formatter
 				ctxt.commit;
 				body.format (ctxt);
 				ctxt.commit;
+			end;
+		end;
+
+	new_ast: FEATURE_AS is
+		local
+			rout_as: ROUTINE_AS;
+			rout_fsas: ROUTINE_FSAS;
+		do
+			rout_as ?= body.content;
+			if rout_as = Void then
+				Result := Current
+			else
+				!! Result;
+				Result.set_content (Current);
+					!! rout_fsas;
+					rout_fsas.set_precondition (rout_as.precondition);
+					rout_fsas.set_locals (rout_as.locals);
+					rout_fsas.set_routine_body (rout_as.routine_body); 
+					rout_fsas.set_postcondition (rout_as.postcondition);
+					rout_fsas.set_rescue_clause (rout_as.rescue_clause);
+					rout_fsas.set_obsolete_message (rout_as.obsolete_message);
+				Result.body.set_content (rout_fsas);
+				Result.set_names (feature_names);
 			end;
 		end;
 
@@ -246,7 +270,7 @@ feature -- Replication
 		end;
 
 
-feature {FEATURE_AS, NAMES_ADAPTER}	-- Replication
+feature {ASSERT_SERVER, FEATURE_AS, NAMES_ADAPTER}	-- Replication
 
 	set_feature_names (f: like feature_names) is
 		do
@@ -262,5 +286,16 @@ feature {FEATURE_AS, NAMES_ADAPTER}	-- Replication
 		do
 			id := i
 		end;				
+
+	set_feature_assertions (feat: FEATURE_I; a: CHAINED_ASSERT) is
+		require
+			valid_feat: feat /= Void;
+			valid_arg2: a /= Void
+		local
+			rout_fsas: ROUTINE_FSAS
+		do
+			rout_fsas ?= body.content;	--| Cannot fail
+			rout_fsas.set_feature_assertions (feat, Current, a);
+		end;
 
 end

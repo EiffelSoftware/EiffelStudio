@@ -22,7 +22,6 @@ inherit
 			{ANY}
 				cursor
 		end;
-	STORABLE;
 
 creation
 

@@ -141,7 +141,7 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_click_command, add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
 		require
@@ -179,7 +179,7 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_select_commands is
+	remove_click_commands, remove_select_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is selected.
 		require

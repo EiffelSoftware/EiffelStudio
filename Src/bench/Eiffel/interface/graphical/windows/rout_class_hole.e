@@ -14,12 +14,12 @@ inherit
 			work as default_work
 		redefine
 			symbol, full_symbol, name, tool, stone_type,
-			transported_stone
+			transported_stone, process_feature
 		end
 	DEFAULT_HOLE_COMMAND
 		redefine
 			symbol, full_symbol, name, work, tool, stone_type,
-			transported_stone
+			transported_stone, process_feature
 		select
 			work
 		end
@@ -88,5 +88,11 @@ feature -- Execution
 				default_work (argument)
 			end
 		end;
+
+feature -- Update
+
+	process_feature (st: FEATURE_STONE) is
+        do
+		end
 
 end -- class ROUT_CLASS_HOLE

@@ -1960,6 +1960,14 @@ feature -- Final mode generation
 			d1, d2: DATE_TIME
 		do
 			if not retried and is_finalization_needed then
+					-- Reset `disposable_descendants' since they can have changed
+					--| Note: That is important to recompute it, as this is a once
+					--| which is not stored in the project file, therefore if we 
+					--| do a finalization where no classes have been modified it
+					--| will be empty (because recomputed only in `do_recompilation
+					--| if some classes have been modified) unless we force its recomputation.
+				reset_disposable_descendants
+
 				debug ("Timing")
 					create d1.make_now
 				end

@@ -118,7 +118,7 @@ feature -- IL code generation
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				context.set_assertion_type (In_check)
-				generate_il_line_info
+				Il_generator.put_silent_line_info (line_number)
 				check_list.generate_il
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
@@ -126,7 +126,7 @@ feature -- IL code generation
 				check
 					end_location_not_void: end_location /= Void
 				end
-				il_generator.put_debug_info (end_location)
+				il_generator.put_silent_debug_info (end_location)
 			end
 		end
 

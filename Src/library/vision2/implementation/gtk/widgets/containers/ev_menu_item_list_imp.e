@@ -235,8 +235,11 @@ feature {NONE} -- implementation
 feature -- Access
 
 	radio_group_ref: POINTER_REF is
-		once
-			create Result
+		do
+			if radio_group_ref_internal = Void then
+				create radio_group_ref_internal
+			end
+			Result := radio_group_ref_internal
 		end
 
 	set_radio_group (p: POINTER) is
@@ -249,9 +252,12 @@ feature -- Access
 			-- GSList with all radio items of this container.
 		do
 			Result := radio_group_ref.item
-
 		end
 
+feature {NONE} -- Implementation
+
+	radio_group_ref_internal: POINTER_REF
+	
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST

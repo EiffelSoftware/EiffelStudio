@@ -268,9 +268,10 @@ feature -- Settings
 			create b.make (value.value)
 			if value_name /= Void then
 				create a.make (value_name)
-				res := cwin_reg_set_key_value (key, a.item, 0, value.type, b.item, value.value.capacity)
+				res := cwin_reg_set_key_value (key, a.item, 0, value.type, b.item, b.capacity)
 			else
-				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type, b.item, value.value.capacity)
+				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type, b.item,
+					b.capacity)
 			end
 			last_call_successful := res = Error_success
 		end

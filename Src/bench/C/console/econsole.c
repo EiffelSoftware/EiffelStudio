@@ -359,12 +359,14 @@ void eif_console_putchar (EIF_CHARACTER c)
 
 void eif_console_putstring (BYTE *s, long length)
 {
+    EIF_GET_CONTEXT
 	if (!eif_console_allocated)
 		eif_make_console();
 	if (windowed_application)
 		eif_PutWindowedOutput (s, length);
 	else
 		WriteConsole(eif_conoutfile,s, length, &dummy_length, NULL);
+    EIF_END_GET_CONTEXT
 }
 
 void eif_console_putreal (double r)
@@ -498,6 +500,7 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 
 void eif_console_cleanup ()
 {
+	EIF_GET_CONTEXT
 	int result;
 	BOOL b;
 	DWORD buffer_length = (DWORD) 0;
@@ -508,6 +511,11 @@ void eif_console_cleanup ()
 							  "Execution terminated", MB_OKCANCEL + MB_ICONQUESTION + MB_TASKMODAL + MB_TOPMOST);
 			DestroyWindow (eif_conout_window);
 		} else {
+
+#ifdef EIF_THREADS
+if (eif_thr_is_root()) 
+{
+#endif
 			eif_console_putstring("\nPress Return to finish the execution...\0", 40);
 			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
 				eio ();
@@ -516,13 +524,18 @@ void eif_console_cleanup ()
 			CloseHandle (eif_conoutfile);
 
 			b = FreeConsole ();
+#ifdef EIF_THREADS
+} /* eif_thr_is_root() */
+#endif
 		}
 		eif_console_allocated = FALSE;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 void eif_make_console()
 {
+    EIF_GET_CONTEXT
 	if (windowed_application) {
 		WNDCLASS wc;
 
@@ -570,6 +583,8 @@ void eif_make_console()
 	}
 	eif_register_cleanup (eif_console_cleanup);
 	eif_console_allocated = TRUE;
+    EIF_END_GET_CONTEXT
+
 }
 
 void eif_GetWindowedInput()

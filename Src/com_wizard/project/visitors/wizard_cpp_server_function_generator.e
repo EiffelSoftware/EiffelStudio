@@ -314,11 +314,6 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append ("short *")
 				Result.append (Close_parenthesis)	
-			elseif is_character (visitor.vt_type) then
-				Result.append (Open_parenthesis)
-				Result.append (Eif_character)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
 			end
 
 			Result.append (arg_name)

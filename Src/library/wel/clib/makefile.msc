@@ -1,11 +1,12 @@
 # wel.lib - Makefile for Microsoft C
 
-CC = cl /nologo
+CC = cl
+
 # Finalized Version
-CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -nologo -c -Ox /W3 -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
 # Debug Version
-#CFLAGS = -c -Zi /W4 -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+#CFLAGS = -c -Zi -Od /W3 -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

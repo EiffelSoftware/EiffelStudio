@@ -537,19 +537,23 @@ BSTR ecom_runtime_ec::ccom_ec_bstr (EIF_REFERENCE a_ref)
 	EIF_REFERENCE_FUNCTION f_to_c = 0;
 	char * c_string = 0;
 	WCHAR * wide_string = 0;
-	BSTR b_string;
+	BSTR b_string = 0;
 
-	eif_object = eif_protect (a_ref);
-	tid = eif_type_id ("STRING");
-	f_to_c = eif_reference_function ("to_c", tid);
+	if (a_ref != NULL)
+	{
+		eif_object = eif_protect (a_ref);
+		tid = eif_type_id ("STRING");
+		f_to_c = eif_reference_function ("to_c", tid);
 
-	c_string = (FUNCTION_CAST (char *, (EIF_REFERENCE))f_to_c)(eif_access (eif_object));
-	wide_string = ccom_create_from_string (c_string);
+		c_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))f_to_c)(eif_access (eif_object));
+		wide_string = ccom_create_from_string (c_string);
 
-	b_string = SysAllocString (wide_string);
+		b_string = SysAllocString (wide_string);
 
-	free (wide_string);
-	eif_wean (eif_object);
+		free (wide_string);
+		eif_wean (eif_object);
+	}
+
 	return b_string;
 };
 //----------------------------------------------------------------------------
@@ -565,21 +569,26 @@ LPSTR ecom_runtime_ec::ccom_ec_lpstr (EIF_REFERENCE a_ref, char * old)
 	char * result = 0;
 
 
-	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("STRING");
-	to_c = eif_reference_function ("to_c", type_id);
-
-	area_string = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c)(eif_access (eif_object));
-	if (old != NULL)
+	if (a_ref != NULL)
 	{
-		result = old;
+		eif_object = eif_protect (a_ref);
+		type_id = eif_type_id ("STRING");
+		to_c = eif_reference_function ("to_c", type_id);
+
+		area_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c)(eif_access (eif_object));
+		if (old != NULL)
+		{
+			result = old;
+		}
+		else
+		{
+			result = (char *) CoTaskMemAlloc (strlen (area_string) + 1);
+		}
+		strcpy (result, area_string);
+		eif_wean (eif_object);
 	}
 	else
-	{
-		result = (char *) CoTaskMemAlloc (strlen (area_string) + 1);
-	}
-	strcpy (result, area_string);
-	eif_wean (eif_object);
+		result = NULL;
 	return result;
 };
 //----------------------------------------------------------------------------
@@ -595,16 +604,21 @@ LPWSTR ecom_runtime_ec::ccom_ec_lpwstr (EIF_REFERENCE a_ref)
 	WCHAR * result = 0;
 	size_t size = 0, str_size = 0;
 
-	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("STRING");
-	to_c = eif_reference_function ("to_c", type_id);
+	if (a_ref != NULL)
+	{
+		eif_object = eif_protect (a_ref);
+		type_id = eif_type_id ("STRING");
+		to_c = eif_reference_function ("to_c", type_id);
 
-	area_string = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
-	str_size = strlen (area_string) + 1;
-	size = mbstowcs (NULL, area_string, str_size);
-	result = (WCHAR *) CoTaskMemAlloc ((size + 1) * sizeof (WCHAR));
-	mbstowcs (result, area_string, str_size);
-	eif_wean (eif_object);
+		area_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
+		str_size = strlen (area_string) + 1;
+		size = mbstowcs (NULL, area_string, str_size);
+		result = (WCHAR *) CoTaskMemAlloc ((size + 1) * sizeof (WCHAR));
+		mbstowcs (result, area_string, str_size);
+		eif_wean (eif_object);
+	}
+	else
+		result = NULL;
 	return result;
 };
 //----------------------------------------------------------------------------

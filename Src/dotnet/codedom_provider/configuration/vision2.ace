@@ -5,6 +5,7 @@ root
 	ANY
 
 default
+	multithreaded (yes)
  	assertion (no)
  	msil_generation (yes)
  	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
@@ -49,6 +50,18 @@ cluster
  			namespace ("EiffelSoftware.Library.Vision2Extension")
 		end
 
+	all thread:			"$EIFFEL_SRC\library\thread"
+		exclude
+			"classic"
+ 		default
+ 			namespace ("EiffelSoftware.Library.Thread")
+		end
+		
+	all thread_net:			"$EIFFEL_SRC\library.net\thread"
+ 		default
+ 			namespace ("EiffelSoftware.Library.ThreadNet")
+		end
+		
 assembly
 	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.Soap.dll"
 

@@ -179,9 +179,12 @@ feature {NONE}
 			-- Is `a_widget' using this resource ?
 		require else
 			a_widget_exists: not (a_widget = Void)
+		local
+			pixmap: PIXMAP
 		do
-			Result := (not (a_widget.background_pixmap = Void)) and then 
-						(a_widget.background_pixmap.implementation = Current)
+			pixmap := a_widget.background_pixmap;
+			Result := (pixmap /= Void) and then 
+						(pixmap.implementation = Current)
 		ensure then
 			(number_of_uses = 0) implies (not Result)
 		end;

@@ -50,13 +50,16 @@ feature {NONE}
 			Result := file_name
 		end;
 
-	help_path: STRING is
-		local
-			dir_name: DIRECTORY_NAME
+	Bitmap_path: DIRECTORY_NAME is
 		once
-			!!dir_name.make_from_string (Eiffel3_dir_name);
-			dir_name.extend_from_array (<<"bench", "help", "errors">>);
-			Result := dir_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "bitmaps">>);
+		end;
+
+	Help_path: DIRECTORY_NAME is
+		once
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "help", "errors">>);
 		end;
 
 	Default_precompiled_location: STRING is

@@ -37,7 +37,7 @@ feature {EWB_GENERATE} -- Initialization
 							-- We don't care about the project directory:
 							-- The eiffel profiler is smarter than external
 							-- tools.
-						do_convertion
+						do_conversion
 					else
 							-- Check whether the specified project directory
 							-- is valid.
@@ -55,7 +55,7 @@ feature {EWB_GENERATE} -- Initialization
 							io.putstring (": File `TRANSLAT' does not exist in this directory.%N%N")
 						else
 								-- Cool! Everything is fine!
-							do_convertion
+							do_conversion
 						end
 					end
 				end
@@ -96,11 +96,12 @@ feature {PROF_CONVERTER} -- Implementation
 			exists := file.exists
 		end -- check_project_directory
 
-	do_convertion is
+	do_conversion is
 			-- Creates both files and initiates conversion.
 		do
 			!! profile_converter.make (profile_out_file, translat_file, config);
 			profile_converter.convert_profile_listing
+			is_last_conversion_ok := profile_converter.is_conversion_ok
 		end;
 
 	help is
@@ -113,6 +114,11 @@ feature {PROF_CONVERTER} -- Implementation
 			io.error.putstring("%Tcompile_type: `workbench' or `final'.%N");
 			io.error.new_line
 		end;
+
+feature -- Access
+
+	is_last_conversion_ok: BOOLEAN
+			-- Has the last conversion worked properly?
 
 feature {NONE} -- attributes
 

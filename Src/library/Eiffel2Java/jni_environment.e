@@ -22,8 +22,10 @@ feature
 			name_valid: name /= Void
 		local
 			clsp: POINTER
+			name_to_c: ANY
 		do
-			clsp := jni_find_class (envp, $(name.to_c));
+			name_to_c := name.to_c
+			clsp := jni_find_class (envp, $name_to_c);
 			Result := find_class_by_pointer (clsp)
 		end
 
@@ -46,8 +48,10 @@ feature
 			-- find class pointer only (used during creation in descendants)
 		local
 			cls: JAVA_CLASS
+			name_to_c: ANY
 		do
-			Result := jni_find_class (envp, $(name.to_c));
+			name_to_c := name.to_c
+			Result := jni_find_class (envp, $name_to_c);
 		end
 
 	destroy_vm is
@@ -76,8 +80,12 @@ feature -- Exception mechanism
 			-- Constructs an exception object from the specified class 'jclass'
 			-- with the message specified by 'msg' and causes that exception 
 			-- to be thrown. 
+		local 
+			msg_to_c: ANY
+			
 		do
-			c_throw_custom_exception (envp, jclass.java_class_id, $(msg.to_c))
+			msg_to_c := msg.to_c
+			c_throw_custom_exception (envp, jclass.java_class_id, $msg_to_c)
 		end
 
 feature  -- Thread Mechanism

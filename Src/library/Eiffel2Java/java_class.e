@@ -60,8 +60,13 @@ feature -- method ids - in a Java class these are all static
 	method_id (mname: STRING; sig: STRING): POINTER is
 			-- Return "method_id" for a static method with "mname" and 
 			-- signature "sig" that belongs to this class.
+		local
+			mname_to_c: ANY
+			sig_to_c: ANY
 		do
-			Result := c_get_static_method_id (jni.envp, java_class_id, $(mname.to_c), $(sig.to_c))
+			mname_to_c := mname.to_c
+			sig_to_c := sig.to_c
+			Result := c_get_static_method_id (jni.envp, java_class_id, $mname_to_c, $sig_to_c)
 		end
 
 feature -- calling static methods
@@ -198,9 +203,14 @@ feature -- attribute ids
 			-- Get the java field id of a static field, used to set/get this field
 		require else
 			(fname /= Void) and (sig /= Void)
+		local
+			fname_to_c: ANY
+			sig_to_c: ANY
 		do
+			fname_to_c := fname.to_c
+			sig_to_c := sig.to_c
 			Result := c_get_static_field_id (jni.envp, java_class_id, 
-										$(fname.to_c), $(sig.to_c))
+										$fname_to_c, $sig_to_c)
 		end
 
 feature -- access to static attributes
@@ -345,13 +355,17 @@ feature {NONE}
 		local
 			mid: POINTER	
 			clsid: POINTER
+			str_getName_to_c: ANY
+			str_Ljava_lang_String_to_c: ANY
 		do
+			str_getName_to_c := ("getName").to_c
+			str_Ljava_lang_String_to_c := ("()Ljava/lang/String;").to_c
 			java_class_id := jclass_id
 			-- get the name of the class
 			clsid := c_get_object_class (jni.envp, jclass_id)
 			mid := c_get_method_id (jni.envp, clsid, 
-									$(("getName").to_c),
-									$(("()Ljava/lang/String;").to_c))
+									$str_getName_to_c,
+									$str_Ljava_lang_String_to_c)
 			name := c_call_string_method (jni.envp, jclass_id, mid, default_pointer)
 			debug ("java")
 				io.putstring ("JAVA_CLASS: name=")

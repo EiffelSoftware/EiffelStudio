@@ -104,9 +104,12 @@ feature
 			-- add "string" argument
 		require
 			not full
+		local
+			a: ANY
 		do
 			contents.put (value, top)
-			c_put_string_arg (jni.envp, java_args_array, $(value.to_c), top-1)
+			a := value.to_c
+			c_put_string_arg (jni.envp, java_args_array, $a, top-1)
 			top := top + 1
 		end
 

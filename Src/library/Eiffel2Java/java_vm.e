@@ -27,8 +27,10 @@ feature
 			class_path_valid: class_path /= Void
 		local
 			err: INTEGER
+			class_path_to_c: ANY
 		do
-			err := create_jvm ($jvmp, $envp, default_vm_args, $(class_path.to_c))
+			class_path_to_c := class_path.to_c
+			err := create_jvm ($jvmp, $envp, default_vm_args, $class_path_to_c)
 			if err /= 0 then
 				io.putstring ("*** Failed to load JVM=")
 				io.putint (err)

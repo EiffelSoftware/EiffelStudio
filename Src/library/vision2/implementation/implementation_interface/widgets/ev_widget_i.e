@@ -1,5 +1,5 @@
 indexing
-	description: "General widget implementation"
+	description: "EiffelVision widget, implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7,13 +7,15 @@ indexing
 deferred class
 	EV_WIDGET_I 
 
+inherit
+	EV_ANY_I
 
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
 		require
-			parent_not_void: par /= Void
+			valid_parent: par.is_valid
 		deferred
 		end
 	
@@ -24,7 +26,7 @@ feature {EV_WIDGET} -- Initialization
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
 		require
-			valid_parent: par /= Void
+			valid_parent: par.is_valid
 		deferred
 		ensure
  			exists: not destroyed
@@ -37,12 +39,15 @@ feature {EV_WIDGET} -- Initialization
 
 	build is
 			-- Common initializations for Gtk and Windows.
+		require
+			exists: not destroyed
+			valid_parent: parent_imp.is_valid
 		do
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
---			set_background_color (parent_imp.background_color.interface)
---			set_foreground_color (parent_imp.foreground_color.interface)
+			set_background_color (parent_imp.background_color.interface)
+			set_foreground_color (parent_imp.foreground_color.interface)
 		end
 
 feature -- Access
@@ -55,6 +60,8 @@ feature -- Access
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -71,22 +78,21 @@ feature -- Access
 
 	background_color: EV_COLOR_IMP is
 			-- Color used for the background of the widget
+		require
+			exists: not destroyed
 		deferred
 		end
 
 	foreground_color: EV_COLOR_IMP is
 			-- Color used for the foreground of the widget,
 			-- usually the text.
+		require
+			exists: not destroyed
 		deferred
 		end
 
 feature -- Status Report
 
-	destroyed: BOOLEAN is			
-			-- Is Current widget destroyed?
-		deferred
-		end
-	
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
 		require
@@ -121,13 +127,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	destroy is
-			-- Destroy screen widget implementation.
-		deferred
-		ensure
-			destroyed: destroyed
-		end
-
+-- XX to implement
 --	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
@@ -176,8 +176,8 @@ feature -- Status setting
 			-- Make `flag' the new expand option.
 		require
 			exists: not destroyed
-		deferred
---			expandable := flag
+		do
+			expandable := flag
 		ensure
 			expand_set: expandable = flag
 		end
@@ -186,20 +186,20 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		deferred
---			if flag then
---				if vertical_resizable then
---					resize_type := 3
---				else
---					resize_type := 1
---				end
---			else
---				if vertical_resizable then
---					resize_type := 2
---				else
---					resize_type := 0
---				end				
---			end
+		do
+			if flag then
+				if vertical_resizable then
+					resize_type := 3
+				else
+					resize_type := 1
+				end
+			else
+				if vertical_resizable then
+					resize_type := 2
+				else
+					resize_type := 0
+				end				
+			end
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
 		end
@@ -208,20 +208,20 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		deferred
---			if flag then
---				if horizontal_resizable then
---					resize_type := 3
---				else
---					resize_type := 2
---				end
---			else
---				if horizontal_resizable then
---					resize_type := 1
---				else
---					resize_type := 0
---				end				
---			end
+		do
+			if flag then
+				if horizontal_resizable then
+					resize_type := 3
+			else
+					resize_type := 2
+				end
+			else
+				if horizontal_resizable then
+					resize_type := 1
+				else
+					resize_type := 0
+				end				
+			end
 		ensure
 			vertical_resize_set: vertical_resizable = flag
 		end
@@ -230,7 +230,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
---			color_not_void: color /= Void
+			valid_color: color.is_valid
 		deferred
 		ensure
 			background_color_set: background_color = color.implementation
@@ -240,7 +240,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
---			color_not_void: color /= Void
+			valid_color: color.is_valid
 		deferred
 		ensure
 			foreground_color_set: foreground_color = color.implementation
@@ -355,7 +355,7 @@ feature -- Resizing
 		end  
 	
 	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum__height' .
+			-- Make `value' the new `minimum_height' .
 		require
 			exists: not destroyed
 			height_large_enough: value >= 0

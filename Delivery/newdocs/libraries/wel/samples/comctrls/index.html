@@ -1,0 +1,46 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Comctrls</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Comctrls">
+	</HEAD>
+
+	<BODY>
+		<H1>Common Controls Sample</H1>
+		<CENTER><IMG SRC="comctrls.png" ALT="comctrls" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\comctrls\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as illustrated above. Selecting "Progress bar demonstration" from the "File" menu will
+		update the progress bar to a full state. Leaving the mouse stationary above the track bar, progress bar or tollbar buttons will cause a
+		tooltip control to be displayed.</P>
+
+		<H2>Under the Hood</H2>
+		<P>There is one <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_tooltip_chart.html">WEL_TOOLTIP</A> used for all the controls, but each control
+		adds a new <A CLASS="eclass" href="/libraries/wel/reference/structs/wel_tool_info_chart.html">WEL_TOOL_INFO</A> to provide different output for each control. The feature
+		`on_notify' has been redefined to handle the <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ttn_constants.html#f_ttn_needtext">Ttn_needtext</A> notification which is
+		posted by a control, and received by the controls parent, when a control needs to display a tooltip. The feature `on_menu_select' has been redefined to output the text of the selected menu item in
+		the <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_status_window_chart.html">WEL_STATUS_WINDOW</A> located at the bottom of <A CLASS="eclass" HREF="/libraries/wel/samples/comctrls/root_cluster/main_window_chart.html">MAIN_WINDOW</A>.
+		
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/comctrls/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/comctrls/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/comctrls/root_cluster/comctrls_demo_chart.html">COMCTRLS_DEMO</A>
+			</UL>
+		</P>
+	</BODY>
+</HTML>

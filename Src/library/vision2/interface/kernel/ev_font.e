@@ -9,11 +9,7 @@ indexing
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
 	revision: "$Revision$"
-
-
---| FIXME Fonts need to be reviewed WRT addition of conveniance features
---| for dealing with points.
-
+	
 class
 	EV_FONT 
 
@@ -312,10 +308,7 @@ feature -- Basic operations
 			Result := family = other.family and then
 				weight = other.weight and then
 				shape = other.shape and then
-				height = other.height-- and then
-				--(preferred_faces = other.preferred_faces or else
-				--preferred_faces.is_equal (other.preferred_faces))
-				--| FIXME IEK PR 2585
+				height = other.height
 		end
 
 	copy (other: like Current) is

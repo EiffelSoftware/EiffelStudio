@@ -28,7 +28,7 @@ inherit
 			make
 		end;
 
-creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_ABSTRACT_EIFFEL}
+creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL}
 
 	make
 

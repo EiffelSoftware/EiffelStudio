@@ -180,7 +180,6 @@ feature -- Access: Platform specific
 			count_positive: a_count > 0
 			valid_position: (pos + a_count) <= count
 		local
-			l_sp: SPECIAL [INTEGER_8]
 			i: INTEGER
 		do
 			from

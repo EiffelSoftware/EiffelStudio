@@ -37,7 +37,6 @@ feature -- Basic operation
 			directory_file_name: FILE_NAME
 		do
 			create directory_file_name.make_from_string (project_settings.project_location)
-			directory_file_name.extend (generation_directory)
 			create directory.make (directory_file_name)
 				-- If the directory for the generated code does not already exist then
 				-- we must create it.
@@ -77,7 +76,6 @@ feature {NONE} -- Implementation
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (system_status.current_project_settings.project_location)
-			Result.extend ("generated")
 		end
 		
 	build_ace_file is
@@ -98,7 +96,6 @@ feature {NONE} -- Implementation
 			end
 			
 			create project_location.make_from_string (system_status.current_project_settings.project_location)
-			project_location.extend ("generated")
 			
 			create ace_template_file.make_open_read (platform_ace_file_name)
 			create ace_text.make (ace_template_file.count)

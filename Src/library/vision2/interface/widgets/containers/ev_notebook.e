@@ -124,7 +124,7 @@ feature -- Status report
 		do
 			Result := implementation.pointed_tab_index
 		ensure
-			result_valid: result >= 0 and pointed_tab_index <= count
+			result_valid: Result >= 0 and Result <= count
 		end
 
 feature -- Status setting

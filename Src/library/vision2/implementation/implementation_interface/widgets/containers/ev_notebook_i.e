@@ -69,7 +69,7 @@ feature -- Status report
 			-- index of tab currently under mouse pointer, or 0 if none.
 		deferred
 		ensure
-			result_valid: result >= 0 and pointed_tab_index <= count
+			result_valid: Result >= 0 and Result <= count
 		end
 
 feature {EV_NOTEBOOK} -- Status setting

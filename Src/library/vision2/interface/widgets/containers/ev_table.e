@@ -247,10 +247,10 @@ feature -- Status report
 			end
 		end
 
-	readable: BOOLEAN is True
+	Readable: BOOLEAN is True
 		-- `Current' is always readable.
 
-	writable: BOOLEAN is True
+	Writable: BOOLEAN is True
 		-- `Current' is always writeable.
 
 feature -- Status settings

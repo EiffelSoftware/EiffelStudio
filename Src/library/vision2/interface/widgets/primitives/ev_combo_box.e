@@ -53,6 +53,16 @@ feature -- Measurement
 
 feature {NONE}-- Implementation
 
+	count: INTEGER is
+			-- number of items in the list of the combo-box
+		require
+			exists: not destroyed
+		do
+			Result := implementation.count
+		end
+
+feature -- Implementation
+
 	implementation: EV_COMBO_BOX_I
 
 end -- class EV_COMBO_BOX

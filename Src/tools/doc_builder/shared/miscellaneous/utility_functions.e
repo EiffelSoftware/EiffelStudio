@@ -43,7 +43,9 @@ feature -- Copying
 						end
 					else						
 						create sub_dir.make (target.name + "\" + a_dir.lastentry)
-						sub_dir.create_dir
+						if not sub_dir.exists then							
+							sub_dir.create_dir	
+						end
 						copy_directory (src_sub_dir, sub_dir)
 					end
 				end
@@ -392,8 +394,7 @@ feature -- Document
 					Result := l_link.relative_url
 				else
 					Result := l_link.absolute_url
-				end
-								
+				end										
 			end				
 		end	
 

@@ -148,5 +148,35 @@ feature {NONE} -- Implementation
 			dialog.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
+	retrieve_pebble (a_widget: EV_WIDGET): ANY is
+			-- Retrieve pebble for transport.
+			-- `Result' is GB_OBJECT associated with `a_widget'.
+			-- A convenient was of setting up the drop
+			-- actions for GB_OBJECT.
+		local
+			object: GB_OBJECT
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			shared_tools: GB_SHARED_TOOLS
+			shared_handler: GB_SHARED_OBJECT_HANDLER
+		do
+			create shared_handler
+			object := shared_handler.object_handler.object_from_display_widget (a_widget)
+			check
+				object_not_void: object /= Void
+			end
+			
+				--| FIXME This is currently identical to version in 
+				--| GB_OBJECT
+				-- If the ctrl key is pressed, then we must
+				-- start a new object editor for `Current', instead
+				-- of beginning the pick and drop.
+			if application.ctrl_pressed then
+				new_object_editor (object)
+			else
+				create shared_tools
+				shared_tools.type_selector.update_drop_actions_for_all_children (object)
+				Result := object
+			end
+		end
 
 end -- class GB_EV_EDITOR

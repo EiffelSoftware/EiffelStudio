@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	delete_wrapper is
 			-- Delete structure
 		do
---			ccom_delete_c_type_info (initializer);
+			ccom_delete_c_type_info (initializer);
 		end
 
 	containing_type_lib_impl: ECOM_TYPE_LIB 
@@ -274,19 +274,6 @@ feature {NONE} -- Implementation
 
 	is_type_attr_set: BOOLEAN
 			-- Is TYPEATTR structure initialized?
-
-
-	release_func_desc (a_func_desc_ptr: POINTER) is
-			-- Release FUNCDESC structure
-		do
-			--ccom_release_func_desc (initializer, a_func_desc_ptr)
-		end
-
-	release_var_desc (a_var_desc_ptr: POINTER) is
-			-- Release VARDESC structure
-		do
-			--ccom_release_var_desc (initializer, a_var_desc_ptr)
-		end
 
 	func_descs: LINKED_LIST [ECOM_FUNC_DESC]
 			-- FUNCDESC structures
@@ -309,21 +296,6 @@ feature {NONE} -- Externals
 	ccom_get_containing_type_lib (cpp_obj: POINTER) is
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"]()"
-		end
-
-	ccom_release_type_attr (cpp_obj: POINTER; a_type_attr: POINTER) is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER)"
-		end
-
-	ccom_release_func_desc (cpp_obj: POINTER; a_func_desc: POINTER) is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER)"
-		end
-
-	ccom_release_var_desc(cpp_obj: POINTER; a_var_desc: POINTER) is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER)"
 		end
 
 	ccom_invoke(cpp_obj: POINTER; a_instance: POINTER;

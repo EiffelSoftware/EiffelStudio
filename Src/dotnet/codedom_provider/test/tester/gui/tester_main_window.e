@@ -42,6 +42,14 @@ inherit
 			copy
 		end
 
+	TESTER_CODE_OBJECT_ANALYZER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -58,9 +66,7 @@ feature {NONE} -- Initialization
 			create codedoms_tree.make
 			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
 			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
-			codedom_trees_box.put_front (codedoms_tree)
-			codedom_trees_box.extend (codedom_tree_buttons_box)
-			codedom_trees_box.disable_item_expand (codedom_tree_buttons_box)
+			tree_bottom_split_area.set_first (codedoms_tree)
 			Event_manager.set_output_displayer (agent display_output)
 			make
 			close_request_actions.extend (agent on_close)
@@ -178,7 +184,8 @@ feature {NONE} -- Events
 			l_path: STRING
 		do
 			if not l_retried then
-				l_type := selected_tree_item_type
+				analyze (codedoms_tree.selected_item.data)
+				l_type := object_type
 				l_generator := codedom_provider.create_generator
 				create l_options.make
 				l_options.set_blank_lines_between_members (blank_lines_check_button.is_selected)
@@ -225,7 +232,7 @@ feature {NONE} -- Events
 					end
 					l_generator.generate_code_from_statement (l_statement, l_text_writer, l_options)
 				else
-					Event_manager.raise_event (create {TESTER_EVENT}.make ("Cannot generate: Invalid codedom tree.", True))
+					Event_manager.raise_event (create {TESTER_EVENT}.make ("Cannot generate: Invalid codedom tree node.", True))
 				end
 				l_text_writer.flush
 				l_text_writer.close
@@ -246,7 +253,6 @@ feature {NONE} -- Events
 		do
 			check
 				non_void_codedom_provider: codedom_provider /= Void
-				valid_codedom_type: selected_tree_item_type = Codedom_compile_unit_type
 			end
 			l_compilation_unit ?= codedoms_tree.selected_item.data
 			check
@@ -387,36 +393,66 @@ feature {NONE} -- Events
 			-- Check kind of tree.
 		local
 			l_type: INTEGER
+			l_object: ANY
 		do
-			l_type := selected_tree_item_type
-			inspect
-				l_type
-			when Codedom_compile_unit_type then
-				generate_label.set_text (generate_compile_unit_label)
-				compile_from_dom_button.enable_sensitive
-				remove_button.enable_sensitive
-			when Codedom_namespace_type then
-				generate_label.set_text (generate_namespace_label)
-				remove_button.enable_sensitive
-				compile_from_dom_button.disable_sensitive
-			when Codedom_type_type then
-				generate_label.set_text (generate_type_label)
-				remove_button.enable_sensitive
-				compile_from_dom_button.disable_sensitive
-			when Codedom_expression_type then
-				generate_label.set_text (generate_expression_label)
-				remove_button.enable_sensitive
-				compile_from_dom_button.disable_sensitive
-			when Codedom_statement_type then
-				generate_label.set_text (generate_statement_label)
-				remove_button.enable_sensitive
-				compile_from_dom_button.disable_sensitive
+			l_object := codedoms_tree.selected_item.data
+			if l_object /= Void then
+				analyze (l_object)
+				l_type := object_type
+				inspect
+					l_type
+				when Codedom_compile_unit_type then
+					generate_label.set_text (generate_compile_unit_label)
+					compile_from_dom_button.enable_sensitive
+					remove_button.enable_sensitive
+				when Codedom_namespace_type then
+					generate_label.set_text (generate_namespace_label)
+					remove_button.enable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_type_type then
+					generate_label.set_text (generate_type_label)
+					remove_button.enable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_expression_type then
+					generate_label.set_text (generate_expression_label)
+					remove_button.enable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_statement_type then
+					generate_label.set_text (generate_statement_label)
+					remove_button.enable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_method_type then
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_property_type then
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_event_type then
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_field_type then
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				when Codedom_snippet_member_type then
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				else
+					generate_label.set_text (select_codedom_tree_label)
+					remove_button.disable_sensitive
+					compile_from_dom_button.disable_sensitive
+				end
+				check_can_generate
+				codedom_node_info_text.set_text (description)
 			else
 				generate_label.set_text (select_codedom_tree_label)
 				remove_button.disable_sensitive
 				compile_from_dom_button.disable_sensitive
 			end
-			check_can_generate
 		end
 	
 	on_codedom_tree_deselect is
@@ -708,52 +744,7 @@ feature {NONE} -- Implementation
 			output_text.insert_text (a_output)
 			tests_notebook.select_item (output_text)
 		end
-		
-	selected_tree_item_type: INTEGER is
-			-- Selected tree item type if any
-			-- 0 otherwise
-			-- See class TESTER_CODEDOM_TYPES for possible values
-		local
-			l_selected: ANY
-			l_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT
-			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
-			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
-			l_statement: SYSTEM_DLL_CODE_STATEMENT
-			l_expression: SYSTEM_DLL_CODE_EXPRESSION
-		do
-			if codedoms_tree.selected_item /= Void then
-				l_selected := codedoms_tree.selected_item.data
-			end
-			if l_selected /= Void then
-				l_compile_unit ?= l_selected
-				if l_compile_unit /= Void then
-					Result := Codedom_compile_unit_type
-				else
-					l_namespace ?= l_selected
-					if l_namespace /= Void then
-						Result := Codedom_namespace_type
-					else
-						l_type ?= l_selected
-						if l_type /= Void then
-							Result := Codedom_type_type
-						else
-							l_expression ?= l_selected
-							if l_expression /= Void then
-								Result := Codedom_expression_type
-							else
-								l_statement ?= l_selected
-								if l_statement /= Void then
-									Result := Codedom_statement_type
-								end
-							end
-						end
-					end
-				end
-			end
-		ensure
-			valid_type: Result = 0 or else is_valid_codedom_type (Result)
-		end
-		
+
 	update_properties is
 			-- Update code generator, parser and compiler properties with `codedom_provider'.
 		local

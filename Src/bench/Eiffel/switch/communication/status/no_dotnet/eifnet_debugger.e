@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	last_string_value_length: INTEGER
+	last_string_value_length: INTEGER is 0
 
 	current_stack_icor_debug_frame: ICOR_DEBUG_FRAME
 
@@ -26,7 +26,6 @@ feature -- Access
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; 
 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
-			-- ANY.generating_)type: STRING evaluation result
 		do
 		end
 		

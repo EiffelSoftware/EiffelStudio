@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	length: INTEGER
+	length: INTEGER is 0
 		
 	dynamic_class: CLASS_C is
 		once

@@ -24,8 +24,8 @@ feature
 
 feature -- Access
 
-	last_once_available: BOOLEAN
-	last_once_failed: BOOLEAN
+	last_once_available: BOOLEAN is False
+	last_once_failed: BOOLEAN is False
 	
 	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
 		do
@@ -41,11 +41,13 @@ feature -- Access
 		
 	dotnet_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 		do
-			
 		end
 		
-
 	dotnet_evaluate_function (addr: STRING; dvalue: DUMP_VALUE; f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
+		do
+		end
+
+	dotnet_evaluate_function_with_name (addr: STRING; dvalue: DUMP_VALUE; a_feature_name, a_external_name: STRING; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 		do
 		end
 

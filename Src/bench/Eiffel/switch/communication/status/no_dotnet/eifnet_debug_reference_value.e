@@ -29,7 +29,7 @@ feature -- get
 	
 feature -- properties
 
-	value_class_token: INTEGER
+	value_class_token: INTEGER is 0
 
 feature -- Access
 

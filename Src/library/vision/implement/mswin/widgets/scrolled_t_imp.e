@@ -1,5 +1,5 @@
 indexing
-	description: "This class represents a MS_IMPmulti-line text editor with scrollbar";
+	description: "This class represents a MS_WINDOWS multi-line text editor with scrollbar";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ inherit
 
 creation
 
-	make, make_word_wrapped 
+	make, make_word_wrapped
 
 feature -- Initialization
 
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for creation.
 		do
-			Result := {TEXT_IMP} precursor - Ws_hscroll - Ws_vscroll
+			Result := {TEXT_IMP} Precursor - Ws_hscroll - Ws_vscroll
 
 			if is_read_only then
 				Result := Result + Es_readonly

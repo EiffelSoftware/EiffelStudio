@@ -18,6 +18,8 @@ inherit
 			copy
 		end
 
+	INTERNAL
+
 create 
 	make
 	
@@ -291,8 +293,19 @@ feature -- Implementation
 			agent_not_void: agent /= Void
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= Default_pointer
+			--FIXME make this an attribut or somthign to make it faster
+		local
+			f_of_tuple_type_id: INTEGER
 		do
-			agent.call ([n_args, args])
+			f_of_tuple_type_id := 
+				dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
+			if
+				type_conforms_to (dynamic_type (agent), f_of_tuple_type_id) 
+			then
+				agent.call ([])
+			else
+				agent.call ([n_args, args])
+			end
 		end
 
 	is_in_gtk_main: BOOLEAN
@@ -385,6 +398,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/12 23:28:41  oconnor
+--| fix for marshal calling actions sequences
+--|
 --| Revision 1.24  2000/04/04 21:01:57  oconnor
 --| assumed funtionality previously in callback marshal
 --|

@@ -152,6 +152,7 @@ extern void memck(unsigned int max_dt);
 
 extern void mem_diagnose(int sig);			/* Memory usage dump */
 extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
+extern void create_scavenge_zones(void);
 extern void sc_stop(void);
 
 #endif /* ISE_GC */

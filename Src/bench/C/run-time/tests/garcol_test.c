@@ -93,7 +93,6 @@ rt_private void scavenge_trace(void)
 	printf("%s%s%s%s\n",
 		gen_scavenge & GS_OFF ? "GS_OFF " : "",
 		gen_scavenge & GS_ON ? "GS_ON " : "",
-		gen_scavenge & GS_SET ? "GS_SET " : "",
 		gen_scavenge & GS_STOP ? "GS_STOP " : "");
 	printf(">>> Bytes used in from: %d\n", sc_from.sc_top - sc_from.sc_arena);
 	printf(">>> Objects remebered: %d\n", nb_items(&rem_set));

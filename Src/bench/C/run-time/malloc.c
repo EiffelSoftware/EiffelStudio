@@ -253,14 +253,14 @@ rt_shared struct sc_zone sc_to;
 
 /*
 doc:	<attribute name="gen_scavenge" return_type="uint32" export="shared">
-doc:		<summary>Generation scavenging status which can be either GS_STOP (disabled), GS_SET (not yet set), GS_ON (enabled) or GS_OFF</summary>
+doc:		<summary>Generation scavenging status which can be either GS_OFF (disabled) or GS_ON (enabled). When it is GC_ON, it can be temporarly disabled in which case it holds the GS_STOP flag. By default it is GS_OFF, and it will be enabled by `create_scavenge_zones' if `cc_for_speed' is enabled and enough memory is available to allocate the zones.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Mostly through `eif_gc_mutex' or `eif_gc_gsz_mutex'</synchronization>
 doc:		<fixme>Some updates are not protected, nor the visibility of the change is not guaranteed among all threads.</fixme>
 doc:	</attribute>
 */
-rt_shared uint32 gen_scavenge = GS_SET;
+rt_shared uint32 gen_scavenge = GS_OFF;
 
 /*
 doc:	<attribute name="eiffel_usage" return_type="long" export="public">
@@ -365,7 +365,7 @@ rt_private int free_last_chunk(void);			/* Detach last chunk from core */
 
 /* Functions handling scavenging zone */
 rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes);		/* Allocate block in scavenging zone */
-rt_private int create_scavenge_zones(void);	/* Attempt creating the two zones */
+rt_shared void create_scavenge_zones(void);	/* Attempt creating the two zones */
 rt_private void explode_scavenge_zone(struct sc_zone *sc);	/* Release objects to free-list */
 rt_public void sc_stop(void);					/* Stop the scavenging process */
 #endif
@@ -668,7 +668,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 */
 
-	if (!(gen_scavenge & GS_OFF) && (int) nbytes <= eif_gs_limit) {
+	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
 		object = malloc_from_zone(nbytes);
 		if (object != (EIF_REFERENCE) 0) {
 			UNDISCARD_BREAKPOINTS
@@ -893,42 +893,24 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 
 #ifdef ISE_GC
-
-		/* Remember set special optimization does not work if object are allocated
-		 * in scavenge zone. */
 #ifdef EIF_GSZ_ALLOC_OPTIMIZATION
-	if (nbytes >= (unsigned int) eif_gs_limit) {
+	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
+		object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
+		if (object != (EIF_REFERENCE) 0) {
+			UNDISCARD_BREAKPOINTS
+			CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+			return  eif_spset(object, EIF_TRUE);
+		}
+	}
 #endif
-		/* New special object is too big to be created in generational scavenge zone.
-		 * So we allocate it in free list. */
-		object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
-		UNDISCARD_BREAKPOINTS
-		if (object == (EIF_REFERENCE) 0)
-			eraise("Special allocation", EN_MEM);	/* No more memory */
-		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		return eif_spset(object, EIF_FALSE);
-#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
-	}
-
-	object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
-
-	if (object != (EIF_REFERENCE) 0) {
-		UNDISCARD_BREAKPOINTS
-		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		return  eif_spset(object, EIF_TRUE);
-	}
-	
-		 /* No more space in scavenge zone: allocation in free list. */
+		/* New special object is too big to be created in generational scavenge zone or there is
+		 * more space in scavenge zone. So we allocate it in free list. */
 	object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
-	if (object == (EIF_REFERENCE) 0) {
-		UNDISCARD_BREAKPOINTS
-		eraise("Special allocation", EN_MEM);	/* No more memory */
-	}
-
 	UNDISCARD_BREAKPOINTS
+	if (object == (EIF_REFERENCE) 0)
+		eraise("Special allocation", EN_MEM);	/* No more memory */
 	CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
 	return eif_spset(object, EIF_FALSE);
-#endif
 #endif
 }
 
@@ -3377,34 +3359,11 @@ doc:	</routine>
 rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 {
 	RT_GET_CONTEXT
-	EIF_REFERENCE object;			/* Address of the allocated object */
+	EIF_REFERENCE object;	/* Address of the allocated object */
 	uint32 mod;				/* Remainder for padding */
 
-	/* The scavenging algorithm is never used when the program is optimized for
-	 * memory, so set the scavenging flag to OFF and we'll never get here again.
-	 * If scavenging is already turned on however, we continue.
-	 */
-	if (!cc_for_speed && !(gen_scavenge & GS_ON)) {
-		gen_scavenge = GS_OFF;		/* Turn generation scavenging off */
-		return (EIF_REFERENCE) 0;			/* No scavenge zone */
-	}
-
-	/* If we came here, the Generation Scavenging algorithm is enabled but the
-	 * scavenge zones may not already exist, so we attempt to create them.
-	 * Note that either both zone are created or none at all, hence the test
-	 * for only one null pointer.
-	 */
-	if (sc_from.sc_arena == (EIF_REFERENCE) 0) {
-		/* FIXME THREAD: Lazy initialization issue here */
-		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-		if (sc_from.sc_arena == NULL) {
-			if (0 != create_scavenge_zones()) {
-				gen_scavenge = GS_OFF;	/* Turn off generation scavenging */
-				return (EIF_REFERENCE) 0;		/* No scavenge zone available */
-			}
-		}
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-	}
+	REQUIRE("Scavenging enabled", gen_scavenge == GS_ON);
+	REQUIRE("Has from zone", sc_from.sc_arena);
 	
 	/* Pad to correct size -- see eif_rt_xmalloc() for a detailed explaination of
 	 * why this is desirable.
@@ -3480,49 +3439,55 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 }
 
 /*
-doc:	<routine name="create_scavenge_zones" return_type="int" export="private">
-doc:		<summary>Attempt creation of two scavenge zones: the 'from' zone and the 'to' zone. The routine updates the structures accordingly..</summary>
-doc:		<return>0 if the two zones are created, -1 otherwise.</return>
+doc:	<routine name="create_scavenge_zones" export="shared">
+doc:		<summary>Attempt creation of two scavenge zones: the 'from' zone and the 'to' zone. If it is successful, `gen_scavenge' is set to `GS_ON' otherwise the value remained unchanged and is `GS_OFF'. Upon success, the routine updates the structures accordingly.</summary>
 doc:	</routine>
 */
 
-rt_private int create_scavenge_zones(void)
+rt_shared void create_scavenge_zones(void)
 {
-	RT_GET_CONTEXT
-	EIF_REFERENCE from;		/* From zone */
-	EIF_REFERENCE to;		/* To zone */
+	REQUIRE("Not already allocated", (sc_from.sc_arena == NULL) && (sc_to.sc_arena == NULL));
+	REQUIRE("Generation scavenging off", gen_scavenge == GS_OFF);
 
-	/* I think it's best to allocate the spaces in the C list. Firstly, this
-	 * space must never be moved, secondly it should never be reclaimed,
-	 * excepted when we are low on memory, but then it does not really matters.
-	 * Lastly, the garbage collector will simply ignore the block, which is
-	 * just fine--RAM.
-	 */
-	from = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
-	if (!from)
-		return -1;
-	to = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
-	if (!to) {
-		eif_rt_xfree(from);
-		return -1;
+		/* Initialize `gen_scavenge' to GS_OFF in case it fails to allocate the scavenge zones. */
+	if (cc_for_speed) {
+		RT_GET_CONTEXT
+		EIF_REFERENCE from;		/* From zone */
+		EIF_REFERENCE to;		/* To zone */
+
+		/* I think it's best to allocate the spaces in the C list. Firstly, this
+		 * space must never be moved, secondly it should never be reclaimed,
+		 * excepted when we are low on memory, but then it does not really matters.
+		 * Lastly, the garbage collector will simply ignore the block, which is
+		 * just fine--RAM.
+		 */
+		from = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
+		if (from) {
+			to = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
+			if (!to) {
+				eif_rt_xfree(from);
+			} else {
+					/* Now set up the zones */
+				SIGBLOCK;								/* Critical section */
+				sc_from.sc_size = sc_to.sc_size = eif_scavenge_size; /* GC statistics */
+				sc_from.sc_arena = from;				/* Base address */
+				sc_to.sc_arena = to;
+				sc_from.sc_top = from;					/* First free address */
+				sc_to.sc_top = to;
+				sc_from.sc_mark = from + GS_WATERMARK;	/* Water mark (nearly full) */
+				sc_to.sc_mark = to + GS_WATERMARK;
+				sc_from.sc_end = from + eif_scavenge_size;	/* First free location beyond */
+				sc_to.sc_end = to + eif_scavenge_size;
+				SIGRESUME;								/* End of critical section */
+
+				gen_scavenge = GS_ON;		/* Generation scavenging activated */
+			}
+		}
 	}
 
-	/* Now set up the zones */
-	SIGBLOCK;								/* Critical section */
-	sc_from.sc_size = sc_to.sc_size = eif_scavenge_size; /* GC statistics */
-	sc_from.sc_arena = from;				/* Base address */
-	sc_to.sc_arena = to;
-	sc_from.sc_top = from;					/* First free address */
-	sc_to.sc_top = to;
-	sc_from.sc_mark = from + GS_WATERMARK;	/* Water mark (nearly full) */
-	sc_to.sc_mark = to + GS_WATERMARK;
-	sc_from.sc_end = from + eif_scavenge_size;	/* First free location beyond */
-	sc_to.sc_end = to + eif_scavenge_size;
-	SIGRESUME;								/* End of critical section */
-
-	gen_scavenge = GS_ON;		/* Generation scavenging activated */
-
-	return 0;					/* Allocation was ok */
+	ENSURE("Correct_value", (gen_scavenge == GS_OFF) || (gen_scavenge == GS_ON));
+	ENSURE("Created", !(gen_scavenge == GS_ON) || sc_from.sc_arena && sc_to.sc_arena);
+	ENSURE("Not created", (gen_scavenge == GS_ON) || !sc_from.sc_arena && !sc_to.sc_arena);
 }
 
 /*
@@ -3654,6 +3619,9 @@ rt_shared void sc_stop(void)
 	eif_rt_xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
 	st_reset (&memory_set);
+		/* Reset values to their default value */
+	memset (&sc_to, 0, sizeof(struct sc_zone));
+	memset (&sc_from, 0, sizeof(struct sc_zone));
 }
 #endif
 

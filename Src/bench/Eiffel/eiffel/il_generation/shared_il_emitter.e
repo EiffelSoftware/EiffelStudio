@@ -41,13 +41,6 @@ feature -- Access
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
 		end
-
-	versioned_assembly_cache_folder: DIRECTORY_NAME is
-			-- Absolute path to versioned path of EAC
-		once
-			Result := assembly_cache_folder.twin
-			Result.extend (system.clr_runtime_version)
-		end
 		
 	il_emitter: IL_EMITTER is
 			-- Instance of IL_EMITTER
@@ -78,7 +71,7 @@ feature {NONE}
 	internal_il_emitter: IL_EMITTER is
 			-- Unique instance of IL_EMITTER
 		once
-			create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
+			create Result.make (assembly_cache_folder, system.clr_runtime_version)
 		end
 
 end -- class SHARED_IL_EMITTER

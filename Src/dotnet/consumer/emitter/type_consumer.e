@@ -207,7 +207,7 @@ feature -- Basic Operation
 				i := i + 1
 			end
 
-				-- Add properties (also considered as method).
+				-- Add properties.
 			from
 				i := 0
 				nb := internal_properties.count
@@ -217,18 +217,10 @@ feature -- Basic Operation
 				l_property := internal_properties.item (i)
 				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_property.get_name))
 				l_properties.extend (consumed_property (l_property, l_unic_eiffel_name))
-				if l_property.get_can_read then
-					meth := l_property.get_get_method
-					l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
-				end
-				if l_property.get_can_write then
-					meth := l_property.get_set_method
-					l_procedures.extend (consumed_procedure (meth, "set_" + l_unic_eiffel_name))
-				end
 				i := i + 1
 			end
 
-				-- Add events (also considered as method).
+				-- Add events.
 			from
 				i := 0
 				nb := internal_events.count
@@ -238,18 +230,6 @@ feature -- Basic Operation
 				l_event := internal_events.item (i)
 				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_event.get_name))
 				l_events.extend (consumed_event (l_event, l_unic_eiffel_name))
-				meth := l_event.get_raise_method
-				if meth /= Void then
-					l_procedures.extend (consumed_function (meth, l_unic_eiffel_name))
-				end
-				meth := l_event.get_add_method
-				if meth /= Void then
-					l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
-				end
-				meth := l_event.get_remove_method
-				if meth /= Void then
-					l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
-				end
 				i := i + 1
 			end
 
@@ -388,7 +368,7 @@ feature {NONE} -- Implementation
 			-- Consumed function.
 		require
 			non_void_info: info /= Void
-			non_void_eiffel_function_name: eiffel_functione_name /= Void
+			non_void_eiffel_function_name: eiffel_function_name /= Void
 			not_empty_eiffel_function_name: not eiffel_function_name.is_empty
 		do
 			create Result.make (

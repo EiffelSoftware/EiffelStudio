@@ -15,7 +15,7 @@ feature -- Synchro Initialization
 	init_dbg_synchronisation is
 			-- Initialize eStudio/.NET debugger synchronisation
 		do
-			debug ("DBG_SYNCHRO")
+			debug ("debugger_eifnet_synchro")
 				io.error.put_string (">>Initialize eStudio/.NET debugger synchronisation%N")
 			end
 			dbg_timer_active := False
@@ -28,7 +28,7 @@ feature -- Synchro Initialization
 		require
 			dbg_timer_stopped: not dbg_timer_active
 		do
-			debug ("DBG_SYNCHRO")
+			debug ("debugger_trace_synchro")
 				io.error.put_string (">>Terminate eStudio/.NET debugger synchronisation%N")
 			end
 			c_terminate_dbg_synchronisation
@@ -64,11 +64,11 @@ feature -- Synchro Timer
 			l_id: INTEGER
 		do
 			l_id := c_dbg_timer_id
-			debug ("DBG_SYNCHRO")
+			debug ("debugger_trace_synchro")
 				io.error.put_string (">>timer::" + l_id.out + "%N")
 			end
 			if l_id = 0 then
-				debug ("DBG_SYNCHRO")
+				debug ("debugger_trace_synchro")
 					io.put_string ("[EIFFEL] Start dbg timer%N")
 				end
 				c_start_dbg_timer
@@ -82,11 +82,12 @@ feature -- Synchro Timer
 			l_id: INTEGER
 		do
 			l_id := c_dbg_timer_id
-			debug ("DBG_SYNCHRO")
+			debug ("debugger_trace_synchro")
+				notify_debugger (generator + ".stop_dbg_timer %N")
 				io.error.put_string (">>timer::" + l_id.out + "%N")
 			end
 			if l_id /= 0 then
-				debug ("DBG_SYNCHRO")
+				debug ("debugger_trace_synchro")
 					io.put_string ("[EIFFEL] Stop dbg timer%N")
 				end
 				c_stop_dbg_timer

@@ -57,6 +57,7 @@ enum
     ISECompilerID_is_signed,
     ISECompilerID_assembly_cluster_name,
     ISECompilerID_assembly_prefix,
+    ISECompilerID_is_precompiled,
 
     EIFFELCLUSTERPROP_Name,
     EIFFELCLUSTERPROP_Path,
@@ -209,6 +210,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Return ISE_EIFFEL environment var.")]
   HRESULT ise_eiffel ([out, retval] BSTR * return_value);
+
+  [helpstring ("Takes a path and expands it using the env vars.")]
+  HRESULT expand_path ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
   [helpstring ("Generate a cyrptographic key filename.")]
   HRESULT generate_msil_keyfile ([in] BSTR filename);
@@ -1088,7 +1092,7 @@ interface IEiffelSystemAssemblies: IDispatch
   [helpstring ("Has the 'prefix' already been allocated to another assembly")]
   HRESULT is_prefix_allocated ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
 
-  [id (200), propget, helpstring ("Returns all of the assemblies in an enumerator")]
+  [propget, helpstring ("Returns all of the assemblies in an enumerator")]
   HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
@@ -1195,7 +1199,6 @@ interface IEiffelClusterProperties: IDispatch
 
   [id (EIFFELCLUSTERPROP_Namespace), propput, helpstring ("Cluster namespace.")]
   HRESULT cluster_namespace ([in] BSTR a_namespace);
-
 };
 //---------------------------------------------------------------------
 

@@ -1,7 +1,9 @@
+
+
 typedef enum __EIF_COMPILATION_TYPES
 {
-    is_application,
-    is_library,
-    is_precompilation
+    EIF_COMPT_is_application,
+    EIF_COMPT_is_library,
+    EIF_COMPT_is_precompilation
     
 } EIF_COMPILATION_TYPES;

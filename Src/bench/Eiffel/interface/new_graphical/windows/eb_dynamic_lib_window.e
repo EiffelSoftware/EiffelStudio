@@ -1743,25 +1743,8 @@ feature {NONE} -- Implementation: checks
 
 	valid_alias (al: STRING): BOOLEAN is
 			-- Is `al' a valid alias?
-		local
-			c: CHARACTER
-			i,j: INTEGER
 		do
-			Result := al /= Void and not al.is_empty
-			if Result then
-				c := al @ 1
-				Result := c = '_' or c.is_alpha
-				from
-					i := 2
-					j := al.count
-				until
-					i > j or not Result
-				loop
-					c := al @ i
-					Result := c.is_digit or c = '_' or c.is_alpha
-					i := i + 1
-				end
-			end
+			Result := (create {IDENTIFIER_CHECKER}).is_valid (al)
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is

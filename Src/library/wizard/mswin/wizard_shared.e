@@ -141,9 +141,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_bold)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Verdana")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Verdana")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (16)
 		end
 
@@ -154,9 +154,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_bold)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Tahoma")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Tahoma")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
 
@@ -167,9 +167,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_regular)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Tahoma")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Tahoma")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
 

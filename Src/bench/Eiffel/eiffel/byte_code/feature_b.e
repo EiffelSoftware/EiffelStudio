@@ -157,8 +157,7 @@ feature -- Context type
 			if precursor_type = Void then
 				Result := {CALL_ACCESS_B} Precursor
 			else
-				Result := precursor_type
-				Result := Context.real_type (Result)
+				Result := Context.real_type (precursor_type)
 			end
 		end
 

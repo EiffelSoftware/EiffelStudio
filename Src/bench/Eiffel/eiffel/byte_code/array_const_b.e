@@ -10,7 +10,8 @@ inherit
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
-			pre_inlined_code, inlined_byte_code, generate_il
+			pre_inlined_code, inlined_byte_code, generate_il,
+			allocates_memory, has_call
 		end
 
 	PREDEFINED_NAMES
@@ -18,13 +19,29 @@ inherit
 			{NONE} all
 		end
 	
-feature 
+feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
 			-- Expressions in the array
 
 	type: GEN_TYPE_I;
 			-- Generic array type
+
+feature -- Settings
+
+	set_expressions (e: like expressions) is
+			-- Assign `e' to `expressions'.
+		do
+			expressions := e;
+		end;
+
+	set_type (t: like type) is
+			-- Assign `t' to `type'.
+		do
+			type := t;
+		end;
+
+feature -- Status report
 
 	need_metamorphosis (source_type: TYPE_I): BOOLEAN is
 			-- Do we need to issue a metamorphosis on the `source_type'?
@@ -39,21 +56,30 @@ feature
 			end;
 		end;
 
-	set_expressions (e: like expressions) is
-			-- Assign `e' to `expressions'.
-		do
-			expressions := e;
-		end;
-
-	set_type (t: like type) is
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
-
 	used (r: REGISTRABLE): BOOLEAN is
 		do
+		end
+
+	allocates_memory: BOOLEAN is True;
+			-- Current allocates memory.
+
+	has_call: BOOLEAN is
+			-- Does current contain a call?
+		local
+			expr: EXPR_B
+		do
+			from
+				expressions.start
+			until
+				expressions.after or Result
+			loop
+				expr ?= expressions.item
+				Result := expr.has_call;
+				expressions.forth
+			end;
 		end;
+
+feature -- Code generation
 
 	enlarge_tree is
 			-- Enlarge the expressions.

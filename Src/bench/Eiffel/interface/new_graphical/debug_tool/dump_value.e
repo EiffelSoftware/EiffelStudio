@@ -146,7 +146,7 @@ feature -- Dotnet creation
 	make_string_for_dotnet (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
-			arg_not_void: a_eifnet_dsv /= Void			
+			arg_not_void: a_eifnet_dsv /= Void		
 		do
 			eifnet_debug_value := a_eifnet_dsv
 			value_frame_dotnet := eifnet_debug_value.icd_frame
@@ -319,15 +319,15 @@ feature -- Status report
 			elseif type = Type_string_dotnet then
 				Result := not is_void
 			elseif type = Type_object and not is_void then
-				if Eiffel_system.string_class.is_compiled then
-					if 
+				if dynamic_class /= Void and then Eiffel_system.string_class.is_compiled then
+					if
 						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
 					then
 						Result := True
 					elseif debug_output_evaluation_enabled then
 						dc := debuggable_class
-						Result :=   dc /= Void and then
-									dynamic_class.simple_conform_to (dc)
+						Result := dc /= Void and then
+								  dynamic_class.simple_conform_to (dc)
 					end
 				end
 			end
@@ -500,7 +500,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					last_string_representation_length := l_eifnet_debugger.last_string_value_length
 				end					
 			else
-				Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger,min, max)
+				Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 			end
 		end		
 
@@ -520,17 +520,19 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_feat: FEATURE_I
 		do
 			l_feat := debug_output_feature_i (dynamic_class)
-			create expr.make_with_object (
-					create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
-					l_feat.feature_name
-				)
-			expr.evaluate
-			evaluator := expr.expression_evaluator
-
-			l_final_result_value := evaluator.final_result_value
-			if evaluator.error_message = Void and then not l_final_result_value.is_void then
-				Result := l_final_result_value.classic_string_representation (min, max)
-				last_string_representation_length := l_final_result_value.last_string_representation_length
+			if l_feat /= Void then
+				create expr.make_with_object (
+						create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
+						l_feat.feature_name
+					)
+				expr.evaluate
+				evaluator := expr.expression_evaluator
+	
+				l_final_result_value := evaluator.final_result_value
+				if evaluator.error_message = Void and then not l_final_result_value.is_void then
+					Result := l_final_result_value.classic_string_representation (min, max)
+					last_string_representation_length := l_final_result_value.last_string_representation_length
+				end				
 			end
 		end
 

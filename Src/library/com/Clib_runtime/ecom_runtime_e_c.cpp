@@ -1534,8 +1534,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -1639,8 +1639,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -1745,8 +1745,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -1851,8 +1851,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -1957,8 +1957,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2063,8 +2063,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2169,8 +2169,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2275,8 +2275,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2380,8 +2380,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2485,8 +2485,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2590,8 +2590,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2695,8 +2695,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2800,8 +2800,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2905,8 +2905,8 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 
 	for (i = 0; i < dimensions; i++)
 	{
-		array_bound[i].lLbound  = (long) lower_indexes [i];
-		array_bound[i].cElements  = (long) element_counts [i];
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY

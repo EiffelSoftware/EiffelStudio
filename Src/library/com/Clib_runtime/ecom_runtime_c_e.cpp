@@ -1744,14 +1744,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -1836,7 +1836,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 	EIF_INTEGER * lower_indeces = 0;
 	EIF_INTEGER * upper_indeces = 0;
 	EIF_INTEGER * element_counts = 0;
-	EIF_INTEGER * index = 0;
+	EIF_INTEGER * index_aaaa = 0;
 	long * sa_indeces = 0;
 	int i = 0;
 	long tmp_long = 0;
@@ -1851,19 +1851,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 	lower_indeces = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
 	upper_indeces = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
 	element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-	index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+	index_aaaa = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
 	sa_indeces = (long *)calloc (dim_count, sizeof (long));
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -1901,14 +1901,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
-	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
+	memcpy (index_aaaa, lower_indeces, dim_count * sizeof(EIF_INTEGER));
 
 	do
 	{
-		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+		eif_make_from_c (eif_access (eif_index), index_aaaa, dim_count, EIF_INTEGER);
 		for (i = 0; i < dim_count; i++)
 		{
-			sa_indeces[i] = index [dim_count - 1 - i];
+			sa_indeces[i] = index_aaaa [dim_count - 1 - i];
 		}
 		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
 		if (hr != S_OK)
@@ -1917,7 +1917,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 		}
 		put (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
-	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
+	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index_aaaa));
 
 	// free memory
 
@@ -1938,6 +1938,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 
 	return eif_wean (result);
 };
+//-------------------------------------------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_bstr (BSTR *a_string)
 {
@@ -2229,14 +2230,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2341,14 +2342,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2453,14 +2454,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2566,14 +2567,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2679,14 +2680,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2799,14 +2800,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -2911,14 +2912,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -3031,14 +3032,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -3143,14 +3144,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -3263,14 +3264,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -3375,14 +3376,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;
@@ -3488,14 +3489,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 
 	for (i = 0; i < dim_count; i++)
 	{
-		hr = SafeArrayGetLBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 			lower_indeces[i] = (EIF_INTEGER)tmp_long;
 		else
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		hr = SafeArrayGetUBound (a_safearray, i + 1, &tmp_long);
+		hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);
 		if (SUCCEEDED (hr))
 		{
 			upper_indeces[i] = (EIF_INTEGER)tmp_long;

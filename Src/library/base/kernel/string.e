@@ -1129,7 +1129,6 @@ feature {STRING} -- Implementation
 			"C | %"eif_eiffel.h%""
 		end;
 
-
 	c_p_i: INTEGER is
 			-- Number of characters per INTEGER
 		do

@@ -46,8 +46,7 @@ feature -- Element change
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to `pixmap'.
 		do
-			--internal_pixmap := a_pixmap.twin
-			internal_pixmap ?= a_pixmap.implementation	
+			internal_pixmap ?= a_pixmap.twin.implementation
 			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
 		end
 

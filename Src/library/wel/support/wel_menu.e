@@ -175,7 +175,7 @@ feature -- Element change
 		do
 			!! a_wel_string.make (a_string)
 			cwin_insert_menu (item, a_position,
-				Mf_string + Mf_bycommand, an_id, a_wel_string.item)
+				Mf_string + Mf_byposition, an_id, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			string_set: id_string (an_id).is_equal (a_string)

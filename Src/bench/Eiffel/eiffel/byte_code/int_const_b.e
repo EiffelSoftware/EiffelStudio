@@ -27,9 +27,12 @@ feature
 
 	print_register is
 			-- Print integer constant
+			-- The '()' are present for the case where int_val=INT32_MIN,
+			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			generated_file.putint (value);
-			generated_file.putchar ('L');
+			generated_file.putchar ('(')
+			generated_file.putint (value)
+			generated_file.putstring ("L)")
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

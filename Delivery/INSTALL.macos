@@ -1,0 +1,75 @@
+Installing EiffelStudio 5.3 on Mac OS X
+
+Before installing the Eiffel53.tgz package you need to install the following components:
+
+1 - Install Mac OS X X11 server:
+
+	Available from Apple web site at:
+	http://www.apple.com/macosx/x11/ 
+
+2 - Install GTK 1.2.10:
+
+	Web site address for download:
+	http://www.opendarwin.org/projects/darwinports/en/x11.php
+
+	Actual file to download in order to install GTK:
+	http://www.opendarwin.org/projects/darwinports/packages/usr/gtk.dmg
+
+3 - Install `libcompat':
+
+	We did not find a better way for that but to install the DarwinPorts available at:
+	
+	http://www.opendarwin.org/projects/darwinports/
+	
+	Follow their instructions on how to install and configure it. Then when everything is
+	properly installed, type:
+	
+	port install libcompat
+
+	Once this is done, update your profile to set the environment variable DYLD_LIBRARY_PATH
+	with /opt/local/lib which is the default location for `port'.
+
+4 - Install GNU tar:
+
+	The version of tar presently installed on Mac OS X does not support our large
+	directory structure. So in order to extract the archive below, you need to install
+	GNU tar. It can be downloaded from
+
+	http://ftp.gnu.org/pub/gnu/tar/tar-1.13.tar.gz
+
+	Then you can type the following commands as a root user:
+
+	tar xvfz tar-1.13.tar.gz
+	cd tar-1.13.tar.gz
+	cp /usr/share/automake-1.6/config.* .
+	./configure
+	make
+	make install
+
+	Then `tar' should be installed in /usr/local/bin. So make sure to update your PATH
+	environment variable. To ensure this is the correct tar version, typing
+
+	tar --version
+
+	should output the following:
+
+	tar (GNU tar) 1.13
+
+	Copyright (C) 1988, 92,93,94,95,96,97,98, 1999 Free Software Foundation, Inc.
+	This is free software; see the source for copying conditions.  There is NO
+	warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+	Written by John Gilmore and Jay Fenlason.
+
+
+
+Then you can extract the file Eiffel53.tgz using:
+
+tar xvfz Eiffel53.tgz
+
+Then to make your install useable you need to initialize the libraries by going
+in the Eiffel53 directory and type:
+
+find . -name \*.a -exec ranlib {} \;
+
+Then read the install normal instruction located in $ISE_EIFFEL/INSTALL. 

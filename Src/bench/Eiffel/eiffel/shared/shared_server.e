@@ -69,12 +69,6 @@ feature {NONE}
 		once
 			Result := System.m_feature_server;
 		end;
-
-	M_rout_tbl_server: M_ROUT_TBL_SERVER is
-			-- Server of melted routine table byte code
-		once
-			Result := System.m_rout_tbl_server;
-		end;
  
 	M_rout_id_server: M_ROUT_ID_SERVER is
 			-- Server of mleted routine id array byte code

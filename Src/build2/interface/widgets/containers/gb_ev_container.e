@@ -70,8 +70,9 @@ feature -- Access
 			create label.make_with_text ("radio button groups")
 			Result.extend (label)
 			create merged_list
-			merged_list.set_minimum_height (50)
+			merged_list.set_minimum_height (100)
 			merged_list.drop_actions.extend (agent new_merge)
+			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
 			Result.extend (merged_list)
 	
 			update_attribute_editor
@@ -89,7 +90,7 @@ feature -- Access
 				radio_group_link: GB_RADIO_GROUP_LINK
 				other_object: GB_OBJECT
 			do
-				create radio_group_link.make_with_text (an_object.id.out)
+				create radio_group_link
 				radio_group_link.set_pebble (radio_group_link)
 				radio_group_link.set_object (an_object)
 				radio_group_link.set_gb_ev_container (Current)
@@ -112,7 +113,7 @@ feature -- Access
 					check
 						object_not_void: other_object /= Void
 					end
-					create radio_group_link.make_with_text (other_object.id.out)
+					create radio_group_link
 					radio_group_link.set_object (other_object)
 					radio_group_link.set_gb_ev_container (Current)
 					radio_group_link.set_pebble (radio_group_link)
@@ -130,26 +131,51 @@ feature -- Access
 			radio_group_link: GB_RADIO_GROUP_LINK
 			other_object: GB_OBJECT
 		do
-			merged_list.wipe_out
 			container ?= first
 			check
 				first_is_container: container /= Void
 			end
 			groups := container.merged_radio_button_groups
 			if groups /= Void then
+				if groups.count = merged_list.count then
+					update_linked_names	
+				else
+				merged_list.wipe_out
 				from
 					counter := 1
 				until
 					counter > groups.count
 				loop
 					other_object := object_handler.object_from_display_widget (groups @ counter)
-					create radio_group_link.make_with_text (other_object.id.out)
+					create radio_group_link
 					radio_group_link.set_object (other_object)
 					radio_group_link.set_gb_ev_container (Current)
 					radio_group_link.set_pebble (radio_group_link)
 					merged_list.extend (radio_group_link)
 					counter := counter + 1
 				end
+				end
+			end
+		end
+		
+	update_linked_names is
+			-- For all items in `merged_list', update
+			-- their texts to reflect the current state of
+			-- associated object names.
+		local
+			radio_group_link: GB_RADIO_GROUP_LINK
+		do
+			from
+				merged_list.start
+			until
+				merged_list.off
+			loop
+				radio_group_link ?= merged_list.item
+				check
+					item_was_radio_group: radio_group_link /= Void
+				end
+				radio_group_link.update_displayed_text
+				merged_list.forth
 			end
 		end
 		
@@ -338,6 +364,26 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	veto_merge (an_object: GB_OBJECT): BOOLEAN is
+			-- Stop invalid radio_group_merges.
+			-- An object may not be dropped if it is the same object that
+			-- `Current' represents, or it is already merged to the object
+			-- that current represents.
+			-- Also, may only drop, if object is a container.
+		local
+			container_object: GB_CONTAINER_OBJECT
+		do
+			container_object ?= an_object
+			if container_object /= Void and then parent_editor.object /= an_object then
+				if (first.merged_radio_button_groups = Void) then
+					Result := True
+				elseif not first.merged_radio_button_groups.has (container_object.object) then
+					Result := True
+				end
+			end
+		end
+		
 
 	link_to_object (an_object: GB_OBJECT) is
 			-- Perform a merging of `Current' and `an_object'.

@@ -132,7 +132,7 @@ feature -- Status report
 		do
 			Result := implementation.count
 		ensure
-			count_positive: count > 0
+			count_not_negative: count >= 0
 		end
 		
 feature -- Status setting
@@ -230,6 +230,7 @@ feature {NONE} -- Implementation
 		
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
+	is_selected_implies_selected_items_count_equals_count: is_selected implies selected_items.count = count
 
 end
 

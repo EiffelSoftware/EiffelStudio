@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 		local
 			a_decor: INTEGER
 		do
-			Precursor
+			Precursor {EV_CONTAINER_IMP}
 			is_initialized := False
 			create upper_bar
 			create lower_bar

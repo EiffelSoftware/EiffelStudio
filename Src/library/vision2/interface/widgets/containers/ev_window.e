@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
---| fix_me: general comment/question are contracts like this ok?
+--| fix_me: General comment/question are contracts like this ok?
 --|         valid_result: foo > bar
 --|         valid result does not really say much. 
 --|         would a more descriptive tag be better, after all the tag's

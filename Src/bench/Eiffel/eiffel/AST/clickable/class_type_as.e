@@ -126,14 +126,16 @@ feature -- Conveniences
 						create actual_generic.make (1, 0)
 						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					else
-						create Result.make (l_class.class_id)
+						Result := l_class.actual_type
 					end
 				end
 
 				if abort then
 					Result := Void
 				else
-					Result.set_is_true_expanded (l_class.is_expanded)
+					if not Result.is_basic then
+						Result.set_is_true_expanded (l_class.is_expanded)
+					end
 				end
 			end
 		end
@@ -174,11 +176,13 @@ feature -- Conveniences
 			end
 
 			if Result = Void then
-				create Result.make (l_class.class_id)
+				Result := l_class.actual_type
 			end
 
 				-- Base type class is expanded
-			Result.set_is_true_expanded (l_class.is_expanded)
+			if not Result.is_basic then
+				Result.set_is_true_expanded (l_class.is_expanded)
+			end
 			if l_class.is_expanded then
 				record_exp_dependance (l_class)
 			end
@@ -187,42 +191,6 @@ feature -- Conveniences
 			if l_class.is_separate then
 				record_separate_dependance (l_class)
 			end
-		end
-
-	record_exp_dependance (a_class: CLASS_C) is
-		local
-			d: DEPEND_UNIT
-			f: FEATURE_I
-			c_class: CLASS_C
-		do
-			c_class := System.current_class
-			if c_class /= Void then
--- *** FIXME ****
--- This was done since actual_type is called on the generic
--- parameters when the signature of the class is requested.
--- This approach seems ok but the FIXME is to make YOU
--- aware that there could be potential problems.
-				-- Only mark the class if it is used during a
-				-- compilation not when querying the actual
-				-- type
-				c_class.set_has_expanded
-				a_class.set_is_used_as_expanded
-				if System.in_pass3 then
-					!!d.make_expanded_unit (a_class.class_id)
-					context.supplier_ids.extend (d)
-					f := a_class.creation_feature
-					if f /= Void then
-						!!d.make (a_class.class_id, f)
-						context.supplier_ids.extend (d)
-					end
-				end
-			end
-		end
-
-	record_separate_dependance (a_class: CLASS_C) is
-			-- Mark the class `a_class' used as separate
-		do
-			a_class.set_is_used_as_separate
 		end
 
 	actual_type: CL_TYPE_A is
@@ -266,11 +234,13 @@ feature -- Conveniences
 				end
 
 				if Result = Void then
-					create Result.make (l_class.class_id)
+					Result := l_class.actual_type
 				end
 
 						-- Base type class is expanded
-				Result.set_is_true_expanded (l_class.is_expanded)
+				if not Result.is_basic then
+					Result.set_is_true_expanded (l_class.is_expanded)
+				end
 				if l_class.is_expanded then
 					record_exp_dependance (l_class)
 				end
@@ -379,6 +349,42 @@ feature -- Conveniences
 					end
 				end
 			end
+		end
+
+	record_exp_dependance (a_class: CLASS_C) is
+		local
+			d: DEPEND_UNIT
+			f: FEATURE_I
+			c_class: CLASS_C
+		do
+			c_class := System.current_class
+			if c_class /= Void then
+-- *** FIXME ****
+-- This was done since actual_type is called on the generic
+-- parameters when the signature of the class is requested.
+-- This approach seems ok but the FIXME is to make YOU
+-- aware that there could be potential problems.
+				-- Only mark the class if it is used during a
+				-- compilation not when querying the actual
+				-- type
+				c_class.set_has_expanded
+				a_class.set_is_used_as_expanded
+				if System.in_pass3 then
+					!!d.make_expanded_unit (a_class.class_id)
+					context.supplier_ids.extend (d)
+					f := a_class.creation_feature
+					if f /= Void then
+						!!d.make (a_class.class_id, f)
+						context.supplier_ids.extend (d)
+					end
+				end
+			end
+		end
+
+	record_separate_dependance (a_class: CLASS_C) is
+			-- Mark the class `a_class' used as separate
+		do
+			a_class.set_is_used_as_separate
 		end
 
 feature -- Output

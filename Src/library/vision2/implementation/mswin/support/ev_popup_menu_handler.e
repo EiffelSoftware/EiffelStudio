@@ -15,7 +15,8 @@ inherit
 			on_draw_item
 		redefine
 			on_menu_command,
-			default_process_message
+			default_process_message,
+			class_requires_icon
 		end
 		
 	EV_MENU_CONTAINER_IMP
@@ -67,6 +68,14 @@ feature {NONE} -- WEL Implementation
 		do
 			return_value := menu_item_list.on_menu_char (char_code, corresponding_menu)
 			set_message_return_value (return_value)
+		end
+		
+	class_requires_icon: BOOLEAN is
+			-- Does `Current' require an icon to be registered?
+			-- If `True' `register_class' assigns a class icon, otherwise
+			-- no icon is assigned.
+		do
+			Result := False
 		end
 
 end -- class EV_POPUP_MENU_HANDLER

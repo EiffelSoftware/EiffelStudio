@@ -12,7 +12,8 @@ class
 inherit
 	WEL_FRAME_WINDOW
 		redefine
-			on_timer
+			on_timer,
+			class_requires_icon
 		end
 
 create
@@ -76,6 +77,14 @@ feature {NONE} -- Implementation
 			else
 				remove_timeout (id)
 			end
+		end
+		
+	class_requires_icon: BOOLEAN is
+			-- Does `Current' require an icon to be registered?
+			-- If `True' `register_class' assigns a class icon, otherwise
+			-- no icon is assigned.
+		do
+			Result := False
 		end
 
 end -- class EV_INTERNAL_TIMEOUT_IMP

@@ -49,8 +49,9 @@ feature {NONE} -- code in the glue library
 			      arguments: POINTER; event_data: POINTER; event_data_imp: POINTER; 
 			      set_event_data_rtn: POINTER;
 			      mouse_button: INTEGER; 
-			      double_click: BOOLEAN): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+			      double_click: BOOLEAN;
+			      extra_data: POINTER): INTEGER is
+		external "C ( GtkObject *, gchar *, EIF_PROC, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_PROC, char, char, gpointer): EIF_INTEGER | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_signal_connect_after (widget: POINTER; event: POINTER; 

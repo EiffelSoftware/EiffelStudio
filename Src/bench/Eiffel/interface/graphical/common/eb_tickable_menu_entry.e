@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Menu entry for Bench with a tick.";
+	description: "Menu entry for Bench with a tick.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -18,8 +16,6 @@ inherit
 			associated_command
 		end
 
-	SYSTEM_CONSTANTS
-
 creation
 	make
 
@@ -28,10 +24,7 @@ feature {NONE} -- Initialization
 	make (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initializes the button part.
 		local
-			act: STRING;
-			m_name: STRING;
-			p_tool: PROJECT_W;
-			pos: INTEGER
+			act: STRING
 		do
 			button_make (a_cmd.menu_name, a_parent)
 			act := a_cmd.accelerator
@@ -39,13 +32,6 @@ feature {NONE} -- Initialization
 				set_accelerator_action (act)
 			end
 			add_activate_action (a_cmd, a_cmd.tool)
-		end;
-
-feature -- Properties
-
-	associated_command: TOOL_COMMAND is
-			-- The associated_command
-		do	
 		end;
 
 feature -- Status setting
@@ -58,6 +44,13 @@ feature -- Status setting
 			else
 				set_toggle_off
 			end
-		end;
+		end
+
+feature -- Properties
+
+	associated_command: TOOL_COMMAND is
+			-- The associated_command
+		do	
+		end
 
 end -- class EB_TICKABLE_MENU_ENTRY

@@ -244,14 +244,14 @@ feature {NONE} -- Externals
 
 	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN) is
 		external
-			"C [macro <windows.h>] (HWND, int, LPCSCROLLINFO, BOOL)"
+			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO, BOOL)"
 		alias
 			"SetScrollInfo"
 		end
 
 	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER) is
 		external
-			"C [macro <windows.h>] (HWND, int, LPCSCROLLINFO)"
+			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO)"
 		alias
 			"GetScrollInfo"
 		end

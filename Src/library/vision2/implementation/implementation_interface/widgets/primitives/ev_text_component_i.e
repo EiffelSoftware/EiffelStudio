@@ -23,6 +23,8 @@ feature -- Access
 		require
 			exists: not destroyed
 		deferred
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	text_length: INTEGER is

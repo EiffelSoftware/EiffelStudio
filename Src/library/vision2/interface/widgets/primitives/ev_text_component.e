@@ -24,6 +24,8 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result:= implementation.text
+		ensure
+			Result_not_void: Result /= Void
 		end 
 
 	text_length: INTEGER is

@@ -73,6 +73,9 @@ feature {NONE} -- Implementation
 			new_f: E_FUNCTION
 		do
 			t ?= type;
+			if t = Void then
+				t := type.actual_type
+			end;
 			!! new_f.make (feature_name, feature_id);
 			new_f.set_type (t);
 			update_api (new_f);

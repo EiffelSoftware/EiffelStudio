@@ -388,6 +388,12 @@ feature {NONE} -- I/O
 	abort: BOOLEAN;
 			-- Does the user want to abort the command?
 
+	arguments: STRING is
+			-- Arguments passed to the application
+		once
+			!!Result.make (0)
+		end;
+
 feature -- I/O
 
 	set_output_window (display: CLICK_WINDOW) is

@@ -108,8 +108,9 @@ cluster
 external
 
 	object:
-		"$(RUN_TIME3)/parsing/eiffel/libeiffel.a";
-		"$(RUN_TIME3)/parsing/lace/liblace.a";
-		"$(RUN_TIME3)/parsing/shared/libparsing.a";
+		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
+		"$(BENCH)/C/parsing/lace/liblace.a";
+		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/platform/libplatform.a";
 
 end

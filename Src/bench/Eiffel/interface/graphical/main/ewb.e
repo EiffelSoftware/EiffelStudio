@@ -88,7 +88,10 @@ feature
 					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
-				io.error.putstring (developer_exception_name);
+				temp := developer_exception_name;
+				if temp /= Void then
+					io.error.putstring (temp);
+				end;
 				io.error.new_line;
 			end;
 			if not Rescue_status.fail_on_rescue then

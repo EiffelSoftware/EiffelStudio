@@ -42,8 +42,11 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 200;
+	Packet_number: INTEGER is
 			-- Maximum number of files in a single linking phase
+		once
+			Result := eif_packet_size
+		end;
 
 feature -- Initialization
 
@@ -604,6 +607,14 @@ feature -- Removal of empty classes
 			-- are not generated
 		do
 			empty_class_types.add (a_class_type);
+		end;
+
+feature {NONE} -- Externals
+
+	eif_packet_size: INTEGER is
+			-- Maximum number of files in a single linking phase
+		external
+			"C"
 		end;
 
 end

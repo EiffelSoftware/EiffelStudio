@@ -773,7 +773,9 @@ end;
 			if not (precompilation or else Lace.compile_all_classes) then
 					-- The root class is not generic
 				root_class_c := root_class.compiled_class;
+				current_class := root_class_c;
 				root_class_c.check_non_genericity_of_root_class;
+				current_class := Void;
 			end;
 
 			if not (precompilation or else Lace.compile_all_classes) then

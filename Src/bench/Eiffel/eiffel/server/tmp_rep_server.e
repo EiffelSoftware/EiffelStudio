@@ -71,11 +71,11 @@ feature
 			-- Initialize server file `server_file' before writing in
 			-- it.
 		local
-			ptr: POINTER;
+			file_desc: INTEGER
 		do
-			ptr := server_file.file_pointer;
-			c_sv_init (ptr);
-			last_offset := fpos2 ( ptr);
+			file_desc := server_file.descriptor;
+			c_sv_init (file_desc);
+			last_offset := fpos2 (file_desc);
 		end;
 
 	make_index (obj: ANY; file_position, object_count: INTEGER) is
@@ -106,7 +106,7 @@ feature
 
 feature {NONE} -- External features
 
-	fpos2 (fil: POINTER): INTEGER is
+	fpos2 (f_desc: INTEGER): INTEGER is
 		external
 			"C"
 		end;

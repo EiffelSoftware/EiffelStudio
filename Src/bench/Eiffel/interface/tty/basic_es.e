@@ -25,8 +25,11 @@ feature -- Creation
 	make is
 			-- Analyze the command line options and 
 			-- execute the appropriate command.
+		local
+			temp: STRING
 		do
 			if not retried then
+
 				analyze_options;
 				if option_error then
 					print_option_error
@@ -48,7 +51,10 @@ feature -- Creation
 			discard_license;
 			io.error.putstring ("ISE Eiffel3: Session aborted%N");
 			io.error.putstring ("Exception tag: ");
-			io.error.putstring (developer_exception_name);
+			temp := developer_exception_name;
+			if temp /= Void then
+				io.error.putstring (temp);
+			end;
 			io.error.new_line;
 			if not Rescue_status.fail_on_rescue then
 				retried := True;

@@ -165,7 +165,7 @@ end;
 			id := t.id;
 			init_file (server_file);
 			position := store_append
-				(server_file.file_pointer, $t, $make_index, $Current);
+				(server_file.descriptor, $t, $make_index, $Current);
 			!!info.make (position, server_file.id);
 			server_file.add_occurence;
 
@@ -185,7 +185,7 @@ end;
 		require
 			good_argument: server_file /= Void
 		do
-			c_sv_init (server_file.file_pointer);
+			c_sv_init (server_file.descriptor);
 		end;
 
 	remove (an_id: INTEGER) is
@@ -238,7 +238,7 @@ end;
 					Server_controler.open_file (server_file);
 				end;
 				Result := retrieve_all
-							(server_file.file_pointer, info.position);
+							(server_file.descriptor, info.position);
 					-- Insert it in the queue
 				if cache.full then
 						-- If cache is full, oldest is removed
@@ -266,7 +266,7 @@ end;
 			end;
 				-- Id not avaible in memory
 			Result := retrieve_all
-						(server_file.file_pointer, info.position);
+						(server_file.descriptor, info.position);
 			Result.set_id (real_id);
 		end;
 
@@ -450,17 +450,17 @@ end;
 
 feature {NONE} -- External features
 
-	store_append (f: POINTER; o: T; r: POINTER; s: like Current): INTEGER is
+	store_append (f_desc: INTEGER; o: T; r: POINTER; s: like Current): INTEGER is
 		external
 			"C"
 		end;
 
-	retrieve_all (s: POINTER; pos: INTEGER): T is
+	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is
 		external
 			"C"
 		end;
 
-	c_sv_init (ptr: POINTER) is
+	c_sv_init (f_desc: INTEGER) is
 		external
 			"C"
 		end;

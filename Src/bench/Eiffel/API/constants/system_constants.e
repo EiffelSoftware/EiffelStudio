@@ -6,7 +6,10 @@ feature {NONE}
 
 	Comp: STRING is "COMP"
 
-	Copy_cmd: STRING is "cp"
+	Copy_cmd: STRING is
+		once
+			Result := Platform_constants.Copy_cmd
+		end;
 
 	Default_Ace_file: STRING is
 		local
@@ -21,7 +24,7 @@ feature {NONE}
 			Result.append_character (c);
 			Result.append ("defaults");
 			Result.append_character (c);
-			Result.append ("Ace.default");
+			Result.append (Platform_constants.Default_ace_name);
 		end;
 
 	Default_precompiled_location: STRING is
@@ -32,13 +35,13 @@ feature {NONE}
 			!!Result.make (0);
 			Result.append ("$EIFFEL3");
 			Result.append_character (c);
-			Result.append ("precompiled");
+			Result.append (Platform_constants.precompiled_directory);
 			Result.append_character (c);
 			Result.append ("spec");
 			Result.append_character (c);
 			Result.append ("$PLATFORM");
 			Result.append_character (c);
-			Result.append ("base.batch");
+			Result.append ("base");
 		end;
 
 	Descriptor_suffix: STRING is "D"
@@ -52,17 +55,29 @@ feature {NONE}
 
 	Dot_c: STRING is ".c"
 
-	Dot_e: STRING is ".e"
+	Dot_e: STRING is
+		once
+			Result := Platform_constants.Dot_e
+		end;
 
 	Dot_h: STRING is ".h"
 
-	Dot_o: STRING is ".o"
+	Dot_o: STRING is
+		once
+			Result := Platform_constants.Dot_o
+		end;
 
-	Dot_workbench: STRING is ".workbench"
+	Dot_workbench: STRING is
+		once
+			Result := Platform_constants.Dot_workbench
+		end;
 
 	Dot_x: STRING is ".x"
 
-	Driver: STRING is "driver"
+	Driver: STRING is
+		once
+			Result := Platform_constants.Driver
+		end;
 
 	Eattr: STRING is "Eattr"
 
@@ -76,9 +91,15 @@ feature {NONE}
 
 	Ehisto: STRING is "Ehisto"
 
-	Eiffelgen: STRING is "EIFFELGEN"
+	Eiffelgen: STRING is
+		once
+			Result := Platform_constants.Eiffelgen
+		end;
 
-	Eiffel_suffix: CHARACTER is 'e'
+	Eiffel_suffix: CHARACTER is
+		once
+			Result := Platform_constants.Eiffel_suffix
+		end;
 
 	Einit: STRING is "Einit"
 
@@ -100,7 +121,10 @@ feature {NONE}
 
 	Evisib: STRING is "Evisib"
 
-	Executable_suffix: STRING is ""
+	Executable_suffix: STRING is
+		once
+			Result := Platform_constants.Executable_suffix
+		end;
 
 	F_code: STRING is "F_code"
 
@@ -112,9 +136,15 @@ feature {NONE}
 
 	Prelink_script: STRING is "prelink"
 
-	Preobj: STRING is "preobj.o"
+	Preobj: STRING is
+		once
+			Result := Platform_constants.Preobj
+		end;
 
-	Updt: STRING is ".UPDT"
+	Updt: STRING is
+		once
+			Result := Platform_constants.Updt
+		end;
 
 	Version_number: STRING is "3.2.4"
 
@@ -126,6 +156,13 @@ feature {NONE}
 		-- Maximum number of non encrypted characters during
 		-- code generation
 		--| The class FEATURE_I will be generated in the file 'feature<n>.c'
+
+feature {NONE}
+
+	Platform_constants: PLATFORM_CONSTANTS is
+		once
+			!!Result
+		end;
 
 feature {NONE} -- Externals
 

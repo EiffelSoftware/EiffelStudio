@@ -6,6 +6,8 @@ feature
 
 	Ancestors_abb: CHARACTER is 'a';
 
+	Arguments_abb: CHARACTER is 'a';
+
 	Attributes_abb: CHARACTER is 'b';
 
 	Callers_abb: CHARACTER is 'c';

@@ -1903,7 +1903,7 @@ feature -- Debugging
 			--| In the latter case, the new real body id is kept
 			--| in DEBUGGABLE objects.
 		require
-			is_debuggable: is_debuggable
+			is_debuggable: is_debuggable or else (is_constant and is_once)
 		local
 			du: DISPATCH_UNIT;
 			class_type: CLASS_TYPE;

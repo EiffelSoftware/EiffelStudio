@@ -101,7 +101,7 @@ end;
 					Server_controler.open_file (server_file);
 				end;
 				Result := retrieve_all
-							(server_file.file_pointer, info.position);
+							(server_file.descriptor, info.position);
 					-- Insert it in the queue
 				if cache.full then
 						-- If cache is full, oldest is removed

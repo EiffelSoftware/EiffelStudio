@@ -8,6 +8,8 @@ feature {NONE}
 
 	ancestors_help: STRING is "show the ancestors of a class";
 
+	arguments_help: STRING is "set the arguments";
+
 	aversions_help: STRING is "show the ancestor versions of a feature";
 
 	attributes_help: STRING is "show the attributes of a class";

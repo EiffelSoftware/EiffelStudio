@@ -7,6 +7,8 @@ feature {NONE}
 
 	ancestors_cmd_name: STRING is "ancestors"
 
+	Arguments_cmd_name: STRING is "arguments"
+
 	attributes_cmd_name: STRING is "attributes"
 
 	aversions_cmd_name: STRING is "aversions"

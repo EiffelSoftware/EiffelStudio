@@ -71,48 +71,18 @@ feature -- Basic Operations
 			"ToInt32"
 		end
 
-feature -- Binary Operators
-
-	frozen infix "#==" (value2: POINTER): BOOLEAN is
-		external
-			"IL operator signature (System.IntPtr): System.Boolean use System.IntPtr"
-		alias
-			"op_Equality"
-		end
-
-	frozen infix "|=" (value2: POINTER): BOOLEAN is
-		external
-			"IL operator signature (System.IntPtr): System.Boolean use System.IntPtr"
-		alias
-			"op_Inequality"
-		end
-
 feature -- Specials
 
-	frozen op_explicit_int32 (value: INTEGER): POINTER is
+	frozen from_integer (value: INTEGER): POINTER is
 		external
 			"IL static signature (System.Int32): System.IntPtr use System.IntPtr"
 		alias
 			"op_Explicit"
 		end
 
-	frozen op_explicit_int_ptr (value: POINTER): INTEGER_64 is
-		external
-			"IL static signature (System.IntPtr): System.Int64 use System.IntPtr"
-		alias
-			"op_Explicit"
-		end
-
-	frozen op_explicit_int64 (value: INTEGER_64): POINTER is
+	frozen from_integer_64 (value: INTEGER_64): POINTER is
 		external
 			"IL static signature (System.Int64): System.IntPtr use System.IntPtr"
-		alias
-			"op_Explicit"
-		end
-
-	frozen op_explicit (value: POINTER): INTEGER is
-		external
-			"IL static signature (System.IntPtr): System.Int32 use System.IntPtr"
 		alias
 			"op_Explicit"
 		end

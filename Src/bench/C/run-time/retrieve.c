@@ -29,6 +29,9 @@
 #include "eif_traverse.h"
 #include "eif_compress.h"
 #include "x2c.header"	/* For macro LNGPAD */
+#ifdef VXWORKS
+#include <unistd.h>	/* For read () */
+#endif
 #include <assert.h>
 
 #include <ctype.h>					/* For isspace() */
@@ -291,7 +294,7 @@ rt_private void independent_retrieve_init (long idrf_size)
 		xfree(idr_temp_buf);
 		xraise (EN_MEM);
 	}
-	bzero ((char *)dattrib, scount * sizeof (int *));
+	memset  ((char *)dattrib, 0, scount * sizeof (int *));
 }
 
 rt_private void independent_retrieve_reset (void) {
@@ -1187,7 +1190,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			xraise(EN_MEM);
 			}
 		}
-		bzero(sorted_attributes, scount * sizeof(unsigned int *));
+		memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
 
 	/* Read the number of lines */
 	if (readline(r_buffer, &bsize) <= 0)

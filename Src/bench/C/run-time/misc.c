@@ -273,8 +273,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 
 	safe_bcopy(new_area, new_area + j * elem_size, k * elem_size);
 									/* `safe_bcopy' takes care of overlap. */
-	bzero(new_area, j * elem_size);		/* Fill empty parts of area with 0 */
-	bzero(new_area + (j + k) * elem_size, (i - j - k) * elem_size);
+	memset (new_area, 0, j * elem_size);		/* Fill empty parts of area with 0 */
+	memset (new_area + (j + k) * elem_size, 0, (i - j - k) * elem_size);
 
 	/* If the new area is full of references and remembered,
 	 * the information in the special table

@@ -390,11 +390,7 @@ rt_public struct ex_vect *exft(void)
 	if (vector == (struct ex_vect *) 0)		/* No more memory */
 		enomem();							/* Critical exception */
 
-#ifdef VXWORKS
 	memset (vector, 0, sizeof(struct ex_vect));	/* Make sure there is no garbage in the vector */
-#else
-	bzero(vector, sizeof(struct ex_vect));	/* Make sure there is no garbage in the vector */
-#endif
 
 	/* Maybe there is no stack dump but there is some marking done or at least
 	 * the marking is called even if no object is present on the stack
@@ -445,11 +441,7 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 	 * to EX_RETY to signal it has been retried. Note that the setjmp buffer
 	 * address is kept.
 	 */
-#ifdef VXWORKS
 	memcpy (last_item, rout_vect, sizeof(struct ex_vect));
-#else
-	bcopy(rout_vect, last_item, sizeof(struct ex_vect));
-#endif
 	last_item->ex_type = EX_RETY;		/* Signals a retry */
 
 	/* Pop off the EN_ILVL record on the Eiffel trace stack. This record was
@@ -786,11 +778,7 @@ rt_public void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect)
 		return;								/* If exception is ignored */
 	}
 
-#ifdef VXWORKS
 	memcpy (trace, rout_vect, sizeof(struct ex_vect));
-#else
-	bcopy(rout_vect, trace, sizeof(struct ex_vect));
-#endif
 	trace->ex_type = EX_RESC;		/* Physical entry in rescue clause */
 	trace->ex_rescue = 0;			/* Meaningless from now on */
 	trace->ex_retry = 0;			/* So is this */
@@ -1224,11 +1212,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 				echmem |= MEM_FSTK;						/* Stack full now */
 				enomem(MTC_NOARG);								/* Critical exception */
 			}
-#ifdef VXWORKS
 			memcpy (trace, top, sizeof(struct ex_vect));	/* Record exception */
-#else
-			bcopy(top, trace, sizeof(struct ex_vect));	/* Record exception */
-#endif
 			trace->ex_type = xcode(top);				/* Exception code */
 		}
 		expop(&eif_stack);			/* Vector no longer needed on stack */
@@ -1279,11 +1263,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 					echmem |= MEM_FSTK;			/* Stack is full */
 					enomem(MTC_NOARG);					/* Critical exception */
 				}
-#ifdef VXWORKS
 				memcpy (top, trace, sizeof(struct ex_vect));	/* Shift record */
-#else
-				bcopy(trace, top, sizeof(struct ex_vect));	/* Shift record */
-#endif
 				trace->ex_type = EN_OLVL;	/* Exit one exception level */
 				trace->ex_lvl = echlvl--;	/* Level we're comming from */
 			} else
@@ -1509,15 +1489,7 @@ rt_private void excur(EIF_CONTEXT_NOARG)
 		eif_panic(botched);
 #endif
 
-#ifdef USE_STRUCT_COPY
-	context = eif_trace;
-#else	/* USE_STRUCT_COPY */
-#ifdef VXWORKS
 	memcpy (&context, &eif_trace, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&eif_trace, &context, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif /* USE_STRUCT_COPY */ 
 
 	/* The current top at this point is an EN_ILVL record, so the last exception
 	 * which occurred at the previous level is just the one below.
@@ -1528,15 +1500,7 @@ rt_private void excur(EIF_CONTEXT_NOARG)
 	echval = top->ex_type;		/* Current exception code */
 	echtg = extag(MTC top);			/* Recompute exception tag */
 
-#ifdef USE_STRUCT_COPY
-	eif_trace = context;
-#else
-#ifdef VXWORKS
 	memcpy (&eif_trace, &context, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&context, &eif_trace, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	EIF_END_GET_CONTEXT
 }
@@ -1592,15 +1556,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 	 * previous nesting level).
 	 */
 
-#ifdef USE_STRUCT_COPY
-	context = eif_trace;
-#else
-#ifdef VXWORKS
 	memcpy (&context, &eif_trace, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&eif_trace, &context, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	poped = 0;		/* If top is the EN_ILVL vector, then we come from eviol */
 	echorg = 0;		/* Signals not found (yet) */
@@ -1648,15 +1604,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 	}
 #endif
 
-#ifdef USE_STRUCT_COPY
-	eif_trace = context;
-#else
-#ifdef VXWORKS
 	memcpy (&eif_trace, &context, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy (&context, &eif_trace, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	EIF_END_GET_CONTEXT
 }
@@ -1944,15 +1892,7 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 	register1 struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
-#ifdef USE_STRUCT_COPY
-	saved = eif_trace;				/* Save stack context */
-#else
-#ifdef VXWORKS
 	memcpy (&saved, &eif_trace, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&eif_trace, &saved, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	/* Reset the exception structure to its default state */
 	eif_except.rescued = 0;				/* Not rescued */
@@ -2030,15 +1970,7 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 		eif_except.last = 1;					/* Must be the last record */
 	}
 
-#ifdef USE_STRUCT_COPY
-	eif_trace = saved;				/* Restore saved stack context */
-#else
-#ifdef VXWORKS
 	memcpy (&eif_trace, &saved, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&saved, &eif_trace, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	EIF_END_GET_CONTEXT
 }

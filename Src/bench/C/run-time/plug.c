@@ -12,7 +12,6 @@
 
 #include "eif_project.h" /* for egc... */
 #include "eif_eiffel.h"
-#include <assert.h>			/* For assertions checkings. */
 #include "eif_config.h"
 #include "eif_plug.h"
 #include "eif_malloc.h"
@@ -28,6 +27,12 @@
 #endif
 #include "eif_bits.h"
 #include "x2c.header"		/* For macro LNGPAD */
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+#include <assert.h>			/* For assertions checkings. */
 
 
 #ifndef lint
@@ -234,7 +239,7 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 	 * of the STRING object, hence the simple de-referencing.
 	 */
 
-	bcopy(s, *(EIF_REFERENCE *)string, len);
+	memcpy (*(EIF_REFERENCE *)string, s, len);
 	epop(&loc_stack, 1);			/* Remove protection */
 
 	return string;
@@ -290,7 +295,7 @@ rt_public void chkinv (EIF_CONTEXT EIF_REFERENCE obj, int where)
 		if ((inv_mark_tablep = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
 			enomem(MTC_NOARG);
 
-	bzero (inv_mark_tablep, scount);
+	memset  (inv_mark_tablep, 0, scount);
 
 	recursive_chkinv(MTC dtype, obj, where);	/* Recurive invariant check */
 

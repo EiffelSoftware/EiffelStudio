@@ -880,7 +880,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RASSIGN\n");
 #endif
-		bcopy(opop(), iresult, ITEM_SZ);
+		memcpy (iresult, opop(), ITEM_SZ);
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
 		 * feature which is going to call this once feature again.
@@ -956,7 +956,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_LASSIGN\n");
 #endif
 		code = get_short();		/* Get the local number (from 1 to locnum) */
-		bcopy(opop(), loc(code), ITEM_SZ);
+		memcpy (loc (code) , opop(), ITEM_SZ);
 		break;
 
 	/*
@@ -1942,30 +1942,17 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			code = get_short() - 1;
 			new = opop();
-			bcopy(new, &prev, ITEM_SZ);
+			memcpy (&prev, new, ITEM_SZ);
 
-#ifdef USE_STRUCT_COPY
-			op_context = op_stack;
-#else
-			bcopy(&op_stack, &op_context, sizeof(struct opstack));
-#endif
-
+			memcpy (&op_context, &op_stack, sizeof(struct opstack));
 			while (code-- > 0) {
 				new = opop();
-				bcopy(new, &old, ITEM_SZ);
-				bcopy(&prev, new, ITEM_SZ);
-#ifdef USE_STRUCT_COPY
-				prev = old;
-#else
-				bcopy(&old, &prev, ITEM_SZ);
-#endif
+				memcpy (&old, new, ITEM_SZ);
+				memcpy (new, &prev, ITEM_SZ);
+				memcpy (&prev, &old,ITEM_SZ);
 			}
 
-#ifdef USE_STRUCT_COPY
-			op_stack = op_context;
-#else
-			bcopy(&op_context, &op_stack, sizeof(struct opstack));
-#endif
+			memcpy (&op_stack, &op_context, sizeof(struct opstack));
 
 			opush(&prev);
 		}
@@ -2097,7 +2084,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		code = get_short();				/* Get number (from 1 to locnum) */
 		last = iget();
-		bcopy(loc(code), last, ITEM_SZ);
+		memcpy (last, loc(code), ITEM_SZ);
 		break;
 
 	/*
@@ -2109,7 +2096,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		code = get_short();				/* Get number (from 1 to argnum) */
 		last = iget();
-		bcopy(arg(code), last, ITEM_SZ);
+		memcpy (last, arg(code), ITEM_SZ);
 		break;
 
 	/*
@@ -2201,9 +2188,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
-	/*
 	 * Bit comparison
  	 */
+
 	case BC_BIT_STD_EQUAL:
 #ifdef DEBUG
 	dprintf(2)("BC_STD_EQUAL\n");
@@ -2588,7 +2575,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		code = get_short();             /* Get number (from 1 to locnum) */
 		last = iget();
-		bcopy(loc(code), last, ITEM_SZ);
+		memcpy (last, loc(code), ITEM_SZ);
 		break;
 
 	/*
@@ -2627,7 +2614,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		last = opop();
 		code = get_short();     /* Get the local number (from 1 to locnum) */
-		bcopy(last, loc(code), ITEM_SZ);
+		memcpy (loc(code), last, ITEM_SZ);
 		break;
 
 	/*
@@ -3520,7 +3507,7 @@ rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct 
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
 			enomem(MTC_NOARG);
 
-	bzero (inv_mark_table, scount);
+	memset  (inv_mark_table, 0, scount);
 
 	if (~in_assertion & WASC(dtype) & CK_INVARIANT) {
 		old_IC = IC;				/* Save IC */
@@ -3588,8 +3575,8 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 				last->type = SK_REF;
 				last->it_ref = obj;
 
-				/*IC = melt[body_id];
-				/*interpret(INTERP_INVA, where);/* Interpret invariant code */
+				/*IC = melt[body_id];*/
+				/*interpret(INTERP_INVA, where);*//* Interpret invariant code */
 
 				/* The proper way to start the interpretation of a melted
 		 		* invariant code is to call `xiinv' in order to initialize the
@@ -4366,8 +4353,8 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
 #ifndef DLE
 	{
 	
-		/*IC = melt[body];					/* Melted byte code */
-		/*interpret(INTERP_CMPD, 0);		/* Interpret (tagval not set) */
+		/*IC = melt[body];*/					/* Melted byte code */
+		/*interpret(INTERP_CMPD, 0);*/		/* Interpret (tagval not set) */
 
 		/* The proper way to start the interpretation of a melted
 		 * feature is to call `xinterp' in order to initialize the
@@ -4444,8 +4431,8 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int
 #ifndef DLE
 	{
 	
-		/*IC = melt[body];					/* Melted byte code */
-		/*interpret(INTERP_CMPD, 0);		/* Interpret (tagval not set) */
+		/*IC = melt[body];	*/				/* Melted byte code */
+		/*interpret(INTERP_CMPD, 0);	*/	/* Interpret (tagval not set) */
 
 		/* The proper way to start the interpretation of a melted
 		 * feature is to call `xinterp' in order to initialize the
@@ -5096,21 +5083,13 @@ rt_private void init_registers(EIF_CONTEXT_NOARG)
 	 * after having saved the stack context.
 	 */
 
-#ifdef USE_STRUCT_COPY
-	op_context = op_stack;			/* Save stack's context */
-#else
-	bcopy(&op_stack, &op_context, sizeof(struct opstack));
-#endif
+	memcpy (&op_context, &op_stack, sizeof(struct opstack));
 
 	reg = iregs + SPECIAL_REG + locnum + argnum - 1; /* Start of arguments */
 	for (n = 0; n < argnum; n++, reg--)		/* Pushed in reverse order */
 		*reg = opop();						/* Get its address */
 
-#ifdef USE_STRUCT_COPY
-	op_stack = op_context;			/* Restore stack's context */
-#else
-	bcopy(&op_context, &op_stack, sizeof(struct opstack));
-#endif
+	memcpy (&op_stack, &op_context, sizeof(struct opstack));
 
 	/* Now loop and fetch the local variables type directly from the byte
 	 * code. Put them on the stack and record the address of each of them in
@@ -5206,11 +5185,7 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	register2 struct item **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
 	
-#ifdef USE_STRUCT_COPY
-	op_context = op_stack;			/* Save stack's context */
-#else
-	bcopy(&op_stack, &op_context, sizeof(struct opstack));
-#endif
+	memcpy (&op_context, &op_stack, sizeof(struct opstack));
 
 	/* Restore the context the stack was in just after we had initialized the
 	 * registers upon routine entrance (calling protocol).
@@ -5237,11 +5212,7 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	for (n = 0, reg = iregs+locnum+SPECIAL_REG+argnum-1; n < argnum; n++, reg--)
 		*reg = opop();
 
-#ifdef USE_STRUCT_COPY
-	op_stack = op_context;			/* Restore stack's context */
-#else
-	bcopy(&op_context, &op_stack, sizeof(struct opstack));
-#endif
+	memcpy (&op_stack, &op_context, sizeof(struct opstack));
 
 	/* Finally, we must not forget the debugging hooks. Running this routine
 	 * certainly means we have called another interpreted feature and the
@@ -5279,13 +5250,13 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
 	 * of local variables, for instance. This means we must save the possible
 	 * register value before popping items.
 	 */
-	bcopy(iresult, &saved_result, ITEM_SZ);
+	memcpy (&saved_result, iresult, ITEM_SZ);
 
 	npop(nb_items);			/* Remove items and eventually shrink stack */
 
 	if (saved_result.type != SK_VOID) {	/* If Result is needed */
 		result = iget();				/* Get a new result record */
-		bcopy(&saved_result, result, ITEM_SZ);
+		memcpy (result, &saved_result, ITEM_SZ);
 	}
 
 	EIF_END_GET_CONTEXT
@@ -5371,7 +5342,7 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 
 	op_stack.st_top = top + 1;			/* Points to next free location */
 	if (val != (struct item *) 0)		/* If value was provided */
-		bcopy(val, top, ITEM_SZ);		/* Push it on the stack */
+		memcpy (top, val, ITEM_SZ);		/* Push it on the stack */
 
 	return top;				/* Address of allocated item */
 	EIF_END_GET_CONTEXT
@@ -5801,22 +5772,14 @@ static void xistack(int n)
 	struct opstack op_context;		/* To save stack's context */
 	int i;
 
-#ifdef USE_STRUCT_COPY
-	op_context = op_stack;			/* Save stack's context */
-#else
-	bcopy(&op_stack, &op_context, sizeof(struct opstack));
-#endif
+	memcpy (&op_context, &op_stack, sizeof(struct opstack));
 
 	for (i=0 ; i<n ; i++) {
 		dprintf(1)("top - %d : ", i);
 		xiprint(opop());
 	}
 
-#ifdef USE_STRUCT_COPY
-	op_stack = op_context;			/* Restore stack's context */
-#else
-	bcopy(&op_context, &op_stack, sizeof(struct opstack));
-#endif
+	memcpy (&op_stack, &op_context, sizeof(struct opstack));
 }
 
 #endif
@@ -5855,7 +5818,6 @@ rt_public void idump(FILE *fd, char *start)
 
 		IC += sizeof (long);    /* Skip flag and reserved space */
 	}
-		/*
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
 
 	/*
@@ -6857,7 +6819,6 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 		fprintf(fd, "0x%lX BC_BIT_STD_EQUAL\n", IC - 1);
 		break;
 
-	/*
 	/*
 	 * Expanded equality
  	 */

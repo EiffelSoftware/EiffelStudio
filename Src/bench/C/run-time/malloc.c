@@ -44,6 +44,9 @@
 #ifdef EIF_REM_SET_OPTIMIZATION
 #include "eif_special_table.h"	/* For the special table interface. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#ifdef VXWORKS
+#include <string.h>
+#endif
 #ifndef TEST
 #include "eif_main.h"
 #endif
@@ -533,11 +536,7 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 
 		/* Reset extra-items with zeros */
 		if (count < nbitems) {
-#ifdef VXWORKS
 			memset (object + (count * elem_size), 0, (nbitems - count) * elem_size);
-#else
-			bzero(object + (count * elem_size), (nbitems - count) * elem_size);
-#endif
 		}
 
 		if (ptr != object)		/* Has ptr moved in the reallocation? */
@@ -587,26 +586,13 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 		/* Copy `ptr' in `object'.	*/
 		assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Not forwarded. */
 		if (nbitems > count) {	/* Is resized object bigger? */
-#ifdef VXWORKS
 			memcpy  (object, ptr, 
 					(HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
 			memset ((char *) object + (count * elem_size), 0, 
 							(nbitems - count) * elem_size);
-#else	/* VXWORKS */
-			bcopy ((char *) ptr, object, 
-					(HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
-											/* Copy only array of characters. */
-			/* Reset extra item with zeros. */
-			bzero ((char *) object + (count * elem_size), 
-							(nbitems - count) * elem_size);
-#endif	/* VXWORKS */
 		}
 		else	{				/* Smaller object requested. */
-#ifdef VXWORKS 
 			memcpy (object, ptr, (HEADER (object)->ov_size & B_SIZE) - LNGPAD_2);
-#else
-			bcopy ((char *) ptr, object, (HEADER (object)->ov_size & B_SIZE) - LNGPAD_2);
-#endif
 		}
 								/* Truncate extra bytes. */
 
@@ -694,11 +680,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 	/* Reset extra-items with zeros */
 	if (count < nbitems) {
-#ifdef VXWORKS
 		memset (object + (count * elem_size), 0, (nbitems - count) * elem_size);
-#else
-		bzero (object + (count * elem_size), (nbitems - count) * elem_size);
-#endif
 	}
 
 	/* Update special attributes count and element size at the end */
@@ -1391,9 +1373,6 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 #endif
 	SIGBLOCK;			/* Critical section starts */
 
-/* add ???? <= from Purify
-bzero (oldbrk, sizeof(struct chunk) + OVERHEAD);
-*/
 	/* Accounting informations */
 	m_data.ml_chunk++;
 	m_data.ml_total += asked;				/* Counts overhead */
@@ -1580,11 +1559,7 @@ rt_private int free_last_chunk(void)
 	 * accessed any more.
 	 */
 
-#ifdef VXWORKS
 	memcpy (&last_desc, &last_desc, sizeof(struct chunk));
-#else
-	bcopy(last_chk, &last_desc, sizeof(struct chunk));
-#endif
 
 	/* The bloc we are about to remove from the process memory is to be removed
 	 * from the free list (may manipulate some pointers in a zone where no
@@ -1709,17 +1684,9 @@ rt_private int free_last_chunk(void)
 	 * initial state.
 	 */
 	if ((EIF_REFERENCE) arena == ps_from.sc_arena) {
-#ifdef VXWORKS
 		memset (&ps_from, 0, sizeof(struct sc_zone));
-#else
-		bzero(&ps_from, sizeof(struct sc_zone));
-#endif
 	} else if ((EIF_REFERENCE) arena == ps_to.sc_arena) {
-#ifdef VXWORKS
 		memset (&ps_to, 0, sizeof(struct sc_zone));
-#else
-		bzero(&ps_to, sizeof(struct sc_zone));
-#endif
 	}
 
 	SIGRESUME;							/* Critical section ends */
@@ -2016,11 +1983,7 @@ rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 	allocated = xmalloc(nbytes, C_T, GC_ON);	/* Ask for C space */
 
 	if (allocated != (EIF_REFERENCE) 0) {
-#ifdef VXWORKS
 		memset (allocated, 0, nbytes);		/* Fill arena with zeros */
-#else
-		bzero(allocated, nbytes);		/* Fill arena with zeros */
-#endif	/* VXWORKS */
 	}
 
 	return allocated;		/* Pointer to new zero-filled zone */
@@ -2296,11 +2259,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	 */
 
 	if (zone != (union overhead *) 0) {
-#ifdef VXWORKS
 		memcpy (zone, ptr, r & B_SIZE);	/* Move to new location */
-#else
-		bcopy((char *) ptr, (char *) zone, r & B_SIZE);	/* Move to new location */
-#endif
 		HEADER(zone)->ov_flags =				/* Keep Eiffel flags */
 			HEADER(ptr)->ov_flags;
 		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */
@@ -3119,11 +3078,7 @@ rt_shared EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint3
 	register4 char *(*init)(char *);			/* The optional initialization */
 
 	SIGBLOCK;					/* Critical section */
-#ifdef VXWORKS
 	memset (object, 0, nbytes);		/* All set with zeros */
-#else
-	bzero(object, nbytes);		/* All set with zeros */
-#endif
 
 	zone = HEADER(object);		/* Object's header */
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
@@ -3162,11 +3117,7 @@ rt_shared EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes)
 	register3 union overhead *zone;		/* Malloc info zone */
 
 	SIGBLOCK;					/* Critical section */
-#ifdef VXWORKS
 	memset (object, 0, nbytes);		/* All set with zeros */
-#else
-	bzero(object, nbytes);		/* All set with zeros */
-#endif
 
 
 	zone = HEADER(object);				/* Object's header */
@@ -3204,11 +3155,7 @@ rt_shared EIF_REFERENCE eif_spset(EIF_REFERENCE object, unsigned int nbytes)
 	register3 union overhead *zone;		/* Malloc info zone */
 
 	SIGBLOCK;					/* Critical section */
-#ifdef VXWORKS
 	memset (object, 0, nbytes);		/* All set with zeros */
-#else
-	bzero(object, nbytes);		/* All set with zeros */
-#endif
 
 	zone = HEADER(object);				/* Object's header */
 #ifdef EIF_TID 
@@ -3525,11 +3472,7 @@ rt_public void memck(unsigned int max_dt)
 			return;
 		}
 	}
-#ifdef VXWORKS
 	memset (obj_use, 0, scount * sizeof(int));
-#else
-	bzero(obj_use, scount * sizeof(int));
-#endif
 
 	c_blocks = c_size = 0;
 	mefree = mcfree = 0;
@@ -3894,11 +3837,7 @@ rt_private void eif_memck(void)
 			return;
 		}
 	}
-#ifdef VXWORKS
 	memset (type_use, 0, scount * sizeof(uint32));
-#else
-	bzero(type_use, scount * sizeof(uint32));
-#endif
 
 	c_mem = 0;					/* Initializes C memory usage */
 

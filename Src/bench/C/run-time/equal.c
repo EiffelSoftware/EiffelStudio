@@ -19,6 +19,11 @@
 #include "eif_tools.h"			/* For `nprime' */
 #include "eif_search.h"
 #include "eif_plug.h"			/* for econfg */
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 
 #define dprintf(n) if (DEBUG & n) printf
 
@@ -111,13 +116,13 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 			*/
 		
 			/* Second condition: block equality */
-			return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
+			return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
 		} else if ((int16) (s_flags & EO_TYPE) == (int16) egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */
 			b_equal (source, target);
 		} else {
 			if (!(s_flags & EO_COMP))	/* Perform a block comparison */
-				return EIF_TEST(!bcmp(source, target, EIF_Size(s_type)));
+				return EIF_TEST(!memcmp (source, target, EIF_Size(s_type)));
 			else
 				return e_field_equal(target, source, s_type);
 		}
@@ -222,7 +227,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	s_flags = s_zone->ov_flags;
 	if (!(s_flags & EO_REF))
 		/* Case 1: specials filled with direct instances: block comparison */
-		return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
+		return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
 
 	if (!(s_flags & EO_COMP)) {
 		/* Case 2: specials filled with references: we have to check fields

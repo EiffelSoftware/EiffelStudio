@@ -104,11 +104,7 @@ rt_public void s_resize(register struct s_table *tbl)
 			s_put(new,one_key);
 	}
 	xfree((char *) (tbl->s_keys));			/* Free old keys */
-#ifdef VXWORKS
 	memcpy (tbl, new, sizeof(struct s_table));	/* Copy new descriptor */
-#else
-	bcopy(new,tbl,sizeof(struct s_table));	/* Copy new descriptor */
-#endif
 	xfree((char *) new);					/* Free temporary descriptor */
 }
 

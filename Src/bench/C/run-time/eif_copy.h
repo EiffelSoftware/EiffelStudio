@@ -32,15 +32,7 @@ RT_LNK EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b);
 RT_LNK void spsubcopy(EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
 RT_LNK void spclearall(EIF_REFERENCE spobj);		/* Reset special object's items to default */
 
-#ifdef HAS_SAFE_BCOPY
-#define safe_bcopy(s,d,l) bcopy((s),(d),(l))
-#elif defined HAS_SAFE_MEMCPY
-#define safe_bcopy(s,d,l) memcpy((d),(s),(l))
-#elif defined HAS_MEMMOVE
 #define safe_bcopy(s,d,l) memmove((d),(s),(l))
-#else
-You must define your own version of safe_bcopy
-#endif
 
 #ifdef __cplusplus
 }

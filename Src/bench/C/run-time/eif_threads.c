@@ -26,6 +26,11 @@
 #include "eif_err_msg.h"
 #include "eif_hector.h"      /* for efreeze() and eufreeze() */
 #include "eif_sig.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #include <assert.h>
 
 

@@ -29,6 +29,9 @@
 #include "eif_compress.h"
 #include "eif_lmalloc.h"
 #include "x2c.header"	/* For macro LNGPAD */
+#ifdef VXWORKS
+#include <unistd.h>	/* For write () */
+#endif
 #include <assert.h>
 
 
@@ -422,7 +425,7 @@ rt_private void internal_store(char *object)
 		account = (char *) xmalloc(scount * sizeof(char), C_T, GC_OFF);
 		if (account == (char *) 0)
 			xraise(EN_MEM);
-		bzero(account, scount * sizeof(char));
+		memset (account, 0, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT) {
 			c = INDEPENDENT_STORE_4_4;
 			rt_kind_version = INDEPENDENT_STORE_4_4;
@@ -439,7 +442,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 				xfree((char *)accounting);
 				xraise(EN_MEM);
 			}
-			bzero(sorted_attributes, scount * sizeof(unsigned int *));
+			memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
 		}
 	} else
 		c = BASIC_STORE_4_0;

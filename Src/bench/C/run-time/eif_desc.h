@@ -13,7 +13,7 @@ extern "C" {
 #include <windows.h>
 /* WHERE IS IT #include <i86.h> */
 
-#define DESC_BCOPY(_target_,_source_,_offset_,_size_) bcopy((_source_),((_target_)+(_offset_)),(_size_))
+#define DESC_BCOPY(_target_,_source_,_offset_,_size_) memcpy (((_target_)+(_offset_)),(_source_), (_size_))
 #define DESC_MAKE_NP32(_16farptr_) MapAliasToFlat(FP_SEG(MK_FP32((void *)(_16farptr_))) << 16) + FP_OFF(MK_FP32((void *)(_16farptr_)))
 
 #ifdef __cplusplus

@@ -36,6 +36,9 @@ extern "C" {
 #include "eif_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
 #include "x2c.header"		/* For macro LNGPAD */
+#ifdef VXWORKS
+#include <string.h>
+#endif
 
 #ifdef EIF_THREADS
 #include "eif_once.h"
@@ -729,15 +732,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	if (gc_monitor) {
 		lastuser[i] = usertime2;		/* User time after last GC */
 		lastsys[i] = systime2;			/* System time after last GC */
-#ifdef USE_STRUCT_COPY
-		lastreal[i] = realtime2;		/* Chronometer time after last GC */
-#else
-#ifdef VXWORKS
 		memcpy (&lastreal[i], &realtime2, sizeof(Timeval));
-#else	/* VXWORKS */
-		bcopy(&realtime2, &lastreal[i], sizeof(Timeval));
-#endif	/* VXWORKS */
-#endif	/* USE_STRUCT_COPY */
 	}
 #endif /* ifndef FAST_RUNTIME */
 
@@ -3098,11 +3093,7 @@ rt_private void clean_zones(void)
 
 			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
 			xfreechunk(ps_from.sc_arena + OVERHEAD);	/* One big bloc */
-#ifdef VXWORKS
 			memset (&ps_from, 0, sizeof(struct sc_zone));	/* Was freed */
-#else
-			bzero(&ps_from, sizeof(struct sc_zone));	/* Was freed */
-#endif
 			g_data.gc_to--;
 
 		} else {
@@ -3112,15 +3103,7 @@ rt_private void clean_zones(void)
 			 * in the next partial scavenging.
 			 */
 
-#ifdef USE_STRUCT_COPY
-			ps_to = ps_from;
-#else
-#ifdef VXWORKS
 			memcpy (&ps_to, &ps_from, sizeof(Timeval));
-#else	/* VXWORKS */
-			bcopy(&ps_from, &ps_to, sizeof(struct sc_zone));
-#endif	/* VXWORKS */
-#endif
 			ps_to.sc_flgs = ((union overhead *) ps_from.sc_arena)->ov_size;
 
 #ifdef DEBUG
@@ -3857,11 +3840,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	root = to->sc_top;						/* New location in 'to' space */
 	length = (zone->ov_size & B_SIZE) + OVERHEAD;
 	to->sc_top += length;					/* Update free-location pointer */
-#ifdef VXWORKS
 	memcpy (root, zone, length);/* The scavenge process itself */
-#else
-	bcopy((EIF_REFERENCE) zone, root, length);/* The scavenge process itself */
-#endif
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
 #ifdef EIF_NO_SCAVENGE
 	eif_panic ("Scavenging is not disabled");
@@ -5000,11 +4979,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * dealt with EO_MARK, so it is our responsability... This was a bug
 			 * I spent three days tracking--RAM.
 			 */
-#ifdef VXWORKS
 			memcpy (new, root, size);		/* Copy data part */
-#else
-			bcopy(root, new, size);		/* Copy data part */
-#endif
 #ifdef EIF_NO_SCAVENGING
 			eif_panic ("Generation Scavenging is not disabled");
 #endif	/* EIF_NO_SCAVENGING */
@@ -5069,15 +5044,7 @@ rt_private void update_moved_set(void)
 	struct stack new_stack;			/* The new stack built from the old one */
 	int done = 0;					/* Top of stack not reached yet */
 
-#ifdef USE_STRUCT_COPY
-	new_stack = moved_set;
-#else /* USE_STRUCT_COPY */
-#ifdef VXWORKS
 	memcpy (&new_stack, &moved_set, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy(&moved_set, &new_stack, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif	/* USE_STRUCT_COPY */
 	s = new_stack.st_cur = moved_set.st_hd;		/* New empty stack */
 	if (s) {
 		new_stack.st_top = s->sk_arena;			/* Lowest possible top */
@@ -5163,15 +5130,7 @@ rt_private void update_moved_set(void)
 	flush;
 #endif
 
-#ifdef USE_STRUCT_COPY
-	moved_set = new_stack;
-#else
-#ifdef VXWORKS
 	memcpy (&moved_set, &new_stack, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy(&new_stack, &moved_set, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif
 
 	/* As for the remembered set (see comment in update_rem_set), we release the
 	 * spurious chunks used by the moved set stack.
@@ -5203,15 +5162,7 @@ rt_private void update_rem_set(void)
 	int done = 0;					/* Top of stack not reached yet */
 	int generational;				/* Are we in a generational cycle? */
 
-#ifdef USE_STRUCT_COPY
-	new_stack = rem_set;
-#else
-#ifdef VXWORKS
 	memcpy (&new_stack, &rem_set, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy(&rem_set, &new_stack, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif
 	s = new_stack.st_cur = rem_set.st_hd;		/* New empty stack */
 	if (s) {
 		new_stack.st_top = s->sk_arena;			/* Lowest possible top */
@@ -5313,15 +5264,7 @@ rt_private void update_rem_set(void)
 	 * remembered set correctly by making "rem_set" refer to the new stack.
 	 */
 
-#ifdef USE_STRUCT_COPY
-	rem_set = new_stack;
-#else
-#ifdef VXWORKS
 	memcpy (&rem_set, &new_stack, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy (&new_stack, &rem_set, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif
 
 	/* Usually, the remembered set shrinks after a collection. The unused chunks
 	 * in the stack are freed. Yet, we'll have to call malloc() again to extend
@@ -5361,15 +5304,7 @@ rt_private void update_memory_set ()
 
 	/************************* End of postconditions. **********************/
 
-#ifdef USE_STRUCT_COPY
-	new_stack = memory_set;
-#else
-#ifdef VXWORKS
 	memcpy (&new_stack, &memory_set, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy(&memory_set, &new_stack, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif
 	s = new_stack.st_cur = memory_set.st_hd;		/* New empty stack */
 	if (s) {
 		new_stack.st_top = s->sk_arena;				/* Lowest possible top */
@@ -5472,15 +5407,7 @@ rt_private void update_memory_set ()
 	 * the memory set correctly by making "memory_set" refer to the new stack.
 	 */
 
-#ifdef USE_STRUCT_COPY
-	memory_set = new_stack;
-#else
-#ifdef VXWORKS
 	memcpy (&memory_set, &new_stack, sizeof(struct stack));
-#else	/* VXWORKS */
-	bcopy(&new_stack, &memory_set, sizeof(struct stack));
-#endif	/* VXWORKS */
-#endif
 
 	/* Usually, the memory set shrinks after a collection. The unused chunks
 	 * in the stack are freed. 
@@ -6270,21 +6197,9 @@ rt_private void swap_gen_zones(void)
 	g_data.mem_copied += sc_from.sc_top - sc_from.sc_arena;	/* Initial */
 	g_data.mem_move += sc_to.sc_top - sc_to.sc_arena;		/* Moved */
 
-#ifdef USE_STRUCT_COPY
-	temp = sc_from;
-	sc_from = sc_to;
-	sc_to = temp;
-#else
-#ifdef VXWORKS
 	memcpy (&temp, &sc_from, sizeof(struct sc_zone));
 	memcpy (&sc_from, &sc_to, sizeof(struct sc_zone));
-	memcpy (&sc-to, &temp, sizeof(struct sc_zone));
-#else	/* VXWORKS */
-	bcopy(&sc_from, &temp, sizeof(struct sc_zone));
-	bcopy(&sc_to, &sc_from, sizeof(struct sc_zone));
-	bcopy(&temp, &sc_to, sizeof(struct sc_zone));
-#endif
-#endif
+	memcpy (&sc_to, &temp, sizeof(struct sc_zone));
 
 	sc_to.sc_top = sc_to.sc_arena;	/* Make sure 'to' is empty */
 
@@ -6719,11 +6634,7 @@ rt_private int reset(register1 struct stack *stk)
 		xfree((EIF_REFERENCE) k);	/* But how do I know implementation won't change? */
 	}
 
-#ifdef VXWORKS
 	memset (stk, 0, sizeof(struct stack));
-#else
-	bzero(stk, sizeof(struct stack));	/* Reset to null pointers ? -- RAM */
-#endif
 	return 0;
 }
 #endif

@@ -79,8 +79,8 @@ rt_public void ht_zero(struct htable *ht)
 
 	int32 hsize = ht->h_size;
 
-	bzero(ht->h_keys, hsize * sizeof(long));
-	bzero(ht->h_values, hsize * ht->h_sval);
+	memset (ht->h_keys, 0, hsize * sizeof(long));
+	memset (ht->h_values, 0, hsize * ht->h_sval);
 }
  
 rt_public char *ht_value(struct htable *ht, register long unsigned int key)
@@ -196,7 +196,7 @@ rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *
 		if (hkeys[pos] == 0) {			/* Found a free location */
 			hkeys[pos] = key;			/* Record item */
 			hkeys = (unsigned long *) (ht->h_values + (pos * ht->h_sval));
-			bcopy(val, (char *) hkeys, ht->h_sval);
+			memcpy ((char *) hkeys, val, ht->h_sval);
 			return (char *) hkeys;
 		}
 	}
@@ -233,7 +233,7 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key) {
 			hkeys[pos] = 0L;
-			bzero(ht->h_values + (pos * ht->h_sval), ht->h_sval);
+			memset (ht->h_values + (pos * ht->h_sval), 0, ht->h_sval);
 		} else
 			if (hkeys[pos] == 0L)
 				break;
@@ -280,7 +280,7 @@ rt_public int ht_xtend(struct htable *ht)
 	/* Free old H table and set H table descriptor */
 	eif_free(ht->h_values);			/* Free in allocation order */
 	eif_free(ht->h_keys);				/* To make free happy (coalescing) */
-	bcopy(&new_ht, ht, sizeof(struct htable));
+	memcpy (ht, &new_ht, sizeof(struct htable));
 
 	return 0;		/* Extension was ok */
 }

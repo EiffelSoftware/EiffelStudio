@@ -11,8 +11,7 @@
 
 */
 
-#include "../idrs/idrs.h"		/* %%zs added */ /* %%zs review */
-
+#include "../idrs/idrs.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

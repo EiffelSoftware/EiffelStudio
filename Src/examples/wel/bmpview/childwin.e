@@ -34,7 +34,6 @@ feature -- Initialization
 			mdi_child_window_make (a_parent, a_name)
 			!! file.make_open_read (a_name)
 			!! dib.make_by_file (file)
-			file.close
 			!! dc.make (Current)
 			dc.get
 			!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)

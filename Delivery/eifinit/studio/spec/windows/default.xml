@@ -57,6 +57,22 @@
 			<TEXT>system_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
+		<TOPIC TOPIC_ID="Editor_tool_preferences">
+			<HEAD>Editor tool preferences</HEAD>
+			<TEXT DESCRIPTION="Edition mode : True = Normal, False = Special">normal_editor_mode<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds require in the new feature structure">autocomplete_feature_adds_require<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds local in the new feature structure">autocomplete_feature_adds_local<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds ensure in the new feature structure">autocomplete_feature_adds_ensure<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds rescue in the new feature structure">autocomplete_feature_adds_rescue<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds else in the new if...then structure">autocomplete_if_with_else<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds variant in the loop structure">autocomplete_loop_with_variant<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="The autocomplete adds invariant in the loop structure">autocomplete_loop_with_invariant<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
 		<TOPIC TOPIC_ID="Development_window_preferences">
 			<HEAD>Development window preferences</HEAD>
 			<TEXT>class_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
@@ -107,10 +123,6 @@
 		<HEAD>Graphical Elements</HEAD>
 		<TOPIC TOPIC_ID="Editor_Preferences">
 			<HEAD>Editor specific preferences</HEAD>
-			<TEXT DESCRIPTION="Edition mode : True = Normal, False = Special">normal_editor_mode<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
 			<TEXT DESCRIPTION="Color used to display selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>

@@ -36,6 +36,7 @@ create
 	make_by_seconds,
 	make_by_fine_seconds,
 	make_from_string,
+	make_from_string_default,
 	make_by_compact_time
 
 feature -- Initialization
@@ -43,7 +44,7 @@ feature -- Initialization
 	make (h, m, s: INTEGER) is
 			-- Set `hour, `minute' and `second' to `h', `m', `s' respectively.
 		require
-			correct_time: is_correct_time (h, m, s)
+			correct_time: is_correct_time (h, m, s, False)
 		do
 			compact_time := c_make_time (h, m, s)
 		ensure
@@ -57,7 +58,7 @@ feature -- Initialization
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
 		require
-			correct_time: is_correct_time (h, m, s)
+			correct_time: is_correct_time (h, m, s, False)
 		local
 			s_tmp: INTEGER
 		do
@@ -392,6 +393,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
+
 	second_large_enough: second >= 0;
 	second_small_enough: second < seconds_in_minute;
 	fractionals_large_enough: fractional_second >= 0;

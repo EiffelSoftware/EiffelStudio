@@ -6,12 +6,12 @@ indexing
 
 class DATE_TIME_VALIDITY_CHECKER inherit
 
-	DATE_CONSTANTS
+	DATE_VALIDITY_CHECKER
 		export
 			{NONE} all
 		end
 
-	TIME_CONSTANTS
+	TIME_VALIDITY_CHECKER
 		export
 			{NONE} all
 		end
@@ -52,14 +52,15 @@ feature -- Preconditions
 				code.is_date_time (s)
 		end
 
-	is_correct_date_time (y, mo, d, h, mi: INTEGER; s: DOUBLE): BOOLEAN is
+	is_correct_date_time (y, mo, d, h, mi: INTEGER; s: DOUBLE;
+					 	  twelve_hour_scale: BOOLEAN): BOOLEAN is
 			-- Is date-time specified by `y', `mo', `d', `h', `mi', `s'
 			-- correct?
+			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
+			-- (if True) or 0 - 23 (if False).
 		do
-			Result := y > 0 and then mo >= 1 and mo <= Months_in_year and then 
-				d >= 1 and d <= days_in_i_th_month (mo, y) and then h >= 0 and
-				h < Hours_in_day and then mi >= 0 and 
-				mi < Minutes_in_hour and then s >= 0 and s < Seconds_in_minute	
+			Result := is_correct_date (y, mo, d) and 
+				is_correct_time (h, mi, s, twelve_hour_scale)
 		end
 
 end -- class DATE_TIME_VALIDITY_CHECKER

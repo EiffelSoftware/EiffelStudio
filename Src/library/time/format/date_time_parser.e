@@ -6,23 +6,11 @@ indexing
 
 class DATE_TIME_PARSER inherit
 
-	DATE_VALIDITY_CHECKER
+	DATE_TIME_VALIDITY_CHECKER
 		rename
 			year as checker_year, month as checker_month,
-			day as checker_day
-		export
-			{NONE} all
-		end
-
-	TIME_VALIDITY_CHECKER
-		rename
-			hour as checker_hour, minute as checker_minute, 
+			day as checker_day, hour as checker_hour, minute as checker_minute, 
 			fine_second as checker_fine_second
-		export
-			{NONE} all
-		end
-
-	DATE_TIME_VALIDITY_CHECKER
 		export
 			{NONE} all
 		end
@@ -133,7 +121,8 @@ feature -- Status report
 		require
 			string_parsed: parsed
 		do
-			Result := is_correct_time (hour, minute, fine_second)
+			Result := is_correct_time (hour, minute, fine_second,
+				twelve_hour_scale)
 		end
 
 	is_date_time: BOOLEAN is
@@ -142,7 +131,7 @@ feature -- Status report
 			string_parsed: parsed
 		do
 			Result := is_correct_date_time (year, month, day, hour,
-				minute, fine_second)
+				minute, fine_second, twelve_hour_scale)
 		end
 
 	is_value_valid: BOOLEAN is
@@ -349,8 +338,22 @@ feature {NONE} -- Implementation
 
 	base_century: INTEGER
 			-- Base century, used when interpreting 2-digit year
-			-- specifications.
+			-- specifications
 			
+	twelve_hour_scale: BOOLEAN is
+			-- Is a twelve hour scale used?
+		do
+			from
+				code.start
+			until
+				Result or else code.after
+			loop
+				-- Type '11' denotes that a twelve hour scale is used.
+				if code.item_for_iteration.type = 11 then Result := True end
+				code.forth
+			end
+		end
+
 invariant
 
 	valid_value_definition: is_value_valid =

@@ -18,7 +18,7 @@ inherit
 
 	DATE_TIME_VALUE
 		undefine
-			is_equal
+			is_equal, fractional_second
 		redefine
 			date, 
 			time,
@@ -28,7 +28,8 @@ inherit
 
 	DATE_TIME_VALIDITY_CHECKER
 		undefine
-			copy, is_equal, out
+			copy, is_equal, out, year, month, day, hour, minute, second, 
+			fine_second
 		end
 
 create
@@ -50,7 +51,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
 		require 
-			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
+			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s, False)
 		do
 			create date.make (y, mo, d);
 			create time.make (h, mi, s)
@@ -67,7 +68,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
 		require
-			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s)
+			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s, False)
 		do
 			create date.make (y, mo, d);
 			create time.make_fine (h, mi, s)

@@ -163,7 +163,7 @@ feature -- Interface
 				or Result = False
 			loop
 				pos2 := find_separator (s, pos1)
-				substrg := s.substring(pos1, pos2-1)
+				substrg := s.substring(pos1, pos2 - 1)
 				substrg2 := s.substring (pos2, pos2)
 				tmp_strg := substrg
 				tmp_strg.to_upper
@@ -246,13 +246,13 @@ feature -- Interface
 							Result.append ("00")
 							Result.append(date.year.out)
 						end
-						if date.year.out.count =3 then
+						if date.year.out.count = 3 then
 							Result.append("0")
 							Result.append(date.year.out)
 						end
 					end
 				when 5 then 
-					int := date.year - 1900
+					int := date.year - base_century
 					Result.append (int.out)
 				when 6 then
 					Result.append (date.month.out)

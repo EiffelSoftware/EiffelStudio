@@ -104,48 +104,43 @@ feature {NONE} -- Implementation
 		local
 			fs: FEATURE_STONE
 			es_class: ES_CLASS
-			l_links: LIST [EG_LINK]
-			l_item: ES_ITEM
 			wd: EV_WARNING_DIALOG
 			referenced_classes: STRING
 			msg: STRING
+			l_ss: LIST [CLASS_C]
+			l_item: CLASS_C
 		do
 			fs ?= st
 			if fs = Void then
 				es_class := tool.graph.class_from_interface (st.class_i)
 				if es_class /= Void then
-					from
+					if es_class.class_c /= Void then
 						create referenced_classes.make_empty
-						l_links := es_class.links
-						l_links.start
-					until
-						l_links.after
-					loop
-						l_item ?= l_links.item
-						if l_item /= Void and then l_item.is_needed_on_diagram and then l_links.item.target = es_class then
-							referenced_classes.append ("%N" + l_links.item.source.name)
+						from
+							l_ss := es_class.class_c.syntactical_clients
+							l_ss.start
+						until
+							l_ss.after
+						loop
+							l_item := l_ss.item
+							referenced_classes.append ("%N" + l_item.name_in_upper)
+							l_ss.forth
 						end
-						l_links.forth
-					end
-					if referenced_classes.is_empty then
-						if 
-							not st.class_i.is_compiled or else
-							st.class_i.compiled_class.syntactical_clients.is_empty
-						then
+						if referenced_classes.is_empty then
 							Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
 						else
-							msg := warning_messages.w_recompile_to_remove_references (es_class.name)
+							msg := warning_messages.w_still_referenced (es_class.name, referenced_classes)
 							create wd.make_with_text (msg)
 							wd.show_modal_to_window (window.window)
 						end
 					else
-						msg := warning_messages.w_still_referenced (es_class.name)
-						msg.append (referenced_classes)
-						create wd.make_with_text (msg)
-						wd.show_modal_to_window (window.window)
+						-- there are now clients and now descendants, otherwise it would be compiled
+						Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
 					end
 				else
-					Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
+					check
+						delete_only_diagram_items: False
+					end
 				end
 			end
 		end

@@ -29,4 +29,7 @@ feature -- basic Operations
 			message.set_text ("Welcome.%NMy text")
 		end
 	
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Store Wizard
+
 end -- class WIZARD_INITIAL_STATE

@@ -38,8 +38,6 @@ feature -- Initialization
 			interface.set_state (c_gdk_event_state (p))
 			interface.set_button (c_gdk_event_button (p))
 		end
-	
-			
 end
 			
 	

@@ -101,7 +101,7 @@ debug
 	io.error.putstring ("Inserting ");
 	id.trace;
 	io.error.putstring (" for class ");
-	io.error.putstring (client.class_name);
+	io.error.putstring (client.name);
 	io.error.new_line;
 end;
 						id_set.put (current_id);

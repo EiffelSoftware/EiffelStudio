@@ -90,15 +90,6 @@ feature {NONE} -- Implementation
 			create {EV_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-feature -- Obsolete
-
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		obsolete
-			"use select_actions"
-		do
-			Result := select_actions
-		end
-
 end -- class EV_MENU_ITEM
 
 --!-----------------------------------------------------------------------------

@@ -56,7 +56,6 @@ feature -- Initialization
 			make_with_coordinates (par, "", 0, 0, 0, 0)
 			split_imp ?= imp
 			!! dc.make (Current)
-			level := 50
 		ensure
 			split_imp_not_void: split_imp /= Void
 			dc_not_void: dc /= Void
@@ -76,11 +75,11 @@ feature {NONE} -- Access
 	is_splitting: BOOLEAN
 			-- Is the user currently moving the split ?
 
-feature {EV_SPLIT_AREA_IMP} -- Access
+	temp_level: INTEGER
+			-- Position of the splitter during the action of
+			-- the user on the splitter.
 
-	level: INTEGER
-			-- width or height depending of the kind of split window
-			-- of the splitter
+feature {EV_SPLIT_AREA_IMP} -- Access
 
 	size: INTEGER is
 			-- width or height depending of the kind of split window
@@ -89,7 +88,7 @@ feature {EV_SPLIT_AREA_IMP} -- Access
 			Result := 6
 		end
 
-feature -- Event handling
+feature -- Event handle
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
@@ -100,11 +99,19 @@ feature -- Event handling
 	on_split (value: INTEGER): BOOLEAN is
 			-- Is a point with `value' as the coordinate on the split?
 		do
-			Result := (value >= level)
-					and then (value < level + size)
+			Result := (value >= split_imp.level)
+					and then (value < split_imp.level + size)
 		end
 
 feature -- Basic routines
+
+	refresh is
+			-- Refresh the window. Redraw the split and erase
+			-- the rest if necessary.
+		do
+			on_wm_erase_background (0)
+			draw_split
+		end
 
 	draw_split is
 			-- draw a vertical split at 'level'.
@@ -199,9 +206,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			result_exists: Result.exists
 		end
-
-Invariant
-	positif_level: level >= 0
 
 end -- class EV_WEL_SPLIT_WINDOW
 

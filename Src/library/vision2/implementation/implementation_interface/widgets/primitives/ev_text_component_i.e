@@ -69,7 +69,7 @@ feature -- Status setting
 		deferred
 		end
 	
-	set_maximum_line_length (lenght: INTEGER) is
+	set_maximum_line_lenght (lenght: INTEGER) is
 			-- Maximum number of charachters on line
 		require
 			exist: not destroyed			

@@ -20,15 +20,10 @@ feature -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the fixed container in  ev_window.
-		local
-			count_imp: EV_CONTAINER_IMP
 		do
-			count_imp ?= par.implementation
-			check
-				valid_container: count_imp /= Void
-			end
+			test_and_set_parent (par)
 			initialize
-			!! wel_window.make (count_imp.wel_window)
+			!! wel_window.make (parent_imp.wel_window)
 		end
 
 end -- class EV_FIXED_IMP

@@ -27,8 +27,8 @@ creation
 
 feature {NONE} -- Access
 
-	split_imp: EV_VERTICAL_SPLIT_IMP
-			-- The parent container, an EV_SPLIT_IMP
+	split_imp: EV_VERTICAL_SPLIT_AREA_IMP
+			-- The parent container, an EV_SPLIT_AREA_IMP
 
 feature -- Event handling
 
@@ -39,11 +39,11 @@ feature -- Event handling
 		do
 			dc.get
 			if 	split_imp.child1 = Void then
-				!! rectangle.make (0, 0, width, level)
+				!! rectangle.make (0, 0, width, split_imp.level)
 				dc.fill_rect (rectangle, class_background)
 			end
 			if split_imp.child2 = Void then
-				!! rectangle.make (0, level + size, width, height)
+				!! rectangle.make (0, split_imp.level + size, width, height)
 				dc.fill_rect (rectangle, class_background)
 			end
 			dc.release
@@ -77,6 +77,7 @@ feature -- Event handling
 			if on_split (a_y) then
 				set_capture
 				is_splitting := True
+				temp_level := split_imp.level
 				invert_split
 			end
 		end
@@ -94,9 +95,9 @@ feature -- Event handling
 				else
 					acceptable_y := a_y
 				end
-				if acceptable_y /= level then
+				if acceptable_y /= temp_level then
 					invert_split
-					level := acceptable_y
+					temp_level := acceptable_y
 					invert_split
 				end
  			end
@@ -107,7 +108,7 @@ feature -- Event handling
 		do
 			if is_splitting then
 				is_splitting := False
-				split_imp.resize_children (level)
+				split_imp.resize_children (temp_level)
 				on_wm_erase_background (0)	
 				draw_split
 				release_capture
@@ -118,7 +119,10 @@ feature -- Basic routines
 
 	draw_split is
 			-- Draw an horizontal split at 'level'.
+		local
+			level: INTEGER
 		do
+			level := split_imp.level
 			dc.get
 			dc.select_pen (face_pen)
 			dc.line (0, level, width, level)
@@ -146,11 +150,10 @@ feature -- Basic routines
 			old_rop2 := dc.rop2
 			dc.set_rop2 (R2_xorpen)
 			dc.select_brush (splitter_brush)
-			dc.rectangle (-1, level, width+1, level + size)
+			dc.rectangle (-1, temp_level, width+1, temp_level + size)
 			dc.set_rop2 (old_rop2)
 			dc.release
 		end
-
 
 end -- class EV_WEL_VERTICAL_SPLIT_WINDOW
 

@@ -13,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 	
-	make is
+	make (interf: EV_APPLICATION) is
 		deferred
 		end
 	

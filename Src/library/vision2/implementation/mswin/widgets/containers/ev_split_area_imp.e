@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelVision split. Mswindows implementation."
+	description: "EiffelVision split area. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
@@ -12,6 +12,10 @@ inherit
 	EV_SPLIT_AREA_I
 
 	EV_CONTAINER_IMP
+		undefine
+			add_child_ok,
+			child_add_successful,
+			add_child
 		redefine
 			wel_window,
 			set_insensitive,
@@ -22,11 +26,10 @@ inherit
 
 feature -- Access
 
-	child1: EV_WIDGET_IMP
-			-- First child of the split area
-
-	child2: EV_WIDGET_IMP
-			-- Second child of the split area
+	level: INTEGER is
+			-- Position of the splitter in the window
+		deferred
+		end
 
 feature -- Status settings
 
@@ -53,13 +56,11 @@ feature -- Resizing
 		end
 
 feature {NONE} -- Implementation
-	
+
 	add_child1 (child_i: EV_WIDGET_I) is
 			-- Add the first child of the split.
 		do
 			child1 ?= child_i
-			child_minwidth_changed (child1.minimum_width)
-			child_minheight_changed (child1.minimum_height)
 		ensure then
 			child1 /= Void
 		end
@@ -68,19 +69,15 @@ feature {NONE} -- Implementation
 			-- Add the second child.
 		do
 			child2 ?= child_i
-			child_minwidth_changed (child2.minimum_width)
-			child_minheight_changed (child2.minimum_height)
 		ensure then
 			child2 /= Void
 		end
 
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- Resize the box and all the children inside
-		local
-   			temp_width, temp_height: INTEGER
    		do
   			wel_window.resize (minimum_width.max (new_width), minimum_height.max (new_height))
-			resize_children (wel_window.level)
+			resize_children (level)
 		end
 
 	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
@@ -88,12 +85,12 @@ feature {NONE} -- Implementation
 			-- and the notice the child.
 		do
 			Precursor (a_x, a_y, new_width, new_height)
-			resize_children (wel_window.level)
+			resize_children (level)
 		end
 
 feature {EV_WEL_SPLIT_WINDOW} -- Implementation
 
-	resize_children (level: INTEGER) is
+	resize_children (a_level: INTEGER) is
 			-- Resize both children according to the new level
 			-- `level' of the splitter.
 		deferred
@@ -102,6 +99,9 @@ feature {EV_WEL_SPLIT_WINDOW} -- Implementation
 feature -- Implementation
 
 	wel_window: EV_WEL_SPLIT_WINDOW
+
+Invariant
+	positif_level: level >= 0
 
 end -- class EV_SPLIT_AREA_IMP
 

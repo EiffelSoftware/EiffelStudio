@@ -19,8 +19,9 @@ feature {NONE} -- Initialization
 
         make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
                         -- Create a menu with name. 
-		deferred
-		end	
+			deferred
+			end	
+
 end
 
 --|----------------------------------------------------------------

@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_RADIO_BUTTON_I
+		undefine
+			build
+		end
 		
 	EV_CHECK_BUTTON_IMP
 		redefine

@@ -76,13 +76,13 @@ feature -- Status setting
 			implementation.set_position (pos)
 		end
 	
-	set_maximum_line_length (len: INTEGER) is
+	set_maximum_line_lenght (len: INTEGER) is
 			-- Maximum number of charachters on line
 			-- If len < text.cout then the text is truncated
 		require
 			exist: not destroyed			
 		do
-			implementation.set_maximum_line_length (len)
+			implementation.set_maximum_line_lenght (len)
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is

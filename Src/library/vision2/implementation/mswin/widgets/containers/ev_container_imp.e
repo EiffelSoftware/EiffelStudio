@@ -18,8 +18,6 @@ inherit
 		
 
 	EV_WIDGET_IMP
-		export
-			{EV_WEL_FRAME_WINDOW} parent_imp
 		redefine
 			parent_ask_resize,
 			set_move_and_size,
@@ -27,20 +25,6 @@ inherit
 		end
 
 	WEL_WM_CONSTANTS
-
-
-feature {EV_CONTAINER}
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			child_imp.set_parent_imp (Current)
-			the_child := child_imp
-			set_minimum_size (the_child.minimum_width, the_child.minimum_height)
-			if the_child.width /= 0 or the_child.height /= 0 then
-				child_has_resized (the_child.width, the_child.height, the_child)
-			end
-		end
 
 feature -- Access
 	
@@ -62,10 +46,18 @@ feature -- Status report
 			-- Set current widget in insensitive mode if
    			-- `flag'.
 		do
-			if the_child /= Void then
-				the_child.set_insensitive (flag)
+			if child /= Void then
+				child.set_insensitive (flag)
 			end
 			Precursor (flag)
+		end
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_I) is
+			-- Add child into composite
+		do
+			child ?= child_imp
 		end
 
 feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
@@ -75,12 +67,12 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
 			-- necessary to send him back the information
 		do
 			Precursor (new_width, new_height)
-			if the_child /= Void then
-				the_child.parent_ask_resize (client_width, client_height)
+			if child /= Void then
+				child.parent_ask_resize (client_width, client_height)
 			end
 		end
 	
-	child_has_resized (new_width, new_height: INTEGER; child: EV_WIDGET_IMP) is
+	child_has_resized (new_width, new_height: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
 			-- resize of the child
 		do
@@ -112,32 +104,25 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
 			-- and the notice the child.
 		do
 			Precursor (a_x, a_y, new_width, new_height)
-			if the_child /= void then
-				the_child.parent_ask_resize (client_width, client_height)
+			if child /= void then
+				child.parent_ask_resize (client_width, client_height)
 			end
 		end
 
 feature {EV_WEL_CONTROL_WINDOW, EV_WEL_FRAME_WINDOW} -- Implementation
 
 	on_show is
-			-- Is called by the `wel_window' when the window
-			-- is displayed on the screen. Is usefull to resize
-			-- the container and the child.
-			-- Is redefine by some heir.
 		do
 		end
 
 feature -- Implementation
-
-	the_child: EV_WIDGET_IMP
-			-- The child of the composite
 
 	wel_window: WEL_COMPOSITE_WINDOW is
 			-- The current wel_window
 		deferred
 		end
 
-end
+end -- class EV_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -13,7 +13,7 @@ deferred class
 inherit
 	EV_INVISIBLE_CONTAINER_I
 	
-end
+end -- class EV_FIXED_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -15,7 +15,7 @@ inherit
 	
 feature -- Constants
 	
-	Default_homogenous: BOOLEAN is True
+	Default_homogeneous: BOOLEAN is False
 	Default_spacing: INTEGER is 0
 	Default_expand: BOOLEAN is True
 	Default_fill: BOOLEAN is True
@@ -41,7 +41,7 @@ feature -- Element change (box specific)
 		deferred
 		end	
 	
-end
+end -- class EV_BOX_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

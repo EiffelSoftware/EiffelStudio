@@ -14,6 +14,10 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
+		redefine
+			interface,
+			parent_imp
+		end
 	
 feature {NONE} -- Initialization
 	
@@ -33,6 +37,12 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
+	interface: EV_WINDOW
+			-- Current interface of the window
+
+	parent_imp: EV_WINDOW_IMP
+			-- Parent of the window, has to be a window.
+			-- Is `Void' if no parent.
 
 	icon_name: STRING is
 			-- Short form of application name to be
@@ -121,14 +131,14 @@ feature -- Element change
 		local
 			a: EV_ARGUMENT1[EV_WINDOW]
                 do
-                        if close_command = Void then
-                                if application /= Void then
-					application.exit
-				end
-                        else
-				!!a.make (interface)
-                                close_command.execute (a)
-                        end
+					if close_command = Void then
+						if application /= Void then
+						application.exit
+						end
+					else
+						!!a.make (interface)
+						close_command.execute (a)
+					end
                 end
         
 	set_close_command (c: EV_COMMAND) is
@@ -174,21 +184,14 @@ feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 		do
 			application := app
 		end	
-	
 
-feature {EV_WINDOW} -- Implementation
-	
-	set_interface (i: EV_WINDOW) is
-		do
-			interface := i
-		end
-		
 feature {NONE} -- Implementation
 	
-	interface: EV_WINDOW
+--	interface: EV_WINDOW
 
-        close_command: EV_COMMAND	
-end
+	close_command: EV_COMMAND	
+
+end -- clas EV_WINDOW_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -21,9 +21,6 @@ inherit
 	
 feature -- Access
 	
-	child: EV_WIDGET
-			-- The child managed by the composite
-	
 	client_width: INTEGER is
 			-- Width of the client area (area of the
 			-- widget excluding the borders etc) of
@@ -55,44 +52,24 @@ feature -- Access
 			Result := True
 		end
 	
-feature -- Status report
-	
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to container. Normal container have
-			-- only one child, but this feature can be
-			-- redefined in decendants.
-		do
-			Result := child = Void
-		end
-	
-	child_add_successful (new_child: EV_WIDGET): BOOLEAN is
-			-- Used in the postcondition of 'add_child'
-		do
-			Result := child = new_child
-		end
-	
-			
-feature {EV_WIDGET}
-	
-	add_child (c: EV_WIDGET) is
-			-- Add child into composite. There can be only
-			-- one child inside.
-		require
-			exists: not destroyed
-			valid_child: c /= Void and then not c.destroyed
-			add_child_ok: add_child_ok
-		do
-			implementation.add_child (c.implementation)
-			child := c
-		ensure
-			child_add_successful: child_add_successful (c)
-		end
-	
-		
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_WIDGET, EV_WIDGET_I} -- Implementation
 
         implementation: EV_CONTAINER_I
 	
-end -- class CONTAINER
+end -- class EV_CONTAINER
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

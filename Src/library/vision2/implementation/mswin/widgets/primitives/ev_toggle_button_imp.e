@@ -10,7 +10,10 @@ class
 
 inherit
 	EV_TOGGLE_BUTTON_I
-		
+		undefine
+			build
+		end
+
 	EV_BUTTON_IMP
 		redefine
 			wel_window,
@@ -25,16 +28,9 @@ feature -- Initialization
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
         		-- Create a wel toggle button.
-		local
-			cont_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= par.implementation
-			check
-				valid_container: cont_imp /= Void
-			end
-			!WEL_SELECTABLE_BUTTON!wel_window.make (cont_imp.wel_window, txt, 0, 0, 10, 10, 0)
-			set_font (font)
-			set_default_size
+			test_and_set_parent (par)
+			!WEL_SELECTABLE_BUTTON!wel_window.make (parent_imp.wel_window, txt, 0, 0, 10, 10, 0)
 		end
 
 feature -- Status report
@@ -65,6 +61,13 @@ feature -- Status setting
 		do
 			set_pressed (not pressed)
 		end
+
+feature -- Event - command association
+	
+	add_toggle_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		do
+		end	
 
 feature -- Implementation
 

@@ -14,24 +14,29 @@ class
 	
 inherit
 	EV_WINDOW_I
+		select
+			interface,
+			parent_imp
+		end
 					
 	EV_CONTAINER_IMP
+		rename
+			interface as wrong_interface,
+			parent_imp as wrong_parent_imp
 		redefine
 			wel_window,	
-			on_show,
-			parent_imp,
 			set_width,
 			set_height,
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
-			child_has_resized
+			child_has_resized,
+			on_show
 		end
 
 creation
 	make, make_top_level
 
-	
 feature {NONE} -- Initialization
 	
 	old_make (par: EV_WINDOW) is
@@ -48,23 +53,14 @@ feature {NONE} -- Initialization
 		end
 
 	make (par: EV_WINDOW) is
-			-- Create a window. Window does not have any
-			-- parents
-		local
-			par_imp: EV_WINDOW_IMP
+			-- Create a window with a parent.
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp_not_void: par_imp /= Void
-			end
-			set_parent_imp (par_imp)
-			!!wel_window.make_child (par_imp.wel_window, "EV_WINDOW")
+			test_and_set_parent (par)
+			!!wel_window.make_child (parent_imp.wel_window, "EV_WINDOW")
 			wel_window.initialize (Current)
 		end
-
 		
 feature  -- Access
-
 
 	icon_name: STRING is
 			-- Short form of application name to be
@@ -192,7 +188,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	child_has_resized (new_width, new_height: INTEGER; child: EV_WIDGET_IMP) is
+	child_has_resized (new_width, new_height: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
 			-- resize of the child
 		do
@@ -240,12 +236,11 @@ feature -- Resizing
 feature {EV_WEL_FRAME_WINDOW} -- Event handling
 
 	on_show is
-			-- When the wel_window receive the on_show message.
-			-- Resize the wel_window at the minimum_size.
+			-- When the wel_window receive the on_show message,
+			-- it resizes the wel_window at the minimum_size.
 		do
-			if the_child /= Void then
-				parent_ask_resize (the_child.minimum_width,
-									the_child.minimum_height)
+			if child /= Void then
+				parent_ask_resize (child.minimum_width, child.minimum_height)
 			end
 		end
 
@@ -253,8 +248,8 @@ feature {EV_WEL_FRAME_WINDOW} -- Event handling
 			-- Called when the wel_window is resized.
 			-- Resize the child if it exists.
 		do
-			if the_child /= Void then
-					the_child.parent_ask_resize (a_width, a_height)
+			if child /= Void then
+					child.parent_ask_resize (a_width, a_height)
 			end
 		end
 
@@ -274,7 +269,7 @@ feature {EV_WEL_FRAME_WINDOW} -- Event handling
 		local
 			current_menu: EV_MENU_ITEM_CONTAINER_IMP
 		do
-			current_menu ?= the_child
+			current_menu ?= child
 			if current_menu /= Void then
 				current_menu.on_menu_command (menu_id)
 			end
@@ -288,10 +283,6 @@ feature --{EV_WINDOW_IMP} -- Implementation
 		once
 			!!Result
 		end
-
-	parent_imp: EV_WINDOW_IMP
-			-- Current parent of the window
-			-- is `void' if no parent
 
 feature {EV_APPLICATION_IMP, EV_WINDOW_IMP} -- Implementation
 	

@@ -21,10 +21,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_CONTAINER; txt: STRING) is
-                        -- Create a push button implementation.
+	make (par: EV_CONTAINER) is
+ 			-- Empty button
 		deferred
-                end	
+		end
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a push button implementation.
+		deferred
+        end	
+
 feature -- Event - command association
 	
 	add_click_command ( command: EV_COMMAND; 

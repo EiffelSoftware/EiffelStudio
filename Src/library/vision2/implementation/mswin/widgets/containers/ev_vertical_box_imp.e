@@ -69,34 +69,32 @@ feature {NONE} -- Basic operation
 		local
 			temp_height: INTEGER
 		do
-	--		if a_child.automatic_resize or a_child.automatic_position then
-	--			if is_homogeneous and a_child.automatic_resize then
+			if a_child.automatic_resize or a_child.automatic_position then
+				if is_homogeneous and a_child.automatic_resize then
 					temp_height := (a_height - total_spacing) // children.count
-	--			elseif is_homogeneous and not a_child.automatic_position then
-	--				temp_height := (minimum_height - total_spacing)// children.count  -- max of minimum size of children
-	--			elseif not is_homogeneous and a_child.automatic_resize then
-	--				temp_height := a_child.minimum_height + (a_height - minimum_height) // children.count 
-	--			end
+				elseif is_homogeneous and not a_child.automatic_position then
+					temp_height := (minimum_height - total_spacing)// children.count  -- max of minimum size of children
+				elseif not is_homogeneous and a_child.automatic_resize then
+					temp_height := a_child.minimum_height + (a_height - minimum_height) // children.count 
+				end
 				a_child.set_move_and_size (0, a_mark, a_width, temp_height)
-	--		end
+			end
 		end
-
 
 	adapt_last_child_size (a_child: EV_WIDGET_IMP; a_width, a_height, a_mark:INTEGER) is
 			-- Adapt the attributes of the last child according to the options of the box.
 		local
 			temp_height: INTEGER
 		do
-	--		if a_child.automatic_resize or a_child.automatic_position then
-	--			if a_child.automatic_resize then
+			if a_child.automatic_resize or a_child.automatic_position then
+				if a_child.automatic_resize then
 					temp_height := a_height - a_mark
-	--			elseif is_homogeneous then
-	--				temp_height := (minimum_height - total_spacing)// children.count  -- max of minimum size of children
-	--			end
+				elseif is_homogeneous then
+					temp_height := (minimum_height - total_spacing)// children.count  -- max of minimum size of children
+				end
 				a_child.set_move_and_size (0, a_mark, a_width, temp_height)
-	--		end
+			end
 		end
-
 
 	add_children_height: INTEGER is
 			-- Give the sum of the height of all the children
@@ -119,7 +117,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	child_has_resized (child_width, child_height: INTEGER; child: EV_WIDGET_IMP) is
+	child_has_resized (child_width, child_height: INTEGER; a_child: EV_WIDGET_IMP) is
 			-- Resize and replace all its children according to the resize of one of them.
 			-- If the  child has a minimal size which is bigger than the minimum size of
 			-- the others, the container take this new minimal size.
@@ -127,11 +125,9 @@ feature {NONE} -- Implementation
 			if shown then
 				if child_height >= (minimum_height - total_spacing) // children.count or child_width > minimum_width then
 					parent_ask_resize (child_width, (child_height * children.count) + total_spacing)
-					if parent_imp /= Void then
-						parent_imp.child_has_resized (width, height, Current)
-					end	
+					notify_size_to_parent
 				else
-					child.parent_ask_resize (minimum_width, (minimum_height - total_spacing ) // children.count)
+					a_child.parent_ask_resize (minimum_width, (minimum_height - total_spacing ) // children.count)
 				end
 			end
 		end

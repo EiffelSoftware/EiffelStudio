@@ -10,10 +10,14 @@ class
 
 inherit
 	EV_LABEL_I
+		redefine
+			build
+		end
 
 	EV_BAR_ITEM_IMP
 		redefine
-			wel_window
+			wel_window,
+			build
 		end
 
 	EV_TEXT_CONTAINER_IMP
@@ -32,19 +36,21 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	make_with_text (parent: EV_CONTAINER; txt: STRING) is
+	make_with_text (a_parent: EV_CONTAINER; txt: STRING) is
 				-- Create a wel_static (i.e.: a mswin label)
-		local
-			par_imp: EV_CONTAINER_IMP
 		do
-			par_imp ?= parent.implementation
-			check
-				valid_container: par_imp /= Void
-			end
-			!!wel_window.make (par_imp.wel_window, txt, 0, 0, 0, 0, 0)
+			test_and_set_parent (a_parent)
+			!!wel_window.make (parent_imp.wel_window, txt, 0, 0, 0, 0, 0)
+		end				
+
+	build is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		do
+			Precursor
 			set_font (font)
 			set_default_size
-		end				
+		end
 
 feature -- Basic operation
 

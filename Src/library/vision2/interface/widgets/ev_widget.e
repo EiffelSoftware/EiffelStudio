@@ -25,19 +25,15 @@ feature {NONE} -- Initialization
 		require
 			valid_parent: par /= Void
 		do
-			parent := par
-			-- For effective widgets, create widget_imp
-			set_default 
-                ensure
-                        parent_set: parent.child = Current and par = parent
+			implementation.set_interface (Current)
+			implementation.test_and_set_parent (par)
+			implementation.parent_imp.add_child (implementation)
+			implementation.build
+			managed := par.manager
+ 		ensure
  			exists: not destroyed
 		end
 	
-feature -- Access
-	
-	parent: EV_CONTAINER
-			-- Parent container of this widget
-
 feature -- Status report
 	
 	destroyed: BOOLEAN is
@@ -67,23 +63,29 @@ feature -- Status report
 		end
 
 	
-	managed: BOOLEAN 
+	managed: BOOLEAN
 			-- Is the geometry of current widget managed by its 
 			-- container? This is the case always unless 
 			-- parent.manager = False (Always true except 
 			-- when the container is EV_FIXED). This is 
 			-- set in the procedure set_default
 		
-	automatic_resize: BOOLEAN
+	automatic_resize: BOOLEAN is
 			-- Is the widget resized automatically when
 			-- the parent resize ?  In this case,
 			-- automatic_position has no effect.  True by
 			-- default
+		do
+			Result := implementation.automatic_resize
+		end
 
-	automatic_position: BOOLEAN
+	automatic_position: BOOLEAN is
 			-- Does the widget take a new position when
 			-- the parent resize ?  (If it does, its size
 			-- doesn't changed).  False by default
+		do
+			Result := implementation.automatic_position
+		end
 
 feature -- Status setting
 
@@ -139,24 +141,24 @@ feature -- Status setting
 			flag = insensitive	
 		end
 
-	set_automatic_resize (resize: BOOLEAN) is
-			-- Set `automatic_resize' to `resize'.
+	set_automatic_resize (state: BOOLEAN) is
+			-- Set `automatic_resize' to `state'.
 		require
 			exists: not destroyed
 		do
-			automatic_resize := resize
+			implementation.set_automatic_resize (state)
 		ensure
-			automatic_resize_set: automatic_resize = resize
+			automatic_resize_set: automatic_resize = state
 		end
 
-	set_automatic_position (position: BOOLEAN) is
-			-- Set `automatic_position' at `position'.
+	set_automatic_position (state: BOOLEAN) is
+			-- Set `automatic_position' at `state'.
 		require
 			exists: not destroyed
 		do
-			automatic_position := position
+			implementation.set_automatic_position (state)
 		ensure
-			automatic_position_set: automatic_position = position
+			automatic_position_set: automatic_position = state
 		end
 
 	-- What is this for?
@@ -225,7 +227,7 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
-        maximum_width: INTEGER is
+	maximum_width: INTEGER is
                         -- Maximum width that application wishes widget
                         -- instance to have
                 require
@@ -553,18 +555,6 @@ feature {NONE} -- Implementation
                         implementation := Void
                 ensure
                         void_implementation: implementation = Void
-                end
-
-feature {NONE} -- Implementation
-
-        set_default is
-                        -- Do the necessary initialization after 
-                        -- creation 
-                        -- Set default values of Current widget.
-                do
-                        implementation.build
-			parent.add_child (Current)
-			managed := parent.manager
                 end
 
 invariant

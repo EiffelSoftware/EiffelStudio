@@ -25,14 +25,9 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the `wel_multiple_line_edit'
-		local
-			cont_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= par.implementation
-			check
-				valid_container: cont_imp /= Void
-			end
-			!! wel_window.make (cont_imp.wel_window, "", 0, 0, 0, 0, 0)
+			test_and_set_parent (par)
+			!! wel_window.make (parent_imp.wel_window, "", 0, 0, 0, 0, 0)
 		end
 
 feature -- Status setting

@@ -170,7 +170,6 @@ feature -- IL code generation
 		local
 			cl_type: CL_TYPE_I
 			return_type: TYPE_I
-			class_type: CLASS_TYPE
 			native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 			special_array_class_type: SPECIAL_CLASS_TYPE
 			is_special_handled: BOOLEAN

@@ -550,7 +550,7 @@ feature -- IL code generation
 			attr: ATTRIBUTE_B
 			loc: LOCAL_B
 			res: RESULT_B
-			target_type, l_type: TYPE_I
+			target_type: TYPE_I
 			cl_type: CL_TYPE_I
 		do
 			target_type := Context.real_type (type)

@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a character constant"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	CHAR_CONST_VAL_B 
 
@@ -6,17 +11,7 @@ inherit
 		rename
 			make as old_make
 		redefine
-			generation_value, make_byte_code
-		end
-		
-	SHARED_BYTE_CONTEXT
-		export
-			{NONE} all
-		end
-
-	SHARED_WORKBENCH
-		export
-			{NONE} all
+			generation_value
 		end
 	
 creation
@@ -26,6 +21,7 @@ feature {NONE} -- Initialization
 
 	make (context_class: CLASS_C; i: CHARACTER; c: CONSTANT_I) is
 		require
+			context_class_not_void: context_class /= Void
 			good_argument: c /= Void
 		do
 			old_make (i)
@@ -58,33 +54,6 @@ feature -- Generation
 			constant_i ?= current_feature_table.origin_table.item (rout_id)
 			char_value ?= constant_i.value
 			Result := char_value.char_val
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a character constant feature in
-			-- an interval
-		local
-			cl_type: CL_TYPE_I
-			base_class: CLASS_C
-			rout_info: ROUT_INFO
-		do
-			ba.append (Bc_current)
-			cl_type := context.current_type
-			base_class := cl_type.base_class
-			if base_class.is_precompiled then
-				rout_info := System.rout_info_table.item (rout_id)
-				ba.append (Bc_pfeature)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-				ba.append_short_integer (-1)
-			else
-				ba.append (Bc_feature)
-				ba.append_integer (feature_id)
-				ba.append_short_integer (cl_type.associated_class_type.static_type_id - 1)
-				ba.append_short_integer (-1)
-			end
 		end
 
 end

@@ -50,11 +50,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Symbols
 
-("~")+		{
-				nb_tilde := text_count
-				current_position.go_to (nb_tilde)
-				last_token := TE_TILDE
-			}
 ";"			{
 				current_position.go_to (1)
 				last_token := TE_SEMICOLON
@@ -70,6 +65,18 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 ".."		{
 				current_position.go_to (2)
 				last_token := TE_DOTDOT
+			}
+"?"			{
+				current_position.go_to (1)
+				last_token := TE_QUESTION
+			}
+"~"			{
+				current_position.go_to (1)
+				last_token := TE_TILDE
+			}
+"}~"		{
+				current_position.go_to (2)
+				last_token := TE_CURLYTILDE
 			}
 "."			{
 				current_position.go_to (1)
@@ -183,10 +190,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Free operators
 
-(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~%]*	{
+(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*	{
 					-- Note: Free operators are converted to lower-case.
 				token_buffer.clear_all
-				-- token_buffer.append_string (text)
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				current_position.go_to (token_buffer.count)
@@ -467,7 +473,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 {A}{X}*		{
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
-				--token_buffer.append_string (text)
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				current_position.go_to (token_buffer.count)
@@ -479,14 +484,13 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 [0-1]+[bB]	{
 				token_buffer.clear_all
-				--token_buffer.append_string (text_substring (1, text_count - 1))
 				append_text_substring_to_string (1, text_count - 1, token_buffer)
 				current_position.go_to (token_buffer.count + 1)
 				last_token := TE_A_BIT
 			}
 
 
--- Intergers
+-- Integers
 
 {D}+		|
 {D}+/".."	{		-- This a trick to avoid having:
@@ -497,7 +501,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					--     `when' `1' `..' `2' `then'
 
 				token_buffer.clear_all
-				--token_buffer.append_string (text)
 				append_text_to_string (token_buffer)
 				current_position.go_to (token_buffer.count)
 				last_token := TE_INTEGER
@@ -513,11 +516,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Reals
 
-({D}*\.{D}+{E})|({D}+\.{D}*{E})|({U}(_{T})*)?\.(({T}_)*{U})?{E}|{U}(_{T})*\.((({T}_)*{U})?{E}) {
--- TO DO: remove '_'
---				return process_name(TE_REAL);
+({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E}) {
 				token_buffer.clear_all
-				--token_buffer.append_string (text)
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				current_position.go_to (text_count)
@@ -675,21 +675,112 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
 				current_position.go_to (text_count)
-				last_token := EIF_ERROR5
+				report_character_missing_quote_error (text)
 			}
 
 
 -- Strings
 
+\""<"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_LT
+			}
+\"">"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_GT
+			}
+\""<="\"	{
+				current_position.go_to (4)
+				last_token := TE_STR_LE
+			}
+\"">="\"	{
+				current_position.go_to (4)
+				last_token := TE_STR_GE
+			}
+\""+"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_PLUS
+			}
+\""-"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_MINUS
+			}
+\""*"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_STAR
+			}
+\""/"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_SLASH
+			}
+\""^"\"		{
+				current_position.go_to (3)
+				last_token := TE_STR_POWER
+			}
+\""//"\"	{
+				current_position.go_to (4)
+				last_token := TE_STR_DIV
+			}
+\""\\\\"\"	{
+				current_position.go_to (4)
+				last_token := TE_STR_MOD
+			}
+\"[aA][nN][dD]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 4, token_buffer)
+				current_position.go_to (5)
+				last_token := TE_STR_AND
+			}
+\"[aA][nN][dD]\ [tT][hH][eE][nN]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 9, token_buffer)
+				current_position.go_to (10)
+				last_token := TE_STR_AND_THEN
+			}
+\"[iI][mM][pP][lL][iI][eE][sS]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 8, token_buffer)
+				current_position.go_to (9)
+				last_token := TE_STR_IMPLIES
+			}
+\"[nN][oO][tT]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 4, token_buffer)
+				current_position.go_to (5)
+				last_token := TE_STR_NOT
+			}
+\"[oO][rR]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 3, token_buffer)
+				current_position.go_to (4)
+				last_token := TE_STR_OR
+			}
+\"[oO][rR]\ [eE][lL][sS][eE]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 8, token_buffer)
+				current_position.go_to (9)
+				last_token := TE_STR_OR_ELSE
+			}
+\"[xX][oO][rR]\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, 4, token_buffer)
+				current_position.go_to (5)
+				last_token := TE_STR_XOR
+			}
+\"(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
+				token_buffer.clear_all
+				append_text_substring_to_string (2, text_count - 1, token_buffer)
+				current_position.go_to (token_buffer.count)
+				last_token := TE_STR_FREE
+			}
+
 \"\"		{
 					-- Empty string.
-				token_buffer.clear_all
 				current_position.go_to (2)
-				last_token := EIF_ERROR6
+				last_token := TE_EMPTY_STRING
 			}
 \"[^%\n"]+\" {
 				token_buffer.clear_all
-				--token_buffer.append_string (text_substring (2, text_count - 1))
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				current_position.go_to (text_count)
 				last_token := TE_STRING
@@ -697,7 +788,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \"[^%\n"]*	{
 				token_buffer.clear_all
 				if text_count > 1 then
-					--token_buffer.append_string (text_substring (2, text_count))
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end
 				current_position.go_to (text_count)
@@ -706,7 +796,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 <IN_STR>{
 	[^%\n"]+	{
 				current_position.go_to (text_count)
-				--token_buffer.append_string (text)
 				append_text_to_string (token_buffer)
 			}
 	%A		{
@@ -806,14 +895,13 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 	[^%\n"]*\"	{
 				if text_count > 1 then
-					--token_buffer.append_string (text_substring (1, text_count - 1))
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
 				end
 				current_position.go_to (text_count)
 				set_start_condition (INITIAL)
 				if token_buffer.empty then
 						-- Empty string.
-					last_token := EIF_ERROR6
+					last_token := TE_EMPTY_STRING
 				else
 					last_token := TE_STRING
 				end
@@ -822,7 +910,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- Bad special character.
 				current_position.go_to (1)
 				set_start_condition (INITIAL)
-				last_token := EIF_ERROR3
+				report_string_bad_special_character_error
 			}
 	\n		{
 					-- No final double-quote.
@@ -830,12 +918,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (1)
 				current_position.set_line_number (line_number)
 				set_start_condition (INITIAL)
-				last_token := EIF_ERROR4
+				report_string_missing_quote_error (token_buffer)
 			}
 	<<EOF>>	{
 					-- No final double-quote.
 				set_start_condition (INITIAL)
-				last_token := EIF_ERROR4
+				report_string_missing_quote_error (token_buffer)
 			}
 }
 
@@ -852,7 +940,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 .			{
 				current_position.go_to (1)
-				report_error ("")
+				report_unknown_token_error (text_item (1))
 			}
 
 

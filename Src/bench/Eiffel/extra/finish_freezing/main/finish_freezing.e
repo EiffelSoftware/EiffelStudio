@@ -16,7 +16,6 @@ feature -- Initialization
 			if not retried then
 				!!translator.make
 
-				translator.read_options
 				translator.translate
 				translator.run_make
 

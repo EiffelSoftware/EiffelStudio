@@ -52,6 +52,24 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 		return (xattr.map_state == IsUnmapped);
 } 	// end
 
+void
+c_gdk_window_get_geometry (GdkWindow * window,
+		int * x, int * y, int * width, int * height) // is
+{
+	// local
+		GdkWindowPrivate *priv;
+		XWindowAttributes xattr;
+	// require
+		g_return_val_if_fail (window != NULL, 0);
+	// do
+	  	priv = (GdkWindowPrivate*) window;
+      	XGetWindowAttributes (priv->xdisplay, priv->xwindow, &xattr);
+		if (x) *x = xattr.x;
+		if (y) *y = xattr.y;
+		if (width) *width = xattr.width;
+		if (height) *height = xattr.height;
+} // end
+
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
 // Copyright (C) 1986-2000 Interactive Software Engineering Inc.
@@ -73,6 +91,9 @@ c_gdk_window_is_iconified (GdkWindow * window) // is
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2000/03/08 02:06:39  brendel
+// Added function c_gdk_window_get_geometry.
+//
 // Revision 1.2  2000/03/08 01:25:46  brendel
 // Fixed compliler errors.
 //

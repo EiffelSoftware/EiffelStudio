@@ -68,12 +68,12 @@ feature -- Status setting and report
 			Result := db_spec.trancount
 		end
 
-	begin: INTEGER is
+	begin is
 			-- Start of transaction status from database handle
 		require
 			connection_exists: is_connected
 		do
-			Result := db_spec.begin
+			db_spec.begin
 		end
 
 end -- class DATABASE_CONTROL

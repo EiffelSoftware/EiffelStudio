@@ -40,7 +40,7 @@ void odbc_unhide_qualifier(char *);
 char *odbc_date_to_str(int, int, int, int, int, int, int);
 int	 odbc_c_type(int odbc_type);
 
-int odbc_close_cursor (int no_des);
+void odbc_close_cursor (int no_des);
 
 
 ODBCSQLDA * odbc_descriptor[MAX_DESCRIPTOR];
@@ -780,10 +780,9 @@ void odbc_terminate_order (int no_des)
 /*   2. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_close_cursor (int no_des)
+void odbc_close_cursor (int no_des)
 {
     rc = SQLFreeStmt(hstmt[no_des], SQL_CLOSE);
-	return error_number;
 }
 
 /*****************************************************************/
@@ -979,10 +978,8 @@ TIMESTAMP_STRUCT *dp;
 /* get column(s) (of a special table or whole data source).      */
 /*                                                               */
 /*****************************************************************/
-int odbc_set_col_flag(int no_desc) {
+void odbc_set_col_flag(int no_desc) {
 	flag[no_desc] = ODBC_CATALOG_COL;
-	return error_number;
-
 }
 
 /*****************************************************************/
@@ -996,9 +993,8 @@ int odbc_set_col_flag(int no_desc) {
 /* get  table(s) in the current Data Source.                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_set_tab_flag(int no_desc) {
+void odbc_set_tab_flag(int no_desc) {
 	flag[no_desc] = ODBC_CATALOG_TAB;
-	return error_number;
 }
 
 /*****************************************************************/
@@ -1012,9 +1008,8 @@ int odbc_set_tab_flag(int no_desc) {
 /* get stored procedure(s) in the current Data Source.           */
 /*                                                               */
 /*****************************************************************/
-int odbc_set_proc_flag(int no_desc) {
+void odbc_set_proc_flag(int no_desc) {
 	flag[no_desc] = ODBC_CATALOG_PROC;
-	return error_number;
 }
 
 /*****************************************************************/
@@ -1144,9 +1139,8 @@ void odbc_set_owner(char *owner) {
 /* general ODBC SQL statement.                                   */
 /*                                                               */
 /*****************************************************************/
-int odbc_unset_catalog_flag(int no_desc) {
+void odbc_unset_catalog_flag(int no_desc) {
 	flag[no_desc] = ODBC_SQL;
-	return error_number;
 }
 
 /*****************************************************************/
@@ -1243,7 +1237,7 @@ char *odbc_str_from_str(char *ptr) {
 /* NOTE: Only the name is mandatory.                             */
 /*                                                               */
 /*****************************************************************/
-int odbc_connect (char *name, char *passwd, char *dsn)
+void odbc_connect (char *name, char *passwd, char *dsn)
 {
 	SWORD indColName;
 	//int i;
@@ -1253,20 +1247,20 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 	rc = SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&henv);
 	if (rc) {
 		odbc_error_handler(NULL,10);
-		return error_number;
+		return;
 	}
 	//rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC2,0);
 	rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,0);
 	if (rc) {
 		odbc_error_handler(NULL,910);
 		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
-		return error_number;
+		return;
 	}
 	rc = SQLAllocHandle(SQL_HANDLE_DBC,henv, &hdbc);
 	if (rc) {
 		odbc_error_handler(NULL,11);
 		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
-		return error_number;
+		return;
 	}
 	dsnLen = strlen(dsn);
 	nameLen = strlen(name);
@@ -1276,7 +1270,7 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 		odbc_error_handler(NULL,12);
 		rc = SQLFreeHandle(SQL_HANDLE_DBC,hdbc);
 		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
-		return error_number ;
+		return;
 	}
 	// Added for multiple connection
 	number_connection = number_connection + 1;
@@ -1310,7 +1304,6 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 		}
 	}
 */
-	return error_number;
 }
 
 /*****************************************************************/
@@ -1421,7 +1414,7 @@ void odbc_commit ()
 /*   Begin a data base transaction.                              */
 /*                                                               */
 /*****************************************************************/
-int odbc_begin ()
+void odbc_begin ()
 {
   odbc_clear_error ();
   /*
@@ -1430,7 +1423,6 @@ int odbc_begin ()
 	odbc_error_handler(NULL,19);
   */
   /* ODBC Has no explicit Transact_begin statement. */
-  return error_number;
 }
 
 /*****************************************************************/

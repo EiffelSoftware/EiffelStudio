@@ -340,7 +340,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	close_cursor (no_descriptor: INTEGER): INTEGER is
+	close_cursor (no_descriptor: INTEGER) is
 			-- Do nothing, for ODBC prepared statement
 		do
 		end
@@ -548,7 +548,7 @@ feature -- External features
 			Result := ora_trancount
 		end
 
- 	begin: INTEGER is
+ 	begin is
 		do
 		end
 

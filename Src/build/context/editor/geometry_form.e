@@ -128,10 +128,18 @@ feature
 
 	reset is
 		do
-			text_field_x.set_int_value (context.x);
-			text_field_y.set_int_value (context.y);
-			text_field_width.set_int_value (context.width);
-			text_field_height.set_int_value (context.height);
+			if text_field_x.int_value /= context.x then
+				text_field_x.set_int_value (context.x);
+			end
+			if text_field_y.int_value /= context.y then
+				text_field_y.set_int_value (context.y);
+			end
+			if text_field_width.int_value /= context.width then
+				text_field_width.set_int_value (context.width);
+			end
+			if text_field_height.int_value /= context.height then
+				text_field_height.set_int_value (context.height);
+			end
 		end;
 
 	

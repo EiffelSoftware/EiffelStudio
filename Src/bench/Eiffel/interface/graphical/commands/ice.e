@@ -23,8 +23,20 @@ feature
 feature {NONE}
 
 	work (argument: ANY) is
-			-- Useless 
+			-- for now, purge system
+			-- lengthy confirmation needed
 		do
+			if argument = warner then
+				confirmer.call (Current, "Think again%NAre you really sure ?");
+			elseif argument = confirmer then
+				system.purge
+			elseif workbench.successfull then
+					warner.call (Current,"Purge system%NIt could take quite a long%N%
+									%Go on ?");
+			else
+				warner.custom_call (void ,"A compilation must complete%
+						%succesfully before purge", void, void, "OK");
+			end;
 		end;
  
 feature 
@@ -39,6 +51,6 @@ feature
 	
 feature {NONE}
 
-	command_name: STRING is do Result := "" end
+	command_name: STRING is do Result := "Purge system" end
   
 end

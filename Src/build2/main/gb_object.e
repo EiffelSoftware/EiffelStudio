@@ -21,6 +21,10 @@ inherit
 	
 	GB_ACCESSIBLE_HISTORY
 	
+	GB_ACCESSIBLE_SYSTEM_STATUS
+	
+	GB_ACCESSIBLE_COMMAND_HANDLER
+	
 	GB_PICK_AND_DROP_SHIFT_MODIFIER
 
 feature {NONE} -- Initialization
@@ -179,16 +183,11 @@ feature {GB_OBJECT_HANDLER, GB_DELETE_TOOL_BAR_BUTTON, GB_OBJECT, GB_COMMAND_ADD
 			end
 			parent_item.prune (layout_item)
 			
-	
-			-- We should not remove it. We may be unparenting, to put in a different
-			-- parent.
-				-- Remove `Current' from objects stored in `object_handler'.
-	--		object_handler.remove_object (Current)
+				-- Notify the system that we have modified something.
+			system_status.enable_project_modified
+			command_handler.update
 		ensure
-			-- object_parent_void
-			-- display_object_parent_void
 			layout_item_parent_void: layout_item.parent = Void
-		--	object_handler_does_not_reference_current: not object_handler.objects.has (Current)
 		end
 
 feature {GB_OBJECT_HANDLER} -- Status setting
@@ -219,6 +218,10 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 			end
 				-- Remove `display_object' from its parent.
 			container.prune (widget)
+			
+				-- Notify the system that we have modified something.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 
 feature {GB_OBJECT_HANDLER} -- Element change

@@ -414,13 +414,13 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 			eraise ("Unknown attribute", EN_PROG);
 		if (ret != NULL) 
 			*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
-		return &eif_default_pointer;
+		return -1;
 	}
 
 	if (ret != NULL)
 		*ret = EIF_CECIL_OK; 	/* Set "*ret" for successfull return. */
 #ifndef WORKBENCH
-	return (void *) (object + (System(Dtype(object)).cn_offsets[i]));
+	return (System(Dtype(object)).cn_offsets[i]);
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i]; 

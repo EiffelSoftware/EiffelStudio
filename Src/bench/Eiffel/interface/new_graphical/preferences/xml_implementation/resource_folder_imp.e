@@ -7,9 +7,6 @@ class
 
 inherit
 	RESOURCE_FOLDER_I
-		rename
-			load_default_attributes as load_attributes
-		end
 
 create
 	make, make_root, make_default, make_default_root
@@ -21,22 +18,45 @@ feature -- Initialization
 			make_default (doc, struct)
 		end
 
-	make_root (doc: XML_ELEMENT; struct: RESOURCE_STRUCTURE) is
+	make_root (file_name: FILE_NAME; struct: RESOURCE_STRUCTURE) is
 		do
-			xml_data := doc
-			name := "root"
-			structure := struct
-			load_attributes (doc)
-			description := "root folder"
+			make_default_root (file_name, struct)
 		end
 
 feature -- Update
 
-	update_root (doc: XML_ELEMENT) is
+	update_root (file_name: FILE_NAME) is
+		local
+			file: RAW_FILE
+			s: STRING
+			parser: XML_TREE_PARSER
+			error_message: STRING
 		do
 			name := "root"
-			update_attributes (doc)
 			description := "root folder"
+
+			create parser.make
+			create file.make (file_name)
+			if file.exists then
+				file.open_read
+				file.read_stream (file.count)
+				s := file.last_string
+				parser.parse_string (s)
+				parser.set_end_of_file
+				file.close
+				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+					error_message := "EIFFEL_DOCUMENT TAG missing%N"
+				else
+					xml_data := parser.root_element
+					update_attributes (xml_data)
+				end
+			else
+				error_message := "does not exist%N"
+				error_message.prepend (file_name)
+			end
+			if error_message /= Void then
+				io.put_string (error_message)
+			end
 		end
 
 	update_attributes (doc: XML_ELEMENT) is
@@ -86,6 +106,33 @@ feature -- Update
 			end
 		end
 
+feature -- Saving
+
+	root_save (location: FILE_NAME) is
+		local
+			file: RAW_FILE
+			s: STRING
+			l: LINKED_LIST [RESOURCE_FOLDER_IMP]
+		do
+			create file.make_open_write (location)
+			if file.exists then
+				s := "<EIFFEL_DOCUMENT>%N"
+				from
+					l := child_list
+					l.start
+				until
+					l.after
+				loop
+					s.append (l.item.xml_trace (""))
+					l.forth
+				end
+				s.append ("</EIFFEL_DOCUMENT>%N")
+				file.put_string (s)
+				file.close
+			end
+		end
+
+
 feature -- Output
 
 	xml_trace (identation: STRING): STRING is
@@ -125,9 +172,5 @@ feature -- Output
 			Result.append (identation)
 			Result.append ("</TOPIC>%N")
 		end
-
-feature {NONE} -- Implementation
-
-	xml_data: XML_ELEMENT
 
 end -- class RESOURCE_FOLDER_IMP

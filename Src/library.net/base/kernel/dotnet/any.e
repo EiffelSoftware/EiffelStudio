@@ -365,7 +365,7 @@ feature {NONE} -- Implement .NET feature
 		do
 			l_other ?= obj
 			if l_other /= Void then
-				Result := get_type.equals_object (obj) and then is_equal (l_other)
+				Result := get_type.equals_type (obj.get_type) and then is_equal (l_other)
 			end
 		end
 

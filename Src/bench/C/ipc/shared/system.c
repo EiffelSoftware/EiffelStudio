@@ -13,6 +13,21 @@
 #include "config.h"
 #include "portable.h"
 
+#include <sys/types.h>
+#include "timehdr.h"
+#include <signal.h>
+#include <errno.h>
+#include <stdio.h>
+ 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
+#ifdef I_SYS_FILE
+#include <sys/file.h>
+#endif
 #ifdef I_FCNTL
 #include <fcntl.h>
 #endif
@@ -54,7 +69,6 @@ int new;
 }
 #endif
 
-#include "timehdr.h"
 
 #ifndef HAS_USLEEP
 public int usleep(usec)
@@ -69,14 +83,6 @@ int usec;
 
 	(void) select(1, (Select_fd_set_t) 0, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm);
 }
-#endif
-
-extern Malloc_t malloc();
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
 #endif
 
 public char *str_save(s)

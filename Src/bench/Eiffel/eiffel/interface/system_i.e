@@ -825,6 +825,25 @@ end;
 			end
 		end
 
+feature -- default_rescue routine
+
+	default_rescue_id: ROUTINE_ID is
+			-- Routine id of default rescue from GENERAL.
+			-- Return 0 if GENERAL has not been compiled or
+			-- does not have a feature named `default_rescue'.
+		local
+			feature_i: FEATURE_I
+		once
+			if general_class /= Void and then
+					general_class.compiled_class /= Void then
+				feature_i := general_class.compiled_class.feature_table.item 
+														("default_rescue")
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first
+				end
+			end
+		end
+
 feature -- Merging
 
 	merge (other: like Current) is

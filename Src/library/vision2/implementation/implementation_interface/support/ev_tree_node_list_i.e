@@ -119,7 +119,7 @@ Feature -- Status report
 		local
 			t: TUPLE [EV_TREE_NODE]
 		do
-			create t.make
+			create t
 			from
 				interface.start
 			until

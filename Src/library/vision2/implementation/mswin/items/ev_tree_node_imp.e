@@ -529,9 +529,9 @@ feature {EV_TREE_IMP} -- Implementation
 			sx := top_parent_imp.indent * counter + 1
 			--|FIXME The relative y_position is always returned as 0.
 			sy := 0
-			create Result.make
-			Result.put (sx, 1)
-			Result.put (sy, 2)
+			create Result
+			Result.put_integer (sx, 1)
+			Result.put_integer (sy, 2) 
 		end
 
 feature {NONE} -- Implementation

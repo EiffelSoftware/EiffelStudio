@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ACTION_SEQUENCE [EVENT_DATA -> TUPLE create make end]
+	EV_ACTION_SEQUENCE [EVENT_DATA -> TUPLE create default_create end]
 
 inherit
 	ACTION_SEQUENCE [EVENT_DATA]

@@ -177,6 +177,7 @@
 			<HEAD>Dynamic data</HEAD>
 			<TEXT>development_window__width<INTEGER>490</INTEGER></TEXT>
 			<TEXT>development_window__height<INTEGER>490</INTEGER></TEXT>
+			<TEXT>development_window__is_maximized<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>development_window__left_panel_width<INTEGER>100</INTEGER></TEXT>
 			<TEXT>development_window__left_panel_layout<LIST_STRING>visible;visible;visible;closed;closed;closed</LIST_STRING></TEXT>
 			<TEXT>development_window__right_panel_layout<LIST_STRING>visible;visible</LIST_STRING></TEXT>

@@ -88,6 +88,10 @@ feature -- Status setting
 			color: POINTER
 			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
+			if default_background_color = Void then
+				default_background_color := background_color
+			end
+			
 			style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
 			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
 			r := a_color.red_16_bit
@@ -172,6 +176,9 @@ feature -- Status setting
 			color: POINTER
 			r, g, b, m: INTEGER
 		do
+			if default_foreground_color= Void then
+				default_foreground_color := foreground_color
+			end
 			style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
 			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
 			r := a_color.red_16_bit
@@ -219,13 +226,22 @@ feature -- Status setting
 
 	set_default_colors is
 			-- Set foreground and background color to their default values.
-			--| FIXME This implementation is quite fast :)
-			--| But it may be incorrect in some cases.
-			--| (Need to check)
 		do
+			if default_foreground_color /= Void then
+				set_foreground_color (default_foreground_color)
+			end
+			if default_background_color /= Void then
+				set_background_color (default_background_color)
+			end
 		end	
 
 feature {NONE} -- Implementation
+
+	default_background_color: EV_COLOR
+		-- Color used for background of 'Current'
+
+	default_foreground_color: EV_COLOR
+		-- Color used for foreground of 'Current'
 
 	background_color_pointer: POINTER is
 			-- Pointer to bg color for `a_widget'.

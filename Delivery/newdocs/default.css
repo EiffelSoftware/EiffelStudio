@@ -1,7 +1,7 @@
 BODY {
-	BACKGROUND=#EEEADD;
+	BACKGROUND=#FFFEEF;
 	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
-	MARGIN=0px 0px 0px 0px;
+	MARGIN=5px 5px 5px 5px;
 	PADDING=0px 0px 0px 0px;
 	COLOR=#000000;
 	FONT-SIZE=70%;
@@ -9,15 +9,12 @@ BODY {
 }
 
 OL, UL {
-	MARGIN=.5em 0em 0em 2em; 
+	MARGIN-TOP=.5em;
+	MARGIN-BOTTOM=2em; 
 }
 
 LI {
 	MARGIN-BOTTOM=.5em;
-}
-
-UL P, OL P, DL P {
-	MARGIN-LEFT=0em;
 }
 
 UL P.LABEL, OL P.LABEL {
@@ -38,14 +35,17 @@ DT {
 	MARGIN-TOP: .5em; 
 }
 
-PRE {
-	MARGIN-TOP: .5em;
-	MARGIN-BOTTOM: .5em; 
-}
-
-PRE, CODE, .CODE {
+PRE, CODE, .code {
 	FONT: 100% Courier New, Courier, mono; /* This is 100% of 70% */
-	COLOR: #000066;
+	MARGIN-TOP: .7em;
+	MARGIN-BOTTOM: .7em;
+	MARGIN-LEFT: .7em;
+	PADDING-LEFT: .5em;
+	PADDING-RIGHT: .5em;
+	PADDING-TOP: .5em;
+	PADDING-BOTTOM: .5em;
+	BACKGROUND=#EFEEDF;
+	WIDTH: 450px;
 }
 
 PRE B, CODE B {
@@ -156,7 +156,7 @@ A:hover {
 }
 
 .elocal, .equoted {
-    COLOR=darkred;
+    COLOR=darkgreen;
     FONT-STYLE=italic;
 }
 

@@ -42,16 +42,18 @@ feature -- Basic Operations
 		do
 			visited := a_descriptor.visited
 			{WIZARD_DATA_VISITOR} Precursor (a_descriptor)
-			if need_generate_ce and not visited then
-				Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
-				if c_header_file /= Void and then not c_header_file.empty then
-					Generated_ce_mapper_writer.add_import (c_header_file)
+			if not is_interface then
+				if need_generate_ce and not visited then
+					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
+					if c_header_file /= Void and then not c_header_file.empty then
+						Generated_ce_mapper_writer.add_import (c_header_file)
+					end
 				end
-			end
-			if need_generate_ec and not visited then
-				Generated_ec_mapper_writer.add_function (ec_function_writer, Public)
-				if c_header_file /= Void and then not c_header_file.empty then
-					Generated_ec_mapper_writer.add_import (c_header_file)
+				if need_generate_ec and not visited then
+					Generated_ec_mapper_writer.add_function (ec_function_writer, Public)
+					if c_header_file /= Void and then not c_header_file.empty then
+						Generated_ec_mapper_writer.add_import (c_header_file)
+					end
 				end
 			end
 		end

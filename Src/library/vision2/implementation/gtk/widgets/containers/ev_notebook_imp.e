@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False--True
+	needs_event_box: BOOLEAN is True
 	
 	make (an_interface: like interface) is
 			-- Create a fixed widget. 

@@ -34,6 +34,6 @@ debug=''
 #debug='-v'
 #
 cc='$compiler_path\bin\bcc32'
-compiler_path='d:\Eiffel50\BCC55'
+compiler_path='d:\Eiffel51\BCC55'
 all_dependency=''
 #

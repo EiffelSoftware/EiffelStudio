@@ -7,7 +7,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOP_SHELL_M 
+class 
+	TOP_SHELL_M 
 
 inherit
 

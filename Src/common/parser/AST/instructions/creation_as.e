@@ -67,6 +67,7 @@ feature -- Simple formatting
 		do
 			ctxt.put_breakable;
 			if type /= Void then
+				ctxt.set_type_creation (type);
 				ctxt.put_text_item (ti_Exclamation);
 				ctxt.format_ast (type);
 				ctxt.put_text_item_without_tabs (ti_Exclamation);
@@ -76,9 +77,12 @@ feature -- Simple formatting
 				ctxt.put_space
 			end;
 			ctxt.format_ast (target)
-			if  call /= void then
+			if type /= Void then
+				ctxt.set_type_creation (Void);
+			end;
+			if call /= void then
 				ctxt.need_dot;
-				ctxt.format_ast (call)
+				ctxt.format_ast (call);
 			end;
 		end;
 

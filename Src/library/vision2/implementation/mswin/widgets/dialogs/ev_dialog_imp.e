@@ -34,8 +34,8 @@ create
 
 feature {NONE} -- Initialization
 
-	--| FIXME Default is_modal
 	--| FIXME replace destroy agent with "cancel" result agent.
+	--| FIXME Default is_modal
 
 feature -- Basic operations
 
@@ -56,12 +56,12 @@ feature -- Basic operations
 		do
 			if is_modal then
 				show
-			--	block
+				block
 			else
-				enable_modal
 				show
-			--	block
-			--	disable_modal
+				enable_modal
+				block
+				disable_modal
 			end
 		end
 
@@ -69,12 +69,7 @@ feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_popup + Ws_sysmenu + Ws_caption + Ds_modalframe
-				+ Ds_setforeground
-				--+ Ws_dlgframe
-				--+ Ws_overlapped
-				+ Ws_clipchildren
-				--+ Ws_clipsiblings
+			Result := Ws_popup + Ws_sysmenu + Ws_caption
 		end
 
 	interface: EV_DIALOG
@@ -102,6 +97,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/20 16:29:15  brendel
+--| Uncommented imp of show_modal.
+--|
 --| Revision 1.11  2000/04/19 00:40:52  brendel
 --| Revised. enable/disable modal are still to be implemented.
 --|

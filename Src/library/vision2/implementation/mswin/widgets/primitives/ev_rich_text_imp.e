@@ -985,54 +985,55 @@ feature -- Status setting
 				loop
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
-						temp_string := highlight_string.twin
+						temp_string := ""
+						add_rtf_keyword (temp_string, rtf_highlight_string)
 						
 						temp_string.append (back_color_offset.i_th (format_index).out)
-						temp_string.append (color_string)
+						add_rtf_keyword (temp_string, rtf_color_string)
 						temp_string.append (color_offset.i_th (format_index).out)
 						format_underlined := formats.i_th (format_index).effects.is_underlined
 						if not is_current_format_underlined and format_underlined then
-							temp_string.append (start_underline_string)
+							add_rtf_keyword (temp_string, rtf_underline_string)
 							is_current_format_underlined := True
 						elseif is_current_format_underlined and not format_underlined then
-							temp_string.append (end_underline_string)
+							add_rtf_keyword (temp_string, rtf_underline_string + "0")
 							is_current_format_underlined := False
 						end
 						format_striked := formats.i_th (format_index).effects.is_striked_out
 						if not is_current_format_striked_through and format_striked then
-							temp_string.append (start_strikeout_string)
+							add_rtf_keyword (temp_string, rtf_strikeout_string)
 							is_current_format_striked_through := True
 						elseif is_current_format_striked_through and not format_striked then
-							temp_string.append (end_strikeout_string)
+							add_rtf_keyword (temp_string, rtf_strikeout_string + "0")
 							is_current_format_striked_through := False
 						end
 						format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
 						if not is_current_format_bold and format_bold then
-							temp_string.append (start_bold_string)
+							add_rtf_keyword (temp_string, rtf_bold_string)
 							is_current_format_bold := True
 						elseif is_current_format_bold and not format_bold then
-							temp_string.append (end_bold_string)
+							add_rtf_keyword (temp_string, rtf_bold_string + "0")
 							is_current_format_bold := False
 						end						
 						format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
 						if not is_current_format_italic and format_italic then
-							temp_string.append (start_italic_string)
+							add_rtf_keyword (temp_string, rtf_italic_string)
 							is_current_format_italic := True
 						elseif is_current_format_italic and not format_italic then
-							temp_string.append (end_italic_string)
+							add_rtf_keyword (temp_string, rtf_italic_string + "0")
 							is_current_format_italic := False
 						end
 						vertical_offset := formats.i_th (format_index).effects.vertical_offset
 						if vertical_offset /= current_vertical_offset then
-							temp_string.append (start_vertical_offset)
+							add_rtf_keyword (temp_string, rtf_vertical_offset)
 								-- We must specify the vertical offset in half points.
 							temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
 							current_vertical_offset := vertical_offset
 						end
 						
-						temp_string.append (font_string)
+						add_rtf_keyword (temp_string, rtf_font_string)
 						temp_string.append (format_index.out)
-						temp_string.append (font_size_string)
+						add_rtf_keyword (temp_string, rtf_font_size_string)
 						temp_string.append (heights.i_th (format_index).out)
 						temp_string.append (space_string)
 						internal_text.append_string (temp_string)
@@ -1042,7 +1043,7 @@ feature -- Status setting
 						internal_text.append_string (default_font_format)
 					end
 					if buffered_text.item (counter).is_equal ('%N') then
-						internal_text.append_string (rtf_newline)
+						add_rtf_keyword (internal_text, rtf_newline + "%N")
 					else
 						internal_text.append_character (buffered_text.item (counter))
 					end

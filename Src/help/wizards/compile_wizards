@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script to generate the wizard executables for Linux.
 # It generates the Vision2 and Precompilation wizards and puts them in the delivery.

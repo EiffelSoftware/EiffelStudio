@@ -107,7 +107,6 @@ feature -- Basic operations
 				add_get_type_info_function (a_descriptor)
 				add_get_type_info_count_function (a_descriptor)
 				add_get_ids_of_names_function (a_descriptor)
-				-- add_invoke_function (a_descriptor)
 				dispatch_invoke_function (a_descriptor)
 			end
 
@@ -120,7 +119,7 @@ feature -- Basic operations
 			-- Implement IUnknown interface
 			add_release_function
 			add_addref_function
-			add_query_interface
+			add_query_interface (a_descriptor)
 
 			check
 				valid_cpp_class_writer: cpp_class_writer.can_generate
@@ -174,9 +173,10 @@ feature {NONE} -- Implementation
 					interface_names.extend (a_name)
 
 					if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
-						if dispatch_interface_name = Void then
-							dispatch_interface_name := clone (interface_descriptors.item.c_type_name)
+						if (dispinterface_names = Void) then
+							create dispinterface_names.make
 						end
+						dispinterface_names.extend (a_name)
 						dispatch_interface := True
 					end
 
@@ -318,13 +318,17 @@ feature {NONE} -- Implementation
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info (a_coclass_descriptor)
-			tmp_body.append (Assert)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append ("itinfo == 0 && pptinfo != 0")
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
+			create tmp_body.make (0)
+
+			tmp_body.append (tab)
+			tmp_body.append ("if (itinfo != 0) %N%T%Treturn ResultFromScode(DISP_E_BADINDEX);")
 			tmp_body.append (New_line_tab)
+
+			tmp_body.append ("*pptinfo = NULL;")
+			tmp_body.append (New_line)
+
+			tmp_body.append (check_type_info (a_coclass_descriptor))
+
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("*pptinfo")
 			tmp_body.append (Space_equal_space)
@@ -362,12 +366,14 @@ feature {NONE} -- Implementation
 			create func_writer.make
 
 			tmp_body := clone (Tab)
-			tmp_body.append (Assert)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append ("pctinfo != 0")
-			tmp_body.append (Close_parenthesis)
+			tmp_body.append ("if (pctinfo == NULL)")
+			tmp_body.append (New_line_tab_tab)
+			tmp_body.append (Return)
+			tmp_body.append (Space)
+			tmp_body.append ("E_NOTIMPL")
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+
 			tmp_body.append ("*pctinfo")
 			tmp_body.append (Space_equal_space)
 			tmp_body.append (One)
@@ -403,16 +409,7 @@ feature {NONE} -- Implementation
 			create func_writer.make
 
 			tmp_body := check_type_info (a_coclass_descriptor)
-			tmp_body.append (Assert)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iid_type)
-			tmp_body.append (Underscore)
-			tmp_body.append (Null)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (Type_info_variable_name)
@@ -456,6 +453,7 @@ feature {NONE} -- Implementation
 			func_writer.set_signature ("DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr")
 
 			body_code := check_type_info (cocls_descriptor)
+
 			body_code.append (Hresult)
 			body_code.append (Space)
 			body_code.append (Hresult_variable_name)
@@ -463,6 +461,7 @@ feature {NONE} -- Implementation
 			body_code.append (Zero)
 			body_code.append (Semicolon)
 			body_code.append (New_line_tab)
+
 			body_code.append (Int)
 			body_code.append (Space)
 			body_code.append ("i")
@@ -471,16 +470,7 @@ feature {NONE} -- Implementation
 			body_code.append (Semicolon)
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
-			body_code.append (Assert)
-			body_code.append (Open_parenthesis)
-			body_code.append (Riid)
-			body_code.append (C_equal)
-			body_code.append (Iid_type)
-			body_code.append (Underscore)
-			body_code.append (Null)
-			body_code.append (Close_parenthesis)
-			body_code.append (Semicolon)
-			body_code.append (New_line_tab)
+
 
 			body_code.append ("VARIANTARG * lcl_rgvarg")
 			body_code.append (Space_equal_space)
@@ -506,12 +496,16 @@ feature {NONE} -- Implementation
 			body_code.append (Open_curly_brace)
 			body_code.append (New_line_tab_tab)
 
+			check 
+				non_void_default_dispinterface: default_dispinterface_name (cocls_descriptor) /= Void
+				valid_default_dispinterface: not default_dispinterface_name (cocls_descriptor).empty
+			end
 			from
 				cocls_descriptor.interface_descriptors.start
 			until
 				cocls_descriptor.interface_descriptors.after
 			loop
-				if cocls_descriptor.interface_descriptors.item.dispinterface then
+				if cocls_descriptor.interface_descriptors.item.c_type_name.is_equal (default_dispinterface_name (cocls_descriptor)) then
 					body_code.append (invoke_function_case_item (cocls_descriptor.interface_descriptors.item))
 				end
 				cocls_descriptor.interface_descriptors.forth
@@ -1084,72 +1078,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab_tab_tab)
 		end
 
-	add_invoke_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
-			-- Add Invoke function
-		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
-		local
-			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
-		do
-			create func_writer.make
-
-			tmp_body := check_type_info (a_coclass_descriptor)
-			tmp_body.append (Assert)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iid_type)
-			tmp_body.append (Underscore)
-			tmp_body.append (Null)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (C_void_pointer)
-			tmp_body.append (Tmp_clause)
-			tmp_body.append (This)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			tmp_body.append (dispatch_interface_name)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (Type_info_variable_name)
-			tmp_body.append (Struct_selection_operator)
-			tmp_body.append (Invoke)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Tmp_clause)
-			tmp_body.append (This)
-			tmp_body.append (Comma_space)
-			tmp_body.append ("dispID, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr")
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-
-			func_writer.set_name (Invoke)
-			func_writer.set_comment ("Invoke function.")
-			func_writer.set_result_type (Std_method_imp)
-			func_writer.set_signature ("DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr")
-			func_writer.set_body (tmp_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
-			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
-		end			
-
-	add_query_interface is
+	add_query_interface (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add function 'QueryInterface'
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
@@ -1191,16 +1120,14 @@ feature {NONE} -- Implementation
 				tmp_body.append (Space_open_parenthesis)
 				tmp_body.append (Riid)
 				tmp_body.append (C_equal)
-				tmp_body.append (Iid_type)
-				tmp_body.append (Underscore)
-				tmp_body.append (Idispatch_type)
+				tmp_body.append (iid_name (Idispatch_type))
 				tmp_body.append (Close_parenthesis)
 				tmp_body.append (New_line_tab_tab)
 				tmp_body.append (Star_ppv)
 				tmp_body.append (Space_equal_space)
 				tmp_body.append (Static_cast)
 				tmp_body.append (Less)
-				tmp_body.append (dispatch_interface_name)
+				tmp_body.append (default_dispinterface_name (a_coclass_descriptor))
 				tmp_body.append (Asterisk)
 				tmp_body.append (More)
 				tmp_body.append (Open_parenthesis)
@@ -1221,9 +1148,7 @@ feature {NONE} -- Implementation
 				tmp_body.append (Space_open_parenthesis)
 				tmp_body.append (Riid)
 				tmp_body.append (C_equal)
-				tmp_body.append (Iid_type)
-				tmp_body.append (Underscore)
-				tmp_body.append (interface_names.item)
+				tmp_body.append (iid_name (interface_names.item))
 				tmp_body.append (Close_parenthesis)
 				tmp_body.append (New_line_tab_tab)
 				tmp_body.append (Star_ppv)
@@ -1316,6 +1241,7 @@ feature {NONE} -- Implementation
 			-- Code to check whether type info exist
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_defualt_interface: default_dispinterface_name (a_coclass_descriptor) /= Void
 		local
 			tmp_path: STRING
 			counter: INTEGER
@@ -1344,7 +1270,8 @@ feature {NONE} -- Implementation
 			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
-			-- ITypeLib *pTypeLib = 0
+
+			-- ITypeLib *pTypeLib = 0;
 			Result.append (Type_lib_type)
 			Result.append (Type_lib_variable_name)
 			Result.append (Space_equal_space)
@@ -1401,7 +1328,7 @@ feature {NONE} -- Implementation
 			Result.append (Struct_selection_operator)
 			Result.append (Get_type_info_of_guid)
 			Result.append (Space_open_parenthesis)
-			Result.append (clsid_name(a_coclass_descriptor.c_type_name))
+			Result.append (iid_name (default_dispinterface_name (a_coclass_descriptor)))
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_info_variable_name)
@@ -1430,6 +1357,21 @@ feature {NONE} -- Implementation
 			Result.append (Close_curly_brace)
 			Result.append (New_line_tab)
 		
+		end
+
+	default_dispinterface_name (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
+			-- Name of default dispinterface.
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+		do
+			if 
+				a_coclass_descriptor.default_dispinterface_name /= Void and then
+				not a_coclass_descriptor.default_dispinterface_name.empty
+			then
+				Result := clone (a_coclass_descriptor.default_dispinterface_name)
+			elseif (dispinterface_names /= Void) then
+				Result := clone (dispinterface_names.first)
+			end
 		end
 
 	add_release_function is
@@ -1462,6 +1404,16 @@ feature {NONE} -- Implementation
 			tmp_body.append (Zero)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab)
+
+			if dispatch_interface then
+				tmp_body.append (Type_info_variable_name)
+				tmp_body.append (Struct_selection_operator)
+				tmp_body.append ("Release")
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab_tab)
+			end
 
 			tmp_body.append (Delete)
 			tmp_body.append (Space)

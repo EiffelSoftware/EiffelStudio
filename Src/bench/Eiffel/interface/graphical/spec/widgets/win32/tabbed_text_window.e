@@ -42,7 +42,6 @@ creation
 
 feature -- Access
 
-	--implementation: TABBED_TEXT_IMP
-	implementation: TABBED_TEXT_I -- VISIONLITE
+	implementation: TABBED_TEXT_I
 
 end -- class TABBED_TEXT_WINDOW

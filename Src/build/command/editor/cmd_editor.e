@@ -5,7 +5,8 @@ inherit
 	EB_TOP_SHELL
 		rename
 			make as top_shell_create,
-			destroy as shell_destroy
+			destroy as shell_destroy,
+			realize as shell_realize
 		export
 			{NONE} all
 		redefine
@@ -13,9 +14,9 @@ inherit
 		end
 	EB_TOP_SHELL
 		redefine
-			make, destroy,set_geometry
+			make, destroy, set_geometry, realize
 		select
-			make, destroy
+			make, destroy, realize
 		end
 	COMMAND;
 	WINDOWS;
@@ -33,19 +34,40 @@ creation
 
 	make
 
-feature {NONE, CMD_INH_HOLE}
+feature {NONE, CMD_ED_POPUP_CLASS_NAME, CMD_INH_HOLE, CMD_EDIT_HOLE, CMD_ED_GENERATE}
 
 	-- Currently edited command.
 	-- Void if `current_command' is
 	-- not editable.
 	edited_command: USER_CMD
 
+	update_user_eiffel_text_from_disk is
+		require
+			editing_user_cmd: edited_command /= Void
+		do
+			if realized then
+				edited_command.retrieve_text_from_disk;
+				text_editor.set_text (edited_command.eiffel_text)
+			end;
+		end;
+ 
 feature -- Geometry
 
 	set_geometry is
 		do
 			set_size (Resources.cmd_type_ed_width,
 					Resources.cmd_type_ed_height)
+		end;
+
+	realize is
+		do
+			shell_realize;
+			if edited_command = Void then
+				inherit_hole.hide;
+				generate_button.hide;
+			else
+				update_user_eiffel_text_from_disk
+			end
 		end;
  
 feature 
@@ -70,10 +92,10 @@ feature -- Editing
 	destroy is
 		do
 			shell_destroy;
+			trash_hole.unregister;
 			argument_hole.unregister;
 			edit_hole.unregister;
 			inherit_hole.unregister;
-			instance_hole.unregister;
 			arguments.unregister_holes;
 			labels.unregister_holes;
 		end;
@@ -81,9 +103,6 @@ feature -- Editing
 	close is
 		-- Close Current editor
 		do
-			if edited_command /= Void then
-				edited_command.save
-			end
 			clear;
 			window_mgr.close (Current)
 		end
@@ -99,6 +118,7 @@ feature -- Editing
 			text_editor.set_text ("")
 			current_command := Void
 			edited_command := Void
+			edit_hole.set_empty_symbol		
 		end
 
 	empty: BOOLEAN is
@@ -122,9 +142,11 @@ feature -- Editing
 			pr_cmd ?= cmd
 			save_previous_command
 			if not (ud_cmd = Void) then
-				set_editable_command (ud_cmd)
+				set_editable_command (ud_cmd);
+				edit_hole.set_full_symbol
 			elseif not (pr_cmd = Void) then
 				set_read_only_command (pr_cmd)
+				edit_hole.set_full_symbol
 			end;
 			update_title
 		end;
@@ -153,13 +175,21 @@ feature {NONE}
 			current_command := cmd
 			arguments.set (cmd.arguments)
 			labels.set (cmd.labels)
-			text_editor.set_text (cmd.eiffel_text)
+			update_user_eiffel_text_from_disk
 			current_command.set_editor (Current)
 			text_editor.set_editable
 			edited_command.set_arguments (arguments)
 			edited_command.set_labels (labels)
-			if not inherit_hole.managed then
-				inherit_hole.manage
+			if edited_command.undoable then
+				undoable_t.set_toggle_on
+			else
+				undoable_t.set_toggle_off
+			end
+			if inherit_hole.realized and then 
+				not inherit_hole.shown 
+			then
+			 	inherit_hole.show;
+				generate_button.show;
 			end
 		end
  
@@ -176,17 +206,23 @@ feature {NONE}
 			text_editor.set_text (cmd.eiffel_text)
 			current_command.set_editor (Current)
 			text_editor.set_read_only
-			inherit_hole.unmanage 
-		end
- 
+			if inherit_hole.realized and then 
+				inherit_hole.shown 
+			then
+			 	inherit_hole.hide;
+				generate_button.hide;
+			end
+		end;
+
 	save_previous_command is
 			-- Save values of currently
 			-- edited command.
 		do
 			if edited_command /= Void then
 				edited_command.save
+				edited_command.save_to_disk
 			end
-			if not (current_command = Void) then
+			if current_command /= Void then
 				current_command.reset
 			end
 		end
@@ -201,7 +237,7 @@ feature -- Argument
 			add_argument_cmd: CMD_ADD_ARGUMENT
 		do
 			if edited_command /= Void then
-				if edited_command.has_instances then
+				if edited_command.has_descendents then
 					popup_error_box (Messages.instance_add_arg_er)
 				else
 					edited_command.add_argument (ts)
@@ -215,8 +251,8 @@ feature -- Argument
 		local
 			remove_argument_cmd: CMD_CUT_ARGUMENT
 		do
-			if not (edited_command = Void) then
-				if edited_command.has_instances then
+			if edited_command /= Void then
+				if edited_command.has_descendents then
 					popup_error_box (Messages.instance_rem_arg_er)
 				else
 					edited_command.remove_argument (a)
@@ -230,10 +266,12 @@ feature -- Labels
 			-- Add a label to currently
 			-- edited command.
 		do
-			if
-				not ((edited_command = Void))
-			then
-				edited_command.add_label (label_text.text)
+			if edited_command /= Void then
+				if edited_command.has_descendents then
+					popup_error_box (Messages.instance_add_label_er)
+				else
+					edited_command.add_label (label_text.text)
+				end
 			else
 				popup_error_box (Messages.add_label_er)
 			end
@@ -244,7 +282,11 @@ feature -- Labels
 			-- of currently edited command.
 		do
 			if edited_command /= Void then
-				edited_command.remove_label (l)
+				if edited_command.has_descendents then
+					popup_error_box (Messages.instance_rem_label_er)
+				else
+					edited_command.remove_label (l)
+				end
 			end
 		end
 
@@ -274,9 +316,7 @@ feature -- Parent
  
 	remove_parent is
 		do
-			if
-				not (edited_command = Void)
-			then
+			if edited_command /= Void then
 				if
 					edited_command.has_instances and
 					not edited_command.parent_type.arguments.empty
@@ -311,6 +351,7 @@ feature {NONE} -- Interface
 			-- Stone representing currently 
 			-- edited command
 
+	trash_hole: CUT_HOLE
 	
 feature {NONE}
 
@@ -330,13 +371,18 @@ feature
 
 feature {NONE}
 
-	instance_hole: CMD_ED_INST_ED_H
+	instance_button: CMD_ED_CREATE_INST
+	generate_button: CMD_ED_GENERATE
+	popup_cname: CMD_ED_POPUP_CLASS_NAME
+	popup_instances_button: CMD_ED_POPUP_INST
+	popup_contexts_button: CMD_ED_POPUP_CONTEXT
 
 			-- Close button associated with
 			-- Current window
 
 	form: FORM
 	edit_bar_form, argument_form, label_form: FORM
+	middle_form: FORM
 	new_label: LABEL
 	first_separator: SEPARATOR
 	label_sw, argument_sw: SCROLLED_W
@@ -352,16 +398,22 @@ feature {NONE}
 		do
 			top_shell_create (a_name, a_screen)
 			!! form.make (Widget_names.form, Current)
+			!! middle_form.make (Widget_names.form, form)
 			!! text_editor.make (Widget_names.text, form)
 			!! edit_bar_form.make (Widget_names.form1, form)
-			!! argument_form.make (Widget_names.form2, form)
-			!! label_form.make (Widget_names.form3, form)
+			!! argument_form.make (Widget_names.form2, middle_form)
+			!! label_form.make (Widget_names.form3, middle_form)
 			!! edit_hole.make (Current, edit_bar_form)
 			!! first_separator.make (Widget_names.separator, form)
 			!! undoable_t.make (Widget_names.undoable_label, edit_bar_form)
 			!! focus_label.make (edit_bar_form);
+			!! trash_hole.make (edit_bar_form, focus_label);
+			!! instance_button.make (Current, edit_bar_form)
+			!! popup_contexts_button.make (Current, edit_bar_form)
+			!! generate_button.make (Current, edit_bar_form)
+			!! popup_cname.make (Current, edit_bar_form)
+			!! popup_instances_button.make (Current, edit_bar_form)
 			!! inherit_hole.make (Current, edit_bar_form)
-			!! instance_hole.make (Current, edit_bar_form)
 			!! close_b.make (Current, edit_bar_form, focus_label)
 			!! argument_hole.make (Current, argument_form)
 			!! argument_sw.make (Widget_names.scroll1, argument_form)
@@ -372,52 +424,18 @@ feature {NONE}
 			!! labels.make (Widget_names.icon_box3, label_sw, Current)
 			!! del_com.make (Current);
 			initialize_window_attributes;
-			inherit_hole.unmanage;
 			set_delete_command (del_com);
 		end
 
 	perform_attachments is
 		-- effect a resize policy
 		do
-			form.set_fraction_base (2);
 			form.attach_top (edit_bar_form, 0)
 			form.attach_right (edit_bar_form, 0)
 			form.attach_left (edit_bar_form, 0)
 			form.attach_top_widget (edit_bar_form, first_separator, 2)
 			form.attach_left (first_separator, 0)
 			form.attach_right (first_separator, 0)
-
-			form.attach_right_position (argument_form, 1)
-			form.attach_left_position (label_form, 1)
-			form.attach_left (argument_form, 0)
-			form.attach_right (label_form, 0)
-			form.attach_top_widget (first_separator, label_form, 2)
-			form.attach_top_widget (first_separator, argument_form, 2)
-			form.attach_top_widget (argument_form, text_editor, 2)
-			form.attach_top_widget (label_form, text_editor, 2)
-			form.attach_bottom (text_editor, 0)
-			form.attach_right (text_editor, 0)
-			form.attach_left (text_editor, 0)
-
-			edit_bar_form.attach_left (edit_hole, 0)
-			edit_bar_form.attach_top (edit_hole, 0)
-			edit_bar_form.attach_top (close_b, 0)
-			edit_bar_form.attach_top (inherit_hole, 0)
-			edit_bar_form.attach_top (instance_hole, 0)
-			edit_bar_form.attach_top (undoable_t, 0)
-			edit_bar_form.attach_top (focus_label, 0)
-			edit_bar_form.attach_bottom (focus_label, 0)
-			edit_bar_form.attach_bottom (edit_hole, 0)
-			edit_bar_form.attach_bottom (inherit_hole, 0)
-			edit_bar_form.attach_bottom (close_b, 0)
-			edit_bar_form.attach_bottom (instance_hole, 0)
-			edit_bar_form.attach_left_widget (edit_hole, inherit_hole, 0)
-			edit_bar_form.attach_left_widget (inherit_hole, instance_hole, 0)
-			edit_bar_form.attach_left_widget (instance_hole, focus_label, 0);
-			edit_bar_form.attach_right_widget (undoable_t, focus_label, 0)
-			edit_bar_form.attach_right_widget (close_b, undoable_t, 0)
-			edit_bar_form.attach_top (close_b, 0)
-			edit_bar_form.attach_right (close_b, 0)
 
 			argument_form.attach_top (argument_hole, 0)
 			argument_form.attach_left (argument_hole, 0)
@@ -435,6 +453,58 @@ feature {NONE}
 			label_form.attach_left (label_sw, 0)
 			label_form.attach_right (label_sw, 0);
 			label_form.attach_bottom (label_sw, 0);
+
+			middle_form.set_fraction_base (2);
+			middle_form.attach_right_position (argument_form, 1)
+			middle_form.attach_left_position (label_form, 1)
+			middle_form.attach_left (argument_form, 0)
+			middle_form.attach_right (label_form, 0)
+			middle_form.attach_bottom (argument_form, 0)
+			middle_form.attach_bottom (label_form, 0)
+
+			form.attach_top_widget (first_separator, middle_form, 2)
+			form.attach_top_widget (middle_form, text_editor, 2)
+			form.attach_left (middle_form, 0)
+			form.attach_right (middle_form, 0)
+			form.attach_bottom (text_editor, 0)
+			form.attach_right (text_editor, 0)
+			form.attach_left (text_editor, 0)
+
+			edit_bar_form.attach_left (edit_hole, 0)
+			edit_bar_form.attach_top (edit_hole, 0)
+			edit_bar_form.attach_top (close_b, 0)
+			edit_bar_form.attach_top (trash_hole, 0)
+			edit_bar_form.attach_top (inherit_hole, 0)
+			edit_bar_form.attach_top (instance_button, 0)
+			edit_bar_form.attach_top (generate_button, 0)
+			edit_bar_form.attach_top (popup_cname, 0)
+			edit_bar_form.attach_top (popup_contexts_button, 0)
+			edit_bar_form.attach_top (popup_instances_button, 0)
+			edit_bar_form.attach_top (undoable_t, 0)
+			edit_bar_form.attach_top (focus_label, 0)
+			edit_bar_form.attach_bottom (focus_label, 0)
+			edit_bar_form.attach_bottom (edit_hole, 0)
+			edit_bar_form.attach_bottom (inherit_hole, 0)
+			edit_bar_form.attach_bottom (close_b, 0)
+			edit_bar_form.attach_bottom (instance_button, 0)
+			edit_bar_form.attach_bottom (generate_button, 0)
+			edit_bar_form.attach_bottom (popup_cname, 0)
+			edit_bar_form.attach_bottom (trash_hole, 0)
+			edit_bar_form.attach_bottom (popup_contexts_button, 0)
+			edit_bar_form.attach_bottom (popup_instances_button, 0)
+			edit_bar_form.attach_left_widget (edit_hole, inherit_hole, 0)
+			edit_bar_form.attach_left_widget (inherit_hole, trash_hole, 0);
+			edit_bar_form.attach_left_widget (trash_hole, focus_label, 0);
+			edit_bar_form.attach_right_widget (undoable_t, focus_label, 0)
+			edit_bar_form.attach_right_widget (generate_button, undoable_t, 0)
+			edit_bar_form.attach_right_widget (popup_cname, generate_button, 0)
+			edit_bar_form.attach_right_widget (instance_button, popup_cname, 0)
+			edit_bar_form.attach_right_widget (popup_instances_button, instance_button, 0)
+			edit_bar_form.attach_right_widget (popup_contexts_button, popup_instances_button, 0)
+			edit_bar_form.attach_right_widget (close_b, popup_contexts_button, 0)
+			edit_bar_form.attach_top (close_b, 0)
+			edit_bar_form.attach_right (close_b, 0)
+
 		end
 
 	set_values is

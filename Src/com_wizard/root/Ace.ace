@@ -11,17 +11,7 @@ root
 
 default
 	assertion (all)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
 	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
-
 
 cluster
 	
@@ -74,6 +64,8 @@ cluster
 			ECOM_TYPE_INFO;
 		end;
 	ecom_library_structures(ecom_library):	"$\structures"
+		option
+			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
 			ECOM_TYPE_LIB_FIND_NAME_RESULT;
 			ECOM_SAFE_ARRAY_BOUND

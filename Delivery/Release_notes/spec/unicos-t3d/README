@@ -15,14 +15,7 @@ the <your_system_path>/EIFGEN/F_code .
 
 PORTABILITY OF GENERATED C CODE
 -------------------------------
-
-The frozen C-code (in EIFGEN/W_code) is portable between platforms only 
-if the length of the C integer is the same as the platform where the
-C code has been generated. Since an C integer (type int) is 8 bytes 
-length. You need to compile the Eiffel code on a system with the same 
-length of int. (So far, all the Eiffel compilers are running on platforms with
-4-bytes-length-integers.
-
+Only the Finalized run-time in non MT-mode is porovided.
 The Finalized C code (in EIFGEN/F_code) is fully portable between all the 
 supported platforms.
 
@@ -43,3 +36,17 @@ Updating PLATFORM:
 
 The tests on CRAY have been performed with this settings.
 
+BUGS ON CRAYs
+-------------
+
+the loader `ld' does not work properly, we use the archiver `ar' instead. Because of that, you cannot generate automatically the CECIL library.
+
+MULTITHREADED MODE
+-----------------
+
+The pthread library is not provided on Unicos-t3d, then there is no multithreaded run-time.
+
+SHARED LIBRARY
+--------------
+
+There is no shared Eiffel run-time library available.

@@ -1,12 +1,10 @@
 <document title=".NET Assembly Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>.NET Assembly Tab
 		</heading>
-		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generationenabled.</paragraph>
+		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generation enabled.</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/dotnet_assembly_tab.png</url>
@@ -32,7 +30,7 @@
 		<heading>
 			<size>2</size>Editing Assemblies
 		</heading>
-		<paragraph>To edit the name of the Eiffel cluster or prefix text associated with a particular assembly simply double-click on the existing text(or where the text would be if it is empty). A text box will appear allowing you to edit the assembly name. Here is an example of editing a cluster name for an assembly.</paragraph>
+		<paragraph>To edit the name of the Eiffel cluster or prefix text associated with a particular assembly simply double-click on the existing text (or where the text would be if it is empty). A text box will appear allowing you to edit the assembly name. Here is an example of editing a cluster name for an assembly.</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/project_settings/dotnet_assembly_tab_editing.png</url>

@@ -32,7 +32,6 @@ feature -- Type check, byte code and dead code removal
 		local
 			internal_name: ID_AS;
 			access_address: ACCESS_ADDRESS_AS;
-			hector_type: HECTOR_A;
 			id_type: TYPE_A;
 		do
 				-- Initialization of the type stack

@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected in a single
+			-- Currently selected item in a single
 			-- selection mode.
 		require
 			single_selection: not is_multiple_selection
@@ -294,8 +294,8 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.32  2000/03/02 18:40:42  rogers
---| ev_multi_column_list.e
+--| Revision 1.33  2000/03/02 18:45:54  rogers
+--| Minor comment change. Previous revision comment should have read : renamed set_multiple_selection -> enable_multiple_selection, set_single_selection -> disable_multiple_selection, set_left_alignment -> align_text_left, set_right_alignment to align_text_right, set_cent_alignment -> align_text_right.
 --|
 --| Revision 1.31  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq

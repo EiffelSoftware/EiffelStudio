@@ -9,19 +9,22 @@ class EWB_CASE_STORAGE
 
 inherit
 
-	EWB_SYSTEM
+	EWB_CMD
 		rename
 			name as storage_cmd_name,
 			help_message as storage_help,
 			abbreviation as storage_abb
-		end
+		end;
+	WINDOWS
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_STORE_CASE_INFO is
-			-- Associated system command to be executed
-		do
-			!! Result.make_with_window (output_window)
-		end;
+    execute is
+        local
+            cmd: E_STORE_CASE_INFO
+        do
+			!! cmd.make (output_window, Reverse_engineering_window)
+			cmd.execute;
+        end;
 
 end -- class EWB_CASE_STORAGE

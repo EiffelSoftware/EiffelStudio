@@ -40,7 +40,7 @@ feature
 		local
 			ms_win: STRING
 		do
-			ms_win := "MS_WINDOW";
+			ms_win := "MS_WINDOWS";
 			if not ms_win.is_equal (toolkit.name) then
 				add_common_callbacks (widget.button);
 				initialize_transport;
@@ -57,7 +57,7 @@ feature
 		local
 			ms_win: STRING
 		do
-			ms_win := "MS_WINDOW";
+			ms_win := "MS_WINDOWS";
 			if not ms_win.is_equal (toolkit.name) then
 				widget.button.remove_pointer_motion_action 
 					(Eb_selection_mgr, first_arg)

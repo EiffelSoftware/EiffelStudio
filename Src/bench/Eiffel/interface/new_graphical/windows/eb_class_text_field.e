@@ -62,10 +62,10 @@ feature {NONE} -- Execution
 			if class_i /= Void then
 				if class_i.compiled then
 					create classc_stone.make (class_i.compiled_class)
-					tool.process_class (classc_stone)
+					tool.set_stone (classc_stone)
 				else
 					create classi_stone.make (class_i)
-					tool.process_classi (classi_stone)
+					tool.set_stone (classi_stone)
 				end
 			end
 		end

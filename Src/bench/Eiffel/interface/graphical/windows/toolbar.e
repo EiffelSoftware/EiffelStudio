@@ -71,49 +71,21 @@ feature {NONE} -- Implementation
 			sibs: ARRAYED_LIST [WIDGET];
 		do
 			sibs := parent.children;
-			sibs.finish
+				-- sibs are in reverse order of creation
 			from
+				sibs.start
 			until
-				sibs.item = Current or else sibs.before
+				sibs.item = Current or else sibs.after
 			loop
-				sibs.back
+				sibs.forth
 			end;
-			if not sibs.before then
-				sibs.back
-				if not sibs.before then
-					s ?= sibs.item
-					if s /= Void then
-						if b then
-							sibs.back;
-							sibs.back;
-							if sibs.before then
-								sibs.forth;
-								if sibs.item.managed then
-									s.manage
-								end
-							end
-						else
-							s.unmanage
-						end
-					end
+			if not sibs.after then
+				sibs.forth
+				s ?= sibs.item; -- Cannot fail
+				if b then
+					s.manage
 				else
-					sibs.forth;
-					sibs.forth;
-					s ?= sibs.item
-					if s /= Void then
-						if b then
-							sibs.forth;
-							sibs.forth;
-							if sibs.after then
-								sibs.back;
-								if sibs.item.managed then
-									s.manage
-								end
-							end
-						else
-							s.unmanage
-						end
-					end
+					s.unmanage
 				end
 			end
 		end

@@ -74,7 +74,7 @@ feature {EB_PRINTER} -- Basic operations
 				check
 					imp /= Void
 				end
-				form.set_height (imp.wel_font.point)
+				form.set_height_in_points (imp.wel_font.point)
 				rich.set_character_format_all (form)
 			end
 			txt := interface.text.image

@@ -1,0 +1,8 @@
+# Action sequence definitions
+# NOTE: This is not supported: x,y: INTEGER
+#       Do this instead: x: INTEGER; y: INTEGER
+
+birthday: what to do on a birthday; age: INTEGER; name: STRING
+pointer_button: for mouse click events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+pointer_motion: for mouse movment events; x: INTEGER; y: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+destroy: for widget destruction events;

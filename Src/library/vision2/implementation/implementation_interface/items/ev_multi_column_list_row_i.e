@@ -1,7 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision multi-column list row, implementation interface.";
+		"Eiffel Vision multi column list row. Implementation interface."
+	status: "See notice at end of class"
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -9,30 +9,27 @@ deferred class
 	EV_MULTI_COLUMN_LIST_ROW_I
 
 inherit
-	EV_COMPOSED_ITEM_I
-		rename
-			count as columns,
-			set_count as set_columns
+	EV_ITEM_I
 		redefine
-			parent,
 			interface
 		end
 
-feature -- Access
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
 
-	parent: EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW] is
-			-- The parent of the Current widget
-			-- Can be void.
-		do
-			Result ?= {EV_COMPOSED_ITEM_I} Precursor
+	EV_PIXMAPABLE_I
+		redefine
+			interface
 		end
 
 feature -- Status report
-	
+
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
-			has_parent: parent_imp /= Void
+			has_parent: parent /= Void
 		deferred
 		end
 
@@ -40,8 +37,9 @@ feature -- Status setting
 
 	enable_select is
 			-- Select Current.
+			-- Must be in a multi column list.
 		require
-			has_parent: parent_imp /= Void
+			has_parent: parent /= Void
 		deferred
 		ensure
 			selected: is_selected
@@ -49,23 +47,27 @@ feature -- Status setting
 
 	disable_select is
 			-- Deselect Current.
+			-- Must be in a multi column list.
 		require
-			has_parent: parent_imp /= Void
+			has_parent: parent /= Void
 		deferred
 		ensure
 			not_selected: not is_selected
 		end
-
+		
 	toggle is
 			-- Change the state of selection of the item.
+			-- Must be in a multi column list.
 		require
-			has_parent: parent_imp /= Void
-		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
+			has_parent: parent /= Void
+		deferred
+		end
+
+feature -- Basic operations
+
+	update is
+			-- Layout of row has been changed.
+		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -95,6 +97,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/23 18:17:35  brendel
+--| Revised in compliance with new interface.
+--|
 --| Revision 1.32  2000/03/10 01:26:41  king
 --| Removed inheritence from PND, moved up to COMPOSED_ITEM
 --|

@@ -40,5 +40,7 @@ feature {NONE}
 		end;
 
 	failed: BOOLEAN;
-
+	
+invariant
+	translation_not_void: translation /= Void
 end

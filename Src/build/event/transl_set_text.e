@@ -4,6 +4,9 @@ class TRANSL_SET_TEXT
 inherit
 
 	TRANSL_COMMAND
+
+creation
+	make
 	
 feature 
 
@@ -13,7 +16,16 @@ feature
 		do
 			text := clone (s);
 		end
-
+	
+feature {NONE} --Initialization
+	
+	make (txt: STRING; transl: TRANSLATION) is
+		do
+			set_text(txt)
+			execute(transl)
+		end
+	
+	
 feature {NONE}
 
 	old_text, text: STRING;

@@ -6,6 +6,9 @@ inherit
 	TRANSL_COMMAND;
 	SHARED_TRANSLATIONS
 	
+creation
+	execute
+	
 feature 
 
 	c_name: STRING is "Add Translation";

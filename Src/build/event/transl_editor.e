@@ -187,10 +187,8 @@ feature {NONE}
 					or (argument = save_b)) and then
 					((not trans_text.text.empty) and then
 					(not equal (trans_text.text, edited_translation.text))) then
-					!!transl_set_text;
 					update_title;
-					transl_set_text.set_text (trans_text.text);
-					transl_set_text.execute (edited_translation);
+					!!transl_set_text.make (trans_text.text, edited_translation)
 				elseif (argument = negate_t) then
 					replace_trans_text (negate_t.state, "~")
 				elseif (argument = only_t) then

@@ -98,8 +98,8 @@ feature
 			text_field_form: TEXT_FIELD_FORM
 			drawing_box_form: DRAWING_BOX_FORM
 			bull_resize_form: BULL_RESIZE_FORM
-			grid_form: GRID_FORM;
-			del_com: DELETE_WINDOW;
+			grid_form: GRID_FORM
+			del_com: DELETE_WINDOW
 			focus_area_form: FORM
 		do
 			!!form_list.make (1, Context_const.total_nbr_of_forms);

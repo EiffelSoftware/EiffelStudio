@@ -76,11 +76,10 @@ feature {NONE}
 			transl_add: TRANSL_ADD;
 			edited_translation: TRANSLATION
 		do
-			!!transl_add;
 			!!edited_translation.make;
 			edited_translation.generate_internal_name;
 			editor.set_edited_translation (edited_translation);
-			transl_add.execute (edited_translation);
+			!!transl_add.execute (edited_translation);
 		end;
 
 feature

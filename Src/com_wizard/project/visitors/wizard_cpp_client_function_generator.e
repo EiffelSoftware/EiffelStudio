@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (interface_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -31,9 +31,11 @@ feature -- Basic operations
 			func_desc := a_descriptor
 
 			-- Set function name used in ccom
-			create ccom_func_name.make (0)
-			ccom_func_name.append (external_feature_name (func_desc.name))
-
+			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
+				ccom_func_name := external_feature_name (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
+			else
+				ccom_func_name := external_feature_name (a_descriptor.interface_eiffel_name)
+			end
 			ccom_feature_writer.set_name (ccom_func_name)
 			ccom_feature_writer.set_comment (func_desc.description)
 

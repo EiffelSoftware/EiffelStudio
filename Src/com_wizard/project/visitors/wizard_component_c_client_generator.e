@@ -54,7 +54,7 @@ feature -- Basic operations
 				loop
 					create property_generator
 
-					property_generator.generate (a_desc.name, a_desc.lcid, a_desc.properties.item)
+					property_generator.generate (a_component_descriptor, a_desc.name, a_desc.lcid, a_desc.properties.item)
 					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
 					if not is_varflag_freadonly (a_desc.properties.item.var_flags) then
 						cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
@@ -74,7 +74,7 @@ feature -- Basic operations
 
 						if a_desc.dual then
 							create dual_func_generator
-							dual_func_generator.generate (a_desc.name, a_desc.functions.item)
+							dual_func_generator.generate (a_component_descriptor, a_desc.name, a_desc.functions.item)
 							cpp_class_writer.add_function (dual_func_generator.ccom_feature_writer, Public)
 							from
 								dual_func_generator.c_header_files.start
@@ -88,12 +88,12 @@ feature -- Basic operations
 							end
 						elseif a_desc.dispinterface then
 							create disp_func_generator
-							disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
+							disp_func_generator.generate (a_component_descriptor, a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
 							cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
 
 						else
 							create function_generator
-							function_generator.generate (a_desc.name, a_desc.functions.item)
+							function_generator.generate (a_component_descriptor, a_desc.name, a_desc.functions.item)
 							cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
 							from
 								function_generator.c_header_files.start

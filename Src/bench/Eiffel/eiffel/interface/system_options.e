@@ -340,11 +340,23 @@ feature -- Update
 			private_melt := True
 		end
 
+	set_finalize is
+			-- Force finalization of system.
+		do
+			private_finalize := True
+		ensure
+			finalize_set: private_finalize
+		end
+
 feature {SYSTEM_I} -- Implementation
 
 	private_freeze: BOOLEAN
 			-- Freeze set if externals or new derivation
 			-- of special is generated
+
+	private_finalize: BOOLEAN
+			-- Force a finalization even if no classes have changed.
+			-- Used when Ace file has changed.
 
 	private_melt: BOOLEAN
 			-- Force melt process when only Ace file has been changed.

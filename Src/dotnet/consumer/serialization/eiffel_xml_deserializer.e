@@ -42,21 +42,31 @@ feature -- Basic Operations
 			name: STRING
 			dt: INTEGER
 			name_att: SYSTEM_STRING
+			bin_des: EIFFEL_BINARY_DESERIALIZER
+			ser: EIFFEL_BINARY_SERIALIZER
 		do
-			if not retried then		
-				last_error := No_error
-				last_error_context := Void
-				create xml_reader.make_from_url (path.to_cil)
-				xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
-				read_next
-				if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
-					read_next
-					deserialized_object := reference_from_xml
+			if not retried then
+				create bin_des
+				bin_des.deserialize (path)
+				if bin_des.deserialized_object /= Void then
+					deserialized_object := bin_des.deserialized_object
 				else
-					last_error := Invalid_xml_file_error
-					last_error_context := clone (path)
+					last_error := No_error
+					last_error_context := Void
+					create xml_reader.make_from_url (path.to_cil)
+					xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
+					read_next
+					if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
+						read_next
+						deserialized_object := reference_from_xml
+						create ser
+						ser.serialize (deserialized_object, path)
+					else
+						last_error := Invalid_xml_file_error
+						last_error_context := clone (path)
+					end
+					xml_reader.close
 				end
-				xml_reader.close
 			end
 		ensure
 			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void

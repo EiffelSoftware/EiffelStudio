@@ -29,28 +29,17 @@ feature -- Access
 	No_target: INTEGER is 0x03000004
 			-- No target assembly specified
 
-	No_destination_if_put_in_eac: INTEGER is 0x03000005
-			-- Both /d and /e options used
-
-	Non_signed_assembly: INTEGER is 0x03000006
-			-- Try to put unsigned assembly in EAC
-	
 	Invalid_assembly: INTEGER is 0x03000007
-			-- Specified file is not a valid .NET assembly
+			-- Specified file is not a valid .NET assembly	
 
-	Eac_not_initialized: INTEGER is 0x03000008
-			-- EAC not initialized
-			
-	Cannot_force_local_and_eac: INTEGER is 0x03000009
-			-- Cannot force local and put in EAC
-			
-	Dependancies_must_be_generated: INTEGER is 0x03000010
-			-- EAC dependancies must be generated
-			
-	Cannot_force_and_exclude_references: INTEGER is 0x03000011
-	
 	Version_should_be_specified: INTEGER is 0x03000012
 			-- Version of the CLR runtime needs to be specified
+			
+	invalid_version_specified: INTEGER is 0x03000013
+			-- Specified CLR version number is invalid
+			
+	no_operation: INTEGER is 0x03000014
+			-- No operation to perform
 
 feature {NONE} -- Implementation
 
@@ -63,14 +52,10 @@ feature {NONE} -- Implementation
 			Result.put ("Invalid destination path", Invalid_destination_path)
 			Result.put ("Invalid target assembly path", Invalid_target_path)
 			Result.put ("Missing target assembly", No_target)
-			Result.put ("Cannot specify destination with '/a' option", No_destination_if_put_in_eac)
-			Result.put ("Cannot put unsigned assemblies in cache", Non_signed_assembly)
 			Result.put ("Specified file is not a valid .NET assembly", Invalid_assembly)
-			Result.put ("EAC not initialized, run 'emitter /init' first", Eac_not_initialized)
-			Result.put ("Assemblies that are added to EAC, cannot have their dependancies consumed locally", Cannot_force_local_and_eac)
-			Result.put ("Assemblies that are added to EAC, must have their dependacies consumed", Dependancies_must_be_generated)
-			Result.put ("Cannot force assembly dependancies into local path if no dependancies are consumed", Cannot_force_and_exclude_references)
-			Result.put ("Version of the CLR runtime must be specified with `clr_version' option", Version_should_be_specified)
+			Result.put ("Version of the CLR runtime must be specified with `ver[sion]' option", Version_should_be_specified)
+			Result.put ("Invalid CLR version number specified with `ver[sion]' option", invalid_version_specified)
+			Result.put ("No operation specified.", no_operation)
 		end
 
 end -- class ARGUMENT_PARSER_ERRORS

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-		
+
 <TITLE>HASH_TABLE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -28,7 +28,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
@@ -36,11 +36,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_current_keys"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_current_keys"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="sample/../../reference/kernel/array.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_count">count</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/10_kernel/array.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_count">count</A><BR>
 
 </A><BR>
 
@@ -56,11 +56,11 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_position"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_position">position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer.html">INTEGER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_position"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_position">position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp;<BR>
 
@@ -68,7 +68,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer.html">INTEGER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp;<BR>
 
@@ -76,35 +76,35 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_conflict"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_conflict"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_extendible"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_extendible"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">False</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">False</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_inserted"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_inserted"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_prunable"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_prunable"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
@@ -112,23 +112,23 @@
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_removed"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_removed"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_replaced"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_replaced"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_valid_key"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_valid_key"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/10_kernel/boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_if_key_is_default_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_if_key_is_default_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -140,13 +140,13 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_new_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_new_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">new</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../reference/10_kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_inserted">inserted</A> <A CLASS="ekeyword" HREF="sample/../../reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_inserted">inserted</A> <A CLASS="ekeyword" HREF="../../../reference/10_kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 

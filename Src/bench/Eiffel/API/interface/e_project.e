@@ -408,7 +408,7 @@ feature -- Element change
 			is_before_degree_3_or_0: degree_output.current_degree >= 3 or
 				else degree_output.current_degree = 0 -- case
 		do
-			Error_handler.insert_interrupt_error
+			Error_handler.insert_interrupt_error (is_compiling)
 		end;
 
 feature -- Update

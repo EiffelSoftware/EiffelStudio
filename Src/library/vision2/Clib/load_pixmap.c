@@ -785,7 +785,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	/* close the file */
 	fclose(fp);
 
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
 	sRowSize = 4 * ((width * 24 + 31) / 32);
 	pImage = (unsigned char *) malloc(sRowSize * height + 40);
 	pData = pImage;
@@ -869,8 +869,31 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			}
 		}
 #else
+	pImage = (unsigned char *) malloc(width * height * 3);
+	pData = pImage;
 
-#endif ndef EIF_WIN32
+	pAlphaImage = (unsigned char *) malloc(width * height);
+	pAlphaData = pAlphaImage;
+
+	for (row = 0; row < height; row--)
+		{
+		unsigned char *pSrc = ppImage[row];
+		unsigned long column;
+
+		for (column = 0; column < width; column++)
+			{
+			/* Copy the RGB data */
+			memcpy(pData, pSrc, 3);
+			pData += 3;
+			pSrc += 3;
+
+			/* Copy the Alpha data */
+			memcpy(pAlphaData, pSrc, 1);
+			pSrc++;
+			pAlphaData++;
+			}
+		}
+#endif // EIF_WIN32
 
 	/* Free the memory */
 	for (row = 0; row < height; row++)

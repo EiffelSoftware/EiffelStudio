@@ -57,8 +57,8 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 					item_contained_in_parent: parent_item.has (Current)
 				end
 				original_index := parent_item.index
-				parent_item.prune (Current)		
-				parent_item.go_i_th (original_index)
+				parent_item.prune (Current)
+				parent_item.go_i_th (original_index.min (parent_item.count))
 			end
 		ensure
 			parent_void: parent = Void

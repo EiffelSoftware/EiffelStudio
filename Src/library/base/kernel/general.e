@@ -60,9 +60,9 @@ feature -- Comparison
 						((some /= Void and other /= Void) and then
 						some.is_equal (other))
 		ensure
-			Result = (some = Void and other = Void) or else
+			Result = ((some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
-						some.is_equal (other))
+						some.is_equal (other)))
 		end;
 
 	frozen standard_equal (some: GENERAL; other: like some): BOOLEAN is
@@ -74,9 +74,9 @@ feature -- Comparison
 						((some /= Void and other /= Void) and then
 						some.standard_is_equal (other))
 		ensure
-			Result = (some = Void and other = Void) or else
+			Result = ((some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
-						some.standard_is_equal (other))
+						some.standard_is_equal (other)))
 		end;
 
 	deep_equal (some: GENERAL; other: like some): BOOLEAN is

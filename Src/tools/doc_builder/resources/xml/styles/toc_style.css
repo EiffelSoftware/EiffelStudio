@@ -1,0 +1,12 @@
+BODY
+{
+	font-size: 70%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+A, A.hover, A.visited, A.link
+{
+	font-size: 70%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:none;
+}

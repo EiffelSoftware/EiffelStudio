@@ -60,7 +60,8 @@ following.
 #define GST_GEN		1				/* Index for generation collection
 stats */
 #define	EIF_REFERENCE_BITS	2		/* To divide by sizeof(EIF_REFERENCE). 
-								     * Do >> EIF_REFERENCE_BITS instead. */	
+								     * Do >> EIF_REFERENCE_BITS instead. 
+									 * FIXME: is 3 in 64 bits platforms. */
 #define AGE_BITS	4		/* Number of bits to represents the age. */
 #define TENURE_MAX	(1<<AGE_BITS)	/* Non reached age */
 

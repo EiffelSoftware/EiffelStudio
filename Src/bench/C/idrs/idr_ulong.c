@@ -19,6 +19,7 @@
 */
 
 #include "idr.h"
+#include "../run-time/size.h"
 /*
 
 public bool_t idr_u_long(idrs, lp)

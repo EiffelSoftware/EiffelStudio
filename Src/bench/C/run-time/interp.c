@@ -4505,14 +4505,15 @@ char *start;
 	 */
 	case BC_ARRAY:
 		{
-			short stype, feat_id;
+			short stype, dtype, feat_id;
 			long nbr_of_items;
 			stype = get_short();		/* Get the static type*/
+			dtype = get_short();		/* Get the static type*/
 			feat_id = get_short();		/* Get the feature id*/
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
 			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
 				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
-					"BC_ARRAY", stype, feat_id, nbr_of_items);
+					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
 		}
 		break;
 

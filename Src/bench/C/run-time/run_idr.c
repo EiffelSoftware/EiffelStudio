@@ -266,11 +266,11 @@ int size;
 #if PTRSIZ == 4
 						/*if the data has come from a 8 byte */
 				*(lp + i) = lower;		/* long machine and we are only a 4 byte*/
-				if (upper & 0x80000000)
+				if (upper & 0x80000000){
 					if (lower & 0x80000000)
 						fprintf (stderr, "64 bit int truncated to 32 bit \n");
 					*(lp + (i++)) |= 0x80000000;
-				else {
+				} else {
 					i++;
 					if (upper)
 						fprintf (stderr, "64 bit int truncated to 32 bit \n");

@@ -103,7 +103,7 @@ feature -- Displayed messages in text form.
 			basic_metric: EB_METRIC_BASIC
 		do
 			if not retried then
-				f.open_read_write
+				f.open_read
 				create parser.make
 				f.start
 				f.read_stream (f.count)

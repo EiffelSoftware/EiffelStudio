@@ -138,8 +138,6 @@ int dtype;				/* Dtype of the Eiffel class */
 
 	struct ex_vect *vector = (struct ex_vect *) 0;
 
-return;
-
  	if (opt->trace_level) {
 			/* Vector is not initialized before for efficiency: if both trace and profiling are off,
 			 * there is no need to get the exception vector.

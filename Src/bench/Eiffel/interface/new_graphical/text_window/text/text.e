@@ -245,7 +245,10 @@ feature {NONE} -- Text Loading
 					-- finish loading the file on idle actions.
 				reading_text_finished := False
 			else
-				if (current_string @ current_string.count) = '%N' then
+				if
+					not current_string.is_empty and then
+					(current_string.item (current_string.count) = '%N')
+				then
 					append_line (new_line_from_lexer (""))
 				end
 				reading_text_finished := True

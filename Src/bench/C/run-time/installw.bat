@@ -1,5 +1,7 @@
-ren size.win size.h
-ren makefile.win makefile
-ren ..\config.win config.h
-ren ..\confmagi.h confmagc.h
-ren ..\idrs\makefile.win makefile
+copy size.win size.h
+copy makefile.win makefile
+copy ..\config.win config.h
+copy ..\confmagi.h confmagc.h
+copy ..\idrs\makefile.win makefile
+copy ..\platform\makefile.win makefile
+wmake

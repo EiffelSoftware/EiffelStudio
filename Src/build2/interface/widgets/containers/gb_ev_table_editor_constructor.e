@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-		EV_STOCK_COLORS
+	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
 		undefine
@@ -386,6 +386,8 @@ feature {NONE} -- Implementation
 			new_column, new_row: INTEGER
 			end_position, current_x_position, current_y_position: INTEGER
 			x, y: INTEGER
+			column_pos, row_pos, column_span, row_span: INTEGER
+			orig_column_pos, orig_row_pos, orig_column_span, orig_row_span: INTEGER
 		do
 				-- Always reset here, as generally, we will not
 				-- need to update. Only if a child is moved or resized.
@@ -393,6 +395,7 @@ feature {NONE} -- Implementation
 				-- Transform coordinates to take into account offset of actual diagram.
 			x := x_position - diagram_border
 			y := y_position - diagram_border
+				
 			if selected_item /= Void and not resizing_widget and not moving_widget then
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
 				row_position := (first.item_row_position (selected_item) - 1) * grid_size
@@ -432,25 +435,40 @@ feature {NONE} -- Implementation
 			
 			if resizing_widget then
 				
+					-- Store original values so that we only need to set
+					-- any values that changed during the resizing. These
+					-- four values will be changed during the resizing as necessary,
+					-- so that afterwards, we can use these to position the widget.
+				column_pos := first.item_column_position (selected_item)
+				row_pos := first.item_row_position (selected_item)
+				column_span := first.item_column_span (selected_item)
+				row_span := first.item_row_span (selected_item)
+				
+					-- Store the original values for comparing with the values above.
+					-- if one or more have changed, then we can reposition the
+					-- selected item.
+				orig_column_pos := column_pos
+				orig_row_pos := row_pos
+				orig_column_span := column_span
+				orig_row_span := row_span
+				
+				
 				if x_scale /= 0 then
 					if x_offset = 0 then
 						end_position := (original_column + original_column_span)
 						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
 						current_x_position := (((new_x // grid_size) + 1).max (1)).min (end_position - 1)
-						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
-							set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
-						else
-							current_x_position := first_filled_horizontal_space (selected_item, end_position - 1, first.item_row_position (selected_item), first.item_row_span (selected_item))-- + 1
-								-- We need to change the order depending on the movement that we are performing. This
-								-- ensures that we stay within valid bounds.
-						 	set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_span (selected_item))
+						if not first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
+							current_x_position := first_filled_horizontal_space (selected_item, end_position - 1, first.item_row_position (selected_item), first.item_row_span (selected_item))
 						end
+						column_pos := current_x_position
+						column_span := end_position - current_x_position
 					else
 						x := x - column_position
 						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)						
-						new_column := ((new_x // grid_size) - first.item_column_position (selected_item) + 1).min (first.columns - first.item_column_position (selected_item) + 1).max (1)--.min (first.columns - first.item_column_position (selected_item))
+						new_column := ((new_x // grid_size) - first.item_column_position (selected_item) + 1).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
 						if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column, first.item_row_span (selected_item)) then --new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
-							set_item_span (selected_item, new_column, first.item_row_span (selected_item))
+							column_span := new_column
 						end
 					end
 				end
@@ -460,23 +478,28 @@ feature {NONE} -- Implementation
 						end_position := (original_row + original_row_span)
 						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
 						current_y_position := (((new_y // grid_size) + 1).max (1)).min (end_position - 1)
-						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
-							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
-						else
-							current_y_position := first_filled_vertical_space (selected_item, end_position - 1, first.item_column_position (selected_item), first.item_column_span (selected_item))-- + 1
-							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
+						if not first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
+							current_y_position := first_filled_vertical_space (selected_item, end_position - 1, first.item_column_position (selected_item), first.item_column_span (selected_item))
 						end
+						row_pos := current_y_position
+						row_span := end_position - current_y_position
 					else
 						y := y - row_position
 						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
 						new_row := ((new_y // grid_size) - first.item_row_position (selected_item) + 1).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
-						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then --.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
-							set_item_span (selected_item, first.item_column_span (selected_item), new_row)
+						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then
+							row_span := new_row
 						end
 					end
 				end				
-									
-				draw_widgets
+					-- Now actually perform the placing of the widget.
+
+				if orig_column_pos /= column_pos or orig_row_pos /= row_pos or orig_row_span /= row_span
+					or orig_column_span /= column_span then
+						-- We only position and redraw if the size or position has really changed.
+					set_item_position_and_span (selected_item, column_pos, row_pos, column_span, row_span)			
+					draw_widgets
+				end
 			end
 			if moving_widget then	
 				new_x := x - ((x - x_offset) \\ grid_size)

@@ -106,6 +106,21 @@ void mclist_click_column_callback(GtkWidget *clist,
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
+gint timeout_callback (gpointer data){
+	//Callback called when a GtkTimeout is set
+	callback_data_t *pcbd;
+
+	//Retrieve locally the callback data
+	pcbd = (callback_data_t *)data;
+
+	//Call Eiffel callback
+	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument),
+		    eif_access(pcbd->ev_data));
+
+	//Return non-zero value to Gtk to recall timeout callback in `n' milliseconds
+	return 1;
+}
+
 void toggle_button_state_selection_callback(GtkToggleButton *togglebutton, gpointer data){
 	callback_data_t *pcbd;
 	int signal_type;
@@ -456,6 +471,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 
 	pcbd->extra_data = extra_data;
 
+   
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 
@@ -576,6 +592,13 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 				return (gtk_signal_connect (widget, "toggled", 
 					GTK_SIGNAL_FUNC(toggle_button_state_selection_callback), 
 					(gpointer)pcbd));			
+			}
+			if (strcmp(name, "timeout") == 0)
+			{
+				// Create timeout with interval(extra_data) , callback funct and pcbd data
+				return (gtk_timeout_add ((guint32) extra_data,
+					(GtkFunction) timeout_callback,
+					(gpointer)pcbd));
 			}
 			else
 			{

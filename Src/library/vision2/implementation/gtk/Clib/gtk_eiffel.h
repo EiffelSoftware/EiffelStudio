@@ -62,6 +62,9 @@ void c_free_call_back_block (callback_data_t *p);
 #define c_gtk_integer_to_pointer(p)      ((EIF_POINTER) p)      /*EIF_POINTER*/
 #define c_gtk_pointer_to_integer(p)      ((EIF_INTEGER) p)      /*EIF_INTEGER*/
 
+// Callback functions for Gtk timeouts
+gint timeout_callback (gpointer data);
+
 /*------------------------------------------------------------------------------
  Called by gtk when a signal is emitted, passes signal on to Eiffel.
 ------------------------------------------------------------------------------*/

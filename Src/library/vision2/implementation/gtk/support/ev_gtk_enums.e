@@ -6,6 +6,13 @@ class
 
 feature -- C enums
 
+	frozen Gtk_no_window_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_NO_WINDOW"
+		end
+
 	frozen Gdk_nothing_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

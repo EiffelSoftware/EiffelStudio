@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 		do
 			if k /= Void then
 				if k.code = Key_enter then
-					if keyword_field.text /= Void and then (not keyword_field.text.is_empty) and then search_is_possible then
+					if not keyword_field.text.is_empty and then search_is_possible then
 						if search_only then
 							search
 						else
@@ -376,13 +376,18 @@ feature {NONE} -- Implementation
 					ev_application.do_once_on_idle (agent editor.set_focus)
 				else
 					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-					meta_keys.compare_objects
-					if (Editor_preferences.key_codes_for_actions @ 5) = k.code and then meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 5) then
-						if keyword_field.text /= Void and then not keyword_field.text.is_empty and then search_only then
+					if 
+						(Editor_preferences.key_codes_for_actions @ 5) = k.code and then
+						meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 5)
+					then
+						if not keyword_field.text.is_empty and then search_only then
 							search
 						end
-					elseif (Editor_preferences.key_codes_for_actions @ 6) = k.code and then meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 6) then
-						if keyword_field.text /= Void and then not keyword_field.text.is_empty and then search_only then
+					elseif
+						(Editor_preferences.key_codes_for_actions @ 6) = k.code and then
+						meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 6)
+					then
+						if not keyword_field.text.is_empty and then search_only then
 							search_performer.go_reverse
 							search
 						end

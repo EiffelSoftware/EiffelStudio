@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 			type ?= yacc_arg (1);
 			content ?= yacc_arg (2);
 				-- Constant value or standard feature body
-		ensure then
-			(content /= Void) or else (type /= Void);
 		end
 
 feature -- Properties

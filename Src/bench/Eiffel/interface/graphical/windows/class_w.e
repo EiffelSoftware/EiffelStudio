@@ -586,7 +586,7 @@ feature {NONE} -- Implemetation; Window Settings
 		do
 			raise_grabbed_popup;
 			class_text_field.update_text;
-			--class_text_field.update_choice_position
+			class_text_field.update_choice_position
 		end;
 
 feature {NONE} -- Commands

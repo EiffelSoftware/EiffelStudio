@@ -360,46 +360,64 @@ feature -- Update
 
 	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
+		local
+			start_position: INTEGER
 		do
-				-- Do the search with `start_at_top' to true and 
-				-- `is_replacing' to false.
-			search (s, is_case_sensitive, True, False)
+				--| We start the search at the current position
+			start_position := find (s, is_case_sensitive, implementation.actual_cursor_position)
+			
+			if start_position = -1 then
+				start_position := find (s, is_case_sensitive, 0)
+			end			
+
+			if start_position /= -1 then
+				highlight_selected (start_position, start_position + s.count)
+				set_cursor_position (start_position + s.count)
+			else
+				eif_beep
+			end
 		end;
 			
 	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		local
-			s_pos, e_pos: INTEGER;
+			start_position: INTEGER
 			c_position: INTEGER
+			length_s, length_r: INTEGER
 		do
-			if matcher.found then
-				if is_selection_active and then
-					begin_of_selection = last_found_position and then
-					end_of_selection = last_found_position + s.count
-				then
-					replace (begin_of_selection, end_of_selection, r)
-				end
-			end;
-
 			if not replace_all then
-					-- Search the next occurence of `s' in the text
-					-- start_at_top = False
-					-- is_replacing = True
-				search (s, is_case_sensitive, False, True);
+					--| The search start where the selection begins
+
+				if is_selection_active then
+					start_position := find (s, is_case_sensitive, begin_of_selection)
+				else
+					start_position := find (s, is_case_sensitive, implementation.actual_cursor_position)
+				end
+
+				if start_position /= -1 then
+					replace (start_position, start_position + s.count, r)
+					search_text (s, is_case_sensitive)
+				else
+					eif_beep
+				end
 			else
 				from
-					c_position := cursor_position;
-					set_cursor_position (0);
-					search (s, is_case_sensitive, True, True)
+					implementation.hide_selection
+					c_position := cursor_position
+					length_s := s.count
+					length_r := r.count
+					start_position := find (s, is_case_sensitive, 0)
 				until
-					not matcher.found
+					start_position  = -1
 				loop
-					replace (begin_of_selection, end_of_selection, r);
-					search (s, is_case_sensitive, False, True)
+					replace (start_position, start_position + length_s, r)
+					start_position := find (s, is_case_sensitive, start_position + length_r)
 				end
-				set_cursor_position (c_position);
+				set_cursor_position (c_position)
+				implementation.show_selection
+				eif_beep
 			end
-		end;
+		end
 
 feature -- Focus Access
 
@@ -538,69 +556,6 @@ feature {OBJECT_W} -- Settings
 				index := index + 1
 			end;
 			clickable_count := last_pos
-		end;
-
-	search (s: STRING; is_case_sensitive, start_at_top, is_replacing: BOOLEAN) is
-			-- Highlight and show next occurence of `s'.
-			-- `start_at_top' of text if initially couldn't find text.
-		local
-			l_t, l_s: STRING;
-			local_text: like text;
-			search_sub: STRING;
-			start_position, end_position: INTEGER;
-			temp: STRING;
-			find_next: BOOLEAN
-			found :BOOLEAN
-		do
-			last_found_position := -1
-			local_text := implementation.actual_text
-
-			if is_case_sensitive then
-				l_t := local_text
-			else
-				l_t := clone (local_text)
-				l_t.to_lower
-			end;
-			matcher.set_text (l_t)
-
-			find_next := equal (matcher.pattern, s)
-
-			if is_case_sensitive then
-				l_s := s
-			else
-				l_s := clone (s)
-				l_s.to_lower
-				find_next := find_next or equal (matcher.pattern, l_s)
-			end;
-			matcher.set_pattern (l_s)
-			
-			if not is_replacing and then not find_next and then start_at_top then
-				matcher.start_at (0)
-				found := matcher.search_for_pattern
-			else
-				matcher.start_at (implementation.actual_cursor_position)
-				if not matcher.search_for_pattern and then not is_replacing then
-					-- ADD-ON: we should display a dialog which asks if the user wants
-					-- to do a search from the beginning.
-					-- %%Manu: 08/26/97
-					matcher.start_at (0)
- 					found := matcher.search_for_pattern
-				end
-			end
-	
-			if matcher.found then
-				start_position := matcher.found_at - 1;
-				last_found_position := start_position;
-				end_position := start_position + s.count;
-				start_position := implementation.unexpanded_position (start_position);
-				end_position := implementation.unexpanded_position (end_position);
-				highlight_selected (start_position, end_position);
-				set_cursor_position (end_position)
-			else
-				eif_beep
-			end
-
-			matcher.set_text ("")
 		end;
 
 feature {NONE}

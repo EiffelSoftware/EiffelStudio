@@ -12,7 +12,7 @@ class
 inherit
 	EV_TOOL_BAR_BUTTON_I
 		export
-			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
 			interface,
 			pointer_double_press_actions_internal,
@@ -33,7 +33,8 @@ inherit
 		undefine
 			visual_widget
 		redefine
-			interface
+			interface,
+			set_tooltip
 		end
 
 	EV_TEXTABLE_IMP
@@ -59,11 +60,12 @@ feature {NONE} -- Initialization
 			-- Initialization of button box and events.
 		do
 			Precursor {EV_ITEM_IMP}
-				-- We want tool bar buttons to be flat in appearance and not focusable.
+			connect_button_press_switch
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 			align_text_center
 			is_initialized := True
 		end
@@ -74,6 +76,20 @@ feature -- Access
 			-- Image displayed on `Current'.
 
 feature -- Element change
+
+	set_tooltip (a_text: STRING) is
+			-- Set `tooltip' to `a_text'.
+		local
+			a_cs: EV_GTK_C_STRING
+		do
+			create a_cs.make (a_text)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
+				visual_widget,
+				app_implementation.tooltips,
+				a_cs.item,
+				NULL
+			)
+		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
@@ -91,13 +107,12 @@ feature -- Element change
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a select action sequence.
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_button_select_actions_intermediary (c_object), Void)
+			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

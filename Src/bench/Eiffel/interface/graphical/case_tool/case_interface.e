@@ -1,5 +1,5 @@
 indexing
-	description : "This class support the GUI for CASGEN generation"
+	description : "This class support the GUI for CASEGEN generation"
 	author : pascalf
 
 class CASE_INTERFACE
@@ -26,7 +26,6 @@ creation
 feature
 
 	scroll_list1: SCROLLABLE_LIST;
-	label1: LABEL;
 			-- Reverse Engineering
 
 	scroll_list2: SCROLLABLE_LIST;
@@ -54,7 +53,9 @@ feature
 			-- Exit
 
 	label6: LABEL;
-			-- Clusters to be generated:
+			-- Clusters to be generated
+
+	sep1,sep2 : THREE_D_SEPARATOR
 
 	output_window: OUTPUT_WINDOW
 	
@@ -69,7 +70,6 @@ feature
 			reverse_w := rev_w	
 			!! associated_form.make ("coucou", Current )		
 			!! scroll_list1.make_fixed_size ("scroll_list1", associated_form);
-			!! label1.make ("label1", associated_form);
 			!! scroll_list2.make_fixed_size ("scroll_list2", associated_form);
 			!! text_field1.make ("text_field1", associated_form);
 			!! label4.make ("label4", associated_form);
@@ -79,9 +79,11 @@ feature
 			!! browsw_b.make ("browsw_b", associated_form);
 			!! generate_all_b.make ("generate_all_b", associated_form);
 			!! generate_selec_b.make ("generate_selec_b", associated_form);
-			!! exit_b.make ("exit_b", associated_form);
-			!! label6.make ("label6", associated_form);
-		--	!! launch_ecase_b.make ("launch ecase after generation", associated_form)
+			!! exit_b.make ("exit_b", associated_form)
+			!! label6.make ("label6", associated_form)
+			!! sep1.make ("ss", associated_form )
+			!! sep2.make ("ss", associated_form )
+
 			initialize_lists
 			set_values
 			set_commands
@@ -127,56 +129,63 @@ feature
 
 	set_values is
 		do
-			scroll_list1.set_x_y (10, 58);
-			scroll_list1.set_size (220, 290);
-			label1.set_text ("Reverse Engineering");
-			label1.forbid_recompute_size;
-			label1.set_font_name ("-adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1");
-			label1.set_x_y (172, 1);
-			label1.set_size (220, 36);
-			scroll_list2.set_x_y (294, 58);
-			scroll_list2.set_size (220, 290);
-			text_field1.set_x_y (114, 319);
-			text_field1.set_size (276, 33);
-			label4.set_text ("Generation path :");
-			label4.forbid_recompute_size;
-			label4.set_x_y (8, 320);
-			label4.set_size (104, 27);
-			arrow_b1.set_right;
-			arrow_b1.set_x_y (240, 68);
-			arrow_b1.set_size (47, 40);
-			arrow_b2.set_left;
-			arrow_b2.set_x_y (240, 114);
-			arrow_b2.set_size (47, 40);
-			label5.set_text ("System clusters:");
-			label5.set_left_alignment;
-			label5.forbid_recompute_size;
-			label5.set_x_y (10, 29);
-			label5.set_size (100, 27);
-			--launch_ecase_b.set_x_y (13, 280 )
-			browsw_b.set_text ("Browse");
-			browsw_b.forbid_recompute_size;
-			browsw_b.set_x_y (413, 319);
-			browsw_b.set_size (73, 35);
-			generate_all_b.set_text ("Generate all");
-			generate_all_b.forbid_recompute_size;
-			generate_all_b.set_x_y (48, 360);
-			generate_all_b.set_size (89, 35);
-			generate_selec_b.set_text ("Generate Selection");
-			generate_selec_b.forbid_recompute_size;
-			generate_selec_b.set_x_y (185, 360);
-			generate_selec_b.set_size (162, 35);
-			exit_b.set_text ("Exit");
-			exit_b.forbid_recompute_size;
-			exit_b.set_x_y (385, 360);
-			exit_b.set_size (79, 35);
-			label6.set_text ("Clusters to be generated:");
-			label6.set_left_alignment;
-			label6.forbid_recompute_size;
-			label6.set_x_y (294, 30);
-			label6.set_size (182, 25);
-			set_x_y (165, 19);
-			set_size (524, 411);
+
+			associated_form.set_fraction_base ( 11 )
+
+			label5.set_text ("System clusters");
+			associated_form.attach_left ( label5, 10 )
+			associated_form.attach_top ( label5, 10 )
+
+			label6.set_text ("Clusters to be generated");
+			associated_form.attach_right ( label6, 10 )
+			associated_form.attach_top ( label6, 10 )
+
+			associated_form.attach_left ( scroll_list1, 5)
+			associated_form.attach_right ( scroll_list2, 5)
+			associated_form.attach_right_position ( scroll_list1, 4)
+			associated_form.attach_left_position ( scroll_list2, 7)
+			associated_form.attach_top_widget ( label5, scroll_list1, 5 )
+			associated_form.attach_top_widget ( label6, scroll_list2, 5 )
+
+			arrow_b1.set_right
+			arrow_b2.set_left
+			associated_form.attach_top_widget ( label6, arrow_b1, 15 )
+			associated_form.attach_top_widget ( arrow_b1, arrow_b2, 5)
+			associated_form.attach_left_position ( arrow_b1, 5)
+			associated_form.attach_left_position ( arrow_b2, 5)
+			associated_form.attach_right_position ( arrow_b1, 6)
+			associated_form.attach_right_position ( arrow_b2, 6)
+
+			associated_form.attach_left ( sep1, 0)
+			associated_form.attach_right ( sep1, 0)
+			associated_form.attach_top_widget ( scroll_list1,sep1,  25 )
+
+			associated_form.attach_top_widget ( sep1, text_field1, 10 )
+			associated_form.attach_top_widget ( sep1, browsw_b, 8)
+			associated_form.attach_top_widget ( sep1, label4, 12 )
+			associated_form.attach_left ( label4, 10 ) 
+			associated_form.attach_left_widget ( label4, text_field1, 5)
+			associated_form.attach_left_widget ( text_field1, browsw_b, 10 )
+			label4.set_text ("Generation path :")
+			browsw_b.set_text ("Browse")
+			
+			associated_form.attach_top_widget ( text_field1,sep2 ,10 )
+			associated_form.attach_left ( sep2, 0)
+			associated_form.attach_right ( sep2, 0)
+
+			associated_form.attach_left ( generate_all_b, 5 )
+			associated_form.attach_top_widget ( sep2, generate_all_b , 10 )
+			generate_all_b.set_text ("Generate all")
+
+			associated_form.attach_left_position ( generate_selec_b, 4 )
+			associated_form.attach_top_widget ( sep2, generate_selec_b , 10 )
+			generate_selec_b.set_text ("Generate Selection")
+		
+			associated_form.attach_right (exit_b, 5 )
+			associated_form.attach_top_widget ( sep2, exit_b , 10 )
+			exit_b.set_text ("Exit")
+		
+			set_x_y (165, 19)
 		end;
 
 	execute (c : ANY ) is

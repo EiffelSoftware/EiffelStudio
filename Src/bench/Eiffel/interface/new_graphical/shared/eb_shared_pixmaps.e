@@ -153,6 +153,16 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_format_interface_color")
 		end
+		
+	Icon_frozen_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_frozen_feature")
+		end
+		
+	Icon_obsolete_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_obsolete_feature")
+		end
 
 	Icon_object_symbol: EV_PIXMAP is
 		once
@@ -178,20 +188,55 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_once_symbol")
 		end
+		
+	Icon_once_obsolete_objects: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_once_obsolete_symbol")
+		end
+		
+	Icon_once_frozen_objects: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_once_frozen_symbol")
+		end
 
 	Icon_attributes: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_attribute_symbol")
+		end
+		
+	Icon_obsolete_attribute: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_attribute_obsolete_symbol")
+		end
+		
+	Icon_frozen_attribute: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_attribute_frozen_symbol")
 		end
 
 	Icon_deferred_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_deferred_feature")
 		end
+		
+	Icon_deferred_obsolete_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_deferred_obsolete_feature")
+		end
 
 	Icon_external_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_external_feature")
+		end
+		
+	Icon_external_frozen_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_external_frozen_feature")
+		end
+
+	Icon_external_obsolete_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_external_obsolete_feature")
 		end
 
 	Icon_void_object: EV_PIXMAP is
@@ -1497,8 +1542,17 @@ feature {NONE} -- Implementation
 			Result.put ([11, 10], "icon_pin_open_color")
 			Result.put ([11, 11], "icon_arrow_empty")
 			Result.put ([11, 12], "icon_force_settings_color")	
-		
+			Result.put ([11, 13], "icon_deferred_obsolete_feature")
+			Result.put ([11, 14], "icon_attribute_obsolete_symbol")
+			Result.put ([11, 15], "icon_attribute_frozen_symbol")
+			Result.put ([11, 16], "icon_once_obsolete_symbol")
+			Result.put ([12, 1], "icon_once_frozen_symbol")
+			Result.put ([12, 2], "icon_external_obsolete_feature")
+			Result.put ([12, 3], "icon_external_frozen_feature")
+			Result.put ([12, 4], "icon_obsolete_feature")
+			Result.put ([12, 5], "icon_frozen_feature")
 			Result.compare_objects
 		end
 
 end
+

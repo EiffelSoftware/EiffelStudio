@@ -14,28 +14,49 @@ inherit
 	EV_GTK_ITEMS_EXTERNALS
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MULTI_COLUMN_LIST) is
-		-- Create an empty row.
+	make is
+			-- Create an row with one empty column.
 		do
-			parent_imp ?= par.implementation
+			create text.make
+			text.extend ("")
 		end
+
+	make_with_text (txt: ARRAY [STRING]) is
+			-- Create a row with text in it.
+		local
+			i: INTEGER
+		do
+			from
+				create text.make
+				i := txt.lower
+			until
+				i > txt.upper
+			loop
+				text.extend (txt @ i)
+				i := i + 1
+			end
+ 		end
 
 feature -- Access
 
 	parent: EV_MULTI_COLUMN_LIST is
-			-- List that container this row
 		do
-			Result ?= parent_imp.interface
+			if parent_imp /= void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
 		end
 
 	columns: INTEGER is
 			-- Number of columns in the row
 		do
-			Result := parent_imp.columns
+			Result := text.count
 		end
 
 feature -- Status report
@@ -43,12 +64,17 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
 		do
-			Result := parent_imp = Void
+			Result := text = Void
 		end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
+		local
+			row: EV_MULTI_COLUMN_LIST_ROW
 		do
+			row ?= Current.interface			
+			Result := (parent_imp.selected_items.has (row))
+			 or (parent_imp.selected_item = row)
 		end
 
 feature -- Status setting
@@ -72,6 +98,50 @@ feature -- Status setting
 			end
 		end
 
+	set_columns (value: INTEGER) is
+			-- if value > number of columns, add empty columns 
+			-- if value < number of columns, remove the last columns
+			-- does nothing if equal.
+		local
+			test, the_count: INTEGER
+		do
+			test := columns
+			if (value > columns) then
+				from
+					text.finish
+				until
+					text.count = value
+				loop
+					text.extend ("")
+					the_count := text.count
+				end
+			elseif (value < columns) then
+				from
+					text.finish
+				until
+					text.count = value
+				loop
+					text.remove
+					text.finish
+				end
+			end
+				
+		end
+
+	cell_text (column: INTEGER): STRING is
+		local
+			p: POINTER
+			ok: INTEGER
+		do
+			!!Result.make (0)
+			ok := gtk_clist_get_text (parent_imp.widget, index, column, $p)
+			check
+				get_text_ok: ok > 0
+			end
+			Result.from_c (p)
+		end
+
+
 feature -- Element Change
 
 	set_cell_text (column: INTEGER; a_text: STRING) is
@@ -80,8 +150,25 @@ feature -- Element Change
 		local
 			ctxt: ANY
 		do
-			ctxt ?= a_text.to_c
+			ctxt := a_text.to_c
 			gtk_clist_set_text (parent_imp.widget, index, column - 1, $ctxt)
+		end
+
+	set_parent (par: EV_MULTI_COLUMN_LIST) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if (par /= void) then
+				parent_imp ?= par.implementation
+				check
+					parent_not_void: parent_imp /= Void
+				end
+				parent_imp.add_item (Current)
+			end					
 		end
 
 feature -- Event : command association
@@ -129,14 +216,16 @@ feature {NONE} -- Implementation
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 		-- Multi-column list that own the current object 
 
-	index: INTEGER
-		-- Index of the row in the parent list
-
-	text: ARRAY [STRING]
-		-- Text in the cells
-
 	pixmaps: ARRAY [EV_PIXMAP]
 		-- Pixmaps in the cells
+
+feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
+
+	text: LINKED_LIST [STRING]
+		-- Text in the cells
+
+	index: INTEGER
+		-- index of the row in the multi column list
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

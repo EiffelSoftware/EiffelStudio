@@ -153,6 +153,40 @@ feature -- Access
 			end
 		end
 
+	all_features (a_type: TYPE): LIST [CODE_MEMBER_REFERENCE] is
+			-- Features in type `a_type'
+		require
+			non_void_type: a_type /= Void
+		local
+			l_entities: LIST [CONSUMED_ENTITY]
+			l_consumed_type: CONSUMED_TYPE
+		do
+			internal_all_features.search (a_type.full_name)
+			if internal_all_features.found then
+				Result := internal_all_features.found_item
+			else
+				check_eac_for_type (a_type)
+				l_consumed_type := cache_reflection.consumed_type (a_type)
+				if l_consumed_type /= Void then
+					create {ARRAYED_LIST [CONSUMED_ENTITY]} l_entities.make_from_array (l_consumed_type.procedures)
+					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.functions))
+					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.fields))
+					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.events))
+					l_entities.append (l_consumed_type.consumed_constructors)
+					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (l_entities.count)
+					from
+						l_entities.start
+					until
+						l_entities.after
+					loop
+						Result.extend (member_from_entity (l_entities.item, a_type))
+						l_entities.forth
+					end
+				end
+				internal_all_features.put (Result, a_type.full_name)
+			end
+		end
+
 	member (a_type: TYPE; a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]): CODE_MEMBER_REFERENCE is
 			-- Member with name `a_name' and arguments `a_arguments' from type `a_type'
 		require
@@ -313,22 +347,30 @@ feature {NONE} -- Implementation
 		do
 			l_entity_arguments := a_entity.arguments
 			l_type := Type_reference_factory.type_reference_from_type (a_type)
-			from
-				l_count := l_entity_arguments.count
-				create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (l_count)
-				i := 1
-			until
-				i > l_count
-			loop
-				l_arguments.extend (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (
-						create {CODE_VARIABLE_REFERENCE}.make (l_entity_arguments.item (i).dotnet_name,
-							Type_reference_factory.type_reference_from_name (l_entity_arguments.item (i).type.name),
-							Type_reference_factory.type_reference_from_type (a_type)), in_argument))
-				i := i + 1
+			if l_entity_arguments /= Void  then
+				from
+					l_count := l_entity_arguments.count
+					create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (l_count)
+					i := 1
+				until
+					i > l_count
+				loop
+					l_arguments.extend (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (
+							create {CODE_VARIABLE_REFERENCE}.make (l_entity_arguments.item (i).dotnet_name,
+								Type_reference_factory.type_reference_from_name (l_entity_arguments.item (i).type.name),
+								Type_reference_factory.type_reference_from_type (a_type)), in_argument))
+					i := i + 1
+				end
 			end
 			create Result.make_external (a_entity.dotnet_name, a_entity.eiffel_name, l_arguments, l_type)
 		end
 
+	internal_all_features: HASH_TABLE [LIST [CODE_MEMBER_REFERENCE], STRING] is
+			-- Cache for `internal_features'
+		once
+			create Result.make (10)
+		end
+		
 end -- class CODE_EIFFEL_METADATA_PROVIDER
 
 --+--------------------------------------------------------------------

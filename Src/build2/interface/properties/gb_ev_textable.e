@@ -32,6 +32,11 @@ inherit
 		end
 		
 	GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR
+	
+	CDATA_HANDLER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -43,7 +48,7 @@ feature {GB_XML_STORE} -- Output
 			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
 			textable.default_create
 			if not objects.first.text.is_empty then
-				add_element_containing_string (element, text_string, cdata_opening + objects.first.text + cdata_closing)	
+				add_element_containing_string (element, text_string, enclose_in_cdata (objects.first.text))
 			end
 		end
 		
@@ -52,7 +57,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			text: STRING
+			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
@@ -60,11 +65,8 @@ feature {GB_XML_STORE} -- Output
 				-- while resetting an object. When we are using the XML document, this is stripped
 				-- automatically so we do not encounter it.
 			if element_info /= Void and then element_info.data.count /= 0 then
-				text := element_info.data
-				if text.substring_index (cdata_opening, 1) = 1 then
-					text := text.substring (cdata_opening.count + 1, text.count - cdata_closing.count)
-				end
-				for_all_objects (agent {EV_TEXTABLE}.set_text (text))
+				stripped_text := strip_cdata (element_info.data)
+				for_all_objects (agent {EV_TEXTABLE}.set_text (stripped_text))
 			end
 		end
 		
@@ -78,26 +80,15 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			escaped_text: STRING
-			stripped_text: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				stripped_text := element_info.data
-				check
-					has_tags: stripped_text.substring_index (cdata_opening, 1) = 1 and
-						stripped_text.substring_index (cdata_closing, 1) = stripped_text.count - cdata_closing.count + 1
-				end
-				stripped_text := stripped_text.substring (cdata_opening.count + 1, stripped_text.count - cdata_closing.count)
-				escaped_text := escape_special_characters (stripped_text)
+				escaped_text := escape_special_characters (strip_cdata (element_info.data))
 				Result := info.name + ".set_text (%"" + escaped_text + "%")"
 			end
 			Result := strip_leading_indent (Result)
 		end
-		
-	cdata_opening: STRING is "<![CDATA["
-	
-	cdata_closing: STRING is "]]>"
 
 end -- class GB_EV_TEXTABLE

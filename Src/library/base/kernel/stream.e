@@ -51,7 +51,7 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		do
-			Result := c_retrieved (buffer, buffer_size, $object_stored_size)
+			Result := c_retrieved (buffer, buffer_size, 0, $object_stored_size)
 		end
 
 feature -- Element change
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			"stream_sstore"
 		end;
 
-	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; c_real_size: POINTER): ANY is
+	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY is
 			-- Object structured retrieved from stream of pointer
 			-- `stream_ptr'
 		external

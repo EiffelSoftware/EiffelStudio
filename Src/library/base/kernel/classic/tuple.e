@@ -10,6 +10,11 @@ class
 inherit
 	HASHABLE
 	
+	MISMATCH_CORRECTOR
+		redefine
+			correct_mismatch
+		end
+	
 create
 	default_create, make
 
@@ -213,6 +218,48 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
+	valid_type_for_index (v: ANY; index: INTEGER): BOOLEAN is
+			-- Is object `v' a valid target for element at position `index'?
+		require
+			valid_index: valid_index (index)
+		local
+			l_b: BOOLEAN_REF
+			l_c: CHARACTER_REF
+			l_wc: WIDE_CHARACTER_REF
+			l_d: DOUBLE_REF
+			l_r: REAL_REF
+			l_p: POINTER_REF
+			l_i: INTEGER_REF
+			l_i8: INTEGER_8_REF
+			l_i16: INTEGER_16_REF
+			l_i64: INTEGER_64_REF
+			l_int: INTERNAL
+		do
+			if v = Void then
+					-- A Void entry is always valid.
+				Result := True
+			else
+				inspect eif_item_type ($Current, index)
+				when boolean_code then l_b ?= v; Result := l_b /= Void
+				when character_code then l_c ?= v; Result := l_c /= Void
+				when wide_character_code then l_wc ?= v; Result := l_wc /= Void
+				when double_code then l_d ?= v; Result := l_d /= Void
+				when real_code then l_r ?= v; Result := l_r /= Void
+				when pointer_code then l_p ?= v; Result := l_p /= Void
+				when integer_code then l_i ?= v; Result := l_i /= Void
+				when integer_8_code then l_i8 ?= v; Result := l_i8 /= Void
+				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
+				when integer_64_code then l_i64 ?= v; Result := l_i64 /= Void
+				when Reference_code then
+						-- Let's check that type of `v' conforms to specified type of `index'-th
+						-- arguments of current TUPLE.
+					create l_int
+					Result := l_int.type_conforms_to
+						(l_int.dynamic_type (v), l_int.generic_dynamic_type (Current, index))
+				end
+			end
+		end
+		
 	count: INTEGER is
 			-- Number of element in Current.
 		do
@@ -240,8 +287,10 @@ feature -- Status report
 feature -- Element change
 
 	put (v: ANY; index: INTEGER) is
+			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)
+			valid_type_for_index: valid_type_for_index (v, index)
 		do
 			inspect eif_item_type ($Current, index)
 			when boolean_code then eif_put_boolean_item_with_object ($Current, index, $v)
@@ -787,6 +836,40 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
+feature -- Retrieval
+
+	correct_mismatch is
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_area: SPECIAL [ANY]
+			i, nb: INTEGER
+			l_any: ANY
+		do
+				-- Old version of TUPLE had a SPECIAL [ANY] to store all values.
+				-- If we can get access to it, then most likely we can recover this
+				-- old TUPLE implementation.
+			l_area ?= Mismatch_information.item (area_name)
+			if l_area /= Void then
+				from
+					i := 1
+					nb := l_area.count
+				until
+					i > nb
+				loop
+					l_any := l_area.item (i - 1)
+					if valid_type_for_index (l_any, i) then
+						put (l_any, i)
+					else
+							-- We found an unexpected type in old special. We cannot go on.
+						Precursor {MISMATCH_CORRECTOR}
+					end
+					i := i + 1
+				end
+			else
+				Precursor {MISMATCH_CORRECTOR}
+			end
+		end
+		
 feature {ROUTINE}
 
 	arg_item_code (index: INTEGER): CHARACTER is
@@ -799,6 +882,9 @@ feature {ROUTINE}
 		end
 
 feature {NONE} -- Implementation
+
+	area_name: STRING is "area"
+			-- Name of attributes where TUPLE elements were stored.
 
 	boolean_code: CHARACTER is 'b'
 	character_code: CHARACTER is 'c'

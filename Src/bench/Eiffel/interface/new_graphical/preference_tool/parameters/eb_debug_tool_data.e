@@ -50,6 +50,11 @@ feature -- Access
 		do
 			Result := boolean_resource_value ("generating_type_evaluation", True)			
 		end
+		
+	optimized_jit_debugging_enabled: BOOLEAN is
+		do
+			Result := boolean_resource_value ("enable_optimized_jit_debugging", True)			
+		end		
 
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?

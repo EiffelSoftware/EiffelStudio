@@ -58,6 +58,15 @@ feature {NONE}
 
 feature -- Debugger
 
+	optimized_jit_debugging_enabled: BOOLEAN
+			-- JIT debugging Optimized ?
+			
+	set_jit_debugging_mode (v: BOOLEAN) is
+			-- Set JIT Debugging mode value
+		do
+			optimized_jit_debugging_enabled := v
+		end		
+
 	controller: EIFNET_DEBUGGER
 			-- Bridge to dotnet debugger
 
@@ -621,6 +630,12 @@ feature -- JIT info
 			l_module_key_name_tail: STRING
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
+			if optimized_jit_debugging_enabled then
+				a_module.enable_jit_debugging (True, True)			
+			else
+				a_module.enable_jit_debugging (False, False)
+			end
+			
 			l_module_key_name := module_key (a_module.get_name)
 			if loaded_modules.is_empty then
 					-- We have to deal with the MSCORLIB.DLL module 

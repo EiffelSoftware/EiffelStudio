@@ -11,13 +11,20 @@ class
 
 inherit
 	EV_MENU_ITEM_I
-
-	EV_SIMPLE_ITEM_IMP
-		undefine
-			pixmap_size_ok
-		redefine
-			set_text,
+		select
 			parent_imp
+		end
+		
+	EV_SIMPLE_ITEM_IMP
+		rename
+			parent_imp as old_simple_parent_imp
+		undefine
+			pixmap_size_ok,
+			parent
+		redefine
+			set_text
+		--select
+		--	old_simple_parent_imp
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
@@ -52,9 +59,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-			-- Parent implementation
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -138,6 +142,20 @@ feature -- Status setting
    		end
 
 feature -- Element change
+
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
 
 	set_text (txt: STRING) is
 			-- Set `text' to `txt'.

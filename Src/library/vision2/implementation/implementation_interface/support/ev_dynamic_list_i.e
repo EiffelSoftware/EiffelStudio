@@ -240,7 +240,7 @@ feature -- Element change
 			from
 				s.start
 			until
-				s.after
+				s.off
 			loop
 				extend (s.item)
 				s.forth

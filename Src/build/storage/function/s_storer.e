@@ -53,7 +53,7 @@ feature {NONE}
 				state_list.after
 			loop
 				!!s.make (state_list.item);
-				stored_data.add (s);
+				stored_data.extend (s);
 				state_list.forth
 			end;
 		end;
@@ -77,7 +77,7 @@ feature
 				sb := stored_data.item;
 				b := sb.state;
 				state_table.put (b, sb.identifier);
-				retrieved_data.add (b);
+				retrieved_data.extend (b);
 				stored_data.forth;
 			end;
 		end;

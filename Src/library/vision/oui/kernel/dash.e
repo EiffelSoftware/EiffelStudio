@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|	Copyright (C) Interactive Software Engineering, Inc.        --
---|	 270 Storke Road, Suite 7 Goleta, California 93117          --
---|						 (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- DASH: Description of a dash pattern.
 
@@ -22,13 +16,15 @@ creation
 
 	make
 
-feature {NONE}
+feature 
 
 	max_offset: INTEGER is
 			-- Sum of integers in the list
 			-- `offset' must be less than `max_offset'
+		local
+			keep_cursor: CURSOR;
 		do
-			mark;
+			keep_cursor := cursor;
 			from
 				start
 			until
@@ -37,7 +33,7 @@ feature {NONE}
 				Result := Result+item;
 				forth
 			end;
-			return
+			go_to (keep_cursor)
 		end;
 
 feature 
@@ -62,3 +58,17 @@ invariant
 	(not empty) implies (offset <= max_offset)
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

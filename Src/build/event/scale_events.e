@@ -51,8 +51,8 @@ feature {CATALOG}
 	make_visible (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			make_page_visible (a_name, a_parent);
-			add (move_ev);
-			add (value_changed_ev)
+			extend (move_ev);
+			extend (value_changed_ev)
 		end
 
 end -- class TEXT_EVENTS   

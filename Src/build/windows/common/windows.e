@@ -52,7 +52,7 @@ feature {NONE}
 
 	init_toolkit: MOTIF is
 		once
-			!!Result.make ("");
+			!!Result.make (XeiffelBuild);
 		end;
 
 	init_windowing is
@@ -84,7 +84,7 @@ feature {NONE}
 
 	command_catalog: CMD_CATALOG is
 		once
-			!!Result.make ("Command catalog", eb_screen);
+			!!Result.make (C_ommandcatalog, eb_screen);
 		end;	
 
 	app_editor: APP_EDITOR is
@@ -94,7 +94,7 @@ feature {NONE}
 
 	history_window: HISTORY_WND is
 		once
-			!!Result.make ("History Window", eb_screen);
+			!!Result.make (H_istorywindow, eb_screen);
 		end;
 
 	tree: CONTEXT_TREE is
@@ -104,17 +104,17 @@ feature {NONE}
 
 	warning_box: WARNING_BOX is
 		once
-			!!Result.make ("Alert", main_panel.base)
+			!!Result.make (A_lert, main_panel.base)
 		end;
 
 	error_box: ERROR_BOX is
 		once
-			!!Result.make ("Error", main_panel.base)
+			!!Result.make (E_rror, main_panel.base)
 		end;
 
 	question_box: QUESTION_BOX is
 		once
-			!!Result.make ("Question", main_panel.base)
+			!!Result.make (Q_uestion, main_panel.base)
 		end;
 
 	window_mgr: WINDOW_MGR is

@@ -44,6 +44,7 @@ feature
 			fill (l);
 			set_x_y (eb_screen.x, eb_screen.y);
 			old_popup;
+			--list.manage;
 		end;
 
 feature {NONE}
@@ -56,7 +57,8 @@ feature {NONE}
 			then
 				list.add_right ("Cancel");
 				list.forth;
-				list.add_right ("--no items--")
+				list.add_right ("--no items--");
+				list.set_visible_item_count (2);
 			else
 				from
 					list.start;
@@ -94,6 +96,7 @@ feature {NONE}
 	execute (argument: ANY) is
 		do
 			popdown;
+			--list.unmanage;
 			continue_after_popdown
 		end;
 

@@ -55,13 +55,6 @@ feature
 			!!focus_label.make (L_abel, button_form);
 			!!type_label.make (L_abel1, button_form);
 
-			attach_left (button_form, 10);
-			attach_right (button_form, 10);
-			attach_top (button_form, 10);
-			attach_left (page_sw, 10);
-			attach_right (page_sw, 10);
-			attach_top_widget (button_form, page_sw, 10);
-			attach_bottom (page_sw, 10);
 			!!pages.make;
 
 			button_form.attach_top (type_label, 0);
@@ -73,6 +66,13 @@ feature
 			button_form.detach_left (type_label);
 			button_form.detach_left (focus_label);
 
+			attach_left (button_form, 10);
+			attach_right (button_form, 10);
+			attach_top (button_form, 10);
+			attach_left (page_sw, 10);
+			attach_right (page_sw, 10);
+			attach_top_widget (button_form, page_sw, 10);
+			attach_bottom (page_sw, 10);
 			define_event_pages;
 			update_interface;
 			button_events.hide_button;

@@ -1,23 +1,52 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                      (805) 685-1006                                --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- DASHABLE: Dashable figure (line, arc,...).
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class DASHABLE 
 
-feature 
+feature -- Access 
 
 	dash_pattern: DASH;
 			-- Pattern of dash to be used to draw lines
+
+feature -- Modification & Insertion 
+
+	set_dash_pattern (a_dash: DASH) is
+			-- Set pattern of dash to be used to draw lines.
+		require
+			a_dash_exists: not (a_dash = Void);
+			a_dash_valid: not a_dash.empty
+		do
+			dash_pattern := a_dash;
+		end;
+
+	set_doubledash_line is
+			-- Specifies that full path of the line is drawn, dashes with the
+			-- foreground pixel value, gaps with th background pixel values.
+		do
+			line_style := LineDoubleDash;
+		end;
+
+	set_onoffdash_line is
+			-- Specifies that only the dashes are drawn with the foreground
+			-- pixel.
+		do
+			line_style := LineOnOffDash;
+		end;
+
+	set_solid_line is
+			-- Specifies that the full path of the line is drawn using the
+			-- foreground pixel value.
+		do
+			line_style := LineSolid;	
+		end;
+
+feature -- Status report
 
 	is_doubledash_line: BOOLEAN is
 			-- Is full path of the line drawn, dashes with the foreground
@@ -38,7 +67,9 @@ feature
 			Result := line_style = LineSolid
 		end;
 
-feature {NONE}
+
+
+feature {NONE} -- Access
 
 	line_style: INTEGER;
 			-- Style of line of current figure
@@ -52,40 +83,22 @@ feature {NONE}
 	LineSolid: INTEGER is 0;
 			-- Code to define solid line
 
-feature 
-
-	set_dash_pattern (a_dash: DASH) is
-			-- Set pattern of dash to be used to draw lines.
-		require
-			a_dash_exists: not (a_dash = Void);
-			a_dash_valid: not a_dash.empty
-		do
-			dash_pattern := a_dash
-		end;
-
-	set_doubledash_line is
-			-- Specifies that full path of the line is drawn, dashes with the
-			-- foreground pixel value, gaps with th background pixel values.
-		do
-			line_style := LineDoubleDash
-		end;
-
-	set_onoffdash_line is
-			-- Specifies that only the dashes are drawn with the foreground
-			-- pixel.
-		do
-			line_style := LineOnOffDash
-		end;
-
-	set_solid_line is
-			-- Specifies that the full path of the line is drawn using the
-			-- foreground pixel value.
-		do
-			line_style := LineSolid
-		end;
-
 invariant
 
 	(not (dash_pattern = Void)) implies (not dash_pattern.empty)
 
-end
+end -- class DASHABLE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

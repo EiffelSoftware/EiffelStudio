@@ -19,8 +19,7 @@ inherit
 		rename
 			make as old_create,
 			put as basic_put,
-			count as max_size,
-			extra_percentage as array_extra_percentage
+			count as max_size
 		export
 			{NONE} all;
 			{ANY} item, max_size

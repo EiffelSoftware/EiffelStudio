@@ -8,7 +8,7 @@ inherit
 			make as cat_create
 		export
 			{CATALOG} hide, make_visible, show, shown,
-			manage, unmanage, managed
+			manage, unmanage, managed, associated_catalog
 		end;
 	WIDGET_NAMES
 		export
@@ -52,6 +52,11 @@ feature
 			symbol := a_symbol
 		end; -- Create
 
+	valid_symbol: BOOLEAN is
+		do
+			Result := symbol /= Void
+		end
+
 	
 feature {CATALOG}
 
@@ -62,8 +67,8 @@ feature {CATALOG}
 		require
 			not_void_page_name: not (page_name = Void);
 			not_void_form: not (button_form = Void);
-			not_void_symbol: not (symbol = Void)
-		do
+			not_void_symbol: valid_symbol;
+		do	
 			create_button;	
 			button.make_visible (button_form);
 			button.set_symbol (symbol);

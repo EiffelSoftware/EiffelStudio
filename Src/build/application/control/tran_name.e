@@ -47,7 +47,7 @@ feature
 	update is
 			-- Update the name of the transition
 		do
-			clear;	
+			wipe_out;	
 			append (label_name);
 			append (" -> ");
 			append (destination_name);

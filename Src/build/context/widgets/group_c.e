@@ -17,7 +17,6 @@ inherit
 
 	COMPOSITE_C
 		rename
-			option_list as old_option_list,
 			reset_modified_flags as old_reset_modified_flags,
 			recursive_cut as old_recursive_cut,
 			cut as old_cut,
@@ -41,9 +40,9 @@ inherit
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			recursive_cut, is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, remove_callbacks, stored_node, option_list, widget
+			reset_callbacks, remove_callbacks, stored_node, widget
 		select
-			option_list, reset_modified_flags, recursive_cut, cut, 
+			reset_modified_flags, recursive_cut, cut, 
 			undo_cut, eiffel_callback_calls
 		end
 
@@ -82,12 +81,12 @@ feature
 			from
 				subtree.start
 			until	
-				subtree.offright
+				subtree.after
 			loop
 				from
 					a_list.start
 				until
-					a_list.offright or found
+					a_list.after or found
 				loop
 					if subtree.item.entity_name.is_equal (a_list.item.entity_name) then
 						found := True;
@@ -106,7 +105,7 @@ feature
 			from
 				subtree.start
 			until	
-				subtree.offright
+				subtree.after
 			loop
 				subtree.item.remove_callbacks;
 				subtree.forth
@@ -119,7 +118,7 @@ feature
 			from
 				subtree.start
 			until	
-				subtree.offright
+				subtree.after
 			loop
 				subtree.item.reset_callbacks;
 				subtree.forth
@@ -159,22 +158,6 @@ feature
 			Result := group_type.entity_name
 		end;
 
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_option_list;
-			i := Result.upper+2;
-			Result.force (alignment_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
-
 	is_bulletin: BOOLEAN is
 		do
 			Result := True
@@ -204,7 +187,7 @@ feature
 			from
 				group_list.start
 			until
-				group_list.offright or found
+				group_list.after or found
 			loop
 				if group_list.item.identifier = a_type then
 					set_type (group_list.item);
@@ -237,7 +220,7 @@ feature
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.merge_right (subtree.item.recursive_cut);
 				subtree.forth
@@ -262,7 +245,7 @@ feature
 				from
 					subtree.start
 				until
-					subtree.offright
+					subtree.after
 				loop
 					tree.append (subtree.item.tree_element);
 					subtree.item.show_tree_elements;
@@ -277,7 +260,7 @@ feature
 				from
 					subtree.start
 				until
-					subtree.offright
+					subtree.after
 				loop
 					tree.cut (subtree.item.tree_element);
 					subtree.item.hide_tree_elements;
@@ -292,7 +275,7 @@ feature
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				subtree.item.reset_modified_flags;
 				subtree.forth
@@ -340,7 +323,7 @@ feature
 
 	full_name: STRING is
 		do
-			Result := intermediate_name
+			Result := intermediate_name;
 		end;
 
 	
@@ -351,6 +334,8 @@ feature {NONE}
 	
 feature {CONTEXT}
 
+
+
 	eiffel_declaration: STRING is
 		local
 			class_name: STRING;
@@ -359,7 +344,7 @@ feature {CONTEXT}
 			Result.append ("%T");
 			Result.append (entity_name);
 			Result.append (": ");
-			class_name := eiffel_type.duplicate;
+			class_name := clone (eiffel_type);
 			class_name.to_upper;
 			Result.append (class_name);
 			Result.append (";%N");
@@ -380,7 +365,7 @@ feature {NONE}
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.append (subtree.item.eiffel_declaration);
 				subtree.forth;
@@ -393,7 +378,7 @@ feature {NONE}
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.append (subtree.item.eiffel_creation (parent_name));
 				subtree.forth;
@@ -409,7 +394,7 @@ feature {CONTEXT}
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.append (subtree.item.eiffel_initialization);
 				subtree.forth
@@ -428,13 +413,12 @@ feature
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				a_child := subtree.item;
 				context_name := a_child.full_name;
 				context_name.append (".");
 				Result.append (a_child.eiffel_color (context_name));
-				Result.append (a_child.children_color);
 				subtree.forth;
 			end;
 		end;
@@ -448,7 +432,7 @@ feature {CONTEXT}
 				!!Result.make (0);
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.append (subtree.item.eiffel_callbacks);
 				subtree.forth;
@@ -464,7 +448,7 @@ feature {CLBKS, CONTEXT}
 			from
 				subtree.start
 			until
-				subtree.offright
+				subtree.after
 			loop
 				Result.append (subtree.item.eiffel_callback_calls);
 				subtree.forth
@@ -483,7 +467,7 @@ feature
 			color_text: STRING;
 		do
 			group_text_generation := True;
-			class_name := eiffel_type.duplicate;
+			class_name := clone (eiffel_type);
 			class_name.to_upper;
 			!!Result.make (100);
 			Result.append ("class ");
@@ -494,6 +478,7 @@ feature
 				-- ***********
 			Result.append ("%N%Ninherit%N%N%TEB_BULLETIN");
 			Result.append ("%N%T%Trename%N%T%T%Tmake as eb_bulletin_make");
+			Result.append ("%N%T%Tend;");
 
 				-- ********
 				-- Features
@@ -528,7 +513,7 @@ feature
 
 			color_text := children_color;
 			if not color_text.empty then
-				Result.append ("\t\t\tset_colors;\n");
+				Result.append ("%T%T%Tset_colors;%N");
 				Result.append ("%T%Tend;%N");
 				Result.append ("%N%Tset_colors is%N%T%Tlocal%N%T%T%Ta_color: COLOR;%N%T%T%Ta_pixmap: PIXMAP%N%T%Tdo%N");
 				Result.append (color_text);
@@ -568,7 +553,7 @@ feature
 			new_id := group_table.item (retrieved_node.group_type);
 			set_type_identifier (new_id);
 			generate_internal_name;
-
+			retrieved_node.set_name_change (full_name);
 			retrieve_oui_widget;
 		end;
 

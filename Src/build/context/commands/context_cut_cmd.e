@@ -39,7 +39,7 @@ feature {NONE}
 			from
 				deleted_contexts.start
 			until
-				deleted_contexts.offright
+				deleted_contexts.after
 			loop
 				deleted_contexts.item.widget.destroy;
 				deleted_contexts.forth
@@ -75,20 +75,19 @@ feature
 			if (context.parent = Void) or else not context.parent.is_in_a_group then
 					-- a group can be destroyed but not its content
 				!!context_list.make;
+				!!deleted_contexts.make;
 				if context.grouped then
-					!!deleted_contexts.make;
 					deleted_contexts.merge_right (context.group);
 					from
 						deleted_contexts.start
 					until
-						deleted_contexts.offright
+						deleted_contexts.after
 					loop
 						context_list.merge_right (deleted_contexts.item.recursive_cut);
 						deleted_contexts.item.set_parent (void_parent);
 						deleted_contexts.forth;
 					end;
 				else
-					deleted_contexts := Void;
 					context_list.merge_right (context.recursive_cut);
 					context.set_parent (void_parent);
 				end;
@@ -99,13 +98,13 @@ feature
 
 	undo is
 		do
-			if (deleted_contexts = Void) then
+			if deleted_contexts.empty then
 				context.set_parent (parent);
 			else
 				from
 					deleted_contexts.start
 				until
-					deleted_contexts.offright
+					deleted_contexts.after
 				loop
 					deleted_contexts.item.set_parent (parent);
 					deleted_contexts.forth;
@@ -114,7 +113,7 @@ feature
 			from
 				context_list.start
 			until
-				context_list.offright
+				context_list.after
 			loop
 				context_list.item.undo_cut;
 				context_list.forth;
@@ -129,23 +128,24 @@ feature
 			from
 				context_list.start
 			until
-				context_list.offright
+				context_list.after
 			loop
 				context_list.item.cut;
 				context_list.forth;
 			end;
-			if (deleted_contexts = Void) then
+			if deleted_contexts.empty then
 				context.set_parent (void_parent);
 			else
 				from
 					deleted_contexts.start
 				until
-					deleted_contexts.offright
+					deleted_contexts.after
 				loop
 					deleted_contexts.item.set_parent (void_parent);
 					deleted_contexts.forth;
 				end;
 			end;
+			context.widget.set_managed (False);
 			if not (parent = Void) then
 				tree.display (parent)
 			else

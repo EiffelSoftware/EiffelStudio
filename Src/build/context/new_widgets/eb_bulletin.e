@@ -52,8 +52,8 @@ feature
 		do
 			search_widget (a_widget);
 			widget_coordinates.item.set_ratios (old_width, old_height,
-												a_widget.x, a_widget.y,
-												a_widget.width, a_widget.height);
+			a_widget.x, a_widget.y,
+			a_widget.width, a_widget.height);
 		end;
 
 	width_resizeable (a_widget: WIDGET; flag: BOOLEAN) is
@@ -111,13 +111,13 @@ feature {PERM_WIND_C} -- only exported for ebuild. Not needed for generated appl
 			from
 				widget_coordinates.start
 			until
-				widget_coordinates.offright or else widget_coordinates.item.widget = a_widget
+				widget_coordinates.after or else widget_coordinates.item.widget = a_widget
 			loop
 				widget_coordinates.forth
 			end;
-			if widget_coordinates.offright then
+			if widget_coordinates.after then
 				!!widget_ratio.make (a_widget);
-				widget_coordinates.put_left (widget_ratio);
+				widget_coordinates.add_left (widget_ratio);
 				widget_coordinates.back;
 			end;
 			if not widget_coordinates.item.initialized and then
@@ -138,7 +138,7 @@ feature {PERM_WIND_C} -- only exported for ebuild. Not needed for generated appl
 						from
 							widget_coordinates.start
 						until
-							widget_coordinates.offright
+							widget_coordinates.after
 						loop
 							widget_coordinates.item.update_widget (width, height);
 							widget_coordinates.forth

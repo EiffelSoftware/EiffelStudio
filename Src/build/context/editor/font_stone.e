@@ -19,6 +19,13 @@ feature {NONE}
 
 feature 
 
+	eiffel_type: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("font");
+		end;
+
+
 	copy_attribute (new_context: CONTEXT) is
 		local
 			font_name: STRING;

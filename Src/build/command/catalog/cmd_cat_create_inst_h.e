@@ -4,12 +4,29 @@ class CMD_CAT_CREATE_INST_H
 inherit
 
 	CMD_CAT_BUTTON
-        rename
-            make as old_create
-        redefine
-            process_stone
+		rename
+			make as old_create,
+			make_visible as make_button_visible
+		redefine
+			process_stone
 		end;
+
+	CMD_CAT_BUTTON
+		rename
+			make as old_create
+		redefine
+			process_stone, make_visible
+		select
+			make_visible
+		end;
+
+
 	PIXMAPS
+		export
+			{NONE} all
+		end;
+
+	COMMAND
 		export
 			{NONE} all
 		end;
@@ -30,6 +47,14 @@ feature
 		end; -- Create
 
 	
+    make_visible (a_parent: COMPOSITE) is
+		local
+			Nothing: ANY
+		do
+			make_button_visible (a_parent);
+			add_activate_action (Current, Nothing)
+		end;
+ 
 feature {NONE}
 
 	process_stone is
@@ -49,5 +74,14 @@ feature {NONE}
 				inst.create_editor
 			end					
 		end;
+
+	execute (argument: ANY) is
+		local
+			inst_editor: CMD_INST_EDITOR
+		do
+			inst_editor := window_mgr.cmd_inst_editor;
+			window_mgr.display (inst_editor)	
+		end;
+
 
 end 

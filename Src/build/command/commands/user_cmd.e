@@ -27,7 +27,7 @@ feature -- Creation
 			-- Initialize current user
 			-- command.
 		do
-			set_symbol (Command_pixmap);
+			set_symbol (Command_o_pixmap);
 			int_generator.next;
 			identifier := int_generator.value;
 			!!arguments.make;
@@ -103,10 +103,51 @@ feature -- Namable
 			if (s = Void) then
 				visual_name := Void
 			else
-				visual_name := s.duplicate
+				visual_name := clone (s);
+				if has_instances then
+					update_instance_names;
+				end;
 			end;
 			command_catalog.update_name_in_editors (Current);
 		end;
+
+	update_instance_names is
+		local
+			s: STATE;
+			b: BEHAVIOR
+		do
+			from
+				graph.start
+			until
+				graph.over
+			loop
+				s ?= graph.key_for_iteration;
+				if not (s = Void) then
+					from
+						s.start
+					until
+						s.after 
+					loop
+						b := s.output.original_stone;
+						from
+							b.start
+						until
+							b.after 
+						loop
+							if (b.output.associated_command = Current) then
+								if b.output.edited then
+									b.output.inst_editor.set_instance_stone;
+								end;
+							end;
+							b.forth
+						end;
+						s.forth
+					end;
+				end;
+				graph.forth
+			end
+		end;
+
 
 feature -- Editor
 
@@ -159,6 +200,17 @@ feature -- Inheritance
 				!!cut_parent_command;
 				cut_parent_command.execute (Current);
 			end
+		end;
+
+	refresh_parent is
+			-- remove and redo parent with out recording it in the history.
+		local
+			refresh_parent_command: CMD_REFRESH_PARENT;
+		do
+			if parent_type /= Void then
+				!!refresh_parent_command;
+				refresh_parent_command.execute (Current);
+			end;
 		end;
 
 	set_parent_type (c: CMD) is
@@ -229,6 +281,7 @@ feature {NONE} -- Naming
 
 feature -- Editing
 
+
 	update_instance_editors is
 			-- Update arguments in the instance 
 			-- editors of Current command.
@@ -268,6 +321,7 @@ feature -- Editing
 		do
 			save_arguments;
 			save_labels;
+			save_text;
 		end;
 
 	save_text is	
@@ -275,7 +329,7 @@ feature -- Editing
 		require
 			Editing: edited
 		do
-			eiffel_text := command_editor.eiffel_text.duplicate
+			eiffel_text := clone (command_editor.eiffel_text);
 		end;
 
 	set_arguments (args: like arguments) is
@@ -309,7 +363,7 @@ feature {NONE}
 			until
 				arguments.after
 			loop
-				l.add (arguments.item);
+				l.extend (arguments.item);
 				arguments.forth
 			end;
 			arguments := l
@@ -328,7 +382,7 @@ feature {NONE}
 			until
 				labels.after
 			loop
-				l.add (labels.item);
+				l.extend (labels.item);
 				labels.forth
 			end;
 			labels := l
@@ -341,11 +395,16 @@ feature  -- Generation
 			-- command.
 		local
 			parent_name: STRING;
-			inherited_args: LINKED_LIST [STRING]
+			inherited_args: LINKED_LIST [STRING];
+			found: BOOLEAN;
 		do
 			!!Result.make (0);
 			Result.append ("class ");
 			Result.append (eiffel_type);
+			if visual_name /= Void and then not visual_name.empty then
+				Result.append ("%T%T-- ");
+				Result.append (visual_name);
+			end;
 			Result.append ("%N%Ninherit%N%N%T");
 			if (parent_type = Void) then
 				if undoable then
@@ -354,7 +413,7 @@ feature  -- Generation
 					Result.append ("NON_UNDOABLE_CMD");
 				end
 			else
-				Result.append (parent_type.eiffel_inherit_text);
+				Result.append (parent_type.eiffel_inherit_text (renamed_labels));
 			end;
 			Result.append ("%N%Ncreation%N%N%Tmake");
 			Result.append ("%N%Nfeature%N%N");
@@ -389,7 +448,22 @@ feature  -- Generation
 				arguments.forth
 			end;
 			if (parent_type = Void) then
-				Result.append ("%Texecute is%N%T%Tdo%N%T%Tend;%N%N");
+				Result.append ("%Texecute is%N%T%Tdo%N");
+				if not labels.empty then
+					from
+						labels.start
+					until
+						labels.after or found
+					loop
+						if (labels.item.parent_type = Void) then
+							Result.append ("%T%T%Tset_transition_label (");
+							Result.append (labels.item.label);
+							Result.append ("_label);%N");
+							found := True;
+						end;
+					end;
+				end;
+				Result.append ("%T%Tend;%N%N");
 			else
 				Result.append (parent_type.eiffel_body_text);
 			end;
@@ -410,7 +484,7 @@ feature  -- Generation
 					Result.append (arguments.item.eiffel_type);
 					arguments.forth;
 					if not arguments.after then
-						Result.append ("; ")
+						Result.append (";%N%T%T")
 					end;
 				end;
 				Result.append (")");
@@ -433,7 +507,7 @@ feature  -- Generation
 					Result.append (arg_param_namer.value);	
 					Result.append (";");
 				else
-					inherited_args.add (arg_param_namer.value);
+					inherited_args.extend (arg_param_namer.value);
 				end;
 				arguments.forth
 			end;
@@ -444,6 +518,7 @@ feature  -- Generation
 			Result.append ("%T%Tend;%N%N");
 			if undoable then
 				Result.append ("%Tundo is%N%T%Tdo%N%T%Tend;%N%N");
+				Result.append ("%Tredo is%N%T%Tdo%N%T%Tend;%N%N");
 			end;
 			Result.append ("end%N");
 		end;
@@ -495,12 +570,46 @@ feature -- labels {CMD_EDITOR}
 			lab: CMD_LABEL;
 			add_label_cmd: CMD_ADD_LABEL
 		do
-			!!lab.make (l);
-			!!add_label_cmd;
-			add_label_cmd.set_element (lab);
-			add_label_cmd.execute (Current);
+			if not label_exist (l) then
+				!!lab.make (l);
+				!!add_label_cmd;
+				add_label_cmd.set_element (lab);
+				add_label_cmd.execute (Current);
+			end;
 		end;
+
+	label_exist (l: STRING): BOOLEAN is
+		do
+			from 
+				labels.start
+			until
+				labels.after
+			loop
+				Result := l.is_equal (labels.item.label);
+				if Result then
+					labels.finish;
+				end;
+				labels.forth;
+			end;
+		end;
+
  
+
+	renamed_labels: LINKED_LIST [STRING] is
+		do
+			!!Result.make;
+			from 
+				labels.start
+			until
+				labels.after
+			loop
+				if labels.item.inh_renamed then
+					Result.extend (clone (labels.item.label));
+				end;
+				labels.forth;
+			end;
+		end;
+
 	remove_label (l: CMD_LABEL) is
 			-- Remove `l' from the list of labels
 			-- from current command.

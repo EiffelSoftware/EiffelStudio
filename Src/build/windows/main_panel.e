@@ -15,9 +15,11 @@ inherit
 		export
 			{NONE} all
 		end;
-	COMMAND
+	LICENCE_COMMAND
 		export
 			{NONE} all
+		redefine
+			cancel_request
 		end;
 	COMMAND_ARGS
 		export
@@ -70,9 +72,12 @@ feature
 	quit_b: QUIT_BUTTON;
 	open_b: OPEN_BUTTON;
 
-	edit_b: EDIT_BUTTON;
 	cut_b: CUT_HOLE;
 	help_b: HELP_HOLE;
+	con_b: CON_ED_HOLE;
+	cmd_b: CMD_ED_HOLE;
+	cmdi_b: CMD_I_ED_HOLE;
+	state_b: STATE_ED_HOLE;
 
 	generate_b: GENERATE_BUTTON;
 	import_b: IMPORT_BUTTON;
@@ -100,26 +105,34 @@ feature
 				!!quit_b.make (P_Cbutton1, form1);
 				!!focus_label.make (L_abel, form1);
 				focus_label.set_center_alignment;	
-				focus_label.forbid_recompute_size;	
-				!!edit_b.make (P_Cbutton2, form1);
+				focus_label.forbid_recompute_size;
+				!!con_b.make (P_Cbutton4, form1);
+				!!cmd_b.make (P_Cbutton5, form1);
+				!!cmdi_b.make (P_Cbutton6, form1);
+				!!state_b.make (P_Cbutton11, form1);
 				!!cut_b.make (P_Cbutton10, form1);
 				!!help_b.make (Void_hw, form1);
 				form1.attach_top (open_b, 0);
 				form1.attach_top (quit_b, 0);
 				form1.attach_top (focus_label, 0);
-				form1.attach_top (edit_b, 0);
+				form1.attach_top (con_b, 0);
+				form1.attach_top (cmd_b, 0);
+				form1.attach_top (cmdi_b, 0);
 				form1.attach_bottom (focus_label, 0);
 				form1.attach_top (cut_b, 0);
 				form1.attach_top (help_b, 0);
 
-				form1.attach_left (open_b, 0);
-				form1.attach_left_widget (open_b, quit_b, 5);
-				form1.attach_left_widget (quit_b, focus_label, 0);
-				form1.attach_right_widget (edit_b, focus_label, 0);
+				form1.attach_left (con_b, 0);
+				form1.attach_left_widget (con_b, cmd_b, 5);
+				form1.attach_left_widget (cmd_b, cmdi_b, 5);
+				form1.attach_left_widget (cmdi_b, state_b, 5);
+				form1.attach_left_widget (state_b, cut_b, 10);
+				form1.attach_left_widget (cut_b, help_b, 5);
+				form1.attach_left_widget (help_b, focus_label, 0);
+				form1.attach_right_widget (open_b, focus_label, 0);
 
-				form1.attach_right_widget (cut_b, edit_b, 5);
-				form1.attach_right_widget (help_b, cut_b, 5);
-				form1.attach_right (help_b, 15);
+				form1.attach_right_widget (quit_b, open_b, 10);
+				form1.attach_right (quit_b, 15);
 
 			!!form2.make (F_orm2, form);
 				!!generate_b.make (P_Cbutton7, form2);
@@ -196,12 +209,16 @@ feature
 			-- *** Set values ***
 
 			t1.arm;
+			t1_state := True;
 			t2.arm;
+			t2_state := True;
 			t3.disarm;
 			t4.disarm;
 			t5.disarm;
 			t6.arm;
+			t6_state := True;
 			t7.arm;
+			t7_state := True;
 			t8.disarm;
 			t1.set_text ("Context catalog");
 			t2.set_text ("Context tree");
@@ -237,7 +254,9 @@ feature {NONE}
 	t1_state, t2_state, t3_state, t4_state: BOOLEAN;
 	t5_state, t6_state, t7_state: BOOLEAN;
 
-	execute (argument: ANY) is
+feature {TRANSPORTER}
+
+	work (argument: ANY) is
 		local
 			t: TOGGLE_B
 		do
@@ -278,6 +297,11 @@ feature {NONE}
 							app_editor.show
 						else
 							app_editor.realize
+						end;
+						if app_editor.selected_figure = Void then
+							app_editor.set_default_selected;
+						else
+							app_editor.display_transitions;
 						end;
 						t4_state := True
 					else
@@ -372,13 +396,63 @@ feature {NONE}
 						if t7_state then
 							window_mgr.show_all_editors;
 							t7_state := False
-						end
-					end
+						end;
+					end;
+				elseif (argument = First) then
+					if t1_state then
+						t1_state := False;
+						cancel_request (t1);
+						context_catalog.hide;
+					end;
+					if t2_state then
+						t2_state := False;
+						cancel_request (t2);
+						tree.hide;
+					end;
+					if t3_state then
+						t3_state := False;
+						cancel_request (t3);
+						command_catalog.hide;
+					end;
+					if t4_state then
+						t4_state := False;
+						cancel_request (t4);
+						app_editor.hide;
+					end;
+					if t5_state then
+						t5_state := False;
+						cancel_request (t5);
+						history_window.hide;
+					end;
+					if t6_state then
+						t6_state := False;
+						cancel_request (t6);
+						hide_interface;
+					end;
+					if t7_state then
+						t7_state := False;
+						cancel_request (t7);
+						window_mgr.hide_all_editors;
+					end;
 				end;
 			else
-				t ?= argument;
+				cancel_request (argument);
+			end;
+		end;
+
+	
+feature {NONE}
+
+	cancel_request (arg: ANY) is
+		local
+			t: TOGGLE_B;
+		do
+			t ?= arg;
+			if t /= Void then
+				t.remove_value_changed_action(current, t);
 				if t.state then t.disarm else t.arm end;
-			end
+				t.add_value_changed_action(current, t);
+			end;
 		end;
 
 	hide_interface is
@@ -404,4 +478,9 @@ feature {NONE}
 				window_list.forth
 			end;
 		end;
+
+	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+		do
+		end;
+
 end

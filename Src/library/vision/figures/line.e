@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- LINE: Description of general lines (implementation for X).
 
@@ -11,36 +5,21 @@ deferred class LINE
 
 inherit
 
-	OPEN_FIG;
+	OPEN_FIG
+		redefine
+			conf_recompute
+		end;
 
 	PATH;
+			
 
 	BASIC_ROUTINES
 		export
 			{NONE} all
-		end
-
-
-
-	
-feature 
-
-	is_horizontal: BOOLEAN is
-			-- Is the line horizontal ?
-		do
-			Result := (p1.y = p2.y)
-		end; 
-
-	is_null: BOOLEAN is
-			-- Is the line null ?
-		deferred
-		end; 
-
-	is_vertical: BOOLEAN is
-			-- Is the line vertical ?
-		do
-			Result := (p1.x = p2.x)
 		end;
+
+feature -- Access
+
 
 	origin: COORD_XY_FIG is
 			-- Origin of line
@@ -66,21 +45,25 @@ feature
 	p1: COORD_XY_FIG;
 			-- First point
 
+
+feature -- Modification & Insertion
+
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
 		require
 			o1_exists: not (o1 = Void);
-			o2_exists: not (o2 = Void)
+			o2_exists: not (o2 = Void);
 		deferred
 		ensure
 			p1 = o1;
 			p2 = o2
 		end;
 
+
 	set_origin_to_first_point is
 			-- Set origin to first point of line.
 		do
-			origin_user_type := 2
+			origin_user_type := 2;
 		ensure
 			origin.is_surimposable (p1)
 		end;
@@ -88,13 +71,13 @@ feature
 	set_origin_to_middle is
 			-- Set origin to middle of the segment [`p1', `p2'].
 		do
-			origin_user_type := 4
+			origin_user_type := 4;
 		end;
 
 	set_origin_to_second_point is
 			-- Set origin to second point of line.
 		do
-			origin_user_type := 3
+			origin_user_type := 3;
 		ensure
 			origin.is_surimposable (p2)
 		end;
@@ -125,7 +108,8 @@ feature
 			a_positive: a >= 0.0
 		do
 			p1.xyrotate (a, px, py);
-			p2.xyrotate (a, px, py)
+			p2.xyrotate (a, px, py);
+			set_conf_modified
 		end;
 
 	xyscale (f: REAL; px,py: INTEGER) is
@@ -134,15 +118,48 @@ feature
 			scale_factor_positive: f > 0.0
 		do
 			p1.xyscale (f, px, py);
-			p2.xyscale (f, px, py)
+			p2.xyscale (f, px, py);
+			set_conf_modified
 		end;
 
 	xytranslate (vx, vy: INTEGER) is
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			p1.xytranslate (vx, vy);
-			p2.xytranslate (vx, vy)
+			p2.xytranslate (vx, vy);
+			set_conf_modified
 		end
+
+
+feature -- Status report
+
+	is_horizontal: BOOLEAN is
+			-- Is the line horizontal ?
+		do
+			Result := (p1.y = p2.y)
+		end; 
+
+	is_null: BOOLEAN is
+			-- Is the line null ?
+		deferred
+		end; 
+
+	is_vertical: BOOLEAN is
+			-- Is the line vertical ?
+		do
+			Result := (p1.x = p2.x)
+		end;
+
+feature -- Updating
+
+	conf_recompute is
+		require else
+			p1 /= Void and p2 /= Void
+		do
+			surround_box.set_bound (p1, p2);
+			unset_conf_modified
+		end;
+
 
 invariant
 
@@ -151,4 +168,18 @@ invariant
 	not (p1 = Void);
 	not (p2 = Void)
 
-end
+end -- class LINE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

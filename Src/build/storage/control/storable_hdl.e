@@ -26,7 +26,7 @@ feature
 			f: UNIX_FILE;
 		do
 			!!f.make_open_write (file_name);
-			basic_store (f);
+			general_store (f);
 			f.close
 		end; 
 			

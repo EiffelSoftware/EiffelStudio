@@ -15,13 +15,13 @@ feature -- Editable
 
 	create_editor is
 		local
-			ed: CMD_EDITOR
+			ed: CMD_EDITOR;
 		do
 			if command_editor = Void then
 				ed := window_mgr.cmd_editor;
 				ed.set_command (Current);
 			end;
-			window_mgr.display (command_editor)
+			window_mgr.display (command_editor);
 		end
 
 feature -- Instance
@@ -35,7 +35,7 @@ feature -- Instance
 			from
 				graph.start
 			until
-				graph.offright or Result
+				graph.over or Result
 			loop
 				s ?= graph.key_for_iteration;
 				if not (s = Void) then
@@ -59,6 +59,17 @@ feature -- Instance
 				end;
 				graph.forth
 			end
+		end;
+
+	instance_counter: INT_GENERATOR;
+
+	instance_count: INTEGER is
+		do
+			if instance_counter = Void then
+				!!instance_counter;
+			end;
+			Result := instance_counter.value;
+			instance_counter.next;
 		end;
 
 feature -- Stone
@@ -102,16 +113,16 @@ feature -- Editing
 
 feature -- Code Generation
 
-	eiffel_inherit_text: STRING is
+	eiffel_inherit_text (rl: LINKED_LIST [STRING]): STRING is
 			-- Code generation for the 
 			-- inherit clause of Current.
 		local
-			temp: STRING;
-			n: LOCAL_NAMER
+			old_label, temp: STRING;
+			n: LOCAL_NAMER;
 		do
 			!!n.make ("argument");
 			!!Result.make (0);
-				temp := eiffel_type.duplicate;
+				temp := clone (eiffel_type);
 				temp.to_upper;
 			Result.append (temp);
 			Result.append ("%N%T%Trename%N%T%T%Texecute as ");
@@ -136,6 +147,18 @@ feature -- Code Generation
 				Result.append (n.value);
 				arguments.forth
 			end;
+			from
+				rl.start
+			until
+				rl.after
+			loop
+				Result.append (",%N%T%T%T");
+				old_label := rl.item.substring (eiffel_type.count + 2, rl.item.count);
+				Result.append (old_label);
+				Result.append (" as ");
+				Result.append (rl.item);
+				rl.forth;
+			end;
 			Result.append ("%N%T%Tend;%N%T");
 				temp.to_upper;
 			Result.append (temp);
@@ -147,7 +170,7 @@ feature -- Code Generation
 				n.reset;
 				arguments.start
 			until
-				arguments.offright
+				arguments.after
 			loop
 				Result.append (", %N%T%T%T");
 				n.next;
@@ -157,6 +180,18 @@ feature -- Code Generation
 				Result.append ("_");
 				Result.append (n.value);
 				arguments.forth
+			end;
+			from
+				rl.start
+			until
+				rl.after
+			loop
+				Result.append (",%N%T%T%T");
+				old_label := rl.item.substring (eiffel_type.count + 2, rl.item.count);
+				Result.append (old_label);
+				Result.append (" as ");
+				Result.append (rl.item);
+				rl.forth;
 			end;
 			Result.append ("%N%T%Tredefine%N%T%T%Texecute");
 			Result.append ("%N%T%Tselect%N%T%T%Texecute%N%T%Tend");
@@ -170,7 +205,7 @@ feature -- Code Generation
 		do
 			!!Result.make (0);
 			Result.append ("%Texecute is%N%T%Tdo%N%T%T%T");
-				temp := eiffel_type.duplicate;
+				temp := clone (eiffel_type);
 				temp.to_lower;
 			Result.append (temp);
 			Result.append ("_execute;%N%T%Tend;%N%N");
@@ -184,7 +219,7 @@ feature -- Code Generation
 		do
 			!!Result.make (0);
 			Result.append ("%T%T%T");
-				temp := eiffel_type.duplicate;
+				temp := clone (eiffel_type);
 				temp.to_lower;
 			Result.append (temp);
 			Result.append ("_make");

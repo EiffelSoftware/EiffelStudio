@@ -46,7 +46,7 @@ feature {NONE}
 
 	focus_source: WIDGET is
 		do
-			Result := Current
+			Result := button;
 		end;
 
 	focus_string: STRING;
@@ -89,14 +89,13 @@ feature {NONE}
 						not p2.after
 					then
 						p2.remove;
-						page.add (temp_cmd);
+						page.extend (temp_cmd);
 					end
 				end
 			elseif
 				not (new_command = Void)
 			then
 				!!cmd.make;
-io.putstring ("Creating a command from hole%N");
 				cmd.set_internal_name ("");
 				cmd.set_eiffel_text (cmd.template);
 				command_catalog.add_to_page (cmd, page);

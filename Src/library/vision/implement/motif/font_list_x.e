@@ -1,9 +1,6 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+
+indexing
+	copyright: "See notice at end of class"
 
 class FONT_LIST_X 
 
@@ -11,14 +8,20 @@ inherit
 
 	FONT_LIST_I
 		undefine
-			twin
+			copy,
+			is_equal,
+			consistent,
+			setup
 		end;
 
 	G_ANY_I
 		export
 			{NONE} all
 		undefine
-			twin
+			copy,
+			is_equal,
+			consistent,
+			setup
 		end;
 
 	FIXED_LIST [FONT]
@@ -28,16 +31,15 @@ inherit
 			i_th as list_i_th,
 			first as list_first,
 			last as list_last,
-			search_equal as list_search_equal,
-			search_same as list_search_same,
 			index_of as list_index_of,
 			has as list_has,
 			put as list_put,
 			put_i_th as list_put_i_th,
-			wipe_out as list_wipe_out
+			wipe_out as list_wipe_out,
+			search as list_search
 		export
 			{NONE} all
-		end
+		end;
 
 creation
 
@@ -137,7 +139,7 @@ feature
 			Result := list_item;
 			if (Result = Void) then
 				!!Result.make;
-				Result.set_name (font_table_i_th (fonts_ptr, position));
+				Result.set_name (font_table_i_th (fonts_ptr, index));
 				list_put (Result)
 			end
 		ensure then
@@ -192,8 +194,13 @@ feature {NONE}
 			-- go off right if none.
 		require
 			search_element_exists: not (v = Void)
+		local
+			keep_object_comparison: BOOLEAN;
 		do
-			list_search_same (v)
+			keep_object_comparison := object_comparison;
+			object_comparison := false;	
+			list_search (v);
+			object_comparison := keep_object_comparison
 		ensure
 			(not off) implies (v = item)
 		end
@@ -228,3 +235,17 @@ feature {NONE} -- External features
 		end; 
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

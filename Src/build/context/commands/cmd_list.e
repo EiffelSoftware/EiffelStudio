@@ -21,7 +21,7 @@ feature {NONE}
 			from
 				cmd_list.start
 			until
-				cmd_list.offright
+				cmd_list.after
 			loop
 				cmd_list.item.undo;
 				cmd_list.forth;

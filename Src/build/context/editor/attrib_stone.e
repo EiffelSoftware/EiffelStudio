@@ -54,7 +54,7 @@ feature {NONE}
 				from
 					a_list.start
 				until
-					a_list.offright
+					a_list.after
 				loop
 					modify_context (a_list.item);
 					a_list.forth;
@@ -66,10 +66,6 @@ feature {NONE}
 
 	
 feature 
-
-	eiffel_type: STRING is
-		do
-		end;
 
 	original_stone: TYPE_STONE;
 	

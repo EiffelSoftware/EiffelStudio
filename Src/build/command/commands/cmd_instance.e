@@ -21,12 +21,14 @@ feature -- Creation
 		local
 			a: ARG_INSTANCE	
 		do
+			inst_identifier := c.instance_count;
 			associated_command := c;
 			update_arguments
 		end;
 
 	storage_init (c: CMD; al: EB_LINKED_LIST [ARG_INSTANCE]) is
 		do
+			inst_identifier := c.instance_count;
 			associated_command := c;
 			arguments := al
 		end;
@@ -101,7 +103,7 @@ feature -- Editing
 				al.after
 			loop
 				!!a.session_init (al.item);
-				arguments.add (a);
+				arguments.extend (a);
 				al.forth
 			end;
 		end;
@@ -110,12 +112,24 @@ feature -- Stone
 
 	label: STRING is
 		do
-			Result := associated_command.label
+			!!Result.make (0);
+			Result.append (associated_command.label);
+			Result.append (".");
+			Result.append_integer (inst_identifier);
+		end;
+
+	inst_identifier: INTEGER;
+
+	set_inst_identifier (n: INTEGER) is
+		require
+			n_not_void: n /= Void;
+		do
+			inst_identifier := n;
 		end;
  
 	symbol: PIXMAP is
 		do
-			Result := Command_instance_pixmap 
+			Result := Command_i_icon_pixmap 
 		end;
 
 	source: WIDGET is do end;

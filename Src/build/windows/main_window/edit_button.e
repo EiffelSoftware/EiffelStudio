@@ -1,5 +1,5 @@
 
-class EDIT_BUTTON 
+deferred class EDIT_BUTTON 
 
 inherit
 
@@ -23,29 +23,20 @@ inherit
 			{NONE} all
 		end
 
-creation
+--creation
 
-	make
+	--make
 
-feature {NONE}
-
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label;
-		end;
-
-	focus_string: STRING is "Edit stone"
-	
 feature 
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
-		do
-			make_visible (a_parent);
-			set_symbol (Edit_stone_pixmap);
-			initialize_focus
-		end;
+	--make (a_name: STRING; a_parent: COMPOSITE) is
+		--local
+			--Nothing: ANY
+		--do
+			--make_visible (a_parent);
+			--set_symbol (Edit_stone_pixmap);
+			--initialize_focus
+		--end;
 
 	
 feature {NONE}

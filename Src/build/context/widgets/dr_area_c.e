@@ -19,7 +19,7 @@ inherit
 			initialize_transport as old_initialize_transport,
 			remove_widget_callbacks as old_remove_widget_callbacks
 		redefine
-				add_widget_callbacks, stored_node, context_initialization, widget	
+				add_widget_callbacks, stored_node, context_initialization, widget
 		end;
 
 	CONTEXT
@@ -52,7 +52,6 @@ feature
 		end;
 
 	widget: EB_DRAWING_BOX;
-
 	
 feature {NONE}
 

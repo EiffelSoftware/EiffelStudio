@@ -18,7 +18,7 @@ feature
 
 	make (other: EVENT) is
 		do
-			identifier := other.identifier	
+			identifier := other.identifier;
 		end;
 
 	event: EVENT is
@@ -28,6 +28,9 @@ feature
 			else
 				Result := translation_table.item (identifier);
 			end;
+			--	io.putstring ("event retrieved on id ");
+			--	io.putint (identifier);
+			--	io.new_line;
 		end;
 
 	

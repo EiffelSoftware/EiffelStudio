@@ -112,7 +112,7 @@ feature
 			offset_value.set_maximum_right_bottom (true);
 			offset_value.set_horizontal (true);
 			offset_value.show_value (true);
-			offset_value.set_size (100, 30);
+			offset_value.set_size (110, 15);
 			offset_value.add_value_changed_action (Current, offset_value);
 
 			attach_left (reference, 10);
@@ -141,6 +141,8 @@ feature
 			attach_top_widget (offset, offset_value, 10);
 			attach_bottom_widget (separator, context_list, 5);
 			attach_bottom_widget (separator, offset_value, 5);
+			radio_box_direction.set_always_one (True);
+			radio_box_point.set_always_one (True);
 		end;
 
 	
@@ -179,7 +181,7 @@ feature
 				from
 					context_list.start
 				until	
-					context_list.offright
+					context_list.after
 				loop
 					a_context := context_list.item.original_stone;
 					i := i + 1;
@@ -227,7 +229,7 @@ feature
 			from
 				context_list.start
 			until
-				found or else context_list.offright
+				found or else context_list.after
 			loop
 				if context_list.item.original_stone = item then
 					found := true
@@ -236,7 +238,7 @@ feature
 				end;
 			end;
 			if not found then
-				context_list.add (item);
+				context_list.extend (item);
 			end;
 		end;
 

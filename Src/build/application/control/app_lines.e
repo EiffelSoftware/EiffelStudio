@@ -19,7 +19,7 @@ inherit
 				draw, empty, off, found, mark, start, 
 				offright, line, forth, finish, remove_selected, 
 				find, position, set_select_mode, set_find_mode, 
-				go, remove_all_occurrences, drawing_list_append, 
+				go, prune_all, drawing_list_append, 
 				enable_drawing, disable_drawing, search, wipe_out
 		redefine
 			has
@@ -109,7 +109,7 @@ feature
 				found := false;
 				start
 			until
-				offright or found
+				after or found
 			loop
 				if
 					l.source = line.destination and
@@ -150,7 +150,7 @@ feature
 			from
 				start
 			until
-				offright or else (Result = True)
+				after or else (Result = True)
 			loop
 				if
 					l.source = line.source and
@@ -176,11 +176,11 @@ feature
 			then
 				line.set_bi_directional (False);
 				a_line := line;
-				pos := position; --mark
+				pos := index; --mark
 				from
 					start
 				until	
-					offright or line_found
+					after or line_found
 				loop
 					if
 						a_line.source = line.destination
@@ -193,7 +193,7 @@ feature
 						forth
 					end
 				end;
-				go (pos) -- return
+				go_i_th (pos) -- return
 			end;
 			drawing_list_remove;
 		end; 
@@ -212,7 +212,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				if
 					line.source = figure or

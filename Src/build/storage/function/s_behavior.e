@@ -68,8 +68,7 @@ feature
 			until
 				input_list.after
 			loop
-				Result.add (input_list.item.event, 
-								output_list.item.command);
+				Result.add (input_list.item.event, output_list.item.command);
 				input_list.forth;
 				output_list.forth
 			end;

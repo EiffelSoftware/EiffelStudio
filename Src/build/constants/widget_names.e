@@ -19,7 +19,7 @@ feature {NONE}
 	C_heck_box1: STRING is "check_box1";
 	C_heck_box2: STRING is "check_box2";
 	C_ommand_catalog: STRING is "command_catalog";
-	C_ommand_editor: STRING is "command_editor";
+	C_ommand_editor: STRING is "command_tool";
 	D_rawingarea: STRING is "drawing_area";
 	F_orm: STRING is "form";
 	F_orm1: STRING is "form1";
@@ -66,6 +66,9 @@ feature {NONE}
 	P_Cbutton8: STRING is "pcbutton8";
 	P_Cbutton9: STRING is "pcbutton9";
 	P_Cbutton10: STRING is "pcbutton10";
+	P_Cbutton11: STRING is "pcbutton11";
+	P_Cbutton12: STRING is "pcbutton12";
+	P_Cbutton13: STRING is "pcbutton13";
 	R_adio_box: STRING is "radio_box";
 	R_adio_box1: STRING is "radio_box1";
 	R_owcolumn: STRING is "row_column";
@@ -104,9 +107,19 @@ feature {NONE}
 	C_opy: String is "Copy";
 	C_ut: String is "Cut";
 	P_aste: String is "Paste";
+	A_lert: STRING is "Alert";
+	E_rror: STRING is "Error";
+	Q_uestion: STRING is "Question";
 
-	C_ontexteditor: STRING is "Context Editor";
+
+	C_ontexttool: STRING is "Context Tool";
 	C_ontexttree: STRING is "Context Tree";
 	C_ontextcatalog: STRING is "Context Catalog";
+	C_ommandcatalog: STRING is "Command catalog";
+	S_tatetool: STRING is "State Tool";
+	C_ommandtypetool: STRING is "Command Type Tool";
+	C_mdinstancetool: STRING is "Command Instance Tool";
+	XeiffelBuild: STRING is "XeiffelBuild";
+	H_istorywindow: STRING is "History Window";
 
 end -- class WIDGET_NAMES

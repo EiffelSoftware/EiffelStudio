@@ -81,15 +81,15 @@ feature {NONE}
 
 	append_mouse_events is
 		do
-			add (mouse_motion1);
-			add (mouse_motion2);
-			add (mouse_motion3);
-			add (mouse1u);
-			add (mouse2u);
-			add (mouse3u);
-			add (mouse1d);
-			add (mouse2d);
-			add (mouse3d);
+			extend (mouse_motion1);
+			extend (mouse_motion2);
+			extend (mouse_motion3);
+			extend (mouse1u);
+			extend (mouse2u);
+			extend (mouse3u);
+			extend (mouse1d);
+			extend (mouse2d);
+			extend (mouse3d);
 		end;
 
 	

@@ -78,13 +78,13 @@ feature {NONE}
 	update_display is
 		do
 			if undo_executed then
-				application_editor.display_states;
 				application_editor.draw_figures;
 				undo_executed := false
 			else
 				figure.draw; 
-				application_editor.display_states; 
-			end
+			end;
+			application_editor.display_states; 
+			application_editor.display_transitions;
 		end;
 
 	worked_on: STRING is

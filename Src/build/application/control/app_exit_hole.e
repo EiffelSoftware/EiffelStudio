@@ -5,7 +5,7 @@ inherit
 
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end;
 	LABELS
 		export
@@ -33,6 +33,11 @@ feature {NONE}
 
 	stone: LABEL_SCR_L;
 			-- Transition list
+	compatible (s: LABEL_SCR_L): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 	process_stone is
 			-- Set exit label.

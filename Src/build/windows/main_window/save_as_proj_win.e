@@ -48,10 +48,10 @@ feature
 		do
 			if not rescued then
 				!!file.make (0);
-				old_project_name := Project_directory.duplicate;
-				main_panel.set_title (selected_file.duplicate);
+				old_project_name := clone (Project_directory);
+				main_panel.set_title (clone (selected_file));
 				Project_directory.wipe_out;
-				Project_directory.append (selected_file.duplicate);
+				Project_directory.append (clone (selected_file));
 				file.from_string (Project_directory);
 				if file.exists then
 					!!msg.make (0);

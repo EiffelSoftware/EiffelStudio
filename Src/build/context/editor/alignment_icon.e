@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 
 	REMOVABLE
@@ -34,6 +34,12 @@ feature {NONE}
 	associated_box: ALIGNMENT_BOX;
 
 	stone: like Current;
+
+	compatible (s: like Current): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	
 feature 

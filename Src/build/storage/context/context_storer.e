@@ -67,7 +67,7 @@ feature {NONE}
 				window_list.after
 			loop
 				!!current_table.make (100);
-				stored_contexts.add (current_table);
+				stored_contexts.extend (current_table);
 				build_stored_context (window_list.item);
 				--****current_table.trim;
 				window_list.forth
@@ -85,7 +85,7 @@ feature {NONE}
 			loop
 				build_stored_context (node.child);
 				node.child_forth
-			end
+			end;
 		end;
 
 	
@@ -105,7 +105,7 @@ feature
 			loop
 				index := 1;
 				current_table := stored_contexts.item;
-				retrieved_data.add (context_tree (void_parent));
+				retrieved_data.extend (context_tree (void_parent));
 				stored_contexts.forth
 			end;
 		end;

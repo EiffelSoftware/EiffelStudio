@@ -35,11 +35,16 @@ feature
 		end;
 
 	n_ame: STRING is
+			
 		do
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" (");
-			Result.append (context.label.duplicate);
+			if context /= Void and context.label /= Void then
+				Result.append (clone (context.label));
+			else
+				Result.append (" ");
+			end;
 			Result.append (")");
 		end;
 

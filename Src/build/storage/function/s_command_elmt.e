@@ -28,7 +28,7 @@ feature
 			until
 				args.after
 			loop
-				arguments.add (args.item.identifier);
+				arguments.extend (args.item.identifier);
 				args.forth
 			end;
 		end;
@@ -60,7 +60,7 @@ feature
 					cs := Void
 				end;
 				!!arg.storage_init (ct, cs);
-				arg_list.add (arg);
+				arg_list.extend (arg);
 				arguments.forth
 			end;
 			!!Result.storage_init (cmd, arg_list);

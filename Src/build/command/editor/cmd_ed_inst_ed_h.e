@@ -45,7 +45,7 @@ feature
 			Nothing: ANY
 		do
 			make_button_visible (a_parent);
-			set_symbol (Create_command_instance_pixmap);
+			set_symbol (Create_command_instance_b_pixmap);
 			add_activate_action (Current, Nothing)
 		end;
 

@@ -5,7 +5,7 @@ inherit
 
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end;
 	LABELS
 		export
@@ -32,6 +32,12 @@ feature -- Creation
 feature {NONE}
 
 	stone: STATE_STONE;
+
+	compatible (s: STATE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	process_stone is
 			-- Update the initial state of the application editor

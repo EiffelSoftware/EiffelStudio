@@ -12,8 +12,6 @@ inherit
 		end;
 
 	PULLDOWN_C
-		rename
-			position_initialization as old_position_initialization
 		redefine
 			stored_node, real_y, real_x, 
 			set_size, set_x_y, height, width, y, x, option_list, widget, 
@@ -22,16 +20,11 @@ inherit
 
 	PULLDOWN_C
 		redefine
-			stored_node, position_initialization, real_y, real_x, 
+			stored_node, real_y, real_x, 
 			set_size, set_x_y, height, width, y, x, option_list, widget, 
 			remove_widget_callbacks, initialize_transport, add_widget_callbacks
-		select
-			position_initialization
-		end
+		end;
 
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -71,8 +64,10 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make (entity_name, a_parent);
-			widget.option_button.set_text ("");
-			set_size (10, 10);
+			widget.set_text (label);
+			if widget.button.realized then
+				widget.button.show;
+			end;
 		end;
 
 	widget: OPT_PULL;
@@ -109,25 +104,25 @@ feature
 	x: INTEGER is
 			-- Horizontal position relative to parent
 		do
-			Result := widget.option_button.x
+			Result := widget.x
 		end;
 
 	y: INTEGER is
 			-- Vertical position relative to parent
 		do
-			Result := widget.option_button.y
+			Result := widget.y
 		end;
 
 	width: INTEGER is
 			-- Width of widget
 		do
-			Result := widget.option_button.width
+			Result := widget.width
 		end;
 
 	height: INTEGER is
 			-- Height of widget
 		do
-			Result := widget.option_button.height
+			Result := widget.height
 		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
@@ -137,13 +132,11 @@ feature
 		do
 			position_modified := True;
 			if parent.is_bulletin then
-				widget.option_button.set_managed (False);
-				widget.option_button.set_x_y (new_x, new_y);
-				widget.option_button.set_managed (True);
+				widget.set_x_y (new_x, new_y);
 				eb_bulletin ?= parent.widget;
-				eb_bulletin.update_ratios (widget.option_button);
+				eb_bulletin.update_ratios (widget.button);
 			else
-				 widget.option_button.set_x_y (new_x, new_y);
+				widget.set_x_y (new_x, new_y);
 			end;
 		end;
 
@@ -154,44 +147,47 @@ feature
 		do
 			size_modified := True;
 			if parent.is_bulletin then
-				widget.option_button.set_managed (False);
-				widget.option_button.set_size (new_w, new_h);
-				widget.option_button.set_managed (True);
+				widget.set_size (new_w, new_h);
 				eb_bulletin ?= parent.widget;
 				eb_bulletin.update_ratios (widget.option_button);
 			else
-				 widget.option_button.set_size (new_w, new_h);
+				widget.set_size (new_w, new_h);
 			end;
 		end;
 
 	real_x: INTEGER is
 			-- Vertical position relative to root window
 		do
-			Result := widget.option_button.real_x
+			Result := widget.real_x
 		end;
 
 	real_y: INTEGER is
 			-- horizontal position relative to root window
 		do
-			Result := widget.option_button.real_y
+			Result := widget.real_y
 		end;
 
 	
-feature {NONE}
-
-	position_initialization (context_name: STRING): STRING is
-			-- Eiffel code for the position of current context
-		local
-			new_name: STRING;
+	forbid_recompute_size is
 		do
-			new_name := context_name.duplicate;
-			if new_name.empty then
-				new_name.append ("option_button");
-			else
-				new_name.append (".option_button");
-			end;
-			Result := old_position_initialization (new_name);
+			widget.forbid_recompute_size;
 		end;
+
+
+	allow_recompute_size is
+		do
+			widget.allow_recompute_size;
+		end;
+
+
+	widget_set_center_alignment is
+		do
+		end;
+
+	widget_set_left_alignment is
+		do
+		end;
+
 
 -- ****************
 -- Storage features

@@ -7,7 +7,7 @@ inherit
 		export
 			{ANY} all
 		redefine
-			stone
+			stone, compatible
 		end;
 
 	PIXMAPS
@@ -29,6 +29,12 @@ creation
 feature 
 
 	stone: TYPE_STONE;
+
+	compatible (s: TYPE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	make (ed: CMD_EDITOR) is
 		do

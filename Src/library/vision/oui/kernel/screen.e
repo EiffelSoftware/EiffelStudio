@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Screen. An object of this class must be created before any other
 -- operation of this screen. It will parent of TOP_SHELL or BASE.
@@ -46,7 +40,7 @@ feature
 		require
 			screen_name_exists: not (a_screen_name = Void)
 		do
-			screen_name := a_screen_name.duplicate;
+			screen_name := clone (a_screen_name);
 			implementation := toolkit.screen (current)
 		end; -- Create
 
@@ -106,3 +100,17 @@ feature
 		end -- y
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

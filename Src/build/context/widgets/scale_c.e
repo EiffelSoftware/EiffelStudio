@@ -42,7 +42,7 @@ feature
 		do
 			!!widget.make (entity_name, a_parent);
 			widget.set_horizontal (False);
-			set_size (24, 105);
+			set_size (10, 105);
 		end;
 
 	widget: SCALE;
@@ -141,8 +141,7 @@ feature
 		do
 			if new_max > minimum then
 				maximum_modified := True;
-				widget.set_value (new_max);
-				widget.set_maximum (new_max)
+				widget.set_maximum (new_max);
 			end
 		end;
 
@@ -189,7 +188,7 @@ feature
 				-- the widget cannot be moved/resized
 				-- any more after a change to read only
 				-- mode
---			widget.set_output_only (flag)
+			widget.set_output_only (flag)
 		end;
 
 	is_value_shown: BOOLEAN is

@@ -38,7 +38,7 @@ feature
 				translation_list.go_i_th (index - 1);
 				translation_list.add_right (translation);
 			else
-				translation_list.add (translation)
+				translation_list.extend (translation)
 			end;
 			context_catalog.update_translation_page;
 		end;

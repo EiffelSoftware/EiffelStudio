@@ -3,8 +3,6 @@ class PERM_WIND_C
 
 inherit
 
-	--COMMAND;
-	--COMMAND_ARGS;
 	PIXMAPS
 		rename
 			Top_shell_pixmap as symbol
@@ -13,6 +11,7 @@ inherit
 		end;
 	WINDOW_C
 		rename
+			remove_yourself as wind_remove_yourself,
 			cut as old_cut,
 			undo_cut as old_undo_cut,
 			option_list as old_list,
@@ -30,11 +29,11 @@ inherit
 			reset_modified_flags, copy_attributes, 
 			context_initialization, option_list, 
 			widget, undo_cut, cut, add_widget_callbacks,
-			set_x_y
+			set_x_y, remove_yourself
 		select
 			cut, undo_cut, option_list, copy_attributes, 
 			reset_modified_flags, add_widget_callbacks,
-			set_x_y
+			set_x_y, remove_yourself
 		end
 
 feature 
@@ -47,13 +46,17 @@ feature
 	widget: PERM_WIND;
 
 	create_oui_widget (a_parent: COMPOSITE) is
+		local
+			contin_command: ITER_COMMAND;
 		do
 			!!widget.make (entity_name, eb_screen);
 			widget_set_title (entity_name);
 			title := entity_name;
 			set_size (400, 500);
-			set_x_y (10,10);
+			widget.parent.set_action ("<Configure>", Current, Current);
 			set_default_pixmap;
+			!!contin_command;
+			widget.top_shell.set_delete_command (contin_command);
 		end;
 
 	old_x, old_y: INTEGER;
@@ -93,6 +96,29 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "PERM_WIND";
+
+	remove_yourself is
+		local
+			child_temp_wind: TEMP_WIND_C;
+		do
+			from 
+				window_list.start
+			until
+				window_list.after
+			loop
+				child_temp_wind ?= window_list.item;
+				if child_temp_wind /= Void then
+					if child_temp_wind.popup_parent = Current then
+						child_temp_wind.remove_yourself;
+						if not window_list.before then
+							window_list.start;
+						end;
+					end;
+				end;	
+				window_list.forth;
+			end;
+			wind_remove_yourself;
+		end;
 
 	cut is
 		do
@@ -225,7 +251,7 @@ feature {NONE}
 		local
 			creation_procedure: STRING;
 		do
-			creation_procedure := eiffel_type.duplicate;
+			creation_procedure := clone (eiffel_type);
 			creation_procedure.to_lower;
 			creation_procedure.append ("_make");
 
@@ -246,18 +272,5 @@ feature
 		do
 			!!Result.make (Current);
 		end;
-
-	--execute (argument: like Current) is
-		--do
-			--io.putstring ("in execute of perm_wind_c%N");
-			--if argument = First then
-					--eb_selection_mgr.set_context (Current);
-					--io.putstring ("configure request%N");
-			--elseif argument = Second then
-					--eb_selection_mgr.execute (second_arg);
-					--io.putstring ("configure notify%N");
-					--widget.execute (widget)
-			--end
-		--end
 
 end

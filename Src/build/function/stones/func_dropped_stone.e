@@ -31,6 +31,14 @@ feature {NONE}
 		deferred
 		end;
 	
+	unmanage is
+		deferred
+		end;
+
+	manage is
+		deferred
+		end;
+
 feature 
 
 	reset is
@@ -63,8 +71,8 @@ feature {NONE}
 	update_stone (s: like original_stone) is
 		do
 			old_set_original_stone (s);
-			if realized and then not shown then
-				show
+			if realized then
+				show;
 			end;
 		end;
 

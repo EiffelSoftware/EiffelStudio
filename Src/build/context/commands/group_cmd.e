@@ -66,7 +66,7 @@ feature
 			from
 				new_contexts.start
 			until
-				new_contexts.offright
+				new_contexts.after
 			loop
 				new_contexts.item.remove_callbacks;
 				new_contexts.forth
@@ -82,7 +82,7 @@ feature
 			from
 				old_contexts.start
 			until
-				old_contexts.offright
+				old_contexts.after
 			loop
 				old_contexts.item.set_parent (group_c);
 				group_c.add_group_child (old_contexts.item);
@@ -94,7 +94,7 @@ feature
 			from
 				old_contexts.start
 			until
-				old_contexts.offright
+				old_contexts.after
 			loop
 				old_contexts.item.reset_callbacks;
 				old_contexts.forth
@@ -122,7 +122,7 @@ feature
 			from
 				old_contexts.start
 			until
-				old_contexts.offright
+				old_contexts.after
 			loop
 					-- Reset the parent
 				old_contexts.item.set_parent (parent);
@@ -153,7 +153,7 @@ feature
 			from
 				old_contexts.start
 			until
-				old_contexts.offright
+				old_contexts.after
 			loop
 					-- Reset the parent
 				old_contexts.item.set_parent (context);
@@ -176,7 +176,7 @@ feature {NONE}
 			from
 				widget_table.start
 			until
-				widget_table.offright
+				widget_table.over
 			loop
 				widget_table.key_for_iteration.change_widget (widget_table);
 				widget_table.forth
@@ -191,7 +191,7 @@ feature {NONE}
 				list := cut_old_command.context_list;
 				list.start
 			until
-				list.offright
+				list.after
 			loop
 				list.item.undo_cut;
 				list.forth
@@ -208,12 +208,12 @@ feature {NONE}
 			from
 				old_contexts.start;
 			until
-				old_contexts.offright
+				old_contexts.after
 			loop
 				from
 					a_list.start
 				until
-					a_list.offright or found
+					a_list.after or found
 				loop
 					if a_list.item.entity_name.is_equal (old_contexts.item.entity_name) then
 						old_contexts.item.save_widget (a_list.item, widget_table);

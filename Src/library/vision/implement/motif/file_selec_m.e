@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -144,6 +139,7 @@ feature
 			Result := from_xm_string (screen_object, $ext_name)
 		end;
 
+			
 	filter: STRING is
 			-- Current filter value
 		local
@@ -403,6 +399,56 @@ feature {NONE}
 			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_OK_BUTTON))
 		end
 
+feature
+	set_file_list_width (new_width: INTEGER) is
+		require else
+			width_large_enough: new_width >= 1;
+		local
+			ext_name_Mw: ANY
+		do
+			ext_name_Mw := Mwidth.to_c;
+			set_dimension (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST), new_width, $ext_name_Mw)
+		end;
+
+
+	hide_file_selection_list is
+		do
+			xt_unmanage_child (xt_parent (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST)));
+		end;
+
+	hide_file_selection_label is
+		do
+			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST_LABEL));
+		end;
+			
+
+	show_file_selection_label is
+		do
+			xt_manage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST_LABEL));
+		end;
+
+	show_file_selection_list is
+		do
+			xt_manage_child (xt_parent (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST)));
+		end;
+
+	set_file_sel_mask(choice: INTEGER) is
+			-- choice = 1  directory only
+			-- choice = 2  files only
+			-- choice = 3 all
+		require else
+			choice_in_range: (choice >= 1 and choice <= 3)
+		do
+			set_xt_unsigned_char (screen_object, choice, MfileTypeMask);
+		end;			
+	
+feature {NONE}
+
+	filter_button: POINTER is
+		do
+			Result := xm_file_selection_box_get_child (screen_object, MDIALOG_APPLY_BUTTON);
+		end;
+
 feature {NONE} -- External features
 
 	create_file_selection (s_name: ANY; scr_obj: POINTER): POINTER is
@@ -436,3 +482,17 @@ feature {NONE} -- External features
 		end;
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

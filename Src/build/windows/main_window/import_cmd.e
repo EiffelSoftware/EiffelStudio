@@ -76,8 +76,8 @@ feature {NONE}
 			mp: MOUSE_PTR;
 		do
 			if not rescued then
-				clear_all;
-				import_directory := import_window.file_selec.selected_file.duplicate;
+				clear_uneeded;
+				import_directory := clone (import_window.file_selec.selected_file);
 				!!import_path_name.make (import_directory.count);
 				import_path_name.from_string (import_directory);
 				if import_path_name.exists then
@@ -122,10 +122,10 @@ feature {NONE}
 		do
 			!!mp;
 			mp.set_watch_shape;
-			import_directory := import_window.file_selec.selected_file.duplicate;
+			import_directory := clone (import_window.file_selec.selected_file);
 			import_directory.append ("/Storage");
 			if import_window.groups.state then
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/groups");
 				!!group_storer;
 				group_storer.retrieve (fn);
@@ -154,7 +154,7 @@ feature {NONE}
 				context_catalog.update_groups;
 			end;
 			if import_window.interface.state then
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/interface");
 				!!context_storer;
 				context_storer.retrieve (fn);
@@ -170,7 +170,7 @@ feature {NONE}
 					a_context.import_oui_widget (group_table);
 					a_context.realize;
 					window_list.finish;
-					window_list.put_right (a_context);
+					window_list.add_right (a_context);
 					retrieved_contexts.forth
 				end;
 				tree.enable_drawing;
@@ -179,7 +179,7 @@ feature {NONE}
 				end;
 			end;
 			if import_window.commands.state then
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/commands");
 				!!command_storer;
 				command_storer.retrieve (fn);
@@ -187,7 +187,7 @@ feature {NONE}
 				command_catalog.merge (retrieved_commands);
 			end;
 			if import_window.translations.state then
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/translations");
 				!!translation_storer;
 				translation_storer.retrieve (fn);
@@ -202,11 +202,11 @@ feature {NONE}
 				end;
 			end;
 			if import_window.entire_application.state then
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/states");
 				!!state_storer;
 				state_storer.retrieve (fn);
-				fn := import_directory.duplicate;
+				fn := clone (import_directory);
 				fn.append ("/application");
 				!!application_storer;
 				application_storer.retrieve (fn);
@@ -218,12 +218,13 @@ feature {NONE}
 					app_editor.draw_figures;
 				end;
 				app_editor.display_states;
+				app_editor.display_transitions;
 			end;
 			retrieved_contexts := Void;
 			retrieved_commands := Void;
 			retrieved_groups := Void;
 			retrieved_translations := Void;
-			clear_all;
+			clear_uneeded;
 			mp.restore
 		end;
 

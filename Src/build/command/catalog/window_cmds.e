@@ -7,11 +7,13 @@ inherit
 		rename 
 			make as page_create, 
 			make_visible as make_page_visible 
+		redefine
+			initial_cmd
 		end;
 
 	COMMAND_PAGE
 		redefine
-			make_visible, make
+			make_visible, make, initial_cmd
 		select
 			make_visible, make
 		end
@@ -34,10 +36,14 @@ feature
 	make (page_n: STRING; a_symbol: PIXMAP; cat: CMD_CATALOG) is
 		do
 			page_create (page_n, a_symbol, cat);
+		end;
+	
+	initial_cmd is
+		do
 			!!popup_command.make;
 			!!popdown_command.make;
-			add (popup_command);
-			add (popdown_command);
+			extend (popup_command);
+			extend (popdown_command);
 		end;
 
 	

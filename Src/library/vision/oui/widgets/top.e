@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Top is the abstract class for TOP_SHELL and BASE.
 
@@ -70,9 +64,28 @@ feature
 			Result := Current
 		ensure then
 			Top_is_current: Result = Current
-		end 
+		end ;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+	delete_window_action is
+			-- Called when 'top' is destroyed
+		local
+			Nothing: ANY;
+		do
+			if delete_command /= Void then
+				delete_command.execute (Nothing);
+			end;
+		end;
+
+	set_delete_command (c: COMMAND) is
+		do
+			delete_command := c;
+		end;
+
+feature {NONE}
+
+	delete_command: COMMAND;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, APPLICATION}
 
 	implementation: TOP_I;
 			-- Implementation of top
@@ -83,3 +96,17 @@ invariant
 	Has_no_parent: parent = Void
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

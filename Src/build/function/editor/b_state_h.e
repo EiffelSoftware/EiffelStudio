@@ -7,11 +7,11 @@ inherit
 		rename
 			make_visible as make_icon_visible
 		redefine
-			stone
+			stone, compatible
 		end;
 	ICON_HOLE
 		redefine
-			stone, make_visible
+			stone, make_visible, compatible
 		select
 			make_visible
 		end;
@@ -59,6 +59,12 @@ feature {NONE}
 	associated_editor: BEHAVIOR_EDITOR;
 
 	stone: STATE_STONE;
+	
+	compatible (s: STATE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	states_wnd: STATES_WND is
 		do

@@ -52,7 +52,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	REMOVABLE;
 	NAMABLE;
@@ -102,7 +102,7 @@ feature -- Namable
 			if (s = Void) then
 				visual_name := Void
 			else
-				visual_name := s.duplicate;
+				visual_name := clone (s);
 			end;
 			update_tree_element;
 		end;
@@ -121,13 +121,19 @@ feature -- Removable
 				-- the bulletin_c that can be transformed
 				-- in group_c
 			command.execute (original_stone);
-			tree.display (a_parent)
+			tree.display (a_parent);
 		end;
 
 	
 feature {NONE}
 
 	stone: TYPE_STONE;
+
+	compatible (s: TYPE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	process_stone is
 			-- Process stone in current hole.
@@ -147,6 +153,22 @@ feature {NONE}
 
 	
 feature 
+
+	group_name: STRING is
+		local
+			con_group: GROUP_C;
+		do
+			con_group ?= Current;
+			Result := parent.group_name;
+			if Result /= Void then
+				Result.append (entity_name);
+				Result.append ("_");
+			elseif con_group /= Void then
+				!!Result.make (0);
+				Result.append (entity_name);
+				Result.append ("_");
+			end;
+		end;
 
 	hash_code: INTEGER is
 		do
@@ -214,14 +236,18 @@ feature
 			-- Parent of current context
 
 	link_to_parent is
+		require 
+			parent_not_void: parent /= Void;
 		do
-			parent.child_finish;
-			parent.put_child_right (Current);
+				parent.child_finish;
+				parent.put_child_right (Current);
 		end;
 
 	root: CONTEXT is
 			-- Root  of context tree (window to
 			-- which the context belongs)
+		require
+			parent_not_void: parent /= Void;
 		do
 			Result := parent.root
 		end;
@@ -244,11 +270,25 @@ feature {NONE}
 			void_widget: like widget;
 		do
 			tree_create (void_widget);
-			integer_generator.next;
-			identifier := integer_generator.value;
+			set_next_identifier;
 		end;
 	
 feature 
+	set_identifier (i: INTEGER) is
+		do
+			identifier := i;
+			if integer_generator.value < i then
+				integer_generator.set (i);
+			end;
+		end;
+
+	set_next_identifier is
+		do
+			if identifier = 0 then
+				integer_generator.next;
+				identifier := integer_generator.value;
+			end;
+		end;
 
 	set_internal_name (a_name: STRING) is
 			-- Set `entity_name' to `a_name'
@@ -816,13 +856,15 @@ feature
 
 	cut is
 			-- Delete the context
+		require
+			parent_not_void: parent /= Void;
 		do
-			if not parent.is_a_group then
+			if  not parent.is_a_group then
 				parent.child_start;
 				parent.search_same_child (Current);
 				parent.remove_child;
 			end;
-			widget.set_managed (False);
+			widget.hide;
 			tree.cut (tree_element);
 			context_catalog.clear_editors (Current);
 		end;
@@ -847,6 +889,7 @@ feature
 				Result.merge_right (a_child.recursive_cut);
 				a_child := new_child;
 			end;
+			widget.set_managed (False);
 		end;
 
 	undo_cut is
@@ -858,8 +901,9 @@ feature
 			if (parent = Void) or else not parent.is_a_group then
 				link_to_parent;
 			end;
-			widget.set_managed (True);
 			tree.append (tree_element);
+			widget.set_managed (True);
+			widget.show;
 		end;
 
 	hide_tree_elements is
@@ -1026,7 +1070,7 @@ feature {CONTEXT}
 			-- Intermediate name redefined for the elements
 			-- of a group
 		do
-			Result := parent.intermediate_name
+			Result := parent.full_name
 		end;
 
 	
@@ -1053,7 +1097,11 @@ feature {CONTEXT}
 			comment: STRING;
 		do
 			!!Result.make (0);
-			context_name := full_name;
+			if group_name = Void then
+				context_name := clone (entity_name);
+			else
+				context_name := full_name;
+			end;
 			context_name.append (".");
 			Result.append (context_initialization (context_name));
 			Result.append (font_creation (context_name));
@@ -1131,10 +1179,9 @@ feature
 			until
 				child_offright
 			loop
-				context_name := child.full_name;
+				context_name := clone (child.entity_name);
 				context_name.append (".");
 				Result.append (child.eiffel_color (context_name));
-				Result.append (child.children_color);
 				child_forth
 			end;
 		end;
@@ -1172,6 +1219,7 @@ feature {CONTEXT}
 			if not Result.empty then
 				Result.prepend (comment_text);
 			end;
+			result.append (children_color);
 		end;
 
 	
@@ -1231,16 +1279,21 @@ feature {CLBKS, CONTEXT}
 			if 
 				(not is_root) and then callback_generator.has (Current)
 			then
-				context_name := full_name;
-				context_name.remove_all_occurrences ('.');
+				if group_name = Void then
+					context_name := clone (entity_name);
+					context_name.append ("_");
+				else
+					context_name := group_name;
+				end;
 				Result.append ("%T%T%Tset_");
 				Result.append (context_name);
-				Result.append ("_callbacks;%N");	
+				Result.append ("callbacks;");	
 				if visual_name /= Void then
-					Result.append ("%N%T%T%T-- (Widget's visual name is");
+					Result.append ("%N%T%T%T-- (Widget's visual name is ");
 					Result.append (visual_name);
 					Result.append (")");
 				end;
+				Result.append ("%N");
 			end;
 			from
 				child_start
@@ -1259,7 +1312,7 @@ feature {NONE}
 		local
 			creation_procedure: STRING
 		do
-			creation_procedure := eiffel_type.duplicate;
+			creation_procedure := clone (eiffel_type);
 			creation_procedure.to_lower;
 			creation_procedure.append ("_make");
 
@@ -1287,7 +1340,7 @@ feature
 				-- Class header
 				-- ************
 			Result.append ("class ");
-			class_name := entity_name.duplicate;
+			class_name := clone (entity_name);
 			class_name.to_upper;
 			Result.append (class_name);
 
@@ -1298,7 +1351,7 @@ feature
 			Result.append ("WINDOWS;%N%N%TSTATES;%N%N%T");
 			Result.append (eiffel_type);
 			Result.append ("%N%T%Trename%N%T%T%Tmake as ");
-				creation_procedure := eiffel_type.duplicate;
+				creation_procedure := clone (eiffel_type);
 				creation_procedure.to_lower;
 				creation_procedure.append ("_make");
 			Result.append (creation_procedure);
@@ -1342,7 +1395,6 @@ feature
 				-- Colors
 
 			color_text := eiffel_color ("");
-			color_text.append (children_color);
 			if not color_text.empty then
 				Result.append ("%T%T%Tset_colors;%N");
 				Result.append ("%T%Tend;%N");
@@ -1356,7 +1408,7 @@ feature
 				-- Callbacks
 				--==========
 			Result.append (eiffel_callbacks);
-			Result.append ("%Nend");
+			Result.append ("%Nend%N");
 		end;
 
 -- ******************************
@@ -1391,7 +1443,7 @@ feature
 				child.retrieve_oui_widget;
 				child_forth
 			end;
-			retrieved_node := Void
+			retrieved_node := Void;
 		end;
 
 	import_oui_widget (group_table: INT_H_TABLE [INTEGER]) is
@@ -1399,6 +1451,7 @@ feature
 			parent_widget: COMPOSITE
 		do
 			generate_internal_name;
+			retrieved_node.set_name_change (full_name);
 			if not (parent = Void) then
 				parent_widget ?= parent.widget;
 			end;

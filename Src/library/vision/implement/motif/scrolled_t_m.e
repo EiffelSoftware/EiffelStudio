@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -37,6 +32,8 @@ inherit
 			set_foreground, set_background_color
 		end;
 
+	SCROLLED_W_R_M;
+
 	SCROLLED_T_I;
 
 creation
@@ -60,50 +57,72 @@ feature -- Creation
 feature -- Color
 
 	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
 		local
-			temp_screen_object: POINTER
+			pixmap_implementation: PIXMAP_X;
+			color_implementation: COLOR_X;
+			ext_name: ANY
 		do
-			text_set_background_color (a_color);
-				--! Window background color
-			temp_screen_object := screen_object;
-			screen_object := action_target;
-			text_set_background_color (a_color);
-				--! Text background color
-			screen_object := temp_screen_object
-		end;	
+			if not (background_pixmap = Void) then
+				pixmap_implementation ?= background_pixmap.implementation;
+				pixmap_implementation.remove_object (Current);
+				background_pixmap := Void
+			end;
+			if not (background_color = Void) then
+				color_implementation ?= background_color.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			bg_color := a_color;
+			color_implementation ?= background_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mbackground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
+			c_set_color (action_target, color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+		end;
 
 	set_foreground (a_color: COLOR) is
+			-- Set `foreground' to `a_color'.
 		local
-			temp_screen_object: POINTER
+			color_implementation: COLOR_X;
+			ext_name: ANY
 		do
-			temp_screen_object := screen_object;
-			screen_object := action_target;
-			text_set_foreground (a_color);
-				--! Text background color
-				--! Cannot set Window's foreground color
-			screen_object := temp_screen_object
-		end;	
+			if not (foreground = Void) then
+				color_implementation ?= foreground.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			foreground := a_color;
+			color_implementation ?= a_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mforeground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
+			c_set_color (action_target, color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+		end;
+
 
 feature
 
 	disable_word_wrap is
             -- Specify that lines are free to go off the right edge
             -- of the window.
-        do
+		do
 			show_horizontal_scrollbar;
-           	text_disable_word_wrap; 
-        end;
- 
-    enable_word_wrap is
+           		text_disable_word_wrap; 
+		end;
+	
+	enable_word_wrap is
             -- Specify that lines are to be broken at word breaks.
             -- The text does not go off the right edge of the window.
 			-- The horizontal bar is not shown.
-        do
+		do
 			hide_horizontal_scrollbar;
-            text_enable_word_wrap;
+			text_enable_word_wrap;
 		ensure then
 			not is_horizontal_scrollbar
-        end;
+		end;
 
 	action_target: POINTER;
 			-- Widget ID on which action must be applied
@@ -111,37 +130,54 @@ feature
 	hide_horizontal_scrollbar is
 			-- Make horizontal scrollbar invisible.
 		do
-            set_xt_boolean (action_target, False, MscrollHorizontal);
+			xt_unmanage_child (horizontal_widget);
+			--set_xt_boolean (screen_object, False, MscrollHorizontal);
 		end;
 
 	hide_vertical_scrollbar is
 			-- Make vertical scrollbar invisible.
 		do
-            set_xt_boolean (action_target, False, MscrollVertical);
+			xt_unmanage_child (vertical_widget);
+			--set_xt_boolean (screen_object, False, MscrollVertical);
 		end;
 
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
 		do
-            Result := xt_boolean (action_target, MscrollHorizontal);
+            		Result := xt_is_managed (horizontal_widget);
+            		--Result := xt_boolean (action_target, MscrollHorizontal);
 		end;
 
 	is_vertical_scrollbar: BOOLEAN is
 			-- Is vertical scrollbar visible?
 		do
-            Result := xt_boolean (action_target, MscrollVertical);
+			Result := xt_is_managed (vertical_widget);;
 		end;
 
 	show_horizontal_scrollbar is
 			-- Make horizontal scrollbar visible.
 		do
-            set_xt_boolean (action_target, True, MscrollHorizontal);
+			xt_manage_child (horizontal_widget);
+			--set_xt_boolean (screen_object, True, MscrollHorizontal);
 		end;
 
 	show_vertical_scrollbar is
 			-- Make vertical scrollbar visible.
 		do
-            set_xt_boolean (action_target, True, MscrollVertical);
+			xt_manage_child (vertical_widget);
+			--set_xt_boolean (screen_object, True, MscrollVertical);
+		end;
+
+feature {NONE}
+
+	vertical_widget: POINTER is
+		do
+			Result := xt_widget (screen_object, MverticalScrollBar);
+		end;
+
+	horizontal_widget: POINTER is
+		do
+			Result := xt_widget (screen_object, MhorizontalScrollBar);
 		end;
 
 feature {NONE} -- Externals
@@ -151,10 +187,19 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	xt_parent (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

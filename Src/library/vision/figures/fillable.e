@@ -1,37 +1,90 @@
---|---------------------------------------------------------------
---|	Copyright (C) Interactive Software Engineering, Inc.		--
---|	 270 Storke Road, Suite 7 Goleta, California 93117		  --
---|						 (805) 685-1006									 --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Fillable figure.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class FILLABLE 
 
-feature {NONE}
 
-	fill_style: INTEGER;
-			-- Style of fill of the graphic
+feature -- Access
 
-	FillOpaqueStippled: INTEGER is 3;
-			-- Code to define opaque stippled fill style
+	stipple: PIXMAP;
+			-- Stipple used to fill when `is_stippled_fill' or
+			-- `is_opaque_stippled_fill'
 
-	FillSolid: INTEGER is 0;
-			-- Code to define solid fill style
+	tile: PIXMAP;
+			-- Tile used to fill when `is_tiled_fill'
 
-	FillStippled: INTEGER is 2;
-			-- Code to define stippled fill style
+feature -- Modification & Insertion
 
-	FillTiled: INTEGER is 1;
-			-- Code to define tiled fill style
+	set_even_odd_rule is
+			-- Specifies that areas are not filled if they overlap an odd
+			-- number of times.
+		do
+			is_even_odd_rule := true;
+		end;
 
-feature 
+	set_opaque_stippled_fill is
+			-- Specifies that graphics sould be drawn using stipple, using
+			-- the foreground pixel value for set bits in stipple and the
+			-- background pixel value for unset bits in stipple.
+		do
+			fill_style := FillOpaqueStippled;
+		end;
+
+	set_solid_fill is
+			-- Specifies that graphics should be drawn using the foreground
+			-- pixel value.
+		do
+			fill_style := FillSolid;
+		end;
+
+	set_stipple (a_pixmap: PIXMAP) is
+			-- Set `stipple' to `a_pixmap'.
+		require
+			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
+		do
+			stipple := a_pixmap;
+		ensure
+			stipple = a_pixmap
+		end;
+
+	set_stippled_fill is
+			-- Specifies that graphics sould be drawn using the foreground
+			-- pixel value masked by stipple. In otherwords, bits set in
+			-- the source and stipple are drawn in the foreground pixel
+			-- value.
+		do
+			fill_style := FillStippled;
+		end;
+
+	set_tile (a_pixmap: PIXMAP) is
+			-- Set `tile' to `a_pixmap'.
+		require
+			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
+		do
+			tile := a_pixmap;
+		ensure
+			tile = a_pixmap
+		end;
+
+	set_tiled_fill is
+			-- Specifies that graphics sould be drawn using the tile pixmap.
+		do
+			fill_style := FillTiled;
+		end;
+
+	set_winding_rule is
+			-- Specifies that overlapping areas are always filled.
+		do
+			is_even_odd_rule := false;
+		end;
+
+feature -- Status report 
 
 	is_even_odd_rule: BOOLEAN;
 			-- Are areas filled if they overlap an odd number of times ?
@@ -64,79 +117,40 @@ feature
 			Result := fill_style = FillTiled
 		end;
 
-	set_even_odd_rule is
-			-- Specifies that areas are not filled if they overlap an odd
-			-- number of times.
-		do
-			is_even_odd_rule := true
-		end;
+feature {NONE} -- Access
 
-	set_opaque_stippled_fill is
-			-- Specifies that graphics sould be drawn using stipple, using
-			-- the foreground pixel value for set bits in stipple and the
-			-- background pixel value for unset bits in stipple.
-		do
-			fill_style := FillOpaqueStippled
-		end;
+	fill_style: INTEGER;
+			-- Style of fill of the graphic
 
-	set_solid_fill is
-			-- Specifies that graphics should be drawn using the foreground
-			-- pixel value.
-		do
-			fill_style := FillSolid
-		end;
+	FillOpaqueStippled: INTEGER is 3;
+			-- Code to define opaque stippled fill style
 
-	set_stipple (a_pixmap: PIXMAP) is
-			-- Set `stipple' to `a_pixmap'.
-		require
-			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
-		do
-			stipple := a_pixmap
-		ensure
-			stipple = a_pixmap
-		end;
+	FillSolid: INTEGER is 0;
+			-- Code to define solid fill style
 
-	set_stippled_fill is
-			-- Specifies that graphics sould be drawn using the foreground
-			-- pixel value masked by stipple. In otherwords, bits set in
-			-- the source and stipple are drawn in the foreground pixel
-			-- value.
-		do
-			fill_style := FillStippled
-		end;
+	FillStippled: INTEGER is 2;
+			-- Code to define stippled fill style
 
-	set_tile (a_pixmap: PIXMAP) is
-			-- Set `tile' to `a_pixmap'.
-		require
-			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
-		do
-			tile := a_pixmap
-		ensure
-			tile = a_pixmap
-		end;
-
-	set_tiled_fill is
-			-- Specifies that graphics sould be drawn using the tile pixmap.
-		do
-			fill_style := FillTiled
-		end;
-
-	set_winding_rule is
-			-- Specifies that overlapping areas are always filled.
-		do
-			is_even_odd_rule := false
-		end;
-
-	stipple: PIXMAP;
-			-- Stipple used to fill when `is_stippled_fill' or
-			-- `is_opaque_stippled_fill'
-
-	tile: PIXMAP;
-			-- Tile used to fill when `is_tiled_fill'
+	FillTiled: INTEGER is 1;
+			-- Code to define tiled fill style
 
 invariant
 
 	(not (stipple = Void)) implies stipple.is_valid;
 	(not (tile = Void)) implies tile.is_valid
 
-end
+end -- class FILLABLE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

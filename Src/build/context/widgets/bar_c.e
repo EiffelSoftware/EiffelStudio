@@ -13,7 +13,7 @@ inherit
 
 	MENU_C
 		redefine
---			add_widget_callbacks,
+			--add_widget_callbacks,
 			widget, option_list, stored_node
 		
 		end
@@ -31,7 +31,9 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make (entity_name, a_parent);
-			set_size (10, 10);
+			forbid_recompute_size;
+			set_size (40, 40);
+			allow_recompute_size;
 		end;
 
 	widget: BAR;
@@ -68,6 +70,15 @@ feature
 			Result.put (bar_form_number, 2);
 		end;
 
+	forbid_recompute_size is
+		do
+			widget.forbid_recompute_size;
+		end;
+
+	allow_recompute_size is
+		do
+			widget.allow_recompute_size;
+		end;
 -- ****************
 -- Storage features
 -- ****************

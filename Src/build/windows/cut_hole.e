@@ -50,10 +50,7 @@ feature {NONE}
 			n: NAMABLE
 		do
 			r ?= stone;
-			io.putstring (stone.generator);
-			io.new_line;
 			if (r /= Void) then
-				io.putstring ("in cut hole%N");
 				r.remove_yourself;
 				n ?= stone.original_stone;
 				if not (n = Void) then

@@ -44,9 +44,9 @@ feature
 			!!arguments.make;
 			!!labels.make;
 			!!lab.make ("popdown");
-			labels.add (lab);
+			labels.extend (lab);
 			!!arg.session_init (context_catalog.temp_wind_type);
-			arguments.add (arg);
+			arguments.extend (arg);
 			set_symbol (Windows_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)

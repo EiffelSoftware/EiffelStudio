@@ -56,7 +56,7 @@ feature
 
 	redo is
 		do
-			page.add (element)
+			page.extend (element)
 		end; -- redo
 
 	

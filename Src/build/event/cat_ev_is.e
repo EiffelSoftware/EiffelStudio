@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	REMOVABLE
 
@@ -26,6 +26,12 @@ creation
 feature {NONE}
 
 	stone: like Current;
+
+	compatible (s: like Current): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 feature 
 
@@ -33,10 +39,8 @@ feature
 		local
 			r: REMOVABLE
 		do
-			io.putstring ("in cat ev is%N");
 			r ?= original_stone;
 			if r /= Void then
-			io.putstring ("removing trans%N");
 				r.remove_yourself
 			end
 		end;

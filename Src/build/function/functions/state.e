@@ -140,14 +140,16 @@ feature -- Editing
 				add (input_stone, output_stone);
 				!!drop_pair_command;
 				drop_pair_command.execute (Current);
+				func_editor.reset_stones;
 			elseif
-				output_set and then
+				output_set and then output_stone.context /= Void and then
 				(not has_input (output_stone.context.original_stone))
 			then
 				set_input_stone (output_stone.context.original_stone);
 				add (input_stone, output_stone);
 				!!drop_pair_command;
 				drop_pair_command.execute (Current);
+				func_editor.reset_stones;
 			end;
 		end;
 
@@ -186,7 +188,7 @@ feature -- Editing
 			if (s = Void) then
 				visual_name := Void
 			else
-				visual_name := s.duplicate;
+				visual_name := clone (s);
 			end;
 			app_editor.update_circle_text (Current);
 		end;

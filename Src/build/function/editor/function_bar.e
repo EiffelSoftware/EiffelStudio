@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end;
 
+	LABELS
+		export
+			{NONE} all
+		end;
+
 	PIXMAPS
 		export
 			{NONE} all

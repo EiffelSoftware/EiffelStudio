@@ -55,17 +55,19 @@ feature
 			attach_left (grids, 50);
 			attach_top_widget (grid_title, grids, 10);
 			detach_bottom (grids);
-			no_grid.add_activate_action (Current, First);
-			grid5.add_activate_action (Current, Second);
-			grid10.add_activate_action (Current, Third);
-			grid15.add_activate_action (Current, Fourth);
-			grid20.add_activate_action (Current, Fifth);
+			no_grid.arm;
+			no_grid.add_arm_action (Current, First);
+			grid5.add_arm_action (Current, Second);
+			grid10.add_arm_action (Current, Third);
+			grid15.add_arm_action (Current, Fourth);
+			grid20.add_arm_action (Current, Fifth);
 			grid_title.set_text ("Grid Options");
 			no_grid.set_text ("off");
 			grid5.set_text ("5 pixels");
 			grid10.set_text ("10 pixels");
 			grid15.set_text ("15 pixels");
 			grid20.set_text ("20 pixels");
+			grids.set_always_one (True);
 		end;
 
 	apply is
@@ -84,16 +86,16 @@ feature {NONE}
 	execute (argument: ANY) is
 		do
 			if (argument = First) then
-				context.set_grid (Void)
+				context.set_grid (Void);
 			elseif (argument = Second) then
-				context.set_grid (grid5_pixmap)
+				context.set_grid (grid5_pixmap);
 			elseif (argument = Third) then
-				context.set_grid (grid10_pixmap)
+				context.set_grid (grid10_pixmap);
 			elseif (argument = Fourth) then
 				context.set_grid (grid15_pixmap)
 			elseif (argument = Fifth) then
-				context.set_grid (grid20_pixmap)
-			end
+				context.set_grid (grid20_pixmap);
+			end;
 		end
 
 end

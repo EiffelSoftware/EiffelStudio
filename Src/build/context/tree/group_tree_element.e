@@ -45,7 +45,7 @@ feature
 				from
 					list.start
 				until
-					list.offright
+					list.after
 				loop
 					child := list.item;
 					tree.set_new_position (child_x, child_y, child_x);
@@ -78,7 +78,7 @@ feature
 				from
 					list.start
 				until
-					list.offright
+					list.after
 				loop
 					list.item.tree_element.set_parent_reference (right_ref_point);
 					list.forth;
@@ -95,7 +95,7 @@ feature
 			from
 				a_list.start
 			until
-				a_list.offright
+				a_list.after
 			loop
 				a_list.item.tree_element.select_figure;
 				a_list.forth
@@ -111,7 +111,7 @@ feature
 			from
 				a_list.start
 			until
-				a_list.offright
+				a_list.after
 			loop
 				a_list.item.tree_element.deselect;
 				a_list.forth

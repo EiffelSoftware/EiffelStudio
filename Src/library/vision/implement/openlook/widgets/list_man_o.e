@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|	 Copyright (C) Interactive Software Engineering, Inc.			--
---|		270 Storke Road, Suite 7 Goleta, California 93117				--
---|									 (805) 685-1006														--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Rectangle with scrollbars or not which contains a list of
 -- selectable strings.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -35,7 +30,6 @@ inherit
 			remove as list_remove,
 			merge_right as list_merge_right,
 			merge_left as list_merge_left,
-			remove_item as list_remove_item,
 			make as list_make,
 			remove_left as list_remove_left,
 			remove_right as list_remove_right
@@ -64,14 +58,13 @@ inherit
 				move, off, 
 				before, after, 
 				index, put_i_th, 
-				remove_all_occurrences, 
-				search_equal, start, 
+				start, 
 				swap
 		redefine
-			wipe_out, remove_item, add_right, add_left, 
+			wipe_out, add_right, add_left, 
 			merge_right, merge_left, remove, put
 		select
-			remove_item, add_right, add_left, 
+			add_right, add_left, 
 			merge_right, merge_left, remove, put
 		end;
 			
@@ -615,3 +608,17 @@ feature {NONE} -- External features
 		end; 
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

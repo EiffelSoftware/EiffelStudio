@@ -50,10 +50,10 @@ feature {NONE}
 			from
 				translation_list.start
 			until
-				translation_list.offright
+				translation_list.after
 			loop
 				!!s.make (translation_list.item);
-				stored_data.add (s);
+				stored_data.extend (s);
 				translation_list.forth;
 			end;
 		end;
@@ -77,7 +77,7 @@ feature
 				s := stored_data.item;
 				t := s.translation;
 				translation_table.put (t, s.identifier);
-				retrieved_data.add (t);
+				retrieved_data.extend (t);
 				stored_data.forth;
 			end;
 		end;

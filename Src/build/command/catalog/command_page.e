@@ -61,6 +61,7 @@ feature
 	make (page_n: STRING; a_symbol: PIXMAP; cat: CMD_CATALOG) is
 		do
 			old_create (page_n, a_symbol, cat);
+			initial_cmd;
 		end;
 
 	make_visible (a_name: STRING; a_parent: COMPOSITE) is
@@ -70,6 +71,9 @@ feature
 			set_preferred_count (5);
 		end;
 
+	initial_cmd is
+		do
+		end;
 	
 feature {NONE}
 
@@ -115,7 +119,7 @@ feature
 				start;
 				search (c);
 				if
-					not offright
+					not after
 				then
 					!!remove_cmd;
 					remove_cmd.execute (Current)

@@ -12,5 +12,4 @@ feature {NONE}
 	popup_cmd_id: INTEGER is unique;
 	save_cmd_id: INTEGER is unique;
 	undoable_cmd_id: INTEGER is unique;
-
 end

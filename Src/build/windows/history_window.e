@@ -175,9 +175,13 @@ feature
 			-- and highlight the corresponding
 			-- item. Remove all commands bellow.
 		do
-			history_list.put_right (cmd);
+			history_list.add_right (cmd);
 			history_list.forth;
-			list.add_right (cmd.n_ame);
+			if cmd.n_ame /= Void then
+				list.add_right (cmd.n_ame);
+			else
+				list.add_right ("Unknown command");
+			end;
 			list.forth;
 			saved_application := False;
 			remove_tail;
@@ -191,23 +195,21 @@ feature {NONE}
 		local
 			pos: INTEGER
 		do
-			from
-				pos := history_list.index;
-				history_list.forth;
-				list.forth;
-				if not list.after then
-					io.putstring ("Removing tail: ");
-					io.putint (history_list.count - pos);
-					io.new_line;
-					list.remove_right (history_list.count - pos);
+			pos := history_list.index;
+			if (history_list.count - pos) /= 0 then
+				from
+					history_list.forth;
+					if not list.after then
+						list.remove_right (history_list.count - pos);
+					end;
+				until
+					history_list.after
+				loop
+					history_list.remove
 				end;
-			until
-				history_list.after
-			loop
-				history_list.remove
+				history_list.go_i_th (pos);
+				list.go_i_th (pos);
 			end;
-			history_list.go_i_th (pos);
-			list.go_i_th (pos);
 		end;
 
 	
@@ -239,7 +241,7 @@ feature
 			until
 				history_list.after
 			loop
-				temp_list.put_right (history_list.item.n_ame);
+				temp_list.add_right (history_list.item.n_ame);
 				temp_list.forth;
 				history_list.forth
 			end;
@@ -264,6 +266,8 @@ feature
 
 	make (a_name: STRING; a_screen: SCREEN) is
 			-- Create history window.
+		local
+			contin_command: ITER_COMMAND;
 		do
 				-----------------
 				-- Create widgets
@@ -299,6 +303,9 @@ feature
 			list.add_single_action (Current, Fourth);
 			!!history_list.make;
 			saved_application := True;
+
+			!!contin_command;
+			set_delete_command (contin_command);
 		end;
 
 	

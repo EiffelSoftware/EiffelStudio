@@ -40,17 +40,22 @@ feature {NONE}
 	
 feature 
 
+	valid_focus_string: BOOLEAN is
+		do
+			Result := focus_string /= Void;
+		end;
+
 	set_focus is
 			-- Display focus string of Current.
 		require
-			Non_void_focus_string: not (focus_string = Void)
+			Non_void_focus_string: valid_focus_string;
 		do
-			focus_label.set_text (focus_string)
+			focus_label.set_text (focus_string);
 		end;
 
 	reset_focus is
 			-- Erase focus string of Current.
 		do
-			focus_label.set_text ("")
+			focus_label.set_text ("");
 		end;
 end

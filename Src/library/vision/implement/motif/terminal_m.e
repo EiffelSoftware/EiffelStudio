@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -43,7 +38,7 @@ feature
 			if not a_font_name.is_equal (label_font_name) then
 				new_font_pointer := resource_font (a_font_name, MlabelFontList, label_font_pointer);
 				if new_font_pointer /= label_font_pointer then
-					label_font_name := a_font_name.duplicate;
+					label_font_name := clone (a_font_name);
 					label_font_pointer := new_font_pointer
 				end
 			end
@@ -60,7 +55,7 @@ feature
 			if not a_font_name.is_equal (button_font_name) then
 				new_font_pointer := resource_font (a_font_name, MbuttonFontList, button_font_pointer);
 				if new_font_pointer /= button_font_pointer then
-					button_font_name := a_font_name.duplicate;
+					button_font_name := clone (a_font_name);
 					button_font_pointer := new_font_pointer
 				end
 			end
@@ -77,7 +72,7 @@ feature
 			if not a_font_name.is_equal (text_font_name) then
 				new_font_pointer := resource_font (a_font_name, MtextFontList, text_font_pointer);
 				if new_font_pointer /= text_font_pointer then
-					text_font_name := a_font_name.duplicate;
+					text_font_name := clone (a_font_name);
 					text_font_pointer := new_font_pointer
 				end
 			end
@@ -152,3 +147,17 @@ feature {NONE} -- External features
 
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

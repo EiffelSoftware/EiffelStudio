@@ -21,7 +21,7 @@ inherit
 		end;
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end
 
 
@@ -40,6 +40,11 @@ feature
 
 	stone: CONTEXT_STONE;
 
+	compatible (s: CONTEXT_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 feature {NONE}
 
@@ -55,9 +60,7 @@ feature {NONE}
 			if not a_context.is_root and then (menu_c = Void)
 				and then (menu_pull_c = Void)
 				and then not a_context.parent.is_in_a_group then
-				set_managed (False);
 				set_symbol (a_context.symbol);
-				set_managed (True);
 			else
 				stone := Void;
 			end;
@@ -79,7 +82,7 @@ feature {NONE}
 				from
 					group_list.start
 				until
-					group_list.offright or found
+					group_list.after or found
 				loop
 					if a_name.is_equal (group_list.item.entity_name) then
 						found := True
@@ -97,9 +100,7 @@ feature {NONE}
 						context_group.add_right (a_context);
 					end;
 					!!new_group.make (a_name, context_group);
-					set_managed (False);
 					set_symbol (Context_pixmap);
-					set_managed (True);
 					argument.set_text ("");
 					stone := Void;
 					mp.restore

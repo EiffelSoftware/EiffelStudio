@@ -72,7 +72,6 @@ feature {NONE}
 			end
 		end;
 
-	
 feature 
 
 	make (f: STRING) is

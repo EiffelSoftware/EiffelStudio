@@ -41,6 +41,6 @@ feature
 			event_table.put (Current, - identifier);
 		end;
 
-	eiffel_text: STRING is "add_release_press_action (3, ";
+	eiffel_text: STRING is "add_button_release_action (3, ";
 
 end

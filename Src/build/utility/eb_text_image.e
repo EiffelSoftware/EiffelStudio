@@ -131,9 +131,12 @@ feature {NONE}
 
 	drawing_i_to_widget_i (a_drawing: DRAWING_I): WIDGET_I is
             -- Conversion routine
-        do
-            Result ?= a_drawing
-        end; -- drawing_i_to_widget_i
+		local
+			temp_wid: WIDGET_I;
+		do
+			temp_wid ?= a_drawing;
+			Result := temp_wid;
+		end; -- drawing_i_to_widget_i
 	
 feature 
 
@@ -155,7 +158,7 @@ feature
 
 	set_text (s: STRING) is
 		do
-			text := s.duplicate;
+			text := clone (s);
 			if not (drawing = Void) then
 				string_width := font.implementation.string_width (drawing_i_to_widget_i (drawing), text);
 			end;

@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE} all
 		end;
-	COMMAND
+	LICENCE_COMMAND
 		export
 			{NONE} all
 		end;
@@ -65,7 +65,7 @@ feature
 	
 feature {NONE}
 
-	execute (argument: ANY) is
+	work (argument: ANY) is
 			-- popup a window to specify what
 			-- and where to import,
 		local
@@ -75,6 +75,10 @@ feature {NONE}
 				!!iw.make ("Import project", main_panel.base);
 				iw.popup;
 			end
+		end;
+
+	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+		do
 		end;
 
 end

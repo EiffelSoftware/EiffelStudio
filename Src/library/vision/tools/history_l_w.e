@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Graphic history based on a linear list of undoable commands, represented on
 -- screen with a popup containing a scroll list to show the previous commands
@@ -38,7 +32,7 @@ feature -- Creation
             form_d_make (a_name, a_parent);
             set_size (200,200);
             set_fraction_base (3);
-            !! scroll_list.scroll_list_make ("list", Current);
+            !! scroll_list.make ("list", Current);
             !! undo_button.make ("undo", Current);
             !! redo_button.make ("redo", Current);
             !! close_button.make ("close", Current);
@@ -74,7 +68,7 @@ feature {HISTORY_LIST}
 	back is
 			-- Move cursor backward one position.
 		do
-			scroll_list.deselect_all;
+			scroll_list.deselect_item;
 			scroll_list.back;
 			update_widgets
 		end;
@@ -101,16 +95,16 @@ feature {HISTORY_LIST}
 	forth is
 			-- Move cursor forward one position.
 		do
-			scroll_list.deselect_all;
+			scroll_list.deselect_item;
 			scroll_list.forth;
 			update_widgets
 		end;
 
-	go (i: INTEGER) is
+	go_i_th (i: INTEGER) is
 			-- Move cursor to position `i'.
 		do
-			scroll_list.deselect_all;
-			scroll_list.go (i);
+			scroll_list.deselect_item;
+			scroll_list.go_i_th (i);
 			update_widgets
 		end;
 
@@ -125,8 +119,8 @@ feature {HISTORY_LIST}
 			-- Insert `a_command' after the cursor position, and place
 			-- cursor upon it
 		do
-			scroll_list.put_right (a_command_name);
-			scroll_list.deselect_all;
+			scroll_list.add_right (a_command_name);
+			scroll_list.deselect_item;
 			scroll_list.forth;
 			update_widgets
 		end;
@@ -147,8 +141,8 @@ feature {HISTORY_LIST}
 	remove_after is
 			-- Remove all commands after the cursor position.
 		do
-			scroll_list.remove_right (scroll_list.count-scroll_list.position);
-			scroll_list.deselect_all;
+			scroll_list.remove_right (scroll_list.count-scroll_list.index);
+			scroll_list.deselect_item;
 			update_widgets
 		end;
 
@@ -182,7 +176,7 @@ feature
 				if not scroll_list.empty then
 					scroll_list.set_visible_item_count (scroll_list.count)
 				end;
-				scroll_list.go (scroll_list.position);
+				scroll_list.go_i_th (scroll_list.index);
 				update_widgets
 			end
 		end;
@@ -201,12 +195,22 @@ feature {NONE}
 	update_widgets is
 			-- Update the state of different widgets (scroll list, buttons).
 		do
-			if not scroll_list.offleft then
+			if not scroll_list.before then
 				scroll_list.scroll_to_current;
 				scroll_list.select_item
 			end;
-			undo_button.set_insensitive (scroll_list.offleft);
-			redo_button.set_insensitive (scroll_list.islast or scroll_list.empty)
+			if scroll_list.before
+			then
+				undo_button.set_insensitive
+			else
+				undo_button.set_sensitive
+			end;
+			if scroll_list.islast or scroll_list.empty
+			then
+				redo_button.set_insensitive 
+			else
+				redo_button.set_sensitive 
+			end
 		end;
 
 	
@@ -222,6 +226,20 @@ feature {HISTORY_LIST}
 invariant
 
 	not (history_list = Void) implies ((history_list.count = scroll_list.count)
-			and (history_list.position = scroll_list.position))
+			and (history_list.index = scroll_list.index ))
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

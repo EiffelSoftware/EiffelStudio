@@ -3,13 +3,34 @@ class CMD_EDIT_HOLE
 
 inherit
 
-	ICON_HOLE;
+	ICON_HOLE
+		rename
+			button as source,
+			make_visible as make_icon_visible,
+			identifier as oui_identifier
+		end;
+
+	ICON_HOLE
+		rename
+			button as source,
+			identifier as oui_identifier
+		redefine
+			make_visible
+		select
+			make_visible
+		end;
 
 	PIXMAPS
 		export
 			{NONE} all
 		end;
 
+	CMD_STONE;
+
+	REMOVABLE
+		export
+			{NONE} all
+		end;
 
 creation
 
@@ -21,6 +42,10 @@ feature {NONE}
 	command_editor: CMD_EDITOR;
 			-- Associated command editor
 
+	remove_yourself is
+		do
+			command_editor.clear
+		end;
 	
 feature 
 
@@ -34,6 +59,73 @@ feature
 			set_symbol (Command_pixmap);
 		end; -- Create
 
+
+	reset is 
+		do
+			set_label ("");
+  			set_symbol (Command_pixmap);
+			original_stone := Void;
+		end;
+
+	set_command (cmd: CMD) is
+		do
+			
+			original_stone := cmd;
+			if realized and shown and (label = Void or else label.empty 
+			  or else cmd.label.count >= label.count) then
+				parent.unmanage;
+			elseif realized and (label = Void or else label.empty 
+			  or else cmd.label.count >= label.count) then
+				hide;
+			end;
+			set_label (cmd.label);
+			set_symbol (cmd.symbol);
+			if realized and (not shown) then
+				show;
+			end;
+			if not parent.managed then
+				parent.manage;
+			end;
+		end;
+
+	original_stone: CMD;
+
+	eiffel_text: STRING is
+		do
+			Result := original_stone.eiffel_text
+		end;
+
+	identifier: INTEGER is
+		do
+			Result := original_stone.identifier
+		end;
+
+	eiffel_type: STRING is
+		do
+			Result := original_stone.eiffel_type
+		end;
+
+	arguments: EB_LINKED_LIST [ARG] is
+		do
+			Result := original_stone.arguments
+		end;
+
+	labels: EB_LINKED_LIST [CMD_LABEL] is
+		do
+			Result := original_stone.labels
+		end;
+
+
+	make_visible (a_parent: COMPOSITE) is
+		do
+			make_icon_visible (a_parent);
+			initialize_transport;
+		end;
+
+	update_name is
+		do
+			set_label (command_label);
+		end;
 	
 feature {NONE}
 
@@ -58,5 +150,11 @@ feature {NONE}
 				end
 			end
 		end; -- process_stone
+
+
+	command_label: STRING is
+		do
+			Result := original_stone.label
+		end;
 
 end 

@@ -23,7 +23,7 @@ feature
 			-- All labels name and their destination 
 			-- graph element names from `source'	
 		require
-			source_exists: graph.has (source)
+			--source_exists: graph.has (source)
 		local
 			element: GRAPH_ELEMENT;
 			text: TRAN_NAME;
@@ -40,7 +40,7 @@ feature
 			from
 				labels.start	
 			until
-				labels.offright
+				labels.after
 			loop
 				label := labels.item.label;
 				if not transition_name_list.has_label (label) then
@@ -66,7 +66,7 @@ feature
 						text.set_destination_name ("self")
 					end;
 					text.update;
-					transition_name_list.add (text);
+					transition_name_list.extend (text);
 				end; 
 				labels.forth;
 			end;
@@ -97,7 +97,7 @@ feature
 			from
 				graph.start
 			until
-				graph.offright
+				graph.over
 			loop
 				source := graph.key_for_iteration;
 				remove_transition (source, element);
@@ -116,7 +116,7 @@ feature
 				from
 					temp_trans.start
 				until
-					temp_trans.offright
+					temp_trans.over
 				loop
 					element := temp_trans.item_for_iteration;
 					if
@@ -146,12 +146,12 @@ feature
 			from
 				temp.start;
 			until			
-				temp.offright
+				temp.after
 			loop
 				if
 					temp.item.destination_name.is_equal (dest_name)
 				then
-					Result.add (temp.item.label_name)
+					Result.extend (temp.item.label_name)
 				end;
 				temp.forth;
 			end	
@@ -171,7 +171,7 @@ feature
 					temp_tran.start;
 					!!Result.make (5);
 				until
-					temp_tran.offright
+					temp_tran.over
 				loop
 					if
 						dest= temp_tran.item_for_iteration
@@ -193,19 +193,19 @@ feature
 			from
 				graph.start
 			until
-				graph.offright
+				graph.over
 			loop
 				temp_trans := graph.item_for_iteration;
 				from
 					temp_trans.start
 				until
-					temp_trans.offright
+					temp_trans.over
 				loop
 					element := temp_trans.item_for_iteration;
 					if
 						element = old_element
 					then
-						temp_trans.change_item (new_element, temp_trans.key_for_iteration)
+						temp_trans.replace (new_element, temp_trans.key_for_iteration)
 					end;
 					temp_trans.forth
 				end;
@@ -220,7 +220,7 @@ feature
 			-- dest element. If a transition between elements do not
 			-- exist then add.
 		require
-			element_has_transitions: graph.has (source)
+			--element_has_transitions: graph.has (source)
 		local
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING]
 		do
@@ -237,10 +237,10 @@ feature
 	update (new_trans: HASH_TABLE [GRAPH_ELEMENT, STRING]; element: GRAPH_ELEMENT) is
 			-- Update the transitions of `element' with `new_transitions'.  
 		require
-			not_void_new_transitions: not (new_trans = Void);
-			graph_has_element: graph.has (element)
+			--not_void_new_transitions: not (new_trans = Void);
+			--graph_has_element: graph.has (element)
 		do
-			graph.change_item (new_trans, element);
+			graph.replace (new_trans, element);
 		end; -- update
 
 	invariant

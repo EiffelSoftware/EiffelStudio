@@ -57,6 +57,7 @@ feature {NONE}
 			a_context: CONTEXT;
 			dropped_context: CONTEXT;
 			window_c: WINDOW_C;
+			a_temp_wind: TEMP_WIND_C;
 		do
 			old_process_stone;
 			if 
@@ -70,21 +71,35 @@ feature {NONE}
 				context_stone ?= stone;	
 				if not (a_type = Void) then
 					if 
-						(a_type /= context_catalog.perm_wind_type) and
-						(a_type /= context_catalog.temp_wind_type)
-					then
-						a_context := a_type.create_context (Current);
+						(a_type /= context_catalog.perm_wind_type) then
+						if
+							(a_type = context_catalog.temp_wind_type) and
+							(context_type = context_catalog.perm_wind_type)
+							then
+							a_context := a_type.create_context (Current);
+						elseif 	
+							(a_type /= context_catalog.temp_wind_type) 
+							then
+							a_context := a_type.create_context (Current);
+						end;
 					end;
 				elseif not (context_stone = Void) then
 					dropped_context := context_stone.original_stone;
 					window_c ?= dropped_context;
 					if (window_c = Void) then
 						a_context := dropped_context.create_context (Current);
+					elseif window_c.context_type = context_catalog.temp_wind_type and
+						context_type = context_catalog.perm_wind_type then
+						a_context := dropped_context.create_context (Current);
 					end;
 				end;
 				if not (a_context = Void) then
 					a_context.set_position (eb_screen.x, eb_screen.y);
 					a_context.realize;
+					a_temp_wind ?= a_context;
+					if a_temp_wind /= Void then
+						a_temp_wind.popup;
+					end;
 					tree.display (a_context);
 				end;
 			end

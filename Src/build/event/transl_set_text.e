@@ -11,7 +11,7 @@ feature
 
 	set_text (s: STRING) is
 		do
-			text := s.duplicate
+			text := clone (s);
 		end
 
 feature {NONE}
@@ -20,7 +20,7 @@ feature {NONE}
 
 	trans_work is
 		do
-			old_text := translation.text.duplicate;
+			old_text := clone (translation.text);
 			translation.set_text (text);
 			context_catalog.update_translation_page;
 			if translation.edited then

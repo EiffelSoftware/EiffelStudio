@@ -11,6 +11,7 @@ inherit
 
 	EB_BOX [T]
 		redefine
+			extend,
 			merge_icons, set_icons
 		select
 			merge_icons, set_icons
@@ -58,18 +59,18 @@ feature
 			end	
 		end; -- add_right
 
-	add (elt: like item) is
+	extend (elt: like item) is
 			-- Add `elt' at end of icon box. Move cursor position
 			-- to last item;
 		local
 			old_pos: INTEGER;
 			icon: like new_icon
 		do
-			list_add (elt);
+			list_extend (elt);
 			finish;
 			if not (icons = Void) then
 				if count > icons.count then
-					update_number_of_icons
+					update_number_of_icons;
 				end;
 				icons.go_i_th (index);
 				icon := icons.item;
@@ -140,9 +141,14 @@ feature
 			end
 		end;
 
+	icons_index: INTEGER is
+		do
+			Result := icons.index
+		end;
+
 	update_display is
 		require
-			positions_same: icons.index = index
+			positions_same: icons_index = index
 		local
 			icon: ICON_STONE
 		do
@@ -184,7 +190,7 @@ feature {NONE}
 				create_new_icon;
 				new_icon.make_visible (Current);
 				new_icon.set_managed (False);
-				icons.add (new_icon);
+				icons.extend (new_icon);
 				icons.finish;
 				i := i + 1
 			end;

@@ -22,8 +22,15 @@ feature
 	set_original_stone (s: like original_stone) is
 		do
 			original_stone := s.original_stone;
+			if label = Void or else label.empty or else s.label.count >= label.count then
+				parent.set_managed (False);
+			
+			end;
 			set_label (s.label);
 			set_symbol (s.symbol);
+			if not parent.managed then
+				parent.set_managed (True);
+			end;
 		end;
 
 	stone_cursor: SCREEN_CURSOR is

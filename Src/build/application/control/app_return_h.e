@@ -5,7 +5,7 @@ inherit
 
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end;
 	PIXMAPS
 		export
@@ -33,6 +33,12 @@ feature {NONE}
 
 	stone: LABEL_SCR_L;
 			-- Stone that Current will accept.
+
+	compatible (s: LABEL_SCR_L): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	process_stone is
 			-- Set the return transition to the dropped stone. 

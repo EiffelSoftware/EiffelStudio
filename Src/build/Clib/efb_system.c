@@ -61,7 +61,7 @@ EIF_POINTER c_efb_get_background (w)
 EIF_POINTER w;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 	Pixel p;
 
 	n = 0;
@@ -75,7 +75,7 @@ EIF_POINTER w;
 EIF_POINTER p;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 
 	n = 0;
 	XtSetArg (wargs[n], "background", (Pixel) p); n++;
@@ -86,7 +86,7 @@ EIF_POINTER c_efb_get_foreground (w)
 EIF_POINTER w;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 	Pixel p;
 
 	n = 0;
@@ -100,7 +100,7 @@ EIF_POINTER w;
 EIF_POINTER p;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 
 	n = 0;
 	XtSetArg (wargs[n], "foreground", (Pixel) p); n++;
@@ -112,7 +112,7 @@ EIF_POINTER w;
 EIF_POINTER p;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 	
 	n = 0;
 	XtSetArg (wargs[n], "backgroundPixmap", (Pixmap) p); n++;
@@ -123,7 +123,7 @@ EIF_POINTER c_efb_get_bg_pixmap (w)
 EIF_POINTER w;
 {
 	int n;
-	Arg wargs[1];
+	Arg wargs[2];
 	Pixmap p;
 
 	n = 0;
@@ -135,6 +135,6 @@ EIF_POINTER w;
 extern event_pointer();
 
 EIF_REFERENCE efb_translation_string (code)
-EIF_INTEGER code
+EIF_INTEGER code;
 {
 }

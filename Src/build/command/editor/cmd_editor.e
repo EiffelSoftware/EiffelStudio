@@ -11,12 +11,15 @@ inherit
 			{NONE} all
 		undefine
 			init_toolkit
+		redefine
+			delete_window_action
 		end;
 	TOP_SHELL
 		undefine
 			init_toolkit
 		redefine
-			realize, make
+			realize, make,
+			delete_window_action
 		select
 			realize, make
 		end;
@@ -48,6 +51,13 @@ feature {NONE}
 			-- Void if `current_command' is
 			-- not editable.
  
+feature {TOP_I}
+
+	delete_window_action is
+		do
+			close;
+			iterate;
+		end;
 feature 
 
 	current_command: CMD;
@@ -70,18 +80,21 @@ feature -- Editing
 	close is
 			-- Close Current editor
 		do
+			if edited_command /= Void then
+				edited_command.save;
+			end;
 			clear;
 			window_mgr.close (Current)
 		end;
 
 	reset_inherit_stone is
 		do
-			inh_cmd_stone.reset
+			inherit_hole.reset;
 		end;
 
 	set_inherit_stone (c: CMD) is
 		do
-			inh_cmd_stone.set_inherit_command (c)
+			inherit_hole.set_inherit_command (c);
 		end;
 
 	clear is
@@ -92,8 +105,8 @@ feature -- Editing
 			save_previous_command;
 			arguments.wipe_out;
 			labels.wipe_out;
-			cmd_stone.reset;
-			inh_cmd_stone.reset;
+			edit_hole.reset;
+			inherit_hole.reset;
 			text_editor.set_text ("");
 			current_command := Void;
 			edited_command := Void;
@@ -129,7 +142,7 @@ feature -- Editing
 	update_name is
 			-- Update the name of the command edit stone
 		do
-			cmd_stone.update_name
+			edit_hole.update_name;
 		end;
  
 feature {NONE}
@@ -146,19 +159,19 @@ feature {NONE}
 			labels.set (cmd.labels);
 			text_editor.set_text (cmd.eiffel_text);
 			current_command.set_editor (Current);
-			cmd_stone.set_command (cmd);
 			text_editor.set_editable;
 			edited_command.set_arguments (arguments);
 			edited_command.set_labels (labels);
-			if inherit_hole.realized then
+			edit_hole.set_command (cmd);
+			if inherit_hole.realized and not shown then
 				inherit_hole.show
 			end;
 			if
 				cmd.parent_type /= Void
 			then
-				inh_cmd_stone.set_inherit_command (cmd.parent_type);
+				inherit_hole.set_inherit_command (cmd.parent_type);
 			else
-				inh_cmd_stone.reset
+				inherit_hole.reset;
 			end;
 		end;
  
@@ -174,12 +187,12 @@ feature {NONE}
 			labels.set (cmd.labels);
 			text_editor.set_text (cmd.eiffel_text);
 			current_command.set_editor (Current);
-			cmd_stone.set_command (cmd);
+			edit_hole.set_command (cmd);
 			text_editor.set_read_only;
 			if inherit_hole.realized then
 				inherit_hole.hide
 			end;
-			inh_cmd_stone.reset
+			inherit_hole.reset;
 		end;
  
 	save_previous_command is
@@ -320,10 +333,6 @@ feature {NONE}
 			-- Hole used to set the currently
 			-- edited command.
 
-	
-feature 
-
-	cmd_stone: CMD_EDIT_STONE;
 			-- Stone representing currently 
 			-- edited command
 
@@ -337,10 +346,6 @@ feature {NONE}
 
 	
 feature 
-
-	inh_cmd_stone: INH_CMD_STONE;
-			-- Stone representing parent of
-			-- currently edited command
 
 	text_editor: SCROLLED_T;
 			-- Text editing area containing
@@ -383,11 +388,8 @@ feature
 			!!undoable_t.make (T_oggle, form1);
 			!!separator1.make (S_eparator1, form);
 			edit_hole.make_visible (form1);
-			!!cmd_stone.make (Current);
-			cmd_stone.make_visible (form1);
 			!!inherit_hole.make (Current);
 			inherit_hole.make_visible (form1);
-			!!inh_cmd_stone.make (form1, Current);
 			!!instance_hole.make (Current);
 			instance_hole.make_visible (form1);
 			!!close_b.make (Current);
@@ -408,7 +410,7 @@ feature
 			form.attach_left (form1, 10);
 			form.attach_left (separator, 10);
 			form.attach_right (separator, 10);
-			form.attach_top (separator, 60);
+			form.attach_top (separator, 70);
 			form.attach_right (form2, 10);
 			form.attach_left (form2, 10);
 			form.attach_top_widget (separator, form2, 10);
@@ -423,18 +425,16 @@ feature
 			form.attach_left (text_editor, 0);
 			form.attach_top_widget (form3, text_editor, 0);
 			form1.attach_top (edit_hole, 0);
+			form1.attach_bottom (edit_hole, 0);
 			form1.attach_left (edit_hole, 0);
-			form1.attach_top (cmd_stone, 0);
 			form1.attach_top (inherit_hole, 0);
-			form1.attach_top (inh_cmd_stone, 0);
+			form1.attach_bottom (inherit_hole, 0);
 			form1.attach_top (instance_hole, 0);
 			form1.attach_top (undoable_t, 0);
 			form1.attach_right_widget (close_b, instance_hole, 40);
 			form1.attach_right_widget (instance_hole, undoable_t, 10);
 			form1.attach_top (close_b, 0);
-			form1.attach_left_widget (edit_hole, cmd_stone, 10);
-			form1.attach_left_widget (cmd_stone, inherit_hole, 40);
-			form1.attach_left_widget (inherit_hole, inh_cmd_stone, 0);
+			form1.attach_left_widget (edit_hole, inherit_hole, 40);
 			form1.attach_right (close_b, 0);
 			form2.attach_left (argument_hole, 0);
 			form2.attach_left_widget (argument_hole, argument_sw, 5);
@@ -509,21 +509,14 @@ feature {NONE}
 			error_box.popup (Current, s);
 		end;
 
-feature 
+feature -- Top shell features
 
 	realize is
 			-- Realize Current window.
 		do
 			shell_realize;
 			if (current_command = Void) then
-				cmd_stone.hide;
-				inh_cmd_stone.hide;
 				inherit_hole.hide
-			elseif (edited_command /= Void) and
-				edited_command.parent_type = Void then
-				inh_cmd_stone.hide
-			else
-				inh_cmd_stone.hide
 			end;				
 		end;
 

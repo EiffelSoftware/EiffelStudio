@@ -13,8 +13,7 @@ inherit
 		end;
 	CONTEXT_CMD
 		redefine
-			work, undo, redo
-		
+			work, undo, redo, n_ame
 		end;
 	EDITOR_FORMS
 		rename
@@ -36,6 +35,14 @@ feature {NONE}
 
 	group_type: CONTEXT_GROUP_TYPE;
 
+	n_ame: STRING is
+		do
+			!!Result.make (20);
+			Result.append (c_name);
+			Result.append (" (");	
+			Result.append (group_type.label);
+			Result.append (" )");
+		end;
 	
 feature 
 
@@ -61,15 +68,13 @@ feature
 			context_catalog.remove_group_type (group_type);
 		end;
 
-	
-feature {NONE}
-
+feature
 	context_work is
 		do
 		end;
-
 	context_undo is
 		do
 		end;
 
+	
 end

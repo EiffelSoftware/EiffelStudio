@@ -5,10 +5,6 @@ inherit
 	LINKED_LIST [T]
 		rename
 			duplicate as ll_duplicate
-		export
-			{ANY} search, item, back, forth, 
-			after, before, add_right, wipe_out,
-			remove, put, go_i_th
 		end
 
 creation

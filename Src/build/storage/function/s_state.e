@@ -39,8 +39,8 @@ feature
 				then
 					!!stored_input.make (c);
 					!!stored_output.make (b);
-					input_list.add (stored_input);
-					output_list.add (stored_output);
+					input_list.extend (stored_input);
+					output_list.extend (stored_output);
 				end;
 				s.forth
 			end;
@@ -63,6 +63,9 @@ feature {NONE}
 feature 
 
 	state: STATE is
+		local
+			b: BEHAVIOR;
+			c: CONTEXT;
 		do
 			!!Result.make;
 			if for_import.value then
@@ -79,8 +82,17 @@ feature
 			until
 				input_list.after
 			loop
-				Result.add (input_list.item.context, 
-								output_list.item.behavior);
+				c := input_list.item.context;
+					-- to be fixed when importing of groups is fixed
+				if c /= void then
+					b := output_list.item.behavior;
+					b.set_context (c);
+					Result.add (c, b);
+				else
+					io.putstring ("behaviour lost for ");
+					io.putstring (input_list.item.full_name);
+					io.new_line;
+				end;
 				input_list.forth;
 				output_list.forth
 			end;

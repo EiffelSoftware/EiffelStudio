@@ -52,6 +52,7 @@ feature {NONE}
 
 	T_ext_label: STRING is "Text";
 	F_orbid_recomp_size: STRING is "Prohibit size changes";
+	F_orbid_auto_recomp_size: STRING is "Prohibit auto sizing";
 	C_enter_alignment: STRING is "Center Alignment";
 	L_eft_alignment: STRING is "Left Alignment";
 	S_ame_size: STRING is "Same size";

@@ -63,7 +63,7 @@ feature
 	reset_form is
 		do
 			context := editor.edited_context;
-			reset
+			reset;
 		end;
 
 	apply is

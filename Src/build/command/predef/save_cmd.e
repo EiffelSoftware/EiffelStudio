@@ -44,11 +44,11 @@ feature
 			!!arguments.make;
 			!!labels.make;
 			!!lab.make ("save");
-			labels.add (lab);
+			labels.extend (lab);
 			!!lab.make ("cancel");
-			labels.add (lab);
+			labels.extend (lab);
 			!!arg.session_init (context_catalog.text_type);
-			arguments.add (arg);
+			arguments.extend (arg);
 			set_symbol (File_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)

@@ -14,6 +14,11 @@ feature {NONE}
 			Result := edited_command.labels;
 		end;
 
+	label_exist (l: STRING): BOOLEAN is
+		do
+			Result := edited_command.label_exist (l);
+		end;
+
 	arguments: LINKED_LIST [ARG] is
 		do
 			Result := edited_command.arguments;
@@ -40,7 +45,8 @@ feature {NONE}
 				labels.after
 			loop
 				if
-					labels.item.parent_type = edited_command.parent_type
+					labels.item.parent_type = edited_command.parent_type and
+					labels.item.parent_type /= Void
 				then
 					labels.remove
 				else
@@ -59,6 +65,7 @@ feature {NONE}
 			l: CMD_LABEL;
 			oal: LINKED_LIST [ARG];
 			oll: LINKED_LIST [CMD_LABEL];
+			new_label: STRING;
 		do
 			if previous_parent /= Void then		
 				remove_parent
@@ -75,7 +82,7 @@ feature {NONE}
 				oal.after
 			loop
 				!!a.set (oal.item.type, c);
-				arguments.add (a);
+				arguments.extend (a);
 				oal.forth;
 			end;
 			from
@@ -85,9 +92,19 @@ feature {NONE}
 			until
 				oll.after
 			loop
-				!!l.make (oll.item.label);
-				l.set_parent (c);
-				labels.add (l);
+				new_label := clone (oll.item.label);
+				if label_exist (new_label) then
+					new_label.prepend ("_");
+					new_label.prepend (c.eiffel_type);
+					new_label.to_lower;
+					!!l.make (new_label);
+					l.set_parent (c);
+					l.set_renamed;
+				else
+					!!l.make (oll.item.label);
+					l.set_parent (c);
+				end;
+				labels.extend (l);
 				oll.forth;
 			end;
 		end; 

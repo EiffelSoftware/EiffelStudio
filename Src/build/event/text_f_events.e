@@ -46,7 +46,7 @@ feature {CATALOG}
 	make_visible (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			make_page_visible (a_name, a_parent);
-			add (t_return);
+			extend (t_return);
 		end
 
 end

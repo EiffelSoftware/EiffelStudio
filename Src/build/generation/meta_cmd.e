@@ -10,22 +10,20 @@ inherit
 			key_for_iteration as current_state
 		export
 			{NONE} all
-		select
-			twin
 		end;
 
 	CALLBACK_GENE
-		rename
-			twin as call_back_twin
 		export
 			{NONE} all
+		undefine
+			is_equal, copy
 		end;
 
 	COM_NAMER
-		rename
-			twin as call_back_twin
 		export
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 
@@ -42,7 +40,7 @@ feature
 			from
 				start
 			until
-				offright
+				over
 			loop
 				namer.next;
 				Result.append ("%T%T%T");
@@ -63,7 +61,7 @@ feature
 			from
 				start
 			until
-				offright
+				over
 			loop
 				namer.next;
 

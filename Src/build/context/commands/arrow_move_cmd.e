@@ -52,7 +52,7 @@ feature
 					from
 						list.start
 					until
-						list.offright
+						list.after
 					loop
 						save_context (list.item);
 						list.forth

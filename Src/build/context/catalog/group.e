@@ -14,16 +14,32 @@ inherit
 		export
 			{NONE} all
 		undefine
-			twin
+			is_equal, copy, consistent, setup
 		end;
 
 	GROUP_SHARED
 		export
 			{NONE} all
 		undefine
-			twin
-		end
+			is_equal, copy, consistent, setup
+		end;
 
+	APP_SHARED
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, consistent, setup
+		end;
+
+
+	STORAGE_INFO
+		rename
+			clear_all as storage_clear_all
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, consistent, setup
+		end;
 
 creation
 
@@ -48,7 +64,7 @@ feature
 		do
 			integer_generator.next;
 			identifier := integer_generator.value;
-			entity_name := a_name.duplicate;
+			entity_name := clone (a_name);
 			table_create (50);
 
 				-- get the composite_c from the context
@@ -78,7 +94,7 @@ feature
 				from
 					context_list.start
 				until
-					context_list.offright
+					context_list.after
 				loop
 					a_context := context_list.item;
 					x := min (x, a_context.x);
@@ -97,29 +113,29 @@ feature
 				!!container.make (void_context);
 				container.save_group_attributes (w, h, context_list.count);
 			end;
-
 			from
 				context_list.start
 			until
-				context_list.offright
+				context_list.after
 			loop
 				s_context := save_context (context_list.item);
 				s_context.reset_position (x, y);
+				remove_context_from_table (context_list.item);
 				context_list.forth
 			end;
 			trim;
 			group_list.finish;
 			group_list.add_right (Current);
-
-			-- Creation of the first instance
-			-- to replace the grouped contexts
+	
+				-- Creation of the first instance
+				-- to replace the grouped contexts
 			!!group_c;
 			group_c.set_type (Current);
 
 			parent_context.append (group_c);
 			group_c.generate_internal_name;
 			if is_bulletin then
-					-- Change the parent and special cmd
+				-- Change the parent and special cmd
 				a_bulletin ?= a_context;
 				a_bulletin.transform_in_group (group_c);
 
@@ -146,17 +162,18 @@ feature
 
 				--  After the text generation, the flags
 				-- can be cleared
-			group_c.reset_modified_flags;
+				group_c.reset_modified_flags;
 			if not is_bulletin then
 				group_c.set_position (parent_context.real_x+x, parent_context.real_y+y);
 			else
 				group_c.set_x_y (group_c.x, group_c.y);
 			end;
-
-				-- Reset the interface
+	
+					-- Reset the interface
 			tree.display (parent_context);
 			context_catalog.add_new_group (Current);
 		end;
+
 
 	entity_name: STRING;
 
@@ -164,14 +181,43 @@ feature
 
 	eiffel_text: STRING;
 
+	counter: INTEGER;
 	
 feature {NONE}
 
 	container: S_BULLETIN;
 
-	counter: INTEGER;
-
-	
+	remove_context_from_table (a_context: CONTEXT) is
+		local
+			con_group: GROUP_C;
+			context_list: LINKED_LIST [CONTEXT];
+			a_context: CONTEXT;
+		do
+			if context_table.has (a_context.identifier) then
+				context_table.remove (a_context.identifier);
+			end;
+			con_group ?= a_context;
+			if con_group = Void then
+				from
+					a_context.child_start
+				until
+					a_context.child_offright
+				loop
+					remove_context_from_table (a_context.child);
+					a_context.child_forth
+				end;
+			else
+				context_list := con_group.subtree;
+				from
+					context_list.start
+				until
+					context_list.after
+				loop
+					remove_context_from_table (context_list.item);
+					context_list.forth;
+				end;
+			end;
+		end;
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -183,7 +229,7 @@ feature
 			from
 				a_list.start
 			until
-				a_list.offright or found
+				a_list.after or found
 			loop
 				if a_list.item.group = Current then
 					found := True;
@@ -241,7 +287,7 @@ feature {NONE}
 			from
 				group_list.start
 			until
-				group_list.offright or found
+				group_list.after or found
 			loop
 				if Result.is_equal (group_list.item.entity_name) then
 					found := True;
@@ -263,7 +309,7 @@ feature
 			from
 				group_list.start
 			until
-				group_list.offright or found
+				group_list.after or found
 			loop
 				if entity_name.is_equal (group_list.item.entity_name) then
 					found := True;
@@ -328,60 +374,59 @@ feature {NONE}
 
 	
 feature 
-
-	create_oui_group (group_c: GROUP_C) is
-		local
-			saved_identifier: INTEGER;
-			a_context: CONTEXT;
-		do
-				-- Identifier is used as a global variable
-				-- for the recursive function create_context_tree
-			saved_identifier := identifier;
-				-- Reset the values of `group_c'
-			container.set_context_attributes (group_c);
-			group_c.set_position (group_c.parent.real_x, group_c.parent.real_y);
-			identifier := 1;
-			from
-			until
-				identifier > count
-			loop
-				a_context := create_context_tree (group_c);
-				a_context.retrieve_oui_widget;
-				identifier := identifier + 1;
-				group_c.add_group_child (a_context);
-			end;
-			identifier := saved_identifier;
-			if (eiffel_text = Void) then
-				eiffel_text := group_c.group_text
-			end;
-		end;
-
+	
+    create_oui_group (group_c: GROUP_C) is
+        local
+            saved_identifier: INTEGER;
+            a_context: CONTEXT;
+        do
+                -- Identifier is used as a global variable
+                -- for the recursive function create_context_tree
+            saved_identifier := identifier;
+                -- Reset the values of `group_c'
+            container.set_context_attributes (group_c);
+            group_c.set_position (group_c.parent.real_x, group_c.parent.real_y);
+            identifier := 1;
+            from
+            until
+                identifier > count
+            loop
+                a_context := create_context_tree (group_c);
+                a_context.retrieve_oui_widget;
+                identifier := identifier + 1;
+                group_c.add_group_child (a_context);
+            end;
+            identifier := saved_identifier;
+            if (eiffel_text = Void) then
+                eiffel_text := group_c.group_text
+            end;
+        end;
 	
 feature {NONE}
 
-	create_context_tree (a_parent: COMPOSITE_C): CONTEXT is
-		local
-			i: INTEGER;
-			s_context: S_CONTEXT;
-			temp: COMPOSITE_C;
-		do
-			s_context :=  item (identifier);
-			Result := s_context.context (a_parent);
-			temp ?= Result;
-			from
-				i := s_context.arity
-			until
-				i <= 0
-			loop
-				identifier := identifier + 1;
-				Result.put_child_right (create_context_tree (temp));
-				Result.child_forth;
-				i := i - 1;
---				s_context.post_process;
-			end;
-		end;
+    create_context_tree (a_parent: COMPOSITE_C): CONTEXT is
+        local
+            i: INTEGER;
+            s_context: S_CONTEXT;
+            temp: COMPOSITE_C;
+        do
+            s_context :=  item (identifier);
+            Result := s_context.context (a_parent);
+            temp ?= Result;
+            from
+                i := s_context.arity
+            until
+                i <= 0
+            loop
+                identifier := identifier + 1;
+                Result.put_child_right (create_context_tree (temp));
+                Result.child_forth;
+                i := i - 1;
+--              s_context.post_process;
+            end;
+        end;
 
-	
+
 feature 
 
 	not_used: BOOLEAN is
@@ -392,7 +437,7 @@ feature
 			from
 				group_list.start
 			until
-				group_list.offright or used
+				group_list.after or used
 			loop
 				if group_list.item /= Current then
 					used := group_list.item.use_group (identifier);

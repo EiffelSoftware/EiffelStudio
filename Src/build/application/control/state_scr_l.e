@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	STATE_STONE
 		export
@@ -63,6 +63,12 @@ feature
 feature {NONE} -- Stone
 
 	stone: STATE_STONE;
+	
+	compatible (s: STATE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	source: STATE_SCR_L is
 		do

@@ -12,12 +12,15 @@ inherit
 			{ANY} raise, set_x_y, x, y, width, height, set_size
 		undefine
 			init_toolkit
+		redefine
+			delete_window_action
 		end;
 	TOP_SHELL
 		undefine
 			init_toolkit
 		redefine
-			realize, make
+			realize, make,
+			delete_window_action
 		select
 			realize, make
 		end;
@@ -49,8 +52,14 @@ feature
 			Result := (edited_function = Void)
 		end;
 
+	delete_window_action is
+		do
+			close;
+			iterate;
+		end;
+
 	
-feature {NONE}
+feature 
 
 	reset_Stones is
 		do
@@ -58,8 +67,6 @@ feature {NONE}
 			output_stone.reset
 		end;
 
-	
-feature 
 
 	close is
 		do

@@ -29,6 +29,15 @@ creation
 	
 feature 
 
+
+	mfont: FONT is
+		once
+			--Result := tree.font;
+			if Result = Void then
+				Result := font;
+			end;
+		end;
+
 	draw is
 		do
 			if selected then

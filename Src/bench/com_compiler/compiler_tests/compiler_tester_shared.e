@@ -70,7 +70,7 @@ feature -- Basic Operations
 		do
 			if not project_loaded then
 				project_manager_internal.put (create {TESTING_PROJECT_MANAGER}.make)
-				project_manager.retrieve_project (a_epr_filename)
+				project_manager.retrieve_eiffel_project (a_epr_filename)
 				project_loaded_internal.set_item (True)
 				epr_filename_internal.put (a_epr_filename)
 				ace_filename_internal.put (project_manager.ace_file_name)
@@ -96,7 +96,7 @@ feature -- Basic Operations
 			if not l_test_path.exists then
 				l_test_path.create_dir
 			end
-			project_manager.create_project (a_ace_filename, test_path)
+			project_manager.create_eiffel_project (a_ace_filename, test_path)
 			ace_filename_internal.put (a_ace_filename)
 			Result := True
 		end

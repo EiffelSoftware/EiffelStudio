@@ -151,7 +151,7 @@ feature -- Event : command association
 			-- when an item has been unselected.
 		require
 			exists: not destroyed
-			valid_command: cmd /= Void
+			valid_command: cmd /=Void
 		deferred
 		end
 

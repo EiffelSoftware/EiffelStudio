@@ -270,6 +270,12 @@ feature -- Execution
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
 				create wd.make_with_text (Warning_messages.w_No_system)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			elseif 
+				Eiffel_system.system.il_generation and then 
+				Eiffel_system.system.msil_generation_type.is_equal ("dll")
+			then
+				create wd.make_with_text ("No debugging for DLL system")
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			elseif (not Application.is_running) then
 				if
 					Eiffel_project.initialized and then
@@ -289,10 +295,12 @@ feature -- Execution
 					is_dotnet_system := Eiffel_system.system.il_generation
 					if uf.exists then
 						if is_dotnet_system then
-							if Application.execution_mode = feature {EXEC_MODES}.User_stop_points then
-								create l_il_env.make (Eiffel_system.System.clr_runtime_version)
-								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
-								if l_app_string /= Void then
+							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
+							l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
+							if l_app_string /= Void then
+									--| This means we are using either dbgclr or cordbg
+								if Application.execution_mode = feature {EXEC_MODES}.User_stop_points then
+										--| With BP
 									if l_il_env.use_cordbg (dotnet_debugger) then
 											-- Launch cordbg.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
@@ -306,8 +314,15 @@ feature -- Execution
 												"%"" + eiffel_system.application_name (True).out + "%"")
 										launch_program := True
 									end
+								else
+										--| Without BP, we just launch the execution as it is
+									(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
+										current_cmd_line_argument)
+									launch_program := True
 								end
 							end
+								--| if launch_program is False this mean we haven't launch the application yet
+								--| for dotnet, this means we are using the EiffelStudio Debugger facilities.
 						end
 						if not launch_program then
 							if 

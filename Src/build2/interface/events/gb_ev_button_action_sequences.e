@@ -34,6 +34,28 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when button is pressed then released.")
 		end
+		
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		
+		local
+			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
+			button: EV_BUTTON
+		do
+			button ?= object
+			check
+				button_not_void: button /= Void
+			end
+			if action_sequence.is_equal ("select_actions") then
+				if adding then
+					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					button.select_actions.extend (notify_sequence.display_agent (action_sequence, textable))
+				else
+					button.select_actions.wipe_out
+				end
+			end
+		end
 
 end -- class GB_EV_BUTTON_ACTION_SEQUENCES
 

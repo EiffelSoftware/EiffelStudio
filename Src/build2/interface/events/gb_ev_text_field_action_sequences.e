@@ -34,5 +34,27 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when return key is pressed.")
 		end
+		
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		local
+			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
+			text_field: EV_TEXT_FIELD
+		do
+			text_field ?= object
+			check
+				text_field_not_void: text_field /= Void
+			end
+			if action_sequence.is_equal ("return_actions") then
+				if adding then
+					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					text_field.return_actions.extend (notify_sequence.display_agent (action_sequence, textable))
+				else
+					text_field.return_actions.wipe_out
+				end
+			end
+			
+		end
 
 end -- class GB_EV_TEXT_FIELD_ACTION_SEQUENCES

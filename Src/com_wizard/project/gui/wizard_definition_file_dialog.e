@@ -79,6 +79,7 @@ feature -- Behavior
 		do
 			folder_name := destination_folder_edit.text
 			file_name := definition_file_edit.text
+			file_name.to_lower
 			if folder_name = Void or folder_name.empty then
 				msg_box.error_message_box (Current, Empty_destination_folder, Initialization_error)
 			elseif file_name = Void or file_name.empty then

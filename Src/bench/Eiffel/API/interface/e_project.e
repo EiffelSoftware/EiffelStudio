@@ -602,7 +602,8 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME;
 		do
 			if
-				not melt_only and then
+-- Melt only compiler does the copy anyway. FIXME???
+				--not melt_only and then
 				Comp_system.uses_precompiled and then
 				not Comp_system.is_dynamic
 			then

@@ -117,7 +117,7 @@ feature {NONE} -- Windows
 			!! Result.make (eb_screen)
 		end
 
-	class_selector: CLASS_SELECTOR is
+	class_importer: CLASS_IMPORTER is
 		once
 			!! Result.make ("", eb_screen)
 		end

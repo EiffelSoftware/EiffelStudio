@@ -31,6 +31,8 @@ inherit
 
 	MODE_CONSTANTS
 
+	SHARED_MODE
+
 	SHARED_APPLICATION
 
 creation
@@ -56,7 +58,7 @@ feature -- Creation
 			!! exit_menu_entry.make (Menu_names.Exit, file_category)
 			!! create_command_entry.make (Menu_names.create_command, action_category)
 			!! application_editor_entry.make (Menu_names.Application_editor, view_category)
-			!! class_selector_entry.make (Menu_names.Class_selector, view_category)
+			!! class_importer_entry.make (Menu_names.Class_importer, view_category)
 			!! command_sub_menu.make (Menu_names.Command, view_category)
 			!! context_sub_menu.make (Menu_names.Context, view_category)
 			!! editors_entry.make (Menu_names.Editors, view_category)
@@ -83,9 +85,6 @@ feature -- Creation
 			!! state_b.make (button_form)
 			!! generate_b.make (button_form)
 			!! import_b.make (button_form)
--- 			!! mode_box.make ("mode box", button_form)
--- 			!! editing_box.make ("editing box", mode_box)
--- 			!! executing_box.make ("executing box", mode_box)
 			!! editing_box.make ("editing box", button_form)
 			!! executing_box.make ("executing box", button_form)
  			!! execute_b.make ("Execute", executing_box)
@@ -472,7 +471,7 @@ feature -- Graphical interface
 	application_editor_entry: APPLICATION_EDITOR_ENTRY
 	interface_entry: INTERFACE_ENTRY
 	interface_only_entry: INTERFACE_ONLY_ENTRY
-	class_selector_entry: CLASS_SELECTOR_ENTRY
+	class_importer_entry: CLASS_IMPORTER_ENTRY
 		--| Entries in the Help category
 	-- None so far
 
@@ -573,13 +572,13 @@ feature -- Closing Current
 			-- value_changed and call again this command.
 		do 
 			if arg = edit_b and not changing_mode then
---				edit_b.arm
 				changing_mode := True
 				execute_b.disarm
+				set_mode (editing_mode)
 			elseif arg = execute_b and not changing_mode then
---				execute_b.arm
 				changing_mode := True
 				edit_b.disarm
+				set_mode (executing_mode)
 			end
 			changing_mode := False
 		end

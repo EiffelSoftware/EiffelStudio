@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"Invoke finalization of the eiffel system.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Invoke finalization of the eiffel system."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EWB_F_COMPILE
 
@@ -20,8 +18,7 @@ inherit
 
 feature {NONE} -- Properties
 
-	workbench_mode: BOOLEAN is
-		do
-		end;
+	workbench_mode: BOOLEAN is False
+			-- Not in workbench mode
 
 end -- class EWB_F_COMPILE

@@ -47,6 +47,12 @@ feature -- Access
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
+		
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+		end
 
 feature {NONE} -- Implementation
 

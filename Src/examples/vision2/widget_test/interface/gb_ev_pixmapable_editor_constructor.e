@@ -86,6 +86,12 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+		end
+
 	modify_pixmap is
 			-- Display a dialog allowing user input for
 			-- selected pixmap.

@@ -169,7 +169,6 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			ass: ASSEMBLY
 			cr: CACHE_READER
-			l_exe_env: EXECUTION_ENVIRONMENT
 		do
 			if not no_copyright_display then
 				display_copyright		
@@ -210,10 +209,8 @@ feature {NONE} -- Implementation
 			elseif not successful then
 				display_error
 			else
-				if not consume_from_fullname and then target_path.index_of (':', 1) = 0 then
-					-- if path is not full path append current working path
-					create l_exe_env
-					target_path.prepend (l_exe_env.current_working_directory + "\")
+				check
+					full_path: not is_path_relative (target_path)
 				end
 				create cr.make (clr_version)
 				if consume_from_fullname then
@@ -294,6 +291,8 @@ feature {NONE} -- Implementation
 		local
 			assembly: ASSEMBLY
 			retried: BOOLEAN
+			l_exe_env: EXECUTION_ENVIRONMENT
+			l_temp_target: STRING
 		do
 			if not retried then
 				if not (list_assemblies or init or usage_display) and target_path = Void then
@@ -313,11 +312,17 @@ feature {NONE} -- Implementation
 				end
 				
 				if not (list_assemblies or init or usage_display) then
-					if consume_from_fullname then
-						assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
-					else
-						assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
+					l_temp_target := target_path.twin
+					if is_path_relative (target_path) then
+						create l_exe_env
+						l_temp_target.prepend (l_exe_env.current_working_directory + "\")
 					end
+					if consume_from_fullname then
+						assembly := feature {ASSEMBLY}.load_string (l_temp_target.to_cil)
+					else
+						assembly := feature {ASSEMBLY}.load_from (l_temp_target.to_cil)
+					end
+					target_path := l_temp_target
 				end
 			else
 				set_error (Invalid_target_path, target_path)
@@ -560,6 +565,29 @@ feature {NONE} -- Implementation
 				Result := <<"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\mscorlib.dll">>				
 			end
 		end
+		
+	is_path_relative (a_path: STRING): BOOLEAN is
+			-- is `a_path' a relative path?
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		local
+			l_head: STRING
+		do
+			Result := True
+			if a_path.count > 2 then
+				l_head := a_path.substring (1, 2)
+				if l_head.is_equal ("\\") then
+						-- network path
+					Result := False
+				end
+			end
+			if Result then
+					-- local path or http path
+				Result := a_path.index_of (':', 1) = 0
+			end
+		end
+		
 		
 	dummy: CACHE_REFLECTION
 	consumed_assemblies: LINKED_LIST [STRING]

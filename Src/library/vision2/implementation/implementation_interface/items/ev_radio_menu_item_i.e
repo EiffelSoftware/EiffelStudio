@@ -8,19 +8,14 @@ deferred class
 	EV_RADIO_MENU_ITEM_I
 
 inherit
-	EV_CHECK_MENU_ITEM_I
+	EV_SELECT_MENU_ITEM_I
 		redefine
 			interface
 		end
 
-feature -- Status report
-
-	peers: LINKED_LIST [like interface] is
-			-- List of all radio items in the group `Current' is in.
-		deferred
-		ensure
-			not_void: Result /= Void
-			different_list_every_time: Result /= peers
+	EV_RADIO_PEER_I
+		redefine
+			interface
 		end
 
 feature {NONE} -- Implementation
@@ -50,6 +45,9 @@ end -- class EV_RADIO_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/24 20:34:31  brendel
+--| Changed to comply with renewed interface.
+--|
 --| Revision 1.7  2000/02/24 01:36:59  brendel
 --| Added feature set_peer.
 --|

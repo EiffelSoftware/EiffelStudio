@@ -60,15 +60,12 @@ feature
 		require
 			good_argument: t /= Void;
 			not t.has_formal;
-		local
-			new_id: INTEGER;
 		do
 			type := t;
 			!!skeleton.make;
 			is_changed := True;
-			new_id := System.type_id_counter.next;
-			type_id := new_id;
-			id := new_id;
+			type_id := System.type_id_counter.next;
+			id := System.static_type_id_counter.next;
 		end;
 
 feature -- Conveniences
@@ -196,7 +193,7 @@ feature -- Generation
 					feature_table.forth;
 				end;
 			else
-				generate_c_code := True;
+				generate_c_code := not is_precompiled;
 			end;
 
 			if generate_c_code then
@@ -264,7 +261,7 @@ feature -- Generation
 
 			else
 					-- The file hasn't been generated
-				Makefile_generator.record_empty_class_type (id)
+				System.makefile_generator.record_empty_class_type (id)
 			end;
 		end;
 
@@ -513,6 +510,7 @@ feature -- Byte code generation
 			-- type
 		require
 			good_context: associated_class.has_features_to_melt;
+			Not_precompiled: not is_precompiled
 		local
 			melted_list: SORTED_TWO_WAY_LIST [MELTED_INFO];
 			feat_tbl: FEATURE_TABLE;
@@ -545,7 +543,7 @@ feature -- Byte code generation
 		do
 			melted_feat_tbl := melted_feature_table;
 			melted_feat_tbl.set_type_id (type_id);
-			M_feat_tbl_server.put (melted_feat_tbl);
+			Tmp_m_feat_tbl_server.put (melted_feat_tbl);
 		end;
 
 feature -- Skeleton generation
@@ -888,6 +886,13 @@ feature -- Byte code generation
 			end;
 
 			Result := ba.feature_table;
+		end;
+
+feature -- Precompilation
+
+	is_precompiled: BOOLEAN is
+		do
+			Result := id <= System.max_precompiled_type_id
 		end;
 
 end

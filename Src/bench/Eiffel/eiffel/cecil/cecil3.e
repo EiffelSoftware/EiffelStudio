@@ -1,4 +1,4 @@
--- Cecil table for generc classes
+-- Cecil table for generic classes
 
 class CECIL3 
 
@@ -31,7 +31,9 @@ feature
 				i > upper
 			loop
 				a_class := values.item (i);
-				if a_class /= Void then
+				if a_class /= Void and then
+					a_class.has_types
+				then
 					check
 						a_class.generics /= Void;
 					end;
@@ -75,7 +77,9 @@ feature
 				i > upper
 			loop
 				a_class := values.item (i);
-				if a_class = Void then
+				if (a_class = Void) or else
+					not a_class.has_types
+				then
 					Cecil_file.putstring
 									("{(int) 0, (int32 *) 0, (int16 *) 0}");
 				else

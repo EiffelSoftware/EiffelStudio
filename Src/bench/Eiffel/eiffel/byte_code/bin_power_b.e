@@ -4,15 +4,40 @@ inherit
 
 	NUM_BINARY_B
 		redefine
-			generate_operator, is_built_in
+			print_register
 		end
 
 feature
 
-	generate_operator is
-			-- Generate the operator
+	print_register is
+			-- Print expression value
+		local
+			left_type: TYPE_I;
+			right_type: TYPE_I;
+			result_type: TYPE_I;
 		do
-			generated_file.putstring (" POWER ");
+			left_type := left.type;
+			right_type := right.type;
+			if left_type.is_long then
+				result_type := right_type
+			elseif left_type.is_float and then
+				right_type.is_double
+			then
+				result_type := right_type
+			else
+				result_type := left_type
+			end;
+			if result_type.is_long then
+				generated_file.putstring (" (long) pow((double)");
+			elseif result_type.is_float then
+				generated_file.putstring (" (float) pow((double)");
+			else
+				generated_file.putstring (" (double) pow((double)");
+			end;
+			left.print_register;
+			generated_file.putstring (",(double)");
+			right.print_register;
+			generated_file.putstring (")");
 		end;
 
 	operator_constant: CHARACTER is
@@ -20,15 +45,6 @@ feature
 			-- operation
 		do
 			Result := Bc_power
-		end;
-
-	is_built_in: BOOLEAN is
-			-- Is the current binary operator a built-in one ?
-		local
-			left_type: TYPE_I;
-		do
-			left_type := context.real_type (type);
-			Result := left_type.is_float or else left_type.is_double;
 		end;
 
 end

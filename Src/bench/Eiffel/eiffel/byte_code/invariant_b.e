@@ -127,7 +127,6 @@ feature -- Byte code geenration
 			-- Generate byte code for a class invariant clause.
 		local
 			local_list: LINKED_LIST [TYPE_I];
-			body_id: INTEGER;
 		do
 			Temp_byte_code_array.clear;
 				-- Default precond- and postcondition offsets

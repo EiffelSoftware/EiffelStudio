@@ -58,7 +58,8 @@ feature
 					wipe_out
 				elseif not after then
 					split (count);
-					remove_sublist
+			--		remove_sublist
+			sublist := Void
 				end
 			end;
 			rescue

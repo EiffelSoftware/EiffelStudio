@@ -181,13 +181,13 @@ feature -- formatting
 				creators.format (ctxt);
 				if not ctxt.last_was_printed then
 					ctxt.put_keyword ("creation");
+					ctxt.next_line;
 				end;
 				ctxt.next_line;
 			end;		
 			ctxt.begin;
 			ctxt.flat_struct.format (ctxt);	
 			ctxt.commit;	
-			ctxt.next_line;
 			ctxt.put_keyword ("end");
 			ctxt.commit;
 		end;

@@ -32,7 +32,7 @@ feature {NONE}
 			file: UNIX_FILE;
 		do
 			if project_tool.initialized then
-				error_window.clean;
+				bench_error_window.clean;
 				if Lace.file_name /= Void then
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (true);

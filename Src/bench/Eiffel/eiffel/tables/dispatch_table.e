@@ -98,7 +98,9 @@ feature	-- Melting and C Generation
 				offright
 			loop
 				unit := item_for_iteration;
-				values.put (unit.real_body_id - 1, unit.real_body_index);
+				if unit.is_valid then
+					values.put (unit.real_body_id - 1, unit.real_body_index);
+				end;
 				forth;
 			end;
 			from

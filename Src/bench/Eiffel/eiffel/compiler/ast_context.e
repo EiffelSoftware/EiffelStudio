@@ -6,7 +6,8 @@ inherit
 
 	EXTEND_STACK [TYPE_A]
 		rename
-			make as extend_stack_make
+			make as extend_stack_make,
+			pop as extend_stack_pop
 		export
 			{ACCESS_FEAT_AS} i_th
 		end;

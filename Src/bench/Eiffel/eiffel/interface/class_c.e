@@ -838,7 +838,9 @@ feature -- Melting
 			until
 				local_cursor = Void
 			loop
-				local_cursor.item.melt;			
+				if not local_cursor.item.is_precompiled then
+					local_cursor.item.melt;			
+				end;
 				local_cursor := local_cursor.right
 			end;
 	
@@ -922,7 +924,9 @@ feature -- Melting
 				until
 					local_cursor = Void
 				loop
-					local_cursor.item.melt_feature_table;
+					if not local_cursor.item.is_precompiled then
+						local_cursor.item.melt_feature_table;
+					end;
 					local_cursor := local_cursor.right
 				end;
 			end;
@@ -2520,6 +2524,27 @@ feature -- Dino stuff
 		do
 			Result :=
 					(types /= Void) and then (not types.empty)
+		end;
+
+feature -- Precompilation
+
+	is_precompiled: BOOLEAN is
+		do	
+			Result := id <= System.max_precompiled_id
+		end;
+
+	nb_precompiled_class_types: INTEGER is
+		do
+			from
+				types.start
+			until
+				types.after
+			loop
+				if types.item.is_precompiled then
+					Result := Result + 1
+				end;
+				types.forth
+			end;
 		end;
 
 invariant

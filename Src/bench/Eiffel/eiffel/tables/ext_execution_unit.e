@@ -7,7 +7,8 @@ inherit
 	EXECUTION_UNIT
 		rename
 			real_body_id as basic_real_body_id,
-			make as basic_make
+			make as basic_make,
+			is_valid as old_is_valid
 		redefine
 			is_external, compound_name
 		end;
@@ -15,9 +16,10 @@ inherit
 	EXECUTION_UNIT
 		redefine
 			real_body_id, make,
-			is_external, compound_name
+			is_external, compound_name,
+			is_valid
 		select
-			real_body_id, make
+			real_body_id, make, is_valid
 		end
 
 creation
@@ -63,6 +65,12 @@ feature
 			else
 				Result := basic_real_body_id;
 			end;
+		end;
+
+	is_valid: BOOLEAN is
+		do
+			Result := Externals.has (external_name) and then
+				old_is_valid
 		end;
 
 end

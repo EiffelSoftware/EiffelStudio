@@ -28,7 +28,12 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
+	WEL_UNIT_CONVERSION
+		export
+			{NONE} all
+		end
+		
 create
 	make,
 	make_by_pointer
@@ -94,6 +99,21 @@ feature -- Access
 			-- Maximum face name length
 		once
 			Result := Lf_facesize
+		end
+		
+	log_font: WEL_LOG_FONT is
+			-- Log font representing `Current'.
+		do
+				-- 1440 is twips per inch. 72 is number of points per inch.
+			create Result.make ( - mul_div (72, height, 1440), face_name)
+			Result.set_pitch_and_family (pitch_and_family)
+			if flag_set (effects, Cfm_bold) then
+				Result.set_weight (700)
+			else
+				Result.set_weight (400)
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	mask: INTEGER is

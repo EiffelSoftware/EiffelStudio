@@ -12,9 +12,6 @@ inherit
 		end
 
 	FIXED_LIST [T]
-		redefine
-			index_of
-		end
 
 creation
 	make, make_filled
@@ -33,31 +30,33 @@ feature
 			-- Do nothing
 		end;
 
-	index_of (v: like item; i: INTEGER): INTEGER is
-			-- Index of `i'-th occurrence of item identical to `v'.
+	locate_index_of (v: like item; n, start_position: INTEGER): INTEGER is
+			-- Index of `n'-th occurrence of item identical to `v'.
 			-- (According to the discrimination rule used by `search')
 			-- 0 if none.
+		require
+			valid_occurence: n > 0
+			valid_start_position: start_position > 0
 		local
-			a_occurrences, pos: INTEGER
-			previous_pos: INTEGER
+			a_occurrences: INTEGER
+			i, nb: INTEGER
+			l_area: SPECIAL [T]
 		do
 			from
-				previous_pos := index
-				start;
-				pos := 1;
+				l_area := area
+				i := start_position - 1
+				nb := count
 			until
-				off or else (a_occurrences = i)
+				i = nb or else (a_occurrences = n)
 			loop
-				if equal (item, v) then
+				if equal (l_area.item (i), v) then
 					a_occurrences := a_occurrences + 1;
 				end;
-				forth;
-				pos := pos + 1
+				i := i + 1
 			end;
-			if a_occurrences = i then
-				Result := pos - 1
+			if a_occurrences = n then
+				Result := i
 			end
-			index := previous_pos
 		end;
 
 feature {NONE} -- Externals

@@ -250,8 +250,8 @@ feature -- Generation
 					-- Check to see if there is really something to generate
 
 				generate_c_code := has_creation_routine or else
-					(	associated_class.has_invariant and then
-						associated_class.assertion_level.check_invariant);
+					(	current_class.has_invariant and then
+						current_class.assertion_level.check_invariant);
 				from
 					feature_table.start
 				until
@@ -317,14 +317,14 @@ feature -- Generation
 				feature_table.forth;
 			end;
 
-			if 	associated_class.has_invariant
+			if 	current_class.has_invariant
 				and then
 					((not final_mode)
 					or else
-					associated_class.assertion_level.check_invariant)
+					current_class.assertion_level.check_invariant)
 			then
 				inv_byte_code := Inv_byte_server.disk_item
-													(associated_class.id);
+													(current_class.id);
 				inv_byte_code.generate_invariant_routine;
 				byte_context.clear_all;
 			end;

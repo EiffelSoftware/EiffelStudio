@@ -27,7 +27,9 @@ feature -- Access
 	object: GB_OBJECT is
 			--
 		do
-			Result := contents.new_copy
+			if contents /= Void then
+				Result := contents.new_copy
+			end
 		end
 
 feature -- Measurement

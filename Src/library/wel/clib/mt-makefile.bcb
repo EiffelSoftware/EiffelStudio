@@ -1,7 +1,8 @@
 # mtwel.lib - Makefile for Borland C
 
-CC = bcc32
-CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib
+CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:
 	$(CC) @&&|
@@ -12,19 +13,19 @@ OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj disks
 
 mtwel.lib: $(OBJ)
 	if exist $@ del $@
-	tlib $@ +disptchr.obj
-	tlib $@ +enumfont.obj
-	tlib $@ +estream.obj
-	tlib $@ +msgboxpa.obj
-	tlib $@ +diskspace.obj
-	tlib $@ +dynload.obj
-	tlib $@ +drawstate.obj
-	tlib $@ +choose_folder.obj
-	tlib $@ +mousehook.obj
-	tlib $@ +wel_thr_init.obj
-	if not exist $(ISE_EIFFEL)\library\wel\spec\bcb mkdir $(ISE_EIFFEL)\library\wel\spec\bcb
-	if not exist $(ISE_EIFFEL)\library\wel\spec\bcb\lib mkdir $(ISE_EIFFEL)\library\wel\spec\bcb\lib
-	copy $@ $(ISE_EIFFEL)\library\wel\spec\bcb\lib
+	$(AR) $@ +disptchr.obj
+	$(AR) $@ +enumfont.obj
+	$(AR) $@ +estream.obj
+	$(AR) $@ +msgboxpa.obj
+	$(AR) $@ +diskspace.obj
+	$(AR) $@ +dynload.obj
+	$(AR) $@ +drawstate.obj
+	$(AR) $@ +choose_folder.obj
+	$(AR) $@ +mousehook.obj
+	$(AR) $@ +wel_thr_init.obj
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
 	del $@
 	del *.obj
 	del *.bak

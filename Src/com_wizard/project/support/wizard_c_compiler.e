@@ -7,12 +7,12 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_ROUTINES
-
-	WIZARD_PROCESS_LAUNCHER
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end
+
+	WIZARD_ROUTINES
 
 	WIZARD_COMPILER_ENVIRONMENT
 		export
@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
+
 feature -- Basic Operations
 
 	compile_folder (a_folder_name: STRING) is
@@ -43,26 +48,28 @@ feature -- Basic Operations
 			non_void_folder_name: a_folder_name /= Void
 			valid_folder_name: is_valid_folder_name (a_folder_name)
 		local
-			a_directory: DIRECTORY
-			a_string: STRING
-			displayed: BOOLEAN
+			l_directory: DIRECTORY
+			l_string: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
-			displayed := displayed_while_running
-			set_displayed_while_running (True)
-			create a_directory.make_open_read (a_folder_name)
-			if a_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
+			create l_directory.make_open_read (a_folder_name)
+			if l_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
 				if Ise_c_compiler_value.is_equal ("msc") then
-					a_string := "make_msc.bat"
+					l_string := "make_msc.bat"
 				else
 					check
 						Ise_c_compiler_value.is_equal ("bcb")
 					end
-					a_string := "make_bcb.bat"
+					l_string := "make_bcb.bat"
 				end
-				launch (a_string, a_folder_name)
-				check_return_code
+				create l_process_launcher
+				l_process_launcher.run_hidden
+				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
+				if not l_process_launcher.last_launch_successful then
+					environment.set_abort (C_compilation_failed)
+					environment.set_error_data ("in folder " + (create {EXECUTION_ENVIRONMENT}).current_working_directory + "\" + a_folder_name)
+				end
 			end
-			set_displayed_while_running (displayed)				
 		end
 	
 	compile_file (a_file_name: STRING) is
@@ -71,14 +78,21 @@ feature -- Basic Operations
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: is_c_file (a_file_name)
 		local
-			a_string: STRING
+			l_string: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			generate_command_line_file (C_compiler_command_line (a_file_name), Temporary_input_file_name)
-			a_string := C_compiler.twin
-			a_string.append (Space)
-			a_string.append (last_make_command)
-			launch (a_string, Env.current_working_directory)
-			check_return_code
+			if not environment.abort then
+				l_string := C_compiler.twin
+				l_string.append (Space)
+				l_string.append (last_make_command)
+				l_process_launcher.run_hidden
+				l_process_launcher.launch (l_string, Env.current_working_directory, agent message_output.add_text)
+				if not l_process_launcher.last_launch_successful then
+					environment.set_abort (C_compilation_failed)
+					environment.set_error_data ("file " + a_file_name)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -88,14 +102,6 @@ feature {NONE} -- Implementation
 
 	Lib_out_option: STRING is "/OUT:"
 			-- Lib out option
-
-	check_return_code is
-			-- Display error message and stops execution if last system call failed
-		do
-			if last_process_result /= 0 or not last_launch_successful then
-				environment.set_abort (last_process_result)
-			end
-		end
 
 	last_make_command: STRING
 			-- Input to compiler
@@ -119,7 +125,7 @@ feature {NONE} -- Implementation
 				last_make_command.append (a_file_name)
 				a_file.close
 			else
-				message_output.add_error (Current, "Could not write makefile")
+				environment.set_abort (Makefile_write_error)
 			end
 		rescue
 			if not failed_on_rescue then

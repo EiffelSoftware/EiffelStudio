@@ -26,7 +26,7 @@ feature -- Initialization
 feature -- Access
 
         maximum: INTEGER
-                    -- Largest pssoible value for generator
+                    -- Largest possible value for generator
 
         minimum: INTEGER
                     -- Smallest possible value for generator
@@ -60,7 +60,9 @@ feature -- Status setting
                 ensure
                         value = a_value
                 end
+
 invariant
+
         minimal: minimum <= value
         maximal: value <= maximum
 

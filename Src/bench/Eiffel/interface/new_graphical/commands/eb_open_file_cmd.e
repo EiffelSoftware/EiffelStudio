@@ -9,9 +9,6 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 	EB_EDITOR_COMMAND
-		redefine
-			tool
-		end
 	EB_SHARED_INTERFACE_TOOLS
 	NEW_EB_CONSTANTS
 
@@ -58,7 +55,7 @@ feature {NONE} -- Implementation
 		do
 			if argument = Void then
 				-- First click on open
-				if tool.text_window.changed then
+				if tool.text_area.changed then
 					create csd.make_and_launch (tool, Current)
 				else
 					process
@@ -76,12 +73,16 @@ feature {NONE} -- Implementation
 							class_i := Eiffel_universe.class_with_file_name (fn)
 							if class_i = Void then
 								tool.show_file (f)
-							elseif class_i.compiled then
-								!! classc_stone.make (class_i.compiled_class)
-								tool.process_class (classc_stone)
-							else
-								!! classi_stone.make (class_i)
-								tool.process_classi (classi_stone)
+	--						elseif class_i.compiled then
+	--							create classc_stone.make (class_i.compiled_class)
+	--							tool.process_class (classc_stone)
+	--						else
+	--							create classi_stone.make (class_i)
+	--							tool.process_classi (classi_stone)
+	--|FIXME
+	--| Christophe, 18 oct 1999
+	--| `process_class' not defined in an EB_EDIT_TOOL.
+	--| has to for drag and drop.
 							end
 						end
 					elseif f.exists and then not f.is_plain then
@@ -109,8 +110,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	tool: EB_CLASS_TOOL
---	tool: EB_EDITOR
+--	tool: EB_CLASS_TOOL
 
 --	name: STRING is
 --			-- Name of the command.

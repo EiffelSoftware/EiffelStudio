@@ -9,7 +9,7 @@ class
 	EB_PREVIOUS_TARGET_CMD
 
 inherit
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 
 	NEW_EB_CONSTANTS
 
@@ -23,7 +23,7 @@ feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
 	process is
 		do
-			tool.text_window.disable_clicking
+			tool.text_area.disable_clicking
 			execute_licensed (Void, Void)
 		end
 
@@ -32,10 +32,16 @@ feature -- Execution
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Execute the command.
 		local
+			ed: EB_EDIT_TOOL
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if tool.text_window.changed then
-				create csd.make_and_launch (tool, Current)
+			ed ?= tool
+			if ed /= Void then			
+				if ed.text_area.changed then
+					create csd.make_and_launch (ed, Current)
+				else
+					process
+				end
 			else
 				process
 			end

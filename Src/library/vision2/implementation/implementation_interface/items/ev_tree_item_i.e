@@ -16,10 +16,38 @@ inherit
 
 	EV_PND_TARGET_I
 
+feature {NONE} -- Initialization
+
+	make_with_index (par: EV_TREE_ITEM_HOLDER; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
+		require
+			valid_parent: par /= Void
+--			valid_index: (value > 0) and (value <= par.count + 1)
+		deferred
+		end
+
+	make_with_all (par: EV_TREE_ITEM_HOLDER; txt: STRING; value: INTEGER) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `value' as index.
+		require
+			valid_parent: par /= Void
+--			valid_index: (value > 0) and (value <= par.count + 1)
+		deferred
+		end
+
 feature -- Access
 
 	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation
+
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+		deferred
+		end
 
 feature -- Status setting
 
@@ -82,6 +110,16 @@ feature -- Element change
 	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		deferred
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+--			valid_index: (value > 0) and (value <= par.count + 1)
 		deferred
 		end
 

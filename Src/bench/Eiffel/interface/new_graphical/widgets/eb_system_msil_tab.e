@@ -532,17 +532,20 @@ feature {NONE} -- Initialization
 				"Follow .NET naming guidelines", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
+			widgets_set_before_has_compilation_started.extend (dotnet_naming_convention_check)
 			
 			create item_box
 			cluster_name_check := new_check_button (item_box,
 				"Use cluster names", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
+			widgets_set_before_has_compilation_started.extend (cluster_name_check)
 			
 			create item_box
 			full_cluster_name_check := new_check_button (item_box, "Use full cluster names", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
+			widgets_set_before_has_compilation_started.extend (full_cluster_name_check)
 
 			Result.extend (vbox)
 		end

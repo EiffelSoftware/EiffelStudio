@@ -18,6 +18,7 @@ fnptr syntax2;					/* Routine for manifest string too long */
 fnptr syntax3;					/* Routine for bad string extension */
 fnptr syntax4;					/* Routine for uncompleted string */
 fnptr syntax5;					/* Routine for bad character */
+fnptr syntax6;					/* Routine for empty string */
 
 char *yacc_file_name;			/* File name of the parsed file */
 
@@ -25,9 +26,9 @@ char *yacc_file_name;			/* File name of the parsed file */
  * Initialization of Yacc error mechanism
  */
 
-void error_init(error_obj, rout1, rout2, rout3, rout4, rout5)
+void error_init(error_obj, rout1, rout2, rout3, rout4, rout5, rout6)
 char *error_obj;
-fnptr rout1, rout2, rout3, rout4, rout5;
+fnptr rout1, rout2, rout3, rout4, rout5, rout6;
 {
 	Error_handler = error_obj;
 	Error_handler = eif_freeze(&Error_handler);	/* Object should not move */
@@ -36,6 +37,7 @@ fnptr rout1, rout2, rout3, rout4, rout5;
 	syntax3 = rout3;
 	syntax4 = rout4;
 	syntax5 = rout5;
+	syntax6 = rout6;
 }
 
 

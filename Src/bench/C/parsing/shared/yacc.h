@@ -109,6 +109,7 @@ extern fnptr syntax2;				/* Routine for manifest string too long */
 extern fnptr syntax3;				/* Routine for bad string extension */
 extern fnptr syntax4;				/* Routine for uncompleted string */
 extern fnptr syntax5;				/* Routine for bad character */
+extern fnptr syntax6;				/* Routine for empty string */
 
 /*
  * Id position managment

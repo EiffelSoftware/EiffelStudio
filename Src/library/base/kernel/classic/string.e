@@ -313,24 +313,32 @@ feature -- Access
 				substring (2, count).string)
 		end
 
-	substring_index (other: STRING; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `other' at or after `start';
-			-- 0 if none.
+	substring_index (other: STRING; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of other at or after start_index; 
+			-- 0 if none
 		require
-			other_nonvoid: other /= Void
-			other_notempty: not other.is_empty
-			start_large_enough: start >= 1
-			start_small_enough: start <= count
+			other_not_void: other /= Void
+			valid_start_index: start_index >= 1 and start_index <= count + 1
 		local
 			a: ANY
 		do
-			a := other.area
-			Result := str_str ($area, $a, count, other.count, start, 0)
+			if other.is_empty then
+				Result := start_index
+			else
+				if start_index <= count then
+					a := other.area
+					Result := str_str ($area, $a, count, other.count, start_index, 0)
+				end
+			end
 		ensure
-			correct_place: Result > 0 implies
-				substring (Result, Result + other.count - 1).is_equal (other)
-			-- forall x : start..Result
-			--	not substring (x, x+other.count -1).is_equal (other)
+			valid_result: Result = 0 or else
+				(start_index <= Result and Result <= count - other.count + 1)
+			zero_if_absent: (Result = 0) =
+				not substring (start_index, count).has_substring (other)
+			at_this_index: Result >= start_index implies
+				other.same_string (substring (Result, Result + other.count - 1))
+			none_before: Result > start_index implies 
+				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
 	fuzzy_index (other: STRING; start: INTEGER; fuzz: INTEGER): INTEGER is
@@ -672,29 +680,29 @@ feature -- Element change
 			--	 item (index_pos + i) = old other.item (start_pos + i)
 		end
 
-	replace_substring (s: STRING; start_pos, end_pos: INTEGER) is
-			-- Replace characters from `start_pos' to `end_pos' with `s'.
+	replace_substring (s: STRING; start_index, end_index: INTEGER) is
+			-- Replace characters from `start_index' to `end_index' with `s'.
 		require
-			string_exists: s /= Void
-			index_small_enough: end_pos <= count
-			order_respected: start_pos <= end_pos
-			index_large_enough: start_pos > 0
+			string_not_void: s /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningfull_interval: start_index <= end_index + 1
 		local
 			new_size, substring_size: INTEGER
 			s_area: like area
 		do
-			substring_size := end_pos - start_pos + 1
+			substring_size := end_index - start_index + 1
 			new_size := s.count + count - substring_size
 			if new_size > capacity then
 				resize (new_size + additional_space)
 			end
 			s_area := s.area
-			str_replace ($area, $s_area, count, s.count, start_pos, end_pos)
+			str_replace ($area, $s_area, count, s.count, start_index, end_index)
 			count := new_size
 		ensure
-			new_count: count = old count + old s.count - end_pos + start_pos - 1
-			replaced: is_equal (old (substring (1, start_pos - 1) +
-				s + substring (end_pos + 1, count)))
+			new_count: count = old count + old s.count - end_index + start_index - 1
+			replaced: is_equal (old (substring (1, start_index - 1) +
+				s + substring (end_index + 1, count)))
 		end
 
 	replace_substring_all (original, new: like Current) is
@@ -727,7 +735,7 @@ feature -- Element change
 		do
 			fill_with (' ')
 		ensure
-			same_size: (count = old count) and (capacity = old capacity)
+			same_size: (count = old count) and (capacity >= old capacity)
 			-- all_blank: For every `i' in 1..`count, `item' (`i') = `Blank'
 		end
 
@@ -746,7 +754,7 @@ feature -- Element change
 		do
 			($area).memory_set (c.code, count)
 		ensure
-			same_count: (count = old count) and (capacity = old capacity)
+			same_count: (count = old count) and (capacity >= old capacity)
 			filled: occurrences (c) = count
 		end
 
@@ -757,7 +765,7 @@ feature -- Element change
 		do
 			fill_with (c)
 		ensure
-			same_count: (count = old count) and (capacity = old capacity)
+			same_count: (count = old count) and (capacity >= old capacity)
 			filled: occurrences (c) = count
 		end
 

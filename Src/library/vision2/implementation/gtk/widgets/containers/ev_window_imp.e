@@ -13,10 +13,12 @@ class
 	
 inherit
 	EV_WINDOW_I	
-	
+		
 	EV_CONTAINER_IMP
-
-
+		rename
+			make as widget_make
+		end
+	
 creation
 	
 	make
@@ -29,7 +31,8 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 		end
-	
+
+
 		
 feature  -- Access
 
@@ -44,6 +47,81 @@ feature  -- Access
                         end	
                 end
 
+        icon_mask: EV_PIXMAP is
+                        -- Bitmap that could be used by window manager
+                        -- to clip `icon_pixmap' bitmap to make the
+                        -- icon nonrectangular 
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+        icon_pixmap: EV_PIXMAP is
+                        -- Bitmap that could be used by the window manager
+                        -- as the application's icon
+		do
+			check
+                                not_yet_implemented: False
+                        end
+		end
+	
+        title: STRING is
+                        -- Application name to be displayed by
+                        -- the window manager
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+        widget_group: EV_WIDGET is
+                        -- Widget with wich current widget is associated.
+                        -- By convention this widget is the "leader" of a group
+                        -- widgets. Window manager will treat all widgets in
+                        -- a group in some way; for example, it may move or
+                        -- iconify them together
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end 
+
+feature -- Element change
+
+        set_icon_mask (mask: EV_PIXMAP) is
+                        -- Set `icon_mask' to `mask'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+        set_icon_pixmap (pixmap: EV_PIXMAP) is
+                        -- Set `icon_pixmap' to `pixmap'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+        set_title (new_title: STRING) is
+                        -- Set `title' to `new_title'.
+                local
+                        a: ANY
+		do
+			a ?= new_title.to_c	
+			gtk_window_set_title (widget, $a)
+                end
+
+        set_widget_group (group_widget: EV_WIDGET) is
+                        -- Set `widget_group' to `group_widget'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+		end
+	
 feature -- Status report
 
         is_iconic_state: BOOLEAN is
@@ -74,8 +152,8 @@ feature -- Status setting
 
 feature -- Element change
 
-        set_icon_name (a_name: STRING) is
-                        -- Set `icon_name' to `a_name'.
+        set_icon_name (new_name: STRING) is
+                        -- Set `icon_name' to `new_name'.
 		do
 			check
                                 not_yet_implemented: False

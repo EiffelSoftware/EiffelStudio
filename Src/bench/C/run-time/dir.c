@@ -49,7 +49,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #include <unistd.h>
 #endif
 
-#include "eif_dir.h"
+#include "rt_dir.h"
 #include "eif_file.h" /* %%ss moved from 2 lines above */
 #include "eif_plug.h"
 #include "rt_error.h"

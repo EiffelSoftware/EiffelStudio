@@ -3,7 +3,7 @@ inherit
 
 	MATISSE_CONST
 
-Creation {ANY} -- Creation procedure
+create {ANY} -- Creation procedure
 
 	make
 
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	r1,r2 : REFERENCE
+	r1,r2 : MT_REFERENCE
 	f: RAW_FILE
 	appl : MATISSE_APPL
 	session : DB_CONTROL

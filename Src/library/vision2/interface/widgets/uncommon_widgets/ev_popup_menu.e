@@ -49,6 +49,7 @@ feature -- Status setting
 	show is
 			-- Show the popup menu at the current position
 			-- of the mouse.
+			-- Nothing appears if the menu is empty.
 		require
 			exists: not destroyed
 			valid_parent: is_valid (parent)
@@ -58,6 +59,7 @@ feature -- Status setting
 
 	show_at_position (x, y: INTEGER) is
 			-- Show the popup menu at the given position
+			-- Nothing appears if the menu is empty.
 		require
 			exists: not destroyed
 			valid_parent: is_valid (parent)

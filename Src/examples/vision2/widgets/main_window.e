@@ -92,7 +92,6 @@ feature {NONE} -- Initialization
 			containers: ARRAY [EV_WIDGET]
 			counter: INTEGER
 			pixmap: EV_PIXMAP
-			passed: BOOLEAN
 		do
 			create tree_item.make_with_text ("Widgets")
 			widget_tree.extend (tree_item)

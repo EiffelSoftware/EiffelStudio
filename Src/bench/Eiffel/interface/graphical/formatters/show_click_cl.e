@@ -7,7 +7,7 @@ inherit
 
 	FILTERABLE
 		rename
-			filter_context as clickable_context
+			filter_context_text as clickable_context_text
 		redefine
 			dark_symbol, text_window, format, display_temp_header,
 			post_fix
@@ -119,7 +119,7 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
 		do
-			text_window.process_text (clickable_context (c).text);	
+			text_window.process_text (clickable_context_text (c));	
 		end
 
 	display_temp_header (stone: STONE) is

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_default_options
 			set_default_colors
 
-			-- intialize the object handling.
+			-- initialize the object handling.
 			initialize_object_handling
 		end
 
@@ -199,12 +199,10 @@ b: BOOLEAN
 	destroy_signal_callback is
 			-- Called when the gtk widget is destroyed
 			-- Remove reference to destroyed widget
-local
-	obj: HASH_TABLE [EV_GTK_ANY_IMP, POINTER]
-
-
+		local
+			obj: HASH_TABLE [EV_GTK_ANY_IMP, POINTER]
 		do
-obj := objects
+			obj := objects
 			unregister_object (Current)
 			widget := Default_pointer
 			interface.remove_implementation

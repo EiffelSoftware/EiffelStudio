@@ -118,9 +118,6 @@ feature -- Implementation - External
 			Result := gtk_range_get_adjustment (widget)
 		end
 
-
-
-
 end -- class EV_GAUGE_I
 
 --!----------------------------------------------------------------

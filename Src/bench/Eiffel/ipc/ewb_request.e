@@ -7,7 +7,8 @@ inherit
 	DEBUG_EXT;
 	IPC_SHARED;
 	SHARED_DEBUG;
-	EXEC_MODES
+	EXEC_MODES;
+	SHARED_RESOURCES
 
 creation
 
@@ -49,6 +50,9 @@ feature
 			byte_array: TO_SPECIAL [CHARACTER];
 			c_ptr: ANY
 		do
+if enabled_debug_trace then
+	print ("Request for sending byte code to application.%N")
+end;
 			-- Send Load request
 			send_rqst_2 (Rqst_load, debug_info.new_extension,
 							debug_info.debuggable_count);
@@ -82,6 +86,9 @@ feature
 					deb.forth;
 				end;
 			end;
+if enabled_debug_trace then
+	print ("Finished sending byte code to application.%N");
+end;
 		end;
 
 	send_breakpoints is
@@ -91,19 +98,38 @@ feature
 			routine: E_FEATURE;
 			status: APPLICATION_STATUS
 		do
+if enabled_debug_trace then
+	print ("Sending breakpoints to application.%N");
+end;
 			Debug_info.remove_all_breakpoints;
+
+if enabled_debug_trace then
+	print("%TInspecting Application.execution_mode:%N");
+end;
 			inspect Application.execution_mode
 			when No_stop_points then
 					-- Do not send new stop points.
+if enabled_debug_trace then
+	print ("%T%TDo not send new stop points.%N");
+end;
 			when User_stop_points then
 					-- Execution with no stop points set.
+if enabled_debug_trace then
+	print ("%T%TExecution with no stop points set.%N");
+end;
 				Debug_info.set_all_breakpoints
 			when All_breakable_points then
 					-- Execution with all breakable points set.
+if enabled_debug_trace then
+	print ("%T%TExecution with all breakable points set.%N");
+end;
 				Debug_info.set_all_breakables
 			when Routine_breakables then
 					-- Execution with only breakable points of current 
 					-- routine set.
+if enabled_debug_trace then
+	print ("%T%TExecution with only breakable points of current%N%T%Troutine set.%N");
+end;
 				status := Application.status;
 				if status /= Void then
 						-- If the application is not running, there is no 
@@ -119,6 +145,9 @@ feature
 			when Routine_breakables_and_user_stop_points then
 					-- Execution with breakable points of current routine
 					-- and user-defined stop points set.
+if enabled_debug_trace then
+	print ("%T%TExecution with breakable points of current routine%N%T%Tand user-defined stop points set.%N");
+end;
 				Debug_info.set_all_breakpoints;
 				status := Application.status;
 				if status /= Void then
@@ -135,6 +164,9 @@ feature
 			when Routine_stop_points then
 					-- Execution with only user-defined stop points of
 					-- current routine set.
+if enabled_debug_trace then
+	print ("%T%TExecution with only user-defined stop points of%N%T%Tcurrent routine set.%N");
+end;
 				status := Application.status;
 				if status /= Void then
 						-- If the application is not running, there is no 
@@ -150,6 +182,9 @@ feature
 			when Last_routine_breakable then
 					-- Execution with only the last breakable point of
 					-- current routine set.
+if enabled_debug_trace then
+	print ("%T%TExecution with only the last breakable point of%N%T%Tcurrent routine set.%N");
+end;
 				status := Application.status;
 				if status /= Void then
 						-- If the application is not running, there is no 
@@ -165,6 +200,9 @@ feature
 			when Out_of_routine then
 					-- Execution with all breakable points set except
 					-- those of the current routine.
+if enabled_debug_trace then
+	print ("%T%TExecution with all breakable points set%N%T%Texcept those of the current routine.%N");
+end;
 				status := Application.status;
 				if status /= Void then
 					routine := status.e_feature;
@@ -176,6 +214,9 @@ feature
 				end
 			else
 					-- Unknown execution mode. Do nothing.
+if enabled_debug_trace then
+	print ("%T%TUnknown execution mode. Do nothing.%N");
+end;
 			end;
 
 			bpts := debug_info.new_breakpoints;
@@ -200,6 +241,9 @@ feature
 				bpts.forth
 			end;
 			bpts.wipe_out
+if enabled_debug_trace then
+	print ("Finished sending breakpoints to application.%N")
+end;
 		end;
 
 	make (code: INTEGER) is

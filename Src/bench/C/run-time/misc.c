@@ -371,8 +371,6 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * the old content.(starts at `j' and is `k' long).
 	 */
 
-	EIF_GET_CONTEXT
-
 	union overhead *zone;
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */

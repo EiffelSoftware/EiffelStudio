@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 			make_open_write (fn)
 			put_string ("#line 2 %"")
 			create tmp.make (fn.count * 2)
-			tmp.escape_string (tmp, fn)
-			put_string (tmp)
+			tmp.escape_string (fn)
+			tmp.put_in_file (Current)
 			put_string ("%"%N")
 		end
 

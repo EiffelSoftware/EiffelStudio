@@ -11,7 +11,7 @@ class META_COMMAND
 
 inherit
 
-	HASH_TABLE [CMD, INTEGER]
+	HASH_TABLE [BUILD_CMD, INTEGER]
 		rename
 			make as hash_table_make,
 			control as hash_table_control
@@ -46,7 +46,7 @@ feature
 			-- provided by the underlying user interface
 			-- mechanism
 
-	add (state: INTEGER; command: CMD) is
+	add (state: INTEGER; command: BUILD_CMD) is
 			-- Add `command' in state `state'.
 		do
 			put (command, state);	
@@ -60,9 +60,11 @@ feature
 	execute (argument: ANY) is
 			-- Execute command depending on current state.
 		local
-			command: CMD
+			command: BUILD_CMD
+			current_state: INTEGER
 		do
 			command := item (control.state);
+			current_state := control.state
 			if command /= Void then
 				if context_data_useful and then 
 					command.context_data_useful 

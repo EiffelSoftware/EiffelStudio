@@ -103,9 +103,16 @@ feature -- Access
 		
 	log_font: WEL_LOG_FONT is
 			-- Log font representing `Current'.
+		local
+			logical_pixels: INTEGER
+			screen_dc: WEL_SCREEN_DC
 		do
-				-- 1440 is twips per inch. 72 is number of points per inch.
-			create Result.make ( - mul_div (72, height, 1440), face_name)
+			create screen_dc
+			screen_dc.get
+			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_y)
+			screen_dc.release
+				-- 1440 is twips per inch.
+			create Result.make ( - mul_div (logical_pixels, height, 1440), face_name)
 			Result.set_pitch_and_family (pitch_and_family)
 			if flag_set (effects, Cfm_bold) then
 				Result.set_weight (700)

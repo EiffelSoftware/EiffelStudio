@@ -18,10 +18,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: TYPE) is
-			-- Initialize type consumer for `type'.
+	make (t: TYPE; en: STRING) is
+			-- Initialize type consumer for `type' with eiffel name `en'.
 		require
 			non_void_type: t /= Void
+			non_void_eiffel_name: en /= Void
+			valid_eiffel_name: not en.is_empty
 		local
 			dotnet_name: STRING
 			inter: NATIVE_ARRAY [TYPE]
@@ -46,7 +48,7 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			create consumed_type.make (dotnet_name,
-										format_type_name (dotnet_name),
+										en,
 										t.get_is_interface,
 										t.get_is_abstract,
 										t.get_is_sealed,

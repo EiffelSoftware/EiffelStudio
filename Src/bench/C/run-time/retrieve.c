@@ -281,7 +281,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	return retrieved;
 }
 
-rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, int (*retrieve_function) (void))
+rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*retrieve_function) (void))
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE retrieved = (EIF_REFERENCE) 0;
@@ -297,6 +297,11 @@ rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, int (*retriev
 		 */
 	fflush (NULL);
 #endif
+
+		/* Go to position `a_pos' in stream where storable starts. */
+	if (lseek (f_desc, a_pos, SEEK_SET) == -1) {
+		esys ();
+	}
 
 	/* Reset nb_recorded */
 	nb_recorded = 0;

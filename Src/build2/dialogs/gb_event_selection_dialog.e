@@ -11,7 +11,9 @@ inherit
 	EV_DIALOG
 		export
 			{NONE} all
-			{ANY} show_modal_to_window
+			{ANY} show_modal_to_window, set_x_position, set_y_position, set_width, set_height
+		redefine
+			show_modal_to_window
 		end
 	
 	GB_SUPPORTED_EVENTS
@@ -102,7 +104,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title ("Event selection")
-		--	disable_user_resize
 			object := an_object
 			show_actions.extend (agent update_text_field_minimum_width)
 				-- Reset building counter.
@@ -213,6 +214,21 @@ feature -- Access
 
 	object: GB_OBJECT
 		-- Object associated with `Current'.
+		
+feature -- Basic operations
+
+	show_modal_to_window  (window: EV_WINDOW) is
+			-- Show `Current' modal to `window'.
+		do
+				-- Previous size will be 0 if the dialog has never
+				-- been displayed, and in this case, we do not want to set a position,
+				-- and just use the default.
+			if previous_size.x /= 0 then
+				set_position (previous_position.x, previous_position.y)
+				set_size (previous_size.x, previous_size.y)
+			end
+			Precursor {EV_DIALOG} (window)
+		end
 
 feature {NONE} -- Implementation
 
@@ -301,6 +317,7 @@ feature {NONE} -- Implementation
 				building_counter := building_counter + 1
 				create frame
 				create horizontal_box
+				horizontal_box.set_background_color (text_background_color)
 				create check_button
 				check_button.set_background_color (text_background_color)
 				create vertical_box
@@ -515,12 +532,12 @@ feature {NONE} -- Implementation
 				create label.make_with_text ("Feature name : ")
 				label.set_background_color (text_background_color)
 				create horizontal_box
+				horizontal_box.set_background_color (text_background_color)
 				horizontal_box.extend (label)
 				horizontal_box.disable_item_expand (label)
 				current_text_field.set_text (current_text_field.text.as_lower)
 				horizontal_box.extend (current_text_field)
 				frame.extend (horizontal_box)
-				horizontal_box.set_background_color (text_background_color)
 			else
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
@@ -559,7 +576,8 @@ feature {NONE} -- Implementation
 		end
 		
 	update_single_text_field (current_text_field: EV_TEXT_FIELD )is
-			--
+			-- Update `minimum_size' of `current_text_filed' to force it
+			--  to resize correctly.
 		local
 			right_hand_position: INTEGER
 		do
@@ -669,6 +687,7 @@ feature {NONE} -- Implementation
 			first_types, second_types: STRING
 			first_name, second_name: STRING
 		do	
+		
 				-- We must validate all the names contained in the boxes.
 				-- First, we need to find out all selected text fields.
 			from
@@ -737,7 +756,12 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 
-			if not invalid_state then			
+			if not invalid_state then
+				
+					-- Store the current size and position.
+				previous_position.set (x_position, y_position)	
+				previous_size.set (width, height)
+					
 					-- Then insert the new info.
 				from
 					counter := 1
@@ -789,5 +813,18 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
+	previous_size: EV_COORDINATE is
+			-- `Result' is previous size of `Current'
+			-- when last displayed.
+		once
+			create Result
+		end
+		
+	previous_position: EV_COORDINATE is
+			-- `Result' is previous position of `Current'
+			-- when last displayed.
+		once
+			create Result
+		end
 
 end -- class GB_EVENT_SELECTION_DIALOG

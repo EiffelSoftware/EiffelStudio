@@ -95,14 +95,14 @@ feature -- Access
 			
 			current_type := dynamic_type_from_string (type)	
 			can_drop := True
-			container ?= constructor_item.object
+			container ?= object
 				-- We may only replace an EV_CONTAINER with a primitive if the container is empty.
 			if container /= Void and container.object.count > 0 and
 				type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE"))then
 				can_drop := False
 			end
 			
-			primitive ?= constructor_item.object
+			primitive ?= object
 			if primitive /= Void  then
 					-- We cannot directly query the count of a primitive
 					-- as only some primitives support items. Checking the count
@@ -113,7 +113,7 @@ feature -- Access
 			end
 			
 			
-			cell ?= constructor_item.object
+			cell ?= object
 			if cell /= Void then
 					-- We may only replace an EV_CELL with an EV_PRIMITIVE if the cell is empty.
 				if type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE")) and (cell.object.count = 1) then
@@ -121,7 +121,7 @@ feature -- Access
 				end
 			end
 			
-			container ?= constructor_item.object
+			container ?= object
 			if container /= Void then
 						-- We may only replace an EV_CONTAINER with an EV_SPLIT_AREA if the container
 						-- holds no more than two items.

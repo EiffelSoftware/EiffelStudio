@@ -12,9 +12,6 @@ inherit
 	EV_ITEM_I
 
 	EV_EVENT_HANDLER_IMP
-		export
-			{EV_ITEM_HOLDER_IMP} execute_command
-		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 

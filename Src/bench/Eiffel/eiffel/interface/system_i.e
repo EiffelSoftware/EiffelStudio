@@ -1822,6 +1822,7 @@ feature -- Final mode generation
 
 					-- Clean `finalization_needed' tag from all CLASS_C
 				clean_finalization_tag
+				private_finalize := False
 			end
 		rescue
 				-- Clean the servers if the finalization is aborted
@@ -2056,7 +2057,8 @@ feature {NONE} -- Finalization implementation
 			i, j, nb: INTEGER
 			class_array: ARRAY [CLASS_C]
 		do
-			if not il_generation then
+			Result := private_finalize
+			if not Result and then not il_generation then
 				i := classes.count
 				class_array := classes
 				nb := class_counter.count

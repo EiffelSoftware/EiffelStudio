@@ -218,7 +218,8 @@ feature -- Basic operations
 
 	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
-			-- of the `grid.drawable' in which the grid is displayed.
+			-- of the `grid.drawable' in which the grid is displayed. The bounded item
+			-- incorporates the tree node if any.
 		require
 			an_x_positive: an_x >= 0
 			a_y_positive: a_y >= 0
@@ -232,6 +233,33 @@ feature -- Basic operations
 			vertical_span_items := items_spanning_vertical_span (a_y, 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
 				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
+			end
+		end
+		
+	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
+			-- of the `grid.drawable' in which the grid is displayed. This version
+			-- returns `Void' if the pointed_part of the item is part of a tree node.
+		require
+			an_x_positive: an_x >= 0
+			a_y_positive: a_y >= 0
+		local
+			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
+			item_indent: INTEGER
+		do
+			grid.perform_vertical_computation
+				-- Recompute vertical row heights and scroll bar positions before
+				-- querying the item positions
+			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
+			vertical_span_items := items_spanning_vertical_span (a_y, 0)
+			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
+				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
+				if Result /= Void then
+					item_indent := grid.item_indent (Result)
+					if an_x - Result.virtual_x_position < item_indent then
+						Result := Void
+					end
+				end
 			end
 		end
 		

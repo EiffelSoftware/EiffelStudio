@@ -390,17 +390,17 @@ feature -- Sub makefile generation
 				-- Generate makefile in subdirectories.
 		local
 			new_makefile, old_makefile: INDENT_FILE
-			baskets_count, i: INTEGER
+			nb, i: INTEGER
 			f_name: FILE_NAME
 			subdir_name: STRING
 			basket: LINKED_LIST [STRING]
 		do
 			old_makefile := make_file
 			from
-				baskets_count := baskets.count
+				nb := baskets.count
 				i := 1
 			until
-				i > baskets_count
+				i > nb
 			loop
 				basket := baskets.item (i)
 				if not basket.is_empty then
@@ -859,32 +859,31 @@ feature -- Generation (Linking rules)
 			generate_basket_objects (object_baskets, C_prefix)
 		end
 
-
 	generate_subdir_names is
 			-- Generate the subdirectories' names.
 		local
-			i, baskets_count: INTEGER
+			i, nb: INTEGER
 			not_first: BOOLEAN
 		do
 			make_file.putstring ("SUBDIRS = ")
 
 			if not_first then
 				make_file.putchar (' ')
-				not_first := false
+				not_first := False
 			end
 
 				-- Class object files.
 			from
-				baskets_count := object_baskets.count
+				nb := object_baskets.count
 				i := 1
 			until
-				i > baskets_count
+				i > nb
 			loop
 				if not object_baskets.item (i).is_empty then
 					if not_first then
 						make_file.putchar (' ')
 					else
-						not_first := true
+						not_first := True
 					end
 					make_file.putchar (C_prefix)
 					make_file.putint (i)
@@ -893,10 +892,10 @@ feature -- Generation (Linking rules)
 			end
 
 			from
-				baskets_count := system_baskets.count
+				nb := system_baskets.count
 				i := 1
 			until
-				i > baskets_count
+				i > nb
 			loop
 				if not system_baskets.item (i).is_empty then
 					make_file.putchar (' ')
@@ -1015,14 +1014,14 @@ feature -- Generation (Linking rules)
 	generate_partial_objects_dependencies is
 			-- Depencies to update partial objects in subdirectories.
 		local
-			i, baskets_count: INTEGER
+			i, nb: INTEGER
 		do
 				-- Class object files.
 			from
-				baskets_count := object_baskets.count
+				nb := object_baskets.count
 				i := 1
 			until
-				i > baskets_count
+				i > nb
 			loop
 				if not object_baskets.item (i).is_empty then
 					make_file.putchar (C_prefix)
@@ -1107,20 +1106,20 @@ feature {NONE} -- Implementation
 		require
 			baskets_not_void: baskets /= Void
 		local
-			i, baskets_count: INTEGER
+			i, nb: INTEGER
 			not_first: BOOLEAN
 		do
 			from
-				baskets_count := baskets.count
-				i := 1
+				nb := baskets.count
+				i := nb
 			until
-				i > baskets_count
+				i < 1
 			loop
 				if not baskets.item (i).is_empty then
 					if not_first then
 						make_file.putchar (' ')
 					else
-						not_first := true
+						not_first := True
 					end
 					make_file.putchar (dir_prefix)
 					make_file.putint (i)
@@ -1130,7 +1129,7 @@ feature {NONE} -- Implementation
 					make_file.putint (i)
 					make_file.putstring (".o")
 				end
-				i := i + 1
+				i := i - 1
 			end
 		end
 

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			create main_box.make (par)
 			main_box.set_spacing (2)
 			create tbar.make (main_box)
+			main_box.set_child_expandable (tbar, False)
 			create raise_widget_hole.make (tbar)
 			create show_window_hole.make (tbar)
 			create exp_parent_hole.make (tbar)

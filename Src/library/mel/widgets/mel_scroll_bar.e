@@ -322,7 +322,7 @@ feature  -- Status setting
 		require
 			exists: not is_destroyed;
 			a_size_small_enough: a_size <= (maximum - minimum);
-			a_size_large_enough: a_size >= 0
+			a_size_large_enough: a_size >= 1
 		do
 			set_xt_int (screen_object, XmNsliderSize, a_size)
 		ensure

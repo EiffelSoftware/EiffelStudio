@@ -72,7 +72,10 @@ feature
 
 	allocates_memory: BOOLEAN is
 		do
-			Result := expression.allocates_memory
+			Result :=
+					-- Is there a metamorphosis?
+				(not attachment_type.is_basic and expression.type.is_basic)
+				or else expression.allocates_memory
 		end;
 
 	stored_register: REGISTRABLE is

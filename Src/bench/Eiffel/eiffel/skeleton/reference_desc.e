@@ -4,10 +4,21 @@ inherit
 
 	ATTR_DESC
 		redefine
-			is_reference
+			is_reference, real_sk_value
 		end
-	
+
 feature 
+
+	class_type_i: CL_TYPE_I;
+			-- Class type of a reference attribute
+
+	set_class_type_i (i: CL_TYPE_I) is
+			-- Assign `i' to `class_type_i'.
+		do
+			class_type_i := i;
+		ensure
+			set: class_type_i = i
+		end;
 
 	is_reference: BOOLEAN is True;
 			-- Is the attribute a reference ?
@@ -30,6 +41,15 @@ feature
 		once
 			Result := Sk_ref
 		end;
+
+	real_sk_value : INTEGER is
+		do
+			if class_type_i /= Void then
+				Result := class_type_i.sk_value
+			else
+				Result := Sk_ref
+			end
+		end
 
 	trace is
 		do

@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision button. Basic GUI push button.%
-				% This is also a base class for other buttons classes"
+		% This is also a base class for other buttons classes"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,16 +16,19 @@ inherit
 		end
 		
 	EV_BAR_ITEM
+		redefine
+			make, implementation
+		end
 	
 	EV_TEXT_CONTAINER
 		redefine
 			implementation, make
 		end
 
---	EV_PIXMAP_CONTAINER
---		redefine
---			implementation
---		end
+	EV_PIXMAP_CONTAINER
+		redefine
+			implementation
+		end
 
 	EV_FONTABLE
 		redefine
@@ -41,7 +44,6 @@ feature {NONE} -- Initialization
  		-- Empty button
 		do
  			!EV_BUTTON_IMP!implementation.make (par)
---			implementation.initialize (Current)
  			widget_make (par)
  		end
 	
@@ -50,21 +52,8 @@ feature {NONE} -- Initialization
 			-- text label
 		do
 			!EV_BUTTON_IMP!implementation.make_with_text (par, txt)
---			implementation.initialize (Current)
 			widget_make (par)
 		end
-	
---	initialize (par: EV_CONTAINER) is
---		-- Common initialization for buttons
---		do
---			widget_make (par)
-	--		!!pixmap_container.make_from_primitive (Current)
---		end
-	
-feature -- Access
-
-	pixmap_container: EV_PIXMAP_CONTAINER
-			-- Pixmap inside button
 	
 feature -- Event - command association
 	

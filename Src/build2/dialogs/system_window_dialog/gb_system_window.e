@@ -150,11 +150,6 @@ feature {NONE} -- Implementation
 			elseif project_settings.attributes_local.is_equal (Optimal_string) then
 				attributes_optimal_local_check_button.enable_select
 			end
-			if project_settings.client_of_window then
-				client_check_button.enable_select
-			else
-				client_check_button.disable_select
-			end
 			if project_settings.load_constants then
 				load_constants_check_button.enable_select
 			else
@@ -201,11 +196,6 @@ feature {NONE} -- Implementation
 				project_settings.set_attributes_locality (False_string)
 			elseif attributes_optimal_local_check_button.is_selected then
 				project_settings.set_attributes_locality (Optimal_string)
-			end
-			if client_check_button.is_selected then
-				project_settings.enable_client_of_window
-			else
-				project_settings.disable_client_of_window
 			end
 			if load_constants_check_button.is_selected then
 				project_settings.enable_constant_loading

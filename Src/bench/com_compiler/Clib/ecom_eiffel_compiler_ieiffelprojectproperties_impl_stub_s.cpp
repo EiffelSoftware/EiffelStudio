@@ -20,6 +20,7 @@ ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::IEiffelProjectProperti
 	type_id = eif_type (eiffel_object);
 	
 	pTypeInfo = 0;
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -32,6 +33,7 @@ ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::~IEiffelProjectPropert
 	eif_wean (eiffel_object);
 	if (pTypeInfo)
 		pTypeInfo->Release ();
+	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

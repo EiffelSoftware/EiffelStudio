@@ -17,6 +17,7 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::IEiffelFeatureDescript
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,6 +28,7 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::~IEiffelFeatureDescrip
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

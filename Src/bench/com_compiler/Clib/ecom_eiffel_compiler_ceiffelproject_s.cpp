@@ -24,6 +24,7 @@ ecom_eiffel_compiler::CEiffelProject::CEiffelProject( EIF_TYPE_ID tid )
 	eiffel_procedure = eif_procedure ("make_from_pointer", type_id);
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -33,6 +34,7 @@ ecom_eiffel_compiler::CEiffelProject::CEiffelProject( EIF_OBJECT eif_obj )
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -43,6 +45,7 @@ ecom_eiffel_compiler::CEiffelProject::~CEiffelProject()
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

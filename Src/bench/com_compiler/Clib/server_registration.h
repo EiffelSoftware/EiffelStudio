@@ -31,21 +31,13 @@ struct REG_DATA
 	BOOL pDelOnUnregister;
 };
 
-#define ccom_dll_get_class_object(_arg1_, _arg2_, _arg3_) (ccom_dll_get_class_object_function((CLSID*)_arg1_, (IID*)_arg2_, (void **)_arg3_))
+#define ccom_register_server (ccom_register_server_function())
 
-#define ccom_dll_register_server (ccom_dll_register_server_function())
+#define ccom_unregister_server (ccom_unregister_server_function())
 
-#define ccom_dll_unregister_server (ccom_dll_unregister_server_function())
+#define ccom_initialize_com (ccom_initialize_com_function())
 
-#define ccom_dll_can_unload_now (ccom_dll_can_unload_now_function())
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-RT_LNK HINSTANCE eif_hInstance;
-#ifdef __cplusplus
-}
-#endif
+#define ccom_cleanup_com (ccom_cleanup_com_function())
 
 	/*-----------------------------------------------------------
 	Unregister Server/Component
@@ -60,27 +52,9 @@ RT_LNK HINSTANCE eif_hInstance;
 
 
 	/*-----------------------------------------------------------
-	DLL get class object funcion
+	Lock module.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_dll_get_class_object_function( CLSID * rclsid, IID * riid, void **ppv );
-
-
-	/*-----------------------------------------------------------
-	Register DLL server.
-	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_dll_register_server_function( void );
-
-
-	/*-----------------------------------------------------------
-	Unregister Server.
-	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_dll_unregister_server_function( void );
-
-
-	/*-----------------------------------------------------------
-	Whether component can be unloaded?
-	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_dll_can_unload_now_function( void );
+	void LockModule( void );
 
 
 	/*-----------------------------------------------------------
@@ -90,9 +64,27 @@ RT_LNK HINSTANCE eif_hInstance;
 
 
 	/*-----------------------------------------------------------
-	Lock module.
+	Register server.
 	-----------------------------------------------------------*/
-	void LockModule( void );
+	void ccom_register_server_function();
+
+
+	/*-----------------------------------------------------------
+	Unregister server.
+	-----------------------------------------------------------*/
+	void ccom_unregister_server_function();
+
+
+	/*-----------------------------------------------------------
+	Initialize server.
+	-----------------------------------------------------------*/
+	void ccom_initialize_com_function();
+
+
+	/*-----------------------------------------------------------
+	Clean up COM.
+	-----------------------------------------------------------*/
+	void ccom_cleanup_com_function();
 
 #ifdef __cplusplus
 }

@@ -59,6 +59,23 @@ feature
 			end;
 		end;
 
+	generated_static_feature_type_id: STRING is
+			-- Textual representation of type id of the Result type
+		local
+			class_type: CL_TYPE_I
+		do
+			class_type ?= type;
+			if
+				not ( class_type = Void or else class_type.is_basic
+				--or else-class_type.is_expanded
+				)
+			then
+				Result := class_type.associated_class_type.id.generated_id
+			else
+				Result := "-1"
+			end
+		end;
+
 	feature_type_id: INTEGER is
 			-- Type id of the Result type
 		local

@@ -39,6 +39,7 @@ extern "C" {
 /* 
  *  VMS system specific definitions 
  */
+#define _POSIX_EXIT
 #define __NEW_STARLET	/* define prototypes for sys$, lib$ function calls */
 /* #define _VMS_V6_SOURCE	** see DECC RTL doc (geteuid) */
 #if !defined(__DECC_VER) || __DECC_VER < 50000000	/* DECC vers < 5.0 */

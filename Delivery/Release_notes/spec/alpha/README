@@ -1,0 +1,15 @@
+RELEASE NOTES for DEC ALPHA (ISE EIFFEL4.2F)
+--------------------------------------------
+
+To run ISE Eiffel on this platform, please set your environment variable
+PLATFORM:
+setenv PLATFORM alpha
+
+You need to have at least a Digital Unix system version 4.0 or higher.
+You need to use gcc to compile the C generated code (it won't work if you
+are using the DEC `cc')
+ISE EiffelBench doesn't support any multithreaded mechanism on Digital Unix.
+The license mechanism does not work properly, sometimes you need to restart
+the `eifdaemon' program.
+
+

@@ -6,18 +6,24 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Initialization
 
-	make (m: MUTEX; i: INTEGER; n: INTEGER) is
+	make (io_m: MUTEX; i: INTEGER; n: INTEGER) is
+		require
+			io_m_not_void: io_m /= Void
+			valid_i: i > 0
+			valid_n: n > 0
 		do
-			mutex := m
+			io_mutex := io_m
 			id := i
 			nb_loop := n
 		end
 
-feature
 
-	mutex: MUTEX
+feature {NONE} -- Implementation
+
+	io_mutex: MUTEX
+
 	id, nb_loop: INTEGER
 
 	execute is
@@ -29,19 +35,20 @@ feature
 			until
 				cpt > nb_loop
 			loop
-				mutex.lock
+				io_mutex.lock
+				io.print (cpt)
+				io.print ("|")
 				from 
-					io.putstring("|")
 					i := 0
 				until
 					i > cpt
 				loop
-					io.putstring("-")
+					print ("-")
 					i := i + 1
 				end
 				io.putint(id)
 				io.putstring("%N")
-				mutex.unlock
+				io_mutex.unlock
 				cpt := cpt + 1
 			end
 		end
@@ -63,4 +70,3 @@ end  -- class RUNNER
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

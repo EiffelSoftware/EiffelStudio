@@ -28,9 +28,9 @@
 #include "rt_garcol.h"
 #include "rt_macros.h"
 #include "rt_types.h"
+#include "rt_assert.h"
 
 #include <string.h>
-#include <assert.h>
 
 
 #ifdef EIF_THREADS
@@ -508,18 +508,21 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_TYPE *l_chld_mutex = eif_thr_context->children_mutex;
 	int *l_addr_n_children = eif_thr_context->addr_n_children;
 	
-	int ret;	/* Return Status of "eifaddr". */
-	EIF_BOOLEAN *terminated = (EIF_BOOLEAN *)
-		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
-	eif_wean(eif_thr_context->current);
-	if (ret != EIF_CECIL_OK) 
-		eraise ("eif_thr_exit", EN_EXT);
+	int ret;	/* Return Status of "eifaddr_offset". */
+	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
+	EIF_REFERENCE thread_object = NULL;
+	RT_GC_PROTECT(thread_object);
+	thread_object = eif_access(eif_thr_context->current);
+	offset = eifaddr_offset (thread_object, "terminated", &ret);
+	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
 	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
 
 		/* Set the `terminated' field of the twin thread object to True so that
 		 * it knows the thread is terminated */
-	*terminated = EIF_TRUE;
+	*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
+	RT_GC_WEAN(thread_object);
+	eif_wean(eif_thr_context->current);
 
 
 	/* 
@@ -554,7 +557,7 @@ rt_public void eif_thr_exit(void)
 		eif_cecil_reclaim ();
 		eif_free (eif_globals);			
 						/* Global variables specific to the current thread */
-		assert (!eif_thr_context);
+		CHECK("Is root", !eif_thr_context);
 #ifdef LMALLOC_CHECK
 		eif_lm_display ();
 		eif_lm_free ();
@@ -679,7 +682,7 @@ rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
 	int i = 0;
 	void **stack = st_list->threads.stack;
 
-	assert(count > 0);	/* Must be something in threads_stack */
+	REQUIRE("Stack not empty", count > 0);
 
 		/* Linear search to find `st' in `threads_stack' */
 	while (i < count) {
@@ -688,7 +691,7 @@ rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
 		i = i + 1;
 	}
 
-	assert (i < count);	/* We must have found entry that holds reference to `st' */
+	CHECK("Is found", i < count);	/* We must have found entry that holds reference to `st' */
 
 		/* Free memory used by `st'. */
 	eif_stack_free (st);
@@ -805,7 +808,15 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 #endif
 	int ret;	/* Return Status of "eifaddr". */
 	EIF_INTEGER offset;	/* location of `terminated' in Current */
-	offset = eifaddr_offset (eif_access (Current), "terminated", &ret);
+	EIF_REFERENCE thread_object = NULL;
+
+		/* We need to protect thread_object, because the protected
+		 * reference `eif_access (Current)' will be cleaned when
+		 * Current thread exit. */
+	RT_GC_PROTECT(thread_object);
+	thread_object = eif_access(Current);
+	offset = eifaddr_offset (thread_object, "terminated", &ret);
+	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
@@ -820,7 +831,7 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	EIF_THR_YIELD;
 	while (!end) {
 		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-		if (*(EIF_BOOLEAN *) (eif_access (Current) + offset) == EIF_FALSE) {
+		if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
 			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 			EIF_THR_YIELD;
 		} else {
@@ -836,11 +847,12 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	 */
 
 	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-	while (*(EIF_BOOLEAN *) (eif_access (Current) + offset) == EIF_FALSE)
+	while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 
 #endif
+	RT_GC_WEAN(thread_object);
 }
 
 rt_public void eif_thr_join (EIF_POINTER tid)

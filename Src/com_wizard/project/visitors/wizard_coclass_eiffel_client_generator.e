@@ -58,7 +58,6 @@ feature -- Access
 
 			end
 
-			-- Generate code and file name.
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 		end

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Revisions</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Revisions and bug fixes</H1>
+		<P>This document contains details of modifications and bug fixes to the vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</P>
+        	<H2>Eiffel Studio 5.1</H2>
+		<P><B>Interface modifications</B></P>
+		<UL>
+			<LI><B>`text' of EV_TEXTABLE and EV_TEXT_COMPONENT</B> - No longer returns Void when `text' is empty.</LI>
+			<LI><B>EV_CONTAINER</B> - has three new features `set_background_pixmap', `background_pixmap' and `remove_background_pixmap'. `background_pixmap' will be tessellated to cover complete background area.</LI>
+			<LI><B>EV_TREE and EV_TREE_NODE</B> - Added `recursively_do_all'.</LI>
+			<LI><B>EV_STANDARD_DIALOGS</B> - `ok_actions' have been renamed in descendents where appropriate. e.g. in EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the associated buttons. Where renamed, `ok_actions' are still available but obsolete. Selected button now also returns the correct text of the button (Previously it was always "Ok").</LI>
+			<LI><B>EV_DIALOG_CONSTANTS</B> - Added new constants required for the above change to EV_STANDARD_DIALOGS.</LI>
+			<LI><B>EV_DRAWABLE</B> - `draw_straight_line' now has a precondition to ensure the points are not identical.</LI>
+			<LI><B>EV_SPLIT_AREA</B> - seperated `put' from `extend'. They were defined as synonyms, but have different behaviour.</LI>
+			<LI><B>EV_DYNAMIC_TREE_ITEM</B> - Added `remove_subtree_function'. Item now only shows as expandable if there is a subtree function.</LI>
+			<LI><B>EV_WINDOW</B> - Added `maximum_dimension' which is the greatest value allowed for `width' and `height'. This is also the default value for `width' and `height'.</LI>
+		</UL>
+		<P><B>Bug fixes</B>
+		<UL>
+		<LI><B>Platform independent</B></LI>
+			<UL>
+			<LI><B>EV_FIXED</B> - Corrected `set_item_height', which was failing.</LI>
+			<LI><B>EV_SELECTABLE</B> - Corrected postcondition of `is_selected'.</LI>
+			</UL>
+		<LI><B>Windows</B></LI>
+			<UL>
+			<LI><B>EV_RANGE</B> - The `maximum_value' could not be set greater than 32,000. The full range of an INTEGER may now be set. </LI>
+			<LI><B>`focused_widget' from `EV_APPLICATION'</B> - was incorrect if an EV_CONTAINER had just received the focus.</LI>
+			<LI><B>EV_PICK_AND_DROPABLE</B> - Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble no longer starts a transport from the button. Reduced flicker on cursor when picking from an EV_TREE_ITEM or EV_LIST_ITEM.</LI>
+			<LI><B>EV_FIXED</B> - Items contained are now drawn correctly dependent on their z order.</LI>
+			<LI><B>EV_DRAWABLE</B>
+				<UL>
+				<LI>`Remove_clip_area' did not remove the clip_area correctly, but set it to the current size. This meant that if you then enlarged the widget, clipping would be applied. </LI>
+				<LI>Fixed problems with ordering of calls to certain features which would cause postcondition violations in the implementation.</LI>
+				<LI>`draw_pie_slice', `fill_pie_slice' and `draw_arc' now have divide by 0 protection in the implementation.</LI>
+				</UL>
+			<LI><B>EV_TEXT</B> - `set_background_color' now correctly sets the color of the whole background. Previously only the area containing text was modified.</LI>
+			<LI><B>EV_CLIPBOARD</B> - Our implementation would sometimes query `text' when not allowed by Windows, thus causing postcondition failures.</LI>
+			</UL>
+		<LI><B>Gtk</B></LI>
+			<UL>
+				<LI>Gtk version of Studio released (including Vision2), so no fixes from 5.0</LI>
+			</UL>
+		</UL>
+		</P>
+		
+</HTML>

@@ -45,18 +45,6 @@ inherit
 			default_create, copy, is_equal
 		end
 		
-	WIZARD_STATE_MANAGER
-		rename
-			wizard_information as old_wizard_information
-		undefine
-			default_create, copy, is_equal
-		end
-		
-	GB_WIDGET_UTILITIES
-		undefine
-			default_create, copy
-		end
-
 create
 	default_create	
 
@@ -75,7 +63,7 @@ feature -- Basic operation
 				-- Build the menu
 			build_menu
 				-- Build the tools and other widgets within `Current'.
-			build_widget_structure
+			build_widget_structure (Void)
 			set_minimum_size (640, 480)
 				-- The split areas do not re-position correctly when
 				-- `Current' is not shown, so when shown, we initialize
@@ -86,12 +74,25 @@ feature -- Basic operation
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
 		end
+		
+		
+		
+	generate_interface (vb: EV_VERTICAL_BOX) is
+			-- Build interface of `Current' into `vb'.
+			-- This is used in Wizard mode.
+		require
+			box_exists: vb /= Void
+		do
+			build_widget_structure (vb)
+		end
+		
 
 	show_tools is
 			-- Place tools in `Current'.
 		require
 			has_item: item /= Void
 			item_is_filler: item = filler
+			not_in_wizard_mode: not system_status.is_wizard_system
 		do
 			lock_update
 				-- Remove the filler.
@@ -122,6 +123,7 @@ feature -- Basic operation
 		require
 			has_item: item /= Void
 			item_is_tool_holder: item = tool_holder
+			not_in_wizard_mode: not system_status.is_wizard_system
 		do
 			lock_update
 				-- Remove the tools
@@ -216,76 +218,38 @@ feature {NONE} -- Implementation
 			a_menu_bar.extend (help_menu)
 		end
 		
-	build_widget_structure is
+	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
 			-- create and layout "widgets" within `Current'.
+			-- if `a_tool_holder' not Void then build widgets into
+			-- `a_tool_holder', else build widgets into `tool_holder'.
 		local
 			separator: EV_HORIZONTAL_SEPARATOR
 			horizontal_box: EV_HORIZONTAL_BOX
-			h1: EV_HORIZONTAL_BOX
-			h_sep: EV_HORIZONTAL_SEPARATOR
-			navigation_bar: EV_HORIZONTAL_BOX
-				-- Horizontal box containing navigation buttons
-				previous_b, next_b, cancel_b, help_b: EV_BUTTON
-
+			the_tool_holder: EV_VERTICAL_BOX
 		do
-			create tool_holder
+			if a_tool_holder /= Void then
+				the_tool_holder := a_tool_holder
+			else
+				create tool_holder
+				the_tool_holder := tool_holder
+			end
 			create separator
-			tool_holder.extend (separator)
-			tool_holder.disable_item_expand (separator)
-			tool_holder.extend (tool_bar)
-			tool_holder.disable_item_expand (tool_bar)
+			the_tool_holder.extend (separator)
+			the_tool_holder.disable_item_expand (separator)
+			the_tool_holder.extend (tool_bar)
+			the_tool_holder.disable_item_expand (tool_bar)
 			create separator
-			tool_holder.extend (separator)
-			tool_holder.disable_item_expand (separator)
+			the_tool_holder.extend (separator)
+			the_tool_holder.disable_item_expand (separator)
 			create horizontal_box
-			tool_holder.extend (horizontal_box)
+			the_tool_holder.extend (horizontal_box)
 			create vertical_split_area.make_with_tools (type_selector, component_selector, "Type selector", "Component selector")
 			create horizontal_split_area.make_with_tools (vertical_split_area, layout_constructor, "Layout constructor")
 			horizontal_box.extend (horizontal_split_area)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
 			
-			if system_status.is_wizard_system then
-				extend (tool_holder)
-				create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
-				previous_b.align_text_center
-				set_default_size_for_button (previous_b)
-	
-				create next_b.make_with_text_and_action ("Next >", agent next_page)	
-				next_b.align_text_center
-				set_default_size_for_button (next_b)
-	
-				create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
-				cancel_b.align_text_center
-				set_default_size_for_button (cancel_b)
-				
-				create help_b.make_with_text_and_action ("Help", agent show_help)
-				help_b.align_text_center
-				set_default_size_for_button (help_b)
-				help_b.hide
-	
-				create h1
-				h1.extend (previous_b)
-				h1.disable_item_expand(previous_b)
-				h1.extend (next_b)
-				h1.disable_item_expand (next_b)
-				
-				create navigation_bar
-				navigation_bar.set_padding (dialog_unit_to_pixels(11))
-				navigation_bar.set_border_width (dialog_unit_to_pixels(11))
-				navigation_bar.extend (help_b)
-				navigation_bar.disable_item_expand (help_b)
-				navigation_bar.extend (create {EV_CELL})
-				navigation_bar.extend (h1)
-				navigation_bar.disable_item_expand (h1)
-				navigation_bar.extend (cancel_b)
-				navigation_bar.disable_item_expand (cancel_b)
-				create h_sep
-				tool_holder.extend (h_sep)
-				tool_holder.disable_item_expand (h_sep)
-				tool_holder.extend (navigation_bar)
-				tool_holder.disable_item_expand (navigation_bar)
-			else
+			if not system_status.is_wizard_system then
 				create filler
 				extend (filler)
 			end
@@ -333,25 +297,7 @@ feature {NONE} -- Implementation
 			create about_dialog.make
 			about_dialog.show_modal_to_window (Current)
 		end
-		
-feature {NONE} -- Wizard mode implementation
 
-	previous_page is
-			-- Display previous page of wizard.
-		do
-				-- Vision2 bug is stopping window contents being
-				-- shown correctly, so we call `show' before `back'.
-			first_window.show
-			back
-		end
-		
-	next_page is
-			-- Display next page of wizard.
-		do
-			graphically_replace_window (first_window, Current)
-			next
-		end
-		
 feature {NONE} -- Implementation
 
 	assign_command_accelerators_to_window is

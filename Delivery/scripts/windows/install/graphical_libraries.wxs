@@ -2781,7 +2781,7 @@
             </Directory>
           </Directory>
           <Directory Id="vision2_extension" Name="VISION~1" LongName="vision2_extension">
-            <Directory Id="windows" Name="windows">
+            <Directory Id="windows_dir" Name="windows">
               <Directory Id="dotnet" Name="dotnet">
                 <Directory Id="ev_winform_container" Name="EV_WIN~1" LongName="ev_winform_container">
                   <Component Id="ev_winform_container.e" Guid="805F25DC-1DEB-4215-B5B4-B6BF4BE74304">

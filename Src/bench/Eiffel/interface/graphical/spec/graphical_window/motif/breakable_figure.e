@@ -60,7 +60,7 @@ feature -- Status setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; is_in_debug_line: BOOLEAN; 
+	draw (d: DRAWING_X; is_in_hightlighted_line: BOOLEAN; 
 			x_offset, y_offset: INTEGER) is
 			-- Draw the current text.
 		local
@@ -70,7 +70,7 @@ feature -- Output
 				check
 					non_void_text: text /= Void
 				end;
-				draw_text (d, is_in_debug_line, x_offset, y_offset)
+				draw_text (d, is_in_hightlighted_line, x_offset, y_offset)
 			else
 				!! ul;
 				ul.set (base_left_x - x_offset, 

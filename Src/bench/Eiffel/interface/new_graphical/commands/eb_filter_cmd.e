@@ -14,6 +14,7 @@ inherit
 			tool
 		end
 
+	EB_GENERAL_DATA
 	EB_SHARED_FORMAT_TABLES
 
 --	WARNER_CALLBACKS
@@ -42,6 +43,9 @@ feature -- Properties
 
 	filter_window: EB_FILTER_DIALOG
 			-- Associated popup window
+
+	user_warned: BOOLEAN
+		-- Has a confirmation dialog been displayed yet?
 
 	filter_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
@@ -104,9 +108,10 @@ feature {EB_FILTER_DIALOG} -- Implementation
 --				mp.restore
 				filter_window.call (Current)
 			elseif argument = filter_it then
---					-- Display the filter output in `text_window'
-				if tool.text_window.changed then
+					-- Display the filter output in `text_window'
+				if tool.text_window.changed and then not (user_warned) then
 					create csd.make_and_launch (tool, Current, argument)
+					user_warned := True
 				else
 					tool.last_format.filter (filter_name)
 				end

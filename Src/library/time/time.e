@@ -367,22 +367,22 @@ feature {NONE} -- Externals
 	
 	c_hour_now: INTEGER is
 		external
-			"C"
+			"C  (): EIF_INTEGER | %"datetime.h%""
 		end;
 
 	c_minute_now: INTEGER is
 		external
-			"C"
+			"C  (): EIF_INTEGER | %"datetime.h%""
 		end;
 
 	c_second_now: INTEGER is
 		external
-			"C"
+			"C (): EIF_INTEGER | %"datetime.h%""
 		end;
 
 	c_millisecond_now: INTEGER is
 		external
-			"C"
+			"C (): EIF_INTEGER | %"datetime.h%""
 		ensure
 			correct_range: 0 <= Result and Result < 1000
 		end;

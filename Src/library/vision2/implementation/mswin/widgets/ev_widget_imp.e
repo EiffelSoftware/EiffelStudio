@@ -383,8 +383,13 @@ feature -- Element change
 
 feature -- Implementation
 
-	on_contained is
+	on_parented is
 			-- `Current' has just been put into a container.
+		do
+		end
+
+	on_orphaned is
+			-- `Current' has just been removed from its container.
 		do
 		end
 
@@ -909,6 +914,10 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/03/23 23:23:41  brendel
+--| Renamed on_contained to on_parented.
+--| Added on_orphaned.
+--|
 --| Revision 1.62  2000/03/23 01:14:28  brendel
 --| Widget is now only shown by default if it is not of type EV_TITLED_WINDOW
 --| Removed obsolete accelerator code.

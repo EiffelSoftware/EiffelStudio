@@ -10,9 +10,7 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Allocated `item'.
-		local
 		do
-			create item.make (Default_size)
 			create item.make (Default_size)
 			current_position := 0
 		end

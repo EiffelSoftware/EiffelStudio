@@ -11,6 +11,9 @@ class
 	
 inherit
 	EV_APPLICATION_I
+			export
+				{EV_WIDGET_IMP} capture_widget
+			end
 
 	IDENTIFIED
 		undefine
@@ -334,7 +337,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
-			--| Do nothing, for future implementation
+
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -352,7 +355,13 @@ feature -- Implementation
 
 	is_in_docking: BOOLEAN
 		-- Is application currently in docking?
-	
+
+	set_capture_widget (a_capture_widget: EV_WIDGET) is
+			-- Set `capture_widget' to the widget that has the current capture 'a_capture_widget'.
+		do
+			capture_widget := a_capture_widget
+		end
+
 	enable_is_in_docking is
 			-- Set is_in_docking to True.
 		do

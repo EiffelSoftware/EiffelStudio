@@ -25,11 +25,8 @@ creation
 
 feature -- Status report
 
-	support_storable: BOOLEAN is
+	support_storable: BOOLEAN is True
 			-- Can medium be used to an Eiffel structure?
-		do
-			Result := True
-		end
 
 feature -- Output
 
@@ -86,49 +83,6 @@ feature -- Input
 		do
 			last_double := file_gdb (file_pointer)
 		end;
-
-feature -- Access
-
-	retrieved: ANY is
-			-- Retrieved object structure
-			-- To access resulting object under correct type,
-			-- use assignment attempt.
-			-- Will raise an exception (code `Retrieve_exception')
-			-- if content is not a stored Eiffel structure.
-		do
-			Result := c_retrieved (descriptor, 'F')
-		end
-
-feature -- Element change
- 
-	basic_store (object: ANY) is
-			-- Produce an external representation of the
-			-- entire object structure reachable from `object'.
-			-- Retrievable within current system only.
-		do
-			c_basic_store (descriptor, $object, 'F')
-		end;
- 
-	general_store (object: ANY) is
-			-- Produce an external representation of the
-			-- entire object structure reachable from `object'.
-			-- Retrievable from other systems for same platform
-			-- (machine architecture).
-			--| This feature may use a visible name of a class written
-			--| in the `visible' clause of the Ace file. This makes it
-			--| possible to overcome class name clashes.
-		do
-			c_general_store (descriptor, $object, 'F')
-		end
- 
-	independent_store (object: ANY) is
-			-- Produce an external representation of the
-			-- entire object structure reachable from `object'.
-			-- Retrievable from other systems for the same or other
-			-- platform (machine architecture).
-		do
-			c_independent_store (descriptor, $object, 'F')
-		end
 
 feature {NONE} -- Implementation
 
@@ -192,42 +146,6 @@ feature {NONE} -- Implementation
 			-- Put `d' to end of `file'.
 		external
 			"C"
-		end;
-
-	c_retrieved (file_handle: INTEGER; file_storage_type: CHARACTER): ANY is
-			-- Object structured retrieved from file of pointer
-			-- `file_ptr'
-		external
-			"C"
-		alias
-			"eretrieve"
-		end;
- 
-	c_basic_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"estore"
-		end;
- 
-	c_general_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"eestore"
-		end;
- 
-	c_independent_store (file_handle: INTEGER; object: POINTER; file_storag_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"sstore"
 		end;
 
 invariant

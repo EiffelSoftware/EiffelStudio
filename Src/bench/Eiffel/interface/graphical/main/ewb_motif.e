@@ -24,7 +24,7 @@ feature {NONE}
 
 feature 
 
-	listen_to: UNIX_FILE;
+	listen_to: RAW_FILE;
 
 	create_handler is
 		do

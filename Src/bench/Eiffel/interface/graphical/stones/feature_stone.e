@@ -141,10 +141,10 @@ feature -- dragging
 			valid_start_position: start_position > 0;
 			valid_feature: feature_i /= Void 
 		local
-			file: UNIX_FILE;
+			file: RAW_FILE;
 			start_line_pos: INTEGER;
 		do
-			!!file.make_open_binary_read (file_name);
+			!!file.make_open_read (file_name);
 			from
 			until
 				file.position > start_position or else file.end_of_file

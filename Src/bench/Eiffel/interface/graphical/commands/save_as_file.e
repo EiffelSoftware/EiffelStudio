@@ -41,43 +41,28 @@ feature {NONE}
 					(new_file.exists) and then (not new_file.is_plain)
 				then
 					aok := False;
-					!! temp.make (0);
-					temp.append (new_file.name);
-					temp.append ("%Nis not a plain file");
 					warner.set_window (text_window);
-					warner.gotcha_call (temp);
+					warner.gotcha_call (w_Not_a_plain_file (new_file.name))
 				elseif 
 					not (argument = warner) and then
 					(new_file.exists and then new_file.is_writable)
 				then
 					aok := False;
-					!! temp.make (0);
-					temp.append ("File: ");
-					temp.append (new_file.name);
-					temp.append (" already exists.%NDo you wish to overwrite it?");
 					warner.set_window (text_window);
-					warner.custom_call 
-						(Current, temp, "Overwrite", Void, "Cancel");
+					warner.custom_call (Current, w_File_exists (new_file.name),
+								 "Overwrite", Void, "Cancel");
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
-					!! temp.make (0);
-					temp.append ("File: ");
-					temp.append (new_file.name);
-					temp.append (" is not writable.%NPlease check permissions");
 					warner.set_window (text_window);
-					warner.gotcha_call (temp);
+					warner.gotcha_call (w_Not_writable (new_file.name))
 				elseif
 					not new_file.is_creatable
 				then
 					aok := False;
-					!! temp.make (0);
-					temp.append ("File: ");
-					temp.append (new_file.name);
-					temp.append (" cannot be created.%NPlease check permissions");
 					warner.set_window (text_window);
-					warner.gotcha_call (temp);
+					warner.gotcha_call (w_Not_creatable (new_file.name))
 				end;
 				if aok then
 					new_file.open_write;

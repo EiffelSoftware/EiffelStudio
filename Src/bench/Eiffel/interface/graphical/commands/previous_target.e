@@ -52,7 +52,7 @@ feature {NONE}
 			history := text_window.history;
 			if history.empty or else (history.isfirst or history.before) then
 				warner.set_window (text_window);
-				warner.gotcha_call ("Beginning of history")
+				warner.gotcha_call (w_Beginning_of_history)
 			else
 				history.back;
 				text_window.last_format.execute (history.item)

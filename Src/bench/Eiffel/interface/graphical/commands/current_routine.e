@@ -30,14 +30,14 @@ feature {NONE}
 		do
 			if not Run_info.is_running then
 				warner.set_window (text_window);
-				warner.gotcha_call ("System is not running")
+				warner.gotcha_call (w_System_not_running)
 			elseif not Run_info.is_stopped then
 				warner.set_window (text_window);
-				warner.gotcha_call ("System is not stopped")
+				warner.gotcha_call (w_System_not_stopped)
 			elseif Run_info.feature_i = Void or Run_info.class_type = Void then
 					-- Should never happen.
 				warner.set_window (text_window);
-				warner.gotcha_call ("Unknown feature")
+				warner.gotcha_call (w_Unknown_feature)
 			else
 				class_c := Run_info.class_type.associated_class;
 				text_window.receive (Run_info.feature_i.stone (class_c));

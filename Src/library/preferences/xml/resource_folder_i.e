@@ -130,6 +130,8 @@ feature -- Initialization
 							txt ?= des_cursor.item
 							if txt /= Void then
 								description.append (txt.string)
+							else
+								description := Void
 							end
 							des_cursor.forth
 						end
@@ -266,7 +268,11 @@ feature {NONE} -- Implementation
 				att := att_table.item ("DESCRIPTION")
 				if att /= Void then
 					resource_description := att.value
+				else
+					resource_description := Void
 				end
+			else
+				resource_description := Void
 			end
 			if att_table.has ("IMMEDIATE_EFFECT") then
 				att := att_table.item ("IMMEDIATE_EFFECT")

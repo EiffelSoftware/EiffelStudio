@@ -18,12 +18,13 @@ inherit
 		redefine
 			read_stream, 
 			readstream,
+			read_character,
+			readchar,
 			put_string, 
 			putstring,
 			put_character, 
 			putchar,
-			close--,
-			--copy_to
+			close
 		end
 
 create
@@ -135,10 +136,14 @@ feature -- Input
 			create str_area.make (nb_char)
 			new_count := reader.read_integer_8_array_integer_integer (str_area, 0, nb_char)
 			
+			check
+				valid_new_count: new_count <= nb_char
+			end
+			
 			from
 				str_area_index := 0
 			until
-				str_area_index = str_area.length
+				str_area_index = new_count
 			loop
 				last_string.put (str_area.item (str_area_index).to_character, str_area_index + 1)
 				str_area_index := str_area_index + 1
@@ -168,6 +173,20 @@ feature -- Input
 		do
 			last_double := reader.read_double
 			internal_end_of_file := reader.peek_char = -1
+		end
+
+	read_character, readchar is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		local 
+		  	a_code: INTEGER 
+		do 
+		  	a_code := reader.read 
+		  	if a_code = - 1 then 
+				internal_end_of_file := True 
+		  	else 
+				last_character := a_code.to_character 
+		  	end 
 		end
 	
 	read_data (p: POINTER; nb_bytes: INTEGER) is

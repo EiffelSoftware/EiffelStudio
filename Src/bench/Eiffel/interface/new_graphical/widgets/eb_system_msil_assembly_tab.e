@@ -194,6 +194,9 @@ feature -- Actions
 		do			
 			selected_item := assembly_list.selected_item
 			if selected_item /= Void then
+				check
+					assembly_interface_exists: assembly_interface.exists
+				end
 				assembly_interface.go_i_th (assembly_list.index_of (selected_item, 1) - 1)
 				l_ass_name := clone (selected_item @ 1)
 				create list_row
@@ -275,38 +278,47 @@ feature -- Actions
 			-- Open the browse dialog for adding of local assembly reference
 		local
 			fd: EV_FILE_OPEN_DIALOG
+			l_dir: STRING
 			list_row: EV_MULTI_COLUMN_LIST_ROW
 			l_ass_name: STRING
+			l_exec: EXECUTION_ENVIRONMENT
 		do
+			create l_exec
+			l_dir := l_exec.current_working_directory
 			create fd
 			fd.set_filter ("*.*")
 			fd.set_title ("Select an Assembly")
 			fd.show_modal_to_window (system_window.window)
+			l_exec.change_working_directory (l_dir)
 			if fd.file_name /= Void and then not fd.file_name.is_empty then
 				l_ass_name := fd.file_name
-				if (l_ass_name.substring_index (".dll", l_ass_name.count - 4) > 0)
-					or (l_ass_name.substring_index (".exe", l_ass_name.count - 4) > 0) then
-						create assembly_interface.make
+				if
+					(l_ass_name.substring_index (".dll", l_ass_name.count - 4) > 0)
+					or (l_ass_name.substring_index (".exe", l_ass_name.count - 4) > 0)
+				then
+					create assembly_interface.make
+					if assembly_interface.exists then
 						assembly_interface.get_assembly_info_from_assembly (l_ass_name)
 						create list_row
 						if assembly_interface.signed (l_ass_name) then
 								-- Assembly is signed.
 							list_row.extend (unique_assembly_cluster_name ("local",
-												assembly_interface.assembly_name,
-												assembly_interface.assembly_version,
-												assembly_interface.assembly_culture,
-												assembly_interface.assembly_public_key_token))
+								assembly_interface.assembly_name,
+								assembly_interface.assembly_version,
+								assembly_interface.assembly_culture,
+								assembly_interface.assembly_public_key_token))
 						else
 								-- Assembly is not signed.
 							list_row.extend (unique_assembly_cluster_name ("local",
-												assembly_interface.assembly_name,
-												assembly_interface.assembly_version,
-												assembly_interface.assembly_culture,
-												""))
+								assembly_interface.assembly_name,
+								assembly_interface.assembly_version,
+								assembly_interface.assembly_culture,
+								""))
 						end
-							list_row.extend ("")
-							list_row.extend (l_ass_name)
-							local_assembly_list.extend (list_row)							
+						list_row.extend ("")
+						list_row.extend (l_ass_name)
+						local_assembly_list.extend (list_row)
+					end
 				end
 			end
 		end
@@ -335,21 +347,8 @@ feature {NONE} -- Initialization
 			extend (msil_assembly_info ("GAC", agent show_gac_assembly_dialog, agent remove_reference ("GAC")))
 			extend (msil_assembly_info ("local", agent add_local_assembly_reference, agent remove_reference ("Local")))
 			
-			initialize_assembly_interface
 			msil_specific_widgets.extend (Current)
 		end
-
-	initialize_assembly_interface is
-			-- Initialize the FusionSupport component for assembly access functions
-		local
-			error: EV_INFORMATION_DIALOG
-		once
-			create assembly_interface.make
-			if not assembly_interface.exists then
-				create error.make_with_text ("Unable to load FusionSupport.dll")
-				error.show_modal_to_window (system_window.window)
-			end
-		end	
 
 	reset is
 			-- Set graphical elements to their default value.
@@ -462,39 +461,41 @@ feature -- Implementation
 			add_to_gac_dialog: BOOLEAN
 		do
 			create assembly_interface.make
-			from
-				assembly_list.wipe_out
-				assembly_interface.start
-			until
-				assembly_interface.after
-			loop
+			if assembly_interface.exists then
 				from
-					gac_assembly_list.start
-					add_to_gac_dialog := True
+					assembly_list.wipe_out
+					assembly_interface.start
 				until
-					gac_assembly_list.after or not add_to_gac_dialog
+					assembly_interface.after
 				loop
-					list_row := gac_assembly_list.item
-						if list_row.i_th (3).is_equal (assembly_interface.assembly_name) then
-							if list_row.i_th (4).is_equal (assembly_interface.assembly_version) then
-								if list_row.i_th (5).is_equal (assembly_interface.assembly_culture) then 
-									if list_row.i_th (6).is_equal (assembly_interface.assembly_public_key_token) then
-										add_to_gac_dialog := False
+					from
+						gac_assembly_list.start
+						add_to_gac_dialog := True
+					until
+						gac_assembly_list.after or not add_to_gac_dialog
+					loop
+						list_row := gac_assembly_list.item
+							if list_row.i_th (3).is_equal (assembly_interface.assembly_name) then
+								if list_row.i_th (4).is_equal (assembly_interface.assembly_version) then
+									if list_row.i_th (5).is_equal (assembly_interface.assembly_culture) then 
+										if list_row.i_th (6).is_equal (assembly_interface.assembly_public_key_token) then
+											add_to_gac_dialog := False
+										end
 									end
 								end
 							end
-						end
-					gac_assembly_list.forth
+						gac_assembly_list.forth
+					end
+					if add_to_gac_dialog then
+						create list_row
+						list_row.extend (assembly_interface.assembly_name)
+						list_row.extend (assembly_interface.assembly_version)
+						list_row.extend (assembly_interface.assembly_culture)
+						list_row.extend (assembly_interface.assembly_public_key_token)
+						assembly_list.extend (list_row)
+					end
+					assembly_interface.forth
 				end
-				if add_to_gac_dialog then
-					create list_row
-					list_row.extend (assembly_interface.assembly_name)
-					list_row.extend (assembly_interface.assembly_version)
-					list_row.extend (assembly_interface.assembly_culture)
-					list_row.extend (assembly_interface.assembly_public_key_token)
-					assembly_list.extend (list_row)
-				end
-				assembly_interface.forth
 			end
 			assembly_list.resize_column_to_content (1)
 		end

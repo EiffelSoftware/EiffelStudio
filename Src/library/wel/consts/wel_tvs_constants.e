@@ -66,6 +66,13 @@ feature -- Access
 			"TVS_SHOWSELALWAYS"
 		end
 
+	Tvs_infotip: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TVS_INFOTIP"
+		end
+
 end -- class WEL_TVS_CONSTANTS
 
 --|----------------------------------------------------------------

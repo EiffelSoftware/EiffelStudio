@@ -990,6 +990,7 @@ feature -- Element change
 			
 			update_grid_row_indices (i.min (j))
 			
+			redraw_client_area
 
 			fixme ("EV_GRID_I: move_row redraw")
 		ensure
@@ -1014,6 +1015,8 @@ feature -- Element change
 				-- Insert retrieved column at position `j'
 			columns.go_i_th (j)
 			columns.put_left (a_col)
+			
+			redraw_client_area
 			
 				-- Remove column from header and insert at the appropriate position
 			fixme ("EV_GRID_I:move_column  add column header removal and redraw")
@@ -1821,7 +1824,7 @@ feature {NONE} -- Drawing implementation
 				if is_row_height_fixed then
 					internal_set_virtual_y_position (row_height * a_value)
 				else
-					internal_set_virtual_y_position (row_offsets.i_th (a_value + 1))
+					internal_set_virtual_y_position (row_offsets.i_th (displayed_row_indexes @ (a_value + 1) + 1))
 				end
 			else
 				internal_set_virtual_y_position (a_value)

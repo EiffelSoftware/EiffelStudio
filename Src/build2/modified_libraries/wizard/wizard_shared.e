@@ -66,7 +66,7 @@ feature -- Access
 			visual_studio_information: VISUAL_STUDIO_INFORMATION
 		do
 			create visual_studio_information
-			Result := visual_studio_information.wizard_installation_path + "\wizards\build"
+			Result := visual_studio_information.wizard_installation_path
 		ensure
 			exists: Result /= Void
 		end

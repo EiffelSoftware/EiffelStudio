@@ -124,18 +124,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_modal: BOOLEAN is
-			-- Must the window be closed before application can
-			-- receive user events again?
-			--
-			-- May be redefined in EV_DIALOG to return 
-			-- a different value
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := False
-		end
-
 	has (v: EV_WIDGET): BOOLEAN is
 			-- Does structure include `v'?
 		do

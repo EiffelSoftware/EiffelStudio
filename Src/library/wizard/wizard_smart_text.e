@@ -10,7 +10,7 @@ class
 inherit
 	EV_VERTICAL_BOX
 		
-creation
+create
 	make
 
 feature -- Initialization

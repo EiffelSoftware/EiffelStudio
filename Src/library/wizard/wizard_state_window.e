@@ -151,7 +151,7 @@ feature -- Settings
 			until
 				i > a_table.count
 			loop
-				a_table.item(i).extend (~change_entries)
+				a_table.item(i).extend (agent change_entries)
 				i := i + 1
 			end
 		end

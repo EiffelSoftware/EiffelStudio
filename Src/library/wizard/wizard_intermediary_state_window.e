@@ -153,7 +153,7 @@ feature {NONE} -- Basic Operations
 			main_box.extend (interior_box) -- Expandable item.
 
 			create tuple.make
-			choice_box.set_help_context (~create_help_context (tuple))
+			choice_box.set_help_context (agent create_help_context (tuple))
 		ensure
 			main_box_has_at_least_one_element: main_box.count > 0
 		end

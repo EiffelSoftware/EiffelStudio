@@ -62,8 +62,8 @@ feature -- Initialization
 			end
 			textfield.set_capacity (textfield_capacity)
 			textfield.set_minimum_height (Default_button_height)
-			textfield.return_actions.extend (caller~next)
-			textfield.change_actions.extend (caller~change_entries)
+			textfield.return_actions.extend (agent caller.next)
+			textfield.change_actions.extend (agent caller.change_entries)
 
 			create empty_space
 			empty_space.set_minimum_height (dialog_unit_to_pixels(2))
@@ -193,7 +193,7 @@ feature -- Settings
 			not_has_browse_button: not has_browse_button
 		do
 			has_browse_button := True
-			browse_button_action := ~browse_directory
+			browse_button_action := agent browse_directory
 		ensure
 			has_browse_button: has_browse_button
 		end
@@ -208,7 +208,7 @@ feature -- Settings
 			valid_filter: a_filter /= Void and then not a_filter.is_empty
 		do
 			has_browse_button := True
-			browse_button_action := ~browse_file
+			browse_button_action := agent browse_file
 			browse_file_filter := a_filter
 		ensure
 			has_browse_button: has_browse_button

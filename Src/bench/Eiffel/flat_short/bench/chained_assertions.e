@@ -57,8 +57,7 @@ feature -- Output
 					ctxt.put_string ("precursor: True");
 					ctxt.new_line;
 					ctxt.exdent;
-					ctxt.set_first_assertion (False);
-					is_not_first := True
+					ctxt.set_first_assertion (False)
 				end
 			end;
 			from
@@ -79,6 +78,7 @@ feature -- Output
 			end;
 			set_not_in_assertion;
 			if is_not_first then
+					-- Only commit if there were chained preconditions
 				ctxt.commit
 			else
 				ctxt.rollback

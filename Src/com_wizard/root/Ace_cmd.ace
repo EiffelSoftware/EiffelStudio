@@ -87,6 +87,8 @@ cluster
 			ecom_type_lib_find_name_result
 				end
 			ecom_safe_array_bound
+				export
+					"make_by_pointer"
 				end
 			ecom_cust_data_item
 				end

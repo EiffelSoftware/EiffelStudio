@@ -5,7 +5,7 @@ root
 	application: make
 
 default
-	assertion (no)
+	assertion (require)
 	disabled_debug (yes)
 	debug (no)
 	line_generation (no)
@@ -25,7 +25,6 @@ default
 
 -- This Ace file requires the following environment variables:
 -- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
---	assertion (all)
 -- EiffelBase
 -- WEL
 -- EiffelCOM
@@ -87,6 +86,8 @@ cluster
 			ecom_type_lib_find_name_result
 				end
 			ecom_safe_array_bound
+				export
+					"make_by_pointer"
 				end
 			ecom_cust_data_item
 				end
@@ -107,9 +108,7 @@ cluster
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
-		default
-			assertion (no)
-		end
+
 
 	ecom_constants:		"$EIFFEL_SRC\library\com\Constants"
 

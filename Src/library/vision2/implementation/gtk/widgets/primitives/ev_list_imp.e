@@ -94,32 +94,50 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation
 
 	switch_to_single_mode_if_necessary is
-			-- Change selection mode if the last selected item is deselected.
+			-- Change selection mode if the last selected
+			-- item is deselected.
 		local
 			sel_items: like selected_items
 		do
 			if not selection_mode_is_single then
 				if multiple_selection_enabled then
 					sel_items := selected_items
-					if sel_items = Void or else selected_items.count <= 1 then
-						C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
+					if 
+						sel_items = Void 
+							or else
+						selected_items.count <= 1
+					then
+						C.gtk_list_set_selection_mode (
+							list_widget,
+							C.Gtk_selection_multiple_enum
+						)
 						selection_mode_is_single := True
 					end
 				else
-					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
+					C.gtk_list_set_selection_mode (
+						list_widget,
+						C.Gtk_selection_single_enum
+					)
 					selection_mode_is_single := True
 				end
 			end
 		end
 		
 	switch_to_browse_mode_if_necessary is
-			-- Change selection mode to browse mode if necessary.
+			-- Change selection mode to browse mode
+			-- if necessary.
 		do
 			if selection_mode_is_single then
 				if multiple_selection_enabled then
-					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_extended_enum)					
+					C.gtk_list_set_selection_mode (
+						list_widget, 
+						C.Gtk_selection_extended_enum
+					)					
 				else
-					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_browse_enum)
+					C.gtk_list_set_selection_mode (
+						list_widget,
+						C.Gtk_selection_browse_enum
+					)
 				end
 				selection_mode_is_single := False
 			end
@@ -148,6 +166,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2001/06/13 16:40:16  etienne
+--| Cosmetics.
+--|
 --| Revision 1.46  2001/06/13 16:35:58  etienne
 --| Improved item selection in combo boxes and lists.
 --|

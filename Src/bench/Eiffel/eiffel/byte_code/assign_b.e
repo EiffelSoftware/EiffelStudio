@@ -6,7 +6,8 @@ inherit
 
 	INSTR_B
 		redefine
-			need_enlarging, enlarged, make_byte_code
+			need_enlarging, enlarged, make_byte_code,
+			assigns_to
 		end;
 	
 feature 
@@ -59,5 +60,12 @@ feature -- Byte code generation
 			source_type ?= context.real_type (source.type);
 			target.make_assignment_code (ba, source_type);
 		end;
+
+feature -- Array optimization
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := target.assigns_to (i)
+		end
 
 end

@@ -10,7 +10,7 @@ inherit
 			copy, setup, is_equal, consistent
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
-			has_loop
+			has_loop, assigns_to
 		end;
 	FIXED_LIST [T]
 
@@ -89,6 +89,18 @@ feature -- Array optimization
 				forth;
 			end;
 		end;
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			from
+				start
+			until
+				Result or else after
+			loop
+				Result := item.assigns_to (i);
+				forth;
+			end;
+		end
 
 feature -- Convenience
 

@@ -631,6 +631,13 @@ feature -- Array optimization
 			Result := has_array_as_item (locals);
 		end;
 
+	has_array_as_result: BOOLEAN is
+			-- Is ARRAY or one of its descendants used as result
+		do
+			Result := result_type /= Void and then
+				Result_type.conforms_to_array
+		end;
+
 feature {NONE} -- Array optimization
 
 	has_array_as_item (a: ARRAY [TYPE_I]): BOOLEAN is

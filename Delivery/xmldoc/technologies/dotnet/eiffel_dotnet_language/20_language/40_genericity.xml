@@ -110,8 +110,8 @@
 	<feature_name>some_cat</feature_name><symbol>:</symbol> <class_name>CAT</class_name>
 		.
 		.
-	<feature_name>some_cat</feature_name> <symbol>?<symbol>=</symbol></symbol> <feature_name>my_cats</feature_name>.<feature_name>item</feature_name>
-	<keyword>if</keyword> <feature_name>some_cat</feature_name> <symbol>/<symbol>=</symbol></symbol> Void <keyword>then</keyword>
+	<feature_name>some_cat</feature_name> <symbol>?</symbol><symbol>=</symbol> <feature_name>my_cats</feature_name>.<feature_name>item</feature_name>
+	<keyword>if</keyword> <feature_name>some_cat</feature_name> <symbol>/</symbol><symbol>=</symbol> Void <keyword>then</keyword>
 		<feature_name>some_cat</feature_name>.<feature_name>purr</feature_name>
 	<keyword>end</keyword>
 </code_block>

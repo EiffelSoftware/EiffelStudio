@@ -161,6 +161,23 @@ feature -- Merging
 			make_duplication
 		end
 
+feature -- Overview
+
+	has_cpp_externals: BOOLEAN is
+			-- Is there any C++ external in the system?
+		do
+			from
+				start
+			until
+				after or else Result
+			loop
+				if item_for_iteration.is_cpp then
+					Result := True
+				end
+				forth
+			end
+		end
+
 feature -- Debug
 
 	trace is

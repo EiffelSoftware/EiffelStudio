@@ -157,7 +157,7 @@ feature -- Access
 	text: STRING is
 			-- Text of the frame
 		do
-			if internal_text /= Void then
+			if internal_text = Void then
 				internal_text := ""
 			end
 			Result := internal_text

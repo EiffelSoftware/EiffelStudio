@@ -370,7 +370,7 @@ end
 			a := area;
 			c := count;
 			from
-				y_coord := to_refresh.up_left_y + y_offset;
+				y_coord := to_refresh.up_left_y + y_offset - 3;
 				i := 0
 			until
 				stopped or else i = c
@@ -456,7 +456,8 @@ feature {TOOL_W} -- Updating
 					y_pos := b_l_y - height + 4;
 					update_scroll_position (vertical_scrollbar, y_pos);
 					update_text -- This will highlight the line
-				elseif highlighted_line /= Void then
+				end;
+				if highlighted_line /= Void then
 					highlighted_line.draw (drawing, x_offset, y_offset)
 				end;
 				if selected_clickable_text /= Void then

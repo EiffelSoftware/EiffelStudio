@@ -37,9 +37,12 @@ gacutil -u ISE.Reflection.EiffelComponents
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace 
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.EiffelComponents.dll
-copy .\ISE.Reflection.EiffelComponents.dll ..\..\bin
-
+copy .\ISE.Reflection.EiffelComponents.dll ..\..\..\..\bin
+cd..
+cd..
 cd ..
 cd ..
 
@@ -60,9 +63,12 @@ gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace 
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
-copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\bin
-
+copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\..\..\bin
+cd ..
+cd ..
 cd ..
 cd ..
 
@@ -83,9 +89,12 @@ gacutil -u ISE.Reflection.Support
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace 
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.Support.dll
-copy .\ISE.Reflection.Support.dll ..\..\bin
-
+copy .\ISE.Reflection.Support.dll ..\..\..\..\bin
+cd ..
+cd ..
 cd ..
 cd ..
 
@@ -106,9 +115,12 @@ gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace 
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
-copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\bin
-
+copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\..\..\bin
+cd ..
+cd ..
 cd ..
 cd ..
 
@@ -130,9 +142,12 @@ gacutil -u ISE.Reflection.CodeGenerator
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.CodeGenerator.dll
-copy .\ISE.Reflection.CodeGenerator.dll ..\..\bin
-
+copy .\ISE.Reflection.CodeGenerator.dll ..\..\..\..\bin
+cd ..
+cd ..
 cd ..
 cd ..
 
@@ -153,9 +168,12 @@ gacutil -u ISE.Reflection.ReflectionInterface
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace 
+cd EIFGEN
+cd W_code
 gacutil -i ISE.Reflection.ReflectionInterface.dll
-copy .\ISE.Reflection.ReflectionInterface.dll ..\..\bin
-
+copy .\ISE.Reflection.ReflectionInterface.dll ..\..\..\..\bin
+cd ..
+cd ..
 cd ..
 cd ..
 
@@ -273,20 +291,10 @@ gacutil -u ISE.AssemblyManager
 del *.epr
 rd -q -s EIFGEN
 ec -ace ace.ace
+cd EIFGEN
+cd W_code
 gacutil -i ISE.AssemblyManager.exe
-copy ISE.AssemblyManager.exe .\..\dotnet\reflection_interface\bin
-copy ..\..\bin\ISE.Reflection.Formatter.dll .
-copy ..\..\bin\ISE.Reflection.EiffelComponents.dll .
-copy ..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll .
-copy ..\..\bin\ISE.Reflection.Support.dll .
-copy ..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll .
-copy ..\..\bin\ISE.Reflection.CodeGenerator.dll .
-copy ..\..\bin\ISE.Reflection.ReflectionInterface.dll .
-copy ..\..\bin\ISE.AssemblyManager.WindowsDirectoryExtractor.dll .
-copy ..\..\bin\FolderBrowser.dll .
-copy ..\..\bin\FolderDialog.dll .
-copy ..\..\bin\folder_browser.dll .
-copy ..\..\bin\ISE.Reflection.Emitter.exe .
+copy ISE.AssemblyManager.exe ..\..\..\..\bin
 
 regsvr32 folder_browser.dll
 

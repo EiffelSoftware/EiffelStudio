@@ -19,10 +19,16 @@ inherit
 			initialize,
 			interface
 		end
+
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
 	
 	EV_PRIMITIVE_IMP
 		undefine
-			set_default_colors
+			set_default_colors,
+			pnd_press
 		redefine
 			make,
 			on_left_button_down,
@@ -30,7 +36,6 @@ inherit
 			on_right_button_down,
 			on_key_down,
 			on_mouse_move,
-			pnd_press,
 			initialize,
 			interface
 		end
@@ -331,66 +336,6 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				a_text.is_equal (i_th_text (index_of_item_imp (li_imp) - 1))
 		end
 
---| FIXME Indentation, names, comments, contracts.
-
-		list_is_pnd_source : BOOLEAN
-
-		pnd_child_source: EV_LIST_ITEM_IMP
-				-- If the pnd started in an item, then this is the item.
-
-		set_pnd_child_source (c: EV_LIST_ITEM_IMP) is
-			do
-				pnd_child_source := c
-			end
-
-		set_source_true is
-			do
-				list_is_pnd_source := True
-			end
-		
-
-		set_source_false is
-			do
-				list_is_pnd_source := False
-			end
-
-		transport_started_in_item: BOOLEAN
-
-		set_t_item_true is
-			do
-				transport_started_in_item := True
-			end
-
-		set_t_item_false is
-			do
-				transport_started_in_item := False
-			end
-
-feature {EV_ANY_I} -- Implementation
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		do
-			inspect
-				press_action
-			when
-				Ev_pnd_start_transport
-			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
-					set_source_true
-					--transport_started_in_list := True
-			when
-				Ev_pnd_end_transport
-			then
-				end_transport (a_x, a_y, a_button)
-				set_source_false
-				--transport_started_in_list := False
-			else
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
-
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		local
@@ -399,15 +344,17 @@ feature {EV_ANY_I} -- Implementation
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-				if it /= Void and it.is_transport_enabled and not list_is_pnd_source then
+				if it /= Void and it.is_transport_enabled and not parent_is_pnd_source then
 					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-				elseif pnd_child_source /= Void then 
-					pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif pnd_item_source /= Void then 
+					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				end
 			if it /= Void then
 				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
+
+feature {EV_ANY_I} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
 			-- Result is list item at pixel position `x_pos', `y_pos'.
@@ -525,13 +472,13 @@ feature {EV_ANY_I} -- Implementation
 			it: EV_LIST_ITEM_IMP
 			a: BOOLEAN
 		do
-			a := transport_started_in_item
+			a := item_is_pnd_source
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
 			it := find_item_at_position (x_pos, y_pos)
 
-			if transport_started_in_item = a then
+			if item_is_pnd_source = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
@@ -566,8 +513,8 @@ feature {EV_ANY_I} -- Implementation
 				--|Julian Rogers
 				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
-			if pnd_child_source /= Void then
-				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if pnd_item_source /= Void then
+				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
@@ -656,6 +603,11 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/30 19:58:02  rogers
+--| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--| Removed features and attributes associated with source of PND as
+--| these are now inherited, and fixed references to these.
+--|
 --| Revision 1.56  2000/03/30 17:43:56  brendel
 --| Moved common features with EV_COMBO_BOX up to EV_LIST_ITEM_LIST_IMP.
 --|

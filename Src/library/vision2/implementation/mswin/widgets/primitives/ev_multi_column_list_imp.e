@@ -15,6 +15,8 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
+		undefine
+			pnd_press
 		redefine
 			on_left_button_down,
 			on_middle_button_down,
@@ -22,7 +24,6 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			interface,
-			pnd_press,
 			set_default_minimum_size,
 			initialize
 		end
@@ -31,6 +32,11 @@ inherit
 		redefine
 			interface,
 			initialize
+		end
+
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
 		end
 
 	WEL_LIST_VIEW
@@ -344,77 +350,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
-
-	list_is_pnd_source : BOOLEAN
-			--| FIXME Comment
-
-	pnd_child_source: EV_MULTI_COLUMN_LIST_ROW_IMP
-			-- If the pnd started in an item, then this is the item.
-
-	set_pnd_child_source (c: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			--| FIXME Comment, pre & post conditions
-		do
-			pnd_child_source := c
-		end
-
-	--| FIXME Better name
-	set_source_true is
-			--| FIXME Comment, pre & post conditions
-		do
-			list_is_pnd_source := True
-		end
-
-	--| FIXME Better name
-	set_source_false is
-			--| FIXME Comment, pre & post conditions
-		do
-			list_is_pnd_source := False
-		end
-
-	transport_started_in_item: BOOLEAN
-			--| FIXME Comment
-
-	--| FIXME Better name
-	set_t_item_true is
-			--| FIXME Comment, pre & post conditions
-		do
-			transport_started_in_item := True
-		end
-
-	--| FIXME Better name
-	set_t_item_false is
-			--| FIXME Comment, pre & post conditions
-		do
-			transport_started_in_item := False
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-			--| FIXME Comment
-		do
-			inspect
-				press_action
-			when
-				Ev_pnd_start_transport
-			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
-					set_source_true
-					--transport_started_in_list := True
-			when
-				Ev_pnd_end_transport
-			then
-				end_transport (a_x, a_y, a_button)
-				set_source_false
-				--transport_started_in_list := False
-			else
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
-
 feature -- Access
 
 	last_column_width_setting: INTEGER
@@ -628,10 +563,10 @@ feature {NONE} -- WEL Implementation
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos) 
 			pt := client_to_screen (x_pos, y_pos)
-			if mcl_row /= Void and mcl_row.is_transport_enabled and not list_is_pnd_source then
+			if mcl_row /= Void and mcl_row.is_transport_enabled and not parent_is_pnd_source then
 					mcl_row.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-				elseif pnd_child_source /= Void then 
-					pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif pnd_item_source /= Void then 
+					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				end
 			if mcl_row /= Void then 
 				offsets := mcl_row.relative_position
@@ -711,13 +646,13 @@ feature {NONE} -- WEL Implementation
 			it: EV_MULTI_COLUMN_LIST_ROW_IMP
 			a: BOOLEAN
 		do
-			a:= transport_started_in_item
+			a:= item_is_pnd_source
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
 			it := find_item_at_position (x_pos, y_pos)
 
-			if transport_started_in_item = a then
+			if item_is_pnd_source = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -751,8 +686,8 @@ feature {NONE} -- WEL Implementation
 				mcl_row.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
-			if pnd_child_source /= Void then
-				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if pnd_item_source /= Void then
+				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
@@ -854,6 +789,11 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2000/03/30 19:56:24  rogers
+--| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--| Removed features and attributes associated with source of PND as
+--| these are now inherited, and fixed references to these.
+--|
 --| Revision 1.73  2000/03/30 16:29:32  rogers
 --| Multiple selection no longer requires pre-parenting.
 --|

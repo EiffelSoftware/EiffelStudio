@@ -68,6 +68,29 @@ feature -- Element Change
 			-- Parent implementation of `Current'.
 		deferred
 		end
+		
+	tooltip: STRING is
+			-- Tooltip displayed on `Current'.
+		deferred
+		end
+
+feature -- Element change
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+		require
+			a_tooltip_not_void: a_tooltip /= Void
+		deferred
+		end
+		
+	remove_tooltip is
+			-- Make `tooltip' empty.
+		do
+			set_tooltip ("")
+		ensure
+			tooltip_removed: tooltip.is_empty
+		end 
+		
 
 feature {NONE} -- Contract support
 

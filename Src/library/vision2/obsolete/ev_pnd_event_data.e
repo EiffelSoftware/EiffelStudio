@@ -4,7 +4,7 @@ class
 inherit
 	EV_BUTTON_EVENT_DATA
 		redefine
-			make,
+			make
 		end
 
 create

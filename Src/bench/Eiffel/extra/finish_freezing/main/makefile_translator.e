@@ -108,9 +108,6 @@ feature -- Status report
 
 feature -- Access
 
-	eiffel_dir: STRING
-			-- $ISE_EIFFEL directory
-
 	makefile_sh: PLAIN_TEXT_FILE	
 			-- Makefile.SH to read from
 

@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions (
 				"clicked",
 				interface.press_actions,
-				default_translate
+				Void
 			)
 		end
 
@@ -153,6 +153,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/13 21:59:47  king
+--| Correct pointer equivalance from Void to Default_pointer
+--|
 --| Revision 1.21  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

@@ -8,7 +8,15 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_GENERATOR
+		undefine
+			default_rescue
+		end
 
+	CODE_SHARED_ANALYSIS_CONTEXT
+		redefine
+			default_rescue
+		end
+	
 	CODE_SHARED_GENERATION_CONTEXT
 		redefine
 			default_rescue
@@ -27,6 +35,28 @@ inherit
 		undefine
 			default_rescue
 		end
+	
+	CODE_SHARED_METADATA_ACCESS
+		export
+			{NONE} all
+		undefine
+			default_rescue
+		end
+
+	CODE_SHARED_GENERATION_HELPERS
+		export
+			{NONE} all
+		undefine
+			default_rescue
+		end
+
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NONE} all
+		undefine
+			default_rescue
+		end
+
 create
 	default_create,
 	make_with_filename,
@@ -70,10 +100,14 @@ feature -- Interface
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
 			else
 				initialize (a_text_writer, a_options)
+				set_current_state (Code_analysis)
 				code_dom_generator.generate_compile_unit_from_dom (a_compile_unit)
+				set_current_state (Code_generation)
 				output.write_string (last_compile_unit.code)
 				output := Void
 			end
+			Resolver.reset_generated_types
+			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
 		end
 		
@@ -82,14 +116,20 @@ feature -- Interface
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
+			Resolver.reset_generated_types
+			Type_reference_factory.reset_cache
 			if a_namespace = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
 			else
 				initialize (a_text_writer, a_options)
+				set_current_state (Code_analysis)
 				code_dom_generator.generate_namespace_from_dom (a_namespace)
+				set_current_state (Code_generation)
 				output.write_string (last_namespace.code)
 				output := Void
 			end
+			Resolver.reset_generated_types
+			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
 		end
 
@@ -102,10 +142,13 @@ feature -- Interface
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
 			else
 				initialize (a_text_writer, a_options)
+				set_current_state (Code_analysis)
 				code_dom_generator.generate_type_from_dom (a_type)
+				set_current_state (Code_generation)
 				output.write_string (last_type.code)
 				output := Void
 			end
+			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
 		end
 
@@ -118,10 +161,13 @@ feature -- Interface
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
 			else
 				initialize (a_text_writer, a_options)
+				set_current_state (Code_analysis)
 				code_dom_generator.generate_statement_from_dom (a_statement)
+				set_current_state (Code_generation)
 				output.write_string (last_statement.code)
 				output := Void
 			end
+			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
 		end		
 
@@ -134,10 +180,13 @@ feature -- Interface
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
 			else
 				initialize (a_text_writer, a_options)
+				set_current_state (Code_analysis)
 				code_dom_generator.generate_expression_from_dom (a_expression)
+				set_current_state (Code_generation)
 				output.write_string (last_expression.code)
 				output := Void
 			end
+			Type_reference_factory.reset_cache
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
 		end
 
@@ -261,9 +310,10 @@ feature -- Interface
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
 			l_type := feature {TYPE}.get_type (a_type.base_type)
-			if l_type /= Void and then cache.type_name (l_type) /= Void then
-				Result := cache.type_name (l_type)
-			else
+			if l_type /= Void then
+				Result := cache_reflection.type_name (l_type)
+			end
+			if Result = Void then
 				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type)
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GetTypeOutput"])
@@ -307,12 +357,6 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 			Result.append ("x")
 			Result.append (a_char.code.out)
-		end
-
-	cache: CACHE_REFLECTION is
-			-- Access to Eiffel assemblies cache
-		once
-			create Result.make (feature {RUNTIME_ENVIRONMENT}.get_system_version)
 		end
 
 	default_rescue is

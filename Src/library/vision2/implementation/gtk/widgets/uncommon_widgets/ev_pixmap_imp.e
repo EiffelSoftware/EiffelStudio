@@ -166,11 +166,53 @@ feature -- Element change
 
 	stretch, stretch_image (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
+		local
+			source_gdkimage, destination_gdkimage: POINTER
+			gdkpix, gdkmask: POINTER
+			pixgc: POINTER
+			column_counter, row_counter, a_pixel: INTEGER
+			mapped_x, mapped_y, source_width, source_height: INTEGER
 		do
-				--| FIXME: To be implemented
-			check
-				to_be_implemented: False
+			-- Create our new stretched pixmap canvas.
+			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
+			pixgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
+			
+			-- Retrieve our existing image information
+			source_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			destination_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
+			
+			from
+				row_counter := 1
+				source_width := width
+				source_height := height
+			until
+				row_counter > a_y
+			loop
+				from
+					column_counter := 1
+				until
+					column_counter > a_x
+				loop
+					-- Retrieve mapped pixel from source by scaling destination coords.
+					mapped_x := ((column_counter / a_x) * source_width).truncated_to_integer
+					mapped_y := ((row_counter / a_y ) * source_height).truncated_to_integer
+					a_pixel := feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
+						source_gdkimage,
+						(mapped_x - 1).max (0), -- Zero based X coord
+						(mapped_y - 1).max (0) -- Zero based Y coord
+					)
+					feature {EV_GTK_EXTERNALS}.gdk_image_put_pixel (destination_gdkimage, column_counter - 1, row_counter - 1, a_pixel)
+					column_counter := column_counter + 1
+				end
+				row_counter := row_counter + 1
 			end
+			
+			-- Copy image over to our new pixmap and cleanup
+			feature {EV_GTK_EXTERNALS}.gdk_draw_image (gdkpix, pixgc, destination_gdkimage, 0, 0, 0, 0, a_x, a_y)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
+			set_pixmap (gdkpix, gdkmask)
+			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (source_gdkimage)
+			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (destination_gdkimage)
 		end
 
 	set_size (a_x, a_y: INTEGER) is

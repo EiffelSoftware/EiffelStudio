@@ -394,7 +394,18 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- and hence `object'.
 		require
 			display_object_void: display_object = Void
-		deferred
+		local
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+		do
+			display_object ?= vision2_object_from_type (type)
+			pick_and_dropable ?= display_object
+			if pick_and_dropable /= Void then
+				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
+				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
+				pick_and_dropable.drop_actions.extend (agent add_new_component_wrapper (?))
+				pick_and_dropable.drop_actions.extend (agent add_new_object_wrapper (?))
+				pick_and_dropable.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			end
 		ensure
 			display_object_not_void: display_object /= Void
 		end

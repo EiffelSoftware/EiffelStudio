@@ -579,8 +579,8 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			radio_group := rg
 		end
 
-	add_radio_button (w: EV_ITEM) is
-			-- Called every time a widget is added to the container.
+	add_radio_button (w: EV_TOOL_BAR_ITEM) is
+			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
 		local
@@ -595,8 +595,8 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_ITEM) is
-			-- Called every time a widget is removed from the container.
+	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
+			-- Called when `w' has beedn removed from `Current'.
 		require
 			w_not_void: w /= Void
 		local
@@ -712,6 +712,11 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/26 18:18:29  rogers
+--| No longer inherits EV_HASH_TABLE_ITEM_HOLDER_IMP, inherits
+--| EV_ITEM_LIST_IMP instead. Add_radio_button and
+--| remove_radio_button now take EV_TOOL_BAR_ITEM's.
+--|
 --| Revision 1.61  2000/04/26 17:38:40  brendel
 --| Removed inheritance of obsolete EV_HASH_TABLE_ITEM_HOLDER_IMP.
 --|

@@ -27,7 +27,7 @@ feature -- Status setting
 			ac: like application_context;
 		do
 			ac := application_context;
-			ac.add_input_except_callback (a_file, Current, an_argument);
+			ac.set_input_except_callback (a_file, Current, an_argument);
 			identifier := ac.last_id;
 			command := a_command;
 		end; 
@@ -39,7 +39,7 @@ feature -- Status setting
 			ac: like application_context;
 		do
 			ac := application_context;
-			ac.add_input_read_callback (a_file, Current, an_argument);
+			ac.set_input_read_callback (a_file, Current, an_argument);
 			identifier := ac.last_id;
 			command := a_command;
 		end;
@@ -52,7 +52,7 @@ feature -- Status setting
 			ac: like application_context;
 		do
 			ac := application_context;
-			ac.add_input_write_callback (a_file, Current, an_argument);
+			ac.set_input_write_callback (a_file, Current, an_argument);
 			identifier := ac.last_id;
 			command := a_command;
 		end

@@ -83,22 +83,43 @@ feature  -- Element change
 	add_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
-		do
-			add_apply_callback (mel_vision_callback (a_command), argument)
+        local
+            list: VISION_COMMAND_LIST
+        do
+            list := vision_command_list (apply_command);
+            if list = Void then
+                !! list.make;
+                set_apply_callback (list, Void)
+            end;
+            list.add_command (a_command, argument)
 		end;
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
-		do
-			add_cancel_callback (mel_vision_callback (a_command), argument)
+        local
+            list: VISION_COMMAND_LIST
+        do
+            list := vision_command_list (cancel_command);
+            if list = Void then
+                !! list.make;
+                set_cancel_callback (list, Void)
+            end;
+            list.add_command (a_command, argument)
 		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
-		do
-			add_ok_callback (mel_vision_callback (a_command), argument)
+        local
+            list: VISION_COMMAND_LIST
+        do
+            list := vision_command_list (ok_command);
+            if list = Void then
+                !! list.make;
+                set_ok_callback (list, Void)
+            end;
+            list.add_command (a_command, argument)
 		end;
 
 feature -- Removal
@@ -107,21 +128,21 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
-			remove_apply_callback (mel_vision_callback (a_command), argument)
+			remove_command (apply_command, a_command, argument)
 		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
-			remove_cancel_callback (mel_vision_callback (a_command), argument)
+			remove_command (cancel_command, a_command, argument)
 		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
-			remove_ok_callback (mel_vision_callback (a_command), argument)
+			remove_command (ok_command, a_command, argument)
 		end;
 
 feature {NONE} -- Implementation

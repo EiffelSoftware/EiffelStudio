@@ -109,15 +109,29 @@ feature -- Element change
 	add_move_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_drag_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (drag_command);
+			if list = Void then
+				!! list.make;
+				set_drag_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end; 
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_value_changed_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (value_changed_command);
+			if list = Void then
+				!! list.make;
+				set_value_changed_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 feature -- Removal
@@ -126,14 +140,14 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
-			remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_command (drag_command, a_command, argument)
 		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
-			remove_value_changed_callback (mel_vision_callback (a_command), argument)
+			remove_command (value_changed_command, a_command, argument)
 		end;
 
 end -- class SCROLLBAR_M

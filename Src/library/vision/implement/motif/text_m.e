@@ -174,22 +174,43 @@ feature -- Element change
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (activate_command);
+			if list = Void then
+				!! list.make;
+				set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
  
 	add_modify_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_modify_verify_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (modify_verify_command);
+			if list = Void then
+				!! list.make;
+				set_modify_verify_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute before insert
 			-- cursor is moved to a new position.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_motion_verify_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (motion_verify_command);
+			if list = Void then
+				!! list.make;
+				set_motion_verify_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	insert (a_text: STRING; a_position: INTEGER) is
@@ -205,21 +226,21 @@ feature -- Removal
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
 		do
-			remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_command (activate_command, a_command, argument)
 		end;
  
 	remove_modify_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		do
-			remove_modify_verify_callback (mel_vision_callback (a_command), argument)
+			remove_command (modify_verify_command, a_command, argument)
 		end;
 
 	remove_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute before
 			-- insert cursor is moved to a new position.
 		do
-			remove_motion_verify_callback (mel_vision_callback (a_command), argument)
+			remove_command (motion_verify_command, a_command, argument)
 		end;
 
 end -- class TEXT_M

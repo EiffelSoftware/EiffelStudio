@@ -25,7 +25,7 @@ inherit
 
 	MEL_XT_FUNCTIONS;
 
-	MEL_CALLBACK;
+	MEL_COMMAND;
 
 	G_ANY_I
 
@@ -245,14 +245,13 @@ feature -- Status setting
 			x_vision_callback: X_EVENT_CALLBACK
 		do 
 			!! x_vision_callback.make (cmd);
-			parent.set_override_translation (action,
-					x_vision_callback, arg)
+			parent.set_translation (action, x_vision_callback, arg)
 		end
 
 	remove_parent_action (action: STRING) is
 			-- Remove `action' from the dialog shell
 		do
-			parent.remove_override_translation (action)
+			parent.remove_translation (action)
 		end
 
 	dialog_command_target is
@@ -480,8 +479,8 @@ feature {NONE} -- Implementation
 			-- Initialize the current dialog
 		do
 			shell.forbid_shell_resize;
-			shell.add_popup_callback (Current, True);
-			shell.add_popdown_callback (Current, False);
+			shell.set_popup_callback (Current, True);
+			shell.set_popdown_callback (Current, False);
 		end;
 
 	action_target: POINTER is do end;

@@ -206,9 +206,12 @@ feature -- Status Setting
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			set_override_translation (a_translation,
-					x_event_vision_callback (a_command), argument)
+			!! list.make;
+			set_translation (a_translation, list, Void);
+			list.add_command (a_command, argument)
 		end;
 
 	set_widget_default is
@@ -222,32 +225,51 @@ feature -- Element change
 	add_destroy_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current widget is destroyed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_destroy_callback (mel_vision_callback (a_command), 
-					argument)
+			list := vision_command_list (destroy_command);	
+			if list = Void then
+				!! list.make;
+				set_destroy_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
+		local
+			list: BUTTON_HAND_X
 		do
-			add_event_handler (ButtonPressMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (event_command (ButtonPressMask));
+			if list = Void then
+				!! list.make;
+				set_event_handler (ButtonPressMask, list, Void)
+			end;
+			list.add_command (number, a_command, argument)
 		end;
 
 	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
+		local
+			list: BUTTON_HAND_X
 		do
-			add_event_handler (ButtonReleaseMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (event_command (ButtonReleaseMask));
+			if list = Void then
+				!! list.make;
+				set_event_handler (ButtonReleaseMask, list, Void)
+			end;
+			list.add_command (number, a_command, argument)
 		end; 
 
 	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
-			a_mask: INTEGER
+			a_mask: INTEGER;
+			list: VISION_COMMAND_LIST
 		do
 			inspect number 
 			when 1 then
@@ -263,56 +285,62 @@ feature -- Element change
 			else
 			end
 			if a_mask /= 0 then
-				add_event_handler (a_mask, 
-					x_event_vision_callback (a_command), argument)
+				add_xt_event_command (a_mask, a_command, argument)
 			end
 		end;
 
 	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is clicked.
+		local
+			actions: like button_click_actions;
 		do
-			button_click_actions.add (number, a_command, argument)
+			actions := button_click_actions;
+			actions.add (number, a_command, argument);
+			if not actions.callback_added then
+				actions.set_callback_added;
+				add_button_press_action (1, actions, argument);
+				add_button_press_action (2, actions, argument);
+				add_button_press_action (3, actions, argument);
+				add_button_release_action (1, actions, argument)
+				add_button_release_action (2, actions, argument)
+				add_button_release_action (3, actions, argument)
+			end
 		end;
 
 	add_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer enter the window.
 		do
-			add_event_handler (EnterWindowMask,
-					x_event_vision_callback (a_command), argument)
+			add_xt_event_command (EnterWindowMask, a_command, argument)
 		end;
 
 	add_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
-			add_event_handler (KeyPressMask,
-				x_event_vision_callback (a_command), argument)
+			add_xt_event_command (KeyPressMask, a_command, argument)
 		end;
 
 	add_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
 			-- is released.
 		do
-			add_event_handler (KeyReleaseMask,
-				x_event_vision_callback (a_command), argument)
+			add_xt_event_command (KeyReleaseMask, a_command, argument)
 		end;
 
 	add_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer leave the window.
 		do
-			add_event_handler (LeaveWindowMask,	
-				x_event_vision_callback (a_command), argument)
+			add_xt_event_command (LeaveWindowMask, a_command, argument)
 		end; 
 
 	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
-			add_event_handler (PointerMotionMask,
-				x_event_vision_callback (a_command), argument)
+			add_xt_event_command (PointerMotionMask, a_command, argument)
 		end; 
 
 feature -- Removal
@@ -339,15 +367,14 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current widget is destroyed.
 		do
-			remove_destroy_callback (mel_vision_callback (a_command), 
-					argument)
+			remove_command (destroy_command, a_command, argument)
 		end;
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
-			remove_override_translation (a_translation)
+			remove_translation (a_translation)
 		end;
 
 	remove_button_motion_action (number: INTEGER; a_command: COMMAND; 
@@ -371,8 +398,7 @@ feature -- Removal
 			else
 			end
 			if a_mask /= 0 then
-				remove_event_handler (a_mask, 
-					x_event_vision_callback (a_command), argument)
+				remove_command (event_command (a_mask), a_command, argument)
 			end
 		end; 
 
@@ -380,68 +406,72 @@ feature -- Removal
 			argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
-		require
-			not_a_command_void: a_command /= Void
+		local
+			list: BUTTON_HAND_X
 		do
-			remove_event_handler (ButtonPressMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (event_command (ButtonPressMask));
+			if list /= Void then
+				list.remove_command (number, a_command, argument)
+			end
 		end; 
 
 	remove_button_release_action (number: INTEGER; a_command: COMMAND; 
 			argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
+		local
+			list: BUTTON_HAND_X
 		do
-			remove_event_handler (ButtonReleaseMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (event_command (ButtonReleaseMask));
+			if list /= Void then
+				list.remove_command (number, a_command, argument)
+			end
 		end; 
 
 	remove_button_click_action (number: INTEGER; a_command: COMMAND; 
 			argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is clicked.
+		local
+			actions: like button_click_actions;
 		do
-			button_click_actions.remove (number, a_command, argument)
+			actions := button_click_actions;
+			actions.remove (number, a_command, argument)
 		end;
 
 	remove_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer enter the window.
 		do
-			remove_event_handler (EnterWindowMask,
-					x_event_vision_callback (a_command), argument)
+			remove_command (event_command (EnterWindowMask), a_command, argument)
 		end; 
 
 	remove_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
-			remove_event_handler (KeyPressMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (event_command (KeyPressMask), a_command, argument)
 		end;
 
 	remove_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is released.
 		do
-			remove_event_handler (KeyReleaseMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (event_command (KeyReleaseMask), a_command, argument)
 		end; 
 
 	remove_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer leave the window.
 		do
-			remove_event_handler (LeaveWindowMask,	
-				x_event_vision_callback (a_command), argument)
+			remove_command (event_command (LeaveWindowMask), a_command, argument)
 		end; 
 
 	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
-			remove_event_handler (PointerMotionMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (event_command (PointerMotionMask), a_command, argument)
 		end; 
 
 feature -- Update
@@ -530,24 +560,6 @@ feature {SCREEN_CURSOR_X, ALL_CURS_X}
 
 feature {NONE} -- Implementation
 
-	x_event_vision_callback (cmd: COMMAND): X_EVENT_CALLBACK is
-			-- Convenience routine to create the xt
-			-- callback handler for vision actions
-		require
-			non_void_cmd: cmd /= Void
-		do
-			!! Result.make (cmd)
-		end;
-
-	x_button_vision_callback (cmd: COMMAND; number: INTEGER): X_BUTTON_CALLBACK is
-			-- Convenience routine to create the xt
-			-- callback handler for vision actions
-		require
-			non_void_cmd: cmd /= Void
-		do
-			!! Result.make (cmd, number)
-		end;
-
 	mel_vision_callback (cmd: COMMAND): MEL_VISION_CALLBACK is
 			-- Convenience routine to create the motif
 			-- callback handler for vision actions
@@ -567,18 +579,17 @@ feature {NONE} -- Implementation
 
 	button_click_actions: BUTTON_CLICK_HAND_X is
 			-- Button click actions for Current widget
+		local
+			list: VISION_COMMAND_LIST
 		do
 			Result := click_actions_table.item (screen_object);
 			if Result = Void then	
 				!! Result.make;
-				click_actions_table.put (Result, screen_object);
-				add_event_handler (ButtonPressMask, Result, Void)
-				add_event_handler (ButtonReleaseMask, Result, Void)
+				click_actions_table.put (Result, screen_object)
 			end;
 		ensure
 			non_void_result: Result /= Void
-		end
-			
+		end;
 
 	mel_parent (a_widget: WIDGET; index: INTEGER): MEL_COMPOSITE is
 			-- Retrieve mel parent from the widget manage for 
@@ -607,6 +618,52 @@ feature {NONE} -- Implementation
 			-- Set widget_index to `index'.
 		do
 			widget_index := index
+		end;
+
+feature {WIDGET_M} -- Implementation
+
+	remove_command (cmd_exec: MEL_COMMAND_EXEC; a_command: COMMAND; an_argument: ANY) is
+			-- Add the EiffelVision command to the mel command list
+			-- for event mask `mask'.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			if cmd_exec /= Void then
+				list ?= cmd_exec.command;
+				if list /= Void then
+					list.remove_command (a_command, an_argument)
+				end
+			end;
+		end;
+
+	vision_command_list (mel_cmd_exec: MEL_COMMAND_EXEC): VISION_COMMAND_LIST is
+			-- Get the vision command list from `mel_cmd_exec'
+		do
+			if mel_cmd_exec /= Void then
+				Result ?= mel_cmd_exec.command
+			end
+		end;
+
+	button_command (mel_cmd_exec: MEL_COMMAND_EXEC): BUTTON_HAND_X is
+			-- Get the vision command list from `mel_cmd_exec'
+		do
+			if mel_cmd_exec /= Void then
+				Result ?= mel_cmd_exec.command
+			end
+		end;
+
+	add_xt_event_command (a_mask: INTEGER; a_command: COMMAND; an_argument: ANY) is
+			-- Add the EiffelVision command to the mel command list
+			-- for event mask `mask'.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (event_command (a_mask));	
+			if list = Void then
+				!! list.make;
+				set_event_handler (a_mask, list, an_argument)
+			end;
+			list.add_command (a_command, an_argument)
 		end;
 
 feature {NONE} -- Implementation

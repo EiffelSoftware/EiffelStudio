@@ -85,22 +85,43 @@ feature -- Element change
 	add_expose_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_expose_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (expose_command);
+			if list = Void then
+				!! list.make;
+				set_expose_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_input_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_input_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (input_command);
+			if list = Void then
+				!! list.make;
+				set_input_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current area is resized.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_resize_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (resize_command);
+			if list = Void then
+				!! list.make;
+				set_resize_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 feature -- Removal
@@ -109,21 +130,21 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		do
-			remove_expose_callback (mel_vision_callback (a_command), argument)
+			remove_command (expose_command, a_command, argument)
 		end;
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		do
-			remove_input_callback (mel_vision_callback (a_command), argument)
+			remove_command (input_command, a_command, argument)
 		end;
 
 	remove_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is resized.
 		do
-			remove_resize_callback (mel_vision_callback (a_command), argument)
+			remove_command (resize_command, a_command, argument)
 		end;
 
 feature {NONE} -- Implementation

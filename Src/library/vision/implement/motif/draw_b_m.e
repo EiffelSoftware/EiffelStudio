@@ -87,29 +87,57 @@ feature -- Element change
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is activated.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_activate_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (activate_command);
+			if list = Void then
+				!! list.make;
+				set_activate_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is armed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_arm_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (arm_command);
+			if list = Void then
+				!! list.make;
+				set_arm_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is released.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_disarm_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (disarm_command);
+			if list = Void then
+				!! list.make;
+				set_disarm_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_expose_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current draw button is exposed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_expose_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (expose_command);
+			if list = Void then
+				!! list.make;
+				set_expose_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 feature -- Removal
@@ -118,28 +146,28 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
 		do
-			remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_command (activate_command, a_command, argument)
 		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
 		do
-			remove_arm_callback (mel_vision_callback (a_command), argument)
+			remove_command (arm_command, a_command, argument)
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
 		do
-			remove_disarm_callback (mel_vision_callback (a_command), argument)
+			remove_command (disarm_command, a_command, argument)
 		end;
 
 	remove_expose_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current draw button is exposed.
 		do
-			remove_expose_callback (mel_vision_callback (a_command), argument)
+			remove_command (expose_command, a_command, argument)
 		end;
 
 feature {NONE} -- Implementation

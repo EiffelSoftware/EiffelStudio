@@ -18,12 +18,15 @@ inherit
 			{NONE} all
 		end;
 
-	MEL_CALLBACK
-		rename
-			object_comparison as cb_object_comparison
+	COMMAND
 		undefine
 			is_equal, consistent, copy, setup
-		end
+		end;
+
+	SHARED_CALLBACK_STRUCT
+		undefine
+			is_equal, consistent, copy, setup
+		end;
 
 creation
 
@@ -49,6 +52,7 @@ feature {NONE} -- Initialization
 				i := i+1
 			end;
 			multi_click_time := 200;
+			compare_objects;
 		ensure
 			default_is_200: multi_click_time = 200
 		end;
@@ -58,11 +62,22 @@ feature -- Status report
 	multi_click_time: INTEGER
 			-- Multi click time
 
+	callback_added: BOOLEAN
+			-- Has the callback been added to event handler?
+
 feature -- Status setting
 
 	set_multi_click_time (time: INTEGER) is
 		do
 			multi_click_time := time
+		end;
+
+	set_callback_added is
+			-- Set `callback_added' to True
+		do
+			callback_added := True
+		ensure
+			callback_added: callback_added
 		end;
 
 feature -- Element change
@@ -92,9 +107,7 @@ feature -- Removal
 			!! command_info.make (a_command, argument);
 			list := item (number);
 			list.start;
-			list.compare_objects;
 			list.search (command_info);
-			list.compare_references;
 			if not list.after then
 				list.remove;
 			end
@@ -106,7 +119,6 @@ feature {NONE} -- Execution
 			-- Callback routine to be called from
 			-- C when a mouse button event occurs,
 		local
-			context_data: CONTEXT_DATA;
 			butclick_data: BUTCLICK_DATA;
 			list: LINKED_LIST [COMMAND_EXEC];
 			be: MEL_BUTTON_EVENT;
@@ -114,13 +126,13 @@ feature {NONE} -- Execution
 			number: INTEGER;
 			widget_m: WIDGET_M
 		do
-			be ?= callback_struct.event;
+			be ?= last_callback_struct.event;
 			if be.is_button_press then
 				click_time := be.time;
 			elseif be.is_button_release and then
 				(be.time - click_time < multi_click_time)
 			then
-				widget_m ?= callback_struct.widget;
+				widget_m ?= last_callback_struct.widget;
 				if be.is_button_one then
 					number := 1
 				elseif be.is_button_two then
@@ -141,8 +153,8 @@ feature {NONE} -- Execution
 					list.after
 				loop
 					if list.item.command.context_data_useful then
-            			!!buttons.make (5);
-            			buttons.put (True, number);
+						!! buttons.make (5);
+						buttons.put (True, number);
 						!! butclick_data.make (widget_m.widget_oui,
 								be.x, be.y, be.x_root, be.y_root,
 								number, buttons);

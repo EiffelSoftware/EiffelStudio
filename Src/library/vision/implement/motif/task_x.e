@@ -12,6 +12,8 @@ class
 inherit
 
 	LINKED_LIST [COMMAND_EXEC]
+		rename
+			make as ll_make
 		export
 			{NONE} all
 		end;
@@ -19,13 +21,18 @@ inherit
 	TASK_I;
 
 	INPUT_EVENT_X
-		rename
-			object_comparison as cb_object_comparison
-		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+		do
+			ll_make;	
+			compare_objects
+		end;
 
 feature -- Element change
 
@@ -38,7 +45,7 @@ feature -- Element change
 		do
 			if not is_call_back_set then
 				ac := application_context;
-				ac.add_work_proc_callback (Current, Void);
+				ac.set_work_proc_callback (Current, Void);
 				identifier := ac.last_id;
 			end;
 			!! command_info.make (a_command, an_argument);
@@ -52,16 +59,12 @@ feature -- Removal
 			-- execute while the system is waiting for user events.
 		local
 			command_info: COMMAND_EXEC;
-			is_removed: BOOLEAN;
 		do
 			!! command_info.make (a_command, an_argument);
 			start;
-			compare_objects;
 			search (command_info);
-			compare_references;
 			if not after then
 				remove;
-				is_removed := true;
 			end;
 			if empty and is_call_back_set then
 				set_no_call_back;

@@ -34,18 +34,36 @@ rt_private void raise_error (HRESULT hr, char *msg)
 }
 #endif
 
-rt_public void com_initialize ()
-	/* Initialize COM runtime */
-{
-	HRESULT hr;
-	hr = CoInitialize (NULL);
-/*
-	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-*/
 
-	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "CoInitialize failed");
+
+#ifdef DBGTRACE_ENABLED
+rt_public void trace_event_hr (char* mesg,HRESULT hr)
+{
+  FILE *out;
+  out=fopen("eif_debugger.out","a+");
+  fprintf(out,"<HR=%d> %s \n",
+					hr,
+					mesg
+					);
+  fclose(out);
 }
+#define DBGTRACE_HR(msg1,hr) trace_event_hr(msg1, hr);
+#else
+#define DBGTRACE_HR(msg,hr)
+#endif
+
+//rt_public void com_initialize ()
+//	/* Initialize COM runtime */
+//{
+//	HRESULT hr;
+//	hr = CoInitialize (NULL);
+///*
+//	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+//	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+//*/
+//
+//	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "CoInitialize failed");
+//}
 
 // ISE_COM_CACHE_MANAGER---------------------------------------------------------------------
 
@@ -67,6 +85,7 @@ rt_public EIF_POINTER new_ise_cache_manager ()
 feature -- CorBindToRuntimeEx interface
 */
 
+
 rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
 	/* Create new instance of `ICorRuntimeHost'. */
 {
@@ -84,7 +103,7 @@ rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
 		}
 	}
 
-	CHECK (hr, "Could not create ICorRuntimeHost");
+	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorRuntimeHost or already initialized");
 
 	return pHost;
 }

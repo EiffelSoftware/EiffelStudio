@@ -1,39 +1,36 @@
 indexing
-	description: "EiffelVision container. Allows only one children.%
-			 % Deferred class, parent of all the containers.%
-			 % Mswindows implementation."
+	description:
+		"EiffelVision container. Allows only one children.%
+		% Deferred class, parent of all the containers.%
+		% Mswindows implementation."
 	note: "This class would be the equivalent of a wel_composite_window%
 		% in the wel hierarchy."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_CONTAINER_IMP
-	
+
 inherit
 	EV_CONTAINER_I	
-		
+
 	EV_WIDGET_IMP
 		redefine
-			set_insensitive,
-			on_first_display,
-			plateform_build
+			widget_make,
+			set_parent
 		end
 
 feature {NONE} -- Initialization
 
-	plateform_build (par: EV_CONTAINER_I) is
-			-- Plateform dependant initializations.
+	widget_make (an_interface: EV_WIDGET) is
+			-- Creation of the widget.
 		do
-			{EV_WIDGET_IMP} Precursor (par)
+			{EV_WIDGET_IMP} Precursor (an_interface)
 			!! menu_items.make (1)
-			if parent_imp /= Void then
-				already_displayed := parent_imp.already_displayed
-			end	
 		end
-	
+
 feature -- Access
 
 	client_width: INTEGER is
@@ -41,52 +38,12 @@ feature -- Access
 		do
 			Result := client_rect.width
 		end
-	
+
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
 			Result := client_rect.height
 		end
-
-feature -- Status report
-
-	set_insensitive (flag: BOOLEAN) is
-			-- Set current widget in insensitive mode if
-   			-- `flag'.
-		do
-			if child /= Void then
-				child.set_insensitive (flag)
-			end
-			{EV_WIDGET_IMP} Precursor (flag)
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy the widget, but set the parent sensitive
-			-- in case it was set insensitive by the child.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_insensitive (False)
-			end
-			wel_destroy
-		end
-
-feature -- Element change
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			child := child_imp
-		end
-
-feature {EV_MENU_CONTAINER_IMP} -- Implementation
-
-	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			-- It can be only one list by container because
-			-- all the ids must be different
-
-feature {EV_WIDGET_IMP} -- Implementation
 
 	already_displayed: BOOLEAN
 			-- The behavior before and after displaying
@@ -94,19 +51,28 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- speed before the first displaying of the
 			-- container.
 
-	update_display is
-			-- Feature that update the actual container.
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
 		do
-			child.parent_ask_resize (client_width, client_height)
+			{EV_WIDGET_IMP} Precursor (par)
+			if parent_imp /= Void then
+				if not already_displayed and parent_imp.already_displayed then
+					on_first_display
+				else
+					already_displayed := parent_imp.already_displayed
+				end
+			end
 		end
 
-	on_first_display is
+feature -- Assertion test
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
 		do
-			if child /= Void then
-				child.on_first_display
-			end
-			{EV_WIDGET_IMP} Precursor
-			already_displayed := True
+			Result := is_child (a_child)
 		end
 
 feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
@@ -124,6 +90,12 @@ feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
 		do
 			set_minimum_height (value)
 		end
+
+feature {EV_MENU_CONTAINER_IMP} -- Implementation
+
+	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
+			-- It can be only one list by container because
+			-- all the ids must be different
 
 feature {NONE} -- WEL Implementation
 
@@ -166,15 +138,11 @@ feature {NONE} -- WEL Implementation
  			end
  		end
 
-feature -- Implementation : deferred features
+feature {NONE} -- Implementation : deferred features
 
 	client_rect: WEL_RECT is
 		deferred
 		end
-
-	wel_destroy is
-		deferred
-		end	
 
 end -- class EV_CONTAINER_IMP
 

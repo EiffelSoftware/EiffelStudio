@@ -15,40 +15,35 @@ deferred class
 
 inherit
 	EV_BOX_I
-		redefine
-			child_add_successful
-		end
 
 	EV_INVISIBLE_CONTAINER_IMP
 		undefine
 			move_and_resize
 		redefine
-			child_add_successful,
+			make,
 			client_width,
 			client_height,
-			on_first_display,
-			update_display
+			on_first_display
 		end
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 				-- Create the box with the default options.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			make_with_coordinates (par_imp, "Box", 0, 0, 0, 0)
-			initialize
+			{EV_INVISIBLE_CONTAINER_IMP} Precursor
+			set_text ("EV_BOX")
+			!! ev_children.make (2)
 			is_homogeneous := Default_homogeneous
 			spacing := Default_spacing
 			border_width := Default_border_width
 		end
 
 feature -- Access
+
+	child: EV_WIDGET_IMP
+			-- A special size, the one who give the minimum_size to the
+			-- box.
 
 	client_width: INTEGER is
 			-- Width of the client area of container
@@ -105,25 +100,28 @@ feature -- Status setting
 			border_width := value
 			-- Update view
 		end
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+		do
+			ev_children.extend (child_imp)
+			child_minheight_changed (child_imp.minimum_height, child_imp)
+			child_minwidth_changed (child_imp.minimum_width, child_imp)
+			update_display
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		do
+			ev_children.prune_all (child_imp)
+			if not ev_children.empty then
+				update_minimum_size
+				update_display
+			end
+		end
 
 feature {NONE} -- Basic operation
-
-	set_local_width (new_width: INTEGER) is
-		deferred
-		end
-
-	set_local_height (new_height: INTEGER) is
-		deferred
-		end
-
---	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove a given child of the composite
---		do
---			children.go_i_th (children.index_of (child_imp,1))
---			children.remove
---			set_minimum (fonction a rajouter qui recherche le minimum des tailles des enfants)
---			parent_ask_resize (minimum_width, minimum_height)
---		end
 
 	modulo (a, b: INTEGER): INTEGER is
 				-- a modulo b
@@ -212,6 +210,20 @@ feature {EV_WIDGET_I} -- Implementation
 			child_cell.set_height (minimum_height)
 		end
 
+feature {NONE} -- Deferred features
+
+	update_minimum_size is
+		deferred
+		end
+
+	set_local_width (new_width: INTEGER) is
+		deferred
+		end
+
+	set_local_height (new_height: INTEGER) is
+		deferred
+		end
+
 end -- class EV_BOX_IMP
 
 --|----------------------------------------------------------------
@@ -229,4 +241,3 @@ end -- class EV_BOX_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

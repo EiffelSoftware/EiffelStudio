@@ -12,14 +12,18 @@ inherit
 	EV_DIALOG_I
 
 	EV_WINDOW_IMP
+		export
+			{NONE} set_default_options
+			{NONE} set_default_colors
+			{NONE} set_default_minimum_size
 		undefine
-			build
+			set_default_options
 		redefine
 			default_style
 		end
 
 creation
-	make
+	make_with_owner
 
 feature {NONE} -- Implementation
 

@@ -12,13 +12,13 @@ class
 inherit
 	EV_FRAME_I
 
-	EV_CONTAINER_IMP
+	EV_SINGLE_CHILD_CONTAINER_IMP
 		redefine
-			plateform_build,
 			client_width,
 			client_height,
 			child_minwidth_changed,
-			child_minheight_changed
+			child_minheight_changed,
+			set_default_minimum_size
 		end
 
 	EV_FONTABLE_IMP
@@ -27,6 +27,7 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
+			make,
 			on_paint,
 			move_and_resize
 		end
@@ -37,30 +38,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create the frame with the default options.
+	make is
 		do
-			make_with_text (par, "")
-		end
-
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-		local
-			par_imp: WEL_WINDOW
-		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			make_with_coordinates (par_imp, txt, 0, 0, 0, 0)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
 			!WEL_ANSI_VARIABLE_FONT! wel_font.make
+			wel_set_font (wel_font)
 		end
 
-	   	plateform_build (par: EV_CONTAINER_I) is
-   			-- Plateform dependant initializations.
-   		do
- 			{EV_CONTAINER_IMP} Precursor (par)
-			wel_set_font (wel_font)
- 		end
+	make_with_text (txt: STRING) is
+		do
+			make
+			set_text (txt)
+		end
 
 feature -- Access
 
@@ -74,6 +63,32 @@ feature -- Access
 			-- Height of the client area of container
 		do
 			Result := (client_rect.height - box_text_height - 2 * box_width).max (0)
+		end
+
+feature -- Status setting
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+		local
+			dc: WEL_CLIENT_DC
+		do
+			!! dc.make (Current)
+			dc.get
+			set_minimum_height (box_text_height + 2 * box_width)
+			set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			dc.release
+		end
+
+feature -- Element change
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			top_level_window_imp := a_window
+			if child /= Void then
+				child.set_top_level_window_imp (a_window)
+			end
 		end
 
 feature {NONE} -- Implementation for automatic size compute.

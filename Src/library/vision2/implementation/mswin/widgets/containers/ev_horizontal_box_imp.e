@@ -12,13 +12,9 @@ class
 
 inherit
 	EV_HORIZONTAL_BOX_I
-		undefine
-			child_add_successful
-		end
 	
 	EV_BOX_IMP
 		redefine
-			add_child,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
@@ -299,23 +295,40 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-feature {NONE} -- Child changing
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add a child to the box, it also resize the box
-   		do
-			if child = Void or (child /= Void and then child_imp.minimum_width > child.minimum_width) then
-				child := child_imp
+	update_minimum_size is
+			-- Update the minimum size of the container
+			-- according to the children.
+		local
+			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
+			mw, mh: EV_WIDGET_IMP
+			i: INTEGER
+		do
+			lchild := ev_children
+			from
+				mw := lchild @ 1
+				mh := mw
+				i := 2
+			until
+				i = lchild.count + 1
+			loop
+				if (lchild @ i).minimum_width > mw.minimum_width then
+					mw := lchild @ i
+				end
+				if (lchild @ i).minimum_height > mh.minimum_height then
+					mh := lchild @ i
+				end
+				i := i + 1
 			end
-			ev_children.extend (child_imp)
-	  	end
+			child := mw
+			set_minimum_height (mh.minimum_height)
+		end
 
 feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_height because the child did.
 		do
-			if value > child.minimum_width then
+			if (child = Void) or (child /= Void and then value > child.minimum_width) then
 				child := the_child
 				if is_homogeneous then
 					set_minimum_width (child.minimum_width * ev_children.count + total_spacing + 2 * border_width)

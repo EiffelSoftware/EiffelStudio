@@ -11,32 +11,26 @@ class
 
 inherit
 	EV_WINDOW_I
-		redefine
-			set_expand
-		end
 					
-	EV_CONTAINER_IMP
+	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
 			{NONE} set_expand
+			{NONE} set_parent
 		undefine
 			set_width,
 			set_height,
-			build
+			set_default_colors
 		redefine
-				-- We redefine the following features because a window
-				-- don't have to notify its parent in the following cases.
-			plateform_build,
-			parent_ask_resize,
+			destroy,
+			set_parent,
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
-			dimensions_set,
 			child_minwidth_changed,
 			child_minheight_changed,
-			add_child,
-			set_expand
---			set_vertical_resize,
---			set_horizontal_resize
+			parent_ask_resize,
+			dimensions_set,
+			set_default_minimum_size
 		end
 
 	WEL_FRAME_WINDOW
@@ -74,11 +68,11 @@ inherit
 
 creation
 	make,
-	make_top_level
+	make_with_owner
 
 feature {NONE} -- Initialization
 
-	make_top_level is
+	make is
 			-- Create a window. Window does not have any
 			-- parents
 		do
@@ -87,39 +81,23 @@ feature {NONE} -- Initialization
 --			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
 		end
 
-	make (par: EV_WINDOW) is
+	make_with_owner (par: EV_WINDOW) is
 			-- Create a window with a parent.
+			-- For a window, we cannot set the parent after or it does a 
 		local
-			par_imp: EV_WINDOW_IMP
+			ww: WEL_FRAME_WINDOW
 		do
-			par_imp ?= par.implementation
+			ww ?= par.implementation
 			check
-				parent_not_void: par_imp /= Void
+				valid_owner: ww /= Void
 			end
-			make_child (par_imp, "EV_WINDOW")
+			make_child (ww, "EV_WINDOW")
 --			!! min_track.make (0,0)
 --			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
 --			set_maximum_width (system_metrics.screen_width)
 --			set_maximum_height (system_metrics.screen_height)
 		end
 
-feature {EV_WINDOW} -- Initialization
-
-	plateform_build (par: EV_CONTAINER_I) is
-			-- Initialize few variables
-			-- We create `child_cell' and `initialize_list'
-			-- because a window doesn't use widget_make.
-			-- We reset the variable already_displayed to
-			-- False, because it is different for a window.
-		do
-			{EV_CONTAINER_IMP} Precursor (par)
-			!! child_cell
-			resize_type := 3
-			set_maximum_width (system_metrics.screen_width)
-			set_maximum_height (system_metrics.screen_height)
-			already_displayed := False
-		end
-		
 feature  -- Access
 
 	maximum_height: INTEGER
@@ -178,6 +156,12 @@ feature  -- Access
 	        end
 		end 
 
+	top_level_window_imp: WEL_WINDOW is
+			-- Top level window that contains the current widget.
+		do
+			Result := Current
+		end
+
 feature -- Status report
 
 	is_iconic_state: BOOLEAN is
@@ -189,6 +173,25 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+				parent_imp.set_insensitive (False)
+			end
+			wel_destroy
+		end
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+		do
+			set_minimum_width (system_metrics.window_minimum_width)
+			set_minimum_height (system_metrics.window_minimum_height)
+			set_maximum_width (system_metrics.screen_width)
+			set_maximum_height (system_metrics.screen_height)
+		end
 
 --	set_horizontal_resize (flag: BOOLEAN) is
 --			-- Allow the window to be verticaly resized.
@@ -283,6 +286,20 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		local
+			ww: WEL_WINDOW
+		do
+			if par /= Void then
+				ww ?= par.implementation
+				wel_set_parent (ww)
+			else
+				wel_set_parent (Void)
+			end
+		end
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Resize the widget and don't notify the parent.
@@ -422,7 +439,7 @@ feature -- Event -- removing command association
 			remove_command (Cmd_move)
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature -- Assertion features
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 			-- Check if the dimensions of the widget are set to 
@@ -434,6 +451,8 @@ feature {EV_WIDGET_IMP} -- Implementation
 			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width)) and then
 				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height))
 		end
+
+feature {EV_WIDGET_IMP} -- Implementation
 
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
@@ -455,23 +474,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 					+ system_metrics.window_border_height 
 					+ 2 * system_metrics.window_frame_height)
 			end
-		end
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			{EV_CONTAINER_IMP} Precursor (child_imp)
-			if has_menu then
-				set_minimum_size (child_imp.minimum_width + 2*window_frame_width, child_imp.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
-			else
-				set_minimum_size (child_imp.minimum_width + 2*window_frame_width, child_imp.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
-			end
-		end
-
-	top_level_window_imp: WEL_WINDOW is
-			-- Top level window that contains the current widget.
-		do
-			Result := Current
 		end
 
 feature {NONE} -- Implementation
@@ -588,7 +590,7 @@ feature {NONE} -- Implementation
 			!!Result
 		end
 
-feature {EV_STATIC_MENU_BAR_IMP} -- implementation
+feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 
 	set_menu (a_menu: WEL_MENU) is
 			-- Set `menu' with `a_menu'.
@@ -603,19 +605,14 @@ feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 
 feature {NONE} -- Inapplicable
 
-	set_expand (flag: BOOLEAN) is
-			-- Not applicable for windows.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
 	parent_ask_resize (a_width, a_height: INTEGER) is
 			-- When the parent asks the resize, it's not
 			-- necessary to send him back the information
-			-- Do nothing for a window
+			-- Can be called but do nothing.
 		do
+			check
+				Inapplicable: True
+			end
 		end
 
 	set_top_level_window_imp (a_window: WEL_WINDOW) is
@@ -623,7 +620,7 @@ feature {NONE} -- Inapplicable
 			-- of the widget.
 		do
 			check
-				Inapplicable: False
+				Inapplicable: True
 			end
 		end
 

@@ -13,16 +13,13 @@ inherit
 
 	EV_CONTAINER_IMP
 		undefine
-			add_child_ok,
-			child_add_successful,
-			add_child,
-			update_display,
 			on_left_button_down,
 			on_left_button_up,
 			on_mouse_move
 		redefine
 			set_insensitive,
-			on_first_display
+			on_first_display,
+			remove_child
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -31,6 +28,7 @@ inherit
 		undefine
 			on_set_cursor
 		redefine
+			make,
 			on_paint,
 			on_wm_erase_background,
 			default_style,
@@ -69,20 +67,23 @@ inherit
 
 feature -- Initialize
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create the control window.
 		local
 			par_imp: WEL_COMPOSITE_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, "Split Area")
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
 			!! dc.make (Current)
+			set_text ("Split Area")
 		end
 
 feature -- Access
+
+	child1: EV_WIDGET_IMP
+				-- The first child of the split area
+
+	child2: EV_WIDGET_IMP
+				-- The second child of the split area
 
 	level: INTEGER is
 			-- Position of the splitter in the window
@@ -128,20 +129,90 @@ feature -- Status settings
 			end
 		end
 
-feature {NONE} -- Basic operation
+feature -- Element change
 
-	set_local_width (new_width: INTEGER) is
-		deferred
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into split area. Split area can 
+			-- have two children.
+		do
+			if child1 = Void then
+				child1 := child_imp
+			else
+				child2 := child_imp
+			end
+			child_minwidth_changed (child_imp.minimum_width, child_imp)
+			child_minheight_changed (child_imp.minimum_height, child_imp)
+			update_display
 		end
 
-	set_local_height (new_height: INTEGER) is
-		deferred
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		do
+			child_minwidth_changed (0, child_imp)
+			child_minheight_changed (0, child_imp)
+			if child_imp.is_equal (child1) then
+				child1 := Void
+			else
+				child2 := Void
+			end
+			update_display
 		end
 
-	resize_children (a_level: INTEGER) is
-			-- Resize both children according to the new level
-			-- `level' of the splitter.
-		deferred
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			top_level_window_imp := a_window
+			if child1 /= Void then
+				child1.set_top_level_window_imp (a_window)
+			end
+			if child2 /= Void then
+				child2.set_top_level_window_imp (a_window)
+			end
+		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		do
+			if child1 /= Void then
+				child1.set_background_color (background_color)
+			end
+			if child2 /= Void then
+				child2.set_background_color (background_color)
+			end
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		do
+			if child1 /= Void then
+				child1.set_foreground_color (foreground_color)
+			end
+			if child2 /= Void then
+				child2.set_foreground_color (foreground_color)
+			end
+		end
+
+feature -- Assertions
+
+	add_child_ok: BOOLEAN is
+			-- True, if it is ok to add a child to
+			-- container. Two children
+			-- are allowed
+		do
+			Result := (child1 = Void) or (child2 = Void)
+		end
+	
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := (a_child = child1) or
+						(a_child = child2)
 		end
 
 feature {NONE} -- Implementation for automatic size compute
@@ -171,17 +242,6 @@ feature {NONE} -- Implementation
 			-- Is a point with `value' as the coordinate on the split?
 		do
 			Result := (value >= level) and then (value < level + size)
-		end
-
-	draw_split is
-			-- draw a vertical split at 'level'.
-		deferred
-		end
-
-	invert_split is
-			-- Invert the vertical split from `first' position to `last' position
-			-- Used when the user move the split
-		deferred
 		end
 
 	refresh is
@@ -267,7 +327,38 @@ feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		do
-			Result := ws_child + ws_visible
+			Result := Ws_child + Ws_visible
+		end
+
+feature {NONE} -- Deferred features
+
+	draw_split is
+			-- draw a vertical split at 'level'.
+		deferred
+		end
+
+	invert_split is
+			-- Invert the vertical split from `first' position to `last' position
+			-- Used when the user move the split
+		deferred
+		end
+
+	set_local_width (new_width: INTEGER) is
+		deferred
+		end
+
+	set_local_height (new_height: INTEGER) is
+		deferred
+		end
+
+	resize_children (a_level: INTEGER) is
+			-- Resize both children according to the new level
+			-- `level' of the splitter.
+		deferred
+		end
+
+	update_display is
+		deferred
 		end
 
 Invariant

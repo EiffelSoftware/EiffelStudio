@@ -10,13 +10,9 @@ class
 
 inherit
 	EV_VERTICAL_BOX_I
-		undefine
-			child_add_successful
-		end
 	
 	EV_BOX_IMP
 		redefine
-			add_child,
 			child_minheight_changed,
 			child_minwidth_changed
 		end
@@ -293,16 +289,33 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-feature {NONE} -- Child changing
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add a child to the box, it also resize the box
-   		do
-			ev_children.extend (child_imp)
-			if child = Void then
-				child := child_imp
+	update_minimum_size is
+			-- Update the minimum size of the container
+			-- according to the children.
+		local
+			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
+			mw, mh: EV_WIDGET_IMP
+			i: INTEGER
+		do
+			lchild := ev_children
+			from
+				mw := lchild @ 1
+				mh := mw
+				i := 2
+			until
+				i = lchild.count + 1
+			loop
+				if (lchild @ i).minimum_width > mw.minimum_width then
+					mw := lchild @ i
+				end
+				if (lchild @ i).minimum_height > mh.minimum_height then
+					mh := lchild @ i
+				end
+				i := i + 1
 			end
-   		end
+			child := mh
+			set_minimum_width (mw.minimum_width)
+		end
 
 feature {NONE} -- Implementation for automatic size compute
 

@@ -17,6 +17,8 @@ inherit
 		end
 		
 	EV_FRAME_CONSTANTS
+			export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -27,18 +29,27 @@ inherit
 		end
 		
 	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR
+		undefine
+			default_create
+		end
 	
 	CDATA_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	DEFAULT_OBJECT_STATE_CHECKER
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

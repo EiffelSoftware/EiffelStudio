@@ -15,6 +15,7 @@ cluster
 
 	root_cluster: 	"../Main";
 
+-- Base:
 	base:             "$EIFFEL4/library/base";
 	access (base):      "$/structures/access";
 	cursors (base):            "$/structures/cursors";
@@ -32,6 +33,20 @@ cluster
 	traversing (base):         "$/structures/traversing";
 	tree (base):               "$/structures/tree";
 
+-- Net
+        net:                            "$EIFFEL4/library/net";
+        abstract_socket (net):          "$/abstract/socket";
+        net_socket (net):               "$/network/socket";
+        local_socket (net):             "$/local/socket";
+
+        polling_abstract (net):         "$/polling/abstract";
+        polling_implementation (net):   "$/polling/implementation";
+
+        abstract_client_server (net):   "$/abstract/client_server";
+        net_client_server (net):        "$/network/client_server";
+        local_client_server (net):      "$/local/client_server";
+
+-- Mel:
 	mel: 			"$EIFFEL4/library/mel";
 	mel_callback_structs (mel):   "$/callback_structs";
 	mel_constants (mel):          "$/constants";
@@ -46,6 +61,7 @@ cluster
 			assertion(no);
 		end ;  
 
+-- Vision
 	vision:			 "$EIFFEL4/library/vision/";
 	vision_figures (vision):             "$/figures";
 	vision_imp_motif (vision):           "$/implement/motif"
@@ -144,7 +160,8 @@ cluster
                 exclude
                         "syntax_error.e" 
 	        end;
-		api_structured_text (common):"$/eiffel/API/structured_text"; -- Eiffel/API/structured_text/
+
+	api_structured_text (common):"$/eiffel/API/structured_text"; -- Eiffel/API/structured_text/
 
 
         api_shared(api):        "$/shared";
@@ -188,9 +205,6 @@ end;
 
 -- Patches from case: syntax_error, compiler_exporter
 	case_patches:	"../../case/eiffel/patches";
-  --              exclude
-    --                    "syntax_error.e" 
-	--        end;
 
 -- Patches from build: build_error_displayer
 	patches (build):	"$/patches";
@@ -210,14 +224,21 @@ end;
 			assertion (no)
 		end;
 
+	switch(build):			"$/common/eiffel/switch";
+	license_switch(switch): 		"$/license/license";  	--unix
+
 	liman (build):				"$/limand";
 
 --	liman_bench(liman):		"$/bench";
 	liman_abstract(liman):		"$/abstract";
+--                exclude
+ --                       "shared_license.e" 
+--	        end;
+
 	--win time_lock(liman):        	"$/time_lock";--win
 	liman_graphical(liman):         "$/graphical";
---	liman_shared(liman):		"$/shared";--unix
---	liman_client(liman):		"$/client";--unix
+	liman_shared(liman):		"$/shared";--unix
+	liman_client(liman):		"$/client";--unix
 
 external
 	include_path: 	"\$(BENCH)/C/parsing/shared",
@@ -226,11 +247,16 @@ external
 
         object:
 		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a", 
-	    	"$(BENCH)/C/parsing/eiffel/libweiffel.a",
+	    	"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a",
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
 	    	"$(BENCH)/C/parsing/shared/libparsing.a",
 	    	"$(BENCH)/C/parsing/lace/liblace.a",
 	    	"$(BENCH)/C/platform/libplatform.a",
-		"-lXm -lXt -lX11 -lXpm";	
+	              "$(BENCH)/C/ipc/ewb/libewb.a",	
+        	        	"$(BENCH)/C/ipc/shared/libipc.a",
+                	"$(BENCH)/C/liman/lm/liblm.a",
+	              "$(BENCH)/C/liman/shared/libshared.a",
+        		"$(BENCH)/C/idrs/libidr.a";
 
 
 end

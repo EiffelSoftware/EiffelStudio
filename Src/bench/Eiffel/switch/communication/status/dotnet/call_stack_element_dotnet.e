@@ -268,9 +268,6 @@ feature {NONE} -- Implementation
 				private_dotnet_module_name := l_module.module_name
 				private_dotnet_module_filename := l_module.get_name
 
-				l_function.clean_on_dispose
-				l_class.clean_on_dispose
-				l_module.clean_on_dispose
 			end
 			dotnet_initialized := True
 		ensure

@@ -1161,9 +1161,6 @@ feature -- Call stack related
 					l_module := l_func.get_module
 					l_module_name := l_module.get_name
 
-					l_class.clean_on_dispose
-					l_module.clean_on_dispose
-					l_func.clean_on_dispose
 	
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)

@@ -212,7 +212,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_function_from_token (item, a_token, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				Result := Icor_objects_manager.icd_function (p)
 			end
 			debug ("DBG")
 				if not last_call_succeed then
@@ -229,7 +229,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_class_from_token (item, a_token, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				Result := Icor_objects_manager.icd_class (p)
 			end
 			debug ("DBG")
 				if not last_call_succeed then

@@ -138,7 +138,6 @@ feature {NONE} -- get member data
 					l_icd_value.clean_on_dispose
 				end
 				l_icd_obj_value.clean_on_dispose
-				l_icd_class.clean_on_dispose
 				l_value_info.clean				
 			end	
 		end

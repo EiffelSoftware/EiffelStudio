@@ -293,9 +293,6 @@ feature {NONE} -- Initialization
 												level := level + 1
 											end
 										end
-										l_module.clean_on_dispose
-										l_class.clean_on_dispose
-										l_func.clean_on_dispose
 
 										l_class := Void
 										l_func := Void

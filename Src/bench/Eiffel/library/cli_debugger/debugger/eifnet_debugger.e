@@ -12,6 +12,8 @@ inherit
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
+	
+	SHARED_ICOR_OBJECTS_MANAGER
 
 	SHARED_DEBUG_VALUE_KEEPER
 	
@@ -59,7 +61,7 @@ inherit
 		export
 			{NONE} all
 			{ICOR_DEBUG_MANAGED_CALLBACK, EIFNET_EXPORTER} Il_debug_info_recorder
-		end	
+		end
 		
 	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 		export
@@ -269,6 +271,7 @@ feature -- Debugging session Termination ...
 			terminate_dbg_synchronisation
 			eifnet_dbg_evaluator.reset
 			eifnet_debugger_info.reset
+			Icor_objects_manager.clean
 			icor_debug.clean_data
 		end
 
@@ -746,7 +749,6 @@ feature -- Function Evaluation
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_class_module_name: STRING
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
-			l_dispose_mod: BOOLEAN
 		do
 			if icdv /= Void and ct.is_external then
 				l_prepared_icdv := edv_formatter.prepared_debug_value (icdv)
@@ -759,8 +761,6 @@ feature -- Function Evaluation
 						l_icd_class := l_icd_obj_val.get_class
 						l_icd_module := l_icd_class.get_module
 						l_feat_name := a_feat.external_name
-						l_dispose_mod := True
-						l_icd_class.clean_on_dispose
 						l_icd_obj_val.clean_on_dispose
 					end
 					l_prepared_icdv.clean_on_dispose
@@ -784,9 +784,6 @@ feature -- Function Evaluation
 				end
 				if l_feat_tok > 0 then
 					Result := l_icd_module.get_function_from_token (l_feat_tok)
-				end
-				if l_dispose_mod then
-					l_icd_module.clean_on_dispose
 				end
 			end
 		end
@@ -915,7 +912,6 @@ feature -- Specific function evaluation
 				--| Get `internal_string_builder' from `STRING' instance Value
 			l_class := icd_string_instance.get_class
 			l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_internal_string_builder_token)
-			l_class.clean_on_dispose
 				
 				--| l_icd_value represents the `internal_string_builder' value
 			if l_icd_value /= Void then
@@ -997,7 +993,6 @@ feature -- Specific function evaluation
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
-				l_func.clean_on_dispose
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
 					l_module_name := l_icd_module.get_name
@@ -1008,9 +1003,6 @@ feature -- Specific function evaluation
 					print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 				end
 			end
-
-			l_icd_module.clean_on_dispose
-			l_icd_class.clean_on_dispose
 
 			debug ("debugger_trace_eval")
 				if Result = Void then
@@ -1061,7 +1053,6 @@ feature -- Specific function evaluation
 					if l_func /= Void then
 						l_icd_frame := a_frame
 						l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
-						l_func.clean_on_dispose
 					else						
 						debug ("DEBUGGER_TRACE_EVAL")
 							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
@@ -1071,8 +1062,6 @@ feature -- Specific function evaluation
 						end
 					end
 				end
-				l_icd_module.clean_on_dispose
-				l_icd_class.clean_on_dispose
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.interface_debug_object_value
@@ -1137,11 +1126,8 @@ feature -- Specific function evaluation
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
-				l_func.clean_on_dispose
 			end
 
-			l_icd_module.clean_on_dispose
-			l_icd_class.clean_on_dispose
 			debug ("debugger_trace_eval")
 				print ("<stop> " + generator + ".to_string_value_from_exception_object_value %N")
 			end			
@@ -1179,7 +1165,6 @@ feature -- Specific function evaluation
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
-				l_func.clean_on_dispose
 			end
 			debug ("debugger_trace_eval")
 				print ("<stop> " + generator + ".get_message_value_from_exception_object_value %N")
@@ -1196,7 +1181,6 @@ feature -- Specific function evaluation
 			if l_icd_class /= Void then
 				Result := once_function_value_on_icd_class (a_icd_frame,
 									l_icd_class, a_adapted_class_type, a_feat)
-				l_icd_class.clean_on_dispose
 			end
 		end
 
@@ -1236,7 +1220,6 @@ feature -- Specific function evaluation
 			if l_data_class_token /= 0 then
 				l_icd_module := l_icd_class.get_module
 				l_icd_class := l_icd_module.get_class_from_token (l_data_class_token)
-				l_icd_module.clean_on_dispose
 			end
 
 				--| Check if already called (_done)

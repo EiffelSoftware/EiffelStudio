@@ -238,7 +238,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					l_result_string.append_string (" class token = 0x" + l_icd_class.get_token.to_hex_string)
 					
 					l_found_value := True
-					l_icd_class.clean_on_dispose
 					l_object.clean_on_dispose
 				else
 					l_result_string.append_string ("<<OBJECT-ERROR:" + a_data.last_error_code_id + ">>")

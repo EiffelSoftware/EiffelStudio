@@ -51,17 +51,36 @@ inherit
 		undefine
 			is_equal			
 		end	
-
+		
+	SHARED_DEBUG_VALUE_KEEPER
+		export
+			{NONE} all
+		undefine
+			is_equal			
+		end
+		
 feature {NONE} -- Init
 
 	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
-
+			-- Init data regarding to dotnet specific values
 		do
 			icd_referenced_value := a_referenced_value
 			icd_value := a_prepared_value
 			icd_frame := f
-			create icd_value_info.make_from_prepared_value (icd_value, a_prepared_value)
+			create icd_value_info.make_from_prepared_value (icd_referenced_value, a_prepared_value)
 		end
+
+	register_dotnet_data is
+			-- Register this object to estudio system
+		do
+			if address /= Void then
+				debug ("debugger_eifnet_data")
+					print (generating_type + ".register_dotnet_data : " + address)
+					print ("%N")
+				end
+				Debug_value_keeper.keep_dotnet_value (Current)				
+			end
+		end		
 
 feature {NONE} -- Special childrens
 

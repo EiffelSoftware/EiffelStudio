@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 					is_external_type := True
 				end
 			end
+			register_dotnet_data
 		ensure
 			value_set: icd_value = a_prepared_value
 		end

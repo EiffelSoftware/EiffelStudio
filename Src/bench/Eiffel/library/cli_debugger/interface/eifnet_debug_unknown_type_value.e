@@ -55,10 +55,9 @@ feature {NONE} -- Initialization
 --			a_frame_not_void: f /= Void
 		do
 			set_default_name
-
 			init_dotnet_data (a_referenced_value, a_prepared_value, f)
-
 			address := icd_value_info.address_as_hex_string
+			register_dotnet_data			
 		ensure
 			value_set: icd_value = a_prepared_value
 		end

@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			if not is_null then
 				address := icd_value_info.address_as_hex_string
 			end
+			register_dotnet_data			
 		ensure
 			value_set: icd_value = a_prepared_value
 		end

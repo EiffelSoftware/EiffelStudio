@@ -410,7 +410,7 @@ feature -- View management
 				if node /= Void and then node.has_attribute_by_name ("NAME") then
 					node.remove_attribute_by_name ("NAME")
 				end
-				save_xml_document (ptf, diagram_output)
+				save_xml_document (ptf.name, diagram_output)
 			end
 		end
 
@@ -758,14 +758,14 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 						view_output := xml_element
 						view_output.set_parent (diagram_output)
 						diagram_output.root_element.force_first (view_output)
-						save_xml_document (ptf, diagram_output)
+						save_xml_document (ptf.name, diagram_output)
 					end
 				else
 					create l_namespace.make ("", "")
 					create node.make_root ("CLUSTER_DIAGRAM", l_namespace)
 					create diagram_output.make
 					diagram_output.force_first (node)
-					save_xml_document (ptf, diagram_output)
+					save_xml_document (ptf.name, diagram_output)
 				end
 			end
 		rescue
@@ -775,14 +775,14 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 			retry
 		end
 
-	save_xml_document (ptf: RAW_FILE; a_doc: XM_DOCUMENT) is
+	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
 			-- Save `a_doc' in `ptf'
 		require else
-			file_not_void: ptf /= Void
-			file_exists: ptf /= Void
+			file_not_void: a_file_name /= Void
+			file_exists: a_file_name /= Void and then not a_file_name.is_empty
 			valid_document: a_doc /= Void and then a_doc.root_element.name.is_equal ("CONTEXT_DIAGRAM")
 		do
-			Precursor {CONTEXT_DIAGRAM} (ptf, a_doc)
+			Precursor {CONTEXT_DIAGRAM} (a_file_name, a_doc)
 		end
 
 	load_from_file (f: RAW_FILE) is

@@ -32,10 +32,10 @@ feature {NONE} -- Redirection
 			Result := Xml_routines.deserialize_document (a_file_path)
 		end
 		
-	save_xml_document (ptf: FILE; a_doc: XM_DOCUMENT) is
+	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
 			-- Redirection
 		do
-			Xml_routines.save_xml_document (ptf, a_doc)
+			Xml_routines.save_xml_document (a_file_name, a_doc)
 		end
 
 	valid_tags: INTEGER is

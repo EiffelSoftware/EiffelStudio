@@ -713,7 +713,7 @@ feature -- Action
 					metric_list.forth
 				end
 				node.put_last (measure_header)
-				save_xml_document (f, archive_header)
+				save_xml_document (f.name, archive_header)
 				tool.progress_dialog.hide
 			end
 		rescue

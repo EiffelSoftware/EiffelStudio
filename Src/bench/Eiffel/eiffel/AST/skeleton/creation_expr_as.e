@@ -51,6 +51,14 @@ feature {NONE} -- Initialization
 			location_set: location.is_equal (l)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_creation_expr_as (Current)
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

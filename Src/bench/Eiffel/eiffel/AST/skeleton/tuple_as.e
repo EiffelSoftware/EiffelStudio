@@ -11,6 +11,14 @@ inherit
 			type_check, byte_node, is_equivalent
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_tuple_as (Current)
+		end
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (exp: like expressions) is

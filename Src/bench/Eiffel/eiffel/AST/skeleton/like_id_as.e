@@ -26,6 +26,14 @@ feature {AST_FACTORY} -- Initialization
 			anchor_set: anchor = a
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_like_id_as (Current)
+		end
+
 feature -- Attributes
 
 	anchor: ID_AS

@@ -25,6 +25,14 @@ feature {AST_FACTORY} -- Initialization
 			bits_symbol_set: bits_symbol = s
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bits_symbol_as (Current)
+		end
+
 feature -- Attributes
 
 	bits_symbol: ID_AS

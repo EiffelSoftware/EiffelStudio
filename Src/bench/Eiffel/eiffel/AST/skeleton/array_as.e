@@ -23,6 +23,14 @@ feature {AST_FACTORY} -- Initialization
 			expressions_set: expressions = exp
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_array_as (Current)
+		end
+
 feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]

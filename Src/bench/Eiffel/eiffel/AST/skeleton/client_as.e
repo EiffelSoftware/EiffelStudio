@@ -26,6 +26,14 @@ feature {AST_FACTORY} -- Initialization
 			clients_set: clients = c
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_client_as (Current)
+		end
+
 feature -- Attributes
 
 	clients: EIFFEL_LIST [ID_AS]

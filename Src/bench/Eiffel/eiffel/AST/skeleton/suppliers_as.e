@@ -31,6 +31,14 @@ feature {NONE} -- Initialization
 			supplier_ids.compare_objects
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_suppliers_as (Current)
+		end
+
 feature -- Attributes
 
 	supplier_ids: TWO_WAY_SORTED_SET [ID_AS]

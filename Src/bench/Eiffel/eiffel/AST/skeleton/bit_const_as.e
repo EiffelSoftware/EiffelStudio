@@ -24,6 +24,14 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = b
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bit_const_as (Current)
+		end
+
 feature -- Attributes
 
 	value: ID_AS

@@ -57,6 +57,14 @@ feature {AST_FACTORY} -- Initialization
 			body_end_location_set: end_location.is_equal (end_pos)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_routine_as (Current)
+		end
+
 feature -- Attributes
 
 	body_start_position: INTEGER

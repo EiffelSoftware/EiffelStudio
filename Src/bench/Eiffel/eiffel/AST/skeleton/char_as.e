@@ -24,6 +24,14 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = c
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_char_as (Current)
+		end
+
 feature -- Properties
 
 	value: CHARACTER

@@ -8,7 +8,16 @@ class ONCE_AS
 inherit
 	INTERNAL_AS
 		redefine
+			process,
 			byte_node, is_once
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_once_as (Current)
 		end
 
 feature -- Properties

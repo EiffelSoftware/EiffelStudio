@@ -8,7 +8,16 @@ class REQUIRE_AS
 inherit
 	ASSERT_LIST_AS
 		redefine
+			process,
 			put_clause_keywords
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_require_as (Current)
 		end
 
 feature -- Properties

@@ -8,7 +8,16 @@ class ENSURE_THEN_AS
 inherit
 	ENSURE_AS
 		redefine
+			process,
 			is_then
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_ensure_then_as (Current)
 		end
 
 feature -- Properties

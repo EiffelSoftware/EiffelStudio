@@ -10,6 +10,7 @@ class SEPARATE_TYPE_AS
 inherit
 	CLASS_TYPE_AS
 		redefine
+			process,
 			initialize,
 			dump, simple_format,
 			actual_type, solved_type
@@ -36,6 +37,14 @@ feature {NONE} -- Initialization
 			else
 				Error_handler.make_separate_syntax_error
 			end
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_separate_type_as (Current)
 		end
 
 feature

@@ -11,6 +11,7 @@ inherit
 		rename
 			initialize as string_initialize
 		redefine
+			process,
 			simple_format
 		end
 
@@ -27,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 		ensure
 			value_set: value = s
 			verbatim_marker_set: verbatim_marker = marker
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_verbatim_string_as (Current)
 		end
 
 feature -- Properties

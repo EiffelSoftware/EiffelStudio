@@ -26,6 +26,14 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = v
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_constant_as (Current)
+		end
+
 feature -- Attributes
 
 	value: EXPR_AS

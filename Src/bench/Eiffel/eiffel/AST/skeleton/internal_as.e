@@ -23,6 +23,14 @@ feature {AST_FACTORY} -- Initialization
 			compound_set: compound = c
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_internal_as (Current)
+		end
+
 feature -- Attributes
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS]

@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = s
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_string_as (Current)
+		end
+
 feature -- Properties
 
 	value: STRING

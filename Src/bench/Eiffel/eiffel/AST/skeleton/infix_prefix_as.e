@@ -37,6 +37,14 @@ feature {NONE} -- Initialization
 			is_frozen_set: is_frozen = b
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_infix_prefix_as (Current)
+		end
+
 feature -- Properties
 
 	is_infix: BOOLEAN

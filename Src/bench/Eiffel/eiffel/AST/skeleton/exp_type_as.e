@@ -9,6 +9,7 @@ class EXP_TYPE_AS
 inherit
 	CLASS_TYPE_AS
 		redefine
+			process,
 			initialize,
 			actual_type, solved_type,
 			dump, simple_format
@@ -21,6 +22,14 @@ feature {AST_FACTORY} -- Initialization
 		do
 			Precursor {CLASS_TYPE_AS} (n, g)
 			record_expanded
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_exp_type_as (Current)
 		end
 
 feature {NONE} -- Initialization

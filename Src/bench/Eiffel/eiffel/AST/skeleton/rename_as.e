@@ -27,6 +27,14 @@ feature {AST_FACTORY} -- Initialization
 			new_name_set: new_name = n
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_rename_as (Current)
+		end
+
 feature -- Attributes
 
 	old_name: FEATURE_NAME

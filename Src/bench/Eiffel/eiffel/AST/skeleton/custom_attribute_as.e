@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			tuple_set: tuple = t
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_custom_attribute_as (Current)
+		end
+
 feature -- Access
 
 	creation_expr: CREATION_EXPR_AS

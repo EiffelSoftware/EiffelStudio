@@ -11,6 +11,14 @@ inherit
 			format
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_none_type_as (Current)
+		end
+
 feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): NONE_A is

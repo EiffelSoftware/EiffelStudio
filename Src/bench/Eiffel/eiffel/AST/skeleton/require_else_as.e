@@ -8,7 +8,16 @@ class REQUIRE_ELSE_AS
 inherit
 	REQUIRE_AS
 		redefine
+			process,
 			is_else
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_require_else_as (Current)
 		end
 
 feature -- Properties

@@ -26,6 +26,14 @@ feature {AST_FACTORY} -- Initialization
 			terminal_set: terminal = t
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_value_as (Current)
+		end
+
 feature -- Attributes
 
 	terminal: ATOMIC_AS

@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			assertion_list_set: assertion_list = a
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_invariant_as (Current)
+		end
+
 feature -- Attribute
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS]

@@ -127,6 +127,11 @@ feature {NONE} -- Windows
 			!! Result.make ("", eb_screen)
 		end
 
+	object_command_generator: OBJECT_COMMAND_GENERATOR is
+		once
+			!! Result.make ("", eb_screen)
+		end
+
 	tree: CONTEXT_TREE is
 		once
 			Result := main_panel.context_tree_widget

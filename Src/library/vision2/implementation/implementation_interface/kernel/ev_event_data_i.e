@@ -8,15 +8,20 @@ indexing
 deferred class
 	EV_EVENT_DATA_I
 	
-feature {NONE}  -- Initialization
+feature {NONE}  -- Creation
 	
 		
-	make (parent: EV_EVENT_DATA; p: POINTER) is
+	make (parent: EV_EVENT_DATA) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'	
-		deferred
+		do
+			interface := parent		
 		end
 
+	
+feature {NONE} -- Implementation
+	
+	interface: EV_EVENT_DATA
 end
 			
 	

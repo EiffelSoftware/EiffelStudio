@@ -18,6 +18,7 @@ typedef  struct callback_data {
     EIF_PROC rtn;
     EIF_OBJ obj;
     EIF_OBJ argument;
+    EIF_OBJ ev_data;
     EIF_PROC set_event_data;
 } callback_data_t;
 
@@ -47,10 +48,12 @@ void c_gtk_signal_destroy_data (gpointer data);
 /* Connect a call back to a widget/event pair */
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
-			   EIF_PROC func,
+			   EIF_PROC execute_func,
 			   EIF_POINTER object,
 			   EIF_POINTER argument,
+			   EIF_POINTER ev_data,
 			   EIF_PROC event_data_rtn);
+
 
 /* Disconnect a call back of a widget/event pair */
 void c_gtk_signal_disconnect (GtkObject *widget, 

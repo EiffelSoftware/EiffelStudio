@@ -145,7 +145,7 @@ feature -- Initialization
 			until
 				statstg = Void
 			loop
-				tvitem := new_tvitem (stor, clone (statstg.name))
+				tvitem := new_tvitem (stor, statstg.name.twin)
 				create tvinss.make
 				tex := stgty_string (statstg.type)
 				tex.append (statstg.name)

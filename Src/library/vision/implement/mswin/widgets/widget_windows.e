@@ -85,8 +85,6 @@ feature  -- Status report
 			-- Color used for the background.
 		local
 			wel_color: WEL_COLOR_REF
-			client_dc: WEL_CLIENT_DC
-			ww: WEL_WINDOW
 		do
 			Result := private_background_color
 			if Result = Void then
@@ -96,7 +94,7 @@ feature  -- Status report
 				Result.set_green (wel_color.green * 256)
 				Result.set_blue (wel_color.blue * 256)
 			end
-		end;
+		end
 
 	background_pixmap: PIXMAP;
 			-- Pixmap used for the background
@@ -463,9 +461,12 @@ feature -- Status setting
 	set_widget_default is
 			-- Set the defaults for current widget.
 		do
-			if managed and parent.realized then
+			if managed and then parent.realized then
 				realize;
 				parent.child_has_resized
+			elseif parent.realized and then not managed then
+				realize
+				set_managed (False)
 			end
 		end;
 

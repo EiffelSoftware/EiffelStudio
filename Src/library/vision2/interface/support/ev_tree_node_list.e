@@ -1,6 +1,7 @@
 indexing
 	description:
 		"Base class for EV_TREE and EV_TREE_ITEM."
+	status: "See notice at end of class"		
 	date: "$Date$"
 	revision: "$Revision$"
 

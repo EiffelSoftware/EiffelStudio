@@ -1,6 +1,7 @@
 indexing
 	description:
 		"Facilities for accessing standardized colors."
+	status: "See notice at end of class"
 	keywords: "color, default"
 	date: "$Date$"
 	revision: "$Revision$"

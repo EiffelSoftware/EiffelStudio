@@ -103,6 +103,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 								current_location->end_position += yyleng;
 								current_location->line_number = yylineno;}
 {D}+/".."					{return process_name(TE_INTEGER);}
+"~"							{return process(TE_TILDE);}
 ";"							{return process(TE_SEMICOLON);}
 ":"							{return process(TE_COLON);}
 ","							{return process(TE_COMMA);}

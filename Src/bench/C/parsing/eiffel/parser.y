@@ -86,6 +86,7 @@ int fbody_pos;		/* To memorize the beginning of a feature body */
 %token		TE_BANG
 %token		TE_BIT
 %token		TE_SEMICOLON
+%token		TE_TILDE
 %token		TE_COLON
 %token		TE_COMMA
 %token 		TE_CREATION
@@ -171,7 +172,8 @@ Actual_generics
 Formal_generics Formal_generic Constraint Creation_constraint Conditional Elsif Elsif_part
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
-Creation Creation_type Creation_target Creation_call Creation_expression Expression Actual_parameter
+Creation Creation_type Creation_target Creation_call Creation_expression
+Routine_creation Expression Actual_parameter
 Manifest_array Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
@@ -1089,6 +1091,10 @@ Creation_clause:			TE_CREATION
 								yacc_error_code=273;}
 	;
 
+Routine_creation:			TE_TILDE Feature_name
+								{$$ = create_node1(ROUTINE_CREATION_AS,click_list_elem($<value>2));}
+	;
+
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
 								{$$ = create_node3(CREATION_AS,$2,$4,$5);yacc_error_code=274;}
 	|						TE_CREATION Creation_target Creation_call
@@ -1257,6 +1263,8 @@ Feature_call:				Call_on_current
 	|						Call_on_precursor
 								{$$ = $1;yacc_error_code=334;}
 	|						Creation_expression
+								{$$ = $1;}
+	|						Routine_creation
 								{$$ = $1;}
 	;
 

@@ -1,6 +1,5 @@
 indexing
 	description: "MIDL component (coclass, interface)"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

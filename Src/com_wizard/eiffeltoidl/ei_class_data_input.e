@@ -1,6 +1,5 @@
 indexing
 	description: "Input class information"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

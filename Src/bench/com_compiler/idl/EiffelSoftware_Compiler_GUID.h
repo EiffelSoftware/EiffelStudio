@@ -133,6 +133,7 @@ enum
     DISPID_EiffelComCompiler_Culture,
     DISPID_EiffelComCompiler_KeyFileName,
     DISPID_EiffelComCompiler_WorkingDirectory,
+    DISPID_EiffelComCompiler_MetadataCachePath,
     DISPID_EiffelComCompiler_Apply,
 
     // IEiffelCompiler dispatch ID's

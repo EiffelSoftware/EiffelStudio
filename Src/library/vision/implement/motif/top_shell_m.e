@@ -25,24 +25,31 @@ creation
 
 	make
 
-feature 
+feature {NONE}
 
 	make (a_top_shell: TOP_SHELL; application_class: STRING) is
 			-- Create a motif top level shell.
 		local
-			ext_name_t_sh, ext_name_app_cl: ANY
+			ext_name_t_sh, ext_name_app_cl: ANY;
+			scr_obj: POINTER
 		do
+			widget_index := widget_manager.last_inserted_position;
 			oui_top := a_top_shell;
 			ext_name_t_sh := to_c_if_not_void (a_top_shell.identifier);
 			ext_name_app_cl := to_c_if_not_void (application_class);
-			screen_object := xt_create_top_level_shell (a_top_shell.screen.implementation.screen_object, $ext_name_t_sh, $ext_name_app_cl);
+			scr_obj := a_top_shell.screen.implementation.screen_object;
+			screen_object := xt_create_top_level_shell (scr_obj, 
+								$ext_name_t_sh, $ext_name_app_cl);
 			a_top_shell.set_wm_imp (Current);
-			xm_delete_window_protocol (a_top_shell.screen.implementation.screen_object, screen_object, Current, $delete_window_action);
+			cdfd := xm_delete_window_protocol (scr_obj,
+								screen_object, Current, 
+								$delete_window_action);
 		end
 
 feature {NONE} -- External features
 
-	xt_create_top_level_shell (scr_obj: POINTER; name1, name2: ANY): POINTER is
+	xt_create_top_level_shell (scr_obj: POINTER; 
+			name1, name2: ANY): POINTER is
 		external
 			"C"
 		end;

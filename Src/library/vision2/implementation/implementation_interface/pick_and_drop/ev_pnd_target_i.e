@@ -11,33 +11,50 @@ deferred class
 inherit
 	EV_ANY_I
 
+	EV_CUSTOM_EVENT_HANDLER [EV_PND_TYPE]
+		rename
+			has_command as has_pnd_command,
+			add_command as add_pnd_command,
+			remove_all_commands as remove_pnd_commands,
+			execute_command as execute_pnd_command
+		redefine
+			add_pnd_command,
+			remove_pnd_commands
+		end
+
 feature -- Access
 
 	add_pnd_command (type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed when
 			-- a data of type `type' is dropped into current target.
-		require
+		require else
 			exists: not destroyed
 			valid_type: type /= Void
 			valid_command: cmd /= Void
 		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
 			transporter: EV_PND_TRANSPORTER_IMP
-			com: EV_INTERNAL_COMMAND
 		do
 			create transporter
 			if not transporter.targets.has (Current) then
 				transporter.register (Current)
 			end
-			if pnd_commands_list = Void then
-				create pnd_commands_list.make (1)
+			Precursor (type, cmd, args)
+		end
+
+	remove_pnd_commands (type: EV_PND_TYPE) is
+			-- Remove the list of commands to be executed when
+			-- a data of type `type' is dropped into current target.
+		require else
+			exists: not destroyed
+			valid_type: type /= Void
+		local
+			transporter: EV_PND_TRANSPORTER_IMP
+		do
+			create transporter
+			if transporter.targets.has (Current) then
+				transporter.unregister (Current)
 			end
-			if pnd_commands_list.item (type) = Void then
-				create list.make
-				pnd_commands_list.force (list, type)
-			end
-			create com.make (cmd, args)
-			(pnd_commands_list.item (type)).extend (com)
+			Precursor (type)
 		end
 
 	add_default_pnd_command (cmd: EV_COMMAND; args: EV_ARGUMENT) is
@@ -48,40 +65,38 @@ feature -- Access
 			exists: not destroyed
 			valid_command: cmd /= Void
 		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			transporter: EV_PND_TRANSPORTER_IMP
-			com: EV_INTERNAL_COMMAND
 			zero_type: EV_PND_TYPE
 		do
-			create transporter
-			if not transporter.targets.has (Current) then
-				transporter.register (Current)
-			end
-			if pnd_commands_list = Void then
-				create pnd_commands_list.make (1)
-			end
 			create zero_type.make_with_id (0)
-			if pnd_commands_list.item (zero_type) = Void then
-				create list.make
-				pnd_commands_list.force (list, zero_type)
-			end
-			create com.make (cmd, args)
-			(pnd_commands_list.item (zero_type)).extend (com)
+			add_pnd_command (zero_type, cmd, args)
 		end
 
-feature {NONE} -- Access
-
-	pnd_commands_list: HASH_TABLE [LINKED_LIST [EV_INTERNAL_COMMAND], EV_PND_TYPE]
-			-- The list of the commands associated with the
-			-- target and their arguments.
+	remove_default_pnd_commands (type: EV_PND_TYPE) is
+			-- Remove the list of commands to be executed when
+			-- a data of type `type' is dropped into current target.
+		require else
+			exists: not destroyed
+			valid_type: type /= Void
+		local
+			zero_type: EV_PND_TYPE
+		do
+			create zero_type.make_with_id (0)
+			remove_pnd_commands (zero_type)
+		end
 
 feature {EV_PND_TRANSPORTER_I} -- Access
 
 	accept (data_type: EV_PND_TYPE): BOOLEAN is
 			-- Is Current accept this data type ?
+		local
+			zero_type: EV_PND_TYPE
 		do
-			if pnd_commands_list /= Void then
-				Result := pnd_commands_list.has (data_type)
+			if event_table /= Void then
+				create zero_type.make_with_id (0)
+				Result := has_pnd_command (zero_type)
+				if not Result then
+					Result := has_pnd_command (data_type)
+				end
 			else
 				Result := False
 			end
@@ -89,17 +104,17 @@ feature {EV_PND_TRANSPORTER_I} -- Access
 
 	receive (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA) is
 		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
+			list: DYNAMIC_LIST [EV_INTERNAL_COMMAND]
 			pnd_event_data: EV_PND_EVENT_DATA
 			zero_type: EV_PND_TYPE
 		do
-			if pnd_commands_list /= Void then
+			if event_table /= Void then
 				pnd_event_data := get_pnd_data (data_type, data, button_data)
 				create zero_type.make_with_id (0)
-				if pnd_commands_list.item (zero_type) /= Void then
-					list := pnd_commands_list.item (zero_type)
-				elseif pnd_commands_list.item (data_type) /= Void then
-					list := pnd_commands_list.item (data_type)
+				if has_pnd_command (zero_type) then
+					list := event_table.item (zero_type)
+				elseif has_pnd_command (data_type) then
+					list := event_table.item (data_type)
 				end
 				if list /= Void then
 					from

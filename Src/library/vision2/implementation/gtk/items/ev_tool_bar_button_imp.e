@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 		do
 			connect_signal_to_actions (
 				"clicked",
-				interface.press_actions,
+				interface.select_actions,
 				Void
 			)
 		end
@@ -153,6 +153,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/18 16:50:04  king
+--| Replaced press-actions -> select_actions
+--|
 --| Revision 1.22  2000/04/13 21:59:47  king
 --| Correct pointer equivalance from Void to Default_pointer
 --|

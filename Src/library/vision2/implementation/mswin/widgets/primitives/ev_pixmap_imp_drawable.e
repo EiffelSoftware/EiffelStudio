@@ -13,7 +13,8 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
-			interface
+			interface,
+			on_parented
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -813,6 +814,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/04/12 17:01:57  brendel
+--| Added redefinition of on_parented.
+--|
 --| Revision 1.1  2000/04/12 01:34:56  pichery
 --| New pixmap implementation.
 --| Use 3 differents states depending on

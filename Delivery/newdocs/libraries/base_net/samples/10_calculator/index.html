@@ -1,0 +1,121 @@
+<HTML>
+	<HEAD>
+		<TITLE>Calculator</TITLE>
+		<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+	</HEAD>
+	<BODY>
+		<H1>The Calculator Sample</H1>
+		<P>
+			This sample consists of a command line reverse Polish notation (RPN) calculator.
+		<P>
+		<P CLASS="note">
+			<B>Note:</B> A RPN calculator works slightly differently from standard calculators. It consists of a stack of numbers. Operations are applied to the two numbers on top of the stack. The result is then put on top of the stack so that it can be used in the next operation. This sample refers to the top of the stack as <I>Accumulator</I>.
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch EiffelBench.
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\base\calculator\</I>.
+			<LI>Choose <I>Ace.mswin.ace</I> on Windows platforms or <I>Ace.unix.ace</I> on Unix platforms.
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<P>
+		<H2>Running</H2>
+		<P>
+			After you launch the sample, the following text appears in a console:
+		</P>
+		<PRE>
+*********************************
+Calculator in reverse Polish form
+*********************************
+Allowable operations are:
+		'/': Divide top two numbers on the stack.
+		'0': Empty the stack.
+		'a': Enter operand onto stack.
+		'?': Help.
+		'*': Multiply top two numbers on the stack.
+		'+': Add top two numbers on the stack
+		'q': Quit.
+		'-': Subtract top two numbers on the stack.
+Enter a number, followed by <return>:
+		</PRE>
+		<P>
+			Enter the first number to be put onto the stack, for example <SPAN CLASS="esymbol">3</SPAN>.
+		</P>
+		<P CLASS="note">
+			<B>Note:</B> Failing to enter a number at this stage will cause the sample to stop. This sample was designed to showcase the use of EiffelBase.NET data structures and is not protected against unexpected entries.
+		</P>
+		<P>
+			You may then add another number on the stack by entering the character <SPAN CLASS="esymbol">a</SPAN>:
+		</P>
+		<PRE>
+*********************************
+Calculator in reverse Polish form
+*********************************
+Allowable operations are:
+        '/': Divide top two numbers on the stack.
+        '0': Empty the stack.
+        'a': Enter operand onto stack.
+        '?': Help.
+        '*': Multiply top two numbers on the stack.
+        '+': Add top two numbers on the stack
+        'q': Quit.
+        '-': Subtract top two numbers on the stack.
+Enter a number, followed by <return>: 3
+
+Accumulator = 3
+
+Next operation? a
+Enter a number, followed by <return>:
+		</PRE>
+		<P>
+			Enter a second number, for example <SPAN CLASS="esymbol">2</SPAN>. You can then apply any operation to the two operands such as minus:
+		</P>
+		<PRE>
+...
+Next operation? a
+Enter a number, followed by <return>: 2
+
+Accumulator = 2
+
+Next operation? -
+
+Accumulator = 1
+
+Next operation?
+		</PRE>
+		<P>
+			You may use the operation <SPAN CLASS="esymbol">0</SPAN> to clear the stack at any time. You may use <SPAN CLASS="esymbol">q</SPAN> to quit the program.
+		</P>
+		<P CLASS="tip">
+			<B>Tip:</B> You can use the command <SPAN CLASS="esymbol">?</SPAN> to display the list of available operations.
+		</P>
+		<H2>Under the Hood</H2>
+		<P>
+			This sample shows how to leverage EiffelBase.NET data structures in a simple Eiffel.NET system. The root class
+            <a CLASS="eclass" HREF="root_cluster/calculator.html">CALCULATOR</a> first instantiates all <I>state</I> objects, each corresponding to one possible operation. The state classes all inherit from <A CLASS="eclass" HREF="root_cluster/state.html">STATE</A>. They are:
+		</P>
+		<UL>
+			<LI><A CLASS="eclass" HREF="root_cluster/plus.html">PLUS</A>: Add stack's two top numbers.
+			<LI><A CLASS="eclass" HREF="root_cluster/minus.html">MINUS</A>: Substract stack's two top numbers.
+			<LI><A CLASS="eclass" HREF="root_cluster/multiply.html">MULTIPLY</A>: Multiply stack's two top numbers.
+			<LI><A CLASS="eclass" HREF="root_cluster/divide.html">DIVIDE</A>: Divide stack's two top numbers.
+			<LI><A CLASS="eclass" HREF="root_cluster/empty.html">EMPTY</A>: Empty stack.
+			<LI><A CLASS="eclass" HREF="root_cluster/help.html">HELP</A>: Prints available commands.
+			<LI><A CLASS="eclass" HREF="root_cluster/question.html">QUESTION</A>: Get number from user.
+			<LI><A CLASS="eclass" HREF="root_cluster/quit.html">QUIT</A>: Close application.
+		</UL>
+		Each of these classes implement the feature <A CLASS="efeature" HREF="root_cluster/state.html#f_do_one_state">do_one_state</A> from <A CLASS="eclass" HREF="root_cluster/state.html">STATE</A> which performs the operation associated with the state.
+		The initial state is <A CLASS="eclass" HREF="root_cluster/question.html">QUESTION</A> which asks for the initial number to put in the <I>accumulator</I>. Following states depend on the user input.<BR>
+		Every descendant of <A CLASS="eclass" HREF="root_cluster/state.html">STATE</A> implement the feature <A CLASS="efeature" HREF="root_cluster/state.html#f_operation">operation</A> which performs the corresponding stack transformation.
+		<P>
+			See the <A HREF="root_cluster/index.html">reference</A> for the class interfaces.<P>.NET
+        classes usually are not generic, but as we can notice in this example, <a href="root_cluster/hash_table_chart.html">HASH_TABLE</a>
+        is a generic one. Actually, this is a great example for implementation
+        and use of generic classes in the .NET technology.
+		<P>
+	</BODY>
+</HTML>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelBase Data Structures, Tables</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+
+	<BODY>
+        <h1>EiffelBase.Net interfaces</h1>
+        <h3><a name="Container">Abstract Container Structures: The Taxonomy</a></h3>
+        <p>A container data structure (or container in the sequel) is an object
+        which serves to store and access collections of objects, called the <b>items</b>
+        of the container. All classes describing containers are descendants of
+        the deferred class <a HREF="../../reference/10_kernel/container_chart.html">CONTAINER</a>.
+        <p>In EiffelBase.NET, a container can be studied from two viewpoints:
+        storage and traversal.
+        <ul>
+          <li>The <b>storage</b> criterion affects how the items are put
+            together into the clients of a container. For example some
+            containers are finite, others potentially infinite; among finite
+            structures, some are bounded, others unbounded.
+          <li>The <b>traversal</b> criterion affects how, if in any way, the
+            items of a container can be traversed. A traversal is a mechanism
+            which makes it possible to examine each item of a container once, in
+            a clearly specified order. For example some containers can be
+            traversed sequentially, in one direction or two; tree structures
+            lend themselves to preorder, postorder and breadth-first traversals.
+        </ul>
+        <p>For each of these criteria the Base library offers a
+        single-inheritance hierarchy of deferred classes. The top of the storage
+        hierarchy is class <a HREF="../../reference/10_kernel/box_chart.html">BOX</a>
+        and the top of the traversal hierarchy is class <a HREF="../../reference/10_kernel/traversable_chart.html">TRAVERSABLE</a>.
+        These two classes are heirs of the most general class, <a HREF="../../reference/10_kernel/container_chart.html">CONTAINER</a>.
+        <p><a name="Finite"></a>Class <a class="eclass" href="../../reference/10_kernel/finite_chart.html">FINITE</a>
+        extends class Box. It belongs to the storage hierarchy and indicates that the
+        client class that implements it describes finite
+            sequences.&nbsp;</p>
+        <p><a name="Linear"></a>Class <a CLASS="eclass" href="../../reference/10_kernel/linear_chart.html">LINEAR</a>
+        describes sequential structures that may be traversed one way. Let us
+        see how linear structures are implemented in more details.</p>
+        <h3>Linear structures</h3>
+        <p>Class <a CLASS="eclass" href="../../reference/10_kernel/linear_chart.html">LINEAR</a>
+        introduces in
+        particular the following features, illustrated on the figure below:</p>
+        <ul>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_after">after</a>, a
+            boolean-valued query which determines whether you have moved past<br>
+        the last position (a more precise specification is given below).</li>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_off">off</a>, a
+            boolean-valued query which is false if and only if there is no item at the
+            current position; for <a CLASS="eclass" href="../../reference/10_kernel/linear_chart.html">LINEAR</a>
+            this is the same as:<br>
+            <code>
+            <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_is_empty">is_empty</a>
+            <a CLASS="efeature" href="../../reference/10_kernel/boolean.html#f__infix_and">and</a>
+            <a CLASS="efeature" href="../../reference/10_kernel/boolean.html#f__prefix_not">not</a>
+            <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_after">after</a>
+            </code></li>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_item">item</a>, a query which returns the item at the current position - provided of course<br>
+        there is one, as expressed by the precondition:<br>
+        <code>
+         <a CLASS="efeature" href="../../reference/10_kernel/boolean.html#f__prefix_not">not</a>
+         <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_off">off</a>
+         </code></li>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_start">start</a>, a command to move to the first position if any (if
+            <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_is_empty">is_empty</a>
+          is true the command has no effect).</li>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_forth">forth</a>, a command to advance by one position; the precondition is not after.</li>
+          <li><a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_finish">finish</a>, a command to move to the last position; the precondition is:<br>
+          <code>
+          <a CLASS="efeature" href="../../reference/10_kernel/boolean.html#f__prefix_not">not</a>
+          <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_is_empty">is_empty</a>.
+         </code>
+          </ul>
+        <p><img border="0" src="../../../base/content/20_structures/linear.png" width="330" height="140"></p>
+        <p class="figuretitle">fig.1: Linear Structure</p>
+        <p>
+        There is also a procedure <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_search"> search</a> with one argument, which determines whether the
+        value of that argument appears in the structure at or after the current position, and if not
+        makes <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_after">after</a> become true. This procedure is internally used by the default
+        implementation of the <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_has">has</a>
+        function (the general membership test) for linear structures.
+        Like has for all containers, <a CLASS="efeature" href="../../reference/10_kernel/inear.html#f_search"> search</a>
+        uses object or reference equality depending on the value set for <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_object_comparison">object_comparison</a>.</p>
+        <p>
+        An invariant property of <a CLASS="eclass" href="../../reference/10_kernel/linear_chart.html">LINEAR</a>
+        structures is that the current position may go off one step past the last item if any, but no further. The precondition of
+        <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_forth">forth</a>
+        - not after - helps ensure this. The first item (if any) being at position 1, the maximum allowable
+        position is <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_count">count</a> + 1, where
+        <a CLASS="efeature" href="../../reference/10_kernel/linear.html#f_count">count</a>
+        is the number of items.</p>
+	</BODY>
+</HTML>

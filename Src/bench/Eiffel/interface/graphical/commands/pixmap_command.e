@@ -11,7 +11,8 @@ inherit
 		rename
 			make as pict_create
 		end;
-	BUILD_LIC
+	SHARED_PIXMAPS;
+	LICENCED_COMMAND
 
 feature {NONE}
 
@@ -55,61 +56,20 @@ feature
 
 feature -- Licence managment
 
-	license_problem: BOOLEAN;
-
 	license_window: LICENSE_W is
 		once
-			!! Result.make
+			!!Result.make;
 		end;
 
-	execute_licenced (argument: ANY) is
+	lost_licence_warning is
 		do
-			if license_problem then
-				license_problem := False;
-				if (argument = Void) then
-					license_window.set_exclusive_grab;
-					license_window.popup
-				end;
-			elseif licence_checked then
-				work (argument)
-			else
-				if licence.daemon_alive and then try_reconnect then
-					work (argument)
-				else
-					license_problem := True;
-					warner.custom_call (Current, "%
+			warner.custom_call (Current, "%
 						%You have lost your licence!%N%
 						%(You can still save your changes%N%
 						%and exit the project.)", "Close", "Info...", Void);
-				end;
-			end;
 		end;
 
-	try_reconnect: BOOLEAN is
-		do
-			if licence.registered then
-				licence.unregister;
-			end;
-			licence.register;
-			if licence.registered then
-				licence.open_licence;
-				Result := licence.licenced and then licence_checked;
-				if not Result then
-					licence.unregister;
-				end;
-			end;
---			if Result then
---				io.error.putstring ("ISE license manager: recognized application%N%
---					%Application now properly licensed%N");
---			end;
-		end;
 
-	licence_checked: BOOLEAN is
-		do
-			licence.alive;
-			Result := licence.is_alive;
-		end;
-	
 feature {TEXT_WINDOW}
 
 	command_name: STRING is deferred end;

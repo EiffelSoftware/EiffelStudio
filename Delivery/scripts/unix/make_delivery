@@ -67,7 +67,6 @@ md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Delivery/studio
-copy studio/config/unix studio/config/$ISE_PLATFORM
 rm -rf studio/config/windows
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
@@ -75,7 +74,7 @@ remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt -r $DEFAULT_CVS_TAG -d $ISE_PLATFORM Delivery/precomp/spec/unix
+exprt -r $DEFAULT_CVS_TAG -d unix Delivery/precomp/spec/unix
 cd $INSTALL_DIR
 remtrace wizards
 exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards
@@ -91,16 +90,6 @@ fullrf BCC55.tar.gz
 fullrf *.bat
 
 md docs
-
-remtrace Create directories
-safe_md $INSTALL_DIR/studio/spec
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-cd $INSTALL_DIR/studio/spec
-move unix/* $ISE_PLATFORM/bin
-fullrd unix
 
 cd $INIT_DIR
 give_time_to organize the delivery and to start filling it

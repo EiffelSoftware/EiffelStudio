@@ -88,11 +88,12 @@ feature -- Execution
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
 			kept_objects: LINKED_SET [STRING];
-			debug_text: TEXT_WINDOW;
+			debug_tool: PROJECT_W;
 			ready_to_run: BOOLEAN;
 			temp: STRING;
 			update_command: UPDATE_PROJECT;
-			project_w: PROJECT_W
+			project_w: PROJECT_W;
+			mp: MOUSE_PTR
 		do
 			if argument = melt_and_run then
 				project_w ?= text_window.tool;
@@ -115,7 +116,7 @@ debug
 	io.error.putstring (generator);
 	io.error.putstring (": Start execution%N");
 end;
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				!!makefile_sh_name.make_from_string (Workbench_generation_path);
 				makefile_sh_name.set_file_name (Makefile_SH);
 
@@ -134,11 +135,11 @@ end;
 							w_Makefile_more_recent (Makefile_SH), 
 							" OK ", Void, "Cancel")
 					else
-						restore_cursors;
+						mp.restore;
 						debug_window.clear_window;
 						debug_window.put_string ("Launching system...%N");
 						debug_window.display;
-						set_global_cursor (watch_cursor);
+						mp.set_watch_cursor;
 						Application.run (argument_window.argument_list);
 						if Application.is_running then
 							debug_window.clear_window;
@@ -160,7 +161,7 @@ end;
 					warner (text_window).gotcha_call 
 						(w_Must_compile_first)
 				end;
-				restore_cursors
+				mp.restore
 			else
 				status := Application.status;
 				if status.is_stopped then
@@ -169,12 +170,12 @@ debug
 	io.error.putstring (generator);
 	io.error.putstring (": Contine execution%N");
 end;
-					set_global_cursor (watch_cursor);
+					!! mp.set_watch_cursor;
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
 					kept_objects := window_manager.object_win_mgr.objects_kept;
-					debug_text ?= debug_window;
-					kept_objects.merge (debug_text.kept_objects);
+					debug_tool ?= Debug_window.tool;
+					kept_objects.merge (debug_tool.kept_objects);
 					Application.continue (kept_objects);
 					Window_manager.object_win_mgr.hang_on;
 					if status.e_feature /= Void then
@@ -184,7 +185,7 @@ end;
 					debug_window.clear_window;
 					debug_window.put_string ("System is running%N");
 					debug_window.display;
-					restore_cursors
+					mp.restore
 				end
 			end
 		end;

@@ -55,7 +55,7 @@ feature {NONE} -- Execution
 			ctxt.set_one_class_only;
 			ctxt.set_order_same_as_text;
 			ctxt.format (e_class);
-			if filter_name.empty then
+			if filter = Void or else filter_name.empty then
 				output_window.put_string (ctxt.text.image);
 			else
 				!! filter.make (filter_name);

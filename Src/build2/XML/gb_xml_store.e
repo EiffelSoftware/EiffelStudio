@@ -102,17 +102,16 @@ feature {GB_XML_HANDLER} -- Implementation
 				-- We must store the name and other attributes
 				-- which are used internallly. These are not in the
 				-- interface of Vision2
-			if an_object.xml_storage_required then
-				new_type_element := new_child_element (element, Internal_properties_string, "")
-				element.force_last (new_type_element)	
-				an_object.generate_xml (new_type_element)
+			new_type_element := new_child_element (element, Internal_properties_string, "")
+			element.force_last (new_type_element)
+			an_object.generate_xml (new_type_element)
 				-- Generate a name if `add_names'.
-			elseif add_names then
-				new_type_element := new_child_element (element, Internal_properties_string, "")
-				element.force_last (new_type_element)
-				new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
-				generated_names.force (new_name)
-				add_element_containing_string (new_type_element, name_string, new_name)--generate_new_name (an_object.short_type))
+			if add_names then
+				if an_object.name.is_empty then
+					new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
+					generated_names.force (new_name)
+					add_element_containing_string (new_type_element, name_string, new_name)--generate_new_name (an_object.short_type))
+				end
 			end
 			
 				-- Now store all attributes from interface of Vision2.

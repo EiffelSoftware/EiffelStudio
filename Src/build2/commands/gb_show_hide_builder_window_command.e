@@ -28,7 +28,7 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 			-- Create `Current'.
 		do
 			if builder_window /= Void then
-				is_selected := builder_window.is_show_requested
+				is_selected := window.is_show_requested
 			end
 		end
 

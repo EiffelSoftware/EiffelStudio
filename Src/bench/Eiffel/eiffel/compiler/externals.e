@@ -247,6 +247,9 @@ feature {NONE} -- Implementation
 			loop
 				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
 				is_cpp := is_cpp or else ext.extension.is_cpp
+				buffer.putstring ("/* ")
+				buffer.putstring (class_c.name)
+				buffer.putstring (" */")
 				ext.generate (class_type, buffer)
 				a_s.forth
 			end

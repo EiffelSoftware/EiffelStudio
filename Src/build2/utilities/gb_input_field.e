@@ -271,7 +271,9 @@ feature {NONE} -- Implementation
 	has_select_item: BOOLEAN is
 			-- Does `constants_combo_box' contain the select item entry?
 		do
-			 Result := constants_combo_box.i_th (1).text.is_equal (select_constant_string)
+			if not constants_combo_box.is_empty then
+				Result := constants_combo_box.i_th (1).text.is_equal (select_constant_string)
+			end
 		end
 
 

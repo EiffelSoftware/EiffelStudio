@@ -1036,12 +1036,12 @@ feature -- Class info
 				-- Predefined .NET basic types.
 			external_class_mapping.put (create {BOOLEAN_I}, "System.Boolean")
 			external_class_mapping.put (create {CHAR_I}.make (False), "System.Char")
-			external_class_mapping.put (create {LONG_I}.make (8), "System.Byte")
-			external_class_mapping.put (create {LONG_I}.make (16), "System.Int16")
-			external_class_mapping.put (create {LONG_I}.make (32), "System.Int32")
-			external_class_mapping.put (create {LONG_I}.make (64), "System.Int64")
-			external_class_mapping.put (create {FLOAT_I}, "System.Float")
-			external_class_mapping.put (create {DOUBLE_I}, "System.Double")
+			external_class_mapping.put (create {INTEGER_I}.make (8), "System.Byte")
+			external_class_mapping.put (create {INTEGER_I}.make (16), "System.Int16")
+			external_class_mapping.put (create {INTEGER_I}.make (32), "System.Int32")
+			external_class_mapping.put (create {INTEGER_I}.make (64), "System.Int64")
+			external_class_mapping.put (create {REAL_32_I}, "System.Float")
+			external_class_mapping.put (create {REAL_64_I}, "System.Double")
 			external_class_mapping.put (create {POINTER_I}, "System.IntPtr")
 
 			create signatures_table.make (0, class_count)
@@ -1181,6 +1181,11 @@ feature -- Class info
 						l_attributes)
 				end
 				current_module := l_cur_mod
+			end
+			
+			if is_cls_compliant then
+				define_custom_attribute (main_module.associated_assembly_token,
+					main_module.cls_compliant_ctor_token, cls_compliant_ca)
 			end
 		end
 
@@ -5026,7 +5031,7 @@ feature -- Constants generation
 			type_not_void: type /= Void 
 			type_is_long: type.is_long
 		local
-			long: LONG_I
+			long: INTEGER_I
 		do
 			long ?= type
 			inspect

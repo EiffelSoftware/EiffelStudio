@@ -25,7 +25,8 @@ inherit
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title, set_mode_for_editing, parse_file, resources
+			set_title, set_mode_for_editing, parse_file, resources,
+			history_window_title
 		end
 
 	BAR_AND_TEXT
@@ -41,7 +42,8 @@ inherit
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title, set_mode_for_editing, parse_file, resources
+			set_title, set_mode_for_editing, parse_file, resources,
+			history_window_title 
 		select
 			reset, make_shell
 		end;
@@ -157,7 +159,13 @@ feature -- Window Properties
 			-- Resource page for current tool
 		do
 			Result := Feature_resources
-		end
+		end;
+
+	history_window_title: STRING is
+			-- Title of the history window
+		do
+			Result := Interface_names.t_Select_feature
+		end;
 
 feature -- Resetting
 
@@ -368,7 +376,7 @@ feature -- Stone updating
 				showtext_frmt_holder.execute (a_stone);
 			else
 				last_format.execute (a_stone);
-				history.extend (a_stone);
+				history.extend (a_stone)
 				if last_format = default_format then
 					highlight_routine;
 				end;

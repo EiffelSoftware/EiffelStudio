@@ -47,6 +47,7 @@ extern "C" {
 /* Setting of `eif_is_new_independent_format' */
 RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);
 RT_LNK EIF_BOOLEAN eif_is_new_recoverable_format_active (void);
+RT_LNK void eif_set_new_recoverable_format (EIF_BOOLEAN);
 
 /*
  * Eiffel calls

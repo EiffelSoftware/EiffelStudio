@@ -56,6 +56,7 @@
 			<li><B>EV_FIXED</B> - No longer inherits DOUBLE_MATH.</li>
 			<li><B>EV_VIEWPORT</B> - No longer inherits DOUBLE_MATH.</li>
 			<li><B>EV_TEXT</B> - `line_count' now returns the number of lines actually displayed, and not just the newline characters, as an EV_TEXT will wrap the text when necessary. The postcondition of `linecount' has been updated to reflect this change.</li>
+			<li><B>EV_FILE_DIALOG</B> Added "valid_file_name" precondition to `set_file_name' and a new feature `valid_file_name' which checks that a file name is valid on the current platform.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>

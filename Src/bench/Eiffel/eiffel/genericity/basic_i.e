@@ -72,7 +72,7 @@ feature
 			file.putstring("RTLN(")
 			if workbench_mode then
 				file.putstring ("RTUD(")
-				file.putstring (associated_reference.id.generated_id)
+				associated_reference.id.generated_id (file)
 				file.putchar (')')
 			else
 				file.putint (associated_dtype)

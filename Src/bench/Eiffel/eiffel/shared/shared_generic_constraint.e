@@ -19,21 +19,16 @@ feature -- Delayed validity checking
 		end
 
 	add_future_checking(
-			gen_type_a: GEN_TYPE_A;
-			formal_dec_as: FORMAL_DEC_AS
-			constraint_type: TYPE_A;
 			context_class: CLASS_C;
-			to_check: TYPE_A;
-			i: INTEGER;
-			formal_type: FORMAL_A) is
+			p: PROCEDURE [ANY, TUPLE])
+		is
 				-- Gather all information which will enable to check that
 				-- all the declaration of generic classes conforms to the
 				-- generic creation constraint of the generic class.
 		local
 			t: CONSTRAINT_CHECKING_INFO
 		do
-			create t.make (gen_type_a, formal_dec_as, constraint_type, context_class,
-				to_check, i, formal_type)
+			create t.make (context_class, p)
 			remaining_validity_checking_list.extend (t)
 		end
 

@@ -253,7 +253,10 @@ feature -- Basic Operation
 							is_field: l_field /= Void
 						end
 						if is_consumed_field (l_field) then
-							l_fields.extend (consumed_field (l_field))						
+							l_fields.extend (consumed_field (l_field))
+							if is_public_static_field (l_field) then
+								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
+							end
 						end
 					elseif l_member.member_type = feature {MEMBER_TYPES}.property then
 						l_property ?= l_member
@@ -381,7 +384,6 @@ feature -- Basic Operation
 				i := i + 1
 			end
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -1178,7 +1180,24 @@ feature {NONE} -- Added features for ENUM types.
 				enum_type)
 			Result.set_is_artificially_added (True)				
 		end
-				
+
+	attribute_setter_feature (a_field: FIELD_INFO; a_field_name: STRING): CONSUMED_PROCEDURE is
+			-- attribute setter feature.
+		require
+			non_void_field: a_field /= Void
+			public_and_static_field: is_public_static_field (a_field)
+			valid_field_name: a_field_name /= Void and then not a_field_name.is_empty
+		local
+			l_eiffel_name: STRING
+			l_arg: CONSUMED_ARGUMENT
+		do		
+			l_eiffel_name := "set_" + a_field_name
+			create l_arg.make ( "a_value", "a_value", internal_referenced_type, False)
+			create Result.make_attribute_setter ( l_eiffel_name,
+												l_arg,
+												internal_referenced_type)
+		end
+
 	integer_type: CONSUMED_REFERENCED_TYPE is
 			-- Referenced type of `System.Int32'.
 		once
@@ -1212,7 +1231,6 @@ feature {NONE} -- Added features for ENUM types.
 			else
 				create Result.make_from_cil (val.to_string)
 			end
-
 		end
 
 	bytes_to_string (a: NATIVE_ARRAY [INTEGER_8]): STRING is
@@ -1239,17 +1257,17 @@ feature {NONE} -- Added features for ENUM types.
 		ensure
 			converted: Result /= Void and then not Result.is_empty
 		end
-		
+
 	Double_type: TYPE is
 			-- typeof (double)
 		once
 			Result := feature {TYPE}.get_type_string (("System.Double").to_cil)
 		end
-		
+
 	Real_type: TYPE is
 			-- typeof (float)
 		once
 			Result := feature {TYPE}.get_type_string (("System.Float").to_cil)
 		end
-		
+
 end -- class TYPE_CONSUMER

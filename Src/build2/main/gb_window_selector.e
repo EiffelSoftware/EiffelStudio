@@ -16,7 +16,7 @@ inherit
 			selected_item as tree_selected_item
 		export
 			{NONE} all
-			{ANY} start, off, forth, item, extend, wipe_out, is_empty
+			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all
 		redefine
 			initialize
 		end
@@ -297,6 +297,8 @@ feature -- Status setting
 		require
 			directory_item_not_void: directory_item /= Void
 			directory_item_not_parented: directory_item.parent = Void
+		local
+			command_add_directory: GB_COMMAND_ADD_DIRECTORY
 		do
 			extend (directory_item)
 		ensure
@@ -367,7 +369,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				from
 					a_directory.start
 				until
-					a_directory.after
+					a_directory.is_empty
 				loop
 					window_item ?= a_directory.item
 					check
@@ -419,28 +421,38 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 				-- is Void, as it will be when picked from the type selector.
 		end
 		
-feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
+feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 
-	update_class_files_location (window_item: GB_WINDOW_SELECTOR_ITEM; current_directory, new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
-			-- Update generated classes of object associated with `window_item' for a move from `current_directory' to `new_directory'.
+	update_class_files_location (window_item: GB_WINDOW_SELECTOR_ITEM; an_original_directory, a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+			-- Update generated classes of object associated with `window_item' for a move from `an_original_directory' to `new_directory'.
 		require
 			window_item_not_void: window_item /= Void
-			-- `current_directory' and `new_directory' area allowed be Void if moving to/from the root.
+			-- `an_original_directory' and `a_new_directory' area allowed be Void if moving to/from the root.
 		local
 			original, new: FILE_NAME
+			original_directory, new_directory: DIRECTORY
 		do
 			create original.make_from_string (generated_path.string)
-			if current_directory /= Void then
-				original.extend (current_directory.text)	
+			if an_original_directory /= Void then
+				original.extend (an_original_directory.text)	
 			end
 			create new.make_from_string (generated_path.string)
-			if new_directory /= Void then
-				new.extend (new_directory.text)	
+			if a_new_directory /= Void then
+				new.extend (a_new_directory.text)	
 			end
-			move_file_between_directories (create {DIRECTORY}.make (original), create {DIRECTORY}.make (new),
-				window_item.object.name.as_lower + ".e")
-			move_file_between_directories (create {DIRECTORY}.make (original), create {DIRECTORY}.make (new),
-				(window_item.object.name + Class_implementation_extension).as_lower + ".e")
+			original_directory := create {DIRECTORY}.make (original)
+			new_directory := create {DIRECTORY}.make (new)
+			
+				-- If the directories do not exist, then create them. They may have been removed from
+				-- outside Build.
+			if not new_directory.exists then
+				create_directory (new_directory)
+			end
+			if not original_directory.exists then
+				create_directory (original_directory)
+			end
+			move_file_between_directories (original_directory, new_directory, window_item.object.name.as_lower + ".e")
+			move_file_between_directories (original_directory, new_directory, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end
 
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
@@ -525,16 +537,19 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		end
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
-		
-	add_named_directory (directory_name: STRING) is
-			-- Add a new directory named `directory_name' to `Current'.
+	
+	silent_add_named_directory (directory_name: STRING) is
+			-- Add a new directory named `directory_name' to `Current',
+			-- but do not mark it as a command, simply add a new item in `Current'.
+			-- This will be called by `undo' of GB_COMMAND_DELETE_DIRECTORY and
+			-- must not affect the command history.
 		require
 			name_valid: directory_name /= Void and not directory_name.is_empty
 		local
-			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			create layout_item.make_with_name (directory_name)
-			extend (layout_item)
+			create directory_item.make_with_name (directory_name)
+			extend (directory_item)
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
 			command_handler.update
@@ -543,6 +558,22 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	add_named_directory (directory_name: STRING) is
+			-- Add a new directory named `directory_name' to `Current'.
+		require
+			name_valid: directory_name /= Void and not directory_name.is_empty
+		local
+			command_add_directory: GB_COMMAND_ADD_DIRECTORY
+		do
+			create command_add_directory.make (directory_name)
+			command_add_directory.execute
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		ensure
+			count_increaed: count = old count + 1
+		end
 
 	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Change the root window of the project to `titled_window_object'.

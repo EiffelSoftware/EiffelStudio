@@ -191,27 +191,36 @@ feature -- Transformation
 			if c = '%N' then
 				insert_eol (False)
 			else
+				update_x_in_pixels
 				s := clone (token.image)
-				s.insert (c.out, pos_in_token)
-				t_before := token.previous
-				if (t_before /= Void) then
+				if token = line.end_token then
+					s := c.out
+				else
+					s.insert (c.out, pos_in_token)
+				end
+				from
+					t_before := token.previous
+				until
+					t_before = Void
+				loop
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.next
-				if (t_after /= line.end_token) then
-					s.append (t_after.image)
-					t_after := t_after.next
+				if token.next /= Void then
+					from
+						t_after := token.next
+					until
+						t_after = line.end_token
+					loop
+						s.append (t_after.image)
+						t_after := t_after.next
+					end
 				end
 				whole_text.lexer.execute (s)
-				if t_before = Void then
-					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
-				else
-					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
-				end
+				line.make_from_lexer (whole_text.lexer)
+				update_current_char
+				go_right_char
 			end
-			update_current_char
-			go_right_char
 		end
 
 	delete_char is
@@ -219,27 +228,36 @@ feature -- Transformation
 			t_before, t_after: EDITOR_TOKEN
 			s: STRING
 		do
+			update_x_in_pixels
 			if token = line.end_token then
-					line.merge_with_next_line (whole_text.lexer)
+				s := line.image + line.next.image
+				line.next.delete
+				whole_text.lexer.execute (s)
+				line.make_from_lexer (whole_text.lexer)
 			else
 				s := clone (token.image)
 				s.remove (pos_in_token)
-				t_before := token.previous
-				if (t_before /= Void) then
+				from
+					t_before := token.previous
+				until
+					t_before = Void
+				loop
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.next
-				if (t_after /= line.end_token) then
+				check
+					not_on_eol: token.next /= Void
+				end
+				from
+					t_after := token.next
+				until
+					t_after = line.end_token
+				loop
 					s.append (t_after.image)
 					t_after := t_after.next
 				end
 				whole_text.lexer.execute (s)
-				if t_before = Void then
-					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
-				else
-					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
-				end
+				line.make_from_lexer (whole_text.lexer)
 			end
 			update_current_char				
 		end
@@ -251,28 +269,39 @@ feature -- Transformation
 		do
 			if c = '%N' then
 				insert_eol (True)
+			elseif token = line.end_token then
+					s := line.image + c.out
+					whole_text.lexer.execute (s)
+					line.make_from_lexer (whole_text.lexer)
+					set_current_char (line.end_token, line.end_token.length)
 			else
+				update_x_in_pixels
 				s := clone (token.image)
 				s.put (c, pos_in_token)
-				t_before := token.previous
-				if (t_before /= Void) then
+				from
+					t_before := token.previous
+				until
+					t_before = Void
+				loop
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.next
-				if (t_after /= line.end_token) then
+				check
+					not_on_eol: token.next /= Void
+				end
+				from
+					t_after := token.next
+				until
+					t_after = line.end_token
+				loop
 					s.append (t_after.image)
 					t_after := t_after.next
 				end
 				whole_text.lexer.execute (s)
-				if t_before = Void then
-					line.replace_beginning_from_lexer (whole_text.lexer, t_after)
-				else
-					line.replace_from_lexer (whole_text.lexer, t_before, t_after)
-				end
+				line.make_from_lexer (whole_text.lexer)
+				update_current_char
+				go_right_char
 			end
-			update_current_char
-			go_right_char
 		end
 
 	delete_previous is
@@ -292,7 +321,9 @@ feature -- Transformation
 			new_line : EDITOR_LINE
 		do
 			if token = line.end_token then
+				update_x_in_pixels
 				create new_line.make_empty_line
+				line.add_right (new_line)
 			else
 				t_image := token.image
 				if overwrite_current_char then
@@ -314,37 +345,30 @@ feature -- Transformation
 				delete_after_cursor
 				whole_text.lexer.execute (s)
 				create new_line.make_from_lexer (whole_text.lexer)
+				line.add_right (new_line)
 			end
-			line.add_right (new_line)
+			go_right_char
 		end
 
 	delete_after_cursor is
 			-- Erase from cursor (included) to end of line.
 		local
-			t_eol: EDITOR_TOKEN_EOL
-			prev_token: EDITOR_TOKEN
+			t: EDITOR_TOKEN
 			s: STRING
-			
 		do
+			update_x_in_pixels
 			if token /= line.end_token then
-				prev_token := token.previous
---				if pos_in_token = 1 then
---					create t_eol.make
---					if prev_token = Void then
---						line.set_first_token (t_eol)
---					else
---						prev_token.set_next (t_eol)
---						t_eol.set_previous (prev_token)
---					end
---					line.set_end_token (t_eol)
---				else
 				s := token.image.substring (1, pos_in_token - 1)
-				whole_text.lexer.execute (s)
-				if prev_token = Void then
-					line.replace_beginning_from_lexer (whole_text.lexer, line.end_token)
-				else
-					line.replace_from_lexer (whole_text.lexer, prev_token, line.end_token)
+				from
+					t := token.previous
+				until
+					t = Void
+				loop
+					s.prepend (t.image)
+					t := t.previous
 				end
+				whole_text.lexer.execute (s)
+				line.make_from_lexer (whole_text.lexer)
 			end
 			update_current_char
 		end
@@ -435,6 +459,30 @@ feature {NONE} -- Implementation
 				token := line.end_token
 				pos_in_token := 1
 			end
+		end
+
+	update_x_in_pixels is
+			-- Update x_in_pixels from `token' and `pos_in_token'
+		local
+			current_width: INTEGER
+			current_token: EDITOR_TOKEN
+		do
+				-- Compute the size of the current token.
+			current_width := token.get_substring_width(pos_in_token - 1)
+
+				-- Rewind the tokens of the line to get
+				-- the width of each one.
+			from
+				current_token := token.previous
+			until
+				current_token = Void
+			loop
+				current_width := current_width + current_token.width
+				current_token := current_token.previous
+			end
+
+				-- Update the value of `x_in_pixels'
+			x_in_pixels := current_width
 		end
 
 feature {NONE} -- Private attributes

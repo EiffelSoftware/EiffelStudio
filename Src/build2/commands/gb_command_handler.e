@@ -142,7 +142,6 @@ feature -- Access
 			-- Modeless by default.
 		once
 			create Result.make
-			Result.enable_selected
 		end
 
 feature -- Basic operation

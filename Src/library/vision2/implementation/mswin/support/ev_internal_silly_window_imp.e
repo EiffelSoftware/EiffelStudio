@@ -116,9 +116,17 @@ feature {NONE} -- Implementation
 				-- http://support.microsoft.com/support/kb/articles/Q104/0/69.asp
 				-- we simply forward the message to the new parent
 
-				info.window_from.parent.on_wm_notify (wparam, lparam)
-				set_message_return_value (info.window_from.parent.message_return_value)
+				-- Also we need to force a new level on the return message stack
+				-- because WEL_DISPATCHER does not do it in this case.
 				
+				info.window_from.parent.increase_level
+				info.window_from.parent.on_wm_notify (wparam, lparam)
+				if
+					info.window_from.parent.has_return_value
+				then
+					set_message_return_value (info.window_from.parent.message_return_value)
+				end
+				info.window_from.parent.decrease_level
 			end
 		end
 		 		

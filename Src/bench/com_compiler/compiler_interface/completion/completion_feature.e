@@ -140,7 +140,7 @@ feature -- Access
 	signature: STRING is
 			-- Main feature signature
 		do
-			Result := clone (name)
+			Result := name.twin
 			if arguments_internal.count > 0 then
 				Result.append (" (")
 			end
@@ -301,11 +301,12 @@ feature {NONE} -- Implementation
 			-- Signature of function with parameters `parameters'
 		require
 			non_void_parameters: a_parameters /= Void
+			non_void_name: name /= Void
 		local
 			i, parameters_count: INTEGER
 			rgelt: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]
 		do
-			Result := clone (name)
+			Result := name.twin
 			parameters_count := a_parameters.count
 			if parameters_count > 0 then
 				Result.append (" (")

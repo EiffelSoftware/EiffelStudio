@@ -99,9 +99,9 @@ feature {NONE} -- Implementation
 					if is_listed (l_feature_i, class_i, l_class_i) then
 						extract_description (l_feature_i, l_class_i, a_name)
 						if Result = Void then
-							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
+							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 						else
-							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump, clone (extracted_description))								
+							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump, extracted_description.twin)
 						end
 					end
 					l_overloaded_features.forth
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 					l_feature_i := feature_table.found_item
 					if a_ignore_call_type or is_listed (l_feature_i, class_i, l_class_i) then
 						extract_description (l_feature_i, l_class_i, a_name)
-						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
+						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end
 			end
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			if l_last_spc > 0 then
 				Result := a_target.substring (l_last_spc + 1, a_target.count)
 			else
-				Result := clone (a_target)
+				Result := a_target.twin
 			end
 		ensure
 			non_void_result: Result /= Void

@@ -66,6 +66,16 @@ feature -- Access
 			Result := Version_number
 		end
 
+	expand_path (a_path: STRING): STRING is
+			-- Epxand all env vars in the given path
+		do
+		end
+		
+	shrink_path (a_path: STRING): STRING is
+			-- Shrink the given path to use the common know Eiffel env vars
+		do
+		end
+	
 	has_signable_generation: BOOLEAN is
 			-- Does the compiler allow for assemblies to be signed
 		do

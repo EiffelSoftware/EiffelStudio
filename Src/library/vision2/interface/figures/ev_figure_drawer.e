@@ -182,9 +182,9 @@ feature -- Figure drawing
 	draw_figure_line (line: EV_FIGURE_LINE) is
 			-- Draw standard representation of `line' to canvas.
 		local
-			s, t: EV_RELATIVE_POINT
 			p: EV_FIGURE_POLYGON
 			d: like drawable
+			point_a, point_b: EV_RELATIVE_POINT
 		do
 			d := drawable
 			d.set_foreground_color (line.foreground_color)
@@ -196,9 +196,6 @@ feature -- Figure drawing
 					line.start_angle
 					)
 					d.fill_polygon (p.point_array)
-					s := line.start_draw_point
-				else
-					s := line.point_a
 				end
 				if line.is_end_arrow then
 					p := line.end_arrow
@@ -206,19 +203,15 @@ feature -- Figure drawing
 						line.end_angle
 					)
 					d.fill_polygon (p.point_array)
-					t := line.end_draw_point
-				else
-					t := line.point_b
 				end
-			else
-				s := line.point_a
-				t := line.point_b
 			end
 			if line.dashed_line_style then
 				d.enable_dashed_line_style
 			end
 			d.set_line_width (line.line_width)
-			d.draw_segment (s.x_abs, s.y_abs, t.x_abs, t.y_abs)
+			point_a := line.point_a
+			point_b := line.point_b
+			d.draw_segment (point_a.x_abs, point_a.y_abs, point_b.x_abs, point_b.y_abs)
 			if line.dashed_line_style then
 				d.disable_dashed_line_style
 			end

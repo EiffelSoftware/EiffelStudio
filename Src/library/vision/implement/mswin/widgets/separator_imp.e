@@ -121,9 +121,9 @@ feature -- Status setting
 			-- Set the separator to be Windows 3D
 		do
 			if is_horizontal then
-				set_form_height (6)
+				set_form_height (4)
 			else
-				set_form_width (6)
+				set_form_width (4)
 			end
 			w3d_separator := True
 		end
@@ -333,9 +333,9 @@ feature -- Status setting
 			end
 
 			if flag then
-				set_form_height (6)
+				set_form_height (4)
 			else
-				set_form_width (6)
+				set_form_width (4)
 			end
 
 			if exists then

@@ -101,24 +101,11 @@ feature {NONE} -- Initialization
 			one_arg: n_args = 1
 		local
 			l_item: EV_LIST_ITEM_IMP
-			--item_alloc_y: INTEGER
-			--v_adjustment: POINTER
 		do
 			switch_to_browse_mode_if_necessary		
 		 	l_item ?= eif_object_from_c (
 				gtk_value_pointer (args)
 			)
-
-			-- Move down in to ev_list_imp or refactor a scrolled window pointer.
-			-- item_alloc_y := C.gtk_allocation_struct_y (
-			--	C.gtk_widget_struct_allocation (l_item.c_object)
-			-- )
-			--if item_alloc_y /= -1 then
-				--print ("Scroll window to " + item_alloc_y.out + "%N")
-			--	v_adjustment := C.gtk_scrolled_window_get_vadjustment (c_object)
-			--	C.set_gtk_adjustment_struct_value (v_adjustment, item_alloc_y)
-			--	C.gtk_scrolled_window_set_vadjustment (c_object, v_adjustment)
-			--end
 			call_select_actions (l_item)
 		end
 
@@ -436,6 +423,9 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/29 22:33:34  king
+--| Removed scrollable code
+--|
 --| Revision 1.7  2001/06/15 17:42:26  etienne
 --| Fixed problem with focus_in/out_actions in combo boxes.
 --|

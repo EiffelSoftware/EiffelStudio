@@ -1,11 +1,13 @@
+indexing
+	description: "Client window where drawing will be performed"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	CLIENT_WINDOW
 
 inherit
 	WEL_CONTROL_WINDOW
-		rename
-			make as old_make,
-			move_and_resize as old_move_and_resize
 		redefine
 			on_wm_close,
 			class_background,
@@ -14,26 +16,7 @@ inherit
 		end
 
 create
-	make, make_by_pointer
-
-feature -- Initialization
-
-	make (win: WEL_COMPOSITE_WINDOW ; a_name: STRING) is
-			-- Create client window with its two children, each with its own thread.
-		do
-			old_make (win, a_name)
-		end
-
-feature -- Behavior
-
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Handle window displacement and resizing.
-		do
-			old_move_and_resize (a_x, a_y, a_width, a_height, true)
-
-				-- See if the threads were launched and send them
-				-- a 'resize' message
-		end
+	make
 
 feature -- Redefine features
 
@@ -52,10 +35,14 @@ feature -- Redefine features
 
 feature {NONE} -- Implementation
 
-	default_ex_style: INTEGER is 768
+	default_ex_style: INTEGER is
 			-- Style of Client Window.
+		do
+			Result := Ws_ex_overlappedwindow
+		end
 
 	class_name: STRING is
+			-- Name of window class.
 		once
 			Result := "Client Window"
 		end

@@ -1,3 +1,8 @@
+indexing
+	description: "Application root class which creates first window and launch the event loop."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class
 	APPLICATION
 
@@ -7,18 +12,18 @@ inherit
 			init_application
 		end
 
-	APPLICATION_IDS
-
 create
 	make
 
-feature
+feature -- Access
 
 	main_window: MAIN_WINDOW is
 			-- Create the application's main window
 		once
 			create Result.make
 		end
+
+feature -- Initialization
 
 	init_application is
 			-- Load the common controls dll

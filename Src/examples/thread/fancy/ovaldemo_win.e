@@ -1,26 +1,30 @@
+indexing
+	description: "Window in which ovals are drawn."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	OVAL_DEMO_WINDOW
 
 inherit
 	DEMO_WIN
+		rename
+			fig_demo_cmd as oval_demo_cmd
+		end
 
 create
 	make
 
-feature -- deferred
+feature -- Implementation
 	
 	launch_demo is
 		do
-			create oval_demo_cmd.make_in ( ptr_window)
+			create oval_demo_cmd.make_in (client_window, display_mutex)
 			oval_demo_cmd.launch
 		end
 
 	oval_demo_cmd: OVAL_DEMO_CMD
-
-	fig_demo_cmd: DEMO_CMD is
-		do
-			Result := oval_demo_cmd
-		end
+			-- To draw ovals.
 
 	title: STRING is "Ovals"
 			-- Title of the window.

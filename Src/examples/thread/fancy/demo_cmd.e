@@ -1,32 +1,44 @@
+indexing
+	description: "Abstract class for commands that draws figures in a window."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 deferred class
 	DEMO_CMD
 
 inherit
 	WEL_STANDARD_COLORS
 	THREAD
-	MEMORY
 
 feature {NONE} -- Initialization
 
-	make_in (ptr: POINTER) is
+	make_in (a_client: like client_window; a_mutex: like display_mutex) is
+		require
+			a_client_not_void: a_client /= Void
+			a_mutex_not_void: a_mutex /= Void
 		do
-			ptr_window := ptr
+			client_window := a_client
+			display_mutex := a_mutex
 			create mutex_continue
 			create thread_continue
 			thread_continue.set_item (True)
-			create proxy_continue.put (thread_continue)
+		ensure
+			client_window_set: client_window = a_client
+			display_mutex_set: display_mutex = a_mutex
 		end
 
 feature -- Threads
-	ptr_window: POINTER
-			-- Pointer to the shared client window, on
-			-- which the thread draws.
+
+	display_mutex: MUTEX
+			-- Since display is a bottleneck on Windows, serialization
+			-- of the drawing operations are done through this mutex.
+
 	mutex_continue: MUTEX
-			-- Protection lock for `proxy_continue'.
+			-- Protection lock for `thread_continue'.
+
 	client_window: CLIENT_WINDOW
 			-- Client window rebuilt from `ptr_window'.
-	proxy_continue: PROXY[like thread_continue]
-			-- Proxy to `thread_continue'.
+
 	thread_continue: BOOLEAN_REF
 			-- Flag, which indicates if the thread must continue.
 			
@@ -34,14 +46,18 @@ feature -- Threads
 
 	execute is
 			-- Draw rectangles, until window closed.
+		local
+			l_msg: WEL_MSG
 		do
 				-- Rebuilt the shared client window from C.
-			create client_window.make_by_pointer (ptr_window)
 			from
+				create l_msg.make
 			until 
-				is_thread_continue
+				not is_thread_continue
 			loop
+				display_mutex.lock
 				draw (client_window)
+				display_mutex.unlock
 			end
 		end
 
@@ -49,7 +65,7 @@ feature -- Threads
 			-- Must the thread continue?
 		do
 			mutex_continue.lock
-			Result := proxy_continue.item.item = False
+			Result := thread_continue.item
 			mutex_continue.unlock
 		end
 
@@ -57,7 +73,7 @@ feature -- Threads
 			-- Tell the thread to stop.
 		do
 			mutex_continue.lock
-			proxy_continue.item.set_item (False)
+			thread_continue.set_item (False)
 			mutex_continue.unlock
 		end
 
@@ -65,6 +81,8 @@ feature -- Basic operations
 
 	draw (t_parent: CLIENT_WINDOW) is 
 			-- Routine executed by new thread.
+		require
+			t_parent_not_void: t_parent /= Void
 		deferred
 		end
 
@@ -117,7 +135,6 @@ feature {NONE} -- Implementation
 		end
 
 end -- class DEMO_CMD
-
 
 --|----------------------------------------------------------------
 --| EiffelThread: library of reusable components for ISE Eiffel.

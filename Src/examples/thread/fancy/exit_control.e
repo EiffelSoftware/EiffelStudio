@@ -1,13 +1,10 @@
 indexing
-	description: "Objects that synchronizes all the threads%
-		% when exiting."
-	author: "Interactive Software Engineering."
+	description: "Objects that synchronizes all the threads when exiting."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EXIT_CONTROL
-
 
 feature -- Access
 
@@ -16,13 +13,19 @@ feature -- Access
 			-- of EiffelThreads.
 		once
 			create Result
+		ensure
+			exit_mutex_not_void: exit_mutex /= Void
 		end
 
 	demos_list: LINKED_LIST [DEMO_WIN] is
 			-- Record all demo windows running a thread.
+			-- Access needs to be protected using `exit_mutex'.
 		once
 			create Result.make
+		ensure
+			demos_list_not_void: Result /= Void
 		end
+
 end -- class EXIT_CONTROL
 
 --|----------------------------------------------------------------

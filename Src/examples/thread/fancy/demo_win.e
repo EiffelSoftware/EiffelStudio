@@ -1,3 +1,8 @@
+indexing
+	description: "Ancestor to windows that draw figures."
+	date: "$Date$"
+	revision: "$Revision$"
+
 deferred class
 	DEMO_WIN
 
@@ -17,13 +22,15 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (a_mutex: like display_mutex) is
+		require
+			a_mutex_not_void: a_mutex /= Void
 		do
 			exit_mutex.lock
+			display_mutex := a_mutex
 			make_top (title)
 			resize (200,200)
 			create  client_window.make (Current, "Client Window")
-			ptr_window := client_window.item
 			launch_demo
 			resize (200,200)
 			show
@@ -48,15 +55,12 @@ feature	-- Deferred
 
 feature -- Access
 
-	ptr_window: POINTER
-		-- Pointer to shared C client window.
-		-- With the Eiffel Threads, we can only share
-		-- flat Eiffel objects, but we share the encapsulated
-		-- C client window for the Windows library.
-
 	client_window: CLIENT_WINDOW
 		-- Shared client window on which thread draws.
 
+	display_mutex: MUTEX
+			-- Since display is a bottleneck on Windows, serialization
+			-- of the drawing operations are done through this mutex.
 
 feature -- Threads
 
@@ -109,9 +113,7 @@ feature -- Redefined features
 			Result := True
 		end
 
-
 end -- class DEMO_WIN
-
 
 --|----------------------------------------------------------------
 --| EiffelThread: library of reusable components for ISE Eiffel.

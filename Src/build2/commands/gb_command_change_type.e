@@ -82,6 +82,7 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			new_object.set_name (original_object.name)
 			command_handler.update
 		end
 		
@@ -95,6 +96,7 @@ feature -- Basic Operation
 			current_object := Object_handler.deep_object_from_id (new_id)
 
 			object_handler.replace_object (current_object, original_object)
+			current_object.set_name (original_object.name)
 			current_object.layout_item.update_pixmap
 			command_handler.update
 		end

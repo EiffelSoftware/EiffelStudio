@@ -3,15 +3,20 @@ class BIN_OR_ELSE_AS_B
 inherit
 
 	BIN_OR_ELSE_AS
-		rename
-			left as old_or_else_left,
-			right as old_or_else_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+	
+	right: EXPR_AS_B
 
 feature
 

@@ -3,17 +3,22 @@ class BIN_MOD_AS_B
 inherit
 
 	BIN_MOD_AS
-		rename
-			left as old_mod_left,
-			right as old_mod_right
+		redefine
+			left, right
 		end;
 
 	ARITHMETIC_AS_B
 		undefine
 			balanced
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

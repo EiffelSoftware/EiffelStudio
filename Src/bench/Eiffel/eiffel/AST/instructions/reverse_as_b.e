@@ -11,21 +11,25 @@ class REVERSE_AS_B
 inherit
 	
 	REVERSE_AS
-		rename
-			target as old_target,
-			source as old_source
+		redefine
+			target, source
 		end;
 
 	ASSIGN_AS_B
 		undefine
 			assign_symbol
 		redefine
-			check_validity, byte_node
-		select
+			check_validity, byte_node,
 			target, source
 		end
 
-feature
+feature -- Properties
+
+	source: EXPR_AS_B;
+
+	target: ACCESS_AS_B
+
+feature -- Access
 
 	check_validity is
 			-- Check validity of the reverse assignment

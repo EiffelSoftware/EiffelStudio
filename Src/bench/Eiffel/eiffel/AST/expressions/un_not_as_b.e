@@ -3,18 +3,20 @@ class UN_NOT_AS_B
 inherit
 	
 	UN_NOT_AS
-		rename
-			expr as old_not_expr
+		redefine
+			expr
 		end;
 
 	UNARY_AS_B
 		undefine
 			operator_is_keyword
 		redefine
-			byte_node
-		select
-			expr
+			byte_node, expr
 		end
+
+feature -- Property
+
+	expr: EXPR_AS_B
 
 feature -- Type check
 

@@ -9,18 +9,21 @@ class VARIANT_AS_B
 inherit
 
 	VARIANT_AS
-		rename
-			tag as old_variant_tag,
-			expr as old_variant_expr
+		redefine
+			tag, expr
 		end;
 
 	TAGGED_AS_B
 		redefine
-			byte_node, type_check
-		select
-			tag, expr
+			byte_node, type_check, tag, expr
 		end
 
+feature -- Properties
+
+	expr: EXPR_AS_B;
+
+	tag: ID_AS_B	
+	
 feature
 
 	type_check is

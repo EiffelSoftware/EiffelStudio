@@ -3,19 +3,22 @@ class BIN_AND_AS_B
 inherit
 
 	BIN_AND_AS
-		rename
-			left as old_left,
-			right as old_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
 		undefine
 			bit_balanced
 		redefine
-			bit_balanced, byte_anchor
-		select
-			left, right
+			bit_balanced, byte_anchor, left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

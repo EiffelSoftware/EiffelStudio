@@ -3,15 +3,20 @@ class BIN_GE_AS_B
 inherit
 
 	BIN_GE_AS
-		rename
-			left as old_ge_left,
-			right as old_ge_right
+		redefine
+			left, right
 		end;
 
 	COMPARISON_AS_B
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

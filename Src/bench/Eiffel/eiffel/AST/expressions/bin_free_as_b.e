@@ -9,24 +9,27 @@ class BIN_FREE_AS_B
 inherit
 
 	BIN_FREE_AS
-		rename
-			left as old_free_left,
-			right as old_free_right
 		redefine
-			op_name, set_infix_function_name
+			op_name, set_infix_function_name,
+			left, right
 		end;
 
 	BINARY_AS_B
 		undefine
 			set, operator_is_keyword
-		select
+		redefine
 			left, right
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	op_name: ID_AS_B;
 			-- Free operator name
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
+	
 
 feature
 

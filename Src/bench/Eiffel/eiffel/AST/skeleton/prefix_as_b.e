@@ -11,20 +11,22 @@ class PREFIX_AS_B
 inherit
 
 	PREFIX_AS
-		rename
-			fix_operator as old_fix_operator
 		undefine
 			internal_name, infix "<", 
 			temp_name
+		redefine
+			fix_operator
 		end;
 
 	INFIX_AS_B
 		undefine
 			Fix_notation, is_infix, is_prefix
-		select
+		redefine
 			fix_operator
 		end
 
-feature
+feature -- Property
+
+	fix_operator: STRING_AS_B
 
 end -- class PREFIX_AS_B

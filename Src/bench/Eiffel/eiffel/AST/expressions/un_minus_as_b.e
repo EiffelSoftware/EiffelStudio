@@ -3,16 +3,18 @@ class UN_MINUS_AS_B
 inherit
 
 	UN_MINUS_AS
-		rename
-			expr as old_minus_expr
+		redefine
+			expr
 		end;
 
 	UNARY_AS_B
 		redefine
-			byte_node
-		select
-			expr
+			byte_node, expr
 		end
+
+feature -- Property
+
+	expr: EXPR_AS_B
 
 feature -- Type check
 

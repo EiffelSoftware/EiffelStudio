@@ -3,15 +3,20 @@ class BIN_AND_THEN_AS_B
 inherit
 
 	BIN_AND_THEN_AS
-		rename
-			left as old_left,
-			right as old_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

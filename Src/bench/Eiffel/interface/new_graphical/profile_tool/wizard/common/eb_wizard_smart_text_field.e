@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			else
 					-- Retrieve the string from the textfield, and set
 					-- the starting directory with it if it's a directory.
-				start_directory := clone (textfield.text)
+				start_directory := textfield.text.twin
 				
 				if not start_directory.is_empty then
 					end_char := start_directory @ start_directory.count

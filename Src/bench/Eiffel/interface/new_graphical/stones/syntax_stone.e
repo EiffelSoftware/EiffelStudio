@@ -56,7 +56,7 @@ feature -- Access
 
 	help_text: STRING is
 		do
-			Result := clone (Interface_names.h_No_help_available)
+			Result := Interface_names.h_No_help_available.twin
 		end
 
 	history_name: STRING is

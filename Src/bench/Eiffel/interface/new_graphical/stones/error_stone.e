@@ -57,8 +57,8 @@ feature -- Access
 			-- Content of the file where the help is.
 		do
 			Result := origin_text
-			if Result = Void or else Result.is_equal ("") then
-				Result := clone (Interface_names.h_No_help_available)
+			if Result = Void or else Result.is_empty then
+				Result := Interface_names.h_No_help_available.twin
 			end
 		end
 

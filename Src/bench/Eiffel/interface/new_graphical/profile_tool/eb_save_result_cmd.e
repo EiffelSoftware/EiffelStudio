@@ -46,7 +46,7 @@ feature -- Access
 			file_name: STRING
 			file_opener: EB_FILE_OPENER
 		do
-			file_name := clone (dialog.file_name)
+			file_name := dialog.file_name.twin
 			create file_opener.make_with_parent (Current, file_name, query_window)
 		end
 

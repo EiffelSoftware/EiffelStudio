@@ -37,8 +37,7 @@ feature -- Access
 
 	stone_signature: STRING is
 		do
-			Result := clone (cluster_i.cluster_name)
-		--	Result.to_upper
+			Result := cluster_i.cluster_name.twin
 		end
 
 	header: STRING is

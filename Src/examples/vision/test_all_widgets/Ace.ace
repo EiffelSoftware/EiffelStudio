@@ -53,7 +53,7 @@ cluster
                         
 -- EiffelVision
 
-        vision:                 	"$EIFFEL4/library/base";
+        vision:                 	"$EIFFEL4/library/vision";
 	vision_kernel (vision):         "$/oui/kernel";
 	vision_widgets (vision):        "$/oui/widgets";
 	vision_context_data (vision):	"$/oui/context_data";

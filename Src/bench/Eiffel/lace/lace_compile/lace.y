@@ -125,11 +125,13 @@ Cluster_clause_list: Cluster_clause ASemi
 	;
 
 Cluster_clause: Name Parent_tag LAC_COLON Name
-			{ $$ := new_cluster_sd ($1, $2, $4, Void) }
+			{ $$ := new_cluster_sd ($1, $2, $4, Void, False) }
+	|	LAC_ALL Name Parent_tag LAC_COLON Name
+			{ $$ := new_cluster_sd ($2, $3, $5, Void, True) }
 	|	Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
-			{ $$ := new_cluster_sd ($1, $2, $4, $5) }
---	|	Name Parent_tag LAC_COLON Name LAC_END
---			{ $$ := new_cluster_sd ($1, $2, $4, Void) }
+			{ $$ := new_cluster_sd ($1, $2, $4, $5, False) }
+	|	LAC_ALL Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
+			{ $$ := new_cluster_sd ($2, $3, $5, $6, True) }
 	;
 
 Parent_tag: -- Empty

@@ -181,7 +181,6 @@ feature -- Generation
 			end;
 			file.putstring ("};%N")
 			file.putstring ("int16 *");
-			file.putchar ('*');
 			file.putstring (c_name);
 			file.putstring (" = ");
 			file.putstring (static_prefix);

@@ -7,13 +7,13 @@ indexing
 	
 class
 	
-	EV_VERTICAL_SPLIT_IMP
+	EV_VERTICAL_SPLIT_AREA_IMP
 	
 inherit
 	
-	EV_VERTICAL_SPLIT_I
+	EV_VERTICAL_SPLIT_AREA_I
 		
-	EV_SPLIT_IMP
+	EV_SPLIT_AREA_IMP
 		redefine
 			child_minheight_changed,
 			wel_window
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 
 	wel_window: EV_WEL_VERTICAL_SPLIT_WINDOW
 
-end -- EV_VERTICAL_SPLIT_IMP
+end -- EV_VERTICAL_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

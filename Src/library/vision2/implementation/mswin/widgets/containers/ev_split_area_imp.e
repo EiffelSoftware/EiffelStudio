@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_SPLIT_IMP
+	EV_SPLIT_AREA_IMP
 	
 inherit
-	EV_SPLIT_I
+	EV_SPLIT_AREA_I
 
 	EV_CONTAINER_IMP
 		redefine
@@ -103,7 +103,7 @@ feature -- Implementation
 
 	wel_window: EV_WEL_SPLIT_WINDOW
 
-end -- class EV_SPLIT_IMP
+end -- class EV_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision vertical split, gtk implementation."
+		"EiffelVision horizontal split, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -9,13 +9,13 @@ indexing
 	
 class
 	
-	EV_VERTICAL_SPLIT_IMP
+	EV_HORIZONTAL_SPLIT_AREA_IMP
 	
 inherit
 	
-	EV_VERTICAL_SPLIT_I
+	EV_HORIZONTAL_SPLIT_AREA_I
 		
-	EV_SPLIT_IMP
+	EV_SPLIT_AREA_IMP
 	
 creation
 	
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
         make (par: EV_CONTAINER) is
                         -- Create a fixed widget. 
 		do
-			widget := gtk_vpaned_new 
+			widget := gtk_hpaned_new 
 		end	
 	
 end

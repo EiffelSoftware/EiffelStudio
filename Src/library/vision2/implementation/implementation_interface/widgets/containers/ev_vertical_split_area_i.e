@@ -1,30 +1,17 @@
 indexing
 
 	description: 
-		"EiffelVision split, implementation interface."
+		"EiffelVision vertical split, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	EV_SPLIT_I
+	EV_VERTICAL_SPLIT_AREA_I
 	
 inherit
-	EV_CONTAINER_I
-	
-feature {EV_SPLIT} -- Implementation
-	
-	add_child1 (child_imp: EV_WIDGET_I) is
-			-- Add the first child of the split.
-		deferred
-		end
-	
-	add_child2 (child_imp: EV_WIDGET_I) is
-			-- Add the second child.
-		deferred
-		end
-
+	EV_SPLIT_AREA_I
 end
 
 --|----------------------------------------------------------------

@@ -1,64 +1,34 @@
 indexing
 
 	description: 
-	"SPLIT_DEMO_WINDOW, demo window to test split_area widget. Belongs to EiffelVision example."
+		"EiffelVision vertical split, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class 
-	SPLIT_DEMO_WINDOW
-
+class
+	
+	EV_VERTICAL_SPLIT_AREA_IMP
+	
 inherit
-
-	DEMO_WINDOW
+	
+	EV_VERTICAL_SPLIT_AREA_I
+		
+	EV_SPLIT_AREA_IMP
 	
 creation
-
+	
 	make
 
-feature -- Access
-
-	main_widget: EV_VERTICAL_SPLIT is
-		once
-			!!Result.make (Current)
-		end
+feature {NONE} -- Initialization
 	
-	
-	h: EV_HORIZONTAL_SPLIT
-	
-			
-			-- Push buttons
-feature -- Status setting
-	
-	set_widgets is
-		local
-			c: DESTROY_COMMAND
-			a: EV_ARGUMENT1 [EV_WIDGET]
-			b: EV_BUTTON
-			t: EV_TEXT_AREA
+        make (par: EV_CONTAINER) is
+                        -- Create a fixed widget. 
 		do
-			-- The first child of the vertical split is a 
-			-- horizontal split
-			!!h.make (main_widget)
-			-- The first child of the horizontal split is a button
-			!!b.make_with_text (h, "Hello")
-			-- There is no second child for the horizontal
-			-- split (this is acceptable)
-			
-			-- The second child of the vertical split is a
-			-- text area
-			!!t.make (main_widget)
-		end
+			widget := gtk_vpaned_new 
+		end	
 	
-feature -- Status setting
-	
-	set_values is
-		do
-			set_title ("Split demo")
-		end
-
 end
 
 --|----------------------------------------------------------------

@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v_imp /= void
 			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
-
+			v_imp.set_item_parent_imp (Current)
 
 			temp_string := ("button-press-event").to_c
 			temp_sig_id := c_signal_connect (

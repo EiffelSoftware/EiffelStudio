@@ -35,18 +35,11 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
-		local
-			--imp: EV_ANY_I
 		do
 			add_to_container (v)
 			if i < count then
 				reorder_child (v, i)
 			end
-
-		--	imp ?= v.implementation
-		--	check
-		--		imp_not_void: imp /= Void
-		--	end
 			on_new_item (v)
 		end
 
@@ -55,22 +48,19 @@ feature {NONE} -- Implementation
 		local
 			p: POINTER
 			a_child_list: POINTER
-			--w_imp: EV_WIDGET_IMP
+			imp: EV_ITEM_IMP
 		do
 			a_child_list := C.gtk_container_children (list_widget)
 			p := C.g_list_nth_data (
 				a_child_list,
 				i - 1)
 			C.g_list_free (a_child_list)
-		--	w_imp ?= eif_object_from_c (p)
-		--	check
-		--		w_imp_not_void: w_imp /= Void
-		--	end
-		--	remove_item_actions.call ([w_imp])
 
 			C.gtk_object_ref (p)
 			C.gtk_container_remove (list_widget, p)
 			C.gtk_object_unref (p)
+			imp ?= eif_object_from_c (p)
+			imp.set_item_parent_imp (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -94,6 +84,7 @@ feature {NONE} -- Obsolete
 				v_imp_not_void: v_imp /= Void
 			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
+			v_imp.set_item_parent_imp (Current)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is

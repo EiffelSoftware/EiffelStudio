@@ -9,7 +9,7 @@ class
 
 inherit
 
-	EV_DIALOG
+	EV_WINDOW
 
 	EV_COMMAND
 		undefine
@@ -44,17 +44,17 @@ feature -- Initialization
 
 			create vb
 			vb.set_padding (3)
-			vb.set_border_width (2)
+--			vb.set_border_width (2)
 			vb.extend (list)
-			vb.extend (exit_b)
-			vb.disable_item_expand (exit_b)		
+--			vb.extend (exit_b)
+--			vb.disable_item_expand (exit_b)		
 
 			default_create
 			set_title ("Choice Window")
 
 			extend (vb)
-			set_default_push_button (exit_b)
-			set_default_cancel_button (exit_b)
+--			set_default_push_button (exit_b)
+--			set_default_cancel_button (exit_b)
 
 			show_actions.extend (~on_shown)
 		end
@@ -141,12 +141,12 @@ feature
 			-- The dialog is being displayed.
 			-- Give the focus to the list.
 		do
-			if not list.is_empty then
-				list.first.enable_select
-			end
 			list.set_focus
-			exit_b.focus_out_actions.wipe_out
-			exit_b.focus_out_actions.extend (~one_lost_focus)
+			if not list.is_empty then
+				list.i_th (2).enable_select
+			end
+--			exit_b.focus_out_actions.wipe_out
+--			exit_b.focus_out_actions.extend (~one_lost_focus)
 			list.focus_out_actions.wipe_out
 			list.focus_out_actions.extend (~one_lost_focus)
 			focus_out_actions.wipe_out

@@ -67,6 +67,8 @@ inherit
 	EV_ANY_HANDLER
 	
 	GB_SHARED_ID
+	
+	GB_SHARED_STATUS_BAR
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 	
@@ -316,6 +318,8 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 			an_object: GB_OBJECT
 			a_component: GB_COMPONENT
 			new_type: STRING
+			new_short_type: STRING
+			funct_result: BOOLEAN
 		do
 			an_object ?= object_representation
 				-- We get the new type of the object to be added. With this
@@ -323,6 +327,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 				-- a child of this type.
 			if an_object /= Void then
 				new_type := an_object.type
+				new_short_type := an_object.short_type
 			else
 				-- If we are not an object, then we must be a component.
 				a_component ?= object_representation
@@ -330,6 +335,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 					is_component: a_component /= Void
 				end
 				new_type := a_component.root_element_type
+				new_short_type := new_type.substring (4, new_type.count)
 			end
 			Result := True
 			create env
@@ -343,23 +349,76 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 							-- We only need to check this if we are not a component,
 							-- as this means there is no way we could be contained in `Current'.
 						if an_object /= Void then
-							Result := Result and override_drop_on_child (an_object)
+							funct_result := override_drop_on_child (an_object)
+							if not funct_result then
+									-- Now display output if we are attempting to insert the object in itself
+									-- or one of its children.
+								display_parent_in_child_message (an_object, parent_object, new_type)			
+							end
+							Result := Result and funct_result
 						end
-						Result := Result and local_parent_object.accepts_child (new_type)
+						funct_result := local_parent_object.accepts_child (new_type)
+							-- We now display information in status bar regarding full status.
+						display_invalid_drop_message (parent_object, new_type, funct_result)
+						Result := Result and funct_result
 					end
 				else
 					Result := False
 				end
 			else
 				Result := not is_full
-				Result := Result and accepts_child (new_type)
+
+				funct_result := accepts_child (new_type)
+					-- We now display information in status bar regarding full status.
+				display_invalid_drop_message (Current, new_type, funct_result)					
+				Result := Result and funct_result
 					-- We only need to check this if we are not a component,
 					-- as this means there is no way we could be contained in `Current'.
 				if an_object /= Void then
-					Result := Result and override_drop_on_child (an_object)
+					funct_result := override_drop_on_child (an_object)
+					if not funct_result then
+							-- Now display output if we are attempting to insert the object in itself
+							-- or one of its children.
+						display_parent_in_child_message (an_object, Current, new_type)
+					end
+					Result := Result and funct_result
 				end
 			end
+			if Result then
+				status_bar_label.remove_text
+			end
 		end
+		
+	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: boolean) is
+			-- Display message in status bar indicating the invalid drop status of `obj2'.
+			-- `new_type' is the type of the transported object, and `does_accept_child' is
+			-- result of last call to `override_drop_on_child' which is False if the child is
+			-- of the wrong type to be contained.
+		require
+			target_not_void: obj2 /= Void
+			new_type_not_empty: new_type /= Void and not (new_type.count = 0)
+		do
+			if obj2.is_full and obj2.layout_item.count = 0 then
+				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children.")
+			elseif not does_accept_child then
+				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
+			elseif obj2.is_full then
+				set_status_text ("Pointed target (" + obj2.short_type + ") is full.")
+			end
+		end
+		
+		
+	display_parent_in_child_message (obj1, obj2: GB_OBJECT; new_type: STRING) is
+			-- Display message in status bar indicating that `ob1' cannot be parented
+			-- in `obj2' as `ob2' is `obj1' or is parent of `obj1'.
+		do
+			if obj1 = obj2 then
+				set_status_text ("Cannot parent " + new_type + " in itself.")
+			else
+				set_status_text ("Cannot parent " + new_type + " in one of its children.")
+			end
+		end
+		
 
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
@@ -376,16 +435,11 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
 		
 	accepts_child (a_type: STRING):BOOLEAN is
-			-- Does `Current' accept `an_object'. By default,
-			-- widgets are accepted. Redefine in primitives
-			-- that must hold items to allow insertion.
-		local
-			current_type: INTEGER
+			-- Does `Current' accept `an_object'.
+			-- Redefine in descendents to allow children
+			-- of correct type to be added.
 		do
-			current_type := dynamic_type_from_string (a_type)
-			if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_string)) then
-				Result := True
-			end
+			Result := False
 		end
 
 feature -- Basic operations

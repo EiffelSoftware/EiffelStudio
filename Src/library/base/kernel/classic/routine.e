@@ -164,7 +164,7 @@ feature -- Status report
 				-- Void operands are only allowed
 				-- if object has no open operands.
 				Result := (open_map = Void)
-			elseif open_map /= Void and then args.count >= open_map.count then
+			elseif open_map /= Void and then eif_gen_count ($args) >= open_map.count then
 				from
 					create int
 					i := 1
@@ -698,6 +698,11 @@ feature {NONE} -- Externals
 		external "C | %"eif_gen_conf.h%""
 		end
 
+	eif_gen_count (obj: POINTER): INTEGER is
+			-- Number of generic parameters of `obj'.
+		external
+			"C | %"eif_gen_conf.h%""
+		end
 
 feature -- Obsolete
 

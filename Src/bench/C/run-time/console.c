@@ -196,3 +196,11 @@ FILE *f;
 #endif
 }
 
+public void console_file_close (f)
+FILE *f;
+{
+#ifdef __WATCOMC__
+#else
+	file_close (f);
+#endif
+}

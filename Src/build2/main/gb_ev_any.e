@@ -149,7 +149,7 @@ feature -- Status setting
 feature {GB_XML_STORE} -- Output
 
 	
-	generate_xml (element: XML_ELEMENT) is
+	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		require
 			element_not_void: element /= Void
@@ -170,7 +170,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Status setting
 		
-	modify_from_xml (element: XML_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		require
 			element_not_void: element /= Void
@@ -179,7 +179,7 @@ feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Status setting
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting
 		
-	modify_from_xml_after_build (element: XML_ELEMENT) is
+	modify_from_xml_after_build (element: XM_ELEMENT) is
 			-- Redefine in any descendents that must perform part of
 			-- their building at the end of the load/build cycle.
 			-- Example  - GB_EV_BOX
@@ -189,7 +189,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_CODE_GENERATOR} -- Status setting
 
-	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of settings held in `Current' which is
 			-- in a compilable format.
 			-- `element' is the XML element that contains information about `Current'.

@@ -43,7 +43,11 @@ extern int fides;			/* File descriptor used by `store_write' */
 extern void st_write();			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
 
+#ifdef EIF_WINDOWS
+public void buffer_write(char *data, int size);
+#else
 extern void buffer_write();
+#endif
 extern void flush_st_buffer();
 
 extern int current_position;

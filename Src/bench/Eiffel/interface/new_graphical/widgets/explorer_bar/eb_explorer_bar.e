@@ -176,7 +176,10 @@ feature -- Access
 			-- `a_widget' has been maximized in `Current'.
 		require
 			a_widget_not_void: a_widget /= Void
+		local
+			cursor: CURSOR
 		do
+			cursor := item_list.cursor
 				-- Must mark all other items as non maximized.
 				-- This is a "brute force" method, as their is no easy way
 				-- to know when an expanded items state changes as a result of 
@@ -195,6 +198,9 @@ feature -- Access
 			if full_maximize and boolean_resource_value ("editor_maximized", True) then
 				explorer_bar_manager.close_all_bars_except (Current)
 			end
+			item_list.go_to (cursor)
+		ensure
+			item_list_index_not_changed: item_list.index = old item_list.index
 		end
 		
 	item_restored (a_widget: EV_WIDGET) is
@@ -203,7 +209,9 @@ feature -- Access
 			a_widget_not_void: a_widget /= Void
 		local
 			restored_item: EB_EXPLORER_BAR_ITEM
+			cursor: CURSOR
 		do
+			cursor := item_list.cursor
 			from
 				item_list.start
 			until
@@ -219,6 +227,9 @@ feature -- Access
 			end
 			restored_item.internal_set_restored
 			restored_item.explorer_bar_manager.restore_bars
+			item_list.go_to (cursor)
+		ensure
+			item_list_index_not_changed: item_list.index = old item_list.index
 		end
 
 	on_item_shown (an_item: EB_EXPLORER_BAR_ITEM) is
@@ -227,7 +238,9 @@ feature -- Access
 			an_item_not_void: an_item /= Void
 		local
 			curr_item: EB_EXPLORER_BAR_ITEM
+			cursor: CURSOR
 		do
+			cursor := item_list.cursor
 			explorer_bar_manager.force_display_bar (Current)
 
 				-- One item at most if explorer bar style.
@@ -244,6 +257,9 @@ feature -- Access
 					item_list.forth
 				end
 			end
+			item_list.go_to (cursor)
+		ensure
+			item_list_index_not_changed: item_list.index = old item_list.index
 		end
 
 	save_to_resource: ARRAY [STRING] is

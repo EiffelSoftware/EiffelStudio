@@ -311,36 +311,6 @@ feature -- Access
 			Result := cluster_of_name (override_cluster_name)
 		end;
 
-feature -- Output
-
-	generate_cluster_list (st: STRUCTURED_TEXT) is
-			-- Generate the cluster list for universe to `st'.
-		require
-			valid_st: st /= Void
-		local
-			c: CLUSTER_I;
-			s_name: STRING
-		do
-			s_name := clone (System.system_name);
-			s_name.to_upper;
-			st.add (ti_Before_class_declaration);
-			st.add_string (s_name);
-			st.add_new_line
-			st.add_new_line
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				c := clusters.item;
-				st.add_indent;
-				st.add_cluster (c, c.name_in_upper);
-				st.add_new_line
-				clusters.forth
-			end
-			st.add (ti_After_class_declaration);
-		end;
-
 feature -- Update
 
 	update_cluster_paths is

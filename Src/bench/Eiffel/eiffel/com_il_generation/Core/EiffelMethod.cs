@@ -1,3 +1,15 @@
+/*
+indexing
+	description: "Abstract representation of an Eiffel routine that will be generated
+		in either an interface or a class. Goal is to create a XXBuilder where XX represents
+		either an attribute or a routine. And if it is an attribute, we automatically have
+		its `SetterBuilder' needed to set the attribute value. To create the XXBuilder
+		we need some info stored in `info' and once it is created `info' is set to
+		Void and thus saving us a lot of space in memory during the code generation".
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -6,99 +18,63 @@ using System.Runtime.InteropServices;
 
 internal class EiffelMethod
 {
-	// Set `ParentTypeId' with `TypeID'.
 	public EiffelMethod( int ID, int arg_count) {
-		TypeID = ID;
-		MethodBuilderCreated = false;
-		ParameterNames = new string [arg_count];
-		ParameterTypeIDs = new int [arg_count];
-		FeatureID = EiffelReflectionEmit.NoValue;
+		argument_count = arg_count;
+		parameter_type_ids = new int [arg_count];
 		ReturnTypeID = EiffelReflectionEmit.NoValue;
-		IsAttribute = false;
-		IsDeferred = false;
-		IsRedefined = false;
+		info = new FEATURE_INFO(arg_count);
 	}
 
-	// TypeID of containing class
-	protected int TypeID;
-	
-	// .NET Name if any
-	public string RealName;
+	// Feature information
+	private FEATURE_INFO info;
 
-	// Eiffel Name always set
-	public string EiffelName;
+	// Parameter TypeIDs
+	public int[] parameter_type_ids;
+
+	// Number of argument of current routine
+	public int argument_count;
 
 	// Final name of method
 	public string Name() {
-		if (RealName == null)
-			return EiffelName;
+		if (info == null)
+			return Builder.Name;
 		else
-			return RealName;
+			return info.name ();
 	}
-
-	// Is feature deferred?
-	public bool IsDeferred;
-	
-	// Is feature redefined/implemented from parent?
-	public bool IsRedefined;
 
 	// Is feature an attribute?
 	public bool IsAttribute;
 	
-	// Is feature a static?
-	public bool IsStatic;
-
 	// Is feature a C external one?
 	public bool Is_C_External;
 	
-	// Is feature frozen?
-	public bool IsFrozen;
-
-	// Is feature an invariant?
-	public bool IsInvariant;
-
 	// Is feature a creation routine?
 	public bool IsCreationRoutine;
 
 	// Return Type identifier in class
 	public int ReturnTypeID;
-	
-	// Feature identifier in class
-	public int FeatureID;
 
-	// Belongs to interface
-	public bool IsInterfaceRoutine;
-	
 	// Associated Method builder to a routine
-	internal MethodBase Builder;
+	internal MethodInfo Builder;
 	internal MethodBuilder SetterBuilder;
-
-	// Associated constructor method builder
-	// Can be a MethodBuilder or a MethodInfo
-	private MethodBase InternalConstructorBuilder;
-	public MethodBase ConstructorBuilder {
-		get {
-			return InternalConstructorBuilder;
-		}
-	}
 
 	// Associated attribute builder
 	// Can be a FieldBuilder or a FieldInfo
 	public FieldInfo AttributeBuilder;
 
-	// Parameter Names
-	public string[] ParameterNames;
-	
-	// Parameter TypeIDs
-	public int[] ParameterTypeIDs;
 
+#if ASSERTIONS
+	// Was `CreateMethodBuilder' called?
+	private bool MethodBuilderCreated;
+#endif
+	
 	// Set `RealName' with `FeatureName'.
 	public void SetRealName( string FeatureName ) {
 		#if ASSERTIONS
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetRealName: Method builder already created" );
 		#endif
-		RealName = FeatureName;
+		info.set_real_name (FeatureName);
 	}
 
 	// Set `EiffelName' with `FeatureName'.
@@ -107,26 +83,26 @@ internal class EiffelMethod
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetEiffelName: Method builder already created" );
 		#endif
-		EiffelName = FeatureName;
+		info.set_eiffel_name (FeatureName);
 	}
 
 	// Set `FeatureID' with `ID'.
 	public void SetFeatureID( int ID ) {
-		#if ÆSSERTIONS
+		#if ASSERTIONS
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetFeatureID: Method builder already created" );
 		#endif
-		FeatureID = ID;
+		info.set_feature_id (ID);
 	}
 
 	// Set `IsInterfaceRoutine' with `ID'.
 	public void SetIsInterfaceRoutine (bool val) {
-		#if ÆSSERTIONS
+		#if ASSERTIONS
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetIsInterfaceRoutine: Method builder " +
 					"already created" );
 		#endif
-		IsInterfaceRoutine = val;
+		info.set_is_interface_routine (val);
 	}
 
 	// Set `ReturnTypeID' with `TypeID'.
@@ -136,8 +112,8 @@ internal class EiffelMethod
 
 	// Add a new argument to method
 	public void AddArgument( string a_name, int TypeID ,int pos) {
-		ParameterNames [pos] = a_name;
-		ParameterTypeIDs [pos] = TypeID;
+		info.parameter_names [pos] = a_name;
+		parameter_type_ids [pos] = TypeID;
 	}
 
 	// Set `IsDeferred' with `val'.
@@ -145,10 +121,10 @@ internal class EiffelMethod
 	  	#if ASSERTIONS
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetDeferred: Method builder already created" );
-			if( IsFrozen )
+			if( info.is_frozen )
 				throw new ApplicationException( "SetDeferred: Frozen feature cannot be deferred" );
 		#endif
-		IsDeferred = val;
+		info.set_is_deferred (val);
 	}
 
 	// Set `IsRedefined' with `val'.
@@ -157,28 +133,28 @@ internal class EiffelMethod
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetRedefined: Method builder already created" );
 		#endif
-		IsRedefined = val;
+		info.set_is_redefined (val);
 	}
 	
+	// Set `IsFrozen' with `val'.
 	public void SetIsFrozen (bool val) {
 		#if ASSERTIONS
 			if( MethodBuilderCreated )
 				throw new ApplicationException( "SetFrozen: Method builder already created" );
-			if( IsDeferred )
+			if( info.is_deferred )
 				throw new ApplicationException( "SetFrozen: Deferred feature cannot be frozen" );
 		#endif
-		IsFrozen = val;
+		info.set_is_frozen (val);
 	}
 
 	// Set `IsInvariant' with `val'.
 	public void SetIsInvariant (bool val) {
-		IsInvariant = val;
+		info.SetIsInvariant (val);
 	}
 
 	// Set `IsCreationRoutine' with `val'.
 	public void SetIsCreationRoutine (bool val) {
 		IsCreationRoutine = val;
-		CreateConstructorBuilder();
 	}
 	
 	// Set `IsAttribute' with `val'.
@@ -188,7 +164,7 @@ internal class EiffelMethod
 
 	// Set `IsStatic' with `val'.
 	public void SetIsStatic (bool val) {
-		IsStatic = val;
+		info.set_is_static (val);
 	}
 
 	// Set `Is_C_External' with `val'.
@@ -198,53 +174,57 @@ internal class EiffelMethod
 
 	// Set `Builder' with `methodBuilder'
 	// Used for external features
-	public void SetMethodBuilder (MethodBase methodBuilder) {
+	public void SetMethodBuilder (MethodInfo methodBuilder) {
 		Builder = methodBuilder;
-		MethodBuilderCreated = true;
+		#if ASSERTIONS
+			MethodBuilderCreated = true;
+		#endif
 	}
 	
 	// Set `AttributeBuilder' with `fieldBuilder'
 	// Used for external features
 	public void SetAttributeBuilder( FieldInfo fieldBuilder ) {
 		AttributeBuilder = fieldBuilder;
-		MethodBuilderCreated = true;
+		#if ASSERTIONS
+			MethodBuilderCreated = true;
+		#endif
 	}
 	
 	// Create associated method builder
 	public void CreateMethodBuilder() {
 		MethodAttributes Attributes;
-		EiffelClass current_class = EiffelReflectionEmit.Classes [TypeID];
+		EiffelClass current_class = EiffelReflectionEmit.Classes [EiffelReflectionEmit.CurrentTypeID];
 		Type[] ParameterTypes;
 		Type return_type;
 		string att_name	= Name();
 		int i, nb, start_index;
-		bool is_static = IsStatic;
+		bool is_static = info.is_static;
 		bool needs_attribute = IsAttribute && current_class.IsFrozen;
 		
-#if ASSERTIONS
-		if( MethodBuilderCreated && !(IsAttribute && IsRedefined))
-			throw new ApplicationException( "CreateMethodBuilder: Already done" );
-		if( FeatureID == EiffelReflectionEmit.NoValue )
-			throw new ApplicationException( "CreateMethodBuilder: No Feature ID" );
-#endif
+		#if ASSERTIONS
+			if( MethodBuilderCreated && !(IsAttribute && info.is_redefined))
+				throw new ApplicationException( "CreateMethodBuilder: Already done" );
+			if( info.feature_id == EiffelReflectionEmit.NoValue )
+				throw new ApplicationException( "CreateMethodBuilder: No Feature ID" );
+		#endif
 
-		nb = ParameterTypeIDs.Length;
-		if( IsInvariant ) {
+		nb = argument_count;
+		if( info.IsInvariant ) {
 			Attributes = MethodAttributes.Static | MethodAttributes.Public;
 			ParameterTypes = new Type[1];
 			ParameterTypes [0] = current_class.Builder;
 		} else {
-			if (IsFrozen)
+			if (info.is_frozen)
 				Attributes = MethodAttributes.Final;
 
-			if (is_static && !IsDeferred)
+			if (is_static && !info.is_deferred)
 				Attributes = MethodAttributes.Static;
 			else
 				Attributes = MethodAttributes.Virtual;
 
 			Attributes = Attributes | MethodAttributes.Public;
 
-			if (IsDeferred)
+			if (info.is_deferred)
 				Attributes = Attributes | MethodAttributes.Abstract;
 
 			if (is_static && !Is_C_External)
@@ -261,16 +241,16 @@ internal class EiffelMethod
 				}
 				for(i = start_index; i < nb; i++ )
 					ParameterTypes [i] = EiffelReflectionEmit.Classes
-						[ParameterTypeIDs [i - start_index]].Builder;
+						[parameter_type_ids [i - start_index]].Builder;
 			} else {
 				for(i = 0; i < nb; i++ )
 					ParameterTypes [i] = EiffelReflectionEmit.Classes
-						[ParameterTypeIDs [i]].Builder;
+						[parameter_type_ids [i]].Builder;
 			}
 		}
 
 		if
-			((IsAttribute && !IsInterfaceRoutine && is_static) ||
+			((IsAttribute && !info.is_interface_routine && is_static) ||
 			(needs_attribute))
 		{
 			AttributeBuilder = ((TypeBuilder) current_class.Builder)
@@ -290,13 +270,13 @@ internal class EiffelMethod
 					CallingConvention.Cdecl, CharSet.Ansi);
 				((MethodBuilder) Builder).SetImplementationFlags (MethodImplAttributes.PreserveSig);
 			} else {
-//				if ((!IsInterfaceRoutine) && (!is_static || IsDeferred))
+//				if ((!info.is_interface_routine) && (!is_static || info.is_deferred))
 //					Attributes = Attributes | MethodAttributes.NewSlot;
 				Builder =((TypeBuilder) current_class.Builder ).
 					DefineMethod( Name(), Attributes, return_type, ParameterTypes );
 			}
 
-			if (IsInvariant) {
+			if (info.IsInvariant) {
 				(( MethodBuilder )Builder ).DefineParameter ( 1,
 					ParameterAttributes.In, "Current_object");
 			} else {
@@ -310,11 +290,11 @@ internal class EiffelMethod
 					}
 					for( i = start_index; i < nb; i++ )
 						(( MethodBuilder )Builder ).DefineParameter( i + 1,
-							ParameterAttributes.In, ParameterNames [i - start_index]);
+							ParameterAttributes.In, info.parameter_names [i - start_index]);
 				} else {
 					for( i = 0; i < nb; i++ )
 						(( MethodBuilder )Builder ).DefineParameter( i + 1,
-							ParameterAttributes.In, ParameterNames [i]);
+							ParameterAttributes.In, info.parameter_names [i]);
 				}
 				(( MethodBuilder )Builder ).InitLocals = true;
 			}
@@ -330,38 +310,47 @@ internal class EiffelMethod
 			SetterBuilder.DefineParameter (1, ParameterAttributes.In, Name ());
 		}
 
-		if( Builder == null && AttributeBuilder == null )
+		if
+			(EiffelReflectionEmit.is_debugging_enabled &&
+			!info.is_interface_routine && !info.is_static)
+		{
+			((MethodBuilder) Builder).SetCustomAttribute (debugger_step_through_attr ());		
+			((MethodBuilder) Builder).SetCustomAttribute (debugger_hidden_attr ());		
+		}
+		if( Builder == null && AttributeBuilder == null ) {
 			throw new ApplicationException (
 				"CreateMethodBuilder: Builder null after call for " + Name());
-		MethodBuilderCreated = true;
-	}
-	
-	// Create associated method builder
-	public void CreateConstructorBuilder() {
-		MethodAttributes Attributes;
-		Type[] ParameterTypes;
-		int i;
-		
-		Attributes = MethodAttributes.Final | MethodAttributes.Public
-			| MethodAttributes.RTSpecialName | MethodAttributes.SpecialName ;
+		}
 
-		ParameterTypes = new Type[ ParameterTypeIDs.Length ];
-		for(i = 0; i < ParameterTypeIDs.Length; i++ )
-			ParameterTypes [i] = EiffelReflectionEmit.Classes [ParameterTypeIDs [i]].Builder;
+		#if ASSERTIONS
+			MethodBuilderCreated = true;
+		#endif
 
-		InternalConstructorBuilder =(( TypeBuilder )EiffelReflectionEmit.Classes [TypeID].Builder ).
-			DefineMethod( Name(), Attributes, EiffelReflectionEmit.VoidType, ParameterTypes );
-		for( i = 0; i < ParameterNames.Length; i++ )
-			(( MethodBuilder )InternalConstructorBuilder ).DefineParameter
-				( i + 1, ParameterAttributes.In, ParameterNames [i]);
-		(( MethodBuilder )InternalConstructorBuilder ).InitLocals = true;
-		
-		if( InternalConstructorBuilder == null)
-			throw new ApplicationException (
-				"CreateMethodBuilder: Builder null after call for " + Name());
+			// We do not need `info' anymore since the Builder(s) has(ve) been
+			// created now. We thus save some space in memory.
+		info = null;
 	}
-	
-	// Was `CreateMethodBuilder' called?
-	protected bool MethodBuilderCreated;
-	
+
+	// Debugger CAs to hide dummy callbacks routine
+	private static CustomAttributeBuilder internal_debugger_step_through_attr;
+	private static CustomAttributeBuilder internal_debugger_hidden_attr;
+	private static CustomAttributeBuilder debugger_step_through_attr () {
+		if (internal_debugger_step_through_attr == null) {
+			Type type = Type.GetType ("System.Diagnostics.DebuggerStepThroughAttribute");
+			ConstructorInfo constructor = type.GetConstructor (Type.EmptyTypes);
+			internal_debugger_step_through_attr =
+				new CustomAttributeBuilder (constructor, new object [0] {});
+		}
+		return internal_debugger_step_through_attr;
+	}
+	private static CustomAttributeBuilder debugger_hidden_attr () {
+		if (internal_debugger_hidden_attr == null) {
+			Type type = Type.GetType ("System.Diagnostics.DebuggerHiddenAttribute");
+			ConstructorInfo constructor = type.GetConstructor (Type.EmptyTypes);
+			internal_debugger_hidden_attr =
+				new CustomAttributeBuilder (constructor, new object [0] {});
+		}
+		return internal_debugger_hidden_attr;
+	}
+
 }

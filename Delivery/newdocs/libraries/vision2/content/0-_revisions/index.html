@@ -93,6 +93,7 @@
 					<li>If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
 					<li>Fixed `select_region' which was selecting an incorrect region starting on any line except the first, when the `text' spanned multiple lines. </li>
 					<li>Fixed `selection_start' and `selection_end' which were incorrect when the selection was not completely contained on the first line.</li>
+					<li>Fixed `first_position_from_line_number' and `last_position_from_line_number' which were returning incorrect values when the text was wrapped.</li>
 						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>

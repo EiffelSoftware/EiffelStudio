@@ -43,39 +43,27 @@ feature {NONE} -- Creation
 			implementation := toolkit.tabbed_text_word_wrapped (Current, man, a_parent);
 			set_default
 		end
-	
+
 feature -- Status report
 
-	tab_positions: ARRAY [INTEGER]
-			-- Positions of tabs.
-
-feature -- Status setting
-
-	set_no_tabs is
-			-- Turn of tabulation.
+	tab_length: INTEGER is
+			-- Size for each tabulation
 		do
-			implementation.set_no_tabs
+			Result := implementation.tab_length
+		ensure
+			result_greater_than_one: Result > 1
 		end
 	
-	set_tab_position (tab_position: INTEGER) is
-			-- Set tabs at every `tab_position'.
-		require
-			valid_tab_position: tab_position > 1
-		do
-			implementation.set_tab_position (tab_position)
-		ensure
-			tab_position_set: tab_positions.item (1) = tab_position
-		end
+feature -- Status setting
 
-	set_tab_positions (tab_position_array: ARRAY [INTEGER]) is
-			-- Set tabs at positions specified in `tab_position_array'.
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'.
 		require
-			tab_position_array_exists: tab_position_array /= Void
-			tab_position_array_filled: not tab_position_array.empty
+			length_greater_than_one: new_length > 1
 		do
-			implementation.set_tab_positions (tab_position_array)
+			implementation.set_tab_length (new_length)
 		ensure
-			tabs_set: tab_positions.is_equal (tab_position_array)
+			set: tab_length = new_length
 		end
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
@@ -84,7 +72,6 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 			-- Implementation of current text
 
 end -- class TABBED_TEXT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

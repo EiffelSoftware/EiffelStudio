@@ -10,17 +10,16 @@ class
 
 inherit
 	EB_TOOL
-
+		redefine
+			init_commands
+		end
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make  (man: EB_TOOL_CONTAINER; par: EV_WINDOW) is
-
-			-- Create Current with manager `par', then
-			-- show Current on the screen.
+	build_interface is
 		local
 			tree: EV_TREE
 			leaves: ARRAY [EV_TREE_ITEM]
@@ -30,48 +29,41 @@ feature {NONE} -- Initialization
 
 			b: EV_BUTTON
 		do
-
-
-				-- panels loading
-			Create {EB_PANEL_LIST_IMP} panel_list.make (Current)
-			
-			last_selected := Void
-
-				-- Linking with parent
-			parent := par
-			manager := man
-			set_title ("Preferences Tool")
+			set_title (Interface_names.t_Preference_tool)
 
 				-- container creation
-			Create container.make (par)
+			create container.make (parent)
 			container.set_minimum_size (500,340)
 --			container.forbid_resize
 			container.set_border_width (4)	
 			container.set_spacing (4)	
 
+				-- panels loading
+			create {EB_PANEL_LIST_IMP} panel_list.make (Current)
+			last_selected := Void
 
 				-- toolbar construction
-			Create toolbar.make (container)
+			create toolbar.make (container)
 			from
 				panel_list.start
 			until
 				panel_list.after
 			loop
---				Create b.make_with_pixmap (toolbar, panel_list.item.symbol)
-				Create b.make (toolbar)
+				create b.make (toolbar)
+--				b.set_pixmap (panel_list.item.symbol)
 				panel_list.item.raise_cmd.set_button (b)
 				panel_list.forth
 			end
 
 				-- tree+panel container construction
-			Create panels_box.make (container)
+			create panels_box.make (container)
 			panels_box.set_spacing (4)	
 
 				-- tree construction
 
-			Create tree.make (panels_box)
+			create tree.make (panels_box)
 			tree.set_minimum_size (100, 300)
-			Create leaves.make (1, panel_list.number_of_tree_items)
+			create leaves.make (1, panel_list.number_of_tree_items)
 			from
 				ijk := 1
 				panel_list.start
@@ -83,7 +75,7 @@ feature {NONE} -- Initialization
 				else
 					f := leaves.item (panel_list.tree_parent.item (ijk))
 				end
-				Create item.make_with_text (f, panel_list.tree_names.item (ijk))
+				create item.make_with_text (f, panel_list.tree_names.item (ijk))
 				panel_list.item.raise_cmd.set_leaf (item)
 				leaves.put (item, ijk)
 				ijk := ijk + 1
@@ -92,56 +84,40 @@ feature {NONE} -- Initialization
 
 				-- panel dispatching
 
---			if not panel_list.empty then
---				from
---					panel_list.start
---				until
---					panel_list.after
---				loop
---					panel_list.item.set_parent (panels_box)
---					panel_list.item.hide
---					panel_list.forth
---				end
---			end
-
 			display_panel (panel_list.first)
 
 				-- buttons addition
-			Create button_bar.make (container)
+			create button_bar.make (container)
 			button_bar.set_expand (False)
 
-			Create ok_button.make_with_text (button_bar, "OK")
+			create ok_button.make_with_text (button_bar, "OK")
 			ok_button.set_minimum_width (100)
 			ok_button.set_horizontal_resize (False)
 			ok_button.set_vertical_resize (False)
-			Create apply_button.make_with_text (button_bar, "Apply")
+			create apply_button.make_with_text (button_bar, "Apply")
 			apply_button.set_minimum_width (100)
 			apply_button.set_horizontal_resize (False)
 			apply_button.set_vertical_resize (False)
-			Create exit_button.make_with_text (button_bar, "Exit")
+			create exit_button.make_with_text (button_bar, "Exit")
 			exit_button.set_minimum_width (100)
 			exit_button.set_horizontal_resize (False)
 			exit_button.set_vertical_resize (False)
 
-				-- commands creation and linking with buttons
-			init_commands
-
+				-- commands linking with buttons
 			ok_button.add_click_command (ok_cmd, void)
 			apply_button.add_click_command (apply_cmd, void)
-			exit_button.add_click_command (exit_cmd, void)
+			exit_button.add_click_command (close_cmd, void)
 
-		ensure then
-			created: not destroyed
 		end
 
 	init_commands is
 			-- Initialize basic commands
 		do
-			Create ok_cmd.make (Current)
-			Create apply_cmd.make (Current)
-			Create exit_cmd.make (Current)
-			Create save_cmd.make (Current)
-			Create validate_cmd.make (Current)
+			precursor
+			create ok_cmd.make (Current)
+			create apply_cmd.make (Current)
+			create save_cmd.make (Current)
+			create validate_cmd.make (Current)
 		end
 
 feature {EB_RAISE_ENTRY_PANEL_COMMAND}
@@ -269,9 +245,6 @@ feature {EB_PREFERENCE_COMMAND, EB_PREFERENCE_WINDOW} -- Commands
 
 	apply_cmd: EB_APPLY_PREFERENCE_COMMAND
 			-- Holder for the Apply command
-
-	exit_cmd: EB_CANCEL_PREFERENCE_COMMAND
-			-- Holder for the Exit/Cancel command
 
 	save_cmd: EB_SAVE_PREFERENCE_COMMAND
 			-- Holder for the Save command

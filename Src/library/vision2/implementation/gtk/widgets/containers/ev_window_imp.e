@@ -520,8 +520,6 @@ feature {NONE} -- Implementation
 		local
 			scr: EV_SCREEN
 			bar_imp: EV_VERTICAL_BOX_IMP
-			app: EV_APPLICATION
-			app_imp: EV_APPLICATION_IMP
 		do
 			vbox := C.gtk_vbox_new (False, 0)
 			C.gtk_widget_show (vbox)
@@ -549,13 +547,8 @@ feature {NONE} -- Implementation
 			create scr
 			set_maximum_width (scr.width)
 			set_maximum_height (scr.height)
-
-			app := (create {EV_ENVIRONMENT}).application
-			app_imp ?= app.implementation
-			check
-				application_created: app_imp /= Void
-			end
-			app_imp.window_oids.extend (object_id)
+			
+			app_implementation.window_oids.extend (object_id)
 		end
 
 	call_close_request_actions is

@@ -59,7 +59,7 @@ rt_public int identify()
 	SECURITY_ATTRIBUTES sa;
 	char c;
 	DWORD count;
-	int tl;
+	size_t tl, sz;
 	char *t, *uu_str, *uu_t;
 	HANDLE uu_handles [2];
 
@@ -68,10 +68,15 @@ rt_public int identify()
 
 	t = GetCommandLine();
 	tl = strlen (t);
-	if ((tl < 17) || (t[tl-1] != '"') || (t[tl-2] != '?') || (t[tl-15] != '?') || (t[tl-16] != '"'))
+		/* 2 because we retrieve 2 HANDLEs from the command line. */
+	sz = (2 * sizeof(HANDLE) * 4 + 2) / 3;
+	if (sz % 4) {
+		sz += 4 - (sz % 4);
+	}
+	if ((tl < sz + 5) || (t[tl-1] != '"') || (t[tl-2] != '?') || (t[tl-(sz+3)] != '?') || (t[tl-(sz+4)] != '"'))
 		return -1;
 
-	uu_str = strdup ((t + tl  - 14));
+	uu_str = strdup ((t + tl  - (sz + 2)));
 	uu_str [strlen(uu_str) -2] = '\0';
 	uu_t = uudecode_str (uu_str);
 	memcpy ((char *)uu_handles, uu_t, 2 * sizeof (HANDLE));

@@ -18,7 +18,8 @@ inherit
 create
 	default_create,
 	make_with_point,
-	make_with_point_and_pixmap
+	make_with_point_and_pixmap,
+	make_for_test
 
 feature -- Initialization
 
@@ -48,6 +49,15 @@ feature -- Initialization
 			default_create
 			set_point (p)
 			set_pixmap (a_pixmap)
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (50)
+			get_point_by_index (1).set_y (100)
+			set_pixmap (create {EV_PIXMAP}.make_for_test)
 		end
 
 feature -- Access

@@ -14,9 +14,10 @@ inherit
 create
 	default_create,
 	make_with_points,
-	make_with_positions
+	make_with_positions,
+	make_for_test
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_with_points (p1, p2: EV_RELATIVE_POINT) is
 			-- Create with points `p1' and `p2'.
@@ -47,6 +48,18 @@ feature -- Initialization
 			point_a_y_assigned: point_a.y = y1
 			point_b_x_assigned: point_b.x = x2
 			point_b_y_assigned: point_b.y = y2
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (3)
+			get_point_by_index (1).set_y (3)
+			get_point_by_index (2).set_x (97)
+			get_point_by_index (2).set_y (197)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
+			set_line_width (4)
 		end
 
 feature -- Access

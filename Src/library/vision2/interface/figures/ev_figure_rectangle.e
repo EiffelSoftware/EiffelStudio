@@ -17,7 +17,8 @@ create
 	default_create,
 	make_with_points,
 	make_with_point_and_dimensions,
-	make_with_position_and_dimensions
+	make_with_position_and_dimensions,
+	make_for_test
 
 feature {NONE} -- Initialization
 
@@ -56,6 +57,19 @@ feature {NONE} -- Initialization
 			create base
 			set_point_a (base.get_relative_point (x, y))
 			set_point_b (point_a.get_relative_point (w, h))
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (3)
+			get_point_by_index (1).set_y (3)
+			get_point_by_index (2).set_x (97)
+			get_point_by_index (2).set_y (197)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 0.0, 0.5))
+			set_fill_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
+			set_line_width (1)
 		end
 
 feature -- Status report

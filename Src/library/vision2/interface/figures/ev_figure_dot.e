@@ -16,7 +16,8 @@ inherit
 
 create
 	default_create,
-	make_with_point
+	make_with_point,
+	make_for_test
 
 feature -- Initialization
 
@@ -33,6 +34,16 @@ feature -- Initialization
 		do
 			default_create
 			set_point (pos)
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (50)
+			get_point_by_index (1).set_y (100)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 0.0))
+			set_line_width (10)
 		end
 
 feature -- Access

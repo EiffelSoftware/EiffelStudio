@@ -8,6 +8,11 @@ class
 
 feature -- Externals
 
+	frozen gtk_get_current_event_time: NATURAL_32 is
+			external
+				"C signature (): guint32 use <gtk/gtk.h>"
+			end
+
 	frozen gtk_window_has_toplevel_focus (a_window: POINTER): BOOLEAN is
 		external
 			"C signature (GtkWindow*): gboolean use <gtk/gtk.h>"
@@ -716,6 +721,13 @@ feature -- Externals
 			"gtk_file_chooser_get_filename ((GtkFileChooser*) $a_dialog)"
 		end
 
+	frozen gtk_file_chooser_get_filenames (a_dialog: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_file_chooser_get_filenames ((GtkFileChooser*) $a_dialog)"
+		end
+
 	frozen gtk_file_chooser_set_filename (a_dialog: POINTER; a_filename: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -728,6 +740,13 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_file_chooser_set_local_only ((GtkFileChooser*) $a_dialog, (gboolean) $a_local_only)"
+		end
+
+	frozen gtk_file_chooser_set_select_multiple (a_dialog: POINTER; a_multiple: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_file_chooser_set_select_multiple ((GtkFileChooser*) $a_dialog, (gboolean) $a_multiple)"
 		end
 
 	frozen gtk_file_chooser_get_filter (a_dialog: POINTER): POINTER is

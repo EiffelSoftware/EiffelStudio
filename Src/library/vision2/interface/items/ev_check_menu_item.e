@@ -37,8 +37,9 @@ feature {NONE} -- Initialization
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
-			!EV_CHECK_MENU_ITEM_IMP!implementation.make_with_text (txt)
+			!EV_CHECK_MENU_ITEM_IMP!implementation.make
 			implementation.set_interface (Current)
+			implementation.set_text (txt)
 			set_parent (par)
 		end
 
@@ -46,20 +47,26 @@ feature -- Status report
 	
 	state: BOOLEAN is
 			-- Is current menu-item checked ?.
+		obsolete
+			"Will be removed in next week release, %
+			 %use is_selected instead."
 		require
 			exists: not destroyed
 		do
-			Result := implementation.state
+			Result := implementation.is_selected
 		end 
 	
 feature -- Status setting
 
 	set_state (flag: BOOLEAN) is
 			-- Make `flag' the new state of the menu-item.
+		obsolete
+			"Will be removed in next week release, %
+			 %use set_selected instead."
 		require
 			exists: not destroyed
 		do
-			implementation.set_state (flag)
+			implementation.set_selected (flag)
 		ensure
 			correct_state: state = flag
 		end
@@ -70,32 +77,57 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		do
-			set_state (not state)
+			set_selected (not is_selected)
 		ensure
-			state_is_true: state = not old state
+			state_is_true: is_selected = not old is_selected
 		end
 
 feature -- Event : command association
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
+			-- when the item is unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_deactivate_command (cmd, arg)		
+			implementation.add_unselect_command (cmd, arg)		
+		end
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		obsolete
+			"Will be removed in next week release, %
+			 %use add_select_command instead."
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_unselect_command (cmd, arg)		
 		end
 
 feature -- Event -- removing command association
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
+			-- the item is unselected.
 		require
 			exists: not destroyed
 		do
-			implementation.remove_deactivate_commands	
+			implementation.remove_unselect_commands	
+		end
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		obsolete
+			"Will be removed in next week release, %
+			 %use remove_unselect_commands instead."
+		require
+			exists: not destroyed
+		do
+			implementation.remove_unselect_commands	
 		end
 
 feature -- Implementation

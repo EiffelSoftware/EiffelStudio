@@ -763,7 +763,7 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
 				l_count := a_dispatch_function.argument_count
 				if a_dispatch_function.return_type /= Void then
 					l_type := a_dispatch_function.return_type.type
-					if l_type /= Void and l_type /= Vt_void and l_type /= Vt_empty and l_type /= Vt_null then
+					if l_type /= Vt_void and l_type /= Vt_empty and l_type /= Vt_null then
 						l_count := l_count + 1
 					end
 				end

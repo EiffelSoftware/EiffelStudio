@@ -98,28 +98,6 @@ feature -- Element change
 			end
 		end
 		
-		
-feature {EG_LAYOUT} -- Access
-		
-	needed_links: ARRAYED_LIST [EG_LINK_FIGURE] is
-			-- 
-		local
-			l_item: ES_ITEM
-		do
-			create Result.make (links.count)
-			from
-				links.start
-			until
-				links.after
-			loop
-				l_item ?= links.item
-				if l_item = Void or else l_item.is_needed_on_diagram then
-					Result.extend (links.item)
-				end
-				links.forth
-			end
-		end
-		
 feature {EG_FIGURE_WORLD} -- Element change
 
 	add_link (a_link: EG_LINK_FIGURE) is
@@ -520,8 +498,8 @@ feature {NONE} -- Implementation (move)
 			if world.selected_figures.is_empty then
 				world.context_editor.history.register_named_undoable (
 						Interface_names.t_Diagram_move_class_cmd,
-						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed>>],
-						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed>>])
+						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed, agent apply_right_angles>>],
+						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed, agent apply_right_angles>>])
 			else
 				l_selected_figures := world.selected_figures.twin
 				l_selected_figures.prune_all (Current)
@@ -529,8 +507,8 @@ feature {NONE} -- Implementation (move)
 				offset_y := port_y - saved_y
 				world.context_editor.history.register_named_undoable (
 					interface_names.t_diagram_move_class_cmd,
-					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed>>],                       
-					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed>>])
+					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed, agent apply_right_angles>>],                       
+					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed, agent apply_right_angles>>])
 			end
 			if world.context_editor.is_force_directed_used then
 				set_is_fixed (True)
@@ -589,5 +567,14 @@ feature {NONE} -- Implementation (move)
 		do
 			set_is_fixed (was_fixed)
 		end
+		
+	apply_right_anlges is
+			-- Apply right angles to world if `is_right_angles'.
+		do
+			if world.is_right_angles then
+				world.apply_right_angles
+			end
+		end
+		
 		
 end -- class EIFFEL_CLASS_FIGURE

@@ -5,7 +5,7 @@ indexing
 	id: "$Id$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CENTERED_BULLETIN
 
 inherit 
@@ -16,10 +16,6 @@ inherit
 			set_size,
 			implementation
 		end
-
-creation
-
-	make
 
 feature
 
@@ -43,5 +39,10 @@ feature
 		end
 
 	implementation: CENTERED_BULLETIN_I
+
+	is_centered: BOOLEAN is
+			-- Is this bulletin centered?
+		deferred
+		end
 
 end -- class CENTERED_BULLETIN

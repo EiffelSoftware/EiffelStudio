@@ -167,54 +167,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_4( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_5( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_5( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_7( ecom_eiffel_compiler::IEiffelException * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_6( ecom_eiffel_compiler::IEiffelException * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelException *  to IEIFFEL_EXCEPTION_INTERFACE.
@@ -227,7 +180,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_7( ecom_eiffel_compiler::I
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_8( ecom_eiffel_compiler::IEiffelException * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_7( ecom_eiffel_compiler::IEiffelException * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelException * *  to CELL [IEIFFEL_EXCEPTION_INTERFACE].
@@ -248,7 +201,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_8( ecom_eiffel_compiler::IEiffe
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelException * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_7 (*(ecom_eiffel_compiler::IEiffelException * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_6 (*(ecom_eiffel_compiler::IEiffelException * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -259,7 +212,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_8( ecom_eiffel_compiler::IEiffe
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_8( ecom_eiffel_compiler::IEiffelException * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_7( ecom_eiffel_compiler::IEiffelException * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelException * *.
@@ -272,7 +225,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_8( ecom_eiffel_compiler::IEiffelExce
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_10( ecom_eiffel_compiler::IEiffelCompiler * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_9( ecom_eiffel_compiler::IEiffelCompiler * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelCompiler *  to IEIFFEL_COMPILER_INTERFACE.
@@ -285,7 +238,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_10( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_11( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_10( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelCompiler * *  to CELL [IEIFFEL_COMPILER_INTERFACE].
@@ -306,7 +259,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_11( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelCompiler * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_10 (*(ecom_eiffel_compiler::IEiffelCompiler * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_9 (*(ecom_eiffel_compiler::IEiffelCompiler * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -317,7 +270,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_11( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_11( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_10( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelCompiler * *.
@@ -327,6 +280,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_11( ecom_eiffel_compiler::IEiffelCom
 	{
 		CoTaskMemFree (a_pointer);
 	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_11( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -341,18 +305,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_12( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_13( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_15( ecom_eiffel_compiler::IEiffelSystemBrowser * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_14( ecom_eiffel_compiler::IEiffelSystemBrowser * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemBrowser *  to IEIFFEL_SYSTEM_BROWSER_INTERFACE.
@@ -365,7 +318,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_15( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_16( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_15( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemBrowser * *  to CELL [IEIFFEL_SYSTEM_BROWSER_INTERFACE].
@@ -386,7 +339,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_16( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelSystemBrowser * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_15 (*(ecom_eiffel_compiler::IEiffelSystemBrowser * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_14 (*(ecom_eiffel_compiler::IEiffelSystemBrowser * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -397,7 +350,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_16( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_16( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_15( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelSystemBrowser * *.
@@ -410,7 +363,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_16( ecom_eiffel_compiler::IEiffelSys
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_18( ecom_eiffel_compiler::IEiffelProjectProperties * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_17( ecom_eiffel_compiler::IEiffelProjectProperties * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelProjectProperties *  to IEIFFEL_PROJECT_PROPERTIES_INTERFACE.
@@ -423,7 +376,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_18( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_19( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_18( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelProjectProperties * *  to CELL [IEIFFEL_PROJECT_PROPERTIES_INTERFACE].
@@ -444,7 +397,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_19( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelProjectProperties * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_18 (*(ecom_eiffel_compiler::IEiffelProjectProperties * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_17 (*(ecom_eiffel_compiler::IEiffelProjectProperties * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -455,7 +408,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_19( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_19( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_18( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelProjectProperties * *.
@@ -468,7 +421,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_19( ecom_eiffel_compiler::IEiffelPro
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_21( ecom_eiffel_compiler::IEiffelCompletionInfo * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_20( ecom_eiffel_compiler::IEiffelCompletionInfo * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelCompletionInfo *  to IEIFFEL_COMPLETION_INFO_INTERFACE.
@@ -481,7 +434,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_21( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_22( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_21( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelCompletionInfo * *  to CELL [IEIFFEL_COMPLETION_INFO_INTERFACE].
@@ -502,7 +455,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_22( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelCompletionInfo * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_21 (*(ecom_eiffel_compiler::IEiffelCompletionInfo * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_20 (*(ecom_eiffel_compiler::IEiffelCompletionInfo * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -513,7 +466,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_22( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_22( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_21( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelCompletionInfo * *.
@@ -526,7 +479,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_22( ecom_eiffel_compiler::IEiffelCom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_24( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_23( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelHTMLDocGenerator *  to IEIFFEL_HTMLDOC_GENERATOR_INTERFACE.
@@ -539,7 +492,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_24( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_25( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_24( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *  to CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE].
@@ -560,7 +513,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_25( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_24 (*(ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_23 (*(ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -571,7 +524,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_25( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_25( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_24( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *.
@@ -584,7 +537,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_25( ecom_eiffel_compiler::IEiffelHTM
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_26( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_25( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -616,7 +569,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_26( BSTR * a_pointer, EIF_OBJEC
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_26( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_25( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -631,10 +584,21 @@ void ecom_gce_ISE::ccom_free_memory_pointed_26( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_28( long * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_27( long * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of long *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_28( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
@@ -653,14 +617,50 @@ void ecom_gce_ISE::ccom_free_memory_pointed_29( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_30( VARIANT_BOOL * a_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_30( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_30( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -805,54 +805,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_33( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_34( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_34( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_35( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_34( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
@@ -863,7 +816,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_35( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_36( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_35( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -895,7 +848,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_36( BSTR * a_pointer, EIF_OBJEC
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_36( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_35( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -907,6 +860,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_36( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_36( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -921,18 +885,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_37( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_38( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_40( ecom_eiffel_compiler::IEnumEiffelClass * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_39( ecom_eiffel_compiler::IEnumEiffelClass * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumEiffelClass *  to IENUM_EIFFEL_CLASS_INTERFACE.
@@ -945,7 +898,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_40( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_41( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_40( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumEiffelClass * *  to CELL [IENUM_EIFFEL_CLASS_INTERFACE].
@@ -966,7 +919,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_41( ecom_eiffel_compiler::IEnum
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumEiffelClass * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_40 (*(ecom_eiffel_compiler::IEnumEiffelClass * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_39 (*(ecom_eiffel_compiler::IEnumEiffelClass * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -977,7 +930,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_41( ecom_eiffel_compiler::IEnum
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_41( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_40( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumEiffelClass * *.
@@ -990,7 +943,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_41( ecom_eiffel_compiler::IEnumEiffe
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_42( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_41( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -1001,7 +954,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_42( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_44( ecom_eiffel_compiler::IEnumCluster * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_43( ecom_eiffel_compiler::IEnumCluster * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumCluster *  to IENUM_CLUSTER_INTERFACE.
@@ -1014,7 +967,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_44( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_45( ecom_eiffel_compiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_44( ecom_eiffel_compiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumCluster * *  to CELL [IENUM_CLUSTER_INTERFACE].
@@ -1035,7 +988,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_45( ecom_eiffel_compiler::IEnum
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumCluster * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_44 (*(ecom_eiffel_compiler::IEnumCluster * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_43 (*(ecom_eiffel_compiler::IEnumCluster * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1046,7 +999,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_45( ecom_eiffel_compiler::IEnum
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_45( ecom_eiffel_compiler::IEnumCluster * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_44( ecom_eiffel_compiler::IEnumCluster * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumCluster * *.
@@ -1059,7 +1012,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_45( ecom_eiffel_compiler::IEnumClust
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_47( ecom_eiffel_compiler::IEnumAssembly * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_46( ecom_eiffel_compiler::IEnumAssembly * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumAssembly *  to IENUM_ASSEMBLY_INTERFACE.
@@ -1072,7 +1025,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_47( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_48( ecom_eiffel_compiler::IEnumAssembly * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_47( ecom_eiffel_compiler::IEnumAssembly * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumAssembly * *  to CELL [IENUM_ASSEMBLY_INTERFACE].
@@ -1093,7 +1046,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_48( ecom_eiffel_compiler::IEnum
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumAssembly * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_47 (*(ecom_eiffel_compiler::IEnumAssembly * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_46 (*(ecom_eiffel_compiler::IEnumAssembly * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1104,7 +1057,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_48( ecom_eiffel_compiler::IEnum
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_48( ecom_eiffel_compiler::IEnumAssembly * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_47( ecom_eiffel_compiler::IEnumAssembly * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumAssembly * *.
@@ -1117,7 +1070,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_48( ecom_eiffel_compiler::IEnumAssem
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_49( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_48( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -1128,7 +1081,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_49( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_51( ecom_eiffel_compiler::IEiffelClusterDescriptor * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_50( ecom_eiffel_compiler::IEiffelClusterDescriptor * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor *  to IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE.
@@ -1141,7 +1094,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_51( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_52( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_51( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor * *  to CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE].
@@ -1162,7 +1115,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_52( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelClusterDescriptor * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_51 (*(ecom_eiffel_compiler::IEiffelClusterDescriptor * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_50 (*(ecom_eiffel_compiler::IEiffelClusterDescriptor * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1173,7 +1126,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_52( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_52( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_51( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelClusterDescriptor * *.
@@ -1186,7 +1139,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_52( ecom_eiffel_compiler::IEiffelClu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_54( ecom_eiffel_compiler::IEiffelClassDescriptor * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_53( ecom_eiffel_compiler::IEiffelClassDescriptor * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClassDescriptor *  to IEIFFEL_CLASS_DESCRIPTOR_INTERFACE.
@@ -1199,7 +1152,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_54( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_55( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_54( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClassDescriptor * *  to CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE].
@@ -1220,7 +1173,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_55( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelClassDescriptor * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_54 (*(ecom_eiffel_compiler::IEiffelClassDescriptor * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_53 (*(ecom_eiffel_compiler::IEiffelClassDescriptor * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1231,7 +1184,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_55( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_55( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_54( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelClassDescriptor * *.
@@ -1244,7 +1197,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_55( ecom_eiffel_compiler::IEiffelCla
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_57( ecom_eiffel_compiler::IEiffelFeatureDescriptor * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_56( ecom_eiffel_compiler::IEiffelFeatureDescriptor * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor *  to IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE.
@@ -1257,7 +1210,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_57( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_58( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_57( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor * *  to CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE].
@@ -1278,7 +1231,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_58( ecom_eiffel_compiler::IEiff
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelFeatureDescriptor * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_57 (*(ecom_eiffel_compiler::IEiffelFeatureDescriptor * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_56 (*(ecom_eiffel_compiler::IEiffelFeatureDescriptor * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1289,7 +1242,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_58( ecom_eiffel_compiler::IEiff
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_58( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_57( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelFeatureDescriptor * *.
@@ -1302,7 +1255,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_58( ecom_eiffel_compiler::IEiffelFea
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_60( ecom_eiffel_compiler::IEnumFeature * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_59( ecom_eiffel_compiler::IEnumFeature * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumFeature *  to IENUM_FEATURE_INTERFACE.
@@ -1315,7 +1268,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_60( ecom_eiffel_compiler::
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_61( ecom_eiffel_compiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_60( ecom_eiffel_compiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumFeature * *  to CELL [IENUM_FEATURE_INTERFACE].
@@ -1336,7 +1289,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_61( ecom_eiffel_compiler::IEnum
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumFeature * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_60 (*(ecom_eiffel_compiler::IEnumFeature * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_59 (*(ecom_eiffel_compiler::IEnumFeature * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -1347,7 +1300,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_61( ecom_eiffel_compiler::IEnum
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_61( ecom_eiffel_compiler::IEnumFeature * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_60( ecom_eiffel_compiler::IEnumFeature * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumFeature * *.
@@ -1355,6 +1308,53 @@ void ecom_gce_ISE::ccom_free_memory_pointed_61( ecom_eiffel_compiler::IEnumFeatu
 {
 	if (a_pointer != NULL)
 	{
+		CoTaskMemFree (a_pointer);
+	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_61( BSTR * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_61( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
 };
@@ -1407,7 +1407,29 @@ void ecom_gce_ISE::ccom_free_memory_pointed_62( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_63( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_63( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_64( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_65( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -1439,7 +1461,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_63( BSTR * a_pointer, EIF_OBJEC
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_63( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_65( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -1451,28 +1473,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_63( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_64( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_65( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -1617,54 +1617,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_68( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_69( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_69( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_70( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_69( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
@@ -1675,7 +1628,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_70( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_72( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_71( SAFEARRAY *  * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert SAFEARRAY *  *  to CELL [ECOM_ARRAY [STRING]].
@@ -1707,7 +1660,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_72( SAFEARRAY *  * a_pointer, E
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_72( SAFEARRAY *  * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_71( SAFEARRAY *  * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of SAFEARRAY *  *.
@@ -1719,6 +1672,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_72( SAFEARRAY *  * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_72( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -1799,18 +1763,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_79( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_80( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_81( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_80( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -1842,7 +1795,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_81( BSTR * a_pointer, EIF_OBJEC
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_81( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_80( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -1854,6 +1807,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_81( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_81( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -1890,10 +1854,10 @@ void ecom_gce_ISE::ccom_free_memory_pointed_84( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_85( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_85( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Free memory of ULONG *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
@@ -1912,14 +1876,50 @@ void ecom_gce_ISE::ccom_free_memory_pointed_86( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_87( ULONG * a_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_87( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_87( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -2158,7 +2158,65 @@ void ecom_gce_ISE::ccom_free_memory_pointed_92( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_93( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_94( ecom_eiffel_compiler::IEnumParameter * a_interface_pointer )
+
+/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEnumParameter *  to IENUM_PARAMETER_INTERFACE.
+-----------------------------------------------------------*/
+{
+	if (a_interface_pointer != NULL)
+		return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IENUM_PARAMETER_IMPL_PROXY");
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_95( ecom_eiffel_compiler::IEnumParameter * * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEnumParameter * *  to CELL [IENUM_PARAMETER_INTERFACE].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [IENUM_PARAMETER_INTERFACE]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(ecom_eiffel_compiler::IEnumParameter * *) a_pointer != NULL)
+		tmp_object = eif_protect (ccom_ce_pointed_interface_94 (*(ecom_eiffel_compiler::IEnumParameter * *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_95( ecom_eiffel_compiler::IEnumParameter * * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ecom_eiffel_compiler::IEnumParameter * *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+	{
+		CoTaskMemFree (a_pointer);
+	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_96( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -2190,7 +2248,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_93( BSTR * a_pointer, EIF_OBJEC
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_93( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_96( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -2200,64 +2258,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_93( BSTR * a_pointer )
 	{
 		rt_ce.free_memory_bstr (*a_pointer);
 		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_95( ecom_eiffel_compiler::IEnumParameter * a_interface_pointer )
-
-/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumParameter *  to IENUM_PARAMETER_INTERFACE.
------------------------------------------------------------*/
-{
-	if (a_interface_pointer != NULL)
-		return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IENUM_PARAMETER_IMPL_PROXY");
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_96( ecom_eiffel_compiler::IEnumParameter * * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumParameter * *  to CELL [IENUM_PARAMETER_INTERFACE].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [IENUM_PARAMETER_INTERFACE]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(ecom_eiffel_compiler::IEnumParameter * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_95 (*(ecom_eiffel_compiler::IEnumParameter * *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_96( ecom_eiffel_compiler::IEnumParameter * * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumParameter * *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
 		CoTaskMemFree (a_pointer);
 	};
 };
@@ -2310,50 +2310,14 @@ void ecom_gce_ISE::ccom_free_memory_pointed_97( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_98( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_98( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_98( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
+	Free memory of ULONG *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
-	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -2423,10 +2387,10 @@ void ecom_gce_ISE::ccom_free_memory_pointed_104( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_105( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_105( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
@@ -2588,18 +2552,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_119( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_120( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_122( ecom_eiffel_compiler::IEiffelParameterDescriptor * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_121( ecom_eiffel_compiler::IEiffelParameterDescriptor * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelParameterDescriptor *  to IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE.
@@ -2612,7 +2565,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_122( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_123( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_122( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelParameterDescriptor * *  to CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE].
@@ -2633,7 +2586,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_123( ecom_eiffel_compiler::IEif
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelParameterDescriptor * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_122 (*(ecom_eiffel_compiler::IEiffelParameterDescriptor * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_121 (*(ecom_eiffel_compiler::IEiffelParameterDescriptor * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -2644,7 +2597,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_123( ecom_eiffel_compiler::IEif
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_123( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_122( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelParameterDescriptor * *.
@@ -2654,6 +2607,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_123( ecom_eiffel_compiler::IEiffelPa
 	{
 		CoTaskMemFree (a_pointer);
 	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_123( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -2668,14 +2632,50 @@ void ecom_gce_ISE::ccom_free_memory_pointed_124( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_125( ULONG * a_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_125( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_125( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -2726,7 +2726,29 @@ void ecom_gce_ISE::ccom_free_memory_pointed_126( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_127( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_127( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_128( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_129( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -2758,7 +2780,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_127( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_127( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_129( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -2770,28 +2792,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_127( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_128( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_129( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -2889,7 +2889,29 @@ void ecom_gce_ISE::ccom_free_memory_pointed_131( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_132( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_132( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_133( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_134( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -2921,7 +2943,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_132( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_132( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_134( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -2933,28 +2955,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_132( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_133( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_134( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3005,7 +3005,109 @@ void ecom_gce_ISE::ccom_free_memory_pointed_135( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_136( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_136( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_137( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_139( ecom_eiffel_compiler::IEiffelAssemblyProperties * a_interface_pointer )
+
+/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties *  to IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE.
+-----------------------------------------------------------*/
+{
+	if (a_interface_pointer != NULL)
+		return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_PROXY");
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_140( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties * *  to CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(ecom_eiffel_compiler::IEiffelAssemblyProperties * *) a_pointer != NULL)
+		tmp_object = eif_protect (ccom_ce_pointed_interface_139 (*(ecom_eiffel_compiler::IEiffelAssemblyProperties * *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_140( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ecom_eiffel_compiler::IEiffelAssemblyProperties * *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+	{
+		CoTaskMemFree (a_pointer);
+	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_141( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_142( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_143( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -3037,7 +3139,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_136( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_136( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_143( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -3049,108 +3151,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_136( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_137( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_138( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_140( ecom_eiffel_compiler::IEiffelAssemblyProperties * a_interface_pointer )
-
-/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties *  to IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE.
------------------------------------------------------------*/
-{
-	if (a_interface_pointer != NULL)
-		return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_PROXY");
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_141( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties * *  to CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(ecom_eiffel_compiler::IEiffelAssemblyProperties * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_140 (*(ecom_eiffel_compiler::IEiffelAssemblyProperties * *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_141( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelAssemblyProperties * *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_142( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_143( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3295,7 +3295,18 @@ void ecom_gce_ISE::ccom_free_memory_pointed_146( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_147( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_147( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_148( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -3327,7 +3338,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_147( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_147( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_148( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -3339,17 +3350,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_147( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_148( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3400,7 +3400,18 @@ void ecom_gce_ISE::ccom_free_memory_pointed_149( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_150( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_150( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_151( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -3432,7 +3443,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_150( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_150( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_151( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -3444,17 +3455,6 @@ void ecom_gce_ISE::ccom_free_memory_pointed_150( BSTR * a_pointer )
 		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_151( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3552,7 +3552,18 @@ void ecom_gce_ISE::ccom_free_memory_pointed_153( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_154( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_155( long * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of long *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_156( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -3584,7 +3595,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_154( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_154( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_156( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -3599,7 +3610,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_154( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_156( long * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_158( long * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of long *.
@@ -3610,57 +3621,10 @@ void ecom_gce_ISE::ccom_free_memory_pointed_156( long * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_157( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_159( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_157( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_159( long * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of long *.
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
@@ -3679,18 +3643,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_160( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_161( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_162( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_161( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -3722,7 +3675,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_162( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_162( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_161( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -3737,7 +3690,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_162( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_163( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_162( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -3748,7 +3701,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_163( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_165( ecom_eiffel_compiler::IEiffelSystemClusters * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_164( ecom_eiffel_compiler::IEiffelSystemClusters * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemClusters *  to IEIFFEL_SYSTEM_CLUSTERS_INTERFACE.
@@ -3761,7 +3714,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_165( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_166( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_165( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemClusters * *  to CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE].
@@ -3782,7 +3735,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_166( ecom_eiffel_compiler::IEif
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelSystemClusters * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_165 (*(ecom_eiffel_compiler::IEiffelSystemClusters * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_164 (*(ecom_eiffel_compiler::IEiffelSystemClusters * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -3793,7 +3746,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_166( ecom_eiffel_compiler::IEif
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_166( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_165( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelSystemClusters * *.
@@ -3806,7 +3759,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_166( ecom_eiffel_compiler::IEiffelSy
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_168( ecom_eiffel_compiler::IEiffelSystemExternals * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_167( ecom_eiffel_compiler::IEiffelSystemExternals * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemExternals *  to IEIFFEL_SYSTEM_EXTERNALS_INTERFACE.
@@ -3819,7 +3772,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_168( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_169( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_168( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemExternals * *  to CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE].
@@ -3840,7 +3793,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_169( ecom_eiffel_compiler::IEif
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelSystemExternals * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_168 (*(ecom_eiffel_compiler::IEiffelSystemExternals * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_167 (*(ecom_eiffel_compiler::IEiffelSystemExternals * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -3851,7 +3804,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_169( ecom_eiffel_compiler::IEif
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_169( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_168( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelSystemExternals * *.
@@ -3864,7 +3817,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_169( ecom_eiffel_compiler::IEiffelSy
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_171( ecom_eiffel_compiler::IEiffelSystemAssemblies * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_170( ecom_eiffel_compiler::IEiffelSystemAssemblies * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemAssemblies *  to IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE.
@@ -3877,7 +3830,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_171( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_172( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_171( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelSystemAssemblies * *  to CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE].
@@ -3898,7 +3851,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_172( ecom_eiffel_compiler::IEif
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelSystemAssemblies * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_171 (*(ecom_eiffel_compiler::IEiffelSystemAssemblies * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_170 (*(ecom_eiffel_compiler::IEiffelSystemAssemblies * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -3909,7 +3862,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_172( ecom_eiffel_compiler::IEif
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_172( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_171( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelSystemAssemblies * *.
@@ -3917,6 +3870,53 @@ void ecom_gce_ISE::ccom_free_memory_pointed_172( ecom_eiffel_compiler::IEiffelSy
 {
 	if (a_pointer != NULL)
 	{
+		CoTaskMemFree (a_pointer);
+	};
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_172( BSTR * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_172( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
 	};
 };
@@ -4345,54 +4345,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_181( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_182( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_182( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_184( ecom_eiffel_compiler::IEnumClusterProp * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_183( ecom_eiffel_compiler::IEnumClusterProp * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClusterProp *  to IENUM_CLUSTER_PROP_INTERFACE.
@@ -4405,7 +4358,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_184( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_185( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_184( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClusterProp * *  to CELL [IENUM_CLUSTER_PROP_INTERFACE].
@@ -4426,7 +4379,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_185( ecom_eiffel_compiler::IEnu
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumClusterProp * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_184 (*(ecom_eiffel_compiler::IEnumClusterProp * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_183 (*(ecom_eiffel_compiler::IEnumClusterProp * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -4437,7 +4390,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_185( ecom_eiffel_compiler::IEnu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_185( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_184( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumClusterProp * *.
@@ -4450,7 +4403,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_185( ecom_eiffel_compiler::IEnumClus
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_187( ecom_eiffel_compiler::IEiffelClusterProperties * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_186( ecom_eiffel_compiler::IEiffelClusterProperties * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterProperties *  to IEIFFEL_CLUSTER_PROPERTIES_INTERFACE.
@@ -4463,7 +4416,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_187( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_188( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_187( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelClusterProperties * *  to CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE].
@@ -4484,7 +4437,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_188( ecom_eiffel_compiler::IEif
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEiffelClusterProperties * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_187 (*(ecom_eiffel_compiler::IEiffelClusterProperties * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_186 (*(ecom_eiffel_compiler::IEiffelClusterProperties * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -4495,7 +4448,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_188( ecom_eiffel_compiler::IEif
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_188( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_187( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEiffelClusterProperties * *.
@@ -4508,7 +4461,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_188( ecom_eiffel_compiler::IEiffelCl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_189( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_188( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
@@ -4519,7 +4472,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_189( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_190( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_189( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -4551,7 +4504,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_190( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_190( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_189( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -4566,6 +4519,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_190( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_gce_ISE::ccom_free_memory_pointed_190( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_gce_ISE::ccom_free_memory_pointed_191( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
@@ -4577,14 +4541,50 @@ void ecom_gce_ISE::ccom_free_memory_pointed_191( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_192( ULONG * a_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_192( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_192( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -4635,50 +4635,14 @@ void ecom_gce_ISE::ccom_free_memory_pointed_193( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_194( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_194( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_194( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
-	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -4770,18 +4734,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_202( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_203( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_205( ecom_eiffel_compiler::IEnumClusterExcludes * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_204( ecom_eiffel_compiler::IEnumClusterExcludes * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClusterExcludes *  to IENUM_CLUSTER_EXCLUDES_INTERFACE.
@@ -4794,7 +4747,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_205( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_206( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_205( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumClusterExcludes * *  to CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE].
@@ -4815,7 +4768,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_206( ecom_eiffel_compiler::IEnu
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumClusterExcludes * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_205 (*(ecom_eiffel_compiler::IEnumClusterExcludes * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_204 (*(ecom_eiffel_compiler::IEnumClusterExcludes * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -4826,7 +4779,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_206( ecom_eiffel_compiler::IEnu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_206( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_205( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumClusterExcludes * *.
@@ -4839,7 +4792,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_206( ecom_eiffel_compiler::IEnumClus
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_207( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_206( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -4871,7 +4824,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_207( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_207( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_206( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -4886,6 +4839,17 @@ void ecom_gce_ISE::ccom_free_memory_pointed_207( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_gce_ISE::ccom_free_memory_pointed_207( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_gce_ISE::ccom_free_memory_pointed_208( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
@@ -4897,18 +4861,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_208( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_209( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_210( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_209( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -4919,7 +4872,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_210( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_211( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_210( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
@@ -4927,6 +4880,53 @@ void ecom_gce_ISE::ccom_free_memory_pointed_211( VARIANT_BOOL * a_pointer )
 {
 	if (a_pointer != NULL)
 		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_211( BSTR * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_211( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
+		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -5024,7 +5024,18 @@ void ecom_gce_ISE::ccom_free_memory_pointed_213( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_214( BSTR * a_pointer, EIF_OBJECT an_object )
+void ecom_gce_ISE::ccom_free_memory_pointed_214( ULONG * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_215( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -5056,7 +5067,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_214( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_214( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_215( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -5071,7 +5082,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_214( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_215( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_216( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -5082,65 +5093,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_215( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_216( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_216( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_217( ULONG * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of ULONG *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_219( ecom_eiffel_compiler::IEnumIncludePaths * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_218( ecom_eiffel_compiler::IEnumIncludePaths * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumIncludePaths *  to IENUM_INCLUDE_PATHS_INTERFACE.
@@ -5153,7 +5106,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_219( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_220( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_219( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumIncludePaths * *  to CELL [IENUM_INCLUDE_PATHS_INTERFACE].
@@ -5174,7 +5127,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_220( ecom_eiffel_compiler::IEnu
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumIncludePaths * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_219 (*(ecom_eiffel_compiler::IEnumIncludePaths * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_218 (*(ecom_eiffel_compiler::IEnumIncludePaths * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -5185,7 +5138,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_220( ecom_eiffel_compiler::IEnu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_220( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_219( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumIncludePaths * *.
@@ -5198,7 +5151,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_220( ecom_eiffel_compiler::IEnumIncl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_222( ecom_eiffel_compiler::IEnumObjectFiles * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_221( ecom_eiffel_compiler::IEnumObjectFiles * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumObjectFiles *  to IENUM_OBJECT_FILES_INTERFACE.
@@ -5211,7 +5164,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_222( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_223( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_222( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEnumObjectFiles * *  to CELL [IENUM_OBJECT_FILES_INTERFACE].
@@ -5232,7 +5185,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_223( ecom_eiffel_compiler::IEnu
 	else
 		result = an_object;
 	if (*(ecom_eiffel_compiler::IEnumObjectFiles * *) a_pointer != NULL)
-		tmp_object = eif_protect (ccom_ce_pointed_interface_222 (*(ecom_eiffel_compiler::IEnumObjectFiles * *) a_pointer));
+		tmp_object = eif_protect (ccom_ce_pointed_interface_221 (*(ecom_eiffel_compiler::IEnumObjectFiles * *) a_pointer));
 	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
@@ -5243,7 +5196,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_223( ecom_eiffel_compiler::IEnu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_223( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_222( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ecom_eiffel_compiler::IEnumObjectFiles * *.
@@ -5256,7 +5209,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_223( ecom_eiffel_compiler::IEnumObje
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_224( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_223( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -5288,7 +5241,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_224( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_224( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_223( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -5303,7 +5256,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_224( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_225( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_224( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -5314,7 +5267,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_225( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_226( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_225( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -5346,7 +5299,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_226( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_226( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_225( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -5361,7 +5314,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_226( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_227( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_226( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -5372,7 +5325,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_227( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_228( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_227( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -5404,7 +5357,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_228( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_228( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_227( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -5419,7 +5372,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_228( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_229( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_228( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
@@ -5430,7 +5383,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_229( ULONG * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_230( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_229( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -5462,7 +5415,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_230( BSTR * a_pointer, EIF_OBJE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_230( BSTR * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_229( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -5477,10 +5430,21 @@ void ecom_gce_ISE::ccom_free_memory_pointed_230( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_231( ULONG * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_230( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of ULONG *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_231( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
@@ -5521,14 +5485,50 @@ void ecom_gce_ISE::ccom_free_memory_pointed_234( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_235( VARIANT_BOOL * a_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_235( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert BSTR *  to CELL [STRING].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [STRING]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	if (*(BSTR *) a_pointer != NULL)
+		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
+	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
+	if (tmp_object != NULL)
+		eif_wean (tmp_object);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_235( BSTR * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of BSTR *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)
+	{
+		rt_ce.free_memory_bstr (*a_pointer);
+		*a_pointer = NULL;
 		CoTaskMemFree (a_pointer);
+	};
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -5579,54 +5579,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_236( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_cell_237( BSTR * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
------------------------------------------------------------*/
-{
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE set_item = 0;
-	EIF_OBJECT result = 0;
-	EIF_OBJECT tmp_object = 0;
-
-	type_id = eif_type_id ("CELL [STRING]");
-	set_item = eif_procedure ("put", type_id);
-
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-	{
-		result = eif_create (type_id);
-	}
-	else
-		result = an_object;
-	if (*(BSTR *) a_pointer != NULL)
-		tmp_object = eif_protect (rt_ce.ccom_ce_bstr (*(BSTR *) a_pointer));
-	set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-	if (tmp_object != NULL)
-		eif_wean (tmp_object);
-	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-		return eif_wean (result);
-	else
-		return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_237( BSTR * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of BSTR *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-	{
-		rt_ce.free_memory_bstr (*a_pointer);
-		*a_pointer = NULL;
-		CoTaskMemFree (a_pointer);
-	};
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_ISE::ccom_free_memory_pointed_238( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_237( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
@@ -5634,6 +5587,19 @@ void ecom_gce_ISE::ccom_free_memory_pointed_238( VARIANT_BOOL * a_pointer )
 {
 	if (a_pointer != NULL)
 		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_record_238( VARIANT * a_record_pointer )
+
+/*-----------------------------------------------------------
+	Convert VARIANT *  to ECOM_VARIANT.
+-----------------------------------------------------------*/
+{
+	if (a_record_pointer != NULL)
+		return rt_ce.ccom_ce_pointed_record (a_record_pointer, "ECOM_VARIANT");
+	else
+		return NULL;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -5663,16 +5629,14 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_record_240( VARIANT * a_record_point
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_record_241( VARIANT * a_record_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_241( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
+	Free memory of VARIANT_BOOL *.
 -----------------------------------------------------------*/
 {
-	if (a_record_pointer != NULL)
-		return rt_ce.ccom_ce_pointed_record (a_record_pointer, "ECOM_VARIANT");
-	else
-		return NULL;
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -5698,18 +5662,7 @@ void ecom_gce_ISE::ccom_free_memory_pointed_243( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_244( VARIANT_BOOL * a_pointer )
-
-/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
------------------------------------------------------------*/
-{
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_246( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer )
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_245( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer )
 
 /*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
@@ -5722,7 +5675,7 @@ EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_246( ecom_eiffel_compiler:
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_ISE::ccom_free_memory_pointed_247( VARIANT_BOOL * a_pointer )
+void ecom_gce_ISE::ccom_free_memory_pointed_246( VARIANT_BOOL * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.

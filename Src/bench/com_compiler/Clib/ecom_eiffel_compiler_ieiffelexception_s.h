@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-A single exception object  Help file: 
+A single exception object Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELEXCEPTION_S_H__

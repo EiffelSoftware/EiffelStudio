@@ -5,7 +5,7 @@ Implemented `IEiffelCompletionInfo' Interface.
 #include "ecom_eiffel_compiler_IEiffelCompletionInfo_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelCompletionInfo_ = {0x06b9f5aa,0x0e7d,0x4d84,{0x80,0x0a,0x38,0x66,0xac,0x70,0x95,0x03}};
+static const IID IID_IEiffelCompletionInfo_ = {0x8630e639,0xedae,0x46b7,{0x88,0x0b,0x27,0xd6,0x8e,0x71,0x84,0xfa}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,17 +122,17 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 	EIF_OBJECT tmp_return_names = NULL;
 	if (return_names != NULL)
 	{
-		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_names));
+		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_238 (return_names));
 	}
 	EIF_OBJECT tmp_return_signatures = NULL;
 	if (return_signatures != NULL)
 	{
-		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_signatures));
+		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_signatures));
 	}
 	EIF_OBJECT tmp_return_image_indexes = NULL;
 	if (return_image_indexes != NULL)
 	{
-		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_241 (return_image_indexes));
+		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_image_indexes));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -188,7 +188,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_57 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_56 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

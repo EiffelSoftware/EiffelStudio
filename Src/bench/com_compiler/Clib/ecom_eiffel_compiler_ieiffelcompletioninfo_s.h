@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Completion info.  Help file: 
+Eiffel Completion info. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCOMPLETIONINFO_S_H__

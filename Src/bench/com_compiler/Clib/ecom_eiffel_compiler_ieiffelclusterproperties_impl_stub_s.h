@@ -173,7 +173,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of subclusters (list of IEiffelClusterProperties*).
+	List subclusters (list of IEiffelClusterProperties*).
 	-----------------------------------------------------------*/
 	STDMETHODIMP subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value );
 
@@ -215,30 +215,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Get type info
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );
-
-
-	/*-----------------------------------------------------------
-	Get type info count
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetTypeInfoCount( unsigned int * pctinfo );
-
-
-	/*-----------------------------------------------------------
-	IDs of function names 'rgszNames'
-	-----------------------------------------------------------*/
-	STDMETHODIMP GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid );
-
-
-	/*-----------------------------------------------------------
-	Invoke function.
-	-----------------------------------------------------------*/
-	STDMETHODIMP Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr );
-
-
-	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();
@@ -277,12 +253,6 @@ private:
 	Eiffel type id
 	-----------------------------------------------------------*/
 	EIF_TYPE_ID type_id;
-
-
-	/*-----------------------------------------------------------
-	Type information
-	-----------------------------------------------------------*/
-	ITypeInfo * pTypeInfo;
 
 
 

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project.  Help file: 
+Eiffel Project. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELPROJECT_S_H__
@@ -112,18 +112,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Retrieve project. Obsolete
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP retrieve_project(  /* [in] */ BSTR a_project_file_name ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Create new project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP create_project(  /* [in] */ BSTR an_ace_file_name, /* [in] */ BSTR project_directory_path ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP project_file_name(  /* [out, retval] */ BSTR * return_value ) = 0;
@@ -145,12 +133,6 @@ public:
 	Is project valid?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP valid_project(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Last error message
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP last_error_message(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

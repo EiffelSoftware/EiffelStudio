@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_CEIFFELCOMPLETIONINFO_S_H__

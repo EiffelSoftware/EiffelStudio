@@ -5,7 +5,7 @@ Implemented `IEnumIncludePaths' Interface.
 #include "ecom_eiffel_compiler_IEnumIncludePaths_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEnumIncludePaths_ = {0xdb65539c,0x1c71,0x4a59,{0xb5,0x48,0x22,0xda,0x96,0xbf,0x0d,0x13}};
+static const IID IID_IEnumIncludePaths_ = {0x95f826bf,0x331d,0x4f84,{0x80,0x53,0xe1,0xb4,0xde,0xd3,0x12,0xd8}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,7 +41,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::Next(  /* [out] 
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_224 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_223 (rgelt, NULL));
 	}
 	EIF_OBJECT tmp_pcelt_fetched = NULL;
 	if (pcelt_fetched != NULL)
@@ -56,7 +56,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::Next(  /* [out] 
 	
 	if (*rgelt != NULL)
 		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_224 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_223 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -112,7 +112,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::Clone(  /* [out]
 	EIF_OBJECT tmp_ppenum = NULL;
 	if (ppenum != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_220 (ppenum, NULL));
+		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_219 (ppenum, NULL));
 		if (*ppenum != NULL)
 			(*ppenum)->AddRef ();
 	}
@@ -124,7 +124,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::Clone(  /* [out]
 	
 	if (*ppenum != NULL)
 		(*ppenum)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_220 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	grt_ec_ISE.ccom_ec_pointed_cell_219 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
 	
 	END_ECATCH;
 	return S_OK;
@@ -143,7 +143,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::ith_item(  /* [i
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_226 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_225 (rgelt, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -153,7 +153,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumIncludePaths_impl_stub::ith_item(  /* [i
 	
 	if (*rgelt != NULL)
 		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_226 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_225 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;

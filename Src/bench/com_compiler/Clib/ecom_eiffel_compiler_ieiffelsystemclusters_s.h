@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel System Clusters.  Help file: 
+Eiffel System Clusters. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMCLUSTERS_S_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelSystemClusters_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelSystemClusters : public IDispatch
+class IEiffelSystemClusters : public IUnknown
 {
 public:
 	IEiffelSystemClusters () {};

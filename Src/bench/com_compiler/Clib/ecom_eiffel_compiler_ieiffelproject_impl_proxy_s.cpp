@@ -3,7 +3,7 @@ Implemented `IEiffelProject' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h"
-static const IID IID_IEiffelProject_ = {0x53e4ff57,0x2f3c,0x4ed2,{0x8b,0x08,0x89,0xaf,0x6e,0x2c,0x10,0xba}};
+static const IID IID_IEiffelProject_ = {0x3afea5ea,0x1aed,0x489b,{0x9e,0x8a,0xe3,0x53,0x42,0x58,0x2b,0x2b}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -112,75 +112,6 @@ void ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_create_eiffel_project
 	
 	rt_ce.free_memory_bstr (tmp_a_ace_file_name);
 rt_ce.free_memory_bstr (tmp_a_project_directory_path);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_retrieve_project(  /* [in] */ EIF_OBJECT a_project_file_name )
-
-/*-----------------------------------------------------------
-	Retrieve project. Obsolete
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProject == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProject_, (void **)&p_IEiffelProject);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_a_project_file_name = 0;
-	tmp_a_project_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_project_file_name));
-	
-	hr = p_IEiffelProject->retrieve_project(tmp_a_project_file_name);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_a_project_file_name);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_create_project(  /* [in] */ EIF_OBJECT an_ace_file_name,  /* [in] */ EIF_OBJECT project_directory_path )
-
-/*-----------------------------------------------------------
-	Create new project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProject == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProject_, (void **)&p_IEiffelProject);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_an_ace_file_name = 0;
-	tmp_an_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (an_ace_file_name));
-	BSTR tmp_project_directory_path = 0;
-	tmp_project_directory_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (project_directory_path));
-	
-	hr = p_IEiffelProject->create_project(tmp_an_ace_file_name,tmp_project_directory_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_an_ace_file_name);
-rt_ce.free_memory_bstr (tmp_project_directory_path);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -320,40 +251,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_valid_project(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_last_error_message(  )
-
-/*-----------------------------------------------------------
-	Last error message
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProject == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProject_, (void **)&p_IEiffelProject);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR ret_value = 0;
-	
-	hr = p_IEiffelProject->last_error_message( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
-	rt_ce.free_memory_bstr (ret_value);
-	return eif_wean (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_last_exception(  )
 
 /*-----------------------------------------------------------
@@ -382,7 +279,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_last_excepti
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_7 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_6 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -415,7 +312,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_compiler(  )
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_10 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_9 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -514,7 +411,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_system_brows
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_15 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_14 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -547,7 +444,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_project_prop
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_18 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_17 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -580,7 +477,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_completion_i
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_21 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_20 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -613,7 +510,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_html_doc_gen
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_24 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_23 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

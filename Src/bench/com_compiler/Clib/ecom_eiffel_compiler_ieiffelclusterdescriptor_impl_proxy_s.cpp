@@ -3,7 +3,7 @@ Implemented `IEiffelClusterDescriptor' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h"
-static const IID IID_IEiffelClusterDescriptor_ = {0x81062b0e,0xb1d6,0x4c5d,{0x8b,0x8b,0x71,0x46,0x4e,0x86,0xb8,0x69}};
+static const IID IID_IEiffelClusterDescriptor_ = {0x09cc4e23,0xceac,0x44b5,{0xb5,0x25,0x61,0xed,0x0c,0xef,0x00,0x75}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -177,7 +177,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_40 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -243,7 +243,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_44 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

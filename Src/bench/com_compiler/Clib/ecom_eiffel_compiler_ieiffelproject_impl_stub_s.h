@@ -53,18 +53,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Retrieve project. Obsolete
-	-----------------------------------------------------------*/
-	STDMETHODIMP retrieve_project(  /* [in] */ BSTR a_project_file_name );
-
-
-	/*-----------------------------------------------------------
-	Create new project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP create_project(  /* [in] */ BSTR an_ace_file_name, /* [in] */ BSTR project_directory_path );
-
-
-	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
 	STDMETHODIMP project_file_name(  /* [out, retval] */ BSTR * return_value );
@@ -86,12 +74,6 @@ public:
 	Is project valid?
 	-----------------------------------------------------------*/
 	STDMETHODIMP valid_project(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Last error message
-	-----------------------------------------------------------*/
-	STDMETHODIMP last_error_message(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -5,7 +5,7 @@ Implemented `IEiffelClusterDescriptor' Interface.
 #include "ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelClusterDescriptor_ = {0x81062b0e,0xb1d6,0x4c5d,{0x8b,0x8b,0x71,0x46,0x4e,0x86,0xb8,0x69}};
+static const IID IID_IEiffelClusterDescriptor_ = {0x09cc4e23,0xceac,0x44b5,{0xb5,0x25,0x61,0xed,0x0c,0xef,0x00,0x75}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -139,7 +139,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -192,7 +192,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::clusters(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_44 (eif_access (tmp_object));
+		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_43 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

@@ -3,7 +3,7 @@ Implemented `IEiffelHTMLDocEvents' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h"
-static const IID IID_IEiffelHTMLDocEvents_ = {0x62890dd1,0x7909,0x4a7d,{0x89,0x0d,0x51,0xdb,0xef,0xe2,0xbb,0x12}};
+static const IID IID_IEiffelHTMLDocEvents_ = {0xb120763e,0xed26,0x4ded,{0xaa,0xfb,0x21,0xfa,0x8b,0x28,0xe8,0x79}};
 
 #ifdef __cplusplus
 extern "C" {

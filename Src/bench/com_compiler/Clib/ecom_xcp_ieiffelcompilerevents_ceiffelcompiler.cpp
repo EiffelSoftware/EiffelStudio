@@ -4,7 +4,7 @@ IEiffelCompilerEvents-specific inner class.
 -----------------------------------------------------------*/
 
 #include "ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler.h"
-static const IID IID_IEiffelCompilerEvents_ = {0xb16070bd,0xdece,0x4e7a,{0x80,0x3c,0xf7,0xa4,0x59,0x24,0xcb,0x88}};
+static const IID IID_IEiffelCompilerEvents_ = {0x75b32e73,0xa00e,0x4bcf,{0x9a,0x7a,0x13,0xd4,0x1e,0x63,0x59,0xb4}};
 
 #ifdef __cplusplus
 extern "C" {

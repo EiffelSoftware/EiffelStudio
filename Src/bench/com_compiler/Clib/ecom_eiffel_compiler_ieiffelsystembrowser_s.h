@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-System Browser.  Help file: 
+System Browser. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMBROWSER_S_H__

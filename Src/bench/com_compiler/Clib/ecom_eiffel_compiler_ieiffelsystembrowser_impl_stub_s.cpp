@@ -5,7 +5,7 @@ Implemented `IEiffelSystemBrowser' Interface.
 #include "ecom_eiffel_compiler_IEiffelSystemBrowser_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelSystemBrowser_ = {0xa4caf314,0x6659,0x48d8,{0xa6,0x8e,0x46,0x34,0x92,0xd7,0x9d,0x8a}};
+static const IID IID_IEiffelSystemBrowser_ = {0xafb76625,0x6f73,0x442c,{0x9c,0xae,0x1b,0x98,0x14,0x14,0x05,0x0d}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classe
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -102,7 +102,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_cluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_44 (eif_access (tmp_object));
+		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_43 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -132,7 +132,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::external_clus
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_44 (eif_access (tmp_object));
+		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_43 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -162,7 +162,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::assemblies(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_47 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_46 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -215,7 +215,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::root_cluster(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_51 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_50 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -250,7 +250,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_51 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_50 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -287,7 +287,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_descrip
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_53 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -329,7 +329,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_57 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_56 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -369,7 +369,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_classe
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -407,7 +407,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

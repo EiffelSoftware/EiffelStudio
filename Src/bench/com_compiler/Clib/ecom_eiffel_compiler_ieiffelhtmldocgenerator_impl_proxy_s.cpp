@@ -3,7 +3,7 @@ Implemented `IEiffelHTMLDocGenerator' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h"
-static const IID IID_IEiffelHTMLDocGenerator_ = {0xaf48d380,0x8f9a,0x436c,{0x97,0x63,0xae,0x1c,0x73,0x2a,0xb3,0xf1}};
+static const IID IID_IEiffelHTMLDocGenerator_ = {0x86270519,0x790f,0x48cb,{0x88,0x69,0xdb,0x06,0x18,0x4f,0x97,0xb4}};
 
 #ifdef __cplusplus
 extern "C" {

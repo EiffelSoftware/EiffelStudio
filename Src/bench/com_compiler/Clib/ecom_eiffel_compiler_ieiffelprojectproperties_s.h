@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project Properties.  Help file: 
+Eiffel Project Properties. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELPROJECTPROPERTIES_S_H__
@@ -63,7 +63,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelProjectProperties_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelProjectProperties : public IDispatch
+class IEiffelProjectProperties : public IUnknown
 {
 public:
 	IEiffelProjectProperties () {};

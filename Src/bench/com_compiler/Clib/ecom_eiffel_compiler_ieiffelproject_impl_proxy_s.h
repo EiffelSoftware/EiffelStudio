@@ -61,18 +61,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Retrieve project. Obsolete
-	-----------------------------------------------------------*/
-	void ccom_retrieve_project(  /* [in] */ EIF_OBJECT a_project_file_name );
-
-
-	/*-----------------------------------------------------------
-	Create new project.
-	-----------------------------------------------------------*/
-	void ccom_create_project(  /* [in] */ EIF_OBJECT an_ace_file_name,  /* [in] */ EIF_OBJECT project_directory_path );
-
-
-	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_project_file_name(  );
@@ -94,12 +82,6 @@ public:
 	Is project valid?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_valid_project(  );
-
-
-	/*-----------------------------------------------------------
-	Last error message
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error_message(  );
 
 
 	/*-----------------------------------------------------------

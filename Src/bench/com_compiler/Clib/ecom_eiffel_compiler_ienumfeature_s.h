@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Feature Enumeration.  Help file: 
+Eiffel Feature Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMFEATURE_S_H__

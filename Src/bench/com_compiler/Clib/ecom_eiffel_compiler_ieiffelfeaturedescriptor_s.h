@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Feature Descriptor.  Help file: 
+Eiffel Feature Descriptor. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELFEATUREDESCRIPTOR_S_H__

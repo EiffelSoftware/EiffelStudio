@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Properties (for Ace file).  Help file: 
+Eiffel Cluster Properties (for Ace file). Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCLUSTERPROPERTIES_S_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelClusterProperties_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelClusterProperties : public IDispatch
+class IEiffelClusterProperties : public IUnknown
 {
 public:
 	IEiffelClusterProperties () {};
@@ -192,7 +192,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of subclusters (list of IEiffelClusterProperties*).
+	List subclusters (list of IEiffelClusterProperties*).
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value ) = 0;
 

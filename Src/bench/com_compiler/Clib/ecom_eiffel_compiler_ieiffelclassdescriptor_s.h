@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Class Descriptor.  Help file: 
+Eiffel Class Descriptor. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCLASSDESCRIPTOR_S_H__

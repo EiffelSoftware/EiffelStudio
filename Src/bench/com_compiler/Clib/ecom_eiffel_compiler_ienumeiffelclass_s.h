@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Class Enumeration.  Help file: 
+Eiffel Class Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMEIFFELCLASS_S_H__

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Exluded Directories Enumeration.  Help file: 
+Eiffel Cluster Exluded Directories Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMCLUSTEREXCLUDES_S_H__

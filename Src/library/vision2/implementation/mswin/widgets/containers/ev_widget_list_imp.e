@@ -32,21 +32,17 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_WIDGET_IMP
 			wel_win: WEL_WINDOW
-			pix_imp: EV_PIXMAP_I
 		do
-			ev_children.go_i_th (i)
+				-- Should `v' be a pixmap,
+				-- promote implementation to EV_WIDGET_IMP.
+			v.implementation.on_parented
+
 			v_imp ?= v.implementation
 
-				-- If the widget is a pixmap, then
-				-- promote it if necessarry.
-			if v_imp = Void then
-				pix_imp ?= v.implementation
-				pix_imp.on_parented
-				v_imp ?= v.implementation
-			end
 			check
 				v_imp_not_void: v /= Void
 			end
+			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			wel_win ?= Current
 			check
@@ -105,6 +101,11 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/14 20:46:55  brendel
+--| Fixed parenting of widget. on_parented is now called for every widget
+--| before trying to conform the implementation to EV_WIDGET_IMP.
+--| This is for the new way EV_PIXMAP is done.
+--|
 --| Revision 1.19  2000/04/12 01:30:21  pichery
 --| - added pixmap promoting when adding
 --|   a pixmap in a container

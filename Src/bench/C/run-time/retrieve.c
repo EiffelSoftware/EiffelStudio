@@ -103,7 +103,6 @@ rt_private void read_header(char rt_type);
 		/* Read general header */
 rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent);	/* read the individual attributes of the object*/
-rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 
 rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
@@ -1079,23 +1078,12 @@ update:
 			continue;
 		if (nb_attr) {
 			if (((System(flags & EO_TYPE).cn_types[nb_attr - nb_references]) & SK_HEAD) == SK_EXP) {
-				/* This is an internal expanded reference */
-				long new_offset;
-				long offset = reference - old;
-	
-				if (rt_kind == INDEPENDENT_STORE) {
-					new_offset = get_expanded_pos (flags & EO_TYPE, (uint32)(nb_attr - nb_references));
-				} else
-					new_offset = offset;
-	
-				*(EIF_REFERENCE *) addr = new_obj + new_offset;				/* Expanded reference */
-				if (rt_kind) {
-					/* CHECK THIS - M.S. */
-					uint32 old_flags = HEADER(new_obj + new_offset)->ov_flags;
-					HEADER(new_obj + new_offset)->ov_flags &= ~EO_TYPE;
-					HEADER(new_obj + new_offset)->ov_flags |= dtypes[old_flags & EO_TYPE];
-				}
-				rt_update2(old + offset, new_obj + new_offset, parent);	/* Recursion */
+					/* Because we have no way to find what was the value corresponding to
+					 * `reference' in `old' object, we simply use `old' although it
+					 * might not be correct, but it does not matter too much as it is
+					 * a self reference and no once except the enclosing object can point
+					 * to it. */
+				rt_update2(old, reference, parent);	/* Recursion */
 				continue;
 			} 
 		} 
@@ -1712,16 +1700,15 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					break;
 				case SK_EXP: {
 					uint32  old_flags, hflags;
-					long size_count;
+					EIF_REFERENCE l_buffer [1];
 
-					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+					buffer_read(l_buffer, sizeof(EIF_REFERENCE));
 					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-					size_count = get_expanded_pos (o_type, num_attrib);
 
-					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
-					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
-					gen_object_read (object + size_count, parent);						
+						/* No need to set `ov_size' as it is done while creating the object */
+					HEADER(object + attrib_offset)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+					gen_object_read (object + attrib_offset, parent);						
 
 					}
 					break;
@@ -1934,20 +1921,20 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					break;
 				case SK_EXP: {
 					uint32  old_flags, hflags;
-					long size_count;
+					EIF_REFERENCE l_buffer [1];
 
-					ridr_multi_any (object + attrib_offset, 1);
+					ridr_multi_any (l_buffer, 1);
 					ridr_norm_int (&old_flags);
 					rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
-					size_count = get_expanded_pos (o_type, attrib_order[num_attrib]);
 
 #if DEBUG & 1
 					printf ("\n %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
 					printf (" %lx", old_flags);
 #endif
-					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
-					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
-					object_read (object + size_count, parent);						
+
+						/* No need to set `ov_size' as it is done while creating the object */
+					HEADER(object + attrib_offset)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
+					object_read (object + attrib_offset, parent);						
 
 					}
 					break;
@@ -2175,71 +2162,6 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			}
 		} 
 	}
-}
-
-rt_private long dbl_off(long t, long u,long v, long w, long x, long y, long z)
-{
-	long add = I64OFF(t,u,v,w,x,y) + z*I64SIZ;
-	return add + PADD(add,DBLSIZ);
-}
-rt_private long obj_size(long s, long t, long u, long v, long w, long x, long y, long z)
-{
-	long add = dbl_off (s,t,u,v,w,x,y)+ z*DBLSIZ;
-	return add+REMAINDER(add);
-}
-
-rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
-{
-	int numb, counter, bit_size = 0;
-	int num_ref = 0, num_char = 0, num_float = 0, num_double = 0;
-	int num_pointer = 0, num_int = 0, exp_size = 0; 
-	int num_int16 = 0, num_int64 = 0;
-	uint32 types_cn;
-
-	numb = System(o_type).cn_nbattr;
-	for (counter = 0; counter < numb; counter++) {
-		types_cn = *(System(o_type).cn_types + counter);
-		switch (types_cn & SK_HEAD) {
-			case SK_EXP:
-				if ((counter + (++num_ref - num_attrib)) < num_attrib) {
-					exp_size += (OVERHEAD + EIF_Size(types_cn & SK_DTYPE));
-				}
-				break;
-			case SK_REF:
-				num_ref++;
-				break;
-			case SK_POINTER:
-				num_pointer++;
-				break;
-			case SK_INT32:
-			case SK_WCHAR:
-				num_int++;
-				break;
-			case SK_INT16:
-				num_int16++;
-				break;
-			case SK_INT64:
-				num_int64++;
-				break;
-			case SK_BOOL:
-			case SK_CHAR:
-			case SK_INT8:
-				num_char++;
-				break;
-			case SK_FLOAT:
-				num_float++;
-				break;
-			case SK_DOUBLE:
-				num_double++;
-				break;
-			case SK_BIT:
-				bit_size += (OVERHEAD + BITOFF(types_cn & SK_DTYPE));
-				break;
-			default:
-				eise_io("Retrieve: incorrect expanded object.");
-		}
-	}
-	return (obj_size(num_ref,num_char,num_int16,num_int,num_float,num_pointer,num_int64,num_double)+bit_size+exp_size+OVERHEAD);
 }
 
 rt_private int char_read(char *pointer, int size)

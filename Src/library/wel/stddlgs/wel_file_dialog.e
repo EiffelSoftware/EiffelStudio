@@ -65,6 +65,51 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	multiple_file_names: LINKED_LIST[STRING] is
+			-- return the full path name of all selected files.
+		require
+			multiple_files_flag_set: has_flag (Ofn_allowmultiselect)
+		local
+			directory_name: STRING
+		do
+			if has_flag(Ofn_explorer) then
+					-- Explorer-like dialog returns a buffer where
+					-- filename are NULL separated.
+				Result := str_file_name.null_separated_strings
+			else
+					-- non Explorer-like dialog returns a buffer where
+					-- filename are space separated. Only "short"
+					-- filename are returned (i.e 8.3 dos format)
+				Result := str_file_name.space_separated_strings
+			end
+
+				-- The first string of `Result' is the selected
+				-- directory, the following strings are the name
+				-- of the selected files
+			from
+				Result.start
+				directory_name := Result.item
+					-- add the final backslash if not present
+				if (directory_name @ directory_name.count) /= '\' then
+					directory_name.append_character('\')
+				end
+				if not Result.after then
+					Result.forth
+				end
+			until
+				Result.after
+			loop
+					-- prepend the directory to the filename
+				Result.item.prepend(directory_name)
+				Result.forth
+			end
+				-- Remove the directory from the string list.
+			Result.start
+			Result.remove
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	file_title: STRING is
 			-- Title of the selected file (without path).
 		require

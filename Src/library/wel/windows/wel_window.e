@@ -2052,8 +2052,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK DefWindowProc
 		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, %
-				%LPARAM): EIF_INTEGER"
+			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"DefWindowProc"
 		end

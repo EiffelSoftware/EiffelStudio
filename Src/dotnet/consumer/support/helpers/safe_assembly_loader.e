@@ -69,13 +69,16 @@ feature -- Basic Operations
 			valid_path: not a_path.is_empty
 		local
 			l_assembly: ASSEMBLY
+			l_new_domain: APP_DOMAIN
 		do
 			l_assembly := load_assembly_from_path (a_path)
 			if l_assembly /= Void then
-				Result := load_assembly_by_name (l_assembly.get_name)
+				l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
+				Result := l_new_domain.load (l_assembly.get_name)
 				if Result = Void or not Result.global_assembly_cache then
 					Result := l_assembly
 				end
+				feature {APP_DOMAIN}.unload (l_new_domain)
 			end
 		end
 		

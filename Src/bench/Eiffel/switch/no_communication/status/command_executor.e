@@ -48,9 +48,15 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 
 	invoke_finish_freezing (c_code_dir, freeze_command: STRING) is
 			-- Invoke the `finish_freezing' script.
+		local
+			cwd: STRING
 		do
-			eif_call_finish_freezing (c_code_dir.to_c,
-				freeze_command.to_c)
+				-- Store current working directory
+			cwd := Execution_environment.current_working_directory
+			
+			Execution_environment.change_working_directory (c_code_dir)
+			Execution_environment.launch (freeze_command)
+			Execution_environment.change_working_directory (cwd)
 		end
 
 feature {NONE} -- Externals
@@ -59,11 +65,6 @@ feature {NONE} -- Externals
 			system_name,
 			prelink_cmd_name,
 			driver_name: ANY) is
-		external
-			"C"
-		end
-
-	eif_call_finish_freezing (c_code_dir, freeze_cmd: ANY) is
 		external
 			"C"
 		end

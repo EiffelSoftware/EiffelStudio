@@ -61,7 +61,10 @@ feature
 					done or else creators.after
 				loop
 					creat_feat := feature_table.item (creators.key_for_iteration);
-					if creat_feat.same_signature (Make_signature) then
+					if
+						creat_feat.feature_name.is_equal (Make_signature.feature_name) and then
+						creat_feat.same_signature (Make_signature)
+					then
 						done := True
 					else
 						creators.forth

@@ -210,13 +210,13 @@ feature {NONE} -- Implementation
 			end
 
 			if current_x = x_in_pixels then
-				-- We are lucky. The cursor is situated at the
-				-- beggining of a token
+					-- We are lucky. The cursor is situated at the
+					-- beggining of a token
 				pos_in_token := 1
 				token := current_token
 			else
 					-- we are too far, so the good token is the
-					-- previous one.
+					-- previous one, we have to look into it.
 				token := current_tokem.previous
 					-- rewind our pixel position
 				current_x := current_x - token.

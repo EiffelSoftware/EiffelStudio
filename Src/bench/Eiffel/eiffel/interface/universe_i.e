@@ -44,22 +44,6 @@ feature -- Properties
 
 feature -- Access
 
-	class_stone (class_name: STRING): STONE is
-			-- Find first class stone with class name `class_name'.
-			-- (Void if none are found).	
-		local
-			class_i: CLASS_I
-		do
-			class_i := class_with_name (class_name);
-			if class_i /= Void then
-				if class_i.compiled then
-					Result := class_i.compiled_eclass.stone
-				else
-					!CLASSI_STONE! Result.make (class_i)
-				end
-			end
-		end;
-
 	class_with_name (class_name: STRING): CLASS_I is
 			-- Find class with name `class_name' in the Universe
 			-- (Void if not found).	

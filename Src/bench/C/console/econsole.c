@@ -75,7 +75,7 @@ EIF_CHARACTER eif_console_readchar()
 
 	eif_show_console();
 
-	if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+	if (!ReadConsole(eif_coninfile, eif_console_buffer, 1, &buffer_length, NULL))
 		eio();
 
 	return eif_console_buffer [0];
@@ -247,7 +247,7 @@ void eif_console_putint (long l)
 	eif_show_console();
 
 	t = sprintf (transfer_buffer, "%ld", l);
-	WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
 	EIF_END_GET_CONTEXT
 }
 
@@ -259,7 +259,7 @@ void eif_console_putchar (EIF_CHARACTER c)
 	eif_show_console();
 
 	transfer_buffer[0] = c;
-	WriteConsole(eif_conoutfile,transfer_buffer,1, &dummy_length, NULL);
+	WriteFile(eif_conoutfile,transfer_buffer,1, &dummy_length, NULL);
 	EIF_END_GET_CONTEXT
 }
 
@@ -267,7 +267,7 @@ void eif_console_putstring (BYTE *s, long length)
 {
 	EIF_GET_CONTEXT
 	eif_show_console();
-	WriteConsole(eif_conoutfile,s, length, &dummy_length, NULL);
+	WriteFile(eif_conoutfile,s, length, &dummy_length, NULL);
 	EIF_END_GET_CONTEXT
 }
 
@@ -280,7 +280,7 @@ void eif_console_putreal (double r)
 	eif_show_console();
 
 	t = sprintf (transfer_buffer, "%g", (float) r);
-	WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
 	EIF_END_GET_CONTEXT
 }
 
@@ -293,7 +293,7 @@ void eif_console_putdouble (double d)
 	eif_show_console();
 
 	t = sprintf (transfer_buffer, "%.17g", d);
-	WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	WriteFile(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
 	EIF_END_GET_CONTEXT
 }
 
@@ -366,25 +366,40 @@ void eif_show_console()
 	EIF_GET_CONTEXT
 	if (!eif_console_allocated) {
 		BOOL bSuccess;
-		SECURITY_ATTRIBUTES sa;
 
 		bSuccess = AllocConsole();
+		printf ("%d\n", bSuccess);
 
-		sa.nLength = sizeof (sa);
-		sa.lpSecurityDescriptor = NULL;
-		sa.bInheritHandle = TRUE;
+		if (bSuccess) {
+			SECURITY_ATTRIBUTES sa;
 
-		eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
-			FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
+			sa.nLength = sizeof (sa);
+			sa.lpSecurityDescriptor = NULL;
+			sa.bInheritHandle = TRUE;
 
-		if (eif_conoutfile == INVALID_HANDLE_VALUE)
-			eio();
+			eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
+				FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
 
-		eif_coninfile = CreateFile ("CONIN$", GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
+			if (eif_conoutfile == INVALID_HANDLE_VALUE)
+				eio();
 
-		if (eif_coninfile == INVALID_HANDLE_VALUE)
-			eio();
+			eif_coninfile = CreateFile ("CONIN$", GENERIC_READ | GENERIC_WRITE,
+				FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
+
+			if (eif_coninfile == INVALID_HANDLE_VALUE)
+				eio();
+
+		} else {
+			eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);
+
+			if (eif_conoutfile == INVALID_HANDLE_VALUE)
+				eio();
+
+			eif_coninfile = GetStdHandle (STD_INPUT_HANDLE);
+
+			if (eif_coninfile == INVALID_HANDLE_VALUE)
+				eio();
+		}
 
 		eif_register_cleanup (eif_console_cleanup);
 		eif_console_allocated = TRUE;

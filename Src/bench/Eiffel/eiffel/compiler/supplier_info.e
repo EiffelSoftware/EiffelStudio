@@ -8,17 +8,11 @@ creation
 
 feature 
 
-	supplier: CLASS_C;
+	supplier: E_CLASS;
 			-- Supplier
 
 	occurence: INTEGER;
 			-- Occurence of the supplier in the class
-
-	set_supplier (c: CLASS_C) is
-			-- Assign `c' to `supplier'.
-		do
-			supplier := c;
-		end;
 
 	set_occurence (i: INTEGER) is
 			-- Assign `i' to `occurence'.
@@ -26,7 +20,7 @@ feature
 			occurence := i;
 		end;
 
-	make (cl: CLASS_C) is
+	make (cl: like supplier) is
 			-- Initialization
 		require
 			good_argument: cl /= Void

@@ -35,7 +35,7 @@ feature
 		do
 			print_error_message;
 			put_string ("Class: ");
-			class_c.append_clickable_signature (error_window);
+			class_c.e_class.append_clickable_signature (error_window);
 			if feature_i /= Void then
 				put_string ("%NFeature: ");
 				feature_i.append_clickable_name (error_window, class_c);

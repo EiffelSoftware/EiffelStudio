@@ -15,7 +15,8 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_BYTE_CONTEXT;
 	SHARED_ENCODER;
-	SHARED_TABLE
+	SHARED_TABLE;
+	COMPILER_EXPORTER
 
 creation
 	make
@@ -205,7 +206,7 @@ end
 	record_descendants (a_class: CLASS_C) is
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
-			d: LINKED_LIST [CLASS_C];
+			d: LINKED_LIST [E_CLASS];
 			an_id: INTEGER;
 			ftable: FEATURE_TABLE;
 			select_table: SELECT_TABLE;
@@ -246,7 +247,7 @@ end;
 				until
 					d.after
 				loop
-					record_descendants (d.item);
+					record_descendants (d.item.compiled_info);
 					d.forth
 				end;
 			end;

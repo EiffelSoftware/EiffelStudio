@@ -45,7 +45,7 @@ feature
 			if r_class = class_c then
 					-- The redeclaration is written in the current class
 					-- The clickable information is NOT in the servers!!!
-				put_string (redeclaration.signature);
+				put_string (redeclaration.api_feature.signature);
 			else
 				redeclaration.append_clickable_signature (error_window, r_class);
 			end;

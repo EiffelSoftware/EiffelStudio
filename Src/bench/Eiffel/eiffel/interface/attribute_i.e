@@ -345,4 +345,16 @@ feature
 			Execution_table.mark_melted (exec);
 		end;
 
+feature {NONE} -- Implementation
+
+	new_api_feature: E_ATTRIBUTE is
+			-- API feature creation
+		local
+			t: TYPE_A
+		do
+			t ?= type;
+			!! Result.make (feature_name, feature_id);
+			Result.set_type (t)
+		end;
+
 end

@@ -52,9 +52,9 @@ feature
 	build_explain is
 		do
 			put_string ("Class: ");
-			associated_class.append_clickable_name (error_window);
+			associated_class.e_class.append_clickable_name (error_window);
 			put_string ("%NObsolete class: ");
-			obsolete_class.append_clickable_name (error_window);
+			obsolete_class.e_class.append_clickable_name (error_window);
 			put_string ("%NObsolete message: ");
 			put_string (obsolete_class.obsolete_message);
 			new_line;

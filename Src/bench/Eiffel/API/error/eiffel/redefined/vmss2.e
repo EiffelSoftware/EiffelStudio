@@ -47,7 +47,7 @@ feature
 			put_string ("Feature name: ");
 			put_string (feature_name);
 			put_string ("%NIn Select subclause for parent: ");
-			parent.append_clickable_signature (error_window);
+			parent.e_class.append_clickable_signature (error_window);
 			new_line;
 		end;
 

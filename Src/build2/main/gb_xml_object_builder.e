@@ -11,6 +11,8 @@ inherit
 	
 	GB_ACCESSIBLE_OBJECT_HANDLER
 	
+	GB_ACCESSIBLE_DEFERRED_BUILDER
+	
 	GB_CONSTANTS	
 	
 	INTERNAL
@@ -84,6 +86,11 @@ feature {NONE} -- Implementation
 					end
 				end
 				xml_element.forth
+			end
+				-- If we were just building a component, then
+				-- there should be no deferred building routines.
+			if is_component then
+				deferred_builder.clear_deferred
 			end
 			Result := a_new_object
 		end

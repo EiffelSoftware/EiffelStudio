@@ -203,7 +203,7 @@ feature {NONE} -- Initialization
 				end
 				if 
 					tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
-							--| This prevents freezing on possible show_modal_to_window calls for dialogs		
+							--| This prevents freezing on possible show_modal_to_window calls for dialogs
 						if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
 							timeout_imp ?= (create {EV_TIMEOUT}).implementation
 							timeout_imp.interface.actions.extend (agent (tree_item_imp.pointer_button_press_actions_internal).call (t))
@@ -456,14 +456,12 @@ feature -- Implementation
 			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
 				pnd_row_imp := Void
 			end
-			
-			if pnd_row_imp /= Void or else pebble /= Void then
-				Precursor (
+			Precursor (
 				a_type,
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y)
-			end			
+				a_screen_x, a_screen_y
+			)			
 		end
 
 	pnd_row_imp: EV_TREE_NODE_IMP

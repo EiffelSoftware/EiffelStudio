@@ -1763,8 +1763,10 @@ feature {NONE} -- Externals
 
 invariant
 
-	path_exists: path /= Void;
-	classes_exists: classes /= Void;
-	sub_clusters_exists: sub_clusters /= Void
+	path_not_void: path /= Void;
+	classes_not_void: classes /= Void;
+	sub_clusters_not_void: sub_clusters /= Void
+	ignore_not_void: ignore /= Void
+	renamings_not_void: renamings /= Void
 
 end

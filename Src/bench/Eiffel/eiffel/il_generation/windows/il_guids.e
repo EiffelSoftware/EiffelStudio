@@ -20,7 +20,7 @@ feature -- Access
 	vendor_guid: COM_GUID is
 			-- Vendor guid used to identify us when debugging.
 		once
-			create Result.make (0xE1FFE10E, 0X9424, 0X485F,
+			create Result.make (0xE1FFE10E, 0x9424, 0x485F,
 				<<0x82, 0x64, 0xD4, 0xA7, 0x26, 0xC1, 0x62, 0xE7>>)
 		ensure
 			vendor_guid_not_void: vendor_guid /= Void

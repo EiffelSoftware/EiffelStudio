@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 		require
 			menus_not_initialized: menus_initialized = False
 		local
-			help_about, file_exit: EV_MENU_ITEM
+			help_about, help_tip_of_day, file_exit: EV_MENU_ITEM
 			view_preferences, view_tools: EV_MENU
 			menu_separator: EV_MENU_SEPARATOR
 			menu_item: EV_MENU_ITEM
@@ -301,6 +301,11 @@ feature {NONE} -- Implementation
 			create help_about.make_with_text (Gb_help_about_menu_text)
 			help_menu.extend (help_about)
 			help_about.select_actions.extend (agent show_about_dialog)
+			help_menu.extend (create {EV_MENU_SEPARATOR})
+			create help_tip_of_day.make_with_text (Gb_help_tip_of_day_menu_text)
+			help_menu.extend (help_tip_of_day)
+			help_tip_of_day.select_actions.extend (agent show_tip_of_day)
+			
 			
 			assign_command_accelerators_to_window
 				
@@ -517,6 +522,15 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	show_tip_of_day is
+			-- Display tip of day dialog.
+		local
+			tip_dialog: GB_TIP_OF_THE_DAY_DIALOG
+		do
+			create tip_dialog
+			tip_dialog.show_modal_to_window (Current)
+		end
 
 	initialize_tool_positions (info: ARRAY [STRING]) is
 			-- Initialize tools in `multiple_split_area', based on `info'.

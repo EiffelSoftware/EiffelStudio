@@ -8,8 +8,8 @@ indexing
 class TTY_RESOURCES
 
 inherit
-	TTY_CONSTANTS;
-	SHARED_CONFIGURE_RESOURCES;
+	TTY_CONSTANTS
+	SHARED_CONFIGURE_RESOURCES
 	SHARED_EIFFEL_PROJECT
 
 creation 
@@ -26,16 +26,16 @@ feature {NONE} -- Initialization
 			resource_table: RESOURCE_TABLE;
 			resource_files_parser: RESOURCE_FILES_PARSER;
 		once
-			!! resource_table.make (20);
-			!! resource_files_parser.make ("bench");
-			resource_files_parser.parse_files (resource_table);
-			initialize_resources (resource_table);
-			resource_files_parser.set_extension ("cfg");
-			resource_files_parser.parse_files (Configure_resources);
+			create resource_table.make (20)
+			create resource_files_parser.make ("bench")
+			resource_files_parser.parse_files (resource_table)
+			initialize_resources (resource_table)
+			resource_files_parser.set_extension ("cfg")
+			resource_files_parser.parse_files (Configure_resources)
 				-- Initialize directories in Eiffel Project
-			Eiffel_project.set_filter_path (General_resources.filter_path.value);
-			Eiffel_project.set_profile_path (General_resources.profile_path.value);
-			Eiffel_project.set_tmp_directory (General_resources.tmp_path.value);
+			Eiffel_project.set_filter_path (General_resources.filter_path.value)
+			Eiffel_project.set_profile_path (General_resources.profile_path.value)
+			Eiffel_project.set_tmp_directory (General_resources.tmp_path.value)
 		end
 
 feature {NONE} -- Initialization of resource categories
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization of resource categories
 	initialize_resources (a_table: RESOURCE_TABLE) is
 			-- Initialize all resources valid for the tty interface.
 		do
-			General_resources.initialize (a_table);
-			Class_resources.initialize (a_table);
-			Feature_resources.initialize (a_table);
+			General_resources.initialize (a_table)
+			Class_resources.initialize (a_table)
+			Feature_resources.initialize (a_table)
 		end
 
 end -- class TTY_RESOURCES

@@ -11,6 +11,8 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_TARGET_ACTION_SEQUENCES_I
 
 feature -- Status report
 

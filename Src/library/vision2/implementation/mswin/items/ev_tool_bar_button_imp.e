@@ -28,6 +28,11 @@ inherit
 			interface
 		end
 
+	EV_PICK_AND_DROPABLE_ITEM_IMP
+		redefine
+			interface
+		end
+
 	EV_TEXTABLE_IMP
 		redefine
 			interface
@@ -93,43 +98,6 @@ feature -- Access
 		do
 			if gray_pixmap /= Void then
 				Result ?= gray_pixmap.implementation
-			end
-		end
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		local
-			tool_bar_imp: EV_TOOL_BAR_IMP
-		do
-		tool_bar_imp ?= parent_imp
-			check
-				parent_not_void: tool_bar_imp /= Void
-			end
-			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
-					a_screen_y)
-				tool_bar_imp.set_parent_source_true
-				tool_bar_imp.set_item_source (Current)
-				tool_bar_imp.set_item_source_true
-			elseif press_action = Ev_pnd_end_transport then
-				end_transport (a_x, a_y, a_button)
-				tool_bar_imp.set_parent_source_false
-				tool_bar_imp.set_item_source (Void)
-				tool_bar_imp.set_item_source_false
-			else
-				tool_bar_imp.set_parent_source_false
-				tool_bar_imp.set_item_source (Void)
-				tool_bar_imp.set_item_source_false
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
-
-	set_pointer_style (c: EV_CURSOR) is
-			-- Assign `c' to `parent_imp' pointer style.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_pointer_style (c)
 			end
 		end
 
@@ -268,6 +236,10 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/11 19:06:26  rogers
+--| Now inherits EV_PICK_AND_DROPABLE_ITEM_IMP. Removed pnd_press
+--| and set_pointer_Style as they are now inherited.
+--|
 --| Revision 1.21  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

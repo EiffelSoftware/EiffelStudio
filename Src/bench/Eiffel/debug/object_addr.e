@@ -24,32 +24,48 @@ feature -- Access
 		do
 			if not addr_table.has (addr) then
 				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_integer (addr));
-				addr_table.put (c_tread, addr)
+				addr_table.put (clone (c_tread), addr)
 			end;
 			Result := addr_table.item (addr)
+
+debug ("HECTOR")
+	io.error.putstring ("Address: ");
+	io.error.putstring (addr);
+	io.error.putstring (" Hector: ");
+	io.error.putstring (Result);
+	io.error.new_line
+end
 		end;
 	
-	physical_addr (eif_obj: STRING): STRING is
-			-- Address of object `eif_obj' (hector addr) previously
+	physical_addr (h_addr: STRING): STRING is
+			-- Address of object `h_addr' (hector addr) previously
 			-- adopted by user application
 		require
-			eif_obj_not_void: eif_obj /= Void
+			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_access, In_address, 0, hex_to_integer (eif_obj));
-			Result := c_tread
+			send_rqst_3 (Rqst_access, In_address, 0, hex_to_integer (h_addr));
+			Result := clone (c_tread)
+	
+debug ("HECTOR")
+	io.error.putstring ("Hector: ");
+	io.error.putstring (h_addr);
+	io.error.putstring (" Address: ");
+	io.error.putstring (Result);
+	io.error.new_line
+end
 		end;
 
 feature -- Updating
 
-	keep_objects (hector_addrs: SET [STRING]) is
-			-- Keep references to `hector_addrs' and ask user application
-			-- to wean the other adopted objects not used any more.
+	keep_objects (kept_addrs: SET [STRING]) is
+			-- Keep references to `kept_addrs' and ask user application
+			-- to wean the other adopted objects not used anymore.
 		require
-			hector_addrs_exists: hector_addrs /= Void
+			kept_addrs_exists: kept_addrs /= Void
 		local
 			addresses: SPECIAL [STRING];
 			i, addr_table_count: INTEGER;
-			eif_obj: STRING
+			h_addr: STRING
 		do
 			from
 				addresses := addr_table.current_keys.area
@@ -57,10 +73,10 @@ feature -- Updating
 			until
 				i >= addr_table_count
 			loop
-				eif_obj := addr_table.item (addresses.item (i));
-				if not hector_addrs.has (eif_obj) then
-					forget_obj (eif_obj);
-					addr_table.remove (eif_obj)
+				h_addr := addr_table.item (addresses.item (i));
+				if not kept_addrs.has (h_addr) then
+					forget_obj (h_addr);
+					addr_table.remove (addresses.item (i))
 				end;
 				i := i + 1
 			end
@@ -70,41 +86,36 @@ feature -- Updating
 			-- Update physical addresses of adopted objects after
 			-- an execution step.
 		local
-			addresses: SPECIAL [STRING];
-			i, addr_table_count: INTEGER;
-			objects: LINKED_LIST [STRING];
-			eif_obj: STRING
+			h_addrs: ARRAY_SEQUENCE [STRING];
+			h_addr: STRING
 		do
 			from
-				objects.make;
-				addresses := addr_table.current_keys.area
-				addr_table_count := addr_table.count
+				h_addrs := addr_table.sequential_representation;
+				addr_table.clear_all;
+				h_addrs.start
 			until
-				i >= addr_table_count
+				h_addrs.off
 			loop
-				objects.add (addr_table.item (addresses.item (i)));
-				i := i + 1
-			end;
-			addr_table.clear_all;
-			from
-				objects.start
-			until
-				objects.after
-			loop
-				eif_obj := objects.item;
-				addr_table.put (eif_obj, physical_addr (eif_obj));
-				objects.forth
+				h_addr := h_addrs.item;
+				addr_table.put (h_addr, physical_addr (h_addr));
+				h_addrs.forth
 			end
 		end;
 
 feature {NONE} 
 
-	forget_obj (eif_obj: STRING) is
-			-- Ask user application to wean adopted object `eif_obj'.
+	forget_obj (h_addr: STRING) is
+			-- Ask user application to wean adopted object `h_addr'.
 		require
-			eif_obj_not_void: eif_obj /= Void
+			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_integer (eif_obj))
+			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_integer (h_addr))
+
+debug ("HECTOR")
+	io.error.putstring ("Wean Hector: ");
+	io.error.putstring (h_addr);
+	io.error.new_line
+end
 		end;
 
 	addr_table: HASH_TABLE [STRING, STRING] is
@@ -112,7 +123,7 @@ feature {NONE}
 			-- the key is the physical addr of the object, the item is
 			-- its hector addr (with indirection)
 		once
-			Result.make (40)
+			!! Result.make (40)
 		end;
 
 end -- class OBJECT_ADDR	

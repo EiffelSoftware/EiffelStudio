@@ -74,7 +74,15 @@ feature {NONE} -- For workbench requests.
 
 	In_address: INTEGER is 0;
 		-- #define IN_ADDRESS      0
-		-- /* Local variable by number */
+		-- /* Object at given physical addr */
+
+	In_h_addr: INTEGER is 5;
+		-- #define IN_H_ADDR      5
+		-- /* Object at given hector addr */
+
+	In_bit_addr: INTEGER is 6;
+		-- #define IN_BIT_ADDR      6
+		-- /* Bit object at given addr */
 
 	Pg_raise: INTEGER is 1;
 		-- Explicitely raised exception

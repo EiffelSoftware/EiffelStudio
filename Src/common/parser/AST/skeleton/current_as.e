@@ -45,9 +45,11 @@ feature -- Type check and byte code
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			ctxt.always_succeed;
-			ctxt.put_string ("Current");
-			ctxt.set_types_back_to_global;
+			ctxt.begin;
+			ctxt.prepare_for_current;
+			ctxt.put_string (ctxt.new_types.final_name);
+			ctxt.commit;
+			--ctxt.set_types_back_to_global;
 		end;
 
 	access_name: STRING is

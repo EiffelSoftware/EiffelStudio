@@ -1,7 +1,11 @@
 class BITS_VALUE
 
 inherit
-	DEBUG_VALUE
+
+	DEBUG_VALUE;
+	DEBUG_EXT;
+	IPC_SHARED;
+	BEURK_HEXER
 
 creation
 	make
@@ -9,23 +13,22 @@ creation
 feature
 
 	append_value (cw: CLICK_WINDOW) is 
-		local
-			os: OBJECT_STONE
 		do 
---			cw.put_string ("BITS ");
---			cw.put_int (size);
-			cw.put_string (" [");
-			!! os.make (reference.out);
-			cw.put_clickable_string (os, reference.out);
-			cw.put_string ("]")
+			send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_integer (addr));
+			cw.put_string (" = ");
+			cw.put_string (clone (c_tread));
+			cw.new_line
+			
 		end;
 
-	reference: POINTER;
+	addr: STRING;
+			-- Physical address of the bit object
+
 	size: INTEGER;
 
-	make (ref: like reference; s: like size) is
+	make (ref: POINTER; s: like size) is
 		do
-			reference := ref;
+			addr := ref.out;
 			size := s;
 		end
 

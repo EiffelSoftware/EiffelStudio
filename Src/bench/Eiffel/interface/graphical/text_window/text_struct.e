@@ -65,11 +65,20 @@ feature
 			-- also affect `other', and conversely.
 		end;
 
-feature {NONE}
-
 	clickable_count: INTEGER;
 			-- Number of clickable elements in structure
 			-- Note that a clickable element is never removed
+
+	clear_clickable is
+			-- Make the text_struct empty.
+		do
+			upper := -1;
+			lower := 0;
+			area := Void;
+			clickable_count := 0
+		end;
+
+feature {NONE}
 
 	search_by_index (i: INTEGER) is
 			-- Search for element which `start_position' is the greatest

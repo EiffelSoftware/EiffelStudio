@@ -27,6 +27,7 @@ extern "C" {
 
 RT_LNK char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
 extern char *c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
+extern char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
 extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
 
 /*
@@ -39,6 +40,16 @@ extern EIF_REFERENCE c_outr(EIF_REAL f);		/* %%zs modified EIF_REFERENCE was cha
 extern EIF_REFERENCE c_outd(EIF_DOUBLE d);		/* %%zs modified EIF_REFERENCE was char * */
 extern EIF_REFERENCE c_outc(EIF_CHARACTER c);		/* %%zs modified EIF_REFERENCE was char * */
 extern EIF_REFERENCE c_outp(EIF_POINTER p);		/* %%zs modified EIF_REFERENCE was char * */
+
+/*
+ *	`out' string.
+ */
+
+#ifndef EIF_THREADS
+extern char*tagged_out;
+#endif /* EIF_THREADS */
+
+
 
 #ifdef WORKBENCH
 

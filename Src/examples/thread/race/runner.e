@@ -1,4 +1,5 @@
-class RUNNER
+class 
+	RUNNER
 inherit
 	THREAD
 

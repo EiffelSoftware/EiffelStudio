@@ -66,6 +66,18 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	GB_SHARED_PREFERENCES
+		undefine
+			copy, default_create
+		end
+		
+	GB_WIDGET_UTILITIES
+		undefine
+			copy, default_create
+		end
+		
+		
 create
 	default_create
 	
@@ -94,6 +106,11 @@ feature -- Basic operation
 				-- Build the tools and other widgets within `Current'.
 			build_widget_structure (Void)
 			set_minimum_size (640, 480)
+			set_width (preferences.integer_resource_value (Preferences.build_window__width, 640))
+			set_height (preferences.integer_resource_value (Preferences.build_window__height, 480))
+			set_x_position (preferences.integer_resource_value (Preferences.build_window__x_position, 200))
+			set_y_position (preferences.integer_resource_value (Preferences.build_window__y_position, 200))
+			
 				-- The split areas do not re-position correctly when
 				-- `Current' is not shown, so when shown, we initialize
 				-- them. This is only done once, as if the user moves through the
@@ -151,7 +168,11 @@ feature -- Basic operation
 				-- the postcondition violation.
 			initialize_split_areas
 
+				-- Now restore from preferences
+			set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
+	
 			unlock_update
+			
 		ensure
 			has_item: item /= Void
 		end
@@ -175,6 +196,12 @@ feature -- Basic operation
 		local
 			vertical_box: EV_VERTICAL_BOX
 		do
+				-- Now store to preferences
+			Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
+
+					-- Actually save the preferences.
+			Preferences.save_resources;
+
 			lock_update
 				-- Remove the tools
 			vertical_box ?= item
@@ -211,6 +238,7 @@ feature {NONE} -- Implementation
 			help_about, file_exit: EV_MENU_ITEM
 			view_preferences, view_tools: EV_MENU
 			menu_separator: EV_MENU_SEPARATOR
+			menu_item: EV_MENU_ITEM
 		do
 				-- Initialize the file menu.
 			create file_menu.make_with_text (Gb_file_menu_text)
@@ -242,7 +270,11 @@ feature {NONE} -- Implementation
 			create view_preferences.make_with_text (Gb_view_preferences_text)
 			view_menu.extend (view_preferences)
 			
+			
 			view_preferences.extend (command_handler.tools_always_on_top_command.new_menu_item)
+			create menu_item.make_with_text ("Preferences...")
+			menu_item.select_actions.extend (agent Preferences.show_preference_window)
+			view_preferences.extend (menu_item)
 
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)
@@ -295,6 +327,7 @@ feature {NONE} -- Implementation
 			vertical_holder: GB_VERTICAL_SPLIT_AREA_THREE_PART_TOOL_HOLDER
 			temp_tool_bar: EV_TOOL_BAR
 			sa: EV_SPLIT_AREA
+			multiple_split_area: MULTIPLE_SPLIT_AREA
 		do
 				-- Now we perform a large hack. In Wizard, mode, the
 				-- fourth state may be re-built, if we go back and change a setting
@@ -335,20 +368,20 @@ feature {NONE} -- Implementation
 			the_tool_holder.disable_item_expand (separator)
 			create horizontal_box
 			the_tool_holder.extend (horizontal_box)
-			create vertical_holder.make_with_tools (type_selector, component_selector, Window_selector, "Type selector", "Component selector", "Window selector")
-				-- Now add a specific tool bar for `window_selector'.
-				
-			create temp_tool_bar
-			temp_tool_bar.extend (window_selector.new_directory_button)
-			temp_tool_bar.extend (window_selector.expand_all_button)
-			temp_tool_bar.extend (window_selector.assign_root_window_button)
-			vertical_holder.third_holder.add_command_tool_bar (temp_tool_bar)
-				--| FIXME temporary
-			sa ?= vertical_holder.third_holder.parent
-			sa.set_split_position (sa.minimum_split_position)
 			
+				-- Add the multiple split area, located to the left.
+			create multiple_split_area
+			multiple_split_area.enable_top_widget_resizing
+			multiple_split_area.set_close_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_close @ 1)
+			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
+			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
+			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
+			multiple_split_area.extend (type_selector, "Type selector")
+			multiple_split_area.extend (component_selector, "Component selector")
+			multiple_split_area.extend (window_selector, "Window selector")
+
 			create constructor_box
-			create horizontal_split_area.make_with_tools (vertical_holder, layout_constructor, "Layout constructor")
+			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
 			create temp_tool_bar
 			temp_tool_bar.extend (Layout_constructor.expand_all_button)
 			temp_tool_bar.extend (Layout_constructor.view_object_button)
@@ -488,7 +521,17 @@ feature {NONE} -- Implementation
 			end
 			if must_exit then
 					-- Save all the user generated components.
-				xml_handler.save_components;
+				xml_handler.save_components
+				
+					-- Now store current window settings into preferences.
+				Preferences.set_integer_resource (Preferences.Build_window__width, width)
+				Preferences.set_integer_resource (Preferences.Build_window__height, height)
+				Preferences.set_integer_resource (Preferences.Build_window__x_position, x_position)
+				Preferences.set_integer_resource (Preferences.Build_window__y_position, y_position)
+
+					-- Actually save the preferences.
+				Preferences.save_resources;
+				
 					-- Destroy the application.
 				(create {EV_ENVIRONMENT}).application.destroy
 			end

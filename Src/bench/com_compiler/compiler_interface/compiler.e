@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 			-- Initialize structure.
 		local
 			output: COM_DEGREE_OUTPUT
-			e_displayer: DEFAULT_ERROR_DISPLAYER
+			e_displayer: VS_ERROR_DISPLAYER
 			err_win: COM_ERROR_WINDOW
 		do
 			create output.make (Current)
 			create err_win.make (Current)
-			create e_displayer.make (err_win)
+			create e_displayer.make_with_coclass (err_win, Current)
 			Eiffel_project.set_degree_output (output)
 			Eiffel_project.set_error_displayer (e_displayer)
 			is_successful := False
@@ -72,7 +72,8 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					Eiffel_project.melt
 					if Eiffel_project.Workbench.successful then
-						is_successful := True
+						is_successful := True					
+					else
 					end
 				end
 			else

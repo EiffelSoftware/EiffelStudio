@@ -14,7 +14,8 @@ inherit
 			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
 			process_classi, compatible, process_feature,
-			process_class_syntax, process_ace_syntax, display
+			process_class_syntax, process_ace_syntax, display,
+			process_call_stack
 		end;
 	COMMAND;
 	BASE
@@ -196,7 +197,7 @@ feature -- Window Properties
 			Result := l_Project
 		end;
 
-feature -- Window Holes
+feature -- Window Holders
 
 	stop_points_hole_holder: HOLE_HOLDER;
 
@@ -334,6 +335,8 @@ feature -- Execution Implementation
 			end
 		end;
 
+feature -- Update
+
 	show_stoppoint (e_feature: E_FEATURE; index: INTEGER) is
 			-- Show breakable mark in the feature part if
 			-- the part is displayed
@@ -344,18 +347,62 @@ feature -- Execution Implementation
 			display_cmd ?= display_feature_cmd_holder.associated_command
 			if display_cmd /= Void then
 				if display_cmd.is_shown then
-					if (feature_part.stone /= Void) and then
-							feature_part.stone.e_feature /= Void and then
-							not equal (feature_part.stone.e_feature.body_id, 
-								e_feature.body_id) 
-					then
-						!! new_stone.make (e_feature, e_feature.written_class)
-						feature_part.process_feature (new_stone)
-						feature_part.text_window.redisplay_breakable_mark (e_feature, index)
-					end;
+					!! new_stone.make (e_feature, e_feature.written_class);
+					feature_part.set_debug_format;
+					feature_part.process_feature (new_stone);
+					if index > 0 then
+						feature_part.Show_stoppoint (e_feature, index)
+					end
 				end
 			end
-		end
+		end;
+
+	show_object (an_object: STRING; dc: E_CLASS) is
+			-- Show breakable mark in the feature part if
+			-- the part is displayed
+		local
+			display_cmd: DISPLAY_OBJECT_PORTION;
+			new_stone: OBJECT_STONE
+		do
+			display_cmd ?= display_object_cmd_holder.associated_command
+			if display_cmd /= Void then
+				if display_cmd.is_shown then
+					!! new_stone.make (an_object, dc);
+					if new_stone.same_as (object_part.stone) then
+						object_part.synchronize
+					else
+						object_part.process_object (new_stone)
+					end
+				end
+			end
+		end;
+
+	display_exception_stack is
+			-- Display the exception stack in the text window.
+		local
+			st: STRUCTURED_TEXT
+		do
+			!! st.make;
+			Application.status.display_status (st);
+			text_window.clear_window;
+			text_window.process_text (st);
+			text_window.display;
+			if saved_cursor /= Void then
+				text_window.go_to (saved_cursor);
+			end;
+		end;
+
+	save_current_cursor_position is
+			-- Save the current cursor position.
+		do
+			saved_cursor := text_window.cursor
+		end;
+
+	clear_cursor_position is
+			-- Clear the saved cursor position.
+		do
+			saved_cursor := Void
+		end;
 
 feature -- Graphical Interface
 
@@ -590,6 +637,10 @@ feature -- Graphical Interface
 			debug_status_cmd: DEBUG_STATUS;
 			debug_status_button: EB_BUTTON;
 			debug_status_menu_entry: EB_MENU_ENTRY;
+			display_exception_cmd: DISPLAY_CURRENT_STACK;
+			up_exception_stack_button: EB_BUTTON;
+			down_exception_stack_button: EB_BUTTON;
+			display_exception_menu_entry: EB_MENU_ENTRY;
 		do
 			!! format_bar.make (new_name, std_form);
 
@@ -639,6 +690,18 @@ feature -- Graphical Interface
 			!! run_final_cmd_holder.make_plain (run_final_cmd);
 			run_final_cmd_holder.set_menu_entry (run_final_menu_entry);
 
+			!! display_exception_cmd.make (True, Current);
+			!! up_exception_stack_button.make (display_exception_cmd, format_bar);
+			!! display_exception_menu_entry.make (display_exception_cmd, debug_menu);
+			!! up_exception_stack_holder.make (display_exception_cmd,
+						up_exception_stack_button, display_exception_menu_entry);
+
+			!! display_exception_cmd.make (False, Current);
+			!! down_exception_stack_button.make (display_exception_cmd, format_bar);
+			!! display_exception_menu_entry.make (display_exception_cmd, debug_menu);
+			!! down_exception_stack_holder.make (display_exception_cmd,
+						down_exception_stack_button, display_exception_menu_entry);
+
 			format_bar.attach_left (stop_button, 0);
 			format_bar.attach_top (stop_button, 0);
 			format_bar.attach_bottom (stop_button, 0);
@@ -658,7 +721,14 @@ feature -- Graphical Interface
 			format_bar.attach_right_widget (debug_run_button, debug_status_button, 0);
 			format_bar.attach_top (debug_status_button, 0);
 			format_bar.attach_bottom (debug_status_button, 0);
-			format_bar.attach_right_widget (debug_status_button, debug_quit_button, 0);
+			format_bar.attach_top (down_exception_stack_button, 0);
+			format_bar.attach_right_widget (debug_status_button, down_exception_stack_button, 0);
+			format_bar.attach_bottom (down_exception_stack_button, 0);
+			format_bar.attach_top (up_exception_stack_button, 0);
+			format_bar.attach_right_widget (down_exception_stack_button, 
+										up_exception_stack_button, 0);
+			format_bar.attach_bottom (up_exception_stack_button, 0);
+			format_bar.attach_right_widget (up_exception_stack_button, debug_quit_button, 0);
 			format_bar.attach_top (debug_quit_button, 0);
 			format_bar.attach_bottom (debug_quit_button, 0);
 
@@ -792,6 +862,10 @@ feature -- Commands
 
 	show_preference_cmd_holder: COMMAND_HOLDER;
 
+	up_exception_stack_holder: COMMAND_HOLDER;
+
+	down_exception_stack_holder: COMMAND_HOLDER;
+
 feature -- Hole access
  
 	compatible (dropped_stone: STONE): BOOLEAN is
@@ -805,6 +879,7 @@ feature -- Hole access
 				t = Explain_type or else
 				t = Object_type or else
 				t = Breakable_type or else
+				t = Call_stack_type or else
 				t = System_type
 		end;
  
@@ -889,8 +964,23 @@ feature -- Update
 			System_tool.process_system (a_stone)
 			System_tool.display
 		end;
+
+	process_call_stack (dropped: CALL_STACK_STONE) is
+			-- Accept all stone types
+		do
+			check
+				is_running: Application.is_running and then
+					Application.is_stopped
+			end;
+			save_current_cursor_position;
+			Application.set_current_execution_stack (dropped.level_number);
+			display_exception_stack
+		end;
  
 feature {NONE} -- Implementation
+
+	saved_cursor: CURSOR;
+			-- Saved cursor position for displaying the stack
 
 	build_feature_menus is
 			-- Build the feature menus.
@@ -973,7 +1063,7 @@ feature {NONE} -- Implementation
 			op.search_cmd_holder.set_menu_entry (search);
 
 			!! slice.make (op.slice_cmd_holder.associated_command, special_object_menu);
-			slice.remove_activate_action (op.slice_cmd_holder.associated_command, op.slice_cmd_holder.associated_command.text_window);
+			slice.remove_activate_action (op.slice_cmd_holder.associated_command, op.slice_cmd_holder.associated_command.tool);
 			slice.add_activate_action (op.slice_cmd_holder.associated_command, Void);
 			op.slice_cmd_holder.set_menu_entry (slice);
 
@@ -1007,14 +1097,14 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			feature_part.close_windows;
 
 			std_form.unmanage;
-			form_manager.detach_bottom (std_form);
-			form_manager.attach_bottom_position (std_form, new_pos)
+			--form_manager.detach_bottom (std_form);
+			--form_manager.attach_bottom_position (std_form, new_pos)
 			if shown_portions = 2 then
 				object_form.unmanage;
-				form_manager.detach_top (object_form);
-				form_manager.detach_bottom (object_form);
-				form_manager.attach_top_position (object_form, new_pos);
-				form_manager.attach_bottom_position (object_form, new_pos + 3);
+				--form_manager.detach_top (object_form);
+				--form_manager.detach_bottom (object_form);
+				--form_manager.attach_top_position (object_form, new_pos);
+				--form_manager.attach_bottom_position (object_form, new_pos + 3);
 				object_form.manage
 			else
 				edit_menu.button.set_insensitive;
@@ -1050,17 +1140,17 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			shown_portions := shown_portions + 1;
 			new_pos := 6 // shown_portions;
 			std_form.unmanage;
-			form_manager.detach_bottom (std_form);
-			form_manager.detach_top (feature_form);
-			form_manager.detach_bottom (feature_form);
-			form_manager.attach_bottom_position (std_form, new_pos);
-			form_manager.attach_top_position (feature_form, new_pos);
-			form_manager.attach_bottom_position (feature_form, new_pos + new_pos);
+			--form_manager.detach_bottom (std_form);
+			--form_manager.detach_top (feature_form);
+			--form_manager.detach_bottom (feature_form);
+			--form_manager.attach_bottom_position (std_form, new_pos);
+			--form_manager.attach_top_position (feature_form, new_pos);
+			--form_manager.attach_bottom_position (feature_form, new_pos + new_pos);
 
 			if shown_portions = 3 then
 				object_form.unmanage;
-				form_manager.detach_top (object_form);
-				form_manager.attach_top_position (object_form, new_pos + new_pos);
+				--form_manager.detach_top (object_form);
+				--form_manager.attach_top_position (object_form, new_pos + new_pos);
 				object_form.manage;
 			end;
 
@@ -1095,14 +1185,14 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			object_form.unmanage;
 			object_part.close_windows;
 
-			form_manager.detach_bottom (std_form);
-			form_manager.attach_bottom_position (std_form, new_pos)
+			--form_manager.detach_bottom (std_form);
+			--form_manager.attach_bottom_position (std_form, new_pos)
 			if shown_portions = 2 then
 				feature_form.unmanage;
-				form_manager.detach_top (feature_form);
-				form_manager.detach_bottom (feature_form);
-				form_manager.attach_top_position (feature_form, new_pos);
-				form_manager.attach_bottom_position (feature_form, new_pos + 3);
+				--form_manager.detach_top (feature_form);
+				--form_manager.detach_bottom (feature_form);
+				--form_manager.attach_top_position (feature_form, new_pos);
+				--form_manager.attach_bottom_position (feature_form, new_pos + 3);
 				feature_form.manage
 			else
 				edit_menu.button.set_insensitive;

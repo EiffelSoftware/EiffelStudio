@@ -12,16 +12,16 @@ creation
 
 feature -- Initialization
 	
-	make(root_resource: XML_NODE; r: RESOURCE_STRUCTURE) is
+	make (root_resource: XML_NODE; r: RESOURCE_STRUCTURE) is
 			-- initialization
 		require
 			not_void: root_resource /= Void and r /= Void
 		local
-			cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
+			cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			node: XML_ELEMENT
 			txt: XML_TEXT
 		do
-			!! name.make(20)
+			create name.make (20)
 			structure ?= r
 			cursor := root_resource.new_cursor
 			from
@@ -31,11 +31,11 @@ feature -- Initialization
 			loop
 				txt ?= cursor.item
 				if txt /= Void then
-					name.append(txt.string)
+					name.append (txt.string)
 				else
 					node ?= cursor.item
 					if node /= Void then
-						process_unit_specific(node)
+						process_unit_specific (node)
 					end
 				end
 				cursor.forth
@@ -44,66 +44,66 @@ feature -- Initialization
 
 feature -- Implementation
 
-	process_unit_specific(node: XML_ELEMENT) is
+	process_unit_specific (node: XML_ELEMENT) is
+			-- Gets the appropriate resource from `node'
+			-- if the type is unknown, it is assumed to be a string.
 		local
 			s: STRING
 			type: INTEGER
 			b: BOOLEAN
-			type0: STRING_RESOURCE
-			type1: COLOR_RESOURCE
-			type2: INTEGER_RESOURCE
-			type3: FONT_RESOURCE
-			type4: BOOLEAN_RESOURCE
 			txt: XML_TEXT
 		do
-			if node.name.is_equal("STRING") then
-				-- String
-				type := 0
-			elseif node.name.is_equal("COLOR") then
-				-- Color
-				type := 1
-			elseif node.name.is_equal("INTEGER") then
-				-- Integer
-				type := 2
-			elseif node.name.is_equal("FONT") then
-				-- Font
-				type := 3
-			elseif node.name.is_equal("BOOLEAN") then
-				-- Boolean
-				type := 4
-			elseif node.name.is_equal("A") then
+			if node.name.is_equal ("STRING") then
+				type := string_type
+			elseif node.name.is_equal ("COLOR") then
+				type := color_type
+			elseif node.name.is_equal ("INTEGER") then
+				type := integer_type
+			elseif node.name.is_equal ("FONT") then
+				type := font_type
+			elseif node.name.is_equal ("BOOLEAN") then
+				type := boolean_type
+			elseif node.name.is_equal ("LIST_STRING") then
+				type := array_type
+			elseif node.name.is_equal ("A") then
 				txt ?= node.first
-				s := clone(txt.string)
+				s := clone (txt.string)
 				if not s.empty then
-					s.prune_all('%R')
-					s.prune_all('%T')
-					name.append(s)
+					s.prune_all ('%R')
+					s.prune_all ('%T')
+					name.append (s)
 				end
 			end
 			txt ?= node.first
 			if txt /= Void then
 				s := txt.string
-				s.prune_all('%R')
-				s.prune_all('%T')
+				s.prune_all ('%R')
+				s.prune_all ('%T')
 			end
-			if type=0 then
-				!!type0.make(name,structure.table,s)
-				value := type0
-			elseif type=1 then
-				!!type1.make(name,structure.table,s)
-				value := type1
-			elseif type=2 and then s.is_integer then
-				!! type2.make(name,structure.table,s.to_integer)
-				value := type2
-			elseif type=3 then
-				!! type3.make(name,structure.table,s)
-				value := type3
-			elseif type=4 then
-				b := s.is_equal("TRUE")
-				!! type4.make(name,structure.table,b)
-				value := type4
+			if type = string_type then
+				create {STRING_RESOURCE} value.make (name, s)
+			elseif type = color_type then
+				create {COLOR_RESOURCE} value.make (name, s)
+			elseif type = integer_type and then s.is_integer then
+				create {INTEGER_RESOURCE} value.make (name, s.to_integer)
+			elseif type = font_type then
+				create {FONT_RESOURCE} value.make (name, s)
+			elseif type = boolean_type then
+				s.to_upper
+				b := s.is_equal ("TRUE")
+				create {BOOLEAN_RESOURCE} value.make (name, b)
+			elseif type = array_type then
+				create {ARRAY_RESOURCE} value.make_from_string (name, s)
+			else
+				create {STRING_RESOURCE} value.make (name, s)
 			end
+			structure.table.add_resource (value)
 		end
+
+feature {NONE} -- Constants
+
+	string_type, color_type, integer_type,
+	font_type, boolean_type, array_type: INTEGER is unique
 
 feature -- Implementation
 
@@ -118,7 +118,9 @@ feature -- Implementation
 
 	external_name: STRING
 		-- Name for the outside world of Current.
+
 invariant
-	XML_RESOURCE_not_void: structure /= Void and name/=Void and value/=Void
+	XML_RESOURCE_not_void: structure /= Void and name /= Void and value /= Void
 	XML_RESOURCE_consistency: not name.empty
+
 end -- class XML_RESOURCE

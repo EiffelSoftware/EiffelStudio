@@ -55,9 +55,6 @@ feature -- Basic operations
 		deferred
 		end
 
-invariant
-	non_void_coclass: coclass /= Void
-
 end -- class WIZARD_COCLASS_INTERFACE_PROCESSOR
 
 --|----------------------------------------------------------------

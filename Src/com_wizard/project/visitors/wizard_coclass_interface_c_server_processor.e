@@ -14,15 +14,11 @@ create
 	make
 
 
-feature -- Access
-
-
 feature -- Basic operations
 
 	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
 		local
-			a_name: STRING
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
 			-- Add parent and import header files
@@ -30,23 +26,17 @@ feature -- Basic operations
 			coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 			coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
 
-			-- Find all features and properties
-			a_name := an_interface.c_type_name
-			coclass_generator.interface_names.extend (a_name)
+			coclass_generator.interface_names.extend (an_interface.c_type_name)
 
 			if an_interface.dispinterface or an_interface.dual then
-				coclass_generator.dispinterface_names.extend (a_name)
+				coclass_generator.dispinterface_names.extend (an_interface.c_type_name)
 				dispatch_interface := True
 			end
 
 			create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
 			interface_generator.generate_functions_and_properties (an_interface)
+			coclass_generator := Void
 		end
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_COCLASS_INTERFACE_C_SERVER_PROCESSOR
 

@@ -58,11 +58,6 @@ feature -- Basic operations
 			interface_generator.generate_functions_and_properties (an_interface)
 		end
 
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
-
 end -- class WIZARD_COCLASS_INTERFACE_C_CLIENT_PROCESSOR
 
 --|----------------------------------------------------------------

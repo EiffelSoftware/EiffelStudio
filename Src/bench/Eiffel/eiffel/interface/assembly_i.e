@@ -412,14 +412,14 @@ feature {NONE} -- Implementation
 					create l_vd64
 					Error_handler.insert_error (l_vd64)
 				else
-					l_emitter.retrieve_assembly_info (an_assembly)
+					l_emitter.retrieve_assembly_info (environ.interpreted_string (an_assembly))
 					if not l_emitter.assembly_found then
 							-- Looks like it is not a valid assembly file.
 						create l_vd65.make (an_assembly)
 						Error_handler.insert_error (l_vd65)
 					else
 							-- Initialize current with data.
-						assembly_path := an_assembly
+						assembly_path := environ.interpreted_string (an_assembly)
 						assembly_name := l_emitter.name
 						version := l_emitter.version
 						culture := l_emitter.culture

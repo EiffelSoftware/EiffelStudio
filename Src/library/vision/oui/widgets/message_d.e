@@ -227,10 +227,20 @@ feature -- Removal
 			implementation.remove_ok_action (a_command, argument)
 		end; 
 
+feature -- Display update
+
+    update_display is
+            -- Updates the display of all the windows in the application    
+            -- Windows implementation does not anything
+        do
+            implementation.update_display
+        end
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: MESSAGE_D_I
 			-- Implementation of message dialog
+
 
 end -- class MESSAGE_D
 

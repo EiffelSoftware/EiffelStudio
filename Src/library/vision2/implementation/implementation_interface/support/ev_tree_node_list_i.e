@@ -124,19 +124,15 @@ Feature -- Status report
 	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
-		local
-			t: TUPLE [EV_TREE_NODE]
 		do
-			create t
 			from
-				interface.start
+				start
 			until
-				interface.after
+				off
 			loop
-				interface.item.implementation.recursive_do_all (action)
-				t.put (item, 1)
-				action.call (t)
-				interface.forth
+				item.recursive_do_all (action)
+				action.call ([item])
+				forth
 			end
 		end
 

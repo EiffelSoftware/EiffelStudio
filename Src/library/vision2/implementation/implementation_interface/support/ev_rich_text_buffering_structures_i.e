@@ -177,8 +177,15 @@ feature -- Status Setting
 			-- `Result' is pixels converted to half points, being
 			-- the meaurement used for font sizes in RTF.
 		do
-			Result := (pixels * 72 // screen.vertical_resolution) * 2
+			Result := (pixels * points_per_inch // screen.vertical_resolution) * 2
 		end
+		
+	half_points_to_pixels (half_points: INTEGER): INTEGER is
+			-- `Result' is half points converted to pixels.
+		do
+			Result := half_points * screen.vertical_resolution // (points_per_inch * 2)
+		end
+		
 		
 	generate_paragraph_information (a_text: STRING) is
 			-- `Result' is index of first character of every line in `a_text' upon
@@ -226,6 +233,8 @@ feature -- Status Setting
 		do
 			create format_stack.make (8)
 			create all_fonts.make (50)
+			create all_colors.make (50)
+			create all_formats.make (50)
 			create current_format
 			plain_text := ""
 			from
@@ -245,7 +254,7 @@ feature -- Status Setting
 					process_keyword (rtf_text, main_iterator)
 				elseif current_character = ' '  then
 					process_text (rtf_text, main_iterator)
-				elseif rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}' then
+				elseif current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
 						-- We are now one character past the tag for the text. This may occur when a keyword
 						-- is ended with a '%N' or we have just skipped a bracket section that contained the "\*"
 						-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
@@ -261,7 +270,8 @@ feature -- Status Setting
 			check
 				no_carriage_returns: not plain_text.has ('%R')
 			end
-			rich_text.set_text (plain_text)
+			rich_text.flush_buffer
+			--rich_text.set_text (plain_text)
 		end
 		
 	process_text (rtf_text:STRING; index: INTEGER) is
@@ -275,7 +285,7 @@ feature -- Status Setting
 			text_completed: BOOLEAN
 			current_text: STRING
 			current_character: CHARACTER
-		do
+		do	
 			current_text := ""
 			from
 				l_index := 1
@@ -294,15 +304,45 @@ feature -- Status Setting
 					end
 				end
 				l_index := l_index + 1
-			end
-			plain_text.append (current_text)
-			
-			--| FIXME should this ever be empty?
+			end			
+	
+				--| FIXME should this ever be empty?
 			if current_text.count > 0 then
 				move_main_iterator (current_text.count)
-			end
+				
+				buffer_formatting (current_text)
+			end			
 		end
-	
+		
+	buffer_formatting (a_text: STRING) is
+			-- Buffer `a_text' into `rich_text' with formatting applied from `current_format'.
+		require
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.is_empty
+		local
+			character_format: EV_CHARACTER_FORMAT
+			a_font: EV_FONT
+		do
+			if not all_formats.has (current_format.out) then
+					-- Only create a new character format if an equivalent one does not already
+					-- exist in `all_formats'.
+				create character_format
+				character_format.set_color (all_colors.item (current_format.text_color))
+				character_format.set_background_color (all_colors.item (current_format.highlight_color))
+				a_font := all_fonts.item (current_format.character_format)
+				if current_format.is_bold then
+					a_font := a_font.twin
+					a_font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+				end	
+				a_font.set_height (half_points_to_pixels (current_format.font_height))
+				character_format.set_font (a_font)
+				all_formats.put (character_format, current_format.out)
+			end
+			
+			character_format := all_formats.item (current_format.out)
+			rich_text.buffered_append (a_text, character_format)
+		end
+
 	get_character (rtf_text: STRING; index: INTEGER): CHARACTER is
 			-- `Result' is character `index' within `rtf_text'.
 		require
@@ -385,8 +425,18 @@ feature -- Status Setting
 				process_colortable (rtf_text, index)
 				processing_moved_iterator := True
 			elseif tag.is_equal (rtf_bold_string) then
+				if tag_value.is_empty then
+					current_format.set_bold (True)
+				else
+					check
+						tag_value.is_equal ("0")
+					end
+					current_format.set_bold (False)
+				end
 			elseif tag.is_equal (rtf_highlight_string) then
+				current_format.set_highlight_color (tag_value.to_integer)
 			elseif tag.is_equal (rtf_color_string) then
+				current_format.set_text_color (tag_value.to_integer)
 			elseif tag.is_equal (rtf_red) then
 				last_colorred := tag_value.to_integer
 			elseif tag.is_equal (rtf_green) then
@@ -395,6 +445,10 @@ feature -- Status Setting
 				last_colorblue := tag_value.to_integer
 			elseif tag.is_equal (rtf_font_string) then
 				last_fontindex := tag_value.to_integer
+				current_format.set_character_format (tag_value.to_integer)				
+			elseif tag.is_equal (rtf_font_size_string) then
+				--last_fontheight := tag_value.to_integer
+				current_format.set_font_height (tag_value.to_integer)
 			elseif tag.is_equal (rtf_charset) then
 				last_fontcharset := tag_value.to_integer
 			elseif tag.is_equal (rtf_family_nill) then
@@ -411,7 +465,8 @@ feature -- Status Setting
 				last_fontfamily := rtf_family_tech_int
 			elseif tag.is_equal (rtf_font_size_string) then
 			elseif tag.is_equal (rtf_newline) then
-				plain_text.append_character ('%N')
+				--plain_text.append_character ('%N')
+				buffer_formatting ("%N")
 			elseif tag.is_equal (rtf_user_props) then
 				check
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
@@ -536,7 +591,6 @@ feature -- Status Setting
 			depth: INTEGER
 			current_character: CHARACTER
 			l_index: INTEGER
-			color_index: INTEGER
 			a_color: EV_COLOR
 		do
 			depth := 1
@@ -557,7 +611,8 @@ feature -- Status Setting
 					process_keyword (rtf_text, index + l_index)
 				elseif current_character = ';' then
 					create a_color.make_with_8_bit_rgb (last_colorred, last_colorgreen, last_colorblue)
-					color_index := color_index + 1
+					all_colors.put (a_color, last_colorindex)
+					last_colorindex := last_colorindex + 1
 				end
 				l_index := l_index + 1
 			end
@@ -565,6 +620,7 @@ feature -- Status Setting
 		end
 
 	last_fontname: STRING
+	last_colorindex: INTEGER
 	last_fontindex: INTEGER
 	last_fontcharset: INTEGER
 	last_fontfamily: INTEGER
@@ -574,6 +630,13 @@ feature -- Status Setting
 		-- Current values read in by parsing RTF.
 	
 	all_fonts: HASH_TABLE [EV_FONT, INTEGER]
+		-- All fonts retrieved during parsing, accessible through their index in the font table.
+	
+	all_colors: HASH_TABLE [EV_COLOR, INTEGER]
+		-- All colors retrieved during parsing, accessible through their index in the color table.
+		
+	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
+		-- All unique formats retreived during parsing.
 		
 	process_fontname (rtf_text:STRING; index: INTEGER) is
 		require
@@ -983,6 +1046,9 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+		
+	points_per_inch: INTEGER is 72
+		-- Number of points per inch.
 		
 invariant
 	rich_text_not_void: rich_text /= Void

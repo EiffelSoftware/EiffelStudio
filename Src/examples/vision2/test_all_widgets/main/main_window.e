@@ -45,7 +45,7 @@ feature -- Initialization
 			c7: MENU_DEMO_WINDOW
 			c8: SPLIT_DEMO_WINDOW
 			c9: SCROLLABLE_AREA_DEMO_WINDOW
-			c10: ALL_BUTTON_DEMO_WINDOW
+			c10: BUTTONS_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -61,15 +61,15 @@ feature -- Initialization
 			!!c10.make (Current)
 			
 			!!b.make_button (Current, "Label", "", c1)
-			!!b.make_button (Current, "Buttons", "../pixmaps/panel-arrow-right.xpm", c10)
-			!!b.make_button (Current, "Fixed", "../pixmaps/folder.xpm", c2)
-			!!b.make_button (Current, "Box", "../pixmaps/panel-arrow-right.xpm", c3)
-			!!b.make_button (Current, "Notebook", "../pixmaps/note.xpm", c4)
-			!!b.make_button (Current, "Text field", "../pixmaps/folder.xpm", c5)
-			!!b.make_button (Current, "Text area", "../pixmaps/page.xpm", c6)
-			!!b.make_button (Current, "Menu", "../pixmaps/panel-arrow-right.xpm", c7)
-			!!b.make_button (Current, "Split area", "../pixmaps/panel-arrow-right.xpm", c8)
-			!!b.make_button (Current, "Scrollable area", "../pixmaps/panel-arrow-right.xpm", c9)
+			!!b.make_button (Current, "Buttons", "../pixmaps/buttons.xpm", c10)
+			!!b.make_button (Current, "Fixed", "../pixmaps/fixed.xpm", c2)
+			!!b.make_button (Current, "Box", "../pixmaps/box.xpm", c3)
+			!!b.make_button (Current, "Notebook", "../pixmaps/notebook.xpm", c4)
+			!!b.make_button (Current, "Text field", "../pixmaps/text_field.xpm", c5)
+			!!b.make_button (Current, "Text area", "../pixmaps/text_area.xpm", c6)
+			!!b.make_button (Current, "Menu", "../pixmaps/menu.xpm", c7)
+			!!b.make_button (Current, "Split area", "../pixmaps/split_area.xpm", c8)
+			!!b.make_button (Current, "Scrollable area", "../pixmaps/scrollable_area.xpm", c9)
 			
 			set_values
 		end
@@ -79,9 +79,10 @@ feature -- Status setting
 
 	
 	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]) is
-		-- called when actions window is deleted
+			-- called when actions window is deleted
 		do
- 			arg.first.actions_window.destroy
+ 			arg.first.effective_button.set_pressed (False)
+			arg.first.actions_window.destroy
 			set_insensitive (False)
 		end
 		

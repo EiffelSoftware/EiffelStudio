@@ -33,6 +33,12 @@ feature --Access
 		end
 	
 	actions_window: ACTIONS_WINDOW
+			-- Actions window related to this demo
+	
+	effective_button: EV_TOGGLE_BUTTON
+			-- Button which was pressed when this demo 
+			-- window was opened
+	
 	
 feature -- Initialization
 	
@@ -57,16 +63,20 @@ feature -- Status setting
 	
 feature -- Command executing
 	
-	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]) is
+	execute (argument: EV_ARGUMENT2[MAIN_WINDOW, EV_TOGGLE_BUTTON]) is
 		do
-			parent_make (parent) 
-			set_widgets
-			set_values
-			show
-			!!actions_window.make_with_main_widget (Current, main_widget)
-			actions_window.show
-			argument.first.set_insensitive (True)
-			set_close_command (argument.first)
+			if argument.second.pressed then
+				parent_make (parent) 
+				set_widgets
+				set_values
+				show
+				!!actions_window.make_with_main_widget (Current, main_widget)
+				actions_window.show
+				argument.first.set_insensitive (True)
+				effective_button := argument.second
+				set_close_command (argument.first)
+			end
+			
 		end
 end
 --|----------------------------------------------------------------

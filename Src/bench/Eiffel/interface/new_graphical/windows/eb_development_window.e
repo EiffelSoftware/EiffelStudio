@@ -176,6 +176,10 @@ feature {NONE} -- Initialization
 			else
 				on_project_unloaded
 			end
+			
+				-- Create feature position table
+			create feature_positions.make (1)
+			feature_positions.compare_objects
 
 			initialized := True
 			is_destroying := False
@@ -2207,6 +2211,22 @@ feature {NONE} -- Multiple editor management
 
 	current_editor_index: INTEGER
 			-- Index in `editors' of the editor that has the focus.
+			
+feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} -- Feature Clauses
+			
+	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]) is
+			-- Set 'features' to 'a_features'.
+		require
+			a_features_not_void: a_features /= Void
+		do
+			feature_clauses := a_features
+		end
+			
+	feature_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
+			-- List of features clauses for class displayed in Current.
+			
+	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
+			-- Features indexed by line position in class text (for .NET features).
 
 feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 
@@ -2372,6 +2392,7 @@ feature {NONE} -- Implementation
 							if changed then
 									-- user has already chosen not to save the file
 									-- do not ask again
+								Feature_positions.wipe_out
 								editor_tool.text_area.no_save_before_next_load
 							end
 						end
@@ -2505,12 +2526,12 @@ feature {NONE} -- Implementation
 							-- if a feature_stone has been dropped
 							-- scroll to the corresponding feature in the basic text format
 							-- FIXME NC: Doesn't work for .NET features
-						if 
-							feature_stone.e_feature.ast /= Void and 
-							not feature_stone.e_feature.is_external and
-							not during_synchronization then
-							scroll_to_feature (feature_stone.e_feature.ast, new_class_stone.class_i)
-						end
+						--if 
+						--	feature_stone.e_feature.ast /= Void and 
+						--	not feature_stone.e_feature.is_external and
+						--	not during_synchronization then
+							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
+						--end
 					end
 				end
 					-- Update the title of the window
@@ -2553,7 +2574,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	scroll_to_feature (feat_as: FEATURE_AS; displayed_class: CLASS_I) is
+	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
 			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
 		require
 			class_is_not_void: displayed_class /= Void
@@ -2562,12 +2583,22 @@ feature {NONE} -- Implementation
 			begin_index, offset: INTEGER
 			tmp_text: STRING
 		do
-			begin_index := feat_as.start_position
-			if platform_constants.is_windows then
-				tmp_text := displayed_class.text.substring (1, begin_index)
-				offset := tmp_text.occurrences('%R')
+			if not feat_as.is_external and feat_as.ast /= Void then
+				begin_index := feat_as.ast.start_position
+				if platform_constants.is_windows then
+					tmp_text := displayed_class.text.substring (1, begin_index)
+					offset := tmp_text.occurrences('%R')
+				end
+				editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
+			elseif feat_as.is_external then
+					-- .NET formatted feature.
+				begin_index := feature_positions.item (feat_as)
+				if platform_constants.is_windows then
+					tmp_text := displayed_class.text.substring (1, begin_index)
+					offset := tmp_text.occurrences('%N')
+				end
+				editor_tool.text_area.scroll_to_when_ready (begin_index // 2) -- - offset)
 			end
-			editor_tool.text_area.scroll_to_when_ready (begin_index - offset)
 		end
 
 

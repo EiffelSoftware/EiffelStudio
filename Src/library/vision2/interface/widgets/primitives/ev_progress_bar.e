@@ -1,5 +1,6 @@
 indexing 
 	description: "EiffelVision Progress bar."
+	note: "By default, the step is 10."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +9,7 @@ deferred class
 	EV_PROGRESS_BAR
 
 inherit
-	EV_PRIMITIVE
+	EV_GAUGE
 		redefine
 			implementation
 		end
@@ -54,14 +55,14 @@ feature -- Status setting
 			continuous: is_continuous
 		end
 
-	set_percentage (value: INTEGER) is
-			-- Make `value' the new percentage filled by the
+	set_percentage (val: INTEGER) is
+			-- Make `val' the new percentage filled by the
 			-- progress bar.
 		require
 			exists: not destroyed
-			valid_value: value >= 0 and value <= 100
+			valid_val: val >= 0 and val <= 100
 		do
-			implementation.set_percentage (value)
+			implementation.set_percentage (val)
 		end
 
 feature -- Implementation

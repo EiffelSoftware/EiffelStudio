@@ -6766,6 +6766,7 @@ $startsh
 # Configured by: $cf_by
 # Target system: $myuname
 
+d_bsdsig='undef'
 d_bsd='$d_bsd'
 d_eunice='$d_eunice'
 d_xenix='$d_xenix'

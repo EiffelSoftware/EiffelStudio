@@ -16,9 +16,24 @@ inherit
 		end
 		
 create
-	make
+	make, make_fatal
 	
 feature -- Initialization
+
+	make_fatal (msg: STRING) is
+			-- Show fatal error.
+		require
+			msg_not_void: msg /= Void
+		local
+			l_msg, l_title: WEL_STRING
+			l_result: INTEGER
+		do
+			create l_msg.make (msg)
+			create l_title.make ("Finish Freezing Status")
+			
+			l_result := cwin_message_box (default_pointer, l_msg.item, l_title.item,
+				Mb_iconerror | Mb_ok | Mb_topmost)
+		end
 
 	make (msg: STRING; error, c_error, config_error: BOOLEAN; mapped_path: BOOLEAN) is
 			-- show message as error or non-error message

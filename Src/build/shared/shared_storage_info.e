@@ -8,23 +8,9 @@ feature {NONE}
 			!! Result
 		end;
 
-	for_save: BOOLEAN_REF is
-		once
-			!! Result
-		end;
-
 -- ***********
 -- Regenerated
 -- ***********
-	name_changed_table: HASH_TABLE [STRING, STRING] is
-		once
-			!!Result.make (100);
-		end;
-
-	identifier_changed_table: HASH_TABLE [INTEGER, STRING] is
-		once
-			!!Result.make (100);
-		end;
 
 	command_table: INT_H_TABLE [USER_CMD] is
 		once
@@ -51,26 +37,15 @@ feature {NONE}
 			!!Result.make (100);
 		end;
 
-	clear_all is
+	clear_shared_storage_info is
 		do
 			command_table.clear_all;
 			context_table.clear_all;
 			state_table.clear_all;
 			circle_table.clear_all;
 			translation_table.clear_all;
-			name_changed_table.clear_all;
-			identifier_changed_table.clear_all;
 		end;
 
-	clear_uneeded is
-		do
-			command_table.clear_all;
-			state_table.clear_all;
-			circle_table.clear_all;
-			translation_table.clear_all;
-			name_changed_table.clear_all;
-			identifier_changed_table.clear_all;
-		end;
 -- ********
 -- Immuable
 -- ********

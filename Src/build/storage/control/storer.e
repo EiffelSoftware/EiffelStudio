@@ -98,8 +98,7 @@ feature
 			c: STATE_CIRCLE;
 			a_context: CONTEXT;
 		do
-			for_save.set_item (True);
-			clear_all;
+			clear_shared_storage_info;
 			group_storer.retrieve (dir_name);
 			Shared_group_list.wipe_out;
 			Shared_group_list.merge_right (group_storer.retrieved_data);
@@ -144,8 +143,8 @@ feature
 				c.set_double_thickness;
 			end;
 
-			clear_uneeded;
-			for_save.set_item (False);
+			app_editor.set_default_selected;
+			clear_shared_storage_info;
 		end;
 
 end

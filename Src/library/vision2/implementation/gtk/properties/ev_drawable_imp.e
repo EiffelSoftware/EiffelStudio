@@ -349,30 +349,6 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
-		local
-			ax1, ax2, ay1, ay2, dx, dy: INTEGER
-		do
-			--| VB: Should work now. Draws lines that are too big.
-			--| Catch worst cases like when `dy' approaches zero.
-			--| This implementation is the same for Mswindows.
-			dx := (x2 - x1)
-			dy := (y2 - y1)
-			if dy /= 0 then
-				ax1 := x1 - ((dx / dy) * y2).rounded
-				ax2 := x1 - ((dx / dy) * (y1 - height)).rounded
-				ay1 := 0
-				ay2 := height
-			else
-				ay1 := y1
-				ay2 := y2
-				ax1 := 0
-				ax2 := width
-			end
-			draw_segment (ax1, ay1, ax2, ay2)
-		end
-
 	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Draw a part of an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.

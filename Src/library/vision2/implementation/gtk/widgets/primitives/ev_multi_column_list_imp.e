@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			col_titles: ARRAYED_LIST [STRING]
 			col_widths: ARRAYED_LIST [INTEGER]
+			old_list_widget: POINTER
 		do
 			if list_widget /= Default_pointer then
 				from
@@ -90,7 +91,7 @@ feature {NONE} -- Initialization
 					col_widths.extend (column_width (i))
 					i := i + 1
 				end
-				C.gtk_container_remove (scroll_window, list_widget)
+				old_list_widget := list_widget
 			end
 
 			list_widget := C.gtk_clist_new (a_columns)
@@ -99,13 +100,12 @@ feature {NONE} -- Initialization
 			real_signal_connect (list_widget, "unselect_row", ~deselect_callback)
 			real_signal_connect (list_widget, "click_column", ~column_click_callback)
 			
-			if rows_height > 0 then
-				set_rows_height (rows_height)		
+			if row_height > 0 then
+				set_rows_height (row_height)		
 			end
 
 			C.gtk_widget_show (list_widget)
 
-			C.gtk_container_add (scroll_window, list_widget)
 
 			-- We need to specify a width for the columns
 			-- otherwise the value given by gtk would be wrong.
@@ -125,6 +125,11 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			show_title_row
+			
+			if old_list_widget /= Default_pointer then
+				C.gtk_container_remove (scroll_window, old_list_widget)
+			end
+			C.gtk_container_add (scroll_window, list_widget)
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
@@ -404,9 +409,8 @@ feature -- Element change
 		do
 			if list_widget /= Default_pointer then
 				C.gtk_clist_set_row_height (list_widget, value)
-			else
-				rows_height := value
 			end
+			row_height := value
 		end
 
 	clear_items is
@@ -596,7 +600,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	rows_height: INTEGER
+	row_height: INTEGER
 		-- Value used to store row height if list isn't yet created.
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
@@ -630,6 +634,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/24 01:50:20  king
+--| Changed rows_height -> row_height, optimized create_list
+--|
 --| Revision 1.46  2000/03/24 01:28:30  king
 --| Implemented updating features, needs testing
 --|

@@ -228,6 +228,7 @@ rt_private char *ex_tag[] = {
 	"Developer exception.",				/* EN_PROG */
 	"Eiffel run-time fatal error.",		/* EN_FATAL */
 	"CECIL cannot call melted code",	/* EN_DOL */
+	"I/O error.",						/* EN_ISE_IO */
 };
 
 /* Converts a vector's type in the stack to an exception code, i.e. given a

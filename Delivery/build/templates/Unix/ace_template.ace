@@ -39,7 +39,7 @@ cluster
 		-- EiffelVision2
 	all vision2: "$ISE_EIFFEL/library/vision2"
 		exclude
-			"mswin"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"
+			"mswin";
 		end
 
 external

@@ -57,9 +57,6 @@ extern int16 *eif_cid_map;
 /* Inverse RTUD Table to reverse the effect of RTUD */ 
 extern int16 *rtud_inv;
 
-/* Name of the generic class */
-extern char *eif_typename (int16);
-
 /* Maximum nr. of entries in a compound typeid array */
 #define MAX_CID_SIZE    200
 

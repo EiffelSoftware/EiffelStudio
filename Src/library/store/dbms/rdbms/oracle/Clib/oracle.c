@@ -77,7 +77,7 @@ static sword sql_function;
 static sword numwidth = 8;
 static int error_number;
 static int max_size;
-text error_message[512];
+static text error_message[512];
 
 short ora_tranNumber=0; /* number of transaction opened at present */
 

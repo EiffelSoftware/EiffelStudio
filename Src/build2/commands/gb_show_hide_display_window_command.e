@@ -14,6 +14,8 @@ inherit
 	
 	GB_SHARED_SYSTEM_STATUS
 	
+	GB_CONSTANTS
+	
 	WIZARD_SHARED
 		rename
 			pixmap as wizard_pixmap
@@ -67,7 +69,7 @@ feature -- Execution
 				end
 					-- If the window is empty, then we give a default size.
 				if display_window.is_empty then
-					display_window.set_size (100, 100)
+					display_window.set_size (default_window_dimension, default_window_dimension)
 						-- Ensure that the windows are not displayed directly on top of each other.
 						-- This only seems to happen when they are shown relative.
 					if builder_window.is_show_requested and display_window.x_position = builder_window.x_position

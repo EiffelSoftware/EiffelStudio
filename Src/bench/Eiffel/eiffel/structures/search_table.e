@@ -32,7 +32,7 @@ feature -- Creation
 			table_size: INTEGER
 		do
 			!!clever;
-			table_size := clever.higher_prime (n);
+			table_size := clever.higher_prime ((3 * n) // 2);
 			if table_size < 5 then
 				table_size := 5
 			end;

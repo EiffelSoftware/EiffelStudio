@@ -430,12 +430,15 @@ feature {NONE} -- Document Retrieval
 					create l_sub_dir.make (l_filename.string)
 					if not l_sub_dir.exists then
 						create l_file.make (l_filename.string)
-						if l_file.exists and then file_type (l_file.name).is_equal ("xml") and include_documents_list.has (l_file.name) then
-								-- Read documents
-							create doc.make_from_file (l_file)
-								-- Add to manager
-							Shared_document_manager.add_document (doc)							
-							progress_generator.set_status_text (doc.name)
+						if l_file.exists and then file_type (l_file.name).is_equal ("xml") then
+							if (shared_constants.application_constants.is_include_list and include_documents_list.has (l_file.name)) or
+								not shared_constants.application_constants.is_include_list then						
+									-- Read documents
+								create doc.make_from_file (l_file)
+									-- Add to manager
+								Shared_document_manager.add_document (doc)							
+								progress_generator.set_status_text (doc.name)
+							end
 						end
 					else
 							-- Retrieve sub directory documents

@@ -124,7 +124,7 @@ feature {NONE} -- Generation
 							if not is_code_document (l_doc) and l_doc.is_valid_xml and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
-						elseif shared_constants.application_constants.allowed_file_types.has (file_type (l_file)) then
+						elseif not file_type (l_file).is_equal ("xml") and then shared_constants.application_constants.allowed_file_types.has (file_type (l_file)) then
 									-- Not XML but does need copying
 							create bin_file.make (l_file)
 							create l_filename.make_from_string (target.name)

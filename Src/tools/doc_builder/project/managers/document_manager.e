@@ -186,9 +186,13 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 			-- Add a document
 		require
 			a_doc_not_void: a_doc /= Void
+		local
+			l_string: STRING
 		do
 			if not documents.has (a_doc.name) then
-				documents.extend (a_doc, a_doc.name)
+				l_string := a_doc.name
+				l_string.replace_substring_all ("\", "/")
+				documents.extend (a_doc, l_string)
 			end			
 		end
 

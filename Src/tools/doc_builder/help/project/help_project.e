@@ -88,7 +88,8 @@ feature {HELP_GENERATOR} -- File
 	help_directory: DIRECTORY is
 			-- Help directory
 		once
-			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)			
+--			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)			
+			create Result.make (Shared_constants.Application_constants.Temporary_html_directory)			
 		end
 		
 	full_toc_text: STRING is

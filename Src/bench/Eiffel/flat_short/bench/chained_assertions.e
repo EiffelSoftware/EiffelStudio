@@ -51,7 +51,7 @@ feature -- Output
 					ctxt.put_space;
 					ctxt.put_text_item (ti_Dashdash);
 					ctxt.put_space;
-					ctxt.put_class_name (item.origin.written_class);
+					ctxt.put_classi (item.origin.written_class.lace_class);
 					ctxt.indent;
 					ctxt.new_line;
 					ctxt.put_string ("precursor: True");

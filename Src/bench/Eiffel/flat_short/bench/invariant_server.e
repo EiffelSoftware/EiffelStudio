@@ -42,7 +42,7 @@ feature -- Output
 						ctxt.put_text_item (ti_Dashdash);
 						ctxt.put_space;
 						ctxt.put_comment_text ("from ");
-						ctxt.put_class_name (item.source_class);
+						ctxt.put_classi (item.source_class.lace_class);
 						ctxt.exdent;
 						ctxt.new_line;
 					end;

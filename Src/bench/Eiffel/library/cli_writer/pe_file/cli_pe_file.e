@@ -92,6 +92,12 @@ feature -- Status
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
 
+	has_resources: BOOLEAN is
+			-- Does current have some resources attached?
+		do
+			Result := resources /= Void
+		end
+
 feature -- Access
 
 	pe_header: CLI_PE_FILE_HEADER
@@ -115,6 +121,9 @@ feature -- Access
 	strong_name_info: MANAGED_POINTER
 	public_key: MD_PUBLIC_KEY
 			-- Hold data for strong name signature.
+
+	resources: CLI_RESOURCES
+			-- Hold data for resources.
 
 	cli_header: CLI_HEADER
 			-- Header for `meta_data'.
@@ -197,6 +206,16 @@ feature -- Settings
 				feature {CLI_HEADER}.il_only | feature {CLI_HEADER}.strong_name_signed
 		end
 
+	set_resources (r: like resources) is
+			-- Set `resources' with `r'
+		require
+			r_not_void: r /= Void
+		do
+			resources := r
+		ensure
+			resources_set: resources = r
+		end
+
 feature -- Saving
 
 	save is
@@ -254,6 +273,13 @@ feature -- Saving
 				create l_padding.make (strong_name_size)
 				l_pe_file.put_data (l_padding.item, l_padding.count)
 			end
+
+			if has_resources then
+					-- Store `resources.item' since otherwise no one will be referencing
+					-- it and thus ready for GC.
+				l_padding := resources.item
+				l_pe_file.put_data (l_padding.item, resources_size)
+ 			end
 			
 			l_pe_file.put_data (emitter.assembly_memory.item, meta_data_size)
 			
@@ -339,18 +365,24 @@ feature {NONE} -- Saving
 				strong_name_size := 0
 			end
 
+			if has_resources then
+				resources_size := resources.count
+			else
+				resources_size := 0
+			end
+
 				-- Real size of all components
 			headers_size := dos_header.count + pe_header.count +
 				optional_header.count + text_section_header.count +
 				reloc_section_header.count
 			
 			import_table_padding := pad_up (iat.count + cli_header.count + code_size +
-				debug_size + strong_name_size + meta_data_size, 16) -
+				debug_size + strong_name_size + resources_size + meta_data_size, 16) -
 				(iat.count + cli_header.count + code_size + debug_size +
-				strong_name_size + meta_data_size)
+				strong_name_size + resources_size + meta_data_size)
 
 			text_size := iat.count + cli_header.count + code_size + debug_size +
-				strong_name_size + meta_data_size +
+				strong_name_size + resources_size + meta_data_size +
 				import_table_padding + import_table.count + entry_data.count
 				
 			reloc_size := reloc_section.count
@@ -366,7 +398,8 @@ feature {NONE} -- Saving
 			code_rva := text_rva + iat.count + cli_header.count
 
 			import_directory_rva := text_rva + iat.count + cli_header.count + code_size + 
-				debug_size + strong_name_size + meta_data_size + import_table_padding
+				debug_size + strong_name_size + resources_size + meta_data_size +
+				import_table_padding
 		end
 
 	update_rvas is
@@ -379,7 +412,7 @@ feature {NONE} -- Saving
 			optional_header.set_code_size (text_size_on_disk)
 			optional_header.set_reloc_size (reloc_size_on_disk)
 			optional_header.set_entry_point_rva (text_rva + iat.count +
-				cli_header.count + code_size + debug_size + strong_name_size +
+				cli_header.count + code_size + debug_size + strong_name_size + resources_size +
 				meta_data_size + import_table_padding +
 				import_table.count + entry_data.start_position)
 			optional_header.set_base_of_code (text_rva)
@@ -444,22 +477,30 @@ feature {NONE} -- Saving
 				cli_header.strong_name_directory.set_rva_and_size (text_rva + iat.count +
 					cli_header.count + code_size + debug_size, strong_name_size)
 			end
+
+			if has_resources then
+				cli_header.resources_directory.set_rva_and_size (text_rva + iat.count +
+					cli_header.count + code_size + debug_size + strong_name_size, resources_size)
+			end
+
 			cli_header.meta_data_directory.set_rva_and_size (text_rva + iat.count +
-				cli_header.count + code_size + debug_size + strong_name_size, meta_data_size)
+				cli_header.count + code_size + debug_size + strong_name_size + resources_size,
+				meta_data_size)
 			
 				-- Setting of import table.
 			iat.set_import_by_name_rva (text_rva + iat.count + cli_header.count + code_size +
-				+ debug_size + strong_name_size + meta_data_size + import_table_padding +
-				import_table.Size_to_import_by_name)
+				+ debug_size + strong_name_size + resources_size + meta_data_size +
+				import_table_padding + import_table.Size_to_import_by_name)
 			import_table.set_rvas (text_rva, text_rva + iat.count + cli_header.count +
-				code_size + debug_size + strong_name_size + meta_data_size + import_table_padding)
+				code_size + debug_size + strong_name_size + resources_size + meta_data_size +
+				import_table_padding)
 			
 				-- Entry point setting
 			entry_data.set_iat_rva (text_rva)
 			
 				-- Reloc section
 			reloc_section.set_data (text_rva + iat.count + cli_header.count + code_size +
-				debug_size + strong_name_size + meta_data_size +
+				debug_size + strong_name_size + resources_size + meta_data_size +
 				import_table_padding + import_table.count +
 				entry_data.jump_size)
 				
@@ -503,6 +544,7 @@ feature {NONE} -- Implementation
 			-- Size information about current PE.
 
 	debug_size, strong_name_size, meta_data_size, code_size: INTEGER
+	resources_size: INTEGER
 
 	import_table_padding: INTEGER
 			-- Padding added before `import_table' so that it is aligned on 16 bytes boundaries.

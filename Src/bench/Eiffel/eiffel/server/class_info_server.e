@@ -11,7 +11,7 @@ inherit
 			has, item, disk_item
 		end
 
-creation
+create
 	make
 	
 feature 
@@ -19,7 +19,7 @@ feature
 	cache: CLASS_INFO_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 	
 	has (an_id: INTEGER): BOOLEAN is

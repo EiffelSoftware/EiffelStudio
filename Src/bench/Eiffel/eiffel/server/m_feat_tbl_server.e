@@ -8,7 +8,7 @@ class M_FEAT_TBL_SERVER
 inherit
 	COMPILER_SERVER [MELTED_FEATURE_TABLE]
 
-creation
+create
 	make
 	
 feature -- Access
@@ -22,7 +22,7 @@ feature -- Access
 	cache: M_FEAT_TBL_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 feature -- Server size configuration

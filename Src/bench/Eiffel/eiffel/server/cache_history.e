@@ -16,7 +16,7 @@ inherit
 				clear_all as array_clear_all
 			end
 
-creation
+create
 	make
 
 feature
@@ -55,9 +55,9 @@ feature
 			int_array: ARRAY[INTEGER]
 		do
 			make_array (0,n - 1)
-			!! next.make (0, n - 1)
-			!! previous.make (0, n - 1)
-			!! free_cells.make (0, n - 1)
+			create next.make (0, n - 1)
+			create previous.make (0, n - 1)
+			create free_cells.make (0, n - 1)
 			from
 				int_array := free_cells
 			until

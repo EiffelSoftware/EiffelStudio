@@ -17,7 +17,7 @@ inherit
 			put, remove
 		end
 
-creation
+create
 	make
 
 
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
-			!!Result.make ((3 * Cache.cache_size) // 2)
+			create Result.make ((3 * Cache.cache_size) // 2)
 		end
 
 	Size_limit: INTEGER is 200

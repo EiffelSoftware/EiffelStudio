@@ -8,7 +8,7 @@ class AST_CACHE
 inherit
 	CACHE [CLASS_AS]
 
-creation
+create
 
 	make
 

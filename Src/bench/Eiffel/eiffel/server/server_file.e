@@ -23,7 +23,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,16 +38,16 @@ feature -- Initialization
 			temp: STRING
 			d: DIRECTORY
 		do
-			!!d_name.make_from_string (Compilation_path)
-			!!temp.make (5)
+			create d_name.make_from_string (Compilation_path)
+			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (i))
 			d_name.extend (temp)
-			!!d.make (d_name)
+			create d.make (d_name)
 			if not d.exists then
 				d.create_dir
 			end
-			!!f_name.make_from_string (d_name)
+			create f_name.make_from_string (d_name)
 			f_name.set_file_name (file_name (i))
 			file_make (f_name)
 			if not Eiffel_project.is_read_only then
@@ -223,8 +223,8 @@ end
 			fname: FILE_NAME
 			temp: STRING
 		do
-			!!fname.make_from_string (directory_path (file_id))
-			!!temp.make (5)
+			create fname.make_from_string (directory_path (file_id))
+			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (file_id))
 			fname.extend (temp)
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 	buffered_file_info: UNIX_FILE_INFO is
 			-- Information about the file.
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	set_buffer is

@@ -12,7 +12,7 @@ inherit
 			melt, generate_il
 		end
 
-creation
+create
 	make
 	
 feature 
@@ -20,7 +20,7 @@ feature
 	make (a_class: CLASS_C) is
 		do
 			set_feature_name_id (Names_heap.internal_invariant_name_id)
-			!!rout_id_set.make
+			create rout_id_set.make
 			rout_id_set.put (System.routine_id_counter.invariant_rout_id)
 			written_in := a_class.class_id
 		end

@@ -16,7 +16,7 @@ inherit
 			item, trace
 		end
 
-creation
+create
 	make
 	
 feature 
@@ -24,7 +24,7 @@ feature
 	cache: BODY_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	item (an_id: INTEGER): FEATURE_AS is

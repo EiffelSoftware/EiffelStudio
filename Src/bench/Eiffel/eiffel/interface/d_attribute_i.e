@@ -50,7 +50,7 @@ feature
 	transfer_to (f: like Current) is
 			-- Data transfer
 		do
-			{ATTRIBUTE_I} Precursor (f)
+			Precursor {ATTRIBUTE_I} (f)
 			f.set_access_in (access_in)
 		end
 

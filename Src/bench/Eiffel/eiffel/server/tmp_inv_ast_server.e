@@ -15,7 +15,7 @@ inherit
 			clear, make
 		end
 
-creation
+create
 	make
 	
 feature
@@ -27,15 +27,15 @@ feature
 	make is
 			-- Hash table creation
 		do
-			{READ_SERVER} Precursor;
-			!!to_remove.make;
+			Precursor {READ_SERVER};
+			create to_remove.make;
 			to_remove.compare_objects
 		end;
 
 	cache: INV_AST_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	remove_id (i: INTEGER) is
@@ -72,7 +72,7 @@ feature
 	clear is
 			-- Clear the structure
 		do
-			{READ_SERVER} Precursor
+			Precursor {READ_SERVER}
 			to_remove.wipe_out;
 		end;
 

@@ -6,7 +6,7 @@ indexing
 
 class SERVER_INFO
 
-creation
+create
 	make
 
 feature

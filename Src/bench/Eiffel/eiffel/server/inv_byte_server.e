@@ -12,7 +12,7 @@ inherit
 			has, item, disk_item
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -20,7 +20,7 @@ feature -- Access
 	cache: INV_BYTE_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	id (t: INVARIANT_B): INTEGER is

@@ -65,7 +65,7 @@ feature
 				and then not actual_type.is_integer
 			then
 					-- Type of unique constant is not INTEGER
-				!! vqui
+				create vqui
 				vqui.set_class (written_class)
 				vqui.set_feature_name (feature_name)
 				vqui.set_type (actual_type)
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			t: TYPE_A
 		do
 			t ?= type
-			!! Result.make (feature_name, feature_id)
+			create Result.make (feature_name, feature_id)
 			if t = Void then
 				t := type.actual_type
 			end

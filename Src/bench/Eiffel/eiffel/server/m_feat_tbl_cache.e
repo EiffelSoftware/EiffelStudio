@@ -8,7 +8,7 @@ class M_FEAT_TBL_CACHE
 inherit
 	CACHE [MELTED_FEATURE_TABLE]
 
-creation
+create
 	make
 	
 feature 

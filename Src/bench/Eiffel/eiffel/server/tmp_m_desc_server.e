@@ -8,7 +8,7 @@ class TMP_M_DESC_SERVER
 inherit
 	DELAY_SERVER [MELTED_DESC]
 
-creation
+create
 	make
 
 feature
@@ -21,13 +21,13 @@ feature
 
 	cache: M_DESC_CACHE is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
-			!!Result.make ((3 * Cache.cache_size) // 2)
+			create Result.make ((3 * Cache.cache_size) // 2)
 		end
 
 	Size_limit: INTEGER is 50

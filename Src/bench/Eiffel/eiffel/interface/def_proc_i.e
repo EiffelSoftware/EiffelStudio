@@ -80,7 +80,7 @@ feature -- Access
 		local
 			rep: R_DEF_PROC_I
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -91,7 +91,7 @@ feature -- Access
 		local
 			unselect: D_DEF_PROC_I
 		do
-			!!unselect;
+			create unselect;
 			transfer_to (unselect);
 			unselect.set_access_in (in);
 			Result := unselect;
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 
 	update_api (f: E_ROUTINE) is
 		do
-			{PROCEDURE_I} Precursor (f);
+			Precursor {PROCEDURE_I} (f);
 			f.set_deferred (True);
 		end;
 

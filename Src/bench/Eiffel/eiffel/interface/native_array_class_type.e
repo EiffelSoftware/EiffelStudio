@@ -21,7 +21,7 @@ inherit
 	
 	PREDEFINED_NAMES
 	
-creation
+create
 	make
 
 feature -- Access

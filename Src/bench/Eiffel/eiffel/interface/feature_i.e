@@ -1161,7 +1161,7 @@ feature -- Polymorphism
  		require
  			not_deferred: not is_deferred
  		do
- 			!!Result
+ 			create Result
  			Result.set_body_index (body_index)
  			Result.set_type_a (type.actual_type)
  			Result.set_written_in (written_in)
@@ -1174,7 +1174,7 @@ feature -- Polymorphism
  		require
  			is_attribute: is_attribute
  		do
- 			!!Result
+ 			create Result
  			Result.set_type_a (type.actual_type)
  			Result.set_feature_id (feature_id)
  		end
@@ -1296,7 +1296,7 @@ feature -- Signature checking
 			if type.has_like and then is_once then
 					-- We have an anchored type.
 					-- Check if the feature is not a once feature
-				!!vffd7
+				create vffd7
 				vffd7.set_class (written_class)
 				vffd7.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd7)
@@ -1339,7 +1339,7 @@ end
 				solved_type.reset_constraint_error_list
 				solved_type.check_constraints (written_class)
 				if not solved_type.constraint_error_list.is_empty then
-					!!vtcg1
+					create vtcg1
 					vtcg1.set_class (written_class)
 					vtcg1.set_feature (Current)
 					vtcg1.set_error_list (solved_type.constraint_error_list)
@@ -1353,7 +1353,7 @@ end
 
 			if is_once and then solved_type.has_formal_generic then
 					-- A once funtion cannot have a type with formal generics
-				!!vffd7
+				create vffd7
 				vffd7.set_class (written_class)
 				vffd7.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd7)
@@ -1366,7 +1366,7 @@ end
 			then
 					-- Infixed features should have only one argument
 					-- and must have a return type.
-				!!vffd6
+				create vffd6
 				vffd6.set_class (written_class)
 				vffd6.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd6)
@@ -1377,7 +1377,7 @@ end
 			then
 					-- Prefixed features shouldn't have any argument
 					-- and must have a return type.
-				!!vffd5
+				create vffd5
 				vffd5.set_class (written_class)
 				vffd5.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd5)
@@ -1412,13 +1412,13 @@ end
 				solved_type ?= type
 				if	solved_type.has_expanded then
 					if 	solved_type.expanded_deferred then
-						!!vtec1
+						create vtec1
 						vtec1.set_class (written_class)	
 						vtec1.set_feature (Current)
 						vtec1.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec1)
 					elseif not solved_type.valid_expanded_creation (class_c) then
-						!!vtec2
+						create vtec2
 						vtec2.set_class (written_class)	
 						vtec2.set_feature (Current)
 						vtec2.set_entity_name (feature_name)
@@ -1466,7 +1466,7 @@ end
 
 				-- Check if an attribute is redefined in an attribute
 			if old_feature.is_attribute and then not is_attribute then
-				!!vdrd6
+				create vdrd6
 				vdrd6.init (old_feature, Current)
 				Error_handler.insert_error (vdrd6)
 			end
@@ -1476,7 +1476,7 @@ end
 					-- Check if an external (resp. non-external) feature is not
 					-- redefined into a non external (resp. external) one
 				if old_feature.is_external /= is_external then
-					!!ve01
+					create ve01
 					ve01.set_class (current_class)
 					ve01.set_feature (Current)
 					ve01.set_old_feature (old_feature)
@@ -1503,7 +1503,7 @@ end
 						((new_extension /= Void) and then new_extension.type /= old_extension.type)
 					then
 							-- Error C++ => C or C => C++
-						!! vdrd71
+						create vdrd71
 						vdrd71.init (old_feature, Current)
 						Error_handler.insert_error (vdrd71)
 					end
@@ -1513,7 +1513,7 @@ end
 				-- Check if an effective feature is not redefined in a
 				-- non-effective feature
 			if (not old_feature.is_deferred) and then is_deferred then
-				!!vdrd7
+				create vdrd7
 				vdrd7.set_class (current_class)
 				vdrd7.init (old_feature, Current)
 				Error_handler.insert_error (vdrd7)
@@ -1549,13 +1549,13 @@ debug ("ACTIVITY")
 end
 
 			if not current_class.valid_redeclaration (old_type, new_type) then
-				!!vdrd51
+				create vdrd51
 				vdrd51.init (old_feature, Current)
 				Error_handler.insert_error (vdrd51)
 			elseif
 				new_type.is_true_expanded /= old_type.is_true_expanded
 			then
-				!!ve02
+				create ve02
 				ve02.init (old_feature, Current)
 --				ve02.set_type (new_type)
 --				ve02.set_precursor_type (old_type)
@@ -1564,7 +1564,7 @@ end
 
 				-- Check the argument count
 			if argument_count /= old_feature.argument_count then
-				!!vdrd52
+				create vdrd52
 				vdrd52.init (old_feature, Current)
 				Error_handler.insert_error (vdrd52)
 			else
@@ -1596,13 +1596,13 @@ end
 					if not
 						current_class.valid_redeclaration (old_type, new_type)
 					then
-						!!vdrd53
+						create vdrd53
 						vdrd53.init (old_feature, Current)
 						Error_handler.insert_error (vdrd53)
 					elseif
 						new_type.is_true_expanded /= old_type.is_true_expanded
 					then
-						!!ve02a
+						create ve02a
 						ve02a.init (old_feature, Current)
 --						ve02a.set_type (new_type)
 --						ve02a.set_precursor_type (old_type)
@@ -1641,7 +1641,7 @@ end
 				-- instantiated
 			new_type ?= type
 			if not new_type.is_deep_equal (old_type) then
-				!!vdjr1
+				create vdjr1
 				vdjr1.init (old_feature, Current)
 				vdjr1.set_type (new_type)
 				vdjr1.set_old_type (old_type)
@@ -1650,7 +1650,7 @@ end
 
 				-- Check the argument count
 			if argument_count /= old_feature.argument_count then
-				!!vdjr
+				create vdjr
 				vdjr.init (old_feature, Current)
 				Error_handler.insert_error (vdjr)
 			else
@@ -1666,7 +1666,7 @@ end
 					old_type ?= old_arguments.i_th (i)
 					new_type ?= arguments.i_th (i)
 					if not new_type.is_deep_equal (old_type) then
-						!!vdjr2
+						create vdjr2
 						vdjr2.init (old_feature, Current)
 						vdjr2.set_type (new_type)
 						vdjr2.set_old_type (old_type)
@@ -1946,7 +1946,7 @@ feature -- Pattern
 	pattern: PATTERN is
 			-- Feature pattern
 		do
-			!!Result.make (type.actual_type.meta_type)
+			create Result.make (type.actual_type.meta_type)
 			if argument_count > 0 then
 				Result.set_argument_types (arguments.pattern_types)
 			end

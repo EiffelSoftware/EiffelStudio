@@ -13,7 +13,7 @@ inherit
 
 	SPECIAL_CONST
 		
-creation
+create
 	make
 	
 feature -- Validity

@@ -13,7 +13,7 @@ inherit
 			init_types, update_types, is_tuple
 		end
 
-creation
+create
 	make
 
 feature -- Status report

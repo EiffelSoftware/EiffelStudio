@@ -475,13 +475,13 @@ feature -- Automatic backup
 			d: DIRECTORY
 		do
 				-- Create the EIFGEN/BACKUP directory
-			!!d.make (Backup_path)
+			create d.make (Backup_path)
 			if not d.exists then
 				d.create_dir
 			end
 
 				-- Create the EIFGEN/BACKUP/COMP<n> directory
-			!!d.make (backup_subdirectory)
+			create d.make (backup_subdirectory)
 			if not d.exists then
 				d.create_dir
 			end
@@ -492,8 +492,8 @@ feature -- Automatic backup
 		local
 			temp: STRING
 		do
-			!! Result.make_from_string (Backup_path)
-			!! temp.make (9)
+			create Result.make_from_string (Backup_path)
+			create temp.make (9)
 			temp.append (Comp)
 			temp.append_integer (backup_counter)
 			Result.extend (temp)
@@ -502,7 +502,7 @@ feature -- Automatic backup
 	backup_info_file_name: FILE_NAME is
 			-- File where info about the compilation is saved
 		do
-			!! Result.make_from_string (backup_subdirectory)
+			create Result.make_from_string (backup_subdirectory)
 			Result.set_file_name (Backup_info)
 		end
 
@@ -513,7 +513,7 @@ feature -- Automatic backup
 			l: ARRAYED_LIST [CLUSTER_I]
 			c: CLUSTER_I
 		do
-			!! file.make_open_write (backup_info_file_name)
+			create file.make_open_write (backup_info_file_name)
 			file.putstring ("Compiler version: ")
 			file.putstring (Version_number)
 			file.new_line

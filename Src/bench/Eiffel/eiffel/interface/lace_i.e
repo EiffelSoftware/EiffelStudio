@@ -337,7 +337,7 @@ feature -- Status setting
 	ace_options: ACE_OPTIONS is
 			-- Options explicitly set in the ace file
 		once
-				!! Result
+				create Result
 		end
 
 	parsed_ast: ACE_SD is

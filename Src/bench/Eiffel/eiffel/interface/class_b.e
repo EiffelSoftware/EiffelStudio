@@ -8,7 +8,7 @@ inherit
 			is_basic
 		end
 
-creation
+create
 	make
 	
 feature 

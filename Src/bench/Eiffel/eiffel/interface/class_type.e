@@ -59,7 +59,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -450,7 +450,7 @@ feature -- Conveniences
 			gen_type: GEN_TYPE_I
 		do
 			from
-				!! Result.make
+				create Result.make
 				parents := associated_class.parents
 				parents.start
 			until
@@ -638,7 +638,7 @@ feature -- Generation
 							-- End of header protection
 						header_buffer.putstring ("%N#endif%N")
 
-						!! extern_decl_file.make_open_write (extern_declaration_filename)
+						create extern_decl_file.make_open_write (extern_declaration_filename)
 						extern_decl_file.put_string (header_buffer)
 						extern_decl_file.close
 					else
@@ -795,23 +795,23 @@ feature -- Generation
 			else
 				Result := workbench_generation_path
 			end
-			!! subdirectory.make (7)
+			create subdirectory.make (7)
 			subdirectory.append_character (sub_dir_prefix)
 			subdirectory.append_integer (packet_number)
 
-			!! dir_name.make_from_string (Result)
+			create dir_name.make_from_string (Result)
 			dir_name.extend (subdirectory)
-			!! dir.make (dir_name)
+			create dir.make (dir_name)
 			if not dir.exists then
 				dir.create_dir
 			end
-			!! f_name.make_from_string (dir_name)
+			create f_name.make_from_string (dir_name)
 			f_name.set_file_name (base_file_name)
 			Result := f_name
 
-			!! finished_file_name.make_from_string (dir_name)
+			create finished_file_name.make_from_string (dir_name)
 			finished_file_name.set_file_name (Finished_file_for_make)
-			!! finished_file.make (finished_file_name)
+			create finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	
 			end
@@ -841,11 +841,11 @@ feature -- Generation
 			temp: STRING
 		do
 				-- Subdirectory
-			!! temp.make (10)
+			create temp.make (10)
 			temp.append_character (C_prefix)
 			temp.append_integer (packet_number)
 
-			!! f_name.make_from_string (temp)
+			create f_name.make_from_string (temp)
 
 				-- File name
 			temp := base_file_name
@@ -1069,7 +1069,7 @@ feature -- Generation
 			buffer.putstring (", ")
 
 			if use_init then
-				!!idx_cnt
+				create idx_cnt
 				idx_cnt.set_value (1)
 				gen_type.generate_cid_array (buffer, final_mode, False, idx_cnt)
 			else
@@ -1285,7 +1285,7 @@ feature -- Parent table generation
 	Par_table: PARENT_TABLE is
 			-- Buffer for parent table generation
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 feature -- Skeleton generation

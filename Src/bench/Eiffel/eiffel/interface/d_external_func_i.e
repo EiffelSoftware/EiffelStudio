@@ -27,7 +27,7 @@ feature
 		local
 			rep: RD1_EXTERNAL_FUNC_I;
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -38,7 +38,7 @@ feature
 		local
 			rep: RD1_EXTERNAL_FUNC_I
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_access_in (i);
 			Result := rep

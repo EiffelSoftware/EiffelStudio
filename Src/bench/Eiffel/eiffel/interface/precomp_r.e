@@ -42,13 +42,13 @@ feature
 					if project_eif.is_interrupted then
 						Error_handler.insert_interrupt_error (True)
 					elseif project_eif.is_corrupted then
-						!! vd41;
+						create vd41;
 						vd41.set_path (project_dir.name);
 						Error_handler.insert_error (vd41);
 						Error_handler.raise_error
 					else
 							-- Must be incompatible version
-						!! vd52;	
+						create vd52;	
 						vd52.set_path (project_dir.name);
 						vd52.set_precompiled_version 
 								(project_eif.project_version_number);
@@ -80,7 +80,7 @@ feature
 						sys.server_controler.init
 						Universe.update_cluster_paths
 					else
-						!! vd41;	
+						create vd41;	
 						vd41.set_path (project_dir.name);
 						Error_handler.insert_error (vd41);
 						Error_handler.raise_error
@@ -150,8 +150,8 @@ feature {NONE} -- Implementation
 			dir_name: STRING;
 			id: INTEGER
 		do
-			!! precomp_ids.make (15);
-			!! project_dir.make (precompiled_project.second);
+			create precomp_ids.make (15);
+			create project_dir.make (precompiled_project.second);
 
 			project_dir.check_precompiled;
 			Error_handler.checksum;
@@ -163,13 +163,13 @@ feature {NONE} -- Implementation
 					if project_eif.is_interrupted then
 						Error_handler.insert_interrupt_error (True)
 					elseif project_eif.is_corrupted then
-						!! vd41;	
+						create vd41;	
 						vd41.set_path (project_dir.name);
 						Error_handler.insert_error (vd41);
 						Error_handler.raise_error
 					else
 						-- Must be incompatible version
-						!! vd52;	
+						create vd52;	
 						vd52.set_path (project_dir.name);
 						vd52.set_precompiled_version 
 							(project_eif.project_version_number);
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 								-- Check compatibility between
 								-- precompiled libraries.
 							if id /= precomp_ids.found_item then
-								!! vd45;	
+								create vd45;	
 								vd45.set_path (dir_name);
 								Error_handler.insert_error (vd45);
 								Error_handler.raise_error
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 							-- Check compatibility between
 							-- precompiled libraries.
 						if id /= precomp_ids.found_item then
-							!! vd45;	
+							create vd45;	
 							vd45.set_path (dir_name);
 							Error_handler.insert_error (vd45);
 							Error_handler.raise_error

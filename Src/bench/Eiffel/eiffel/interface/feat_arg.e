@@ -32,7 +32,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
@@ -115,7 +115,7 @@ feature -- Access
 			from
 				l_area := area
 				nb := count
-				!! Result.make (1, nb)
+				create Result.make (1, nb)
 				r_area := Result.area
 			until
 				i = nb
@@ -197,7 +197,7 @@ feature -- Checking
 					solved_type.reset_constraint_error_list
 					solved_type.check_constraints (associated_class)
 					if not solved_type.constraint_error_list.is_empty then
-						!! vtcg2
+						create vtcg2
 						vtcg2.set_class (associated_class)
 						vtcg2.set_feature (f)
 						vtcg2.set_entity_name (argument_name)
@@ -251,13 +251,13 @@ feature -- Checking
 						-- Check validity of an expanded type
 					if 	solved_type.has_expanded then
 						if 	solved_type.expanded_deferred then
-							!!vtec1
+							create vtec1
 							vtec1.set_class (associated_class)
 							vtec1.set_feature (f)
 							vtec1.set_entity_name (argument_name)
 							Error_handler.insert_error (vtec1)
 						elseif not solved_type.valid_expanded_creation (associated_class) then
-							!!vtec2
+							create vtec2
 							vtec2.set_class (associated_class)
 							vtec2.set_feature (f)
 							vtec2.set_entity_name (argument_name)

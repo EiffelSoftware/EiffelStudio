@@ -8,7 +8,7 @@ class BODY_CACHE
 inherit
 	CACHE [FEATURE_AS]
 
-creation
+create
 	make
 
 feature 

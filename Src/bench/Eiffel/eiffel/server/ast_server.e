@@ -8,7 +8,7 @@ class AST_SERVER
 inherit
 	COMPILER_SERVER [CLASS_AS]
 
-creation
+create
 	make
 	
 feature -- Access
@@ -22,7 +22,7 @@ feature -- Access
 	cache: AST_CACHE is
 		-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 feature -- Server size configuration

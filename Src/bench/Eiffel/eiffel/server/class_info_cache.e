@@ -8,7 +8,7 @@ class CLASS_INFO_CACHE
 inherit
 	CACHE [CLASS_INFO]
 
-creation
+create
 	make
 
 feature 

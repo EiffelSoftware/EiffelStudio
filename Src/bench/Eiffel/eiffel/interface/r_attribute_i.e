@@ -51,7 +51,7 @@ feature
 	transfer_to (f: like Current) is
 			-- Data transfer
 		do
-			{ATTRIBUTE_I} precursor (f)
+			precursor {ATTRIBUTE_I} (f)
 			f.set_code_id (code_id)
 		end
 

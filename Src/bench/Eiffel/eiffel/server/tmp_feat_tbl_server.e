@@ -11,7 +11,7 @@ class TMP_FEAT_TBL_SERVER
 inherit
 	DELAY_SERVER [FEATURE_TABLE]
 
-creation
+create
 	make
 
 feature 
@@ -25,14 +25,14 @@ feature
 	cache: FEAT_TBL_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end			
 
 
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
-			!!Result.make ((3 * Cache.cache_size) // 2)
+			create Result.make ((3 * Cache.cache_size) // 2)
 		end
 
 	Size_limit: INTEGER is 400

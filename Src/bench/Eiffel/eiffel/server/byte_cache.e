@@ -8,7 +8,7 @@ class BYTE_CACHE
 inherit
 	CACHE [BYTE_CODE]
 
-creation
+create
 	make
 	
 feature 

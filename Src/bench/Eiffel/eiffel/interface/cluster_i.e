@@ -475,7 +475,7 @@ end;
 		do
 			rename_clause := rename_clause_for (cl);
 			if rename_clause = Void then
-				!!rename_clause.make;
+				create rename_clause.make;
 				rename_clause.set_cluster (cl);
 				renamings.put_front (rename_clause);
 			end;
@@ -541,7 +541,7 @@ end;
 				(changed (ex_l, inc_l) or else
 				process_subclusters /= is_recursive)
 			then
-				!! Result.make_with_parent (dollar_path, par_clus);
+				create Result.make_with_parent (dollar_path, par_clus);
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 
@@ -553,7 +553,7 @@ end;
 				Result.set_belongs_to_all (belongs_to_all)
 				Result.fill (ex_l, inc_l);
 			else
-				!! Result.make_from_old_cluster (Current, par_clus)
+				create Result.make_from_old_cluster (Current, par_clus)
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 			end;
@@ -572,7 +572,7 @@ end;
 				-- Process the include and exclude lists
 			if ex_l /= Void then
 				from
-					!!exclude_list.make_filled (ex_l.count)
+					create exclude_list.make_filled (ex_l.count)
 					i := 1
 				until
 					i > ex_l.count
@@ -585,7 +585,7 @@ end;
 
 			if inc_l /= Void then
 				from
-					!!include_list.make_filled (inc_l.count)
+					create include_list.make_filled (inc_l.count)
 					i := 1
 				until
 					i > inc_l.count
@@ -602,7 +602,7 @@ end;
 			date := new_date
 
 			if is_recursive then
-				!!already_done.make
+				create already_done.make
 				already_done.compare_objects
 				cl_id := physical_id (path)
 				already_done.extend (cl_id)
@@ -646,7 +646,7 @@ end;
 
 			create cluster_file.make (cl_path)
 			if not cluster_file.exists then
-				!!vd01
+				create vd01
 				vd01.set_path (cl_path)
 				vd01.set_cluster_name (cluster_name)
 				Error_handler.insert_error (vd01)
@@ -654,14 +654,14 @@ end;
 			end
 
 			if open_directory_error (cluster_file) then
-				!!vd22
+				create vd22
 				vd22.set_cluster (Current)
 				vd22.set_file_name (cluster_file.name)
 				Error_handler.insert_error (vd22)
 			else
 				if is_recursive then
-					!!sub_dirs.make
-					!!suffixes.make
+					create sub_dirs.make
+					create suffixes.make
 				end
 				from
 					cluster_file.start
@@ -701,11 +701,11 @@ end;
 						if not found then
 							if check_dir then
 								-- Check that it is really a directory.
-								!!sub_dir_path.make_from_string (clone (cl_path))
+								create sub_dir_path.make_from_string (clone (cl_path))
 								sub_dir_path.extend (file_name)
-								!!sub_dir_suffix.make_from_string (clone (suffix))
+								create sub_dir_suffix.make_from_string (clone (suffix))
 								sub_dir_suffix.extend (file_name)
-								!!sub_dir_file.make (sub_dir_path)
+								create sub_dir_file.make (sub_dir_path)
 
 								if sub_dir_file.exists then
 									-- Add it to the list
@@ -713,7 +713,7 @@ end;
 									suffixes.extend (sub_dir_suffix)
 								else
 									if is_efile then
-										!!prefixed_file_name.make_from_string(
+										create prefixed_file_name.make_from_string(
 																clone (suffix)
 																			 )
 										prefixed_file_name.extend (file_name)
@@ -756,12 +756,12 @@ end;
 						end
 						if not found then
 							-- If file exists insert it.
-							!!class_path.make_from_string (cl_path);
+							create class_path.make_from_string (cl_path);
 							class_path.set_file_name (file_name);
-							!!class_file.make (class_path)
+							create class_file.make (class_path)
 							if class_file.exists then
 								if is_recursive then
-									!!prefixed_file_name.make_from_string(
+									create prefixed_file_name.make_from_string(
 															clone (suffix)
 																		 )
 									prefixed_file_name.extend (file_name)
@@ -832,7 +832,7 @@ end;
 			vd11: VD11;
 			str: ANY;
 		do
-			!!class_path.make_from_string (path);
+			create class_path.make_from_string (path);
 			class_path.set_file_name (file_name);
 			class_name := read_class_name_in_file (class_path);
 			if class_name /= Void then
@@ -844,7 +844,7 @@ end;
 				a_class := classes.item (class_name);
 				if a_class /= Void then
 					-- Error
-					!!vd11;
+					create vd11;
 					vd11.set_a_class (a_class);
 					vd11.set_file_name (file_name);
 					vd11.set_cluster (Current);
@@ -880,7 +880,7 @@ end;
 debug ("REMOVE_CLASS")
 	io.error.putstring ("new class!!!%N");
 end;
-					!!a_class.make (class_name);
+					create a_class.make (class_name);
 					a_class.set_base_name (file_name);
 					a_class.set_cluster (Current);
 					a_class.set_date;
@@ -909,7 +909,7 @@ end;
 				class_file.open_read
 				if not class_file.is_open_read then
 						-- Error when opening file
-					!!vd22;
+					create vd22;
 					vd22.set_cluster (Current);
 					vd22.set_file_name (file_name);
 					Error_handler.insert_error (vd22);
@@ -922,7 +922,7 @@ end;
 						Result.to_lower;
 					else
 							-- No class in file
-						!!vd10;
+						create vd10;
 						vd10.set_cluster (Current);
 						vd10.set_file_name (file_name);
 						Error_handler.insert_error (vd10);
@@ -930,7 +930,7 @@ end;
 				end;
 			else
 					-- Unreadable file
-				!!vd21;
+				create vd21;
 				vd21.set_cluster (Current);
 				vd21.set_file_name (file_name);
 				Error_handler.insert_error (vd21);
@@ -1243,7 +1243,7 @@ end;
 		do
 			if classes.has ("any") then
 					-- It means that it is the kernel cluster.
-				!!vd40;
+				create vd40;
 				vd40.set_cluster (Current);
 				Error_handler.insert_error (vd40);
 				Error_handler.raise_error;
@@ -1300,7 +1300,7 @@ end;
 						found := True;
 					else
 							-- Name clash
-						!!vscn;
+						create vscn;
 						vscn.set_first (Universe.last_class);
 						vscn.set_second  
 						(a_cluster.classes.item (table.found_item));
@@ -1508,8 +1508,8 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			d: DIRECTORY
 			cluster: like Current
 		do
-			!! Result.make_from_string (Workbench.backup_subdirectory)
-			!! d.make (Result)
+			create Result.make_from_string (Workbench.backup_subdirectory)
+			create d.make (Result)
 			if not d.exists then
 					-- Create the backup directory again just in case the user removes it.
 				d.create_dir
@@ -1528,7 +1528,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 				Result.extend (backup_subdirectory)
 			end
 
-			!! d.make (Result)
+			create d.make (Result)
 			if not d.exists then
 				d.create_dir
 			end
@@ -1544,9 +1544,9 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 		local
 			file_name: FILE_NAME
 		do
-			!! file_name.make_from_string (backup_directory)
+			create file_name.make_from_string (backup_directory)
 			file_name.set_file_name (Backup_info)
-			!! Result.make_open_append (file_name)
+			create Result.make_open_append (file_name)
 		end
 
 	record_removed_class (class_name: STRING) is
@@ -1587,7 +1587,7 @@ feature -- Output
 			st.add_cluster (Current, name_in_upper);
 			st.add_new_line
 			st.add_new_line;
-			!! list.make;
+			create list.make;
 			from
 				classes.start
 			until
@@ -1625,7 +1625,7 @@ feature -- Document processing
 		do
 			tmp := document_path;
 			if tmp /= Void then
-				!! Result.make_from_string (tmp);
+				create Result.make_from_string (tmp);
 				c_name := "_cluster_";
 				c_name.append (cluster_name);
 				Result.set_file_name (c_name)
@@ -1640,10 +1640,10 @@ feature -- Document processing
 		do
 			tmp := private_document_path;
 			if tmp = Void then
-				!! Result.make_from_string (System.document_path);
+				create Result.make_from_string (System.document_path);
 				Result.extend (cluster_name)
 			elseif not tmp.is_equal (No_word) then
-				!! Result.make_from_string (tmp)
+				create Result.make_from_string (tmp)
 			end;
 		end;
 

@@ -8,7 +8,7 @@ class POLY_CACHE
 inherit
 	CACHE [POLY_TABLE [ENTRY]]
 
-creation
+create
 	make
 
 feature

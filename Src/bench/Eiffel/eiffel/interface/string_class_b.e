@@ -42,7 +42,7 @@ feature
 					parents.forth;
 				end;
 				if not stop then
-					!!special_error.make (Case_4, Current);
+					create special_error.make (Case_4, Current);
 					Error_handler.insert_error (special_error);
 				end;
 			end
@@ -50,7 +50,7 @@ feature
 				-- Second check if class has only one reference attribute
 				-- only (which is necessary `area' then).
 			if types.first.skeleton.nb_reference /= 1 then
-				!!special_error.make (Case_5, Current);
+				create special_error.make (Case_5, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -76,7 +76,7 @@ feature
 				error := not done
 			end;
 			if error then
-				!!special_error.make (Case_6, Current);
+				create special_error.make (Case_6, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -88,7 +88,7 @@ feature
 				or else
 				not (set_count_feat.written_in = class_id)
 			then
-				!!special_error.make (Case_17, Current);
+				create special_error.make (Case_17, Current);
 				Error_handler.insert_error (special_error);
 			end;
 		end
@@ -108,9 +108,9 @@ feature
 		local
 			args: FEAT_ARG;
 		once
-			!!args.make (1);
+			create args.make (1);
 			args.put_i_th (Integer_type, 1);
-			!!Result;
+			create Result;
 			Result.set_arguments (args);
 			Result.set_feature_name_id (Names_heap.make_name_id);
 		end;
@@ -120,9 +120,9 @@ feature
 		local
 			args: FEAT_ARG;
 		once
-			!!args.make (1);
+			create args.make (1);
 			args.put_i_th (Integer_type, 1);
-			!!Result;
+			create Result;
 			Result.set_arguments (args);
 			Result.set_feature_name_id (Names_heap.set_count_name_id);
 		end;

@@ -35,7 +35,7 @@ inherit
 			copy, is_equal
 		end
 
-creation {COMPILER_EXPORTER}
+create {COMPILER_EXPORTER}
 	make
 
 feature {NONE} -- Initialization

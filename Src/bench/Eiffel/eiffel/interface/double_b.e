@@ -8,7 +8,7 @@ inherit
 			actual_type, generate_cecil_value, cecil_value
 		end
 
-creation
+create
 	make
 	
 feature 

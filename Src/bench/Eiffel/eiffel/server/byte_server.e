@@ -12,7 +12,7 @@ inherit
 			disk_item, has, item
 		end
 
-creation
+create
 	make
 
 feature -- Update
@@ -26,7 +26,7 @@ feature -- Update
 	cache: BYTE_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 	
 feature -- Access

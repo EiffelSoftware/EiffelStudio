@@ -19,7 +19,7 @@ feature -- Document processing
 		do
 			tmp := document_path;
 			if tmp /= Void then
-				!! Result.make_from_string (tmp);
+				create Result.make_from_string (tmp);
 				Result.extend (system_name);
 			end
 		end;
@@ -34,7 +34,7 @@ feature -- Document processing
 			if tmp = Void then
 				Result := Documentation_path
 			elseif not tmp.is_equal (No_word) then
-				!! Result.make_from_string (tmp)
+				create Result.make_from_string (tmp)
 			end;
 		end
 

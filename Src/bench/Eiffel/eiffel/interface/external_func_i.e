@@ -40,7 +40,7 @@ feature
 		local
 			rep: R_EXTERNAL_FUNC_I;
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -51,7 +51,7 @@ feature
 		local
 			unselect: D_EXTERNAL_FUNC_I;
 		do
-			!!unselect;
+			create unselect;
 			transfer_to (unselect);
 			unselect.set_access_in (in);
 			Result := unselect;
@@ -64,7 +64,7 @@ feature -- Api creation
 		local
 			t: TYPE_A
 		do
-			!! Result.make (feature_name, feature_id);
+			create Result.make (feature_name, feature_id);
 			t ?= type;
 			if t = Void then
 				t := type.actual_type

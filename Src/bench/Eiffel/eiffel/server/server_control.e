@@ -11,7 +11,7 @@ inherit
 			make, wipe_out
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

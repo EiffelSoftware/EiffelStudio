@@ -228,7 +228,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{PROCEDURE_I} Precursor (other);
+			Precursor {PROCEDURE_I} (other);
 			other.set_encapsulated (encapsulated);
 			other.set_extension (extension);
 		end;
@@ -236,7 +236,7 @@ feature
 	new_rout_entry: EXTERN_ENTRY is
 			-- New external unit
 		do
-			!!Result;
+			create Result;
 			Result.set_body_index (body_index);
 			Result.set_type_a (type.actual_type);
 			Result.set_written_in (written_in);
@@ -252,7 +252,7 @@ feature
 		local
 			rep: R_EXTERNAL_I
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -263,7 +263,7 @@ feature
 		local
 			unselect: D_EXTERNAL_I
 		do
-			!!unselect;
+			create unselect;
 			transfer_to (unselect);
 			unselect.set_access_in (in);
 			Result := unselect;
@@ -346,7 +346,7 @@ feature {NONE} -- Api
 	update_api (f: E_ROUTINE) is
 			-- Update the attributes of api feature `f'.
 		do
-			{PROCEDURE_I} Precursor (f)
+			Precursor {PROCEDURE_I} (f)
 			f.set_external (True)
 		end
 

@@ -41,7 +41,7 @@ feature {NONE}
 	display_info (i: INTEGER; stone: FEATURE_STONE) is 
 			-- Display flat form of `stone'.
 		do 
-			text_window.process_text (rout_flat_context (stone).text)
+			text_window.process_text (rout_flat_context_text (stone))
 		end;
 
 	display_temp_header (stone: STONE) is

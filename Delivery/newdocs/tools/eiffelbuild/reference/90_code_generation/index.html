@@ -5,7 +5,7 @@
 <P>The code will be generated according to the options you selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A></P>
 
 <H2>Project build type</H2>
-<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build_type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then the following will be generated:
+<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then the following files will be generated:
 	<UL>
 		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting + '_IMP' representing the implementation of your window.</LI>
 		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting representing the interface of your window.</LI>
@@ -14,14 +14,29 @@
 
 	</UL>
 </P>
-<P>Below is a <A HREF="http://www.eiffel.com/products/bon.html">BON</A> diagram of the generated system once compiled (All names are the EiffelBuild defaults):</P>
+<P>Below is a <A HREF="http://www.eiffel.com/products/bon.html">BON</A> diagram of the generated system using default names:</P>
 
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/complete_project_diagram.png"></p>
-
+<P>As the files generated enable you to compile a new <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> system, it is recommended that you use this option only when starting a new Vision2 system.</> 
 <H2>Class build type</H2>
+<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build_type</A> is selected as <B>Class</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then the following files will be generated:
+	<UL>
+		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting + '_IMP' representing the implementation of your window.</LI>
+		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting representing the interface of your window.</LI>
+	</UL>
+</P>
+<P>Below is a <A HREF="http://www.eiffel.com/products/bon.html">BON</A> diagram of the generated system using default names:</P>
+
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram.png"></p>
+<P>As the files generated are only sufficient for inclusion in an existing system, it is recommended that you use this option only when adding to an existing <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> system.</P> 
+
+<H2>Modifying code after generation</H2>
+<P>The choice to generate an interface and an implementation class for the window was to enable modification of the interface using EiffelBuild, once you had hand edited code. The rule is that the implementation window class will be re-generated every time, but the interface will not. It follows from this that you should not add hand written code to the implementation of the window, as any changes you make will be lost when re-generation takes place.</P>
+<P>Using this mechanism, you can generate your initial system using EiffelBuild, and implement any event features that have been generated (in the interface) by EiffelBuild. If you then decide that you wish to modify the look and the feel of the interface, you can return to EiffelBuild, make the necessary adjustments and then re-generate the system.</P>
 
 
-<P CLASS="note"><B>Note</B>: note here.</P>
+<P CLASS="note"><B>Note</B>: When returning to EiffelBuild to modify the interface, if you delete or rename controls, then it is quite possible that you will break your existing code. Care should be taken with all changes of this type.</P>
+<P>Looking at a generated system, you will see that the events connected to your controls are defined as deferred in the implementation and actually implemented in the interface class. This means that if you return to EiffelBuild with a previously generated system, and add a new event to a control, then you will have to implement the definition in the interface class yourself (as the class interface class is not re-generated).</P>
 
 
 

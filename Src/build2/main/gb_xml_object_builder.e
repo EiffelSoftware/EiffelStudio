@@ -124,7 +124,7 @@ feature -- Access
 				a_new_object := object_handler.build_object_from_string_and_assign_id (element.attribute_by_name (type_string).value)
 			end
 			
-			object_handler.add_object (object, a_new_object, object.layout_item.count + 1)
+			object_handler.add_object (object, a_new_object, object.children.count + 1)
 			from
 				element.start
 			until

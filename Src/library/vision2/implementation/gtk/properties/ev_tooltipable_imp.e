@@ -30,35 +30,29 @@ feature -- Element change
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
 		local
-			app_imp: EV_APPLICATION_IMP
-			old_ref_count: INTEGER
-	        do
+			tempstr: ANY
+		do
 			tooltip := clone (a_text)
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			old_ref_count := C.gtk_object_struct_ref_count (c_object)
+			tempstr := tooltip.to_c
 			C.gtk_tooltips_set_tip (
-				app_imp.tooltips,
+				app_implementation.tooltips,
 				c_object,
-				eiffel_to_c (a_text),
+				$tempstr,
 				NULL
 			)
 		end
 
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
-		local
-			app_imp: EV_APPLICATION_IMP
-	        do
+	    do
 			tooltip := Void
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			C.gtk_tooltips_set_tip (
-				app_imp.tooltips,
+				app_implementation.tooltips,
 				c_object,
 				NULL,
 				NULL
 			)
 		end
-
 
 feature {EV_ANY_I} -- Implementation
 

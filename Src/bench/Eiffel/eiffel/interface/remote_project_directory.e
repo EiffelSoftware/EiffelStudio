@@ -12,26 +12,97 @@ class REMOTE_PROJECT_DIRECTORY
 inherit
 
 	PROJECT_CONTEXT
+		rename
+			compilation_path as shared_compilation_path,
+			precomp_eif as shared_precomp_eif
 		export
 			{NONE} all
 		end;
 	DIRECTORY
 		rename
+			make as directory_make,
 			mode as file_mode
 		end;
 	SHARED_ERROR_HANDLER;
+	SHARED_ENV;
 	COMPILER_EXPORTER
 
 creation
 
 	make
 	
+feature {NONE} -- Initialization
+
+	make (dn: STRING) is
+			-- Create a remote project directory object.
+		do
+			dollar_name := dn;
+			directory_make (Environ.interpreted_string (dn))
+		end
+
 feature -- Status
 
 	is_valid: BOOLEAN;
 		-- Is Current a valid project directory
 		-- Set by the check routines `check_precompiled'
 		-- and `check_project'
+
+feature -- Access
+
+	dollar_name: STRING
+			-- Directory name (with environment variables)
+
+	compilation_path: DIRECTORY_NAME is
+			-- Path of the COMP directory
+		do
+			!! Result.make_from_string (name);
+			Result.extend_from_array (<<Eiffelgen, Comp>>)
+		end
+
+	project_eif: FILE_NAME is
+			-- Full name of the file where the
+			-- workbench is stored
+		do
+			!! Result.make_from_string (name);
+			Result.extend (Eiffelgen);
+			Result.set_file_name (Dot_workbench)
+		end
+
+	precomp_eif: FILE_NAME is
+			-- Full name of the file where the
+			-- precompilation information is stored
+		do
+			!! Result.make_from_string (name);
+			Result.extend (Eiffelgen);
+			Result.set_file_name (Shared_precomp_eif)
+		end
+
+	precompiled_preobj: FILE_NAME is
+			-- Full name of `preobj' object file
+		local
+			makefile_name: STRING
+		do
+			makefile_name := Environ.translated_string (dollar_name);
+			!! Result.make_from_string (makefile_name);
+			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.set_file_name (Preobj)
+		end
+
+	precompiled_driver: FILE_NAME is
+			-- Full name of the precompilation driver
+		do
+			!! Result.make_from_string (name);
+			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.set_file_name (Driver)
+		end
+
+	precompiled_descobj: FILE_NAME is
+			-- Full name of the precompilation descriptor tables
+		do
+			!! Result.make_from_string (name);
+			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.set_file_name (Descobj)
+		end
 
 feature -- Check
 
@@ -41,6 +112,8 @@ feature -- Check
 		do
 			is_precompile := True;
 			check_project_directory
+				-- EIFGEN/precomp.eif file must be readable.
+			check_file (<<Eiffelgen>>, Shared_precomp_eif);
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
 				-- should be present. If they are not, issue a warning.
 			check_precompiled_optional (<<Eiffelgen, W_code>>, Driver);
@@ -54,6 +127,14 @@ feature -- Check
 			is_precompile := False;
 			check_project_directory
 		end;
+
+feature {COMPILER_EXPORTER} -- Update
+
+	update_path is
+			-- Interpret environment variables in directory name.
+		do
+			name := Environ.interpreted_string (dollar_name)
+		end
 
 feature {NONE} -- Implementation
 

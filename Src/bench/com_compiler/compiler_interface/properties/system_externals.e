@@ -259,7 +259,7 @@ feature -- Basic operations
 			
 			store_externals (include_paths_list, include_path_keyword, True)
 			store_externals (object_files_list, object_keyword, True)
-			store_externals (dotnet_resources_list, dotnet_resource_keyword, False)
+			store_externals (dotnet_resources_list, dotnet_resource_keyword, True)
 			ace_accesser.apply
 		end
 
@@ -360,6 +360,7 @@ feature {NONE} -- Implementation
 			external_item: LANG_TRIB_SD
 			file_names: LACE_LIST [ID_SD]
 			file_name: ID_SD
+			unquoted_name: STRING
 		do		
 			if not external_list.is_empty then
 				create file_names.make (external_list.count)
@@ -373,7 +374,10 @@ feature {NONE} -- Implementation
 					if add_quotes then
 						file_names.extend (new_id_sd (external_list.item, True))	
 					else
-						file_names.extend (new_id_sd (external_list.item, False))
+						unquoted_name := clone (external_list.item)
+						unquoted_name.prune_all_leading ('%"')
+						unquoted_name.prune_all_trailing ('%"')
+						file_names.extend (new_id_sd (unquoted_name, True))
 					end
 					external_list.forth
 				end

@@ -290,7 +290,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
-
+	EIF_GET_CONTEXT
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
@@ -440,7 +440,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
-
+	EIF_GET_CONTEXT
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
@@ -620,7 +620,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
-
+	EIF_GET_CONTEXT
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
@@ -1063,11 +1063,12 @@ rt_private char *next_item (char *ptr)
 rt_private void read_header(EIF_CONTEXT char rt_type)
 {
 	/* Read header and make the dynamic type correspondance table */
+	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
 	long size;
 	int nb_gen, bsize = 1024;
-	char vis_name[512]; /* %%ss removed , end; */
+	char vis_name[512];
 	char * temp_buf;
 	jmp_buf exenv;
 	RTXD;
@@ -1197,10 +1198,11 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 rt_private void iread_header(EIF_CONTEXT_NOARG)
 {
 	/* Read header and make the dynamic type correspondance table */
+	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
 	int nb_gen, bsize = 1024;
-	char vis_name[512]; /* %%ss removed , end; */
+	char vis_name[512];
 	char * temp_buf;
 	uint32 num_attrib;
 	long read_attrib;

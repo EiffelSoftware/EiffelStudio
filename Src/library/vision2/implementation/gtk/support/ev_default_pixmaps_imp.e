@@ -136,6 +136,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (crosshair_cursor_xpm)
+			Result.set_x_hotspot (15)
+			Result.set_y_hotspot (15)
 		end
 
 	Help_cursor: EV_CURSOR is
@@ -156,6 +158,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (ibeam_cursor_xpm)
+			Result.set_x_hotspot (7)
+			Result.set_y_hotspot (15)
 		end
 
 	No_cursor: EV_CURSOR is
@@ -166,6 +170,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (no_cursor_xpm)
+			Result.set_x_hotspot (15)
+			Result.set_y_hotspot (15)
 		end
 
 	Sizeall_cursor: EV_CURSOR is
@@ -176,6 +182,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizeall_cursor_xpm)
+			Result.set_x_hotspot (11)
+			Result.set_y_hotspot (11)
 		end
 
 	Sizens_cursor: EV_CURSOR is
@@ -186,6 +194,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizens_cursor_xpm)
+			Result.set_x_hotspot (5)
+			Result.set_y_hotspot (9)
 		end
 
 	Sizenwse_cursor: EV_CURSOR is
@@ -196,6 +206,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizenwse_cursor_xpm)
+			Result.set_x_hotspot (8)
+			Result.set_y_hotspot (7)
 		end
 
 	Sizenesw_cursor: EV_CURSOR is
@@ -206,6 +218,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizenesw_cursor_xpm)
+			Result.set_x_hotspot (7)
+			Result.set_y_hotspot (7)
 		end
 
 	Sizewe_cursor: EV_CURSOR is
@@ -216,6 +230,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizewe_cursor_xpm)
+			Result.set_x_hotspot (9)
+			Result.set_y_hotspot (5)
 		end
 
 	Uparrow_cursor: EV_CURSOR is
@@ -226,6 +242,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (uparrow_cursor_xpm)
+			Result.set_x_hotspot (0)
+			Result.set_y_hotspot (5)
 		end
 
 	Wait_cursor: EV_CURSOR is
@@ -236,6 +254,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (wait_cursor_xpm)
+			Result.set_x_hotspot (16)
+			Result.set_y_hotspot (16)
 		end
 
 feature {NONE} -- Externals
@@ -382,14 +402,14 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"ev_c_util.h%"]"
 		alias
-			"busy_cursor_xpm"
+			"uparrow_cursor_xpm"
 		end
 		
 	wait_cursor_xpm: POINTER is
 		external
 			"C [macro %"ev_c_util.h%"]"
 		alias
-			"busy_cursor_xpm"
+			"wait_cursor_xpm"
 		end
 
 end -- class EV_STOCK_PIXMAPS_IMP

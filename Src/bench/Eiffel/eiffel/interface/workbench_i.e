@@ -9,13 +9,15 @@ inherit
 	SHARED_PASS;
 	STORABLE;
 	SHARED_RESOURCES;
-	PROJECT_CONTEXT;
+	PROJECT_CONTEXT
+		rename
+			extendible_directory as shared_extendible_directory
+		end;
 	SHARED_WORKBENCH
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER;
-	WINDOWS
+	COMPILER_EXPORTER; WINDOWS
 
 feature -- Attributes
 
@@ -28,8 +30,14 @@ feature -- Attributes
 	lace: LACE_I;
 			-- Current lace description
 
-	precompiled_directory_name: STRING;
-			-- Name of the precompiled directory
+	precompiled_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			-- Precompilation directories, indexed by precompilation ids
+
+	precompiled_driver: FILE_NAME
+			-- Full file name of the precompilation driver
+
+	precompiled_descobj: FILE_NAME
+			-- Full file name of the precompilation descriptor tables
 
 	compilation_counter: INTEGER;
 			-- Number of recompilations
@@ -54,10 +62,31 @@ feature -- Conveniences
 			system := s
 		end;
 
-	set_precompiled_directory_name (s: STRING) is
+	set_precompiled_directories (directories: like precompiled_directories) is
+			-- Set `precompiled_directories' to `directories'.
+		require
+			directories_not_void: directories /= Void
 		do
-			precompiled_directory_name := s;
-		end;
+			precompiled_directories := directories
+		ensure
+			assigned: precompiled_directories = directories
+		end
+
+	set_precompiled_driver (pd: like precompiled_driver) is
+			-- Set `precompiled_driver' to `pd'.
+		do
+			precompiled_driver := pd
+		ensure
+			assigned: precompiled_driver = pd
+		end
+
+	set_precompiled_descobj (pd: like precompiled_descobj) is
+			-- Set `precompiled_descobj' to `pd'.
+		do
+			precompiled_descobj := pd
+		ensure
+			assigned: precompiled_descobj = pd
+		end
 
 feature -- Initialization
 
@@ -67,6 +96,7 @@ feature -- Initialization
 			-- first compilation).
 		do
 			!! universe.make;
+			!! precompiled_directories.make (5);
 			!! lace;
 			init
 		ensure
@@ -181,6 +211,7 @@ feature -- Commands
 			-- changed (for precompilation)
 		local
 			class_list: EXTEND_TABLE [CLASS_I, STRING];
+			c: CLUSTER_I;
 			i: INTEGER;
 		do
 			from
@@ -188,15 +219,18 @@ feature -- Commands
 			until
 				Universe.clusters.after
 			loop
-				from
-					class_list := Universe.clusters.item.classes;
-					class_list.start
-				until
-					class_list.after
-				loop
-					i := i + 1;
-					change_class (class_list.item_for_iteration);
-					class_list.forth
+				c := Universe.clusters.item;
+				if not c.is_precompiled then
+					from
+						class_list := c.classes;
+						class_list.start
+					until
+						class_list.after
+					loop
+						i := i + 1;
+						change_class (class_list.item_for_iteration);
+						class_list.forth
+					end
 				end;
 				Universe.clusters.forth
 			end;
@@ -273,12 +307,12 @@ feature -- Commands
 
 feature -- DLE
 
-	extendible_directory_name: STRING;
-			-- Name of the dynamically extendible directory
+	extendible_directory: REMOTE_PROJECT_DIRECTORY;
+			-- Dynamically extendible directory
 
-	set_extendible_directory_name (s: STRING) is
+	set_extendible_directory (d: like extendible_directory) is
 		do
-			extendible_directory_name := s
+			extendible_directory := d
 		end;
 
 	change_all_new_dynamic_classes is

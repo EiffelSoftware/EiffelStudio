@@ -82,8 +82,8 @@ feature -- Element change
 			font_imp ?= a_font.implementation
 			wel_font := font_imp.wel_log_font
 			f_name := wel_font.face_name
-			if f_name.is_empty and then not font_imp.preferred_faces.is_empty  then
-				wel_font.set_face_name (font_imp.preferred_faces @ 1)
+			if f_name.is_empty and then not font_imp.preferred_familys.is_empty  then
+				wel_font.set_face_name (font_imp.preferred_familys @ 1)
 			end
 			set_log_font (wel_font)
 		end
@@ -227,6 +227,9 @@ end -- class EV_FONT_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2001/06/14 17:24:33  rogers
+--| changed preferred_faces to preferred_familys.
+--|
 --| Revision 1.9  2001/06/07 23:08:14  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

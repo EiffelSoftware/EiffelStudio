@@ -385,8 +385,8 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			set_integer ("min_slice", min_slice_ref.item)
-			set_integer ("max_slice", max_slice_ref.item)
+			set_integer_resource ("min_slice", min_slice_ref.item)
+			set_integer_resource ("max_slice", max_slice_ref.item)
 			debugger_manager.kept_objects.wipe_out
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug

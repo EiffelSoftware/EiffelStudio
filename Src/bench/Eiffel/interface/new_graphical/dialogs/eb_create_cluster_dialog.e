@@ -67,6 +67,8 @@ inherit
 		end
 
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
 		export
 			{NONE} all
 		undefine
@@ -553,7 +555,7 @@ feature {NONE} -- Graphic interface
 		do
 			dir := bd.directory
 			folder_entry.set_text (dir)
-			set_string ("last_browsed_cluster_directory", dir)
+			set_string_resource ("last_browsed_cluster_directory", dir)
 		end
 
 	top_cluster_selected is

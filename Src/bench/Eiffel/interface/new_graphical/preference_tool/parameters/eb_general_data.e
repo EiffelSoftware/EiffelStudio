@@ -8,6 +8,16 @@ class
 
 inherit
 	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
+
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -80,7 +90,7 @@ feature -- Element change
 
 	save_show_starting_dialog (new_value: BOOLEAN) is
 		do
-			set_boolean ("show_starting_dialog", new_value)
+			set_boolean_resource ("show_starting_dialog", new_value)
 		end
 
 end -- class EB_GENERAL_DATA

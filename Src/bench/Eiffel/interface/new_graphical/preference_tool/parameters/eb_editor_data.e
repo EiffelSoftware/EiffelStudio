@@ -346,7 +346,7 @@ feature -- Update
 			-- Default Initialisations
 		do
 			tabulation_spaces := integer_resource_value ("tab_step", 4)
-			create font.make_with_font (font_resource_value ("editor_font"))
+			create font.make_with_font (font_resource_value ("editor_font", "verdana,arial,helvetica-r-regular-12-screen"))
 			update_preferences
 		end
 
@@ -355,12 +355,16 @@ feature -- Update
 		local
 			cr: COLOR_RESOURCE
 		do
-			normal_text_color := secure_color_resource_value ("normal_text_color", 0, 0, 0)
-			normal_background_color := secure_color_resource_value ("normal_background_color", 255, 255, 255)
-			selection_text_color := secure_color_resource_value ("selection_text_color", 255, 255, 128)
-			selection_background_color := secure_color_resource_value ("selection_background_color", 0, 0, 128)
-			string_text_color := secure_color_resource_value ("string_text_color", 255, 255, 128)
-			string_background_color := color_resource_value ("string_background_color")
+			normal_text_color := color_resource_value ("normal_text_color", 0, 0, 0)
+			normal_background_color := color_resource_value ("normal_background_color", 255, 255, 255)
+			selection_text_color := color_resource_value ("selection_text_color", 255, 255, 128)
+			selection_background_color := color_resource_value ("selection_background_color", 0, 0, 128)
+			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
+			if has_color_resource ("string_background_color") then
+				string_background_color := color_resource_value ("string_background_color", 255, 255, 255)
+			else
+				string_background_color := Void
+			end
 			cr ?= resources.item ("string_background_color")
 			if cr /= Void then
 				cr.allow_void
@@ -413,42 +417,86 @@ feature -- Update
 			if cr /= Void then
 				cr.allow_void
 			end
-			keyword_text_color := secure_color_resource_value ("keyword_text_color", 0, 153, 255)
-			keyword_background_color := color_resource_value ("keyword_background_color")
-			spaces_text_color := secure_color_resource_value ("spaces_text_color", 128, 128, 128)
-			spaces_background_color := color_resource_value ("spaces_background_color")
-			comments_text_color := secure_color_resource_value ("comments_text_color", 204, 102, 255)
-			comments_background_color := color_resource_value ("comments_background_color")
-			number_text_color := secure_color_resource_value ("number_text_color", 153, 255, 153)
-			number_background_color := color_resource_value ("number_background_color")
-			operator_text_color := secure_color_resource_value ("operator_text_color", 0, 153, 255)
-			operator_background_color := color_resource_value ("operator_background_color")
-			breakpoint_background_color := color_resource_value ("breakpoint_background_color")
-			assertion_tag_text_color := secure_color_resource_value ("assertion_tag_text_color", 0, 0, 0)
-			assertion_tag_background_color := color_resource_value ("assertion_tag_background_color")
-			indexing_tag_text_color := secure_color_resource_value ("indexing_tag_text_color", 0, 0, 0)
-			indexing_tag_background_color := color_resource_value ("indexing_tag_background_color")
-			reserved_text_color := secure_color_resource_value ("reserved_text_color", 0, 0, 0)
-			reserved_background_color := color_resource_value ("reserved_background_color")
-			generic_text_color := secure_color_resource_value ("generic_text_color", 0, 0, 0)
-			generic_background_color := color_resource_value ("generic_background_color")
-			local_text_color := secure_color_resource_value ("local_text_color", 0, 0, 0)
-			local_background_color := color_resource_value ("local_background_color")
+			keyword_text_color := color_resource_value ("keyword_text_color", 0, 153, 255)
+			if has_color_resource ("keyword_background_color") then
+				keyword_background_color := color_resource_value ("keyword_background_color", 255, 255, 255)
+			else
+				keyword_background_color := Void
+			end
+			spaces_text_color := color_resource_value ("spaces_text_color", 128, 128, 128)
+			if has_color_resource ("spaces_background_color") then
+				spaces_background_color := color_resource_value ("spaces_background_color", 255, 255, 255)
+			else
+				spaces_background_color := Void
+			end
+			comments_text_color := color_resource_value ("comments_text_color", 204, 102, 255)
+			if has_color_resource ("comments_background_color") then
+				comments_background_color := color_resource_value ("comments_background_color", 255, 255, 255)
+			else
+				comments_background_color := Void
+			end
+			number_text_color := color_resource_value ("number_text_color", 153, 255, 153)
+			if has_color_resource ("number_background_color") then
+				number_background_color := color_resource_value ("number_background_color", 255, 255, 255)
+			else
+				number_background_color := Void
+			end
+			operator_text_color := color_resource_value ("operator_text_color", 0, 153, 255)
+			if has_color_resource ("operator_background_color") then
+				operator_background_color := color_resource_value ("operator_background_color", 255, 255, 255)
+			else
+				operator_background_color := Void
+			end
+			if has_color_resource ("breakpoint_background_color") then
+				breakpoint_background_color := color_resource_value ("breakpoint_background_color", 255, 255, 255)
+			else
+				breakpoint_background_color := Void
+			end
+			assertion_tag_text_color := color_resource_value ("assertion_tag_text_color", 0, 0, 0)
+			if has_color_resource ("assertion_tag_background_color") then
+				assertion_tag_background_color := color_resource_value ("assertion_tag_background_color", 255, 255, 255)
+			else
+				assertion_tag_background_color := Void
+			end
+			indexing_tag_text_color := color_resource_value ("indexing_tag_text_color", 0, 0, 0)
+			if has_color_resource ("indexing_tag_background_color") then
+				indexing_tag_background_color := color_resource_value ("indexing_tag_background_color", 255, 255, 255)
+			else
+				indexing_tag_background_color := Void
+			end
+			reserved_text_color := color_resource_value ("reserved_text_color", 0, 0, 0)
+			if has_color_resource ("reserved_background_color") then
+				reserved_background_color := color_resource_value ("reserved_background_color", 255, 255, 255)
+			else
+				reserved_background_color := Void
+			end
+			generic_text_color := color_resource_value ("generic_text_color", 0, 0, 0)
+			if has_color_resource ("generic_background_color") then
+				generic_background_color := color_resource_value ("generic_background_color", 255, 255, 255)
+			else
+				generic_background_color := Void
+			end
+			local_text_color := color_resource_value ("local_text_color", 0, 0, 0)
+			if has_color_resource ("local_background_color") then
+				local_background_color := color_resource_value ("local_background_color", 255, 255, 255)
+			else
+				local_background_color := Void
+			end
 
-			smart_identation := boolean_resource_value("smart_indent", true)
-			automatic_update := boolean_resource_value("automatic_update", true)
-			underscore_is_separator := boolean_resource_value("underscore_is_separator", False)
-			autocomplete_brackets_and_parenthesis := boolean_resource_value("autocomplete_brackets_and_parenthesis", False)
-			autocomplete_quotes := boolean_resource_value("autocomplete_quotes", False)
-			show_any_features := boolean_resource_value("call_complete_with_any_features", False)
-			syntax_complete_enabled := boolean_resource_value("syntax_autocomplete", True)
-			quadruple_click_enabled := boolean_resource_value("quadruple_click", True)
-			use_tab_for_indentation := boolean_resource_value("tab_for_indentation", True)
+			smart_identation := boolean_resource_value ("smart_indent", True)
+			automatic_update := boolean_resource_value ("automatic_update", True)
+			underscore_is_separator := boolean_resource_value ("underscore_is_separator", False)
+			autocomplete_brackets_and_parenthesis := boolean_resource_value ("autocomplete_brackets_and_parenthesis", False)
+			autocomplete_quotes := boolean_resource_value ("autocomplete_quotes", False)
+			show_any_features := boolean_resource_value ("call_complete_with_any_features", False)
+			syntax_complete_enabled := boolean_resource_value ("syntax_autocomplete", True)
+			quadruple_click_enabled := boolean_resource_value ("quadruple_click", True)
+			use_tab_for_indentation := boolean_resource_value ("tab_for_indentation", True)
 			
 			create customized_strings.make (1, 3)
-			customized_strings.put (string_resource_value("customized_string_1", ""), 1)
-			customized_strings.put (string_resource_value("customized_string_2", ""), 2)
-			customized_strings.put (string_resource_value("customized_string_3", ""), 3)
+			customized_strings.put (string_resource_value ("customized_string_1", ""), 1)
+			customized_strings.put (string_resource_value ("customized_string_2", ""), 2)
+			customized_strings.put (string_resource_value ("customized_string_3", ""), 3)
 
 			build_autocomplete_prefs
 			build_shortcuts_prefs

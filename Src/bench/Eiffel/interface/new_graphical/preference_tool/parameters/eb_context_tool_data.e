@@ -120,7 +120,7 @@ feature -- Access
 			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
 			-- Call `save_resources' to have the changes actually saved.
 		do
-			set_array ("diagram__toolbar_layout", save_toolbar (toolbar))
+			set_array_resource ("diagram__toolbar_layout", save_toolbar (toolbar))
 		end
 
 feature {NONE} -- Implementation

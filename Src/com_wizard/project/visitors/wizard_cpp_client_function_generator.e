@@ -106,7 +106,7 @@ feature -- Basic operations
 			-- Set return type.
 		require
 			non_void_visitor: a_visitor /= Void
-			valid_return_type: a_visitor.vt_type /= Vt_void and a_visitor.vt_type /= Vt_hresult
+			valid_return_type: a_visitor.vt_type /= Vt_void
 			non_void_feature_writer: ccom_feature_writer /= Void
 		do
 			if 

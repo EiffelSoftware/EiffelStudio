@@ -61,7 +61,12 @@ feature -- Basic operation
 		end
 		
 	
-			
+	set_progress_bar (bar: EV_PROGRESS_BAR) is
+			-- Assign `bar' to `progress_bar'
+		do
+			progress_bar := bar
+		end
+		
 		
 feature {NONE} -- Implementation
 
@@ -82,7 +87,8 @@ feature {NONE} -- Implementation
 			ace_template_file, ace_output_file: RAW_FILE
 			temp_string: STRING
 			i, j: INTEGER
-		do		
+		do	
+			set_progress (0.1)
 			project_settings := system_status.current_project_settings
 			if Eiffel_platform.is_equal ("windows") then
 				platform_ace_file_name := clone (windows_ace_file_name)
@@ -131,6 +137,7 @@ feature {NONE} -- Implementation
 				main_window_type: STRING
 				main_window_tag_index: INTEGER
 			do
+				set_progress (0.2)
 				create application_template_file.make_open_read (application_template_file_name)
 				create application_text.make (application_template_file.count)
 				application_template_file.start
@@ -163,6 +170,7 @@ feature {NONE} -- Implementation
 				window_file_name: FILE_NAME
 				create_tag_index, local_tag_index, build_tag_index, set_tag_index: INTEGER
 			do
+				set_progress (0.3)
 				create type_string.make_from_string ("type")
 				create store
 					-- Generate an XML representation of the current project.
@@ -172,7 +180,8 @@ feature {NONE} -- Implementation
 				check
 					current_document_not_void: current_document/= Void
 				end
-			
+				
+				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
 				create window_template_file.make_open_read (window_template_file_name)
 				create class_text.make (window_template_file.count)
@@ -185,40 +194,45 @@ feature {NONE} -- Implementation
 					-- First replace the name of the class
 				set_class_name (system_status.current_project_settings.main_window_class_name)
 
-				-- Generate the widget declarations and creation lines.
-			generate_declarations (current_document.root_element, 1)
-			
-				-- Create storage for all parent child name pairs.
-			create parent_child.make (0)
-				-- Generate the widget building code.
-			generate_structure (current_document.root_element, 1, "")
-			
-				-- Generate the widget setting code.
-			generate_setting (current_document.root_element, 1)
-
-			local_tag_index := class_text.substring_index (local_tag, 1)
-			class_text.replace_substring_all (local_tag, "")			
-			class_text.insert (local_string, local_tag_index)
-			
-			create_tag_index := class_text.substring_index (create_tag, 1)
-			class_text.replace_substring_all (create_tag, "")			
-			class_text.insert (create_string, create_tag_index)
-			
-			build_tag_index := class_text.substring_index (build_tag, 1)
-			class_text.replace_substring_all (build_tag, "")			
-			class_text.insert (build_string, build_tag_index)
-			
-			set_tag_index := class_text.substring_index (set_tag, 1)
-			class_text.replace_substring_all (set_tag, "")			
-			class_text.insert (set_string, set_tag_index)
 				
-				-- Store `class_text'.				
-			window_file_name := clone (generated_path)
-			window_file_name.extend (system_status.current_project_settings.main_window_file_name)
-			create window_output_file.make_open_write (window_file_name)
-			window_output_file.start
-			window_output_file.putstring (class_text)
-			window_output_file.close
+				set_progress (0.7)
+				-- Generate the widget declarations and creation lines.
+				generate_declarations (current_document.root_element, 1)
+				
+					-- Create storage for all parent child name pairs.
+				create parent_child.make (0)
+				
+				set_progress (0.8)
+					-- Generate the widget building code.
+				generate_structure (current_document.root_element, 1, "")
+				
+				set_progress (0.9)
+					-- Generate the widget setting code.
+				generate_setting (current_document.root_element, 1)
+	
+				local_tag_index := class_text.substring_index (local_tag, 1)
+				class_text.replace_substring_all (local_tag, "")			
+				class_text.insert (local_string, local_tag_index)
+				
+				create_tag_index := class_text.substring_index (create_tag, 1)
+				class_text.replace_substring_all (create_tag, "")			
+				class_text.insert (create_string, create_tag_index)
+				
+				build_tag_index := class_text.substring_index (build_tag, 1)
+				class_text.replace_substring_all (build_tag, "")			
+				class_text.insert (build_string, build_tag_index)
+				
+				set_tag_index := class_text.substring_index (set_tag, 1)
+				class_text.replace_substring_all (set_tag, "")			
+				class_text.insert (set_string, set_tag_index)
+					
+					-- Store `class_text'.				
+				window_file_name := clone (generated_path)
+				window_file_name.extend (system_status.current_project_settings.main_window_file_name)
+				create window_output_file.make_open_write (window_file_name)
+				window_output_file.start
+				window_output_file.putstring (class_text)
+				window_output_file.close
 			end
 
 	set_class_name (a_name: STRING) is
@@ -484,6 +498,22 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	set_progress (value: REAL)	is
+			-- Assign `value' to proportion of `progress_bar'
+			-- if `progress_bar' /= Void
+		require
+			valid_range: value >=0 and value <= 1
+		local
+			env: EV_ENVIRONMENT
+		do
+			if progress_bar /= Void then
+				create env
+				progress_bar.set_proportion (value)
+				env.application.process_events
+			end
+		end
+		
+	
 	parent_child: ARRAYED_LIST [STRING]
 		-- A list of all parent attribute names and associated child names in the following format:
 		-- parent, child, parent, child, parent, child.
@@ -521,5 +551,8 @@ feature {NONE} -- Implementation
 	set_string: STRING
 		-- String representation of all attribute setting statements built
 		-- by `Current'. This is inserted into the template when complete.
+		
+	progress_bar: EV_PROGRESS_BAR
+		-- A progress bar that will be updated during generation.
 
 end -- class GB_CODE_GENERATOR

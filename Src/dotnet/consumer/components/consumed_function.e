@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 			method_make (en, dn, den, args, froz, static, defer, pub, ns, virt, poe, a_type)
 			r := ret
 			if inf then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_infix
+				f := f | {FEATURE_ATTRIBUTE}.Is_infix
 			end
 			if pref then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_prefix				
+				f := f | {FEATURE_ATTRIBUTE}.Is_prefix				
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -74,15 +74,13 @@ feature -- Status report
 	is_infix: BOOLEAN is
 			-- Is function an infix feature?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_infix =
-				feature {FEATURE_ATTRIBUTE}.Is_infix
+			Result := f & {FEATURE_ATTRIBUTE}.Is_infix = {FEATURE_ATTRIBUTE}.Is_infix
 		end
 			
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_prefix = 
-				feature {FEATURE_ATTRIBUTE}.Is_prefix
+			Result := f & {FEATURE_ATTRIBUTE}.Is_prefix = {FEATURE_ATTRIBUTE}.Is_prefix
 		end
 
 	has_return_value: BOOLEAN is True

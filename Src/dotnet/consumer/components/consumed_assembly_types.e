@@ -136,13 +136,13 @@ feature -- Element Settings
 			eiffel_names.put (en, index)
 			dotnet_names.put (dn, index)
 			if int then
-				flag := feature {TYPE_FLAGS}.Is_interface
+				flag := {TYPE_FLAGS}.Is_interface
 			elseif enum then
-				flag := feature {TYPE_FLAGS}.Is_enum
+				flag := {TYPE_FLAGS}.Is_enum
 			elseif dele then
-				flag := feature {TYPE_FLAGS}.Is_delegate
+				flag := {TYPE_FLAGS}.Is_delegate
 			elseif val then
-				flag := feature {TYPE_FLAGS}.Is_value_type
+				flag := {TYPE_FLAGS}.Is_value_type
 			end
 			flags.put (flag, index)
 		ensure

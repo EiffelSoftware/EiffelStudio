@@ -41,64 +41,58 @@ feature -- Status report
 	is_public: BOOLEAN is
 			-- Is current member public?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_public =
-				feature {FEATURE_ATTRIBUTE}.Is_public
+			Result := f & {FEATURE_ATTRIBUTE}.Is_public = {FEATURE_ATTRIBUTE}.Is_public
 		end
 
 	is_frozen: BOOLEAN is
 			-- Is feature frozen?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_frozen =
-				feature {FEATURE_ATTRIBUTE}.Is_frozen
+			Result := f & {FEATURE_ATTRIBUTE}.Is_frozen = {FEATURE_ATTRIBUTE}.Is_frozen
 		end
 
 	is_static: BOOLEAN is
 			-- Is .NET member static?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_static =
-				feature {FEATURE_ATTRIBUTE}.Is_static
+			Result := f & {FEATURE_ATTRIBUTE}.Is_static ={FEATURE_ATTRIBUTE}.Is_static
 		end
 
 	is_deferred: BOOLEAN is
 			-- Is feature deferred?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_deferred =
-				feature {FEATURE_ATTRIBUTE}.Is_deferred
+			Result := f & {FEATURE_ATTRIBUTE}.Is_deferred = {FEATURE_ATTRIBUTE}.Is_deferred
 		end
 
 	is_artificially_added: BOOLEAN is
 			-- Is feature artificially added?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
-				feature {FEATURE_ATTRIBUTE}.Is_artificially_added
+			Result := f & {FEATURE_ATTRIBUTE}.Is_artificially_added =
+				{FEATURE_ATTRIBUTE}.Is_artificially_added
 		end
 	
 	is_property_or_event: BOOLEAN is
 			-- Is feature property or event related?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_property_or_event =
-				feature {FEATURE_ATTRIBUTE}.Is_property_or_event
+			Result := f & {FEATURE_ATTRIBUTE}.Is_property_or_event =
+				{FEATURE_ATTRIBUTE}.Is_property_or_event
 		end
 		
 	is_new_slot: BOOLEAN is
 			-- Is current marked with `new_slot' flag?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_newslot =
-				feature {FEATURE_ATTRIBUTE}.Is_newslot
+			Result := f & {FEATURE_ATTRIBUTE}.Is_newslot = {FEATURE_ATTRIBUTE}.Is_newslot
 		end
 
 	is_virtual: BOOLEAN is
 			-- Is feature virtual?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_virtual =
-				feature {FEATURE_ATTRIBUTE}.Is_virtual
+			Result := f & {FEATURE_ATTRIBUTE}.Is_virtual = {FEATURE_ATTRIBUTE}.Is_virtual
 		end
 
 	is_attribute_setter: BOOLEAN is
 			-- Is feature an setter of an attribute of current class?
 		do
-			Result := f & feature {FEATURE_ATTRIBUTE}.Is_attribute_setter = 
-				feature {FEATURE_ATTRIBUTE}.Is_attribute_setter
+			Result := f & {FEATURE_ATTRIBUTE}.Is_attribute_setter = 
+				{FEATURE_ATTRIBUTE}.Is_attribute_setter
 		end
 
 feature -- Settings
@@ -107,9 +101,9 @@ feature -- Settings
 			-- Set `is_public' with `pub'.
 		do
 			if pub then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_public
+				f := f | {FEATURE_ATTRIBUTE}.Is_public
 			else
-				f := f & feature {FEATURE_ATTRIBUTE}.Is_public.bit_not
+				f := f & {FEATURE_ATTRIBUTE}.Is_public.bit_not
 			end
 		end
 
@@ -117,9 +111,9 @@ feature -- Settings
 			-- Set `is_artificially_added' with `val'.
 		do
 			if val then
-				f := f | feature {FEATURE_ATTRIBUTE}.Is_artificially_added
+				f := f | {FEATURE_ATTRIBUTE}.Is_artificially_added
 			else
-				f := f & feature {FEATURE_ATTRIBUTE}.Is_artificially_added.bit_not
+				f := f & {FEATURE_ATTRIBUTE}.Is_artificially_added.bit_not
 			end
 		ensure
 			is_artificially_added_set: is_artificially_added = val

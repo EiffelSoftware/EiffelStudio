@@ -25,7 +25,8 @@ feature
 			-- `a_tool' is passed as argument to the activation action.
 		do
 			tool := a_tool
-			is_shown := True
+			is_shown := False
+--			is_shown := True
 		end
 
 feature -- Properties
@@ -75,8 +76,8 @@ feature {NONE} -- Implementation
 	update_visual_aspects is
 			-- Update the button and menu entry from `holder'.
 		do
-			holder.associated_button.set_symbol (symbol);
-			holder.associated_menu_entry.set_text (name)
+  			holder.associated_button.set_symbol (symbol);
+ 			holder.associated_menu_entry.set_text (name)
 		end;
 
 end -- class DISPLAY_DEBUGGER_PORTION

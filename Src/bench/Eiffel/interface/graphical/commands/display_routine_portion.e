@@ -10,9 +10,6 @@ class DISPLAY_ROUTINE_PORTION
 
 inherit
 	DISPLAY_DEBUGGER_PORTION
-		redefine
-			update_visual_aspects
-		end
 
 creation
 	make
@@ -70,15 +67,6 @@ feature -- Execution
 			is_shown := True;
 			Project_tool.show_feature_portion;
 			update_visual_aspects
-		end;
-
-feature {NONE} -- Implementation
-
-	update_visual_aspects is
-			-- Update the visual aspects.
-		do
-			holder.associated_button.set_symbol (symbol);
-			holder.associated_menu_entry.set_text (name)
 		end;
 
 end -- class DISPLAY_ROUTINE_PORTION

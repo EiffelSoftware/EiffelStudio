@@ -124,8 +124,8 @@ feature -- Properties
 			-- Has the system to be frozen again ?
 		do
 			if not java_generation then
-				Result := (not Lace.compile_all_classes) and
-					(private_freeze or else Compilation_modes.is_freezing)
+				Result := (not Lace.compile_all_classes)
+					and then (private_freeze or else Compilation_modes.is_freezing)
 			else
 				-- Avoid freezing or re-freezing at all costs!
 			end
@@ -528,8 +528,7 @@ end
 						ftable.after
 					loop
 						f := ftable.item_for_iteration
-						if f.is_external and then f.written_in.is_equal (id)
-						then
+						if f.is_external and then f.written_in.is_equal (id) then
 							ext ?= f
 								-- If the external is encapsulated then it was not added to
 								-- the list of new externals in inherit_table. Same thing
@@ -635,7 +634,15 @@ end
 						supplier.id.associated_class /= Void
 					then
 						remove_class (supplier)
+					elseif supplier.has_dep_class (a_class) then
+							-- Is it enough to remove the dependecies only on a class
+							-- which is still in the system, or should we do it for
+							-- all the classes even the ones that we just removed from
+							-- the system? In the last case, we should put the previous
+							-- test one level up.
+						supplier.remove_dep_class (a_class)
 					end
+
 					a_class.syntactical_suppliers.forth
 				end
 			end
@@ -759,7 +766,7 @@ feature -- Merging
 			was_precompiling := Compilation_modes.is_precompiling
 			Compilation_modes.set_is_precompiling (True)
 			byte_context.set_workbench_mode
-			set_freeze (True)
+			set_freeze
 				-- Counters.
 			body_id_counter.append (other.body_id_counter)
 			body_index_counter.append (other.body_index_counter)
@@ -973,7 +980,7 @@ end
 			melt
 
 				-- Finalize a successful compilation
-			finalize
+			finish_compilation
 
 				-- Produce the update file
 			deg_output := Degree_output
@@ -1752,8 +1759,8 @@ end
 			Rout_info_table.melted.store (file)
 		end
 
-	finalize is
-			-- Finalize a successful recompilation and update the
+	finish_compilation is
+			-- Finish a successful recompilation and update the
 			-- compilation files.
 		local
 			class_array: ARRAY [CLASS_C]
@@ -3683,12 +3690,6 @@ feature -- Conveniences
 			address_expression_allowed := False
 		end
 
-	set_freeze (b: BOOLEAN) is
-			-- Assign `b' to `freeze'.
-		do
-			private_freeze := b
-		end
-
 	set_update_sort (b: BOOLEAN) is
 			-- Assign `b' to `update_sort'.
 		do
@@ -3804,12 +3805,6 @@ feature -- Debug purpose
 				classes.forth
 			end
 		end
-
-feature {SYSTEM_I} -- Implementation
-
-	private_freeze: BOOLEAN
-			-- Freeze set if externals or new derivation
-			-- of special is generated
 
 feature {NONE} -- External features
 
@@ -4063,7 +4058,7 @@ feature -- Concurrent Eiffel
 				has_separate := True
 					-- We need to link with the Concurrent Eiffel
 					-- run-time
-				set_freeze (True)
+				set_freeze
 			end
 		end
 

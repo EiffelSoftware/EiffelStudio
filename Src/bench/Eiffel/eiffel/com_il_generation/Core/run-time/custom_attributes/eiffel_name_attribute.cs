@@ -13,21 +13,21 @@ namespace EiffelSoftware.Runtime.CA
 [CLSCompliant(false)]
 [AttributeUsage (AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 [Serializable]
-public class EIFFEL_CLASS_NAME_ATTRIBUTE : Attribute
+public class EIFFEL_NAME_ATTRIBUTE : Attribute
 {
 /*
 feature -- Initialization
 */
-	public EIFFEL_CLASS_NAME_ATTRIBUTE(String name)
+	public EIFFEL_NAME_ATTRIBUTE(String a_name)
 	{
-		class_name = name;
+		name = a_name;
 	}
 
 /*
 feature -- Access
 */
-	public String class_name;
+	public String name;
 		// Name of class associated to Current.
 }
 
-} // class EIFFEL_CLASS_NAME_ATTRIBUTE
+} // class EIFFEL_NAME_ATTRIBUTE

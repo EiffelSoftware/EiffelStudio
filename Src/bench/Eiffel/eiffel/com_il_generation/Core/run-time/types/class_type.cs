@@ -31,18 +31,18 @@ feature -- Status Report
 		String Result;
 		Object [] l_ca;
 		Type l_type;
-		EIFFEL_CLASS_NAME_ATTRIBUTE l_class_name;
+		EIFFEL_NAME_ATTRIBUTE l_class_name;
 
 		l_type = Type.GetTypeFromHandle (type);
-		l_ca = l_type.GetCustomAttributes (typeof (EIFFEL_CLASS_NAME_ATTRIBUTE), false);
+		l_ca = l_type.GetCustomAttributes (typeof (EIFFEL_NAME_ATTRIBUTE), false);
 
 		#if ASSERTIONS
 			ASSERTIONS.CHECK ("`l_ca' should not be Void", l_ca != null);
 		#endif
 
 		if (l_ca.Length == 1) {
-			l_class_name = (EIFFEL_CLASS_NAME_ATTRIBUTE) l_ca [0];
-			Result = l_class_name.class_name;
+			l_class_name = (EIFFEL_NAME_ATTRIBUTE) l_ca [0];
+			Result = l_class_name.name;
 		} else {
 			Result = l_type.Name;
 		}

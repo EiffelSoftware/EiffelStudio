@@ -1,0 +1,18 @@
+test_name clone-list
+test_description Cloning of lists (using the new implementation of `copy')
+
+define OUTPUT $TEST
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen 
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE	 exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

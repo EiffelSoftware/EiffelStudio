@@ -75,9 +75,9 @@ feature {NONE} -- Initialization
 
 			list_widget := feature {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
 			
-			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_LINES_DOTTED_ENUM)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM)
-			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_EXPANDER_SQUARE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, feature {EV_GTK_EXTERNALS}.GTK_CTREE_LINES_DOTTED_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.GTK_SELECTION_BROWSE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, feature {EV_GTK_EXTERNALS}.GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			--feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
@@ -287,10 +287,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
-					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					select_actions_internal.call ([])
 				end
 				if a_tree_node_imp.select_actions_internal /= Void then
-					a_tree_node_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					a_tree_node_imp.select_actions_internal.call (Void)
 				end
 			end
 			selected_node := a_tree_node_imp
@@ -302,12 +302,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and selected_node /= Void then
+			if a_tree_node_imp /= Void and selected_node = a_tree_node_imp then
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					deselect_actions_internal.call (Void)
 				end
 				if a_tree_node_imp.deselect_actions_internal /= Void then
-					a_tree_node_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					a_tree_node_imp.deselect_actions_internal.call (Void)
 				end
 			end
 		end
@@ -693,6 +693,7 @@ feature {NONE} -- Implementation
 			if count = 1 then
 				selected_node := item_imp
 				item_imp.enable_select
+				selected_node := Void
 			end
 		end
 

@@ -673,8 +673,7 @@ feature
 			after
 		loop
 			rout_id := item.rout_id;
-			Extern_declarations.add_skeleton_attribute_table
-				(rout_id.table_name);
+			Extern_declarations.add_skeleton_attribute_table (rout_id.table_name);
 			Eiffel_table.mark_used (rout_id);
 			forth
 		end;

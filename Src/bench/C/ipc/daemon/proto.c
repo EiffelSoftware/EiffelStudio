@@ -527,7 +527,7 @@ rt_private void run_command(int s)
 	}
 
 #ifdef EIF_VMS_V6_ONLY
-	appname = rindex (meltpath, ']');
+	appname = strrchr (meltpath, ']');
 	if (!appname)
 		strcpy (meltpath, "[]");
 #elif defined EIF_VMS
@@ -535,7 +535,7 @@ rt_private void run_command(int s)
 	if (!dirname_size)
 		strcpy (meltpath, "[]");
 #else
-	appname = rindex (meltpath, '/');
+	appname = strrchr (meltpath, '/');
 	if (!appname)
 		strcpy (meltpath, ".");
 #endif
@@ -725,7 +725,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	}
 
 #ifdef EIF_VMS_V6_ONLY
-	appname = rindex (meltpath, ']');
+	appname = strrchr (meltpath, ']');
 	if (appname)
 		*appname = 0;
 	else
@@ -737,7 +737,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	else
 		strcpy (meltpath, "[]");
 #else
-	appname = rindex (meltpath, '/');
+	appname = strrchr (meltpath, '/');
 	if (appname)
 		*appname = 0;
 	else

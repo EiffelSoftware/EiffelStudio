@@ -165,7 +165,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		}
 
 #if defined(EIF_VMS_V6_ONLY)
-		appname = rindex (meltpath, ']');
+		appname = strrchr (meltpath, ']');
 		if (appname) 
 			*(++appname) = 0;
 		else
@@ -177,13 +177,13 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		else
 			strcpy (meltpath, "[]");
 #elif defined(EIF_WIN32)
-		appname = rindex (meltpath, '\\');
+		appname = strrchr (meltpath, '\\');
 		if (appname)
 			*appname = 0;
 		else
 			strcpy (meltpath, ".");
 #else
-		appname = rindex (meltpath, '/');
+		appname = strrchr (meltpath, '/');
 		if (appname)
 			*appname = 0;
 		else

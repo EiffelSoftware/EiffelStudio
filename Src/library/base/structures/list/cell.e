@@ -12,6 +12,7 @@ indexing
 class CELL [G]
 
 create
+	default_create,
 	put
 
 feature -- Access

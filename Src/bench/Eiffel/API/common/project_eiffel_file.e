@@ -163,11 +163,12 @@ feature {NONE} -- Implementation
 					collection_on
 					full_coalesce
 					full_collect
-					close;
 					if Result = Void then
 						error_value := corrupt_value
 					end
 				end
+					-- Close the Eiffel Project file.
+				close;
 			end
 		ensure
 			valid_result: not error implies Result /= Void

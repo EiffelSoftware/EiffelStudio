@@ -459,7 +459,7 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_row_count_positive: a_row_count >= 1
 		do
-			enlarge_row_list (a_row_count)
+			enlarge_row_lists (a_row_count)
 			recompute_vertical_scroll_bar
 		ensure
 			row_count_set: row_count = a_row_count
@@ -582,6 +582,8 @@ feature -- Element change
 			internal_row_data.go_i_th (j)
 			internal_row_data.put_left (a_row_data)
 			
+			update_grid_row_indices (i.min (j))
+			
 
 			fixme ("EV_GRID_I: move_row redraw")
 		ensure
@@ -668,6 +670,9 @@ feature -- Removal
 				visible_column_count := visible_column_count - 1
 			end
 			
+				-- Remove association of column with `Current'
+			a_col_i.remove_parent_grid_i
+			
 			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
 		ensure
 			column_count_updated: column_count = old column_count - 1
@@ -690,6 +695,8 @@ feature -- Removal
 			
 			internal_row_data.go_i_th (a_row)
 			internal_row_data.remove
+			
+			update_grid_row_indices (a_row)
 			
 			
 			to_implement ("EV_GRID_I.remove_row redraw plus subnode removal handling")
@@ -737,6 +744,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
 		-- The actual ordering is queried from `visible_physical_column_indexes'
 		do
+			fixme ("Remove me and have `area' called directly from grid drawer ")
 			Result := internal_row_data.area
 		end
 
@@ -1254,6 +1262,7 @@ feature {NONE} -- Drawing implementation
 			else
 				virtual_x_position := a_value
 			end
+			
 			buffer_space := (buffered_drawable_size - viewport.width)
 			current_buffer_position := viewport.x_offset
 			
@@ -1355,14 +1364,12 @@ feature {NONE} -- Implementation
 		require
 			i_positive: a_index > 0
 		local
-			a_column: EV_GRID_COLUMN
-			column_implementation: EV_GRID_COLUMN_I
+			a_column_i: EV_GRID_COLUMN_I
 		do
-			create a_column
-			column_implementation := a_column.implementation
-			column_implementation.set_grid_i (Current)
+			a_column_i := (create {EV_GRID_COLUMN}).implementation
+			a_column_i.set_grid_i (Current)
 
-			column_implementation.set_physical_index (physical_column_count)
+			a_column_i.set_physical_index (physical_column_count)
 			physical_column_count := physical_column_count + 1
 			
 			if a_index > grid_columns.count then
@@ -1376,9 +1383,9 @@ feature {NONE} -- Implementation
 
 			grid_columns.go_i_th (a_index)
 			if replace_existing_item then
-				grid_columns.replace (column_implementation)
+				grid_columns.replace (a_column_i)
 			else
-				grid_columns.put_left (column_implementation)
+				grid_columns.put_left (a_column_i)
 			end
 
 			show_column (a_index)
@@ -1389,7 +1396,7 @@ feature {NONE} -- Implementation
 					Also headers before may be needed to pad it out.
 					]")
 			header.go_i_th (a_index)
-			header.put_left (column_implementation.header_item)
+			header.put_left (a_column_i.header_item)
 			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
 		ensure
@@ -1402,52 +1409,80 @@ feature {NONE} -- Implementation
 		require
 			i_positive: a_index > 0
 		local
-			a_grid_row: EV_GRID_ROW
+			grid_row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-			create a_grid_row
-			a_grid_row.implementation.set_grid_i (Current)
+			grid_row_i := (create {EV_GRID_ROW}).implementation
 			
 			create a_row_data.make (1)
-			if row_list.count < a_index then
-				enlarge_row_list (a_index)
-			end
-			row_list.put (a_row_data, a_index - 1)
-
-			if a_index > grid_rows.count then
+			if a_index > row_count then
 				if replace_existing_item then
-					grid_rows.resize (a_index)
+						-- We are inserting at a certain value so we resize to one less
+					enlarge_row_lists (a_index)
 				else
-					grid_rows.resize (a_index - 1)
+					enlarge_row_lists (a_index - 1)
 				end
 			end
+
 			grid_rows.go_i_th (a_index)
+			internal_row_data.go_i_th (a_index)
 			if replace_existing_item then
-				grid_rows.replace (a_grid_row.implementation)
+				internal_row_data.replace (a_row_data)
+				grid_rows.replace (grid_row_i)
+				grid_row_i.set_internal_index (a_index)
 			else
-				grid_rows.put_left (a_grid_row.implementation)
+				internal_row_data.put_left (a_row_data)
+				grid_rows.put_left (grid_row_i)
+					-- Update the index of `grid_row_i' and subsequent rows in `grid_rows'
+				update_grid_row_indices (a_index)
 			end
+				-- Set grid of `grid_row' to `Current'
+			grid_row_i.set_grid_i (Current)
+
 			recompute_row_offsets (a_index)
 			if do_not_compute_scroll_bar then
 				recompute_vertical_scroll_bar
 			end
 		end
 
-	enlarge_row_list (new_count: INTEGER) is
-			-- Enlarge the row list to to count `new_count'
+	update_grid_row_indices (a_index: INTEGER) is
+			-- Recalculate subsequent row indexes starting from `a_index'
+		local
+			i, a_row_count: INTEGER
+			row_i: EV_GRID_ROW_I
+		do
+				-- Set subsequent indexes to their new values
+			from
+				i := a_index
+				a_row_count := grid_rows.count
+			until
+				i > a_row_count
+			loop
+				row_i := grid_rows @ i
+				if row_i /= Void then
+					row_i.set_internal_index (i)
+				end
+				i := i + 1
+			end
+		end
+
+	enlarge_row_lists (new_count: INTEGER) is
+			-- Enlarge the row lists to to count `new_count'
 		require
 			valid_new_count: new_count > row_list.count
 		do
 			internal_row_data.resize (new_count)
+			grid_rows.resize (new_count)
 		ensure
-			count_increased: row_list.count = new_count
+			grid_rows_increased: grid_rows.count = new_count
+			internal_row_data_count_increased: internal_row_data.count = new_count
+			counts_equal: grid_rows.count = internal_row_data.count
 		end
 		
 	maximum_header_width: INTEGER is 10000
 		-- Maximium width of `header'.
 		
 	default_scroll_bar_leap: INTEGER is 1
-		
 
 	enlarge_row (a_index, new_count: INTEGER) is
 			-- Enlarge the row at index `a_index' to `new_count'.
@@ -1513,6 +1548,7 @@ invariant
 	virtual_y_position_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies virtual_y_position = 0
 	virtual_y_position_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies virtual_y_position >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
+	row_lists_count_equal: is_initialized implies internal_row_data.count = grid_rows.count
 	
 end
 

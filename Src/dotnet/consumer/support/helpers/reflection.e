@@ -36,9 +36,7 @@ feature -- Status Report
 			l_is_errornous: BOOLEAN
 			i: INTEGER
 		do			
-			Result := (m.is_public or m.is_family or m.is_family_or_assembly) and then is_cls_compliant (m)
-
-			if Result then
+			if (m.is_public or m.is_family or m.is_family_or_assembly) and then is_cls_compliant (m) then
 					-- check that member is fully cls compliant
 				Result := is_consumed_method_true_cls_compliant (m)
 				debug ("log_illegal_non_cls_compliancy") 
@@ -85,24 +83,22 @@ feature -- Status Report
 			l_mi: METHOD_INFO
 			i: INTEGER
 		do
-			Result := is_cls_compliant (m)
+				-- check that return type is CLS compliant
+			l_params := m.get_parameters
+			from
+				Result := True
+				i := l_params.lower
+			until
+				i > l_params.upper or not Result
+			loop
+				Result := is_cls_compliant_type ((l_params @ i).parameter_type)
+				i := i + 1
+			end
 			if Result then
-					-- check that return type is CLS compliant
-				l_params := m.get_parameters
-				from
-					i := l_params.lower
-				until
-					i > l_params.upper or not Result
-				loop
-					Result := is_cls_compliant_type ((l_params @ i).parameter_type)
-					i := i + 1
-				end
-				if Result then
-					l_mi ?= m
-					if l_mi /= Void and then l_mi.return_type /= Void then
-						Result := is_cls_compliant_type (l_mi.return_type)
-					end					
-				end
+				l_mi ?= m
+				if l_mi /= Void and then l_mi.return_type /= Void then
+					Result := is_cls_compliant_type (l_mi.return_type)
+				end					
 			end
 		end
 
@@ -111,12 +107,12 @@ feature -- Status Report
 		require
 			f_not_void: f /= Void
 		do
-			Result := (f.is_public or f.is_family or f.is_family_or_assembly) and then
-						is_cls_compliant (f)
-						
-			if Result then
+			if
+				(f.is_public or f.is_family or f.is_family_or_assembly) and then
+				is_cls_compliant (f)
+			then
 					-- check that field is fully cls compliant
-				Result := is_consumed_field_cls_compliant (f)
+				Result := is_cls_compliant_type (f.field_type)
 				
 				if Result and then f.is_literal then
 					Result := is_valid_literal_field (f)
@@ -146,27 +142,27 @@ feature -- Status Report
 			Result := f.get_value (Void) /= Void
 		end
 		
-	is_consumed_field_cls_compliant (f: FIELD_INFO): BOOLEAN is
-			-- Is `f' a CLS compliant field?
-		require
-			f_not_void: f /= Void
-			f_is_cls_compliant: is_cls_compliant (f)
-		do
-			Result := is_cls_compliant (f) and then is_cls_compliant_type (f.field_type)
-		end
-		
 	is_cls_compliant_type (a_type: SYSTEM_TYPE): BOOLEAN is
 			-- is `a_type' CLS compliant
 		require
 			a_type_not_void: a_type /= Void
+		local
+			l_cls: like cls_compliant_status
+			l_obj: SYSTEM_OBJECT
 		do
-			if not a_type.is_pointer then
-				if a_type.has_element_type then
-					Result := is_cls_compliant_type (a_type.get_element_type)
-				else
-					Result := is_cls_compliant (a_type)
-				end					
+			l_cls := cls_compliant_status
+			l_obj := l_cls.item (a_type)
+			if l_obj = Void then
+				if not a_type.is_pointer then
+					if a_type.has_element_type then
+						l_obj := is_cls_compliant_type (a_type.get_element_type)
+					else
+						l_obj := is_cls_compliant (a_type)
+					end					
+				end
+				l_cls.set_item (a_type, l_obj)
 			end
+			Result ?= l_obj
 		end
 
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is
@@ -174,7 +170,7 @@ feature -- Status Report
 		local
 			ca: CLS_COMPLIANT_ATTRIBUTE
 		do
-			ca ?= feature {SYSTEM_ATTRIBUTE}.get_custom_attribute_member_info_type (member, cls_compliant_attribute_type)
+			ca ?= feature {SYSTEM_ATTRIBUTE}.get_custom_attribute_member_info_type (member, {CLS_COMPLIANT_ATTRIBUTE})
 			Result := ca = Void or else ca.is_compliant
 		end
 
@@ -192,10 +188,12 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	cls_compliant_attribute_type: SYSTEM_TYPE is
-			-- typeof (System.CLSCompliantAttribute)
+	cls_compliant_status: HASHTABLE is
+			-- Table where keys are instances of SYSTEM_TYPE and values are their associated
+			-- CLS compliant value.
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string ("System.CLSCompliantAttribute")
+			create Result.make (500)
+		ensure
+			cls_compliant_status_not_void: Result /= Void
 		end
-
 end -- class REFLECTION

@@ -12,8 +12,6 @@ inherit
 			is_equivalent, location
 		end
 
-	EXTERNAL_CONSTANTS
-
 create
 	initialize
 

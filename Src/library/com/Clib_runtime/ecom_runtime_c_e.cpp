@@ -14,6 +14,87 @@
 ecom_runtime_ce rt_ce;
 
 //-------------------------------------------------------------------------
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_enum_variant ( IEnumVARIANT * a_interface_pointer )
+
+/*-----------------------------------------------------------
+	Convert IEnumVARIANT *  to IENUM_VARIANT_INTERFACE.
+-----------------------------------------------------------*/
+{
+	return ccom_ce_pointed_interface (a_interface_pointer, "IENUM_VARIANT_IMPL_PROXY");
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointed_enum_variant( IEnumVARIANT * * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert IEnumVARIANT * *  to CELL [IENUM_VARIANT_INTERFACE].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [IENUM_VARIANT_INTERFACE]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	tmp_object = eif_protect (ccom_ce_pointed_enum_variant (*(IEnumVARIANT * *) a_pointer));
+	set_item (eif_access (result), eif_access (tmp_object));
+	eif_wean (tmp_object);
+	CoTaskMemFree (a_pointer);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ifont( IFont * a_interface_pointer )
+
+/*-----------------------------------------------------------
+	Convert IFont *  to IFONT_INTERFACE.
+-----------------------------------------------------------*/
+{
+	return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IFONT_IMPL_PROXY");
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointed_ifont( IFont * * a_pointer, EIF_OBJECT an_object )
+
+/*-----------------------------------------------------------
+	Convert IFont * *  to CELL [IFONT_INTERFACE].
+-----------------------------------------------------------*/
+{
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
+	EIF_OBJECT tmp_object = 0;
+
+	type_id = eif_type_id ("CELL [IFONT_INTERFACE]");
+	set_item = eif_procedure ("put", type_id);
+
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+	{
+		result = eif_create (type_id);
+	}
+	else
+		result = an_object;
+	tmp_object = eif_protect (ccom_ce_pointed_ifont (*(IFont * *) a_pointer));
+	set_item (eif_access (result), eif_access (tmp_object));
+	eif_wean (tmp_object);
+	CoTaskMemFree (a_pointer);
+	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 

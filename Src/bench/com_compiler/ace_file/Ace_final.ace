@@ -350,8 +350,6 @@ cluster
 			"hact"; "se"; "ve"; "base"; "CVS"; 
 		end
 
-	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
-
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
 	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"

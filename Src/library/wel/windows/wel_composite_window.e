@@ -1008,6 +1008,8 @@ feature {WEL_DISPATCHER}
 				on_wm_syscolor_change
 			when Wm_close then
 				on_wm_close
+			when wm_getdlgcode then
+				set_message_return_value (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys)
 			else
 				called := True
 				-- Call the `process_message' routine of the

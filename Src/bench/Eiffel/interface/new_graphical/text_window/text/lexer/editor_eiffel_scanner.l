@@ -159,6 +159,7 @@ create
 [uU][nN][iI][qQ][uU][eE]				|
 [uU][nN][tT][iI][lL]					|
 [vV][aA][rR][iI][aA][nN][tT]			|
+[vV][oO][iI][dD]						|
 [wW][hH][eE][nN]						|
 [xX][oO][rR]							{
 										-- Keyword

@@ -28,7 +28,7 @@ feature -- Initialization
 
 	make (n: INTEGER) is
 		require
-			n_valid: n >= 1
+			n_valid: n >= 0
 		do
 			array_make (1, n)
 		end

@@ -203,8 +203,8 @@ feature -- Element change
 			until
 				i > titles.count
 			loop
-				column_title_changed (titles @ i, i)
-				column_titles.extend (clone (titles @ i))
+				column_title_changed (titles @ (i + titles.lower - 1), i)
+				column_titles.extend (clone (titles @ (i + titles.lower - 1)))
 				i := i + 1
 				old_count := old_count - 1
 			end
@@ -256,8 +256,8 @@ feature -- Element change
 			until
 				i > widths.count
 			loop
-				column_width_changed (widths @ i, i)
-				column_widths.extend (widths @ i)
+				column_width_changed (widths @ (i + widths.lower - 1), i)
+				column_widths.extend (widths @ (i + widths.lower - 1))
 				i := i + 1
 				old_count := old_count - 1
 			end
@@ -436,6 +436,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/29 01:20:50  brendel
+--| Fixed to take ARRAY's with lower not 1 in account.
+--|
 --| Revision 1.43  2000/03/28 21:30:22  king
 --| Corrected set_column_widths
 --|

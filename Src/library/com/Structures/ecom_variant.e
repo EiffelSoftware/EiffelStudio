@@ -372,8 +372,8 @@ feature -- Access
 			Result := ccom_ce_safearray_decimal (ecom_rt_ptr, ptr)
 		end
 
-	dispatch_array: ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE] is
-			-- ARRAY of ECOM_GENERIC_DISPINTERFACEs.
+	dispatch_array: ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE] is
+			-- ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			is_dispatch: is_dispatch (variable_type)
 			is_array: is_array (variable_type)
@@ -609,7 +609,7 @@ feature {NONE} -- Externals
 			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
 		end
 
-	ccom_ce_safearray_dispatch (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE] is
+	ccom_ce_safearray_dispatch (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE] is
 		external
 			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
 		end

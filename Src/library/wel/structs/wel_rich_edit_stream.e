@@ -129,7 +129,7 @@ feature {NONE} -- Cookie access and settings
 	c_free_cookie (ptr: POINTER) is
 			-- Remove protection on `ptr'.
 		external
-			"C [macro %"estream.h%"] (EIF_REFERENCE)"
+			"C [macro %"estream.h%"] (EIF_OBJECT)"
 		alias
 			"eif_wean"
 		end

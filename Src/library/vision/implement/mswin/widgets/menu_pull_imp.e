@@ -57,7 +57,7 @@ feature -- Initialization
 			end
 		end
 
-	create is
+	create_menu is
 			-- Create the menu.
 		do
 			wel_make

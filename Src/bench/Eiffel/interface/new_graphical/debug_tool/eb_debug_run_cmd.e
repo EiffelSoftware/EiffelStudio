@@ -77,7 +77,7 @@ feature -- Initialization
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			initialize
+			is_sensitive := True
 			create run_request.make (Rqst_application)
 			create cont_request.make (Rqst_cont)
 		end

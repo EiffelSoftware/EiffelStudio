@@ -49,11 +49,7 @@ feature -- Status setting
 			-- in column otherwise.
 		do
 			is_row_layout := flag
-			if flag then
-				set_finite_dimension (columns.max (1))
-			else
-				set_finite_dimension (rows.max (1))
-			end
+			set_finite_dimension (finite_dimension.max (1))
 		end
 
 feature {EV_DYNAMIC_TABLE} -- Implementation

@@ -18,13 +18,13 @@ feature
 
 feature {}
 	
-	clause_name: STRING is
+	clause_name(ctxt: FORMAT_CONTEXT): STRING is
 			-- "ensure" or "ensure then"
 		do
 			if is_then then
-				Result := "ensure then"
-			else
 				Result := "ensure"
+			else
+				Result := "ensure then"
 			end
 		end ;
 			

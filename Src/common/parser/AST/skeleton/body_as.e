@@ -221,7 +221,6 @@ feature -- formatter
 			if not ctxt.no_internals then
 				ctxt.put_special(";");
 			end;
-			ctxt.next_line;
 			ctxt.commit;
 		end;
 		

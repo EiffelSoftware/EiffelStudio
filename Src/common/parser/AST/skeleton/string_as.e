@@ -4,6 +4,7 @@ class STRING_AS
 
 inherit
 
+	COMPARABLE;
 	ATOMIC_AS
 		redefine
 			type_check, byte_node, value_i, format
@@ -53,6 +54,8 @@ feature -- Type check and byte code
 			Result.set_value (value);
 		end;
 
+feature -- formatter
+
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
@@ -61,6 +64,17 @@ feature -- Type check and byte code
 			ctxt.put_special ("%"");
 			ctxt.always_succeed;
 		end;
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := value_i.str_val < other.value_i.str_val 
+		end;
+
+	set_value (s: STRING) is
+		do
+			value := s;
+		end;
+
 
 
 end

@@ -107,6 +107,12 @@ feature -- Conveniences
 			ctxt.put_string (Current);
 			ctxt.always_succeed;
 		end;
+
+	load (s: STRING) is
+		do
+			wipe_out;
+			append (s);
+		end;
 			
 
 feature {NONE}

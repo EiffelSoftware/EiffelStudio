@@ -5,6 +5,10 @@ inherit
 creation
 	make
 
+feature -- compilation test
+
+	flat_struct: FLAT_STRUCT
+
 feature -- commit / rollback system
 
 	make (c: CLASS_C; is_short: BOOLEAN) is
@@ -21,8 +25,11 @@ feature -- commit / rollback system
 			else
 				!FLAT_DEF!definition.make;
 			end;
-			ast := ast_server.item (c.id);
-			ast.format (Current);
+			!!flat_struct.make (c, definition.client);
+			flat_struct.fill;
+			if flat_struct.ast /= void then
+				flat_struct.ast.format (Current);
+			end;
 		end;
 
 
@@ -77,6 +84,11 @@ feature -- commit / rollback system
 
 	last_was_printed: BOOLEAN;
 
+	is_in_first_pass: BOOLEAN;
+
+
+	is_reconstitution: BOOLEAN;
+
 
 feature -- text construction
 
@@ -92,6 +104,13 @@ feature -- text construction
 	no_inherited: BOOLEAN;
 		-- immediate feature only;
 		--| not yet implemented
+
+	first_assertion: BOOLEAN;
+		
+	set_first_assertion (b: BOOLEAN) is
+		do
+			first_assertion := b;
+		end;
 
 	text : CLICK_STRUCT;
 		-- formatted text
@@ -514,6 +533,22 @@ feature -- type control
 
 	new_types: FEAT_ADAPTATION;
 	new_priority: INTEGER;
+	
+	set_source_class (c: CLASS_C) is
+		do
+			format.set_classes (c, format.global_types.target_class);
+		end;
+
+	set_context_features (source, target: FEATURE_I) is
+		do
+			format.set_context_features (source, target);
+		end;
+
+	set_source_context (source: FEATURE_I) is
+		do
+			format.set_context_features (source, 
+				format.global_types.target_enclosing_feature);
+		end;
 
 	keep_types is
 		do
@@ -544,7 +579,10 @@ feature -- infix and prefix control
 
     insert (s: STRING) is
         do
-			if s /= void then
+			if 
+				s /= void 
+			--	and format.insertion_point < text.count
+			then
 				text.insert_string (s, format.insertion_point + 1);
 			end;	
         end;
@@ -585,4 +623,92 @@ feature -- infix and prefix control
 		end;
 
 
+feature -- comments
+
+	file_list: TABLE [EIFFEL_FILE, INTEGER];
+
+	trailing_comment_exists (pos: INTEGER): BOOLEAN is
+			-- is there a comment after pos
+		local
+			file: EIFFEL_FILE;
+		do
+			if pos >= 0 then
+				file := file_list.item (format.global_types.source_id);
+				if file /= void then
+					file.go_after (pos);
+					Result := file.trailing_comment  /= void;
+				end;
+			end;
+		end;
+
+
+	put_comment (comment: EIFFEL_COMMENTS) is
+		local
+			i: INTEGER;
+		do
+			begin;
+			if comment /= void then
+				if comment.count > 0 then
+					put_special ("-- ");
+					put_string (comment.text.item (0));
+				end;
+				if comment.count > 1 then
+					from
+						i := 1
+					until
+						i >= comment.count
+					loop
+						next_line;
+						put_special ("-- ");
+						put_string (comment.text.item (i));
+						i := i + 1;
+					end;
+				end;
+			end;
+			commit;
+		end;
+			
+				
+	
+	put_trailing_comment (pos: INTEGER) is
+		local
+			file: EIFFEL_FILE;
+			comment: EIFFEL_COMMENTS;
+		do
+			if pos >= 0 then
+				--file := file_list.item (format.global_types.source_id);
+				if file /= void then
+					file.go_after (pos);
+					comment := file.trailing_comment;
+				end;
+				if comment /= void then
+					begin;
+					indent_one_more;
+					next_line;
+					--put_comment 
+					commit;
+				end;
+			end;
+		end;
+	
+	put_origin_comment is
+		do
+			if 
+				format.global_types.source_class 
+				/= format.global_types.target_class
+			then
+				begin;
+				indent_one_more;
+				next_line;
+				-- writefrom source_class.class_name
+				commit;
+			end;
+		end;
+
+
+	register_feature_clause (f: FEATURE_CLAUSE_AS) is
+		do
+		end;
+				
+			
 end	

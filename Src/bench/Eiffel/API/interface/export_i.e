@@ -1,4 +1,8 @@
 deferred class EXPORT_I 
+
+inherit
+	PART_COMPARABLE
+
 	
 feature -- Queries
 
@@ -54,11 +58,19 @@ feature -- Incrementality
 		deferred
 		end;
 
+
 feature -- Debug purpose
 
 	trace is
 			-- Debug purpose
 		deferred
 		end;
+
+feature -- formatter
+
+	infix "<" (other: EXPORT_I): BOOLEAN is
+		deferred
+		end;
+			
 
 end

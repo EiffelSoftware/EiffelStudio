@@ -446,6 +446,14 @@ feature -- Formatter
 			if not ctxt.no_internals then
 				ctxt.put_keyword(" is");
 			end;
+			if ctxt.trailing_comment_exists (position) then
+				ctxt.begin;
+				ctxt.indent_one_more;
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_trailing_comment (position);
+				ctxt.commit;
+			end;
 			ctxt.indent_one_more;
 			ctxt.next_line;
 

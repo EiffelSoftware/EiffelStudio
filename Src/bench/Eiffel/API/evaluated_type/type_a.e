@@ -5,6 +5,8 @@ deferred class TYPE_A
 inherit
 
 	TYPE
+		rename
+			position as comment_position
 		redefine
 			is_solved, same_as
 		end;

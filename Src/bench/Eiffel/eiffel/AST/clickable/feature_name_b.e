@@ -8,7 +8,8 @@ inherit
 		redefine
 			format
 		end;
-	STONABLE
+	STONABLE;
+	COMPARABLE
 
 feature -- Conveniences
 
@@ -31,7 +32,14 @@ feature -- Conveniences
 			Result := True;
 		end;
 
+
+
 feature -- Internal name computing
+
+
+	infix "<" (other: FEATURE_NAME): BOOLEAN is
+		deferred
+		end;
 
 	internal_name: ID_AS is
 			-- Internal name used by the compiler
@@ -43,6 +51,18 @@ feature -- Internal name computing
 		once
 			!!Result.make (25);
 		end;
+
+	set_name (s: STRING) is
+		require
+			s /= void
+		deferred
+		end;
+
+	set_is_frozen (b: BOOLEAN) is
+		do
+			is_frozen := b;
+		end;
+
 
 	code_table: HASH_TABLE [STRING, STRING] is
 			-- Corepondance table for infix/prefix notation
@@ -84,6 +104,9 @@ feature -- Formatting
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			if is_frozen then
+				ctxt.put_keyword ("frozen ");
+			end;
 			ctxt.prepare_for_feature (internal_name, void);
 			ctxt.put_current_feature;
 		end;

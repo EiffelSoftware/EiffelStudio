@@ -40,10 +40,17 @@ feature
 			Result := other.is_all
 		end;
 
+
 	trace is
 			-- Debug purpose
 		do
 			io.error.putstring ("ALL");
+		end;
+
+	infix "<" (other: EXPORT_I): BOOLEAN is
+			-- is Current less restrictive than other
+		do
+			Result := not other.is_all;
 		end;
 
 end

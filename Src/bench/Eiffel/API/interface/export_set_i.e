@@ -159,4 +159,26 @@ feature
 			end;
 		end;
 
+	infix "<" (other: EXPORT_I): BOOLEAN is
+			-- is Current less restrictive than other
+		local
+			other_set: EXPORT_SET_I
+		do
+			if other.is_none then
+				Result := true
+			elseif other.is_all then
+				Result := not is_all
+			else
+				other_set ?= other;
+				check
+					other_set /= void;
+				end;
+				Result := first.less_restrictive_than (other_set.first);
+			end;
+		end;
+	
+			
+			
+		
+
 end

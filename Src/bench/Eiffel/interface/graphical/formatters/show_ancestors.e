@@ -34,7 +34,21 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Ancestors_of end;
 
+
+	displayed: LINKED_LIST [CL_TYPE_A];
+
 	display_info (i: INTEGER; c: CLASSC_STONE) is
+			-- Display parents of `c' in tree form.
+		do
+			!!displayed.make;
+			rec_display (i,c);
+			displayed := void;	
+		end;
+
+
+
+
+	rec_display (i: INTEGER; c: CLASSC_STONE) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
@@ -53,15 +67,22 @@ feature {NONE}
 					until
 						parents.after
 					loop
+
 						!!p.make (parents.item.associated_class);
 						text_window.put_string (tabs (i));
 						text_window.put_clickable_string (p, p.signature);
-						text_window.put_string ("%N");
-						display_info (i+1, p);
+						if displayed.has (parents.item) then
+							text_window.put_string ("...%N")
+						else	
+							text_window.put_string ("%N");
+							displayed.add (parents.item);
+							rec_display (i+1, p);
+						end;			
 						parents.forth
 					end
 				end
 			end
-		end
+		end;
+
 
 end

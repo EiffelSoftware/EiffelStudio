@@ -17,13 +17,13 @@ feature -- Conveniences
 
 feature {}
 	
-	clause_name: STRING is
+	clause_name (ctxt: FORMAT_CONTEXT): STRING is
 			-- require or require else
 		do
-			if is_else then
-				Result := "require else"
-			else
+			if ctxt.first_assertion then
 				Result := "require"
+			else
+				Result := "require else"
 			end
 		end;
 			

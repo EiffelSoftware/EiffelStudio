@@ -5,6 +5,8 @@ class EIFFEL_LIST [T->AST_EIFFEL]
 inherit
 
 	AST_EIFFEL
+		rename
+			position as text_position
 		undefine
 			pass_address, twin
 		redefine
@@ -77,7 +79,7 @@ feature -- Formatter
 	
 	format (ctxt : FORMAT_CONTEXT) is
 		local
-			i: INTEGER;
+			i, l_count: INTEGER;
 			failure: BOOLEAN;
 			not_first:  BOOLEAN;
 			must_abort: BOOLEAN;
@@ -86,8 +88,9 @@ feature -- Formatter
 			must_abort := ctxt.must_abort_on_failure;
 			from	
 				i := 1;
+				l_count := count;
 			until
-				i > count or failure
+				i > l_count or failure
 			loop
 				ctxt.begin;
 				if not_first then

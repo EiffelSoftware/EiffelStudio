@@ -246,6 +246,8 @@ feature -- Byte code generation
 				generate_dll16_body;
 			when dll32_id then
 				generate_dll32_body;
+			when dllwin32_id then
+				generate_dllwin32_body;
 			else
 				generate_basic_body;
 			end
@@ -411,6 +413,73 @@ feature -- Byte code generation
 			end;
 			generated_file.putchar (',');
 			generated_file.putstring (external_name);
+			generated_file.putstring (");");
+			generated_file.new_line;
+			if not result_type.is_void then
+				generated_file.putstring ("return ");
+				if has_return_type then
+					generated_file.putchar ('(');
+					generated_file.putstring (return_type);
+					generated_file.putchar (')');
+					generated_file.putchar (' ');
+				end;
+				generated_file.putstring ("Result;");
+				generated_file.new_line;
+			end;
+		end;
+
+	generate_dllwin32_body is
+			-- Generate body for an external of type dllwin32
+		do
+				-- FIXME: remove extern declaration
+			generated_file.putstring ("extern HANDLE eif_load_dll(char*);");
+			generated_file.new_line;
+
+				-- Declare local variables required by the call
+			generated_file.putstring ("HANDLE a_result;");
+			generated_file.new_line;
+
+			result_type.c_type.generate (generated_file);
+			generated_file.putstring ("(*fp)();");
+			generated_file.new_line;
+
+			if not result_type.is_void then
+				result_type.c_type.generate (generated_file);
+				generated_file.putstring (" Result;");
+				generated_file.new_line;
+			end;
+			generated_file.new_line;
+				-- Now comes the body
+			generated_file.putstring ("a_result = eif_load_dll(");
+			generated_file.putstring (special_file_name);
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);");
+			generated_file.new_line;
+			generated_file.putstring ("fp = ");
+			result_type.c_type.generate_function_cast (generated_file);
+			generated_file.putstring ("GetProcAddress(a_result,");
+            if external_name.is_integer then
+                generated_file.putstring ("MAKEINTRESOURCE (");
+                generated_file.putstring (external_name);
+                generated_file.putstring (")");
+            else
+                generated_file.putchar ('"');
+                generated_file.putstring (external_name);
+                generated_file.putchar ('"');
+            end
+            generated_file.putstring (");");
+
+			generated_file.new_line;
+			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);");
+			generated_file.new_line;
+			if not result_type.is_void then
+				generated_file.putstring ("Result = ");
+			end;
+			generated_file.putstring ("(fp)(");
+			if arguments /= Void then
+				generate_arguments_with_cast;
+			end;
 			generated_file.putstring (");");
 			generated_file.new_line;
 			if not result_type.is_void then

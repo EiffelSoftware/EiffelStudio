@@ -77,29 +77,45 @@ feature {NONE} -- Implementation
 		require
 			non_void_name: a_name /= Void
 			valid_name: names_heap.has (a_name)
+			non_void_feature_table: feature_table /= Void
 		local
 			l_overloaded_features: LIST [FEATURE_I]
 			l_feature_i: FEATURE_I
+			l_class_i: CLASS_I
 		do
+			l_class_i := feature_table.associated_class.lace_class
 			if feature_table.has_overloaded (a_name) then
 				l_overloaded_features := feature_table.overloaded_items (a_name)
-				l_feature_i := l_overloaded_features.first
-				create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), System.class_of_id (feature_table.feat_tbl_id).file_name)
 				from
 					l_overloaded_features.start
-					l_overloaded_features.forth
 				until
-					l_overloaded_features.after
+					l_feature_i /= Void or l_overloaded_features.after
 				loop
-					l_feature_i := l_overloaded_features.item
-					Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump)
+					if is_listed (l_overloaded_features.item, class_i, l_class_i) then
+						l_feature_i := l_overloaded_features.item
+					end
 					l_overloaded_features.forth
+				end
+				if l_feature_i /= Void then
+					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name)
+					from
+					until
+						l_overloaded_features.after
+					loop
+						l_feature_i := l_overloaded_features.item
+						if is_listed (l_feature_i, class_i, l_class_i) then
+							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump)								
+						end
+						l_overloaded_features.forth
+					end
 				end
 			else
 				feature_table.search (a_name)
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
-					create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), System.class_of_id (feature_table.feat_tbl_id).file_name)
+					if is_listed (l_feature_i, class_i, l_class_i) then
+						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name)
+					end
 				end
 			end
 			found := Result /= Void

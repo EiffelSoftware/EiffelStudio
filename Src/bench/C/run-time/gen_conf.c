@@ -556,13 +556,13 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 }
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
+rt_public int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 {
 	int16   result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_gen_id_from_cid (cidarr, dtype_map);
+	result = eifthd_gen_id_from_cid (a_cidarr, dtype_map);
 
 	EIFMTX_UNLOCK;
 

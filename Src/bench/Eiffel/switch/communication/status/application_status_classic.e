@@ -96,6 +96,8 @@ feature -- Values
 			-- TODO
 		end
 
+feature {NONE} -- Values Impl
+
 	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
 			-- Eiffel call stack
 		do

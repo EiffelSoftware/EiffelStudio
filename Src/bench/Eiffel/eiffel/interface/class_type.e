@@ -156,9 +156,6 @@ feature -- Access
 			-- Name of type in IL code generation.
 		require
 			is_precompiled: is_precompiled
-		local
-			l_pos: INTEGER
-			l_name: STRING
 		do
 			Result := clone (il_casing.namespace_casing (is_dotnet_name, internal_namespace))
 			if a_prefix /= Void then

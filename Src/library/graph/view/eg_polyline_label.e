@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			
 			set_label_line_start_and_end
 			position_on_line := -10.0
+			
 		end
 		
 feature -- Status report
@@ -249,123 +250,78 @@ feature {NONE} -- Implementation
 			-- set the label_group to the correct side of the line			
 			set_label_group_position_on_line (new_x, new_y, nearest_start, nearest_end)
 		end
-		
+
 	set_label_group_position_on_line (new_x, new_y: DOUBLE; p, q: EV_COORDINATE) is
 			-- Set `label_group' position to left or right of line from `p' to `q' depending on `is_left'.
-			-- Afterwards a line perpendicular to the line `p' `q' through the `center' of `label_group'
-			-- will intersect with the line `p' `q' at position (`new_x', `new_y').
+			-- such that `label_group' does not intersect with the line.
 		require
 			p_not_void: p /= Void
 			q_not_void: q /= Void
 		local
-			d_x, d_y: DOUBLE
-			m, m_inv: DOUBLE
-			w2, h2: DOUBLE
-			nx, ny: DOUBLE
 			bbox: EV_RECTANGLE
+			shift_x, shift_y: INTEGER
+			w, h: INTEGER
+			theta: DOUBLE
+			pival: DOUBLE
 		do
-			d_x := q.x_precise - p.x_precise
-			d_y := q.y_precise - p.y_precise
+			theta := line_angle (p.x_precise, p.y_precise, q.x_precise, q.y_precise)
 			bbox := label_group.bounding_box
-			w2 := bbox.width / 2 + line_width - 2
-			h2 := bbox.height / 2 + line_width - 2
-			if d_x = 0 then
-				if d_y < 0 then
-					if is_left then
-						nx := new_x - w2
-						ny := new_y
-					else
-						nx := new_x + w2
-						ny := new_y
-					end
-				else
-					if is_left then
-						nx := new_x + w2
-						ny := new_y
-					else
-						nx := new_x - w2
-						ny := new_y
-					end
+			w := bbox.width + line_width
+			h := bbox.height
+			if is_left then
+				theta := modulo (theta + pi, pi_times_two)
+			end
+			if theta >= 0 and theta <= pi / 4 then
+				-- octant 1
+				shift_x := w
+			elseif theta > pi / 4 and theta <= pi_half then
+				-- octant 2
+				shift_x := w
+				pival := (7/16) * pi
+				if theta >= pival then
+					shift_y := transition (0, h, (theta - pival) * (16/pi))
 				end
-			elseif d_y = 0 then
-				if d_x > 0 then
-					if is_left then
-						nx := new_x
-						ny := new_y - h2
-					else
-						nx := new_x
-						ny := new_y + h2
-					end
+			elseif theta > pi_half and theta <= 3*pi/4 then
+				-- octant 3
+				shift_x := w
+				shift_y := h
+			elseif theta > 3*pi/4 and theta <= pi then
+				-- octant 4
+				pival := (15/16) * pi
+				if theta > pival then
+					shift_x := transition (w, 0, (theta - pival) * (16/pi))
 				else
-					if is_left then
-						nx := new_x
-						ny := new_y + h2
-					else
-						nx := new_x
-						ny := new_y - h2
-					end
+					shift_x := w
 				end
+				shift_y := h - as_integer ((w - shift_x) * (p.y_precise - label_move_handle.point_y) / (p.x_precise - label_move_handle.point_x))
+			elseif theta > pi and theta <= 5/4 * pi then
+				-- octant 5
+				shift_y := h
+			elseif theta > 5/4 * pi and theta <= pi_half_times_three then
+				-- octant 6
+				pival := (23/16) * pi
+				if theta >= pival then
+					shift_y := transition (h, 0, (theta - pival) * (16/pi))
+				else
+					shift_y := h
+				end
+			elseif theta > pi_half_times_three and theta <= (7/4) * pi then
+				-- octant 7
 			else
-				m := d_y / d_x
-				check 
-					m_not_zero: m /= 0
-				end
-				m_inv := -1 / m
-				if m > 0 then
-					if d_x > 0 then
-						if is_left then
-							-- -w
-							-- +h
-							nx := (-h2 - new_x * (1/m + m) + m * -w2) / (-1/m -m)
-							ny := m_inv * (nx - new_x) + new_y
-						else
-							-- +w
-							-- -h
-							nx := (h2 - new_x * (1/m + m) + m * w2) / (-1/m - m)
-							ny := m_inv * (nx - new_x) + new_y
-						end
-					else
-						if is_left then
-							-- +w
-							-- -h
-							nx := (h2 - new_x * (1/m + m) + m * w2) / (-1/m - m)
-							ny := m_inv * (nx - new_x) + new_y
-						else
-							-- -w
-							-- +h
-							nx := (-h2 - new_x * (1/m + m) + m * -w2) / (-1/m -m)
-							ny := m_inv * (nx - new_x) + new_y
-						end
-					end
-				else
-					if d_x > 0 then
-						if is_left then
-							-- +w
-							-- +h
-							nx := (-h2 - new_x * (1/m + m) + m * +w2) / (-1/m -m)
-							ny := m_inv * (nx - new_x) + new_y
-						else
-							-- -w
-							-- -h
-							nx := (h2 - new_x * (1/m + m) + m * -w2) / (-1/m - m)
-							ny := m_inv * (nx - new_x) + new_y
-						end
-					else
-						if is_left then
-							-- -w
-							-- -h
-							nx := (h2 - new_x * (1/m + m) + m * -w2) / (-1/m - m)
-							ny := m_inv * (nx - new_x) + new_y
-						else
-							-- +w
-							-- +h
-							nx := (-h2 - new_x * (1/m + m) + m * +w2) / (-1/m -m)
-							ny := m_inv * (nx - new_x) + new_y
-						end
-					end
+				-- octant 8
+				pival := (31/16) * pi
+				if theta >= pival then
+					shift_x := transition (0, w, (theta - pival) * (16/pi))
+					shift_y := as_integer (shift_x * (p.y_precise - label_move_handle.point_y) / (p.x_precise - label_move_handle.point_x))
 				end
 			end
-			label_group.set_x_y (as_integer (nx) + 1, as_integer (ny) + 1)
+			label_group.set_point_position (label_move_handle.point_x - shift_x, label_move_handle.point_y - shift_y)
+		end
+		
+	transition (start_value, end_value: INTEGER; progress: DOUBLE): INTEGER is
+			-- Value between `start_value' and `end_value'.
+		do
+			Result := start_value + as_integer ((end_value - start_value) * progress)
 		end
 
 	project_to_line (ax, ay, x1, y1, x2, y2: DOUBLE): TUPLE [DOUBLE, DOUBLE] is

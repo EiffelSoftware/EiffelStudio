@@ -56,7 +56,7 @@ feature -- Comparison
 		do
 			Result := item < other.item
 		ensure then
-			definition: result = (code < other.code)
+			definition: Result = (code < other.code)
 		end
 
 	is_equal (other: like Current): BOOLEAN is
@@ -146,14 +146,14 @@ feature -- Output
 
 feature -- Conversion
 
-	upper: CHARACTER is
+	as_upper, upper: CHARACTER is
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
 			Result := chupper (item)
 		end
 
-	lower: CHARACTER is
+	as_lower, lower: CHARACTER is
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do

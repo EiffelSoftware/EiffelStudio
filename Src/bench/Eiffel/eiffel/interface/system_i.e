@@ -3009,7 +3009,16 @@ end
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 if cl_type /= Void then
-				cl_type.generate_skeleton1 (buffer)
+				if final_mode then
+					if
+						not cl_type.associated_class.is_precompiled or else
+						cl_type.associated_class.is_in_system
+					then
+						cl_type.generate_skeleton1 (buffer)
+					end
+				else
+					cl_type.generate_skeleton1 (buffer)
+				end
 				if not final_mode then
 						-- Doesn't use `cl_type' as first argument:
 						-- LINKED_LIST [INTEGER] introduced in two precompiled projects
@@ -3034,7 +3043,20 @@ end
 			loop
 				cl_type := class_types.item (i)
 if cl_type /= Void then
-				cl_type.generate_skeleton2 (buffer)
+				if final_mode then
+					if
+						not cl_type.associated_class.is_precompiled or else
+						cl_type.associated_class.is_in_system
+					then
+						cl_type.generate_skeleton2 (buffer)
+					else
+							-- Type not inserted in system because it was coming
+							-- from a precompiled library.
+						buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0,0,0,0,0,0}")
+					end
+				else
+					cl_type.generate_skeleton2 (buffer)
+				end
 else
 		-- FIXME
 	if final_mode then

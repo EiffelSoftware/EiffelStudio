@@ -632,6 +632,7 @@ feature {NONE} -- Implementation
 			-- resize it with `a_width', `a_height'.
 		do
 			{WEL_FRAME_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
+			--| FIXME Someone please clarify this with a comment:
 			if a_width = width and a_height = height then
 				on_size (0, a_width, a_height)
 			end
@@ -717,21 +718,16 @@ feature {NONE} -- Implementation
 			min_track, max_track: WEL_POINT
 			w, h: BOOLEAN
 		do
-		--	io.put_string ("recomputing sizes%N")
-		--	compute_minimum_size
 			w := horizontal_resizable
 			h := vertical_resizable
 			if w and h then
 				!! min_track.make (internal_minimum_width, internal_minimum_height)
-		--		!! min_track.make (minimum_width, minimum_height)
 				!! max_track.make (maximum_width, maximum_height)
 			elseif w then
 				!! min_track.make (internal_minimum_width, height)
-		--		!! min_track.make (minimum_width, height)
 				!! max_track.make (maximum_width, height)
 			elseif h then
 				!! min_track.make (width, internal_minimum_height)
-		--		!! min_track.make (width, minimum_height)
 				!! max_track.make (width, maximum_height)
 			else
 				!! min_track.make (width, height)
@@ -904,6 +900,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/14 19:59:44  brendel
+--| Removed some commented out code.
+--|
 --| Revision 1.28  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

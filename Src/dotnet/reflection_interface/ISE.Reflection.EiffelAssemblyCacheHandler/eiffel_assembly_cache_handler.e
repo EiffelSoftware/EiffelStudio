@@ -72,10 +72,36 @@ feature -- Status Report
 			description: "Was last removal successful?"
 			external_name: "LastRemovalSuccessful"
 		end
-				
+	
+	is_valid_filename (a_filename: STRING): BOOLEAN is
+		indexing
+			description: "Is `a_filename' a valid filename?"
+			external_name: "IsValidFilename"
+		require
+			non_void_filename: a_filename /= Void
+			not_empty_filename: a_filename.get_length > 0
+		local
+			file: SYSTEM_IO_FILE
+		do
+			Result := file.exists (a_filename)
+		end
+	
+	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
+		indexing
+			description: "Is `a_folder_name' a valid directory path"
+			external_name: "IsValidDirectoryPath"
+		require
+			non_void_folder_name: a_folder_name /= Void
+			not_empty_folder_name: a_folder_name.get_length > 0
+		local
+			dir: SYSTEM_IO_DIRECTORY
+		do
+			Result := dir.exists (a_folder_name)
+		end
+		
 feature -- Basic Operations
 		
-	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): TYPE_STORER is --FACTORY): TYPE_STORER is
+	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): TYPE_STORER is 
 		indexing
 			description: "[
 						Store assembly corresponding to `an_eiffel_assembly': 
@@ -84,14 +110,18 @@ feature -- Basic Operations
 			external_name: "StoreAssembly"
 		require
 			non_void_assembly: an_eiffel_assembly /= Void
-			non_void_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name /= Void
-			not_empty_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
+			non_void_assembly_descriptor: an_eiffel_assembly.get_assembly_descriptor /= Void
+		local
+			dir: SYSTEM_IO_DIRECTORY
 		do
 			eiffel_assembly := an_eiffel_assembly
 			assembly_descriptor := eiffel_assembly.get_assembly_descriptor
 			prepare_assembly_storage
+			check
+				non_void_assembly_folder_path: assembly_folder_path /= Void
+				valid_folder_path: dir.exists (assembly_folder_path)
+			end
 			create Result.make_type_storer (assembly_folder_path)
-			--assembly_folder_path := Void
 		ensure
 			storer_created: Result /= Void
 		end
@@ -112,8 +142,7 @@ feature -- Basic Operations
 			if not retried then
 				check
 					non_void_assembly: eiffel_assembly /= Void
-					non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
-					not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_length > 0
+					non_void_assembly_name: eiffel_assembly.get_assembly_descriptor /= Void
 				end
 				create notifier_handle.make1
 				notifier := notifier_handle.current_notifier
@@ -126,6 +155,7 @@ feature -- Basic Operations
 		ensure
 			void_eiffel_assembly: eiffel_assembly = Void
 			void_assembly_descriptor: assembly_descriptor = Void
+			void_assembly_folder_path: assembly_folder_path = Void
 		rescue
 			retried := True
 			retry
@@ -141,8 +171,6 @@ feature -- Basic Operations
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
-			non_void_assembly_name: a_descriptor.get_name /= Void
-			not_empty_assembly_name: a_descriptor.get_name.get_length > 0
 		local
 			assembly_path: STRING
 			dir: SYSTEM_IO_DIRECTORY
@@ -199,54 +227,55 @@ feature -- Basic Operations
 							-- Remove assembly folder name from `index.xml'.
 						index_path := reflection_support.Eiffel_delivery_path
 						index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.Assemblies_Folder_Path, Index_Filename, Xml_Extension)
-						create xml_reader.make_xmltextreader_10 (index_path)
-						xml_reader.set_Whitespace_Handling (white_space_handling.none)
-						xml_reader.Read_Start_Element_String (Assemblies_Element)
-						from
-							create assembly_folders_list.make
-						until
-							not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
-						loop
-							a_folder_name := xml_reader.Read_Element_String_String (Assembly_Filename_Element)
-							assembly_folder_name_added := assembly_folders_list.extend (a_folder_name)
-						end
-						xml_reader.Read_End_Element
-						xml_reader.Close
-
-						path_to_remove := assembly_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
-						assembly_folders_list.Remove (path_to_remove)
-
-						if assembly_folders_list.get_count /= 0 then
-							create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
-								-- Set generation options
-							text_writer.set_Formatting (formatting.indented)
-							text_writer.set_Indentation (1)
-							text_writer.set_Indent_Char ('%T')
-							text_writer.set_Namespaces (False)
-							text_writer.set_Quote_Char ('%"')
-
-								-- Write `<!DOCTYPE ...>
-							text_writer.Write_Doc_Type (Index_Filename, public_string, Index_Filename.Concat_String_String (Index_Filename, Dtd_Extension), subset)
-								-- <assemblies>
-							text_writer.write_start_element (Assemblies_Element)			
+						if file.exists (index_path) then
+							create xml_reader.make_xmltextreader_10 (index_path)
+							xml_reader.set_Whitespace_Handling (white_space_handling.none)
+							xml_reader.Read_Start_Element_String (Assemblies_Element)
 							from
+								create assembly_folders_list.make
 							until
-								i = assembly_folders_list.get_count
+								not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
 							loop
-								a_folder_name ?= assembly_folders_list.get_item (i)
-								if a_folder_name /= Void then
-										-- <assembly_folder_name>
-									text_writer.write_element_string (Assembly_Filename_Element, a_folder_name)
-								end
-								i := i + 1
+								a_folder_name := xml_reader.Read_Element_String_String (Assembly_Filename_Element)
+								assembly_folder_name_added := assembly_folders_list.extend (a_folder_name)
 							end
-								-- </assemblies>
-							text_writer.write_end_element
-							text_writer.Close
-						else
-							file.Delete (index_path)
-						end
+							xml_reader.Read_End_Element
+							xml_reader.Close
 
+							path_to_remove := assembly_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
+							assembly_folders_list.Remove (path_to_remove)
+
+							if assembly_folders_list.get_count /= 0 then
+								create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
+									-- Set generation options
+								text_writer.set_Formatting (formatting.indented)
+								text_writer.set_Indentation (1)
+								text_writer.set_Indent_Char ('%T')
+								text_writer.set_Namespaces (False)
+								text_writer.set_Quote_Char ('%"')
+
+									-- Write `<!DOCTYPE ...>
+								text_writer.Write_Doc_Type (Index_Filename, public_string, Index_Filename.Concat_String_String (Index_Filename, Dtd_Extension), subset)
+									-- <assemblies>
+								text_writer.write_start_element (Assemblies_Element)			
+								from
+								until
+									i = assembly_folders_list.get_count
+								loop
+									a_folder_name ?= assembly_folders_list.get_item (i)
+									if a_folder_name /= Void then
+											-- <assembly_folder_name>
+										text_writer.write_element_string (Assembly_Filename_Element, a_folder_name)
+									end
+									i := i + 1
+								end
+									-- </assemblies>
+								text_writer.write_end_element
+								text_writer.Close
+							else
+								file.Delete (index_path)
+							end
+						end
 							-- Notify assembly removal
 						create notifier_handle.make1
 						notifier := notifier_handle.current_notifier
@@ -299,6 +328,7 @@ feature -- Basic Operations
 			non_void_path: new_path /= Void
 			not_empty_path: new_path.get_length > 0
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
+			valid_path: is_valid_directory_path (new_path)
 		local
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT			
 			a_filename: STRING
@@ -323,66 +353,68 @@ feature -- Basic Operations
 				a_filename := reflection_support.xml_assembly_filename (an_eiffel_assembly.get_assembly_descriptor)
 				a_filename := a_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 				
-				types_list := assembly_types_from_xml (a_filename)	
-				file.delete (a_filename)
-					-- Write new `assembly_description.xml' with `new_path' as new Eiffel cluster path.
-				create text_writer.make_xmltextwriter_1 (a_filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
+				if file.exists (a_filename) then
+					types_list := assembly_types_from_xml (a_filename)	
+					file.delete (a_filename)
+						-- Write new `assembly_description.xml' with `new_path' as new Eiffel cluster path.
+					create text_writer.make_xmltextwriter_1 (a_filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
-					-- Set generation options
-				text_writer.set_Formatting (formatting.indented)
-				text_writer.set_Indentation (1)
-				text_writer.set_Indent_Char ('%T')
-				text_writer.set_Namespaces (False)
-				text_writer.set_Quote_Char ('%"')
+						-- Set generation options
+					text_writer.set_Formatting (formatting.indented)
+					text_writer.set_Indentation (1)
+					text_writer.set_Indent_Char ('%T')
+					text_writer.set_Namespaces (False)
+					text_writer.set_Quote_Char ('%"')
 
-					-- Write `<?xml version="1.0">
-				DTD_path := "../"
-				text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
-					-- <assembly>
-				text_writer.write_start_element (Assembly_Element)
-				
-					-- <assembly_name>
-				text_writer.write_element_string (Assembly_Name_Element, an_eiffel_assembly.get_assembly_descriptor.get_name)
-					-- <assembly_version>
-				assembly_version := an_eiffel_assembly.get_assembly_descriptor.get_version
-				if assembly_version /= Void and then assembly_version.get_Length > 0 then
-					text_writer.write_element_string (Assembly_Version_Element, assembly_version)
-				end
-					-- <assembly_culture>
-				assembly_culture := an_eiffel_assembly.get_assembly_descriptor.get_culture
-				if assembly_culture /= Void and then assembly_culture.get_length > 0 then
-					text_writer.write_element_string (Assembly_Culture_Element, assembly_culture)
-				end
-					-- <assembly_public_key>
-				assembly_public_key := an_eiffel_assembly.get_assembly_descriptor.get_public_key
-				if assembly_public_key /= Void and then assembly_public_key.get_length > 0 then
-					text_writer.write_element_string (Assembly_Public_Key_Element, assembly_public_key)
-				end
-					-- <eiffel_cluster_path>
-				text_writer.write_element_string (Eiffel_Cluster_Path_Element, new_path)
-					-- <emitter_version_number>
-				emitter_version_number := an_eiffel_assembly.get_emitter_version_number
-				if emitter_version_number /= Void and then emitter_version_number.get_length > 0 then
-					text_writer.write_element_string (Emitter_Version_Number_Element, emitter_version_number)
-				end
-					-- <assembly_types>
-				if types_list.get_count > 0 then
-					text_writer.write_start_element (Assembly_Types_Element)
-					from
-						i := 0
-					until
-						i = types_list.get_count
-					loop
-						type_filename ?= types_list.get_item (i)
-						if type_filename /= Void and then type_filename.get_length > 0 then
-							text_writer.write_element_string (Assembly_Type_Filename_Element, type_filename)
-						end
-						i := i + 1
+						-- Write `<?xml version="1.0">
+					DTD_path := "../"
+					text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
+						-- <assembly>
+					text_writer.write_start_element (Assembly_Element)
+
+						-- <assembly_name>
+					text_writer.write_element_string (Assembly_Name_Element, an_eiffel_assembly.get_assembly_descriptor.get_name)
+						-- <assembly_version>
+					assembly_version := an_eiffel_assembly.get_assembly_descriptor.get_version
+					if assembly_version /= Void and then assembly_version.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Version_Element, assembly_version)
 					end
+						-- <assembly_culture>
+					assembly_culture := an_eiffel_assembly.get_assembly_descriptor.get_culture
+					if assembly_culture /= Void and then assembly_culture.get_length > 0 then
+						text_writer.write_element_string (Assembly_Culture_Element, assembly_culture)
+					end
+						-- <assembly_public_key>
+					assembly_public_key := an_eiffel_assembly.get_assembly_descriptor.get_public_key
+					if assembly_public_key /= Void and then assembly_public_key.get_length > 0 then
+						text_writer.write_element_string (Assembly_Public_Key_Element, assembly_public_key)
+					end
+						-- <eiffel_cluster_path>
+					text_writer.write_element_string (Eiffel_Cluster_Path_Element, new_path)
+						-- <emitter_version_number>
+					emitter_version_number := an_eiffel_assembly.get_emitter_version_number
+					if emitter_version_number /= Void and then emitter_version_number.get_length > 0 then
+						text_writer.write_element_string (Emitter_Version_Number_Element, emitter_version_number)
+					end
+						-- <assembly_types>
+					if types_list.get_count > 0 then
+						text_writer.write_start_element (Assembly_Types_Element)
+						from
+							i := 0
+						until
+							i = types_list.get_count
+						loop
+							type_filename ?= types_list.get_item (i)
+							if type_filename /= Void and then type_filename.get_length > 0 then
+								text_writer.write_element_string (Assembly_Type_Filename_Element, type_filename)
+							end
+							i := i + 1
+						end
+					end
+						-- </assembly>
+					text_writer.write_end_element
+					text_writer.Close	
 				end
-					-- </assembly>
-				text_writer.write_end_element
-				text_writer.Close	
 			end
 		rescue
 			retried := True
@@ -432,7 +464,8 @@ feature {NONE} -- Implementation
 		indexing
 			description: "[
 						Prepare type storage: 
-						Create assembly folder from `assembly_descriptor' if it does not exist yet.
+						Create assembly folder from `assembly_descriptor' if it does not exist yet,
+						create a write lock in this folder, update `index.xml' and generate `assembly_description.xml'.
 					  ]"
 			external_name: "PrepareTypeStorage"
 		local
@@ -450,8 +483,6 @@ feature {NONE} -- Implementation
 		do
 			check
 				non_void_descriptor: assembly_descriptor /= Void
-				non_void_assembly_name: assembly_descriptor.get_name /= Void
-				not_empty_assembly_name: assembly_descriptor.get_name.get_length > 0
 			end
 			create reflection_support.make_reflectionsupport
 			reflection_support.Make
@@ -647,8 +678,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				check
 					non_void_assembly: eiffel_assembly /= Void
-					non_void_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name /= Void
-					not_empty_assembly_name: eiffel_assembly.get_assembly_descriptor.get_name.get_Length > 0
+					non_void_assembly_descriptor: eiffel_assembly.get_assembly_descriptor /= Void
 				end
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
@@ -719,8 +749,8 @@ feature {NONE} -- Implementation
 	prepare_type_storage (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		indexing
 			description: "[
-						Prepare type storage:
-						Create assembly folder from `assembly_descriptor' if it does not exist yet.
+						Check that the assembly folder corresponding to `an_assembly_descriptor' exist and 
+						that there is no sharing violation (no read or write lock).
 					  ]"
 			external_name: "PrepareTypeStorage"
 		require
@@ -795,6 +825,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_filename: xml_filename /= Void
 			not_empty_filename: xml_filename.get_length > 0
+			valid_filename: is_valid_filename (xml_filename)
 		local
 			xml_reader: SYSTEM_XML_XMLTEXTREADER
 			assembly_name: STRING

@@ -31,9 +31,8 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfo"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_Name /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_Name.get_length > 0
-			non_void_eiffel_cluster_path: an_eiffel_assembly.get_Eiffel_Cluster_Path.get_length > 0
+			non_void_eiffel_assembly_descriptor: an_eiffel_assembly.get_assembly_descriptor /= Void
+			non_void_eiffel_cluster_path: an_eiffel_assembly.get_Eiffel_Cluster_Path /= Void
 			non_void_emitter_version_number: an_eiffel_assembly.get_Emitter_Version_Number /= Void
 			not_empty_emitter_version_number: an_eiffel_assembly.get_Emitter_Version_Number.get_length > 0
 		local
@@ -50,7 +49,7 @@ feature {NONE} -- Initialization
 			if cluster_path.index_of (reflection_support.eiffel_key) > -1 then
 				cluster_path := cluster_path.replace (reflection_support.eiffel_key, reflection_support.eiffel_delivery_path)
 			end
-			if not code_generation_support.valid_path (cluster_path) then
+			if not code_generation_support.is_valid_directory_path (cluster_path) then
 				code_generation_support.create_folder (cluster_path)
 			end
 		ensure
@@ -90,9 +89,8 @@ feature -- Basic Operations
 			non_void_eiffel_class_full_external_name: an_eiffel_class.get_Full_External_Name /= Void
 			not_empty_eiffel_class_full_external_name: an_eiffel_class.get_Full_External_Name.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: eiffel_assembly.get_assembly_descriptor.get_Name /= Void
-			not_empty_eiffel_assembly_name: eiffel_assembly.get_assembly_descriptor.get_Name.get_length > 0
-			non_void_eiffel_cluster_path: eiffel_assembly.get_Eiffel_Cluster_Path.get_length > 0
+			non_void_eiffel_assembly_descriptor: eiffel_assembly.get_assembly_descriptor /= Void
+			non_void_eiffel_cluster_path: eiffel_assembly.get_Eiffel_Cluster_Path /= Void
 			non_void_emitter_version_number: eiffel_assembly.get_Emitter_Version_Number /= Void
 			not_empty_emitter_version_number: eiffel_assembly.get_Emitter_Version_Number.get_length > 0
 		local
@@ -127,10 +125,11 @@ feature -- Basic Operations
 			non_void_eiffel_class_full_external_name: an_eiffel_class.get_Full_External_Name /= Void
 			not_empty_eiffel_class_full_external_name: an_eiffel_class.get_Full_External_Name.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: eiffel_assembly.get_assembly_descriptor.get_Name /= Void
-			not_empty_eiffel_assembly_name: eiffel_assembly.get_assembly_descriptor.get_Name.get_length > 0
+			non_void_eiffel_assembly_descriptor: eiffel_assembly.get_assembly_descriptor /= Void
 			non_void_emitter_version_number: eiffel_assembly.get_Emitter_Version_Number /= Void
 			not_empty_emitter_version_number: eiffel_assembly.get_Emitter_Version_Number.get_length > 0
+			non_void_path: a_path /= Void
+			not_empty_path: a_path.get_length > 0
 		local
 			code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
@@ -145,7 +144,7 @@ feature -- Basic Operations
 			if path.index_of (reflection_support.eiffel_key) > -1 then
 				path := path.replace (reflection_support.eiffel_key, reflection_support.eiffel_delivery_path)
 			end
-			if not code_generation_support.valid_path (path) then
+			if not code_generation_support.is_valid_directory_path (path) then
 				code_generation_support.create_folder (path)
 			end
 			intern_generate_eiffel_class (path)
@@ -159,6 +158,10 @@ feature {NONE} -- Implementation
 			external_name: "InternGenerateEiffelClass"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
+			non_void_eiffel_class_name: eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_class_name: eiffel_class.get_eiffel_name.get_length > 0
+			non_void_eiffel_class_full_external_name: eiffel_class.get_Full_External_Name /= Void
+			not_empty_eiffel_class_full_external_name: eiffel_class.get_Full_External_Name.get_length > 0
 			non_void_filename: a_filename /= Void
 			not_empty_filename: a_filename.get_length > 0
 		local

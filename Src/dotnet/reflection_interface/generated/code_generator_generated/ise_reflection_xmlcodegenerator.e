@@ -64,9 +64,9 @@ feature -- Basic Operations
 			"EndAssemblyGeneration"
 		end
 
-	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+	replace_type (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
 			"ReplaceType"
 		end

@@ -183,13 +183,20 @@ feature -- Basic Operations
 			"GenerateClassFooter"
 		end
 
-	valid_path (a_path: STRING): BOOLEAN is
+	is_valid_directory_path (a_path: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"ValidPath"
+			"IsValidDirectoryPath"
 		end
 
+	is_valid_filename (a_filename: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"IsValidFilename"
+		end
+		
 	generic_name_base: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"

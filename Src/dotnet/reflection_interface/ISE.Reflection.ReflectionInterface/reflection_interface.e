@@ -548,8 +548,6 @@ feature -- Removal
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
-			non_void_assembly_name: a_descriptor.get_Name /= Void
-			not_empty_assembly_name: a_descriptor.get_Name.get_length > 0
 		local
 			cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
 			retried: BOOLEAN

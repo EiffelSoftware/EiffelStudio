@@ -94,6 +94,8 @@ feature -- Access
 		indexing
 			description: "Errors currently in `errors_table'"
 			external_name: "Errors"
+		require
+			not_empty_errors_table: errors_table.get_count > 0
 		local
 			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
 			a_code: INTEGER

@@ -31,15 +31,14 @@ feature {NONE} -- Initialization
 			
 feature -- Basic Operations
 	
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is--FACTORY) is
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 			-- | Call `StoreAssembly' on `cache_handler'.
 		indexing
 			description: "Start assembly generation: create folder and assembly description file and set write lock."
 			external_name: "StartAssemblyGeneration"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name.get_Length > 0
+			non_void_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor /= Void
 		do
 			type_storer := cache_handler.Store_Assembly (an_eiffel_assembly)
 		ensure
@@ -52,13 +51,19 @@ feature -- Basic Operations
 			external_name: "GenerateType"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_class_name: an_eiffel_class.get_Eiffel_Name /= Void
-			not_empty_eiffel_class_name: an_eiffel_class.get_Eiffel_Name.get_Length > 0
+			non_void_eiffel_class_name: an_eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.get_eiffel_name.get_length > 0	
+			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void
+			non_void_full_external_name: an_eiffel_class.get_full_external_name /= Void
+			not_empty_full_external_name: an_eiffel_class.get_full_external_name.get_length > 0
+			non_void_external_name: an_eiffel_class.get_external_name /= Void
+			not_empty_external_name: an_eiffel_class.get_external_name.get_length > 0
 		do
 			check
 				non_void_type_storer: type_storer /= Void
+				not_committed: not type_storer.get_committed
 			end
-			type_storer.Add_Type (an_eiffel_class, False)
+			type_storer.add_type (an_eiffel_class, False)
 		end
 
 	end_assembly_generation is
@@ -69,6 +74,7 @@ feature -- Basic Operations
 		do
 			check
 				non_void_type_storer: type_storer /= Void
+				not_commmitted: not type_storer.get_committed
 			end
 			type_storer.Commit
 			type_storer := Void
@@ -83,7 +89,13 @@ feature -- Basic Operations
 			external_name: "ReplaceType"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void			
+			non_void_eiffel_class_name: an_eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.get_eiffel_name.get_length > 0	
+			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void
+			non_void_full_external_name: an_eiffel_class.get_full_external_name /= Void
+			not_empty_full_external_name: an_eiffel_class.get_full_external_name.get_length > 0
+			non_void_external_name: an_eiffel_class.get_external_name /= Void
+			not_empty_external_name: an_eiffel_class.get_external_name.get_length > 0		
 		do
 			type_storer := cache_handler.type_storer_from_class (an_eiffel_class)
 			type_storer.add_type (an_eiffel_class, True)

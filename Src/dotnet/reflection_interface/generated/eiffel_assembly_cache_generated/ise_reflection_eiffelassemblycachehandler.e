@@ -239,4 +239,18 @@ feature -- Basic Operations
 			"TypeStorerFromClass"
 		end
 
+	is_valid_filename (a_filename: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"IsValidFilename"
+		end
+
+	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"IsValidDirectoryPath"
+		end
+		
 end -- class ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER

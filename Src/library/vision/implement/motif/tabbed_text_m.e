@@ -28,6 +28,7 @@ inherit
 			end_of_selection as i_end_of_selection,
 			x_coordinate as i_x_coordinate,
 			y_coordinate as i_y_coordinate,
+			coordinate as i_coordinate,
 			character_position as i_character_position
 		redefine
 			expanded_position, unexpanded_position,
@@ -36,7 +37,8 @@ inherit
 			i_append, i_insert, i_replace, i_set_text, i_text, 
 			i_clear, i_count, i_cursor_position, i_set_cursor_position,
 			i_set_selection, i_begin_of_selection, i_end_of_selection,
-			i_x_coordinate, i_y_coordinate, i_character_position
+			i_x_coordinate, i_y_coordinate, i_character_position,
+			i_coordinate
 		end;
 
 	SCROLLED_T_M
@@ -56,6 +58,7 @@ inherit
 			end_of_selection as st_end_of_selection,
 			x_coordinate as st_x_coordinate,
 			y_coordinate as st_y_coordinate,
+			coordinate as st_coordinate,
 			character_position as st_character_position
 		redefine
 			expanded_position, unexpanded_position,
@@ -142,6 +145,17 @@ feature -- Access
 			-- of Current text widget at character position `char_pos'.
 		do
 			Result := st_y_coordinate (expanded_position (char_pos))
+		end;
+
+	i_coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		local
+			exp_pos: INTEGER
+		do
+			exp_pos := expanded_position (char_pos);
+			!! Result;
+			Result.set (st_x_coordinate (exp_pos), st_y_coordinate (exp_pos))
 		end;
 
 	actual_text: STRING is

@@ -43,7 +43,7 @@ feature {GB_XML_STORE} -- Output
 			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
 			textable.default_create
 			if not objects.first.text.is_empty then
-				add_element_containing_string (element, text_string, objects.first.text)	
+				add_element_containing_string (element, text_string, "<![CDATA[" + objects.first.text + "]]>")	
 			end
 		end
 		
@@ -58,6 +58,7 @@ feature {GB_XML_STORE} -- Output
 			if element_info /= Void and then element_info.data.count /= 0 then
 				for_all_objects (agent {EV_TEXTABLE}.set_text (element_info.data))
 			end
+			full_information := get_unique_full_info (element)
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output

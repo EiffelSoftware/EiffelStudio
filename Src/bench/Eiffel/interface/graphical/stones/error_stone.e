@@ -86,7 +86,7 @@ feature -- Access
 			fn: FILE_NAME
 		do
 			!! fn.make_from_string (help_path);
-			fn.set_file_name (code);
+			fn.set_file_name (error_i.help_file_name);
 			Result := fn
 		end;
 

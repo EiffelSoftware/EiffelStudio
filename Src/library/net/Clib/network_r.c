@@ -72,7 +72,7 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 #else
 #include <sys/un.h>
 #include <netinet/tcp.h>
@@ -470,7 +470,7 @@ EIF_INTEGER ipoptions()
 EIF_INTEGER tcpmax_seg()
 	/*x get TCP maximum segement size */
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) TCP_MAXSEG;
@@ -629,7 +629,7 @@ EIF_INTEGER c_fsetown()
 EIF_INTEGER c_fgetfl()
 	/*x command constant for examination of file flag bits */
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) F_GETFL;
@@ -639,7 +639,7 @@ EIF_INTEGER c_fgetfl()
 EIF_INTEGER c_fsetfl()
 	/*x command constant for setting file flag bits */
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) F_SETFL;

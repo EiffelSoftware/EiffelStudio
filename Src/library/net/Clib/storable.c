@@ -1,7 +1,16 @@
+/*
+	Eiffel Net C interfacing --- 	.../library/net/Clib/storable.c
+*/
+
+
+#include "eif_config.h"
+#include "eif_portable.h" 	/* required for VMS, recommended for others */
+
 #include "eif_except.h"		/* eraise */
 #include "eif_store.h"
 #include "eif_retrieve.h"
 #include "eif_compress.h"
+#include "eif_error.h"    	/* for eio() */
 
 #ifdef EIF_WIN32
 #include "winsock.h"

@@ -10,12 +10,12 @@ inherit
 	COM_OBJECT
 		
 create
-	make_by_pointer	
-	
+	make_by_pointer
+
 feature -- Access
 
 	count: INTEGER is
-		-- Number of assemblies in Current
+			-- Number of assemblies in Current
 		do
 			last_call_success := c_count (item, $Result)
 		ensure
@@ -23,7 +23,7 @@ feature -- Access
 		end
 		
 	i_th (i: INTEGER): FUSION_SUPPORT_ASSEMBLY_INFO is
-		-- COM interface to assembly information at index 'a_index'
+			-- COM interface to assembly information at index 'a_index'
 		local
 			p: POINTER
 		do
@@ -32,7 +32,7 @@ feature -- Access
 		ensure
 			no_error: last_call_success = 0	
 		end
-		
+	
 feature {NONE} -- Implementation
 
 	c_count (p, cnt: POINTER): INTEGER is

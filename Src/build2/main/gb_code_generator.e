@@ -699,36 +699,37 @@ feature {NONE} -- Implementation
 						else
 							comment_object_name := generated_info.name
 						end
-					end
-					
-						-- No parameters if zero arguments.
-					if action_sequence.count = 0 then
-						parameters := " is"
-					else
-						parameters := " (" +action_sequence.parameter_list + ") is"
-					end	
-					
-						-- If the user has selected that they wish to generate debugging output, 
-						-- then we build a representation in `feature_implementation' otherwise,
-						-- the feature implementation will be empty.
-					if project_settings.debugging_output then
+						
+						
+							-- No parameters if zero arguments.
 						if action_sequence.count = 0 then
-							feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+							parameters := " is"
 						else
-							feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+							parameters := " (" +action_sequence.parameter_list + ") is"
+						end	
+						
+							-- If the user has selected that they wish to generate debugging output, 
+							-- then we build a representation in `feature_implementation' otherwise,
+							-- the feature implementation will be empty.
+						if project_settings.debugging_output then
+							if action_sequence.count = 0 then
+								feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+							else
+								feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+							end
+						else
+							feature_implementation := ""
 						end
-					else
-						feature_implementation := ""
+						
+							-- Now we must generate the event declarations.
+						add_event_declaration (action_sequence_info.feature_name + parameters +
+						indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+						indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
+						
+						add_event_implementation (action_sequence_info.feature_name + parameters +
+						indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+						indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
 					end
-					
-						-- Now we must generate the event declarations.
-					add_event_declaration (action_sequence_info.feature_name + parameters +
-					indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-					indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
-					
-					add_event_implementation (action_sequence_info.feature_name + parameters +
-					indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-					indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
 					events.forth
 				end
 				

@@ -44,14 +44,6 @@ feature {NONE}
 
 feature 
 
-	n_ame: STRING is 
-			-- Name of Current command
-		obsolete
-			"Use ``name'' instead."
-		do
-			Result := name
-		end; 
-
 	name: STRING is
 			-- Name of Current command
 		deferred

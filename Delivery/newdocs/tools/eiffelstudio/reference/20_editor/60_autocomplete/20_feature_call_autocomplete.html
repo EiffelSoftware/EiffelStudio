@@ -1,0 +1,53 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Feature call autocomplete</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Editor, Feature call autocomplete">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Feature call autocomplete</H1>
+		<P>[BENCH] editor now offers the possibility to complete feature calls automatically. This means that
+		when the user types &quot;<i>an_identifier.an_incomplete_feature_name</i>&quot; and then triggers the autocomplete, the
+		editor will propose a list of possible feature names correct in this situation.<BR>To be more
+		precise, a window will pop up and display the list of features that can be called on
+		<i>an_identifier</i>. In this list, the first name that matches <i>an_incomplete_feature_name</i> will
+		be highlighted. The user can accept the suggested name, choose another name (in the list or not), or simply
+		cancel the auto-complete.
+		</P>
+		SCREENSHOT (autocomplete window)
+		<P>To trigger the autocomplete, press the key combination &quot;Ctrl+Space&quot; or click on
+		<B>Complete word</B> in the <B>Advanced</B> sub-menu of the <B>Edit</B> menu. If automatic completion is
+		possible, a window will appear. This window will contain a text field and a list. The text field will be
+		filled with the beginning of the feature name you entered. The first item that matches in the list, if
+		any, will be selected.<BR>
+		To complete your code with the selected item, press &quot;Enter&quot; or &quot;Ctrl+Space&quot;.<BR>
+		To choose another item, use keyboard Up and Down arrows or the mouse. You can also modify the
+		content of the text field. The selected item will be updated automatically. To validate your choice,
+		press &quot;Enter&quot; or &quot;Ctrl+Space". If there is no selected item, the content of the text field
+		will be inserted.<BR>
+		To cancel the autocomplete, press &quot;Esc&quot; at any time.
+		<P>
+		<P CLASS="Note">
+		<B>Note</B>:
+		<UL>
+			<LI>If the selected feature is a function, you can call again the autocomplete right after the
+			previous completion. There is no need to type a period.
+			<LI>You can call the autocomplete when there is no identifier. The autocomplete window will then
+			show the features of the current class.
+			<LI>The keyboard shortcut for automatic completion can be changed in the editor preferences.HYPERLINK (preferences)
+		</UL>
+		</P>
+		<P CLASS="warning">
+		<B>Caution</B>:
+		<UL>
+			<LI>Only identifiers that were already defined as the class was compiled for the last time can be
+			completed.
+			<LI>Only compiled features will appear in the autocomplete window.
+			<LI>By default, features from class ANY will not be shown in the autocomplete window. This can be
+			changed in the editor preferences. HYPERLINK (preferences)
+		</UL> 
+		</P>
+ 	</BODY>
+</HTML>

@@ -27,7 +27,7 @@ inherit
 		redefine
 			interface, initialize, on_left_button_down, 
 			on_middle_button_down, on_right_button_down,
-			propagate_syncpaint, destroy
+			destroy
 		end
 
 	EV_WEL_CONTROL_WINDOW
@@ -83,14 +83,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	propagate_syncpaint is
-			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
-			-- children. No children, but must force `Current' to re-draw. See
-			-- "WM_SYNCPAINT" in MSDN for more information.
-		do
-			invalidate
-		end
 
 	in_paint: BOOLEAN
 			-- Are we inside an onPaint event?
@@ -167,30 +159,35 @@ feature {NONE} -- Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
-				-- Switch the dc from screen_dc to paint_dc.
-			internal_paint_dc := paint_dc
-			in_paint := True
-			
-				-- Initialise the device for painting.
-			dc.set_background_transparent
-			internal_initialized_pen := False
-			internal_initialized_background_brush := False
-			internal_initialized_brush := False
-			internal_initialized_text_color := False
-
 				-- Call registered onPaint actions
 			if expose_actions_internal /= Void then
+					-- Switch the dc from screen_dc to paint_dc.
+				internal_paint_dc := paint_dc
+				in_paint := True
+				
+					-- Initialise the device for painting.
+				dc.set_background_transparent
+				internal_initialized_pen := False
+				internal_initialized_background_brush := False
+				internal_initialized_brush := False
+				internal_initialized_text_color := False
+
 				expose_actions_internal.call ([
 					invalid_rect.x,
 					invalid_rect.y,
 					invalid_rect.width,
 					invalid_rect.height
 					])
-			end
 
-				-- Switch back the dc from paint_dc to screen_dc.
-			internal_paint_dc := screen_dc
-			in_paint := False
+					-- Switch back the dc from paint_dc to screen_dc.
+				internal_paint_dc := screen_dc
+				in_paint := False
+				
+					-- Without disabling it looks like we will not be getting all
+					-- the WM_PAINT messages we expected to receive (leaving some
+					-- unrefresh part on the drawing area).
+				disable_default_processing
+			end
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is

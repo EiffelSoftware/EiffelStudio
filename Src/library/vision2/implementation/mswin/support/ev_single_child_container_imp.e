@@ -16,7 +16,6 @@ inherit
 			disable_sensitive,
 			propagate_foreground_color,
 			propagate_background_color,
-			propagate_syncpaint,
 			update_for_pick_and_drop,
 			on_size
 		end
@@ -164,15 +163,6 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	propagate_syncpaint is
-			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
-			-- child. See "WM_SYNCPAINT" in MSDN for more information.
-		do
-			if item_imp /= Void then
-				item_imp.propagate_syncpaint		
-			end
-		end
-		
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify `item_imp'.
 		do

@@ -647,13 +647,6 @@ feature {NONE} -- Implementation, mouse_button_events
 		end
 		
 feature {EV_ANY_I} -- Implementation
-
-	propagate_syncpaint is
-			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
-			-- children. No need to do anything here as there are no children. See
-			-- "WM_SYNCPAINT" in MSDN for more information.
-		do
-		end
 		
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearance of

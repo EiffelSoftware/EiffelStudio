@@ -15,8 +15,7 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			interface,
-			propagate_syncpaint
+			interface
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
@@ -98,27 +97,6 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 				ev_children.go_to (loc_cursor)
 			end
-		ensure then
-			index_not_changed: old ev_children.index = ev_children.index
-		end
-		
-	propagate_syncpaint is
-			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
-			-- children. See "WM_SYNCPAINT" in MSDN for more information.
-		local
-			loc_cursor: CURSOR
-		do
-			from
-				loc_cursor := ev_children.cursor
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.propagate_syncpaint
-				ev_children.forth
-			end
-				-- Restore the original cursor position.
-			ev_children.go_to (loc_cursor)
 		ensure then
 			index_not_changed: old ev_children.index = ev_children.index
 		end

@@ -19,7 +19,7 @@ feature -- Commands
 		do
 			create_tool
 			dialog_tool.ok_actions.extend (~update_changes)
-			dialog_tool.show_modal
+			dialog_tool.show_modal_to_window (caller)
 		end 
 
 	update_changes is

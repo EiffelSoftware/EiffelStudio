@@ -104,6 +104,8 @@ feature -- Status Setting
 			has_button: has_recursive (a_button)
 		do
 			implementation.set_default_push_button (a_button)
+		ensure
+			default_push_button_set: default_push_button = a_button
 		end
 
 	remove_default_push_button is
@@ -190,6 +192,8 @@ feature -- Basic operations
 				-- `select_actions'. If no push button has the focus, then
 				-- call the `select_actions' of the default push button if
 				-- it is sensitive.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.dialog_key_press_action (a_key)
 		end

@@ -13,6 +13,11 @@ inherit
 			solved_type, dump, ext_append_to,
 			is_equivalent, is_full_named_type
 		end
+		
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 create {COMPILER_EXPORTER}
 	make
@@ -22,14 +27,14 @@ feature {NONE} -- Initialization
 	make (f: FEATURE_I; c: like bit_count) is
 		do
 			make_with_count (c)
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			current_class_id := System.current_class.class_id
 			rout_id := f.rout_id_set.first
 		end
 
 feature -- Properties
 
-	feature_name: STRING
+	feature_name_id: INTEGER
 
 	rout_id: INTEGER
 
@@ -46,7 +51,7 @@ feature -- Comparison
 		do
 			Result := bit_count = other.bit_count and then
 				rout_id = other.rout_id and then
-				feature_name.is_equal (other.feature_name) and then
+				feature_name_id = other.feature_name_id and then
 				current_class_id = other.current_class_id
 		end
 
@@ -57,14 +62,14 @@ feature -- Output
 		do
 			create Result.make (9)
 			Result.append ("BIT ")
-			Result.append (feature_name)
+			Result.append (names_heap.item (feature_name_id))
 		end
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
 			st.add (ti_Bit_class)
 			st.add_space
-			st.add_string (feature_name)
+			st.add_string (names_heap.item (feature_name_id))
 		end
 
 feature {COMPILER_EXPORTER}
@@ -73,7 +78,6 @@ feature {COMPILER_EXPORTER}
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
-			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
 			anchor_feature: FEATURE_I
 			vtbt: VTBT
 			veen: VEEN
@@ -82,18 +86,17 @@ feature {COMPILER_EXPORTER}
 			error: BOOLEAN
 			int_value: INTEGER_CONSTANT
 		do
-			origin_table := feat_table.origin_table
 			if not (System.current_class.class_id = current_class_id) then
 				anchor_feature := System.class_of_id (current_class_id).feature_table
-								.item (feature_name)
+								.item_id (feature_name_id)
 			else
-				anchor_feature := feat_table.item (feature_name)
+				anchor_feature := feat_table.item_id (feature_name_id)
 			end
 			if anchor_feature = Void then
 				create veen
 				veen.set_class (System.current_class)
 				veen.set_feature (f)
-				veen.set_identifier (feature_name)
+				veen.set_identifier (names_heap.item (feature_name_id))
 				Error_handler.insert_error (veen)
 				Error_handler.raise_error
 			else

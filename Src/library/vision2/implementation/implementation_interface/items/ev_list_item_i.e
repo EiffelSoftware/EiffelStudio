@@ -15,11 +15,6 @@ inherit
 			parent		
 		end
 
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
-
 feature -- Access
 
 	parent: EV_ITEM_LIST [EV_LIST_ITEM] is
@@ -106,6 +101,9 @@ end -- class EV_LIST_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/09 20:11:34  king
+--| Removed inheritence from PND
+--|
 --| Revision 1.29  2000/03/09 17:48:49  king
 --| Inheriting from PND
 --|

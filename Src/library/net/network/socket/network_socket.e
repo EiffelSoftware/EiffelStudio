@@ -73,13 +73,22 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 	
+	has_exception_state: BOOLEAN is
+			-- Is socket in exception state within `timeout' seconds?
+		local
+			retval: INTEGER
+		do
+			retval := c_check_exception_with_timeout (descriptor, timeout)
+			Result := (retval > 0)
+		end
+	
 	timeout: INTEGER
 			-- Duration of timeout in seconds
 		
 feature -- Status setting
 
 	set_reuse_address is
-			-- Set the reuse_address option on.
+			-- Turn `reuse_address' option on.
 		require
 			socket_exists: exists
 		do
@@ -87,7 +96,7 @@ feature -- Status setting
 		end;
 
 	do_not_reuse_address is
-			-- Set reuse_address option off.
+			-- Turn `reuse_address' option off.
 		require
 			socket_exists: exists
 		do
@@ -116,6 +125,12 @@ feature {NONE} -- Constants
 feature {NONE} -- Externals
 
 	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
+								timeout_secs: INTEGER): INTEGER is
+		external
+			"C"
+		end
+		
+	c_check_exception_with_timeout (fd: INTEGER;
 								timeout_secs: INTEGER): INTEGER is
 		external
 			"C"

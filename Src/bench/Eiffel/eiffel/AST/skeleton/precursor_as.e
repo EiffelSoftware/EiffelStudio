@@ -215,18 +215,17 @@ feature -- Type check, byte code and dead code removal
 			last_class := last_constrained.associated_class
 
 				-- Type of feature has to be evaluated in the context of current
-				-- class type, except that `last_id' has to show from where we got
-				-- the routine, namely the parent. That way types of return type, and
-				-- parameters are correctly evaluated.
-			last_id := p_type.base_class_id
-
+				-- class type. That way types of return type, and parameters are
+				-- correctly evaluated.
+			last_id := context.a_class.class_id
+			
 				-- Supplier dependances update
 				-- Create self-dependance
-			create depend_unit.make (context.a_class.class_id, context.a_feature)
+			create depend_unit.make (last_id, context.a_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
-			create depend_unit.make (last_id, a_feature)
+			create depend_unit.make (p_type.base_class_id, a_feature)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check

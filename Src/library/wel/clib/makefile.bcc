@@ -15,6 +15,9 @@ wel.lib: $(OBJ)
 	tlib $@ +disptchr.obj
 	tlib $@ +enumfont.obj
 	tlib $@ +estream.obj
+	tlib $@ +wel_string.obj
+	tlib $@ +msgboxpa.obj
+	tlib $@ +registry.obj
 	if not exist $(EIFFEL4)\library\wel\spec\bcc mkdir $(EIFFEL4)\library\wel\spec\bcc
 	if not exist $(EIFFEL4)\library\wel\spec\bcc\lib mkdir $(EIFFEL4)\library\wel\spec\bcc\lib
 	copy $@ $(EIFFEL4)\library\wel\spec\bcc\lib

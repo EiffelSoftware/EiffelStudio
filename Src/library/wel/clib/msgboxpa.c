@@ -13,7 +13,7 @@
 #	include <msgboxpa.h>
 #endif
 
-cwel_msgboxparams_set (LPMSGBOXPARAMS item, HWND wd, HINSTANCE hinst, LPCSTR txt, LPCSTR ttl, DWORD s, LPCSTR ico, DWORD langid)
+void cwel_msgboxparams_set (LPMSGBOXPARAMS item, HWND wd, HINSTANCE hinst, LPCSTR txt, LPCSTR ttl, DWORD s, LPCSTR ico, DWORD langid)
 {	/*
 	 * fill item with arguments
 	 * the fields dwContextHelpId and lpfnMsgBoxCallback are set to NULL

@@ -41,7 +41,7 @@ feature -- Attributes
 	arguments: EIFFEL_LIST [TYPE_DEC_AS];
 			-- List (of list) of arguments
 
-	type: EIFFEL_TYPE;
+	type: TYPE_AS;
 			-- Type if any
 
 	content: CONTENT_AS;

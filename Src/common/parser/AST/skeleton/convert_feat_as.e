@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [EIFFEL_TYPE]) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]) is
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		do
 			is_creation_procedure := cr

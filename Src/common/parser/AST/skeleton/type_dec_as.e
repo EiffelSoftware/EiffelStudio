@@ -50,7 +50,7 @@ feature -- Access
 	id_list: ARRAYED_LIST [INTEGER]
 			-- List of ids
 
-	type: EIFFEL_TYPE
+	type: TYPE_AS
 			-- Type
 
 	location: TOKEN_LOCATION

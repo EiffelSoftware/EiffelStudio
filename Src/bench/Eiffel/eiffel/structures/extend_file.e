@@ -19,6 +19,8 @@ feature
 		do
 			if not error_happened then
 				open_read
+			else
+				Result := True
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then

@@ -2564,6 +2564,10 @@ end;
 				Reference_file.new_line;
 				i := i + 1;
 			end;
+			if has_separate then
+				Reference_file.putint (0);
+				Reference_file.new_line;
+			end;
 			Reference_file.putstring ("};%N");
 			Reference_file.close;
 		end;
@@ -2710,6 +2714,15 @@ else
 end;
 				Skeleton_file.putstring (",%N");
 				i := i + 1;
+			end;
+			if has_separate then
+				if not final_mode then
+					Skeleton_file.putstring 
+						("{%N0L,%N%"SEP_OBJ%",%N(char**) 0,%N(int*) 0,%N%
+						%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
+						%(int32) 0,(int32) 0, %N1,%N(int32*) 0,%N%
+						%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}%N");
+				end
 			end;
 			Skeleton_file.putstring ("};%N%N");
 
@@ -3371,6 +3384,8 @@ feature -- Pattern table generation
 
 	generate_only_separate_pattern_table is
 			-- Generate pattern table.
+        require
+            finalized_mode: byte_context.final_mode
 		do
 			pattern_table.generate_in_finalized_mode;
 		end

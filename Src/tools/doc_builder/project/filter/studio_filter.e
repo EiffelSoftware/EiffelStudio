@@ -140,7 +140,7 @@ feature -- Processing
 			if in_filterable_element then
 				if a_name.is_equal ("output") and then (output_flags.has (a_value)) then
 					can_output := True
-				else
+				elseif a_name.is_equal ("output") and then not (output_flags.has (a_value)) then					
 					can_output := False
 				end
 			end

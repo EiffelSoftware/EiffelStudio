@@ -57,11 +57,6 @@ feature
 			ba.append_real (real_val.to_double);
 		end;
 
-	vqmc: VQMC is
-		do
-			!VQMC4!Result;
-		end;
-
 	dump: STRING is
 		do
 			Result := real_val

@@ -62,11 +62,6 @@ feature
 			end;
 		end;
 
-	vqmc: VQMC is
-		do
-			!VQMC1!Result;
-		end;
-
 	dump: STRING is
 		do
 			Result := bool_val.out			

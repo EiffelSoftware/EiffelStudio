@@ -67,11 +67,6 @@ feature
 			ba.append_raw_string (str_val);
 		end;
 
-	vqmc: VQMC is
-		do
-			!VQMC5!Result;
-		end;
-
 	dump: STRING is
 		do
 			!! Result.make (str_val.count + 2);

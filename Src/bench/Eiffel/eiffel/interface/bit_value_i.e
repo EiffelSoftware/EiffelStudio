@@ -84,11 +84,6 @@ feature
 			ba.append_bit (bit_val);
 		end;
 
-	vqmc: VQMC is
-		do
-			!VQMC6!Result;
-		end;
-
 	dump: STRING is
 		do
 			Result := bit_val			

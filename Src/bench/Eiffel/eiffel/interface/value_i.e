@@ -95,10 +95,6 @@ feature
 		deferred
 		end
 
-	vqmc: VQMC is
-		deferred
-		end
-
 	append_signature (st: STRUCTURED_TEXT) is
 		require
 			st_not_void: st /= Void

@@ -83,9 +83,11 @@ feature
 			if value.valid_type (actual_type) then
 				value.set_real_value (actual_type)
 			else
-				vqmc := value.vqmc
+				create vqmc
 				vqmc.set_class (written_class)
 				vqmc.set_feature_name (feature_name)
+				vqmc.set_constant_type (value)
+				vqmc.set_expected_type (actual_type)
 				Error_handler.insert_error (vqmc)
 			end
 		end

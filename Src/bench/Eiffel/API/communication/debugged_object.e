@@ -40,7 +40,6 @@ feature
 			is_special := rqst.is_special;
 			capacity := rqst.capacity;
 			object_address := addr;
-			dynamic_class_name := rqst.dynamic_class_name;
 			max_capacity := rqst.max_capacity
 		ensure
 			set: addr = object_address
@@ -53,9 +52,6 @@ feature -- Properties
 
 	is_special: BOOLEAN;
 		-- Is the object being inspected SPECIAL?
-
-	dynamic_class_name: STRING
-			-- Name of dynamic class of object
 
 	object_address: STRING;
 			-- Hector address of object being inspected
@@ -71,7 +67,6 @@ feature -- Properties
 invariant
 
 	non_void_attributes: attributes /= Void;
-	non_void_dynamic_class_name: dynamic_class_name /= Void;
 	non_void_address: object_address /= Void
 
 end -- class DEBUGGED_OBJECT

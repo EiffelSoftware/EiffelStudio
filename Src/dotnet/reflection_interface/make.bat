@@ -215,7 +215,7 @@ cd ..
 cd Clib
 del *.lib
 call make_finalize.bat
-cd ..\..
+cd ..\..\..
 cd bin
 gacutil -u FolderBrowser
 gacutil -u FolderDialog

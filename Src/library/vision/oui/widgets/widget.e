@@ -730,8 +730,8 @@ feature -- Hierarchy
 
 	parent: WIDGET is
 			-- Parent of Current widget
-		require
-			exists: not destroyed
+--		require
+--			exists: not destroyed
 		do
 			Result := widget_manager.parent (Current)
 		end;
@@ -747,7 +747,7 @@ feature
 			Result := other.implementation = implementation
 		end;
 
-feature {WIDGET, W_MANAGER}
+feature {WIDGET, W_MANAGER, WIDGET_I}
 
 	depth: INTEGER;
 			-- Depth of Current widget

@@ -127,6 +127,16 @@ feature -- Access
 
 feature -- Status setting
 
+	tab_length: INTEGER
+			-- Length of the tabulation
+	
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'
+		do
+			tab_length := new_length
+		end
+	
+	
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Set both width and height to `new_width'
 			-- and `new_height'.

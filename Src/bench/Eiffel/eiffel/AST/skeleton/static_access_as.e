@@ -17,15 +17,16 @@ inherit
 		redefine
 			type_check, is_equivalent, simple_format, format,
 			valid_feature, report_error_for_feature,
-			assoc_class, byte_node, context_last_type
+			assoc_class, context_last_type,
+			new_call_access
 		end
 		
 	ATOMIC_AS
 		undefine
-			fill_calls_list, replicate, format
+			fill_calls_list, replicate, format, byte_node
 		redefine
-			type_check, byte_node,
-			good_integer, good_character, make_integer, make_character
+			type_check, good_integer, good_character,
+			make_integer, make_character
 		end
 
 create
@@ -162,32 +163,23 @@ feature -- Type check, byte code and dead code removal
 			Result := a_feature /= Void and then a_feature.has_static_access
 		end
 
-	byte_node: ACCESS_B is
-			-- Associated byte code.
+	new_call_access (a_feature: FEATURE_I; a_type_i: TYPE_I): ACCESS_B is
+			-- Create new node for associated AST node.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_i_not_void: a_type_i /= Void
 		local
 			ext: EXTERNAL_B
-			const_b: CONSTANT_B
-			feat_b: FEATURE_B
 			cl_type_i: CL_TYPE_I
 		do
-			Result := Precursor {ACCESS_FEAT_AS}
-			ext ?= Result
 			cl_type_i ?= class_type.actual_type.type_i
+			Result := a_feature.access_for_feature (a_type_i, cl_type_i)
+			ext ?= Result
 			if ext /= Void then
 				ext.enable_static_call
-				ext.set_written_in (associated_class.class_id)
-				ext.set_static_class_type (cl_type_i)
-			else
-				const_b ?= Result
-				check
-					is_constant: const_b /= Void
-				end
-				feat_b ?= const_b.access
-				check
-					is_feature: feat_b /= Void
-				end
-				feat_b.set_precursor_type (cl_type_i)
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 feature -- Conveniences

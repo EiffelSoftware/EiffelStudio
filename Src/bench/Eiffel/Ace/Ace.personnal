@@ -1,0 +1,120 @@
+system es3
+
+root
+
+	basic_es (root_cluster): "make"
+
+default
+
+	assertion (no)
+
+cluster
+
+-- STANDARD STRUCTURES:
+
+		kernel:				"$BENCH/Eiffel/library/base/kernel";
+		support:			"$BENCH/Eiffel/library/base/support";
+		access:				"$BENCH/Eiffel/library/base/structures/access";
+		cursors:			"$BENCH/Eiffel/library/base/structures/cursors";
+		dispenser:			"$BENCH/Eiffel/library/base/structures/dispenser";
+		list:				"$BENCH/Eiffel/library/base/structures/list";
+		set:				"$BENCH/Eiffel/library/base/structures/set";
+		sort:				"$BENCH/Eiffel/library/base/structures/sort";
+		storage:			"$BENCH/Eiffel/library/base/structures/storage";
+		table:				"$BENCH/Eiffel/library/base/structures/table";
+		traversing:			"$BENCH/Eiffel/library/base/structures/traversing";
+		tree:				"$BENCH/Eiffel/library/base/structures/tree";
+
+-- ES3 SPECIFIC CLUSTERS
+
+		limand:				"$BENCH/Eiffel/limand";
+		beurk:				"$BENCH/Eiffel/beurk";
+		replication:		"$BENCH/Eiffel/eiffel/replication";
+		debugclas:			"$BENCH/Eiffel/debug";
+
+	-- General compilation:
+
+		flat_short:			"$BENCH/Eiffel/flat_short";
+		special_ast:        "$BENCH/Eiffel/special_ast";
+		yacc:				"$BENCH/Eiffel/yacc";
+		const:				"$BENCH/Eiffel/const";
+		error:				"$BENCH/Eiffel/error";
+		struct_text:        "$BENCH/Eiffel/structured_text";
+
+	-- Lace compilation:
+
+		lace_AST:			"$BENCH/Eiffel/lace/AST";
+		env:				"$BENCH/Eiffel/lace/env";
+		lace_error:			"$BENCH/Eiffel/lace/error";
+		lace_compile:		"$BENCH/Eiffel/lace/lace_compile";
+		lace_shared:		"$BENCH/Eiffel/lace/shared";
+
+	-- Eiffel compilation:
+
+		instructions:		"$BENCH/Eiffel/eiffel/AST/instructions";
+		expressions:		"$BENCH/Eiffel/eiffel/AST/expressions";
+		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/skeleton";
+		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/stonables";
+		actual_type:		"$BENCH/Eiffel/eiffel/actual_type";
+		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
+		cecil:				"$BENCH/Eiffel/eiffel/cecil";
+		compiler:			"$BENCH/Eiffel/eiffel/compiler";
+		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
+		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
+		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
+		eiffel_error_redefined:			"$BENCH/Eiffel/eiffel/error/redefined";
+		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
+		generation:			"$BENCH/Eiffel/eiffel/generation";
+		genericity:			"$BENCH/Eiffel/eiffel/genericity";
+		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
+		interface:			"$BENCH/Eiffel/eiffel/interface";
+		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
+		server:				"$BENCH/Eiffel/eiffel/server";
+--		temp:				"$BENCH/Eiffel/eiffel/temp";
+		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
+		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
+		structures:			"$BENCH/Eiffel/eiffel/structures";
+		tables:				"$BENCH/Eiffel/eiffel/tables";
+		descriptor:         "$BENCH/Eiffel/eiffel/descriptor";
+
+-- SHARED BETWEEN COMPILER AND INTERFACE:
+
+		clicking:			"$BENCH/Eiffel/shared/clicking";
+		communications:		"$BENCH/Eiffel/shared/es3_bench";
+		stones:				"$BENCH/Eiffel/shared/stones";
+		tops:				"$BENCH/Eiffel/shared/tops";
+
+-- INTERFACE CLUSTERS
+
+--	 Root
+
+		 root_cluster:		"$BENCH/Eiffel/root";
+
+	-- Switch:
+	
+		switch: 			"$BENCH/Eiffel/batch_bench/batch"
+			ignore
+				"shared_status.e"
+			end;
+		melt_only: 			"$BENCH/Eiffel/batch_bench/melt_only";
+
+	-- graphical interface (bench):
+	-- NEEDED ?
+
+		 windows:			"$BENCH/Eiffel/interface/windows";
+		 commands:			"$BENCH/Eiffel/interface/commands";
+		 formatters:		"$BENCH/Eiffel/interface/formatters";
+		 debugging:			"$BENCH/Eiffel/interface/debugging";
+		 archi_text:		"$BENCH/Eiffel/interface/archi_text";
+
+		 ipc:				"$BENCH/Eiffel/ipc";
+
+external
+
+	object:
+		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
+		"$(BENCH)/C/parsing/lace/liblace.a";
+		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/platform/libplatform.a";
+
+end

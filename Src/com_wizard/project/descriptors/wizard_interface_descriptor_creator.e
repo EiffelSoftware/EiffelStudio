@@ -223,17 +223,22 @@ feature -- Basic operations
 				i = l_count
 			loop
 				l_desc := a_type_info.func_desc (i)
-				create l_func_factory
-				l_func_descriptor := l_func_factory.create_descriptor (a_type_info, l_desc)
-				l_name := unique_identifier (l_func_descriptor.name, agent feature_names.has)
-				l_func_descriptor.set_name (l_name)
-				function_table.force (l_func_descriptor)
-				feature_names.extend (l_name)
+				l_name := a_type_info.names (l_desc.member_id, 1).item (1)
+				if name.is_equal (Iunknown_type) or name.is_equal (Idispatch_type) or not well_known_functions.has (l_name) then
+					-- We don't want to generate IUnknown and IDispatch functions
+					-- This test is needed because some dispinterface include definiton
+					-- for all IDispatch methods (see Excel example)
+					create l_func_factory
+					l_func_descriptor := l_func_factory.create_descriptor (a_type_info, l_desc)
+					l_name := unique_identifier (l_func_descriptor.name, agent feature_names.has)
+					l_func_descriptor.set_name (l_name)
+					function_table.force (l_func_descriptor)
+					feature_names.extend (l_name)
+				end
 				i := i + 1
 			end
 		ensure
 			non_void_function_table: function_table /= Void
-			valid_function_table: function_table.count = a_type_info.type_attr.count_func
 		end
 
 	create_property_descriptors (a_type_info: ECOM_TYPE_INFO) is

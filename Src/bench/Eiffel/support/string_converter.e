@@ -5,6 +5,19 @@ indexing
 
 class STRING_CONVERTER
 
+feature -- Conversion
+
+	escaped_string (s: STRING): STRING is
+			-- Escaped version of `s'.
+		require
+			valid_arguments: s /= Void
+		do
+			create Result.make (s.count)
+			escape_string (Result, s)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Commands
 
 	escape_string (buffer: STRING; s: STRING) is

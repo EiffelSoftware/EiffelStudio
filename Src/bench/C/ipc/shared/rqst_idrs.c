@@ -57,7 +57,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ WEAN, idr_Opaque },
 	{ ONCE, idr_Opaque },
 	{ SP_LOWER, idr_Opaque },
-	{ SP_UPPER, idr_Opaque },
+	{ METAMORPHOSE, idr_Opaque },
 	{ MODIFY_LOCAL, idr_Opaque },
 	{ MODIFY_ATTR, idr_Opaque },
 	{ DYNAMIC_EVAL, idr_Opaque },

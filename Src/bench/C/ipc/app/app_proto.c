@@ -37,6 +37,7 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_eiffel.h"
+#include "eif_interp.h"
 #include "eif_memory.h"
 #include "eif_debug.h"
 #include "x2c.h"	/* For macro LNGPAD */
@@ -88,8 +89,8 @@ rt_private void modify_object_attribute(long arg_addr, long arg_attr_number, str
 rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
-rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_extern, int is_precompiled);
-extern struct item *dynamic_eval(EIF_CONTEXT int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
+rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type);
+extern struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
 
 /* Private Constants */
 #define NO_CURRMODIF	0
@@ -162,10 +163,11 @@ static int curr_modify = NO_CURRMODIF;
 #endif
 		break;
 	case SP_LOWER:					/* Bounds for special object inspection */
-		sp_lower = arg_3;
-		break;
-	case SP_UPPER:					/* Bounds for special object inspection */
+		sp_lower = arg_2;
 		sp_upper = arg_3;
+		break;
+	case METAMORPHOSE:					/* Converts the top-level item on the operational stack to a reference type */
+		metamorphose_top();
 		break;
 	case DUMP_VARIABLES:
 #ifdef EIF_WIN32
@@ -181,9 +183,9 @@ static int curr_modify = NO_CURRMODIF;
 		send_stack(writefd (sp));
 #endif
 		break;
-	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled */
+	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
 #ifdef EIF_WIN32
-		dynamic_evaluation(sp, arg_1, arg_2, arg_3 & 1, arg_3 >> 1);
+		dynamic_evaluation(sp, arg_1, arg_2, arg_3 & 1, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #else
 		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3 & 1, arg_3 >> 1);
 #endif
@@ -1309,9 +1311,9 @@ rt_private void opush_dmpitem(struct item *item)
 	}
 
 #ifdef EIF_WIN32
-rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_extern, int is_precompiled)
+rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type)
 #else
-rt_private void dynamic_evaluation(int s, int fid, int stype, int is_extern, int is_precompiled)
+rt_private void dynamic_evaluation(int s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type)
 #endif
 	{
 	struct item *ip;
@@ -1321,7 +1323,7 @@ rt_private void dynamic_evaluation(int s, int fid, int stype, int is_extern, int
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
-	ip = dynamic_eval(fid,stype, is_extern, is_precompiled, previous_otop);
+	ip = dynamic_eval(fid,stype, is_extern, is_precompiled, is_basic_type, previous_otop);
 	if (ip == (struct item *) 0)
 		{
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */

@@ -457,8 +457,6 @@ interface IEiffelFeatureDescriptor: IUnknown
 ]
 interface IEiffelProjectProperties: IDispatch
 {
-  [helpstring ("Apply changes")]
-  HRESULT Apply ();
   
   [id (DISPID_VALUE), propget, helpstring ("System name.")]
   HRESULT system_name ([out, retval] BSTR * return_value);
@@ -558,6 +556,16 @@ interface IEiffelProjectProperties: IDispatch
   
   [id (118), helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_path);  
+  
+  [id (131), helpstring ("Update the project Ace file according to the current settings.")]
+  HRESULT update_project_ace_file ([in] BSTR project_ace_file_name);
+  
+  [id (132), helpstring ("Synchronize the current settings with the project Ace file.")]
+  HRESULT synchronize_with_project_ace_file ([in] BSTR project_ace_file_name);
+  
+  [id (133), helpstring ("Apply changes")]
+  HRESULT Apply ();
+
 };
 //---------------------------------------------------------------------
 

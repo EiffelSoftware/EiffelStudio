@@ -92,33 +92,6 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_la
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_apply()
-
-/*-----------------------------------------------------------
-	Apply changes
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_IEiffelProjectProperties->Apply ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_system_name(  )
 
 /*-----------------------------------------------------------
@@ -1221,6 +1194,99 @@ void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_remove_asse
 	
 	rt_ce.free_memory_bstr (tmp_assembly_path);
 
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_update_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name )
+
+/*-----------------------------------------------------------
+	Update the project Ace file according to the current settings.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProjectProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_project_ace_file_name = 0;
+	tmp_project_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (project_ace_file_name));
+	
+	hr = p_IEiffelProjectProperties->update_project_ace_file(tmp_project_ace_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_project_ace_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_synchronize_with_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name )
+
+/*-----------------------------------------------------------
+	Synchronize the current settings with the project Ace file.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProjectProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_project_ace_file_name = 0;
+	tmp_project_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (project_ace_file_name));
+	
+	hr = p_IEiffelProjectProperties->synchronize_with_project_ace_file(tmp_project_ace_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_project_ace_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_apply()
+
+/*-----------------------------------------------------------
+	Apply changes
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProjectProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_IEiffelProjectProperties->Apply ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

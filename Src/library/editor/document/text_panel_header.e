@@ -416,9 +416,11 @@ feature {NONE} -- Events
 			remove_document
 			if is_empty then
 				panel.clear_window
+				update_buffered_screen
+				update_display
 			else
 				open_document (open_linked_list.item)
-			end			
+			end		
 		end
 		
 	on_text_loaded is

@@ -168,6 +168,8 @@ feature
 		do
 			Make_file.putstring ("%T$(RM) ");
 			generate_objects_macros;
+			Make_file.putchar (' ');
+			generate_system_objects_macros;
 			Make_file.new_line;
 		end;
  

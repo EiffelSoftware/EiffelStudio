@@ -10,7 +10,8 @@ deferred class
 inherit
 	EV_BUTTON_I
 		redefine
-			interface
+			interface,
+			default_alignment
 		end
 
 	EV_RADIO_PEER_I
@@ -26,6 +27,15 @@ inherit
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON
+	
+feature {NONE} -- Implementation
+
+	default_alignment: INTEGER is
+			-- Default alignment used during
+			-- creation of real implementation
+		do
+			Result := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left
+		end
 
 end -- class EV_RADIO_BUTTON_I
 

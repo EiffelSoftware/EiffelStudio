@@ -2,6 +2,9 @@
 #include "eif_cecil.h"
 #include "eif_setup.h"
 #include "fext.h"
+#ifdef EIF_WIN32
+#include "eif_econsole.h"
+#endif
 
 #undef NDEBUG
 #include <assert.h>
@@ -111,3 +114,17 @@ int main (int argc, char **argv, char **envp)
 	
 	return 0;
 }
+
+
+#ifdef EIF_WIN32
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	int argc;
+	char **argv;
+	char **envp;
+
+	get_argcargv (&argc, &argv);
+	envp = (char **) GetEnvironmentStrings ();
+	return main(argc, argv, envp);
+}
+#endif

@@ -29,6 +29,38 @@ interface IEnumIncludePaths;
 interface IEnumObjectFiles;
 interface IEnumAssembly;
 
+// IDispathc IDs
+enum
+{
+    ISECompilerID_store = 1,
+    ISECompilerID_add_include_path,
+    ISECompilerID_remove_include_path,
+    ISECompilerID_replace_include_path,
+    ISECompilerID_include_paths,
+    ISECompilerID_add_object_File,
+    ISECompilerID_remove_object_file,
+    ISECompilerID_replace_object_file,
+    ISECompilerID_object_files,
+
+    EIFFELCLUSTERPROP_Name,
+    EIFFELCLUSTERPROP_Path,
+    EIFFELCLUSTERPROP_Namespace,
+    EIFFELCLUSTERPROP_ExpandedClusterPath,
+    EIFFELCLUSTERPROP_IsEiffelLibrary,
+    EIFFELCLUSTERPROP_ClusterId,
+    EIFFELCLUSTERPROP_HasChildren,
+    EIFFELCLUSTERPROP_HasParent,
+    EIFFELCLUSTERPROP_ParentName,
+    EIFFELCLUSTERPROP_Invariant,
+    EIFFELCLUSTERPROP_Check,
+    EIFFELCLUSTERPROP_Loop,
+    EIFFELCLUSTERPROP_Ensure,
+    EIFFELCLUSTERPROP_Require,
+    EIFFELCLUSTERPROP_UseSysDefault,
+    EIFFELCLUSTERPROP_All,
+    EIFFELCLUSTERPROP_IsLibrary,
+    EIFFELCLUSTERPROP_Override
+};
 
 typedef enum __EIF_COMPILATION_TYPES
 {
@@ -731,6 +763,9 @@ interface IEiffelSystemClusters: IDispatch
   [helpstring ("Cluster tree.")]
   HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
 
+  [helpstring ("Cluster in a flat form.")]
+  HRESULT flat_clusters ([out, retval] IEnumClusterProp ** return_value);
+
   [helpstring ("Save changes.")]
   HRESULT store ();
 
@@ -743,7 +778,6 @@ interface IEiffelSystemClusters: IDispatch
   [helpstring ("Cluster properties.")]
   HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
 
-
   [helpstring ("Cluster properties.")]
   HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
 
@@ -752,6 +786,9 @@ interface IEiffelSystemClusters: IDispatch
 
   [helpstring ("Checks to see if a cluster name is valid")]
   HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Retrieves a clusters full name from its name")]
+  HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
 };
 
 //---------------------------------------------------------------------
@@ -818,107 +855,108 @@ interface IEiffelSystemAssemblies: IDispatch
 ]
 interface IEiffelClusterProperties: IDispatch
 {
-  [id (DISPID_VALUE), propget, helpstring ("Cluster name.")]
+
+  [id (EIFFELCLUSTERPROP_Name), propget, helpstring ("Cluster name.")]
   HRESULT name ([out, retval] BSTR * return_value);
 
-  [id (200), propget, helpstring ("Full path to cluster.")]
+  [id (EIFFELCLUSTERPROP_Path), propget, helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([out, retval] BSTR * path);
 
-  [id (200), propput, helpstring ("Full path to cluster.")]
+  [id (EIFFELCLUSTERPROP_Path), propput, helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([in] BSTR path);
 
-  [id (201), propget, helpstring ("Should this cluster classes take priority over other classes with same name?")]
+  [id (EIFFELCLUSTERPROP_Override), propget, helpstring ("Should this cluster classes take priority over other classes with same name?")]
   HRESULT override ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (201), propput, helpstring ("Should this cluster classes take priority over other classes with same name?")]
+  [id (EIFFELCLUSTERPROP_Override), propput, helpstring ("Should this cluster classes take priority over other classes with same name?")]
   HRESULT override ([in] VARIANT_BOOL a_bool);
 
-  [id (202), propget, helpstring ("Should this cluster be treated as library?")]
+  [id (EIFFELCLUSTERPROP_IsLibrary), propget, helpstring ("Should this cluster be treated as library?")]
   HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (202), propput, helpstring ("Should this cluster be treated as library?")]
+  [id (EIFFELCLUSTERPROP_IsLibrary), propput, helpstring ("Should this cluster be treated as library?")]
   HRESULT is_library ([in] VARIANT_BOOL a_bool);
 
-  [id (203), propget, helpstring ("Should all subclusters be included?")]
+  [id (EIFFELCLUSTERPROP_All), propget, helpstring ("Should all subclusters be included?")]
   HRESULT all ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (203), propput, helpstring ("Should all subclusters be included?")]
+  [id (EIFFELCLUSTERPROP_All), propput, helpstring ("Should all subclusters be included?")]
   HRESULT all ([in] VARIANT_BOOL new_value);
 
-  [id (204), propget, helpstring ("Should use system default?")]
+  [id (EIFFELCLUSTERPROP_UseSysDefault), propget, helpstring ("Should use system default?")]
   HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (204), propput, helpstring ("Should use system default?")]
+  [id (EIFFELCLUSTERPROP_UseSysDefault), propput, helpstring ("Should use system default?")]
   HRESULT use_system_default ([in] VARIANT_BOOL new_value);
 
-  [id (205), propget, helpstring ("Should preconditions be evaluated by default?")]
+  [id (EIFFELCLUSTERPROP_Require), propget, helpstring ("Should preconditions be evaluated by default?")]
   HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (206), propget, helpstring ("Should postconditions be evaluated by default?")]
+  [id (EIFFELCLUSTERPROP_Ensure), propget, helpstring ("Should postconditions be evaluated by default?")]
   HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (207), propget, helpstring ("Should check assertions be evaluated by default?")]
+  [id (EIFFELCLUSTERPROP_Check), propget, helpstring ("Should check assertions be evaluated by default?")]
   HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (208), propget, helpstring ("Should loop assertions be evaluated by default?")]
+  [id (EIFFELCLUSTERPROP_Loop), propget, helpstring ("Should loop assertions be evaluated by default?")]
   HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (209), propget, helpstring ("Should class invariants be evaluated by default?")]
+  [id (EIFFELCLUSTERPROP_Invariant), propget, helpstring ("Should class invariants be evaluated by default?")]
   HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
 
-  [id (210), helpstring ("Set assertions for cluster.")]
+  [helpstring ("Set assertions for cluster.")]
   HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check,
                           [in] VARIANT_BOOL evaluate_require,
                           [in] VARIANT_BOOL evaluate_ensure,
                           [in] VARIANT_BOOL evaluate_loop,
                           [in] VARIANT_BOOL evaluate_invariant);
 
-  [id (211), helpstring ("List of excluded directories.")]
+  [helpstring ("List of excluded directories.")]
   HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
 
-  [id (212), helpstring ("Add a directory to exclude.")]
+  [helpstring ("Add a directory to exclude.")]
   HRESULT add_exclude ([in] BSTR dir_name);
 
   [id (213), helpstring ("Remove a directory to exclude.")]
   HRESULT remove_exclude ([in] BSTR dir_name);
 
-  [id (214), propget, helpstring ("Name of the parent cluster.")]
+  [id (EIFFELCLUSTERPROP_ParentName), propget, helpstring ("Name of the parent cluster.")]
   HRESULT parent_name ([out, retval] BSTR * return_value);
 
-  [id (214), propput, helpstring ("Name of the parent cluster.")]
+  [id (EIFFELCLUSTERPROP_ParentName), propput, helpstring ("Name of the parent cluster.")]
   HRESULT parent_name ([in] BSTR new_value);
 
-  [id (215), propget, helpstring ("Does the current cluster have a parent cluster?")]
+  [id (EIFFELCLUSTERPROP_HasParent), propget, helpstring ("Does the current cluster have a parent cluster?")]
   HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (216), propget, helpstring ("List of subclusters (list of IEiffelClusterProperties*).")]
+  [propget, helpstring ("List of subclusters (list of IEiffelClusterProperties*).")]
   HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
 
-  [id (217), propget, helpstring ("Does the current cluster have children?")]
+  [id (EIFFELCLUSTERPROP_HasChildren), propget, helpstring ("Does the current cluster have children?")]
   HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (218), propget, helpstring ("Cluster identifier.")]
+  [id (EIFFELCLUSTERPROP_ClusterId), propget, helpstring ("Cluster identifier.")]
   HRESULT cluster_id ([out, retval] ULONG * return_value);
 
-  [id (219), helpstring ("Is the cluster in the Eiffel library")]
+  [id (EIFFELCLUSTERPROP_IsEiffelLibrary), helpstring ("Is the cluster in the Eiffel library")]
   HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (220), propget, helpstring ("Full path to cluster with ISE_EIFFEL env var expanded.")]
+  [id (EIFFELCLUSTERPROP_ExpandedClusterPath), propget, helpstring ("Full path to cluster with ISE_EIFFEL env var expanded.")]
   HRESULT expanded_cluster_path ([out, retval] BSTR * path);
 
-  [id (221), helpstring ("Does the path to the cluster exsit")]
+  [helpstring ("Does the path to the cluster exsit")]
   HRESULT cluster_path_exists ([out, retval] VARIANT_BOOL * exists);
 
-  [id (222), helpstring ("Create the cluster path if it doesnt exist")]
+  [helpstring ("Create the cluster path if it doesnt exist")]
   HRESULT create_cluster_path ([out, retval] VARIANT_BOOL * exists);
 
-  [id (223), helpstring ("Does parent cluster have all set and does the cluster path extend upon the parents")]
+  [helpstring ("Does parent cluster have all set and does the cluster path extend upon the parents")]
   HRESULT all_cluster_path_not_excluded ([out, retval] VARIANT_BOOL * exists);
 
-  [id (224), propget, helpstring ("Cluster namespace.")]
+  [id (EIFFELCLUSTERPROP_Namespace), propget, helpstring ("Cluster namespace.")]
   HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
 
-  [id (224), propput, helpstring ("Cluster namespace.")]
+  [id (EIFFELCLUSTERPROP_Namespace), propput, helpstring ("Cluster namespace.")]
   HRESULT cluster_namespace ([in] BSTR a_namespace);
 
 };
@@ -974,31 +1012,31 @@ interface IEiffelAssemblyProperties: IDispatch
 ]
 interface IEiffelSystemExternals: IDispatch
 {
-  [helpstring ("Save changes.")]
+  [id(ISECompilerID_store), helpstring ("Save changes.")]
   HRESULT store ();
 
-  [helpstring ("Add a include path to the project.")]
+  [id(ISECompilerID_add_include_path), helpstring ("Add a include path to the project.")]
   HRESULT add_include_path ([in] BSTR include_path);
 
-  [helpstring ("Remove a include path from the project.")]
+  [id(ISECompilerID_remove_include_path), helpstring ("Remove a include path from the project.")]
   HRESULT remove_include_path ([in] BSTR include_path);
 
-  [helpstring ("Replace an include path in the project.")]
+  [id(ISECompilerID_replace_include_path), helpstring ("Replace an include path in the project.")]
   HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
 
-  [helpstring ("Include paths.")]
+  [id(ISECompilerID_include_paths), helpstring ("Include paths.")]
   HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
 
-  [helpstring ("Add a object file to the project.")]
+  [id(ISECompilerID_add_object_File), helpstring ("Add a object file to the project.")]
   HRESULT add_object_file ([in] BSTR object_file);
 
-  [helpstring ("Remove a object file from the project.")]
+  [id(ISECompilerID_remove_object_file), helpstring ("Remove a object file from the project.")]
   HRESULT remove_object_file ([in] BSTR object_file);
 
-  [helpstring ("Replace an object file in the project.")]
+  [id(ISECompilerID_replace_object_file), helpstring ("Replace an object file in the project.")]
   HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
 
-  [helpstring ("Object files.")]
+  [id(ISECompilerID_object_files), helpstring ("Object files.")]
   HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
 
 };

@@ -250,6 +250,7 @@ feature {NONE} -- Initialization
 				C.gtk_container_remove (c_object, old_list_widget)
 			end
 			C.gtk_container_add (c_object, list_widget)
+			--C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 			if is_multiple_selected then
 				enable_multiple_selection
 			end
@@ -346,7 +347,6 @@ feature {NONE} -- Initialization
 			end
 			if a_y > y_coord_offset then
 				a_row_number := row_from_y_coord (a_y)
-				print ("a_row_number = " + a_row_number.out + " a_y = " + a_y.out + "%N")
 				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
@@ -787,7 +787,6 @@ feature -- Implementation
 			a_row_index: INTEGER
 		do
 			a_row_index := row_from_y_coord (a_y)
-			print ("PND row index = " + a_row_index.out + "%N")
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)

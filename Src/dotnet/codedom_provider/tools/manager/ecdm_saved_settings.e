@@ -48,16 +48,22 @@ feature -- Access
 			Result := saved_boolean (Show_tooltip_key)
 		end
 
-	saved_precompiled_paths: LIST [STRING] is
-			-- List of saved values for precompiled library combo
+	saved_precompile_ace_files: LIST [STRING] is
+			-- List of saved values for precompile ace file combo
 		do
-			Result := saved_list (precompiled_paths)
+			Result := saved_list (Precompile_ace_files)
 		end
 		
 	saved_metadata_cache_paths: LIST [STRING] is
 			-- List of saved values for metadata cache combo
 		do
-			Result := saved_list (metadata_cache_paths)
+			Result := saved_list (Metadata_cache_paths)
+		end
+		
+	saved_precompile_cache_paths: LIST [STRING] is
+			-- List of saved values for metadata cache combo
+		do
+			Result := saved_list (Precompile_cache_paths)
 		end
 		
 feature -- Element settings
@@ -82,11 +88,14 @@ feature {NONE} -- Private Access
 	Show_tooltip_key: STRING is "show_tooltip"
 			-- Show tooltip menu item
 			
-	precompiled_paths: STRING is "precompiled_paths"
+	Precompile_ace_files: STRING is "precompile_ace_files"
 			-- Precompiled paths
 			
-	metadata_cache_paths: STRING is "metadata_cache_paths"
+	Metadata_cache_paths: STRING is "metadata_cache_paths"
 			-- Metadata Cache paths
+			
+	Precompile_cache_paths: STRING is "precompile_cache_paths"
+			-- Precompile Cache paths
 			
 end -- class ECDM_SAVED_SETTINGS
 

@@ -26,8 +26,9 @@ indexing
 						</prefixes>
 						<compiler>
 							<default_root_class>ANY</default_root_class>
-							<precompile></precompile>
 							<metadata_cache></metadata_cache>
+							<precompile_ace_file></precompile_ace_file>
+							<precompile_cache></precompile_cache>
 						</compiler>
 					</configuration>
 					]"
@@ -72,7 +73,7 @@ feature {NONE} -- Initialization
 		local
 			l_path: STRING
 		do
-			l_path := (create {CODE_REGISTRY_SETTINGS}).current_process_config_path
+			l_path := (create {CODE_CONFIGURATION_REGISTRY_SETTINGS}).current_process_config_path
 			if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
 				load (l_path)
 			end
@@ -120,16 +121,22 @@ feature -- Access
 			non_void_log_name: Result /= Void
 		end
 
-	precompile: STRING is
+	precompile_ace_file: STRING is
 			-- Precompile path if any
 		do
-			Result := config_values.item ("precompile")
+			Result := config_values.item ("precompile_ace_file")
 		end
 
 	metadata_cache: STRING is
 			-- Path to EAC if any
 		do
 			Result := config_values.item ("metadata_cache")
+		end
+
+	precompile_cache: STRING is
+			-- Path to precompiled libraries if any
+		do
+			Result := config_values.item ("precompile_cache")
 		end
 
 	default_root_class: STRING is
@@ -211,7 +218,7 @@ feature -- Basic Operations
 				l_xml_reader.close
 			end
 		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.process_exception
 			l_retried := True
 			retry
 		end
@@ -252,6 +259,9 @@ feature {NONE} -- Implementation
 			if Default_metadata_cache_path /= Void then
 				internal_config_values.extend (Default_metadata_cache_path, "metadata_cache")
 			end
+			if Default_precompile_cache /= Void then
+				internal_config_values.extend (Default_precompile_cache, "precompile_cache")
+			end
 		end
 		
 	initialize_prefixes is
@@ -268,9 +278,6 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	Cache_folder_name: STRING is "assemblies"
-			-- Metadata Cache Folder name 
-
 	internal_config_values: HASH_TABLE [STRING, STRING]
 			-- Internal object for once per object implementation
 

@@ -232,21 +232,8 @@ feature -- Basic operations
 
 	infix "^" (other: NUMERIC): DOUBLE is
 			-- Current double to the power `other'
-		local
-			integer_value: INTEGER_REF
-			real_value: REAL_REF
-			double_value: DOUBLE_REF
 		do
-			integer_value ?= other
-			real_value ?= other
-			double_value ?= other
-			if integer_value /= Void then
-				Result := item ^ integer_value.item
-			elseif real_value /= Void then
-				Result := item ^ real_value.item
-			elseif double_value /= Void then
-				Result := item ^ double_value.item
-			end
+			Result := item ^ other
 		end
 
 	prefix "+": like Current is

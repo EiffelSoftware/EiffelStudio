@@ -93,6 +93,7 @@ feature {NONE} -- Implementation
 		local
 			wel_cursor: WEL_CURSOR
 			cursor_imp: EV_PIXMAP_IMP_STATE
+			l_widget: EV_WIDGET_IMP
 		do
 				-- We do a global setting. This means that if the widget
 				-- where the cursor is has a different cursor than
@@ -125,7 +126,20 @@ feature {NONE} -- Implementation
 				current_wel_cursor := Void
 			end
 			current_wel_cursor := wel_cursor
-			wel_cursor.set
+			l_widget ?= Current
+			if l_widget /= Void then
+				if l_widget.is_displayed then
+						-- When the current widget is not yet displayed then
+						-- there is no need to change the cursor and thus
+						-- avoiding the flashing described above.
+					wel_cursor.set
+				end
+			else
+					-- If Current is not a EV_WIDGET then we must be in the case of
+					-- a Pick and drop thus it is safe to force the update of the cursor
+					-- as the parent widget should be visible.
+				wel_cursor.set
+			end
 		end
 		
 	current_wel_cursor: WEL_CURSOR

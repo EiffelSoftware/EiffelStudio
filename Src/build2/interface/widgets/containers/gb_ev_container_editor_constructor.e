@@ -26,7 +26,6 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			label: EV_LABEL
-			editor_item: GB_OBJECT_EDITOR_ITEM
 			hbox1, hbox2: EV_HORIZONTAL_BOX
 			pixmap: EV_PIXMAP
 			tool_bar1, tool_bar2: EV_TOOL_BAR
@@ -46,33 +45,33 @@ feature -- Access
 			
 			pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("propagate")
 			
-			create propagate_foreground_color--.make_with_text (gb_ev_container_propagate_foreground_color)
+			create propagate_foreground_color
 			create tool_bar1
 			tool_bar1.extend (propagate_foreground_color)
 			propagate_foreground_color.set_pixmap (pixmap)
-			create propagate_background_color--.make_with_text (gb_ev_container_propagate_background_color)
+			create propagate_background_color
 			create tool_bar2
 			tool_bar2.extend (propagate_background_color)
 			propagate_background_color.set_pixmap (pixmap)
 			propagate_background_color.set_tooltip (gb_ev_container_propagate_background_color_tooltip)
 			propagate_foreground_color.set_tooltip (gb_ev_container_propagate_foreground_color_tooltip)
-			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
-			propagate_background_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_background_color))
+			propagate_foreground_color.select_actions.extend (agent internal_propagate_background_color (object, True))
+			propagate_background_color.select_actions.extend (agent internal_propagate_background_color (object, False))
 				-- We now modify the editor item corresponding to
 				-- GB_EV_COLORIZABLE. It is much nicer, if the
 				-- propagate buttons are placed here, along with the color
 				-- selection.
-			editor_item := parent_editor.editor_item_by_type ("EV_COLORIZABLE")
+			colorizable_editor_item := parent_editor.editor_item_by_type ("EV_COLORIZABLE")
 			check
-				colorizable_controls_not_changed: editor_item /= Void
+				colorizable_controls_not_changed: colorizable_editor_item /= Void
 			end
-			hbox1 ?= editor_item @ 2
+			hbox1 ?= colorizable_editor_item @ 2
 			hbox1.go_i_th (hbox1.count)
 			hbox1.put_left (tool_bar1)
 			hbox1.disable_item_expand (tool_bar1)
 			
 			
-			hbox2 ?= editor_item @ 4
+			hbox2 ?= colorizable_editor_item @ 4
 			hbox2.go_i_th (hbox2.count)
 			hbox2.put_left (tool_bar2)
 			hbox2.disable_item_expand (tool_bar2)
@@ -176,5 +175,95 @@ feature {NONE} -- Implementation
 		-- this one for radio button grouping.
 		
 	propagate_foreground_color, propagate_background_color: EV_TOOL_BAR_BUTTON
+		-- Buttons used for color propagation.
+	
+	internal_propagate_background_color (an_object: GB_OBJECT; is_foreground_color: BOOLEAN) is
+			-- Propagate color setting specified by `is_foreground_color' of `an_object' to all children
+			-- recursively.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			constant: GB_CONSTANT
+			color: EV_COLOR
+			color_string: STRING
+		do
+			if not an_object.is_instance_of_top_level_object then
+				if is_foreground_color then
+					color := first.foreground_color
+					color_string := foreground_color_string
+				else
+					color := first.background_color
+					color_string := background_color_string
+				end
+				constant_context := object.constants.item (colorizable_type + color_string)
+				if constant_context /= Void then
+					constant := constant_context.constant
+				end
+				update_background_color (an_object, color, constant, is_foreground_color)
+				for_all_instance_referers (an_object, agent update_background_color (?, color, constant, is_foreground_color))
+				from
+					an_object.children.start
+				until
+					an_object.children.off
+				loop				
+					internal_propagate_background_color (an_object.children.item, is_foreground_color)
+					an_object.children.forth
+				end
+				enable_project_modified
+			end
+		end
+		
+	update_background_color (an_object: GB_OBJECT; color: EV_COLOR; constant: GB_CONSTANT; is_foreground_color: BOOLEAN) is
+			-- Update color of `an_object' to `color' setting a constant reference to `constant' if not Void.
+			-- If `constant' is Void then remove existing constant context if any.
+			-- `is_foreground_color' specifis if it is a foreground or background color.
+		require
+			an_object_not_void: an_object /= Void
+			color_not_void: color /= Void
+		local
+			colorizable: EV_COLORIZABLE
+			constant_context: GB_CONSTANT_CONTEXT
+			color_string: STRING
+		do
+			if is_foreground_color then
+				color_string := foreground_color_string
+			else
+				color_string := background_color_string
+			end
+				-- Ensure that the old constant is removed.
+			constant_context := an_object.constants.item (colorizable_type + color_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
+				-- If we have  anew constant then assign it.
+			if constant /= Void then
+				create constant_context.make_with_context (constant, an_object, colorizable_type, color_string)
+				constant.add_referer (constant_context)
+				an_object.add_constant_context (constant_context)
+			end
+			
+				-- Now actually update the colors.
+			colorizable ?= an_object.object
+			if colorizable /= Void then
+				if is_foreground_color then
+					colorizable.set_foreground_color (color)
+				else
+					colorizable.set_background_color (color)
+				end
+			end
+			colorizable ?= an_object.display_object
+			if colorizable /= Void then
+				if is_foreground_color then
+					colorizable.set_foreground_color (color)
+				else
+					colorizable.set_background_color (color)
+				end
+			end
+		end
+		
+	colorizable_editor_item: GB_OBJECT_EDITOR_ITEM
+		-- Access to the colorizable editor item used by `Current' as the propagate butons
+		-- are only available to containers.
 
 end -- class GB_EV_CONTAINER_EDITOR_CONSTRUCTOR

@@ -216,7 +216,7 @@ feature -- Access
 		do
 			Result := Current
 		end
-		
+
 	deep_actual_type: TYPE_A is
 			-- Actual type; recursive on generic types
 			-- NOTE by M.S: Needed for ROUTINEs - perhaps
@@ -231,6 +231,14 @@ feature -- Access
 			-- Has the current type generics types ?
 		do
 			Result := generics /= Void
+		end
+
+	intrinsic_type: TYPE_A is
+			-- Default type of a manifest constant.
+		do
+			Result := Current
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Output

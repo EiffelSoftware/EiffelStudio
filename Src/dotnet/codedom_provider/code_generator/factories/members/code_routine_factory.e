@@ -39,20 +39,21 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_routine: CODE_ROUTINE_IMP
 			l_member: CODE_MEMBER_REFERENCE
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_is_redefined: BOOLEAN
 			l_type: CODE_TYPE_REFERENCE
 			l_parent: CODE_MEMBER_REFERENCE
 		do
 			if current_type /= Void then
 				l_arguments := code_arguments (a_source.parameters)
-				l_is_redefined := a_source.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.override
 				l_type := Type_reference_factory.type_reference_from_code (current_type)
-				l_member := l_type.member (a_source.name, l_arguments, l_is_redefined)
+				l_member := l_type.member (a_source.name, l_arguments)
+				check
+					exists: l_member /= Void
+				end
 				create l_routine.make (a_source.name, l_member.eiffel_name)
 				if a_source.user_data /= Void and then a_source.user_data.contains (From_eiffel_code_key) then
 					l_routine.set_eiffel_name (a_source.name)
 				end
-				if l_is_redefined then
+				if l_member.is_redefined then
 					l_parent := l_member.parent
 					if l_parent /= Void then
 						current_type.add_redefine_clause (l_parent.implementing_type, l_member)
@@ -111,7 +112,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		do
 			if current_type /= Void then
 				l_arguments := code_arguments (a_source.parameters)
-				l_member := Type_reference_factory.type_reference_from_code (current_type).member (a_source.name, l_arguments, False)
+				l_member := Type_reference_factory.type_reference_from_code (current_type).member (a_source.name, l_arguments)
+				check
+					exists: l_member /= Void
+				end
 				create l_root_procedure.make (a_source.name, l_member.eiffel_name)
 				if a_source.user_data /= Void and then a_source.user_data.contains (From_eiffel_code_key) then
 					l_root_procedure.set_eiffel_name (a_source.name)
@@ -153,21 +157,22 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_getter_name, l_setter_name, l_name: STRING
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			l_argument_expression: CODE_PARAMETER_DECLARATION_EXPRESSION
-			l_is_redefined: BOOLEAN
 			l_parent: CODE_MEMBER_REFERENCE
 		do
 			if current_type /= Void then
 				l_name := a_source.name
 				if l_name /= Void then
 					l_arguments := code_arguments (a_source.parameters)
-					l_is_redefined := a_source.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.override
 					if a_source.has_get then
 						create l_getter_name.make (l_name.count + 4)
 						l_getter_name.append ("get_")
 						l_getter_name.append (l_name)
-						l_getter := Type_reference_factory.type_reference_from_code (current_type).member (l_name, l_arguments, l_is_redefined)
+						l_getter := Type_reference_factory.type_reference_from_code (current_type).member (l_getter_name, l_arguments)
+						check
+							exists: l_getter /= Void
+						end
 						create l_property_getter.make (l_getter_name, l_getter.eiffel_name)
-						if l_is_redefined then
+						if l_getter.is_redefined then
 							l_parent := l_getter.parent
 							if l_parent /= Void then
 								current_type.add_redefine_clause (l_parent.implementing_type, l_getter)
@@ -188,9 +193,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						create l_argument_expression.make (create {CODE_VARIABLE_REFERENCE}.make ("value", Type_reference_factory.type_reference_from_reference (a_source.type), Type_reference_factory.type_reference_from_code (current_type)), in_argument)
 						create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (1)
 						l_arguments.extend (l_argument_expression)
-						l_setter := Type_reference_factory.type_reference_from_code (current_type).member (l_setter_name, l_arguments, l_is_redefined)
+						l_setter := Type_reference_factory.type_reference_from_code (current_type).member (l_setter_name, l_arguments)
+						check
+							exists: l_setter /= Void
+						end
 						create l_property_setter.make (l_setter_name, l_setter.eiffel_name)
-						if l_is_redefined then
+						if l_setter.is_redefined then
 							l_parent := l_setter.parent
 							if l_parent /= Void then
 								current_type.add_redefine_clause (l_parent.implementing_type, l_setter)
@@ -244,6 +252,11 @@ feature {NONE} -- Routine Initialization
 				if a_source.private_implementation_type /= Void then
 					current_feature.add_feature_clause (Type_reference_factory.type_reference_from_reference (a_source.private_implementation_type))
 				end
+
+				if a_source.get_statements /= Void then
+					initialize_locals (a_source.get_statements)
+					initialize_statements (a_source.get_statements)
+				end
 			end
 		end
 
@@ -275,6 +288,11 @@ feature {NONE} -- Routine Initialization
 
 				if a_source.private_implementation_type /= Void then
 					current_feature.add_feature_clause (Type_reference_factory.type_reference_from_reference (a_source.private_implementation_type))
+				end
+
+				if a_source.set_statements /= Void then
+					initialize_locals (a_source.set_statements)
+					initialize_statements (a_source.set_statements)
 				end
 			end
 		end
@@ -320,7 +338,8 @@ feature {NONE} -- Routine Initialization
 			end
 
 			if a_source.statements /= Void then
-				initialize_locals (a_source.statements)	
+				initialize_locals (a_source.statements)
+				initialize_statements (a_source.statements)
 			end
 		end
 
@@ -383,7 +402,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end	
-
 
 end -- class CODE_ROUTINE_FACTORY
 

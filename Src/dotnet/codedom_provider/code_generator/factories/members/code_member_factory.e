@@ -33,10 +33,14 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		do
 			if a_source.name /= Void then
 				if current_type /= Void then
-					l_member := Type_reference_factory.type_reference_from_code (current_type).member (a_source.name, Void, False)
+					l_member := Type_reference_factory.type_reference_from_code (current_type).member (a_source.name, Void)
+					check
+						exists: l_member /= Void
+					end
 					create l_attribute.make (a_source.name, l_member.eiffel_name)
-					l_attribute.set_result_type (Type_reference_factory.type_reference_from_code (current_type))
+					l_attribute.set_result_type (Type_reference_factory.type_reference_from_reference (a_source.type))
 					l_attribute.set_feature_kind (Access)
+					set_current_feature (l_attribute)
 					if a_source.attributes /= Void then
 						initialize_member_status (a_source.attributes)
 					end
@@ -47,6 +51,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						initialize_comments (a_source.comments)
 					end
 					set_last_feature (l_attribute)
+					set_current_feature (Void)
 					current_type.add_feature (l_attribute)
 				else
 					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
@@ -126,25 +131,46 @@ feature {NONE} -- Components initialization.
 			-- Generate feature comments from `a_source'.
 		require
 			non_void_feature: current_feature /= Void
+			non_void_comments: a_comments /= Void
 		local
 			i, l_count: INTEGER
 			l_comment_statement: CODE_COMMENT_STATEMENT
 		do
-			if a_comments /= Void then
-				from
-					l_count := a_comments.count
-				until
-					i = l_count
-				loop
-					code_dom_generator.generate_statement_from_dom (a_comments.item (i))
-					l_comment_statement ?= last_statement
-					if l_comment_statement /= Void then
-						current_feature.add_comment (l_comment_statement.comment)
-					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_STATEMENT", "CODE_COMMENT_STATEMENT", "comments generation of "])
-					end
-					i := i + 1
+			from
+				l_count := a_comments.count
+			until
+				i = l_count
+			loop
+				code_dom_generator.generate_statement_from_dom (a_comments.item (i))
+				l_comment_statement ?= last_statement
+				if l_comment_statement /= Void then
+					current_feature.add_comment (l_comment_statement.comment)
+				else
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Failed_assignment_attempt, ["CODE_STATEMENT", "CODE_COMMENT_STATEMENT", "comments generation of "])
 				end
+				i := i + 1
+			end
+		end
+
+	initialize_statements (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION) is
+			-- | Call in loop `generate_statement_from_dom'.
+			-- Generate feature statements from `a_source'.
+		require
+			non_void_routine: current_routine /= Void
+			non_void_statements: a_statements /= Void
+		local
+			i, l_count: INTEGER
+		do
+			from
+				l_count := a_statements.count
+			until
+				i = l_count
+			loop
+				code_dom_generator.generate_statement_from_dom (a_statements.item (i))
+				if last_statement /= Void then
+					current_routine.add_statement (last_statement)
+				end
+				i := i + 1
 			end
 		end
 

@@ -26,41 +26,24 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
+			valid_source: (current_namespace /= Void implies Resolver.is_generated (Type_reference_factory.type_reference_from_declaration (a_source, current_namespace.name))) and
+							(current_namespace = Void implies Resolver.is_generated (Type_reference_factory.type_reference_from_declaration (a_source, Void)))
 		local
-			l_type_attributes: TYPE_ATTRIBUTES
-			l_deferred: BOOLEAN
-			l_frozen: BOOLEAN
-			l_expanded: BOOLEAN
 			l_type: CODE_GENERATED_TYPE
-			l_type_reference: CODE_TYPE_REFERENCE
 		do
-			l_type_attributes := a_source.type_attributes
-			l_deferred := a_source.is_interface or (l_type_attributes & feature {TYPE_ATTRIBUTES}.Abstract = feature {TYPE_ATTRIBUTES}.Abstract)
-			l_frozen := l_type_attributes & feature {TYPE_ATTRIBUTES}.Sealed = feature {TYPE_ATTRIBUTES}.Sealed
-			l_expanded := a_source.is_struct
-			l_type_reference := Type_reference_factory.type_reference_from_declaration (a_source)
-			if l_deferred then
-				create {CODE_DEFERRED_TYPE} l_type.make (l_type_reference)
-			end
-			if l_frozen then
-				if l_expanded then
-					create {CODE_FROZEN_EXPANDED_TYPE} l_type.make (l_type_reference)
-				else
-					create {CODE_FROZEN_TYPE} l_type.make (l_type_reference)
-				end
-			elseif l_expanded then
-				create {CODE_EXPANDED_TYPE} l_type.make (l_type_reference)
+			if current_namespace /= Void then
+				Resolver.search (Type_reference_factory.type_reference_from_declaration (a_source, current_namespace.name))
 			else
-				create {CODE_GENERATED_TYPE} l_type.make (l_type_reference)
+				Resolver.search (Type_reference_factory.type_reference_from_declaration (a_source, Void))
 			end
-			l_type.set_name (l_type_reference.eiffel_name)
-			if not Resolver.is_generated (l_type_reference) then
-				Resolver.add_external_type (l_type_reference)
+			check
+				found: Resolver.found
 			end
+			l_type := Resolver.found_type
 			set_current_type (l_type)
 			initialize_indexing_clause (a_source)
-			initialize_type_parents (a_source)
-			initialize_type_features (a_source)
+			initialize_parents (a_source)
+			initialize_features (a_source)
 			set_current_type (Void)
 			set_last_type (l_type)
 		ensure
@@ -69,7 +52,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Type generation
 
-	initialize_type_parents (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_parents (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
 			-- | Use `eg_types' to set type parents.
 
 			-- Generate type parents from `a_source'.
@@ -92,15 +75,12 @@ feature {NONE} -- Type generation
 					l_parent_type := Type_reference_factory.type_reference_from_reference (l_parents.item (i))
 					create l_object_parent.make (l_parent_type)
 					current_type.add_parent (l_object_parent)
-					if not Resolver.is_generated (l_parent_type) then
-						Resolver.add_external_type (l_parent_type)
-					end
 					i := i + 1
 				end
 			end
 		end
 
-	initialize_type_features (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_features (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
 			-- | Call in loop `generate_member_from_dom'.
 
 			-- Generate type features from `a_source'.

@@ -1,5 +1,8 @@
+indexing
+	description: "Hole for the wastebasket.";
 
-class CUT_HOLE 
+class 
+	CUT_HOLE 
 
 inherit
 

@@ -16,9 +16,7 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		redefine
 			interface,
-			initialize,
-			set_text,
-			text
+			initialize
 		end
 create
 	make
@@ -58,31 +56,6 @@ feature {NONE} -- Initialization
 		ensure
 			menu_item_box /= default_pointer
 		end
-
-feature -- Access
-
-	text: STRING
-			-- Text of the label.
-
-feature -- Element Change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		local
-			menu_text: STRING
-		do
-			text := clone (a_text)
-			if menu_text.has ('&') then
-				menu_text := clone (a_text)
-				menu_text.replace_substring_all ("\&", "@AMPERSAND@")
-				menu_text.prune_all ('&')
-				menu_text.replace_substring_all ("@AMPERSAND@", "&")
-				Precursor (menu_text)
-			else
-				Precursor (text)
-			end
-		end
-			
 
 feature {EV_ANY_I} -- Implementation
 
@@ -128,6 +101,10 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/24 00:13:16  brendel
+--| Removed ampersand filtering for the moment. Will be handled by future
+--| class EV_MENU_TEXTABLE (or something).
+--|
 --| Revision 1.41  2000/03/23 19:32:41  brendel
 --| redefined text ans set_text to ignore ampersands which are used as menu
 --| shortcuts on Windows.

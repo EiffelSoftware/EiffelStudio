@@ -32,12 +32,16 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomB
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
-MKDIR bin\icons
-XCOPY ..\..\..\checkout\dotnet\codedom_provider\manager\icons bin\icons\ /E
 
+CD bin
+REM in delivery\codedom\bin
+MKDIR icons
+CD icons
+REM in delivery\codedom\bin\icons
+XCOPY ..\..\..\..\checkout\dotnet\codedom_provider\manager\icons /E
 SET CODEDOM_BUILT=1
 
-CD ..\..
+CD ..\..\..\..
 
 :END
 IF "%CODEDOM_BUILT%"=="" ECHO COULD NOT BUILD CODEDOM FILES!!

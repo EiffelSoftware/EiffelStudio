@@ -1,0 +1,16 @@
+FLAG = -c -I$(EIFFEL3)\bench\spec\$(PLATFORM)\include -Ic:\msdev\include
+LIBS = wsock32.lib $(EIFFEL3)\library\net\spec\$(PLATFORM)\lib\wnetwork.lib $(EIFFEL3)\bench\spec\$(PLATFORM)\lib\wkbench.lib
+OBJS = dog.obj subs.obj 
+CC = cl
+
+win_dog: $(OBJS)
+		$(CC) -o win_dog $(OBJS) $(LIBS)
+                del  dog.obj
+                del  subs.obj
+
+dog.obj:   dog.c dog.h
+		$(CC) $(FLAG) dog.c
+
+subs.obj:   subs.c dog.h
+		$(CC) $(FLAG) subs.c
+

@@ -97,9 +97,9 @@ private int utime();
 #endif
 
 #ifndef HAS_LINK
- #ifndef unlink
+#ifndef unlink
 private int unlink();
- #endif
+#endif
 #endif
 
 
@@ -865,9 +865,9 @@ struct stat *buf;		/* Structure to fill in */
 		status = stat(path, buf);		/* Watch for symbolic links */
 #else
 		status = stat(path, buf);		/* Get file statistics */
- #ifdef __VMS
+#ifdef __VMS
 		buf->st_uid = buf->st_uid & UID_MASK;
- #endif
+#endif
 #endif
 		if (status == -1) {				/* An error occurred */
 			if (errno == EINTR)			/* Interrupted by signal */
@@ -1427,7 +1427,7 @@ char *path;
 				/* Check if a non writable file `path' exists */
 			if (file_exists(path)) {
 				file_stat(path, &buf);
-				if (buf.st_mode & S_IFDIR) return (EIF_BOOLEAN) '\0';   /* is a directory */
+				if (buf.st_mode & S_IFDIR) return (EIF_BOOLEAN) '\0';	/* is a directory */
 				return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
 			}
 

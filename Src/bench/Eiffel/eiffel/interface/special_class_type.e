@@ -134,8 +134,8 @@ feature
 					buffer.putstring ("%T*((EIF_POINTER *) Current + arg2) = arg1;");
 				when C_ref then
 						--! Could be bit or ref
-					buffer.putstring ("%TRTAS(arg1, Current);%N");
 					buffer.putstring ("%T*((EIF_REFERENCE *) Current + arg2) = arg1;");
+					buffer.putstring ("%TRTAS_OPT(arg1, arg2, Current);%N");
 				else
 						-- Type is NONE
 					buffer.putstring ("%T*((EIF_REFERENCE *) Current + arg2) = arg1;");

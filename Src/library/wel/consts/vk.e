@@ -37,6 +37,13 @@ feature -- Access
 			"VK_MBUTTON"
 		end
 
+	Vk_back: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"VK_BACK"
+		end
+
 	Vk_tab: INTEGER is
 		external
 			"C [macro <wel.h>]"

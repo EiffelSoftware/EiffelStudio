@@ -157,6 +157,29 @@ feature -- Access
 			window_has_no_parent_object: is_instance_of (object, dynamic_type_from_string (ev_window_string)) implies Result = Void
 		end
 		
+	top_level_parent_object: GB_OBJECT is
+			-- `Result' is top level object containing `Current'.
+			-- That is, the object that has no parent object of its own.
+			-- Will return `Current' if `Current' has no `parent_object'.
+		local
+			a_parent_object: GB_OBJECT
+		do
+			from
+				a_parent_object := Current
+			until
+				a_parent_object = Void
+			loop
+				Result := a_parent_object
+				a_parent_object := a_parent_object.parent_object
+				if a_parent_object /= Void then
+					Result := a_parent_object
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+		
 	all_children_recursive (a_list: ARRAYED_LIST [GB_OBJECT]) is
 			-- Add all children of `Current' recursively, to
 			-- `a_list'.
@@ -639,18 +662,7 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 				layout_item.set_text (name + ": " + type.substring (4, type.count))			
 			end
 		end
-		
-	accept_edited_name is
-			-- Assign `edited_name' to `name'
-		do
-			name := edited_name
-			if name.is_empty then
-				layout_item.set_text (type.substring (4, type.count))
-			else
-				layout_item.set_text (name + ": " + type.substring (4, type.count))			
-			end
-		end
-	
+
 	output_name: STRING is
 			-- Representation of `name' of `Current'
 			-- Used so that we do not have to distinguish between the

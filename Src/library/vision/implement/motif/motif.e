@@ -4,7 +4,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MOTIF  
+class 
+	MOTIF  
 
 inherit
 
@@ -47,8 +48,8 @@ feature -- Access
 
 feature -- Widget Access
 
-	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN; oui_parent:
-COMPOSITE): ARROW_B_M is
+	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN; 
+				oui_parent: COMPOSITE): ARROW_B_M is
 			-- Motif implementation of `an_arrow_button'
 		do
 			!! Result.make (an_arrow_button, managed, oui_parent)
@@ -66,10 +67,22 @@ COMPOSITE): ARROW_B_M is
 			!! Result.make (a_color)
 		end;
 
+	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_X is
+			-- Motif implementation of `a_color'
+		do
+			!! Result.make_for_screen (a_color, a_screen)
+		end;
+
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_X is
 			-- Motif implementation of `a_cursor'
 		do
 			!! Result.make (a_cursor)
+		end;
+
+	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_X is
+			-- Motif implementation of `a_cursor'
+		do
+			!! Result.make_for_screen (a_cursor, a_screen)
 		end;
 
 	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN; oui_parent: COMPOSITE): DRAW_B_M is
@@ -78,8 +91,8 @@ COMPOSITE): ARROW_B_M is
 			!! Result.make (a_draw_b, managed, oui_parent)
 		end; 
 
-	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN;
-oui_parent: COMPOSITE): D_AREA_M is
+	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN; 
+				oui_parent: COMPOSITE): D_AREA_M is
 			-- Motif implementation of `a_drawing_area'
 		do
 			!! Result.make (a_drawing_area, managed, oui_parent)
@@ -97,8 +110,14 @@ oui_parent: COMPOSITE): D_AREA_M is
 			!! Result.make (a_font)
 		end;
 
-	font_box (a_font_box: FONT_BOX; managed: BOOLEAN; oui_parent:
-COMPOSITE): FONT_BOX_M is
+	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_X is
+			-- Toolkit implementation of `a_font' for `a_screen'
+		do
+			!! Result.make_for_screen (a_font, a_screen)
+		end;
+
+	font_box (a_font_box: FONT_BOX; managed: BOOLEAN; 
+				oui_parent: COMPOSITE): FONT_BOX_M is
 			-- Motif implementation of `a_font_box'
 		do
 			!! Result.make (a_font_box, managed, oui_parent)
@@ -111,7 +130,7 @@ COMPOSITE): FONT_BOX_M is
 		end; 
 
 	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN;
-oui_parent: COMPOSITE): PICT_COL_B_M is
+				oui_parent: COMPOSITE): PICT_COL_B_M is
 			-- Motif implementation of `a_picture_color_button'
 		do
 			!! Result.make (a_picture_color_button, managed, oui_parent)
@@ -121,6 +140,12 @@ oui_parent: COMPOSITE): PICT_COL_B_M is
 			-- Motif implementation of `a_pixmap'
 		do
 			!! Result.make (a_pixmap)
+		end;
+
+	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_X is
+			-- Motif implementation of `a_pixmap' for `a_screen'
+		do
+			!! Result.make_for_screen (a_pixmap, a_screen)
 		end;
 
 	top_shell (a_top_shell: TOP_SHELL): TOP_SHELL_M is

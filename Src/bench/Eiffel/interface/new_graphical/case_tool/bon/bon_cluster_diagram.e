@@ -9,6 +9,9 @@ class
 	
 inherit
 	EIFFEL_CLUSTER_DIAGRAM
+		redefine
+			default_view_name
+		end
 	
 create
 	make,
@@ -35,6 +38,14 @@ feature {EB_DIAGRAM_HTML_GENERATOR} -- Initialization
 			a_graph_not_void: a_graph /= Void
 		do
 			make_with_model_and_factory (a_graph, create {BON_FACTORY})
+		end
+		
+feature -- Access
+
+	default_view_name: STRING is
+			-- Name for the default view.
+		do
+			Result := "DEFAULT:BON"
 		end
 
 end -- class BON_CLUSTER_DIAGRAM

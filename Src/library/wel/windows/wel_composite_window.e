@@ -916,6 +916,7 @@ feature {NONE} -- Implementation
 			-- Update the system colors.
 		local
 			child_wnd: LIST [WEL_WINDOW]
+			control: WEL_CONTROL
 		do
 				-- Invalidate the colors
 			system_color_scrollbar_cell.put (Void)
@@ -947,7 +948,10 @@ feature {NONE} -- Implementation
 			until
 				child_wnd.after
 			loop
-				cwin_send_message (child_wnd.item.item, Wm_syscolorchange, to_wparam (0), to_lparam (0))
+				control ?= child_wnd.item
+				if control /= Void then
+					cwin_send_message (child_wnd.item.item, Wm_syscolorchange, to_wparam (0), to_lparam (0))
+				end
 				child_wnd.forth
 			end
 		end

@@ -14,7 +14,7 @@ inherit
 			output_value, kind, expandable
 		end
 
-	EIFNET_ABSTRACT_DEBUG_VALUE		
+	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address
 		redefine
@@ -41,6 +41,11 @@ feature {NONE} -- Initialization
 
 			init_dotnet_data (a_referenced_value, a_prepared_value, f)
 
+			icd_string_value := icd_value_info.interface_debug_string_value
+			if icd_string_value /= Void then
+				length := icd_string_value.get_length				
+			end
+			
 			is_external_type := True
 			string_value := icd_value_info.value_to_string
 
@@ -70,8 +75,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 		
---	icd_string: ICOR_DEBUG_STRING_VALUE
+	icd_string_value: ICOR_DEBUG_STRING_VALUE
 			-- String value
+			
+	length: INTEGER
+			-- Capacity/Size of the String value
 	
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.

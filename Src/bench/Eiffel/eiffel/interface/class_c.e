@@ -238,6 +238,9 @@ feature -- Access: CLI implementation
 	class_interface: CLASS_INTERFACE
 			-- CLI corresponding interface of Current class.
 
+	assembly_info: ASSEMBLY_INFO
+			-- Information about assembly in which current class is being generated.
+
 feature -- Action
 
 	remove_c_generated_files is
@@ -448,14 +451,16 @@ feature -- Action
 		do
 			if not is_in_system then
 				set_is_in_system (True)
-				ast_b := Ast_server.item (class_id)
-				supplier_list := ast_b.suppliers.supplier_ids
-				if not supplier_list.is_empty then
-					check_suppliers (supplier_list)
-				end
-				parent_list := ast_b.parents
-				if parent_list /= Void then
-					check_parent_classes (parent_list)
+				if not is_external then
+					ast_b := Ast_server.item (class_id)
+					supplier_list := ast_b.suppliers.supplier_ids
+					if not supplier_list.is_empty then
+						check_suppliers (supplier_list)
+					end
+					parent_list := ast_b.parents
+					if parent_list /= Void then
+						check_parent_classes (parent_list)
+					end
 				end
 			end
 		end
@@ -4095,6 +4100,16 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features := f
 		ensure
 			generic_features_set: generic_features = f
+		end
+
+	set_assembly_info (a: like assembly_info) is
+			-- Set `assembly_info' with `a'.
+		require
+			a_not_void: a /= Void
+		do
+			assembly_info := a
+		ensure
+			assembly_info_set: assembly_info = a
 		end
 
 feature -- Removal

@@ -50,7 +50,7 @@ feature -- Status report
 	proportion: REAL is
 			-- Relative position of `value' in `range'. Range: [0, 1].
 		do
-			if maximum = minimum then
+			if maximum > minimum then
 				Result := (value - minimum) / (maximum - minimum)
 			else
 				--| By definition:
@@ -214,6 +214,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/19 21:56:51  brendel
+--| Corrected set_proportion.
+--|
 --| Revision 1.8  2000/04/13 18:02:44  brendel
 --| Added proportion and set_proportion.
 --|

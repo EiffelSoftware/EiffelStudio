@@ -25,14 +25,11 @@ run-time:
 
 platforms:
 	default -> $ISE_PLATFORM
-	linux-glibc 
+	linux-x86 
 	solaris
-	unixware
 	sgi
 	unicos-c90
 	unicos-t3d
-	hpux-9
-	hpux-10
 	alpha
 	...
 

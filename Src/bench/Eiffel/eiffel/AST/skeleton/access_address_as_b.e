@@ -9,11 +9,8 @@ class ACCESS_ADDRESS_AS_B
 inherit
 
 	ACCESS_ADDRESS_AS
-		rename
-			feature_name as old_address_feature_name,
-			parameters as old_address_parameters
 		redefine
-			make
+			make, feature_name, parameters
 		end;
 
 	ACCESS_ID_AS_B
@@ -21,8 +18,7 @@ inherit
 			simple_format
 		redefine
 			feature_access_type, format,
-			fill_calls_list, replicate
-		select
+			fill_calls_list, replicate,
 			feature_name, parameters
 		end
 
@@ -38,6 +34,12 @@ feature
 			feature_name := s;
 		end;
 
+feature -- Properties
+
+	feature_name: ID_AS_B
+
+	parameters: EIFFEL_LIST_B [EXPR_AS_B]
+ 
 feature -- Type check
 
 	feature_access_type: TYPE_A is

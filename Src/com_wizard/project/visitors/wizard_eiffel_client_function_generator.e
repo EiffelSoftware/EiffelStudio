@@ -151,6 +151,9 @@ feature {NONE} -- Implementation
 						if visitor.is_basic_type then
 							Result.append (visitor.cecil_type)
 
+						elseif is_boolean (visitor.vt_type) then
+							Result.append (Eif_boolean)
+
 						elseif visitor.is_enumeration then
 							Result.append (Eif_integer)
 

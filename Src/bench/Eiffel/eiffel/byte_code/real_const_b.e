@@ -15,8 +15,10 @@ feature
 
 	set_value (v: STRING) is
 			-- Assign `v' to `value'.
+			-- Remove the '_' signs in the real number.
 		do
 			value := v;
+			value.replace_substring_all ("_","")
 		end;
 
 	type: TYPE_I is
@@ -28,7 +30,6 @@ feature
 	print_register is
 			-- Print real value
 		do
---			generated_file.putstring ("(double) ");
 			generated_file.putstring (value);
 		end;
 

@@ -9,20 +9,7 @@ deferred class
 	EB_FORMATTER
 
 inherit
-
---	TWO_STATE_CMD
---		rename
---			active_symbol as symbol,
---			work as format
---		redefine
---			execute
---		end
 	SHARED_CONFIGURE_RESOURCES
---	WARNER_CALLBACKS
---		rename
---			execute_warner_ok as save_changes,
---			execute_warner_help as loose_changes
---		end
 	NEW_EB_CONSTANTS
 
 feature -- Properties
@@ -42,61 +29,6 @@ feature -- Initialization
 			tool := t
 			create launch_cmd.make (Current)
 		end
-
-feature -- Callbacks
-
-	loose_changes is
---			-- Default procedure which will be executed if the user
---			-- click on `Yes' or `No'.
---		local
---			old_do_format: BOOLEAN
---			mp: MOUSE_PTR
-		do
---			create mp.set_watch_cursor
---			tool.text_window.set_changed (false)
---				-- Because the text in the window has been changed,
---				-- we have to force the new format in order to update
---				-- the window as it was before the modifications.
---			old_do_format := do_format
---			do_format := true
---			execute_licensed (formatted)
---			do_format := old_do_format
---			tool.add_to_history (tool.stone)
---			mp.restore
-		end
-
-	save_changes (argument: ANY) is
-			-- If it comes here this means `Ok' has
-			-- been pressed in the warner window
-			-- for file modification (only showtext
-			-- command can modify text)
-		do
---			if tool.save_cmd_holder /= Void then
---				tool.save_cmd_holder.associated_command.execute (Void)
---			end
---
---			loose_changes
-		end
-
-feature -- Execution
-
---	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
---			-- Execute current command but don't change the cursor into watch shape.
---		local
---			mp: MOUSE_PTR
---		do
---			if argument.first = tool then
---				formatted ?= tool.stone
---			else
---				formatted ?= argument.first
---			end
---			if not text_window.changed then
---				execute_licensed (formatted)
---			else
---				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
---			end
---		end
 
 feature -- Setting
 
@@ -189,25 +121,12 @@ feature -- Filters; Implementation
 			end
 		end
 
-feature {FORMAT_BUTTON} -- Properties
+feature {NONE} -- Implementation
 
 	post_fix: STRING is
-			-- Postfix name of current format which generated
-			-- from the dynamic value of object (minus the show_)
-			-- so it is very important to name the format as
-			-- SHOW_<type of format>
-		
-			-- Christophe 08/24/99: it is easier, safer and more elegant to
-			-- oblige developpers to redeclare this feature than to
-			-- force all descendants to begin by "SHOW_"
+			-- Postfix name of current format
+			-- Used as an extension while saving
 		deferred
---		do
---			create Result.make(0)
---			Result.append (generator)
---			Result.to_lower
---				--| remove the SHOW_
---				--| Maximum length is 3. (Portability)
---			Result := Result.substring (6, Result.count.min (9))
 		ensure
 			Result_not_void: Result /= Void
 			valid_extension: Result.count <= 3

@@ -444,7 +444,7 @@ feature -- Element change
 			end
 		end
 
-feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
+feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP} -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of `Current'.

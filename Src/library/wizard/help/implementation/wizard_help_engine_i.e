@@ -10,7 +10,7 @@ feature -- Status Report
 			-- Was last call to `show' successful?
 		deferred
 		ensure
-			message_if_failed: not Result implies (last_error_message /= Void and then not last_error_message.empty)
+			message_if_failed: not Result implies (last_error_message /= Void and then not last_error_message.is_empty)
 		end
 	
 	last_error_message: STRING is

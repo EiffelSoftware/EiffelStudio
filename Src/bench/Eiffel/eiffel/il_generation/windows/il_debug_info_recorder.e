@@ -475,7 +475,9 @@ feature -- line debug exploitation
 			l_list: LIST [INTEGER]
 		do
 			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			Result := l_list.has (a_il_offset)
+			if l_list /= Void then
+				Result := l_list.has (a_il_offset)			
+			end
 		end
 		
 	next_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
@@ -486,15 +488,17 @@ feature -- line debug exploitation
 		local
 			l_list: ARRAYED_LIST [INTEGER]
 		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)			
-			from
-				l_list.start
-			until
-				l_list.after
-				or else Result > a_il_offset
-			loop
-				Result := l_list.item --| ARRAYED_LIST.index => 1
-				l_list.forth
+			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			if l_list /= Void then
+				from
+					l_list.start
+				until
+					l_list.after
+					or else Result > a_il_offset
+				loop
+					Result := l_list.item --| ARRAYED_LIST.index => 1
+					l_list.forth
+				end			
 			end
 		end
 
@@ -509,23 +513,25 @@ feature -- line debug exploitation
 			l_interval: TUPLE[INTEGER, INTEGER]			
 			i: INTEGER
 		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)			
-			from
-				l_list.start
-				l_inf := l_list.item
-				l_list.forth
-			until
-				l_list.after or (l_interval /= Void)
-			loop
-				l_sup := l_list.item
-				if l_inf <= a_current_il_offset and a_current_il_offset < l_sup then
-					l_interval := [l_inf, l_sup]
+			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			if l_list /= Void then
+				from
+					l_list.start
+					l_inf := l_list.item
+					l_list.forth
+				until
+					l_list.after or (l_interval /= Void)
+				loop
+					l_sup := l_list.item
+					if l_inf <= a_current_il_offset and a_current_il_offset < l_sup then
+						l_interval := [l_inf, l_sup]
+					end
+					l_inf := l_sup
+					l_list.forth
 				end
-				l_inf := l_sup
-				l_list.forth
-			end
-			if l_interval /= Void then
-				Result := <<l_interval>>
+				if l_interval /= Void then
+					Result := <<l_interval>>
+				end				
 			end
 
 			debug ("debugger_il_info_trace")
@@ -992,9 +998,9 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				create l_il_info_file.make (a_fn)
 				if not l_il_info_file.exists then
 						--| File does not exists !
-					check
-						Eiffel_debug_il_information_file_missing: False
-					end
+--					check
+--						Eiffel_debug_il_information_file_missing: False
+--					end
 				else
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
@@ -1005,7 +1011,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					if l_retrieved_object /= Void then
 						l_dbg_info_modules     := l_retrieved_object.modules_debugger_info
 						l_dbg_info_class_types := l_retrieved_object.class_types_debugger_info
-						l_entry_point_token         := l_retrieved_object.entry_point_token
+						l_entry_point_token    := l_retrieved_object.entry_point_token
 					end
 					
 						--| Assign values

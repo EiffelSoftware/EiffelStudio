@@ -96,7 +96,11 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
-			parent_imp.select_item (id + 1)
+			if flag then
+				parent_imp.select_item (id + 1)
+			else
+				parent_imp.deselect_item (id + 1)
+			end
 		end
 
 	toggle is

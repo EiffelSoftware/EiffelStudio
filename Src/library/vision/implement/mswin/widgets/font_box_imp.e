@@ -471,9 +471,11 @@ feature {NONE} -- Implementation
 			efdw: ENUMERATED_FONT_DETAILS_WINDOWS
 		do
 			efw := find_font_name (font_names.selected_string)
-			efdw := efw.find_style (new_style)
-			efdw.fill_sizes (font_sizes)
-			create_font
+			if efw /= Void then
+				efdw := efw.find_style (new_style)
+				efdw.fill_sizes (font_sizes)
+				create_font
+			end
 		end
 
 	fonts: SORTED_TWO_WAY_LIST [ENUMERATED_FONT_WINDOWS]

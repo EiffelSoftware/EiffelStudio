@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
 			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} extern_functions.make
 			standard_include
-			conversion_include
 		end
 
 feature -- Access
@@ -170,6 +169,10 @@ feature -- Access
 		local
 			class_protector: STRING
 		do
+			if not abstract then
+				conversion_include
+			end
+
 			Result := clone (C_open_comment_line)
 			Result.append (New_line)
 			Result.append (header)
@@ -401,6 +404,8 @@ feature -- Access
 			Result.append (cpp_protector_end1)
 			Result.append (New_line)
 			Result.append (New_line)
+			Result.append (cpp_protector_end)
+			Result.append (New_line)
 
 			from
 				import_files_after.start
@@ -419,8 +424,6 @@ feature -- Access
 
 			Result.append (New_line)
 
-			Result.append (cpp_protector_end)
-			Result.append (New_line)
 			Result.append (Hash_end_if)
 		end
 
@@ -617,6 +620,12 @@ feature -- Basic Operations
    		do
 			save_content (a_header_file, generated_header_file)
 	 	end
+
+	conversion_include is
+			-- Standart include files.
+		do
+			add_import_after (Ecom_generated_rt_globals_header_file_name)
+		end
 
 feature {NONE} -- Implementation
 

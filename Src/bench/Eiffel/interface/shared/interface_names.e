@@ -639,6 +639,7 @@ feature -- Label texts
 	l_Discard_convert_project_dialog: STRING is	"Do not ask again, and always convert old projects"
 	l_Discard_dialog: STRING is			"Do not show again"
 	l_Discard_finalize_assertions: STRING is "Do not ask again, and always discard assertions when finalizing"
+	l_Discard_finalize_precompile_dialog: STRING is "Dont ask me again and always finalize."
 	l_Discard_freeze_dialog: STRING is	"Do not ask again, and always compile C code"
 	l_Discard_save_before_compile_dialog: STRING is	"Do not ask again, and always save files before compiling"
 	l_Discard_starting_dialog: STRING is "Don't show this dialog at startup"

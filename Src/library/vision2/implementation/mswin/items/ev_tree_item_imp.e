@@ -79,7 +79,10 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Do post creation initialization.
 		do
+			create internal_children.make (1)
+			is_initialized := True
 		end
 
 	--make_with_text (txt: STRING) is
@@ -101,9 +104,11 @@ feature -- Access
 	top_parent_imp: EV_TREE_IMP is
 			-- Implementation of `parent_tree'.
 		do
-			Result ?= parent_tree.implementation
-			check
-				parent_tree_not_void: Result /= Void
+			if parent_tree /= Void then
+				Result ?= parent_tree.implementation
+				check
+					parent_tree_not_void: Result /= Void
+				end
 			end
 		end
 
@@ -171,8 +176,11 @@ feature -- Status setting
 		--		parent_imp.remove_item (Current)
 		--		parent_imp := Void
 		--	end
-		--	if par /= Void then
-		--		parent_imp ?= par.implementation
+			if par /= Void then
+				parent_imp ?= par.implementation
+			else
+				parent_imp := Void
+			end
 		--		parent_imp.add_item (Current)
 		--	end
 		end
@@ -434,6 +442,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/06 21:10:21  rogers
+--| Is_initialized is now set to true in initialization, and internal_children is created. Re-implemented parent_imp.
+--|
 --| Revision 1.28  2000/03/06 19:07:22  rogers
 --| Added text and also top_parent_imp which returns the implementation of parent_tree. Set text no longer calls the EV_SIMPLE_ITEM_IMP Precursor.
 --|

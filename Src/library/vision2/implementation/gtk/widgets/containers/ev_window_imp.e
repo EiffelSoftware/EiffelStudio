@@ -250,12 +250,23 @@ feature -- Status setting
 			if not is_show_requested then
 				if is_positioned or positioned_by_user then
 					C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+<<<<<<< ev_window_imp.e
 					app_implementation.process_events
+=======
+					app_implementation.process_events
+					{EV_CONTAINER_IMP} Precursor
+>>>>>>> 1.98.2.2
 					set_position (user_x_position, user_y_position)
+<<<<<<< ev_window_imp.e
 					{EV_CONTAINER_IMP} Precursor		
 				else
 					C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
 					{EV_CONTAINER_IMP} Precursor
+=======
+				else
+					C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
+					{EV_CONTAINER_IMP} Precursor
+>>>>>>> 1.98.2.2
 				end
 				is_positioned := True
 			end

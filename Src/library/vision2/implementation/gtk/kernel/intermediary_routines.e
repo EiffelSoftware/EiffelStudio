@@ -1,6 +1,5 @@
 indexing
 	description: "Intermediary routines between gtk and eiffel."
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -251,7 +250,9 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
+			if a_widget /= Void then
+				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
+			end	
 		end
 
 	widget_focus_in_intermediary (a_c_object: POINTER) is
@@ -260,7 +261,9 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_widget.on_focus_changed (True)
+			if a_widget /= Void then
+				a_widget.on_focus_changed (True)
+			end
 		end
 		
 	widget_focus_out_intermediary (a_c_object: POINTER) is
@@ -269,7 +272,9 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_widget.on_focus_changed (False)
+			if a_widget /= Void then
+				a_widget.on_focus_changed (False)
+			end
 		end	
 
 feature {EV_ANY_IMP} -- Text component intermediary agent routines

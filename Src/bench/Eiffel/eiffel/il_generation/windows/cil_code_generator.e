@@ -1048,7 +1048,7 @@ feature -- Class info
 			l_name_ca.put_string (l_class_name)
 			l_name_ca.put_integer_16 (0)
 			define_custom_attribute (l_class_token,
-				current_module.ise_eiffel_class_name_attr_ctor_token, l_name_ca)
+				current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
 
 			if is_single_inheritance_implementation then
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
@@ -1591,6 +1591,7 @@ feature -- Features info
 			l_is_c_external: BOOLEAN
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 			l_naming_convention: BOOLEAN
+			l_name_ca: MD_CUSTOM_ATTRIBUTE
 		do
 			l_is_attribute := feat.is_attribute
 			l_is_c_external := feat.is_c_external
@@ -1686,6 +1687,12 @@ feature -- Features info
 
 				l_meth_token := md_emit.define_field (uni_string, current_class_token,
 					l_field_attr, l_field_sig)
+
+				create l_name_ca.make
+				l_name_ca.put_string (feat.feature_name)
+				l_name_ca.put_integer_16 (0)
+				define_custom_attribute (l_meth_token,
+					current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
 			else

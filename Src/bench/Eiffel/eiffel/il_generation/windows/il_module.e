@@ -252,7 +252,7 @@ feature -- Access: tokens
 	ise_formal_type_token,
 	ise_none_type_token,
 	ise_basic_type_token,
-	ise_eiffel_class_name_attr_ctor_token,
+	ise_eiffel_name_attr_ctor_token,
 	ise_assertion_level_attr_ctor_token,
 	ise_interface_type_attr_ctor_token,
 	type_handle_class_token,
@@ -1922,7 +1922,7 @@ feature {NONE} -- Once per modules being generated.
 			l_token: INTEGER
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
-			l_ise_eiffel_class_name_attr_token: INTEGER
+			l_ise_eiffel_name_attr_token: INTEGER
 			l_ise_assertion_level_attr_token: INTEGER
 			l_ise_interface_type_attr_token: INTEGER
 			l_system_type_token: INTEGER
@@ -1931,7 +1931,7 @@ feature {NONE} -- Once per modules being generated.
 			create l_ass_info.make
 			l_ass_info.set_major_version (5)
 			l_ass_info.set_minor_version (5)
-			l_ass_info.set_build_number (626)
+			l_ass_info.set_build_number (707)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
@@ -2009,8 +2009,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (None_type_class_name), ise_runtime_token)
 			ise_basic_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (basic_type_class_name), ise_runtime_token)
-			l_ise_eiffel_class_name_attr_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (eiffel_class_name_attribute), ise_runtime_token)
+			l_ise_eiffel_name_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (eiffel_name_attribute), ise_runtime_token)
 			l_ise_assertion_level_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (assertion_level_class_name_attribute), ise_runtime_token)
 			l_ise_interface_type_attr_token := md_emit.define_type_ref (
@@ -2060,8 +2060,8 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
 			uni_string.set_string (".ctor")
-			ise_eiffel_class_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
-				l_ise_eiffel_class_name_attr_token, l_meth_sig)
+			ise_eiffel_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_eiffel_name_attr_token, l_meth_sig)
 
 				-- Definition of `.ctor' for ASSERTION_LEVEL_ATTRIBUTE
 			l_system_type_token := md_emit.define_type_ref (

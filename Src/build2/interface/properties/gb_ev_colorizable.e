@@ -30,6 +30,8 @@ inherit
 		end
 		
 	DEFAULT_OBJECT_STATE_CHECKER
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

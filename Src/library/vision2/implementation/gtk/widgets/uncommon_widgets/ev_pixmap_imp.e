@@ -359,17 +359,20 @@ feature -- Access
 			-- Pointer to the GdkBitmap used for masking.
 		do
 			Result := C.gtk_pixmap_struct_mask (gtk_pixmap)
-		end	
+		end
 
-feature {NONE} -- Implementation
 
-	parent_widget: POINTER
+feature {EV_DEFAULT_PIXMAPS_IMP} -- Implementation
 
 	set_pixmap (pix, msk: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
 			C.gtk_pixmap_set (gtk_pixmap, pix, msk)
-		end
+		end	
+
+feature {NONE} -- Implementation
+
+	parent_widget: POINTER
 
 	initialize_gc is
 			-- Set the foreground color of the GC to black.
@@ -469,6 +472,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/05/03 21:35:34  king
+--| Altered export clause of set_pixmap to EV_DEF_PIX_IMP
+--|
 --| Revision 1.35  2000/05/03 04:32:08  pichery
 --| Added feature `set_with_default'
 --|

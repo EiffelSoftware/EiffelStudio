@@ -26,7 +26,49 @@ feature -- Access
 			-- Analyzed target call type
 			--| Can be one of the following unique values
 
+	extracted_description: STRING
+			-- Last extracted description with `extract_description'
+
+	qualified_call: BOOLEAN
+			-- Does current target correspond to a qualified call?
+
 feature -- Basic operations
+
+	extract_description (a_feature_i: FEATURE_I; a_class_i: CLASS_I) is
+			-- Extract contracts from feature `l_feature_i' in class `a_class_i'.
+		require
+			non_void_feature: a_feature_i /= Void
+			non_void_class: a_class_i /= Void
+		local
+			l_ctxt: FEATURE_TEXT_FORMATTER;
+			l_dotnet_ctxt: DOTNET_FEATURE_TEXT_FORMATTER
+			l_reader: EIFFEL_XML_DESERIALIZER
+			l_consumed_type: CONSUMED_TYPE
+			l_file_name: STRING
+		do
+			if a_feature_i.is_il_external then
+				l_file_name := a_class_i.file_name
+				consumed_types_cache.search (l_file_name)
+				if not consumed_types_cache.found then
+					create l_reader				
+					l_consumed_type ?= l_reader.new_object_from_file (l_file_name)
+					consumed_types_cache.put (l_consumed_type, l_file_name)
+				else
+					l_consumed_type := consumed_types_cache.found_item
+				end
+				if l_consumed_type /= Void then
+					create l_dotnet_ctxt
+					l_dotnet_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), l_consumed_type)
+					format (l_dotnet_ctxt.text)
+				else
+					extracted_description := ""
+				end
+			else
+				create {FEATURE_TEXT_FORMATTER} l_ctxt
+				l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
+				format (l_ctxt.text)
+			end
+		end
 
 	features_list_from_table (table: FEATURE_TABLE; class_i: CLASS_I; use_overloading: BOOLEAN): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is
 			-- Convert `table' into an instance of LIST [FEATURE_DESCRIPTOR].
@@ -89,9 +131,7 @@ feature -- Basic operations
 							feature_name := fi.feature_name
 						end
 						descriptors.search (feature_name)
-						if descriptors.found then
-							descriptors.found_item.increase_overload_count
-						else
+						if not descriptors.found then
 							create descriptor.make_with_class_i_and_feature_i (ci, fi)
 							descriptor.set_name (feature_name)
 							descriptors.put (descriptor, feature_name)
@@ -253,41 +293,52 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	is_listed (fi: FEATURE_I; class_i: CLASS_I; context: CLASS_I): BOOLEAN is
+	is_listed (fi: FEATURE_I; a_class_i: CLASS_I; context: CLASS_I): BOOLEAN is
 			-- Should `fi' be listed in member completion list?
 		require
 			non_void_feature_i: fi /= Void
-			non_void_class_i: class_i /= Void
-			valid_class_i: class_i.compiled
+			non_void_class_i: a_class_i /= Void
+			valid_class_i: a_class_i.compiled
 			non_void_context: context /= Void
 		do
 			if call_type = Standard_call or call_type = Precursor_call then
-				Result := not fi.is_infix and
-							not fi.is_prefix and
+				Result := not fi.is_infix and not fi.is_prefix and
 							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
-							fi.is_exported_for (class_i.compiled_class)
+							(not qualified_call or fi.is_exported_for (a_class_i.compiled_class))
+
 			elseif call_type = Static_call then
-				Result := not fi.is_infix and
-							not fi.is_prefix and
-							fi.has_static_access and
-							fi.is_exported_for (class_i.compiled_class)
+				Result := not fi.is_infix and not fi.is_prefix and fi.has_static_access and
+							(not qualified_call or fi.is_exported_for (a_class_i.compiled_class))
+
 			elseif call_type = Creation_call then
 				if context.compiled_class.creators /= Void then
 					Result := context.compiled_class.creators.has (fi.feature_name)					
 				end
+
 			elseif call_type = Agent_call then
-				Result := not fi.is_infix and
-							not fi.is_prefix and
-							not fi.is_c_external and
-							not fi.is_attribute and
+				Result := not fi.is_infix and not fi.is_prefix and
+							not fi.is_c_external and not fi.is_attribute and
 							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
-							fi.is_exported_for (class_i.compiled_class)
+							(not qualified_call or fi.is_exported_for (a_class_i.compiled_class))
 			end
 			if Result and fi.has_static_access and call_type /= Static_call then
 				Result := not context.is_external_class
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	format (a_text: STRUCTURED_TEXT) is
+			-- Format `a_text' as ASCII string and put result in `extracted_description'.
+		require
+			non_void_text: a_text /= Void
+		do
+			Formatter.reset_output
+			Formatter.process_text (a_text)
+			extracted_description := Formatter.output
+			extracted_description.left_adjust
+			extracted_description.replace_substring_all ("%N%T", "%N")
+			extracted_description.right_adjust
 		end
 
 	type_from_type_name (name: STRING): TYPE is
@@ -424,12 +475,6 @@ feature {NONE} -- Implementation
 			extracted_type_not_void_if_extracted: type_extracted implies extracted_type /= Void
 		end
 
-	extracted_type: TYPE
-			-- Type extracted from last call to `extract_type'
-
-	type_extracted: BOOLEAN
-			-- Was last call to `extract_type' successful?
-
 	set_standard_call is
 			-- Analyzed target corresponds to a standard call
 		do
@@ -458,6 +503,26 @@ feature {NONE} -- Implementation
 			-- Analyzed target corresponds to a Precursor call
 		do
 			call_type := Precursor_call
+		end
+
+feature {NONE} -- Implementation
+
+	Formatter: STRING_FORMATTER is
+			-- Text formatter for structured texts
+		once
+			create Result.make
+		end
+
+	extracted_type: TYPE
+			-- Type extracted from last call to `extract_type'
+
+	type_extracted: BOOLEAN
+			-- Was last call to `extract_type' successful?
+
+	consumed_types_cache: HASH_TABLE [CONSUMED_TYPE, STRING] is
+			-- Cache of consumed types so as not to deserialize each time
+		once
+			create Result.make (128)
 		end
 
 end -- class COMPLETION_HELPERS

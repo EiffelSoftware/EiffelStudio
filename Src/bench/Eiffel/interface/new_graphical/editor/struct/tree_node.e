@@ -120,8 +120,8 @@ feature -- Measurement
 			-- Number of children
 
 	keys_plus_one: INTEGER
-			-- total number of keys in the node
-			-- and its chilren, plus one.
+			-- total number of keys of the node
+			-- and its chilren, plus one
 
 feature -- Status report
 
@@ -293,7 +293,7 @@ feature -- Element change
 		end
 
 	insert_first (key: like item) is
-			-- Insert `key' in first position.
+			-- Insert `key' in first position of the tree.
 		do
 			if is_leaf then
 				insert_key_and_left_child (key, Void, 1)
@@ -303,7 +303,7 @@ feature -- Element change
 		end
 
 	insert_last (key: like item) is
-			-- Insert `key' in last position.
+			-- Insert `key' in last position of the tree.
 		do
 			if is_leaf then
 				insert_key_and_right_child (key, Void, arity)
@@ -315,7 +315,7 @@ feature -- Element change
 feature -- Removal
 
 	delete (pos: INTEGER) is
-			-- delete key in position `pos'
+			-- delete key in position `pos' in the node.
 		local
 			i: INTEGER
 			previous_key: like item
@@ -368,6 +368,9 @@ feature -- Transformation
 
 	balance_heavy_node is
 			-- rebalance a heavy node (splitting it)
+			--| Changes in this feature implementation
+			--| may change "merge_left(right)" feature
+			--| behaviour. be careful while changing it.
 		local
 			node2, aux_node: like Current
 			parent_key: like item
@@ -509,6 +512,69 @@ feature -- Transformation
 		end
 
 feature -- Conversion
+
+--| FIXME
+--| christophe, 25 jan 2000
+--| This features cannot work, because of changes during rebalancing nodes.
+
+	merge_right (other: like Current) is
+			-- Add `other' at the right of Current.
+		local
+			dummy: like item
+			current_node, child: like Current
+			pos: INTEGER
+		do
+			create dummy.make (Void)
+			child := other.children @ 1
+			insert_key_and_right_child (dummy, child, arity)
+			from
+				i := 1
+				current_node := child.parent
+				pos := child.pos_in_parent
+			variant
+				other.arity - i
+			until
+				i = other.arity
+			loop
+				child := other.children @ (i + 1)
+				current_node.insert_key_and_right_child (other.key @ i, child, pos)
+					--| Node organisation may have changed if `current_node'
+					--| has been split due to rebalancing. We are looking for the
+					--| place the last child inserted is, to attach others after it.
+				current_node := child.parent
+				pos := child.pos_in_parent
+				i := i + 1
+			end
+			dummy.delete
+		end
+
+	merge_left (other: like Current) is
+			-- Add `other' at the left of Current.
+		local
+			dummy: like item
+			current_node, child: like Current
+			pos: INTEGER
+		do
+			create dummy.make (Void)
+			child := other.children @ arity
+			insert_key_and_left_child (dummy, child, 1)
+			from
+				i := other.arity - 1
+				current_node := child.parent
+				pos := child.pos_in_parent
+			variant
+				i
+			until
+				i = 0
+			loop
+				child := other.children @ i
+				insert_key_and_left_child (key @ i, child, pos)
+				current_node := child.parent
+				pos := child.pos_in_parent
+				i := i - 1
+			end
+			dummy.delete
+		end
 
 feature -- Duplication
 

@@ -66,6 +66,11 @@ private char *rcsid =
 	"$Id$";
 #endif
 
+extern char gc_ison();
+extern void gc_stop();
+extern void gc_run();
+
+
 #ifdef DEBUG
 shared long nomark();
 private long chknomark();

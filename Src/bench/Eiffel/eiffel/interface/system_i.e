@@ -1471,8 +1471,7 @@ end
 						Uses_precompiled_library: Workbench.precompiled_directories /= Void	
 						Not_multiple_precompiled: Workbench.precompiled_directories.count = 1
 					end
-					Workbench.precompiled_directories.start
-					name := clone (Workbench.precompiled_directories.item_for_iteration.system_name)
+					name := clone (Workbench.melted_file_name)
 				end	
 			end
 			name.append (".melted")
@@ -3677,10 +3676,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123153;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123155;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123154;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123156;%N")
 			end
 
 			from

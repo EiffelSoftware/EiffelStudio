@@ -13,6 +13,8 @@ indexing
 deferred class LIST [G] inherit
 
 	CHAIN [G]
+		export
+			{ANY} remove
 		redefine
 			forth, is_equal
 		end

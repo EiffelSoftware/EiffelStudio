@@ -114,7 +114,7 @@ feature -- Removal
 		local
 			p: POINTER
 			delete_result: BOOLEAN
-			last_error: INTEGER
+			l_wel_error: WEL_ERROR
 		do
 			if item /= p then
 				debug ("WEL_GDI_COUNT")
@@ -122,9 +122,10 @@ feature -- Removal
 				end
 				delete_result := destroy_resource
 				if not delete_result then
-					last_error := cwin_get_last_error
 					debug ("WEL")
-						io.putstring ("Unable to Destroy Icon/Cursor, Error="+last_error.out)
+						create l_wel_error
+						io.putstring ("Unable to Destroy Icon/Cursor, Error=" +
+							l_wel_error.last_error_code.out)
 						print (Current)
 					end
 				end
@@ -174,14 +175,6 @@ feature {NONE} -- Externals
 			"CreateIconIndirect"
 		end
 	
-	cwin_get_last_error: INTEGER is
-			-- SDK CreateIconIndirect
-		external
-			"C [macro <wel.h>] (): DWORD"
-		alias
-			"GetLastError"
-		end
-
 feature {NONE} -- Constants
 
 	Image_type: INTEGER is

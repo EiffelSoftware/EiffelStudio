@@ -26,7 +26,6 @@ inherit
 	EB_LINKED_LIST [T]
 		rename
 			extend as list_extend,
-			add_right as list_add_right,
 			put_right as list_put_right,
 			remove as list_remove,
 			wipe_out as list_wipe_out,
@@ -38,16 +37,15 @@ inherit
 		end;
 	EB_LINKED_LIST [T]
 		rename
-			make as linked_list_make,
-			put_right as list_put_right
+			make as linked_list_make
 		undefine
-			add_right, extend
+			put_right, extend
 		redefine
 			go_i_th, put, wipe_out, 
 			remove, merge, set
 		select
 			go_i_th, put, wipe_out, remove,
-			add_right, extend
+			put_right, extend
 		end
 	
 feature -- List operations
@@ -144,6 +142,7 @@ feature -- List operations
 						icons.forth;
 						forth
 					else
+						current_icon.reset_data;
 						current_icon.set_managed (False);
 						finished := True
 					end
@@ -193,6 +192,7 @@ feature {NONE}
 					icons.after or else
 					(not icons.item.managed)
 				loop
+					icons.item.reset_data;
 					icons.item.set_managed (False);
 					icons.forth
 				end;
@@ -274,7 +274,7 @@ feature -- Other features
 								dest_pos := dest_pos - 1
 							end;
 							go_i_th (dest_pos);
-							add_right (moved_stone)
+							put_right (moved_stone)
 						end
 					end
 				end
@@ -369,14 +369,12 @@ feature {NONE}
 				icons.forth;
 				forth;
 			end;
-			if
-				after and
-				not icons.after
-			then
+			if after and not icons.after then
 				from
 				until
 					icons.after
 				loop
+					icons.item.reset_data;
 					icons.item.set_managed (False);
 					icons.forth
 				end

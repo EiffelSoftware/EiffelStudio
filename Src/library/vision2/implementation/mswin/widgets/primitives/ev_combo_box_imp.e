@@ -19,6 +19,9 @@ inherit
 	EV_LIST_ITEM_HOLDER_IMP
 
 	EV_TEXT_COMPONENT_IMP
+		undefine
+			selection_start,
+			selection_end
 		redefine
 			set_editable,
 			move_and_resize,
@@ -379,6 +382,24 @@ feature {NONE} -- Wel implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+feature {NONE} -- Inapplicable
+
+	wel_selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	wel_selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_COMBO_BOX_IMP

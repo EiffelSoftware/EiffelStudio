@@ -365,20 +365,26 @@ feature {NONE} -- WEL Implementation
 			tooltip: WEL_TOOLTIP
 			rich_text: EV_RICH_TEXT_IMP
 			selchange: WEL_RICH_EDIT_SELCHANGE
+			list: EV_LIST_IMP
+			lvninfotip: WEL_NM_LIST_VIEW_GETINFOTIP
+			string: WEL_STRING
+			multi_column_list: EV_MULTI_COLUMN_LIST_IMP
+			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW_I
+			l_zero: INTEGER
 		do
 			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
 				create tooltip_text.make_by_nmhdr (info)
 					-- Retrieve tree view get info tip structure.
-				create tvinfotip.make_by_pointer (tooltip_text.item)
+				create tvinfotip.make_by_pointer (info.item)
 
 				tree ?= info.window_from
-				tooltip ?= tree.get_tooltip
+				tooltip := tree.get_tooltip
 					-- Bring the tooltip to the front.
 					-- For some reason without this, it is shown behind 
 					-- the window.
 				tooltip.set_z_order (Hwnd_top)
-
+				
 				tree.all_ev_children.search (tvinfotip.hitem)
 				if tree.all_ev_children.found then
 					temp_node := tree.all_ev_children.found_item
@@ -389,6 +395,33 @@ feature {NONE} -- WEL Implementation
 						tooltip_text.set_text (temp_node.tooltip)
 					end
 				end
+			elseif info.code = feature {WEL_LIST_VIEW_CONSTANTS}.Lvn_getinfotip then
+					--| FIXME The way we handle toolips for lists and multi column lists
+					--| is somewhat strange. The height of the tooltip returned is too great, and
+					--| we are unable to use `tooltip_text' as we do for trees above. This code is
+					--| also non unicode compliant. Why can we not implement tooltips for these widgets
+					--| as we do for tree items?
+				create lvninfotip.make_by_pointer (info.item)
+				list ?= info.window_from
+				if list = Void then
+					multi_column_list ?= info.window_from
+					tooltip := multi_column_list.get_tooltip
+					multi_column_list_row ?= multi_column_list.i_th (lvninfotip.iitem + 1).implementation
+					check
+						row_not_void: multi_column_list_row /= Void
+					end
+					create string.make (multi_column_list_row.tooltip)
+				else
+					tooltip := list.get_tooltip	
+					create string.make (list.i_th (lvninfotip.iitem + 1).tooltip)
+				end
+				
+				tooltip.set_z_order (Hwnd_top)
+					
+					-- Copy tooltip to allocated memory location.
+				lvninfotip.psztext.memory_copy (string.item, string.count.min (lvninfotip.cchtextmax))
+				(lvninfotip.psztext + (lvninfotip.cchtextmax - 1)).memory_copy ($l_zero, 1)
+				
 			elseif info.code = (feature {WEL_LIST_VIEW_CONSTANTS}.Lvn_marqueebegin) then
 					-- A message has been received from an EV_LIST notifying
 					-- us that a bounding box selection is beginning. We

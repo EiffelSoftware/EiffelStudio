@@ -86,7 +86,7 @@ feature -- Basic operations
 				variant
 					actions.count - actions.index
 				until
-					actions.off
+					actions.after
 				loop
 					actions.item.execute
 					check

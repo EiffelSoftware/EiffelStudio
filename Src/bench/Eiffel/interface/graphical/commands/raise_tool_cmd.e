@@ -41,4 +41,15 @@ feature -- Status report
 			Result := tool.title
 		end
 
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := tool.title
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
+
 end -- class RAISE_TOOL_CMD

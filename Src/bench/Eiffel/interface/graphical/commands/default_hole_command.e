@@ -48,8 +48,17 @@ feature -- Access
 	name: STRING is
 			-- Name of hole
 		do
-			Result := ""
-		end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
 
 feature -- Execution
 

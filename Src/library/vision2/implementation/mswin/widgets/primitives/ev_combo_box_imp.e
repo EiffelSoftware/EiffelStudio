@@ -193,15 +193,15 @@ feature -- Status setting
 		do
 			if (not selected) or (selected and then not equal (wel_selected_item, index - 1)) then
 					-- Only select an item if it is not already selected.
+				if selected then
+					execute_command (Cmd_unselect, Void)
+				end
 				wel_select_item (index - 1)
 				old_selected_item := ev_children @ (index)
 					-- Now send `Cbn_selchange' message to Current control
 					-- so that we know that a change occured and to handle
 					-- it as specified by user.
-				if selected then
-					execute_command (Cmd_unselect, Void)
-				end
-				cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
+					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (item))
 				execute_command (Cmd_select, Void)
 				-- Must now manually inform the combo box that a selection is taking place.
@@ -421,9 +421,6 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
 		local
-			temp: ANY
-			temp_text: STRING
-			tint: INTEGER
 			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			counter: INTEGER
 			found: BOOLEAN
@@ -432,7 +429,6 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 			process_tab_key (virtual_key)
 			if virtual_key = Vk_return then
 				-- If return pressed, select item with matching text.
-				if selected and then equal (selected_item.text, text) then
 				from
 					list := ev_children
 					list.start
@@ -441,16 +437,22 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					counter = list.count + 1 or found
 				loop
 					if equal (list.item.text, text) then
-						select_item (counter)
+						if not selected or (selected and not is_selected (counter - 1)) then
+							select_item (counter)
+						end
 						found := True
 					end
 					list.forth
 					counter := counter + 1
 				end
+			else
+				if selected and equal (text, selected_item.text) then
+					clear_selection
+					execute_command (Cmd_unselect, Void)
 				end
 			end
 		end
-
+	
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is

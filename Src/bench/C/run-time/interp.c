@@ -5491,7 +5491,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 	if (cnt <= 2)
 		return dtype;
 	
-	return (short) eif_compound_id((int16 *)0,Current, (int16) dtype, gen_types);
+	return (short) eif_compound_id((int16 *)0, (int16) Dftype (Current), (int16) dtype, gen_types);
 }
 
 /*

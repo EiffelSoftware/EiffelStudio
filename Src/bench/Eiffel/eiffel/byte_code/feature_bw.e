@@ -5,13 +5,14 @@ class FEATURE_BW
 inherit
 
 	FEATURE_BL
+		rename
+			make as node_make
 		redefine
 			check_dt_current, generate_access_on_type, is_polymorphic,
 			need_invariant, set_need_invariant
 		end
 
 create
-
 	make
 	
 feature 

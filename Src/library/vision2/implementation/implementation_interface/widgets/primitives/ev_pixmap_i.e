@@ -11,7 +11,12 @@ deferred class
 	EV_PIXMAP_I 
 
 inherit
-	EV_DRAWING_AREA_I
+	EV_DRAWABLE_I
+		redefine
+			interface
+		end
+
+	EV_PRIMITIVE_I
 		redefine
 			interface
 		end
@@ -95,6 +100,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/12 00:07:30  king
+--| Now inheriting from drawable and primitive
+--|
 --| Revision 1.14  2000/03/20 23:42:59  pichery
 --| Moved implementation of `read_from_named_file' from interface to
 --| implementation cluster.

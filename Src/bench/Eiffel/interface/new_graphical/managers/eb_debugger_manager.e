@@ -253,13 +253,15 @@ feature -- Status setting
 				if Application.is_stopped then
 					pos := Application.current_execution_stack_number
 					Application.status.reload_call_stack
-					if pos > Application.status.where.count then
+					if pos > Application.status.current_call_stack.count then
 							-- We reloaded less elements than there were.
 						pos := 1
 					end
 					call_stack_tool.update
 					create cst.make (pos)
-					launch_stone (cst)
+					if cst.is_valid then
+						launch_stone (cst)
+					end
 				end
 			end
 		end
@@ -587,7 +589,7 @@ feature -- Debugging events
 	
 					-- Display the callstack, the current object & the current stop point.
 				Application.set_current_execution_stack_number (1)	-- go on top of stack
-				call_stack_elem := status.current_stack_element
+				call_stack_elem := status.current_call_stack_element
 --				if call_stack_elem /= Void then
 ----					Project_tool.show_current_stoppoint
 ----					Project_tool.show_current_object

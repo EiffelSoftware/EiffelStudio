@@ -35,12 +35,12 @@ char *suppliers;			/* Instance of SUPPLIERS_AS where all the
  * Declarations for generic parameter managment
  */
 
-static char *Generic_name[MAXG];	/* Array of formal generic name */
+static char *Generic_name[MAX_GENERICS];	/* Array of formal generic name */
 static int nb_generics;				/* Number of formal generic parameter
 									 * name actualy in Generic_name.
 									 */
 static int generic_count;
-static char *formals[MAXG];			/* Array of formals: Shared Eiffel instances
+static char *formals[MAX_GENERICS];			/* Array of formals: Shared Eiffel instances
 									 * of class FORMAL_AS.
 									 */
 
@@ -69,7 +69,7 @@ void eif_init()
 	(*c_id_create)(id_string, (long) IDLENGTH);
 
 	/* Initialization of the formal generic type array. */
-	for(i=0; i<MAXG; i++) {
+	for(i=0; i<MAX_GENERICS; i++) {
 		int_arg[0] = i + 1;
 		formal = create_node(FORMAL_AS);
 		formal = eif_freeze(&formal);	/* Object shouldn't move */
@@ -201,16 +201,16 @@ char *constrained;
 		return (char *) 0;
 
 	/* Save the name of the generic parameter. */
-	if (nb_generics <  MAXG)
+	if (nb_generics <  MAX_GENERICS)
 		Generic_name[nb_generics++] = str_save(gen_name);
 	else
-			/* Create a special syntax error if MAXG generic
+			/* Create a special syntax error if MAX_GENERICS generic
 			 * parameters have already been found. The following
 			 * comment is invalid!.
 			 */
 		(*syntax9)(Error_handler);
 
-	/* Even if already MAXG generic parameters have been found, we
+	/* Even if already MAX_GENERICS generic parameters have been found, we
 	 * create a new FORMAL_GENERIC node. The error will be reported
 	 * later on, during semantic checks.
 	 */

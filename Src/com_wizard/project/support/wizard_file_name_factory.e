@@ -66,7 +66,11 @@ feature -- Basic operations
 			-- File name for generated Eiffel to C structure mapper
 		do
 			last_created_header_file_name:= clone (shared_wizard_environment.destination_folder)
-			last_created_header_file_name.append (Common)
+			if shared_wizard_environment.client then
+				last_created_header_file_name.append (Client)
+			else
+				last_created_header_file_name.append (Server)
+			end
 			last_created_header_file_name.append_character (Directory_separator)
 			last_created_file_name := clone (last_created_header_file_name)
 			last_created_file_name.append (Clib)

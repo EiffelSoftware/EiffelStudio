@@ -11,15 +11,15 @@ deferred class
 inherit
 	DIALOG_WINDOWS
 		redefine
-			on_paint,
-			on_size,
-			realize_current,
 			default_style,
 			default_ex_style,
 			popup,
 			popdown,
+			on_kill_focus,
+			on_paint,
 			on_set_focus,
-			on_kill_focus
+			on_size,
+			realize_current
 		end
 
 	BASIC_ROUTINES
@@ -72,6 +72,7 @@ feature -- Initialization
 			set_fonts
 			adjust_dialog
 			set_default_button
+			shown := True
 		end
 
 feature -- Basic operations
@@ -90,6 +91,7 @@ feature -- Basic operations
 				determine_focus
 				wel_show
 			end
+			shown := True
 		end
 
 	popdown is
@@ -100,6 +102,7 @@ feature -- Basic operations
 					set_windows_sensitive
 				end
 				wel_hide
+				shown := False
 			end
 		end
 

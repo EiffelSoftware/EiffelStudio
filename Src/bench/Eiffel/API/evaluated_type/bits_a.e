@@ -69,7 +69,7 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (10)
+			create Result.make (10)
 			Result.append ("BIT ")
 			Result.append_integer (bit_count)
 		end
@@ -92,7 +92,7 @@ feature {COMPILER_EXPORTER}
 			vncb: VNCB
 		do
 			if not conform_to (target_type) then
-				!!vncb
+				create vncb
 				context.init_error (vncb)
 				vncb.set_target_name (target_name)
 				vncb.set_source_type (Current)
@@ -114,7 +114,7 @@ feature {COMPILER_EXPORTER}
 					Result := other_bits.bit_count >= bit_count
 				end
 			else
-				Result := {BASIC_A} Precursor (other, False)
+				Result := Precursor {BASIC_A} (other, False)
 			end
 		end
 
@@ -134,7 +134,7 @@ feature {COMPILER_EXPORTER}
 	type_i: BIT_I is
 			-- C type
 		do
-			!!Result
+			create Result
 			Result.set_size (bit_count)
 		end
 

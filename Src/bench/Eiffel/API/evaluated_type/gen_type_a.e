@@ -130,7 +130,7 @@ feature -- Output
 		local
 			i, count: INTEGER
 		do
-			Result := {CL_TYPE_A} Precursor
+			Result := Precursor {CL_TYPE_A}
 
 			count := generics.count
 
@@ -158,7 +158,7 @@ feature -- Output
 			i, count: INTEGER
 		do
 				-- Append classname "TUPLE"
-			{CL_TYPE_A} Precursor (st, f)
+			Precursor {CL_TYPE_A} (st, f)
 
 			count := generics.count
 				-- TUPLE may have zero generic parameters
@@ -248,7 +248,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			from
-				Result := {CL_TYPE_A} Precursor
+				Result := Precursor {CL_TYPE_A}
 				i := 1
 				count := generics.count
 			until
@@ -581,9 +581,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 			if Result = Void then
 				if base_generics = Void then
-					!VTUG1! Result
+					create {VTUG1} Result
 				else
-					!VTUG2! Result
+					create {VTUG2} Result
 				end
 				Result.set_type (Current)
 				Result.set_base_class (associated_class)
@@ -904,7 +904,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 		do
 			from
-				Result := {CL_TYPE_A} Precursor
+				Result := Precursor {CL_TYPE_A}
 				i := 1
 				nb := generics.count
 			until
@@ -926,7 +926,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 		do
 			from
-				Result := {CL_TYPE_A} Precursor (a_class)
+				Result := Precursor {CL_TYPE_A} (a_class)
 				i := 1
 				nb := generics.count
 			until

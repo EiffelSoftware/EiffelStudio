@@ -33,7 +33,7 @@ feature {COMPILER_EXPORTER}
 			if in_generics then
 				Result := other.is_real
 			else
-				Result := 	{BASIC_A} precursor (other, False)
+				Result := 	precursor {BASIC_A} (other, False)
 							or else
 							other.actual_type.is_double
 			end

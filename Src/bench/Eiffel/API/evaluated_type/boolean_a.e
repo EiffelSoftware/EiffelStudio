@@ -39,7 +39,7 @@ feature {COMPILER_EXPORTER}
 			if in_generics then
 				Result := other.is_boolean
 			else
-				Result := {BASIC_A} precursor (other, False)
+				Result := precursor {BASIC_A} (other, False)
 			end
 		end
 

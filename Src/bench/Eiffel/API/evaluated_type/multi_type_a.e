@@ -22,7 +22,7 @@ inherit
 			make as array_make
 		end
 
-creation {COMPILER_EXPORTER}
+create {COMPILER_EXPORTER}
 	make
 	
 feature {NONE} -- Initialization
@@ -84,7 +84,7 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			!!Result.make (10 * count)
+			create Result.make (10 * count)
 			Result.append ("<<")
 			from
 				i := 1

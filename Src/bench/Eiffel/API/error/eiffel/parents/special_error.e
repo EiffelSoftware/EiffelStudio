@@ -20,7 +20,7 @@ inherit
 			is_equal
 		end
 
-creation {CLASS_C}
+create {CLASS_C}
 	make
 
 feature {NONE} -- Initialization

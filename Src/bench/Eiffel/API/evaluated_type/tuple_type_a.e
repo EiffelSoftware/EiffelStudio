@@ -138,7 +138,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				from
 					i := 1
 					count := generics.count
-					!!new_generics.make (1, count)
+					create new_generics.make (1, count)
 				until
 					i > count
 				loop

@@ -245,7 +245,7 @@ feature {COMPILER_EXPORTER} -- Access
 			vtcg5: VTCG5
 		do
 			if not conform_to (target_type) then
-				!!vtcg5
+				create vtcg5
 				vtcg5.set_class (a_class)
 				vtcg5.set_actual_type (Current)
 				vtcg5.set_constraint_type (target_type)
@@ -260,7 +260,7 @@ feature {COMPILER_EXPORTER} -- Access
 			vjar: VJAR
 		do
 			if not conform_to (target_type) then
-				!!vjar
+				create vjar
 				context.init_error (vjar)
 				vjar.set_source_type (Current)
 				vjar.set_target_type (target_type)
@@ -460,7 +460,7 @@ feature {COMPILER_EXPORTER} -- Access
 			if not current_class.is_obsolete then
 				ass_class := actual_type.associated_class
 		   		if 	(ass_class /= Void) and then ass_class.is_obsolete then
-					!!warn
+					create warn
 					warn.set_class (current_class)
 					warn.set_obsolete_class (ass_class)
 					Error_handler.insert_warning (warn)
@@ -481,7 +481,7 @@ feature {COMPILER_EXPORTER} -- Access
 					-- we must had a dependance to the anchor feature
 				a_class := System.class_of_id (like_feat.class_id)
 				feature_i := a_class.feature_table.item_id (like_feat.feature_name_id)
-				!! depend_unit.make (like_feat.class_id, feature_i)
+				create depend_unit.make (like_feat.class_id, feature_i)
 				feat_depend.extend (depend_unit)
 			end
 		end

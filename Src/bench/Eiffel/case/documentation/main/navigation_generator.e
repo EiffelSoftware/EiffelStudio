@@ -7,7 +7,7 @@ indexing
 class
 	NAVIGATION_GENERATOR
 
-creation
+create
 	make
 
 feature -- Initialize

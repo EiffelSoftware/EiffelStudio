@@ -70,7 +70,7 @@ feature {COMPILER_EXPORTER}
 			if in_generics then
 				Result := same_as (other)
 			else
-				Result := {BASIC_A} Precursor (other, False)
+				Result := Precursor {BASIC_A} (other, False)
 				if not Result and then other.is_character then
 					char ?= other
 					Result := is_wide or else not char.is_wide

@@ -45,8 +45,6 @@ feature {NONE}
 
 	descendants_cmd_name: STRING is "descendants"
 
-	Descendents_cmd_name: STRING is "descendents";
-
 	Documentation_cmd_name: STRING is "documentation";
 
 	dversions_cmd_name: STRING is "dversions"

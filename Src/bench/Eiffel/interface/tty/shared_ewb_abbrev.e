@@ -39,8 +39,6 @@ feature
 
 	Descendants_abb: CHARACTER is 'd';
 
-	Descendents_abb: CHARACTER is 'd';
-
 	Documentation_abb: CHARACTER is 'd';
 
 	Edit_ace_abb: CHARACTER is 'v';

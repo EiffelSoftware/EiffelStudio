@@ -305,6 +305,7 @@ feature {NONE} -- Initialization
 			send_stone_to_context_cmd.set_tooltip (Interface_names.e_Send_stone_to_context)
 			send_stone_to_context_cmd.set_menu_name (Interface_names.m_Send_stone_to_context)
 			send_stone_to_context_cmd.set_name ("Send_to_context")
+			send_stone_to_context_cmd.set_tooltext (Interface_names.b_Send_stone_to_context)
 			send_stone_to_context_cmd.add_agent (agent send_stone_to_context)
 			create accel.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Kcst.Key_down), False, True, False
@@ -890,8 +891,11 @@ feature -- Graphical Interface
 			create general_toolbar
 			general_customizable_toolbar := retrieve_general_toolbar (toolbarable_commands)
 			if show_text_in_general_toolbar then
+				general_customizable_toolbar.enable_important_text
+			elseif show_all_text_in_general_toolbar then
 				general_customizable_toolbar.enable_text_displayed
 			end
+				
 			create hbox
 			hbox.extend (general_customizable_toolbar.widget)
 			hbox.disable_item_expand (general_customizable_toolbar.widget)
@@ -1203,6 +1207,7 @@ feature {NONE} -- Menu Building
 			os_cmd.set_name ("Editor_cut")
 			os_cmd.set_tooltip (interface_names.f_cut)
 			os_cmd.add_agent (agent cut_selection)
+			os_cmd.set_tooltext (Interface_names.b_Cut)
 			toolbarable_commands.extend (os_cmd)
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
@@ -1216,6 +1221,7 @@ feature {NONE} -- Menu Building
 			os_cmd.set_pixmaps (pixmaps.icon_copy)
 			os_cmd.set_name ("Editor_copy")
 			os_cmd.set_tooltip (interface_names.f_copy)
+			os_cmd.set_tooltext (Interface_names.b_Copy)
 			os_cmd.add_agent (agent copy_selection)
 			toolbarable_commands.extend (os_cmd)
 			os_cmd.set_needs_editable (False)

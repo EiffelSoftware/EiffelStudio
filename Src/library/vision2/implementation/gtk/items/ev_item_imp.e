@@ -29,6 +29,24 @@ inherit
 
 	EV_GTK_ITEMS_EXTERNALS
 
+feature -- Event : command association
+
+	add_activate_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+			-- The toggle event doesn't work on gtk, then
+			-- we add both event command.
+		do
+			add_command ("select", command, arguments)
+		end
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		do
+			add_command ("deselect", cmd, arg)
+		end	
+
 feature {NONE} -- Implementation
 	
 	set_label_widget (new_label_widget: POINTER) is
@@ -38,21 +56,11 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-        label_widget: POINTER is
-                        -- gtk widget of the label inside the button
+	label_widget: POINTER is
+                        -- gtk widget of the label inside the item
                 do
                         Result := c_gtk_get_label_widget (widget)
 		end
-	
-feature -- Event : command association
-
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
-		do
-			add_command ( "activate", command,  arguments )
-		end	
 
 end -- class EV_ITEM_IMP
 

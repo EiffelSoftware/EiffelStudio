@@ -411,6 +411,31 @@ feature -- Bit operations
 			Result := item & (1 |<< n) /= 0
 		end
 
+	set_bit (b: BOOLEAN; n: INTEGER): INTEGER is
+			-- Copy of current with `n'-th position
+			-- set to 1 if `b', 0 otherwise.
+		require
+			n_nonnegative: n >= 0
+			n_less_than_32: n < 32
+		do
+			if b then
+				Result := item | (1 |<< n)
+			else
+				Result := item & (1 |<< n).bit_not
+			end
+		end
+
+	set_bit_with_mask (b: BOOLEAN; m: INTEGER): INTEGER is
+			-- Copy of current with all 1 bits of m set to 1
+			-- if `b', 0 otherwise.
+		do
+			if b then
+				Result := item | m
+			else
+				Result := item & m.bit_not
+			end
+		end
+
 feature -- Output
 
 	out: STRING is

@@ -1,6 +1,6 @@
 lib_path: "C:\BC5\lib"
 
-include_path: "C:\BC5\include"
+include_path: ""
 
 eiffel4: "$(EIFFEL4)"
 
@@ -14,7 +14,7 @@ ccflags: "-c -WC -g0 -w- -DWIN32"
 
 large: ""
 
-ldflags: "-m -s -c -Tpe -aa -S:2048"
+ldflags: "-m -s -c -Tpe -aa -S:2048 -Sc:2048"
 
 libs: ""
 
@@ -36,37 +36,37 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %%Ttlink32 @$appl.lnk%N%
 %#%N%
 %..\..\$appl.rc:%N%
-%%Tif not exist ..\..\$appl.rc copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc ..\..\$appl.rc%N%
+%%Tif not exist ..\..\$appl.rc copy $(EIFFEL4)\bench\spec\w32bcc\config\eiffel.rc ..\..\$appl.rc%N%
 %#%N%
-%$appl.rc: ..\..\$appl.rc $(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc%N
-%%Tcopy ..\..\$appl.rc+$(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc $appl.rc%N%
+%$appl.rc: ..\..\$appl.rc $(EIFFEL4)\bench\spec\w32bcc\config\except.rc%N%
+%%Tcopy ..\..\$appl.rc+$(EIFFEL4)\bench\spec\w32bcc\config\except.rc $appl.rc%N%
 %#%N%
 %$appl.res: $appl.rc working.ico appl.ico Makefile $appl.ico%N%
 %%Tif exist ..\..\*.ico xcopy ..\..\*.ico .%N%
 %%Tif exist ..\..\*.cur xcopy ..\..\*.cur .%N%
 %%Tif exist ..\..\*.bmp xcopy ..\..\*.bmp .%N%
 %%Tif exist ..\..\*.h xcopy ..\..\*.h .%N%
-%%Tbrc32 -i$(INCLUDE_PATH) -r $appl.rc%N%
+%%Tbrc32 -iC:\BC5\include -r $appl.rc%N%
 %#%N%
 %working.ico:%N%
 %%Tif exist ..\..\working.ico copy ..\..\working.ico .%N%
-%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\working.ico .%N%
+%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\config\working.ico .%N%
 %#%N%
 %..\..\$appl.ico:%N%
-%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico ..\..\$appl.ico%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\config\appl.ico ..\..\$appl.ico%N%
 %#%N%
 %$appl.ico: ..\..\$appl.ico%N%
 %%Tcopy ..\..\$appl.ico .%N%
 %#%N%
 %appl.ico:%N%
 %%Tif exist ..\..\appl.ico copy ..\..\appl.ico .%N%
-%%Tif not exist appl.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico .%N%
+%%Tif not exist appl.ico copy $(EIFFEL4)\bench\spec\w32bcc\config\appl.ico .%N%
 %#%N%
 %object.lnk: $(OBJECTS) $(EOBJECTS) $(EXTERNALS)%N%
-%del $@%N%
+%%Tdel $@%N%
 %%T&echo $** + >> $@%N%
 %#%N%
-%$appl.lnk: object.lnk e1\emain.obj Makefile $appl.res%N%
+%$appl.lnk: object.lnk e1\emain.obj Makefile $appl.res $precompilelibs%N%
 %%T$(RM) $@%N%
 %%Techo $(LDFLAGS) + > $@%N%
 %%Techo e1\emain.obj+$(LIB_PATH)\c0w32.obj, + >> $@%N%
@@ -74,7 +74,7 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %%Techo $library + >> $@%N%
 %%Techo CW32+IMPORT32.lib+ >> $@%N%
 %%Techo OLE2W32.LIB + >> $@%N%
-%%Techo $precomplib\precomp.lib >> $@%N%
+%$precomp_libs_command%N%
 %%Techo ,,$appl.res >> object.lnk%N%
 %%Techo @object.lnk >> $@%N%
 %#"
@@ -93,44 +93,45 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%T$(RM) Makefile.SH%N%
 %%T$(RM) *.bak%N%
 %%Tcopy Melted.eif preobj.obj%N%
-%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\version.eif .%N%
-%%Tfor %i in ($(SUBDIRS)) do del %i /s /q%N%
-%%Tfor %i in ($(SUBDIRS)) do rd %i%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\config\version.eif .%N%
+%%Tfor %%i in ($(SUBDIRS)) do echo y|del %%i%N%
+%%Tfor %%i in ($(SUBDIRS)) do rd %%i%N%
 %#%N%
 %appl.ico:%N%
 %%Tif exist ..\..\console.ico copy ..\..\appl.ico .%N%
-%%Tif not exist console.ico copy  $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico%N%
+%%Tif not exist console.ico copy  $(EIFFEL4)\bench\spec\w32bcc\config\appl.ico%N%
 %#%N%
 %working.ico:%N%
 %%Tif exist ..\..\working.ico copy ..\..\working.ico .%N%
-%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\working.ico .%N%
+%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\config\working.ico .%N%
 %#%N%
-%driver.rc: $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc%N%
-%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc+$(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc driver.rc%N%
-%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico .%N%
+%driver.rc: $(EIFFEL4)\bench\spec\w32bcc\config\eiffel.rc%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\config\eiffel.rc+$(EIFFEL4)\bench\spec\w32bcc\config\except.rc driver.rc%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\config\appl.ico .%N%
 %#%N%
 %driver.res: driver.rc appl.ico working.ico%N%
-%%Tbrc32 -i$(INCLUDE_PATH) -r driver.rc%N%
+%%Tbrc32 -iC:\BC5\include -r driver.rc%N%
 %#%N%
 %precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
 %%T$(RM) $@%N%
-%%T&tlib /p128 /c $@ +$** %N%
+%%T&tlib /p256 /c $@ +$** %N%
 %#%N%
 %eobject.lib: $(EOBJECTS)%N%
 %%T$(RM) $@%N%
 %%T&tlib /p128 /c $@ +$**%N%
 %#%N%
-%driver.lnk: e1\emain.obj precomp.lib driver.res eobject.lib%N%
+%driver.lnk: e1\emain.obj precomp.lib driver.res eobject.lib $precompilelibs%N%
 %%Techo $(LDFLAGS) + > $@%N%
 %%Techo e1\emain.obj+$(LIB_PATH)\c0w32.obj, + >> $@%N%
 %%Techo driver.exe,, + >> $@%N%
 %%Techo precomp.lib + >> $@ %N%
 %%Techo CW32+IMPORT32.lib+ >> $@%N%
 %%Techo eobject.lib+ >> $@%N%
+%$precomp_libs_command%N%
 %%Techo $(EIFFEL4)\bench\spec\w32bcc\lib\wkbench.lib + >> $@%N%
 %%Techo ,,driver.res >> $@"
 
-cecil_make: "cecil.lib: $(OBJECTS) $(EXTERNALS) $(EOBJECTS)%N%
+cecil_make: "cecil.lib: $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $precompilelibs%N%
 %%T$(RM) $@%N%
 %%T&tlib /p128 /c $@ +$**"
 
@@ -150,20 +151,20 @@ make_intermediate: "%Tdel $@%N%
 %#%N%
 %.c.obj:%N%
 %%Tif exist t.cmp del t.cmp%N%
-%%Tfor %i in ($(CFLAGS)) do echo %i >> t.cmp%N%
-%%Tfor %i in ($(INCLUDE_PATH)) do echo %i >> t.cmp%N%
+%%Tfor %%i in ($(CFLAGS)) do echo %%i >> t.cmp%N%
+%%Tfor %%i in ($(INCLUDE_PATH)) do echo %%i >> t.cmp%N%
 %%T$(CC) @t.cmp $<%N%
 %%T@del t.cmp%N%
 %#%N%
 %.x.obj:%N%
 %%T$(EIFFEL4)\bench\spec\w32bcc\bin\x2c $< $*.c%N%
 %%Tif exist t.cmp del t.cmp%N%
-%%Tfor %i in ($(CFLAGS)) do echo %i >> t.cmp%N%
-%%Tfor %i in ($(INCLUDE_PATH)) do echo %i >> t.cmp%N%
+%%Tfor %%i in ($(CFLAGS)) do echo %%i >> t.cmp%N%
+%%Tfor %%i in ($(INCLUDE_PATH)) do echo %%i >> t.cmp%N%
 %%T$(CC) @t.cmp $*.c%N%
 %%Tdel t.cmp"
 
--- options below are for es3sh internal use
+-- options below are for config internal use
 -- mind the spaces!
 
 no_subs: "!NO!SUBS!"
@@ -219,3 +220,5 @@ driver_filename: "driver.exe"
 externals_text: "EXTERNALS"
 
 externals_continuation_text: "EXTERNALS =  \"
+
+precomp_lib_command_text: "echo $precompiled_library + >> $@"

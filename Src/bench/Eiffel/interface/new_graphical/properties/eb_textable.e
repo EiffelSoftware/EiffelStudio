@@ -87,22 +87,4 @@ feature {NONE} -- Implementation
 			text_area := an_editor
 		end
 
-feature -- Obsolete
-
-	set_mode_for_editing is
-			-- Set edit mode for text modification.	
-			-- (By default it is set to read only)
-		obsolete "use enable_editable instead"
-		do
-			enable_editable
-		end
-
-	has_editable_text: BOOLEAN is
-			-- Does Current tool have an editable text area?
-			-- False by default.
-		obsolete "use is_editable instead"
-		do
-			Result := is_editable
-		end
-
 end -- class EB_TEXTABLE

@@ -6,7 +6,7 @@ inherit
 
 	BUTTON_C
 		redefine
-			stored_node, widget
+			stored_node, widget, is_able_to_be_grouped
 		end
 
 feature 
@@ -28,7 +28,14 @@ feature
 		do
 			Result := Pixmaps.toggle_b_pixmap
 		end;
-	
+
+	is_able_to_be_grouped: BOOLEAN is
+			-- Is Current toggle able to be grouped?
+		do
+			Result := not parent.is_group_composite and
+						then not is_in_a_group
+		end
+
 feature {NONE}
 
 	namer: NAMER is

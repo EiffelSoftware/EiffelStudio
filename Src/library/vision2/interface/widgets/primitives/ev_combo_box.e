@@ -56,7 +56,7 @@ feature -- Element change
 			implementation.set_extended_height (value)
 		end
 
-feature -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_COMBO_BOX_I
 
@@ -72,7 +72,6 @@ feature -- Implementation
 			{EV_LIST} Precursor
 			{EV_TEXT_FIELD} Precursor
 		end
-
 
 end -- class EV_COMBO_BOX
 
@@ -97,6 +96,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/15 19:26:52  king
+--| Exporting interface to ev_any
+--|
 --| Revision 1.23  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

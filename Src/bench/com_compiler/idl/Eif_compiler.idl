@@ -11,6 +11,7 @@ interface IEiffelProject;
 interface IEiffelCompiler;
 interface IEiffelCompilerEvents;
 interface IEiffelSystemBrowser;
+interface IEiffelClusterDescriptor;
 interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
 
@@ -52,9 +53,6 @@ interface IEiffelCompiler: IUnknown
 	
 	[helpstring ("Was last compilation successful?")]
 	HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
-	
-	[helpstring ("Last error message.")]
-	HRESULT last_error_message ([out, retval] BSTR * return_value);
 };
 
 [
@@ -68,7 +66,7 @@ interface IEiffelCompilerEvents: IUnknown
 	HRESULT continue ([in, out] VARIANT_BOOL * a_boolean);
 		
 	[helpstring ("Output string.")]
-	HRESULT output_string ([out, retval] BSTR * return_value);
+	HRESULT output_string ([in] BSTR a_string);
 };
 
 [
@@ -81,6 +79,12 @@ interface IEiffelSystemBrowser: IUnknown
 	[helpstring ("List of classes in system.")]
 	HRESULT system_classes ([out, retval] SAFEARRAY (BSTR) * names);
 
+	[helpstring ("List of system's clusters.")]
+	HRESULT system_clusters ([out, retval] SAFEARRAY (BSTR) * names);
+
+	[helpstring ("Cluster descriptor.")]
+	HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);
+
 	[helpstring ("Class descriptor.")]
 	HRESULT class_descriptor ([in] BSTR class_name, [out, retval] IEiffelClassDescriptor ** return_value);
 	
@@ -88,6 +92,26 @@ interface IEiffelSystemBrowser: IUnknown
 	HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
 };
 
+
+[
+	oleautomation,
+	uuid (81062B0E-B1D6-4c5d-8B8B-71464E86B869),
+	helpstring ("Eiffel Cluster Descriptor.")
+]
+interface IEiffelClusterDescriptor: IUnknown
+{
+	[helpstring ("Cluster name.")]
+	HRESULT name ([out, retval] BSTR * return_value);
+
+	[helpstring ("Cluster description.")]
+	HRESULT description ([out, retval] BSTR * return_value);
+	
+	[helpstring ("List of classes in cluster.")]
+	HRESULT classes ([out, retval] SAFEARRAY (IEiffelClassDescriptor *) * some_features);
+
+	[helpstring ("Full path to cluster.")]
+	HRESULT cluster_path ([out, retval] BSTR * path);
+};
 
 [
 	oleautomation,
@@ -102,6 +126,9 @@ interface IEiffelClassDescriptor: IUnknown
 	[helpstring ("Class description.")]
 	HRESULT description ([out, retval] BSTR * return_value);
 	
+	[helpstring ("List of names of class features.")]
+	HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
+
 	[helpstring ("List of class features.")]
 	HRESULT features ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_features);
 	

@@ -27,7 +27,7 @@ create
 feature -- Access
 
 	has (v: like item): BOOLEAN is
-			-- Does structure include `v'?
+			-- Does `Current' include `v'?
 		do
 			Result := not is_destroyed and
 				(v /= Void and then implementation.item = v)	
@@ -68,15 +68,17 @@ feature -- Status report
 feature -- Removal
 
 	prune (v: like item) is
-			-- Remove one occurrence of `v' if any.
+			-- Remove `v' if contained.
 		do
 			if item = v then
 				wipe_out
 			end
+		ensure then
+			not has (v)
 		end
 
 	wipe_out is
-			-- Remove all items.
+			-- Remove `item'.
 		do
 			implementation.replace (Void)
 		end
@@ -103,7 +105,7 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of cell.
+			-- Create implementation of `Current'.
 		do
 			create {EV_CELL_IMP} implementation.make (Current) 
 		end

@@ -8,11 +8,6 @@ class
 	AUXILIARY_FILES
 
 inherit
-	SHARED_ROUT_ID
-		undefine
-			system
-		end
-
 	SHARED_CODE_FILES
 
 	COMPILER_EXPORTER
@@ -33,6 +28,56 @@ feature -- Access
 	system: SYSTEM_I
 
 	context: BYTE_CONTEXT
+
+feature -- Plug and Makefile file
+
+	generate_conformance_table is
+			-- Generates conformance tables.
+		local
+			i, nb: INTEGER
+			cl_type: CLASS_TYPE
+			conformance_file: INDENT_FILE
+		do
+			conformance_file := conformance_f (context.final_mode)
+			conformance_file.open_write
+
+			conformance_file.putstring ("#include %"eif_project.h%"%N%
+										%#include %"eif_struct.h%"%N%N")
+			from
+				i := 1
+				nb := system.type_id_counter.value
+			until
+				i > nb
+			loop
+				cl_type := system.class_types.item (i)
+if cl_type /= Void then
+		-- FIXME
+				cl_type.generate_conformance_table (conformance_file)
+end
+				i := i + 1
+			end
+
+			conformance_file.putstring ("struct conform *egc_fco_table[] = {%N")
+
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				cl_type := system.class_types.item (i)
+if cl_type /= Void then
+				conformance_file.putstring ("&conf")
+				conformance_file.putint (cl_type.type_id)
+else
+		-- FIXME
+	conformance_file.putstring ("(struct conform *)0")
+end
+				conformance_file.putstring (",%N")
+				i := i + 1
+			end
+			conformance_file.putstring ("};%N")
+			conformance_file.close
+		end
 
 feature -- Plug and Makefile file
 
@@ -132,8 +177,8 @@ feature -- Plug and Makefile file
 					Plug_file.putstring ("0;%N")
 				end
 
-				init_name := Initialization_rout_id.table_name
-				dispose_name := Dispose_rout_id.table_name
+				init_name := system.routine_id_counter.initialization_rout_id.table_name
+				dispose_name := system.routine_id_counter.dispose_rout_id.table_name
 
 				Plug_file.putstring ("extern char *(*")
 				Plug_file.putstring (table_prefix)
@@ -175,7 +220,7 @@ feature -- Plug and Makefile file
 
 				-- Do we need to collect GC data for the profiler?
 			Plug_file.putstring ("EIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
-			if Lace.ace_options.has_profile then
+			if system.lace.ace_options.has_profile then
 				Plug_file.putstring ("3;%N")
 			else
 				Plug_file.putstring ("0;%N")

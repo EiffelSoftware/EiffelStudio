@@ -22,6 +22,12 @@ feature -- Initialization
 
 feature -- Access
 
+	new_id is
+			-- Generate a new id.
+		do
+			menu_id.next
+		end
+
 	menu_id: INTEGER_GENERATOR_WINDOWS
 
 	menu_buttons: HASH_TABLE [WIDGET_WINDOWS, INTEGER]

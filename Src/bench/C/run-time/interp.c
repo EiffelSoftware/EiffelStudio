@@ -219,6 +219,7 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 	 * code, before propagating it to the C code, the operational stack
 	 * must be cleaned.
 	 */
+	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
 	RTXD;					/* Store stack contexts */
@@ -280,7 +281,7 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
           		/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
-
+	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	RTXD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
@@ -308,6 +309,7 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 rt_public void xinitint(EIF_CONTEXT_NOARG)
 {
 	/* Creation of the register array. */
+	EIF_GET_CONTEXT
 
 	iregsz = REGISTER_SIZE * sizeof(struct item *);
 	iregs = (struct item **) cmalloc(iregsz);
@@ -324,6 +326,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	 * CPU cycles--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 int code;				/* Current intepreted byte code */
 	register2 struct item *last;	/* Last pushed value */
 	register3 long offset;			/* Offset for jumps and al */
@@ -350,9 +353,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	char *rvar;						/* Result address for once */
 	int32 rout_id;					/* Routine id */
 	int32 body_id;					/* Body id of once routine */
-	int current_trace_level;	/* Saved call level for trace, only needed when routine is retried */
-	char **saved_prof_top;	/* Saved top of `prof_stack' */
-	/* struct item *result_val; */		/* Postcondition result value */ /* %%ss removed */
+	int current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
+	char **saved_prof_top;			/* Saved top of `prof_stack' */
 	RTSN;							/* Save nested flag */
  
 #ifdef CONCURRENT_EIFFEL
@@ -3278,12 +3280,11 @@ rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct 
                   			/* To save stack context */
           					/* Invariant after or before */
 {
+	EIF_GET_CONTEXT
 	/* Check invariant on non-void object `obj' */
 	char *old_IC;		/* IC backup */
-
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
-	/* int i; */ /* %%ss removed */
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
@@ -3307,10 +3308,10 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 {
 	/* Recursive invariant check. */
 
+	EIF_GET_CONTEXT
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
 	int p_type;
-	/* int32 inv_body_id; */ /* Invariant body id */ /* %%ss removed */
 
 	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
 
@@ -4008,13 +4009,15 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
 	 * resynchronization of registers is needed.
 	 */
 
+	EIF_GET_CONTEXT
 	uint32 body;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
 	char *old_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
-	uint16 body_index;
+	uint16 body_index;	
+	
 
 	rout_id = Routids(stype)[fid];
 	CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));
@@ -4076,6 +4079,7 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
 	 * 1 to the caller if a resynchronization of registers is needed.
 	 */
 
+	EIF_GET_CONTEXT
 	uint32 body;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
 	char *old_IC;					/* IC back-up */
@@ -4211,6 +4215,7 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 	 * is then popped off from the stack.
 	 */
 	
+	EIF_GET_CONTEXT
 	long offset;					/* Offset of the attribute */
 	struct item *last;				/* Value on top of the stack */
 	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
@@ -4275,6 +4280,7 @@ rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
 	 * is then popped off from the stack.
 	 */
 	
+	EIF_GET_CONTEXT
 	long offset;					/* Offset of the attribute */
 	struct item *last;				/* Value on top of the stack */
 	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
@@ -4334,6 +4340,7 @@ void call_disp(EIF_CONTEXT uint32 dtype, char *object)
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
 	 */
+	EIF_GET_CONTEXT
 	char *OLD_IC;
 	OLD_IC = IC;
 	(wdisp (dtype))(object);
@@ -4367,7 +4374,7 @@ rt_private double get_double(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(double)];
 		double value;
@@ -4387,7 +4394,7 @@ rt_private float get_float(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(float)];
 		float value;
@@ -4407,7 +4414,7 @@ rt_private long get_long(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(long)];
 		long value;
@@ -4427,7 +4434,7 @@ rt_private short get_short(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(short)];
 		short value;
@@ -4447,7 +4454,7 @@ rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(uint32)];
 		uint32 value;
@@ -4467,7 +4474,7 @@ rt_private fnptr get_fnptr(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(fnptr)];
 		fnptr value;
@@ -4487,7 +4494,7 @@ rt_private char *get_address(EIF_CONTEXT_NOARG)
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	union {
 		char xtract[sizeof(char *)];
 		char *value;
@@ -4624,6 +4631,7 @@ rt_private void init_registers(EIF_CONTEXT_NOARG)
 	 * informations about the type of each variable. They are retrieved here.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 int n;				/* # of locals/arguments to be fetched */
 	register2 struct item **reg;	/* Pointer in register array */
 	register3 struct item *last;	/* Initialization of stack frame */
@@ -4702,6 +4710,7 @@ rt_private void allocate_registers(EIF_CONTEXT_NOARG)
 	 * memory exception is register array cannot be created.
 	 */
 
+	EIF_GET_CONTEXT
 	static int bigger = 0;			/* Records # of time array is bigger */
 	register1 int size;				/* Size of iregs array */
 	register2 struct item **new;	/* New location for array extension */
@@ -4741,6 +4750,7 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	 * opop() calls--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 int n;				/* Loop index */
 	register2 struct item **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
@@ -4802,6 +4812,7 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
 	 * It we were in a function, the Result value is pushed back on the stack.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 int nb_items;			/* Number of registers to be popped off */
 	struct item *result;			/* To save the result */
 	struct item saved_result;		/* Save value pointed to by iresult */
@@ -5164,6 +5175,8 @@ rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
 	 * To avoid endless tests, there is a convention: if the routine has n
 	 * locals, then n+1 is the result of the routine, if it exists.
 	 */
+
+	EIF_GET_CONTEXT
 
 	switch (code) {
 	case IV_LOCAL:						/* Nth local */

@@ -49,8 +49,8 @@ rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 	/* Create an Eiffel ARRAY [STRING] with the values contained in
 	 * `argv'
 	 */
+	EIF_GET_CONTEXT
 	char *array, *sp;
-	/* char *str; */ /* %%ss removed */
 	int i;
 
 	/*
@@ -87,9 +87,9 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	 * This object will contain all the attributes of curr except for
 	 * items.
 	 */
-
+	EIF_GET_CONTEXT
 	char *array, *sp, *o_ref; 
-	char *new_obj; /* %%ss removed, *new_attr; */
+	char *new_obj;
 	long nbr_attr, offset, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
@@ -197,7 +197,7 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
 	 */
-	
+	EIF_GET_CONTEXT
 	char *string;					/* Were string object is located */
 
 	string = emalloc(str_dtype);	/* If we return, it succeeded */
@@ -296,10 +296,9 @@ rt_public void chkinv (EIF_CONTEXT char *obj, int where)
           		/* Invariant is beeing checked before or after compound? */
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
-
+	EIF_GET_CONTEXT
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
-	/* int i; */ /* %%ss removed */
 
 	if (inv_mark_tablep == (char *) 0)
 		if ((inv_mark_tablep = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
@@ -326,13 +325,10 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
           		/* Invariant is being checked before or after compound? */
 {
 	/* Recursive invariant check. */
-
+	EIF_GET_CONTEXT
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
 	int p_type;
-/* #ifdef WORKBENCH */
-	/* int32 inv_body_id; */ /* Invariant body id */ /* %%ss removed */
-/* #endif */
 
 	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
 

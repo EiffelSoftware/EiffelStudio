@@ -29,7 +29,7 @@ inherit
 			is_equal, out, copy, consistent, setup
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

@@ -26,7 +26,7 @@ inherit
 
 	TYPES [G]
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

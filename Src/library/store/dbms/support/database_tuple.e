@@ -10,7 +10,7 @@ inherit
 
 	HANDLE_USE
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

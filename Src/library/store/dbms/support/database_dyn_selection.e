@@ -18,7 +18,7 @@ inherit
 			out, copy, is_equal
 		end
 
-creation
+create
 
 	make
 

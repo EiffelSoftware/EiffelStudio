@@ -16,7 +16,7 @@ inherit
 
 	DB_CONSTANT
 
-creation
+create
 	default_create,
 	login,
 	login_and_connect

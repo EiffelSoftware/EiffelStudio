@@ -19,7 +19,8 @@ inherit
 feature -- Access
 
 	keycode: INTEGER
-			-- Server-dependent code corresponding to the keystroke
+			-- Platform dependent code corresponding to the keystroke
+			-- For values, see class EV_KEY_CODE.
 
 	length: INTEGER is
 			-- length of the string returned by the system

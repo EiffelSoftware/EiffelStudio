@@ -2,6 +2,8 @@ class SYSTEM_CONSTANTS
 
 feature {NONE}
 
+	Continuation: CHARACTER is '\'
+
 	Comp: STRING is "COMP"
 
 	Default_precompiled_location: STRING is "$EIFFEL3/precompiled/spec/$PLATFORM/base"

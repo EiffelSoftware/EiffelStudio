@@ -140,12 +140,6 @@ feature -- Cecil
 		deferred
 		end;
 
-	continuation: CHARACTER is
-		obsolete "Should be in SYSTEM_CONSTANTS"
-		do
-			Result := '\'
-		end;
-
 	generate_cecil is
 		local
 			libname: STRING;
@@ -158,8 +152,7 @@ feature -- Cecil
 			generate_objects_macros (partial_objects, False);
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
-			Make_file.new_line;
-			Make_file.putstring ("%Tar x ");
+			Make_file.putstring (" Makefile%N%Tar x ");
 			Make_file.putstring (run_time);
 			Make_file.new_line;
 			Make_file.putstring ("%Tar cr ");
@@ -448,7 +441,7 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			Make_file.putstring (Emain);
 			Make_file.putstring (Dot_o);
-			Make_file.new_line;
+			Make_file.putstring (" Makefile%N");
 			Make_file.putstring ("%T$(RM) ");
 			Make_file.putstring (system_name);
 			Make_file.new_line;

@@ -46,6 +46,7 @@ feature -- Closing
 	close is
 		do
 			if is_popped_up then
+				unrealize;
 				popdown
 			end
 		end;

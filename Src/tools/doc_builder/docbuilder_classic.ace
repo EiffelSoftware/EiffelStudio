@@ -1,5 +1,5 @@
 system
-	"docbuilder"
+	"doc_builder"
 
 root
 	DOC_BUILDER: make_and_launch
@@ -7,9 +7,7 @@ root
 default
 	il_verifiable (no)
 	msil_generation_type ("exe")
-	assertion (require)
-	assertion (ensure)
-	assertion (check)
+	assertion (no)
 	disabled_debug (yes)
 	debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
@@ -28,7 +26,7 @@ default
 	profile (no)
 	trace (no)
 	check_vape (yes)
-	console_application (yes)
+	console_application (no)
 	syntax_warning (no)
 	address_expression (no)
 	array_optimization (no)

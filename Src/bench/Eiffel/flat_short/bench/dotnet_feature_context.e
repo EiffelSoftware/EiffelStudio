@@ -17,7 +17,7 @@ inherit
 			put_comments as old_put_comments,
 			put_origin_comment as old_put_origin_comment
 		export
-			{DOTNET_CLASS_AS} name_of_current_feature	
+			{DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} name_of_current_feature	
 		redefine
 			initialize
 		end
@@ -189,11 +189,19 @@ feature -- Element change
 			if l_feature /= Void then
 				text.add_new_line
 				text.add_indent
+				if current_feature.is_frozen or l_feature.is_frozen then
+					text.add_string (Ti_frozen_keyword.image)
+					text.add_space
+				end
 				text.add_feature (l_feature, name_of_current_feature)
 			else
 				l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
 				text.add_new_line
 				text.add_indent
+				if current_feature.is_frozen then
+					text.add_string (Ti_frozen_keyword.image)
+					text.add_space
+				end
 				text.add (l_txt)
 			end	
 			
@@ -201,42 +209,42 @@ feature -- Element change
 			put_comments
 		end		
 
-	put_property_or_event_feature is
-			-- Format an event ot property feature.
-		require
-			is_prop_or_event: current_feature.is_property_or_event
-		local
-			l_event: CONSUMED_EVENT
-			l_property: CONSUMED_PROPERTY
-		do
-			if current_feature.is_event then
-				l_event ?= current_feature
-				if l_event /= Void then
-					if l_event.adder /= Void then
-						name_of_current_feature := l_event.adder.eiffel_name
-						put_normal_feature
-					end
-					if l_event.remover /= Void then
-						name_of_current_feature := l_event.remover.eiffel_name
-						put_normal_feature
-					end
-					name_of_current_feature := clone (current_feature.eiffel_name)
-				end		
-			elseif current_feature.is_property then
-				l_property ?= current_feature
-				if l_property /= Void then
-					if l_property.getter /= Void then
-						name_of_current_feature := l_property.getter.eiffel_name
-						put_normal_feature
-					end
-					if l_property.setter /= Void then
-						name_of_current_feature := l_property.setter.eiffel_name
-						put_normal_feature
-					end
-					name_of_current_feature := clone (current_feature.eiffel_name)
-				end		
-			end
-		end	
+--	put_property_or_event_feature is
+--			-- Format an event ot property feature.
+--		require
+--			is_prop_or_event: current_feature.is_property_or_event
+--		local
+--			l_event: CONSUMED_EVENT
+--			l_property: CONSUMED_PROPERTY
+--		do
+--			if current_feature.is_event then
+--				l_event ?= current_feature
+--				if l_event /= Void then
+--					if l_event.adder /= Void then
+--						name_of_current_feature := l_event.adder.eiffel_name
+--						put_normal_feature
+--					end
+--					if l_event.remover /= Void then
+--						name_of_current_feature := l_event.remover.eiffel_name
+--						put_normal_feature
+--					end
+--					name_of_current_feature := clone (current_feature.eiffel_name)
+--				end		
+--			elseif current_feature.is_property then
+--				l_property ?= current_feature
+--				if l_property /= Void then
+--					if l_property.getter /= Void then
+--						name_of_current_feature := l_property.getter.eiffel_name
+--						put_normal_feature
+--					end
+--					if l_property.setter /= Void then
+--						name_of_current_feature := l_property.setter.eiffel_name
+--						put_normal_feature
+--					end
+--					name_of_current_feature := clone (current_feature.eiffel_name)
+--				end		
+--			end
+--		end	
 
 feature {NONE} -- Element Change
 
@@ -247,6 +255,8 @@ feature {NONE} -- Element Change
 			l_c_class: CLASS_I
 			l_cnt,
 			l_char_count: INTEGER
+			l_ext: EXTERNAL_CLASS_C
+			l_type_a: CL_TYPE_A
 		do
 			if not (arguments = Void or arguments.is_empty) then
 				begin
@@ -263,7 +273,7 @@ feature {NONE} -- Element Change
 				loop
 					l_c_arg := arguments.item (l_cnt)
 					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
-					
+
 					if l_char_count > 60 then
 						text.add_new_line
 						text.add_indents (4)
@@ -272,13 +282,22 @@ feature {NONE} -- Element Change
 					text.add (create {LOCAL_TEXT}.make (l_c_arg.eiffel_name))
 					text.add_char (':')
 					text.add_space
-					text.add_class (l_c_class)
+					
+					if class_i.is_compiled then
+						l_ext ?= class_i.compiled_class
+						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
+						l_type_a.format (Current)
+					else
+						text.add_class (l_c_class)
+					end				
+					
 					if l_cnt < arguments.count then
 						text.add_char (';')
 						text.add_space
 					end
 					
 					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 + l_c_class.name.count
+					l_ext := Void
 					l_cnt := l_cnt + 1
 				end
 				text.add (ti_r_parenthesis)
@@ -287,28 +306,38 @@ feature {NONE} -- Element Change
 			if return_type /= Void then
 				text.add_char (':')
 				text.add_space
-				text.add_class (class_i.type_from_consumed_type (return_type))
+				l_c_class := class_i.type_from_consumed_type (return_type)
+				if 	class_i.is_compiled then
+					l_ext ?= class_i.compiled_class
+					l_type_a := l_ext.type_from_consumed_type (return_type)
+					l_type_a.format (Current)
+				else
+					text.add_class (l_c_class)
+				end
 			end
 		end
 		
 	put_comments is
-			-- Feature comments from XML
+			-- Feature comments from XML.
 		local
 			l_member_info: MEMBER_INFORMATION
 			l_parameter_information: ARRAYED_LIST [PARAMETER_INFORMATION]
-			l_parsed_arguments, l_namespace_name: STRING
+			l_parsed_arguments, l_namespace_name, l_dotnet_name: STRING
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_summary, l_return_info: ARRAYED_LIST [STRING]
 			l_c_arg: CONSUMED_ARGUMENT
 			l_cnt: INTEGER
 		do
-				-- Retrieve feature comments for feature
 			create l_parsed_arguments.make_empty
 			l_constructor ?= current_feature
+			
 			if l_constructor /= Void then
+					-- Feature is a constructor so add constructor suffix.
 				l_parsed_arguments.append ("#ctor")
 			end
+			
 			if arguments /= Void then
+					-- Feature has arguments so append to 'l_parsed_arguments'.
 				from
 					l_cnt := 1
 					if arguments.count > 0 then
@@ -331,19 +360,30 @@ feature {NONE} -- Element Change
 				create l_parsed_arguments.make_empty
 			end
 			
-			if not is_inherited then
+			if is_inherited then
+					-- Retrieve .NET member name depending upon if inherited.	
 				l_namespace_name := class_i.type_from_consumed_type (declared_type).external_name
 			else
 				l_namespace_name := consumed_t.dotnet_name
 			end
 			
 			if l_constructor /= void then
+					-- Return constructor member type information.
 				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_parsed_arguments)
 			else
-				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, current_feature.dotnet_name + l_parsed_arguments)
+				if current_feature.is_property_or_event then
+						-- Return property or event member type information.
+					l_dotnet_name := parsed_entity_string (current_feature.dotnet_name)
+					l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_dotnet_name)
+				else
+						-- Return any other member type information.
+					l_dotnet_name := current_feature.dotnet_name
+					l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_dotnet_name + l_parsed_arguments)
+				end	
 			end
 			
 			if l_member_info /= Void then
+					-- Write returned member type information to class/feature text.
 				l_summary := parse_summary (l_member_info.summary)
 				from
 					l_summary.start
@@ -353,7 +393,7 @@ feature {NONE} -- Element Change
 					text.add_new_line
 					text.add_indents (3)
 					text.add_comment ("-- ")
-					text.add_comment (l_summary.item)		
+					text.add_comment (l_summary.item)	
 					l_summary.forth
 				end
 				
@@ -387,16 +427,20 @@ feature {NONE} -- Element Change
 					end
 					new_line
 				end
-			else 
+			else
+				text.add_new_line
+				text.add_indents (3)
+				text.add_comment ("-- ")
+				text.add_comment ("Description unavailable.")
 				new_line
 			end
 			put_origin_comment
 		end
 	
 	put_origin_comment is
-			-- Put the 'from CLASS' if feature is declared in ancestor.
+			-- Put the 'from (CLASS)' if feature is declared in ancestor where 'CLASS' is
+			-- ancestor class.
 		do
-				-- Check if feature is inherited, if display inherited class name
 			if is_inherited then
 				text.add_indents (3)
 				text.add_comment ("-- from (")
@@ -432,7 +476,9 @@ feature {NONE} -- Element Change
 					text.add_new_line
 					text.add_indents (3)
 					text.add_comment ("-- ")
-					text.add_comment (a_param_info.item.name + ":")
+					create l_string.make_from_string (a_param_info.item.name)
+					l_string.prune_all_leading (' ')
+					text.add_comment (l_string + ": ")
 
 					l_summary := parse_summary (a_param_info.item.description)
 					from
@@ -449,13 +495,11 @@ feature {NONE} -- Element Change
 							text.add_string (l_string)
 						else
 							if (l_max_count - a_param_info.item.name.count > 0) then
-								create l_string.make (l_max_count - a_param_info.item.name.count)
-								l_string.fill_character (' ')
+								create l_string.make_filled (' ', l_max_count - a_param_info.item.name.count)
 								text.add_string (l_string)
 							end
 							l_next_line := not l_next_line
 						end
-						text.add_space
 						text.add_comment (l_summary.item)
 						l_summary.forth
 					end
@@ -464,8 +508,8 @@ feature {NONE} -- Element Change
 					a_param_info.forth
 				end
 			new_line
-		end		
-		
+		end			
+				
 	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
 				-- Strip 'a_summary' of all unwanted whites space
 			require
@@ -503,6 +547,14 @@ feature {NONE} -- Element Change
 				has_an_element: not a_summary.is_empty implies not Result.is_empty
 			end
 
+	parsed_entity_string (a_string: STRING): STRING is
+			-- Parse 'a_string' for property or event to return correct .NET string.
+		require
+			string_not_void: a_string /= Void
+		do
+			Result := a_string.substring (a_string.index_of ('_', 1) + 1, a_string.count)	
+		end
+
 	feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed feature.
 		require
@@ -515,12 +567,72 @@ feature {NONE} -- Element Change
 			from 
 				l_entities.start
 			until
-				l_entities.after
+				l_entities.after or Result /= Void
 			loop
 				if l_entities.item.eiffel_name.is_equal (a_feature.name) then
 					Result := l_entities.item
 				end
 				l_entities.forth
+			end
+			if Result = Void then
+				Result := event_or_property_feature_from_type (a_consumed_type, a_feature)
+			end
+		end
+		
+	event_or_property_feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
+			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed feature.
+		require
+			a_consumed_type_not_void: a_consumed_type /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_properties: ARRAY [CONSUMED_PROPERTY]
+			l_events: ARRAY [CONSUMED_EVENT]
+			l_counter: INTEGER
+		do
+			l_properties := a_consumed_type.properties
+			from 
+				l_counter := 1
+			until
+				l_counter > l_properties.count or Result /= Void
+			loop
+				if 	
+					l_properties.item (l_counter).getter /= Void and 
+					l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name) 
+				then
+					Result := l_properties.item (l_counter).getter
+				elseif
+					l_properties.item (l_counter).setter /= Void and 
+					l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name) 
+				then
+					Result := l_properties.item (l_counter).setter
+				end
+				l_counter := l_counter + 1
+			end
+			if Result = Void then
+				from
+					l_events := a_consumed_type.events
+					l_counter := 1
+				until
+					l_counter > l_events.count or Result /= Void
+				loop
+					if
+						l_events.item (l_counter).adder /= Void and
+						l_events.item (l_counter).adder.eiffel_name.is_equal (a_feature.name)
+					then
+						Result := l_events.item (l_counter).adder
+					elseif
+						l_events.item (l_counter).remover /= Void and
+						l_events.item (l_counter).remover.eiffel_name.is_equal (a_feature.name)
+					then
+						Result := l_events.item (l_counter).remover
+					elseif
+						l_events.item (l_counter).raiser /= Void and
+						l_events.item (l_counter).raiser.eiffel_name.is_equal (a_feature.name)
+					then
+						Result := l_events.item (l_counter).raiser
+					end
+					l_counter := l_counter + 1
+				end
 			end
 		end
 
@@ -545,7 +657,6 @@ feature {NONE} -- Implementation
 			end
 			Result := l_max
 		end
-		
 
 	Maximum_line_count: INTEGER is 70
 			-- Number of characters after which we should stop displaying

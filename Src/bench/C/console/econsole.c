@@ -373,7 +373,10 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	return r;
 }
 
-void eif_console_cleanup (void)
+void eif_console_cleanup (EIF_BOOLEAN crashed)
+	/* Free the DOS console */
+	/* If crashed = EIF_TRUE then a message is shown to the user so that he
+	 * can see what has been the problem after a crash of his system */
 {
 	BOOL b;
 	EIF_CHARACTER c;
@@ -383,8 +386,10 @@ void eif_console_cleanup (void)
 		if (eif_thr_is_root())
 #endif
 		{
-			eif_console_putstring("\nPress Return to finish the execution...\0", 40);
-			c = eif_console_readchar ();
+			if (crashed) {
+				eif_console_putstring("\nPress Return to finish the execution...\0", 40);
+				c = eif_console_readchar ();
+			}
 			CloseHandle (eif_coninfile);
 			CloseHandle (eif_conoutfile);
 			b = FreeConsole ();

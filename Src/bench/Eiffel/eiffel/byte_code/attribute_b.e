@@ -11,7 +11,8 @@ inherit
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
-			creation_access, enlarged, is_creatable, is_attribute, read_only
+			creation_access, enlarged, is_creatable, is_attribute, read_only,
+			assigns_to
 		end;
 
 feature 
@@ -158,5 +159,12 @@ feature -- Byte code generation
         once
 			Result := Bc_attribute_inv
         end;
+
+feature -- Array optimization
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := attribute_id = i
+		end
 
 end

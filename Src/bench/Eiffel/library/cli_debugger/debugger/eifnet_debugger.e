@@ -957,7 +957,6 @@ feature -- Specific function evaluation
 		local
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icd: ICOR_DEBUG_VALUE		
-			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -969,12 +968,11 @@ feature -- Specific function evaluation
 		do	
 -- FIXME jfiat [2004/07/20] : Why do we set l_icd as a_icd ... this is not what we want, check it
 --			l_icd := a_icd
-			l_icd_object := a_icd_obj
 
 			l_class_type := a_class_type
 			l_feat := debug_output_feature_i (l_class_type.associated_class)
 			if l_feat /= Void then
-				l_icd_class := l_icd_object.get_class
+				l_icd_class := a_icd_obj.get_class
 				l_icd_module := l_icd_class.get_module
 			
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
@@ -988,7 +986,7 @@ feature -- Specific function evaluation
 					end
 					if l_func /= Void then
 						l_icd_frame := a_frame
-						l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<l_icd>>)
+						l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
 						l_func.clean_on_dispose
 					else						
 						debug ("DEBUGGER_TRACE_EVAL")

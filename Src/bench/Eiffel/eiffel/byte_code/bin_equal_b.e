@@ -223,7 +223,13 @@ feature -- IL code generation
 				(left_type.is_none and right_type.is_expanded) or
 				(left_type.is_expanded and right_type.is_none)
 			then
-					-- Simple type can never be Void
+					-- Simple type can never be Void, so we simply evaluate
+					-- expressions and then remove them from the stack to insert
+					-- the expected value
+				left.generate_il
+				right.generate_il
+				il_generator.pop
+				il_generator.pop
 				generate_il_boolean_constant
 			else
 				if

@@ -132,22 +132,8 @@ feature
 		end;
 
 	add_in_log (encoded_name: STRING) is
-		local
-			log_file: PLAIN_TEXT_FILE;
-			class_t: CLASS_TYPE;
 		do
-			class_t := Context.class_type;
-			log_file := System.used_features_log_file;
-			log_file.putstring (class_t.associated_class.cluster.cluster_name);
-			log_file.putchar ('%T');
-			class_t.type.dump (log_file);
-			log_file.putchar ('%T');
-			log_file.putstring (feature_name);
-			log_file.putchar ('%T');
-			log_file.putstring (encoded_name);
-			log_file.putchar ('%T');
-			log_file.putstring (class_t.relative_file_name);
-			log_file.new_line;
+			System.used_features_log_file.add (Context.class_type, feature_name, encoded_name);
 		end
 
 	generate is
@@ -167,7 +153,6 @@ feature
 				body_id);
 
 				-- Add entry in the log file
-
 			add_in_log (internal_name);
 
 				-- Generate function name

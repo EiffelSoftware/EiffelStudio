@@ -49,7 +49,7 @@ feature -- Properties
 			file_name, dir_entry: STRING
 			found: BOOLEAN
 		once
-			Result := filter_name
+			Result := general_filter_name
 				-- Check whether that filter exists or not.
 			create filter_dir.make (filter_path)
 			if filter_dir.exists and then filter_dir.is_readable then

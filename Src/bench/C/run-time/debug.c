@@ -890,9 +890,9 @@ int new;		/* Amount of new entries in melting table */
 		return 0;				/* Everything is fine */
 
 #ifdef DEBUG
-	dprintf(4)("dmake_room: extending melt (0x%x), %d items by %d\n",
+	dprintf(4)("dmake_room: extending melt (0x%lx), %d items by %d\n",
 		 melt, mcount, new);
-	dprintf(4)("dmake_room: extending mpatidtab (0x%x), %d items by %d\n",
+	dprintf(4)("dmake_room: extending mpatidtab (0x%lx), %d items by %d\n",
 		 mpatidtab, mcount, new);
 #endif
 
@@ -912,9 +912,9 @@ int new;		/* Amount of new entries in melting table */
 	mpatidtab = new_mpatidtab - zeroc;	/* Melted pattern id table may heve changed */
 	
 #ifdef DEBUG
-	dprintf(4)("dmake_room: extension ok, melt now at 0x%x, %d items\n",
+	dprintf(4)("dmake_room: extension ok, melt now at 0x%lx, %d items\n",
 		 melt, mcount);
-	dprintf(4)("dmake_room: extension ok, mpatidtab now at 0x%x, %d items\n",
+	dprintf(4)("dmake_room: extension ok, mpatidtab now at 0x%lx, %d items\n",
 		 mpatidtab, mcount);
 #endif
 
@@ -934,7 +934,7 @@ char *addr;			/* Address where byte code is stored */
 	uint32 old_body_id;
 
 #ifdef DEBUG
-	dprintf(4)("drecord_bc: recording 0x%x (%d), idx: %d, id: %d\n",
+	dprintf(4)("drecord_bc: recording 0x%lx (%d), idx: %d, id: %d\n",
 		 addr, body_id - zeroc, body_idx, body_id);
 #endif
 
@@ -955,7 +955,7 @@ char *addr;			/* Address where byte code is stored */
 	melt[body_id] = addr;				/* And record new byte code */
 
 #ifdef DEBUG
-	dprintf(4)("melt [%d] = 0x%x\n", body_id - zeroc, addr);
+	dprintf(4)("melt [%d] = 0x%lx\n", body_id - zeroc, addr);
 #endif
 
 }

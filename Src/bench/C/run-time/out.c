@@ -99,13 +99,13 @@ EIF_OBJ object;
 
 	if (flags & EO_SPEC) {
 		/* Special object */
-		sprintf(buffer, "SPECIAL [0x%X]\n", eif_access(object));
+		sprintf(buffer, "SPECIAL [0x%lX]\n", eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
 		rec_swrite(eif_access(object), 0);
 	} else {
 		/* Print instance class name and object id */
-		sprintf(buffer, "%s [0x%X]\n", System(flags & EO_TYPE).cn_generator,
+		sprintf(buffer, "%s [0x%lX]\n", System(flags & EO_TYPE).cn_generator,
 			eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
@@ -184,7 +184,7 @@ int tab;
 		switch(type & SK_HEAD) {
 		case SK_POINTER:
 			/* Pointer attribute */
-			sprintf(buffer, "POINTER =  C pointer 0x%x\n", *(fnptr *)o_ref);
+			sprintf(buffer, "POINTER =  C pointer 0x%lx\n", *(fnptr *)o_ref);
 			write_out();
 			break;
 		case SK_BOOL:
@@ -247,11 +247,11 @@ int tab;
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
 					/* C reference */
-					sprintf(buffer, "POINTER = C pointer 0x%x\n", reference);
+					sprintf(buffer, "POINTER = C pointer 0x%lx\n", reference);
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
 					/* Special object */
-					sprintf(buffer, "SPECIAL [0x%X]\n", reference);
+					sprintf(buffer, "SPECIAL [0x%lX]\n", reference);
 					write_out();
 					write_tab(tab + 2);
 					sprintf(buffer, "-- begin special object --\n");
@@ -263,7 +263,7 @@ int tab;
 					sprintf(buffer, "-- end special object --\n");
 					write_out();
 				} else {
-					sprintf(buffer, "%s [0x%X]\n",
+					sprintf(buffer, "%s [0x%lX]\n",
 						System(Dtype(reference)).cn_generator, reference);
 					write_out();
 				}
@@ -334,7 +334,7 @@ int tab;
 				else if (dt_type == sp_double)
 					sprintf(buffer, "DOUBLE = %.17g\n", *(double *)o_ref);
 				else if (dt_type == sp_pointer)
-					sprintf(buffer, "POINTER = C pointer 0x%x\n", *(fnptr *)o_ref);
+					sprintf(buffer, "POINTER = C pointer 0x%lx\n", *(fnptr *)o_ref);
 				else {
 					/* Must be bit */
 					reference = *(char **) o_ref;
@@ -353,9 +353,9 @@ int tab;
 			if (0 == reference)
 				sprintf(buffer, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)
-				sprintf(buffer, "POINTER = C pointer 0x%x\n", reference);
+				sprintf(buffer, "POINTER = C pointer 0x%lx\n", reference);
 			else
-				sprintf(buffer, "%s [0x%X]\n",
+				sprintf(buffer, "%s [0x%lX]\n",
 					System(Dtype(reference)).cn_generator, reference);
 			write_out();
 		}
@@ -453,7 +453,7 @@ char c;
 public char *c_outp(p)
 char *p;
 {
-	sprintf(buffer, "0x%X", p);
+	sprintf(buffer, "0x%lX", p);
 	return makestr(buffer, strlen(buffer));
 }
 
@@ -503,7 +503,7 @@ struct item *val;			/* Interpreter value cell */
 		sprintf(tagged_out, "Bit object");
 		break;
 	case SK_POINTER:
-		sprintf(tagged_out, "POINTER = C pointer 0x%x", val->it_ref);
+		sprintf(tagged_out, "POINTER = C pointer 0x%lx", val->it_ref);
 		break;
 	default:
 		sprintf(tagged_out, "Not an object?");

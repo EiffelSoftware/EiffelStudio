@@ -231,7 +231,7 @@ register1 int num;
 	register3 char **saved_top = top;		/* Save current top of stack */
 
 #ifdef DEBUG
-	dprintf(1)("eget: top = 0x%x, current = 0x%x, end = 0x%x, num = %d\n",
+	dprintf(1)("eget: top = 0x%lx, current = 0x%lx, end = 0x%lx, num = %d\n",
 			top, loc_set.st_cur, loc_set.st_end, num);
 #endif
 
@@ -252,7 +252,7 @@ register1 int num;
 		loc_set.st_top += num;				/* Reserve room for variables */
 
 #ifdef DEBUG
-		dprintf(2)("eget: %d slot%s from 0x%x to 0x%x (excluded)\n",
+		dprintf(2)("eget: %d slot%s from 0x%lx to 0x%lx (excluded)\n",
 				num, num == 1 ? "" : "s", top, loc_set.st_top);
 #endif
 
@@ -260,7 +260,7 @@ register1 int num;
 	}
 
 #ifdef DEBUG
-	dprintf(4)("eget: chunk ending at 0x%x is followed by current = 0x%x\n",
+	dprintf(4)("eget: chunk ending at 0x%lx is followed by current = 0x%lx\n",
 		loc_set.st_end, loc_set.st_cur->sk_next);
 #endif
 
@@ -288,7 +288,7 @@ register1 int num;
 	}
 
 #ifdef DEBUG
-	dprintf(4)("eget: top = 0x%x, current = 0x%x, end = 0x%x, slots = %d\n",
+	dprintf(4)("eget: top = 0x%lx, current = 0x%lx, end = 0x%lx, slots = %d\n",
 			top, loc_set.st_cur, loc_set.st_end, loc_set.st_end - top);
 #endif
 
@@ -304,7 +304,7 @@ register1 int num;
 	loc_set.st_top += num;				/* Reserve room for variables */
 
 #ifdef DEBUG
-	dprintf(2)("eget: %d slot%s from 0x%x to 0x%x (excluded)\n",
+	dprintf(2)("eget: %d slot%s from 0x%lx to 0x%lx (excluded)\n",
 			num, num == 1 ? "" : "s", top, loc_set.st_top);
 #endif
 
@@ -322,7 +322,7 @@ register1 char **top;
 	 */
 
 #ifdef DEBUG
-	dprintf(1)("eback: top = 0x%x, arena = 0x%x, end = 0x%x\n",
+	dprintf(1)("eback: top = 0x%lx, arena = 0x%lx, end = 0x%lx\n",
 			top, loc_set.st_cur->sk_arena, loc_set.st_end);
 #endif
 
@@ -481,20 +481,20 @@ public main()
 	evpush(2, &a1, &a2);
 	stack_stats();
 	collect_stats();
-	printf(">>>> Address of A: 0x%x\n", a1);
-	printf(">>>> Address of B: 0x%x\n", a2);
+	printf(">>>> Address of A: 0x%lx\n", a1);
+	printf(">>>> Address of B: 0x%lx\n", a2);
 	printf(">>> Running a full collection.\n");
 	plsc();
 	stack_stats();
 	collect_stats();
-	printf(">>>> Address of A: 0x%x (changed)\n", a1);
-	printf(">>>> Address of B: 0x%x (changed)\n", a2);
+	printf(">>>> Address of A: 0x%lx (changed)\n", a1);
+	printf(">>>> Address of B: 0x%lx (changed)\n", a2);
 	printf(">>> Running a full collection again.\n");
 	plsc();
 	stack_stats();
 	collect_stats();
-	printf(">>>> Address of A: 0x%x (same as first one)\n", a1);
-	printf(">>>> Address of B: 0x%x (same as first one)\n", a2);
+	printf(">>>> Address of A: 0x%lx (same as first one)\n", a1);
+	printf(">>>> Address of B: 0x%lx (same as first one)\n", a2);
 
 	printf("> End of tests.\n");
 	exit(0);

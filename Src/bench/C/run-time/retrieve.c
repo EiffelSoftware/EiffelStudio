@@ -449,7 +449,7 @@ private void read_header()
 				matched = 1;					/* Assume a perfect match */
 				for (j=0; j<nb_gen; j++) {
 					itype[j] = *t++;
-					if (itype[j] != gtype[j])	/* Matching done on the fly */
+					if (itype[j] !=  gtype[j])	/* Matching done on the fly */
 						matched = 0;			/* The types do not match */
 				}
 				if (matched) {					/* We found the type */

@@ -47,8 +47,8 @@ public c_recv_rout_info (target)
 	Dump dump;
 	char *c_rout_name, *eif_rout_name, *obj_addr;
 	char string [128], *ptr = string;
-	long hack;		/* Temporary solution: 2 integers sent in one */
-	long orig, dtype;
+	uint32 hack;		/* Temporary solution: 2 integers sent in one */
+	uint32 orig, dtype;
 
 	Request_Clean (pack);
 	if (-1 != recv_packet (readfd (sp), &pack)){ /* else send error */
@@ -61,10 +61,10 @@ public c_recv_rout_info (target)
 					case DMP_MELTED:
 						c_rout_name = dump.dmp_vect -> ex_rout;
 						eif_rout_name = RTMS (c_rout_name);
-						sprintf (ptr, "%x\0", dump.dmp_vect -> ex_id);
+						sprintf (ptr, "%lx\0", dump.dmp_vect -> ex_id);
 						obj_addr = RTMS (ptr);
 
-						hack = (long) dump.dmp_vect -> ex_orig;
+						hack = (uint32) dump.dmp_vect -> ex_orig;
 						orig = hack >> 16;
 						dtype = hack << 16;
 						dtype >>= 16;

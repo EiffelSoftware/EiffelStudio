@@ -30,7 +30,7 @@ public void wide_listen()
 	 * routine whenever data is available there.
 	 */
 
-	if (-1 == add_input(EWBIN, rqsthandle)) {
+	if (-1 == add_input(EWBIN, arqsthandle)) {
 #ifdef USE_ADD_LOG
 		add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif

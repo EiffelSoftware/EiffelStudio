@@ -862,7 +862,7 @@ int type;
 		oldbrk = (union overhead *) sbrk(asked);
 
 #ifdef DEBUG
-		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%x)\n",
+		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
 			((union overhead *) -1 == oldbrk) ? "no" : "ok", oldbrk);
 		flush;
 #endif
@@ -932,7 +932,7 @@ int type;
 
 #ifdef DEBUG
 	dprintf(1+4)(
-		"add_core: kernel granted %d bytes (user mem from 0x%x to 0x%x)\n",
+		"add_core: kernel granted %d bytes (user mem from 0x%lx to 0x%lx)\n",
 		asked + OVERHEAD + sizeof(struct chunk), oldbrk,
 		(char *) oldbrk + asked + OVERHEAD - 1);
 	flush;
@@ -992,7 +992,7 @@ private int free_last_chunk()
 		sc_to.sc_arena > (char *) last_chk
 	) {
 #ifdef DEBUG
-		dprintf(1)("free_last_chunk: 0x%x not eligible for shrinking\n",
+		dprintf(1)("free_last_chunk: 0x%lx not eligible for shrinking\n",
 			last_chk);
 		flush;
 #endif
@@ -1007,7 +1007,7 @@ private int free_last_chunk()
 	arena = (union overhead *) ((char *) last_chk + sizeof(struct chunk));
 
 #ifdef DEBUG
-	dprintf(1)("free_last_chunk: %s block 0x%x, %d bytes, %s\n",
+	dprintf(1)("free_last_chunk: %s block 0x%lx, %d bytes, %s\n",
 		arena->ov_size & B_LAST ? "last" : "normal",
 		arena, arena->ov_size & B_SIZE,
 		arena->ov_size & B_BUSY ?
@@ -1023,7 +1023,7 @@ private int free_last_chunk()
 	}
 
 #ifdef DEBUG
-	dprintf(1)("free_last_chunk: %d bytes to be removed before 0x%x\n",
+	dprintf(1)("free_last_chunk: %d bytes to be removed before 0x%lx\n",
 		nbytes, sbrk(0));
 	flush;
 #endif
@@ -1083,7 +1083,7 @@ private int free_last_chunk()
 	}
 
 #ifdef DEBUG
-	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%x\n",
+	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
 		sbrk(0));
 	flush;
 #endif
@@ -1164,7 +1164,7 @@ unsigned int nbytes;
 	register3 uint32 i;		/* To store true size */
 
 #ifdef DEBUG
-	dprintf(8)("set_up: selected is 0x%x (%s, %d bytes)\n",
+	dprintf(8)("set_up: selected is 0x%lx (%s, %d bytes)\n",
 		selected, selected->ov_size & B_LAST ? "last" : "normal",
 		selected->ov_size & B_SIZE);
 	flush;
@@ -1198,7 +1198,7 @@ unsigned int nbytes;
 	 */
 
 #ifdef DEBUG
-	dprintf(8)("set_up: returning %s %s block starting at 0x%x (%d bytes)\n",
+	dprintf(8)("set_up: returning %s %s block starting at 0x%lx (%d bytes)\n",
 		(selected->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		(selected->ov_size & B_LAST) ? "last" : "normal",
 		(char *) (selected + 1), selected->ov_size & B_SIZE);
@@ -1235,7 +1235,7 @@ register4 char *ptr;
 		return;				/* Nothing to be done */
 
 #ifdef DEBUG
-	dprintf(1)("free: on a %s %s block starting at 0x%x (%d bytes)\n",
+	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -1288,7 +1288,7 @@ register4 char *ptr;
 	SIGRESUME;					/* Critical section ends */
 
 #ifdef DEBUG
-	dprintf(8)("free: %s %s block starting at 0x%x holds %d bytes free\n",
+	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -1355,7 +1355,7 @@ int gc_flag;
 	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
 
 #ifdef DEBUG
-	dprintf(16)("realloc: reallocing block 0x%x to be %d bytes\n",
+	dprintf(16)("realloc: reallocing block 0x%lx to be %d bytes\n",
 		zone, nbytes);
 	if (zone->ov_flags & EO_SPEC) {
 		long *pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD(2));
@@ -1534,7 +1534,7 @@ int gc_flag;
 
 #ifdef DEBUG
 	if (zone != (union overhead *) 0)
-		dprintf(16)("realloc: malloced a new arena at 0x%x (%d bytes)\n",
+		dprintf(16)("realloc: malloced a new arena at 0x%lx (%d bytes)\n",
 			zone, (zone-1)->ov_size & B_SIZE);
 	else
 		dprintf(16)("realloc: failed for %d bytes, garbage collector %s\n",
@@ -1629,7 +1629,7 @@ register4 uint32 nbytes;
 	connect_free_list(selected, i);	/* Insert block in free list */
 
 #ifdef DEBUG
-	dprintf(32)("split_block: split %s %s block starts at 0x%x (%d bytes)\n",
+	dprintf(32)("split_block: split %s %s block starts at 0x%lx (%d bytes)\n",
 		(selected->ov_size & B_LAST) ? "last" : "normal",
 		(selected->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		selected, selected->ov_size & B_SIZE);
@@ -1676,7 +1676,7 @@ register4 union overhead *zone;
 		e_data.ml_over -= OVERHEAD;
 			
 #ifdef DEBUG
-	dprintf(1)("coalesc: coalescing with a %d bytes %s %s block at 0x%x\n",
+	dprintf(1)("coalesc: coalescing with a %d bytes %s %s block at 0x%lx\n",
 		r, (next->ov_size & B_LAST) ? "last" : "normal",
 		(next->ov_size & B_CTYPE) ? "C" : "Eiffel", next);
 	flush;
@@ -1700,7 +1700,7 @@ register4 union overhead *zone;
 		zone->ov_size |= B_LAST;		/* So coalesced is now the last one */
 
 #ifdef DEBUG
-	dprintf(1)("coalesc: coalescing provided a %s %d bytes %s block at 0x%x\n",
+	dprintf(1)("coalesc: coalescing provided a %s %d bytes %s block at 0x%lx\n",
 		zone->ov_size & B_LAST ? "last" : "normal",
 		zone->ov_size & B_SIZE,
 		zone->ov_size & B_CTYPE ? "C" : "Eiffel", zone);
@@ -1738,7 +1738,7 @@ register6 uint32 i;
 	blist = BUFFER(hlist);							/* And the right cache */
 
 #ifdef DEBUG
-	dprintf(64)("connect_free_list: bloc 0x%x, %d bytes in %s list #%d\n",
+	dprintf(64)("connect_free_list: bloc 0x%lx, %d bytes in %s list #%d\n",
 		zone, zone->ov_size & B_SIZE,
 		zone->ov_size & B_CTYPE ? "C" : "Eiffel", i);
 	flush;
@@ -1819,7 +1819,7 @@ register2 uint32 i;
 	blist = BUFFER(hlist);							/* And associated cache */
 
 #ifdef DEBUG
-	dprintf(64)("disconnect_free_list: bloc 0x%x, %d bytes in %s list #%d\n",
+	dprintf(64)("disconnect_free_list: bloc 0x%lx, %d bytes in %s list #%d\n",
 		next, next->ov_size & B_SIZE,
 		next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
 	flush;
@@ -1847,11 +1847,11 @@ register2 uint32 i;
 		 */
 		if (p == (union overhead *) 0) {
 #ifdef DEBUG
-			printf("Uh-Oh... Item 0x%x not found in %s list #%d\n",
+			printf("Uh-Oh... Item 0x%lx not found in %s list #%d\n",
 				next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
 			printf("Dumping of list:\n");
 			for (p = hlist[i]; p; p = p->ov_next)
-				printf("\t0x%x\n", p);
+				printf("\t0x%lx\n", p);
 #endif
 			panic("free-list botched");
 		}
@@ -1907,7 +1907,7 @@ struct chunk *c;
 		flags = zone->ov_size;		/* Size and flags */
 
 #ifdef DEBUG
-		dprintf(32)("chunk_coalesc: %s block 0x%x, %d bytes, %s\n",
+		dprintf(32)("chunk_coalesc: %s block 0x%lx, %d bytes, %s\n",
 			flags & B_LAST ? "last" : "normal",
 			zone, flags & B_SIZE,
 			flags & B_BUSY ?
@@ -2012,7 +2012,7 @@ int chunk_type;
 	) {
 	
 #ifdef DEBUG
-		dprintf(1+32)("full_coalesc: entering %s chunk 0x%x (%d bytes)\n",
+		dprintf(1+32)("full_coalesc: entering %s chunk 0x%lx (%d bytes)\n",
 			c->ck_type == C_T ? "C" : "Eiffel", c, c->ck_length);
 		flush;
 #endif
@@ -2095,7 +2095,7 @@ unsigned int nbytes;
 	 */
 
 #ifdef DEBUG
-	dprintf(4)("malloc_from_zone: returning block starting at 0x%x (%d bytes)\n",
+	dprintf(4)("malloc_from_zone: returning block starting at 0x%lx (%d bytes)\n",
 		(char *) (((union overhead *) object ) + 1),
 		((union overhead *) object)->ov_size);
 	flush;
@@ -2310,7 +2310,7 @@ uint32 type;
 	SIGRESUME;					/* End of critical section */
 
 #ifdef DEBUG
-	dprintf(256)("eif_set: %d bytes for DT %d at 0x%x%s\n",
+	dprintf(256)("eif_set: %d bytes for DT %d at 0x%lx%s\n",
 		nbytes, type & EO_TYPE, object, type & EO_NEW ? " (new)" : "");
 	flush;
 #endif
@@ -2348,7 +2348,7 @@ unsigned int nbytes;
 	SIGRESUME;					/* End of critical section */
 
 #ifdef DEBUG
-	dprintf(256)("eif_spset: %d bytes special at 0x%x\n", nbytes, object);
+	dprintf(256)("eif_spset: %d bytes special at 0x%lx\n", nbytes, object);
 	flush;
 #endif
 
@@ -2430,12 +2430,12 @@ register1 union overhead *next;
 		}
 		/* Consistency check: we MUST have found the block */
 		if (p == (union overhead *) 0) {
-			printf("memck: block 0x%x not found in %s list #%d\n",
+			printf("memck: block 0x%lx not found in %s list #%d\n",
 				next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
 #ifdef MEMPANIC
 			printf("Dumping of list:\n");
 			for (p = hlist[i]; p; p = p->ov_next)
-				printf("\t0x%x\n", p);
+				printf("\t0x%lx\n", p);
 #endif
 			notfound = 1;
 			mempanic;
@@ -2471,7 +2471,7 @@ char *object;
 	flags = zone->ov_flags;
 
 	if ((flags & EO_TYPE) > max_dtype) {
-		printf("memck: object 0x%x exceeds maximum dtype (%d), skipped.\n",
+		printf("memck: object 0x%lx exceeds maximum dtype (%d), skipped.\n",
 			object, flags & EO_TYPE);
 		mempanic;
 		return;
@@ -2502,12 +2502,12 @@ char *object;
 
 	if (flags & EO_COMP) {				/* Object advertised some expandeds */
 		if (!has_expanded) {
-			printf("memck: object 0x%x is EO_COMP but no expanded.", object);
+			printf("memck: object 0x%lx is EO_COMP but no expanded.", object);
 			mempanic;
 		}
 	} else {
 		if (has_expanded) {
-			printf("memck: object 0x%x not EO_COMP with %d expanded%s.",
+			printf("memck: object 0x%lx not EO_COMP with %d expanded%s.",
 				object, has_expanded, has_expanded == 1 ? "" : "s");
 			mempanic;
 		}
@@ -2535,12 +2535,12 @@ char *from;
 
 	if ((uint32) object % ALIGNBYTES) {
 		num++;
-		printf("memck: object 0x%x is mis-aligned.\n", object);
+		printf("memck: object 0x%lx is mis-aligned.\n", object);
 	}
 
 	if (dtype > max_dtype) {
 		num++;
-		printf("memck: object 0x%x exceeds maximum dynamic type (%d).\n",
+		printf("memck: object 0x%lx exceeds maximum dynamic type (%d).\n",
 			object, dtype);
 	} else if (from == (char *) 0)
 		obj_use[flags & EO_TYPE]++;
@@ -2556,50 +2556,50 @@ char *from;
 
 		if (size != nbytes) {
 			num++;
-			printf("memck: object 0x%x should be %d bytes (is %d)\n",
+			printf("memck: object 0x%lx should be %d bytes (is %d)\n",
 				object, nbytes, size);
 		}
 	}
 
 	if (flags & EO_MARK) {
 		num++;
-		printf("memck: object 0x%x is marked with EO_MARK.\n", object);
+		printf("memck: object 0x%lx is marked with EO_MARK.\n", object);
 	}
 
 	if ((flags & EO_OLD) && (flags & EO_NEW)) {
 		num++;
-		printf("memck: object 0x%x both EO_OLD and EO_NEW.\n", object);
+		printf("memck: object 0x%lx both EO_OLD and EO_NEW.\n", object);
 	}
 	
 	if ((flags & EO_REM) && !(flags & EO_OLD)) {
 		num++;
-		printf("memck: object 0x%x is EO_REM and not EO_OLD.\n", object);
+		printf("memck: object 0x%lx is EO_REM and not EO_OLD.\n", object);
 	}
 
 	if ((flags & EO_REM) && (flags & EO_NEW)) {
 		num++;
-		printf("memck: object 0x%x is EO_REM and EO_NEW.\n", object);
+		printf("memck: object 0x%lx is EO_REM and EO_NEW.\n", object);
 	}
 
 	if ((flags & EO_C) && (flags & EO_SPEC)) {
 		num++;
-		printf("memck: object 0x%x is EO_C and EO_SPEC.\n", object);
+		printf("memck: object 0x%lx is EO_C and EO_SPEC.\n", object);
 	}
 
 	if ((flags & EO_EXP) && (flags & EO_SPEC)) {
 		num++;
-		printf("memck: object 0x%x is EO_EXP and EO_SPEC.\n", object);
+		printf("memck: object 0x%lx is EO_EXP and EO_SPEC.\n", object);
 	}
 
 #ifdef WORKBENCH
 	if (flags & EO_STOP) {
 		num++;
-		printf("memck: object 0x%x is marked with EO_STOP.\n", object);
+		printf("memck: object 0x%lx is marked with EO_STOP.\n", object);
 	}
 #endif
 
 	if (num && from != (char *) 0) {
-		printf("memck: last %d messages while exploring %s0x%x (DT %d)\n",
+		printf("memck: last %d messages while exploring %s0x%lx (DT %d)\n",
 			num, flags & EO_EXP ? "expanded inside " : "", from,
 			Dtype(from));
 		mempanic;
@@ -2695,7 +2695,7 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 		size = zone->ov_size;			/* Size and flags */
 
 		if (size % ALIGNBYTES) {
-			printf("memck: block 0x%x has size %d\n", zone, size);
+			printf("memck: block 0x%lx has size %d\n", zone, size);
 			mempanic;
 		}
 
@@ -2708,10 +2708,10 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 
 		if ((char *) zone + (size & B_SIZE) + OVERHEAD > end)
 			if (type == CHUNK_T) {
-				printf("memck: block 0x%x goes beyond chunk.\n", zone);
+				printf("memck: block 0x%lx goes beyond chunk.\n", zone);
 				mempanic;
 			} else {
-				printf("memck: block 0x%x goes beyond top of zone.\n", zone);
+				printf("memck: block 0x%lx goes beyond top of zone.\n", zone);
 				mempanic;
 			}
 		
@@ -2720,26 +2720,26 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 			(char *) zone + (size & B_SIZE) + OVERHEAD == end
 		)
 			if (!(size & B_LAST)) {
-				printf("memck: block 0x%x not marked B_LAST.\n", zone);
+				printf("memck: block 0x%lx not marked B_LAST.\n", zone);
 				mempanic;
 			}
 
 		if (type == CHUNK_T) {
 			if (((struct chunk *) chunk)->ck_type == C_T) {
 				if (!(size & B_CTYPE)) {
-					printf("memck: block 0x%x should be B_CTYPE.\n", zone);
+					printf("memck: block 0x%lx should be B_CTYPE.\n", zone);
 					mempanic;
 				}
 			} else {
 				if (size & B_CTYPE) {
-					printf("memck: block 0x%x cannot be B_CTYPE.\n", zone);
+					printf("memck: block 0x%lx cannot be B_CTYPE.\n", zone);
 					mempanic;
 				}
 			}
 		}
 
 		if (size & B_FWD) {
-			printf("memck: block 0x%x marked with B_FWD.\n", zone);
+			printf("memck: block 0x%lx marked with B_FWD.\n", zone);
 			mempanic;
 		}
 
@@ -2767,7 +2767,7 @@ int type;					/* Type is either CHUNK_T or ZONE_T */
 				continue;
 
 			if (!(zone->ov_flags & EO_OLD) && !(zone->ov_flags & EO_NEW)) {
-				printf("memck: object 0x%x neither OLD nor NEW.\n", arena);
+				printf("memck: object 0x%lx neither OLD nor NEW.\n", arena);
 				mempanic;
 			}
 		}

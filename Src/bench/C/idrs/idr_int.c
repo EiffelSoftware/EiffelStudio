@@ -24,6 +24,12 @@ public bool_t idr_int(idrs, ip)
 IDR *idrs;
 int *ip;
 {
-	return idr_long(idrs, (long *) ip);
+	long lip;
+	bool_t ok_bool;
+
+	lip = (long) *ip;
+	ok_bool = idr_long(idrs, &lip);
+	*ip = (int32) lip;
+	return ok_bool;
 }
 

@@ -94,7 +94,12 @@ char *cmd;			/* The command string (without i/o redirection) */
 	Request_Clean (rqst);
 	rqst.rq_type = APPLICATION;			/* Request application start-up */
 	send_packet(writefd(sp), &rqst);	/* Send request for ised processing */
-	send_str(sp, cmd);					/* Now send the command string */
+	if (-1 == send_str(sp, cmd)) {		/* Send command string */
+#ifdef USE_ADD_LOG
+		add_log(2, "ERROR cannot send command string");
+#endif
+		return -1;
+	}
 	recv_packet(readfd(sp), &rqst);		/* Acknowledgment */
 
 	return AK_OK == rqst.rq_ack.ak_type ? 0 : -1;

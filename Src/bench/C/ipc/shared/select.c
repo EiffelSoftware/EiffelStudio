@@ -297,7 +297,7 @@ struct timeval *timeout;
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
-	add_log(20, "selecting with mask 0x%x", rd_mask);
+	add_log(20, "selecting with mask 0x%lx", rd_mask);
 #endif
 #endif
 

@@ -489,7 +489,7 @@ show_dumped (d)
 show_vector (dmpu)
 	struct ex_vect *dmpu;
 {
-		printf ("VECTOR %x\n", (char *) dmpu);
+		printf ("VECTOR %lx\n", (char *) dmpu);
 		printf ("type = %i; retry = %i; rescue = %i\n", dmpu -> ex_type, 
 			dmpu -> ex_retry, dmpu -> ex_rescue);
 		printf ("obj_id = %i, rout_name = %s orig = %i\n",

@@ -161,7 +161,7 @@ char *target;
 	t_flags = HEADER(target)->ov_flags;
 
 #ifdef DEBUG
-	dprintf(2)("eiso: source = 0x%x [%s] target = 0x%x [%s]\n",
+	dprintf(2)("eiso: source = 0x%lx [%s] target = 0x%lx [%s]\n",
 		source, System(s_flags & EO_TYPE).cn_generator,
 		target, System(t_flags & EO_TYPE).cn_generator);
 #endif
@@ -218,7 +218,7 @@ register2 char *source;
 	t_ref = (char *) (target + t_size - LNGPAD(2));
 
 #ifdef DEBUG
-	dprintf(2)("spiso: source = 0x%x [%d] target = 0x%x [%d]\n",
+	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
 		source, *(long *) s_ref,
 		target, *(long *) t_ref);
 #endif

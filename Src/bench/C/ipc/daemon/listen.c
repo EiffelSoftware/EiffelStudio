@@ -24,7 +24,7 @@
 private int active_check();	/* Monitor connection to detect child death */
 #endif
 
-public void wide_listen()
+public void dwide_listen()
 {
 	/* Listen on all the file descriptors opened for reading until the
 	 * connected socket is broken. If the socket is in fact a pipe, then there
@@ -42,7 +42,7 @@ public void wide_listen()
 	/* Make sure we listen on the connected socket and call the handling
 	 * routine whenever data is available there.
 	 */
-	if (-1 == add_input(readfd(d_data.d_cs), rqsthandle)) {
+	if (-1 == add_input(readfd(d_data.d_cs), drqsthandle)) {
 #ifdef USE_ADD_LOG
 		add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif

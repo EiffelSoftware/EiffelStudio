@@ -613,7 +613,7 @@ private void run_collector()
 
 #ifdef DEBUG
 	fdone = g_data.nb_full == NB_FULL;
-	dprintf(1)("run_collector: gen_scavenge: 0x%x, status: 0x%x\n",
+	dprintf(1)("run_collector: gen_scavenge: 0x%lx, status: 0x%lx\n",
 		gen_scavenge, g_data.status);
 	flush;
 #endif
@@ -743,7 +743,7 @@ register6 int move;					/* Are the objects expected to move? */
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; char **obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%x\n", i, *obj);
+				printf("    %d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
@@ -768,7 +768,7 @@ register6 int move;					/* Are the objects expected to move? */
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; char **obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%x\n", i, *obj);
+				printf("    %d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
@@ -818,7 +818,7 @@ register6 int move;					/* Are the objects expected to move? */
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; char **obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%x\n", i, *(char **) *obj);
+				printf("    %d: 0x%lx\n", i, *(char **) *obj);
 		}
 		flush;
 #endif
@@ -838,7 +838,7 @@ register6 int move;					/* Are the objects expected to move? */
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; char **obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%x\n", i, * (char **) *obj);
+				printf("    %d: 0x%lx\n", i, * (char **) *obj);
 		}
 		flush;
 #endif
@@ -927,10 +927,10 @@ register5 int move;					/* Are the objects expected to move? */
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP:
-					printf("    %d: expanded 0x%x\n", i, lst->it_ref);
+					printf("    %d: expanded 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_REF:
-					printf("    %d: 0x%x\n", i, lst->it_ref);
+					printf("    %d: 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_BOOL:
 					printf("    %d: bool %s\n", i,
@@ -952,13 +952,13 @@ register5 int move;					/* Are the objects expected to move? */
 					printf("    %d: BITS\n", i);
 					break;
 				case SK_POINTER:
-					printf("    %d: pointer 0x%x\n", i, lst->it_ref);
+					printf("    %d: pointer 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_VOID:
 					printf("    %d: void\n", i);
 					break;
 				default:
-					printf("    %d: UNKNOWN TYPE 0x%x\n", i, lst->type);
+					printf("    %d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}
 			}
 		}
@@ -994,10 +994,10 @@ register5 int move;					/* Are the objects expected to move? */
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP:
-					printf("    %d: expanded 0x%x\n", i, lst->it_ref);
+					printf("    %d: expanded 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_REF:
-					printf("    %d: 0x%x\n", i, lst->it_ref);
+					printf("    %d: 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_BOOL:
 					printf("    %d: bool %s\n", i,
@@ -1019,13 +1019,13 @@ register5 int move;					/* Are the objects expected to move? */
 					printf("    %d: BITS\n", i);
 					break;
 				case SK_POINTER:
-					printf("    %d: pointer 0x%x\n", i, lst->it_ref);
+					printf("    %d: pointer 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_VOID:
 					printf("    %d: void\n", i);
 					break;
 				default:
-					printf("    %d: UNKNOWN TYPE 0x%x\n", i, lst->type);
+					printf("    %d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}
 			}
 		}
@@ -1124,13 +1124,13 @@ char *root;
 
 #ifdef DEBUG
 	if (zone->ov_size & B_FWD) {
-		dprintf(16)("recursive_mark: 0x%x fwd to 0x%x (DT %d, %d bytes)\n",
+		dprintf(16)("recursive_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
 			root,
 			zone->ov_fwd,
 			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
 			zone->ov_size & B_SIZE);
 	} else {
-		dprintf(16)("recursive_mark: 0x%x %s%s%s(DT %d, %d bytes)\n",
+		dprintf(16)("recursive_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
 			root,
 			zone->ov_flags & EO_MARK ? "marked " : "",
 			zone->ov_flags & EO_OLD ? "old " : "",
@@ -1277,11 +1277,11 @@ marked:		/* I need this goto label to avoid code duplication */
 		offset = References(flags & EO_TYPE);	/* Number of references */
 
 #ifdef DEBUG
-	dprintf(16)("recursive_mark: %d references for 0x%x\n", offset, root);
+	dprintf(16)("recursive_mark: %d references for 0x%lx\n", offset, root);
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%x\n", *((char **) root + i));
+			printf("\t0x%lx\n", *((char **) root + i));
 	}
 	flush;
 #endif
@@ -1655,9 +1655,9 @@ private void split_to_block()
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
 #ifdef DEBUG
-		dprintf(1)("split_to_block: new 'to' is now %d bytes [0x%x, 0x%x[\n",
+		dprintf(1)("split_to_block: new 'to' is now %d bytes [0x%lx, 0x%lx[\n",
 			size, base, ps_to.sc_top);
-		dprintf(1)("split_to_block: released %d bytes (starting at 0x%x)\n",
+		dprintf(1)("split_to_block: released %d bytes (starting at 0x%lx)\n",
 			ps_to.sc_end - ps_to.sc_top, (char *) base + size);
 		flush;
 #endif
@@ -1717,7 +1717,7 @@ private int sweep_from_space()
 	flags = zone->ov_size;				/* Malloc information flags */
 
 #ifdef DEBUG
-	dprintf(1)("sweep_from_space: chunk from 0x%x to 0x%x (excluded)\n",
+	dprintf(1)("sweep_from_space: chunk from 0x%lx to 0x%lx (excluded)\n",
 		base, end);
 	flush;
 #endif
@@ -1734,7 +1734,7 @@ private int sweep_from_space()
 		) {
 
 #ifdef DEBUG
-			dprintf(8)("sweep_from_space: found a %d bytes C block at 0x%x\n",
+			dprintf(8)("sweep_from_space: found a %d bytes C block at 0x%lx\n",
 				zone->ov_size & B_SIZE, zone + 1);
 			flush;
 #endif
@@ -1763,7 +1763,7 @@ private int sweep_from_space()
 	
 #ifdef DEBUG
 		dprintf(8)(
-		"sweep_from_space: %sfound a %s %s%s%sblock (%d bytes) at 0x%x\n",
+		"sweep_from_space: %sfound a %s %s%s%sblock (%d bytes) at 0x%lx\n",
 			(char *) zone == base ? "" : "(spoilt) ",
 			zone->ov_size & B_LAST ? "last" : "normal",
 			zone->ov_size & B_BUSY ? "" : "free ",
@@ -1834,7 +1834,7 @@ private int sweep_from_space()
 
 #ifdef DEBUG
 			dprintf(8)(
-			"sweep_from_space: followed by a %s %s%sblock (%d bytes) at 0x%x\n",
+			"sweep_from_space: followed by a %s %s%sblock (%d bytes) at 0x%lx\n",
 				next->ov_size & B_LAST ? "last" : "normal",
 				next->ov_size & B_BUSY ? "" : "free ",
 				next->ov_size & B_C ? "C " : next->ov_size & B_FWD ? "":"dead ",
@@ -1968,7 +1968,7 @@ private int find_scavenge_spaces()
 	char *to_space;					/* Location of the 'to' space */
 
 #ifdef DEBUG
-	dprintf(1)("find_scavenge_spaces: last from was 0x%x\n", last_from);
+	dprintf(1)("find_scavenge_spaces: last from was 0x%lx\n", last_from);
 	flush;
 #endif
 
@@ -1989,7 +1989,7 @@ private int find_scavenge_spaces()
 	}
 	
 #ifdef DEBUG
-	dprintf(1)("find_scavenge_spaces: from space is now 0x%x\n", last_from);
+	dprintf(1)("find_scavenge_spaces: from space is now 0x%lx\n", last_from);
 	flush;
 #endif
 
@@ -2006,7 +2006,7 @@ private int find_scavenge_spaces()
 	if (ps_to.sc_arena != (char *) 0) {
 
 #ifdef DEBUG
-		dprintf(1)("find_scavenge_spaces: from [0x%x, 0x%x] to [0x%x, 0x%x]\n",
+		dprintf(1)("find_scavenge_spaces: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
 			ps_from.sc_arena, ps_from.sc_end - 1,
 			ps_to.sc_arena, ps_to.sc_end - 1);
 #endif
@@ -2057,9 +2057,9 @@ private int find_scavenge_spaces()
 	ps_to.sc_top = ps_to.sc_arena;				/* Is empty */
 
 #ifdef DEBUG
-	dprintf(1)("find_scavenge_spaces: malloc'ed a to space at 0x%x (#%d)\n",
+	dprintf(1)("find_scavenge_spaces: malloc'ed a to space at 0x%lx (#%d)\n",
 		ps_to.sc_arena, g_data.gc_to);
-	dprintf(1)("find_scavenge_spaces: from [0x%x, 0x%x] to [0x%x, 0x%x]\n",
+	dprintf(1)("find_scavenge_spaces: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
 		ps_from.sc_arena, ps_from.sc_end - 1,
 		ps_to.sc_arena, ps_to.sc_end - 1);
 	flush;
@@ -2081,7 +2081,7 @@ register1 struct chunk *start;
 	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
 
 #ifdef DEBUG
-		dprintf(4)("find_std_chunk: chunk 0x%x is %d (std is %d)\n",
+		dprintf(4)("find_std_chunk: chunk 0x%lx is %d (std is %d)\n",
 			start, start->ck_length, std_size);
 		flush;
 #endif
@@ -2166,9 +2166,9 @@ struct sc_zone *to;		/* The zone structure we want to fill in */
 		e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 
 #ifdef DEBUG
-	dprintf(1)("find_to_space: coalesced a to space at 0x%x (#%d)\n",
+	dprintf(1)("find_to_space: coalesced a to space at 0x%lx (#%d)\n",
 		ps_to.sc_arena, g_data.gc_to);
-	dprintf(1)("find_to_space: from [0x%x, 0x%x] to [0x%x, 0x%x]\n",
+	dprintf(1)("find_to_space: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
 		ps_from.sc_arena, ps_from.sc_end - 1,
 		ps_to.sc_arena, ps_to.sc_end - 1);
 	flush;
@@ -2270,7 +2270,7 @@ struct sc_zone *to;
 
 #ifdef DEBUG
 	dprintf(2)(
-		"scavenge: %sobject %x moved to %x (%d bytes) for %s scavenging\n",
+		"scavenge: %sobject %lx moved to %lx (%d bytes) for %s scavenging\n",
 		to == &sc_to ? "" : (zone->ov_size & B_BUSY ? "" : "FREE? "),
 		zone + 1, zone->ov_fwd, length - OVERHEAD,
 		to == &sc_to ? "generation" : "partial");
@@ -2496,13 +2496,13 @@ char *root;
 
 #ifdef DEBUG
 	if (zone->ov_size & B_FWD) {
-		dprintf(16)("generation_mark: 0x%x fwd to 0x%x (DT %d, %d bytes)\n",
+		dprintf(16)("generation_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
 			root,
 			zone->ov_fwd,
 			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
 			zone->ov_size & B_SIZE);
 	} else {
-		dprintf(16)("generation_mark: 0x%x %s%s%s%s(DT %d, %d bytes)\n",
+		dprintf(16)("generation_mark: 0x%lx %s%s%s%s(DT %d, %d bytes)\n",
 			root,
 			zone->ov_flags & EO_MARK ? "marked " : "",
 			zone->ov_flags & EO_OLD ? "old " : "",
@@ -2612,11 +2612,11 @@ char *root;
 		offset = References(flags & EO_TYPE);	/* Number of references */
 
 #ifdef DEBUG
-	dprintf(16)("generation_mark: %d references for 0x%x\n", offset, root);
+	dprintf(16)("generation_mark: %d references for 0x%lx\n", offset, root);
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%x\n", *((char **) root + i));
+			printf("\t0x%lx\n", *((char **) root + i));
 	}
 	flush;
 #endif
@@ -2700,7 +2700,7 @@ char *root;
 				zone->ov_flags = flags;		/* Store updated flags */
 
 #ifdef DEBUG
-				dprintf(4)("gscavenge: tenured 0x%x at age %d (%d bytes)\n",
+				dprintf(4)("gscavenge: tenured 0x%lx at age %d (%d bytes)\n",
 					root, age >> AGE_OFFSET, zone->ov_size & B_SIZE);
 				flush;
 #endif
@@ -2761,7 +2761,7 @@ char *root;
 			zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 
 #ifdef DEBUG
-			dprintf(4)("gscavenge: tenured 0x%x to 0x%x at age %d (%d bytes)\n",
+			dprintf(4)("gscavenge: tenured 0x%lx to 0x%lx at age %d (%d bytes)\n",
 				root, new, age >> AGE_OFFSET, size);
 			flush;
 #endif
@@ -2773,7 +2773,7 @@ char *root;
 	/* Object is to be kept in the new generation */
 
 #ifdef DEBUG
-	dprintf(4)("gscavenge: keeping %s0x%x at age %d (%d bytes)\n",
+	dprintf(4)("gscavenge: keeping %s0x%lx at age %d (%d bytes)\n",
 		flags & EO_NEW ? "new " : "",
 		root, age >> AGE_OFFSET, zone->ov_size & B_SIZE);
 	flush;
@@ -2972,7 +2972,7 @@ private void update_rem_set()
 			zone = HEADER(current);			/* Object's header */
 
 #ifdef DEBUG
-			dprintf(4)("update_rem_set: at 0x%x (type %d, %d bytes) %s%s\n",
+			dprintf(4)("update_rem_set: at 0x%lx (type %d, %d bytes) %s%s\n",
 				current,
 				HEADER(
 					zone->ov_size & B_FWD ? zone->ov_fwd : current
@@ -3021,7 +3021,7 @@ private void update_rem_set()
 				HEADER(current)->ov_flags &= ~EO_REM;	/* Not remembered */
 
 #ifdef DEBUG
-			dprintf(4)("update_rem_set: %s object %x (type %d, %d bytes) %s\n",
+			dprintf(4)("update_rem_set: %s object %lx (type %d, %d bytes) %s\n",
 				HEADER(current)->ov_flags & EO_OLD ? "old" :
 					HEADER(current)->ov_flags & EO_NEW ? "new" : "gen",
 				current, HEADER(current)->ov_flags & EO_TYPE,
@@ -3161,7 +3161,7 @@ char *obj;
 	}
 
 #ifdef DEBUG
-	dprintf(4)("eremb: remembering object %x (type %d, %d bytes) at age %d\n",
+	dprintf(4)("eremb: remembering object %lx (type %d, %d bytes) at age %d\n",
 		obj,
 		HEADER(obj)->ov_flags & EO_TYPE,
 		HEADER(obj)->ov_size & B_SIZE,
@@ -3233,7 +3233,7 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	}
 
 #ifdef DEBUG
-	dprintf(8)("gfree: freeing object 0x%x, DT = %d\n",
+	dprintf(8)("gfree: freeing object 0x%lx, DT = %d\n",
 		zone + 1, dtype);
 	flush;
 #endif
@@ -3255,7 +3255,7 @@ register4 char **ptr;
 	 */
 
 #ifdef DEBUG
-	dprintf(32)("onceset: value 0x%x at 0x%x\n", *ptr, ptr);
+	dprintf(32)("onceset: value 0x%lx at 0x%lx\n", *ptr, ptr);
 	flush;
 #endif
 	
@@ -3289,7 +3289,7 @@ register2 char *value;				/* Value to be pushed */
 	}
 
 #ifdef DEBUG
-	dprintf(32)("epush: value 0x%x on stack 0x%x\n", value, stk);
+	dprintf(32)("epush: value 0x%lx on stack 0x%lx\n", value, stk);
 	flush;
 #endif
 

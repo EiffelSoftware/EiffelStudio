@@ -217,7 +217,7 @@ feature {NONE}
 				if (trans_text.text.item (1) = s.item (1))  then
 					trans_text.replace (0, 1, "");
 					update_title
-				elseif (trans_text.text.item (2) = s.item (2)) then
+				elseif (trans_text.text.item (2) = s.item (1)) then
 					trans_text.replace (0, 2, "");
 					update_title
 				end

@@ -151,49 +151,54 @@ feature
 				widget_c := x_query_window_pointer (display_pointer, widget_c)
 			end;
 				-- Remove last item;
-			widget_list.remove;
-			from
-				widget_manager.start;
-				last_widget_c := xt_window_to_widget (display_pointer, last_widget_c);
-			until	
-				Result /= Void or widget_manager.after
-			loop
-				if last_widget_c = 
-					widget_manager.item.implementation.screen_object 
-				then
-					Result := widget_manager.item;
-				end;
-				widget_manager.forth
-			end;
-			if Result = Void then
-				widget_list.finish;
+			if not widget_list.empty and then
+				last_widget_c /= default_pointer 
+			then
 				widget_list.remove;
-				--| Cannot find widget in widget_manager.
-				--| This means that this widget was created on the
-				--| C side and hasn't been recorded in the widget_manager.
-				--| The best we can do is to get the parent that has
-				--| been recorded in the w_manager.
+				last_widget_c := xt_window_to_widget (display_pointer, last_widget_c);
 				from
-					widget_list.start
-				until
-					widget_list.after
+					widget_manager.start;
+				until	
+					Result /= Void or widget_manager.after
 				loop
-					widget_c := xt_window_to_widget (display_pointer, widget_list.item);
-					from
-						found := false;
-						widget_manager.start
-					until
-						found or widget_manager.after
-					loop
-						if widget_c = 
-							widget_manager.item.implementation.screen_object
-						then
-							Result := widget_manager.item;
-							found := true
-						end;
-						widget_manager.forth
+					if last_widget_c 
+						= widget_manager.item.implementation.screen_object
+					then
+						Result := widget_manager.item;
 					end;
-					widget_list.forth
+					widget_manager.forth
+				end
+				if Result = Void then
+					--| Cannot find widget in widget_manager.
+					--| This means that this widget was created on the
+					--| C side and hasn't been recorded in the widget_manager.
+					--| The best we can do is to get the parent that has
+					--| been recorded in the w_manager.
+					from
+						widget_list.start
+					until
+						widget_list.after
+					loop
+						widget_c := xt_window_to_widget (display_pointer, 
+							widget_list.item);
+						if widget_c /= void_pointer then
+							from
+								found := false;
+								widget_manager.start
+							until
+								found or widget_manager.after
+							loop
+								if widget_c = 
+									widget_manager.item.implementation.screen_object
+								then
+									Result := widget_manager.item;
+									found := true
+								end;
+								widget_manager.forth
+							end;
+						end;
+						widget_list.forth
+					end
 				end
 			end
 		end;

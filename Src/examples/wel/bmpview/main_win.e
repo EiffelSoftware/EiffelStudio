@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			!! ofn
 			!! Result.make
 			Result.set_filter (<<"Bitmap file (*.bmp)", "All file (*.*)">>,
-					<<"*.BMP", "*.*">>)
+					<<"*.bmp", "*.*">>)
 			Result.add_flag (ofn.Ofn_filemustexist)
 		ensure
 			result_not_void: Result /= Void

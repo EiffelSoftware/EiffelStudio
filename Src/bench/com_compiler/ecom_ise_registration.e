@@ -19,7 +19,7 @@ inherit
 
 	WEL_SW_CONSTANTS
 		export
-			{NONE} all;
+			{NONE} all
 		end
 
 creation
@@ -56,7 +56,7 @@ feature -- Access
 	main_window: WEL_FRAME_WINDOW is
 			-- Server main window
 		once
-			create Result.make_top ("ISE")
+			create Result.make_top ("Should not see me!")
 		end
 
 	default_show_command: INTEGER is

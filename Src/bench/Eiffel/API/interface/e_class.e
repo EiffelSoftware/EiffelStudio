@@ -21,7 +21,7 @@ inherit
 			{ANY} all
 		end;
 	SHARED_INSTANTIATOR;
-	SHARED_INST_CONTEXT;
+	SHARED_INST_CONTEXT
 
 creation
 
@@ -101,9 +101,13 @@ feature -- Properties
 			Result := lace_class.class_name
 		end;
 
-	types: TYPE_LIST;
-			-- Meta-class types associated to the class: it contains
-			-- only one type if the class is not generic
+	text: STRING is
+			-- Class text
+		require
+			valid_file_name: file_name /= Void
+		do
+			Result := lace_class.text
+		end;
 
 feature -- Access
 
@@ -112,9 +116,11 @@ feature -- Access
 		do
 			if Ast_server.has (id) then
 				Result := Ast_server.item (id);
+			elseif Tmp_ast_server.has (id) then
+				Result := Tmp_ast_server.item (id);
 			end;
 		ensure
-			non_void_result_if: Ast_server.has (id) implies Result /= Void 
+			non_void_result_if: has_ast implies Result /= Void 
 		end;
 
 	has_types: BOOLEAN is
@@ -128,7 +134,8 @@ feature -- Access
 	feature_with_name (n: STRING): E_FEATURE is
 			-- Feature whose internal name is `n'
 		require
-			valid_n: n /= Void
+			valid_n: n /= Void;
+			has_feature_table: has_feature_table
 		local
 			f: FEATURE_I
 		do
@@ -141,7 +148,8 @@ feature -- Access
 	feature_with_body_id (bid: INTEGER): E_FEATURE is
 			-- Feature whose body id `bid'.
 		require
-			valid_body_id: bid > 0
+			valid_body_id: bid > 0;
+			has_feature_table: has_feature_table
 		local
 			feat: FEATURE_I
 		do
@@ -154,7 +162,8 @@ feature -- Access
 	feature_with_rout_id (rout_id: INTEGER): E_FEATURE is
 			-- Feature whose routine id `rout_id'.
 		require
-			valid_rout_id: rout_id /= 0
+			valid_rout_id: rout_id /= 0;
+			has_feature_table: has_feature_table
 		local
 			feat: FEATURE_I
 		do
@@ -166,6 +175,8 @@ feature -- Access
 
 	feature_table: E_FEATURE_TABLE is	
 			-- Feature table for current class
+		require
+			has_feature_table: has_feature_table
 		do
 			Result := comp_feature_table.api_table
 		ensure
@@ -204,33 +215,32 @@ feature -- Precompilation Access
 			Result := id <= System.max_precompiled_id
 		end;
 
-feature -- Stone access
+feature -- Server Access
 
-	stone: CLASSC_STONE is
-		require
-			is_clickable: is_clickable
+	has_ast: BOOLEAN is
+			-- Does Current class have an AST structure?
 		do
-			!CLASSC_STONE! Result.make (Current)
+			Result := Ast_server.has (id) or else
+				Tmp_ast_server.has (id)
 		end;
 
-	click_list: ARRAY [CLICK_STONE] is
+	has_feature_table: BOOLEAN is
+			-- Does Current class have a feature table?
+		do
+			Result := Feat_tbl_server.has (id)
+		end;
+
+	click_list: CLICK_LIST is
+		require
+			has_ast: has_ast
 		local
 			ast_clicks: CLICK_LIST
 		do
-			if not Tmp_ast_server.has (id) then
-				ast_clicks := Ast_server.item (id).click_list
+			if Tmp_ast_server.has (id) then
+				Result := Tmp_ast_server.item (id).click_list
 			else
-				ast_clicks := Tmp_ast_server.item (id).click_list
+				Result := Ast_server.item (id).click_list
 			end;
-			Result := ast_clicks.clickable_stones (Current)
-		end;
-
-	is_clickable: BOOLEAN is
-			-- Is Current class clickable?
-		do
-			Result := (Tmp_ast_server.has (id) or else
-						Ast_server.has (id)) and then
-						Feat_tbl_server.has (id)
 		end;
 
 	cluster: CLUSTER_I is
@@ -264,7 +274,7 @@ feature -- Comparison
 feature -- Output
 
 	signature: STRING is
-		obsolete "Use `append_clickable_signature'"
+			-- Signature of class
 		local
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
@@ -290,15 +300,6 @@ feature -- Output
 						constraint_type := formal_dec.constraint;
 						if constraint_type /= Void then
 							Result.append (" -> ");
-							if not constraint_type.has_like then
-								constraint_type := formal_dec.constraint.actual_type;
-								if constraint_type = Void then
-										-- Problem in building the type
-										-- Should occur only for invalid constraint
-										-- i.e. `like weasel'
-									constraint_type := formal_dec.constraint
-								end;
-							end;
 							Result.append (constraint_type.dump)
 						end;
 						gens.forth;
@@ -313,8 +314,10 @@ feature -- Output
 			end;
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-			-- Append the signature of current class in `a_clickable'
+	append_signature (ow: OUTPUT_WINDOW) is
+			-- Append the signature of current class in `ow'
+		require
+			non_void_ow: ow /= Void
 		local
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
@@ -326,10 +329,10 @@ feature -- Output
 			if not error then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				append_clickable_name (a_clickable);
+				append_name (ow);
 				gens := private_generics;
 				if gens /= Void then
-					a_clickable.put_string (" [");
+					ow.put_string (" [");
 					from
 						gens.start
 					until
@@ -338,40 +341,33 @@ feature -- Output
 						formal_dec := gens.item;
 						c_name := clone (formal_dec.formal_name);
 						c_name.to_upper;
-						a_clickable.put_string (c_name);
+						ow.put_string (c_name);
 						constraint_type := formal_dec.constraint;
 						if constraint_type /= Void then
-							a_clickable.put_string (" -> ");
-							if not constraint_type.has_like then
-								constraint_type := constraint_type.actual_type;
-								if constraint_type = Void then
-										-- Problem in building the type
-										-- Should occur only for invalid constraint
-										-- i.e. `like weasel'
-									constraint_type := formal_dec.constraint
-								end;
-							end;
-							constraint_type.append_clickable_signature (a_clickable)
+							ow.put_string (" -> ");
+							constraint_type.append_to (ow)
 						end;
 						gens.forth;
 						if not gens.after then
-							a_clickable.put_string (", ");
+							ow.put_string (", ");
 						end;
 					end;
-					a_clickable.put_char (']');
+					ow.put_char (']');
 				end;
 				Inst_context.set_cluster (old_cluster);
 			end;
 		end;
 
-	append_clickable_name (a_clickable: CLICK_WINDOW) is
-			-- Append the name ot the current class in `a_clickable'
+	append_name (ow: OUTPUT_WINDOW) is
+			-- Append the name ot the current class in `ow'
+		require
+			non_void_ow: ow /= Void
 		local
 			c_name: STRING;
 		do
 			c_name := clone (name)
 			c_name.to_upper;
-			a_clickable.put_clickable_string (stone, c_name);
+			ow.put_class (Current, c_name)
 		end;
 
 feature {COMPILER_EXPORTER} -- Implementation
@@ -450,16 +446,20 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			reverse_engineered_set: reverse_engineered = b
 		end;
 
+feature {COMPILER_EXPORTER} -- Implementation
+
+	types: TYPE_LIST;
+			-- Meta-class types associated to the class: it contains
+			-- only one type if the class is not generic
+
 feature {NONE} -- Implementation
 
 	comp_feature_table: FEATURE_TABLE is
 			-- Compiler feature table
+		require
+			has_feature_table: Feat_tbl_server.has (id)
 		do
-			if Tmp_feat_tbl_server.has (id) then
-				Result := Tmp_feat_tbl_server.item (id)
-			else
-				Result := Feat_tbl_server.item (id)
-			end;
+			Result := Feat_tbl_server.item (id)
 		ensure
 			valid_result: Result /= Void
 		end;

@@ -252,6 +252,11 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_stopped")
 		end
 
+	Icon_expression_disabled: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_stopped")
+		end
+
 	Icon_edited: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_editing")

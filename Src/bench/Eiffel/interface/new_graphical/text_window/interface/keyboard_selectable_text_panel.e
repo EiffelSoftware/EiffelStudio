@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 					-- We want to create or modify a selection.
 				if not text_displayed.has_selection then
 						-- No selection? We have to start one.
-					text_displayed.set_selection_cursor(clone (cursor))
+					text_displayed.set_selection_cursor(cursor.twin)
 					text_displayed.enable_selection
 				end
 				old_line := cursor.y_in_lines

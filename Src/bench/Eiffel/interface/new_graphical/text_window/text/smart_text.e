@@ -127,7 +127,7 @@ feature -- Basic Operations
 					cursor.go_left_char
 				end
 			else
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 				selection_cursor.go_start_line
 				cursor.go_end_line
 			end
@@ -249,8 +249,7 @@ feature -- Search
 				disable_selection
 			end
 			if click_and_complete_is_active and then click_tool.is_ready then
-				low := clone (a_name)
-				low.to_lower
+				low := a_name.as_lower
 				from
 					ln := first_line
 					tok := ln.first_token
@@ -258,8 +257,7 @@ feature -- Search
 					tok = Void or found_feature
 				loop
 					if tok.is_feature_start then
-						low2 := clone (tok.image)
-						low2.to_lower
+						low2 := tok.image.as_lower
 						found_feature := low2.is_equal (low)
 						if found_feature then
 							cursor.make_from_relative_pos (ln, tok, 1, Current)
@@ -488,7 +486,7 @@ class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			end
 
 			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 				cursor.set_y_in_lines (y)
 				cursor.set_x_in_characters (x)
 			end
@@ -511,8 +509,7 @@ feature -- Syntax completion
 			index: INTEGER
 		do
 			syntax_completed := False
-			kw := clone (keyword)
-			kw.to_lower
+			kw := keyword.as_lower
 			index := Editor_preferences.completed_keywords.index_of (kw, 1)
 
 			if index /= 0 and then Editor_preferences.syntax_complete_enabled and then Editor_preferences.complete_keywords.item (index) then
@@ -568,7 +565,7 @@ feature -- Syntax completion
 				else
 					indent := ""
 				end
-				to_be_inserted := clone (expr)
+				to_be_inserted := expr.twin
 				to_be_inserted.replace_substring_all ("$indent$", indent)
 				from
 					i := to_be_inserted.index_of ('%%', 1)
@@ -669,7 +666,7 @@ feature {NONE}-- click information update
 						-- skip token if commented
 					if tc = Void then
 						if begin_line_tokens.item.is_feature_start then
-							tfs ?= clone (begin_line_tokens.item)
+							tfs ?= begin_line_tokens.item.twin
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
@@ -699,7 +696,7 @@ feature {NONE}-- click information update
 						-- skip token if commented
 					if tc = Void then 
 						if end_line_tokens.item.is_feature_start then
-							tfs ?= clone (end_line_tokens.item)
+							tfs ?= end_line_tokens.item.twin
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)

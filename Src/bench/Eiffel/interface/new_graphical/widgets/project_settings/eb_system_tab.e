@@ -280,8 +280,7 @@ feature -- Convenience
 		require
 			st_not_void: st /= Void
 		do
-			Result := clone (st)
-			Result.to_upper
+			Result := st.as_upper
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_duplicated: Result /= st

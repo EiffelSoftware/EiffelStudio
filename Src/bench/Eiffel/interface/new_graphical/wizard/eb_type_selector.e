@@ -60,7 +60,7 @@ feature -- Access
 			type_as_class_c: CLASS_C
 			l: LIST [CLASS_I]
 		do
-			Result := clone (selector.text)
+			Result := selector.text
 			if Result.is_empty then
 			else
 				Result.to_upper
@@ -83,9 +83,9 @@ feature -- Access
 					until
 						gts.after
 					loop
-						generic_type_name := clone(gts.item.code)
+						generic_type_name := gts.item.code
 						if generic_type_name /= Void then
-							generic_type_name.to_upper
+							generic_type_name := generic_type_name.as_upper
 							Result.append (generic_type_name)
 						end
 						gts.forth

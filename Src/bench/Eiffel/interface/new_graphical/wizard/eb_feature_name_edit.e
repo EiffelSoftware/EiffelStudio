@@ -64,12 +64,9 @@ feature {NONE} -- Implementation
 			-- Is `a_string' already defined in current class?
 		require
 			a_string_not_void: a_string /= Void
-		local
-			s: STRING
 		do
-			s := clone (a_string)
-			s.to_lower
-			Result := s.is_equal ("ass")
+				-- FIXME: Check that `a_string' is not already defined in current class.
+			Result := False
 		end
 
 	is_keyword (a_string: STRING): BOOLEAN is
@@ -79,8 +76,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := clone (a_string)
-			s.to_lower
+			s := a_string.as_lower
 			Result :=
 				s.is_equal ("alias") or
 				s.is_equal ("all") or

@@ -155,7 +155,7 @@ feature -- Basic Operations
 					remove_selection (begin_sel, end_sel)
 					cursor.make_from_character_pos (char_num, line_number, Current)
 					history.record_delete_selection (removed)
-					selection_cursor := clone (cursor)
+					selection_cursor := cursor.twin
 				end
 				disable_selection
 				ignore_cursor_moves := False
@@ -219,7 +219,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if not has_selection then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 			end
 			history.record_symbol (selection_start, selection_end, "--")
 			symbol_selection(selection_start, selection_end, "--")
@@ -231,7 +231,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if not has_selection then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 			end
 			unsymbol_selection(selection_start, selection_end, "--")
 			if unsymboled_lines.count > 0 then
@@ -245,7 +245,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if not has_selection then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 			end
 			history.record_symbol (selection_start, selection_end, tabulation_symbol)
 			symbol_selection(selection_start, selection_end, tabulation_symbol)
@@ -257,7 +257,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if not has_selection then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 			end
 			unsymbol_selection(selection_start, selection_end, tabulation_symbol)
 			if unsymboled_lines.count > 0 then
@@ -427,7 +427,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if selection_is_empty then
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 				if back then
 					selection_cursor.go_left_word
 				else
@@ -822,7 +822,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if tok = ln.eol_token then
 					s := c.out
 				else
-					s := clone (tok.image)
+					s := tok.image.twin
 					s.insert_string (c.out, cursor.pos_in_token)
 				end
 					--| As a simple insertion can change the whole line,
@@ -890,7 +890,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			record_first_modified_line (ln, tok)
 			record_last_modified_line (ln, tok)
 
-			aux := clone (s)
+			aux := s.twin
 			aux.prune_all ('%R')
 			if tok = ln.eol_token then
 				first_image := ln.image
@@ -1010,7 +1010,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			else
 				record_last_modified_line (ln, tok)
 
-				s := clone (tok.image)
+				s := tok.image.twin
 				s.remove (cursor.pos_in_token)
 				from
 					t_before := tok.previous
@@ -1186,7 +1186,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				record_last_modified_line (ln, tok)
 				char_pos := cursor.x_in_characters
 
-				s := clone (tok.image)
+				s := tok.image.twin
 				s.put (c, cursor.pos_in_token)
 				from
 					t_before := tok.previous
@@ -1353,7 +1353,7 @@ feature {NONE} -- Implementation
 			no_selection: not has_selection
 		do
 			from
-				selection_cursor := clone (cursor)
+				selection_cursor := cursor.twin
 				has_selection := True
 			until
 				not is_blank (cursor.item)

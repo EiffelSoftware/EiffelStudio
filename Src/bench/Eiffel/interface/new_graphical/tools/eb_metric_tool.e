@@ -973,7 +973,7 @@ feature -- Setting
 				multi_column_list.exhausted
 			loop
 				row := multi_column_list.item
-				row_name := clone (row.i_th (1))
+				row_name := row.i_th (1).twin
 				if row_name.count >= 7 then
 					metric_part := row_name.substring (1, 6)
 					number_part := row_name.substring ( 7, row_name.count)
@@ -1101,7 +1101,7 @@ feature -- Displayed messages in column list form
 				xml_element ?= file_manager.measure_header.item (index_updated_row)
 				row_status := xml_element.attribute_by_name ("STATUS").value
 				row_scope := row.i_th (2)
-				row_stone_name := clone (row.i_th (3))
+				row_stone_name := row.i_th (3).twin
 				row_metric := row.i_th (4)
 				row_stone_name.to_lower
 				if equal (row_status, "old") then

@@ -54,8 +54,7 @@ feature -- Status setting
 		local
 			name: STRING
 		do
-			name := clone (a_class.name)
-			name.to_upper
+			name := a_class.name_in_upper
 			set_text (name)
 			data := a_class
 			set_pebble (stone)
@@ -227,14 +226,9 @@ feature {NONE} -- Implementation
 
 	print_name is
 			-- Print class name in textable, the associated text component.
-		local
-			name: STRING
 		do
 			if associated_textable /= Void then
-				create name.make (data.name.count)
-				name := clone (data.name)
-				name.to_upper
-				associated_textable.set_text (name)
+				associated_textable.set_text (data.name_in_upper)
 			end
 		end
 

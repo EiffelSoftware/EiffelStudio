@@ -314,6 +314,12 @@ feature {NONE}
 	motion_notify_data (widget_oui: WIDGET): MOTNOT_DATA is
 			--
 		do
+			!! Result.make (widget_oui,
+					c_event_x_relative,
+					c_event_y_relative,
+					c_event_x_pointer,
+					c_event_y_pointer,
+					buttons_state)
 		end;
 
 	no_expose_data (widget_oui: WIDGET): NOEXP_DATA is

@@ -706,6 +706,7 @@ feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT
 			an_object_is_top_level_object: an_object.is_top_level_object
 		do
 			associated_top_level_object := an_object.id
+			associated_top_level_object_on_loading := 0
 		ensure
 			object_associated: associated_top_level_object = an_object.id
 		end

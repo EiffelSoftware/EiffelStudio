@@ -407,6 +407,8 @@ feature -- Access: once manifest strings
 					buf.put_character ('%"')
 					buf.put_character (',')
 					buf.put_integer (value.count)
+					buf.put_character(',')
+					buf.put_integer (value.hash_code)
 					buf.put_character (')')
 					buf.put_character (';')
 					buf.put_new_line
@@ -415,70 +417,6 @@ feature -- Access: once manifest strings
 				class_once_manifest_strings.forth
 			end
 			buf.exdent
-		end
-
-	generate_once_manifest_string_access (register: REGISTRABLE; value: STRING; number: INTEGER) is
-			-- Generate access to once manifest string number `number' in the current routine body
-			-- with the given `value'; use `register' to store the result.
-		require
-			register_not_void: register /= Void
-			meaningful_register: register /= register.No_register
-			value_not_void: value /= Void
-			positive_number: number > 0
-			consistent_number: is_static_system_data_safe implies number <= once_manifest_string_count
-		local
-			buf: like buffer
-			body_index: like original_body_index
-		do
-			buf := buffer
-			body_index := original_body_index
-			if is_static_system_data_safe then
-					-- Register once manifest string for creation
-				register_once_manifest_string (value, number)
-					-- RTOMS is the macro used to retrieve previously created once manifest strings
-				register.print_register
-				buf.put_character ('=')
-				buf.put_string ("RTOMS(")
-				buf.put_integer (body_index - 1)
-				buf.put_character (',')
-				buf.put_integer (number - 1)
-				buf.put_character (')')
-				buf.put_character (';')
-				buf.put_new_line
-			else
-					-- RTCOMS is the macro used to retrieve previously created once manifest strings
-					-- or to create a new one if this is the first acceess to the string
-				buf.put_string ("RTCOMS(")
-				register.print_register
-				buf.put_character (',')
-				buf.put_integer (body_index - 1)
-				buf.put_character (',')
-				buf.put_integer (number - 1)
-				buf.put_character (',')
-				buf.put_character ('%"')
-				buf.escape_string (value)
-				buf.put_character ('%"')
-				buf.put_character (',')
-				buf.put_integer (value.count)
-				buf.put_character (')')
-				buf.put_character (';')
-				buf.put_new_line
-			end
-		ensure
-			registered: is_static_system_data_safe implies once_manifest_string_value (number) = value
-		end
-
-feature {NONE} -- Setting: once manifest strings
-
-	set_once_manifest_string_count (number: INTEGER) is
-			-- Set number of once manifest strings in current routine body to `number'.
-		require
-			positive_number: number > 0
-			same_if_set: once_manifest_string_count > 0 implies once_manifest_string_count = number
-		do
-			once_manifest_string_count_table.force (number, original_body_index)
-		ensure
-			once_manifest_string_count_set: once_manifest_string_count = number
 		end
 
 	register_once_manifest_string (value: STRING; number: INTEGER) is
@@ -504,6 +442,19 @@ feature {NONE} -- Setting: once manifest strings
 			routine_once_manifest_strings.put (value, number)
 		ensure
 			registered: once_manifest_string_value (number) = value
+		end
+
+feature {NONE} -- Setting: once manifest strings
+
+	set_once_manifest_string_count (number: INTEGER) is
+			-- Set number of once manifest strings in current routine body to `number'.
+		require
+			positive_number: number > 0
+			same_if_set: once_manifest_string_count > 0 implies once_manifest_string_count = number
+		do
+			once_manifest_string_count_table.force (number, original_body_index)
+		ensure
+			once_manifest_string_count_set: once_manifest_string_count = number
 		end
 
 feature -- Access

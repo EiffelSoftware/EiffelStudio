@@ -10,6 +10,7 @@ class
 inherit
 	ONCE_STRING_B
 		redefine
+			allocates_memory,
 			analyze,
 			generate,
 			print_register,
@@ -41,23 +42,72 @@ feature
 	analyze is
 			-- Analyze the string.
 		do
-				-- FIXME: alexk 09 Aug 2004: This can be optimized in cases
-				-- when once manifest strings are pre-initialized
-			get_register
+			if allocates_memory then
+				get_register
+			else
+				-- Once manifest string is pre-initialized and can be used inside expression or feature call
+			end
 		end
 
 	generate is
 			-- Generate the string.
+		local
+			buf: like buffer
 		do
-			check register /= No_register end
-			context.generate_once_manifest_string_access (register, value, number)
+			if register = Void then
+					-- Remember once manifest string to generate its pre-initialization.
+				context.register_once_manifest_string (value, number)
+			else
+					-- Generate once manifest string initialization.
+				buf := buffer
+					-- RTCOMS is the macro used to retrieve previously created once manifest strings
+					-- or to create a new one if this is the first acceess to the string
+				buf.put_string ("RTCOMS(")
+				register.print_register
+				buf.put_character (',')
+				buf.put_integer (body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number - 1)
+				buf.put_character (',')
+				buf.put_character ('%"')
+				buf.escape_string (value)
+				buf.put_character ('%"')
+				buf.put_character (',')
+				buf.put_integer (value.count)
+				buf.put_character(',')
+				buf.put_integer (value.hash_code)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			end
 		end
 
 	print_register is
 			-- Print the string (or the register in which it is held).
+		local
+			buf: like buffer
 		do
-			check register /= No_register end
-			register.print_register
+			if register = Void then
+					-- Once manifest string access is inlined.
+				buf := buffer
+				buf.put_string ("RTOMS(")
+				buf.put_integer (body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (number - 1)
+				buf.put_character (')')
+			else
+					-- Once manifest string value is in a register.
+				register.print_register
+			end
+		end
+
+feature -- Properties
+
+	allocates_memory: BOOLEAN is
+			-- Does the expression allocates memory?
+		do
+				-- Memory is allocated only when strings are not pre-initialized
+			Result := not context.is_static_system_data_safe
 		end
 
 end

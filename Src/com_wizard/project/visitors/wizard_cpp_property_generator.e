@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Struct_selection_operator)
 			tmp_body.append (Invoke)
 			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("disp, IID_NULL, lcid, DISPATCH_PROPERTYSET, &args, ")
+			tmp_body.append ("disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, ")
 			tmp_body.append (Ampersand)
 			tmp_body.append (Return_variant_variable_name)
 			

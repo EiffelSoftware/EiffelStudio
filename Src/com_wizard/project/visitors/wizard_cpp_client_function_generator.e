@@ -305,6 +305,8 @@ feature {NONE} -- Implementation
 				Result.append (Eif_access)
 				Result.append (Space_open_parenthesis)
 				Result.append (name)
+				Result.append (Comma_space)
+				Result.append (Null)
 				Result.append (Close_parenthesis)
 
 				Result.append (Close_parenthesis)
@@ -331,25 +333,20 @@ feature {NONE} -- Implementation
 			end
 			Result.append (Open_parenthesis)
 			Result.append (visitor.c_type)
-			if visitor.is_structure then
+			if visitor.is_structure_pointer then
 				Result.append (Asterisk)
 			end
 			Result.append (Close_parenthesis)
 
 			if visitor.is_basic_type or visitor.is_enumeration then
-				if is_boolean (argument_type) then
-					Result.append (Ec_mapper)
-					Result.append (Dot)
-					Result.append (visitor.ec_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (name)
-					Result.append (Close_parenthesis)
-				else
-					Result.append (name)
-				end
+				Result.append (name)
 
 			elseif visitor.is_basic_type_ref then
-				if is_boolean (argument_type) then
+				Result.append (Ampersand)
+				Result.append (name)
+
+			elseif is_boolean (argument_type) then
+				if is_byref (argument_type) then
 					Result.append (Ampersand)
 					Result.append (Ec_mapper)
 					Result.append (Dot)
@@ -358,8 +355,12 @@ feature {NONE} -- Implementation
 					Result.append (name)
 					Result.append (Close_parenthesis)
 				else
-					Result.append (Ampersand)
+					Result.append (Ec_mapper)
+					Result.append (Dot)
+					Result.append (visitor.ec_function_name)
+					Result.append (Space_open_parenthesis)
 					Result.append (name)
+					Result.append (Close_parenthesis)
 				end
 
 			elseif visitor.is_interface or visitor.is_structure or 
@@ -553,7 +554,7 @@ feature {NONE} -- Implementation
 
 			Result.append (Make_word)
 			Result.append (Space_equal_space)
-			Result.append (Eif_procedure)
+			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 			Result.append (Make_word)

@@ -499,11 +499,11 @@ feature -- Generator constants -- 8
 
 	Wcode_field: STRING is "wCode"
 
-	Bstr_source_field: STRING is "BstrSource"
+	Bstr_source_field: STRING is "bstrSource"
 
-	Bstr_description_field: STRING is "BstrDescription"
+	Bstr_description_field: STRING is "bstrDescription"
 
-	Bstr_help_file_field: STRING is "BstrHelpFile"
+	Bstr_help_file_field: STRING is "bstrHelpFile"
 
 	Class_object_registration_token: STRING is "dwRegister"
 

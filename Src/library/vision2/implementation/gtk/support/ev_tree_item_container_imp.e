@@ -34,6 +34,14 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 
 feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 
+	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+		do
+			--| FIXME  Needs implementing IEK (19990927)
+			check
+				to_be_implemented: False
+			end
+		end
+
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
 		deferred

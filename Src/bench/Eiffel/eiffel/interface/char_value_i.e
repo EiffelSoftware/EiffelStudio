@@ -48,7 +48,7 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		do
-			file.putchar ('%'');
+			file.putstring ("(EIF_CHARACTER) '");
 			file.escape_char (char_val);
 			file.putchar ('%'');
 		end;

@@ -289,15 +289,18 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
  * LEAVE_BODY - leave body of a routine
  */
 
-#define SET_RESCUE                                                    \
-	if (rescue) {                                                 \
-			/* Register address to rescue on exception.*/ \
-		exvect->ex_jbuf = &exenv;                             \
-		if (setjmp(exenv)) {                                  \
-				/* There is an exception. */          \
-				/* Jump to rescue clause. */          \
-			IC = rescue;                                  \
-		}                                                     \
+#define SET_RESCUE                                                            \
+	if (rescue) {                                                         \
+			/* Set exception handler address. */                  \
+		if (!setjmp(exenv)) {                                         \
+				/* Register address to rescue on exception.*/ \
+			exvect->ex_jbuf = &exenv;                             \
+		}                                                             \
+		else {                                                        \
+				/* There is an exception. */                  \
+				/* Jump to rescue clause. */                  \
+			IC = rescue;                                          \
+		}                                                             \
 	}
 
 #define ENTER_BODY(i)                                                                \
@@ -323,14 +326,19 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 		} else {                                                             \
 				/* This is a first-time call. */                     \
 				/* Declare variables for exception handling. */      \
+			struct ex_vect * exvecto;                                    \
 			jmp_buf exenvo;                                              \
 				/* Mark once routine as executed. */                 \
 			MTOM(OResult);                                               \
 				/* Record execution vector to catch exception. */    \
-			excatch (&exenvo);                                           \
+			exvecto = extre ();                                          \
 			if (!setjmp(exenvo)) {                                       \
-					/* Provide stack record for rescue/retry. */ \
-				struct ex_vect * EIF_VOLATILE exvect = exft();       \
+					/* Set catch address. */                     \
+				exvect->ex_jbuf = &exenvo;                           \
+					/* Update routine exception vector. */       \
+				exvect = exvecto;                                    \
+				dexset(exvect);                                      \
+					/* Register rescue handler (if any). */      \
 				SET_RESCUE;                                          \
 			} else {                                                     \
 					/* Exception occurred. */                    \
@@ -341,17 +349,16 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 			}                                                            \
 		}                                                                    \
 	} else {                                                                     \
+			/* Register rescue handler (if any). */                      \
 		SET_RESCUE;                                                          \
 	}
 
 #define LEAVE_BODY                                                  \
 	if (is_once) {                                              \
-			/* Evaluation is completed successfully. */ \
-			/* Remove stack record for rescue/retry. */ \
-		expop(&eif_stack);                                  \
 			/* Remove execution vector to restore    */ \
 			/* previous exception catch point.       */ \
-		expop (&eif_stack);                                 \
+		exvect = extrl();                                   \
+		dexset(exvect);                                     \
 	}
 
 rt_public void metamorphose_top()

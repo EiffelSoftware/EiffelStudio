@@ -179,7 +179,7 @@ rt_public void update(char ignore_updt)
 		enomem(MTC_NOARG);
 	bcopy(egc_fcall, ecall, scount * sizeof(int32 *));
 
-	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
+	/* FIXME: `ecall' is indexed by original (static) type id, not by dynamic type
 	 * id. Therefore it should be resized using `scount' which is the number of
 	 * dynamic types in the system, but rather by the updated value of `fcount'
 	 * which is the number of static types (if some types have been removed

@@ -432,7 +432,7 @@ feature {NONE} -- Contract support
 
 feature -- Contract support
 
-	is_parent_recursive (a_list: EV_ANY): BOOLEAN is
+	is_parent_recursive (a_list: like item): BOOLEAN is
 			-- Is `a_list' a parent of `Current'?
 		require
 			a_list_not_void: a_list /= Void

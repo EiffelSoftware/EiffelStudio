@@ -31,21 +31,6 @@ feature {NONE} -- Implementation
 
 	displayed: LINKED_LIST [E_CLASS];
 
-	add_tabs (st:STRUCTURED_TEXT; i: INTEGER) is
-			-- Add `i' tabs to `structured_text'.
-		local
-			j: INTEGER
-		do
-			from
-				j := 1;
-			until
-				j > i
-			loop
-				st.add_indent;
-				j := j + 1
-			end;
-		end;
-
 	rec_display (i: INTEGER; c: E_CLASS; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local

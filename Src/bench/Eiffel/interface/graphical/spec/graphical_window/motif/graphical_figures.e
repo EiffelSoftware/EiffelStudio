@@ -206,13 +206,13 @@ feature -- Input
 		end;
 
 	put_operator (str: STRING;
-			e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
+			e_feature: E_FEATURE; is_keyword: BOOLEAN) is
 		   -- Process operator text.
 		local
 			stone: FEATURE_STONE;
 			fig: TEXT_FIGURE
 		do
-			!! stone.make (e_feature, e_class);
+			!! stone.make (e_feature);
 			if is_keyword then
 				!KEYWORD_TEXT_IMAGE! fig
 			else
@@ -346,14 +346,14 @@ end
 			add_text_figure (fig, str)
 		end;
 
-	put_feature (feat: E_FEATURE; e_class: E_CLASS; str: STRING) is
+	put_feature (feat: E_FEATURE; str: STRING) is
 			-- Put feature `feat' defined in `e_class' with string
 			-- representation `str' at current position.
 		local
 			fig: FEATURE_TEXT_IMAGE;
 			stone: FEATURE_STONE
 		do
-			!! stone.make (feat, e_class);
+			!! stone.make (feat);
 			!! fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
@@ -616,6 +616,9 @@ feature {NONE} -- Implementation
 				if Application.is_breakpoint_set (stone.routine, stone.index) then
 					fig.set_pixmap (bm_graphical_Stoppoint);
 					fig.set_foreground_color (g_Stop_fg_color);
+				else
+					fig.set_foreground_color (g_Breakable_fg_color);
+					fig.set_pixmap (bm_graphical_Breakablepoint)
 				end;
 			elseif Application.is_breakpoint_set (stone.routine, stone.index) then
 				fig.set_pixmap (bm_graphical_Stoppoint);

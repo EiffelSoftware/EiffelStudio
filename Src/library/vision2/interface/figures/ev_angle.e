@@ -38,7 +38,7 @@ feature -- initialization
 		do
 			set_degrees (r)
 		ensure
-			angle_set: degrees = r
+			(degrees - r).abs < Error_margin
 		end
 
 feature -- Comparisons
@@ -75,7 +75,7 @@ feature -- Operations
 	infix "*" (r: REAL): like Current is
 			-- Product by `r'
 		require
-			other_not_void: other /= Void
+			other_not_void: r /= Void
 		do
 			create Result.make_radians (radians * r)
 		ensure
@@ -136,7 +136,7 @@ feature -- Access
 	degrees: REAL is
 			-- value of Current in degrees
 		do
-			if value /= 0.0 then
+			if radians /= 0.0 then
 				Result := Pi_in_degrees*(radians/Pi).truncated_to_real
 			end
 		end
@@ -147,7 +147,7 @@ feature -- Access
 		do
 			radians := ((Pi*r)/Pi_in_degrees).truncated_to_real
 		ensure
-			angle_set: degrees = r
+			angle_set: (degrees - r).abs < Error_margin
 		end
 	
 
@@ -156,8 +156,14 @@ feature {NONE} -- Implementation constants
 	Pi_in_degrees: REAL is 180.0
 			-- Pi radians in degrees
 
+	Error_margin: REAL is 
+			-- 1/1000th of an arc.
+		do
+			Result := Pi / 1000	
+		end
+
 invariant
-	units_consistant: (radians - (degrees*Pi)/Pi_in_degrees).abs < Pi/1000
+	units_consistant: (radians - (degrees*Pi)/Pi_in_degrees).abs < Error_margin
 			-- Ensure that the two units agree to withing 1/1000th of an arc
 
 end -- class EV_ANGLE

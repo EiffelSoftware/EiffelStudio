@@ -3,7 +3,7 @@ indexing
 	description: 
 		"EiffelVision message dialog, gtk implementation.";
 	status: "See notice at end of class";
-	id: "$id: $";
+	id: "$Id$";
 	date: "$Date$";
 	revision: "$Revision$"
 	

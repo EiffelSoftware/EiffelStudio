@@ -29,7 +29,9 @@ feature {NONE} -- Initialization
 			a_widget_exists: a_widget /= Void and then not a_widget.is_destroyed;
 		do
 			widget := a_widget;
-			create_event (an_event_ptr)
+			if an_event_ptr /= default_pointer then
+				create_event (an_event_ptr)
+			end;
 		ensure
 			non_void_event: event /= Void;
 			widget_set: a_widget = widget
@@ -43,7 +45,7 @@ feature {NONE} -- Initialization
 			a_widget_exists: a_widget /= Void and then not a_widget.is_destroyed;
 		do
 			widget := a_widget;
-debug ("MEL")
+debug ("MEL_CALLBACK")
 	io.error.putstring ("Mel structure:%N ");
 	io.error.putstring (out);
 	io.error.new_line
@@ -152,7 +154,7 @@ feature {NONE} -- Implementation
 			else
 				!! event.make (event_ptr)
 			end
-debug ("MEL")
+debug ("MEL_CALLBACK")
 	io.error.putstring ("Mel structure:%N ");
 	io.error.putstring (out);
 	io.error.putstring ("%TEvent dump: %N%T");

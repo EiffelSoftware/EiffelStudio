@@ -8,9 +8,9 @@ external class
 	
 feature -- Basic Operations
 
-	frozen equals_object_object (obj_a: SYSTEM_OBJECT; obj_b: SYSTEM_OBJECT): BOOLEAN is
+	equals (obj: SYSTEM_OBJECT): BOOLEAN is
 		external
-			"IL static signature (System.Object, System.Object): System.Boolean use System.Object"
+			"IL signature (System.Object): System.Boolean use System.Object"
 		alias
 			"Equals"
 		end
@@ -22,13 +22,6 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	frozen get_type: TYPE is
-		external
-			"IL signature (): System.Type use System.Object"
-		alias
-			"GetType"
-		end
-
 	to_string: SYSTEM_STRING is
 		external
 			"IL signature (): System.String use System.Object"
@@ -36,18 +29,27 @@ feature -- Basic Operations
 			"ToString"
 		end
 
+feature -- Frozen Basic Operations
+
+	frozen equals_object_object (obj_a: SYSTEM_OBJECT; obj_b: SYSTEM_OBJECT): BOOLEAN is
+		external
+			"IL static signature (System.Object, System.Object): System.Boolean use System.Object"
+		alias
+			"Equals"
+		end
+
+	frozen get_type: TYPE is
+		external
+			"IL signature (): System.Type use System.Object"
+		alias
+			"GetType"
+		end
+
 	frozen reference_equals (obj_a: SYSTEM_OBJECT; obj_b: SYSTEM_OBJECT): BOOLEAN is
 		external
 			"IL static signature (System.Object, System.Object): System.Boolean use System.Object"
 		alias
 			"ReferenceEquals"
-		end
-
-	equals (obj: SYSTEM_OBJECT): BOOLEAN is
-		external
-			"IL signature (System.Object): System.Boolean use System.Object"
-		alias
-			"Equals"
 		end
 
 feature {NONE} -- Implementation

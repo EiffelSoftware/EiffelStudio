@@ -20,7 +20,7 @@ feature -- Access
 	set: STRING is
 			-- Current character set
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			old_idx: INTEGER
 		do
@@ -42,7 +42,7 @@ feature -- Access
 	has (token: STRING): BOOLEAN is
 			-- Is there a comparator for `token'?
 		require
-			non_empty_token: token /= Void and then not token.empty
+			non_empty_token: token /= Void and then not token.is_empty
 		local
 			old_idx: INTEGER
 		do
@@ -63,13 +63,13 @@ feature -- Access
 	contains_string (s: STRING): BOOLEAN is
 			-- Does character set contain string `s'?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			string_exists: s /= Void
 		local
 			i: INTEGER
 			str: STRING
 		do
-			if not s.empty then
+			if not s.is_empty then
 				str := clone (s)
 				remove_duplicate_characters (str)
 				from
@@ -91,7 +91,7 @@ feature -- Access
 	contains_character (c: CHARACTER): BOOLEAN is
 			-- Does character set contain character `c'?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			old_idx: INTEGER
 		do
@@ -111,10 +111,10 @@ feature -- Access
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is character set empty?
 		do
-			Result := comparators = Void or else comparators.empty
+			Result := comparators = Void or else comparators.is_empty
 		end
 		
 feature -- Status setting
@@ -132,7 +132,7 @@ feature -- Status setting
 			comparators := clone (comparator_builder.comparators)
 		ensure
 			comparators_set_up: comparators /= Void and then not
-						comparators.empty
+						comparators.is_empty
 		end
 
 feature -- Element change
@@ -140,7 +140,7 @@ feature -- Element change
 	add (s: STRING) is
 			-- Add `s' to character set.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 			no_such_comparator: not has (s)
 		do
 			comparator_builder.add (s)
@@ -155,7 +155,7 @@ feature -- Removal
 	remove (s: STRING) is
 			-- Remove `s' from character set.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 			has_comparator: has (s)
 		do
 			comparator_builder.remove (s)
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 	remove_duplicate_characters (s: STRING) is
 			-- Remove duplicate characters from `s'.
 		require
-			string_exists: s /= Void and then not s.empty
+			string_exists: s /= Void and then not s.is_empty
 		local
 			i: INTEGER
 			newstr: STRING

@@ -41,13 +41,13 @@ feature -- Status report
 	is_set_defined: BOOLEAN is
 			-- Has a character set been defined?
 		do
-			Result := not character_array.all_cleared
+			Result := not character_array.all_default
 		end
 
 	comparators_available: BOOLEAN is
 			-- Is there a set of comparators available?
 		do
-			Result := not comparators.empty
+			Result := not comparators.is_empty
 		end
 		
 feature -- Status setting
@@ -55,7 +55,7 @@ feature -- Status setting
 	define_set (s: STRING) is
 			-- Define character set.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			comparators.wipe_out
 			character_array.clear_all
@@ -65,22 +65,26 @@ feature -- Status setting
 	add (s: STRING) is
 			-- Add to character set.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
-			from until s.empty loop
+			from until s.is_empty loop
 				fetch_token (s)
-				if not last_token.empty then update_character_array (False) end
+				if not last_token.is_empty then 
+					update_character_array (False) 
+				end
 			end
 		end
 		
 	remove (s: STRING) is
 			-- Remove from character set.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
-			from until s.empty loop
+			from until s.is_empty loop
 				fetch_token (s)
-				if not last_token.empty then update_character_array (True) end
+				if not last_token.is_empty then 
+					update_character_array (True) 
+				end
 			end
 		end
 
@@ -142,7 +146,7 @@ feature {NONE} -- Implementation
 			-- Update character array with `last_token'.
 			-- (Reset state, if `remove_mode' is on.)
 		require
-			non_empty_token: last_token /= Void and then not last_token.empty
+			non_empty_token: last_token /= Void and then not last_token.is_empty
 			token_ok: token_type /= 0
 		local
 			i: INTEGER
@@ -205,7 +209,7 @@ feature {NONE} -- Implementation
 	fetch_token (tok: STRING) is
 			-- Fetch next token from `tok'.
 		require
-			non_empty_token: tok /= Void and then not tok.empty
+			non_empty_token: tok /= Void and then not tok.is_empty
 		local
 			cur: CHARACTER
 			next: CHARACTER
@@ -216,19 +220,19 @@ feature {NONE} -- Implementation
 			from
 				create last_token.make (4)
 			until
-				valid or tok.empty
+				valid or tok.is_empty
 			loop
 				get_character (tok)
 				cur := last_character
-				if not tok.empty then 
+				if not tok.is_empty then 
 					next := tok.item (1)
 				else
 					next := '%U'
 				end
-				if last_token.empty and cur = '-' and not quoted then
+				if last_token.is_empty and cur = '-' and not quoted then
 					tok.remove (1)
 				end
-				if tok.empty and 
+				if tok.is_empty and 
 					(cur = Backslash.ascii_char and not quoted) then 
 					cur := '%U' 
 				end
@@ -250,13 +254,13 @@ feature {NONE} -- Implementation
 					if not quoted then last_token.extend (last_character) end
 					if not range_flag and then token_type /= 0 then
 						valid := True
-					elseif tok.empty and not valid then
+					elseif tok.is_empty and not valid then
 						last_token.wipe_out
 					end
 				end
 			end
 				check
-					valid_token: not last_token.empty implies token_type /= 0
+					valid_token: not last_token.is_empty implies token_type /= 0
 						-- Because the above algorithm always yields correct
 						-- tokens
 				end
@@ -265,7 +269,7 @@ feature {NONE} -- Implementation
 	get_character (s: STRING) is
 			-- Get next character from `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			last_character := s.item (1)
 			s.remove (1)
@@ -275,7 +279,7 @@ invariant
 
 	character_array_set_up: character_array /= Void
 	comparators_set_up: comparators /= Void
-	token_valid: (last_token /= Void and then not last_token.empty) implies
+	token_valid: (last_token /= Void and then not last_token.is_empty) implies
 			token_type /= 0
 
 end -- class COMPARATOR_BUILDER_IMPL

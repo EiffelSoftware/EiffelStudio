@@ -46,7 +46,7 @@ feature -- Access
 	transaction (n: INTEGER): TRANSACTION is
 			-- `n'-th transaction
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			index_in_range: 1 <= n and n <= count
 		do
 			Result := transactions.i_th (n)
@@ -64,23 +64,23 @@ feature -- Measurement
 		
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- No transaction stored in builder?
 		do
-			Result := transactions.empty
+			Result := transactions.is_empty
 		end
 
 	manager_built: BOOLEAN is
 			-- Has manager been built?
 		do
 			Result := transfer_manager /= Void and then 
-				not transfer_manager.empty
+				not transfer_manager.is_empty
 		end
 
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN is
 			-- Is address `addr' correct?
 		require
-			non_empty_address: addr /= Void and then not addr.empty
+			non_empty_address: addr /= Void and then not addr.is_empty
 			mode_in_range: Readable <= mode and mode <= writable
 		local
 			res: RESOURCE
@@ -174,7 +174,7 @@ feature -- Removal
 	remove_transaction (n: INTEGER) is
 			-- Remove `n'-th transaction.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			index_in_range: 1 <= n and n <= count
 		local
 			idx: INTEGER
@@ -208,7 +208,7 @@ feature -- Removal
 			optimized_transactions := Void
 			transfer_manager := Void
 		ensure
-			empty: empty
+			empty: is_empty
 			no_optimized_transactions: optimized_transactions = Void
 			no_manager: not manager_built
 		end
@@ -218,7 +218,7 @@ feature -- Basic operations
 	build_manager is
 			-- Build manager.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			optimize_transactions
 			setup_manager
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			-- Number of optimized transactions
 		do
 			if optimized_transactions /= Void and then not
-				optimized_transactions.empty then
+				optimized_transactions.is_empty then
 				from 
 					optimized_transactions.start 
 				until 
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 	optimize_transactions is
 			-- Optimize registered transactions.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			hash: HASH_TABLE[LINKED_LIST[INTEGER], URL]
 			addr: URL
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			optimized: optimized_transactions /= Void and then not
-					optimized_transactions.empty
+					optimized_transactions.is_empty
 		end
 
 	setup_manager is

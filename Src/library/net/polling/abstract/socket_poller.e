@@ -276,7 +276,7 @@ feature {NONE} -- implementation
 			listen_argument_list.go_i_th (i);
 			listen_argument_list.remove;
 
-			if listen_socket_list.empty then
+			if listen_socket_list.is_empty then
 				listen_list_exhausted := True
 			elseif listen_socket_list.after then
 				listen_socket_list.start;
@@ -288,7 +288,7 @@ feature {NONE} -- implementation
 	listen_list_empty: BOOLEAN is
 			-- Is listen list empty?
 		do
-			Result := listen_socket_list.empty
+			Result := listen_socket_list.is_empty
 		end;
 
 	listen_list_after: BOOLEAN is
@@ -392,7 +392,7 @@ feature {NONE} -- implementation
 	 		service_argument_list.go_i_th (i);
 			service_argument_list.remove;
 
-			if service_socket_list.empty then
+			if service_socket_list.is_empty then
 				service_list_exhausted := True
 			elseif service_socket_list.after then
 				service_socket_list.start;
@@ -404,7 +404,7 @@ feature {NONE} -- implementation
 	service_list_empty: BOOLEAN is
 			-- See listen_list comments.
 	 	do
-	 		Result := service_socket_list.empty
+	 		Result := service_socket_list.is_empty
 		end;
 
 	service_list_after: BOOLEAN is

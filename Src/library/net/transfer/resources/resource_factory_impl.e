@@ -47,7 +47,7 @@ feature -- Status report
 			-- Has address been set?
 		do
 			Result := (address /= Void and service /= Void) and then
-				not (address.empty and service.empty)
+				not (address.is_empty and service.is_empty)
 		end
 
 	is_address_correct: BOOLEAN is
@@ -67,7 +67,7 @@ feature -- Status setting
 			-- Set address.
 		require
 			address_exists: addr /= Void
-			address_not_empty: not addr.empty
+			address_not_empty: not addr.is_empty
 		local
 			s: STRING
 			pos: INTEGER
@@ -99,7 +99,7 @@ feature -- Status setting
 			-- Set default service to `service_name'.
 		require
 			name_exists: service_name /= Void
-			name_not_empty: not service_name.empty
+			name_not_empty: not service_name.is_empty
 		do
 			default_service := clone (service_name)
 			default_service.to_lower
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation (Factory setup)
 invariant
 
 	default_service_specified: default_service /= Void and then
-							not default_service.empty
+							not default_service.is_empty
 	url_constraint: is_address_set implies url /= Void
 
 end -- class RESOURCE_FACTORY_IMPL

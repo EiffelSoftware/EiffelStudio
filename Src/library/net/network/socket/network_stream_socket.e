@@ -47,7 +47,8 @@ feature -- Initialization
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
 		require
-			valid_peer_host: a_peer_host /= Void and then not a_peer_host.empty;
+			valid_peer_host: a_peer_host /= Void and then 
+					not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
 		local
 			h_address: HOST_ADDRESS;

@@ -79,7 +79,7 @@ feature -- Status report
 	error: BOOLEAN is
 			-- Has an error occurred in any transaction?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			Result := check_query (transaction~error)
 		end
@@ -87,7 +87,7 @@ feature -- Status report
 	transactions_succeeded: BOOLEAN is
 			-- Have all transactions succeeded?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			if transfer_finished then
 				Result := check_query (transaction~succeeded)
@@ -120,7 +120,7 @@ feature -- Removal
 	remove_transaction (n: INTEGER) is
 			-- Remove `n'-th transaction.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			index_in_range: 1 <= n and n <= count
 		local
 			idx: INTEGER
@@ -142,7 +142,7 @@ feature -- Basic operations
 	transfer is
 			-- Transfer file.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			flags_reset: not (transfer_finished and transactions_succeeded)
 		do
 			transfer_finished := True

@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 						Io.error.put_string (str)
 						Io.error.put_new_line
 					end
-				if not str.empty then headers.extend (str) end
+				if not str.is_empty then headers.extend (str) end
 			end
 			check_error
 			if not error then get_content_length end
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	get_content_length is
 			-- Get content length from HTTP headers
 		require
-			non_empty_headers: not headers.empty
+			non_empty_headers: not headers.is_empty
 			no_error: not error
 		local
 			str: STRING

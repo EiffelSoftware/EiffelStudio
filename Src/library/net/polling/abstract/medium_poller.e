@@ -79,15 +79,16 @@ feature
 		local
 			lrm, lwm, lem: ANY
 		do
-			if not ignore_read and then not read_command_list.all_cleared then
+			if not ignore_read and then not read_command_list.all_default then
 				last_read_mask := clone (read_mask);
 				lrm := last_read_mask.mask
 			end;
-			if not ignore_write and then not write_command_list.all_cleared then
+			if not ignore_write and then not write_command_list.all_default then
 				last_write_mask := clone (write_mask);
 				lwm := last_write_mask.mask
 			end;
-			if not ignore_exception and then not exception_command_list.all_cleared then
+			if not ignore_exception and then 
+				not exception_command_list.all_default then
 				last_except_mask := clone (except_mask);
 				lem := last_except_mask.mask
 			end;
@@ -131,7 +132,7 @@ feature -- process set commands
 			counter, counter1: INTEGER;
 			a_command: POLL_COMMAND
 		do
-			if not ignore_read and then not read_command_list.all_cleared then
+			if not ignore_read and then not read_command_list.all_default then
 				from 
 					counter1 := read_command_list.lower
 				until
@@ -148,7 +149,8 @@ feature -- process set commands
 					counter1 := counter1 + 1
 				end
 			end;
-			if not ignore_write and then counter < number_of_selected and then not write_command_list.all_cleared then
+			if not ignore_write and then counter < number_of_selected and then
+				not write_command_list.all_default then
 				from 
 					counter1 := write_command_list.lower
 				until
@@ -165,7 +167,8 @@ feature -- process set commands
 					counter1 := counter1 + 1
 				end
 			end;
-			if not ignore_exception and then counter < number_of_selected and then not exception_command_list.all_cleared then
+			if not ignore_exception and then counter < number_of_selected and
+				then not exception_command_list.all_default then
 				from
 					counter1 := exception_command_list.lower
 				until

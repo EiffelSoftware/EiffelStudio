@@ -81,7 +81,7 @@ feature -- Status report
 	 		-- Can transaction `t' be inserted in container?
 		do
 			Result := t.source.supports_multiple_transactions and then
-				(not empty implies equal (transaction.source, t.source))
+				(not is_empty implies equal (transaction.source, t.source))
 		end
 	 
 feature -- Status setting
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	reset_error_flags is
 			-- Reset error flags for selected transaction.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			source.reset_error
 			target.reset_error
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	do_transaction is
 			-- Execute selected transaction.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			first_source_set: first_source /= Void
 		do
 			if index > 1 then 

@@ -23,7 +23,8 @@ feature -- Access
 	
 invariant
 
-	no_empty_comparator: character_set /= Void and then not character_set.empty
+	no_empty_comparator: character_set /= Void and then 
+			not character_set.is_empty
 
 end -- class COMPARATOR
 

@@ -271,7 +271,7 @@ feature -- Status setting
 		require
 			proxy_supported: is_proxy_supported
 			closed: not is_open
-			non_empty_host: host /= Void and then not host.empty
+			non_empty_host: host /= Void and then not host.is_empty
 			host_ok: address.proxy_host_ok (host)
 			positive_port: port_no > 0
 		do
@@ -284,7 +284,7 @@ feature -- Status setting
 			-- Set username.
 		require
 			username_accepted: address.has_username
-			non_empty_username: un /= Void and then not un.empty
+			non_empty_username: un /= Void and then not un.is_empty
 		do
 			address.set_username (un)
 		end
@@ -293,7 +293,7 @@ feature -- Status setting
 			-- Set password.
 		require
 			password_accepted: address.is_password_accepted
-			non_empty_password: pw /= Void and then not pw.empty
+			non_empty_password: pw /= Void and then not pw.is_empty
 		do
 			address.set_password (pw)
 		end

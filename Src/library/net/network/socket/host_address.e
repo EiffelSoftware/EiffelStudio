@@ -104,7 +104,7 @@ feature -- Status_setting
 	set_address_from_name (a_name: STRING) is
 			-- Set the host address using the name provided in 'a_name'.
 		require
-			name_valid: a_name /= Void and then not a_name.empty
+			name_valid: a_name /= Void and then not a_name.is_empty
 		local
 			ext: ANY
 		do

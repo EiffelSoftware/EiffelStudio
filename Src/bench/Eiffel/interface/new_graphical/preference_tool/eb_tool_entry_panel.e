@@ -7,16 +7,17 @@ class
 	EB_TOOL_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_TOOL_DATA
 		rename
 			Tool_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 	SYSTEM_CONSTANTS
 
 creation
@@ -31,10 +32,9 @@ feature {NONE} -- Initialization
 			if Platform_constants.is_windows then
 				Create regular_button.make_with_resource (Current, parameters.regular_button)
 			end
-			Create close_button.make_with_resource (Current, parameters.close_button)
-			Create default_window_position.make_with_resource (Current, parameters.default_window_position)
-			Create history_size.make_with_resource (Current, parameters.history_size)
-			Create window_free_list_number.make_with_resource (Current, parameters.window_free_list_number)
+			create close_button.make_with_resource (Current, parameters.close_button)
+			create default_window_position.make_with_resource (Current, parameters.default_window_position)
+			create history_size.make_with_resource (Current, parameters.history_size)
 
 			if Platform_constants.is_windows then
 				resources.extend (regular_button)
@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			resources.extend (close_button)
 			resources.extend (default_window_position)
 			resources.extend (history_size)
-			resources.extend (window_free_list_number)
 		end
 
 feature -- Access
@@ -50,16 +49,15 @@ feature -- Access
 	name: STRING is "Tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_General
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	regular_button, close_button,
 	default_window_position: EB_BOOLEAN_RESOURCE_DISPLAY
 	history_size: EB_INTEGER_RESOURCE_DISPLAY
-	window_free_list_number: EB_INTEGER_RESOURCE_DISPLAY
 
 end -- class EB_TOOL_ENTRY_PANEL

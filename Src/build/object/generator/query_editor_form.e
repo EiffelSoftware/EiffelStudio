@@ -136,7 +136,7 @@ feature
 		do
 			!! Result.make (0)
 			if is_boolean then
-				Result.append (".to_boolean")
+				Result.append (".state")
 			elseif is_double then
 				Result.append (".to_double")
 			elseif is_integer then

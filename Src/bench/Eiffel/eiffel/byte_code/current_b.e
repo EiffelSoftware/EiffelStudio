@@ -7,7 +7,7 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged, is_current, make_byte_code,
-			register_name, pre_inlined_code, print_register
+			register_name, pre_inlined_code
 		end;
 	
 feature 
@@ -46,12 +46,6 @@ feature
 		once
 			Result := "Current";
 		end;
-
-	print_register is
-			-- Print "Current" register
-		do
-			context.buffer.putstring (register_name)
-		end
 
 feature -- Byte code generation
 

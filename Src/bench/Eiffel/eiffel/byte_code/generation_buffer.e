@@ -108,15 +108,6 @@ feature -- Element change
 		end
 
 	put_protected_local (i: INTEGER) is
-			-- Write "l_`i'".
-		do
-			emit_tabs
-			append_character ('l')
-			append_character ('_')
-			append_integer (i)
-		end
-
-	put_protected_local_set (i: INTEGER) is
 			-- Write "l[`i']".
 		do
 			emit_tabs
@@ -203,11 +194,9 @@ feature -- Element change
 				append_character ('\')
 				putoctal (c.code)
 			elseif c = '\' then
-				append_character ('\')
-				append_character ('\')
+				append ("\\")
 			elseif c = '%'' then
-				append_character ('\')
-				append_character (''')
+				append ("\'")
 			else
 				append_character (c)
 			end
@@ -229,11 +218,9 @@ feature -- Element change
 			loop
 				c := s.item (i)
 				if c = '"' then
-					append_character ('\')
-					append_character ('"')
+					append ("\%"")
 				elseif c = '\' then
-					append_character ('\')
-					append_character ('\')
+					append ("\\")
 				elseif c < ' ' or c > '%/127/' then
 						-- Assume ASCII set, sorry--RAM.
 					append_character ('\')

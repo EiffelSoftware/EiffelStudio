@@ -185,11 +185,12 @@ feature -- Dynamic Library file
 					if (dynamic_lib_exports.item_for_iteration /= Void) then
 						def_buffer.putstring( "%N; CLASS [" )
 
+						class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
+						def_buffer.putstring(class_name)
+						def_buffer.putstring( "]%N" )
+
 						from
 							dynamic_lib_exports.item_for_iteration.start
-							class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
-							def_buffer.putstring(class_name)
-							def_buffer.putstring( "]%N" )
 						until
 							dynamic_lib_exports.item_for_iteration.after
 						loop
@@ -310,8 +311,8 @@ feature -- Dynamic Library file
 									buffer.putstring (" ;*/")
 
 										--LOCAL VARIABLES
+									buffer.putstring ("%N%TEIF_OBJ main_obj;")
 									buffer.putstring ("%N%TEIF_PROC ep;")
-									buffer.putstring ("%N%TEIF_REFERENCE main_obj = (EIF_REFERENCE) 0;")
 									buffer.putstring ("%N%TEIF_TYPE_ID eti;")
 									if not return_type.is_equal("void") then
 										buffer.putstring ("%N%T")
@@ -319,6 +320,7 @@ feature -- Dynamic Library file
 										buffer.putstring (" Return_Value ;")
 									end -- When the feature return a value.
 										
+
 										--INITIALIZATION DYNAMIC_LIB and RT
 									buffer.putstring ("%N%TDYNAMIC_LIB_RT_INITIALIZE(")
 
@@ -338,8 +340,10 @@ feature -- Dynamic Library file
 										loop
 											if not args.i_th(argument_names.index).is_basic then
 												buffer.putstring ("%N%T")
-												buffer.put_protected_local_set (argument_names.index)
-												buffer.putstring (" = &")
+												buffer.put_protected_local (argument_names.index)
+												buffer.putstring (" = (")
+												buffer.putstring ( cecil_type(args.i_th(argument_names.index)) )
+												buffer.putstring (") ")
 												buffer.putstring(argument_names.item)
 												buffer.putstring (" ;"); 
 											end
@@ -350,9 +354,8 @@ feature -- Dynamic Library file
 
 										-- CALCULATE THE MAIN OBJECT.
 									buffer.putstring ("%N%T")
-									buffer.put_protected_local_set (0)
-									buffer.putstring (" = &main_obj;")
-									buffer.putstring ("%N%Tmain_obj = RTLN(")
+									buffer.put_protected_local (0)
+									buffer.putstring (" = RTLN(")
 
 									if Context.workbench_mode then
 										buffer.putstring ("RTUD(");
@@ -368,7 +371,7 @@ feature -- Dynamic Library file
 										buffer.putstring ("%N%T/* Call the creation routine */%N%T")
 										buffer.putstring (internal_creation_name)
 										buffer.putchar ('(')
-										buffer.putstring ("main_obj")
+										buffer.put_protected_local (0)
 										buffer.putstring (");")
 									end
 									
@@ -382,7 +385,7 @@ feature -- Dynamic Library file
 									end -- When the feature return a value.
 									buffer.putstring (internal_feature_name)
 									buffer.putchar ('(')
-									buffer.putstring ("main_obj")
+									buffer.put_protected_local (0)
 
 									if argument_names /= Void then
 										from
@@ -390,8 +393,13 @@ feature -- Dynamic Library file
 										until
 											argument_names.after
 										loop
-											buffer.putchar (',')
-											buffer.putstring (argument_names.item)
+											if not args.i_th(argument_names.index).is_basic then
+												buffer.putchar (',')
+												buffer.put_protected_local (argument_names.index)
+											else
+												buffer.putstring (", ")
+												buffer.putstring (argument_names.item)
+											end
 											argument_names.forth
 										end
 									end

@@ -55,7 +55,6 @@ feature -- Code generation
 			-- Generate the body for an external of type macro
 		local
 			buf: GENERATION_BUFFER
-			special_access: BOOLEAN
 		do
 			buf := buffer
 			if is_cpp_code then
@@ -66,22 +65,13 @@ feature -- Code generation
 				buf.putstring ("return ");
 				result_type.c_type.generate_cast (buf)
 
-				if external_name.item (1) = '&' and then external_name.count > 1 then
-					buf.putchar ('&')
-					special_access := True
-				end
-
 					--| External structure access will be generated as:
 					--| (type_2) (((type_1 *) arg1)->alias_name);
 				buf.putstring ("(((")
 				buf.putstring (argument_types.item(1))
 				buf.putstring (" *) arg1");
 				buf.putstring (")->")
-				if not special_access then
-					buf.putstring (external_name)
-				else
-					buf.putstring (external_name.substring (2, external_name.count))
-				end
+				buf.putstring (external_name)
 				buf.putstring (");")
 				buf.new_line;
 			else

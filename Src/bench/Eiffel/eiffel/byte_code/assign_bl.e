@@ -480,7 +480,7 @@ feature
 					buf.putstring ("RTAR(");
 					print_register;
 					buf.putstring (gc_comma);
-					context.Current_register.print_register;
+					context.Current_register.print_register_by_name;
 					buf.putchar (')');
 					buf.putchar (';');
 					buf.new_line;
@@ -488,7 +488,7 @@ feature
 					buf.putstring ("RTAR(");
 					source_print_register;
 					buf.putstring (gc_comma);
-					context.Current_register.print_register;
+					context.Current_register.print_register_by_name;
 					buf.putchar (')');
 					buf.putchar (';');
 					buf.new_line;

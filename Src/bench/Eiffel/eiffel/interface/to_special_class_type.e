@@ -77,14 +77,13 @@ feature
 
 			buffer.putstring ("%
 				%%TEIF_REFERENCE ref;%N%
-				%%TEIF_REFERENCE loc1 = NULL;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");
 
 				-- Garbage collector hooks
 			buffer.putstring ("%TRTLI(2);%N%
-				%%Tl[0] = (EIF_REFERENCE) &Current;%N%
-				%%Tl[1] = (EIF_REFERENCE) &loc1;%N%N");
+				%%Tl[0] = Current;%N%
+				%%Tl[1] = (EIF_REFERENCE) 0;%N%N");
 
 			final_mode := byte_context.final_mode;
 			if 	(not final_mode)
@@ -113,8 +112,8 @@ feature
 			end;
 
 				-- Allocation of a special object
-				--		loc1 = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2));
-			buffer.putstring ("%Tloc1 = spmalloc(CHRPAD(arg1 * ");
+				--		l[1] = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2));
+			buffer.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
 		
 			if is_expanded then
 				buffer.putstring ("(EIF_Size(");
@@ -130,9 +129,9 @@ feature
 			buffer.putstring (") + LNGPAD(2));%N");
 
 				-- Header evaluation
-				--		zone = HEADER(loc1);
-			buffer.putstring ("%Tzone = HEADER(loc1);%N");
-			buffer.putstring ("%Tref = loc1 + (zone->ov_size & B_SIZE) - LNGPAD(2);");
+				--		zone = HEADER(l[1]);
+			buffer.putstring ("%Tzone = HEADER(l[1]);%N");
+			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);");
 			buffer.new_line
 
 				-- Set dynamic type
@@ -225,7 +224,7 @@ feature
 							gen_ptype.generate_cid (buffer, final_mode, True)
 						end
 
-						buffer.putstring ("pdtype = RTCID(&typcache, Current,")
+						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line
@@ -244,18 +243,18 @@ feature
 					end
 
 					buffer.putstring ("%
-						%%T%Tfor (ref = loc1+OVERHEAD, i = 0; i < arg1; i++,%
+						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
 								%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
-						%%T%T%THEADER(ref)->ov_size = ref - loc1;%N%
+						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
 						%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N")
 
 						-- FIXME: call to creation routine?????
 
 					if has_init then
-						buffer.putstring ("%T%T%T(init)(ref, loc1);%N")
+						buffer.putstring ("%T%T%T(init)(ref, l[1]);%N")
 					end
 
 					buffer.putstring ("%T%T};%N%T};%N")
@@ -324,7 +323,7 @@ feature
 							gen_ptype.generate_cid (buffer, final_mode, True)
 						end
 
-						buffer.putstring ("pdtype = RTCID(&typcache, Current,")
+						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line
@@ -338,15 +337,15 @@ feature
 					buffer.putstring ("%T%Tinit = XCreate(");
 					buffer.putint (dtype);
 					buffer.putstring (");%N%
-									%%T%Tfor (ref = loc1+OVERHEAD, i = 0; i < arg1; i++,%
+									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
 									%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
-									%%T%T%THEADER(ref)->ov_size = ref - loc1;%N%
+									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
 									%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N%
 									%%T%T%Tif ((char *(*)()) 0 != init)%N%
-									%%T%T%T%T(init)(ref, loc1);%N%
+									%%T%T%T%T(init)(ref, l[1]);%N%
 									%%T%T};%N%T};%N");
 				end
 			else
@@ -354,9 +353,9 @@ feature
 				buffer.putstring (";%N");
 			end;
 				-- Assignment of result to `area'.
-			buffer.putstring ("%TRTAR(loc1, Current);%N%T");
+			buffer.putstring ("%TRTAR(l[1], l[0]);%N%T");
 			generate_area_access (buffer);
-			buffer.putstring (" = loc1;%N%
+			buffer.putstring (" = l[1];%N%
 							%%TRTLE;%N}%N%N");
 		end;
 
@@ -381,7 +380,7 @@ feature
 			array_index: INTEGER
 			rout_info: ROUT_INFO
 		do
-			buffer.putstring ("*(EIF_REFERENCE *) (Current");
+			buffer.putstring ("*(EIF_REFERENCE *) (l[0]");
 
 			area_feature := associated_class.feature_table.item ("area");
 
@@ -397,7 +396,7 @@ feature
 					buffer.putchar ('-');
 					buffer.putint (array_index);
 					buffer.putchar (')');
-					buffer.putstring ("[Dtype(Current)]");
+					buffer.putstring ("[Dtype(l[0])]");
 						-- Remember extern declaration
 					Extern_declarations.add_attribute_table (clone (table_name));
 					   -- Mark attribute table used
@@ -419,13 +418,13 @@ feature
 				rout_info.origin.generated_id (buffer);
 				buffer.putstring (", ");
 				buffer.putint (rout_info.offset);
-				buffer.putstring (", Dtype(Current)))");
+				buffer.putstring (", Dtype(l[0])))");
 			else
 				buffer.putstring ("+ RTWA(");
 				buffer.putint (id.id - 1);
 				buffer.putstring (", ");
 				buffer.putint (area_feature.feature_id);
-				buffer.putstring (", Dtype(Current)))");
+				buffer.putstring (", Dtype(l[0])))");
 			end;				
 		end;
 

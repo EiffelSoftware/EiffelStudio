@@ -55,7 +55,7 @@ feature
 			print_register;
 			buf.putstring (" = ");
 			buf.putstring ("RTST(");
-			Context.Current_register.print_register;
+			Context.Current_register.print_register_by_name;
 			buf.putstring (gc_comma);
 			buf.putint (cl_type.type_id - 1);
 			buf.putstring (", items, ");

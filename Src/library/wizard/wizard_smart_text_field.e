@@ -190,7 +190,7 @@ feature -- Settings
 		end
 
 	enable_file_browse_button (a_filter: STRING) is
-			-- Add a browse button near on the right of the text field,
+			-- Add a browse button near the right of the text field,
 			-- clicking on the browse button will display a dialog to
 			-- choose a file among `a_filter'.
 		require
@@ -206,7 +206,7 @@ feature -- Settings
 		end
 
 	disable_browse_button is
-			-- Remove a browse button near on the right of the text field.
+			-- Remove a browse button near the right of the text field.
 		require
 			not_yet_generated: not generated
 			has_browse_button: has_browse_button

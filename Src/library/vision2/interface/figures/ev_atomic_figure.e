@@ -43,7 +43,6 @@ feature -- Access
 
 	logical_function_mode: INTEGER
 			-- Logical function to be used in Graphic Context.
-			--| FIXME Get those constants in this class, maybe?????
 
 feature -- Status setting
 

@@ -28,9 +28,9 @@ feature -- Access
 			-- C compiler options to compile Proxy/Stub.
 		once
 			Result := "/ML /W0 /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /D %"_WIN32_WINNT=0x0500%" /YX /c /I..\include /I..\..\common\include /I"
-			Result.append (Eiffel4_location)
-			Result.append ("\bench\spec\windows\include /I")
-			Result.append (Eiffel4_location)
+			Result.append (Eiffel_installation_dir_name)
+			Result.append ("\studio\spec\windows\include /I")
+			Result.append (Eiffel_installation_dir_name)
 			Result.append ("\library\com\spec\windows\include ")
 		end
 

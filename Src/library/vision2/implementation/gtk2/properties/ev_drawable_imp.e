@@ -184,7 +184,9 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-			internal_font_imp ?= a_font.implementation
+			if internal_font_imp /= a_font.implementation then
+				internal_font_imp ?= a_font.implementation				
+			end
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -192,12 +194,14 @@ feature -- Element change
 		local
 			color_struct: POINTER
 		do
-			internal_background_color := a_color
-			color_struct := App_implementation.reusable_color_struct
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)
+			if internal_background_color /= a_color then
+				internal_background_color := a_color
+				color_struct := App_implementation.reusable_color_struct
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)				
+			end
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -205,12 +209,14 @@ feature -- Element change
 		local
 			color_struct: POINTER
 		do
-			internal_foreground_color := a_color
-			color_struct := App_implementation.reusable_color_struct
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)
+			if internal_foreground_color /= a_color then
+				internal_foreground_color := a_color
+				color_struct := App_implementation.reusable_color_struct
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)				
+			end
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -347,15 +353,22 @@ feature -- Drawing operations
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			--a_cs: EV_GTK_C_STRING
-			a_pango_layout, a_pango_iter: POINTER
-			a_text_count, a_baseline: INTEGER
-			a_y: INTEGER
+			a_pango_layout: POINTER
+			a_y, a_text_count: INTEGER
 			temp_any: ANY
 		do
 			if drawable /= default_pointer then
+				if draw_from_baseline then
+					if internal_font_imp /= Void then
+						a_y := y - internal_font_imp.ascent
+					else
+						a_y := y - app_implementation.default_font_ascent
+					end
+				else
+					a_y := y
+				end
 				--create a_cs.make (a_text)
-				--a_cs := a_text
-				
+				--a_cs := a_text				
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
 				a_text_count := a_text.count
@@ -363,14 +376,8 @@ feature -- Drawing operations
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, $temp_any, a_text_count)
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
-				end
-				if draw_from_baseline then
-					a_pango_iter := App_implementation.pango_iter
-					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
-					a_y := y - a_baseline
 				else
-					a_y := y - 2
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
 			end

@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Reflection system specification</title>
+		<TITLE>ISE.Reflection.CodeGenerator.dll</TITLE>
 		<LINK REL="StyleSheet" HREF="/default.css">
 		<META NAME ="MS-HKWD" CONTENT = "ISE.Reflection.CodeGenerator.dll">
 		<META NAME ="MS-HKWD" CONTENT = "Code generator, Eiffel code generator, XML code generator, Eiffel code generator from XML">
@@ -26,7 +26,7 @@
 								To create an <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN>, you must call <SPAN CLASS = "efeature">make_from_info</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN><SPAN CLASS = "esymbol">;</SPAN> <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN><SPAN CLASS = "esymbol">)</SPAN>. <br>
 								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.Reflection.EiffelComponents</a> for more information about <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> and <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> classes.<br>
 								The main service provided by this class is to generate the Eiffel class by using information of <SPAN CLASS = "elocal">eiffel_class</SPAN> and <SPAN CLASS = "elocal">eiffel_assembly</SPAN> given as parameters to the creation routine.<br>
-								EiffelCodeGenerator will use <SPAN CLASS = "elocal">eiffel_class</SPAN> and <SPAN CLASS = "elocal">eiffel_assembly</SPAN> to find the filename of class to be generated. More precisely, generated class filename will be of the form: filename = <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS "efeature">eiffel_cluster_path</SPAN> + "\" + <SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS = "efeature">dot_net_full_name</SPAN> + ".e"
+								EiffelCodeGenerator will use <SPAN CLASS = "elocal">eiffel_class</SPAN> and <SPAN CLASS = "elocal">eiffel_assembly</SPAN> to find the filename of class to be generated. More precisely, generated class filename will be of the form: filename = <SPAN CLASS = "elocal">eiffel_assembly</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS = "efeature">eiffel_cluster_path</SPAN> + "\" + <SPAN CLASS = "elocal">eiffel_class</SPAN><SPAN CLASS = "esymbol">.</SPAN><SPAN CLASS = "efeature">dot_net_full_name</SPAN> + ".e"
 						</p>
 						<p>
 								When you call <SPAN CLASS = "efeature">GenerateEiffelClasses</SPAN> from `ISE.Reflection.Emitter.exe', it calls <SPAN CLASS = "efeature">generate_eiffel_class</SPAN> of <SPAN CLASS = "eclass">EiffelCodeGenerator</SPAN> for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.

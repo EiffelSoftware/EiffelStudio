@@ -488,22 +488,38 @@ feature -- Command instantiation
 			-- Return an instantiated BUILD command.
 		local
 			observer_cmd: BUILD_CMD
+			retried: BOOLEAN
+			warner: WARNING_BOX
+			new_do_nothing_cmd: DO_NOTHING_CMD
 		do
-			if instance = Void then
-				Result := command_instantiator.new_instance (eiffel_type, creation_args)
-				from
-					observers.start
-				until
-					observers.after
-				loop
-					observer_cmd := observers.item.instantiated_command
-					instantiated_observers.extend (observer_cmd)
-					Result.add_observer (observer_cmd)
-					observers.forth
+			if not retried then
+				if instance = Void then
+					Result := command_instantiator.new_instance (eiffel_type, creation_args)
+					from
+						observers.start
+					until
+						observers.after
+					loop
+						observer_cmd := observers.item.instantiated_command
+						instantiated_observers.extend (observer_cmd)
+						Result.add_observer (observer_cmd)
+						observers.forth
+					end
+					instance := Result
+				else
+					Result := instance
 				end
-				instance := Result
 			else
-				Result := instance
+				!! new_do_nothing_cmd
+				Result := new_do_nothing_cmd
+				!! warner.make ("Warning", command_tool)
+				warner.set_message ("Some problems ocurred when trying to instantiate this command.%NMay be due to some uninstantiated arguments.%NAttention: this command won't be executed in executing mode.")
+				warner.popup
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
 			end
 		end
 

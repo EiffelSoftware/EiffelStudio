@@ -34,6 +34,10 @@ feature
 	occurence: INTEGER;
 			-- Occurence of the file in the server control
 
+	number_of_objects: INTEGER;
+			-- Number of objects stored in this file including dead
+			-- objects
+
 	is_open: BOOLEAN;
 			-- Is the current file open ?
 
@@ -85,6 +89,7 @@ end;
 			-- Add one occurence.
 		do
 			occurence := occurence + 1
+			number_of_objects := number_of_objects + 1
 		end;
 
 	remove_occurence is
@@ -184,5 +189,36 @@ feature -- Status report
 		do
 			Result := System.is_dynamic and not is_dynamic
 		end;
+
+	need_purging: BOOLEAN is
+			-- Does the file need purging?
+		do
+			Result := not (precompiled or is_static) and then
+				(occurence = 0 or else
+				occurence / number_of_objects < .25)
+debug ("SERVER")
+	trace
+	io.error.putstring ("Need purging: ")
+	io.error.putbool (Result)
+	io.error.new_line
+end
+		end
+
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("File E")
+			io.error.putint (id.id)
+			io.error.putstring ("%Nnb objects: ")
+			io.error.putint (number_of_objects)
+			io.error.putstring ("%Noccurence: ")
+			io.error.putint (occurence)
+			io.error.putstring ("%Nsize: ")
+			io.error.putint (count)
+		--	io.error.putstring ("%Nneed_purging: ")
+		--	io.error.putbool (need_purging)
+		--	io.error.new_line
+		end
 
 end -- class SERVER_FILE

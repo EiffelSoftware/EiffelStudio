@@ -368,6 +368,8 @@ end;
 
 			current_id := other.current_id;
 			other.set_current_id;
+
+			--partial_purge
 		end;			
 
 	purge is
@@ -455,7 +457,80 @@ end;
 			end;
 			copy (new);
 		end;
-		
+
+	partial_purge is
+			-- Perform a partial purge on the server
+		local
+			old_info: SERVER_INFO;
+			old_server_file: SERVER_FILE;
+			an_id: H
+			live_ids: LINKED_LIST [H]
+			dead_files: LINKED_SET [SERVER_FILE]
+		do
+debug ("SERVER")
+	io.error.putstring ("partial_purge")
+	io.error.new_line
+end
+			flush
+
+			from
+				!! live_ids.make
+				!! dead_files.make
+				start
+			until
+				after
+			loop
+				old_info := item_for_iteration
+				an_id := key_for_iteration
+				old_server_file := Server_controler.file_of_id (old_info.id)
+				if old_server_file.need_purging then
+						-- Avoid side effects on the iteration
+debug ("SERVER")
+	io.error.putstring ("Marking id ")
+	io.error.putint (an_id.id)
+	io.error.putstring (" from ")
+	io.error.putint (old_server_file.id.id)
+	io.error.new_line
+end
+					live_ids.extend (an_id)
+					dead_files.extend (old_server_file)
+				end
+				forth
+			end
+
+			from
+				live_ids.start
+			until
+				live_ids.after
+			loop
+debug ("SERVER")
+	--io.error.putstring ("Rewritting id ")
+	--io.error.putint (live_ids.item.id)
+	--io.error.new_line
+end
+				write (item (live_ids.item))
+				live_ids.forth
+			end
+			from
+				dead_files.start
+			until
+				dead_files.after
+			loop
+				old_server_file := dead_files.item
+debug ("SERVER")
+	io.error.putstring ("Deleting file ")
+	io.error.putint (old_server_file.id.id)
+	io.error.new_line
+	old_server_file.trace
+end
+				check
+					is_dead: old_server_file.occurence = 0
+				end
+				old_server_file.delete
+				dead_files.forth
+			end
+		end
+
 	flush is
 			-- Flush server
 		do

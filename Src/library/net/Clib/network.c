@@ -126,14 +126,14 @@ void eif_net_check (int retcode) {
 			eraise("WSAENOTSOCK The descriptor is not a socket.",EN_PROG);
 		if ((errcode != EWOULDBLOCK) && (errcode != EINPROGRESS)) {
 			itoa(errcode,&buf[11],10);
-			eraise(buf,EN_IO);
+			eraise(buf,EN_ISE_IO);
 		}
 	}
 #else
 		/* FIXME */
 		/* Get the last error here, and signal it like above...*/
 	if (retcode < 0) {
-		eraise("Error happened when accessing net",EN_IO);
+		eraise("Error happened when accessing net",EN_ISE_IO);
 	}
 #endif
 

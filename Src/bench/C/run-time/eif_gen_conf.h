@@ -33,6 +33,9 @@ extern char *eif_gen_typename (char *obj);
 /* CID which creates a given type */
 extern int16 *eif_gen_cid (int16);
 
+/* Generic id list from external sources (retrieve) */
+extern int16 eif_gen_id_from_cid (int16 *, int *);
+
 /* Conformance test */
 extern int eif_gen_conf (int16, int16);
 

@@ -16,11 +16,7 @@ feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text according to context.
-		do
-			-- Do nothing
-
-			-- should do nothing. Now put AST class name
-			ctxt.put_string (generator);
+		deferred
 		end;
 
 feature {SERVER} -- Identity

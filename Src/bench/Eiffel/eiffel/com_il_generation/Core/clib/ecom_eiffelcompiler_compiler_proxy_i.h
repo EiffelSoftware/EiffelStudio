@@ -42,19 +42,31 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetConsoleApplication( void ) = 0;
+	virtual STDMETHODIMP set_console_application( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetWindowApplication( void ) = 0;
+	virtual STDMETHODIMP set_window_application( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetDll( void ) = 0;
+	virtual STDMETHODIMP set_dll( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_version(  /* [in] */ LONG build, /* [in] */ LONG major, /* [in] */ LONG minor, /* [in] */ LONG revision ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_verifiability(  /* [in] */ VARIANT_BOOL v ) = 0;
 
 
 	/*-----------------------------------------------------------

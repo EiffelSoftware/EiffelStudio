@@ -199,7 +199,7 @@ feature -- Access
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
 	
-	creators: EXTEND_TABLE [EXPORT_I, STRING]
+	creators: HASH_TABLE [EXPORT_I, STRING]
 			-- Creation procedure names
 
 	creation_feature: FEATURE_I
@@ -777,7 +777,6 @@ feature -- Third pass: byte code production and type check
 			feature_changed: BOOLEAN
 				-- Is the current feature `feature_i' changed ?
 			dependances: CLASS_DEPENDANCE
-			rep_dep: REP_CLASS_DEPEND
 			new_suppliers: like suppliers
 			feature_name: STRING
 			feature_name_id: INTEGER
@@ -786,8 +785,6 @@ feature -- Third pass: byte code production and type check
 			type_check_error: BOOLEAN
 			check_local_names_needed: BOOLEAN
 			byte_code_generated, has_default_rescue: BOOLEAN
-			body_index: INTEGER
-			rep_removed: BOOLEAN
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
@@ -795,7 +792,7 @@ feature -- Third pass: byte code production and type check
 			invariant_changed: BOOLEAN
 
 			old_invariant_body_index: INTEGER
-			feature_body_index: INTEGER
+			body_index: INTEGER
 
 				-- For Concurrent Eiffel
 			def_resc_depend: DEPEND_UNIT
@@ -816,18 +813,12 @@ feature -- Third pass: byte code production and type check
 					dependances.set_class_id (class_id)
 				end
 
-				if Rep_depend_server.server_has (class_id) then
-					rep_dep := Rep_depend_server.server_item (class_id)
-				elseif Tmp_rep_depend_server.has (class_id) then
-					rep_dep := Tmp_rep_depend_server.item (class_id)
-				end
-
 				if changed then
 					new_suppliers := suppliers.same_suppliers
 				end
 
 				feat_table := Feat_tbl_server.item (class_id)
-				def_resc := default_rescue_feature (feature_table)
+				def_resc := default_rescue_feature
 
 				ast_context.set_current_class (Current)
 
@@ -1173,28 +1164,16 @@ end
 					removed_features.after
 				loop
 					feature_i := removed_features.item_for_iteration
-					feature_body_index := feature_i.body_index
-					f_suppliers := dependances.item (feature_body_index)
+					body_index := feature_i.body_index
+					f_suppliers := dependances.item (body_index)
 					if f_suppliers /= Void then
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers
 						end
 						new_suppliers.remove_occurrence (f_suppliers)
 					end
-					dependances.remove (feature_body_index)
-					if
-						rep_dep /= Void and then
-						rep_dep.has (feature_name)
-					then
-debug ("REPLICATION")
-	io.error.putstring ("removing dependency feature :")
-	io.error.putstring (feature_name)
-	io.error.new_line
-end
-						rep_dep.remove (feature_name)
-						rep_removed := True
-					end
-					body_index := feature_i.body_index
+					dependances.remove (body_index)
+
 						-- Second pass desactive body id of changed
 						-- features only. Deactive body ids of removed
 						-- features.
@@ -1202,9 +1181,6 @@ end
 
 					removed_features.forth
 				end
-			end
-			if rep_removed and then rep_dep /= Void then
-				Tmp_rep_depend_server.put (rep_dep)
 			end
 
 			if new_suppliers /= Void then
@@ -1246,6 +1222,10 @@ end
 		end
 
 	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE) is
+			-- Record suppliers of `feature_i' and insert it in `dependances'.
+		require
+			feature_i_not_void: feature_i /= Void
+			dependances_not_void: dependances /= Void
 		local
 			f_suppliers: FEATURE_DEPENDANCE
 			body_index: INTEGER
@@ -1254,10 +1234,12 @@ end
 			if dependances.has (body_index) then
 				dependances.remove (body_index)
 			end
-			!!f_suppliers.make
+			create f_suppliers.make
 			f_suppliers.set_feature_name_id (feature_i.feature_name_id)
 			feature_i.record_suppliers (f_suppliers)
 			dependances.put (f_suppliers, body_index)
+		ensure
+			inserted: dependances.has (feature_i.body_index)
 		end
 
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE
@@ -2160,8 +2142,7 @@ feature {NONE} -- Private access
 	Any_type: CL_TYPE_A is
 			-- Default parent type
 		once
-			create Result
-			Result.set_base_class_id (System.any_id)
+			create Result.make (System.any_id)
 		end
 
 	Any_parent: PARENT_C is
@@ -2174,8 +2155,7 @@ feature {NONE} -- Private access
 	System_object_type: CL_TYPE_A is
 			-- Default parent type
 		once
-			create Result
-			Result.set_base_class_id (System.system_object_id)
+			create Result.make (System.system_object_id)
 		end
 
 	System_object_parent: PARENT_C is
@@ -2754,12 +2734,10 @@ feature -- Supplier checking
 			array_generics: ARRAY [TYPE_A]
 			string_type: CL_TYPE_A
 		once
-			create string_type
-			string_type.set_base_class_id (System.string_id)
+			create string_type.make (System.string_id)
 			create array_generics.make (1, 1)
 			array_generics.put (string_type, 1)
-			create Result.make (array_generics)
-			Result.set_base_class_id (System.array_id)
+			create Result.make (System.array_id, array_generics)
 		end
 
 feature -- Order relation for inheritance and topological sort
@@ -3021,13 +2999,13 @@ feature -- Actual class type
 			formal: FORMAL_A
 		do
 			if generics = Void then
-				!!Result
+				create Result.make (class_id)
 			else
 				from
 					i := 1
 					count := generics.count
 					create actual_generic.make (1, count)
-					create {GEN_TYPE_A} Result.make (actual_generic)
+					create {GEN_TYPE_A} Result.make (class_id, actual_generic)
 				until
 					i > count
 				loop
@@ -3037,7 +3015,6 @@ feature -- Actual class type
 					i := i + 1
 				end
 			end
-			Result.set_base_class_id (class_id)
 			Result.set_is_true_expanded (is_expanded)
 		end
 		
@@ -3252,33 +3229,15 @@ feature -- Validity class
 
 feature -- default_rescue routine
 
-	default_rescue_feature (ftab: FEATURE_TABLE): FEATURE_I is
+	default_rescue_feature: FEATURE_I is
 			-- The version of `default_rescue' from ANY.
 			-- Void if ANY has not been compiled yet or
-			-- does not posess the feature.
-		local
-			item: FEATURE_I
-			pos, id: INTEGER
+			-- does not possess the feature.
+		require
+			has_feature_table: has_feature_table
+			any_class_compiled: System.any_class /= Void
 		do
-			if (System.any_class /= Void) then
-				from
-					pos  := ftab.iteration_position
-					id := System.default_rescue_id
-					ftab.start
-				until
-					ftab.after or (Result /= Void)
-				loop
-					item := ftab.item_for_iteration
-
-					if item.rout_id_set.first = id then
-						Result := item
-					end
-
-					ftab.forth
-				end
-
-				ftab.go (pos)
-			end
+			Result := feature_table.feature_of_rout_id (System.default_rescue_id)
 		end
 
 feature -- default_create routine
@@ -3288,6 +3247,7 @@ feature -- default_create routine
 			-- Void if ANY has not been compiled yet or
 			-- does not posess the feature or class is deferred.
 		require
+			has_feature_table: has_feature_table
 			any_class_compiled: System.any_class /= Void
 		do
 			if not is_deferred then
@@ -3349,24 +3309,27 @@ feature -- Dead code removal
 	mark_all_used (remover: REMOVER) is
 			-- Mark all the features written in the Current class used.
 			-- [Useful for basic class like INTEGER_REF, etc...].
+		require
+			remover_not_void: remover /= Void
+			has_feature_table: has_feature_table
 		local
-			tbl: FEATURE_TABLE
 			a_feature: FEATURE_I
-			pos: INTEGER
+			l_features: like feature_table
+			l_cursor: CURSOR
 		do
 			from
-				tbl := feature_table
-				tbl.start
+				l_features := feature_table
+				l_features.start
 			until
-				tbl.after
+				l_features.after
 			loop
-				a_feature := tbl.item_for_iteration
-				pos := tbl.iteration_position
+				a_feature := l_features.item_for_iteration
+				l_cursor := l_features.cursor
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end
-				tbl.go (pos)
-				tbl.forth
+				l_features.go_to (l_cursor)
+				l_features.forth
 			end
 		end
 
@@ -3459,97 +3422,6 @@ feature -- Process the creation feature
 				end
 			else
 				creation_feature := Void
-			end
-		end
-
-feature -- Replication
-
-	propagate_replication (feat_dep: REP_FEATURE_DEPEND) is
-			-- Propagate `feat_dep' to do Degree 3. This checks
-			-- to see if the feature to be propagated exists in
-			-- the descendant. If not, then remove the rep_depend_unit.
-		local
-			unit: REP_DEPEND_UNIT
-			class_c: CLASS_C
-			rep_depend: REP_CLASS_DEPEND
-			feat_depend: REP_FEATURE_DEPEND
-			f_table: FEATURE_TABLE
-			feat: FEATURE_I
-			cid: INTEGER
-			found: BOOLEAN
-		do
-			from
-				feat_dep.start
-			until
-				feat_dep.after
-			loop
-				unit := feat_dep.item
-				cid := unit.class_id
-				class_c := System.class_of_id (cid)
-					-- Get feature table
-				if class_c /= Void then
-					-- Class exists in system
-					f_table := class_c.feature_table
-						-- Get feature_i to be propagated (if valid)
-					feat := f_table.item (unit.feature_name)
-					if
-						(feat /= Void) and then
-						(feat.rout_id_set.same_as (unit.rout_id_set))
-					then
-						-- Then Propagate
-						class_c.set_changed2 (True)
-						Degree_4.insert_new_class (class_c)
-						if Rep_depend_server.server_has (cid) then
-							rep_depend := Rep_depend_server.server_item (cid)
-							found := True
-						elseif Tmp_rep_depend_server.has (cid) then
-							rep_depend := Tmp_rep_depend_server.item (cid)
-							found := True
-						else
-							found := False
-						end
-						if found then
-							feat_depend := rep_depend.item (unit.feature_name)
-							if feat_depend /= Void then
-								propagate_replication (feat_depend)
-								if feat_depend.count > 0 then
-									Tmp_rep_depend_server.put (rep_depend)
-								else
-									Tmp_rep_depend_server.remove (cid)
-								end
-							end
-						end
-						feat_dep.forth
-					else
-							-- Remove depend unit
-						feat_dep.remove
-debug ("REPLICATION")
-	io.error.putstring ("removing dependency to feature: ")
-	io.error.putstring (unit.feature_name)
-	io.error.putstring ("from class : ")
-	io.error.new_line
-end
-					end
-debug ("REPLICATION")
-	io.error.putstring ("propagating feature: ")
-	io.error.putstring (unit.feature_name)
-	io.error.putstring ("to class : ")
-	io.error.new_line
-end
-				else
-debug ("REPLICATION")
-	io.error.putstring ("removing dependency to feature: ")
-	io.error.putstring (unit.feature_name)
-	io.error.putstring ("from class : ")
-	io.error.new_line
-end
-						-- Remove depend unit
-					feat_dep.remove
-				end
-debug ("REPLICATION")
-	io.error.putstring (class_c.name)
-	io.error.new_line
-end
 			end
 		end
 
@@ -3687,10 +3559,16 @@ feature -- Properties
 	generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generical parameters
 
-	generic_features: HASH_TABLE [FORMAL_ATTRIBUTE_I, INTEGER]
+	generic_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			-- Collect all possible generic derivations inherited or current.
 			-- Indexed by `rout_id' of formal generic parmater.
 			-- Updated during `pass2' of INHERIT_TABLE.
+
+	anchored_features: like generic_features
+			-- Collect all features that are used for creating or doing an assignment
+			-- attempt in current or in an inherited class.
+			-- Indexed by `rout_id' of feature on which anchor is done.
+			-- Updated before each IL code generation.
 
 	topological_id: INTEGER
 			-- Unique number for a class. Could change during a topological
@@ -3789,7 +3667,8 @@ feature -- Access
 			par: like parents
 		do
 			Result := True
-			if not is_class_any then
+				-- FIXME: Manu 1/21/2002: Test below is not the most correct one.
+			if class_id > 1 then
 				Result := is_deferred
 				if Result then
 					from
@@ -4297,7 +4176,7 @@ feature -- Removal
 
 feature -- Genericity
 
-	formal_at_position (n: INTEGER): FORMAL_ATTRIBUTE_I is
+	formal_at_position (n: INTEGER): TYPE_FEATURE_I is
 			-- Find first FORMAL_ATTRIBUTE_I in `generic_features' that
 			-- matches position `n'.
 		require
@@ -4326,14 +4205,14 @@ feature -- Genericity
 			-- Update `generic_features' with information of Current.
 		local
 			l_parents: like parents
-			l_formal, l_parent_formal: FORMAL_ATTRIBUTE_I
+			l_formal, l_parent_formal: TYPE_FEATURE_I
 			l_formal_type: FORMAL_A
 			l_generic_features, l_old: like generic_features
 			l_inherited_formals: SEARCH_TABLE [INTEGER]
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 		do
-				-- Cleaned previously stored information.
+				-- Clean previously stored information.
 			l_old := generic_features
 			generic_features := Void
 
@@ -4452,7 +4331,7 @@ feature -- Genericity
 		
 feature {NONE} -- Genericity
 
-	extend_generic_features (an_item: FORMAL_ATTRIBUTE_I) is
+	extend_generic_features (an_item: TYPE_FEATURE_I) is
 			-- Insert `an_item' in `generic_features'. If `generic_features'
 			-- is not yet created, creates it.
 		require
@@ -4489,7 +4368,142 @@ feature {NONE} -- Genericity
 				i := i + 1	
 			end
 		end
+	
+feature -- Anchored types
+
+	update_anchors is
+			-- Update `anchored_features' with information of Current.
+		require
+			il_generation: System.il_generation
+		local
+			l_feat_tbl: like feature_table
+			l_anchor, l_previous_anchor: TYPE_FEATURE_I
+			l_anchored_features, l_old: like anchored_features
+			l_inherited_features: like anchored_features
+			l_parents: like parents
+			l_feat: FEATURE_I
+			l_rout_id: INTEGER
+			l_rout_id_set: ROUT_ID_SET
+			l_type_set: SEARCH_TABLE [INTEGER]
+			l_select: SELECT_TABLE
+		do
+				-- Get all inherited anchored features.
+			from
+				create l_inherited_features.make (0)
+				l_parents := parents
+				l_parents.start
+			until
+				l_parents.after
+			loop
+				l_old := l_parents.item.associated_class.anchored_features
+				if l_old /= Void then
+					l_inherited_features.merge (l_old)
+				end
+				l_parents.forth
+			end
+			
+				-- Create `anchored_features' if needed and fill it with inherited
+				-- anchors.
+			from
+				l_old := anchored_features
+				create l_anchored_features.make (10)
+				l_feat_tbl := feature_table
+				l_select := l_feat_tbl.origin_table
+				l_type_set := System.type_set
+				l_select.start
+			until
+				l_select.after
+			loop
+				l_rout_id := l_select.key_for_iteration
+				if l_type_set.has (l_rout_id) then
+					l_feat := l_select.item_for_iteration
+
+					create l_anchor
+					l_anchor.set_type (l_feat.type.actual_type)
+					l_anchor.set_written_in (class_id)
+				
+					create l_rout_id_set.make (1)
+					l_rout_id_set.put (l_rout_id)
+					l_anchor.set_rout_id_set (l_rout_id_set)
+
+					if l_old /= Void and then l_old.has (l_rout_id) then
+						l_anchor.set_feature_id (l_old.item (l_rout_id).feature_id)
+					else
+						l_anchor.set_feature_id (feature_id_counter.next)
+					end
+
+					if l_inherited_features.has (l_rout_id) then
+						l_previous_anchor := l_inherited_features.item (l_rout_id)
+						l_anchor.set_origin_class_id (l_previous_anchor.origin_class_id)
+						l_anchor.set_origin_feature_id (l_previous_anchor.origin_feature_id)
+						l_anchor.set_feature_name_id (l_previous_anchor.feature_name_id)
+						l_anchor.set_is_origin (False)				
+					else
+						l_anchor.set_is_origin (True)
+						l_anchor.set_origin_class_id (class_id)
+						l_anchor.set_origin_feature_id (l_anchor.feature_id)
+						l_anchor.set_feature_name ("_" +
+							System.class_of_id (l_feat.origin_class_id).name_in_upper +
+							"_" + l_rout_id.out)
+					end
+
+					l_anchored_features.put (l_anchor, l_rout_id)
+				end
+				l_select.forth
+
+				if not l_anchored_features.is_empty then
+					anchored_features := l_anchored_features
+				end
+			end
 		
+ 			debug ("ANCHORED_FEATURES")
+				if l_anchored_features /= Void then
+					print ("%NFor class " + name_in_upper + ": " + l_anchored_features.count.out)
+					print (" local + inherited generic parameters%N")
+				end
+ 			end
+		end
+
+feature {NONE} -- Anchored features
+
+	extend_anchored_features (an_item: TYPE_FEATURE_I) is
+			-- Insert `an_item' in `anchored_features'. If `anchored_features'
+			-- is not yet created, creates it.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			l_anchored_features: like anchored_features
+			l_rout_id_set: ROUT_ID_SET
+			l_rout_id, i, nb: INTEGER
+		do
+			l_anchored_features := anchored_features
+			if l_anchored_features = Void then
+				create l_anchored_features.make (5)
+				anchored_features := l_anchored_features
+			end
+			
+			from
+				l_rout_id_set := an_item.rout_id_set
+				i := 1
+				nb := l_rout_id_set.count
+			until
+				i > nb
+			loop
+				l_rout_id := l_rout_id_set.item (i)
+				if not l_anchored_features.has (l_rout_id) then
+					l_anchored_features.put (an_item, l_rout_id)
+				else
+						-- Should we report an error in this case, as it is not
+						-- well implemented by compiler?
+					check
+						same_type: l_anchored_features.item (l_rout_id).type.same_as (an_item.type)
+					end
+				end
+
+				i := i + 1	
+			end
+		end
+	
 feature -- Implementation
 
 	invariant_feature: INVARIANT_FEAT_I
@@ -4811,10 +4825,15 @@ feature {NONE} -- Implementation
 
 invariant
 
+		-- Default invariants common to all kind of generation.
 	lace_class_exists: lace_class /= Void
 	descendants_exists: descendants /= Void
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
+	
+		-- Invariants IL versus normal generation.
+	anchored_features_void_in_non_il_generation: 
+		not System.il_generation implies anchored_features = Void
 
 end -- class CLASS_C
 

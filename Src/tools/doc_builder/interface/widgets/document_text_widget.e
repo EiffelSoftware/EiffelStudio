@@ -177,7 +177,7 @@ feature -- Status report
 			has_string: text.has_substring (a_string)
 		local
 			l_text: STRING
-			cnt, line_no: INTEGER
+			cnt: INTEGER
 			done: BOOLEAN
 		do
 			l_text := text.substring (caret_position, text.count)

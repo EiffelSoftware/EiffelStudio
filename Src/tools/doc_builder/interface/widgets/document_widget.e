@@ -76,7 +76,6 @@ feature -- Commands
 			-- Show XML browser widget
 		local
 			l_filename: STRING
-			l_target_dir: DIRECTORY
 			l_xml: PLAIN_TEXT_FILE
 		do
 			create l_filename.make_from_string (temporary_xml_location (document, True))

@@ -127,7 +127,6 @@ feature -- Commands
 			old_link_not_void: a_old /= Void
 			new_link_not_void: a_new /= void
 		local
-			l_documents: ARRAYED_LIST [DOCUMENT]
 			l_link_manager: LINK_MANAGER
 		do
 			create l_link_manager.make_with_documents (documents)
@@ -321,9 +320,6 @@ feature {NONE} -- Implementation
 			-- Show report of errors
 		require
 			has_report: error_report /= Void
-		local
-			l_message_dialog: EV_MESSAGE_DIALOG
-			l_constants: EV_DIALOG_CONSTANTS
 		do
 			error_report.show
 		end

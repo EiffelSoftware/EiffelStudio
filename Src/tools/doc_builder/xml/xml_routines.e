@@ -172,8 +172,12 @@ feature -- Commands
 					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
 					l_parser.parse_from_stream (l_file)
 					l_file.close
-					if l_parser.is_correct then
-						Result := l_tree_pipe.document
+					if l_parser.is_correct then 
+						if not l_tree_pipe.error.has_error then
+							Result := l_tree_pipe.document
+						else
+							error_description := l_tree_pipe.error.last_error
+						end
 					else
 						error_description := l_parser.last_error_extended_description
 						Result := Void

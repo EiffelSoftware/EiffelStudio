@@ -79,7 +79,7 @@ feature -- Commands
 	parse_arguments is
 			-- Parse arguments.
 		local
-			k, count: INTEGER;
+			count: INTEGER;
 			first_char, flag: STRING;
 		do
 			from

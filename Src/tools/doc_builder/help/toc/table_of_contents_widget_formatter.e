@@ -47,7 +47,6 @@ feature {NONE} -- Status setting
 	add_node_item (e: XM_ELEMENT) is
 			-- Add new node item based on `e'
 		local
-			l_node_item: EV_TREE_ITEM
 			l_title, l_url: STRING
 			l_id: INTEGER
 			l_toc_node: TABLE_OF_CONTENTS_WIDGET_NODE

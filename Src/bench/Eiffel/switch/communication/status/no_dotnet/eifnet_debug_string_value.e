@@ -71,7 +71,7 @@ feature {NONE} -- Output
 --	expandable: BOOLEAN is False
 --			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 --
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do

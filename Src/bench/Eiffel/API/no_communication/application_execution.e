@@ -7,7 +7,15 @@ indexing
 
 class APPLICATION_EXECUTION
 
-inherit
+creation
+
+	make
+
+feature
+
+	make is 
+		do
+		end;
 
 	clear_debugging_information is
 			-- Used in E_PROJECT.

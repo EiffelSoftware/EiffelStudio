@@ -48,11 +48,11 @@ feature {NONE} -- Initialization
 			format_menu := format_m
 			special_menu := special_m
 			make_form (a_form)
-			init_text_window
 			set_composite_attributes (a_form)
 			set_composite_attributes (edit_m)
 			set_composite_attributes (format_m)
 			set_composite_attributes (special_m)
+--  			init_text_window
 		end
 
 feature -- Window Properties

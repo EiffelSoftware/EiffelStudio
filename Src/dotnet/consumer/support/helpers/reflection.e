@@ -8,11 +8,11 @@ class
 
 feature -- Status Report
 
-	is_consumed_type (t: TYPE): BOOLEAN is
+	is_consumed_type (t: SYSTEM_TYPE): BOOLEAN is
 			-- Is `t' a public CLS compliant type?
 		local
 			parent_name: SYSTEM_STRING
-			parent_type: TYPE
+			parent_type: SYSTEM_TYPE
 		do
 			if is_cls_compliant_type (t) then
 				Result := t.is_public
@@ -155,7 +155,7 @@ feature -- Status Report
 			Result := is_cls_compliant (f) and then is_cls_compliant_type (f.field_type)
 		end
 		
-	is_cls_compliant_type (a_type: TYPE): BOOLEAN is
+	is_cls_compliant_type (a_type: SYSTEM_TYPE): BOOLEAN is
 			-- is `a_type' CLS compliant
 		require
 			a_type_not_void: a_type /= Void
@@ -174,7 +174,7 @@ feature -- Status Report
 		local
 			ca: CLS_COMPLIANT_ATTRIBUTE
 		do
-			ca ?= feature {ATTRIBUTE_}.get_custom_attribute_member_info_type (member, cls_compliant_attribute_type)
+			ca ?= feature {SYSTEM_ATTRIBUTE}.get_custom_attribute_member_info_type (member, cls_compliant_attribute_type)
 			Result := ca = Void or else ca.is_compliant
 		end
 
@@ -192,10 +192,10 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	cls_compliant_attribute_type: TYPE is
+	cls_compliant_attribute_type: SYSTEM_TYPE is
 			-- typeof (System.CLSCompliantAttribute)
 		once
-			Result := feature {TYPE}.get_type_string ("System.CLSCompliantAttribute")
+			Result := feature {SYSTEM_TYPE}.get_type_string ("System.CLSCompliantAttribute")
 		end
 
 end -- class REFLECTION

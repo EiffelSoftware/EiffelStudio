@@ -461,7 +461,9 @@ feature {NONE} -- Saving
 				entry_data.jump_size)
 				
 				-- Set method RVAs now.
-			method_writer.update_rvas (emitter, code_rva)
+			if method_writer /= Void then
+				method_writer.update_rvas (emitter, code_rva)
+			end
 		end
 		
 feature {NONE} -- Implementation

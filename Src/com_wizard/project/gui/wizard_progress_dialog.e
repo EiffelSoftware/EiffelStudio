@@ -69,17 +69,15 @@ feature {NONE} -- Behavior
 			-- Disable parent when active.
 		do
 			if (parent.x + parent.width + width) <= full_screen_client_area_width then
-				set_x (parent.x + parent.width)
-				set_y (parent.y)
+				move (parent.x + parent.width, parent.y)
 			elseif width <= parent.x then
-				set_x (0)
-				set_y (parent.y)
+				move (parent.x - width, parent.y)
 			elseif (parent.y + parent.height + height) <= full_screen_client_area_height then
-				set_y (parent.y + parent.height)
-				set_x (parent.x)
+				move (parent.x, parent.y + parent.height)
 			elseif parent.y >= height then
-				set_y (0)
-				set_x (parent.x)
+				move (parent.x, parent.y - height)
+			else
+				move (full_screen_client_area_width - width, full_screen_client_area_height - height)
 			end
 			parent.disable
 		end

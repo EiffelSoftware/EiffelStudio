@@ -67,14 +67,16 @@ char dbmsVer[DB_MAX_NAME_LEN];
 // Added for multiple connection
 short number_connection=0;
 
-/* Messages */
-char *error_message;/*exported to Eiffel*/
-char *warn_message;/*exported to Eiffel*/
-int error_number;/*exported to Eiffel*/
+/* Messages: Are not exported to Eiffel due to
+merge with Oracle variables when using both files.
+Wrapping functions are used.*/
+rt_private char *error_message = NULL;
+rt_private char *warn_message = NULL;
+rt_private int error_number = 0;
 
-static int tmp_int;
-static int data_type, size, max_size, * past_time;
-static char *tmp_st;
+static int tmp_int = 0;
+static int data_type = 0, size = 0, max_size = 0, * past_time = NULL;
+static char *tmp_st = NULL;
 char odbc_user_name[40];
 
 short odbc_tranNumber=0; /* number of transaction opened at present */
@@ -91,7 +93,7 @@ int is_null_data;
 /* initialise ODBC   c-module                                    */
 /*****************************************************************/
 
-int c_odbc_make (int m_size)
+void c_odbc_make (int m_size)
 {
   int count;
 
@@ -105,8 +107,6 @@ int c_odbc_make (int m_size)
 
   for (count = 0; count < MAX_DESCRIPTOR; count++)
       odbc_descriptor[count] = NULL;
-
-  return error_number;
 }
 
 
@@ -1825,6 +1825,20 @@ char *odbc_str_value(char *val) {
 /*  The following functions are related with the error processing*/
 /*****************************************************************/
 
+int odbc_get_error_code ()
+{
+	return error_number;
+}
+
+char * odbc_get_error_message ()
+{
+	return error_message;
+}
+
+char * odbc_get_warn_message ()
+{
+	return warn_message;
+}
 
 void odbc_clear_error ()
 {

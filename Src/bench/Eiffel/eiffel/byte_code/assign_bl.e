@@ -188,9 +188,9 @@ feature
 							-- to be performed.
 						source.propagate (No_register);
 						register := target;
-						register_for_metamorphosis := true;
+						register_for_metamorphosis := True;
 					elseif target_type.is_bit and then source_type.is_bit then
-						is_bit_assignment := true
+						is_bit_assignment := True
 					else
 							-- Do not propagate something expanded as the
 							-- routines in NESTED_BL and friends won't know
@@ -224,9 +224,9 @@ feature
 							-- to be performed.
 						source.propagate (No_register);
 						get_register;
-						register_for_metamorphosis := true;
+						register_for_metamorphosis := True;
 					elseif target_type.is_bit then
-						is_bit_assignment := true
+						is_bit_assignment := True
 					else
 							-- I can't expand because of the aging tests.
 							-- (macro RTAP evaluates its argument more than
@@ -284,16 +284,16 @@ feature
 					source.propagate (target);
 				else
 						-- We won't need Result after all...
-					result_used := false;
+					result_used := False;
 				end;
 				source.analyze;
 				source.free_register;
 					-- We may expand the return in line, once the GC hooks
 					-- have been removed.
-				expand_return := true;
+				expand_return := True;
 			else
 					-- Force usage of Result
-				last_in_result := false;
+				last_in_result := False;
 			end;
 			if result_used then
 				context.mark_result_used;
@@ -334,7 +334,7 @@ feature
 			-- A none entity is assigned
 
 	source_print_register is
-			-- Generate source (the true one or the metamorphosed one)
+			-- Generate source (the True one or the metamorphosed one)
 		do
 			if register_for_metamorphosis then
 				print_register;
@@ -629,7 +629,7 @@ feature
 		local
 			binary: BINARY_B;
 			other: EXPR_B;
-			int: INT_CONST_B;
+			int: INTEGER_CONSTANT;
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -652,8 +652,9 @@ feature
 			end;
 				-- Detection of <expr> +/- 1
 			int ?= other;
-			if binary.is_additive and then not (int = Void) and then
-				int.value = 1
+			if
+				binary.is_additive and then not (int = Void)
+				and then (int.lower = 1 and int.upper = 0)
 			then
 				binary.generate_plus_plus;
 			else

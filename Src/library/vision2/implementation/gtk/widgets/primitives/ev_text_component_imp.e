@@ -68,13 +68,13 @@ feature -- status settings
 			gtk_editable_set_position (widget, pos)
 		end
 
-	set_maximum_text_lenght (lenght: INTEGER) is
-			-- Maximum number of characters on text
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+--	set_maximum_text_lenght (lenght: INTEGER) is
+--			-- Maximum number of characters on text
+--		do
+--			check
+--				not_yet_implemented: False
+--			end
+--		end
 
 feature -- Resizing
 
@@ -154,9 +154,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the text of the widget have changed.
 		do
-			check
-				not_yet_implemented: False
-			end
+			remove_commands (changed_id)
 		end
 
 end -- class EV_TEXT_COMPONENT_IMP

@@ -474,6 +474,7 @@ feature -- Access
 			Result.force ("RGB", "RGB")
 			Result.force ("hr", "hr")
 			Result.force ("Formatter", "Formatter")
+			Result.force (clone (Eof_word), clone (Eof_word))
 		end
 
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is

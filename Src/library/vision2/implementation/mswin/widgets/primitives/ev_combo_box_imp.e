@@ -20,7 +20,7 @@ inherit
 			initialize
 		end
 
-	EV_LIST_ITEM_HOLDER_IMP
+	EV_LIST_ITEM_LIST_IMP
 		redefine
 			interface,
 			initialize
@@ -122,7 +122,8 @@ feature {NONE} -- Initialization
 			-- Create a combo-box.
 		do
 			base_make (an_interface)
-			internal_window_make (default_parent, Void, default_style + Cbs_dropdown,
+			internal_window_make (default_parent, Void, default_style +
+				Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
 		end
@@ -131,7 +132,7 @@ feature {NONE} -- Initialization
 			-- Initialize combo box.
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor
-			{EV_LIST_ITEM_HOLDER_IMP} Precursor
+			{EV_LIST_ITEM_LIST_IMP} Precursor
 			create text_field.make_with_combo (Current)
 			create combo.make_with_combo (Current)
 			create ev_children.make (2)
@@ -225,24 +226,30 @@ feature -- Status setting
 			-- postcondition is violated because of the change
 			-- of index.
 		do
-			if (not selected) or (selected and then not equal (wel_selected_item, an_index - 1)) then
+			if (not selected) or (selected and then not equal (
+						wel_selected_item, an_index - 1)) then
 					-- Only select an item if it is not already selected.
 				if selected then
-					(ev_children @ old_Selected_item.index).interface.deselect_actions.call ([])
+					(ev_children @ old_Selected_item.list_index
+						).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
-					interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
+					interface.deselect_actions.call ([(
+						ev_children @ old_selected_item.list_index).interface])
 				end
 				wel_select_item (an_index - 1)
 				old_selected_item := ev_children @ (an_index)
 					-- Now send `Cbn_selchange' message to Current control
 					-- so that we know that a change occured and to handle
 					-- it as specified by user.
-					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
+					cwin_send_message (parent_item, Wm_command, Cbn_selchange *
+						65536 + id,
 					cwel_pointer_to_integer (wel_item))
 					(ev_children @ an_index).interface.select_actions.call ([])
 						-- Call select events on child.
-					interface.select_actions.call ([(ev_children @ an_index).interface])
-						-- Must now manually inform the combo box that a selection is taking place.
+					interface.select_actions.call ([(ev_children @ an_index
+							).interface])
+						-- Must now manually inform the combo box that
+						-- selection is taking place.
 				end
 		end
 
@@ -339,15 +346,43 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	graphical_insert_item (item_imp: EV_LIST_ITEM; an_index: INTEGER) is
-			-- Insert `item_imp' at the `an_index' position of the 
-			-- graphical object.
+	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+			-- Is `li_imp' selected?
 		local
-			citem: WEL_COMBO_BOX_EX_ITEM
+			pos: INTEGER
 		do
-			!! citem.make_with_index (an_index)
-			citem.set_text (item_imp.text)
-			wel_insert_item (citem)
+			pos := index_of_item_imp (li_imp)
+		end
+
+	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
+			-- Set `li_imp' selected.
+		do
+			select_item (index_of_item_imp (li_imp))
+			check
+				to_be_implemented: False
+			end
+		end
+
+	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
+			-- Set `li_imp' deselected.
+		local
+			pos: INTEGER
+		do
+			pos := index_of_item_imp (li_imp)
+			check
+				to_be_implemented: False
+			end
+		end
+
+	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
+			-- Set `li_imp'.`text' to `a_text'.
+		local
+			pos: INTEGER
+		do
+			pos := index_of_item_imp (li_imp)
+			check
+				to_be_implemented: False
+			end
 		end
 
 	insert_item (item_imp: EV_ITEM_IMP; an_index: INTEGER) is
@@ -384,7 +419,8 @@ feature {NONE} -- Implementation
 				text_field := Void
 
 				-- We create the new combo.
-  				internal_window_make (par_imp, Void, default_style + Cbs_dropdownlist,
+  				internal_window_make (par_imp, Void, default_style +
+					Cbs_dropdownlist,
 					a, b, c, 90, 0, default_pointer)
  	 			id := 0
 				create combo.make_with_combo (Current)
@@ -412,7 +448,8 @@ feature {NONE} -- Implementation
 				combo := Void
 
 				-- We create the new combo.
-  				internal_window_make (par_imp, Void, default_style + Cbs_dropdown,
+  				internal_window_make (par_imp, Void, default_style +
+					Cbs_dropdown,
 					a, b, c, 90, 0, default_pointer)
  	 			id := 0create text_field.make_with_combo (Current)
 				
@@ -426,7 +463,8 @@ feature {NONE} -- Implementation
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
-feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implementation
+feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
+	-- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- We check if the enter key is pressed)
@@ -449,7 +487,8 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					counter = list.count + 1 or found
 				loop
 					if equal (list.item.text, text) then
-						if not selected or (selected and not is_selected (counter - 1)) then
+						if not selected or (selected and not is_selected (
+								counter - 1)) then
 							select_item (counter)
 						end
 						found := True
@@ -458,13 +497,16 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					counter := counter + 1
 				end
 			else
-				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
+				if selected and equal (text, selected_item.text) and
+						(virtual_key /= 9) and
 					(virtual_key /= 40) and (virtual_key /= 38) then
 					t_item ?= selected_item.implementation
 					unselect;
-					(ev_children @ t_item.index).interface.deselect_actions.call ([])
+					(ev_children @ t_item.list_index
+						).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
-					interface.deselect_actions.call ([(ev_children @ t_item.index).interface])
+					interface.deselect_actions.call ([(
+						ev_children @ t_item.list_index).interface])
 					old_selected_item := Void
 				end
 			end
@@ -498,22 +540,31 @@ feature {NONE} -- WEL Implementation
 			-- The selection is about to be changed.
 		do
 			if selected and then wel_selected_item /= Void then
-				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1))
+				if selected and then not equal (old_selected_item,
+					ev_children.i_th (wel_selected_item + 1))
 				then
 					if old_selected_item /= Void then
 						old_selected_item.interface.deselect_actions.call ([])
 							-- Call deselect events on child.
-						interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
+						interface.deselect_actions.call ([(
+							ev_children @ old_selected_item.list_index
+								).interface])
 					end
 	
-						-- Only performed if an item is selected and the new selection is not equal to
+						-- Only performed if an item is selected and the new
+						-- selection is not equal to
 						-- the current selection.
-					old_selected_item := ev_children.i_th (wel_selected_item + 1)
-					(ev_children @ (wel_selected_item + 1)).interface.select_actions.call ([])
+					old_selected_item := ev_children.i_th (wel_selected_item +
+						1)
+					(ev_children @ (wel_selected_item + 1)
+						).interface.select_actions.call ([])
 						-- Call select events on child.
-					interface.select_actions.call ([(ev_children @ (wel_selected_item + 1)).interface])
-						-- Must now manually inform combo box that a selection is taking place
-				elseif wel_selected_item/= Void and then not equal (old_selected_item,
+					interface.select_actions.call ([(ev_children @ (
+						wel_selected_item + 1)).interface])
+						-- Must now manually inform combo box that a selection
+						-- is taking place
+				elseif wel_selected_item/= Void and then not equal (
+					old_selected_item,
 				ev_children.i_th (wel_selected_item + 1)) then
 					old_selected_item := Void
 				end
@@ -525,7 +576,8 @@ feature {NONE} -- WEL Implementation
 		do
 			if selected then
 				--|FIXME Events have changed this event is no longer pertinent.
-				--(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_dblclk, Void)
+				--(ev_children.i_th (wel_selected_item + 1)).execute_command (
+				-- Cmd_item_dblclk, Void)
 			end
 		end
 
@@ -552,19 +604,22 @@ feature {NONE} -- WEL Implementation
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		do
-			cwin_send_message (wel_item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
+			cwin_send_message (wel_item, Cb_seteditsel, 0, cwin_make_long (
+				start_pos, end_pos))
 		end
 
 	wel_selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := cwin_lo_word (cwin_send_message_result (edit_item, Em_getsel, 0, 0))
+			Result := cwin_lo_word (cwin_send_message_result (edit_item,
+				Em_getsel, 0, 0))
 		end
 
 	wel_selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, 0, 0))
+			Result := cwin_hi_word (cwin_send_message_result (edit_item,
+				Em_getsel, 0, 0))
 		end
 
 Feature -- Temp
@@ -650,6 +705,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/03/30 17:44:44  brendel
+--| Now inherits EV_LIST_ITEM_LIST_IMP.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.64  2000/03/30 16:24:14  rogers
 --| Implemented insert_item
 --| -----------------------------------------------------
@@ -670,10 +729,12 @@ end -- class EV_COMBO_BOX_IMP
 --| Fixed any references to these old names.
 --|
 --| Revision 1.60  2000/03/07 00:19:55  rogers
---| Corrected all select and deselect actions which did not previously call the child's events first.
+--| Corrected all select and deselect actions which did not previously call
+--| the child's events first.
 --|
 --| Revision 1.59  2000/03/06 20:51:32  rogers
---| The list select and deselect action sequences now only return the selected item, so any calls
+--| The list select and deselect action sequences now only return the selected
+--| item, so any calls
 --| to these action sequences have been modified.
 --|
 --| Revision 1.58  2000/03/02 18:10:33  rogers
@@ -683,7 +744,8 @@ end -- class EV_COMBO_BOX_IMP
 --| Added calls to the children's select and deselect events.
 --|
 --| Revision 1.55  2000/03/02 16:38:35  rogers
---| Is selected and selected_item have had checks added, to limit the wel calls when unecessary.
+--| Is selected and selected_item have had checks added, to limit the wel calls
+--| when unecessary.
 --| Fixed the call to deselect_actions in on_key_down.
 --|
 --| Revision 1.54  2000/03/01 16:39:10  rogers
@@ -699,7 +761,8 @@ end -- class EV_COMBO_BOX_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.50.2.1.2.3  2000/01/29 02:19:55  rogers
---| Modified to comply with the major vision2 changes. It is not currently working.
+--| Modified to comply with the major vision2 changes. It is not currently
+--| working.
 --|
 --| Revision 1.50.2.1.2.2  2000/01/27 19:30:26  oconnor
 --| added --| FIXME Not for release

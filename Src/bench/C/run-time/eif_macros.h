@@ -278,8 +278,8 @@ RT_LNK int fcount;
 #define RTOC_NEW(x)
 #define RTOC_GLOBAL(x)
 #endif /* ISE_GC */
-#define RTOVP(n,c,a)	if (!(CAT2(n,_done))) CAT2(c,a)
-#define RTOVF(n,c,a)	(CAT2(n,_done) ? CAT2(n,_result) : CAT2(c,a))
+#define RTOVP(n,c,a)	if (!(CAT2(n,_done))) c a
+#define RTOVF(n,c,a)	(CAT2(n,_done) ? CAT2(n,_result) : c a)
 		
 
 /* Macro used for object information:

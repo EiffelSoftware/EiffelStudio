@@ -123,7 +123,9 @@ feature
 			valid_protocol: protocol >= 0
 		do
 			descriptor := c_socket (family, type, protocol)
-			descriptor_available := True
+			if descriptor > -1 then
+				descriptor_available := True
+			end
 		end
 
 	cleanup is

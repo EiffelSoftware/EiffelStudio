@@ -84,5 +84,11 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (4)
 		end
+		
+	application: EV_APPLICATION is
+			-- Once access to EV_APPLICATION.
+		once
+			Result := (create {EV_ENVIRONMENT}).application
+		end
 
 end -- class WIDGET_TEST_SHARED

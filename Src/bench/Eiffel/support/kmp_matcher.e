@@ -134,7 +134,7 @@ feature -- Search
 					old_text := text
 					old_pattern := pattern
 					pattern := pattern.as_lower
-					text := text.as_upper
+					text := text.as_lower
 				end
 				init_arrays 
 				create t.make (10)

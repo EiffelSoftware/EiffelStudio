@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 			start_position := get_start_position;
 			end_position := get_end_position;
 			file_name := get_yacc_file_name;
+			error_code := get_yacc_error_code
+			error_message := get_yacc_error_message
 		end;
 
 feature -- Properties
@@ -51,7 +53,13 @@ feature -- Properties
 			Result := ""
 		ensure
 			non_void_result: Result /= Void
-		end;	
+		end;
+
+	error_code: INTEGER --JOCE--
+			-- Specify the syntax error.
+
+	error_message: STRING --JOCE--
+			-- Specify the syntax error message.
 
 feature -- Output
 
@@ -204,6 +212,18 @@ feature {NONE} -- Externals
 
 	get_yacc_file_name: STRING is
 			-- Get file name processed by yacc.
+		external
+			"C"
+		end;
+
+	get_yacc_error_code: INTEGER is --JOCE--
+			-- Get error code processed by yacc.
+		external
+			"C"
+		end;
+
+	get_yacc_error_message: STRING is --JOCE--
+			-- Get error message processed by yacc.
 		external
 			"C"
 		end;

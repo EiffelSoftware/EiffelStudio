@@ -49,7 +49,23 @@ feature {NONE} -- Initialization
 			extra_width := 40
 		end
 
+feature -- Status report
+
+	selected_item: EV_MENU_ITEM
+			-- which menu item is selected.
+			-- Void if the selection is the `text' of the menu.
+
 feature -- Status setting
+
+	clear_selection is
+			-- Clear the selection by putting the `text'
+			-- of the menu on the option button if there is one,
+		    -- otherwise the first menu item.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
 
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
@@ -68,6 +84,7 @@ feature -- Event association
 		do
 			internal_set_text (sitem.text)
 			pixmap_imp := sitem.pixmap_imp
+			selected_item ?= sitem.interface
 		end
 
 feature {NONE} -- Basic operation

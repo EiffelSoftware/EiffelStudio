@@ -11,6 +11,7 @@ inherit
 	DEGREE_OUTPUT
 		redefine
 			put_start_degree_6, put_end_degree_6, put_degree_6,
+			put_recursive_degree_6,
 			put_start_degree, put_end_degree, put_degree_5,
 			put_degree_4, put_degree_3, put_degree_2,
 			put_degree_1, put_degree_minus_1, put_degree_minus_2,
@@ -278,6 +279,31 @@ feature -- Per entity output
 			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per)
 			progress_bar.set_position (a_per)
 			processed := processed + 1
+
+			process_messages
+		end
+
+	put_recursive_degree_6 (a_cluster: CLUSTER_I; a_path: STRING) is
+			-- Put message to indicate that `a_cluster' is being compiled
+			-- during degree six and that it is a recursive cluster so we have
+			-- to display the path too.
+		local
+			a_per: INTEGER
+			nbr_of_clusters: INTEGER
+			l_path: STRING
+		do
+			nbr_of_clusters := total_number - processed
+			a_per := percentage_calculation (nbr_of_clusters)
+
+			if a_path.count > 32 then
+				l_path := clone (a_path)
+				l_path.tail (32)
+				l_path.prepend ("...")
+			else
+				l_path := a_path
+			end
+
+			update_interface (a_cluster.cluster_name + " in " + l_path, nbr_of_clusters, a_per)
 
 			process_messages
 		end

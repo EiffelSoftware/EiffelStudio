@@ -44,23 +44,13 @@ feature {NONE} -- Implementation
 	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			qd: EV_QUESTION_DIALOG
-		do
-			create qd.make_with_text (Warning_messages.w_Precompile_warning)
-			qd.button ("Yes").select_actions.extend (agent set_c_compilation_and_confirm_finalization (True))
-			qd.button ("No").select_actions.extend (agent set_c_compilation_and_confirm_finalization (False))
-			qd.show_modal_to_window (window_manager.last_focused_development_window.window)
-		end
-		
-	set_c_compilation_and_confirm_finalization (c_comp: BOOLEAN) is
-			-- Ask for confirmation for finalization, and compile thereafter.
-		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
-
 		do
-			start_c_compilation := c_comp
+			start_c_compilation := True
 			if is_dotnet_project then
-				create cd.make_initialized (3, "confirm_finalize_precompile", Warning_messages.w_Finalize_precompile, interface_names.l_discard_finalize_precompile_dialog)
+				create cd.make_initialized (3, "confirm_finalize_precompile",
+					Warning_messages.w_Finalize_precompile,
+					interface_names.l_discard_finalize_precompile_dialog)
 				cd.set_ok_action (agent confirm_finalization_and_compile (True))
 				cd.set_no_action (agent confirm_finalization_and_compile (False))
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)

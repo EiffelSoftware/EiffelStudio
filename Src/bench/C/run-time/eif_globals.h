@@ -105,6 +105,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* debug.c */
 	struct dbstack db_stack_cx;		/* Debugging stack. */
+	struct id_list once_list_cx;		/* Debugging once_list */
 	struct dbinfo d_data_cx;			/* Global debugger information */
 	struct pgcontext d_cxt_cx;			/* Main program context */
 
@@ -247,6 +248,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 	/* debug.c */
 #define db_stack		(eif_globals->db_stack_cx)		/* rt_shared */
+#define once_list		(eif_globals->once_list_cx)		/* rt_shared */
 #define d_data			(eif_globals->d_data_cx)		/* rt_shared */
 #define d_cxt			(eif_globals->d_cxt_cx)		/* rt_shared */
 
@@ -400,6 +402,7 @@ extern EIF_TSD_TYPE eif_global_key;
 	/* debug.c */
 /* Debugging data structures */
 extern struct dbstack db_stack;	/* Calling context stack */
+extern struct id_list once_list;	/* Calling context once_list */
 extern struct dbinfo d_data;	/* Global debugger information */
 extern struct pgcontext d_cxt;	/* Program context */
 

@@ -374,6 +374,13 @@ struct dbstack {
 	struct dcall *st_end;		/* First element beyond current chunk */
 };
 
+struct id_list {
+	struct idlchunk *idl_hd;		/* idl_hd */
+	struct idlchunk *idl_tl;		/* idl_tl */
+	uint32 *idl_last;				/* idl_last */
+	uint32 *idl_end;				/* idl_end */
+};
+
 /* For fastest reference, the debugging informations for the current routine
  * are held in the debugger status structure.
  */

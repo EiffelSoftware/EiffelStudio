@@ -61,8 +61,6 @@ rt_shared struct dbstack db_stack = {
 	(struct dcall *) 0,			/* st_end */
 };
 
-#endif /* !EIF_THREADS */
-
 /* Once list. This list records the body_id of once routines that have already
  * been called. This is usefull to prevent those routines to be supermelted
  * losing in that case their memory (whether they have already been called
@@ -75,8 +73,6 @@ rt_shared struct id_list once_list = {
 	(uint32 *) 0,				/* idl_last */
 	(uint32 *) 0,				/* idl_end */
 };
-
-#ifndef EIF_THREADS
 
 /* For faster reference, the current control table is memorized in a global
  * debugger status structure, along with the execution status and break point

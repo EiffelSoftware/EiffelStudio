@@ -87,7 +87,7 @@ extern "C" {
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
-#define GS_ZONE_SZ_DEFAULT	150*1024	/* Size of a scavenge zone (150K) */
+#define GS_ZONE_SZ_DEFAULT	300*1024	/* Size of a scavenge zone (300 K) */
 #endif
 #define GS_FLOATMARK (eif_scavenge_size * .40)	/* Leave that much free */
 #define GS_WATERMARK (eif_scavenge_size - 1024)	/* Collect to be run after this */

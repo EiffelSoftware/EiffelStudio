@@ -628,6 +628,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			pos: INTEGER
 			conformance_on_formal, is_conform: BOOLEAN
 			formal_dec_as: FORMAL_DEC_AS
+			l_vtug: VTUG
 		do
 				-- Some lines of explanations with some examples:
 				--  * `context_class' is the class TEST where we can find the text of A [G,...]
@@ -763,8 +764,20 @@ feature {COMPILER_EXPORTER} -- Primitives
 					end
 				end
 
-					-- Recursion
-				gen_param.check_constraints (context_class)
+					-- Recursion Part:
+					
+					-- Check a generic local type
+				if not gen_param.good_generics then
+					l_vtug := gen_param.error_generics
+					l_vtug.set_type (generics.item (i))
+					l_vtug.set_class (context_class)
+					l_vtug.set_feature (context.current_feature)
+					Error_handler.insert_error (l_vtug)
+				else
+						
+						-- It is a valid generic, so we can recurse
+					gen_param.check_constraints (context_class)
+				end
 				i := i + 1
 			end
 		end

@@ -200,13 +200,13 @@ feature {NONE} -- Implementation
 			hscos := sh * cos
 
 			p := point.x_precise
-			arrow.set_i_th_point_x (1, p.truncated_to_integer)
-			arrow.set_i_th_point_x (2, (p + scos - hssin).truncated_to_integer)
-			arrow.set_i_th_point_x (3, (p + scos + hssin).truncated_to_integer)
+			arrow.set_i_th_point_x (1, as_integer(p))--p.truncated_to_integer)
+			arrow.set_i_th_point_x (2, as_integer(p + scos - hssin))--.truncated_to_integer)
+			arrow.set_i_th_point_x (3, as_integer(p + scos + hssin))--.truncated_to_integer)
 			p := point.y_precise
-			arrow.set_i_th_point_y (1, p.truncated_to_integer)
-			arrow.set_i_th_point_y (2, (p + ssin + hscos).truncated_to_integer)
-			arrow.set_i_th_point_y (3, (p + ssin - hscos).truncated_to_integer)
+			arrow.set_i_th_point_y (1, as_integer(p))--p.truncated_to_integer)
+			arrow.set_i_th_point_y (2, as_integer(p + ssin + hscos))--.truncated_to_integer)
+			arrow.set_i_th_point_y (3, as_integer(p + ssin - hscos))--.truncated_to_integer)
 		end
 		
 	internal_start_arrow: EV_MODEL_POLYGON

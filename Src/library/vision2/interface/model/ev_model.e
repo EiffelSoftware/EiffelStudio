@@ -699,10 +699,10 @@ feature -- Events
 						i := i + 1
 					end
 					
-					ax := min_x.truncated_to_integer
-					ay := min_y.truncated_to_integer
-					w := max_x.truncated_to_integer - ax + 1
-					h := max_y.truncated_to_integer - ay + 1
+					ax := as_integer (min_x)
+					ay := as_integer (min_y)
+					w := as_integer (max_x) - ax + 1
+					h := as_integer (max_y) - ay + 1
 					create Result.make (ax, ay, w, h)
 				end
 				internal_bounding_box := Result.twin

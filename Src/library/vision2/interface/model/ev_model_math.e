@@ -334,6 +334,16 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end	
+		
+	as_integer (a_value: DOUBLE): INTEGER is
+			-- Truncat `a_value' to INTEGER.
+		do
+			if a_value > 0 then
+				Result := (a_value + 0.5).truncated_to_integer
+			else
+				Result := (a_value - 0.5).truncated_to_integer
+			end
+		end
 
 end -- class EV_MODEL_MATH
 

@@ -355,6 +355,16 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	as_integer (a_value: DOUBLE): INTEGER is
+			-- Truncat `a_value' to INTEGER.
+		do
+			if a_value > 0 then
+				Result := (a_value + 0.5).truncated_to_integer
+			else
+				Result := (a_value - 0.5).truncated_to_integer
+			end
+		end
+
 	pi_half: DOUBLE is 1.57079632679489661923
 					   
 	pi_times_two: DOUBLE is 6.28318530717958647693 

@@ -139,7 +139,7 @@ feature -- Access
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			
-			Result := distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise).truncated_to_integer
+			Result := as_integer (distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise))
 		ensure
 			width_positive: width >= 0
 		end
@@ -153,7 +153,7 @@ feature -- Access
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 			p3 := l_point_array.item (3)
-			Result := distance (p0.x_precise, p0.y_precise, p3.x_precise, p3.y_precise).truncated_to_integer
+			Result := as_integer (distance (p0.x_precise, p0.y_precise, p3.x_precise, p3.y_precise))
 		ensure
 			height_positive: height >= 0
 		end

@@ -87,7 +87,7 @@ feature -- Access
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			
-			Result := (p0.x_precise - p1.x_precise).truncated_to_integer.abs
+			Result := as_integer (p0.x_precise - p1.x_precise).abs
 		end
 		
 	height: INTEGER is
@@ -99,7 +99,7 @@ feature -- Access
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			Result := (p0.y_precise - p1.y_precise).truncated_to_integer.abs
+			Result := as_integer (p0.y_precise - p1.y_precise).abs
 		end
 		
 	top_left: EV_COORDINATE is
@@ -257,10 +257,10 @@ feature -- Events
 				lw := line_width
 				lw2 := lw / 2
 				
-				lx := (min_x - lw2).truncated_to_integer
-				ly := (min_y - lw2).truncated_to_integer
-				w := ((max_x - min_x) + lw).truncated_to_integer + 2
-				h := ((max_y - min_y) + lw).truncated_to_integer + 2
+				lx := as_integer (min_x - lw2)
+				ly := as_integer (min_y - lw2)
+				w := as_integer ((max_x - min_x) + lw) + 2
+				h := as_integer ((max_y - min_y) + lw) + 2
 				create Result.make (lx, ly, w, h)
 				internal_bounding_box := Result.twin
 			end	

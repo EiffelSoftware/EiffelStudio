@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 				Result := internal_bounding_box.twin
 			else
 				lw := line_width
-				lw2 := lw // 2
+				lw2 := as_integer (lw / 2)
 				p := point_array.item (0)
 				create Result.make (p.x - lw2, p.y - lw2, lw, lw)
 				internal_bounding_box := Result.twin

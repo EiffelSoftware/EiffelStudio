@@ -245,10 +245,10 @@ feature -- Implementation
 				end
 				lw := line_width
 				lw2 := lw / 2
-				ax := (min_x - lw2).truncated_to_integer
-				ay := (min_y - lw2).truncated_to_integer
-				w := (max_x - min_x + lw).truncated_to_integer + 2
-				h := (max_y - min_y + lw).truncated_to_integer + 2
+				ax := as_integer (min_x - lw2)
+				ay := as_integer (min_y - lw2)
+				w := as_integer (max_x - min_x + lw) + 2
+				h := as_integer (max_y - min_y + lw) + 2
 				create Result.set (ax, ay, w, h)
 				internal_bounding_box := Result.twin
 			end

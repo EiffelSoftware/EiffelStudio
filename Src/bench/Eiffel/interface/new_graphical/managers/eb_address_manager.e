@@ -2072,7 +2072,10 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				address_dialog.hide
 			end
 			create a_screen
-			address_dialog.set_position (start_x.max (0).min (a_screen.width - address_dialog.minimum_width), header_info.screen_y.max (0).min (a_screen.height - address_dialog.height))
+			--address_dialog.set_position (start_x.max (0).min (a_screen.width - address_dialog.minimum_width), header_info.screen_y.max (0).min (a_screen.height - address_dialog.height))
+				--| FIXME IEK Previous line is not multi-display friendly
+			address_dialog.set_position (start_x.max (0), header_info.screen_y.max (0))
+			
 			address_dialog.set_width ((start_x + header_info.width).min (a_screen.width) - start_x.max(0))
 			address_dialog.set_height (header_info.height)
 			address_dialog.show

@@ -15,7 +15,9 @@ inherit
 	EV_PRIMITIVE_I	
 
 	EV_WIDGET_IMP
-		
+
+	WEL_VK_CONSTANTS
+
 feature -- Status setting
 
 	destroy is
@@ -28,12 +30,69 @@ feature -- Status setting
 			wel_destroy
 		end
 
-feature -- Implementation : deferred features of WEL_CONTROL
-		-- that are used here but not defined
+feature {NONE} -- Implementation
+
+	top_level_window_imp: WEL_WINDOW
+			-- Top level window that contains the current widget.
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			top_level_window_imp := a_window
+		end
+
+feature {NONE} -- WEL Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Use the tab key to jump from one control
+			-- to another. Use also the arrows.
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			if virtual_key = Vk_tab then
+				hwnd := next_dlgtabitem (top_level_window_imp.item, item, False)
+				window := windows.item (hwnd)
+				window.set_focus
+			elseif virtual_key = Vk_down then
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
+				window := windows.item (hwnd)
+				window.set_focus
+			elseif virtual_key = Vk_up then
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
+				window := windows.item (hwnd)
+				window.set_focus
+			end
+		end
+
+feature {NONE} -- Deferred features
 
 	wel_destroy is
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
+		deferred
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		deferred
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		deferred
+		end
+
+	item: POINTER is
+		deferred
+		end
+
+	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
 		deferred
 		end
 

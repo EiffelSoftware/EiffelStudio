@@ -300,6 +300,7 @@ feature
 		local
 			ext_name: ANY
 		do
+			ext_name := MmaxHeight.to_c;
 			m_wm_shell_set_int (screen_object, a_height, $ext_name)
 		ensure then
 			max_height = a_height

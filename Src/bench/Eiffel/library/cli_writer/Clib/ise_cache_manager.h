@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Tue Jan 14 19:54:27 2003
+/* at Tue Feb 04 14:16:51 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -99,6 +99,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
     ISE_Cache_COM_ISE_CACHE_MANAGER : public IDispatch
     {
     public:
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message( 
+            /* [retval][out] */ BSTR *pRetVal) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize_with_path( 
             /* [in] */ BSTR a_path) = 0;
         
@@ -140,12 +145,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_is_initialized( 
             /* [in] */ VARIANT_BOOL p1) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message( 
-            /* [retval][out] */ BSTR *pRetVal) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_1980( 
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_1982( 
             /* [retval][out] */ void **pRetVal) = 0;
         
     };
@@ -195,6 +195,13 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [out] */ VARIANT *pVarResult,
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [retval][out] */ BSTR *pRetVal);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize_with_path )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
@@ -248,14 +255,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ VARIANT_BOOL p1);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )( 
-            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [retval][out] */ BSTR *pRetVal);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
-            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_emitter_type_1980 )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_emitter_type_1982 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ void **pRetVal);
         
@@ -295,6 +295,12 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)	\
+    (This)->lpVtbl -> last_error_message(This,pRetVal)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
+    (This)->lpVtbl -> initialize(This)
+
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path(This,a_path)	\
     (This)->lpVtbl -> initialize_with_path(This,a_path)
 
@@ -328,20 +334,37 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER__set_is_initialized(This,p1)	\
     (This)->lpVtbl -> _set_is_initialized(This,p1)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)	\
-    (This)->lpVtbl -> last_error_message(This,pRetVal)
-
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
-    (This)->lpVtbl -> initialize(This)
-
-#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1980(This,pRetVal)	\
-    (This)->lpVtbl -> _emitter_type_1980(This,pRetVal)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1982(This,pRetVal)	\
+    (This)->lpVtbl -> _emitter_type_1982(This,pRetVal)
 
 #endif /* COBJMACROS */
 
 
 #endif 	/* C style interface */
 
+
+
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [retval][out] */ BSTR *pRetVal);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
 
 
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Proxy( 
@@ -484,35 +507,12 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_is_initialized_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy( 
-    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [retval][out] */ BSTR *pRetVal);
-
-
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Proxy( 
-    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
-
-
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1980_Proxy( 
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1982_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ void **pRetVal);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1980_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1982_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

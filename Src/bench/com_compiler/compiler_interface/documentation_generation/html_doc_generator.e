@@ -132,6 +132,7 @@ feature -- Basic operations
 			-- generate the HTML documentation into 'generation_path'
 		local
 			du: DOCUMENTATION_UNIVERSE
+			l_cluster: CLUSTER_I
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -149,7 +150,10 @@ feature -- Basic operations
 				until
 					excluded_clusters.after
 				loop
-					du.include_cluster (doc_generator.Universe.cluster_of_name (excluded_clusters.item), true)
+					l_cluster := doc_generator.Universe.cluster_of_name (excluded_clusters.item)
+					if l_cluster /= Void then
+						du.include_cluster (l_cluster, true)
+					end
 					excluded_clusters.forth
 				end
 				doc_generator.set_universe (du)

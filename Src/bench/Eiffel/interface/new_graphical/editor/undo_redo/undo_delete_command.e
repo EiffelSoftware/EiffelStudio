@@ -15,10 +15,10 @@ create
 
 feature -- Initialization
 
-	make_from_string (c: TEXT_CURSOR; s: STRING; w: CHILD_WINDOW) is
+	make_from_string (tc: TEXT_CURSOR; s: STRING; w: CHILD_WINDOW) is
 		do
-			y_start := c.y_in_lines
-			x_start := c.x_in_characters
+			y_start := tc.y_in_lines
+			x_start := tc.x_in_characters
 			message := s
 			chwin := w
 		end
@@ -44,6 +44,13 @@ feature -- Element change
 	extend (c: CHARACTER) is
 		do
 			message.extend (c)
+		end
+
+	prepend (tc: TEXT_CURSOR; c: CHARACTER) is
+		do
+			y_start := tc.y_in_lines
+			x_start := tc.x_in_characters
+			message.precede (c)
 		end
 
 feature -- Removal

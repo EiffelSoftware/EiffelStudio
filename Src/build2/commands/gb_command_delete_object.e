@@ -42,9 +42,15 @@ feature -- Basic Operation
 
 	execute is
 			-- Execute `Current'.
+		local
+			previous_parent_object: GB_OBJECT
 		do
-			update_object_editors_for_delete (child_layout_item.object, all_editors)
+				-- Note that unparenting an object does not update parent representations
+				-- in objects editors, so we must do it ourselves by calling
+				-- `update_object_editors_for_delete'.
+			previous_parent_object := child_layout_item.object.parent_object
 			child_layout_item.object.unparent
+			update_object_editors_for_delete (child_layout_item.object, previous_parent_object, all_editors)
 				-- We now need to mark the deleted object and all children as
 				-- deleted.
 			object_handler.mark_as_deleted (child_layout_item.object)
@@ -59,6 +65,8 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		do
+				-- Calling `add_object' on the obejct handler, will automatically
+				-- update any parent representations in the object editor.
 			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
 				-- We now need to ensure that the object is no longer marked as
 				-- deleted.
@@ -85,14 +93,14 @@ feature {NONE} -- Implementation
 		-- Position of `child_layout_item' within `parent_layout_item' when `make'
 		-- was called.
 	
-	update_object_editors_for_delete (deleted_object: GB_OBJECT editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
-			-- For every item in `editors', update to reflect removal of `deleted_object'.
+	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
+			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
+			--| FIXME this is repeated in GB_COMMAND_ADD_OBJECT. When get time
+			--| extract into a new class and inherit.
 		local
 			editor: GB_OBJECT_EDITOR
-			local_parent: GB_OBJECT
 			window_parent: EV_WINDOW
 		do
-			local_parent := deleted_object.parent_object
 			from
 				editors.start
 			until
@@ -120,7 +128,7 @@ feature {NONE} -- Implementation
 			
 					-- If the parent of `an_object' is in the object editor then we must
 					-- update it accordingly.
-				if local_parent /= Void and then local_parent = editor.object then
+				if parent_object /= Void and then parent_object = editor.object then
 					editor.update_current_object
 				end	
 				editors.forth

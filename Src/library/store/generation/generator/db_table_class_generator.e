@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			-- `column' (which is at `column_number').
 			-- Append result to `result_block'.
 		local
-			attribute_name: STRING
+			attribute_name, tn: STRING
 			attribute_type: INTEGER
 			mapped_item: STRING
 			column: COLUMNS [DATABASE]
@@ -98,7 +98,13 @@ feature {NONE} -- Implementation
 				
 					-- The value `column_id' is not properly set for Oracle.
 		--		mapped_item.replace_substring_all (tags.Iterator, column.column_id.out)
-				mapped_item.replace_substring_all (tags.Type_name, type_name)
+		
+				tn := clone (type_name)
+				mapped_item.replace_substring_all (tags.Upper_type_name, tn)
+				tn.to_lower
+				mapped_item.replace_substring_all (tags.Lower_type_name, tn)
+				to_initcap (tn)
+				mapped_item.replace_substring_all (tags.Initcap_type_name, tn)
 				mapped_item.replace_substring_all (tags.Type_default_value, type_default_value)
 				result_block.append (mapped_item)
 			end
@@ -121,6 +127,9 @@ feature {NONE} -- Implementation
 			
 	type_default_value: STRING
 			-- Default value for last managed attribute column type.
+
+	type_code: STRING
+			-- Code of last managed attribute column type.
 
 	manage_type (column: COLUMNS [DATABASE]) is
 			-- Manage type of attribute in `column': set `type_correspond',
@@ -195,7 +204,7 @@ feature {NONE} -- Implementation
 			
 	String_type_default_value: STRING is "%"%""
 			-- String type default_value.
-			
+						
 	Date_type_default_value: STRING is "create {DATE_TIME}.make_now"
 			-- Date type default_value.
 

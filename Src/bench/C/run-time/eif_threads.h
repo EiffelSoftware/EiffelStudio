@@ -11,9 +11,10 @@
 
 */
 
-#ifdef EIF_THREADS
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
+
+#ifdef EIF_THREADS
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,24 +73,32 @@ extern void eufreeze(char *object);
 #define EIF_THR_YIELD
 
 #define EIF_MUTEX_TYPE						CRITICAL_SECTION *
-#define EIF_MUTEX_CREATE(m,msg) \
+#define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(CRITICAL_SECTION)); \
 	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"##msg); \
 	InitializeCriticalSection(m)
 #define EIF_MUTEX_LOCK(m,msg)				EnterCriticalSection(m)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)
 #define EIF_MUTEX_UNLOCK(m,msg)				LeaveCriticalSection(m)
-#define EIF_MUTEX_DESTROY(m,msg) \
-	DeleteCriticalSection(m); \
+#define EIF_MUTEX_DESTROY(m,msg)	\
+	DeleteCriticalSection(m); 		\
 	free(m)
 
 #define EIF_TSD_TYPE						DWORD
 #define EIF_TSD_VAL_TYPE					LPVOID
-#define EIF_TSD_CREATE(key,msg)				if ((key=TlsAlloc())==0xFFFFFFFF) eif_thr_panic(msg)
-#define EIF_TSD_SET(key,val,msg)			if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eif_thr_panic(msg)
-#define EIF_TSD_GET(key,val,msg)			val=TlsGetValue(key); if (GetLastError()!=NO_ERROR) eif_thr_panic(msg)
-#define EIF_TSD_GET_CONTEXT(key,val,msg)	val=(eif_global_context_t *)TlsGetValue(key); if (GetLastError()!=NO_ERROR) eif_thr_panic(msg)
-#define EIF_TSD_DESTROY(key,msg)			if (!TlsFree(key)) eif_thr_panic(msg)
+#define EIF_TSD_CREATE(key,msg)				\
+	if ((key=TlsAlloc())==0xFFFFFFFF) eif_thr_panic(msg)
+#define EIF_TSD_SET(key,val,msg)			\
+	if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eif_thr_panic(msg)
+
+#define EIF_TSD_GET0(key,val)			 	val=TlsGetValue(key);
+#define EIF_TSD_GET(key,val,msg)			\
+	/*val=TlsGetValue(key); \*/
+	EIF_TSD_GET0(key,val)	\
+	if (GetLastError() != NO_ERROR) eif_thr_panic(msg)
+
+#define EIF_TSD_DESTROY(key,msg)			\
+	if (!TlsFree(key)) eif_thr_panic(msg)
 
 
 #elif defined SOLARIS_THREADS
@@ -132,13 +141,16 @@ extern void eufreeze(char *object);
 #define EIF_TSD_TYPE					thread_key_t
 #define EIF_TSD_VAL_TYPE				void *
 #define EIF_TSD_CREATE(key,msg)		\
-	if (thr_keycreate(&(key),NULL)) eif_thr_panic(msg)
-#define EIF_TSD_SET(key,val,msg)	\
-	if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val)))  eif_thr_panic(msg)
-#define EIF_TSD_GET(key,val,msg)		\
-	if (thr_getspecific((key),(void **)&(val))) \
+	if (thr_keycreate(&(key),NULL)) \
 		eif_thr_panic(msg)
-#define EIF_TSD_GET_CONTEXT(key,val,msg)	EIF_TSD_GET(key,val,msg)
+#define EIF_TSD_SET(key,val,msg)	\
+	if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val)))	\
+		eif_thr_panic(msg)
+#define EIF_TSD_GET0(key,val)		\
+	thr_getspecific(key,(void **)&(val))
+#define EIF_TSD_GET(key,val,msg)	\
+	if (EIF_TSD_GET0(key,val)) 	eif_thr_panic(msg)
+
 #define EIF_TSD_DESTROY(key,errcode)
 
 #endif	/* end of POSIX, WIN32, SOLARIS... */
@@ -154,5 +166,6 @@ extern void eif_thr_mutex_lock(EIF_MUTEX_TYPE a_mutex_pointer);
 extern void eif_thr_mutex_unlock(EIF_MUTEX_TYPE a_mutex_pointer);
 extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer);
 
-#endif	/* _eif_threads_h_ */
 #endif	/* EIF_THREADS */
+
+#endif	/* _eif_threads_h_ */

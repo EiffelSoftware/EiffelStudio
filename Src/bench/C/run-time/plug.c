@@ -132,7 +132,7 @@ register4 long nbr;
 	epush (&loc_stack, &sp);	/* Protect the area */
 
 	while (nbr_attr--) {
-		found = NULL;
+		found = (char) NULL;
 		for (i=0; i<nbr & (!found); i++) {
 			attr = items[i];
 			if (!(strcmp (attr, attr_names[nbr_attr])))

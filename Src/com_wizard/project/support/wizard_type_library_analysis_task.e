@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
+	
 feature -- Access
 
 	title: STRING is "Analyzing Type Library:"
@@ -36,11 +41,24 @@ feature -- Access
 
 	steps_count: INTEGER is
 			-- Number of steps involved in task	
+		local
+			l_file_name: STRING
+			l_type_lib: ECOM_TYPE_LIB
 		do
 			create library_guids.make (10)
 			library_guids.compare_objects
-			Result := type_library_analysis_steps_count (create {ECOM_TYPE_LIB}.make_from_name (environment.type_library_file_name))
-			Result := Result + 5 -- 5 steps in `{WIZARD_SYSTEM_DESCRIPTOR}.generate'
+			l_file_name := environment.type_library_file_name
+			if l_file_name /= Void and then (create {RAW_FILE}.make (l_file_name)).exists then
+				create l_type_lib.make_from_name (environment.type_library_file_name)
+				Result := type_library_analysis_steps_count (l_type_lib)
+				l_type_lib.release
+				Result := Result + 5 -- 5 steps in `{WIZARD_SYSTEM_DESCRIPTOR}.generate'
+			else
+				environment.set_abort (No_type_library)
+				if l_file_name /= Void then
+					environment.set_error_data (l_file_name)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -50,7 +68,7 @@ feature {NONE} -- Implementation
 			-- Use `step' `steps_count' times unless `stop' is called.
 		do
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
-			message_output.add_title (Current, "Analyzing type library")
+			message_output.add_title ("Analyzing type library")
 			system_descriptor.generate (environment.type_library_file_name)
 		end
 

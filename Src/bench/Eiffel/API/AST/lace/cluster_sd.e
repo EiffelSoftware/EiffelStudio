@@ -90,6 +90,9 @@ feature -- Lace recompilation
 				!!cluster.make (directory_name);
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
+debug ("REMOVE_CLASS")
+	io.error.putstring ("CLUSTER_SD calling fill%N");
+end;
 				cluster.fill (exclude_list, include_list);
 			else
 				cluster := old_cluster.new_cluster (cluster_name, exclude_list, include_list);

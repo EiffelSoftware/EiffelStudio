@@ -29,7 +29,7 @@ feature -- Access
 		deferred
 		end
 
-	tool_parent: EV_CONTAINER is
+	tool_parent (t: like tool): EV_CONTAINER is
 			-- parent of `tool'
 		do
 			Result := Current

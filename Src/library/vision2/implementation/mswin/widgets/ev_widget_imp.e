@@ -1,7 +1,10 @@
 indexing
-	description: 
-		"EiffelVision widget, the parent of all EV class. %
-		% Mswindows implementation."
+	description: "EiffelVision widget, the parent of all EV class. %
+				% Mswindows implementation."
+	note: "The parent of a widget cannot be void, except for a  %
+		%  window. Therefore, each feature that call the parent %
+		%  here need to be redefine by EV_WINDOW to check if    %
+		%  parent is `Void'"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -10,7 +13,6 @@ indexing
 deferred class
 	EV_WIDGET_IMP
         
-
 inherit
 	EV_WIDGET_I
 
@@ -78,51 +80,34 @@ feature -- Status setting
 feature -- Measurement
 	
 	x: INTEGER is
+			-- Horizontal position relative to parent
 		do
 			Result := wel_window.x
 		end
 	
 	y: INTEGER is
+			-- Vertical position relative to parent
 		do
 			Result := wel_window.y
 		end
 	
 	width: INTEGER is
+			-- Width of the widget
 		do
 			Result := wel_window.width
 		end
 	
 	height: INTEGER is 
+			-- Height of the widget
 		do
 			Result := wel_window.height
 		end
-	
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-		end	
-
-	maximum_width: INTEGER is
-                        -- Maximum width that application wishes widget
-                        -- instance to have
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-		end	
-
 
 	minimum_width: INTEGER 
 			-- Minimum width of widget, `0' by default
-		
-
+	
 	minimum_height: INTEGER
 			-- Minimum height of widget, `0' by default
-		
 	
 feature -- Resizing
 
@@ -131,70 +116,69 @@ feature -- Resizing
 			-- the resize which must be bigger than the
 			-- minimal size or nothing happens
 		do
-			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
-			notify_size_to_parent
+			set_width (new_width)
+			set_height (new_height)
+--			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+--			notify_size_to_parent
 		end
-
 	
 	set_width (new_width :INTEGER) is
+			-- Make `new_width' the new width and notify the parent
+			-- of the change.
 		do
-			wel_window.set_width (minimum_width.max(new_width))
-			notify_size_to_parent
+				wel_window.set_width (new_width.max (minimum_width))
+				parent_imp.child_width_changed (width, Current)
 		end
-
 		
 	set_height (new_height: INTEGER) is
+			-- Make `new_height' the new `height' and notify the
+			-- parent of the change.
 		do
- 			wel_window.set_height (minimum_height.max(new_height))
-			notify_size_to_parent
+			wel_window.set_height (new_height.max (minimum_height))
+			parent_imp.child_height_changed (new_height, Current)
 		end
 	
-	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-
-    set_maximum_width (max_width: INTEGER) is
-                        -- Set `maximum_width' to `max_width'.
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-
     set_minimum_height (min_height: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
+			-- Make `min_height' the new `minimum__height' and
+			-- notify the parent of the change. If this new minimum is
+			-- bigger than the Current `height', the widget is resized.
 		do
 			minimum_height := min_height
-			if parent_imp /= Void then
-				parent_imp.child_minheight_changed (min_height)
+			parent_imp.child_minheight_changed (min_height)
+			if min_height > height then
+				parent_ask_resize (width, min_height)
 			end
 		end
 
     set_minimum_width (min_width: INTEGER) is
-                        -- Set `minimum_width' to `min_width'.
+			-- Make `min_width' the new `minimum_width' and
+			-- notify the parent of the change. If this new minimum is
+			-- bigger than the Current `width', the widget is resized.
 		do
 			minimum_width := min_width
-			if parent_imp /= Void then
-				parent_imp.child_minwidth_changed (min_width)
+			parent_imp.child_minwidth_changed (min_width)
+			if min_width > width then
+				parent_ask_resize (min_width, height)
 			end
-
 		end
 
 	set_x (new_x: INTEGER) is
+			-- Put at horizontal position `new_x' relative
+			-- to parent.
 		do
 			wel_window.set_x (new_x)
 		end
 		
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+			-- Put at horizontal position `new_x' and at
+			-- vertical position `new_y' relative to parent.
 		do
 			wel_window.move (new_x, new_y)
 		end
 	
 	set_y (new_y: INTEGER) is
+			-- Put at vertical position `new_y' relative
+			-- to parent.
 		do
 			wel_window.set_y (new_y)
 		end
@@ -221,7 +205,6 @@ feature -- Event - command association
 					io.putstring ("This button do not exists")
 			end
 		end
-
 	
 	add_button_release_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a command that responds when `button' is release.
@@ -244,11 +227,9 @@ feature -- Event - command association
 		end
 
 	add_double_click_command (mouse_button: INTEGER;
-				  command: EV_COMMAND; 
-				  arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to 
-			-- be executed when button no 'mouse_button' 
-			-- is double clicked
+				  command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be executed
+			-- when button no 'mouse_button' is double clicked.
 		local
 			data_type: EV_BUTTON_EVENT_DATA
 		do
@@ -278,8 +259,14 @@ feature -- Event - command association
 			add_command (Wm_mousemove, command, arguments, data_type)
 		end
 	
-	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when 
+			-- the widget is destroyed.
+		local
+			data_type: EV_MOTION_EVENT_DATA
 		do
+			!! data_type.make
+			add_command (Wm_destroy, command, arguments, data_type)
 		end
 
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -314,7 +301,8 @@ feature -- Event - command association
 			data_type: EV_EVENT_DATA
 		do
 			!! data_type.make
-			add_command (Wm_notify, command, arguments, data_type)
+				-- We must not use add_command here.
+			add_command (Wm_setcursor, command, arguments, data_type)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -324,7 +312,8 @@ feature -- Event - command association
 			data_type: EV_EVENT_DATA
 		do
 			!! data_type.make
-			add_command (Wm_killfocus, command, arguments, data_type)
+				-- We must not use add_command here
+			add_command (Wm_mousemove, command, arguments, data_type)
 		end
 
 	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -393,15 +382,6 @@ feature -- Implementation
 			-- necessary to send him back the information
 		do
 			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
-		end
-
-feature {NONE} -- Implementation
-	
-	notify_size_to_parent is
-		do
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (width, height, Current)
-			end
 		end
 	
 feature {EV_WIDGET_IMP} -- Implementation

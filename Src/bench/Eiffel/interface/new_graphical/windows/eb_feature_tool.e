@@ -11,39 +11,26 @@ inherit
 			edit_bar as feature_toolbar
 --			Routine_type as stone_type
 		redefine
-			make,
 -- hole,
  empty_tool_name,
 -- close_windows,
 			init_commands,
-			build_interface, reset,
+			reset,
 			stone, set_stone, synchronize,
 -- process_feature,
 --			process_class, process_breakable, compatible,
 --			update_boolean_resource, create_toolbar, build_toolbar_menu,
 			set_mode_for_editing, parse_file, raise,
 			history_window_title, has_editable_text,
--- help_index,
- icon_id,
-			format_list, build_edit_bar
-
+			format_list, build_edit_bar,
+			build_special_menu
 		end
 	EB_FEATURE_TOOL_DATA
-		rename
-			Feature_resources as resources
-		end			
 
 creation
 	make
 
 feature {NONE} -- Initialization
-
-	make (man: EB_TOOL_MANAGER) is
-			-- Create a feature tool.
-		do
---			has_double_line_toolbar := resources.double_line_toolbar.actual_value
- 			Precursor (man)
-		end
 
 --	form_create (a_form: EV_CONTAINER; file_m, edit_m, format_m, special_m: EV_MENU) is
 --			-- Create a feature tool from a form.
@@ -83,22 +70,39 @@ feature {NONE} -- Initialization
 			create next_target_cmd.make (Current)
 		end
 
-feature {EB_TOOL_MANAGER} -- Initialize
+feature -- Update Resources
 
-	build_interface is
-			-- Build the widgets for this window.
+	register is
 		do
-			precursor
-
---			if not resources.keep_toolbar.actual_value then
---				feature_toolbar.remove
---				if has_double_line_toolbar then
---					format_bar.remove
---				end
---			end
+			register_to ("feature_tool_command_bar")
+			register_to ("feature_tool_format_bar")
 		end
 
-feature -- Update Resources
+	update is
+		do
+			if feature_tool_command_bar then
+				feature_toolbar.show
+			else
+				feature_toolbar.hide
+			end
+			if edit_bar_menu_item /= Void then
+				edit_bar_menu_item.set_selected (feature_tool_command_bar)
+			end
+			if feature_tool_format_bar then
+				format_bar.show
+			else
+				format_bar.hide
+			end	
+			if format_bar_menu_item /= Void then
+				format_bar_menu_item.set_selected (feature_tool_format_bar)
+			end
+		end
+
+	unregister is
+		do
+			unregister_to ("feature_tool_command_bar")
+			unregister_to ("feature_tool_format_bar")
+		end
 
 	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
 			-- Update `old_res' with the value of `new_res',
@@ -150,11 +154,11 @@ feature -- Window Properties
 
 --	help_index: INTEGER is 3
 
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_Feature_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (only for windows)
+--		do
+--			Result := Interface_names.i_Feature_id
+--		end
  
 feature -- Resetting
 
@@ -426,21 +430,7 @@ feature -- Formats
 
 	format_list: EB_FEATURE_FORMATTER_LIST
 
---	showroutclients_frmt_holder: FORMAT_HOLDER
-
---	showhomonyms_frmt_holder: FORMAT_HOLDER
-
---	showpast_frmt_holder: FORMAT_HOLDER
-
---	showhistory_frmt_holder: FORMAT_HOLDER
-
---	showfuture_frmt_holder: FORMAT_HOLDER
-
---	showflat_frmt_holder: FORMAT_HOLDER
-
 feature -- Commands
-
---	showstop_frmt_holder: FORMAT_HOLDER
 
 	shell_cmd: EB_OPEN_SHELL_CMD
 
@@ -457,8 +447,6 @@ feature -- Commands
 	feature_text_field: EB_FEATURE_TEXT_FIELD
 
 	class_text_field: EB_FEATURE_CLASS_TEXT_FIELD
-
---	super_melt_menu_entry: EB_MENU_ENTRY
 
 feature {NONE} -- Implementation Window Settings
 
@@ -526,7 +514,6 @@ feature {NONE} -- Implementation Graphical Interface
 --			new_class_button: EB_CREATE_CLASS_CMD
 			label: EV_LABEL
 --			quit_cmd: QUIT_FILE
---			has_close_button: BOOLEAN
 --			class_hole_holder: HOLE_HOLDER
 --			stop_hole_holder: HOLE_HOLDER
 --			rc: ROW_COLUMN
@@ -543,7 +530,6 @@ feature {NONE} -- Implementation Graphical Interface
 --			current_bar := feature_toolbar
 --
 --				-- Do we have a close button to create?
---			has_close_button := tool_resources.close_button.actual_value
 --
 --				-- First we create the needed objects.
 --			!! hole.make (Current)
@@ -602,11 +588,11 @@ feature {NONE} -- Implementation Graphical Interface
 			label.set_right_alignment
 			create class_text_field.make_with_tool (feature_toolbar, Current)
 
---				if has_close_button then
---					create b.make (a_toolbar)
---					b.set_pixmap (Pixmaps.bm_Quit)
---					b.add_close_command (close_cmd, Void)
---				end
+				if close_button_in_every_tool then
+					create b.make (a_toolbar)
+					b.set_pixmap (Pixmaps.bm_Quit)
+					b.add_click_command (close_cmd, Void)
+				end
 		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
@@ -632,12 +618,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Previous_target)
 			i.add_select_command (previous_target_cmd, Void)
+
+			Precursor (a_menu)
 		end
-
-feature {NONE} -- Properties
-
-	has_double_line_toolbar: BOOLEAN
-			-- Are we displaying two lines in the toolbar?
 
 feature {EB_FORMATTED_TEXT} -- Properties
 

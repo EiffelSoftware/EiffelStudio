@@ -79,7 +79,7 @@ extern "C" {
 	int32 egc_rcdt;
 	int32 egc_rcorigin;
 	int32 egc_rcoffset;
-	int egc_rcarg;
+	int32 egc_rcarg;
 
 	char *egc_system_name;
 	EIF_INTEGER egc_compiler_tag;

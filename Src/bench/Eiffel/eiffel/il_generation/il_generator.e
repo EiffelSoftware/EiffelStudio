@@ -65,6 +65,11 @@ feature -- Access
 	is_single_module: BOOLEAN
 			-- Are we only generate one module?
 
+feature {NONE} -- Implementation: Access
+
+	root_class_routine: CLASS_C
+			-- Class which defines body of creation routine.
+
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
 
@@ -325,6 +330,8 @@ feature {NONE} -- Type description
 		require
 			valid_system: System.classes /= Void
 		do
+			compute_root_class
+
 			generate_class_interfaces (classes)
 
 			if not is_single_module then
@@ -345,7 +352,26 @@ feature {NONE} -- Type description
 				degree_output.put_end_degree
 			end
 		end
-		
+
+	compute_root_class is
+			-- Initialize `root_class_routine' with CLASS_C instance that defines
+			-- creation routine of current system.
+			--| In most cases `System.root_class.compiled_class' is equal to
+			--| `root_class_routine', but when creation routine is inherited, this
+			--| is not true.
+			--| `root_class_routine' is used to find out which module needs to be
+			--| marked in a special way so that debug information is properly generated.
+		local
+			l_feat: FEATURE_I
+			l_root_class: CLASS_C
+		do
+			if System.root_class /= Void and then System.creation_name /= Void then
+				l_root_class := System.root_class.compiled_class
+				l_feat := l_root_class.feature_table.item (System.creation_name)
+				root_class_routine := l_feat.written_class
+			end
+		end
+
 	generate_types (classes: ARRAY [CLASS_C]) is
 			-- Generate all classes in compiled system.
 		require
@@ -448,7 +474,8 @@ feature {NONE} -- Type description
 			loop
 				class_c := classes.item (i)
 				if is_class_generated (class_c) then
-					has_root_class := has_root_class or else class_c.lace_class = System.root_class
+					has_root_class := has_root_class or else (root_class_routine /= Void and then
+						class_c.lace_class = root_class_routine.lace_class)
 					types := class_c.types
 					if not types.is_empty then
 						from

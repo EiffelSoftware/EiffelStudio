@@ -459,6 +459,7 @@ feature -- Access
 			layout_item.set_pixmap (l_pixmap)
 			layout_item.wipe_out
 			layout_item.set_data ("Represents a top level object, so no children may be added.")
+			layout_item.pointer_double_press_actions.force_extend (agent layout_constructor.target_associated_top_object (Current))
 		ensure
 			chidren_index_not_changed: old children.index = children.index
 			layout_item_empty: layout_item.count = 0
@@ -472,6 +473,7 @@ feature -- Access
 		do
 			layout_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin)
 			layout_item.set_data (Void)
+			layout_item.pointer_button_press_actions.wipe_out
 			cursor := children.cursor
 			from
 				children.start

@@ -1,5 +1,5 @@
 system
-	"docbuilder"
+	"doc_builder"
 
 root
 	DOC_BUILDER: make_and_launch

@@ -100,7 +100,6 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
-			align_text_center
 		end
 
 feature -- Status setting
@@ -160,7 +159,7 @@ feature {NONE} -- WEL Implementation
    	default_style: INTEGER is
    			-- Default style used to create the control
    		do
- 			Result := Ws_child + Ws_visible + Ss_left
+ 			Result := Ws_child + Ws_visible + Ss_center
  		end
 
 	wel_background_color: WEL_COLOR_REF is
@@ -249,6 +248,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/09 16:27:26  brendel
+--| Improved initialization.
+--|
 --| Revision 1.34  2000/03/03 20:08:20  brendel
 --| Default: align_text_center.
 --| Formatted for 80 columns.

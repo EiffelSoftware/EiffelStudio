@@ -142,6 +142,12 @@ feature -- Status report
 			Result := (c_gtk_clist_selection_mode (widget) = GTK_SELECTION_MULTIPLE)
 		end
 
+	title_shown: BOOLEAN is
+			-- True if the title row is shown.
+			-- False if the title row is not shown.
+		do
+		end
+
 feature -- Status setting
 
 	destroy is
@@ -301,20 +307,26 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection has changed.
 		local
-			ev_data: EV_EVENT_DATA
+--			ev_data: EV_EVENT_DATA
+			i: INTEGER
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
 			-- We pass -1 as the mouse button to have a different handling in 'c_gtk_signal_connect_general'.
-			add_command_with_event_data (widget, "select_row", cmd, arg, ev_data, -1, False, default_pointer)
-			add_command_with_event_data (widget, "unselect_row", cmd, arg, ev_data, -1, False, default_pointer)
+--			add_command_with_event_data (widget, "select_row", cmd, arg, ev_data, -1, False, default_pointer)
+--			add_command_with_event_data (widget, "unselect_row", cmd, arg, ev_data, -1, False, default_pointer)
+
+			-- We pass -1 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
+			i := 0
+			add_command (widget, "select_row", cmd, arg, c_integer_to_pointer (i))
+			add_command (widget, "unselect_row", cmd, arg, c_integer_to_pointer (i))
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
 		do
-			add_command (widget, "click_column", cmd, arg)
+			add_command (widget, "click_column", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

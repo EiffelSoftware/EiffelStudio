@@ -695,6 +695,7 @@ feature {NONE} -- Implementation
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
+			interface.move_actions.call ([x_pos, y_pos, width, height])
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
@@ -883,6 +884,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/29 19:24:40  rogers
+--| Connected the move_actions.
+--|
 --| Revision 1.25  2000/02/29 18:04:43  rogers
 --| Removed closeable, redefined last_call_was_destroy, which should only be a temporary solution, as it turns off the checking of no_calls_after_destroy for EV_WINDOW_IMP, EV_TITLED_WINDOW_IMP and EV_DIALOG_IMP. Now call the new events from on_wm_close. Removed set_horizontal_resize and set_vertical_resize. in destroy, remove_root_window is now called.
 --|

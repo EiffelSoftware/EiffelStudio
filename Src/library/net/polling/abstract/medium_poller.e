@@ -123,6 +123,7 @@ feature -- process set commands
 			valid_number: number_of_selected > 0
 		local
 			counter, counter1: INTEGER
+			a_command: POLL_COMMAND
 		do
 			if not ignore_read and then not read_command_list.all_cleared then
 				from 
@@ -131,9 +132,10 @@ feature -- process set commands
 					counter1 > read_command_list.upper or else 
 						not (counter < number_of_selected)
 				loop
-					if read_command_list.item (counter1) /= Void then
-						if last_read_mask.is_medium_ready (read_command_list.item(counter1).active_medium) then
-							read_command_list.item (counter1).execute
+					a_command := read_command_list.item (counter1)
+					if a_command /= Void then
+						if last_read_mask.is_medium_ready (a_command.active_medium) then
+							a_command.execute
 							counter := counter + 1
 						end
 					end
@@ -147,9 +149,10 @@ feature -- process set commands
 					counter1 > write_command_list.upper or else 
 						not (counter < number_of_selected)
 				loop
-					if write_command_list.item (counter1) /= Void then
-						if last_write_mask.is_medium_ready (write_command_list.item(counter1).active_medium) then
-							write_command_list.item (counter1).execute
+					a_command := write_command_list.item (counter1)
+					if a_command /= Void then
+						if last_write_mask.is_medium_ready (a_command.active_medium) then
+							a_command.execute
 							counter := counter + 1
 						end
 					end
@@ -163,9 +166,10 @@ feature -- process set commands
 					counter1 > exception_command_list.upper or else
 					   not (counter < number_of_selected)
 				loop
-					if exception_command_list.item (counter1) /= Void then
-						if last_except_mask.is_medium_ready (exception_command_list.item (counter1).active_medium) then
-							exception_command_list.item (counter1).execute
+					a_command := exception_command_list.item (counter1)
+					if a_command /= Void then
+						if last_except_mask.is_medium_ready (a_command.active_medium) then
+							a_command.execute
 							counter := counter + 1
 						end
 					end
@@ -264,7 +268,7 @@ feature -- booleans to decide whether to include each mask in the select call
 
 feature -- commands to be executed
 
-	read_command_list: ARRAY[POLL_COMMAND] is
+	read_command_list: ARRAY [POLL_COMMAND] is
 			-- list of poll commands to be called
 			-- by medium select read mask
 		once
@@ -314,7 +318,7 @@ feature -- commands to be executed
 			command_removed: read_command_list.item (s.handle) = Void
 		end
 
-	write_command_list: ARRAY[POLL_COMMAND] is
+	write_command_list: ARRAY [POLL_COMMAND] is
 			-- list of poll commands to be called
 			-- by medium select
 		once
@@ -362,7 +366,7 @@ feature -- commands to be executed
 			command_removed: write_command_list.item (s.handle) = Void
 		end
 
-	exception_command_list: ARRAY[POLL_COMMAND] is
+	exception_command_list: ARRAY [POLL_COMMAND] is
 			-- list of poll commands to be called
 			-- by medium select
 		once

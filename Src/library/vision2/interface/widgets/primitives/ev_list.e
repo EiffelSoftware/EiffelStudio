@@ -1,13 +1,13 @@
 indexing
 	description: 
-		"EiffelVision list. Contains a list of strings from %
+		"EiffelVision list. Contains a list of items from %
 		% which the user can select."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_LIST
 
 inherit
@@ -17,7 +17,6 @@ inherit
 		end
 
 creation
-
 	make
 	
 feature {NONE} -- Initialization
@@ -33,12 +32,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	rows: INTEGER is
+			-- Number of rows
+		require
+			exists: not destroyed
+		do
+			Result := implementation.rows
+		end
+
 	get_item (index: INTEGER): EV_LIST_ITEM is
 			-- Give the item of the list at the zero-base
 			-- `index'.
 		require
 			exists: not destroyed
-			item_exists: index <= count
+			item_exists: index <= rows
 		do
 			Result := implementation.get_item(index)
 		end
@@ -68,14 +75,6 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
-			-- Number of lines
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		end
-
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		require
@@ -100,7 +99,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_small_enough: index <= rows
 		do
 			implementation.select_item (index)
 		end

@@ -819,7 +819,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					s := c.out
 				else
 					s := clone (tok.image)
-					s.insert (c.out, cursor.pos_in_token)
+					s.insert_string (c.out, cursor.pos_in_token)
 				end
 					--| As a simple insertion can change the whole line,
 					--| We are obliged to retrieve previous and following

@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 						l_registry_key := feature {REGISTRY}.local_machine
 						l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)
 						l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)
-						l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)
+						l_registry_key := l_registry_key.open_sub_key (("Eiffel53").to_cil)
 						l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)
 						l_obj := l_registry_key.get_value (Ise_key.to_cil)
 						l_str ?= l_obj

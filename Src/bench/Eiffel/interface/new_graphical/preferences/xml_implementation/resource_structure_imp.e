@@ -14,10 +14,14 @@ create
 feature -- Initialization
 
 	initialize, initialize_from_file (default_file: STRING; normal_file: STRING) is
+			-- Initialize Current from `default_file', and update it with
+			-- `normal_file'.
 		local
 			file_name: FILE_NAME
 		do
-			make_default (default_file)
+			if default_file /= Void then
+				make_default (default_file)
+			end
 			create file_name.make_from_string (normal_file)
 			if root_folder_i /= Void then
 				update (file_name)
@@ -49,17 +53,14 @@ feature -- Update
 feature -- Saving
 
 	save is
+			-- Save structure in `location'.
 		do
 			root_folder_i.root_save (location)
-		end
-
-	save_resource (r: RESOURCE) is
-		do
-			save
 		end
 
 feature -- Status report
 
 	location: FILE_NAME
+		-- Current location of structure backup.
 
 end -- class RESOURCE_STRUCTURE_IMP

@@ -72,7 +72,6 @@ rt_public void mem_free(EIF_REFERENCE object)
 	union overhead *zone = HEADER(object);
 #ifdef ISE_GC
 	uint32 flags = zone->ov_flags;
-	unsigned int nbytes = EIF_Size(Dtype(object));
 
 	if (0 == (flags & (EO_OLD | EO_NEW)))	/* Neither old nor new */
 		return;							/* Object in scavenge zone */
@@ -195,7 +194,7 @@ rt_public void mem_coalesc(void)
  * collections in the acollect() routine.
  */
 
-rt_public long mem_tget(void)
+rt_public EIF_INTEGER mem_tget(void)
 {
 #ifdef ISE_GC
 	return th_alloc;			/* Current allocation threshold */

@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			app_imp: EV_APPLICATION_IMP
 		do
 			{EV_WINDOW_IMP} Precursor
+			--| FIXME This should be in EV_WINDOW_IMP:
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			app_imp.add_root_window (interface)
 			destroy_feature := interface~destroy
@@ -93,9 +94,8 @@ feature {NONE} -- Initialization
 		end
 
 	destroy_feature: PROCEDURE [EV_TITLED_WINDOW, TUPLE []]
+		--| FIXME Rename to `destroy_agent'.
 		-- Holds the feature `interface.destroy'
-		--| FIXME Why cannot we just prune for the real feature?
-		--| It did not seem to work when attempted.
 
 feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 
@@ -469,6 +469,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/13 19:40:26  brendel
+--| Added 2 FIXME's and removed 1.
+--|
 --| Revision 1.60  2000/04/03 16:39:10  rogers
 --| Redefined destroy from EV_WINDOW_IMP. Added `destroy_feature'.
 --|

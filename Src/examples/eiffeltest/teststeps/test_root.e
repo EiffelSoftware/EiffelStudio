@@ -1,0 +1,71 @@
+indexing
+	description:
+		"Root class for validity test"
+
+	status:	"See note at end of class"
+	author: "Patrick Schoenbach"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class 
+	TEST_ROOT
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (argv: ARRAY[STRING]) is
+			-- Create test.
+		local
+			log: SCREEN_LOG
+			s: TEST_SUITE
+			drv: SIMPLE_TEST_DRIVER
+			st1: PUSH_STEP
+			st2: POP_STEP
+			st3: POP_STEP
+			stack: LINKED_STACK [INTEGER]
+			e: EMPTY_STACK_EVALUATOR
+			a: ARRAY [INTEGER]
+		do
+			create log.make
+			log.set_format ("ascii")
+			create stack.make
+			create st1.make
+			create st2.make
+			create st3.make
+			create e
+			st3.extend (e)
+			create s.make
+			s.set_fixture (stack)
+			s.extend (st1)
+			s.extend (st2)
+			s.extend (st3)
+			a := << 1, 2, 1, 3 >>
+			s.select_strategy ("sequential")
+			s.set_context (a)
+			create drv.make (log)
+			drv.enable_timing_display
+			drv.extend (s)
+			drv.execute
+			drv.evaluate
+		end
+
+end -- class TEST_ROOT
+
+--|----------------------------------------------------------------
+--| EiffelTest: Reusable components for developing unit tests.
+--| Copyright (C) 2000 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -60,7 +60,8 @@ inherit
 			pointer_enter_actions,
 			pointer_leave_actions,
 			pointer_motion_actions,
-			resize_actions
+			resize_actions,
+			tooltip_window
 		end
 
 	WEL_CONTROL_WINDOW
@@ -711,6 +712,13 @@ feature {NONE} -- Implementation
 			internal_text_field.ev_apply_new_size
 				(0, 0, a_width - spin_width, a_height, repaint)
 		end
+		
+	tooltip_window: WEL_WINDOW is
+			-- `Result' is WEL_WINDOW of `Current' used
+			-- to trigger tooltip events.
+		do
+			Result := window_of_item (internal_text_field.wel_item)
+		end
 
 feature {NONE} -- Constants
 
@@ -775,6 +783,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPIN_BUTTON
+	
+invariant
+	internal_text_field_not_void: internal_text_field /= Void
+	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
 end -- class EV_SPIN_BUTTON_IMP
 

@@ -62,7 +62,8 @@ inherit
 			interface,
 			initialize,
 			on_set_focus,
-			set_foreground_color
+			set_foreground_color,
+			tooltip_window
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -161,11 +162,11 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			set_default_font
+			create text_field.make_with_combo (Current)
+			create combo.make_with_combo (Current)
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			initialize_pixmaps
-			create text_field.make_with_combo (Current)
-			create combo.make_with_combo (Current)
 		end
 
 feature -- Access
@@ -718,6 +719,13 @@ feature {NONE} -- Implementation
 				combo.invalidate
 			end
 		end
+		
+	tooltip_window: WEL_WINDOW is
+			-- `Result' is WEL_WINDOW of `Current' used
+			-- to trigger tooltip events.
+		do
+			Result := window_of_item (text_field.item)
+		end
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	-- WEL Implementation
@@ -953,6 +961,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX
+	
+invariant
+	combo_not_void: is_initialized implies combo /= Void
+	text_field_not_void: is_initialized implies text_field /= Void
 
 end -- class EV_COMBO_BOX_IMP
 

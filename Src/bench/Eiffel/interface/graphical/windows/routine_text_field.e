@@ -112,38 +112,44 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 						e_class := stone.e_class;	
 						if e_class /= Void then
 							f_table := e_class.api_feature_table;
-							!! pattern.make (0);
-							pattern.append (rname);
-							if pattern.has_wild_cards then
-								!! feat_names.make;
-								from
-									f_table.start
-								until
-									f_table.after
-								loop
-									feat_name := f_table.key_for_iteration;
-									if pattern.matches (feat_name) then
-										feat_names.extend (feat_name)
+							if f_table /= Void then
+								!! pattern.make (0);
+								pattern.append (rname);
+								if pattern.has_wild_cards then
+									!! feat_names.make;
+									from
+										f_table.start
+									until
+										f_table.after
+									loop
+										feat_name := f_table.key_for_iteration;
+										if pattern.matches (feat_name) then
+											feat_names.extend (feat_name)
+										end;
+										f_table.forth
 									end;
-									f_table.forth
-								end;
-								if choice = Void then
-									!! choice.make_with_widget (parent, Current)
-								end;
-								classc_stone := stone;
-								mp.restore;
-								choice.popup (Current, feat_names, Interface_names.t_Select_feature)
-							else
-								e_feature := f_table.item (rname);		
-								if e_feature = Void then
+									if choice = Void then
+										!! choice.make_with_widget (parent, Current)
+									end;
+									classc_stone := stone;
 									mp.restore;
-									warner (tool.popup_parent).gotcha_call 
-										(Warning_messages.w_Cannot_find_feature (rname, e_class.name))
+									choice.popup (Current, feat_names, Interface_names.t_Select_feature)
 								else
-									!! feature_stone.make (e_feature);
-									tool.process_feature (feature_stone);
-									mp.restore;
+									e_feature := f_table.item (rname);		
+									if e_feature = Void then
+										mp.restore;
+										warner (tool.popup_parent).gotcha_call 
+											(Warning_messages.w_Cannot_find_feature (rname, e_class.name))
+									else
+										!! feature_stone.make (e_feature);
+										tool.process_feature (feature_stone);
+										mp.restore;
+									end
 								end
+							else
+								mp.restore
+								warner (tool.popup_parent).gotcha_call
+									(Warning_messages.w_features_not_compiled)
 							end
 						else
 							cname := clone (tool.class_text_field.text);

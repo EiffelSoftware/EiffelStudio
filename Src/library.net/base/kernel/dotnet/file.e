@@ -1300,11 +1300,6 @@ feature -- Input
 			-- New line will be consumed but not part of `last_string'.
 		require else
 			is_readable: file_readable
-		local
-			str_cap: INTEGER
-			read: INTEGER	-- Amount of bytes already read
-			str_area: ANY
-			done: BOOLEAN
 		do
 			create last_string.make_from_cil (reader.read_line)
 		end

@@ -4,10 +4,6 @@ indexing
 		"Values that may be hashed into an integer index, %
 		%for use as keys in hash tables";
 
-	note:
-		"In general, the default value of a type (e.g. 0 for integers, %
-		%void for references) may not be hashed."
-
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -19,8 +15,6 @@ feature -- Access
 
 	hash_code: INTEGER is
 			-- Hash code value
-		require
-			hashable: is_hashable
 		deferred
 		ensure
 			good_hash_value: Result >= 0

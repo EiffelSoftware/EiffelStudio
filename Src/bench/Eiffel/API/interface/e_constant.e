@@ -51,4 +51,4 @@ feature -- Setting
 			set: value = v
 		end;
 
-end -- class E_ATTRIBUTE
+end -- class E_CONSTANT

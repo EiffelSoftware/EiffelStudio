@@ -266,7 +266,7 @@ feature -- Obtaining Properties of a Specified Object
 		end
 		
 	get_member_props (a_tok: INTEGER): STRING is
-			-- 
+			-- Get member 's name property
 		local
 			mp_name: MANAGED_POINTER
 			l_r_classtoken: INTEGER
@@ -288,8 +288,30 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end		
 
+
+	get_method_props (a_tok: INTEGER): STRING is
+			-- Get method 's name property
+		local
+			mp_name: MANAGED_POINTER
+			l_r_classtoken: INTEGER
+			l_rsize: INTEGER
+			l_flag: POINTER
+			l_sig: POINTER
+			l_sigsize: INTEGER
+			l_rva: POINTER
+			l_pdw: POINTER
+			
+		do
+			create mp_name.make (256 * 2)
+
+			last_call_success := cpp_get_method_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, 
+				l_flag, l_sig, $l_sigsize, $l_rva, $l_pdw)
+
+			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+		end	
+
 	get_field_props (a_tok: INTEGER): STRING is
-			-- 
+			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
 			l_r_classtoken: INTEGER
@@ -310,20 +332,6 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end	
 
---feature -- obsolete
---
---	get_name_from_token (a_tok: INTEGER): STRING is
---		local
---			mp_name: MANAGED_POINTER
---		do
---			create mp_name.make (256 * 2)
---			last_call_success := cpp_get_name_from_token (item, a_tok, mp_name.item)
---			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
---			
---		ensure
---			success: last_call_success = 0
---		end
-		
 feature {NONE} -- Implementation Enum...
 
 	frozen cpp_close_enum (obj: POINTER; a_enum_hdl: INTEGER) is
@@ -567,16 +575,6 @@ feature {NONE} -- Implementation Obtaining information
 			]"
 		end	
 
---	frozen cpp_get_name_from_token (obj: POINTER; a_tok: INTEGER; a_name: POINTER): INTEGER is
---		external
---			"[
---				C++ IMetaDataImport signature(mdToken, MDUTF8CSTR*): EIF_INTEGER 
---				use "cli_headers.h"
---			]"
---		alias
---			"GetNameFromToken"
---		end	
-	
 feature {NONE} -- Implementation
 
 	sizeof_mdTypeDef: INTEGER is

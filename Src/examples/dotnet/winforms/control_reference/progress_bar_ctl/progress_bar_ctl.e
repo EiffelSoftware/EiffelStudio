@@ -85,7 +85,7 @@ feature -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (506, 175)
-			my_window.set_client_size_size (l_size)
+			my_window.set_client_size_size_2 (l_size)
 			my_window.set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
 			my_window.set_maximize_box (False)
 			my_window.set_minimize_box (False)
@@ -135,9 +135,9 @@ feature -- Implementation
 			l_array.put (1, ("5").to_cil)
 			l_array.put (2, ("10").to_cil)
 			l_array.put (3, ("20").to_cil)
-			cmd_step.get_items.add_range (l_array)
+			cmd_step.items.add_range (l_array)
 
-			prog_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.get_control)
+			prog_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
 			l_point.make_from_x_and_y (24, 24)
 			prog_bar.set_location (l_point)
 			prog_bar.set_tab_index (0)
@@ -146,7 +146,7 @@ feature -- Implementation
 			prog_bar.set_step (1)
 			prog_bar.set_text (("prog_bar").to_cil)
 
-			sldr_speed.set_back_color (feature {DRAWING_SYSTEM_COLORS}.get_control)
+			sldr_speed.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
 			sldr_speed.set_tick_frequency (10)
 			l_point.make_from_x_and_y (16, 96)
 			sldr_speed.set_location (l_point)
@@ -170,20 +170,20 @@ feature -- Implementation
 			l_point.make_from_x_and_y (248, 16)
 			grp_behavior.set_location (l_point)
 			grp_behavior.set_tab_index (5)
-			grp_behavior.set_tab_stop_boolean (False)
+			grp_behavior.set_tab_stop_boolean_2 (False)
 			grp_behavior.set_text (("ProgressBar").to_cil)
 			l_size.make_from_width_and_height (248, 152)
 			grp_behavior.set_size (l_size)
-			grp_behavior.get_controls.add (cmd_step)
-			grp_behavior.get_controls.add (label_1)
-			grp_behavior.get_controls.add (sldr_speed)
-			grp_behavior.get_controls.add (label_3)
-			my_window.get_controls.add (grp_behavior)
-			my_window.get_controls.add (lbl_value)
-			my_window.get_controls.add (label_4)
-			my_window.get_controls.add (lbl_completed)
-			my_window.get_controls.add (label_2)
-			my_window.get_controls.add (prog_bar)
+			grp_behavior.controls.add (cmd_step)
+			grp_behavior.controls.add (label_1)
+			grp_behavior.controls.add (sldr_speed)
+			grp_behavior.controls.add (label_3)
+			my_window.controls.add (grp_behavior)
+			my_window.controls.add (lbl_value)
+			my_window.controls.add (label_4)
+			my_window.controls.add (lbl_completed)
+			my_window.controls.add (label_2)
+			my_window.controls.add (prog_bar)
 
 			sldr_speed.end_init
 		end
@@ -224,17 +224,17 @@ feature {NONE} -- Implementation
 			numerator, denominator, completed: DOUBLE
 		do
 			-- Reset to start if required
-			if prog_bar.get_value = prog_bar.get_maximum then
-				prog_bar.set_value (prog_bar.get_minimum)
+			if prog_bar.value = prog_bar.maximum then
+				prog_bar.set_value (prog_bar.minimum)
 			else 
 				prog_bar.perform_step
 			end
 	
-			lbl_value.set_text (prog_bar.get_value.to_string)
+			lbl_value.set_text (prog_bar.value.to_string)
 	
-			min         := prog_bar.get_minimum 
-			numerator   := prog_bar.get_value - min 
-			denominator := prog_bar.get_maximum - min 
+			min         := prog_bar.minimum 
+			numerator   := prog_bar.value - min 
+			denominator := prog_bar.maximum - min 
 			completed   := (numerator / denominator) * 100.0 
 	
 			--lbl_completed.set_text ((feature {MATH}.round (completed).to_string + "%"").to_cil) 
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 					feature {SYSTEM_CONSOLE}.write (("  4   ").to_cil)
 					sleep_time := 100
 					feature {SYSTEM_CONSOLE}.write (("  5   ").to_cil)
-					feature {THREAD}.sleep_integer_32 (i_sleep_time)
+					feature {THREAD}.sleep_integer (i_sleep_time)
 				end
 	
 				feature {SYSTEM_CONSOLE}.write (("not rescued").to_cil)
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 		do
 			tb ?= sender 
 --			if tb /= Void then
---				time := 110 - tb.get_value 
+--				time := 110 - tb.value 
 --				set_sleep_time (time)
 --			end
 		end

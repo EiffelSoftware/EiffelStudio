@@ -116,7 +116,7 @@ feature -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (504, 293)
-			my_window.set_client_size_size (l_size)
+			my_window.set_client_size_size_2 (l_size)
 			
 			tool_tip.set_active (True)
 			
@@ -151,8 +151,8 @@ feature -- Implementation
 --			l_array.put (1, ("Short").to_cil)
 --			l_array.put (2, ("Time").to_cil)
 --			l_array.put (3, ("Custom").to_cil)
---			cmb_format.get_items.add_range (l_array)
-			cmb_format.get_items.add_range (format_choisse_array)
+--			cmb_format.items.add_range (l_array)
+			cmb_format.items.add_range (format_choisse_array)
 			cmb_format.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $cmb_format_selected_index_changed))
 			
 				-- Init `dtp_min_date'.
@@ -162,16 +162,16 @@ feature -- Implementation
 			dtp_min_date.set_location (l_point)
 			l_size.make_from_width_and_height (104, 20)
 			dtp_min_date.set_size (l_size)
-			dtp_min_date.set_calendar_fore_color (feature {DRAWING_SYSTEM_COLORS}.get_window_text)
+			dtp_min_date.set_calendar_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			dtp_min_date.set_checked (True)
-			dtp_min_date.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.get_window_text)
+			dtp_min_date.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			dtp_min_date.set_format (feature {WINFORMS_DATE_TIME_PICKER_FORMAT}.Short)
 --			tool_tip.set_tool_tip (dtp_min_date, "The value indicating the first date that\r\nthe control allows the user to select")
 			dtp_min_date.set_tab_index (6)
 			dtp_min_date.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Top |
 										feature {WINFORMS_ANCHOR_STYLES}.Left |
 										feature {WINFORMS_ANCHOR_STYLES}.Right )
-			dtp_min_date.set_back_color (feature {DRAWING_SYSTEM_COLORS}.get_window)
+			dtp_min_date.set_back_color (feature {DRAWING_SYSTEM_COLORS}.window)
 			dtp_min_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $dtp_min_date_value_changed))
 			
 				-- Init `label_2'.
@@ -193,7 +193,7 @@ feature -- Implementation
 			my_group_box.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Top |
 									   feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 									   feature {WINFORMS_ANCHOR_STYLES}.Right )
-			my_group_box.set_tab_stop_boolean (False)
+			my_group_box.set_tab_stop_boolean_2 (False)
 			my_group_box.set_text (("DateTimePicker").to_cil)
 --			my_group_box.set_size (create {DRAWING_SIZE}.make_from_width_and_height (248, 264))
 			l_size.make_from_width_and_height (248, 264)
@@ -230,12 +230,12 @@ feature -- Implementation
 			date_time_picker.set_location (l_point)
 			l_size.make_from_width_and_height (200, 20)
 			date_time_picker.set_size (l_size)
-			date_time_picker.set_calendar_fore_color ((feature {DRAWING_SYSTEM_COLORS}.get_window_text))
+			date_time_picker.set_calendar_fore_color ((feature {DRAWING_SYSTEM_COLORS}.window_text))
 			date_time_picker.set_checked (True)
-			date_time_picker.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.get_window_text)
+			date_time_picker.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			date_time_picker.set_format (feature {WINFORMS_DATE_TIME_PICKER_FORMAT}.Custom)
 			date_time_picker.set_tab_index (1)
-			date_time_picker.set_back_color (feature {DRAWING_SYSTEM_COLORS}.get_window)
+			date_time_picker.set_back_color (feature {DRAWING_SYSTEM_COLORS}.window)
 			date_time_picker.set_custom_format (("\'The date is: \'yy MM d - HH\':\'mm\':\'s ddd").to_cil)
 			date_time_picker.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Top |
 											feature {WINFORMS_ANCHOR_STYLES}.Bottom |
@@ -267,16 +267,16 @@ feature -- Implementation
 			dtp_max_date.set_location (l_point)
 			l_size.make_from_width_and_height (104, 20)
 			dtp_max_date.set_size (l_size)
-			dtp_max_date.set_calendar_fore_color (feature {DRAWING_SYSTEM_COLORS}.get_window_text)
+			dtp_max_date.set_calendar_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			dtp_max_date.set_checked (True)
-			dtp_max_date.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.get_window_text)
+			dtp_max_date.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			dtp_max_date.set_format (feature {WINFORMS_DATE_TIME_PICKER_FORMAT}.Short)
 --			tool_tip.set_tool_tip(dtp_max_date, "The value indicating the last date that \r\nthe control allows the user to select")
 			dtp_max_date.set_tab_index (4)
 			dtp_max_date.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Top |
 									feature {WINFORMS_ANCHOR_STYLES}.Left |
 									feature {WINFORMS_ANCHOR_STYLES}.Right)
-			dtp_max_date.set_back_color ( feature {DRAWING_SYSTEM_COLORS}.get_window)
+			dtp_max_date.set_back_color ( feature {DRAWING_SYSTEM_COLORS}.window)
 			dtp_max_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $dtp_max_date_value_changed))
 			
 				-- Init `chk_show_up_down'.
@@ -292,18 +292,18 @@ feature -- Implementation
 			chk_show_up_down.set_tab_index (8)
 			chk_show_up_down.add_click (create {EVENT_HANDLER}.make (Current, $chk_show_up_down_click))
 			
-			my_group_box.get_controls.add (chk_show_up_down)
-			my_group_box.get_controls.add (btn_change_font)
-			my_group_box.get_controls.add (btn_change_color)
-			my_group_box.get_controls.add (dtp_max_date)
-			my_group_box.get_controls.add (dtp_min_date)
-			my_group_box.get_controls.add (label_3)
-			my_group_box.get_controls.add (label_2)
-			my_group_box.get_controls.add (label_1)
-			my_group_box.get_controls.add (cmb_format)
+			my_group_box.controls.add (chk_show_up_down)
+			my_group_box.controls.add (btn_change_font)
+			my_group_box.controls.add (btn_change_color)
+			my_group_box.controls.add (dtp_max_date)
+			my_group_box.controls.add (dtp_min_date)
+			my_group_box.controls.add (label_3)
+			my_group_box.controls.add (label_2)
+			my_group_box.controls.add (label_1)
+			my_group_box.controls.add (cmb_format)
 			
-			my_window.get_controls.add (date_time_picker)
-			my_window.get_controls.add (my_group_box)
+			my_window.controls.add (date_time_picker)
+			my_window.controls.add (my_group_box)
 		end
 
 
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			dummy: SYSTEM_OBJECT
 		do
 			dummy := font_dialog.show_dialog
-			new_font := font_dialog.get_font
+			new_font := font_dialog.font
 			date_time_picker.set_font (new_font)
 		end
 
@@ -341,11 +341,11 @@ feature {NONE} -- Implementation
 	dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_min_date_value' is changed.
 		do
---			if dtp_min_date.get_value < dtp_max_date.get_value then
+--			if dtp_min_date.value < dtp_max_date.value then
 --				error_min.set_error (dtp_min_date, "")
---				date_time_picker.set_min_date (dtp_min_date.get_value)
+--				date_time_picker.set_min_date (dtp_min_date.value)
 --			else
---				dtp_min_date.set_value (date_time_picker.get_min_date)
+--				dtp_min_date.set_value (date_time_picker.min_date)
 --				error_min.set_error (dtp_min_date, "Max Date must be greater than Min Date")
 --			end
 		end
@@ -353,11 +353,11 @@ feature {NONE} -- Implementation
 	dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_max_date_value' is changed.
 		do
---			if dtp_max_date.get_value > dtp_min_date.get_value then
---				date_time_picker.set_max_date (dtp_max_date.get_value)
+--			if dtp_max_date.value > dtp_min_date.value then
+--				date_time_picker.set_max_date (dtp_max_date.value)
 --				error_max.set_error (dtp_max_date, "")
 --			else
---				dtp_max_date.set_value (date_time_picker.get_max_date)
+--				dtp_max_date.set_value (date_time_picker.max_date)
 --				error_max.set_error (dtp_max_date, "Max Date must be greater than Min Date")
 --			end
 		end
@@ -368,8 +368,8 @@ feature {NONE} -- Implementation
 			l_format: WINFORMS_DATE_TIME_PICKER_FORMAT
 			item_selected: SYSTEM_STRING
 		do
-			if cmb_format.get_selected_index >= 0 then
-				item_selected := cmb_format.get_selected_item.to_string
+			if cmb_format.selected_index >= 0 then
+				item_selected := cmb_format.selected_item.to_string
 
 				if item_selected.equals (format_choisse_array.item (1)) then
 					l_format := feature {WINFORMS_DATE_TIME_PICKER_FORMAT}.short
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
         	local
         		show_up_down: BOOLEAN
         	do
-        		show_up_down := chk_show_up_down.get_checked
+        		show_up_down := chk_show_up_down.checked
         		date_time_picker.set_show_up_down (show_up_down)
         	end
 		

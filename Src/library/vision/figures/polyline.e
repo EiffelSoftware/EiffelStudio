@@ -33,8 +33,8 @@ inherit
 	LINKED_LIST [POINT]
 		rename
 			extend as list_add,
-			add_left as list_add_left,
-			add_right as list_add_right,
+			put_left as list_put_left,
+			put_right as list_put_right,
 			duplicate as list_duplicate,
 			merge_left as list_merge_left,
 			merge_right as list_merge_right,
@@ -49,8 +49,8 @@ inherit
             make as linked_list_make,
 			extend as add
 		redefine
-			add_right, 
-			add_left, 
+			put_right, 
+			put_left, 
 			put_i_th, 
 			put, 
 			merge_right, 
@@ -59,8 +59,8 @@ inherit
 			add,
 			wipe_out
 		select
-			add_right, 
-			add_left, 
+			put_right, 
+			put_left, 
 			put_i_th, 
 			put, 
 			merge_right, 
@@ -120,23 +120,21 @@ feature  -- Modification & Insertion
 			set_conf_modified
 		end;
 
-	add_left (v: like first) is
+	put_left (v: like first) is
 			-- Put item `v' to the left of cursor position.
 			-- Do not move cursor.
-			-- Synonym for `put_left'.
 		do
 			v.attach_drawing_imp (drawing);
-			list_add_left (v);
+			list_put_left (v);
 			set_conf_modified
 		end;
 
-	add_right (v: like first) is
+	put_right (v: like first) is
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
-			-- Synonym for `put_right'.
 		do
 			v.attach_drawing_imp (drawing);
-			list_add_right (v);
+			list_put_right (v);
 			set_conf_modified
 		end;
 

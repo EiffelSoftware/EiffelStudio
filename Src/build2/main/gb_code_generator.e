@@ -124,6 +124,9 @@ feature {NONE} -- Implementation
 				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
 			end	
 			
+				-- Now add the application class name.
+			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+			
 			ace_file_name := clone (generated_path)
 			ace_file_name.extend ("build_ace.ace")
 					-- Store `ace_text'.
@@ -139,9 +142,12 @@ feature {NONE} -- Implementation
 			local
 				application_template_file, application_output_file: RAW_FILE
 				application_file_name: FILE_NAME
-				main_window_type: STRING
+				main_window_type, application_class_name: STRING
 				main_window_tag_index: INTEGER
+				project_settings: GB_PROJECT_SETTINGS
+				change_pos: INTEGER
 			do
+				project_settings := system_status.current_project_settings
 				set_progress (0.2)
 				create application_template_file.make_open_read (application_template_file_name)
 				create application_text.make (application_template_file.count)
@@ -150,15 +156,19 @@ feature {NONE} -- Implementation
 				application_text := application_template_file.last_string
 				application_template_file.close
 			
-				main_window_type := system_status.current_project_settings.main_window_class_name
-				main_window_type.to_upper
+					-- Now add the main window class type
+				add_generated_string (application_text, project_settings.main_window_class_name.as_upper, main_window_tag)
 				
-				main_window_tag_index := application_text.substring_index (main_window_tag, 1)
-				application_text.replace_substring_all (main_window_tag, "")			
-				application_text.insert_string (main_window_type, main_window_tag_index)
-			
+					-- Now add the application class name. 0ne at start
+					-- and one at end of file, so do this twice.
+				application_class_name := project_Settings.application_class_name.as_lower
+				change_pos := application_text.substring_index (application_tag, 1)
+				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
+				change_pos := application_text.substring_index (application_tag, 1)
+				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
+				
 				application_file_name := clone (generated_path)
-				application_file_name.extend ("build_application.e")
+				application_file_name.extend (application_class_name + ".e")
 
 				create application_output_file.make_open_write (application_file_name)
 				application_output_file.start
@@ -258,7 +268,7 @@ feature {NONE} -- Implementation
 					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
-				window_file_name.extend ("main_window_imp.e")--system_status.current_project_settings.main_window_file_name)
+				window_file_name.extend (system_status.current_project_settings.main_window_class_name + class_implementation_extension.as_lower + ".e")--system_status.current_project_settings.main_window_file_name)
 				create window_output_file.make_open_write (window_file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)
@@ -300,7 +310,7 @@ feature {NONE} -- Implementation
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
 		require
-			a_class_text.has_substring (tag)
+			tag_contained: a_class_text.has_substring (tag)
 		local
 			temp_index: INTEGER
 		do

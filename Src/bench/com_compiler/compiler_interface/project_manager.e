@@ -205,6 +205,7 @@ feature -- Basic Operations
 		local
 			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 			dir: DIRECTORY
+			pp: PROJECT_PROPERTIES
 		do
 			if not Valid_project_ref.item then
 				if ace_name /= Void and project_directory_path /= Void then
@@ -223,9 +224,15 @@ feature -- Basic Operations
 							Eiffel_project.make_new (project_dir, True, Void, Void)
 							if Eiffel_project.initialized then
 								Eiffel_ace.set_file_name (ace_name)
+								Valid_project_ref.set_item (True)
 								create {PROJECT_PROPERTIES} project_properties_internal.make
 								create enum
-								Valid_project_ref.set_item (True)
+								pp ?= project_properties
+								if not pp.msil_generation then
+									Valid_project_ref.set_item (False)
+									last_error_message := "Not a .NET ace file"
+								end
+								
 							else
 								last_error_message := "Project could not be initialized"
 							end

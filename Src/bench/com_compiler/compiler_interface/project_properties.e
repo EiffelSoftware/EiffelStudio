@@ -305,6 +305,15 @@ feature -- Access
 			end
 		end
 		
+	msil_generation: BOOLEAN is
+			-- Msil generation
+		do
+			if is_valid then 
+				Result := ace.msil_generation
+			end
+		end
+		
+		
 feature -- Element change
 
 	set_system_name (a_system_name: STRING) is

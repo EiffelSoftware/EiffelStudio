@@ -153,6 +153,22 @@ typedef enum EIF_ENTITY_IMAGES{
 } EIF_ENTITY_IMAGES;
 
 //---------------------------------------------------------------------
+// Image indexes associated with a class
+//---------------------------------------------------------------------
+[
+	uuid (UUID_ENUMEIF_CLASS_IMAGES),
+	helpstring ("Image indexes associated with a class.")
+]
+typedef enum EIF_CLASS_IMAGES{
+	EIF_CLASS_IMAGES_External = 48,
+	EIF_CLASS_IMAGES_DeferredInSystem = 13,
+	EIF_CLASS_IMAGES_InSystem = 2,
+	EIF_CLASS_IMAGES_NotInSystem = 14,
+	EIF_CLASS_IMAGES_DeferredNotInSystem = 15,
+	EIF_CLASS_IMAGES_Obsolete = 3,
+} EIF_CLASS_IMAGES;
+
+//---------------------------------------------------------------------
 // Type of Eiffel feature
 //---------------------------------------------------------------------
 [

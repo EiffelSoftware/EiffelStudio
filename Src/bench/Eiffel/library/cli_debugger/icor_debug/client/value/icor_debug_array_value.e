@@ -50,7 +50,6 @@ feature {ICOR_EXPORTER} -- Access
 			mp_tab: MANAGED_POINTER
 			l_integer_size: INTEGER
 			i: INTEGER
-			l_p: POINTER
 			l_element: INTEGER
 		do
 			l_integer_size := (create {PLATFORM}).Integer_bytes
@@ -91,7 +90,6 @@ feature {ICOR_EXPORTER} -- Access
 			mp_tab: MANAGED_POINTER
 			l_integer_size: INTEGER
 			i: INTEGER
-			l_p: POINTER
 			l_element: INTEGER
 		do
 			l_integer_size := (create {PLATFORM}).Integer_bytes

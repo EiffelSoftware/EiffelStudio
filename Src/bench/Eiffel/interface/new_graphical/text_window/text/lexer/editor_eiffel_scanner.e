@@ -40,22 +40,34 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 24
+--|#line 24 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 24")
+end
 -- Ignore carriage return
 when 2 then
---|#line 25
+--|#line 25 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 25")
+end
 
 					create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
 					update_token_list
 					
 when 3 then
---|#line 29
+--|#line 29 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 29")
+end
 
 					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count, tab_size_cell)
 					update_token_list
 					
 when 4 then
---|#line 33
+--|#line 33 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 33")
+end
 
 					from i_ := 1 until i_ > text_count loop
 						create {EDITOR_TOKEN_EOL} curr_token.make
@@ -65,7 +77,10 @@ when 4 then
 					in_comments := False
 					
 when 5 then
---|#line 45
+--|#line 45 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 45")
+end
  
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
@@ -73,7 +88,10 @@ when 5 then
 					in_comments := True
 					
 when 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 then
---|#line 54
+--|#line 54 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 54")
+end
 
 						-- Symbols
 					if not in_comments then
@@ -84,7 +102,10 @@ when 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 then
 					update_token_list
 					
 when 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 then
---|#line 75
+--|#line 75 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 75")
+end
  
 						-- Operator Symbol
 					if not in_comments then
@@ -95,7 +116,10 @@ when 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 
 					update_token_list
 					
 when 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93 then
---|#line 105
+--|#line 105 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 105")
+end
 
 										-- Keyword
 										if not in_comments then
@@ -106,7 +130,10 @@ when 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
 										update_token_list
 										
 when 94 then
---|#line 174
+--|#line 174 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 174")
+end
 
 										if not in_comments then
 											if not Eiffel_universe.classes_with_name (text).is_empty then
@@ -120,7 +147,10 @@ when 94 then
 										update_token_list
 										
 when 95 then
---|#line 188
+--|#line 188 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 188")
+end
 
 										if not in_comments then
 											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
@@ -130,7 +160,10 @@ when 95 then
 										update_token_list
 										
 when 96 then
---|#line 200
+--|#line 200 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 200")
+end
 
 										if not in_comments then
 											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
@@ -140,7 +173,10 @@ when 96 then
 										update_token_list
 										
 when 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118 then
---|#line 214
+--|#line 214 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 214")
+end
 
 					if not in_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text, tab_size_cell)
@@ -150,7 +186,10 @@ when 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112
 					update_token_list
 					
 when 119 then
---|#line 244
+--|#line 244 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 244")
+end
 
 					if not in_comments then
 						code_ := text_substring (4, text_count - 2).to_integer
@@ -166,7 +205,10 @@ when 119 then
 					update_token_list
 					
 when 120, 121 then
---|#line 259
+--|#line 259 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 259")
+end
 
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
@@ -177,7 +219,10 @@ when 120, 121 then
 					update_token_list
 					
 when 122, 123 then
---|#line 282
+--|#line 282 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 282")
+end
 
 					-- Eiffel String
 					if not in_comments then
@@ -188,7 +233,10 @@ when 122, 123 then
 					update_token_list
 					
 when 124 then
---|#line 295
+--|#line 295 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 295")
+end
 
 					-- Eiffel Bit
 					if not in_comments then
@@ -199,7 +247,10 @@ when 124 then
 					update_token_list
 					
 when 125, 126 then
---|#line 307
+--|#line 307 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 307")
+end
 
 						-- Eiffel Integer
 						if not in_comments then
@@ -210,7 +261,10 @@ when 125, 126 then
 						update_token_list
 						
 when 127 then
---|#line 317
+--|#line 317 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 317")
+end
 
 						-- Eiffel Integer Error (considered as text)
 						if not in_comments then
@@ -221,8 +275,11 @@ when 127 then
 						update_token_list
 						
 when 128 then
-	yy_position := yy_position - 1
---|#line 329
+	yy_end := yy_end - 1
+--|#line 329 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 329")
+end
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -233,7 +290,10 @@ when 128 then
 						update_token_list
 						
 when 129, 130 then
---|#line 330
+--|#line 330 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 330")
+end
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -244,8 +304,11 @@ when 129, 130 then
 						update_token_list
 						
 when 131 then
-	yy_position := yy_position - 1
---|#line 332
+	yy_end := yy_end - 1
+--|#line 332 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 332")
+end
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -256,7 +319,10 @@ when 131 then
 						update_token_list
 						
 when 132, 133 then
---|#line 333
+--|#line 333 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 333")
+end
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -267,13 +333,19 @@ when 132, 133 then
 						update_token_list
 						
 when 134 then
---|#line 350
+--|#line 350 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 350")
+end
 
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
 					update_token_list
 					
 when 135 then
---|#line 358
+--|#line 358 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 358")
+end
 
 					-- Error (considered as text)
 				if not in_comments then
@@ -284,8 +356,11 @@ when 135 then
 				update_token_list
 				
 when 136 then
---|#line 0
-echo
+--|#line 0 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 0")
+end
+default_action
 			else
 				last_token := yyError_token
 				fatal_error ("fatal scanner internal error: no action found")
@@ -297,7 +372,10 @@ echo
 		do
 			inspect yy_sc
 when 0 then
---|#line 0
+--|#line 0 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 0")
+end
 terminate
 			else
 				terminate
@@ -1133,6 +1211,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 137
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 			-- Start condition codes

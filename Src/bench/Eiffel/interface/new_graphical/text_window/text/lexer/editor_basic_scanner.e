@@ -40,22 +40,34 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 24
+--|#line 24 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 24")
+end
 -- Ignore carriage return
 when 2 then
---|#line 25
+--|#line 25 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 25")
+end
 
 					create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
 					update_token_list
 					
 when 3 then
---|#line 29
+--|#line 29 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 29")
+end
 
 					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count, tab_size_cell)
 					update_token_list
 					
 when 4 then
---|#line 33
+--|#line 33 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 33")
+end
 
 					from i_ := 1 until i_ > text_count loop
 						create {EDITOR_TOKEN_EOL} curr_token.make
@@ -64,14 +76,20 @@ when 4 then
 					end
 					
 when 5 then
---|#line 40
+--|#line 40 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 40")
+end
 
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
 					update_token_list
 					
 when 6 then
---|#line 0
-echo
+--|#line 0 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 0")
+end
+default_action
 			else
 				last_token := yyError_token
 				fatal_error ("fatal scanner internal error: no action found")
@@ -83,7 +101,10 @@ echo
 		do
 			inspect yy_sc
 when 0 then
---|#line 0
+--|#line 0 "editor_basic_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 0")
+end
 terminate
 			else
 				terminate
@@ -213,6 +234,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 7
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 			-- Start condition codes

@@ -1,3 +1,5 @@
+indexing
+	description: "Removable object."
 
 deferred class REMOVABLE 
 	

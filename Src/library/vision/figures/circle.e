@@ -111,7 +111,7 @@ feature -- Modification & Insertion
         	require else
             		scale_factor_positive: f > 0.0
         	do
-            		radius := real_to_integer (f*radius);
+            		radius := (f*radius).truncated_to_integer;
             		center.xyscale (f, px, py);
 					set_conf_modified
         	end;

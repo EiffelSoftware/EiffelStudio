@@ -24,7 +24,7 @@ feature -- Basic operation
 			a_smaller_than_360: a < 360;
           	a_positive: a >= 0
 		do
-			Result := cosine (double_to_real((Pi*a)/180.0))
+			Result := cosine (((Pi*a)/180.0).truncated_to_real)
 		end;
 
 	sin (a: REAL): REAL is
@@ -33,7 +33,7 @@ feature -- Basic operation
 			a_smaller_than_360: a < 360;
           	a_positive: a >= 0
 		do
-			Result := sine (double_to_real((Pi*a)/180.0))
+			Result := sine (((Pi*a)/180.0).truncated_to_real)
 		end;
 
 	mod360 (angle: REAL): REAL is
@@ -41,10 +41,10 @@ feature -- Basic operation
 		do
 			Result := angle;
 			if angle >= 360 then
-				Result := angle-360.0*real_to_integer (angle/360)
+				Result := angle-360.0*((angle/360).truncated_to_integer)
 			end;
 			if angle < 0 then
-				Result := angle+360.0*real_to_integer (1-angle/360)
+				Result := angle+360.0*((1-angle/360).truncated_to_integer)
 			end
 		ensure
 			Result >= 0;

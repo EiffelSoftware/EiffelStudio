@@ -28,12 +28,7 @@ feature {EV_WIDGET} -- Initialization
 		deferred
 		end
 
-feature -- Access
-
-	interface: EV_WIDGET
-			-- The interface of the current implementation
-			-- Used to give the parent of a widget to the user
-			-- and in the implementation of some widgets
+ feature -- Access
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this widget. The same than
@@ -118,7 +113,7 @@ feature -- Status setting
 			-- Make widget visible on the screen.
 		require
 			exist: not destroyed
-			has_parent: parent_imp /= Void
+			has_parent: has_parent
 		deferred
 		ensure
 			shown: shown		
@@ -191,19 +186,6 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		deferred
---			if flag then
---				if vertical_resizable then
---					resize_type := 3
---				else
---					resize_type := 1
---				end
---			else
---				if vertical_resizable then
---					resize_type := 2
---				else
---					resize_type := 0
---				end				
---			end
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
 		end
@@ -213,19 +195,6 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		deferred
---			if flag then
---				if horizontal_resizable then
---					resize_type := 3
---			else
---					resize_type := 2
---				end
---			else
---				if horizontal_resizable then
---					resize_type := 1
---				else
---					resize_type := 0
---				end				
---			end
 		ensure
 			vertical_resize_set: vertical_resizable = flag
 		end
@@ -239,7 +208,7 @@ feature -- Element change
 			exists: not destroyed
 		deferred
 		ensure
-			parent_set: interface.parent = par
+			parent_set: parent_set (par)
 		end
 
 	set_background_color (color: EV_COLOR) is
@@ -457,6 +426,21 @@ feature -- Assertions
 			Result := position_set (-1, value)
 		end
 
+	has_parent: BOOLEAN is
+			-- True if the widget has a parent, False otherwise
+		do
+			Result := parent_imp /= void
+		end
+
+	parent_set (par: EV_CONTAINER): BOOLEAN is
+		local
+			wid: EV_CONTAINER
+		do
+			wid ?= parent_imp.interface
+			Result := wid = par
+		end
+
+
 feature -- Event - command association
 
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -653,18 +637,6 @@ feature -- Event -- removing command association
 		deferred
 		end
 	
-feature -- Implementation
-
-	set_interface (the_interface: EV_WIDGET) is
-			-- Make `interface' the interface of the current object.
-		require
-			valid_interface: the_interface /= Void
-		do
-			interface := the_interface
-		ensure
-			interface_set: interface = the_interface
-		end
-
 invariant
 
 --	backgound_color_not_void: background_color /= Void

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	EV_ANY_I
+		redefine
+			interface
+		end
 
 feature {NONE} -- Initialization
 
@@ -102,18 +105,6 @@ feature -- Element change
 			name := txt
 		ensure
 			name_set: name = txt
-		end
-
-feature -- Implementation
-
-	set_interface (color: EV_COLOR) is
-			-- Make `color' the interface of current object.
-		require
-			valid_interface: color /= Void
-		do
-			interface := color
-		ensure
-			interface_set: interface = color
 		end
 
 end -- class EV_COLOR_I

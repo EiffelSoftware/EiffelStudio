@@ -33,17 +33,7 @@ feature -- Access
 		deferred
 		end
 
-	interface: EV_MENU
-		-- Interface of the current object
-
 feature -- Element change
-
-	set_interface (an_interface: EV_MENU) is
-			-- Make `an_interface' the interface of the current
-			-- implementation
-		do
-			interface := an_interface
-		end
 
 	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the item.

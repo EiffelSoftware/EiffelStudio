@@ -22,11 +22,6 @@ feature {NONE} -- Initialization
 		deferred
 		end	
 
-feature -- Access
-
-	interface: EV_PIXMAP
-			-- Interface of Current implementation
-
 feature -- Measurement
 
 	width: INTEGER is
@@ -37,14 +32,6 @@ feature -- Measurement
 	height: INTEGER is
 			-- height of the pixmap
 		deferred
-		end
-
-feature -- Element change
-
-	set_interface (pix: EV_PIXMAP) is
-			-- Make `pix' the new interface.
-		do
-			interface := pix
 		end
 
 feature -- Basic operation

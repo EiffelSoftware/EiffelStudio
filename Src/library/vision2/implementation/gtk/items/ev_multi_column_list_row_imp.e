@@ -139,6 +139,7 @@ feature -- Status setting
 			if (value > columns) then
 				from
 					internal_text.finish
+					internal_pixmaps.finish
 				until
 					internal_text.count = value
 				loop
@@ -148,6 +149,7 @@ feature -- Status setting
 			elseif (value < columns) then
 				from
 					internal_text.finish
+					internal_pixmaps.finish
 				until
 					internal_text.count = value
 				loop
@@ -321,6 +323,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/03 18:17:43  king
+--| Fixed bug in set_columns
+--|
 --| Revision 1.32  2000/03/03 00:12:53  king
 --| Changed set_selected to enable/disable_select
 --|

@@ -23,6 +23,7 @@ inherit
 			execute_warner_ok as save_changes,
 			execute_warner_help as loose_changes
 		end
+	NEW_EB_CONSTANTS
 
 feature -- Properties
 
@@ -109,13 +110,6 @@ feature -- Setting
 			do_format := b
 		end
 
-	set_holder (h: like holder) is
-			-- Set `holder' to `h'.
-		do
-			holder := h
-		end
-
-
 feature -- Formatting
 
 	format (stone: STONE) is
@@ -123,8 +117,9 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN
-			edit_tool: EB_EDITOR
+			edit_tool: EB_MULTIFORMAT_EDIT_TOOL
 --			mp: MOUSE_PTR
+			wd: EV_WARNING_DIALOG
 		do
 			if not retried then 
 				if 
@@ -138,29 +133,30 @@ feature -- Formatting
 							display_temp_header (stone)
 --							create mp.set_watch_cursor
 							tool.text_window.clear_window
+							tool.text_window.hide
 							tool.text_window.set_editable (False)
---							tool.set_stone (stone)
+							tool.set_stone (stone)
 							tool.set_file_name (file_name (stone))
 							display_info (stone)
 							tool.text_window.set_position (0)
---							tool.text_window.display
---							tool.set_last_format (holder)
+							tool.text_window.show
+							tool.set_last_format (Current)
 							filtered := false
 							display_header (stone)
 --							mp.restore
 						else
-							holder.set_selected (False)
+							set_selected (False)
 							edit_tool ?= tool
 							if edit_tool /= Void then
---								edit_tool.showtext_frmt_holder.execute (stone)
+								edit_tool.format_list.text_format.format (stone)
 							end
 						end
 					else
-						holder.set_selected (False)
+						set_selected (False)
 					end
 				end
 			else
---				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Cannot_retrieve_info)
 --				mp.restore
 			end
 		rescue
@@ -182,22 +178,18 @@ feature -- Filters; Properties
 
 feature -- Filters; Implementation
 
---	filter (filtername: STRING) is
---			-- Filter the `Current' format with `filtername'.
---		require
---			filtername_not_void: filtername /= Void
---			current_format: tool.last_format = Current
---		do
+	filter (filtername: STRING) is
+			-- Filter the `Current' format with `filtername'.
+		require
+			filtername_not_void: filtername /= Void
+			current_format: tool.last_format = Current
+		do
 --			if tool.stone /= Void then
 --				warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_filterable_format)
 --			end
---		end
+		end
 
 feature {FORMAT_BUTTON} -- Properties
-
-	holder: FORMAT_HOLDER
-			-- Holds the format holder in which
-			-- Current is a property.
 
 	post_fix: STRING is
 			-- Postfix name of current format which generated
@@ -280,6 +272,10 @@ feature {FEATURE_TOOL} -- Implementation
 		end
 
 feature -- Dumb Features: Only here for compilation
+
+	menu_name: STRING is
+		deferred
+		end
 
 	set_selected (b: BOOLEAN) is
 		do

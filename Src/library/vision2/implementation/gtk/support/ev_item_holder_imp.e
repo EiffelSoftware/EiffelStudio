@@ -166,7 +166,6 @@ feature -- Removal
 
 	remove_left is
 			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
 		do
 			remove_item_from_position (index - 1)
 			index := index - 1
@@ -262,6 +261,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/08 21:36:56  king
+--| Corrected comment on remove
+--|
 --| Revision 1.13  2000/02/22 19:52:47  brendel
 --| Added feature `item_from_c_object' to be able to retreive the Eiffel object
 --| in redefined gtk_reorder_child functions. See: EV_MENU_ITEM_LIST_IMP.

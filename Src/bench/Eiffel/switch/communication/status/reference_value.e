@@ -11,7 +11,7 @@ inherit
 
 	ABSTRACT_REFERENCE_VALUE
 		redefine
-			set_hector_addr
+			set_hector_addr, sorted_children
 		end
 
 	OBJECT_ADDR
@@ -147,11 +147,29 @@ feature -- Output
 				print ("REFERENCE_VALUE.children%N")
 			end
 			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, min_slice, max_slice)
+			is_children_from_tuple := obj.is_tuple
 			Result := obj.attributes
+		end
+
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- sort `children' and return it.
+		do
+			Result := children
+			if 
+				Result /= Void 
+				and then not is_children_from_tuple 
+			then
+				sort_debug_values (Result)
+			end
 		end
 
 feature {NONE} -- Implementation
 
+	is_children_from_tuple: BOOLEAN
+			-- Does the children are attached to a Tuple ?
+			-- i.e: is Current a Tuple object ?
+			--| Nota: may be used only after a call to `children'
+		
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after

@@ -25,6 +25,9 @@ feature -- Properties
 	is_special: BOOLEAN;
 		-- Is the object being inspected SPECIAL?
 
+	is_tuple: BOOLEAN;
+		-- Is the object being inspected TUPLE?
+
 	object_address: STRING;
 			-- Hector address of object being inspected
 

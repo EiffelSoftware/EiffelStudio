@@ -64,7 +64,7 @@ feature -- Basic operations
 				create l_extracted_description.make (256)
 				if a_feature_i.written_class.is_true_external then
 					l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
-					l_extracted_description.append ("%N")
+					l_extracted_description.append ("%N%N")
 					l_external_class ?= a_feature_i.written_class.lace_class
 					check
 						non_void_external_class: l_external_class /= Void
@@ -86,21 +86,21 @@ feature -- Basic operations
 							end
 						end
 					end
+					l_extracted_description.replace_substring_all ("%T", "  ")
+					l_index := l_extracted_description.index_of ('%N', 1)
+					if l_index > 0 then -- Keep first line unwrapped since it's the signature
+						create extracted_description.make (l_extracted_description.count)
+						l_first_line := l_extracted_description.substring (1, l_index)
+						extracted_description.append (l_first_line)
+						extracted_description.append (wrapped (l_extracted_description.substring (l_index + 1, l_extracted_description.count), Line_count.max (l_first_line.count)))
+					else
+						extracted_description := l_extracted_description
+					end
 				else
 					create l_ctxt
 					l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
-					l_extracted_description := formatted (l_ctxt.text)
-					l_extracted_description.replace_substring_all ("%T%T-- ", "")
-				end
-				l_extracted_description.replace_substring_all ("%T", "  ")
-				l_index := l_extracted_description.index_of ('%N', 1)
-				if l_index > 0 then -- Keep first line unwrapped since it's the signature
-					create extracted_description.make (l_extracted_description.count)
-					l_first_line := l_extracted_description.substring (1, l_index)
-					extracted_description.append (l_first_line)
-					extracted_description.append (wrapped (l_extracted_description.substring (l_index + 1, l_extracted_description.count), Line_count.max (l_first_line.count)))
-				else
-					extracted_description := l_extracted_description
+					extracted_description := formatted (l_ctxt.text)
+					extracted_description.replace_substring_all ("%T", "  ")
 				end
 			else
 				if extracted_description = Void then
@@ -744,7 +744,7 @@ feature {NONE} -- Implementation
 			-- Maximum number of character on one line for `extracted_description'
 			-- if the length of the feature signature is lesser
 
-	Formatter: STRING_FORMATTER is
+	Formatter: DESCRIPTION_STRING_FORMATTER is
 			-- Text formatter for structured texts
 		once
 			create Result.make

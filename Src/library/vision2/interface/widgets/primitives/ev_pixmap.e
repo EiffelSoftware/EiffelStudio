@@ -147,7 +147,7 @@ feature -- Duplication
 			if implementation = Void then
 				default_create
 			end
-			implementation.copy_pixmap(other)
+			implementation.copy_pixmap (other)
 		end
 
 feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT_DRAWER, ANY} -- Implementation

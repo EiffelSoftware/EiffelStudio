@@ -5,7 +5,7 @@ class ROUTINE_SUBCOUNTER
 
 inherit
 
-	COMPILER_SUBCOUNTER [ROUTINE_ID]
+	COMPILER_SUBCOUNTER
 		rename
 			next_id as next_rout_id
 		end
@@ -31,5 +31,13 @@ feature -- Access
 		ensure
 			next_attr_id_not_void: Result /= Void
 		end;
+
+feature {ROUTINE_ID} -- Implementation
+
+	prefix_name: STRING is
+			-- Prefix for generated C function and table names
+		once
+			Result := ""
+		end
 
 end -- class ROUTINE_SUBCOUNTER

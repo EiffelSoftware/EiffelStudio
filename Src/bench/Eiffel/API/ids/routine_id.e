@@ -4,7 +4,11 @@ class ROUTINE_ID
 
 inherit
 
-	COMPILER_ID
+	COMPILER_ID;
+	ENCODER
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -27,7 +31,7 @@ feature -- Access
 		local
 			buff: STRING
 		do
-			Result := clone (prefix_string);
+			Result := clone (prefix_name);
 			buff := Buffer;
 			eif011 ($buff, internal_id);
 			Result.append (Buffer)
@@ -39,7 +43,7 @@ feature -- Access
 		local
 			buff: STRING
 		do
-			Result := clone (prefix_string);
+			Result := clone (prefix_name);
 			buff := Buffer;
 			eif101 ($buff, internal_id);
 			Result.append (Buffer)
@@ -47,10 +51,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	counter: COMPILER_SUBCOUNTER [ROUTINE_ID] is
+	counter: ROUTINE_SUBCOUNTER is
 			-- Counter associated with the id
 		do
 			Result := System.routine_id_counter.item (compilation_id)
 		end;
+
+	prefix_name: STRING is
+			-- Prefix for generated C function and table names
+		do
+			Result := counter.prefix_name
+		end
 
 end -- class ROUTINE_ID

@@ -4,11 +4,11 @@ deferred class COMPILER_ID
 
 inherit
 
+	SHARED_ID;
 	SHARED_WORKBENCH;
-	HASHABLE;
-	ENCODER
-		export
-			{NONE} all
+	HASHABLE
+		rename
+			hash_code as internal_id
 		end
 
 feature {NONE} -- Initialization
@@ -27,31 +27,30 @@ feature -- Access
 			Result := internal_id + counter.offset
 		end;
 
-	hash_code: INTEGER is
-			-- Hash code
+feature -- Status report
+
+	is_precompiled: BOOLEAN is
+			-- Is the entity identified by `Current' precompiled?
 		do
-			Result := internal_id
-		end;
+		end
+
+	is_dynamic: BOOLEAN is
+			-- Is the entity identified by `Current' part of a DC-set?
+		do
+		end
 
 feature {NONE} -- Implementation
 
 	internal_id: INTEGER;
-			-- Internal precompilation-level id
+			-- Internal compilation-level id
 
 	compilation_id: INTEGER is
-			-- Compilation unit associated with the
-			-- current id (-1 when not precompiled)
+			-- Compilation unit associated with the current id
 		do
-			Result := -1
+			Result := Normal_compilation
 		end;
 
-	prefix_string: STRING is
-			-- Prefix for generated C function and table names
-		do
-			Result := counter.prefix_string
-		end
-
-	counter: COMPILER_SUBCOUNTER [COMPILER_ID] is
+	counter: COMPILER_SUBCOUNTER is
 			-- Counter associated with the id
 		deferred
 		ensure

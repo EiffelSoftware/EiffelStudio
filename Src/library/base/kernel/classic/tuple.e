@@ -40,6 +40,10 @@ feature -- Access
 			when real_64_code then Result := eif_real_64_item ($Current, index)
 			when real_32_code then Result := eif_real_32_item ($Current, index)
 			when pointer_code then Result := eif_pointer_item ($Current, index)
+			when natural_8_code then Result := eif_natural_8_item ($Current, index)
+			when natural_16_code then Result := eif_natural_16_item ($Current, index)
+			when natural_32_code then Result := eif_natural_32_item ($Current, index)
+			when natural_64_code then Result := eif_natural_64_item ($Current, index)
 			when integer_8_code then Result := eif_integer_8_item ($Current, index)
 			when integer_16_code then Result := eif_integer_16_item ($Current, index)
 			when integer_32_code then Result := eif_integer_32_item ($Current, index)
@@ -54,7 +58,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_reference: is_reference_item (index)
 		do
-			Result := eif_reference_item ($current, index)
+			Result := eif_reference_item ($Current, index)
 		end
 		
 	boolean_item (index: INTEGER): BOOLEAN is
@@ -88,24 +92,49 @@ feature -- Access
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_numeric: is_numeric_item (index)
+			is_numeric: is_double_item (index)
 		do
-			inspect eif_item_type ($Current, index)
-			when integer_8_code then Result := eif_integer_8_item ($Current, index)
-			when integer_16_code then Result := eif_integer_16_item ($Current, index)
-			when integer_32_code then Result := eif_integer_32_item ($Current, index)
-			when integer_64_code then Result := eif_integer_64_item ($Current, index)
-			when real_32_code then Result := eif_real_32_item ($Current, index)
-			else
-				check
-					is_double: eif_item_type ($Current, index) = real_64_code
-				end
-				Result := eif_real_64_item ($Current, index)
-			end
+			Result := eif_real_64_item ($Current, index)
+		end
+
+	natural_8_item (index: INTEGER): NATURAL_8 is
+			-- NATURAL_8 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_8_item (index)
+		do
+			Result := eif_natural_8_item ($Current, index)
+		end
+
+	natural_16_item (index: INTEGER): NATURAL_16 is
+			-- NATURAL_16 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_16_item (index)
+		do
+			Result := eif_natural_16_item ($Current, index)
+		end
+
+	natural_32_item (index: INTEGER): NATURAL_32 is
+			-- NATURAL_32 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_32_item (index)
+		do
+			Result := eif_natural_32_item ($Current, index)
+		end
+
+	natural_64_item (index: INTEGER): NATURAL_64 is
+			-- NATURAL_64 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_64_item (index)
+		do
+			Result := eif_natural_64_item ($Current, index)
 		end
 
 	integer_8_item (index: INTEGER): INTEGER_8 is
-			-- Integer item at `index'.
+			-- INTEGER_8 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_8_item (index)
@@ -114,7 +143,7 @@ feature -- Access
 		end
 
 	integer_16_item (index: INTEGER): INTEGER_16 is
-			-- Integer item at `index'.
+			-- INTEGER_16 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_16_item (index)
@@ -123,16 +152,16 @@ feature -- Access
 		end
 
 	integer_item, integer_32_item (index: INTEGER): INTEGER is
-			-- Integer item at `index'.
+			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_integer: is_integer_item (index)
+			is_integer: is_integer_32_item (index)
 		do
 			Result := eif_integer_32_item ($Current, index)
 		end
 
 	integer_64_item (index: INTEGER): INTEGER_64 is
-			-- Integer item at `index'.
+			-- INTEGER_64 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_64_item (index)
@@ -153,24 +182,10 @@ feature -- Access
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
+			is_real_or_integer: is_real_item (index)
 		do
-			inspect eif_item_type ($Current, index)
-			when integer_8_code then Result := eif_integer_8_item ($Current, index)
-			when integer_16_code then Result := eif_integer_16_item ($Current, index)
-			when integer_32_code then Result := eif_integer_32_item ($Current, index)
-			when integer_64_code then Result := eif_integer_64_item ($Current, index)
-			when real_64_code then
-					-- Special case of manifest tuple.
-				Result := eif_real_64_item ($Current, index).truncated_to_real
-			else
-				check
-					is_real: eif_item_type ($Current, index) = real_32_code
-				end
-				Result := eif_real_32_item ($Current, index)
-			end
+			Result := eif_real_32_item ($Current, index)
 		end
-
 		
 feature -- Status report
 
@@ -193,6 +208,10 @@ feature -- Status report
 				when real_64_code then l_hash := eif_real_64_item ($Current, i).hash_code
 				when real_32_code then l_hash := eif_real_32_item ($Current, i).hash_code
 				when pointer_code then l_hash := eif_pointer_item ($Current, i).hash_code
+				when natural_8_code then l_hash := eif_natural_8_item ($Current, i).hash_code
+				when natural_16_code then l_hash := eif_natural_16_item ($Current, i).hash_code
+				when natural_32_code then l_hash := eif_natural_32_item ($Current, i).hash_code
+				when natural_64_code then l_hash := eif_natural_64_item ($Current, i).hash_code
 				when integer_8_code then l_hash := eif_integer_8_item ($Current, i).hash_code
 				when integer_16_code then l_hash := eif_integer_16_item ($Current, i).hash_code
 				when integer_32_code then l_hash := eif_integer_32_item ($Current, i).hash_code
@@ -229,9 +248,13 @@ feature -- Status report
 			l_d: DOUBLE_REF
 			l_r: REAL_REF
 			l_p: POINTER_REF
-			l_i: INTEGER_REF
+			l_ui8: NATURAL_8_REF
+			l_ui16: NATURAL_16_REF
+			l_ui32: NATURAL_32_REF
+			l_ui64: NATURAL_64_REF
 			l_i8: INTEGER_8_REF
 			l_i16: INTEGER_16_REF
+			l_i32: INTEGER_REF
 			l_i64: INTEGER_64_REF
 			l_int: INTERNAL
 		do
@@ -246,9 +269,13 @@ feature -- Status report
 				when real_64_code then l_d ?= v; Result := l_d /= Void
 				when real_32_code then l_r ?= v; Result := l_r /= Void
 				when pointer_code then l_p ?= v; Result := l_p /= Void
+				when natural_8_code then l_ui8 ?= v; Result := l_ui8 /= Void
+				when natural_16_code then l_ui16 ?= v; Result := l_ui16 /= Void
+				when natural_32_code then l_ui32 ?= v; Result := l_ui32 /= Void
+				when natural_64_code then l_ui64 ?= v; Result := l_ui64 /= Void
 				when integer_8_code then l_i8 ?= v; Result := l_i8 /= Void
 				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
-				when integer_32_code then l_i ?= v; Result := l_i /= Void
+				when integer_32_code then l_i32 ?= v; Result := l_i32 /= Void
 				when integer_64_code then l_i64 ?= v; Result := l_i64 /= Void
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
@@ -266,7 +293,7 @@ feature -- Status report
 				-- `-1' because we always allocate one item more to avoid
 				-- to do `-1' each time we want to access or store an item
 				-- of current.
-			Result := feature {ISE_RUNTIME}.sp_count ($Current) - 1
+			Result := {ISE_RUNTIME}.sp_count ($Current) - 1
 		end
 
 	lower: INTEGER is 1
@@ -299,6 +326,10 @@ feature -- Element change
 			when real_64_code then eif_put_real_64_item_with_object ($Current, index, $v)
 			when real_32_code then eif_put_real_32_item_with_object ($Current, index, $v)
 			when pointer_code then eif_put_pointer_item_with_object ($Current, index, $v)
+			when natural_8_code then eif_put_natural_8_item_with_object ($Current, index, $v)
+			when natural_16_code then eif_put_natural_16_item_with_object ($Current, index, $v)
+			when natural_32_code then eif_put_natural_32_item_with_object ($Current, index, $v)
+			when natural_64_code then eif_put_natural_64_item_with_object ($Current, index, $v)
 			when integer_8_code then eif_put_integer_8_item_with_object ($Current, index, $v)
 			when integer_16_code then eif_put_integer_16_item_with_object ($Current, index, $v)
 			when integer_32_code then eif_put_integer_32_item_with_object ($Current, index, $v)
@@ -369,12 +400,48 @@ feature -- Element change
 		do
 			eif_put_pointer_item ($Current, index, v)
 		end
+
+	put_natural_8 (v: NATURAL_8; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_8_item (index)
+		do
+			eif_put_natural_8_item ($Current, index, v)
+		end
 		
+	put_natural_16 (v: NATURAL_16; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_16_item (index)
+		do
+			eif_put_natural_16_item ($Current, index, v)
+		end
+
+	put_natural_32 (v: NATURAL_32; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_32_item (index)
+		do
+			eif_put_natural_32_item ($Current, index, v)
+		end
+		
+	put_natural_64 (v: NATURAL_64; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_64_item (index)
+		do
+			eif_put_natural_64_item ($Current, index, v)
+		end
+
 	put_integer, put_integer_32 (v: INTEGER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
-			valid_type: is_integer_item (index)
+			valid_type: is_integer_32_item (index)
 		do
 			eif_put_integer_32_item ($Current, index, v)
 		end
@@ -440,6 +507,38 @@ feature -- Type queries
 			Result := (eif_item_type ($Current, index) = real_64_code)
 		end
 
+	is_natural_8_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_8?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_item_type ($Current, index) = natural_8_code)
+		end
+
+	is_natural_16_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_16?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_item_type ($Current, index) = natural_16_code)
+		end
+
+	is_natural_32_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_32?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_item_type ($Current, index) = natural_32_code)
+		end
+
+	is_natural_64_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_64?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_item_type ($Current, index) = natural_64_code)
+		end
+
 	is_integer_8_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' an INTEGER_8?
 		require
@@ -457,7 +556,7 @@ feature -- Type queries
 		end
 
 	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' an INTEGER?
+			-- Is item at `index' an INTEGER_32?
 		require
 			valid_index: valid_index (index)
 		do
@@ -498,15 +597,23 @@ feature -- Type queries
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' a number?
+		obsolete
+			"Use the precise type query instead."
 		require
 			valid_index: valid_index (index)
 		local
 			tcode: INTEGER_8
 		do
 			tcode := eif_item_type ($Current, index)
-			Result := (tcode = integer_32_code) or else
-					 (tcode = real_32_code) or else
-					 (tcode = real_64_code)
+			inspect tcode
+			when
+				integer_8_code, integer_16_code, integer_32_code,
+				integer_64_code, real_code, double_code
+			then
+				Result := True
+			else
+				-- Nothing to do here since Result already initialized to False.
+			end
 		end
 
 	is_uniform: BOOLEAN is
@@ -545,6 +652,38 @@ feature -- Type queries
 			-- Are all items of type DOUBLE?
 		do
 			Result := is_tuple_uniform (real_64_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_8: BOOLEAN is
+			-- Are all items of type NATURAL_8?
+		do
+			Result := is_tuple_uniform (natural_8_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_16: BOOLEAN is
+			-- Are all items of type NATURAL_16?
+		do
+			Result := is_tuple_uniform (natural_16_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_32: BOOLEAN is
+			-- Are all items of type NATURAL_32?
+		do
+			Result := is_tuple_uniform (natural_32_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_64: BOOLEAN is
+			-- Are all items of type NATURAL_64?
+		do
+			Result := is_tuple_uniform (natural_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -609,6 +748,8 @@ feature -- Type conversion queries
 
 	convertible_to_double: BOOLEAN is
 			-- Is current convertible to an array of doubles?
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			tcode: INTEGER_8
@@ -621,9 +762,15 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_item_type ($Current, i)
-				Result := (tcode = integer_32_code) or else 
-						 (tcode = real_32_code) or else 
-						 (tcode = real_64_code)
+				inspect tcode
+				when
+					integer_8_code, integer_16_code, integer_32_code,
+					integer_64_code, real_code, double_code
+				then
+					Result := True
+				else
+					Result := False
+				end
 				i := i + 1
 			end
 		ensure
@@ -632,6 +779,8 @@ feature -- Type conversion queries
 
 	convertible_to_real: BOOLEAN is
 			-- Is current convertible to an array of reals?
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			tcode: INTEGER_8
@@ -644,7 +793,15 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_item_type ($Current, i)
-				Result := (tcode = integer_32_code) or else (tcode = real_32_code)
+				inspect tcode
+				when
+					integer_8_code, integer_16_code, integer_32_code,
+					integer_64_code, real_code
+				then
+					Result := True
+				else
+					Result := False
+				end
 				i := i + 1
 			end
 		ensure
@@ -655,6 +812,8 @@ feature -- Conversion
 
 	arrayed: ARRAY [ANY] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 		do
@@ -676,6 +835,8 @@ feature -- Conversion
 
 	boolean_arrayed: ARRAY [BOOLEAN] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_boolean: is_uniform_boolean
 		local
@@ -699,6 +860,8 @@ feature -- Conversion
 
 	character_arrayed: ARRAY [CHARACTER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_character: is_uniform_character
 		local
@@ -722,6 +885,8 @@ feature -- Conversion
 
 	double_arrayed: ARRAY [DOUBLE] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			convertible: convertible_to_double
 		local
@@ -745,6 +910,8 @@ feature -- Conversion
 
 	integer_arrayed: ARRAY [INTEGER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_integer: is_uniform_integer
 		local
@@ -757,7 +924,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				Result.put (integer_item (i), i)
+				Result.put (integer_32_item (i), i)
 				i := i + 1
 			end
 		ensure
@@ -768,6 +935,8 @@ feature -- Conversion
 
 	pointer_arrayed: ARRAY [POINTER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_pointer: is_uniform_pointer
 		local
@@ -791,6 +960,8 @@ feature -- Conversion
 
 	real_arrayed: ARRAY [REAL] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			convertible: convertible_to_real
 		local
@@ -816,6 +987,8 @@ feature -- Conversion
 			-- Items of Current as array
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			s: STRING
@@ -893,6 +1066,10 @@ feature {ROUTINE} -- Internal constant code
 	integer_16_code: INTEGER_8 is 0x07
 	integer_32_code: INTEGER_8 is 0x08
 	integer_64_code: INTEGER_8 is 0x09
+	natural_8_code: INTEGER_8 is 0x0A
+	natural_16_code: INTEGER_8 is 0x0B
+	natural_32_code: INTEGER_8 is 0x0C
+	natural_64_code: INTEGER_8 is 0x0D
 	wide_character_code: INTEGER_8 is 0x0E
 	any_code: INTEGER_8 is 0xFF
 			-- Code used to identify type in TUPLE.
@@ -982,26 +1159,50 @@ feature {NONE} -- Externals: Access
 			"C macro use %"eif_rout_obj.h%""
 		end
 
+	eif_natural_8_item (obj: POINTER; pos: INTEGER): NATURAL_8 is
+			-- NATURAL_8 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_natural_16_item (obj: POINTER; pos: INTEGER):  NATURAL_16 is
+			-- NATURAL_16 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_natural_32_item (obj: POINTER; pos: INTEGER):  NATURAL_32 is
+			-- NATURAL_32 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_natural_64_item (obj: POINTER; pos: INTEGER):  NATURAL_64 is
+			-- NATURAL_64 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
 	eif_integer_8_item (obj: POINTER; pos: INTEGER): INTEGER_8 is
-			-- Integer_8 item at position `pos' in tuple `obj'.
+			-- INTEGER_8 item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
 	eif_integer_16_item (obj: POINTER; pos: INTEGER): INTEGER_16 is
-			-- Integer_16 item at position `pos' in tuple `obj'.
+			-- INTEGER_16 item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
 	eif_integer_32_item (obj: POINTER; pos: INTEGER): INTEGER is
-			-- Integer_32 item at position `pos' in tuple `obj'.
+			-- INTEGER_32 item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
 	eif_integer_64_item (obj: POINTER; pos: INTEGER): INTEGER_64 is
-			-- Integer_64 item at position `pos' in tuple `obj'.
+			-- INTEGER_64 item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
@@ -1046,6 +1247,30 @@ feature {NONE} -- Externals: Setting
 
 	eif_put_pointer_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set pointer item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_8_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set NATURAL_8 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_16_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set NATURAL_16 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_32_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set NATURAL_32 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_64_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set NATURAL_64 item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
@@ -1112,6 +1337,30 @@ feature {NONE} -- Externals: Setting
 
 	eif_put_pointer_item (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set pointer item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_8_item (obj: POINTER; pos: INTEGER; v: NATURAL_8) is
+			-- Set NATURAL_8 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_16_item (obj: POINTER; pos: INTEGER; v: NATURAL_16) is
+			-- Set NATURAL_16 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_32_item (obj: POINTER; pos: INTEGER; v: NATURAL_32) is
+			-- Set NATURAL_32 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_natural_64_item (obj: POINTER; pos: INTEGER; v: NATURAL_64) is
+			-- Set NATURAL_64 item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end

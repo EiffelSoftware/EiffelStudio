@@ -481,8 +481,6 @@ feature -- Code generation
 				end
 				associated_assembly_token :=
 					md_emit.define_assembly (uni_string, l_assembly_flags, ass, public_key)
-				il_code_generator.define_custom_attribute (associated_assembly_token,
-					com_visible_ctor_token, not_com_visible_ca)
 			end
 
 			md_emit.set_module_name (uni_string)

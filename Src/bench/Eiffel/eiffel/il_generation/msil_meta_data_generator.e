@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 			-- creation routine.
 		local
 			real: REAL_CONST_B
-			int: INT_CONST_B
+			int: INTEGER_CONSTANT
 			char: CHAR_CONST_B
 			bool: BOOL_CONST_B
 			string: STRING_B

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			-- the gauge, to reflect change from user.
 		do
 			if user_event_widget.has_focus and then not user_event_widget.text.is_equal (objects.first.text) then
-				objects.first.set_text (user_event_widget.text)
+				for_first_object (agent {EV_TEXTABLE}.set_text (user_event_widget.text))
 				update_editors
 				enable_project_modified
 			end

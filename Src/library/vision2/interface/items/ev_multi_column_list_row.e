@@ -41,17 +41,24 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the row
 		require
---			exists: not destroyed
+			exists: not destroyed
 		do
 			Result := implementation.columns
 		end
 
 feature -- Status report
 	
+	destroyed: BOOLEAN is
+			-- Is Current widget destroyed?  
+			-- (= implementation does not exist)
+		do
+			Result := (implementation = Void)
+		end
+
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
---			exists: not destroyed
+			exists: not destroyed
 		do
 			Result := implementation.is_selected
 		end
@@ -61,7 +68,7 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
---			exists: not destroyed
+			exists: not destroyed
 		do
 			implementation.set_selected (flag)
 		end
@@ -69,7 +76,7 @@ feature -- Status setting
 	toggle is
 			-- Change the state of selection of the item.
 		require
---			exists: not destroyed
+			exists: not destroyed
 		do
 			implementation.toggle
 		end
@@ -80,7 +87,7 @@ feature -- Element Change
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		require
---			exists: not destroyed
+			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 			text_not_void: a_text /= Void
 		do
@@ -89,7 +96,7 @@ feature -- Element Change
 
 	set_text (a_text: ARRAY[STRING]) is
 		require
---			exists: not destroyed
+			exists: not destroyed
 			text_not_void: a_text /= Void
 			text_length_ok: a_text.count <= columns
 		do
@@ -100,9 +107,18 @@ feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
 
+	remove_implementation is
+		-- Remove implementation of list row
+		do
+			implementation := Void
+		ensure
+			void_implementation: implementation = Void
+		end
+
+
 invariant
-	parent_not_void: parent /= Void
-	parent_exists: not parent.destroyed
+--	parent_not_void: parent /= Void
+--	parent_exists: not parent.destroyed
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 

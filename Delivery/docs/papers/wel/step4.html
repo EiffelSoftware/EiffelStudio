@@ -1,0 +1,169 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<H1>Step 4: Drawing lines in a window</H1>
+<P>
+In the next few steps, you will build a simple painting program that lets the user draw on the main window. You will do the following steps:
+<OL><LI>Respond to left button clicks and drag by connecting the dots, resulting drawn lines.
+<LI>Respond to the right click by bringing up an input dialog, allowing the user to change the thickness of the line.
+<LI>Automatically redraw the window's contents by storing the points and redrawing them in response to a paint message.</OL>
+<P>
+Typically, a window will receive one left button down message, followed by a series of mouse move messages (one for each point dragged over), then followed by a single left button up message. The drawing model will be implemented as follows:
+<PRE>
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>true</B>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end</B>
+<I>	</I>
+<I>	on_mouse_move </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  <I>button_down</I> <B>then</B> 
+<I>				dc<B>.</B>line_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end</B>
+<I>	</I>
+<I>	on_left_button_up </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <I>button_down</I> <B>then</B> 
+<I>				button_down </I>:= <B>false</B>
+<I>				dc<B>.</B>release</I>
+			<B>end</B> 
+		<B>end</B>
+</pre>
+<P>
+</PRE>
+Attribute <I>button_down</I> has been introduced to draw the lines only when the user moves the mouse while the button is down.
+<PRE>	<I>button_down</I>:<I> BOOLEAN</I>
+<I>			</I>-- Is the left mouse button down?
+</pre>
+<P>
+</PRE>
+Figure 5 shows what the application can do.
+<P>
+<B>Figure 5</B><P>
+<img alt="hi" border="0" src="hi.gif" width="398" height="266">
+<P>
+Here is the full text of <I>MAIN_WINDOW</I>:
+<PRE>
+<B>class</B> 
+<I>	MAIN_WINDOW</I>
+<B>inherit</B> 
+<I>	WEL_FRAME_WINDOW</I>
+		<B>redefine</B> 
+<I>			on_left_button_down</I>,<I> on_left_button_up</I>,<I> </I>
+<I>			on_right_button_down</I>,<I> on_mouse_move</I>,
+<I>			closeable</I>
+		<B>end</B> 
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+		<B>end</B>
+<I>	</I>
+<B>feature</B>   -- Access
+
+<I>	dc</I>:<I> WEL_CLIENT_DC</I>
+<I>			</I>-- Device context associated to the current
+<I>			</I>-- client window
+<I>			</I>
+<I>	button_down</I>:<I> BOOLEAN</I>
+<I>			</I>-- Is the left mouse button down?
+<I>			</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down</I> <B>then</B> 
+<I>				button_down </I>:= <B>true</B>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_mouse_move </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				dc<B>.</B>line_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_left_button_up </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <I>button_down</I> <B>then</B> 
+<I>				button_down </I>:= <B>false</B>
+<I>				dc<B>.</B>release</I>
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Invalidate window.
+		<B>do</B> 
+<I>			invalidate</I>
+		<B>end
+</B>
+<I>	closeable</I>:<I> BOOLEAN </I><B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+<I>			!! msgBox.make
+			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
+<I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
+		<B>end
+</B>
+<B>end</B>  -- class MAIN_WINDOW
+</pre>
+
+<P><BR>
+<A HREF="step3.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of
+Contents</A>
+<A HREF="step5.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+</P>
+</i>
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

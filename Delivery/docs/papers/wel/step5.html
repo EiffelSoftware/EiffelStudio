@@ -1,0 +1,628 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+ 
+<H1>Step 5: Changing line thickness</H1>
+<P>
+At this point, you can draw only thin lines. In order to change line thickness, you have to change the thickness of the pen the application use to draw lines. In this step, you will learn how to set new tools in a display context and how to create a dialog box.
+<P>
+You will use a dialog box to provide a mechanism for the user to change the line thickness. Figure 6 shows the dialog box.
+<P>
+<B>Figure 6</B><P>
+<img alt="dbempty" border="0" src="dbempty.gif" width="192" height="105"><P>
+<P>
+There are 2 methods to include a dialog box in your application:
+<UL><LI>Using resources
+<LI>Writing Eiffel code</UL>
+<P>
+The first method consists of using Windows resources capabilities works only with 
+the Professional version of ISE Eiffel since resources are linked to the program's 
+executable file. This solution needs a linker, a resource compiler and a resource 
+editor which are shipped with your C-compiler. Resources compilation process is 
+completely integrated to Professional ISE Eiffel 3 for Windows and fully transparent 
+ for the user. You just need to put a resource file in the project directory, start 
+a  Freeze (or Finalize) operation, and EiffelBench does the rest. In a nutshell, 
+the freeze or finalization process will automatically copy the resource file from 
+the project directory into the \EIFGEN\[W|F]_CODE directory and will link it to the
+ executable file. Once the resource file is linked to your executable you can just 
+Melt your project. You will need to Freeze again if you change or add any resources.
+ This method is much easier and quicker than the second because it is usually easier
+ to use a visual tool to design a dialog box or a menu instead of writing Eiffel 
+code. One of the most important advantages of resources is that you can change 
+them without touching Eiffel code. It is clear that this is the preferred method 
+if you are a Professional ISE Eiffel 3 for Windows user. You will see later in 
+details how to create and use a resource file in WEL.
+<P>
+The second method consists of writing an Eiffel class which creates each visual 
+component of the dialog box with the right positions and dimensions. Typically, 
+if you use Personal ISE Eiffel 3 for Windows you will choose this method since 
+the Personal version does not allow to produce a stand-alone executable file.
+<P>
+Both methods will be explain in details in the following sections.<P>
+<P>
+<B>Method 1: Using resources</B>
+<P>
+Resources are data stored in a program's executable file, but stored separately 
+from the program's normal data segment. Typically, Windows leaves resources on 
+disk when it loads an application into memory, and loads individual resources as 
+it needs them during execution. You've probably noticed dynamic loading of 
+resources when working with Windows programs. When you invoke a program's dialog 
+box for the first time, Windows usually accesses the disk to copy the dialog box 
+resource from the program's .EXE file into memory. Of course, if you want the 
+resource to be loaded when the program is loaded, or if you don't want Windows to 
+be able to discard the resource from memory, you can change its attributes (for 
+more details, see your resource editor manual). These are the resources you will 
+create and use most often:
+<UL><LI>Menus
+<LI>Dialog boxes
+<LI>Icons
+<LI>Cursors
+<LI>Keyboard accelerators
+<LI>Bitmaps
+<LI>Character strings</UL>
+<P>
+You can create resources visually using a resource editor as Borland Resource 
+Workshop, Microsoft Developer Studio, or Watcom resource editor. See your resource 
+editor manual to learn how to create a resource file. 
+<P>
+For instance, Figure 7 shows Borland Resource Workshop after the dialog box 
+thickness has been created and Figure 8 shows the same with Microsoft Developer 
+Studio.
+<P>
+&nbsp;
+<P>
+<B>Figure 7</B><P>
+<img alt="rw" border="0" src="rw.gif" width="649" height="354"><P>
+<P>
+<B>Figure 8</B><P>
+<img alt="mds" border="0" src="mds.gif" width="649" height="483"><P>
+<P>
+No matter what resource editor tool you want to use to design the line thickness 
+dialog box, you should obtain a resource file like the following (app.rc).
+<PRE>
+<CODE>#include &lt;windows.h&gt;
+</CODE>
+<CODE>#define DLG_LINE_THICKNESS	1</CODE>
+<CODE>#define IDC_EDIT_WIDTH		101
+</CODE>
+<CODE>DLG_LINE_THICKNESS <B>DIALOG</B> 98, 38, 124, 49</CODE>
+<CODE><B>STYLE</B> DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU</CODE>
+<CODE><B>CAPTION</B> &quot;Line thickness&quot;</CODE>
+<CODE><B>FONT</B> 8, &quot;MS Sans Serif&quot;</CODE>
+<CODE>{</CODE>
+<CODE>	<B>LTEXT</B> &quot;&amp;Width&quot;, -1, 9, 12, 22, 8</CODE>
+<CODE>	<B>EDITTEXT</B> IDC_EDIT_WIDTH, 9, 22, 30, 12, WS_BORDER | WS_GROUP | WS_TABSTOP</CODE>
+<CODE>	<B>DEFPUSHBUTTON</B> &quot;OK&quot;, IDOK, 65, 8, 50, 14, BS_DEFPUSHBUTTON | WS_GROUP | WS_TABSTOP</CODE>
+<CODE>	<B>PUSHBUTTON</B> &quot;Cancel&quot;, IDCANCEL, 65, 26, 50, 14, WS_GROUP | WS_TABSTOP</CODE>
+<CODE>}</CODE>
+</PRE>
+The <B>DIALOG</B> statement defines a window that an application can use to create 
+dialog boxes. The statement defines the position and dimensions of the dialog box 
+on the screen as well as the dialog box style. <I>control-statement</I> defines 
+the controls of the dialog box.
+<PRE>	nameID <B>DIALOG</B> [ load-mem] x, y, width, height
+	[optional-statements]
+	<B>BEGIN</B>
+		control-statement
+		 . . .
+	<B>END</B>
+</PRE>
+<P>
+Important note: The resource file needs to be present in the project directory and its name must be the same as the system name specified in the Ace file with the .RC extension.
+<P>
+As you see at the beginning of the resource file, two identifiers 
+(DLG_LINE_THICKNESS and IDC_EDIT_WIDTH) are declared. You will use them to identify
+ the dialog box and the edit control since a resource file may contain several 
+dialog boxes and one dialog box may contains several controls. WEL provides a 
+simple tool to extract identifiers from a resource file (.RC) or a header file (.H)
+ to make an Eiffel class which contains a set of constants. If you change or add 
+any identifiers in the resource file, make sure to update your Eiffel class as 
+well. After running this tool named H2E (available in $EIFFEL3\UTIL) with your 
+resource file, you will obtain the following class:
+<PRE>
+<B>indexing</B> 
+<I>	description</I>:<I> </I>&quot;<I>Generated by h2e from the file C:\Eiffel3\examples\wel\tutorial\step5\app.rc.</I>&quot;
+<B>class</B> 
+<I>	APPLICATION_IDS
+</I>
+<B>feature</B>   -- Access
+
+<I>	Dlg_line_thickness</I>:<I> INTEGER </I><B>is</B>  1;
+<I>			</I>
+<I>	Idc_edit_width</I>:<I> INTEGER </I><B>is</B>  101;
+<I>			</I>
+<B>end</B>  --<I> </I>class <I>APPLICATION_IDS</I>
+</PRE>
+Figure 9 shows the values entered in H2E in order to obtain the above file.
+<P>
+<B>Figure 9</B><P>
+<img alt="h2e" border="0" src="h2e.gif" width="356" height="218"><P>
+<P>
+Note: If you use Microsoft Developer Studio, identifiers are saved in file
+ `resource.h'. In this case, specify this file and not the resource file.
+<P>
+Now, you will learn how to make the connection between this dialog box specified 
+in the resource file and your application. You will create a new class inherited 
+from the class <I>WEL_MODAL_DIALOG</I> to load and use the line thickness dialog 
+box. This class will do the following tasks:
+<UL><LI>Load the dialog box from the resource and create an edit control. 
+See <I>make</I> routine.
+<LI>Set the single line edit control Width with the value previously entered by 
+the user (The first time, this value will be equal to 1). See <I>setup_dialog</I> 
+  routine.
+<LI>If the new width entered by the user is a valid integer, save the value in 
+<I>pen_width</I> and terminate the dialog box. See <I>on_ok</I> routine.</UL>
+<P>
+The full text of this class is: (Note that the class <I>APPLICATION_IDS</I> generated by H2E is added in the inheritance clause.)
+<PRE>
+<B>class</B> 
+<I>	LINE_THICKNESS_DIALOG
+</I>
+<B>inherit</B> 
+<I>	WEL_MODAL_DIALOG</I>
+		<B>redefine</B> 
+<I>			on_ok</I>,<I> setup_dialog</I>
+		<B>end</B>
+<I>	APPLICATION_IDS</I>
+		<B>export</B> 
+<I>			</I>{<I>NONE</I>} <B>all</B> 
+		<B>end</B> 
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I>(<I>a_parent</I>:<I> WEL_COMPOSITE_WINDOW</I>) <B>is</B> 
+<I>			</I>-- Make the dialog box and create <I>edit</I>.
+		<B>do</B> 
+<I>			make_by_id </I>(<I>a_parent</I>,<I> Dlg_line_thickness</I>)
+<I>			</I>!!<I> edit<B>.</B>make_by_id </I>(<I>Current</I>,<I> idc_edit_width</I>)
+<I>			pen_width </I>:=<I> 1</I>
+		<B>end</B>
+<I>	</I>
+<B>feature</B> -- Access
+
+<I>	edit</I>:<I> WEL_SINGLE_LINE_EDIT</I>
+<I>			</I>-- Edit control to enter pen width
+<I>			</I>
+<I>	pen_width</I>:<I> INTEGER</I>
+<I>			</I>-- Pen width entered
+<I>			</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	setup_dialog </I><B>is</B> 
+<I>			</I>-- Set the width previously entered.
+		<B>local</B> 
+<I>			s</I>:<I> STRING</I>
+		<B>do</B> 
+<I>			</I>!!<I> s<B>.</B>make </I>(<I>0</I>)
+<I>			s<B>.</B>append_integer </I>(<I>pen_width</I>)
+<I>			edit<B>.</B>set_text </I>(<I>s</I>)
+		<B>end</B>
+<I>	</I>
+<I>	on_ok </I><B>is</B> 
+<I>			</I>-- Ensure <I>edit</I> value is an integer, save it in
+<I>			</I>-- <I>pen_width</I> and close the dialog box.
+		<B>do</B> 
+			<B>if</B>  <I>edit<B>.</B>text<B>.</B>is_integer</I> <B>then</B> 
+<I>				pen_width </I>:=<I> edit<B>.</B>text<B>.</B>to_integer</I>
+<I>				terminate </I>(<I>idok</I>)
+			<B>end</B> 
+		<B>end</B>
+<I>	</I>
+<B>end</B>  --<I> </I>class <I>LINE_THICKNESS_DIALOG</I>
+</PRE>
+<P>
+<B>Method 2: Writing Eiffel code</B>
+<P>
+If you use Personal ISE Eiffel, you need to create the following class:
+<PRE><B>class</B> 
+<I>	LINE_THICKNESS_WINDOW</I>
+<B>inherit</B> 
+<I>	WEL_FRAME_WINDOW</I>
+		<B>redefine</B> 
+<I>			on_control_command</I>
+		<B>end</B> 
+
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I>(<I>a_parent</I>:<I> WEL_COMPOSITE_WINDOW</I>) <B>is</B> 
+<I>			</I>-- Make the line thickness window.
+		<B>do</B> 
+<I>			make_child </I>(<I>a_parent</I>,<I> </I>&quot;<I>Line thickness</I>&quot;)
+<I>			move_and_resize </I>(<I>20</I>,<I> 20</I>,<I> 210</I>,<I> 104</I>, <B>true</B>)
+<I>			</I>!!<I> static<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>Width</I>&quot;,<I> 14</I>,<I> 18</I>,<I> 38</I>,<I> 13</I>,<I> </I>-<I> 1</I>)
+<I>			</I>!!<I> edit<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;&quot;,<I> 14</I>,<I> 33</I>,<I> 52</I>,<I> 19</I>,<I> </I>-<I> 1</I>)
+<I>			</I>!!<I> ok_button<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>OK</I>&quot;,<I> 98</I>,<I> 12</I>,<I> 87</I>,<I> 23</I>,<I> </I>-<I> 1</I>)
+<I>			</I>!!<I> cancel_button<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>Cancel</I>&quot;,<I> 98</I>,<I> 45</I>,<I> 87</I>,<I> 23</I>,<I> </I>-<I> 1</I>)
+<I>			pen_width </I>:=<I> 1</I>
+		<B>end</B>
+<I>	</I>
+<B>feature</B>   -- Access
+
+<I>	edit</I>:<I> WEL_SINGLE_LINE_EDIT</I>
+<I>			</I>-- Edit control to enter pen width
+<I>			</I>
+<I>	ok_button</I>:<I> WEL_PUSH_BUTTON</I>
+<I>			</I>-- Button to validate the value
+<I>			</I>
+<I>	cancel_button</I>:<I> WEL_PUSH_BUTTON</I>
+<I>			</I>-- Button to cancel the value
+<I>			</I>
+<I>	static</I>:<I> WEL_STATIC</I>
+<I>			</I>-- &quot;Width&quot; static text
+<I>			</I>
+<I>	pen_width</I>:<I> INTEGER</I>
+<I>			</I>-- Pen width entered
+<I>			</I>
+<I><B>feature</B>   </I>-- Basic operations
+
+<I>	activate </I><B>is</B> 
+<I>			</I>-- Activate the window
+		<B>local</B> 
+<I>			s</I>:<I> STRING</I>
+		<B>do</B> 
+<I>			</I>!!<I> s<B>.</B>make </I>(<I>0</I>)
+<I>			s<B>.</B>append_integer </I>(<I>pen_width</I>)
+<I>			edit<B>.</B>set_text </I>(<I>s</I>)
+<I>			show</I>
+		<B>end</B>
+<I>	</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	on_control_command </I>(<I>control</I>:<I> WEL_CONTROL</I>) <B>is</B> 
+<I>			</I>-- Process <I>ok_button</I> and <I>cancel_button</I> selection.
+		<B>local</B> 
+<I>			p</I>:<I> MAIN_WINDOW</I>
+		<B>do</B> 
+			<B>if</B>  <I>control </I>=<I> ok_button </I><B>then</B> 
+				<B>if</B>  <I>edit<B>.</B>text<B>.</B>is_integer </I><B>then</B> 
+<I>					pen_width </I>:=<I> edit<B>.</B>text<B>.</B>to_integer</I>
+<I>					p </I>?=<I> parent</I>
+					<B>if</B>  <I>p </I>/=<I> void </I><B>then</B> 
+<I>						p<B>.</B>set_pen_width </I>(<I>pen_width</I>)
+					<B>end</B>
+<I>					hide</I>
+				<B>end</B> 
+			<B>elseif</B>  <I>control </I>=<I> cancel_button </I><B>then</B> 
+<I>				hide</I>
+			<B>end</B> 
+		<B>end</B>
+<I>	</I>
+<B>end</B>  --<I> </I>class <I>LINE_THICKNESS_WINDOW</I>
+</PRE>
+In order to be able to change line thickness in the device context, you need to add the following attribute:
+<PRE><I>	pen</I>:<I> WEL_PEN</I>
+<I>			</I>-- Pen currently selected in <I>dc</I>
+</PRE>
+You also have to set the default pen width in the <I>make</I> routine:
+<PRE><I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			set_pen_width </I>(<I>1</I>)
+		<B>end</B>
+</PRE>
+<P>
+The implementation of <I>set_pen_width</I> is defined as follows:
+<PRE><I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Set pen width with <I>new_width</I>.
+		<B>do</B> 
+<I>			</I>!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+		<B>end</B>
+</PRE>
+<P>
+The <I>black</I> color can be retrieved from the class <I>WEL_STANDARD_COLORS</I> which must be added in the inheritance clause.<P>
+<P>
+You have to insert a call to <I>select_pen</I>  in the routine <I>
+on_left_button_down</I> as follows. Selecting a pen for a device context will 
+allow you to use a different pen than the default one.
+<PRE><I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:=<I> <B>true</B> </I>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				dc<B>.</B>select_pen </I>(<I>pen</I>)
+			<B>end</B> 
+		<B>end</B>
+</PRE>
+<P>
+The new version of <I>on_right_button</I> will now bring up the dialog box:<P>
+<P>
+According the version you use, you need to update the <I>MAIN_WINDOW</I> class in 
+order to bring up the line thickness dialog  box or window when the user pushes 
+on the right button. If you use Professional ISE Eiffel 3 for Windows, you need 
+to add a new attribute <I>line_thickness_dialog </I>and change the body of <I>
+on_right_button_down</I> as follows:
+<PRE><I>	line_thickness_dialog</I>:<I> LINE_THICKNESS_DIALOG</I>
+<I>			</I>-- Dialog box to change line thickness
+</pre>
+<P>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Bring up <I>line_thickness_dialog</I> and set the
+<I>			</I>-- new pen width.
+		<B>do</B> 
+			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
+<I>				</I>!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+			<B>end</B>
+<I>			line_thickness_dialog<B>.</B>activate</I>
+			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
+<I>				set_pen_width </I>(<I>line_thickness_dialog<B>.</B>pen_width</I>)
+			<B>end</B> 
+		<B>end</B>
+</PRE>
+<P>
+On the other hand, if you use Personal ISE Eiffel for Windows, you need to add a 
+new attribute <I>line_thickness_dialog </I>and change the body of <I>
+on_right_button_down</I> as follows:
+<PRE><I>	line_thickness_window</I>:<I> LINE_THICKNESS_WINDOW</I>
+<I>			</I>-- Window to change line thickness
+</pre>
+<P>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Bring up <I>line_thickness_window</I> and set the
+<I>			</I>-- new pen width.
+		<B>do</B> 
+			<B>if</B>  <I>line_thickness_window </I>=<I> void </I><B>then</B> 
+<I>				</I>!!<I> line_thickness_window<B>.</B>make </I>(<I>Current</I>)
+			<B>end</B>
+<I>			line_thickness_window<B>.</B>activate</I>
+		<B>end</B>
+</PRE>
+<P>
+Figure 10 shows the new capabilities of your application:
+<P>
+<B>Figure 10</B><P>
+<img alt="line" border="0" src="line.gif" width="398" height="266"><P>
+<P>
+This is the full text of <I>MAIN_WINDOW</I> (Professional version):
+<PRE>
+<B>class</B> 
+<I>	MAIN_WINDOW</I>
+<B>inherit</B> 
+<I>	WEL_FRAME_WINDOW</I>
+		<B>redefine</B> 
+<I>			on_left_button_down</I>,<I> on_left_button_up</I>,<I> </I>
+<I>			on_right_button_down</I>,<I> on_mouse_move</I>,<I> </I>
+<I>			closeable</I>
+		<B>end</B> 
+<I>	WEL_STANDARD_COLORS</I>
+		<B>export</B> 
+<I>			</I>{<I>NONE</I>} <B>all</B> 
+		<B>end</B> 
+
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			set_pen_width </I>(<I>1</I>)
+		<B>end</B>
+<I>	</I>
+<B>feature</B>   -- Access
+
+<I>	dc</I>:<I> WEL_CLIENT_DC</I>
+<I>			</I>-- Device context associated to the current
+<I>			</I>-- client window
+<I>			</I>
+<I>	button_down</I>:<I> BOOLEAN</I>
+<I>			</I>-- Is the left mouse button down?
+<I>			</I>
+<I>	pen</I>:<I> WEL_PEN</I>
+<I>			</I>-- Pen currently selected in <I>dc</I>
+<I>			</I>
+<I>	line_thickness_dialog</I>:<I> LINE_THICKNESS_DIALOG</I>
+<I>			</I>-- Dialog box to change line thickness
+<I>			</I>
+<I><B>feature</B>   </I>-- Element change
+
+<I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Set pen width with <I>new_width</I>.
+		<B>do</B> 
+			!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+		<B>end
+</B>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+		-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>true</B>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				dc<B>.</B>select_pen </I>(<I>pen</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_mouse_move </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				dc<B>.</B>line_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_left_button_up </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>false</B>
+<I>				dc<B>.</B>release</I>
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Bring up <I>line_thickness_dialog</I> and set the -- new pen width.
+		<B>do</B> 
+			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
+				!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+			<B>end</B>
+<I>			line_thickness_dialog<B>.</B>activate</I>
+			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
+<I>				set_pen_width </I>(<I>line_thickness_dialog<B>.</B>pen_width</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	closeable</I>:<I> BOOLEAN </I><B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+<I>			!! msgBox.make
+			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
+<I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
+		<B>end
+</B>
+<B>end</B>  -- class MAIN_WINDOW
+
+This is the full text of MAIN_WINDOW (Personal version):</pre>
+
+<PRE><B>class</B> 
+	MAIN_WINDOW
+<B>inherit</B> 
+	WEL_FRAME_WINDOW
+		<B>redefine</B> 
+			on_left_button_down, on_left_button_up,
+			on_right_button_down, on_mouse_move,
+			closeable
+		<B>end</B>
+	WEL_STANDARD_COLORS
+		<B>export</B> 
+			{NONE} <B>all</B> 
+		<B>end</B> 
+<B>creation</B>  
+	make
+
+<B>feature</B>  {NONE} -- Initialization
+
+	make <B>is</B> 
+			-- Make the main window.
+		<B>do</B> 
+			make_top (&quot;My application&quot;)
+			!! dc<B>.</B>make (Current)
+			set_pen_width (1)
+		<B>end</B>
+	
+<B>feature</B>   -- Access
+
+	dc: WEL_CLIENT_DC
+			-- Device context associated to the current
+			-- client window.
+			
+	button_down: BOOLEAN
+			-- Is the left mouse button down?
+			
+	pen: WEL_PEN
+			-- Pen currently selected in dc.
+			
+	line_thickness_window: LINE_THICKNESS_WINDOW
+			-- Window to change line thickness.
+			
+<B>feature</B>   -- Element change
+
+	set_pen_width (new_width: INTEGER) <B>is</B> 
+			-- Set pen width with new_width.
+		<B>do</B> 
+			!! pen<B>.</B>make_solid (new_width, black)
+		<B>end</B>
+	
+<B>feature</B>  {NONE} -- Implementation
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  button_down <B>then</B> 
+				button_down := <B>true</B>
+				dc<B>.</B>get
+				dc<B>.</B>move_to (x_pos, y_pos)
+				dc<B>.</B>select_pen (pen)
+			<B>end</B> 
+		<B>end</B>
+	
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  button_down <B>then</B> 
+				dc<B>.</B>line_to (x_pos, y_pos)
+			<B>end</B> 
+		<B>end</B>
+	
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  button_down <B>then</B> 
+				button_down := <B>false</B>
+				dc<B>.</B>release
+			<B>end</B> 
+		<B>end</B>
+	
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Bring up line_thickness_window and set the
+			-- new pen width.
+		<B>do</B> 
+			<B>if</B>  line_thickness_window = void <B>then</B> 
+				!! line_thickness_window<B>.</B>make (Current)
+			<B>end</B>
+			line_thickness_window<B>.</B>activate
+		<B>end</B>
+	
+	closeable: BOOLEAN <B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+			!! msgBox.make
+			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
+			Result := msgBox.message_box_result = Mb_ok
+		<B>end</B>
+	
+<B>end</B>  -- class MAIN_WINDOW
+</pre>
+
+<A HREF="step4.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
+<A HREF="step6.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+
+</i>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>

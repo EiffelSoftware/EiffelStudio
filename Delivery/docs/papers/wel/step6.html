@@ -1,0 +1,501 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+ 
+<H1>Step 6: Repainting a window</H1>
+<P>
+As you have probably noticed, the graphics and text you draw in a window using device context functions (like <I>line_to</I> or <I>text_out</I>) disappear when you resize or uncover the window. Windows does not save the graphics that you draw in the device context, the application is in charge to refresh the window when it is necessary. In this step you will learn how to do that.
+<P>
+When the user of your application resizes or uncovers a window, it requires updating, or painting. WEL automatically calls the <I>on_paint</I> procedure (from <I>WEL_COMPOSITE_WINDOW</I>) when the window needs to be painted. Procedure <I>on_paint</I> is where you write the code to paint the contents of the window. There is one major difference between drawing graphics in the <I>on_paint</I> procedure and at other times, such as in response to mouse actions. The device context to be used for painting is passed in the <I>paint_dc</I> parameter, so your program does not need to get and release it. You will, however, need to select your drawing tools into the <I>paint_dc</I>.
+<P>
+To paint a window's contents, you are going to replay the actions that led to the original drawing on <I>dc</I>, but use <I>paint_dc</I> instead. But first, you need to store the graphic as objects, so you can paint them in the <I>on_paint</I> procedure.
+<P>
+Let's say that the window's contents is a set of lines, and each line is a set of points with a width. Then, you can simply define a line as follows:
+<PRE>
+<B>class</B> 
+<I>	LINE</I>
+<B>inherit</B> 
+<I>	LINKED_LIST </I>[<I>POINT</I>]
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>   -- Access
+
+<I>	width</I>:<I> INTEGER</I>
+<I>			</I>-- Width of the line
+<I>			</I>
+<B>feature</B>   -- Element change
+
+<I>	set_width </I>(<I>a_width</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Set <I>width</I> with <I>a_width</I>.
+		<B>require</B> 
+<I>			positive_width</I>:<I> a_width </I>&gt;=<I> 0</I>
+		<B>do</B> 
+<I>			width </I>:=<I> a_width</I>
+		<B>ensure</B> 
+<I>			width_set</I>:<I> width </I>=<I> a_width</I>
+		<B>end</B>
+<I>	</I>
+<I>	add </I>(<I>x</I>,<I> y</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Add a point specified by <I>x</I> and <I>y</I>.
+		<B>local</B> 
+<I>			p</I>:<I> POINT</I>
+		<B>do</B> 
+<I>			</I>!!<I> p<B>.</B>make </I>(<I>x</I>,<I> y</I>)
+<I>			extend </I>(<I>p</I>)
+		<B>end</B>
+<I>	</I>
+<B>invariant</B> 
+<I>	positive_width</I>:<I> width </I>&gt;=<I> 0</I>
+<I>	</I>
+<B>end</B>  --<I> </I>class <I>LINE</I>
+</PRE>
+<P>
+Class <I>POINT</I> is simply defined as follows:
+<PRE><B>class</B> 
+<I>	POINT
+</I>
+<B>creation
+</B>	<I>make
+</I>
+<B>feature</B>   -- Initialization
+
+<I>	make </I>(<I>a_x</I>,<I> a_y</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Make a point with <I>a_x</I> and <I>a_y</I>.
+		<B>do</B> 
+<I>			x </I>:=<I> a_x</I>
+<I>			y </I>:=<I> a_y</I>
+		<B>ensure</B> 
+<I>			x_set</I>:<I> x </I>=<I> a_x</I>
+<I>			y_set</I>:<I> y </I>=<I> a_y</I>
+		<B>end</B> 
+
+<B>feature</B>   -- Access
+
+<I>	x</I>:<I> INTEGER
+</I>			-- x position
+<I>	y</I>:<I> INTEGER</I>
+			-- y position
+<B>end</B>  --<I> </I>class <I>POINT</I>
+</pre>
+<P>
+Using class <I>LINE</I>, the basic idea consists of saving mouse movements while the user draws. Then, you will use these data in the <I>on_paint</I> procedure to redraw window's contents. First, you need to add the following attributes in class <I>MAIN_WINDOW</I>.
+<PRE><I>	lines</I>:<I> LINKED_LIST </I>[<I>LINE</I>]
+<I>			</I>-- All lines drawn by the user
+<I>			</I>
+<I>	current_line</I>:<I> LINE</I>
+<I>			</I>-- Line currently drawn by the user
+</PRE>
+<P>
+Attribute <I>lines</I> needs to be created in the <I>make</I> routine as follows:
+<PRE><I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			set_pen_width </I>(<I>1</I>)
+<I>			</I>!!<I> lines<B>.</B>make</I>
+		<B>end</B>
+</PRE>
+<P>
+And finally, you have to change <I>on_left_button_down</I> and <I>on_mouse_move</I> to store the points in <I>lines</I>.
+<PRE><I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>true</B>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				dc<B>.</B>select_pen </I>(<I>pen</I>)
+<I>				</I>!!<I> current_line<B>.</B>make</I>
+<I>				current_line<B>.</B>set_width </I>(<I>pen<B>.</B>width</I>)
+<I>				lines<B>.</B>extend </I>(<I>current_line</I>)
+<I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end</B>
+<I>	</I>
+<I>	on_mouse_move </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				dc<B>.</B>line_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end</B>
+</PRE>
+<P>
+At this point, <I>lines</I> has all the information needed to redraw the window's contents. Basically, you just need to redefine <I>on_paint</I> and iterate over the list to draw the lines as follows:
+<PRE><I>	on_paint </I>(<I>paint_dc</I>:<I> WEL_PAINT_DC</I>;<I> invalid_rect</I>:<I> WEL_RECT</I>) <B>is</B> 
+<I>			</I>-- Paint the lines.
+		<B>local</B> 
+<I>			a_line</I>:<I> LINE</I>
+<I>			a_pen</I>:<I> WEL_PEN</I>
+<I>			first_point</I>:<I> BOOLEAN</I>
+		<B>do</B> 
+			<B>from</B> 
+<I>				lines<B>.</B>start</I>
+			<B>until</B> 
+<I>				lines<B>.</B>off</I>
+			<B>loop</B> 
+				<B>from</B> 
+<I>					first_point </I>:= <B>true</B>
+<I>					a_line </I>:=<I> lines<B>.</B>item</I>
+<I>					a_line<B>.</B>start</I>
+<I>					</I>!!<I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
+<I>					paint_dc<B>.</B>select_pen </I>(<I>a_pen</I>)
+				<B>until</B> 
+<I>					a_line<B>.</B>off</I>
+				<B>loop</B> 
+					<B>if</B>  <I>first_point </I><B>then</B> 
+<I>						first_point </I>:= <B>false</B>
+<I>						paint_dc<B>.</B>move_to </I>(<I>a_line<B>.</B>item<B>.</B>x</I>,<I> a_line<B>.</B>item<B>.</B>y</I>)
+					<B>else</B> 
+<I>						paint_dc<B>.</B>line_to </I>(<I>a_line<B>.</B>item<B>.</B>x</I>,<I> a_line<B>.</B>item<B>.</B>y</I>)
+					<B>end</B>
+<I>					a_line<B>.</B>forth</I>
+				<B>end</B>
+<I>				lines<B>.</B>forth</I>
+			<B>end</B> 
+		<B>end</B>
+</PRE>
+<P>
+Now, if you minimize and restore the window, you will see that window's contents is restored.
+<P>
+Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
+<PRE>
+<B>class</B> 
+<I>	MAIN_WINDOW</I>
+<B>inherit</B> 
+<I>	WEL_FRAME_WINDOW</I>
+		<B>redefine</B> 
+<I>			on_left_button_down</I>,<I> on_left_button_up</I>,<I> </I>
+<I>			on_right_button_down</I>,<I> on_mouse_move</I>,<I> </I>
+<I>			on_paint</I>,<I> closeable</I>
+		<B>end</B>
+<I>	WEL_STANDARD_COLORS</I>
+		<B>export</B> 
+<I>			</I>{<I>NONE</I>} <B>all</B> 
+		<B>end</B> 
+
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			set_pen_width </I>(<I>1</I>)
+<I>			</I>!!<I> lines<B>.</B>make</I>
+		<B>end</B>
+<I>	</I>
+<B>feature</B>   -- Access
+
+<I>	dc</I>:<I> WEL_CLIENT_DC</I>
+<I>			</I>-- Device context associated to the current
+<I>			</I>-- client window
+<I>			</I>
+<I>	button_down</I>:<I> BOOLEAN</I>
+<I>			</I>-- Is the left mouse button down?
+<I>			</I>
+<I>	pen</I>:<I> WEL_PEN</I>
+<I>			</I>-- Pen currently selected in <I>dc</I>
+<I>			</I>
+<I>	line_thickness_dialog</I>:<I> LINE_THICKNESS_DIALOG</I>
+<I>			</I>-- Dialog box to change line thickness
+<I>			</I>
+<I>	lines</I>:<I> LINKED_LIST </I>[<I>LINE</I>]
+<I>			</I>-- All lines drawn by the user
+<I>			</I>
+<I>	current_line</I>:<I> LINE</I>
+<I>			</I>-- Line currently drawn by the user
+<I>			</I>
+<B>feature</B>   -- Element change
+
+<I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>)<I> <B>is</B> </I>
+<I>			</I>-- Set pen width with <I>new_width</I>.
+		<B>do</B> 
+<I>			</I>!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+		<B>end</B>
+<I>	</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>true</B>
+<I>				dc<B>.</B>get</I>
+<I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				dc<B>.</B>select_pen </I>(<I>pen</I>) !!<I> current_line<B>.</B>make</I>
+<I>				current_line<B>.</B>set_width </I>(<I>pen<B>.</B>width</I>)
+<I>				lines<B>.</B>extend </I>(<I>current_line</I>)
+<I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_mouse_move </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B>
+			-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				dc<B>.</B>line_to </I>(<I>x_pos</I>,<I> y_pos</I>)
+<I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_left_button_up </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <I>button_down </I><B>then</B> 
+<I>				button_down </I>:= <B>false</B>
+<I>				dc<B>.</B>release</I>
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+			-- Bring up <I>line_thickness_dialog</I> and set the -- new pen width.
+		<B>do</B> 
+			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
+				!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+			<B>end</B>
+<I>			line_thickness_dialog<B>.</B>activate</I>
+			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
+<I>				set_pen_width </I>(<I>line_thickness_dialog<B>.</B>pen_width</I>)
+			<B>end</B> 
+		<B>end
+</B>
+<I>	on_paint </I>(<I>paint_dc</I>:<I> WEL_PAINT_DC</I>;<I> invalid_rect</I>:<I> WEL_RECT</I>) <B>is</B> 
+			-- Paint the lines.
+		<B>local</B> 
+<I>			a_line</I>:<I> LINE</I>
+<I>			a_pen</I>:<I> WEL_PEN</I>
+<I>			first_point</I>:<I> BOOLEAN</I>
+		<B>do</B> 
+			<B>from</B> 
+<I>				lines<B>.</B>start</I>
+			<B>until</B> 
+<I>				lines<B>.</B>off</I>
+			<B>loop</B> 
+				<B>from</B> 
+<I>					first_point </I>:= <B>true</B>
+<I>					a_line </I>:=<I> lines<B>.</B>item</I>
+<I>					a_line<B>.</B>start</I>
+					!!<I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
+<I>					paint_dc<B>.</B>select_pen </I>(<I>a_pen</I>)
+				<B>until</B> 
+<I>					a_line<B>.</B>off</I>
+				<B>loop</B> 
+					<B>if</B>  <I>first_point </I><B>then</B> 
+<I>						first_point </I>:= <B>false</B>
+<I>						paint_dc<B>.</B>move_to </I>(<I>a_line<B>.</B>item<B>.</B>x</I>,<I> a_line<B>.</B>item<B>.</B>y</I>)
+					<B>else</B> 
+<I>						paint_dc<B>.</B>line_to </I>(<I>a_line<B>.</B>item<B>.</B>x</I>,<I> a_line<B>.</B>item<B>.</B>y</I>)
+					<B>end</B>
+<I>					a_line<B>.</B>forth</I>
+				<B>end</B>
+<I>				lines<B>.</B>forth</I>
+			<B>end</B> 
+		<B>end
+</B>
+<I>	closeable</I>:<I> BOOLEAN </I><B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+<I>			!! msgBox.make
+			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
+<I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
+		<B>end
+</B>
+<B>end</B>  -- class MAIN_WINDOW
+</pre>
+Here is the full text of MAIN_WINDOW (Personal version):
+<PRE>
+<B>class</B> 
+	MAIN_WINDOW
+<B>inherit</B> 
+	WEL_FRAME_WINDOW
+		<B>redefine</B> 
+			on_left_button_down, on_left_button_up,
+			on_right_button_down, on_mouse_move,
+			on_paint, closeable
+		<B>end</B>
+	WEL_STANDARD_COLORS
+		<B>export</B> 
+			{NONE} <B>all</B> 
+		<B>end
+</B>
+<B>creation</B>  
+	make
+
+<B>feature</B>  {NONE} -- Initialization
+
+	make <B>is</B> 
+			-- Make the main window.
+		<B>do</B> 
+			make_top (&quot;My application&quot;)
+			!! dc<B>.</B>make (Current)
+			set_pen_width (1)
+			!! lines<B>.</B>make
+		<B>end</B>
+	
+<B>feature</B>   -- Access
+
+	dc: WEL_CLIENT_DC
+			-- Device context associated to the current
+			-- client window
+			
+	button_down: BOOLEAN
+			-- Is the left mouse button down?
+			
+	pen: WEL_PEN
+			-- Pen currently selected in dc
+			
+	line_thickness_window: LINE_THICKNESS_WINDOW
+			-- Window to change line thickness
+			
+	lines: LINKED_LIST [LINE]
+			-- All lines drawn by the user
+			
+	current_line: LINE
+			-- Line currently drawn by the user
+			
+<B>feature</B>   -- Element change
+
+	set_pen_width (new_width: INTEGER) <B>is</B> 
+			-- Set pen width with new_width.
+		<B>do</B> 
+			!! pen<B>.</B>make_solid (new_width, black)
+		<B>end</B>
+	
+<B>feature</B>  {NONE} -- Implementation
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Initiate the drawing process.
+		<B>do</B> 
+			<B>if</B>  <B>not</B>  button_down <B>then</B> 
+				button_down := <B>true</B> 
+				dc<B>.</B>get
+				dc<B>.</B>move_to (x_pos, y_pos)
+				dc<B>.</B>select_pen (pen)
+				!! current_line<B>.</B>make
+				current_line<B>.</B>set_width (pen<B>.</B>width)
+				lines<B>.</B>extend (current_line)
+				current_line<B>.</B>add (x_pos, y_pos)
+			<B>end</B> 
+		<B>end</B>
+	
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Connect the points to make lines.
+		<B>do</B> 
+			<B>if</B>  button_down <B>then</B> 
+				dc<B>.</B>line_to (x_pos, y_pos)
+				current_line<B>.</B>add (x_pos, y_pos)
+			<B>end</B> 
+		<B>end</B>
+	
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Terminate the drawing process.
+		<B>do</B> 
+			<B>if</B>  button_down <B>then</B> 
+				button_down := <B>false</B>
+				dc<B>.</B>release
+			<B>end</B> 
+		<B>end</B>
+	
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Bring up line_thickness_window and set the
+			-- new pen width.
+		<B>do</B> 
+			<B>if</B>  line_thickness_window = void <B>then</B> 
+				!! line_thickness_window<B>.</B>make (Current)
+			<B>end</B>
+			line_thickness_window<B>.</B>activate
+		<B>end</B>
+	
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) <B>is</B> 
+			-- Paint the lines.
+		<B>local</B> 
+			a_line: LINE
+			a_pen: WEL_PEN
+			first_point: BOOLEAN
+		<B>do</B> 
+			<B>from</B> 
+				lines<B>.</B>start
+			<B>until</B> 
+				lines<B>.</B>off
+			<B>loop</B> 
+				<B>from</B> 
+					first_point := <B>true</B> 
+					a_line := lines<B>.</B>item
+					a_line<B>.</B>start
+					!! a_pen<B>.</B>make_solid (a_line<B>.</B>width, black)
+					paint_dc<B>.</B>select_pen (a_pen)
+				<B>until</B> 
+					a_line<B>.</B>off
+				<B>loop</B> 
+					<B>if</B>  first_point <B>then</B> 
+						first_point := <B>false</B> 
+						paint_dc<B>.</B>move_to (a_line<B>.</B>item<B>.</B>x, a_line<B>.</B>item<B>.</B>y)
+					<B>else</B> 
+						paint_dc<B>.</B>line_to (a_line<B>.</B>item<B>.</B>x, a_line<B>.</B>item<B>.</B>y)
+					<B>end</B>
+					a_line<B>.</B>forth
+				<B>end</B>
+				lines<B>.</B>forth
+			<B>end</B> 
+		<B>end</B>
+	
+	closeable: BOOLEAN <B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+			!! msgBox.make
+			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
+			Result := msgBox.message_box_result = Mb_ok
+		<B>end</B>
+	
+<B>end</B>  -- class MAIN_WINDOW
+</PRE>
+
+<P>
+<A HREF="step5.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of
+Contents</A>
+<A HREF="step7.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+</P>
+
+</i>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

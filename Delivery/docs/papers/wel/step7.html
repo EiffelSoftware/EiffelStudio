@@ -1,0 +1,176 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<H1>Step 7: Adding a menu</H1>
+<P>
+Most Windows applications have a menu on their main window to provide a variety of selections for the user. In this section, you will add a menu to the program. Figure 11 shows the menus that you will add.
+<P>
+<B>Figure 11</B><P>
+<IMG SRC="fileline.gif" ALT="fileline"   BORDER= width="246" height="105">
+<P>
+Like dialog boxes, you have two ways to add a menu: using resources or writing Eiffel code. Once again, both solutions will be presented for the Professional and Personal users.
+<P>
+<B>Method 1: Using resources</B>
+<P>
+Resource editors provide a very easy way to design menus visually. For instance, Figure 12 shows Borland Resource Workshop's menu module.
+<P>
+<B>Figure 12</B><P>
+<IMG SRC="rwmenu.gif" ALT="rwmenu"   BORDER= width="654" height="381"><P>
+<P>
+After adding the menus in app.rc, the following text will be added to the file.
+<PRE><CODE>#define MAIN_MENU_ID		1</CODE>
+<CODE>#define CMD_NEW		101</CODE>
+<CODE>#define CMD_OPEN		102</CODE>
+<CODE>#define CMD_SAVE		103</CODE>
+<CODE>#define CMD_EXIT		104</CODE>
+<CODE>#define CMD_LINE_THICKNESS	105</CODE>
+<CODE>MAIN_MENU_ID <B>MENU</B></CODE>
+<CODE>{</CODE>
+<CODE>	<B>POPUP</B> &quot;&amp;File&quot;</CODE>
+<CODE>	{</CODE>
+<CODE>		<B>MENUITEM</B> &quot;&amp;New&quot;, CMD_NEW</CODE>
+<CODE>		<B>MENUITEM</B> &quot;&amp;Open...&quot;, CMD_OPEN</CODE>
+<CODE>		<B>MENUITEM</B> &quot;&amp;Save...&quot;, CMD_SAVE</CODE>
+<CODE>		<B>MENUITEM</B> SEPARATOR</CODE>
+<CODE>		<B>MENUITEM</B> &quot;E&amp;xit&quot;, CMD_EXIT</CODE>
+<CODE>	}</CODE>
+<CODE>	<B>POPUP</B> &quot;&amp;Line&quot;</CODE>
+<CODE>	{</CODE>
+<CODE>		<B>MENUITEM</B> &quot;Line &amp;thickness...&quot;, CMD_LINE_THICKNESS</CODE>
+<CODE>	}</CODE>
+<CODE>}</CODE>
+</PRE>
+<P>
+The value of MAIN_MENU_ID, which identifies the menu, will be used in Eiffel to load the menu. Menu item identifiers (as CMD_NEW, CMD_OPEN) will be used to identify options selected by the user. Don't forget to update class <I>APPLICATION_IDS</I> using H2E since new identifiers have been added in the resource file.<P>
+<P>
+Now, you need to add the following once function to load the menu:
+<PRE><I>	main_menu</I>:<I> WEL_MENU </I><B>is</B> 
+<I>			</I>-- Window's menu
+		<B>once</B> 
+<I>			</I>!!<I> Result<B>.</B>make_by_id </I>(<I>Main_menu_id</I>)
+		<B>end</B>
+</PRE>
+<P>
+Class <I>APPLICATION_IDS</I> needs to be added in the inheritance clause of <I>MAIN_WINDOW</I> to use <I>Main_menu_id</I>.<P>
+<P>
+<B>Method 2: Writing Eiffel code</B>
+<P>
+If you can't use a resource editor, you have to create the menu using WEL_MENU's procedures as follows:
+<PRE><I>	main_menu</I>:<I> WEL_MENU </I><B>is</B> 
+<I>			</I>-- Window's menu
+		<B>local</B> 
+<I>			file</I>,<I> line</I>:<I> WEL_MENU</I>
+		<B>once</B> 
+<I>			</I>!!<I> file<B>.</B>make</I>
+<I>			file<B>.</B>append_string </I>(&quot;<I>&amp;New</I>&quot;,<I> Cmd_new</I>)
+<I>			file<B>.</B>append_string </I>(&quot;<I>&amp;Open...</I>&quot;,<I> Cmd_open</I>)
+<I>			file<B>.</B>append_string </I>(&quot;<I>&amp;Save...</I>&quot;,<I> Cmd_save</I>)
+<I>			file<B>.</B>append_separator</I>
+<I>			file<B>.</B>append_string </I>(&quot;<I>E&amp;xit</I>&quot;,<I> Cmd_exit</I>)
+<I>			</I>!!<I> line<B>.</B>make</I>
+<I>			line<B>.</B>append_string </I>(&quot;<I>Line &amp;thickness...</I>&quot;,<I> Cmd_line_thickness</I>)
+<I>			</I>!!<I> Result<B>.</B>make</I>
+<I>			Result<B>.</B>append_popup </I>(<I>file</I>,<I> </I>&quot;<I>&amp;File</I>&quot;)
+<I>			Result<B>.</B>append_popup </I>(<I>line</I>,<I> </I>&quot;<I>&amp;Line</I>&quot;)
+		<B>end</B>
+</pre>
+<P>
+<I>	Cmd_new</I>:<I> INTEGER </I><B>is</B>  <I>101</I>
+<I>	Cmd_open</I>:<I> INTEGER </I><B>is</B>  <I>102</I><I>			</I>
+<I>	Cmd_save</I>:<I> INTEGER </I><B>is</B>  <I>103</I><I>			</I>
+<I>	Cmd_exit</I>:<I> INTEGER </I><B>is</B>  <I>104</I>
+<I>	Cmd_line_thickness</I>:<I> INTEGER </I><B>is</B>  <I>105</I>
+</PRE>
+<P>
+Basically, the function creates two popup menus (File and Line) and add them to the main menu. Procedure <I>append_string</I> expects two arguments which are an item name (<I>STRING</I>) and an unique identifier (<I>INTEGER</I>). Optional character &quot;&amp;&quot; identifies the hot key of the option.<P>
+<P>
+No matter which method you use, now you need to set the menu for the window in the <I>MAIN_WINDOW</I>'s make routine as follows:
+<PRE><I>	set_menu </I>(<I>main_menu</I>)
+</PRE>
+<P>
+Figure 13 shows the menu how it appears in the menu window.
+<P>
+<B>Figure 13</B><P>
+<IMG SRC="menu.gif" ALT="menu"   BORDER= width="398" height="266"><P>
+<P>
+At this point, choosing an option in the menu does not perform any task. In order to process menu commands, you have to redefine <I>on_menu_command </I>from <I>WEL_COMPOSITE_WINDOW</I>. This procedure has an <I>INTEGER</I> argument which identifies the option selected by the user (the same as you have specified in the resources or in <I>main_menu</I> function).<P>
+<P>
+A very basic implementation of <I>on_menu_command</I> could be the following:
+<PRE><I>	on_menu_command </I>(<I>menu_id</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- <I>menu_id</I> has been selected.
+		<B>local</B>
+<I>				msgBox: WEL_MSG_BOX</I>
+		<B>do</B>
+			<I>!! msgBox.make</I>
+			<B>inspect</B>  
+<I>				menu_id</I>
+			<B>when</B>  <I>Cmd_new </I><B>then</B>  
+<I>				msgBox.warning_message_box </I>(Current, &quot;<I>Feature not implemented.</I>&quot;,<I> </I>&quot;<I>New</I>&quot;)
+			<B>when</B>  <I>Cmd_open </I><B>then</B>  
+<I>				msgBox.warning_message_box </I>(Current, &quot;<I>Feature not implemented.</I>&quot;,<I> </I>&quot;<I>Open</I>&quot;)
+			<B>when</B>  <I>Cmd_save </I><B>then</B>  
+<I>				msgBox.warning_message_box </I>(Current, &quot;<I>Feature not implemented.</I>&quot;,<I> </I>&quot;<I>Save</I>&quot;)
+			<B>when</B>  <I>Cmd_exit </I><B>then</B>  
+<I>				msgBox.warning_message_box </I>(Current, &quot;<I>Feature not implemented.</I>&quot;,<I> </I>&quot;<I>Exit</I>&quot;)
+			<B>when</B>  <I>Cmd_line_thickness </I><B>then</B>  
+<I>				msgBox.warning_message_box </I>(Current, &quot;<I>Feature not implemented.</I>&quot;,<I> </I>&quot;<I>Line thickness</I>&quot;)
+			<B>end</B> 
+		<B>end</B>
+</PRE>
+<P>
+For instance, if you choose option New in the File menu, Figure 14 shows what you will get.<P>
+<P>
+<B>Figure 14</B><P>
+<IMG SRC="notim.gif" ALT="notim"   BORDER= width="398" height="266"><P>
+<P>
+To make things more interesting, the application will process New option as it should be: Delete all the lines and forces a repainting of the screen. Since there are no lines to redraw, the screen becomes blank. Replace the call to <I>warning_message_box</I> by the following code:
+<PRE>		<B>when</B>  <I>Cmd_new </I><B>then</B>  
+<I>			lines<B>.</B>wipe_out</I>
+<I>			invalidate</I>
+</PRE>
+<P>
+It is easy to respond to the Exit selection by destroying the main window as follows:
+<PRE>		<B>when</B>  <I>Cmd_exit </I><B>then</B>  
+			<B>if</B>  <I>closeable </I><B>then</B> 
+<I>				destroy</I>
+			<B>end</B> 
+</PRE>
+<P>
+You can also move the code from <I>on_right_button_down</I> which brings up line thickness dialog box to <I>on_menu_command</I> to respond to the Line thickness selection (identifier <I>Cmd_line_thickness</I>).
+<P><BR>
+<A HREF="step6.htm"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of
+Contents</A>
+<A HREF="step8.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+</P>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

@@ -1,0 +1,116 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+ 
+<H1>Step 8: Storing the drawing in a file</H1>
+<P>
+Since that you have got a data representation of the drawing, you should be able to transfer that data into a file and read it back. You will also use
+standard dialog boxes to get file names from the user.
+<P>
+You are going to use class <I>STORABLE</I> from EiffelBase to save and read data of the drawing. But first, you need to create the following abstraction in order to be able to save the linked list of points.
+<PRE>
+<B>class</B> 
+<I>	LINES</I>
+</pre>
+<P>
+<B>inherit</B> 
+<I>	LINKED_LIST </I>[<I>LINE</I>]
+<I>	STORABLE</I>
+<P>
+<B>creation</B>  
+<I>	make</I>
+<P>
+<B>end</B>  --<I> </I>class <I>LINES</I>
+</PRE>
+<P>
+<P>
+In <I>MAIN_WINDOW</I> you need to change the definition of <I>lines</I> from:
+<PRE><I>	lines</I>:<I> LINKED_LIST </I>[<I>LINE</I>]
+</PRE>
+<P>
+into:
+<PRE><I>	lines</I>:<I> LINES</I>
+</PRE>
+<P>
+The application will show standard dialog boxes in response to the user's selection of Open and Save to get the file name which will be used for the operation. The following attributes need to be added in <I>MAIN_WINDOW</I>:
+<PRE><I>	open_dialog</I>:<I> WEL_OPEN_FILE_DIALOG</I>
+<I>			</I>-- Standard dialog box to open a file.
+<I>			</I>
+<I>	save_dialog</I>:<I> WEL_SAVE_FILE_DIALOG</I>
+<I>			</I>-- Standard dialog box to save a file.
+</PRE>
+<P>
+Now, you are ready to implement Open and Save options in <I>on_menu_command</I>. Basically, the file name is retrieved from the standard dialog box and used to save (<I>store_by_name</I>) or read (<I>retrieve_by_name</I>) the data. Extension .DRW is adopted for the files (procedures <I>set_filter </I>and <I>set_default_extension</I>).
+<PRE><I>	on_menu_command </I>(<I>menu_id</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- <I>menu_id</I> has been selected.
+		<B>do</B> 
+			<B>inspect</B>
+<I>				menu_id</I>
+			<B>...</B>
+			<B>when</B>  <I>Cmd_open </I><B>then</B>  
+				<B>if</B>  <I>open_dialog </I>=<I> void </I><B>then</B> 
+<I>					</I>!!<I> open_dialog<B>.</B>make</I>
+<I>					open_dialog<B>.</B>set_filter </I>(&lt;&lt;&quot;<I>Draw file</I>&quot;&gt;&gt;,<I> </I>&lt;&lt;&quot;<I>*.drw</I>&quot;&gt;&gt;)
+<I>					open_dialog<B>.</B>set_default_extension </I>(&quot;<I>drw</I>&quot;)
+				<B>end</B>
+<I>				open_dialog<B>.</B>activate </I>(<I>Current</I>);
+				<B>if</B>  <I>open_dialog<B>.</B>selected </I><B>then</B> 
+<I>					lines </I>?=<I> lines<B>.</B>retrieve_by_name </I>(<I>open_dialog<B>.</B>file_name</I>)
+<I>					invalidate</I>
+				<B>end</B> 
+			<B>when</B>  <I>Cmd_save </I><B>then</B>  
+				<B>if</B>  <I>save_dialog </I>=<I> void </I><B>then</B> 
+<I>					</I>!!<I> save_dialog<B>.</B>make</I>
+<I>					save_dialog<B>.</B>set_filter </I>(&lt;&lt;&quot;<I>Draw file</I>&quot;&gt;&gt;,<I> </I>&lt;&lt;&quot;<I>*.drw</I>&quot;&gt;&gt;)
+<I>					save_dialog<B>.</B>set_default_extension </I>(&quot;<I>drw</I>&quot;)
+				<B>end</B>
+<I>				save_dialog<B>.</B>activate </I>(<I>Current</I>)
+				<B>if</B>  <I>save_dialog<B>.</B>selected </I><B>then</B> 
+<I>					lines<B>.</B>store_by_name </I>(<I>save_dialog<B>.</B>file_name</I>)
+				<B>end</B> 
+			<B>...</B>
+		<B>end</B>
+</PRE>
+<P>
+Figure 15 shows the standard open dialog box as it appears when the user chooses the Open option.<P>
+<B>Figure 15</B><P>
+<IMG SRC="save.gif" ALT="save"   BORDER= width="555" height="336">
+<P>
+Here is the end of the tutorial, we hope that you have plenty of ideas to improve your application!
+
+<P><BR>
+<A HREF="step7.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
+</P>
+
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>
+

@@ -1,0 +1,158 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<H1>Step 3: Drawing text in a window</H1><P>
+<P>
+In the next sections, you will learn how to draw lines in the window, change the thickness of the lines, and finally save the contents of the window into a file for reloading later on. But first and to make things simple, you will learn to draw text in a window.<P>
+<P>
+To provide applications with graphic functionality, Windows has a set of functions called the Graphic Device Interface, or GDI. The GDI is the graphic engine that Windows applications use to display and manipulate graphics. To draw text, lines, or figures in a window, you need to use a device context given by the GDI. A device context is a virtual surface with associated attributes, such as a pen, brush, font, background color, text color and current position. When you call GDI functions to draw on a device context, the device driver associated with that device context translates that drawing action into appropriate commands. These commands reproduce the drawing action as accurately as possible on the device context, regardless of the display's capabilities. The display might be a low-resolution monochrome screen, a two-million color screen or a printer. In other words, all devices supported by Windows.<P>
+<P>
+To make things more interesting in your program, instead of bringing up a message box, you will respond by drawing text that shows the coordinates of the point where you clicked on the window. The new version of <I>on_left_button_down</I> will be defined as follows:
+<PRE>
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Write <I>x_pos</I> and <I>y_pos</I> when the user presses
+<I>			</I>-- the left mouse button.
+		<B>local</B> 
+<I>			position</I>:<I> STRING</I>
+		<B>do</B> 
+<I>			position </I>:=<I> </I>&quot;<I>(</I>&quot;
+<I>			position<B>.</B>append_integer </I>(<I>x_pos</I>)
+<I>			position<B>.</B>append </I>(&quot;<I>, </I>&quot;)
+<I>			position<B>.</B>append_integer </I>(<I>y_pos</I>)
+<I>			position<B>.</B>extend </I>('<I>)</I>')
+<I>			dc<B>.</B>get</I>
+<I>			dc<B>.</B>text_out </I>(<I>x_pos</I>,<I> y_pos</I>,<I> position</I>)
+<I>			dc<B>.</B>release</I>
+		<B>end</B>
+</pre>
+<P>
+You also need to add a new attribute in class <I>MAIN_WINDOW</I> which is:
+<P>
+<I>	dc</I>:<I> WEL_CLIENT_DC</I>
+<I>			</I>-- Device context associated to the current
+<I>			</I>-- client window
+<P>
+The <I>make</I> routine needs to be modified in order to create <I>dc</I> as follows:
+<Pre>
+<I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+		<B>end</B>
+</PRE>
+Figure 4 shows the result after several clicks.
+<P>
+<B>Figure 4</B><P>
+<IMG SRC="xy.gif" ALT="xy"   BORDER= width="397" height="266"><P>
+<P>
+One more function you can add to the application is clearing the window. The window will be cleared when a right mouse button is clicked. To implement this, redefine <I>on_right_button</I> to call <I>invalidate</I> which causes the whole window to be repainted. Since your window does not yet know how to repaint itself, it just clears its client area.
+<PRE>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Invalidate window.
+		<B>do</B> 
+<I>			invalidate</I>
+		<B>end</B>
+</PRE>
+<P>
+The full code of <I>MAIN_WINDOW </I>is:
+<PRE>
+<B>class</B> 
+<I>	MAIN_WINDOW</I>
+<B>inherit</B> 
+<I>	WEL_FRAME_WINDOW</I>
+		<B>redefine</B> 
+<I>			on_left_button_down</I>,<I> on_right_button_down</I>,<I> closeable</I>
+		<B>end</B> 
+<B>creation</B>  
+<I>	make
+</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+
+<I>	make </I><B>is</B> 
+<I>			</I>-- Make the main window.
+		<B>do</B> 
+<I>			make_top </I>(&quot;<I>My application</I>&quot;)
+<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+		<B>end</B>
+<I>	</I>
+<B>feature</B>   -- Access
+
+<I>	dc</I>:<I> WEL_CLIENT_DC</I>
+<I>			</I>-- Device context associated to the current
+<I>			</I>-- client window
+<I>			</I>
+<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+
+<I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Write <I>x_pos</I> and <I>y_pos</I> when the user presses
+<I>			</I>-- the left mouse button.
+		<B>local</B> 
+<I>			position</I>:<I> STRING</I>
+		<B>do</B> 
+<I>			position </I>:=<I> </I>&quot;<I>(</I>&quot;
+<I>			position<B>.</B>append_integer </I>(<I>x_pos</I>)
+<I>			position<B>.</B>append </I>(&quot;<I>, </I>&quot;)
+<I>			position<B>.</B>append_integer </I>(<I>y_pos</I>)
+<I>			position<B>.</B>extend </I>('<I>)</I>')
+<I>			dc<B>.</B>get</I>
+<I>			dc<B>.</B>text_out </I>(<I>x_pos</I>,<I> y_pos</I>,<I> position</I>)
+<I>			dc<B>.</B>release</I>
+		<B>end</B>
+<I>	</I>
+<I>	on_right_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B> 
+<I>			</I>-- Invalidate window.
+		<B>do</B> 
+<I>			invalidate</I>
+		<B>end</B>
+<I>	</I>
+<I>	closeable</I>:<I> BOOLEAN </I><B>is</B> 
+<I>			</I>-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+<I>			!! msgBox.make
+			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
+<I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
+		<B>end</B>
+	
+<B>end</B>  -- class MAIN_WINDOW
+</PRE>
+<P><BR>
+<A HREF="step2.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of
+Contents</A>
+<A HREF="step4.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+</P>
+
+</i>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

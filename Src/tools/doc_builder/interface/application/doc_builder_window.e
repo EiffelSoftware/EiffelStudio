@@ -97,12 +97,12 @@ feature {NONE} -- Initialization
 			toc_new_button.select_actions.extend 			(agent open_new_toc_dialog)
 			toc_open_button.select_actions.extend 			(agent Shared_toc_manager.open_toc)
 			toc_save_button.select_actions.extend 			(agent Shared_toc_manager.save_toc)
-			toc_menu_button.select_actions.extend 			(agent show_loaded_tocs)
-			toc_properties_button.select_actions.extend 	(agent open_toc_properties_dialog)
+			toc_list_button.select_actions.extend 			(agent show_loaded_tocs)
+			toc_sort_button.select_actions.extend 			(agent open_toc_properties_dialog)
 			toc_new_heading.select_actions.extend 			(agent Shared_toc_manager.new_node (True))
 			toc_new_page.select_actions.extend 				(agent Shared_toc_manager.new_node (False))
 			toc_remove_topic.select_actions.extend 			(agent Shared_toc_manager.remove_node)
-			toc_exclude_button.select_actions.extend 		(agent Shared_toc_manager.toggle_include_node)
+			toc_merge_button.select_actions.extend 			(agent open_toc_merge_dialog)
 				
 					-- Misc Interface Events
 			editor_close.select_actions.extend	 			(agent Shared_document_editor.close_document)
@@ -319,20 +319,26 @@ feature -- Interface Events
 	update_toc_toolbar is
 			-- Update TOC toolbar
 		do
-			if Shared_toc_manager.loaded_toc = Void then
+			if shared_toc_manager.loaded_toc = Void then
 				toggle_sensitivity (toc_save_button, False)
-				toggle_sensitivity (toc_properties_button, False)
+				toggle_sensitivity (toc_sort_button, False)
 				toggle_sensitivity (toc_new_heading, False)
 				toggle_sensitivity (toc_new_page, False)
 				toggle_sensitivity (toc_remove_topic, False)
-				toggle_sensitivity (toc_menu_button, False)
+				toggle_sensitivity (toc_list_button, False)
+				toggle_sensitivity (toc_merge_button, False)
 			else
 				toggle_sensitivity (toc_save_button, True)
-				toggle_sensitivity (toc_properties_button, True)
+				toggle_sensitivity (toc_sort_button, True)
 				toggle_sensitivity (toc_new_heading, True)
 				toggle_sensitivity (toc_new_page, True)
 				toggle_sensitivity (toc_remove_topic, True)
-				toggle_sensitivity (toc_menu_button, True)
+				toggle_sensitivity (toc_list_button, True)
+				if shared_toc_manager.displayed_tocs.count > 1 then
+					toggle_sensitivity (toc_merge_button, True)
+				else
+					toggle_sensitivity (toc_merge_button, False)
+				end
 			end
 		end		
 		
@@ -466,6 +472,7 @@ feature -- Status Setting
 			end
 			toc_area.go_i_th (2)
 			toc_area.replace (a_toc)
+			toc_status_report_label.set_text (a_toc.toc.name)
 		end
 
 	set_toc_node_widget (a_widget: EV_WIDGET) is
@@ -505,7 +512,7 @@ feature {NONE} -- Implementation
 			l_cnt: INTEGER
 		do
 			create l_menu
-			l_tocs := Shared_toc_manager.displayed_tocs_list
+			l_tocs := Shared_toc_manager.displayed_tocs
 			l_curr_toc := Shared_toc_manager.loaded_toc.name
 			from
 				l_cnt := 1
@@ -521,7 +528,7 @@ feature {NONE} -- Implementation
 				l_menu.extend (l_menu_item)
 				l_cnt := l_cnt + 1
 			end
-			l_menu.show_at (toc_menu_button, 0, 0)
+			l_menu.show_at (toc_list_button, 0, 0)
 		end	
 		
 	connect_item_actions (a_item: EV_TREE_NODE) is
@@ -599,6 +606,12 @@ feature {NONE} -- Dialog
 			-- Open dialog for TOC properties
 		do
 			Shared_dialogs.toc_dialog.show_modal_to_window (Current)
+		end
+
+	open_toc_merge_dialog is
+			-- Open dialog for TOC merging
+		do
+			Shared_dialogs.toc_merge_dialog.show_modal_to_window (Current)
 		end
 
 end -- class MAIN_WINDOW

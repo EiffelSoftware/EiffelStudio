@@ -69,20 +69,34 @@ feature {NONE} -- Commands
 	set_settings is
 			-- Set chosen preferences
 		require
-			settings_valid: is_valid		
+			settings_valid: is_valid
+		local
+			l_proj_settings: DOCUMENT_PROJECT_PREFERENCES
 		do			
-			Shared_project.set_name (name_text.text)
+			l_proj_settings := shared_project.preferences			
+				
+				-- Schema
 			if schema_loc_text.text.is_empty then
-				Shared_document_manager.remove_schema
+				shared_document_manager.remove_schema
 			else
-				Shared_document_manager.initialize_schema (schema_loc_text.text)			
+				shared_document_manager.initialize_schema (schema_loc_text.text)			
 			end			
+				-- Stylesheet
 			if css_loc_text.text.is_empty then
-				Shared_document_manager.remove_stylesheet
+				shared_document_manager.remove_stylesheet
 			else
-				Shared_document_manager.initialize_stylesheet (css_loc_text.text)
+				shared_document_manager.initialize_stylesheet (css_loc_text.text)
 			end		
 			
+				-- Conversion Options
+			l_proj_settings.set_process_includes (use_include_tags.is_selected)
+			l_proj_settings.set_include_header (header_include_check.is_selected)
+			l_proj_settings.set_include_footer (footer_include_check.is_selected)
+			l_proj_settings.set_include_html_stylesheet (html_stylesheet_check.is_selected)
+			l_proj_settings.set_include_nav_links (nav_links_check.is_selected)
+			l_proj_settings.set_generate_dhtml_toc (dhtml_toc_check.is_selected)
+			l_proj_settings.set_generate_dhtml_filter (dhtml_filter_check.is_selected)
+				
 			project_preferences.write
 		end		
 

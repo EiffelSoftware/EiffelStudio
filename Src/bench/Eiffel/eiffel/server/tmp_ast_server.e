@@ -11,12 +11,12 @@ inherit
 			make as basic_make,
 			put as old_put
 		redefine
-			make_index, init_file
+			make_index, need_index, init_file
 		end;
 
 	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
 		redefine
-			put, make_index, make, init_file
+			put, make_index, need_index, make, init_file
 		select
 			put, make
 		end
@@ -86,25 +86,26 @@ feature
 			-- of FEATURE_AS and INVARIANT_AS
 		local
 			read_info: READ_INFO;
-			is_feature, is_invariant: BOOLEAN;
 			feat: FEATURE_AS_B;
 		do
-			is_feature := is_feature_as ($obj);
-			is_invariant := is_invariant_as ($obj);
-			if is_feature or else is_invariant then
-					-- Put `obj' in the index.
-				!!read_info;
-				read_info.set_offset (file_position - last_offset);
-				read_info.set_class_id (last_id);
-				read_info.set_object_count (object_count);
-				if is_feature then
-					feat ?= obj;
-					index.force (read_info, feat.id);
-				else
-					invariant_info := read_info;
-				end;
+				-- Put `obj' in the index.
+			!!read_info;
+			read_info.set_offset (file_position - last_offset);
+			read_info.set_class_id (last_id);
+			read_info.set_object_count (object_count);
+			if is_feature_as ($obj) then
+				feat ?= obj;
+				index.force (read_info, feat.id);
+			else
+				invariant_info := read_info;
 			end;
 		end;
+
+	need_index (obj: ANY): BOOLEAN is
+			-- Is an index needed for `obj'?
+		do
+			Result := is_feature_as ($obj) or else is_invariant_as ($obj)
+		end
 
 	clear_index is
 			-- Clear `index'.

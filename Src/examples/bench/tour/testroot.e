@@ -8,19 +8,19 @@ feature
 
 	make is
 		do
-			display_demonstration_message;
-			!HEIR! o1; 
-			!! o2;
-			o1.display;
+			display_demonstration_message
+			!HEIR! o1
+			!! o2
+			o1.display
 			o2.display
 		end;
 
 	display_demonstration_message is
 		do
-			io.new_line;
-			io.putstring ("ISE Eiffel spoken here");
-			io.new_line;
-			io.putstring ("--------------------------------%N%N");
+			io.put_new_line;
+			io.put_string (" ISE Eiffel spoken here");
+			io.put_new_line;
+			io.put_string ("--------------------------------%N%N");
 		end;
 
 		-- To get a typical compilation error, remove the two dashes

@@ -1,9 +1,9 @@
-system SIMPLE root
-
+system 
+	SIMPLE
+root
 	TESTROOT  (root_cluster): "make"
 
 default
-
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster

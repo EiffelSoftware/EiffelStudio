@@ -167,8 +167,25 @@ feature -- Basic operations
 		
 	pick_object: GB_CLIPBOARD_OBJECT_STONE is
 				-- Execute `Current'.
+			local
+				contents: XM_ELEMENT
+				element_info: ELEMENT_INFORMATION
+				full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			do
+				check
+					clipboard_not_empty: clipboard.contents_cell.item /= Void
+				end
 				create Result
+				
+					-- Now determine if the top level object is an instance of another
+					-- object and if so, set the associated object for `Result'.
+				contents ?= clipboard.contents_cell.item.first
+				contents ?= child_element_by_name (contents, internal_properties_string)
+				full_information := get_unique_full_info (contents)
+				element_info := full_information @ (reference_id_string)
+				if element_info /= Void then
+					Result.set_associated_top_level_object (element_info.data.to_integer)
+				end
 			end
 			
 	new_clipboard_object: GB_OBJECT

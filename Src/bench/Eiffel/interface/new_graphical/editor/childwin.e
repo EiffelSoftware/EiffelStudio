@@ -204,18 +204,21 @@ feature -- Basic operations
 		do
 				-- Draw all lines
 			dc.select_font(current_font)
-			from
-				first_line_to_draw := (first_line_displayed + top // line_increment - 1).max(1)
-				last_line_to_draw := (first_line_displayed + bottom // line_increment).min(number_of_lines)
+			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max(1)
+			last_line_to_draw := (first_line_displayed + bottom // line_increment).min(number_of_lines)
+
+			if first_line_to_draw <= last_line_to_draw then
 				text_displayed.go_i_th(first_line_to_draw)
-				curr_line := first_line_to_draw
-			until
-				curr_line > last_line_to_draw + 2 or else
-				text_displayed.after
-			loop
-				display_line (0,(curr_line - first_line_displayed)*line_increment,text_displayed.current_line, dc)
-				curr_line := curr_line + 1
-				text_displayed.forth
+				from
+					curr_line := first_line_to_draw
+				until
+					curr_line > last_line_to_draw + 2 or else
+					text_displayed.after
+				loop
+					display_line (0,(curr_line - first_line_displayed)*line_increment,text_displayed.current_line, dc)
+					curr_line := curr_line + 1
+					text_displayed.forth
+				end
 			end
 			dc.unselect_font
 		end

@@ -6,11 +6,7 @@ deferred class POLY_TABLE [T -> ENTRY]
 inherit
 
 	SORTED_TWO_WAY_LIST [T];
-	IDABLE
-		rename
-			id as rout_id,
-			set_id as set_rout_id
-		end;
+	IDABLE;
 	SHARED_WORKBENCH;
 	SHARED_ENCODER;
 	SHARED_CODE_FILES;
@@ -18,12 +14,22 @@ inherit
 	SHARED_SERVER;
 	SH_DEBUG;
 
+feature -- IDABLE
+
+	id: INTEGER is
+			-- Id for server storage
+		do
+			Result := rout_id.id
+		end
+
+	set_id (i: INTEGER) is do end;
+
 feature
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 			-- Routine id of the table
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: ROUTINE_ID) is
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i;
@@ -52,16 +58,7 @@ feature
 				writer.generate (Current);
 			end;
 			if has_type_table and then not has_one_type then
-				writer.generate_type_table (Current, True);
-			end;
-		end;
-
-	write_workbench is
-			-- Generation of the workbench tabl ethrough the writer
-		do
-			writer.generate_workbench (Current);
-			if has_type_table then
-				writer.generate_type_table (Current, False)
+				writer.generate_type_table (Current);
 			end;
 		end;
 
@@ -255,21 +252,16 @@ feature
 			end;
 		end;
 
-	generate_type_table (file: INDENT_FILE; final_mode: BOOLEAN) is
-			-- Generate the associated type table
+	generate_type_table (file: INDENT_FILE) is
+			-- Generate the associated type table in final mode.
 		local
 			i, nb: INTEGER;
 			entry: ENTRY;
 			c_name: STRING;
 		do
 			file.putstring ("int16 ");
-			if final_mode then
-				c_name := Encoder.type_table_name (rout_id);
-				file.putstring (c_name);
-			else
-				file.putchar ('t');
-				file.putint (rout_id);
-			end;
+			c_name := rout_id.type_table_name;
+			file.putstring (c_name);
 			from
 				file.putstring ("[] = {%N");
 				i := min_type_id;
@@ -295,47 +287,11 @@ feature
 
 		end;
 
-	generate_workbench (file: INDENT_FILE) is
-			-- Generate workbench table
-		require
-			good_argument: file /= Void;
-		local
-			i, nb: INTEGER;
-		do
-			file.putstring (workbench_c_type);
-			file.putstring (" r");
-			file.putint (rout_id);
-			file.putstring ("[] = {%N");
-			from
-				i := min_type_id;
-				nb := max_type_id;
-				start
-			until
-				i > nb
-			loop
-				if i = item.type_id then
-					item.generate_workbench_info (file);
-					forth;
-				else
-					item.generate_empty_info (file);
-				end;
-				file.putstring (",%N");
-				i := i + 1;
-			end;
-			file.putstring ("};%N%N");
-		end;
-
 	workbench_c_type: STRING is
 			-- Associated C item structure name
 		deferred
 		end;
 
-	melt is
-			-- Melt current table
-		do
-			io.putstring ("POLY_TABLE.melt: Should not be called anymore%N");
-		end;
-			
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for the current poly table.
 		require
@@ -377,7 +333,7 @@ feature
 			-- Make header byte code
 		do
 				-- Routine id
-			ba.append_int32_integer (rout_id);
+			ba.append_int32_integer (rout_id.id);
 				-- King of poly table: attribute / routine
 			if is_routine_table then
 				ba.append ('%/001/');

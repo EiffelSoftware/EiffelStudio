@@ -57,6 +57,22 @@ feature -- EiffelBench specific calls
 			end
 		end;
 
+	ebench_command_name: STRING is
+		local
+			eiffel4, platform: STRING
+			ebench_location: FILE_NAME
+			a: ANY
+		do
+			eiffel4 := Execution_environment.get ("EIFFEL4")
+			platform := Execution_environment.get ("PLATFORM")
+			!! ebench_location.make_from_string (eiffel4)
+			ebench_location.extend_from_array (<<"bench","spec",platform,"bin">>)
+			ebench_location.set_file_name ("ebench")
+			!! Result.make (128)
+			a := ebench_location.to_c
+			Result.from_c ($a)
+		end
+
 feature {NONE} -- Shell
 
 	request: ASYNC_SHELL is

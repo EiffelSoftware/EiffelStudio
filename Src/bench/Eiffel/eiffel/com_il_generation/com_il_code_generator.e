@@ -12,7 +12,7 @@ inherit
 			start_class_mappings
 		end
 		
-	CORE_PROXY
+	COMPILER_PROXY_PROXY
 		rename
 			generate_external_identification as proxy_generate_external_identification,
 			generate_external_call as proxy_generate_external_call,

@@ -122,12 +122,14 @@ feature {NONE} -- Windows message handling
 		do
 				-- Are we moving the splitter?
 			if has_capture then
-					-- Move the splitter. The splitter position
-					-- is now the mouse position
-				splitter_position := x_pos
+				if x_pos >= 0 and x_pos <= width - separator_width then
+						-- Move the splitter. The splitter position
+						-- is now the mouse position
+					splitter_position := x_pos
 					
-					-- Resize the left & right controls.
-				on_size (0, width, height)
+						-- Resize the left & right controls.
+					on_size (0, width, height)
+				end
 			end
 		end
 

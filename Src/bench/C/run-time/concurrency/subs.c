@@ -1008,3 +1008,19 @@ void cur_set_gc_period(EIF_INTEGER gcp) {
 */
 }
 
+EIF_OBJ cur_deep_import(EIF_OBJ s_obj) {
+	int i, fd;
+
+	if (!s_obj) 
+		return NULL;
+	if (on_local_processor(eif_access(s_obj))) {
+		/* now, deep clone the local object */
+		return edclone(CURPROXY_OBJ(eif_access(s_obj)));
+	} else {
+		CURRSO(eif_access(s_obj));
+		CURSARI(constant_execute_procedure, oid_of_sep_obj(eif_access(s_obj)), constant_deep_import, "_no_class", "_no_feature", 0);
+		CURSG(eif_access(s_obj));
+		CURFSO(eif_access(s_obj));
+		return CURGO(0);		
+	}
+}

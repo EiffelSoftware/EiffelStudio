@@ -171,10 +171,15 @@ cluster
 		-- INTERFACE CLUSTERS
 	all interface:				"$EIFFEL_SRC/Eiffel/interface"
 		exclude
-			"CVS";"graphical";"win32";"mswin";"new_tty";"tty";"Not_in_System";"registry";
+			"CVS";"graphical";"win32";"mswin";"new_tty";"tty";"Not_in_System";"registry";"preferences"
 	--	default
 	--		assertion (check)
 	--		assertion (require)
+		end
+
+	all preferences: 			"$EIFFEL_SRC/library/preferences"
+		exclude
+			"CVS"; "registry"
 		end
 
 		-- tty interface

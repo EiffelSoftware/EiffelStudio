@@ -1225,38 +1225,3 @@ void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* 
 		*r /= 257; *g /= 257; *b /= 257;
 }
 
-/*********************************
- *
- * Function : `c_gtk_font_selection_set_filter'
- *
- * Note : Set the filter on th given font selection.
- *
- * Author : Leila
- *
- *********************************/
-
-void c_gtk_font_selection_set_filter (GtkFontSelection *fontsel,
-		const char *foundries,
-		const char *weights,
-		const char *slants,
-		const char *setwidths,
-		const char *spacings,
-		const char *charsets)
-{
-		gchar **f;
-		gchar **w;
-		gchar **sl;
-		gchar **sw;
-		gchar **sp;
-		gchar **c;
-	
-		f = (gchar **) &foundries;
-		w = (gchar **) &weights;
-		sl = (gchar **) &slants;
-		sw = (gchar **) &setwidths;
-		sp = (gchar **) &spacings;
-		c = (gchar **) &charsets;
-			
-		gtk_font_selection_set_filter (fontsel,GTK_FONT_FILTER_USER,GTK_FONT_ALL,f, w, sl, sw, sp, c);
-}
-

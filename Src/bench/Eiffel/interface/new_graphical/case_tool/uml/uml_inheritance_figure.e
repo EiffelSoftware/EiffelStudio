@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is an UML view for an inheritance link."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +20,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create
+		end
 
 create
 	make_with_model,
@@ -33,8 +40,8 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			set_line_width (uml_inheritance_line_width)
-			set_foreground_color (uml_inheritance_color)
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 			real_arrow_head_size := 20
 			line.set_arrow_size (20)
 			request_update
@@ -111,5 +118,12 @@ feature {NONE} -- Implementation
 			
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
+			
+	retrieve_preferences is
+			-- Retrieve preferences.
+		do
+			set_line_width (uml_inheritance_line_width)
+			set_foreground_color (uml_inheritance_color)
+		end
 
 end -- class UML_INHERITANCE_FIGURE

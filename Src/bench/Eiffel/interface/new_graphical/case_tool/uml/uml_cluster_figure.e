@@ -1,12 +1,11 @@
 indexing
 	description: "Objects that is an UML view for an eiffel cluster."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	UML_CLUSTER_FIGURE
-	
 	
 inherit
 	EIFFEL_CLUSTER_FIGURE
@@ -28,6 +27,13 @@ inherit
 			default_create
 		end
 		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model
 		
@@ -38,37 +44,14 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
 			
-			-- Set properties to default values
-			foreground_color := uml_cluster_line_color
-			background_color := uml_cluster_fill_color
-			line_width := uml_cluster_line_width
-			cluster_name_background_color := uml_cluster_name_area_color
-			cluster_name_font := uml_cluster_name_font
-			cluster_name_color := uml_cluster_name_color
-			iconified_background_color := uml_cluster_iconified_fill_color
-		
-			-- set name_label properties
-			name_label.set_font (cluster_name_font)
-			name_label.set_foreground_color (cluster_name_color)
-			
 			-- create the cluster rectangle
 			create rectangle
-			rectangle.set_foreground_color (foreground_color)
-			if background_color /= Void then
-				rectangle.set_background_color (background_color)
-			end
-			rectangle.set_line_width (line_width)
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 			extend (rectangle)
 			send_to_back (rectangle)
 			
 			-- create the label rectangle
 			create label_rectangle
-			label_rectangle.set_foreground_color (foreground_color)
-			if cluster_name_background_color /= Void then
-				label_rectangle.set_background_color (cluster_name_background_color)
-			end
-			label_rectangle.set_line_width (line_width)
 			label_rectangle.pointer_double_press_actions.extend (agent on_label_double_press)
 			extend (label_rectangle)
 			bring_to_front (name_label)
@@ -76,6 +59,9 @@ feature {NONE} -- Initialization
 
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
+			
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 			is_shown := True
 		end
 		
@@ -157,7 +143,6 @@ feature -- Access
 			l_area: like area
 			i, nb: INTEGER
 			l_bbox: like bounding_box
---			e_item: ES_ITEM
 			l_item: EG_FIGURE
 			l_border: INTEGER
 		do
@@ -170,15 +155,12 @@ feature -- Access
 					i := number_of_figures
 					nb := count - 1
 					l_item ?= l_area.item (i)
---					e_item ?= l_item.model
 				until
---					i > nb or else (e_item = Void or else e_item.is_needed_on_diagram)--
 					i > nb or else l_area.item (i).is_show_requested
 				loop
 					i := i + 1
 					if i <= nb then
 						l_item ?= l_area.item (i)
---						e_item ?= l_item.model
 					end
 				end
 				if i <= nb then
@@ -189,8 +171,6 @@ feature -- Access
 						i > nb
 					loop
 						l_item ?= l_area.item (i)
---						e_item ?= l_item.model
---						if e_item = Void or else e_item.is_needed_on_diagram then --
 						if l_area.item (i).is_show_requested then
 							l_bbox := l_area.item (i).bounding_box
 							if l_bbox.height > 0 or else l_bbox.width > 0 then
@@ -206,27 +186,6 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR
-			-- Color for the cluster border.
-			
-	background_color: EV_COLOR
-			-- Color for the cluster background.
-			
-	line_width: INTEGER
-			-- Cluster border line width.
-			
-	cluster_name_font: EV_FONT
-			-- Font for the cluster name.
-			
-	cluster_name_color: EV_COLOR
-			-- Color for the cluster name.
-			
-	cluster_name_background_color: EV_COLOR
-			-- Background color for the cluster name label.
-	
-	iconified_background_color: EV_COLOR
-			-- Background color when `is_iconified'.
-			
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
@@ -466,11 +425,11 @@ feature {NONE} -- Implementation
 			if is_selected /= an_is_selected then
 				is_selected := an_is_selected
 				if is_selected = True then
-					rectangle.set_line_width (line_width * 2)
-					label_rectangle.set_line_width (line_width * 2)
+					rectangle.set_line_width (uml_cluster_line_width * 2)
+					label_rectangle.set_line_width (uml_cluster_line_width * 2)
 				else
-					rectangle.set_line_width (line_width)
-					label_rectangle.set_line_width (line_width)
+					rectangle.set_line_width (uml_cluster_line_width)
+					label_rectangle.set_line_width (uml_cluster_line_width)
 				end
 			end
 		end
@@ -580,26 +539,55 @@ feature {NONE} -- Implementation
 		do
 			is_iconified := not is_iconified
 			if is_iconified then
-				if iconified_background_color /= Void then
-					rectangle.set_background_color (iconified_background_color)
+				if uml_cluster_iconified_fill_color /= Void then
+					rectangle.set_background_color (uml_cluster_iconified_fill_color)
 				else
 					rectangle.remove_background_color
 				end
 			else
-				if background_color /= Void then
-					rectangle.set_background_color (background_color)
+				if uml_cluster_fill_color /= Void then
+					rectangle.set_background_color (uml_cluster_fill_color)
 				else
 					rectangle.remove_background_color
 				end
 			end
 		end
-
-
-invariant
-	foreground_color_not_void: foreground_color /= Void
-	line_width_non_negative: line_width >= 0
-	cluster_name_font_not_void: cluster_name_font /= Void
-	cluster_name_color_not_void: cluster_name_color /= Void
-
+		
+	retrieve_preferences is
+			-- Retrieve properties from preferences.
+		do
+			name_label.set_identified_font (uml_cluster_name_font)
+			name_label.set_foreground_color (uml_cluster_name_color)
+			
+			rectangle.set_foreground_color (uml_cluster_line_color)
+			if is_iconified then
+				if uml_cluster_iconified_fill_color /= Void then
+					rectangle.set_background_color (uml_cluster_iconified_fill_color)
+				else
+					rectangle.remove_background_color
+				end
+			else
+				if uml_cluster_fill_color /= Void then
+					rectangle.set_background_color (uml_cluster_fill_color)
+				else
+					rectangle.remove_background_color
+				end
+			end
+			if is_selected then
+				rectangle.set_line_width (uml_cluster_line_width * 2)
+			else
+				rectangle.set_line_width (uml_cluster_line_width)
+			end
+			
+			label_rectangle.set_foreground_color (uml_cluster_line_color)
+			if uml_cluster_name_area_color /= Void then
+				label_rectangle.set_background_color (uml_cluster_name_area_color)
+			end
+			if is_selected then
+				label_rectangle.set_line_width (uml_cluster_line_width * 2)
+			else
+				label_rectangle.set_line_width (uml_cluster_line_width)			
+			end
+		end
 
 end -- class UML_CLUSTER_FIGURE

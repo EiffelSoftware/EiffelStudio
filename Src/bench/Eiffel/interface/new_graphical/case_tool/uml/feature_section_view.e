@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is a view for a FEATURE_SECTION."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +9,9 @@ class
 	
 inherit
 	EV_MODEL_GROUP
+		redefine
+			world
+		end
 	
 	FEATURE_NAME_EXTRACTOR
 		export
@@ -23,6 +26,13 @@ inherit
 		end
 		
 	EB_CONSTANTS
+		undefine
+			default_create
+		end
+		
+	OBSERVER
+		rename
+			update as retrieve_preferences
 		undefine
 			default_create
 		end
@@ -45,7 +55,6 @@ feature {NONE} -- Initialize
 			e_feature: E_FEATURE
 			visibility: STRING
 			once_line: EV_MODEL_LINE
-			bbox: EV_RECTANGLE
 		do
 			default_create
 			
@@ -53,9 +62,9 @@ feature {NONE} -- Initialize
 			
 			attr_height := 0
 			create section_text.make_with_text ("+" + a_fs.features.count.out + " <<" + a_fs.name + ">>")
-			set_section_text_properties (section_text)
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
 			section_text.pointer_button_press_actions.extend (agent on_section_press)
+
 			section_text.set_point_position (point_x, point_y)
 			attr_height := attr_height + section_text.height
 			extend (section_text)
@@ -78,8 +87,7 @@ feature {NONE} -- Initialize
 				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name)
 				
 				create txt.make_with_text (visibility + full_name_compiled (e_feature))
-				
-				set_features_text_properties (txt)
+
 				txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
 				txt.set_accept_cursor (cursors.cur_feature)
 				txt.set_deny_cursor (cursors.cur_x_feature)
@@ -87,9 +95,7 @@ feature {NONE} -- Initialize
 				attr_height := attr_height + txt.height
 				feature_group.extend (txt)
 				if e_feature.is_once then
-					bbox := txt.bounding_box
-					create once_line.make_with_positions (bbox.left, bbox.bottom - 4, bbox.right, bbox.bottom - 4)
-					once_line.set_foreground_color (uml_class_features_color)
+					create once_line
 					feature_group.extend (once_line)
 				end
 				l_features.forth
@@ -100,6 +106,9 @@ feature {NONE} -- Initialize
 			is_expanded := False
 			feature_group.hide
 			disable_pick_and_drop
+
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 		ensure
 			set: feature_section = a_fs and container = a_container
 			collabsed: not is_expanded
@@ -115,6 +124,12 @@ feature -- Access
 	
 	is_expanded: BOOLEAN
 			-- Is section expanded?
+			
+	world: EG_FIGURE_WORLD is
+			-- World `Current' is part of.
+		do
+			Result ?= Precursor {EV_MODEL_GROUP}
+		end
 			
 feature -- Element change
 
@@ -150,26 +165,16 @@ feature {NONE} -- Implementation
 
 	set_features_text_properties (txt: EV_MODEL_TEXT) is
 			-- Set properties of `txt' according to standarts.
-		local
-			ew: EG_FIGURE_WORLD
 		do
-			txt.set_font (uml_class_features_font)
+			txt.set_identified_font (uml_class_features_font)
 			txt.set_foreground_color (uml_class_features_color)
-			ew ?= world
-			if ew /= Void and then ew.scale_factor /= 1.0 then
-				txt.scale (ew.scale_factor)
-			end
 		end
 		
 	set_section_text_properties (txt: EV_MODEL_TEXT) is
 			-- Set properties of `txt' according to standarts.
-		local
-			ew: EG_FIGURE_WORLD
 		do
-			txt.set_font (uml_class_feature_section_font)
-			if ew /= Void and then ew.scale_factor /= 1.0 then
-				txt.scale (ew.scale_factor)
-			end
+			txt.set_identified_font (uml_class_feature_section_font)
+			txt.set_foreground_color (uml_class_feature_section_color)
 		end
 		
 	section_text: EV_MODEL_TEXT
@@ -212,4 +217,38 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	retrieve_preferences is
+			-- Retrieve properties from preference.
+		local
+			txt, last_txt: EV_MODEL_TEXT
+			line: EV_MODEL_LINE
+			bbox: EV_RECTANGLE
+		do
+			set_section_text_properties (section_text)
+			from
+				feature_group.start
+			until
+				feature_group.after
+			loop
+				txt ?= feature_group.item
+				if txt /= Void then		
+					set_features_text_properties (txt)
+					last_txt := txt
+				else
+					line ?= feature_group.item
+					if line /= Void then
+						line.set_foreground_color (uml_class_features_color)
+						check
+							once_line_for_feature: last_txt /= Void
+						end
+						bbox := last_txt.bounding_box
+						line.set_point_a_position (bbox.left, bbox.bottom - 4)
+						line.set_point_b_position (bbox.right, bbox.bottom - 4)
+					end
+				end
+				feature_group.forth
+			end
+			container.request_update
+		end
+
 end -- class FEATURE_SECTION_VIEW

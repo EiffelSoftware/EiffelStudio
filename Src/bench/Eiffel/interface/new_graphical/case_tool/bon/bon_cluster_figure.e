@@ -42,6 +42,13 @@ inherit
 			default_create
 		end
 		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model
 		
@@ -52,26 +59,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
 			
-			-- Set properties to default values
-			foreground_color := bon_cluster_line_color
-			background_color := bon_cluster_fill_color
-			line_width := bon_cluster_line_width
-			cluster_name_background_color := bon_cluster_name_area_color
-			id_cluster_name_font := bon_cluster_name_font
-			cluster_name_color := bon_cluster_name_color
-			iconified_background_color := bon_cluster_iconified_fill_color
-		
-			-- set name_label properties
-			name_label.set_identified_font (id_cluster_name_font)
-			name_label.set_foreground_color (cluster_name_color)
-			
 			-- create the cluster rectangle
 			create rectangle
-			rectangle.set_foreground_color (foreground_color)
-			if background_color /= Void then
-				rectangle.set_background_color (background_color)
-			end
-			rectangle.set_line_width (line_width)
 			real_rectangle_radius := 20.0
 			rectangle.set_radius (rectangle_radius)
 			rectangle.enable_dashed_line_style
@@ -81,11 +70,6 @@ feature {NONE} -- Initialization
 			
 			-- create the label rectangle
 			create label_rectangle
-			label_rectangle.set_foreground_color (foreground_color)
-			if cluster_name_background_color /= Void then
-				label_rectangle.set_background_color (cluster_name_background_color)
-			end
-			label_rectangle.set_line_width (line_width)
 			label_rectangle.enable_dashed_line_style
 			label_rectangle.set_radius (3)
 			
@@ -107,6 +91,10 @@ feature {NONE} -- Initialization
 			is_high_quality := True
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
+			
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
+			
 			is_shown := True
 		end
 		
@@ -239,30 +227,6 @@ feature -- Access
 				end
 			end
 		end
-
-	foreground_color: EV_COLOR
-			-- Color for the cluster border.
-			
-	background_color: EV_COLOR
-			-- Color for the cluster background.
-			
-	line_width: INTEGER
-			-- Cluster border line width.
-			
-	cluster_name_font: EV_FONT is
-			-- Font for the cluster name.
-		do
-			Result := id_cluster_name_font.font
-		end
-			
-	cluster_name_color: EV_COLOR
-			-- Color for the cluster name.
-			
-	cluster_name_background_color: EV_COLOR
-			-- Background color for the cluster name label.
-	
-	iconified_background_color: EV_COLOR
-			-- Background color when `is_iconified'.
 			
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
@@ -287,11 +251,21 @@ feature -- Access
 			if xml_routines.xml_boolean (node, "IS_ICONIFIED") then
 				if not is_iconified then
 					collapse
+					if bon_cluster_iconified_fill_color /= Void then
+						rectangle.set_background_color (bon_cluster_iconified_fill_color)
+					else
+						rectangle.remove_background_color
+					end
 					is_iconified := True
 				end
 			else
 				if is_iconified then
 					expand
+					if bon_cluster_fill_color /= Void then
+						rectangle.set_background_color (bon_cluster_fill_color)
+					else
+						rectangle.remove_background_color
+					end
 					is_iconified := False
 				end
 			end
@@ -312,100 +286,8 @@ feature -- Element change
 			Precursor {EIFFEL_CLUSTER_FIGURE}
 			label_move_handle.pointer_double_press_actions.prune_all (agent on_label_double_press)
 			polyline_label_recycle
+			diagram_preferences.remove_observer (Current)
 		end
-		
-
--- If you uncomment it you have to save the colors to xml.
---
---
---	set_iconified_background_color (an_iconified_background_color: like iconified_background_color) is
---			-- Set `iconified_background_color' to `an_iconified_background_color'.
---		do
---			iconified_background_color := an_iconified_background_color
---			if is_iconified then
---				if an_iconified_background_color /= Void then
---					rectangle.set_background_color (an_iconified_background_color)
---				else
---					rectangle.remove_background_color
---				end
---			end
---		ensure
---			iconified_background_color_assigned: iconified_background_color = an_iconified_background_color
---		end
---
---	set_cluster_name_background_color (a_cluster_name_background_color: like cluster_name_background_color) is
---			-- Set `cluster_name_background_color' to `a_cluster_name_background_color'.
---		do
---			cluster_name_background_color := a_cluster_name_background_color
---			if cluster_name_background_color /= Void then
---				label_rectangle.set_background_color (cluster_name_background_color)
---			else
---				label_rectangle.remove_background_color
---			end
---		ensure
---			cluster_name_background_color_assigned: cluster_name_background_color = a_cluster_name_background_color
---		end
---
---	set_cluster_name_color (a_cluster_name_color: like cluster_name_color) is
---			-- Set `cluster_name_color' to `a_cluster_name_color'.
---		require
---			a_cluster_name_color_not_void: a_cluster_name_color /= Void
---		do
---			cluster_name_color := a_cluster_name_color
---			name_label.set_foreground_color (cluster_name_color)
---		ensure
---			cluster_name_color_assigned: cluster_name_color = a_cluster_name_color
---		end
---
---	set_cluster_name_font (a_cluster_name_font: like cluster_name_font) is
---			-- Set `cluster_name_font' to `a_cluster_name_font'.
---		require
---			a_cluster_name_font_not_void: a_cluster_name_font /= Void
---		do
---			cluster_name_font := a_cluster_name_font
---			name_label.set_font (a_cluster_name_font)
---			request_update
---		ensure
---			cluster_name_font_assigned: cluster_name_font = a_cluster_name_font
---		end
---
---	set_line_width (a_line_width: like line_width) is
---			-- Set `line_width' to `a_line_width'.
---		require
---			a_line_width_non_negative: a_line_width >= 0
---		do
---			line_width := a_line_width
---			rectangle.set_line_width (line_width)
---			label_rectangle.set_line_width (line_width)
---		ensure
---			line_width_assigned: line_width = a_line_width
---		end
---
---	set_background_color (a_background_color: like background_color) is
---			-- Set `background_color' to `a_background_color'.
---		do
---			background_color := a_background_color
---			if not is_iconified then
---				if background_color /= Void then
---					rectangle.set_background_color (background_color)
---				else
---					rectangle.remove_background_color
---				end
---			end
---		ensure
---			background_color_assigned: background_color = a_background_color
---		end
---
---	set_foreground_color (a_foreground_color: like foreground_color) is
---			-- Set `foreground_color' to `a_foreground_color'.
---		require
---			a_foreground_color_not_void: a_foreground_color /= Void
---		do
---			foreground_color := a_foreground_color
---			rectangle.set_foreground_color (foreground_color)
---		ensure
---			foreground_color_assigned: foreground_color = a_foreground_color
---		end
 
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
 			-- Set `p' position such that it is on a point on the edge of `Current'.
@@ -572,7 +454,11 @@ feature {EIFFEL_WORLD} -- Show/Hide
 	
 feature {NONE} -- Implementation
 
-	id_cluster_name_font: EV_IDENTIFIED_FONT
+	line_width: INTEGER is
+			-- Cluster border line width.
+		do
+			Result := rectangle.line_width
+		end
 
 	set_is_selected (an_is_selected: like is_selected) is
 			-- Set `is_selected' to `an_is_selected'.
@@ -719,14 +605,14 @@ feature {NONE} -- Implementation
 		do
 			is_iconified := not is_iconified
 			if is_iconified then
-				if iconified_background_color /= Void then
-					rectangle.set_background_color (iconified_background_color)
+				if bon_cluster_iconified_fill_color /= Void then
+					rectangle.set_background_color (bon_cluster_iconified_fill_color)
 				else
 					rectangle.remove_background_color
 				end
 			else
-				if background_color /= Void then
-					rectangle.set_background_color (background_color)
+				if bon_cluster_fill_color /= Void then
+					rectangle.set_background_color (bon_cluster_fill_color)
 				else
 					rectangle.remove_background_color
 				end
@@ -756,14 +642,14 @@ feature {NONE} -- Implementation
 					send_to_back (rectangle)
 					rectangle.enable_dashed_line_style
 					if not is_iconified then
-						if background_color /= Void then
-							rectangle.set_background_color (background_color)
+						if bon_cluster_fill_color /= Void then
+							rectangle.set_background_color (bon_cluster_fill_color)
 						else
 							rectangle.remove_background_color
 						end
 					else
-						if iconified_background_color /= Void then
-							rectangle.set_background_color (iconified_background_color)
+						if bon_cluster_iconified_fill_color /= Void then
+							rectangle.set_background_color (bon_cluster_iconified_fill_color)
 						else
 							rectangle.remove_background_color
 						end
@@ -791,11 +677,34 @@ feature {NONE} -- Implementation
 				request_update
 			end
 		end
-
-invariant
-	foreground_color_not_void: foreground_color /= Void
-	line_width_non_negative: line_width >= 0
-	cluster_name_font_not_void: cluster_name_font /= Void
-	cluster_name_color_not_void: cluster_name_color /= Void
+		
+	retrieve_preferences is
+			-- Retrieve preferences from shared resources.
+		do
+			name_label.set_identified_font (bon_cluster_name_font)
+			name_label.set_foreground_color (bon_cluster_name_color)
+			
+			rectangle.set_foreground_color (bon_cluster_line_color)
+			if is_iconified then
+				if bon_cluster_iconified_fill_color /= Void then
+					rectangle.set_background_color (bon_cluster_iconified_fill_color)
+				else
+					rectangle.remove_background_color
+				end
+			else
+				if bon_cluster_fill_color /= Void then
+					rectangle.set_background_color (bon_cluster_fill_color)
+				else
+					rectangle.remove_background_color
+				end
+			end
+			rectangle.set_line_width (bon_cluster_line_width)
+			
+			label_rectangle.set_foreground_color (bon_cluster_line_color)
+			if bon_cluster_name_area_color /= Void then
+				label_rectangle.set_background_color (bon_cluster_name_area_color)
+			end
+			request_update
+		end
 
 end -- class BON_CLUSTER_FIGURE

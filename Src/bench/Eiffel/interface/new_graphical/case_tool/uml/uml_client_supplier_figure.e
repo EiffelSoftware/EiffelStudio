@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is an UML view for a client supplier link."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,10 +20,18 @@ inherit
 			is_label_shown,
 			xml_element,
 			xml_node_name,
-			set_with_xml_element
+			set_with_xml_element,
+			set_name_label_text
 		end
 
 	UML_CONSTANTS
+		undefine
+			default_create
+		end
+		
+	OBSERVER
+		rename
+			update as retrieve_preferences
 		undefine
 			default_create
 		end
@@ -41,9 +49,6 @@ feature {NONE} -- Initialization
 
 			real_reflexive_radius := reflexive_radius
 
-			label_font := uml_client_label_font
-			label_color := uml_client_label_color
-			
 			create aggregate_figure
 			aggregate_figure.set_point_count (4)
 			aggregate_figure.set_background_color (default_colors.white)
@@ -51,23 +56,17 @@ feature {NONE} -- Initialization
 			aggregate_figure.set_i_th_point_position (2, -10, 10)
 			aggregate_figure.set_i_th_point_position (3, 0, 20)
 			aggregate_figure.set_i_th_point_position (4, 10, 10)
-			aggregate_figure.set_line_width (uml_client_line_width)
-			aggregate_figure.set_foreground_color (foreground_color)
 			create aggregate_group
 			aggregate_group.extend (aggregate_figure)
 			extend (aggregate_group)
 			
-			name_label.set_font (label_font)
-			name_label.set_foreground_color (label_color)
-
-			set_foreground_color (uml_client_color)
-			set_line_width (uml_client_line_width)
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 			
 			create name_group
 			name_group.extend (name_label)
 			extend (name_group)
 
-			
 			is_label_shown := True
 		end
 
@@ -100,12 +99,6 @@ feature -- Status report
 			
 feature -- Access
 
-	label_color: EV_COLOR
-			-- Feature name color.
-
-	label_font: EV_FONT
-			-- Font used for the feature name.
-			
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		do
@@ -162,6 +155,7 @@ feature -- Element change
 			-- Set `line_width' to `a_line_width'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_line_width)
+			aggregate_figure.set_line_width (a_line_width)
 			real_line_width := a_line_width
 		end
 
@@ -170,29 +164,6 @@ feature -- Element change
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
 			aggregate_figure.set_foreground_color (a_color)
-		end
-
-	set_label_color (a_label_color: like label_color) is
-			-- Set `label_color' to `a_label_color'.
-		require
-			a_label_color_not_void: a_label_color /= Void
-		do
-			label_color := a_label_color
-			name_label.set_foreground_color (label_color)
-		ensure
-			label_color_assigned: label_color = a_label_color
-		end
-
-	set_label_font (a_label_font: like label_font) is
-			-- Set `label_font' to `a_label_font'.
-		require
-			a_label_font_not_void: a_label_font /= Void
-		do
-			label_font := a_label_font
-			name_label.set_font (label_font)
-			request_update
-		ensure
-			label_font_assigned: label_font = a_label_font
 		end
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
@@ -391,10 +362,38 @@ feature {NONE} -- Implementation
 			end
 			name_group.set_point_position (nx.truncated_to_integer + 5, ny.truncated_to_integer)
 		end
+		
+	retrieve_preferences is
+			-- Retrieve preferences when changed.
+		do
+			name_label.set_identified_font (uml_client_label_font)
+			name_label.set_foreground_color (uml_client_label_color)
+			set_foreground_color (uml_client_color)
+			set_line_width (uml_client_line_width)
+		end
+		
+	set_name_label_text (a_text: STRING) is
+			-- Set `name_label'.`text' to `a_text'.
+		local
+			l_features: LIST [E_FEATURE]
+			l_item: E_FEATURE
+		do
+			name_label.set_text (a_text)
+			l_features := model.e_features
+			if l_features.is_empty then
+				name_label.remove_pebble
+			else
+				l_item := l_features.first
+				
+				if l_item.name.is_equal (model.features.first.feature_name) then
+					name_label.set_pebble (create {FEATURE_STONE}.make (l_item))
+				else
+					name_label.remove_pebble
+				end
+			end
+		end
 
 invariant
-	label_font_not_void: label_font /= Void
-	label_color_not_void: label_color /= Void
 	foreground_color_not_void: foreground_color /= Void
 	aggregate_figure_not_void: aggregate_figure /= Void
 

@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that defines constants for the BON view."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,30 +11,29 @@ inherit
 	EV_SHARED_SCALE_FACTORY
 	
 	EB_CONSTANTS
-		
+	
+	EIFFEL_SHARED_DIAGRAM_PREFERENCES
+
 feature {NONE} -- Bon class
 		
 	bon_class_name_font: EV_IDENTIFIED_FONT is
-		local
-			fc: EV_FONT_CONSTANTS
-			font: EV_FONT
-		once
-			create fc
-			create font
-			font.set_family (fc.family_sans)
-			font.set_height (14)
-			Result := font_factory.registered_font (font)
-			font_factory.register_font (Result)
+		do
+			Result := diagram_preferences.bon_class_name_font
 		end
 
 	bon_class_name_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0.0, 0.1, 0.5)
+		do
+			Result := diagram_preferences.bon_class_name_color
 		end
 
 	bon_class_fill_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (1.0, 1.0, 0.0)
+		do
+			Result := diagram_preferences.bon_class_fill_color
+		end
+		
+	bon_class_uncompiled_fill_color: EV_COLOR is
+		do
+			Result := diagram_preferences.bon_class_uncompiled_fill_color
 		end
 
 	bon_class_line_color: EV_COLOR is
@@ -42,40 +41,22 @@ feature {NONE} -- Bon class
 			create Result.make_with_rgb (0.0, 0.0, 0.0)
 		end
 
-	bon_class_line_width: INTEGER is
-		do
-			Result := 1
-		end
+	bon_class_line_width: INTEGER is 1
 
 	bon_generics_font: EV_IDENTIFIED_FONT is
-		local
-			fc: EV_FONT_CONSTANTS
-			font: EV_FONT
-		once
-			create fc
-			create font
-			font.set_family (fc.family_roman)
-			font.set_weight (fc.weight_bold)
-			font.set_height (12)
-			Result := font_factory.registered_font (font)
-			font_factory.register_font (Result)
+		do
+			Result := diagram_preferences.bon_generics_font
 		end
 
 	bon_generics_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0.0, 0.4, 0.7)
+		do
+			Result := diagram_preferences.bon_generics_color	
 		end
 
-	max_class_name_length: INTEGER is
-		do
-			Result := 15
-		end
+	max_class_name_length: INTEGER is 15
 		
-	max_generics_name_length: INTEGER is
-		do
-			Result := 15
-		end
-		
+	max_generics_name_length: INTEGER is 15
+	
 	bon_deferred_icon: EV_IDENTIFIED_PIXMAP is
 		local
 			pic: EV_PIXMAP
@@ -124,77 +105,68 @@ feature {NONE} -- Bon class
 feature {NONE} -- Cluster
 
 	bon_cluster_line_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0.8, 0.1, 0.0)
+		do
+			Result := diagram_preferences.bon_cluster_line_color
 		end
-		
+
 	bon_cluster_line_width: INTEGER is 1
 
 	bon_cluster_fill_color: EV_COLOR
 
 	bon_cluster_iconified_fill_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (1.0, 0.9, 0.9)
+		do
+			Result := diagram_preferences.bon_cluster_iconified_fill_color
 		end
 
 	bon_cluster_name_area_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (1.0, 1.0, 1.0)
+		do
+			Result := diagram_preferences.bon_cluster_name_area_color
 		end
 
 	bon_cluster_name_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0.5, 0.0, 0.0)
+		do
+			Result := diagram_preferences.bon_cluster_name_color
+		end
+	
+	bon_cluster_name_font: EV_IDENTIFIED_FONT is
+		do
+			Result := diagram_preferences.bon_cluster_name_font
 		end
 		
-	bon_cluster_name_font: EV_IDENTIFIED_FONT is
-		local
-			font: EV_FONT
-		once
-			create font
-			Result := font_factory.registered_font (font)
-			font_factory.register_font (Result)
-		end
-
-	max_cluster_name_length: INTEGER is
-		do
-			Result := 25
-		end
+	max_cluster_name_length: INTEGER is 25
 		
 feature {NONE} -- Client supplier link
 
 	bon_client_label_font: EV_IDENTIFIED_FONT is
-		local
-			fc: EV_FONT_CONSTANTS
-			font: EV_FONT
-		once
-			create fc
-			create font
-			font.set_family (fc.family_roman)
-			font.set_height (15)
-			Result := font_factory.registered_font (font)
-			font_factory.register_font (Result)
+		do
+			Result := diagram_preferences.bon_client_label_font
 		end
 
 	bon_client_label_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0, 0, 0)
+		do
+			Result := diagram_preferences.bon_client_label_color
 		end
-		
+
 	bon_client_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (0, 0, 1)
+		do
+			Result := diagram_preferences.bon_client_color
 		end
-		
-	bon_client_line_width: INTEGER is 5
+	
+	bon_client_line_width: INTEGER is 
+		do
+			Result := diagram_preferences.bon_client_line_width
+		end
 	
 feature {NONE} -- Inheritance link
 
 	bon_inheritance_color: EV_COLOR is
-		once
-			create Result.make_with_rgb (1, 0, 0)
+		do
+			Result := diagram_preferences.bon_inheritance_color
 		end
-		
-	bon_inheritance_line_width: INTEGER is 2
+	
+	bon_inheritance_line_width: INTEGER is 
+		do
+			Result := diagram_preferences.bon_inheritance_line_width
+		end
 
 end -- class BON_CONSTANTS

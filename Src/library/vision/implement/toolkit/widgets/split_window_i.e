@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Element change
 
-	update is
+	update_split is
 		deferred
 		end
 

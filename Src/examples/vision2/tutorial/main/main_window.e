@@ -1,8 +1,7 @@
 indexing
 	description: 
-	"MAIN_WINDOW, main window for the application. Belongs to EiffelVision example 'hello world'."
+		"MAIN_WINDOW, main window for the application. Belongs to EiffelVision example 'hello world'."
 	status: "See notice at end of class"
-
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,8 +14,6 @@ inherit
 		redefine
 			make_top_level
 		end
-
-	EV_COMMAND
 
 creation
 	make_top_level
@@ -42,7 +39,6 @@ feature -- Initialization
 		local
 			notebook: EV_NOTEBOOK
 			split: EV_HORIZONTAL_SPLIT_AREA
-			item: BUTTON_ITEM
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			label: EV_LABEL
@@ -50,41 +46,46 @@ feature -- Initialization
 			bc: EV_BASIC_COLORS
 			sitem: EV_STATUS_BAR_ITEM
 			tooltip: EV_TOOLTIP
-			action_button: EV_BUTTON
 			cmd: EV_ROUTINE_COMMAND
+			item: DEMO_ITEM [WINDOW_WINDOW]
+			setp: EV_HORIZONTAL_SEPARATOR
 		do
-
 			{EV_WINDOW} Precursor
-			set_minimum_size (720, 420)
-			set_title ("Tutorial of EiffelVision")
-			!! split.make (Current)
+			set_minimum_size (500, 310)
+			set_title ("EiffelVision Tutorial")
+			create split.make (Current)
 
 			-- We set the menu
-			!! mbar.make (Current)
+			create mbar.make (Current)
 			fill_menu
 
 			-- We set the status bar
-			!! sbar.make (Current)
-			!! sitem.make_with_text (sbar, "Processing...")
+			create sbar.make (Current)
+			create sitem.make_with_text (sbar, "Processing...")
 			sitem.set_width (200)
-			!! sitem.make_with_text (sbar, "Here is some information")
+			create sitem.make_with_text (sbar, "Here is some information")
 			sitem.set_width (-1)
 
 			-- We set the tree
-			!! vbox.make (split)
+			create vbox.make (split)
 			split.set_position (200)
-			!! label.make_with_text (vbox, "Vision hierarchy")
+			create label.make_with_text (vbox, "Please choose an item.")
+			label.set_minimum_width (200)
 			label.set_expand (False)
-			label.set_center_alignment
-			!! tree.make (vbox)
-			tree.set_minimum_size (200, 250)
+			create tree.make (vbox)
+			tree.set_minimum_size (195, 195)
+			split.set_first_area_shrinkable (False)
 			fill_tree
-			create action_button.make_with_text(vbox,"Actions")
-			action_button.set_expand (False)
+
+			-- We set the action button
+			create item.make_with_title (Void, "", "")
+			item.action_button.set_parent (vbox)
+			item.action_button.set_expand (False)
+			item.action_button.set_insensitive (True)
 
 			-- We set the notebook
-			!! item.make (Void)
-			!! notebook.make (split)
+			create color.make_rgb (255, 255, 255)
+			create notebook.make (split)
 			item.demo_page.set_parent (notebook)
 			notebook.append_page (item.demo_page, "Demo")
 			item.text_page.set_parent (notebook)
@@ -94,38 +95,11 @@ feature -- Initialization
 			item.example_page.set_parent (notebook)
 			notebook.append_page (item.example_page, "Example text")
 			item.destroy
-			notebook.set_minimum_size (250, 250)
-
-			-- We create a tooltip
-			create tooltip.make
-			create color.make_rgb (0, 255, 0)
-			tooltip.set_background_color (color)
-			create color.make_rgb (0, 0, 255)
-			tooltip.set_foreground_color (color)
-	--		tooltip.add_tips (tree, "EiffelVision components")
-			tooltip.add_tip (notebook, "Demo Area")
-
-			--create cmd.make(~execute1)
-			--action_button.add_click_command (cmd, Void)
+			notebook.set_minimum_size (195, 195)
 		end
 
 feature -- Features needed for the status bar of the window.
 
-
-feature -- Execute commands
-
-
-	--execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-	--		--When the action button is pressed then
---			--display the window
---		local
---	do	
---		if act_window=Void then
---			create act_window.make(Current)
---		end
---		act_window.show
---	end
-	
 feature -- Menu Features
 
 	fill_menu is
@@ -136,141 +110,184 @@ feature -- Menu Features
 			check_item: EV_CHECK_MENU_ITEM
 			radio_item: EV_RADIO_MENU_ITEM
 		do
-			!! menu.make_with_text (mbar, "Categories")
-			!! menu_item.make_with_text (menu, "Widgets")
-			!! menu_item.make_with_text (menu, "Events")
-			!! menu_item.make_with_text (menu, "Properties")
+			create menu.make_with_text (mbar, "Categories")
+			create menu_item.make_with_text (menu, "Widgets")
+			create menu_item.make_with_text (menu, "Events")
+			create menu_item.make_with_text (menu, "Properties")
 
-			!! menu.make_with_text (mbar, "View")
-			!! radio_item.make_with_text (menu, "Demo")
-			!! radio_item.make_with_text (menu, "Documentation")
-			!! radio_item.make_with_text (menu, "Text")
-			!! check_item.make_with_text (menu, "Control Window")
+			create menu.make_with_text (mbar, "View")
+			create radio_item.make_with_text (menu, "Demo")
+			create radio_item.make_with_text (menu, "Documentation")
+			create radio_item.make_with_text (menu, "Text")
+			create check_item.make_with_text (menu, "Control Window")
 		end
 
 feature -- Tree features
 
 	fill_tree is
 		local
-			-- Root tree items
+			-- Sub tree item.
 			kernel, properties, items, figures, widgets: EV_TREE_ITEM
-
-			-- Sub items for widgets node
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-			demo,gauges,table,buttons: EV_TREE_ITEM
 
-			-- Sub items for items node
-			-- simple, composed, separator: EV_TREE_ITEM
-			
+			-- Kernel items
+			acceleratord: DEMO_ITEM [ACCELERATOR_WINDOW]
+			cursord: DEMO_ITEM [CURSOR_WINDOW]
+			timeout: DEMO_ITEM [TIMEOUT_WINDOW]
+			tooltip: DEMO_ITEM [TOOLTIP_WINDOW]
+
+			-- Figures items
+			figure: FIGURE_ITEM
+
+			-- Primitives
+			gauge:		DEMO_ITEM [GAUGE_WINDOW]
+			range:		DEMO_ITEM [RANGE_WINDOW]
+			spin:		DEMO_ITEM [SPIN_BUTTON_WINDOW]
+			scroll:		DEMO_ITEM [SCROLL_BAR_WINDOW]
+			buttons:		DEMO_ITEM [BUTTON_WINDOW]
+			toggle:		DEMO_ITEM [TOGGLE_BUTTON_WINDOW]
+			checkb:		DEMO_ITEM [CHECK_BUTTON_WINDOW]
+			radio:		DEMO_ITEM [RADIO_BUTTON_WINDOW]
+			option:		DEMO_ITEM [OPTION_WINDOW]
+			mc:			DEMO_ITEM [MULTI_COLUMN_LIST_WINDOW]
+			label:		DEMO_ITEM [LABEL_WINDOW]
+			tf:			DEMO_ITEM [TEXT_FIELD_WINDOW]
+			ta:			DEMO_ITEM [TEXT_AREA_WINDOW]
+			list:		DEMO_ITEM [LIST_WINDOW]
+			treed:		DEMO_ITEM [TREE_WINDOW]
+			combo:		DEMO_ITEM [COMBO_WINDOW]
+			drawing:	DEMO_ITEM [DRAWING_WINDOW]
+			rich:		DEMO_ITEM [RICH_WINDOW]
+			toolbar:	DEMO_ITEM [TOOLBAR_WINDOW]
+			progress:	DEMO_ITEM [PROGRESS_WINDOW]
+
+			-- Containers
+			window:		DEMO_ITEM [WINDOW_WINDOW]
+			dialogd:		DEMO_ITEM [DIALOG_WINDOW]
+			fixed:		DEMO_ITEM [FIXED_WINDOW]   
+			box:		DEMO_ITEM [BOX_WINDOW] 
+			notebook:	DEMO_ITEM [NOTEBOOK_WINDOW] 
+			split:		DEMO_ITEM [SPLIT_AREA_WINDOW] 
+			scrollable:	DEMO_ITEM [SCROLLABLE_WINDOW] 
+			frame:		DEMO_ITEM [FRAME_WINDOW] 
+			table:		DEMO_ITEM [TABLE_WINDOW] 
+			dyntable:	DEMO_ITEM [DYNTABLE_WINDOW] 
+
+			-- Dialogs
+			error:		DEMO_ITEM [ERROR_WINDOW]
+			question:	DEMO_ITEM [QUESTION_WINDOW] 
+			information:DEMO_ITEM [INFORMATION_WINDOW] 
+			warning:	DEMO_ITEM [WARNING_WINDOW] 
+			open_file:	DEMO_ITEM [OPEN_FILE_WINDOW] 
+			save_file:	DEMO_ITEM [SAVE_FILE_WINDOW] 
+			directory:	DEMO_ITEM [DIRECTORY_WINDOW] 
+			accelerator:DEMO_ITEM [ACCELERATOR_SELECTION_WINDOW]
+			color:		DEMO_ITEM [COLOR_WINDOW] 
+			font:		DEMO_ITEM [FONT_WINDOW]
+			printd:		DEMO_ITEM [PRINT_WINDOW]
+
+			-- Uncommon
+			popup:		DEMO_ITEM [POPUP_WINDOW]
+			pixmap:		DEMO_ITEM [PIXMAP_WINDOW]
 		do
 			-- The main topics
-			!! figures.make_with_text (tree, "figures")
-			!! kernel.make_with_text (tree, "kernel")
-			!! properties.make_with_text (tree, "properties")
-			!! items.make_with_text (tree, "items")
-			!! widgets.make_with_text (tree, "widgets")
-		
+			create figures.make_with_text		(tree, "figures")
+			create kernel.make_with_text		(tree, "kernel")
+			create properties.make_with_text	(tree, "properties")
+			create items.make_with_text			(tree, "items")
+			create widgets.make_with_text		(tree, "widgets")
 
 			-- The sub topics for widget root node
-			!! container.make_with_text (widgets, "containers")
-			!! primitive.make_with_text (widgets, "primitives")
-			!! dialog.make_with_text (widgets, "common dialogs")
-			!! uncommon.make_with_text (widgets, "uncommon widgets")
+			create container.make_with_text		(widgets, "containers")
+			create primitive.make_with_text		(widgets, "primitives")
+			create dialog.make_with_text		(widgets, "common dialogs")
+			create uncommon.make_with_text		(widgets, "uncommon widgets")
 
 			-- The sub topics for item root node
-			--!! simple.make_with_text (items, "EV_SIMPLE_ITEM")
-			--!! composed.make_with_text (items, "EV_COMPOSED_ITEM")
-			--!! separator.make_with_text (items, "EV_SEPARATOR_ITEM")		
+			--create simple.make_with_text (items, "EV_SIMPLE_ITEM")
+			--create composed.make_with_text (items, "EV_COMPOSED_ITEM")
+			--create separator.make_with_text (items, "EV_SEPARATOR_ITEM")
 
 			-- The demos
-			!ACCELERATOR_ITEM! demo.make (kernel)
-			!CURSOR_ITEM! demo.make (kernel)
-			!TIMEOUT_ITEM! demo.make (kernel)
+			create acceleratord.make_with_title	(kernel, "ev_accelerator", "accelerator_window")
+			create cursord.make_with_title		(kernel, "ev_cursor", "cursor_window")
+			create timeout.make_with_title		(kernel, "ev_timeout", "timeout_window")
+			create tooltip.make_with_title		(kernel, "ev_tooltip", "tooltip_window")
 
-		
-		--	!NEW_ITEM! demo.make(figures)
-			
-			!PIXEL_ITEM! demo.make (figures)
-			!SEGMENT_ITEM! demo.make (figures)
-			!STRAIGHT_LINE_ITEM! demo.make (figures)
-			!POLYLINE_ITEM! demo.make (figures)
-			!ARC_ITEM! demo.make (figures)
-			!ELLIPSE_ITEM! demo.make (figures)
-			!CIRCLE_ITEM! demo.make (figures)
-			!POLYGON_ITEM! demo.make (figures)
-			!REGULAR_POLYGON_ITEM! demo.make (figures)
-			!EQUILATERAL_TRIANGLE_ITEM! demo.make (figures)
-			!SQUARE_ITEM! demo.make (figures)
-			!RECTANGLE_ITEM! demo.make (figures)
-			!SLICE_ITEM! demo.make (figures)
-			!TEXT_FIGURE_ITEM! demo.make (figures)
+			-- The figures
+			create {PIXEL_ITEM} figure.make_with_title (figures, "ev_pixel", "figure_window")
+			create {SEGMENT_ITEM} figure.make_with_title (figures, "ev_segment", "figure_window")
+			create {STRAIGHT_LINE_ITEM} figure.make_with_title (figures, "ev_straight_line", "figure_window")
+			create {POLYLINE_ITEM} figure.make_with_title (figures, "ev_polyline", "figure_window")
+			create {ARC_ITEM} figure.make_with_title (figures, "ev_arc", "figure_window")
+			create {ELLIPSE_ITEM} figure.make_with_title (figures, "ev_ellipse", "figure_window")
+			create {CIRCLE_ITEM} figure.make_with_title (figures, "ev_circle", "figure_window")
+			create {POLYGON_ITEM} figure.make_with_title (figures, "ev_polygon", "figure_window")
+			create {REGULAR_POLYGON_ITEM} figure.make_with_title (figures, "ev_regular_polygon", "figure_window")
+			create {EQUILATERAL_TRIANGLE_ITEM} figure.make_with_title (figures, "ev_equilateral_triangle", "figure_window")
+			create {SQUARE_ITEM} figure.make_with_title (figures, "ev_square", "figure_window")
+			create {RECTANGLE_ITEM} figure.make_with_title (figures, "ev_rectangle", "figure_window")
+			create {SLICE_ITEM} figure.make_with_title (figures, "ev_slice", "figure_window")
+			create {TEXT_FIGURE_ITEM} figure.make_with_title (figures, "ev_text_figure", "figure_window")
 -- Do not work
---			--!PICTURE_ITEM! demo.make (figures)
+--			--create {PICTURE_ITEM} figure.make_with_title (figures)
 
-			-- items for gauge tree
-			!GAUGE_ITEM! gauges.make (primitive)
-			!RANGE_ITEM! demo.make (gauges)
-			!SPIN_BUTTON_ITEM! demo.make (gauges)
-			!SCROLL_BAR_ITEM! demo.make (gauges)
-
-			!BUTTON_ITEM! buttons.make (primitive)
-			!TOGGLE_BUTTON_ITEM! demo.make (buttons)
-			!CHECK_BUTTON_ITEM! demo.make (buttons)
-			!RADIO_BUTTON_ITEM! demo.make (buttons)
-			!OPTION_ITEM! demo.make (primitive)
-			!MULTI_COLUMN_LIST_ITEM! demo.make (primitive)
-			!LABEL_ITEM! demo.make (primitive)
-			!TEXT_FIELD_ITEM! demo.make (primitive)
-			!TEXT_AREA_ITEM! demo.make (primitive)
-			!LIST_ITEM! demo.make (primitive)
-			!TREE_ITEM! demo.make (primitive)
-			!COMBO_ITEM! demo.make (primitive)
+			-- Primitives
+			create gauge.make_with_title (primitive, "ev_gauge", "gauge_window")
+			create range.make_with_title (gauge, "ev_range", "range_window")
+			create spin.make_with_title (gauge, "ev_spin_button", "spin_button_window")
+			create scroll.make_with_title (gauge, "ev_scroll_bar", "scroll_bar_window")
+			create buttons.make_with_title (primitive, "ev_button", "button_window")
+			create toggle.make_with_title (buttons, "ev_toggle_button", "toggle_button_window")
+			create checkb.make_with_title (buttons, "ev_check_button", "check_button_window")
+			create radio.make_with_title (buttons, "ev_radio_button", "radio_button_window")
+			create option.make_with_title (primitive, "ev_option_button", "option_window")
+			create mc.make_with_title (primitive, "ev_multi_column_list", "multi_column_list_window")
+			create label.make_with_title (primitive, "ev_label", "label_window")
+			create tf.make_with_title (primitive, "ev_text_field", "text_field_window")
+			create ta.make_with_title (primitive, "ev_text", "text_area_window")
+			create list.make_with_title (primitive, "ev_list", "list_window")
+			create treed.make_with_title (primitive, "ev_tree", "tree_window")
+			create combo.make_with_title (primitive, "ev_combo_box", "combo_window")
 --	This example does not work on gtk yet
-			!DRAWING_ITEM! demo.make (primitive)
-			!RICH_ITEM! demo.make (primitive)
-			!TOOLBAR_ITEM! demo.make (primitive)
-			!PROGRESS_ITEM! demo.make (primitive)
+			create drawing.make_with_title (primitive, "ev_drawing_area", "drawing_window")
+			create rich.make_with_title (primitive, "ev_rich_text", "rich_window")
+			create toolbar.make_with_title (primitive, "ev_tool_bar", "toolbar_window")
+			create progress.make_with_title (primitive, "ev_progress_bar", "progress_window")
 
-			!WINDOW_ITEM! demo.make (container)
-			!DIALOG_ITEM! demo.make (container)
-			!FIXED_ITEM! demo.make (container)
-			!BOX_ITEM! demo.make (container)
-			!NOTEBOOK_ITEM! demo.make (container)
-			!SPLIT_AREA_ITEM! demo.make (container)
-			!SCROLLABLE_ITEM! demo.make (container)
-			!FRAME_ITEM! demo.make (container)
-			!TABLE_ITEM! table.make (container)
-			!DYNTABLE_ITEM! demo.make (table)
+			create window.make_with_title (container, "ev_window", "window_window")
+			create dialogd.make_with_title (container, "ev_dialog" , "dialog_window")
+			create fixed.make_with_title (container, "ev_fixed", "fixed_window")
+			create box.make_with_title (container, "ev_box", "box_window")
+			create notebook.make_with_title (container, "ev_notebook", "notebook_window")
+			create split.make_with_title (container, "ev_split_area", "split_area_window")
+			create scrollable.make_with_title (container, "ev_scrollable", "scrollable_window")
+			create frame.make_with_title (container, "ev_frame", "frame_window")
+			create table.make_with_title (container, "ev_table", "table_window")
+			create dyntable.make_with_title (table, "ev_dynamic_table", "dyntable_window")
 
 --	This example does not work on gtk yet
-			!POPUP_ITEM! demo.make (uncommon)
-			!PIXMAP_ITEM! demo.make (uncommon)
+			create popup.make_with_title (uncommon, "ev_popup_menu", "popup_window")
+			create pixmap.make_with_title (uncommon, "ev_pixmap", "pixmap_window")
 
-			!ERROR_ITEM! demo.make (dialog)
-			!QUESTION_ITEM! demo.make (dialog)
-			!INFORMATION_ITEM! demo.make (dialog)
-			!WARNING_ITEM! demo.make (dialog)
+			create error.make_with_title (dialog, "ev_error_dialog", "error_window")
+			create question.make_with_title (dialog, "ev_question_dialog", "question_window")
+			create information.make_with_title (dialog, "ev_information_dialog", "information_window")
+			create warning.make_with_title (dialog, "ev_warning_dialog", "warning_window")
+			create open_file.make_with_title (dialog, "ev_file_open_dialog", "open_file_window")
+			create save_file.make_with_title (dialog, "ev_file_save_dialog", "save_file_window")
+			create directory.make_with_title (dialog, "ev_directory_dialog", "directory_window")
+			create accelerator.make_with_title (dialog, "ev_accelerator_dialog", "accelerator_selection_window")
 --	These examples do not work on gtk yet
-			!OPEN_FILE_ITEM! demo.make (dialog)
-			!SAVE_FILE_ITEM! demo.make (dialog)
-			!DIRECTORY_ITEM! demo.make (dialog)
-			!COLOR_SELECTION_ITEM! demo.make (dialog)
-			!ACCELERATOR_SELECTION_ITEM! demo.make (dialog)
+			create color.make_with_title (dialog, "ev_color_dialog", "color_window")
+			create font.make_with_title (dialog, "ev_font_dialog", "font_window")
+			create printd.make_with_title (dialog, "ev_print_dialog", "print_window")
 
 --	Demos for item node
-			--!MULTI_COLUMN_LIST_ROW_ITEM! items.make (composed,"MULTI_COLUMN_LIST_ROW_ITEM",test_wind)
-			--!MULTI_COLUMN_LIST_ROW_ITEM! items.make (composed)
-			--!TOOL_BAR_SEPARATOR! items.make (composed)
-			--!MENU_SEPARATOR! items.make (composed)
-		end
-
-feature -- Temp
-
-	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
-			-- Show and hide the window
-		do
---			hide
---			show
+			--create items.make_with_title (composed,"MULTI_COLUMN_LIST_ROW_ITEM",test_wind)
+			--create items.make_with_title (composed)
+			--create items.make_with_title (composed)
+			--create items.make_with_title (composed)
 		end
 
 end -- class MAIN_WINDOW

@@ -16,12 +16,12 @@ inherit
 			{NONE} all
 		end;
 
-    MANAGER_M;
+	MANAGER_M;
 
-    BULLETIN_R_M
-        export
-            {NONE} all
-        end
+	BULLETIN_R_M
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -42,6 +42,19 @@ feature {NONE} -- Creation
 					man);
 		end;
 
+	allow_recompute_size is	
+			-- Allow Current bulletin to recompute its size
+			-- according to its children.
+		do
+			set_xt_int (screen_object, MDIALOG_RESIZE_ANY, MresizePolicy);
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current bulletin to recompute its size
+			-- according to its children.
+		do
+			set_xt_int (screen_object, MDIALOG_RESIZE_NONE, MresizePolicy);
+		end;
 
 	set_default_button (but: POINTER) is
 		do

@@ -217,6 +217,8 @@ feature -- Status setting
 			if not is_expanded then
 				is_expanded := True
 				update_parent_expanded_node_counts_recursively (subnode_count_recursive)
+				parent_grid_i.recompute_row_offsets (index)
+				parent_grid_i.recompute_vertical_scroll_bar
 				parent_grid_i.redraw_client_area
 			end
 		ensure
@@ -231,6 +233,8 @@ feature -- Status setting
 			if is_expanded then
 				is_expanded := False
 				update_parent_expanded_node_counts_recursively ( - subnode_count_recursive)
+				parent_grid_i.recompute_row_offsets (index)
+				parent_grid_i.recompute_vertical_scroll_bar
 				parent_grid_i.redraw_client_area
 			end
 		ensure
@@ -243,8 +247,9 @@ feature -- Status setting
 			is_parented: parent /= Void
 		do
 			internal_height := a_height
-			parent_grid_i.recompute_row_offsets (index)
-			to_implement ("EV_GRID_ROW.set_height")
+			if not parent_grid_i.is_row_height_fixed then
+				parent_grid_i.recompute_row_offsets (index)
+			end
 		ensure
 			height_set: height = a_height
 		end
@@ -285,10 +290,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			row_imp := a_row.implementation
 			subrows.extend (row_imp)
 			row_imp.internal_set_parent_row (Current)
-			parent_grid_i.redraw_client_area
 			
 			update_parent_node_counts_recursively (1)
-			update_parent_expanded_node_counts_recursively (1)
+			if is_expanded then
+				update_parent_expanded_node_counts_recursively (1)
+			end
+			parent_grid_i.recompute_row_offsets (index)
+			parent_grid_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
@@ -436,7 +444,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 	set_expanded_subnode_count_recursive (a_count: INTEGER) is
 			-- Assign `a_count' to `expanded_subnode_count_recursive'.
 		require
-			a_count_non_negative: a_count > 0
+			a_count_non_negative: a_count >= 0
 		do
 			expanded_subnode_count_recursive := a_count
 		ensure

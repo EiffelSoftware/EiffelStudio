@@ -1954,7 +1954,7 @@ feature -- Resource Update
 				str.tail (str.count - 2)
 				set_title (str)
 			end
-			address_manager.enable_formatters
+			update_formatters
 		end
 
 	save_and (an_action: PROCEDURE [ANY, TUPLE []]) is
@@ -2586,7 +2586,7 @@ feature {NONE} -- Implementation
 				address_manager.disable_formatters
 			else
 				save_cmd.disable_sensitive
-				address_manager.enable_formatters
+				update_formatters
 			end
 			if is_empty then
 				print_cmd.disable_sensitive
@@ -2594,6 +2594,28 @@ feature {NONE} -- Implementation
 			else
 				print_cmd.enable_sensitive
 				save_as_cmd.enable_sensitive
+			end
+		end
+
+	update_formatters is
+			-- Give a correct sensitivity to formatters.
+		local
+			cst: CLASSC_STONE
+			file: RAW_FILE
+		do
+			cst ?= stone
+			if cst /= Void then
+				if changed then
+					address_manager.disable_formatters
+				else
+					address_manager.enable_formatters
+					create file.make (cst.e_class.lace_class.file_name)
+					if not file.exists then
+						managed_main_formatters.first.disable_sensitive
+					end
+				end
+			else
+				address_manager.disable_formatters
 			end
 		end
 
@@ -2608,7 +2630,7 @@ feature {NONE} -- Implementation
 				str.tail (str.count - 2)
 				set_title (str)
 			end
-			address_manager.enable_formatters
+			address_manager.disable_formatters
 			update_paste_cmd
 			Precursor {TEXT_OBSERVER_MANAGER}
 			text_state := 0
@@ -2662,6 +2684,7 @@ feature {NONE} -- Implementation
 					selection_commands.forth
 				end
 			end
+			update_formatters
 		end
 
 	on_text_back_to_its_last_saved_state is
@@ -2673,7 +2696,7 @@ feature {NONE} -- Implementation
 				str.tail (str.count - 2)
 				set_title (str)
 			end
-			address_manager.enable_formatters
+			update_formatters
 			Precursor {TEXT_OBSERVER_MANAGER}
 			edition_state := 0
 		end			

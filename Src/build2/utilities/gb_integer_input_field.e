@@ -297,6 +297,7 @@ feature {NONE} -- Implementation
 			validate_agent := a_validate_agent
 			a_parent.extend (Current)
 			create horizontal_box
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			extend (horizontal_box)
 			create text_field
 			text_field.set_tooltip (tooltip)

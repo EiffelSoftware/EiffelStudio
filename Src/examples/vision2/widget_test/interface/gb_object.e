@@ -14,7 +14,5 @@ feature
 	name: STRING
 	
 	type: STRING
-	
-	children: ARRAYED_LIST [GB_OBJECT]
 
 end -- class GB_OBJECT

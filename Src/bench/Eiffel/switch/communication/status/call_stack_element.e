@@ -16,11 +16,6 @@ inherit
 			{NONE} all
 		end
 
---create {EIFFEL_CALL_STACK}
---	make
---create {STOPPED_HDLR,APPLICATION_EXECUTION}
---	dummy_make
-
 feature {NONE} -- Initialization
 
 	make (level: INTEGER) is
@@ -57,6 +52,9 @@ feature -- Properties
 
 	dynamic_class: CLASS_C
 			-- Dynamic class where routine is called from
+
+	dynamic_type: CLASS_TYPE
+			-- Dynamic class type where routine is called from
 
 	origin_class: CLASS_C
 			-- Class where routine is written in

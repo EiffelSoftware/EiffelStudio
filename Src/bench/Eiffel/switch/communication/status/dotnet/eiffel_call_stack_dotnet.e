@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 									if l_class_type /= Void and then l_feature_i /= Void then
 										
 										l_il_offset := l_frame_il.get_ip
-										l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_feature_i, l_il_offset)
+										l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 									
 										--| FIXME: JFIAT : set for real in CALL_STACK_ELEMENT_DOTNET.initialize_callstack
 										--| get address from current object
@@ -196,8 +196,8 @@ feature {NONE} -- Initialization
 												l_frame_il,
 												False, -- is_melted (this is a dotnet system)
 												"0x" + l_address.to_hex_string, -- address
-												l_class_type.associated_class, -- dyn_class
-												l_feature_i.written_class, -- origin class FIXME JFIAT
+												l_class_type, -- dyn type
+												l_feature_i.written_class, -- origin class
 												l_feature_i, -- routine, routine_name ...
 												l_line_number -- break_index / line number
 											)

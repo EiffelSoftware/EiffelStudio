@@ -79,7 +79,10 @@ feature {NONE} -- Initialization
 			level_in_stack := lvl
 			is_melted := mlt
 			break_index := br
-			dynamic_class := Eiffel_system.class_of_dynamic_id (type + 1)
+			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
+			if dynamic_type /= Void then
+				dynamic_class := dynamic_type.associated_class	
+			end
 			origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 			object_address := addr
 			display_object_address := object_address
@@ -95,7 +98,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
-
 
 	routine: E_FEATURE is
 			-- Routine being called
@@ -512,7 +514,10 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 			if exhausted then
 				is_exhausted := True
 			else
-				dynamic_class := Eiffel_system.class_of_dynamic_id (type + 1)
+				dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
+				if dynamic_type /= Void then
+					dynamic_class := dynamic_type.associated_class					
+				end
 				origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 
 				break_index := line_number

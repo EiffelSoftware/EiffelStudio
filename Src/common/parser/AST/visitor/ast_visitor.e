@@ -483,7 +483,7 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_infix_as (l_as: INFIX_PREFIX_AS) is
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -679,49 +679,7 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_bool_type_as (l_as: BOOL_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_char_type_as (l_as: CHAR_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_double_type_as (l_as: DOUBLE_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_int_type_as (l_as: INT_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_none_type_as (l_as: NONE_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_pointer_type_as (l_as: POINTER_TYPE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_real_type_as (l_as: REAL_TYPE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

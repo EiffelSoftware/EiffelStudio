@@ -30,6 +30,8 @@ RT_LNK int eif_gen_conf (int16, int16);
 /* Type of the i-th generic parameter */
 RT_LNK int16 eif_gen_param_id (int16 stype, EIF_REFERENCE obj, int pos);
 
+/* Id to be used in workbench mode */
+RT_LNK int16 eif_id_for_typarr (int16 x);
 
 
 /* TUPLEs */

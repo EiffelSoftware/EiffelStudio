@@ -578,6 +578,11 @@ RT_LNK int fcount;
 #define RTFCID(ct,x,y,z,u)	eif_final_id((ct),(x),(y), (int16) Dftype(z),(u))
 #define RTFCID2(ct,x,y,z,u)	eif_final_id((ct),(x),(y),(int16) (z),(u))
 #define RTGPTID(st,x,y)		eif_gen_param_id ((st),(x),(y))
+#ifdef WORKBENCH
+#define RTID(x)	eif_id_for_typarr((int16) x)
+#else
+#define RTID(x) (x)
+#endif
 
 
 

@@ -401,7 +401,7 @@ feature -- Queries : dotnet data from estudio data
 feature {EIFFEL_CALL_STACK_DOTNET, 
 		APPLICATION_STATUS_DOTNET, 
 		APPLICATION_EXECUTION_DOTNET,
-		ICOR_DEBUG_MANAGED_CALLBACK} -- Queries : IL Offset data
+		EIFNET_DEBUGGER} -- Queries : IL Offset data
 
 	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
 			-- is a_il_offset related to an Eiffel line index ?

@@ -19,10 +19,10 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
+	--EV_PICK_AND_DROPABLE_I
+	--	redefine
+	--		interface
+	--	end
 	
 feature -- Access
 
@@ -88,6 +88,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/16 20:28:08  king
+--| Removed inheritence from pnd
+--|
 --| Revision 1.26  2000/02/14 11:40:34  oconnor
 --| merged changes from prerelease_20000214
 --|

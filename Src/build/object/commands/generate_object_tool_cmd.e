@@ -160,11 +160,11 @@ feature -- Tool generation
 				form_list.forth
 			end
 			Result.append ("%T%Tend%N%N")
-			Result.append ("%Ttarget_object: ")
+			Result.append ("%Ttarget: ")
 			Result.append (application_class.class_name)
-			Result.append ("%N%N%Tset_target_object (new_target: ")
+			Result.append ("%N%N%Tset_target (new_target: ")
 			Result.append (application_class.class_name)
-			Result.append (") is%N%T%Tdo%N%T%T%Ttarget_object := new_target%N")
+			Result.append (") is%N%T%Tdo%N%T%T%Ttarget := new_target%N")
 
 			Result.append (a_template.substring (i + 5, a_template.count))
 		end

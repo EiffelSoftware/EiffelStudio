@@ -17,7 +17,10 @@ inherit
 		rename
 			command_line as arguments_line
 		end
-	SHARED_LICENSE;
+	SHARED_LICENSE
+		redefine
+			new_license
+		end;
 	SHARED_CONFIGURE_RESOURCES;
 	SHARED_BATCH_COMPILER;
 	SHARED_EIFFEL_PROJECT
@@ -104,5 +107,10 @@ feature -- Access
 			licence.get_licence;
 			Result := licence.licensed;
 		end;
+
+	new_license: LICENCE is
+		do
+			!BENCH_LICENCE!Result.make
+		end
 
 end -- class EWB

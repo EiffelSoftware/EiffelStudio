@@ -141,7 +141,7 @@ end;
 					profile_information := int_last_output
 				end
 			else
-				st.add_sting ("Error during retrieval of: ");
+				st.add_string ("Error during retrieval of: ");
 				st.add_string (current_item);
 				st.add_new_line
 			end
@@ -727,6 +727,6 @@ feature {NONE} -- Attributes
 		-- The options specified by the user.
 
 	st: STRUCTURED_TEXT;
-			-- The text that is to bew displayed.
+			-- The text that is to be displayed.
 
 end -- class E_SHOW_PROFILE_QUERY

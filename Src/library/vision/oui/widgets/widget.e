@@ -747,7 +747,7 @@ feature
 			Result := other.implementation = implementation
 		end;
 
-feature {WIDGET, W_MANAGER, WIDGET_I}
+feature
 
 	depth: INTEGER;
 			-- Depth of Current widget

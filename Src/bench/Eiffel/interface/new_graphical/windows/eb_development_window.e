@@ -168,6 +168,8 @@ feature {NONE} -- Initialization
 
 	init_commands is
 			-- Initialize commands.
+		local
+			accel: EV_ACCELERATOR
 		do
 			Precursor
 			create toolbarable_commands.make (15)
@@ -253,6 +255,11 @@ feature {NONE} -- Initialization
 			send_stone_to_context_cmd.set_menu_name (Interface_names.m_Send_stone_to_context)
 			send_stone_to_context_cmd.set_name ("Send_to_context")
 			send_stone_to_context_cmd.add_agent (~send_stone_to_context)
+			create accel.make_with_key_combination (
+				create {EV_KEY}.make_with_code (Kcst.Key_down), False, True, False
+			)
+			accel.actions.extend (~send_stone_to_context)
+			send_stone_to_context_cmd.set_accelerator (accel)
 			send_stone_to_context_cmd.disable_sensitive
 			toolbarable_commands.extend (send_stone_to_context_cmd)
 
@@ -843,6 +850,7 @@ feature -- Graphical Interface
 			hsep: EV_HORIZONTAL_SEPARATOR
 			hbox: EV_HORIZONTAL_BOX -- Contains HistoryToolbar (back, forth, current) + `address_bar'
 			cell: EV_CELL
+			accel: EV_ACCELERATOR
 		do
 				-- Create the toolbar
 			create address_toolbar
@@ -865,6 +873,19 @@ feature -- Graphical Interface
 
 				-- Forward icon
 			tb.extend (history_manager.forth_command.new_toolbar_item (False, False))
+			
+				-- Set up the accelerators.
+			create accel.make_with_key_combination (
+				create {EV_KEY}.make_with_code (Kcst.Key_right), False, True, False
+			)
+			accel.actions.extend (~on_forth)
+			window.accelerators.extend (accel)
+			
+			create accel.make_with_key_combination (
+				create {EV_KEY}.make_with_code (Kcst.Key_left), False, True, False
+			)
+			accel.actions.extend (~on_back)
+			window.accelerators.extend (accel)
 
 			------------------------------------------
 			-- Address bar (Class name & feature name)
@@ -2414,6 +2435,59 @@ feature {NONE} -- Implementation
 			address_manager.disable_formatters
 		end
 
+	on_back is
+			-- User pressed Alt+left.
+			-- Go back in the history (or the context history).
+		do
+			if context_tool_has_focus then
+				if context_tool.history_manager.is_back_possible then
+					context_tool.history_manager.back_command.execute
+				end
+			elseif history_manager.is_back_possible then
+				history_manager.back_command.execute
+			end
+		end
+
+	on_forth is
+			-- User pressed Alt+right.
+			-- Go forth in the history (or the context history).
+		do
+			if context_tool_has_focus then
+				if context_tool.history_manager.is_forth_possible then
+					context_tool.history_manager.forth_command.execute
+				end
+			elseif history_manager.is_forth_possible then
+				history_manager.forth_command.execute
+			end
+		end
+
+	context_tool_has_focus: BOOLEAN is
+			-- Does the context tool or one of its children has the focus?
+		local
+			fw: EV_WIDGET
+			cont: EV_CONTAINER
+			wid: EV_WIDGET
+		do
+			fw := (create {EV_ENVIRONMENT}).application.focused_widget
+			wid := context_tool.explorer_bar_item.widget
+			if wid = fw then
+				Result := True
+			elseif fw = Void then
+				Result := False
+			else
+				from
+					cont := fw.parent
+				until
+					cont = wid or cont = Void
+				loop
+					cont := cont.parent
+				end
+				if cont = wid then
+					Result := True
+				end
+			end
+		end
+
 	saved_cursor: CURSOR
 			-- Saved cursor position for displaying the stack.
 
@@ -2517,12 +2591,6 @@ feature {NONE} -- Implementation / Menus
 			-- Accelerator for Ctrl+Y
 
 feature {EB_TOOL} -- Implementation / Commands
-
-	history_forth_cmd: EB_HISTORY_FORTH_COMMAND
-			-- Command to go forward in the history
-
-	history_back_cmd: EB_HISTORY_BACK_COMMAND
-			-- Command to go back in the history
 
 	shell_cmd: EB_OPEN_SHELL_COMMAND
 			-- Command to use an external editor.

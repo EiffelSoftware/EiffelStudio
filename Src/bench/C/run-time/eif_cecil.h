@@ -175,6 +175,7 @@ RT_LNK void eifuvisex (void);          /* Disable visible exception (in current 
 
 RT_LNK int eifreturntype (char *class_name, EIF_TYPE_ID cid);
 										/* Return type of `cid' from `class_name' */
+RT_LNK int eiflocate(EIF_OBJ object, char *name); /* Return the index of attribute `name' in EIF_OBJ `object'*/
 
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
 RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */

@@ -34,7 +34,6 @@ feature -- Initialization
 			standard_make
 			create str_folder_name.make_empty (max_path)
 			create str_title.make_empty (max_title_length)
-			create str_display_name.make_empty (max_path)
 			create str_starting_folder.make_empty (max_path)
 			create imalloc.make
 			cwel_browse_info_set_pszdisplayname (item, str_folder_name.item)
@@ -56,8 +55,10 @@ feature -- Access
 	display_name: STRING is
 			-- Display name of selected folder
 			-- Empty if no folder was selected.
+		obsolete
+			"Use folder_name instead"
 		do
-			Result := str_display_name.string
+			Result := folder_name
 		end
 	
 	title: STRING is
@@ -151,16 +152,16 @@ feature -- Basic operations
 			id_list: POINTER
 		do
 			set_parent (a_parent)
-			str_folder_name.set_string ("")
-			str_display_name.set_string ("")
 			selected := False
 			id_list := cwin_sh_browse_for_folder (item)
-			if not (id_list = default_pointer) then
+			if id_list /= default_pointer then
 				cwin_sh_get_path_from_id_list (id_list, str_folder_name.item)
 				imalloc.free_buffer (id_list)
 				if not str_folder_name.string.is_empty then
 					selected := True
 				end
+			else
+				str_folder_name.set_string ("")
 			end
 		end
 
@@ -171,9 +172,6 @@ feature {NONE} -- Implementation
 
 	str_starting_folder: WEL_STRING
 			-- Starting folder name
-
-	str_display_name: WEL_STRING
-			-- Chosen display name
 
 	str_title: WEL_STRING
 			-- Dialog title

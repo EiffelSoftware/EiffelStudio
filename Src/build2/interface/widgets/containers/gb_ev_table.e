@@ -403,11 +403,14 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					-- We store them, so they can be replaced, in the correct positions.
 					-- It is not possible to move them, as any existing widgets that have not yet been
 					-- moved to their correct positions may block the desired positions of the current
-					-- widgets. It does not work, just to disable assertion checking here, as I already tried this.
+					-- widgets.
 					-- Julian.
-				first_items := clone (first.item_list)
-				second_items := clone ((objects @ 2).item_list)
-				temp_item_list := first.item_list
+					-- Note that we cannot use `item_list' as this returns the items in the wroing order.
+					-- In Build, we move down, then across. We used `item_list' previously, but offset of
+					-- all widgets was messaed up after loading.
+				first_items := table_items (first)
+				second_items := table_items (objects @ 2)
+				temp_item_list := table_items (first)
 				from
 					temp_item_list.start
 				until
@@ -458,6 +461,30 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			end
 		end
 
+	table_items (table: EV_TABLE): ARRAYED_LIST [EV_WIDGET] is
+			-- `Result' is all items in `table'. Ordered from
+			-- top left, going down, before moving right to the
+			-- next column.
+		local
+			counter: INTEGER
+			item: EV_WIDGET
+		do
+			create Result.make (table.widget_count)
+			from
+				counter := 0
+			until
+				Result.count = table.widget_count
+			loop
+				item := table.item ((counter // table.columns) + 1, (counter \\ table.rows) + 1)
+				if item /= Void then
+					Result.extend (item)	
+				end
+				counter := counter + 1	
+			end
+		ensure
+			count_correct: Result.count = table.widget_count
+		end
+		
 
 feature {NONE} -- Implementation
 

@@ -6,7 +6,8 @@ class WINDOWS
 inherit
 
 	SHARED_STATUS;
-	NAMER
+	NAMER;
+	WARNING_MESSAGES
 
 feature {NONE}
 

@@ -42,14 +42,6 @@ feature {NONE} -- Initialization
 			v1.extend (wizard_page)	
 			build_navigation_bar (v1)
 			extend (v1)
-
-
-				-- Only if we are a modify item interface from Visual Studio.
-				-- If we are not, then we must load the interface after the
-				-- application has been launched.
-			if not is_modify_wizard then
-				load_first_state	
-			end
 		end
 		
 	initialize is

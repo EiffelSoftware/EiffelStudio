@@ -127,7 +127,7 @@ feature -- Access: file name
 				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel55"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
-				fname.set_file_name (".ecrc")
+				fname.set_file_name (".ecrc55")
 				Result := fname
 			end
 		end

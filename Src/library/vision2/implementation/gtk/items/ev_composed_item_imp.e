@@ -16,10 +16,10 @@ inherit
 			interface
 		end
 
-	EV_ITEM_IMP
-		redefine
-			interface
-		end
+	--EV_ITEM_IMP
+	--	redefine
+	--		interface
+	--	end
 
 feature -- Access
 
@@ -84,6 +84,13 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
+	set_parent_imp (v: EV_ITEM_LIST_IMP [EV_ITEM]) is
+		do
+			parent_imp := v
+		end
+
+	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+
 	interface: EV_COMPOSED_ITEM
 
 	internal_pixmaps: ARRAYED_LIST [EV_PIXMAP_IMP]
@@ -118,6 +125,9 @@ end -- class EV_COMPOSED_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/16 20:22:56  king
+--| Removed inheritence from ev_item_imp, added parent setting feature
+--|
 --| Revision 1.4  2000/02/14 11:40:27  oconnor
 --| merged changes from prerelease_20000214
 --|

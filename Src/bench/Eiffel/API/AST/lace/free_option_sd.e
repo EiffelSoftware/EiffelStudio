@@ -89,6 +89,7 @@ feature -- Properties
 	exception_stack_managed,
 	force_recompile,
 	full_type_checking,
+	metadata_cache_path,
 	msil_assembly_compatibility,
 	msil_classes_per_module,
 	msil_clr_version,
@@ -198,6 +199,7 @@ feature {NONE} -- Codes and names.
 			Result.force (ise_gc_runtime, "ise_gc_runtime")
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
+			Result.force (metadata_cache_path, "metadata_cache_path")
 			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility")
 			Result.force (msil_classes_per_module, "msil_classes_per_module")
 			Result.force (msil_clr_version, "msil_clr_version")
@@ -408,6 +410,13 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_java_generation (True)
 						set_il_parsing (True)
+					else
+						error_found := True
+					end
+
+				when metadata_cache_path then
+					if value.is_name then
+						System.set_metadata_cache_path (value.value)
 					else
 						error_found := True
 					end

@@ -261,8 +261,6 @@ feature -- Observer pattern
 
 	on_class_added (a_class: CLASS_I) is
 			-- Refresh the tree to display the new class.
-		require else
-			valid_class: a_class /= Void
 		local
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do

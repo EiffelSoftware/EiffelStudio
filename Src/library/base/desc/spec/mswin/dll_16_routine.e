@@ -278,7 +278,8 @@ feature {NONE} -- Implementation
 					desc_copy_arg ($area, $p, position, arg_size)
 				when T_string then
 					s ?= args @ i
-					p := desc_alloc_alias16 (s.to_pointer)
+					a := s.to_c
+					p := desc_alloc_alias16 ($a)
 					desc_copy_arg ($area, $p, position, arg_size)
 				end
 				position := position + arg_size

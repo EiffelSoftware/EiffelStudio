@@ -23,6 +23,7 @@ vti_defaultcharset:SR|windows-1252
 vti_defaultlanguage:SR|en
 vti_publishmetainfokeys:VR|vti_assignedto vti_approvallevel vti_categories vti_description
 vti_autorecalc:IX|1
+vti_usernames:VR|
 vti_htmlextensions:SX|.htm.html.shtml.shtm.stm.htt.htx.asp.alx.asa.
 vti_navbuttonhomelabel:SR|Home
 vti_insecureserverurl:SR|file://

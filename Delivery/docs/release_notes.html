@@ -36,9 +36,7 @@
 (accessing COM components from Eiffel) and the server side (producing COM components
 from Eiffel). Built-in <span class=emphasis>wizard</span> takes care of all tedious tasks. Design by Contract(TM) applied for the first time
 to the world of COM: assertion violations are notified to clients;
-takes the pain out of COM debugging.
-For details see <a href="pdf/com/index.pdf">EiffelCOM documentation in PDF</a>
-or <a href="papers/com/index.html">HTML documentation</a>.</li>
+takes the pain out of COM debugging. (<a href="papers/com/index.html">Details</a>.)</li>
 
       <p class=space><li> New <span class=emphasis>EiffelStore library</span> handles ODBC v.3.0, Oracle 8.0.4 and 8i.</li>
 
@@ -97,9 +95,11 @@ example look at
       <li class=small> Another new command-line option to <a href="papers/command_line_tools.html">finish_freezing.exe</a> is <span class=eiffelid>-location</span>, which will let you launch
         <span class=eiffelid>finish_freezing.exe</span> on a specific directory.
 For example: <span class=emphasis>finish_freezing -silent -location $MY_PROJECT\F_code</span>.</li>
-      <p class=space><li> New <span class=eiffelkeyword>dll32</span> and <span class=eiffelkeyword>dllwin32</span> implementation for Windows. Now, <span class=eiffelkeyword>dll32</span> is used to call C functions exported in a DLL, whereas <span class=eiffelkeyword>dllwin32</span> is used to call C functions exported in a DLL with the <span class=eiffelid>__stdcall</span> mechanism, mostly used by the Win32 API&nbsp;. (<a href="papers/externals.html">Details</a>).</li>
     </ol>
+        <p>&nbsp;</p>
       </li>
+              <p class=space><li>  New <span class=eiffelkeyword>dll32</span> and <span class=eiffelkeyword>dllwin32</span> implementation for Windows. Now, <span class=eiffelkeyword>dll32</span> is used to call C functions exported in a DLL, whereas <span class=eiffelkeyword>dllwin32</span> is used to call C functions exported in a DLL with the <span class=eiffelid>__stdcall</span> mechanism, mostly used by the Win32 API&nbsp;. (<a href="papers/externals.html">Details</a>).</li>
+
       <p class=space><li> <span class=emphasis>DLL facilities</span>: <span class=eiffelkeyword>dll16</span> as a recognized sublanguage name; if you were using this,
    you	will have to switch to <span class=eiffelkeyword>dll32</span>. (<a href="papers/externals.html">Details</a>.)</li>
 

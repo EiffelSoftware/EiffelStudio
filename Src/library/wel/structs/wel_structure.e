@@ -19,8 +19,8 @@ feature {NONE} -- Initialization
 		do
 			item := c_calloc (1, structure_size)
 			if item = a_default_pointer then
-				-- Memory allocation problem
-				c_enomem
+					-- Memory allocation problem
+				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			shared := False
 		ensure
@@ -107,12 +107,9 @@ feature {NONE} -- Externals
 		end
 
 	c_enomem is
-			-- Eiffel run-time function to raise an
-			-- "Out of memory" exception.
-		external
-			"C | %"eif_except.h%""
-		alias
-			"enomem"
+			-- Raise a "No more memory" exception.
+		do
+			(create {EXCEPTIONS}).raise ("No more memory")
 		end
 
 	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER) is

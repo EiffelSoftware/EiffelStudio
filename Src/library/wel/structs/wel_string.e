@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			item := c_calloc (1, a_length + 1)
 			if item = a_default_pointer then
 					-- Memory allocation problem
-				c_enomem
+				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			capacity := a_length + 1
 			shared := False

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			memory_allocated_with_global_alloc := True
 			if item = default_pointer then
 					-- Memory allocation problem
-				c_enomem
+				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			shared := False
 		ensure

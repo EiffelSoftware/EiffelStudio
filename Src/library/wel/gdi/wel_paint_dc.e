@@ -57,18 +57,12 @@ feature -- Basic operations
 
 	get is
 			-- Get the device context
-		require else
-			window_not_void: window /= Void
-			window_exist: window.exists
 		do
 			item := cwin_begin_paint (hwindow, paint_struct.item)
 		end
 
 	release, quick_release is
 			-- Release the device context
-		require else
-			window_not_void: window /= Void
-			window_exist: window.exists
 		do
 			cwin_end_paint (hwindow, paint_struct.item)
 			item := default_pointer

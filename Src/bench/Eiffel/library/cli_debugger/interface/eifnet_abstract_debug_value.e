@@ -90,6 +90,7 @@ feature {NONE} -- Special childrens
 		local
 			l_object_value: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
+			l_icd_frame: ICOR_DEBUG_FRAME
 			l_class_token: INTEGER			
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_md_import: MD_IMPORT
@@ -113,10 +114,16 @@ feature {NONE} -- Special childrens
 			
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
+				l_icd_frame := l_object_value.associated_frame
+				if l_icd_frame = Void then
+					l_icd_frame := icd_frame					
+				end
+				check
+					l_icd_frame /= Void
+				end
 				
 				if l_icd_class /= Void then
 					l_class_token := l_icd_class.get_token
-					
 					l_icd_module := l_icd_class.get_module
 					l_md_import := l_icd_module.interface_md_import
 
@@ -148,7 +155,6 @@ feature {NONE} -- Special childrens
 								l_tokens.put_last (l_tokens_array.item (l_t_index))				
 								l_t_index := l_t_index + 1
 							end						
---							l_tokens.extend_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
 						end
 					end
 					l_md_import.close_enum (l_enum_hdl)
@@ -164,14 +170,30 @@ feature {NONE} -- Special childrens
 						until
 							l_tokens_cursor.after
 						loop
+							l_att_icd_debug_value := Void
 							l_att_token := l_tokens_cursor.item
-							l_att_name := l_md_import.get_field_props (l_att_token)							
+							l_att_name := l_md_import.get_field_props (l_att_token)
 							
-							l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
-							if l_att_icd_debug_value /= Void then
-								l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
-								if l_att_debug_value /= Void then
-									l_att_debug_value.set_name (l_att_name)
+							if l_att_name /= Void and then not l_md_import.last_field_is_literal then
+									--| If the field is not a constant at compiled time
+									--| then available only throught source code or
+									--| Meta Data
+								if l_md_import.last_field_is_static and l_icd_frame /= Void then
+									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
+								end
+								if l_att_icd_debug_value = Void then
+										--| In case, it is not available through get_static_field_value
+										--| we need to check if this can occur and why/how.
+									l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
+								end
+								if l_att_icd_debug_value /= Void then
+									l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
+									if l_att_debug_value /= Void then
+										l_att_debug_value.set_name (l_att_name)
+										Result.put_last (l_att_debug_value)
+									end
+								else
+									create {UNAVAILABLE_DEBUG_VALUE} l_att_debug_value.make_with_name (l_att_name)
 									Result.put_last (l_att_debug_value)
 								end
 							end

@@ -1,7 +1,7 @@
 <document output="studio" title="Working at predefined level">
 	<meta_data/>
 	<paragraph>
-		<table>
+		<table><border>1</border>
 			<row>
 				<cell>The example classes discussed in this section appear in the        subdirectory 
 					<italic>predef </italic>of the example directory

@@ -1,7 +1,7 @@
 <document output="studio" title="Using datagram sockets">
 	<meta_data/>
 	<paragraph>
-		<table>
+		<table><border>1</border>
 			<row>
 				<cell>The example classes discussed in this section appear in the        subdirectory 
 					<italic>datagram </italic>of the example directory

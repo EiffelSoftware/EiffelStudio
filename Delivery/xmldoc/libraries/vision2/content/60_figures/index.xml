@@ -21,7 +21,7 @@
 		<heading>
 			<size>3</size>Figures
 		</heading>
-		<table>
+		<table><border>1</border>
 			<row>
 				<cell>class</cell>
 				<cell>open/closed</cell>

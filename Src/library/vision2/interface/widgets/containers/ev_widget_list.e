@@ -298,61 +298,11 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-feature {NONE} -- Contract support
-
-	parent_of_items_is_current: BOOLEAN is
-			-- Do all items have parent `Current'?
-		local
-			c: CURSOR
-		do
-			Result := True
-			c := cursor
-			from
-				start
-			until
-				after or Result = False
-			loop
-				if item.parent /= Current then
-					Result := False
-				end
-				forth
-			end
-			go_to (c)
-		end
-
-	items_unique: BOOLEAN is
-			-- Are all items unique?
-			-- (ie Are there no duplicates?)
-		local
-			c: CURSOR
-			l: LINKED_LIST [EV_WIDGET]
-		do
-			create l.make
-			Result := True
-			c := cursor
-			from
-				start
-			until
-				after or Result = False
-			loop
-				if l.has (item) then
-					Result := False
-				end
-				l.extend (item)
-				forth
-			end
-			go_to (c)
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: EV_WIDGET_LIST_I
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
-
-invariant
-	parent_of_items_is_current: is_useable implies parent_of_items_is_current
-	items_unique: is_useable implies items_unique
 
 end -- class EV_WIDGET_LIST
 
@@ -377,6 +327,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/17 23:47:16  oconnor
+--| Moved uniqueness and parenting invariants from widget_list to container.
+--|
 --| Revision 1.15  2000/03/16 23:12:28  king
 --| Revised post conditions on insertion
 --|

@@ -1,9 +1,9 @@
 indexing
 	description: 
-		"Eiffel Vision container. Holds other widgets.%N%
+		"Widget that contains other widgets.%N%
 		%Base class for all containers."
 	status: "See notice at end of class"
-	keywords: "container"
+	keywords: "container, pack"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,7 +36,7 @@ inherit
 feature -- Access
 
 	item: EV_WIDGET is
-			-- Current item
+			-- Current item.
 		require
 			readable: readable
 		do
@@ -112,6 +112,7 @@ feature -- Element change
 		do
 			implementation.extend (v)
 		ensure
+			item_is_old_item: item = old item
 			has_v: has (v)
 		end
 
@@ -175,10 +176,57 @@ feature -- Implementation
 			-- (Answer: no by default.)
 
 	implementation: EV_CONTAINER_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature -- Contract support
+
+	parent_of_items_is_current: BOOLEAN is
+			-- Do all items have parent `Current'?
+		local
+			c: CURSOR
+			l: LINEAR [EV_WIDGET]
+		do
+			Result := True
+			l := linear_representation
+			c := l.cursor
+			from
+				l.start
+			until
+				l.after or Result = False
+			loop
+				if l.item.parent /= Current then
+					Result := False
+				end
+				l.forth
+			end
+			l.go_to (c)
+		end
+
+	items_unique: BOOLEAN is
+			-- Are all items unique?
+			-- (ie Are there no duplicates?)
+		local
+			c: CURSOR
+			l: LINEAR [EV_WIDGET]
+			ll: LINKED_LIST [EV_WIDGET]
+		do
+			create ll.make
+			Result := True
+			l := linear_representation
+			c := l.cursor
+			from
+				l.start
+			until
+				l.after or Result = False
+			loop
+				if ll.has (l.item) then
+					Result := False
+				end
+				ll.extend (item)
+				l.forth
+			end
+			l.go_to (c)
+		end
 
 	foreground_color_propagated: BOOLEAN is
 			-- Do all children have same foreground color as `Current'?
@@ -225,8 +273,6 @@ feature -- Contract support
 				l.forth
 			end
 		end
-
-feature -- Contract support
 
 	all_radio_buttons_connected: BOOLEAN is
 			-- Are all radio buttons in this container connected?
@@ -277,6 +323,8 @@ feature {NONE} -- Inapplicable
 
 invariant
 	all_radio_buttons_connected: is_useable implies all_radio_buttons_connected
+	parent_of_items_is_current: is_useable implies parent_of_items_is_current
+	items_unique: is_useable implies items_unique
 
 end -- class EV_CONTAINER
 
@@ -301,6 +349,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/17 23:47:16  oconnor
+--| Moved uniqueness and parenting invariants from widget_list to container.
+--|
 --| Revision 1.24  2000/03/08 20:06:06  brendel
 --| Fixed invariant.
 --|

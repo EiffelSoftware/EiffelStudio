@@ -10,11 +10,11 @@
 		<paragraph> Hash tables are a convenient mechanism tostore and retrieve objects identified by unique keys. 
 			<heading>
 				<size>2</size>Why use hash tables?
-			</heading> The main advantage of hash tables is the efficiency of the basic operations: store ( 
+			</heading> The main advantage of hash tables is the efficiency of the basic operations: store (
 			<link>
 				<url>../../reference/structures/table/hash_table.xml#f_put</url>
 				<label>put</label>
-			</link>) and retrieve ( 
+			</link>) and retrieve (
 			<link>
 				<url>../../reference/structures/table/hash_table.xml#f_item</url>
 				<label>item</label>
@@ -25,32 +25,31 @@
 			</link>).
 			<line_break/> The idea behind hash tables is to try to emulate the data structure that provides the ultimate in efficiency: the array. On an array 
 			<code>
-				<local_variable>a</local_variable>
+				<feature_name>a</feature_name>
 			</code>, for some integer 
 			<code>
-				<local_variable>i</local_variable>
+				<feature_name>i</feature_name>
 			</code> whose value lies within the bounds of 
 			<code>
-				<local_variable>a</local_variable>
+				<feature_name>a</feature_name>
 			</code>, the basic operations are
 		</paragraph>
 		<code_block>
-	<feature_name>a</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, i<symbol>)</symbol>
-	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>i<symbol>)</symbol>
-	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name> @ i 			
-		</code_block>
+<feature_name>a</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, i<symbol>)</symbol>
+<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>i<symbol>)</symbol>
+<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name> @ i </code_block>
 		<paragraph> The first causes the value of a at index 
 			<code>
-				<local_variable>i</local_variable>
+				<feature_name>i</feature_name>
 			</code> to be 
 			<code>
-				<local_variable>x</local_variable>
+				<feature_name>x</feature_name>
 			</code>; the second (and the third, which is simply a syntactical variant) access the value at index 
 			<code>
-				<local_variable>i</local_variable>
+				<feature_name>i</feature_name>
 			</code> and assign it to 
 			<code>
-				<local_variable>x</local_variable>
+				<feature_name>x</feature_name>
 			</code>. With the usual computer architectures, these operations are very fast: because arrays items are stored contiguously in memory, a computer will need just one addition (base address plus index) and one memory access to perform a put or item.
 			<line_break/> Not only are the operation times small; they are constant (or more precisely bounded by a constant). This is a great advantage over structures such as lists or trees which you must traverse at least in part to retrieve an item, so that access and modification times grow with the number of items. With an array, disregarding the influence of other factors such as memory paging, the time for a put or item is for all practical purposes the same whether the array has five items or five hundred thousand. These properties make arrays excellent data structures for keeping objects. Unfortunately, they are only applicable if the objects satisfy three requirements:
 		</paragraph>
@@ -75,16 +74,14 @@
 			<item>Different keys may hash into the same integer value, requiring extra processing  to find an acceptable index.</item>
 		</list>
 		<paragraph> With good implementations, however, it is possible to use hash tables with a performance that is not much worse than that of arrays and, most importantly, may be treated as if the time for a put, an item or a remove were constant. This will mean that you can consider operations such as</paragraph>
-		<code_block>			
-	<feature_name>h</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, <feature_name>k</feature_name><symbol>)</symbol>
-	<feature_name>h</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol><feature_name>k</feature_name><symbol>)</symbol> 	
-		</code_block>
+		<code_block><feature_name>h</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, <feature_name>k</feature_name><symbol>)</symbol>
+<feature_name>h</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol><feature_name>k</feature_name><symbol>)</symbol></code_block>
 		<paragraph> where 
 			<code>
-				<local_variable>h</local_variable>
+				<feature_name>h</feature_name>
 			</code> is a hash-table and 
 			<code>
-				<local_variable>k</local_variable>
+				<feature_name>k</feature_name>
 			</code> is a key (for example a string) as conceptually equivalentto the array operations mentioned above.
 			<line_break/> The quality of a hashed implementation will depend both on the data structure that will store the objects, and on the choice of hashing function. Class 
 			<link>
@@ -152,8 +149,7 @@
 			</link> takes two generic parameters:
 		</paragraph>
 		<code_block>
-	<keyword>class</keyword> <class_name>HASH_TABLE</class_name> <symbol>[</symbol><class_name>G</class_name>, <class_name>H</class_name> <symbol>-&gt;</symbol> <class_name>HASHABLE</class_name><symbol>]</symbol> ...
-		</code_block>
+<keyword>class</keyword> <class_name>HASH_TABLE</class_name> <symbol>[</symbol><class_name>G</class_name>, <class_name>H</class_name> <symbol>-&gt;</symbol> <class_name>HASHABLE</class_name><symbol>]</symbol> ...	</code_block>
 		<paragraph> G represents the type of the objects to be stored in the hash table, H the type of their keys.
 			<line_break/> When viewed as an implementation of containers, 
 			<link>
@@ -161,12 +157,10 @@
 				<label>HASH_TABLE</label>
 			</link>, in a strict sense, represents bags rather than sets: unlike the other classes in this chapter, it allows an object to have two or more distinct occurrences in a single container. But this is only true if we consider a hash table as a repository of objects of type G. In reality each item of the table is identified by a pair of values, one from G and one from H. Because the keys must uniquely identify objects, the hash table viewed as a container of such pairs is indeed a set. The creation procedure make takes an integer argument, as in
 		</paragraph>
-		<code_block>				
-	<keyword>create</keyword> <feature_name>my_table</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><feature_name>n</feature_name><symbol>)</symbol>
-		</code_block>
+		<code_block><keyword>create</keyword> <feature_name>my_table</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><feature_name>n</feature_name><symbol>)</symbol></code_block>
 		<paragraph> The value of 
 			<code>
-				<local_variable>n</local_variable>
+				<feature_name>n</feature_name>
 			</code> indicates how many items the hash table is expected to have to accommodate. This number of items is not a hardwired size, just information passed to the class. In particular:
 		</paragraph>
 		<list ordered="false">

@@ -8,33 +8,29 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>  To create a DESC object representing a library and load that library,  use a declaration such as:</paragraph>
-		<code_block>
-	<feature_name>your_dll</feature_name><symbol>:</symbol> <class_name>DLL_32</class_name> 
-		</code_block>
+		<code_block><feature_name>your_dll</feature_name><symbol>:</symbol> <class_name>DLL_32</class_name></code_block>
 		<paragraph>where 
 			<code>
-				<local_variable>your_dll</local_variable>
+				<feature_name>your_dll</feature_name>
 			</code> should be replaced by whatever name you have chosen to  denote the library in your software, and execute a creation instruction of the form:
 		</paragraph>
-		<code_block>
-	<keyword>create</keyword> <feature_name>your_dll</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"your_lib_name"<symbol>)</symbol> 
-	</code_block>
+		<code_block><keyword>create</keyword> <feature_name>your_dll</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"your_lib_name"<symbol>)</symbol></code_block>
 		<paragraph>where 
 			<code>
-				<local_variable>your_lib_name</local_variable>
+				<feature_name>your_lib_name</feature_name>
 			</code> is the name of the file containing the library.
 		</paragraph>
 		<paragraph>  After this call has been executed, the boolean value 
 			<code>
-				<local_variable>your_dll.meaningful</local_variable>
+				<feature_name>your_dll.meaningful</feature_name>
 			</code> will be true if and only if the creation has been successful, that is to say, the  given name did correspond to an available library, and it was possible to load it.
 		</paragraph>
 		<paragraph>  If 
 			<code>
-				<local_variable>your_dll.meaningful</local_variable>
+				<feature_name>your_dll.meaningful</feature_name>
 			</code> is false, you can have more details about the error  by comparing the value of 
 			<code>
-				<local_variable>your_dll.error_code</local_variable>
+				<feature_name>your_dll.error_code</feature_name>
 			</code>, an integer, to those of  constant attributes defined in class 
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_chart.xml</url>
@@ -53,7 +49,7 @@
 				<label>DLL_32</label>
 			</link>, the value of 
 			<code>
-				<local_variable>meaningful</local_variable>
+				<feature_name>meaningful</feature_name>
 			</code> is true if an only if 
 			<code>
 				<local_variable>error_code</local_variable>

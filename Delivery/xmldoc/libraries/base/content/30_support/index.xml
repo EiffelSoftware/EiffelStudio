@@ -15,9 +15,9 @@
 			<link>
 				<url>../10_kernel/index.xml</url>
 				<label>kernel</label>
-			</link> facilities. PRIMES, RANDOM and FIBONACCI are part of the data structure taxonomy; the others are meant to be used as ancestors by  classes needing their features.
+			</link> facilities. <link><url>/libraries/base/reference/support/PRIMES_chart.html</url><label>PRIMES</label></link>, <link><url>/libraries/base/reference/support/RANDOM_chart.html</url><label>RANDOM</label></link> and <link><url>/libraries/base/reference/support/FIBONACCI_chart.html</url><label>FIBONACCI</label></link> are part of the data structure taxonomy; the others are meant to be used as ancestors by  classes needing their features.
 		</paragraph>
-		<paragraph>Two classes provide basic mathematical functions such as logarithms and trigonometric functions: SINGLE_MATH for single precision and DOUBLE_MATH for the double-precision variants. MATH_CONST contains mathematical constants: 
+		<paragraph>Two classes provide basic mathematical functions such as logarithms and trigonometric functions: <link><url>/libraries/base/reference/support/SINGLE_MATH_chart.html</url><label>SINGLE_MATH</label></link> for single precision and <link><url>/libraries/base/reference/support/DOUBLE_MATH_chart.html</url><label>DOUBLE_MATH</label></link> for the double-precision variants.  <link><url>/libraries/base/reference/support/MATH_CONST_chart.html</url><label>MATH_CONST</label></link> contains mathematical constants: 
 			<code>
 				<symbol>p</symbol>
 			</code>, the square root of two, Euler's constant 
@@ -25,56 +25,56 @@
 				<symbol>e</symbol>
 			</code>.
 		</paragraph>
-		<paragraph>PRIMES, RANDOM and FIBONACCI are data structure classes - heirs of COUNTABLE_SEQUENCE. In all of these classes function i_th takes an integer argument 
+		<paragraph><link><url>/libraries/base/reference/support/PRIMES_chart.html</url><label>PRIMES</label></link>, <link><url>/libraries/base/reference/support/RANDOM_chart.html</url><label>RANDOM</label></link> and <link><url>/libraries/base/reference/support/FIBONACCI_chart.html</url><label>FIBONACCI</label></link> are data structure classes - heirs of <link><url>/libraries/base/reference/support/COUNTABLE_SEQUENCE_chart.html</url><label>COUNTABLE_SEQUENCE</label></link>. In all of these classes function i_th takes an integer argument 
 			<code>
 				<local_variable>i</local_variable>
-			</code> and will return the i-th element of the sequence under consideration - prime numbers, pseudo-random numbers or Fibonacci numbers. These sequences are active structures, on which forth will advance the current position and item will return the value at the current position. A few other features are specific to each case: for example  higher_prime will yield the smallest prime greater than or equal to a certain value, and set_seed will define the seed to be used for starting the pseudo-random sequence.
+			</code> and will return the i-th element of the sequence under consideration - prime numbers, pseudo-random numbers or Fibonacci numbers. These sequences are active structures, on which forth will advance the current position and item will return the value at the current position. A few other features are specific to each case: for example  <link><url>/libraries/base/reference/support/RANDOM_flatshort.html#f_higher_prime</url><label>higher_prime</label></link> will yield the smallest prime greater than or equal to a certain value, and <link><url>/libraries/base/reference/support/RANDOM_flatshort.html#f_set_seed</url><label>set_seed</label></link> will define the seed to be used for starting the pseudo-random sequence.
 		</paragraph>
 		<heading>
 			<size>2</size>Internal object structures
 		</heading>
-		<paragraph>Class INTERNAL provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
+		<paragraph>Class <link><url>/libraries/base/reference/support/INTERNAL_chart.html</url><label>INTERNAL</label></link> provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
 			<line_break/> Here are some of the most useful calls and what they yield, 
 			<code>
-				<local_variable>obj</local_variable>
+				<feature_name>obj</feature_name>
 			</code> being an entity attached to an object 
 			<code>
-				<local_variable>O</local_variable>
+				<feature_name>O</feature_name>
 			</code> and 
 			<code>
-				<local_variable>i</local_variable>
+				<feature_name>i</feature_name>
 			</code> an integer:
 		</paragraph>
 		<list ordered="false">
-			<item>class_name (obj):  the name of the generator class for O.</item>
-			<item>dynamic_type 
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_class_name</url><label>class_name</label></link> (<code><feature_name>obj</feature_name></code>):  the name of the generator class for O.</item>
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_dynamic_type</url><label>dynamic_type </label></link>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the integer code for the type of 
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code>,  where each type in a system is identified by a unique code.
 			</item>
-			<item>field_count 
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_field_count</url><label>field_count </label></link>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the number of fields in 
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code>.
 			</item>
-			<item>physical_size 
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_physical_size</url><label>physical_size </label></link>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>: the space occupied by 
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code>, in bytes.
 			</item>
 			<item>
@@ -83,26 +83,26 @@
 				</code>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>i</local_variable>
+					<feature_name>i</feature_name>
 				</code>,  
 				<code>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code> where  
 				<code>
 					<feature_name>xx</feature_name>
 				</code> is name or offset: name or offset of the i-th field of  
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code>.
 			</item>
-			<item>field 
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_field</url><label>field </label></link>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>i</local_variable>
+					<feature_name>i</feature_name>
 				</code>, 
 				<code>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the value of the i-th field of , if a reference; declared of type  ANY  in the class.
 			</item>
@@ -112,31 +112,31 @@
 				</code>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>i</local_variable>
+					<feature_name>i</feature_name>
 				</code>, 
 				<code>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code> where  
 				<code>
 					<feature_name>yy</feature_name>
 				</code> is boolean, character, integer, real or double: the value  of the i-th field of 
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code>, if of the corresponding type; each declared of the  appropriate type in the class.
 			</item>
-			<item>is_special 
+			<item><link><url>/libraries/base/reference/support/INTERNAL_flatshort.html#f_is_special</url><label>is_special </label></link>
 				<code>
 					<symbol>(</symbol>
-					<local_variable>obj</local_variable>
+					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>, a boolean query which indicates whether 
 				<code>
-					<local_variable>O</local_variable>
+					<feature_name>O</feature_name>
 				</code> is a special object  (the sequence of values representing the elements of an array or the characters of  a string).
 			</item>
 		</list>
 		<warning>
-			<bold>CAUTION:</bold> Only very special cases justify the use of this class. Unless you are writing the lowest level of an interface between an Eiffel application and external tools (such as a database management system), and this requires passing to those tools information about the internals of Eiffel objects, you almost certainly should not use INTERNAL. 
+			<bold>CAUTION:</bold> Only very special cases justify the use of this class. Unless you are writing the lowest level of an interface between an Eiffel application and external tools (such as a database management system), and this requires passing to those tools information about the internals of Eiffel objects, you almost certainly should not use <link><url>/libraries/base/reference/support/INTERNAL_chart.html</url><label>INTERNAL</label></link>. 
 		</warning>
 	</paragraph></document>

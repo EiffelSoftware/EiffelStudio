@@ -13,7 +13,7 @@
 				<label>created</label>
 			</link> the object  representing the external routine and attachedit to entity 
 			<code>
-				<local_variable>your_routine</local_variable>
+				<feature_name>your_routine</feature_name>
 			</code>, you may now call the routine with  arbitrary actual arguments through the procedure,  a feature of class 
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_routine_chart.xml</url>
@@ -26,7 +26,5 @@
 				<label>ARRAY [ANY]</label>
 			</link>, containing  the successive actual arguments to be passed to the external routine.  The easiest technique is to use a manifest array, as in:
 		</paragraph>
-		<code_block>
-	<feature_name>your_routine</feature_name>.<feature_name>call</feature_name> <symbol>(</symbol><symbol>&lt;&lt;</symbol>-325, <feature_name>67</feature_name>.<feature_name>2</feature_name>, x, a<symbol>+</symbol>b&gt;&gt;<symbol>)</symbol> 
-		</code_block>
+		<code_block><feature_name>your_routine</feature_name>.<feature_name>call</feature_name> <symbol>(</symbol><symbol>&lt;&lt;</symbol>-325, <feature_name>67</feature_name>.<feature_name>2</feature_name>, x, a<symbol>+</symbol>b&gt;&gt;<symbol>)</symbol></code_block>
 	</paragraph></document>

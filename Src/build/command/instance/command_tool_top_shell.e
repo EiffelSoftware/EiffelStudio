@@ -53,7 +53,6 @@ feature -- Creation
 			!! add_formal_argument_entry.make (Menu_names.Add_formal_argument, action_category)
 			!! remove_formal_argument_entry.make (Menu_names.Remove_formal_argument, action_category)
 				--| Top form
---			!! command_hole.make (Current, top_form)
 			!! command_hole.make (top_form)
 			!! trash_hole.make (top_form)
 			!! search_class_name_button.make (Current, top_form)
@@ -134,8 +133,6 @@ feature -- Creation
 			top_split_form.attach_top_widget (arguments_scrolled_w, observer_hole, 0)
 			top_split_form.attach_left (observer_hole, 5)
 			top_split_form.attach_bottom (observer_hole, 0)
---			top_split_form.attach_top_widget (arguments_scrolled_w, details_label, 0)
---			top_split_form.attach_top_widget (arguments_scrolled_w, details_button, 0)
 			top_split_form.attach_bottom_widget (details_label, arguments_scrolled_w, 0)
 			top_split_form.attach_bottom_widget (details_button, arguments_scrolled_w, 0)
 			top_split_form.attach_right (details_button, 5)

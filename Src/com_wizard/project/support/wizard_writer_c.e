@@ -36,7 +36,7 @@ feature -- Basic operations
 	standard_include is
 			-- Standart include files.
 		do
-			add_import (Eif_com_h)
+			--add_import (Eif_com_h)
 			add_import (Eif_eiffel_h)
 			add_import (Windows_h)
 			add_import (Ecom_generated_rt_globals_header_file_name)

@@ -157,6 +157,10 @@ feature -- Initialization
 			control_holder.extend (item_parent)
 			control_holder.disable_item_expand (item_parent)
 			is_initialized := True
+			
+			create all_integer_input_fields.make (4)
+			create all_string_input_fields.make (4)
+			create all_pixmap_editors.make (2)
 		end
 		
 feature -- Access
@@ -240,9 +244,16 @@ feature -- Status setting
 				name_field.focus_in_actions.resume
 				name_field.focus_out_actions.resume	
 			end
+			
+			all_integer_input_fields.wipe_out
+			all_string_input_fields.wipe_out
+			all_pixmap_editors.wipe_out
 		ensure
 			now_empty: attribute_editor_box.count = 0
 			object_is_void: object = Void
+			integer_input_fields_empty: all_integer_input_fields.is_empty
+			string_input_fields_empty: all_string_input_fields.is_empty
+			pixmap_editors_empty: all_pixmap_editors.is_empty
 		end
 		
 	update_current_object is
@@ -298,18 +309,87 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT} -- Implementation
 		require
 			constant_not_void: a_constant /= Void
 		local
-			object_editor_item: GB_OBJECT_EDITOR_ITEM
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			integer_constant: GB_INTEGER_CONSTANT
+			string_constant: GB_STRING_CONSTANT
 		do
-			object_editor_item := editor_item_by_type ("EV_PIXMAPABLE")
-			--| FIXME implement
+			pixmap_constant ?= a_constant
+			if pixmap_constant /= Void then
+				from
+					all_pixmap_editors.start
+				until
+					all_pixmap_editors.off
+				loop
+					all_pixmap_editors.item.constant_added (pixmap_constant)
+					all_pixmap_editors.forth
+				end
+			end
+			integer_constant ?= a_constant
+			if integer_constant /= Void then
+				from
+					all_integer_input_fields.start
+				until
+					all_integer_input_fields.off
+				loop
+					all_integer_input_fields.item.constant_added (integer_constant)
+					all_integer_input_fields.forth
+				end
+			end
+			string_constant ?= a_constant
+			if string_constant /= Void then
+				from
+					all_string_input_fields.start
+				until
+					all_string_input_fields.off
+				loop
+					all_string_input_fields.item.constant_added (string_constant)
+					all_string_input_fields.forth
+				end
+			end
 		end
 
 	constant_removed (a_constant: GB_CONSTANT) is
 			-- Update `Current' to reflect removal of constant `a_constant'.
 		require
 			constant_not_void: a_constant /= Void
+		local
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			integer_constant: GB_INTEGER_CONSTANT
+			string_constant: GB_STRING_CONSTANT			
 		do
-			--| FIXME implement
+			pixmap_constant ?= a_constant
+			if pixmap_constant /= Void then
+				from
+					all_pixmap_editors.start
+				until
+					all_pixmap_editors.off
+				loop
+					all_pixmap_editors.item.constant_removed (pixmap_constant)
+					all_pixmap_editors.forth
+				end
+			end
+			integer_constant ?= a_constant
+			if integer_constant /= Void then
+				from
+					all_integer_input_fields.start
+				until
+					all_integer_input_fields.off
+				loop
+					all_integer_input_fields.item.constant_removed (integer_constant)
+					all_integer_input_fields.forth
+				end
+			end
+			string_constant ?= a_constant
+			if string_constant /= Void then
+				from
+					all_string_input_fields.start
+				until
+					all_string_input_fields.off
+				loop
+					all_string_input_fields.item.constant_removed (string_constant)
+					all_string_input_fields.forth
+				end
+			end
 		end
 
 feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
@@ -712,7 +792,47 @@ feature {NONE} -- Implementation
 	
 	control_holder: EV_VERTICAL_BOX
 		-- Holds the controls, and is placed in the scrollable area.
-	
+		
+	all_integer_input_fields: ARRAYED_LIST [GB_INTEGER_INPUT_FIELD]
+		-- All integer input fields comprising `Current'.
+		
+	all_string_input_fields: ARRAYED_LIST [GB_STRING_INPUT_FIELD]
+		-- All string input fields comprising `Current'.
+		
+	all_pixmap_editors: ARRAYED_LIST [GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR]
+		-- All input fields for pixmaps, comprising `Current'.
+		
+feature {GB_INTEGER_INPUT_FIELD} -- Implementation
+		
+	add_integer_input_field (input_field: GB_INTEGER_INPUT_FIELD) is
+			-- Add `input_field' to `all_integer_input_fields'.
+		require
+			input_field_not_void: input_field /= Void
+		do
+			all_integer_input_fields.extend (input_field)
+		end
+		
+feature {GB_STRING_INPUT_FIELD} -- Implementation
+		
+	add_string_input_field (input_field: GB_STRING_INPUT_FIELD) is
+			-- Add `input_field' to `all_string_input_fields'.
+		require
+			input_field_not_void: input_field /= Void
+		do
+			all_string_input_fields.extend (input_field)
+		end
+		
+feature {GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR} -- Impleemntation
+
+	add_pixmap_input_field (input_field: GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR) is
+			-- Add `input_field' to `all_pixmap_editors'.
+		require
+			input_field_not_void: input_field /= Void
+		do
+			all_pixmap_editors.extend (input_field)
+		end
+		
+		
 feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 
 	update_name_field is
@@ -737,5 +857,10 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 				replace_object_editor_item ("EV_CONTAINER")
 			end
 		end
+
+invariant
+		all_integer_input_fields_not_void: all_integer_input_fields /= Void
+		all_string_input_fields_not_void: all_string_input_fields /= Void
+		all_pixmap_editors_not_void: all_pixmap_editors /= Void
 
 end -- class GB_OBJECT_EDITOR

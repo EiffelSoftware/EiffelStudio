@@ -1451,6 +1451,14 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 	 */
 	
 	r = selected->ov_size;
+#ifdef EIF_TID 
+#ifdef EIF_THREADS
+    selected->ovs_tid = thread_id; /* tid from eif_thr_context */
+#else
+    selected->ovs_tid = (EIF_THR_TYPE *) 0; /* In non-MT-mode, it is NULL by convention */
+#endif  /* EIF_THREADS */
+#endif  /* EIF_TID */
+
 	selected->ov_size = r | B_NEW;
 	i = r & B_SIZE;						/* Keep only true size */
 	m_data.ml_used += i;				/* Account for memory used */
@@ -2828,6 +2836,14 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
 	bzero(object, nbytes);		/* All set with zeros */
 
 	zone = HEADER(object);				/* Object's header */
+#ifdef EIF_TID 
+#ifdef EIF_THREADS
+    zone->ovs_tid = thread_id; /* tid from eif_thr_context */
+#else
+    zone->ovs_tid = (EIF_THR_TYPE *) 0; /* In non-MT-mode, it is NULL by convention */
+#endif  /* EIF_THREADS */
+#endif  /* EIF_TID */
+
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
 	zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
 

@@ -118,23 +118,13 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 					end
 				elseif
 					source_type.is_expanded and then target_type.is_external and then
-					source_type.reference_actual_type.conform_to (target_type)
+					source_type.is_conformant_to (target_type)
 				then
 						-- No need for conversion, this is currently done at the code
 						-- generation level to properly handle the generic case.
 						-- If not done at the code generation, we would need the following
 						-- line.
 					-- create {BOX_CONVERSION_INFO} conversion_info.make (source_type)
-				elseif
-					source_type.is_expanded and then
-					source_type.convert_to (context.current_class,
-						source_type.reference_actual_type) and then
-					source_type.reference_actual_type.conform_to (target_type)
-				then
-					conversion_info := context.last_conversion_info
-					if conversion_info.has_depend_unit then
-						context.supplier_ids.extend (conversion_info.depend_unit)
-					end
 				else
 						-- Type does not convert neither, so we raise an error
 						-- about non-conforming types.

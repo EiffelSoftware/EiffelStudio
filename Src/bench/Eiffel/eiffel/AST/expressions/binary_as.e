@@ -129,13 +129,7 @@ feature -- Type check, byte code and dead code removal
 							l_class.class_id).actual_type
 
 						if not a_right_type.conform_to (l_arg_type) then
-							if
-								(a_right_type.convert_to (context.current_class, l_arg_type)) or
-								(a_right_type.is_expanded and then
-									a_right_type.convert_to (context.current_class,
-										a_right_type.reference_actual_type) and then
-									a_right_type.reference_actual_type.conform_to (l_arg_type))
-							then
+							if a_right_type.convert_to (context.current_class, l_arg_type) then
 								last_argument_conversion_info := context.last_conversion_info
 								last_arg_type := l_arg_type
 							else
@@ -207,13 +201,7 @@ feature -- Type check, byte code and dead code removal
 			if is_infix_valid (left_type, right_type, infix_function_name) then
 			else
 				l_error := last_error
-				if
-					(left_type.convert_to (context.current_class, right_type)) or
-					(left_type.is_expanded and then
-						left_type.convert_to (context.current_class,
-							left_type.reference_actual_type) and then
-						left_type.reference_actual_type.conform_to (right_type))
-				then
+				if left_type.convert_to (context.current_class, right_type) then
 					last_target_conversion_info := context.last_conversion_info
 					if not is_infix_valid (right_type, right_type, infix_function_name) then
 						last_target_conversion_info := Void

@@ -66,10 +66,7 @@ feature -- Access
 						-- Special case `ref ?= exp' where we convert
 						-- `exp' to its associated reference before
 						-- doing the assignment.
-					if
-						source_type.convert_to (context.current_class,
-							source_type.reference_actual_type)
-					then
+					if source_type.convert_to (context.current_class, target_type) then
 						conversion_info := context.last_conversion_info
 						if conversion_info.has_depend_unit then
 							context.supplier_ids.extend (conversion_info.depend_unit)

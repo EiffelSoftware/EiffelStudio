@@ -33,6 +33,7 @@ feature -- Basic operation
 			-- Add `an_object' to `Current' at position `position'.
 		local
 			widget: EV_WIDGET
+			box: EV_BOX
 		do
 			widget ?= an_object.object
 			check
@@ -40,6 +41,13 @@ feature -- Basic operation
 			end
 			object.go_i_th (position)
 			object.put_left (widget)
+			if not an_object.expanded_in_box then
+					-- Update expanded state of `an_object'.
+				box ?= object
+				if box /= Void then
+					box.disable_item_expand (widget)
+				end
+			end
 				-- Check we need to handle if display_object is a container.
 			widget ?= an_object.display_object
 			check
@@ -47,6 +55,14 @@ feature -- Basic operation
 			end
 			display_object.child.go_i_th (position)
 			display_object.child.put_left (widget)
+			if not an_object.expanded_in_box then
+					-- Update expanded state of `an_object'.
+				box ?= display_object.child
+				if box /= Void then
+					box.disable_item_expand (widget)
+				end
+			end
+			
 			if not layout_item.has (an_object.layout_item) then
 				layout_item.go_i_th (position)
 				layout_item.put_left (an_object.layout_item)			

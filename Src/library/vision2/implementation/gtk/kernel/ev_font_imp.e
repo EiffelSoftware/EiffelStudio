@@ -157,13 +157,21 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
- 			-- Is the font valid in `a_widget''s display ?
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
  		do
                         check
                                 not_yet_implemented: False
                         end
- 		end
+		end
+
+--	is_valid: BOOLEAN is
+--			-- Is the font valid in `a_widget''s display ?
+--		do
+--			check
+--				not_yet_implemented: False
+--			end
+--		end
 
 	is_proportional: BOOLEAN is
  			-- Is the font proportional ?
@@ -198,6 +206,15 @@ feature -- Status report
 -- 		end;
 
 -- feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+ 		end
+
 
  	set_name (a_name: STRING) is
 -- 			-- Set `name' to `a_name'.

@@ -185,6 +185,10 @@ feature
 						%%T%TEIF_INTEGER i;%N%
 						%%T%Tint16 pdtype;");
 
+					if has_init then
+						buffer.putstring ("%N%T%Tvoid *(*init)(EIF_REFERENCE, EIF_REFERENCE);")
+					end
+
 					buffer.new_line
 
 					gen_ptype ?= expanded_type

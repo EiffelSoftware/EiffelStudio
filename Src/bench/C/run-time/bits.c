@@ -276,7 +276,7 @@ rt_public char *b_clone(char *bit)
 
 	char *new;						/* Address of newly allocated object */
 
-	epush(&loc_stack, &bit);		/* Ensure address is updated by GC */
+	epush(&loc_stack, (char *) &bit);	/* Ensure address is updated by GC */
 	new = bmalloc(LENGTH(bit));		/* Create new bit field */
 	epop(&loc_stack, 1);			/* It's safe now, object won't move */
 	b_copy(bit, new);				/* Copy into newly allocated bits */
@@ -373,7 +373,7 @@ rt_private char *b_right_shift(char *bit, long int s)
 	char *new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
-	epush(&loc_stack, &bit);
+	epush(&loc_stack, (char *) &bit);
 	new = bmalloc(len);			/* Returned bit object */
 	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
@@ -430,7 +430,7 @@ rt_private char *b_left_shift(char *bit, long int s)
 	char *new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
-	epush(&loc_stack,&bit);
+	epush(&loc_stack, (char *) &bit);
 	new = bmalloc(len);			/* Returned bit object */
 	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
@@ -520,7 +520,7 @@ rt_private char *b_right_rotate(char *bit, long int s)
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_left_rotate(bit, len - s);
 
-	epush(&loc_stack,&bit);
+	epush(&loc_stack, (char *) &bit);
 	new = bmalloc(len);			/* The bit object which will be rotated */
 	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
@@ -625,7 +625,7 @@ rt_private char *b_left_rotate(char *bit, long int s)
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_right_rotate(bit, len - s);
 
-	epush(&loc_stack,&bit);
+	epush(&loc_stack, (char *) &bit);
 	new = bmalloc(len);			/* The new bit object which will be rotated */
 	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
@@ -720,7 +720,7 @@ rt_public char *b_and (char *a, char *b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack,&b);
+	epush(&loc_stack, (char *) &b);
 	a = b_clone(a);
 	epop(&loc_stack,1);
 	len_a = LENGTH(a);
@@ -773,7 +773,7 @@ rt_public char *b_implies(char *a, char *b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack,&b);
+	epush(&loc_stack, (char *) &b);
 	a = b_clone(a);
 	epop(&loc_stack,1);
 	len_a = LENGTH(a);
@@ -826,7 +826,7 @@ rt_public char *b_or(char *a, char *b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack,&b);
+	epush(&loc_stack, (char *) &b);
 	a = b_clone(a);
 	epop(&loc_stack,1);
 	len_a = LENGTH(a);
@@ -875,7 +875,7 @@ rt_public char *b_xor(char *a, char *b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack,&b);
+	epush(&loc_stack, (char *) &b);
 	a = b_clone(a);
 	epop(&loc_stack,1);
 	len_a = LENGTH(a);

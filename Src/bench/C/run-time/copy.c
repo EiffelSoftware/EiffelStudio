@@ -111,7 +111,7 @@ rt_public char *edclone(char *source)
 	if (0 == source)
 		return (char *) 0;			/* Void source */
 
-	epush(&loc_stack, &source);		/* Protect source: allocation will occur */
+	epush(&loc_stack, (char *) &source);	/* Protect source: allocation will occur */
 
 #ifdef DEBUG
 	xobjs = nomark(source);
@@ -159,7 +159,7 @@ rt_public char *edclone(char *source)
 	 * represents a pseudo anchor object for the object hierarchy being cloned.
 	 */
 
-	rdeepclone(source, &anchor.boot, 0);	/* Recursive clone */
+	rdeepclone(source, (char *) &anchor.boot, 0);	/* Recursive clone */
 	hash_free(&hclone);						/* Free hash table */
 	map_reset(0);							/* And free maping table */
 
@@ -186,7 +186,7 @@ rt_public char *rtclone(char *source)
 	if (source == (char *) 0)
 		return (char *) 0;
 
-	epush(&loc_stack, &source);		/* In case object is going to move */
+	epush(&loc_stack, (char *) &source);	/* In case object is going to move */
 
 	if (HEADER(source)->ov_flags & EO_SPEC) {
 		result = spclone(source);	/* Special object cloning */

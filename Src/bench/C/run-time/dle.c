@@ -586,13 +586,13 @@ rt_public void dle_reclaim(void)
 			for (i = 0; i < dle_melt_count; i++)
 				if (dle_melt[i] != (char *) 0)
 					xfree(dle_melt[i]);
-			xfree(dle_melt);
+			xfree((char *) dle_melt);
 		}
 	
 				/*** Free memory for variable `dle_mpatidtab' ***/
 		if (dle_mpatidtab != (int *) 0) {
 			dle_mpatidtab += dle_zeroc;
-			xfree(dle_mpatidtab);
+			xfree((char *) dle_mpatidtab);
 		}
 
 #ifdef DLFCN

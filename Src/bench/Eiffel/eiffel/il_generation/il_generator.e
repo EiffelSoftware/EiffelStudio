@@ -154,7 +154,7 @@ feature -- Generation
 						if l_last_error_msg = Void or else l_last_error_msg.is_empty then
 							Error_handler.insert_error (create {IL_ERROR}.make (Error_handler.exception_trace))
 						else						
-							Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+							Error_handler.insert_error (create {IL_ERROR}.make (l_last_error_msg))
 						end
 					else
 						check

@@ -67,8 +67,7 @@ feature -- Widget Management
 
 feature {SPLIT_WINDOW_I} -- Implementation
 
-	--implementation: FORM_IMP;
-	implementation: FORM_WINDOWS; -- VISIONLITE
+	implementation: FORM_WINDOWS;
 			-- Implementation Window
 
 feature {NONE} -- Implementation

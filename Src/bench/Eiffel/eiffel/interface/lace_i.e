@@ -54,6 +54,7 @@ end;
 			ptr := file_name.to_c;
 			!!file.make (file_name);
 			if not file.exists then
+				successfull := False;
 				!!vd22;
 				vd22.set_file_name (file_name);
 				Error_handler.insert_error (vd22);

@@ -46,7 +46,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_down,
-			on_key_up
+			on_key_up,
+			on_set_cursor
 		redefine
 			set_column_title,
 			set_column_width,
@@ -368,7 +369,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			delete_item (index)
 
 			-- Then, we update the children
-			ev_children.go_i_th (index)
+			ev_children.go_i_th (index + 1)
 			ev_children.remove
 		end
 

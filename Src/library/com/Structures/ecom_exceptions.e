@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+		
 	MEMORY
 		export
 			{NONE} all
@@ -41,6 +41,45 @@ feature --  Access
 			Result := ccom_hresult (formatter, wel_string.item)
 		end
 
+	hresult_code: INTEGER is
+			-- Status code.
+		require
+			applicable: is_developer_exception
+		do
+			Result := ccom_hresult_code (hresult)
+		end
+
+	hresult_facility: INTEGER is
+			-- Facility code.
+		require
+			applicable: is_developer_exception
+		do
+			Result := ccom_hresult_facility (hresult)
+		end
+	
+	hresult_message: STRING is
+			-- Error message.
+		require
+			applicable: is_developer_exception
+		local
+			error_messages: WEL_WINDOWS_ERROR_MESSAGES
+		do
+			Result := clone (tag_name)
+			Result.tail (Result.count - 10)
+			Result.left_adjust
+			Result.right_adjust
+			
+			if Result.empty then
+				create error_messages
+				Result := error_messages.error_messages.item (hresult_code)
+			end
+			if Result = Void then
+				create Result.make (0)
+			end
+		ensure
+			non_void_message: Result /= Void
+		end
+		
 feature -- Element Change
 
 	trigger (code: INTEGER) is
@@ -105,6 +144,20 @@ feature {NONE} -- External
 		alias
 			"com_eraise"
 		end;
+
+	ccom_hresult_code (an_hresult: INTEGER): INTEGER is
+		external
+			"C [macro <winerror.h>] (HRESULT): EIF_INTEGER"
+		alias
+			"HRESULT_CODE"
+		end
+	
+	ccom_hresult_facility (an_hresult: INTEGER): INTEGER is
+		external
+			"C [macro <winerror.h>] (HRESULT): EIF_INTEGER"
+		alias
+			"HRESULT_FACILITY"
+		end
 
 end -- class ECOM_EXCEPTION
 

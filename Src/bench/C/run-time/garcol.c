@@ -619,6 +619,15 @@ doc:	</attribute>
 */
 rt_public EIF_REFERENCE root_obj = NULL;
 
+/*
+doc:	<attribute name="has_reclaim_been_called" return_type="EIF_BOOLEAN" export="private">
+doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim´ failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_BOOLEAN has_reclaim_been_called = 0;
+
 #ifdef ISE_GC
 
 #ifdef DEBUG
@@ -1241,76 +1250,80 @@ rt_public void reclaim(void)
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
 
+	if (!has_reclaim_been_called) {
+		has_reclaim_been_called = 1;
+
 #if ! defined CUSTOM || defined NEED_OPTION_H
-	if (egc_prof_enabled)
-		exitprf();			/* Store profile information */
+		if (egc_prof_enabled) {
+			exitprf();			/* Store profile information */
+		}
 #endif
 
 #ifdef ISE_GC
-	if (eif_no_reclaim || (g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
+		if (eif_no_reclaim || (g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
 #else
-	if (eif_no_reclaim) {
+		if (eif_no_reclaim) {
 #endif
-		UNDISCARD_BREAKPOINTS;
-		return;	
-	}
 
 #ifdef RECLAIM_DEBUG
-	fprintf(stderr, "reclaim: collecting all objects...\n");
+			fprintf(stderr, "reclaim: collecting all objects...\n");
 #endif
 
 #ifdef ISE_GC
-	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
-		sc_stop();					/* Free 'to' and explode 'from' space */
+			if (gen_scavenge & GS_ON) {		/* If generation scaveging was on */
+				sc_stop();					/* Free 'to' and explode 'from' space */
+			}
 
-		/* Call for the last time the GC through a `full_collect'. It enables
-		 * the call to `dispose' routine of remaining objects which defines
-		 * the dispose routine. */
-	plsc ();
+				/* Call for the last time the GC through a `full_collect'. It enables
+				 * the call to `dispose' routine of remaining objects which defines
+				 * the dispose routine. */
+			plsc ();
 
-	/* Reset GC status otherwise full_sweep() might skip some memory blocks
-	 * (those previously used as partial scavenging areas).
-	 */
-	g_data.status = (char) 0;
-	
-	full_sweep();				/* Reclaim ALL the objects in the system */
+			/* Reset GC status otherwise full_sweep() might skip some memory blocks
+			 * (those previously used as partial scavenging areas).
+			 */
+			g_data.status = (char) 0;
+			
+			full_sweep();				/* Reclaim ALL the objects in the system */
 
 #endif
 
-	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+			eif_free (EIF_once_values); /* have been allocated with eif_malloc */
 
-	FREE_OMS (EIF_oms); /* Free array of once manifest strings */
+			FREE_OMS (EIF_oms); /* Free array of once manifest strings */
 
-	eif_free (starting_working_directory);
-	eif_gen_conf_cleanup ();
+			eif_free (starting_working_directory);
+			eif_gen_conf_cleanup ();
 #ifdef EIF_WIN32
-	eif_cleanup(); 
-	eif_free_dlls();
+			eif_cleanup(); 
+			eif_free_dlls();
 #endif /* EIF_WIN32 */
 
 #ifdef EIF_THREADS 
-	CHECK ("Root thread", eif_thr_is_root ());
-	eif_thread_cleanup ();
+			CHECK ("Root thread", eif_thr_is_root ());
+			eif_thread_cleanup ();
 #endif	/* EIF_THREADS */
 
 #ifdef ISE_GC
-	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
-		cn = c->ck_next;
+			for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
+				cn = c->ck_next;
 #if !defined HAS_SMART_MMAP && !defined HAS_SBRK
-		eif_free (c);	/* Previously allocated with eif_malloc. */
+				eif_free (c);	/* Previously allocated with eif_malloc. */
 #else
-		eif_rt_xfree ((EIF_REFERENCE) c);		/* Previously allocated with mmap or sbrk. */
+				eif_rt_xfree ((EIF_REFERENCE) c);		/* Previously allocated with mmap or sbrk. */
 #endif	/* !HAS_SMART_MMAP && !!HAS_SBRK */
-	}
-	cklst.ck_head = (struct chunk *) 0;
+			}
+			cklst.ck_head = (struct chunk *) 0;
 #endif
 
 #ifdef ISE_GC
 #ifdef LMALLOC_CHECK
-		eif_lm_display ();
-		eif_lm_free ();
+				eif_lm_display ();
+				eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
 #endif
+		}
+	}
 
 		/* Final collection terminated, unmark the flag */
 	eif_is_in_final_collect = EIF_FALSE;

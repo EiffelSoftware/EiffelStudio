@@ -9,6 +9,12 @@ class EB_CONSTANTS
 
 feature {NONE} -- Resources
 
+	Graphical_resources: GRAPHICAL_CATEGORY is
+			-- General resources
+		once
+			!! Result.make
+		end;
+
 	System_resources: SYSTEM_CATEGORY is
 			-- General resources
 		once

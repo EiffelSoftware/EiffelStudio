@@ -113,8 +113,7 @@ RT_LNK int fcount;
  *  RTAX(x,y) remembers 'y' if 'x' is new and 'y' is old not remembered yet
  *  RTAR(x,y) remembers 'y' if it is old and not remembered and 'x' is new
  *  RTAS(x,y) is the same as RTAR but for special objects and with no GC call
- *  RTAS_OPT(x,i, y) is the same as RTAR but for special objects passing 
- *	the index, and with no GC call.
+ *  RTAS_OPT(x,i, y) is the same as RTAS with passing the index.
  */
 #define RTAO(x) (HEADER(x)->ov_flags & EO_OLD)
 #define RTAE(x) (HEADER(x)->ov_flags & EO_REF)
@@ -128,23 +127,13 @@ RT_LNK int fcount;
 		if (RTAG(z)) RTAM(z); \
 	} else if (RTAG(y)) RTAM(y); \
 	}
-#if !defined NDEBUG && defined EIF_REM_SET_OPTIMIZATION
-#define RTAS(x,y) if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
-	if (RTAE(y)) eif_panic ("Must call RTAS_OPT instead");\
-	if (HEADER(y)->ov_flags & EO_EXP) { \
-		register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
-		if (RTAG(z)) erembq((z)); \
-	} else if (RTAG(y)) erembq((y)); \
-	}
-#else	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
 #define RTAS(x,y) if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
 	if (HEADER(y)->ov_flags & EO_EXP) { \
 		register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} else if (RTAG(y)) erembq((y)); \
 	}
-#endif	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
-
+#ifdef EIF_REM_SET_OPTIMIZATION
 #define RTAS_OPT(x,i,y) \
 	if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) \
 	{ \
@@ -161,6 +150,9 @@ RT_LNK int fcount;
 				erembq((y)); \
 			} \
 	} 
+#else	/* EIF_REM_SET_OPTIMIZATION */
+#define RTAS_OPT(x,i,y) RTAS (x,y)
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 /* Macros used by reverse assignments:
  *  RTRC(x,y) is true if type 'y' conforms to type 'x'

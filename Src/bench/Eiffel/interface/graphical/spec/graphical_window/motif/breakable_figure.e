@@ -32,21 +32,24 @@ feature -- Properties
 	pixmap: PIXMAP;
 			-- Associated break point pixmap
 
-	foreground_color: COLOR;
+	foreground_color (values: GRAPHICAL_VALUES): COLOR is
 			-- Background color of pixmap
+		do
+			Result := actual_foreground_color
+		end;
 
-	font: FONT is
+	font (values: GRAPHICAL_VALUES): FONT is
 			-- Breakable font
 		do
-			Result := g_Breakable_font
+			Result := values.breakable_font
 		end;
 
 feature -- Status setting
 
-	set_foreground_color (a_color: like foreground_color) is
+	set_foreground_color (a_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			foreground_color := a_color
+			actual_foreground_color := a_color
 		end;
 
 	set_pixmap (a_pixmap: like pixmap) is
@@ -60,7 +63,9 @@ feature -- Status setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; is_in_hightlighted_line: BOOLEAN; 
+	draw (d: DRAWING_X; 
+		values: GRAPHICAL_VALUES;
+		is_in_hightlighted_line: BOOLEAN; 
 			x_offset, y_offset: INTEGER) is
 			-- Draw the current text.
 		local
@@ -70,18 +75,20 @@ feature -- Output
 				check
 					non_void_text: text /= Void
 				end;
-				draw_text (d, is_in_hightlighted_line, x_offset, y_offset)
+				draw_text (d, values, is_in_hightlighted_line, x_offset, y_offset)
 			else
 				!! ul;
 				ul.set (base_left_x - x_offset, 
 						base_left_y - pixmap.height - y_offset);
-				d.set_foreground_gc_color (foreground_color);
-				d.set_background_gc_color (g_Bg_color);
+				d.set_foreground_gc_color (actual_foreground_color);
+				d.set_background_gc_color (values.text_background_color);
 				d.copy_bitmap (ul, pixmap);
 			end
 		end;
 
-	select_clickable (d: DRAWING_X; x_offset, y_offset: INTEGER) is
+	select_clickable (d: DRAWING_X; 
+			values: GRAPHICAL_VALUES;
+			x_offset, y_offset: INTEGER) is
 			-- Select clickable.
 		local
 			ul: COORD_XY
@@ -90,18 +97,20 @@ feature -- Output
 				check
 					non_void_text: text /= Void
 				end;
-				select_clickable_text (d, x_offset, y_offset)
+				select_clickable_text (d, values, x_offset, y_offset)
 			else
 				!! ul;
 				ul.set (base_left_x - x_offset, 
 						base_left_y - pixmap.height - y_offset);
-				d.set_foreground_gc_color (g_Selected_clickable_fg_color);
-				d.set_background_gc_color (g_Selected_clickable_bg_color);
+				d.set_foreground_gc_color (values.selected_clickable_fg_color);
+				d.set_background_gc_color (values.selected_clickable_bg_color);
 				d.copy_bitmap (ul, pixmap);
 			end
 		end;
 
-	unselect_clickable (d: DRAWING_X; x_offset, y_offset: INTEGER) is
+	unselect_clickable (d: DRAWING_X; 
+			values: GRAPHICAL_VALUES;
+			x_offset, y_offset: INTEGER) is
 			-- Unselect clickable.
 		local
 			ul: COORD_XY
@@ -110,15 +119,20 @@ feature -- Output
 				check
 					non_void_text: text /= Void
 				end;
-				unselect_clickable_text (d, x_offset, y_offset)
+				unselect_clickable_text (d, values, x_offset, y_offset)
 			else
 				!! ul;
 				ul.set (base_left_x - x_offset, 
 						base_left_y - pixmap.height - y_offset);
-				d.set_foreground_gc_color (foreground_color);
-				d.set_background_gc_color (g_Bg_color);
+				d.set_foreground_gc_color (actual_foreground_color);
+				d.set_background_gc_color (values.text_background_color);
 				d.copy_bitmap (ul, pixmap);
 			end
 		end;
 
-end -- class EB_BREAKABLE_FIG
+feature {NONE} -- Implementation
+
+	actual_foreground_color: COLOR
+			-- Foreground color breakable figure
+
+end -- class BREAKABLE_FIG

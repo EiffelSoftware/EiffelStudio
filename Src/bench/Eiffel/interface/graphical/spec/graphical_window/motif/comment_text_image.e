@@ -10,9 +10,19 @@ class COMMENT_TEXT_IMAGE
 inherit
 
 	TEXT_FIGURE
-		rename
-			g_Comment_fg_color as foreground_color,
-			g_Comment_font as font
-		end
+
+feature -- Access
+
+	font (values: GRAPHICAL_VALUES): FONT is
+			-- Font to be used for text
+		do
+			Result := values.comment_font
+		end;
+			
+	foreground_color (values: GRAPHICAL_VALUES): COLOR is
+			-- Foreground color
+		do
+			Result := values.comment_color
+		end;
 
 end -- class COMMENT_TEXT_IMAGE

@@ -18,6 +18,11 @@ inherit
 		undefine
 			destroy,
 			destroyed
+		redefine
+			set_foreground_color,
+			set_background_color,
+			foreground_color,
+			background_color
 		end
 
 creation
@@ -31,8 +36,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an row with one empty column.
 		do
-			create text.make
-			text.extend ("")
+			-- create the arrayed_list where the text will be stored.
+			create internal_text.make (0)
+			internal_text.extend ("")
+
+			-- create the arrayed_list where the pixmaps will be stored.
+			create internal_pixmaps.make (0)
+			internal_pixmaps.extend (Void)
 		end
 
 	make_with_text (txt: ARRAY [STRING]) is
@@ -40,26 +50,64 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 		do
+			-- create the arrayed_lists where the text and
+			-- the pixmaps will be stored.
 			from
-				create text.make
+				create internal_text.make (0)
+				create internal_pixmaps.make (0)
 				i := txt.lower
 			until
 				i > txt.upper
 			loop
-				text.extend (txt @ i)
+				internal_text.extend (txt @ i)
+				internal_pixmaps.extend (Void)
 				i := i + 1
 			end
+
  		end
 
 	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
 			-- Create a row at the given `value' index in the list.
 		do
+			-- Create the text of the row
+			create internal_text.make (0)
+			internal_text.extend ("")
+
+			-- create the arrayed_list where the pixmaps will be stored.
+			create internal_pixmaps.make (0)
+			internal_pixmaps.extend (Void)
+
+			if par /= Void then
+				set_columns (par.columns)
+			end
+
+			-- set `par' as parent and put the row at the given position
+			set_parent (par)
+			set_index (value)
 		end
 
 	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
 			-- Create a row with `txt' as text at the given
 			-- `value' index in the list.
+		local
+			i: INTEGER
 		do
+			-- set the text of the row
+			from
+				create internal_text.make (0)
+				create internal_pixmaps.make (0)
+				i := txt.lower
+			until
+				i > txt.upper
+			loop
+				internal_text.extend (txt @ i)
+				internal_pixmaps.extend (Void)
+				i := i + 1
+			end
+
+			-- set `par' as parent and put the row at the given position
+			set_parent (par)
+			set_index (value)
 		end
 
 feature -- Access
@@ -76,27 +124,42 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the row
 		do
-			Result := text.count
+			Result := internal_text.count
 		end
 
-	index: INTEGER
+	index: INTEGER is
 			-- Index of the row in the list
-			-- (gtk index starting from 0).
-
-
-	cell_pixmap (column: INTEGER): EV_PIXMAP is
-			-- Return the pixmap of the cell number
-			-- `index'. On windows platform, 
-			-- if index > 1, the result is void.
+			-- (starting from 1).
 		do
-			-- To implement
+			-- The `ev_children' array has to contain
+			-- the same rows in the same order than in the gtk
+			-- part.
+			result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
-	pixmap: LINKED_LIST [EV_PIXMAP] is
-			-- Return all the pixmaps of the item.
-			-- Only 1 on windows platform.
+	background_color: EV_COLOR is
+			-- Color used for the background of the widget
+			-- Currently, on windows, we can only set the color
+			-- for the whole mclist and not for each row.
+			-- Therefore, this feature is not available to the client, yet.
+		local
+			r, g, b: INTEGER
 		do
-			-- To implement
+			c_gtk_clist_get_bg_color (parent_imp.widget, index - 1, $r, $g, $b)
+			!!Result.make_rgb (r, g, b)
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color used for the foreground of the widget,
+			-- usually the text.
+			-- Currently, on windows, we can only set the color
+			-- for the whole mclist and not for each row.
+			-- Therefore, this feature is not available to the client, yet.
+		local
+			r, g, b: INTEGER
+		do
+			c_gtk_clist_get_fg_color (parent_imp.widget, index - 1, $r, $g, $b)
+			!!Result.make_rgb (r, g, b)
 		end
 
 feature -- Status report
@@ -104,7 +167,7 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
 		do
-			Result := text = Void
+			Result := (internal_text = Void) and (internal_pixmaps = void)
 		end
 
 	is_selected: BOOLEAN is
@@ -123,24 +186,35 @@ feature -- Status setting
 			-- Destroy actual object.
 		local
 		do
-			text := Void
-			pixmaps := Void
+			internal_text := Void
+			internal_pixmaps := Void
 			parent_imp := Void	
 		end
 
 	set_index (value: INTEGER) is
 			-- Make `value' the new index of the item.
+		local
+			local_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 		do
-			index := value
+			-- moving the gtk row
+			gtk_clist_row_move (parent_imp.widget, index - 1, value - 1)
+
+			-- updating the parent `ev_children' array
+			local_array := parent_imp.ev_children
+			local_array.search (Current)
+			local_array.remove
+
+			local_array.go_i_th (value)
+			local_array.put_left (Current)
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				gtk_clist_select_row (parent_imp.widget, index, 0)
+				gtk_clist_select_row (parent_imp.widget, index - 1, 0)
 			else
-				gtk_clist_unselect_row (parent_imp.widget, index, 0)
+				gtk_clist_unselect_row (parent_imp.widget, index - 1, 0)
 			end
 		end
 
@@ -148,50 +222,35 @@ feature -- Status setting
 			-- if value > number of columns, add empty columns 
 			-- if value < number of columns, remove the last columns
 			-- does nothing if equal.
-		local
-			test, the_count: INTEGER
 		do
-			test := columns
 			if (value > columns) then
 				from
-					text.finish
+					internal_text.finish
 				until
-					text.count = value
+					internal_text.count = value
 				loop
-					text.extend ("")
-					the_count := text.count
+					-- Increasing the number of fields in the `internal_text' array.
+					internal_text.extend ("")
+					-- Increasing the number of fields in the `internal_pixmaps' array.
+					internal_pixmaps.extend (Void)
 				end
 			elseif (value < columns) then
 				from
-					text.finish
+					internal_text.finish
 				until
-					text.count = value
+					internal_text.count = value
 				loop
-					text.remove
-					text.finish
+					-- Decreasing the number of fields in the `internal_text' array.
+					internal_text.remove
+
+					-- Decreasing the number of fields in the `internal_pixmaps' array.
+					internal_pixmaps.remove
+				
+					internal_text.finish
+					internal_pixmaps.finish
 				end
 			end
 				
-		end
-
-	cell_text (column: INTEGER): STRING is
-		local
-			p: POINTER
-			ok: INTEGER
-		do
-			!!Result.make (0)
-			ok := gtk_clist_get_text (parent_imp.widget, index, column - 1, $p)
-			check
-				get_text_ok: ok > 0
-			end
-			Result.from_c (p)
-		end
-
-	set_cell_pixmap (column: INTEGER; pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the 
-			-- `index'-th cell of the item.
-		do
-			-- To implement
 		end
 
 feature -- Element Change
@@ -200,10 +259,51 @@ feature -- Element Change
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		local
-			ctxt: ANY
+			txt: ANY
+			pix_imp: EV_PIXMAP_IMP
 		do
-			ctxt := a_text.to_c
-			gtk_clist_set_text (parent_imp.widget, index, column - 1, $ctxt)
+			-- Prepare the pixmap and the text.
+			txt := a_text.to_c
+			pix_imp := (internal_pixmaps @ column)
+
+			-- Set the pixmap and the text in the given column.
+			if (pix_imp /= void) then
+				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, pix_imp.widget, $txt)
+			else
+				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, default_pointer, $txt)
+			end
+			-- Update the `internal_text' and `internal_pixmaps' arrays.
+			internal_text.go_i_th (column)
+			internal_text.put (a_text)
+		end
+
+	set_cell_pixmap (column: INTEGER; pix: EV_PIXMAP) is
+			-- Sets the pixmap of the given column of the current row to `pixmap'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			txt: STRING
+			a: ANY
+		do
+			-- Prepare the pixmap and the text.
+			pix_imp ?= pix.implementation
+			txt := cell_text (column)
+			a := txt.to_c
+
+			-- Set the pixmap and the text in the given column.
+			if (pix_imp /= void) then
+				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, pix_imp.widget, $a)
+			else
+				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, default_pointer, $a)
+			end
+			-- Update the `internal_text' and `internal_pixmaps' arrays.
+			internal_pixmaps.go_i_th (column)
+			internal_pixmaps.put (pix_imp)
+		end
+
+	unset_cell_pixmap (column: INTEGER) is
+			-- Sets the pixmap of the given column of the current row to `pixmap'.
+		do
+			c_gtk_clist_unset_pixmap (parent_imp.widget, index - 1, column - 1)
 		end
 
 	set_parent (par: EV_MULTI_COLUMN_LIST) is
@@ -221,6 +321,24 @@ feature -- Element Change
 				end
 				parent_imp.add_item (Current)
 			end					
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'.
+			-- Currently, on windows, we can only set the color
+			-- for the whole mclist and not for each row.
+			-- Therefore, this feature is not available to the client, yet.
+		do
+			c_gtk_clist_set_bg_color (parent_imp.widget, index - 1, color.red, color.green, color.blue)
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'.
+			-- Currently, on windows, we can only set the color
+			-- for the whole mclist and not for each row.
+			-- Therefore, this feature is not available to the client, yet.
+		do
+			c_gtk_clist_set_fg_color (parent_imp.widget, index - 1, color.red, color.green, color.blue)
 		end
 
 feature -- Event : command association
@@ -259,14 +377,6 @@ feature {NONE} -- Implementation
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 		-- Multi-column list that own the current object 
-
-	pixmaps: ARRAY [EV_PIXMAP]
-		-- Pixmaps in the cells
-
-feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
-
-	text: LINKED_LIST [STRING]
-		-- Text in the cells
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

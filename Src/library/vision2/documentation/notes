@@ -32,6 +32,7 @@ To be revised:
 To do:
 - Redo windows dialog implementation.
 - Right click interface to pick and drop.
+- Add set_pointer_position to EV_SCREEN.
 - The event `expose_actions' is triggered twice on a container when a window
   is resized. !! This makes resizing take twice as long!!
 - Color is inefficent on GTK+. 
@@ -39,6 +40,8 @@ To do:
 - Fix key release events on GTK.
 - Fix key as string action sequence.
 - Check for things that could inherit textable (frame, menu, simple item)
+- Add EV_SELECTABLE AND EV_DESELECTABLE where deselect inherits select.
+- Add EV_SENSITIVE??
 - Test circular parenting contracts for items and widgets.
 - Check export of stuff int _I and _IMP, nothing should be exported to all,
   export to EV_ANY and EV_ANY_I is the most open anything should be.
@@ -53,7 +56,6 @@ To do:
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
 - Rename titled_window_imp.e <-> window_imp.e
-- Added EV_SELECTABLE AND EV_DESELECTABLE where deselect inherits select.
 
 
 Feature/Bug requests:
@@ -117,7 +119,7 @@ X   complete but found to have bugs
   System:
     kernel/ev_application.e                             o    o .5  *     .
     kernel/ev_environment.e                             *    o .1  *     .
-    widgets/uncommon_widgets/ev_screen.e                *    o     *     .
+    widgets/uncommon_widgets/ev_screen.e                .    .     .     .
 
   Buttons:
     widgets/primitives/ev_button.e                      *    *     *     .

@@ -164,7 +164,7 @@ feature -- Generation
 
 						if re.is_generic then
 							f.putstring ("{");
-							f.putstring (re.gen_type_string);
+							f.putstring (re.gen_type_string (False));
 							f.putstring ("-1};%N")
 						else
 							f.putstring ("(int16 *) 0;%N")
@@ -191,7 +191,7 @@ feature -- Generation
 
 							if ae.is_generic then
 								f.putstring ("{");
-								f.putstring (ae.gen_type_string);
+								f.putstring (ae.gen_type_string (False));
 								f.putstring ("-1};%N")
 							else
 								f.putstring ("(int16 *) 0;%N")
@@ -243,7 +243,7 @@ feature -- Generation
 						f.putint (cnt.value);
 						j := cnt.next;
 						f.putstring (" [] = {");
-						f.putstring (re.gen_type_string);
+						f.putstring (re.gen_type_string (False));
 						f.putstring ("-1};%N")
 					else
 						ae ?= entry_item
@@ -252,7 +252,7 @@ feature -- Generation
 							f.putint (cnt.value);
 							j := cnt.next;
 							f.putstring (" [] = {");
-							f.putstring (ae.gen_type_string);
+							f.putstring (ae.gen_type_string (False));
 							f.putstring ("-1};%N")
 						end
 					end;

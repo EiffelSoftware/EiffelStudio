@@ -191,7 +191,6 @@ feature {NONE} -- Implementation
 				window_file_name, window_template: FILE_NAME
 				store: GB_XML_STORE
 				generation_settings: GB_GENERATION_SETTINGS
-				document_info: GB_GENERATED_INFO
 			do
 				set_progress (0.3)
 				create store
@@ -209,8 +208,6 @@ feature {NONE} -- Implementation
 					-- that is contained within. This is then used by the generator,
 					-- to find paticular information regarding the structure.
 				create document_info.make_root
-				create generated_info_by_id.make (50)
-				create id_by_name.make (50)
 				create all_ids.make (50)
 				prepass_xml (current_document.root_element, document_info, 1)
 				
@@ -238,9 +235,6 @@ feature {NONE} -- Implementation
 				set_progress (0.7)
 					-- Generate the widget declarations and creation lines.
 				generate_declarations (current_document.root_element, 1)
-				
-					-- Create storage for all parent child name pairs.
-				create parent_child.make (50)
 				
 					-- Create storage for all generated feature names.
 				create all_generated_events.make (0)
@@ -429,8 +423,8 @@ feature {NONE} -- Implementation
 							end
 							element_info := full_information @ (id_string)
 							info.set_id (element_info.data.to_integer)
-							generated_info_by_id.put (info, info.id)
-							id_by_name.put (info.id, info.name)
+							info.generated_info_by_id.put (info, info.id)
+							info.names_by_id.put (info.name, info.id)
 							all_ids.extend (info.id)
 						elseif current_name.is_equal (Events_string) then
 								-- Do nothing
@@ -544,9 +538,6 @@ feature {NONE} -- Implementation
 									if not parent_type.is_equal (Ev_table_string) then
 										add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
 									end
-										-- Store the parent and child attribute names in `parent_child'.									
-									parent_child.extend (parent_name)
-									parent_child.extend (element_info.data)
 								end
 								found_name := element_info.data
 						else
@@ -576,7 +567,7 @@ feature {NONE} -- Implementation
 			until
 				all_ids.off
 			loop
-				generated_info := generated_info_by_id.item (all_ids.item)
+				generated_info := document_info.generated_info_by_id.item (all_ids.item)
 				supported_types := generated_info.supported_types
 				from
 					supported_types.start
@@ -843,7 +834,7 @@ feature {NONE} -- Implementation
 			if create_string = Void then
 				create_string := create_widgets_comment + temp_string
 			else
-				create_string := create_string + temp_string--indent + "create " + name
+				create_string := create_string + temp_string
 			end
 		end
 		
@@ -856,7 +847,7 @@ feature {NONE} -- Implementation
 			if build_string = Void then
 				build_string := build_widgets_comment + temp_string
 			else
-				build_string := build_string + temp_string--+ indent + constructor
+				build_string := build_string + temp_string
 			end
 		end
 		
@@ -925,32 +916,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	child_names (current_name: STRING): ARRAYED_LIST [STRING]  is
-			-- `Result' is attribute names for all children of attribute `current_name'.
-			-- Queried from `parent_child'.
-		require
-			parent_child_not_void: parent_child /= Void
-			parent_child_count_even: parent_child.count > 0 implies parent_child.count \\ 2 = 0
-		do
-			create Result.make (0)
-			from
-				parent_child.start
-			until
-				parent_child.off
-			loop
-				if parent_child.item.is_equal (current_name) then
-				
-						parent_child.forth
-
-						Result.extend (parent_child.item)
-
-						parent_child.forth
-				else
-					parent_child.go_i_th (parent_child.index + 2)
-				end
-			end
-		end
-		
 	set_progress (value: REAL)	is
 			-- Assign `value' to proportion of `progress_bar'
 			-- if `progress_bar' /= Void
@@ -968,7 +933,8 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
+	document_info: GB_GENERATED_INFO
+		-- Representation of XML file after `prepass_xml'.
 		
 	project_settings: GB_PROJECT_SETTINGS is
 			-- Short access to system_status.current_project_settings.
@@ -977,20 +943,9 @@ feature {NONE} -- Implementation
 			Result := system_status.current_project_settings
 		end
 		
-	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER]
-		-- All objects of type GB_GENERATED_INFO created during prepass, referenced by id.
-		
-	id_by_name: HASH_TABLE [INTEGER, STRING]
-		-- All ids found during prepass, referenced by name.
-		
 	all_ids: ARRAYED_LIST [INTEGER]
 		-- All ids found during prepass. One for each object that is being generated.
 	
-	parent_child: ARRAYED_LIST [STRING]
-		-- A list of all parent attribute names and associated child names in the following format:
-		-- parent, child, parent, child, parent, child.
-		-- This is not the most efficient format, but can be changed as necessary.
-
 	all_generated_events: ARRAYED_LIST [STRING]
 		-- A list of all event feature names that have been generated. This is necessary, so
 		-- that when there are multiple events connected to one feature, then we do not

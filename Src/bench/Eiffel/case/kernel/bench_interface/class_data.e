@@ -884,7 +884,7 @@ feature -- Update
 			class_not_void : a_data/= Void	
 		local
 			generic_data: GENERIC_DATA;
-			c_l: EDITOR_LIST [EC_CLASS_WINDOW];
+	--		c_l: EDITOR_LIST [EC_CLASS_WINDOW];
 		do
 --			generic_data ?= a_data;
 --			if generic_data = Void then

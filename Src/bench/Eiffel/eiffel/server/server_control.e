@@ -162,7 +162,7 @@ end;
 			is_open: f.is_open
 		end;
 
-	Cache_size: INTEGER is 20;
+	Default_size: INTEGER is 20;
 
 	wipe_out is
 			-- Empty the cache

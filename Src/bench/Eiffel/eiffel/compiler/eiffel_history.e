@@ -97,7 +97,7 @@ feature {EIFFEL_HISTORY} -- Implementation
 	used: SEARCH_TABLE [ROUTINE_ID];
 			-- Used routine table ids
 
-	Cache_size: INTEGER is 200;
+	default_size: INTEGER is 200;
 			-- Cache size
 
 invariant

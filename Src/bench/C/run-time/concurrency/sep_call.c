@@ -62,6 +62,55 @@ char *name;
 	return i;		   /* Index in the attribute array */
 }
 
+#ifndef WORKBENCH
+EIF_INTEGER get_pattern_id(struct ctable *ct, char *key) {
+    /* Look for item associated with given key and returns a pointer to its
+     * location in the value array. Return a null pointer if item is not found.
+     */
+   
+    register2 long pos;     /* Position in H table */
+    register3 int32 hsize;      /* Size of H table */
+    register4 char **hkeys;     /* Array of keys */
+ 
+    register5 int32 tryv = (int32) 0;   /* Count number of attempts */
+    register6 long inc;     /* Loop increment */
+ 
+dprintf(4) ("In get_pattern_id: ct=%x, key=%s\n", ct, key);
+    /* Initializations */
+    hsize = ct->h_size;
+dprintf(4) ("In get_pattern_id: sizeoftable=%d\n", hsize);
+    hkeys = ct->h_keys;
+dprintf(4) ("In get_pattern_id: sizeoftable=%d, keyary=%x\n", hsize, hkeys);
+ 
+    if (hsize == 0) {
+    	sprintf(_concur_crash_info, "    Can't find feature %s(in class %s)'s pattern ID.", _concur_command_feature, _concur_command_class);
+	    c_raise_concur_exception(exception_implementation_error);
+	}
+ 
+    /* Jump from one hashed position to another until we find the value or
+     * go to an empty entry or reached the end of the table.
+     */
+    inc = hashcode(key, (long) strlen(key));
+dprintf(4) ("In get_pattern_id: inc=%ld\n", inc);
+    for (
+        pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
+        tryv < hsize;
+        tryv++, pos = (pos + inc) % hsize
+    ) {
+        if (hkeys[pos] == (char *) 0)
+            break;
+        else if (0 == strcmp(hkeys[pos], key)) {
+dprintf(4)("In get_pattern_id, POS=%d, value_p=%x, ", pos, ct->h_values);
+dprintf(4)("*+++++++++* patID=%d\n", ((EIF_INTEGER *)ct->h_values)[pos]);
+            return ((EIF_INTEGER *)ct->h_values)[pos];
+		}
+    }
+ 
+    sprintf(_concur_crash_info, "    Can't find feature %s(in class %s)'s pattern ID.", _concur_command_feature, _concur_command_class);
+    c_raise_concur_exception(exception_implementation_error);
+}
+#endif
+
 void separate_call() {
 
 	EIF_INTEGER ack=_concur_command_ack;
@@ -164,11 +213,11 @@ void separate_call() {
 			dyn_type = Dtype(CUROBJ);
 			static_type = eif_type_id(_concur_command_class); 	/* Can be removed */
 #ifdef DEBUG
-printf("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, static_type, dyn_type);
+dprintf(4)("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, static_type, dyn_type);
 #endif
 			ptr_table = &(Cecil(dyn_type));		/* Get associated H table */
 #ifdef DEBUG
-printf("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
+dprintf(4)("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
 #endif
 			is_extern = 0; /* It should be determined by the info transferred from caller, 
 							* or in some other way. 
@@ -183,7 +232,10 @@ printf("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _conc
 					c_raise_concur_exception(exception_invalid_parameter);
 				}
 #ifndef WORKBENCH
+/*
 				offset = *((long *)System(dyn_type).cn_offsets[is_extern]);	
+*/
+				offset = ((System(dyn_type).cn_offsets[is_extern])[dyn_type]);
 #else
 				rout_id = System(dyn_type).cn_attr[is_extern];
 				CAttrOffs(offset,rout_id,dyn_type);
@@ -233,45 +285,18 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 									 * so we check Invariant when the feature is done. 
 									 */
 #ifndef WORKBENCH
-				fptr = ct_value(ptr_table, _concur_command_feature);
-				/* How to get the corresponding the entry in "separate_pattern" for the routine ?
-				 * "body_id" can't be used any more.
-				 */
-#ifdef CANTUSED
-				cn_routids = System(dyn_type).cn_routids;
-				if (cn_routids)
-					 rout_id = cn_routids[*feature_ptr];
-				else /* precompiled routine */
-					 rout_id = *feature_ptr;
-				CBodyIdx(body_index,rout_id, dyn_type);/* Get the body index */
-				body_id = dispatch[body_index];
-
-				if (body_id < zeroc) {
-					fptr =  frozen[body_id];                /* Frozen feature */
-					sep_call = separate_pattern[FPatId(body_id)]; 
-				}
-				else 
-#ifndef DLE
-				{
-					IC = melt[body_id];		/* Position byte code to interpret */
-					fptr = pattern[MPatId(body_id)].toi;
-					sep_call = separate_pattern[MPatId(body_id)]; 
-				}
-#else
-				if (body_id < dle_level) {
-					IC = melt[body_id]; 	/* Position byte code to interpret */
-					fptr = pattern[MPatId(body_id)].toi;
-					sep_call = separate_pattern[MPatId(body_id)]; 
-				} else if (body_id < dle_zeroc) {
-					fptr = dle_frozen[body_id]; /* Frozen feature in the DC-set */
-					sep_call = separate_pattern[DLEFPatId(body_id)]; 
-				} else {
-					IC = dle_melt[body_id];	/* Position byte code to interpret */
-					fptr = pattern[DLEMPatId(body_id)].toi;
-					sep_call = separate_pattern[DLEMPatId(body_id)]; 
-				}
+				fptr = *(EIF_FN_REF *) ct_value(ptr_table, _concur_command_feature);
+#ifdef DEBUG
+dprintf(2)("%d(%s) ******** Separa feature <%s>'s dyn_type=%d, fptr=%x\n", _concur_pid, _concur_command_class, _concur_command_feature, dyn_type, fptr);
 #endif
-#endif	/* CANTUSED */
+				ptr_table = &(ce_sep_pat[dyn_type]);
+#ifdef DEBUG
+dprintf(2)("%d(%s) ******** Separa feature <%s>'s ctable is = %x, <size=%d, elesize=%d, %x, %x>\n", _concur_pid, _concur_command_class, _concur_command_feature, ptr_table, ce_sep_pat[dyn_type].h_size, ce_sep_pat[dyn_type].h_sval, ce_sep_pat[dyn_type].h_keys, ce_sep_pat[dyn_type].h_values);
+#endif
+				sep_call = separate_pattern[get_pattern_id(ptr_table, _concur_command_feature)-1];
+#ifdef DEBUG
+dprintf(2)("%d(%s) ******** Separa feature <%s>'s feature Ptr = %x, sep_call=%x\n", _concur_pid, _concur_command_class, _concur_command_feature, fptr, sep_call);
+#endif
 
 #else  		/* WORKBENCH  for "FEATURE" */
 				feature_ptr = (int32 *) ct_value(ptr_table, _concur_command_feature);
@@ -352,8 +377,8 @@ dprintf(2)("%d(%s) Got feature's sep_call 0x%x, fptr 0x%x\n", _concur_pid, _conc
 					RTCI(CUROBJ);
 				}
 			}	/* end of "FEATURE" */
-#ifdef DISP_MSG
-		printf("* %d(%s) Performed separate call.\n", _concur_pid, _concur_class_name_of_root_obj);
+#ifdef DEBUG
+		dprintf(2)("* %d(%s) Performed separate call.\n\n", _concur_pid, _concur_class_name_of_root_obj);
 #endif
 		_concur_crash_info[0] = '\0';
 	}

@@ -363,6 +363,8 @@ feature {NONE} -- WEL Implementation
 			temp_node: EV_TREE_NODE_IMP
 			tree: EV_TREE_IMP
 			tooltip: WEL_TOOLTIP
+			rich_text: EV_RICH_TEXT_IMP
+			selchange: WEL_RICH_EDIT_SELCHANGE
 		do
 			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
@@ -392,6 +394,10 @@ feature {NONE} -- WEL Implementation
 					-- us that a bounding box selection is beginning. We
 					-- return 1 to override this behaviour.
 				set_message_return_value (1)
+			elseif info.code = (feature {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
+				rich_text ?= info.window_from
+				create selchange.make_by_nmhdr (info)
+				rich_text.on_en_selchange (selchange.selection_type, selchange.character_range)
 			end
 		end
 		

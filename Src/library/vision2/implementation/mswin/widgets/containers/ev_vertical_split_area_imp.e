@@ -71,28 +71,6 @@ feature -- Element change
 
 feature {NONE} -- Basic operation
 
-	set_local_width (new_width: INTEGER) is
-			-- Make `new_width' the new `width' of the 
-			-- container and both children.
-		do
-			if new_width > minimum_width then
-				set_width (new_width)
-				resize_children (level)
-			end
-		end
-
-	set_local_height (new_height: INTEGER) is
-			-- Make `new_height' the new `height' of the 
-			-- container and both children.
-		do
-			if new_height > minimum_height then
-				set_height (new_height)
-				if child2 /= Void then
-					child2.parent_ask_resize (child2.width, new_height - child1.child_cell.height - size)
-				end
-			end
-		end
-
 	resize_children (a_level: INTEGER) is
 			-- Resize the two children according to the new level of the 
 			-- splitter

@@ -343,14 +343,6 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	set_local_width (new_width: INTEGER) is
-		deferred
-		end
-
-	set_local_height (new_height: INTEGER) is
-		deferred
-		end
-
 	resize_children (a_level: INTEGER) is
 			-- Resize both children according to the new level
 			-- `level' of the splitter.

@@ -209,12 +209,13 @@ rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 /* For historical reasons, these definitions were moved here for VMS. 
  * The reasons were specious, and the definitions have been restored to 
  * retrieve.c, at least for VMS. I don't know about other platforms.
- * --- dss
+ * -dss
+ *  Back to retrieve.c for all platforms -ET
  */
-#if defined EIF_VMS || defined EIF_OS2 || defined SYMANTEC_CPP
-#else	/* %%ss added */
-rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
-rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
+/*#if defined EIF_VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+/*#else	/* %%ss added */
+/*rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
+/*rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
 	 */
 #endif
 

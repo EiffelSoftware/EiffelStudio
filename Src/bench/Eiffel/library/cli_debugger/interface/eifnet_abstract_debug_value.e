@@ -80,8 +80,8 @@ feature {NONE} -- Init
 				end
 				Debug_value_keeper.keep_dotnet_value (Current)				
 			end
-		end		
-
+		end
+		
 feature {NONE} -- Special childrens
 
 	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
@@ -106,7 +106,9 @@ feature {NONE} -- Special childrens
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
+			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
 			l_att_name: STRING
+			l_error_message: STRING
 		do
 			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.interface_debug_object_value			
@@ -171,6 +173,7 @@ feature {NONE} -- Special childrens
 							l_tokens_cursor.after
 						loop
 							l_att_icd_debug_value := Void
+							l_error_message := Void
 							l_att_token := l_tokens_cursor.item
 							l_att_name := l_md_import.get_field_props (l_att_token)
 							
@@ -180,10 +183,12 @@ feature {NONE} -- Special childrens
 									--| Meta Data
 								if l_md_import.last_field_is_static and l_icd_frame /= Void then
 									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
+									if (l_icd_class.last_call_success & 0x0000FFFF) = feature {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
+										l_error_message := "Static not yet initialized"
+									end
+									l_att_name.prepend ("{S} ")
 								end
-								if l_att_icd_debug_value = Void then
-										--| In case, it is not available through get_static_field_value
-										--| we need to check if this can occur and why/how.
+								if l_att_icd_debug_value = Void and l_error_message = Void then
 									l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
 								end
 								if l_att_icd_debug_value /= Void then
@@ -193,8 +198,11 @@ feature {NONE} -- Special childrens
 										Result.put_last (l_att_debug_value)
 									end
 								else
-									create {UNAVAILABLE_DEBUG_VALUE} l_att_debug_value.make_with_name (l_att_name)
-									Result.put_last (l_att_debug_value)
+									create l_error_debug_value.make_with_name (l_att_name)
+									if l_error_message /= Void then
+										l_error_debug_value.set_message (l_error_message)
+									end
+									Result.put_last (l_error_debug_value)
 								end
 							end
 							l_tokens_cursor.forth

@@ -128,6 +128,11 @@ feature {NONE} -- Computed Value access
 
 feature -- Output
 
+	is_dummy_value: BOOLEAN is
+			-- Does `Current' represent a object value or for instance an error message
+		deferred
+		end		
+
 	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		deferred

@@ -110,11 +110,13 @@ feature {NONE} -- Output
 
 feature -- Output
 
+	is_dummy_value: BOOLEAN is False
+			-- Does `Current' represent a object value or for instance an error message
+
 	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? 
 			-- (Is it a non void reference, a special object, ...)
 		do
---			Result := address /= Void
 			Result := not is_null
 		end
 

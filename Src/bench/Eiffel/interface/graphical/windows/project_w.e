@@ -335,9 +335,6 @@ feature -- Window Holders
 
 feature -- Pulldown Menus
 
-	menu_bar: BAR;
-			-- Menu bar in the top section of the window.
-
 	special_menu: MENU_PULL;
 			-- Menu for commands.
 			-- Only used during debugging
@@ -384,9 +381,6 @@ feature -- Pulldown Menus
 
 	format_object_menu: MENU_PULL;
 			-- Format menu specific for the object part
-
-	help_menu: MENU_PULL;
-			-- Help menu.
 
 feature -- Window Forms
 
@@ -748,10 +742,7 @@ feature -- Graphical Interface
 			!! format_menu.make (Interface_names.m_Formats, menu_bar);
 			!! special_menu.make (Interface_names.m_Special, menu_bar);
 			!! window_menu.make (Interface_names.m_Windows, menu_bar);
-			!! help_menu.make (Interface_names.m_Help, menu_bar);
-			menu_bar.set_help_button (help_menu.menu_button);
-
-			!! sep.make (Interface_names.t_Empty, edit_menu);
+			build_help_menu;
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
 				--| on demand and not on purpose.
@@ -760,10 +751,14 @@ feature -- Graphical Interface
 			!! edit_object_menu.make (Interface_names.m_Object, edit_menu);
 			edit_object_menu.button.set_insensitive;
 
+			!! sep.make (Interface_names.t_Empty, edit_menu);
+
 			!! format_feature_menu.make (Interface_names.m_Feature, format_menu);
 			format_feature_menu.button.set_insensitive;
 			!! format_object_menu.make (Interface_names.m_Object, format_menu);
 			format_object_menu.button.set_insensitive;
+
+			!! sep.make (Interface_names.t_Empty, format_menu);
 
 			!! special_feature_menu.make (Interface_names.m_Feature, special_menu);
 			special_feature_menu.button.set_insensitive;
@@ -800,8 +795,8 @@ feature -- Graphical Interface
 	build_top is
 			-- Build top bar
 		local
-			close_all: CLOSE_ALL_CMD;
-			close_all_menu_entry: EB_MENU_ENTRY;
+			tool_action: TOOLS_MANAGEMENT;
+			tool_action_menu_entry: EB_MENU_ENTRY;
 			quit_cmd: QUIT_PROJECT;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
@@ -849,6 +844,7 @@ feature -- Graphical Interface
 		do
 			!! open_command;
 			!! classic_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit_cmd_holder.make_plain (quit_cmd);
@@ -857,8 +853,10 @@ feature -- Graphical Interface
 			build_edit_menu (classic_bar);
 
 				-- Close all command
-			!! close_all.make (Current);
-			!! close_all_menu_entry.make (close_all, window_menu);
+			!! tool_action.make_close_all;
+			!! tool_action_menu_entry.make_default (tool_action, window_menu);
+			!! tool_action.make_raise_all;
+			!! tool_action_menu_entry.make_default (tool_action, window_menu);
 			!! sep.make (Interface_names.t_Empty, window_menu);
 
 				-- Sub menus for open tools.

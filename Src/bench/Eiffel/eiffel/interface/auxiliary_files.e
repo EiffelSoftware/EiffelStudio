@@ -727,6 +727,11 @@ feature -- Plug and Makefile file
 			buffer.putstring (System.version_tag)
 			buffer.putstring (";%N%N")
 
+				-- Generate the number of static dynamic types.
+			buffer.putstring (";%N%Tscount = ")
+			buffer.putint (System.type_id_counter.value)
+			buffer.putstring (";%N%N")
+
 			if not final_mode then
 				root_cl := System.root_class.compiled_class
 				dtype := root_cl.types.first.type_id - 1

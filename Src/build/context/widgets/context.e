@@ -525,11 +525,7 @@ feature {NONE}
 
 	add_widget_callbacks is
 			-- Define the general behavior of the widget
-		local
---			mode_backup: INTEGER
 		do
---			mode_backup := executing_or_editing_mode
---			set_mode (editing_mode)
 			if (parent = Void) or else not parent.is_group_composite then
 					-- In a group, move is applied to the group,
 					-- even if the cursor is on the children
@@ -537,14 +533,12 @@ feature {NONE}
 			end
 			add_common_callbacks (widget)
 			initialize_transport
---			set_mode (mode_backup)
 		end
 
 	add_common_callbacks (a_widget: WIDGET) is
 			-- General callbacks forall types of contexts
 		do
 				-- Move and resize actions
---			a_widget.set_several_modes (True)
 			a_widget.set_action ("<Btn1Down>", Eb_selection_mgr, third)
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg)
 				-- Shift actions

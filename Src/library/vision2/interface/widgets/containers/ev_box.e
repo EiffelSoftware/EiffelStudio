@@ -17,6 +17,14 @@ inherit
 
 feature -- Access
 
+	is_homogeneous: BOOLEAN is
+			-- Is the current box homogeneous
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_homogeneous
+		end
+
 	border_width: INTEGER is
 			-- Border width around container
 		require

@@ -21,6 +21,13 @@ feature -- Constants
 
 feature -- Access
 
+	is_homogeneous: BOOLEAN is
+			-- Is the current box homogeneous
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	border_width: INTEGER is
 			-- Border width around container
 		require

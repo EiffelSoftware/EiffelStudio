@@ -104,12 +104,6 @@ feature -- Window Properties
 		deferred
 		end;
 
-	hole: HOLE_COMMAND is
-			-- Hole associated with Current.
-			-- Void by default
-		do
-		end;
-
 	save_cmd_holder: COMMAND_HOLDER is
 			-- The command to save the contents of Current.
 		do
@@ -139,6 +133,11 @@ feature -- Window Properties
 			Result := text_window.hole_target
 		end
 
+	hole_button: EB_BUTTON_HOLE is
+			-- Button to represent Current's default hole.
+			-- By default: Void
+		do
+		end
 feature -- Access
 
 	has_editable_text: BOOLEAN is
@@ -291,8 +290,8 @@ feature -- Status setting
 				set_icon_name (tool_name);
 			else
 				set_icon_name (s.icon_name);
-				if hole /= Void then
-					hole.set_full_symbol
+				if hole_button /= Void then
+					hole_button.set_full_symbol
 				end;
 			end
 		ensure
@@ -488,8 +487,8 @@ feature -- Update
 				text_window.display;
 				update_save_symbol;
 				set_title (tool_name);
-				if hole /= Void then
-					hole.set_empty_symbol
+				if hole_button /= Void then
+					hole_button.set_empty_symbol
 				end;
 			end
 		end;
@@ -508,8 +507,8 @@ feature -- Pick and Throw Implementation
 			reset_stone;
 			history.wipe_out;
 			close_windows;
-			if hole /= Void then
-				hole.set_empty_symbol
+			if hole_button /= Void then
+				hole_button.set_empty_symbol
 			end;
 		end;
 

@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 					last_reply.append ("%N")
 					debug
 						if not last_reply.is_empty then 
-							Io.putstring (last_reply) 
+							io.put_string (last_reply) 
 						end
 					end
 					if has_num (last_reply) then

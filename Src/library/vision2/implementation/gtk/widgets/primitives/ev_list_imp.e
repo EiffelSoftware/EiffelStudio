@@ -232,8 +232,6 @@ feature {NONE} -- Implementation
 
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to end of list.
-			-- (from EV_ITEM_LIST_IMP)
-			-- (export status {NONE})
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v, v_imp)
 			real_signal_connect (

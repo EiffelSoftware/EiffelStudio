@@ -19,6 +19,11 @@ inherit
 			implementation
 		end
 		
+	EV_DOCKABLE_TARGET_ACTION_SEQUENCES
+		redefine
+			implementation
+		end
+		
 	IDENTIFIED
 		undefine
 			copy, is_equal, default_create

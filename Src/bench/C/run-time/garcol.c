@@ -889,9 +889,6 @@ rt_public void reclaim(void)
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
 
-	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
-		sc_stop();					/* Free 'to' and explode 'from' space */
-
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
@@ -902,6 +899,10 @@ rt_public void reclaim(void)
 #ifdef RECLAIM_DEBUG
 	fprintf(stderr, "reclaim: collecting all objects...\n");
 #endif
+
+	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
+		sc_stop();					/* Free 'to' and explode 'from' space */
+
 		/* Call for the last time the GC through a `full_collect'. It enables
 		 * the call to `dispose' routine of remaining objects which defines
 		 * the dispose routine. */

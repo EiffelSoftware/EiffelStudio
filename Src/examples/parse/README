@@ -1,0 +1,23 @@
+Usage: 
+	process
+
+Description:
+Prompts for the name of a file with a polynomial description (see below),
+reads a polynomial from the given file, prompts for integer values of the
+variables, and evaluates the polynomial.
+
+POLYNOMIAL DESCRIPTION 
+      Grammar:
+		LINE 			=  VARIABLES ":" SUM 
+		VARIABLES	 	=  VAR .. ";" 
+		SUM 			=  DIFF .. "+" 
+		DIFF 			=  PRODUCT .. "-" 
+		PRODUCT 		=  TERM .. "*" 
+		TERM			=  SIMPLE_VAR | INT_CONSTANT | NESTED
+		NESTED			=  "(" SUM ")" 
+
+	Example: 
+		x;y: x*(y+8-(2*x))
+
+See the "Introduction to the Parsing Library" chapter of
+EIFFEL: THE LIBRARIES for more information.

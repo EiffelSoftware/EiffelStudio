@@ -16,9 +16,9 @@ inherit
 			is_equal, copy, default_create
 		end
 	
-	GB_SHARED_SYSTEM_STATUS
+	GB_SHARED_TOOLS
 		undefine
-			default_create, copy, is_equal
+			is_equal, copy, default_create
 		end
 		
 	GB_CONSTANTS
@@ -98,12 +98,12 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			if not valid_class_name (main_window_class_name_field.text) then
 				select_in_parent
 				create warning_dialog.make_with_text (main_window_class_name_field.text + Class_invalid_name_warning)
-				warning_dialog.show_modal_to_window (system_status.main_window)
+				warning_dialog.show_modal_to_window (main_window)
 				validate_successful := False
 			elseif main_window_file_name_field.text.is_empty then
 				select_in_parent
 				create warning_dialog.make_with_text ("Please enter a file name.")
-				warning_dialog.show_modal_to_window (system_status.main_window)
+				warning_dialog.show_modal_to_window (main_window)
 				validate_successful := False
 			end
 		end

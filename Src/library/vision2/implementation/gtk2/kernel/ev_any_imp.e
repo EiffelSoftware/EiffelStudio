@@ -193,29 +193,19 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
-				if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
+			if not is_destroyed and then not is_in_final_collect then
 					-- Destroy has not been explicitly called.
-					is_destroyed := True
-						-- This is incase events are fired from the calls to gtk upon disposal
-					if internal_id /= 0 then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-					end			
-					--| This is the signal attached in ev_any_imp.c
-					--| used for GC/Ref-Counting interaction.
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-					c_object := NULL
-				end
-				Precursor {IDENTIFIED}
+					-- This is incase events are fired from the calls to gtk upon disposal
+				if internal_id /= 0 then
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+				end			
+				--| This is the signal attached in ev_any_imp.c
+				--| used for GC/Ref-Counting interaction.
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 			end
-		rescue
-			retried := True
 			Precursor {IDENTIFIED}
-			retry
 		end
 
 	c_object_dispose is

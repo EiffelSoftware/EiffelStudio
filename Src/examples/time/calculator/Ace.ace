@@ -1,0 +1,46 @@
+system
+	eiffel_time_calendar
+
+root
+
+	calculator: "make"
+
+default
+
+	assertion (all);
+	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base")
+
+cluster
+
+	ROOT_CLUSTER:	"$EIFFEL3/examples/time/calculator";
+
+		-- EiffelTime
+
+	eiffel_time:	"$EIFFEL3/library/time";
+	localizer:		"$EIFFEL3/library/time/format";
+
+		-- EiffelBase
+
+	kernel:			"$EIFFEL3/library/base/kernel";
+	support:		"$EIFFEL3/library/base/support";
+	access:			"$EIFFEL3/library/base/structures/access";
+	cursors:		"$EIFFEL3/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL3/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL3/library/base/structures/dispenser";
+	iteration:		"$EIFFEL3/library/base/structures/iteration";
+	list:			"$EIFFEL3/library/base/structures/list";
+	obsolete:		"$EIFFEL3/library/base/structures/obsolete";
+	set:			"$EIFFEL3/library/base/structures/set";
+	sort:			"$EIFFEL3/library/base/structures/sort";
+	storage:		"$EIFFEL3/library/base/structures/storage";
+	table:			"$EIFFEL3/library/base/structures/table";
+	traversing:		"$EIFFEL3/library/base/structures/traversing";
+	tree:			"$EIFFEL3/library/base/structures/tree";
+
+external
+
+	object:
+		"$(EIFFEL3)/library/time/spec/$(PLATFORM)/lib/datetime.a"
+
+end
+

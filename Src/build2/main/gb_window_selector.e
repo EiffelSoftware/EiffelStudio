@@ -39,6 +39,13 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
+		end
 	
 	GB_WIDGET_UTILITIES
 		export
@@ -624,19 +631,37 @@ feature {NONE} -- Implementation
 
 	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
 			-- `selector_item' has become selected so we must update
-			-- `layout_constructor'.
+			-- `layout_constructor'. Do nothing if a project is loading.
 		require
 			selector_item_not_void: selector_item /= Void
+		local
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			if not System_status.loading_project then
+					-- Only change the selected item, if a project is not loading.
+				titled_window_object := selector_item.object
+				layout_constructor.set_root_window (titled_window_object)
+				
+				update_display_and_builder_windows (titled_window_object)
+			
+				if parent_window (Layout_constructor) /= Void then
+						-- Protect against a selection being fired before
+						-- `layout_constructor' is parented.
+					layout_constructor.first.enable_select
+				end
+			end
+		end
+		
+	update_display_and_builder_windows (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+			-- Update windows referenced by `builder_window' and `display_window' to
+			-- reflect `titled_window_object'.
+		require
+			window_not_void: titled_window_object /= Void
 		local
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 			builder_shown, display_shown: BOOLEAN
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			titled_window_object := selector_item.object
-			layout_constructor.set_root_window (titled_window_object)
-			
-				-- Now we must update the displayed display and builder windows.
 				-- Firstly hide the existing windows if shown
 			if builder_window.is_displayed then
 				command_handler.show_hide_builder_window_command.execute
@@ -654,7 +679,7 @@ feature {NONE} -- Implementation
 			end
 			set_display_window (display_win)
 			if titled_window_object.display_object /= Void then
-				builder_win ?= selector_item.object.display_object.child
+				builder_win ?= titled_window_object.display_object.child
 				check
 					display_object_item_is_window: builder_win /= Void
 				end
@@ -666,11 +691,6 @@ feature {NONE} -- Implementation
 			end
 			if display_shown then
 				Command_handler.Show_hide_display_window_command.execute
-			end
-			if parent_window (Layout_constructor) /= Void then
-					-- Protect against a selection being fired before
-					-- `layout_constructor' is parented.
-				layout_constructor.first.enable_select
 			end
 		end
 

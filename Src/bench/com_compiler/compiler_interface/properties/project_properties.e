@@ -71,12 +71,12 @@ inherit
     	export {NONE}
     		all
     	end
-    		
-    
+
+
 create
     make,
     make_in_memory
-    
+
 feature {NONE} -- Initialization
 
     make is
@@ -85,6 +85,9 @@ feature {NONE} -- Initialization
             initialized: Eiffel_project.initialized
         do
             create ace.make (Eiffel_ace.file_name)
+			if not msil_generation then
+				ace.set_il_generation (True)
+			end
         end
     
     make_in_memory is
@@ -93,6 +96,9 @@ feature {NONE} -- Initialization
             initialized: Eiffel_project.initialized
         do
             create ace.make_in_memory
+			if not msil_generation then
+				ace.set_il_generation (True)
+			end
         end   	
     	
 feature -- Access

@@ -56,9 +56,11 @@ feature -- Access
 			occurs_in_file: filename /= Void
 		local
 			l_abs, l_url_name, l_file_name: STRING
-			l_url_arr, l_filename_arr, 
-			l_big_arr, l_small_arr: ARRAY [STRING]
-			cnt: INTEGER
+			l_url_arr, 
+			l_filename_arr,
+			l_det_arr: ARRAY [STRING]
+			cnt,
+			l_match_index: INTEGER
 			l_match, l_parent: BOOLEAN
 			l_filename: FILE_NAME
 		do
@@ -70,57 +72,45 @@ feature -- Access
 					if l_abs /= void and then not l_abs.is_empty then
 						l_url_name := short_name (url)
 						l_file_name := short_name (filename)
-						l_url_arr := directory_array (url)
+						l_url_arr := directory_array (l_abs)
 						l_filename_arr := directory_array (filename)
+						l_match_index := l_filename_arr.count
 						create Result.make_from_string (l_url_name)
 						if l_url_arr /= Void and l_filename_arr /= Void then
-									-- Determine the larger of the arrays.  If the url
-									-- array is larger the Result refers to a subdirectory
-									-- of `filename', otherwise it refers to a parent directory.
-							if l_url_arr.count >= l_filename_arr.count then
-								l_big_arr := l_url_arr
-								l_small_arr := l_filename_arr
-							else
-								l_big_arr := l_filename_arr
-								l_small_arr := l_url_arr
-								l_parent := True
-							end
 							
 									-- Compare array directory items until they don't match
 							from
 								cnt := 1
 								l_match := True
 							until
-								cnt > l_big_arr.count or cnt > l_small_arr.count or not l_match
+								cnt > l_url_arr.count or cnt > l_filename_arr.count or not l_match
 							loop
-								l_match := l_big_arr.item (cnt).is_equal (l_small_arr.item (cnt))
+								l_match := l_url_arr.item (cnt).is_equal (l_filename_arr.item (cnt))
 								cnt := cnt + 1
 							end
 							
-								-- Build result based on position of first non-match
+								-- Build in parent traversal if this was in a parent
+							create l_filename.make
 							from
-								if not l_parent then
-									create l_filename.make
-								end
+								l_parent := l_match_index < cnt																
+								cnt := l_match_index
 							until
-								cnt > l_big_arr.count
-							loop
-								if l_parent then
-									if l_filename = Void then
-										create l_filename.make_from_string ("..")
-									else
-										l_filename.extend ("..")
-									end									
-								else									
-									l_filename.extend (l_big_arr.item (cnt))	
-								end														
+								cnt > l_filename_arr.count
+							loop				
+								l_filename.extend ("..")	
 								cnt := cnt + 1
-							end
-							if not l_filename.is_empty then
-								l_filename.extend (l_url_name)
-							else
-								create l_filename.make_from_string (Result)
-							end
+							end							
+
+							from
+								cnt := l_match_index
+							until
+								cnt > l_url_arr.count
+							loop				
+								l_filename.extend (l_url_arr.item (cnt))	
+								cnt := cnt + 1
+							end														
+							
+							l_filename.extend (l_url_name)
 							Result := l_filename.string
 						end
 					end
@@ -291,7 +281,8 @@ feature -- Query
 			l_url: STRING
 		do
 			if external_link then
-					-- TO DO:  Check for existence of external resource	
+					-- TO DO:  Check for existence of external resource
+				Result := True
 			else
 					-- First check raw url
 				create l_file.make (url)
@@ -330,31 +321,32 @@ feature {DOCUMENT_LINK} -- Query
 			l_file: RAW_FILE
 			l_filename: FILE_NAME
 		do
-					-- Does url begin with '.'?
+--					-- Does url begin with '.'?
 			l_first_char := url.item (1)
-			Result := l_first_char = '.'
-			if not Result then
-					-- Since it does not start with a '.', if it does not contain
-					-- any path sepaartors it must be relative to document
-				Result := url.occurrences ('/') = 0 and url.occurrences ('\') = 0
-			end
-			
-					-- Can file be created from location of filename appended with
-					-- url?  If so must be relative to document
-			if not Result and then (url.occurrences (':') = 0)then
-				create l_filename.make_from_string (directory_no_file_name (filename))
-				l_filename.extend (url)
-				create l_file.make (l_filename)
-				Result := l_file.exists
-			end
-			
-					-- Can a file be created from `url'.  If so it must be absolute, not relative
-			if not Result then
-				create l_file.make (url)
-				if l_file.exists then
-					Result := False
-				end
-			end
+--			Result := l_first_char = '.'
+--			if not Result then
+--					-- Since it does not start with a '.', if it does not contain
+--					-- any path separators it must be relative to document
+--				Result := url.occurrences ('/') = 0 and url.occurrences ('\') = 0
+--			end
+--			
+--					-- Can file be created from location of filename appended with
+--					-- url?  If so must be relative to document
+--			if not Result and then (url.occurrences (':') = 0)then
+--				create l_filename.make_from_string (directory_no_file_name (filename))
+--				l_filename.extend (url)
+--				create l_file.make (l_filename)
+--				Result := l_file.exists
+--			end
+--			
+--					-- Can a file be created from `url'.  If so it must be absolute, not relative
+--			if not Result then
+--				create l_file.make (url)
+--				if l_file.exists then
+--					Result := False
+--				end
+--			end
+			Result := l_first_char = '.' or (l_first_char /= '/' and l_first_char /= '\')
 		end		
 	
 	relative_from_root: BOOLEAN is
@@ -370,16 +362,21 @@ feature {DOCUMENT_LINK} -- Query
 			-- Is there a link to `url' in `a_document'?
 		require
 			document_not_void: a_document /= Void
+			document_valid: a_document.is_valid_xml
 		local
 			l_link: like Current
+			l_links: ARRAYED_LIST [like Current]
+			l_manager: LINK_MANAGER
 		do
+			create l_manager.make_with_documents (shared_project.documents)
+			l_links := l_manager.document_links (a_document)
 			from 
-				a_document.links.start
+				l_links.start
 			until
-				a_document.links.after
+				l_links.after
 			loop
-				l_link := a_document.links.item
-				a_document.links.forth
+				l_link := l_links.item
+				l_links.forth
 			end
 		end
 		

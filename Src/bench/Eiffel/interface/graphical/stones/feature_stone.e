@@ -270,7 +270,7 @@ feature -- dragging
 				if Eiffel_system.class_of_id (e_class.id) = e_class then
 					new_e_feature := e_class.feature_with_name (e_feature.name);
 					if new_e_feature /= Void then
-						!! Result.make (e_feature, e_class)
+						!! Result.make (new_e_feature, e_class)
 					end
 				end
 			end

@@ -63,7 +63,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #endif /* WORKBENCH */
 
 #include <stdlib.h>				/* For exit(), abort() */
-#include "eif_globals.h"
+#include "rt_globals.h"
 
 
 #define ITEM_SZ			sizeof(struct item)
@@ -366,6 +366,7 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	/* This routine is called at the beginning of every melted feature. It
 	 * builds up a calling context on the debugging stack and initializes it.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct dcall *context;		/* The calling context */
 
@@ -440,7 +441,7 @@ rt_public void dostk(EIF_CONTEXT_NOARG)
 	 * interpreter on any melted feature and get local and argument values.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	struct dcall *context;		/* Current calling context */
 	
 	context = dtop();
@@ -1017,6 +1018,7 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 * Under work bench control, the user may modify those stack, for instance
 	 * to perform a stack dump or to inspect a given local variable.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 		
 	memcpy (&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
@@ -1048,6 +1050,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	 * debugging mode, as specified by the workbench (e.g. a step after an
 	 * exception will stop at the first instruction before rescue clause).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
@@ -1094,7 +1097,7 @@ rt_private struct dcall *stack_allocate(register int size)
 	 * Return the arena value (bottom of stack).
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct dcall *arena;		/* Address for the arena */
 	register3 struct stdchunk *chunk;	/* Address of the chunk */
 
@@ -1133,7 +1136,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	 * get a new cell at the top of the stack.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct dcall *top = db_stack.st_top;	/* Top of stack */
 	
 	/* Stack created at initialization time via initdb */
@@ -1176,7 +1179,7 @@ rt_private int stack_extend(register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct dcall *arena;		/* Address for the arena */
 	register3 struct stdchunk *chunk;	/* Address of the chunk */
 	
@@ -1209,7 +1212,7 @@ rt_public struct dcall *dpop(void)
 	 * the removed item, which also happens to be the first free location.
 	 */
 	
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct dcall *top = db_stack.st_top;	/* Top of the stack */
 	register2 struct stdchunk *s;			/* To walk through stack chunks */
 	register3 struct dcall *arena;			/* Base address of current chunk */
@@ -1246,7 +1249,7 @@ rt_private void npop(register int nb_items)
 {
 	/* Removes 'nb_items' from the debugging stack */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct dcall *top;		/* Current top of debugging stack */
 	register3 struct stdchunk *s;		/* To walk through stack chunks */
 	register4 struct dcall *arena;		/* Base address of current chunk */
@@ -1310,7 +1313,7 @@ rt_public struct dcall *dtop(void)
 	register1 struct dcall *last_item;		/* Address of last item stored */
 	register2 struct stdchunk *prev;		/* Previous chunk in stack */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	last_item = db_stack.st_top - 1;
 	if (last_item >= db_stack.st_cur->sk_arena)
 		return last_item;
@@ -1355,7 +1358,7 @@ rt_private int nb_calls(void)
 	register3 int n = 0;			/* Number of items */
 	register4 int done = 0;			/* Top of stack not reached yet */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	for (s = db_stack.st_hd; s && !done; s = s->sk_next) {
 		if (s != db_stack.st_cur)
 			n += s->sk_end - s->sk_arena;			/* The whole chunk */
@@ -1401,7 +1404,7 @@ rt_private void call_down(int level)
 	 * because npop() will panic if we give it too much to pop.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 		
 	if (d_cxt.pg_index - level < 1)
 		level = d_cxt.pg_index - 1;
@@ -1423,7 +1426,7 @@ rt_private void call_up(int level)
 	struct stdchunk *s;			/* To walk trhough stack chunks */
 	struct dcall *end;			/* Once cell above end of current chunk */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	if (level + d_cxt.pg_index > d_cxt.pg_calls)
 		level = d_cxt.pg_calls - d_cxt.pg_index;
 
@@ -1556,7 +1559,7 @@ rt_private uint32 *list_allocate(register int size)
 	 * Return the arena value.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
@@ -1587,7 +1590,7 @@ rt_public uint32 *onceadd(uint32 id)
 	 * an "Out of memory" exception.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 uint32 *last = once_list.idl_last;/* Last free element of list */
 
 	/* List created at initialization time via initdb */
@@ -1616,7 +1619,7 @@ rt_private int list_extend(register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
@@ -1649,7 +1652,7 @@ rt_public uint32 *onceitem(register uint32 id)
 	 * list has been created.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct idlchunk *chunk;	/* To walk through the list */
 	register3 uint32 *item;				/* To walk through the chunk */
 	register4 int done = 0;				/* Last element of list not reached */
@@ -1787,6 +1790,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
 	 * get a new cell at the top of the stack.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct item *top = cop_stack.st_top;	/* Top of stack */
 	
@@ -1830,6 +1834,7 @@ rt_public int c_stack_extend(EIF_CONTEXT register int size)
 	/* The operational stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register2 struct item *arena;		/* Address for the arena */
 	register3 struct stochunk *chunk;	/* Address of the chunk */
@@ -1867,6 +1872,7 @@ rt_public struct item *c_opop(void)
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct item *top = cop_stack.st_top;	/* Top of the stack */
 	register2 struct stochunk *s;			/* To walk through stack chunks */
@@ -1906,6 +1912,7 @@ rt_public void c_npop(register int nb_items)
 	 * try to truncate the unused chunks from the tail of the stack. We do
 	 * not do that in c_opop() because that would create an overhead...
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register2 struct item *top;			/* Current top of operational stack */
 	register3 struct stochunk *s;		/* To walk through stack chunks */

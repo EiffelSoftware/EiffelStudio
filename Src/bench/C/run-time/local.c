@@ -26,6 +26,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #ifdef WORKBENCH
 #include "rt_debug.h"
 #endif
+#include "rt_globals.h"
 
 #include <string.h>
 
@@ -62,7 +63,7 @@ rt_public void epop(register struct stack *stk, register int nb_items)
 	/* Removes 'nb_items' from the stack 'stk'. The routine is more general
 	 * than needed, but it keeps the spirit of epush().
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 char **top = stk->st_top;		/* Current top of the stack */
 	register4 struct stchunk *s;			/* To walk through stack chunks */
 	register5 char **arena;					/* Base address of current chunk */
@@ -145,6 +146,7 @@ rt_public char **eget(register int num)
 	 * to be in a loop, that's too bad--RAM.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register2 char **top = loc_set.st_top;	/* The top of the stack */
 	register3 char **saved_top = top;		/* Save current top of stack */
@@ -250,6 +252,7 @@ rt_public void eback(register char **top)
 	 * stack by checking the range of the pointers.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 #ifdef DEBUG
 	dprintf(1)("eback: top = 0x%lx, arena = 0x%lx, end = 0x%lx\n",
@@ -288,7 +291,7 @@ rt_private int extend(register struct stack *stk)
 	 * If no chunk can be allocated from the memory, an attempt is
 	 * made to get one from the urgent storage.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 int size = STACK_CHUNK;	/* Size of new chunk to be added */
 	register3 char **arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */

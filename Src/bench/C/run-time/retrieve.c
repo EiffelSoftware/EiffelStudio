@@ -983,7 +983,7 @@ rt_private int correct_mismatches (mismatch_table *mm, type_table *conversions)
 
 rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	r_fides = file_desc;
 
 	return portable_retrieve(char_read);
@@ -1184,6 +1184,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 
 rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*retrieve_function) (void))
 {
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_REFERENCE retrieved = (EIF_REFERENCE) 0;
 	char rt_type = (char) 0;
@@ -4624,7 +4625,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 
 rt_private int char_read(char *pointer, int size)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	return read(r_fides, pointer, size);
 }
 

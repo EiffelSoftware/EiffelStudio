@@ -519,7 +519,8 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	 * a matching object. Return a SPECIAL [ANY] of type `result_type' with all
 	 * found references. */
 {
-	GTCX
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	int i = 0;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;

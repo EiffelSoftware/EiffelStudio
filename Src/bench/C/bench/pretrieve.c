@@ -144,7 +144,6 @@ extern long cmp_buffer_size;
 
 rt_private int parsing_retrieve_read_with_compression (void)
 {
-	EIF_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	int dcmps_in_size = 0;

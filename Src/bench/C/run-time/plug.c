@@ -34,6 +34,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"		/* For assertions checkings. */
+#include "rt_globals.h"
 
 #ifdef WORKBENCH
 rt_public void discard_breakpoints(void);
@@ -322,7 +323,7 @@ rt_public void chkinv (EIF_REFERENCE obj, int where)
 		  		/* Invariant is beeing checked before or after compound? */
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	  /*	union overhead *zone = HEADER(obj);    (not used in this fct) */
 	int dtype = Dtype(obj);
 
@@ -350,8 +351,9 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 		  
 		  		/* Invariant is being checked before or after compound? */
 {
-	/* Recursive invariant check. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
+	/* Recursive invariant check. */
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
 	int p_type;
@@ -413,7 +415,6 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 EIF_REFERENCE cr_exp(uint32 type)
 	/* Create an instance of expanded object of dynamic type id `type'. */
 {
-	EIF_GET_CONTEXT
 	EIF_REFERENCE result;
 	void *(*creation_procedure)(EIF_REFERENCE);	/* Initialization routine to be called */
 
@@ -421,6 +422,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 
 	creation_procedure = (void *(*) (EIF_REFERENCE)) egc_exp_create[Deif_bid(type)];
 	if (creation_procedure) {
+		EIF_GET_CONTEXT
 		RT_GC_PROTECT(result);	/* Protect address in case it moves */
 		creation_procedure (result);
 		RT_GC_WEAN(result);            /* Remove protection */
@@ -437,7 +439,6 @@ EIF_REFERENCE cr_exp(uint32 type)
 	 * a creation routine then call it.
 	 */
 
-	EIF_GET_CONTEXT
 	EIF_REFERENCE result;
 	register1 struct cnode *exp_desc;	/* Expanded object description */
 
@@ -450,6 +451,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 		feature_id = exp_desc->cn_creation_id;
 		static_id = exp_desc->static_id;	
 		if (feature_id) {					/* Call creation routine */
+			EIF_GET_CONTEXT
 			RT_GC_PROTECT(result);	/* Protect address in case it moves */
 			wexp(static_id, feature_id, Deif_bid(type), result);
 			RT_GC_WEAN(result);            /* Remove protection */
@@ -461,6 +463,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 		origin = exp_desc->cn_creation_id;
 		offset = exp_desc->static_id;
 		if (origin) {						/* Call creation routine */
+			EIF_GET_CONTEXT
 			RT_GC_PROTECT(result);	/* Protect address in case it moves */
 			wpexp(origin, offset, Deif_bid(type), result);
 			RT_GC_WEAN(result);            /* Remove protection */

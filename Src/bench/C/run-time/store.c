@@ -464,7 +464,7 @@ rt_public void rt_reset_store(void) {
 /* Store object hierarchy of root `object' without header. */
 rt_public void estore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 	rt_init_store (
@@ -509,7 +509,7 @@ rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_R
  * so it can be retrieved by other systems. */
 rt_public void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 	rt_init_store (
@@ -578,7 +578,7 @@ rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
  * so it can be retrieved by other systems. */
 rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 #ifdef RECOVERABLE_SCAFFOLDING
@@ -2017,7 +2017,7 @@ rt_public void flush_st_buffer (void)
 
 rt_public int char_write(char *pointer, int size)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	return write(s_fides, pointer, size);
 }
 

@@ -41,6 +41,7 @@
 #include "rt_macros.h"
 #include "rt_gen_types.h"
 #include "rt_struct.h"
+#include "rt_globals.h"
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -404,6 +405,7 @@ rt_public void stop_rqst(int s)
 	 * current location. We also indicate why the program stopped and set
 	 * a proper exception tag if that is the reason we stopped.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	Request rqst;			/* XDR request built */
 	struct where wh;		/* Where did the program stop? */

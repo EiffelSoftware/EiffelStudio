@@ -183,7 +183,7 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 	 * table. If the object is dead, the next GC cycle will collect it. The C
 	 * cannot reference the object through its EIF_OBJECT handle any more.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE ret;
 
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
@@ -205,7 +205,7 @@ rt_public void eufreeze(EIF_REFERENCE object)
 	 * cleared and should the object be dead, it will be collected during the
 	 * next GC cycle.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_OBJECT address;					/* Address in hector's stack */
 	EIF_REFERENCE unprotected_ref;
 
@@ -290,7 +290,7 @@ rt_public EIF_OBJECT henter(EIF_REFERENCE object)
 	 * someone wants to create Eiffel objects via emalloc() and let the GC
 	 * see them by calling 'henter'--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE address;						/* Address in hector */
 
 	address = hpop();					/* Check for an already free location */
@@ -313,7 +313,7 @@ rt_public void hfree(EIF_OBJECT address)
 	 * within the hector stack hec_saved is remembered in free_stack for later
 	 * reuse. Again, only guys wearing white hats should use this routine--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	eif_access(address) = (EIF_REFERENCE) 0;				/* Reset hector's entry */
 	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
 		plsc();										/* Run GC cycle */
@@ -366,7 +366,7 @@ rt_private EIF_REFERENCE hpop(void)
 	 * null pointer. Otherwise the address points directly to a free entry
 	 * in hector's table.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE *top = free_stack.st_top;
 	struct stchunk *s;
 
@@ -401,7 +401,7 @@ rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root)
 	 * associated with the physical address and return it. This is a linear
 	 * search, but the size of this stack should remain small.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int nb_items;			/* Number of items in arena */
 	register2 struct stchunk *s;	/* To walk through each stack's chunk */
 	register3 EIF_REFERENCE *arena;			/* Current arena in chunk */

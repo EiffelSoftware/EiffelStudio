@@ -26,7 +26,7 @@
 #include "com.h"
 #include "request.h"
 #include "eif_macros.h"
-#include "eif_globals.h"
+#include "rt_globals.h"
 #include <string.h>
 
 #define EIF_IGNORE	-1	/*	We do not want this item sent, but there are still
@@ -158,6 +158,7 @@ rt_private void send_dump(eif_stream s, struct dump *dp)
  **************************************************************************/
 rt_private void save_stacks(void)
 	{
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	/* Save the appropriate stack context, depending on the operations to
@@ -174,6 +175,7 @@ rt_private void save_stacks(void)
  **************************************************************************/
 rt_private void restore_stacks(void)
 	{
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	/* Restore context of all the stack we had to modify/inspect */
@@ -270,7 +272,7 @@ rt_private struct dump *get_next_execution_vector(void)
  **************************************************************************/
 rt_private struct dcall *safe_dtop(void)
 	{
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
 		return NULL;
 

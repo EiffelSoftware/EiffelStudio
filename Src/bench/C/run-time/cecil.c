@@ -688,9 +688,9 @@ rt_shared void eif_set_thr_context () {
 	 * from the others.	
 	 */
 
-	EIF_GET_CONTEXT	
+	RT_GET_CONTEXT	
 	start_routine_ctxt_t *rout;
-	REQUIRE ("eif_globals not null", eif_globals);	
+	REQUIRE ("eif_globals not null", rt_globals);	
 	rout = (start_routine_ctxt_t *) eif_malloc (sizeof (start_routine_ctxt_t));
 	if (rout == NULL) {
 		eif_panic ("Couldn't allocate thread context");

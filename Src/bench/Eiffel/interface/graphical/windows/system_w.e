@@ -147,7 +147,7 @@ feature -- Parsing
 					error_msg.extend (')')
 				end
 				
-				error_msg.append (".%NSee higlighted area")
+				error_msg.append (".%NSee highlighted area")
 				!! syntax_stone.make (syntax_error)
 				process_ace_syntax (syntax_stone)
 				Parser.clear_syntax_error

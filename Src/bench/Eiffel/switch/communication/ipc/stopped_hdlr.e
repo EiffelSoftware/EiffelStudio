@@ -41,7 +41,6 @@ feature
 			address: STRING;
 			reason: INTEGER;
 			status: APPLICATION_STATUS_CLASSIC;	
-			e_cmd: E_CMD
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
@@ -49,10 +48,6 @@ feature
 		do
 			if not retry_clause then
 				Application_notification_controller.notify_on_before_stopped
---				e_cmd := Application.before_stopped_command;
---				if e_cmd /= Void then
---					e_cmd.execute
---				end;
 
 				debug ("DEBUGGER_TRACE")
 					io.error.putstring ("STOPPED_HDLR: Application is stopped - reading information from application%N")
@@ -106,7 +101,7 @@ feature
 				check
 					application_launched: status /= Void
 				end
-				status.set_is_stopped (true)
+				status.set_is_stopped (True)
 				status.set (name, address, org_type, dyn_type, offset, reason)
 				status.set_exception (last_int, last_string)
 
@@ -140,11 +135,6 @@ feature
 
 						Application_notification_controller.notify_on_after_stopped
 							
---						e_cmd := Application.after_stopped_command
---						if e_cmd /= Void then
---							e_cmd.execute
---						end
-					
 						debug ("DEBUGGER_TRACE")
 							io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")
 						end

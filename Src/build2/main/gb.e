@@ -238,14 +238,18 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	display_tip_of_the_day is
-			-- Display a tip of the day dialog.
+			-- Display a tip of the day dialog if not disabled from preferences.
 		do
-			(create {GB_TIP_OF_THE_DAY_DIALOG}).show_modal_and_centered_to_window (main_window)
+			if preferences.boolean_resource_value (Preferences.Show_tip_of_the_day, True) then
+				(create {GB_TIP_OF_THE_DAY_DIALOG}).show_modal_and_centered_to_window (main_window)
+			end
 		end
 
 	open_with_name (f: STRING) is
 			-- Use the open project command to open
 			-- file `f'.
+		require
+			f_not_void: f /= Void
 		do
 			command_handler.Open_project_command.execute_with_name (f)
 		end

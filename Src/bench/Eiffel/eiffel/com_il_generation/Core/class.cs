@@ -167,9 +167,10 @@ internal class CLASS
 		#endif
 
 			// Create Document associated to current class.
-		Document = module.DefineDocument (source_file_name, new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
+		Document = module.DefineDocument (source_file_name,
+			new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
 			new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
-			System.Guid.Empty);
+			Guid.Empty);
 
 			// Not needed anymore.
 		source_file_name = null;

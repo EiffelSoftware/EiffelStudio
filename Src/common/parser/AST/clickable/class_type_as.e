@@ -12,6 +12,10 @@ inherit
 		redefine
 			has_like, is_deep_equal, simple_format
 		end;
+	CLICKABLE_AST
+		redefine
+			is_class
+		end
 
 feature -- Attributes
 
@@ -20,6 +24,12 @@ feature -- Attributes
 
 	generics: EIFFEL_LIST [TYPE];
 			-- Possible generical parameters
+
+	is_class: BOOLEAN is
+			-- Does the Current AST represent a class?
+		do
+			Result := True
+		end;
 
 feature -- Initialization
 
@@ -122,9 +132,6 @@ feature -- Conveniences
 		local
 			dumped_class_name: STRING;
 		do
--- FIXME append_clickable_signature should be redefined
--- some parts of the signature can be clickable !!!
-
 			!!Result.make (class_name.count);
 			dumped_class_name := clone (class_name)
 			dumped_class_name.to_upper;

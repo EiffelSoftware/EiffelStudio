@@ -34,7 +34,6 @@ feature
 			restore_file: PLAIN_TEXT_FILE
 			storage_file: PLAIN_TEXT_FILE
 			proj_dir: STRING
-			i: INTEGER
 		do
 			if main_panel.project_initialized then
 				clear_project
@@ -42,9 +41,7 @@ feature
 			to_create_project := False
 			proj_dir := Environment.project_directory
 			proj_dir.wipe_out
---			proj_dir.append (argument)	
-			i := argument.substring_index ("EIFGEN", 1)
-			proj_dir.append (argument.substring (1, i - 1))
+			proj_dir.append (argument)	
 			proj_dir.prune_all (' ')
 			char := proj_dir.item (proj_dir.count)
 			if char = Environment.directory_separator then

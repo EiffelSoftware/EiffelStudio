@@ -4,10 +4,13 @@ inherit
 
 	FILE_SEL_D
 		rename
-			make as file_sel_d_create,
-			popup as file_sel_d_popup,
-			init_toolkit as file_sel_d_init_toolkit
-		end;
+			make as file_sel_d_create
+		undefine
+			init_toolkit
+		redefine
+			popup
+		end
+
 	COMMAND;
 	COMMAND_ARGS;
 	CLOSEABLE;
@@ -41,19 +44,18 @@ feature {NONE}
 			mp.set_watch_shape;
 			file_sel_d_create (title_name, a_parent);
 			set_title (title_name);
+			set_x_y (200, 300)
 			hide_help_button;
 			add_ok_action (Current, First);
 			add_cancel_action (Current, Second);
-			set_exclusive_grab;
 			set_directory_selection;
 			hide_file_selection_list;
 			hide_file_selection_label;
-			dialog_command_target;
 			!! set_dialog_att;
 			set_dialog_att.execute (Current);
 			!! del_window.make (Current);
 			set_action ("<Unmap>", del_window, Void);
-			widget_command_target;
+			set_exclusive_grab;
 			mp.restore;
 		end;
 
@@ -83,7 +85,7 @@ feature
 			if not last_cwd.empty then
 				set_directory (last_cwd);
 			end;
-			file_sel_d_popup
+			{FILE_SEL_D} Precursor
 		end;
 	
 end

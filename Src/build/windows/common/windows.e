@@ -35,31 +35,20 @@ feature {NONE}
 feature {NONE} -- Initial windowing
 
 	init_toolkit: TOOLKIT_IMP is
-				-- The demo uses the
-				-- Motif toolkit
+			-- Init toolkit to desired implementation.
 		once
 			!!Result.make ("")
 		end
 
 	init_project is
-		local
-			open_cmd: OPEN_PROJECT
-			check_cmd: PERFORM_CHECKING_CMD
 		do
 			main_panel.realize
 			main_panel.unset_project_initialized
-			!! check_cmd
-			check_cmd.execute
---			if (tree = Void) then end
---			if (context_catalog = Void) then end
---			if (command_catalog = Void) then end
---			if (history_window = Void) then end
---			if (app_editor = Void) then end
---			!! open_cmd
---			open_cmd.execute (execution_environment.current_working_directory)
-
---			if (current_mode = Void) then end
---			if (application_object_window = Void) then end
+			if (tree = Void) then end
+			if (context_catalog = Void) then end
+			if (command_catalog = Void) then end
+			if (history_window = Void) then end
+			if (app_editor = Void) then end
 		end
 
 	display_init_windows is
@@ -98,10 +87,6 @@ feature {NONE} -- Initial windowing
 
 feature {NONE} -- Windows
 
---	command_catalog: CMD_CATALOG is
---		once
---			!! Result.make (eb_screen)
---		end	
 	command_catalog: COMMAND_CATALOG is
 		do
 			Result := main_panel.command_catalog_widget

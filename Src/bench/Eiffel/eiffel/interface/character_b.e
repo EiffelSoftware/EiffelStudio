@@ -7,7 +7,7 @@ inherit
 		rename
 			make as basic_make
 		redefine
-			actual_type, generate_cecil_value, cecil_value
+			actual_type
 		end
 
 create
@@ -39,26 +39,6 @@ feature -- Access
 				Result := Wide_char_type
 			else
 				Result := Character_type
-			end
-		end
-
-	generate_cecil_value is
-			-- Generate Cecil type value
-		do
-			if is_wide then
-				generation_buffer.putstring ("SK_WCHAR")
-			else
-				generation_buffer.putstring ("SK_CHAR")
-			end
-		end
-
-	cecil_value: INTEGER is
-			-- Cecil value
-		do
-			if is_wide then
-				Result := Sk_wchar
-			else
-				Result := Sk_char
 			end
 		end
 

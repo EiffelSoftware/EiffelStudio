@@ -7,7 +7,7 @@ inherit
 		rename
 			make as basic_make
 		redefine
-			actual_type, generate_cecil_value, cecil_value
+			actual_type
 		end
 
 create
@@ -42,28 +42,6 @@ feature -- Access
 			when 16 then Result := Integer_16_type
 			when 32 then Result := Integer_type
 			when 64 then Result := Integer_64_type
-			end
-		end;
-
-	generate_cecil_value is
-			-- Generate Cecil type value
-		do
-			inspect size
-			when 8 then generation_buffer.putstring ("SK_INT8")
-			when 16 then generation_buffer.putstring ("SK_INT16")
-			when 32 then generation_buffer.putstring ("SK_INT32")
-			when 64 then generation_buffer.putstring ("SK_INT64")
-			end
-		end;
-
-	cecil_value: INTEGER is
-			-- Cecil value
-		do
-			inspect size
-			when 8 then Result := Sk_int8
-			when 16 then Result := Sk_int16
-			when 32 then Result := Sk_int32
-			when 64 then Result := Sk_int64
 			end
 		end;
 

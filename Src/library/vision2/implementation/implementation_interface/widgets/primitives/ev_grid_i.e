@@ -80,7 +80,7 @@ feature -- Access
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
 		do
-			to_implement ("EV_GRID_I.selected_rows")
+			Result := internal_selected_rows
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -952,6 +952,8 @@ feature {NONE} -- Drawing implementation
 			create grid_columns.make
 			create grid_rows.make
 			
+			create internal_selected_rows.make (0)
+			
 			create drawer.make_with_grid (Current)
 			create drawable
 			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
@@ -1560,7 +1562,7 @@ feature {NONE} -- Implementation
 		require
 			a_column_positive: a_column > 0
 		do
-			if not grid_columns.valid_index (a_column) then
+			if a_column > grid_columns.count then
 				from
 				until
 					grid_columns.count = a_column
@@ -1578,7 +1580,7 @@ feature {NONE} -- Implementation
 		require
 			a_row_positive: a_row > 0
 		do
-			if grid_rows.valid_index (a_row) then
+			if a_row <= grid_rows.count then
 				Result := grid_rows @ a_row
 			end
 			if Result = Void then
@@ -1589,7 +1591,36 @@ feature {NONE} -- Implementation
 			row_not_void: Result /= Void
 		end
 
-feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
+feature {EV_GRID_ROW_I} -- Implementation
+
+	internal_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+		-- List of selected rows
+
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
+
+	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
+			-- Update the selection status for `a_row' in `Current'
+		do
+			if single_row_selection_enabled then
+					-- Deselect existing rows and then remove from list
+				from
+					internal_selected_rows.start
+				until
+					internal_selected_rows.after
+				loop
+					internal_selected_rows.item.implementation.disable_select_internal
+					internal_selected_rows.remove
+				end				
+			end
+			if a_row_i.is_selected then
+					-- Add to grid's selected rows
+					if not internal_selected_rows.has (a_row_i.interface) then
+						internal_selected_rows.extend (a_row_i.interface)
+					end
+			else
+				internal_selected_rows.prune_all (a_row_i.interface)
+			end
+		end
 
 	item_internal (a_row: INTEGER; a_column: INTEGER; create_item_if_void: BOOLEAN): EV_GRID_ITEM_I is
 			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void

@@ -29,7 +29,7 @@ feature -- Initialization
 			!EV_MOTION_EVENT_DATA_IMP!implementation.make (Current)
 		end
 
-feature {EV_MOTION_EVENT_DATA_I} -- Access	
+feature -- Access	
 	
 	x: DOUBLE
 			-- x coordinate of mouse pointer 

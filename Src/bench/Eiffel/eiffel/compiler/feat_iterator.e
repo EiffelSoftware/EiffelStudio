@@ -134,6 +134,7 @@ DEBUG("DEAD_CODE")
 	
 	io.putstring ("MARKING: ")			
 	a_class := actual_class_id.associated_class
+	io.putstring (a_class.feature_table.feature_of_body_id (body_id).feature_name)
 	io.putstring (" (bid: ")
 	io.putint (body_id.id)
 	io.putstring ("; fid: ")
@@ -189,6 +190,12 @@ feature
 			-- record feature of body_id body_id
 		do
 			used_table.put (True, body_id)
+		end
+
+	mark_dead (body_id: INTEGER) is
+			-- forget feature of body_id body_id
+		do
+			used_table.put (False, body_id)
 		end
 
 	mark_treated (body_id: INTEGER; rout_id: ROUTINE_ID) is

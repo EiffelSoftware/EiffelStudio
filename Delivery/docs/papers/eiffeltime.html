@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>New Page 1</title>
+<title>EiffelTime</title>
 <link rel="stylesheet" href="../styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
 </head>
@@ -13,21 +13,20 @@
   <tr>
     <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
       Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelTime</font></b></td>
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="center">
+<p align="center"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
 <hr>
 
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
 <h1>Introduction</h1>
-<p>In this short documentation we will describe you how to use EiffelTime.</p>
-<p>EiffelTime is the Eiffel library that allow you to use efficiently Date and
+<p>EiffelTime is the Eiffel library that allows you to use efficiently Date and
 Time in your projects.</p>
-<p>Before using EiffelTime, we suggest you to read the following Documentation.:</p>
+<p>Before using EiffelTime, we suggest you to read this documentation.:</p>
 <ul>
   <li><a href="#TechInfo">Technical Information</a></li>
   <li><a href="#GetStart">Getting started</a></li>
@@ -48,6 +47,10 @@ Time in your projects.</p>
 <p>You need EiffelTime to use <a href="eiffelstore.html">EiffelStore</a>
 library.</p>
 <h1><a name="GetStart">Getting Started</a></h1>
+<p>By default, all the files you need are installed by the installation
+procedure of your product. In the case, where the following library `libdatetime.a'
+(for Unix) or `datetime.lib' (for Windows) was not found during the C
+comnpilation, use the following instructions to recreate them:</p>
 <ul>
   <li><u><b>On</b></u><u><b> Windows</b></u></li>
 </ul>
@@ -60,8 +63,9 @@ library.</p>
 $EIFFEL4\library\time\Clib.</p>
 <h1><a name="HowtoAcefile">How to configure your Ace file</a></h1>
 <p>In order to use EiffelTime in an Eiffel Project, you have to include in your
-project, the right clusters and the right external files. Thus, you need to
-configure your Ace file.<br>
+project, the correct clusters and external files. Thus, you need to
+configure your Ace file.</p>
+<p>
 You can get all the information about Ace files <a href="lace.html">here</a>.</p>
 <p>To include the EiffelTime cluster you need to include in your ace file :</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>eiffel_time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -72,14 +76,16 @@ format:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; english:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &quot;$EIFFEL4/library/time/format/english&quot;;</b></p>
 <p>You also need to include the external object <b>datetime.lib</b> (under
-windows) or <b>datetime.a</b> (under unix):</p>
+windows) or <b>libdatetime.a</b> (under unix):</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>object:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib</b></p>
-<p>&nbsp;You can check the Ace file of our example to see a working Ace file
+&quot;$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib</b> (for
+Windows)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>object:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib/libdatetime.</b><b>a</b> (for
+Unix)</p>
+<p>You can check the Ace file of our example to see a working Ace file
 using EiffelTime.</p>
 <h1><a name="Date-Timeconv">Date-Time String conversion</a></h1>
-<p>The class DATE_TIME_CODE is based on the date/time to string conversion suggested by
-TCAM.</p>
 <p>The following list format conversion codes. These are all nicked direct from Excel:</p>
 <table border="1" width="87%">
   <tr>
@@ -204,7 +210,7 @@ TCAM.</p>
 <p>&nbsp;</p>
 <h1><a name="Example">A working Example</a></h1>
 <p>We developed an example that you can try to see how to use EiffelTime.</p>
-<p>It is in the directory: <b>$EIFFEL4/examples/time/calculator</b>.</p>
+<p>It is located in the directory: <b>$EIFFEL4/examples/time/calculator</b>.</p>
 <p>To run this example, launch eiffel_time_calendar once you have compiled it.</p>
 <p>Then on the prompt, you can enter : </p>
 <ul>
@@ -217,7 +223,6 @@ TCAM.</p>
   <li><b>q</b> to exit</li>
 </ul>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

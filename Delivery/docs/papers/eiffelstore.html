@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>New Page 1</title>
+<title>EiffelStore</title>
 <link rel="stylesheet" href="../styles/tech.css" type="text/css">
 
 <meta name="Microsoft Border" content="t, default">
@@ -15,11 +15,11 @@
   <tr>
     <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
       Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelStore</font></b></td>
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="center">
+<p align="center"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
 <hr>
 
     </td>
@@ -29,8 +29,7 @@
 <h1><a name="TOP">INTRODUCTION</a></h1>
 <p>In this documentation, we will describe how to use the EiffelStore library in
 an Eiffel project.</p>
-<p>This library provides a consistent set of classes for writing object oriented Eiffel applications that need&nbsp;<br>
-to handle persistent objects.</p>
+<p>This library provides a consistent set of classes for writing object oriented Eiffel applications that need&nbsp;to handle persistent objects.</p>
 <p>Before using EiffelStore, we suggest that you read this documentation.</p>
 <ul>
   <li><a href="#tech_info">Technical Information</a></li>
@@ -85,41 +84,62 @@ users)&nbsp;</p>
   <li>Oracle 8.04&nbsp;</li>
   <li>Oracle 8i Entreprise Edition.</li>
 </ul>
-<p>However you should be able to use it with Sybase and IngresII</p>
+<p>However you should be able to use it with Sybase and OpenIngres. As far as
+ISE's support is concerned we currently only guarantee support for ODBC and
+Oracle. Users who want to use Sybase or OpenIngres can still do so, but in the
+past couple of years we have removed them from our officially supported
+platforms, due essentially to insufficient number of users.</p>
 <p>In order to work with EiffelStore you also need to get <a href="eiffeltime.html">EiffelTime</a>
 library.</p>
 <p>&nbsp;</p>
 <h1><a name="GetStart">Getting Started</a></h1>
-<p>You now have to install the EiffelStore library:</p>
+<p>By default, all the needed files are not installed because each user has its
+own specific version of some specific database handles and ISE cannot compiled
+the C libraries for each of them.</p>
+<p>Before starting the compilation of the C libraries:</p>
 <ul>
   <li>Make sure the environment variables EIFFEL4 and PLATFORM are set.</li>
   <li>Make sure that the Database you have chosen is installed</li>
-  <li>Install the C-Librairies.</li>
+  <li>Install the C library for the EiffelTime library, click <a href="eiffeltime.html#GetStart">here</a>
+    to have the instructions on how to build it.</li>
 </ul>
-<p>In Order to install the C-libraries you need to type <b>finish_freezing</b>
-in the following directories :</p>
+<p>Now, you can installl the C libraries. We will describe below the procedure
+for both Windows and Unix:</p>
 <ul>
-  <li>$EIFFEL4/library/time/Clib</li>
-  <li>$EIFFEL4/library/store/Clib</li>
-  <li>$EIFFEL4/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib&nbsp;</li>
-</ul>
+  <li>On Windows: type &quot;<b>make_msc</b>&quot; or &quot;<b>make_bcc</b>&quot;&nbsp;
+    (Depending which C compiler you are using msc for
+    Microsoft, bcc for Borland) in the following directories:
+    <ul>
+      <li>$EIFFEL4/library/store/Clib</li>
+      <li>$EIFFEL4/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib</li>
+    </ul>
 <p>Where <i>your_Database</i> is the database you have chosen (Oracle, ODBC,
 Sybase or Ingres)</p>
-<ul>
-  <li>Then in the directory $EIFFEL4/library/store/install call : <b>make_msc</b>
-    or <b>make_bcc</b> (Depending which C compiler you are using msc for
-    Microsoft, bcc for Borland)</li>
+    
+  </li>
 </ul>
-<p>&nbsp;</p>
-<p>Congratulation, your EiffelStore library has been successfully installed
-!!!!!</p>
-<p>If one of the previous step did not work, contact us at<a href="mailto:support@eiffel.com">
-support@eiffel.com</a> .</p>
+<ul>
+  <li>On Unix: type &quot;<b>finish_freezing</b> -library&quot; in the following
+    directories:</li>
+    <ul>
+      <li>$EIFFEL4/library/store/Clib</li>
+      <li>$EIFFEL4/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib&nbsp;</li>
+
+<p>Where <i>your_Database</i> is the database you have chosen (Oracle, ODBC,
+Sybase or Ingres)</p>
+</ul>
+</ul>    
+<p>Congratulation, your EiffelStore library has been successfully installed !!! You should now have in the directory
+$EIFFEL4\library\store\spec\$PLATFORM\lib (for Unix) and
+$EIFFEL4\library\store\spec\$COMPILER\lib two C libraries objects.</p>
+<p>If one of the previous step did not work, contact us through our support web
+page at: <a href="http://support.eiffel.com">http://support.eiffel.com</a> .</p>
 <p>Now you can start a new Eiffel Project using EiffelStore.</p>
-<h1><a name="Ace">How to configure you Ace file</a></h1>
+<h1><a name="Ace">How to configure your Ace file</a></h1>
 <p>In order to use EiffelStore in an Eiffel Project, you have to include in your
 project, the right clusters and the right external files. Thus, you need to
-configure your Ace file.<br>
+configure your Ace file.</p>
+<p>
 You can get all the information about Ace files <a href="lace.html">here</a>.</p>
 <p>You have to include EiffelStore clusters and <a href="eiffeltime.html"> EiffelTime</a> clusters.</p>
 <p>To include the EiffelStore cluster you have to :</p>
@@ -127,7 +147,7 @@ You can get all the information about Ace files <a href="lace.html">here</a>.</p
   <li>Include&nbsp; these clusters one by one:&nbsp;<b><br>
     estore_support: &quot;$EIFFEL4\library\store\support&quot;;<br>
     estore_interface: &quot;$EIFFEL4\library\store\interface&quot;;<br>
-    estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;<br>
+    estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;
     </b></li>
 </ul>
 <p>THEN</p>
@@ -141,7 +161,6 @@ library installed. And so, you need to include its cluster in your Ace file:</p>
 <p><b>time: &quot;$EIFFEL4\library\time&quot;;<br>
 time_format(time): &quot;$\format&quot;;<br>
 english_format(time_format): &quot;$\english&quot;;</b></p>
-<p>&nbsp;</p>
 <p>You now have to include all the external files.</p>
 <ul>
   <li><i><u>For Oracle:</u></i></li>
@@ -161,7 +180,7 @@ objects:<br>
 &quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib&quot;;</b></p>
 <p><u>Remark:</u> This description is valid only under Windows, if you use Unix, the objects are
 : <b>libsupport.a, liboracle.a, libdatetime.a</b> .<br>
-Moreover, the first command which include Oci.lib should be : <b>&quot;-L$(ORACLE_HOME)/lib
+Moreover, the first command which include the OCI C library should be : <b>&quot;-L$(ORACLE_HOME)/lib
 -lclntsh&quot;</b></p>
 <ul>
   <li><i><u>For Odbc:</u></i></li>
@@ -180,38 +199,41 @@ support.lib objects and the C EiffelStore files.<br>
 <p>Now your Ace file should be configured. However here you can see the Ace file
 of the Insert example, working with Oracle under Windows. (Check the Ace of the examples if
 you need to see other Ace file).</p>
-<pre align="left"><i><span style="background-color: #FFFFFF"><b>System</b> inserter
+<center>
+<table border="0">
+  <tr>
+    <td bgcolor="#FFFFE6">
+<pre align="left"><b>System</b> inserter
 <b>&nbsp;&nbsp;&nbsp;</b>
-	<b>root</b>
-		inserter (root_cluster): &quot;make&quot;
+<b>root</b>
+	inserter (root_cluster): &quot;make&quot;</pre>
 
-	<b>default</b>
-<b>&nbsp;&nbsp;&nbsp;</b> 
-		<b>assertion</b> (all)
-		<b>console_application</b> (yes)
-		<b>precompiled</b> (&quot;$EIFFEL4\precomp\spec\$PLATFORM\base&quot;)
+<pre align="left"><b>default</b>
+	<b>assertion</b> (all)
+	<b>console_application</b> (yes)
+	<b>precompiled</b> (&quot;$EIFFEL4\precomp\spec\$PLATFORM\base&quot;)
 
-	<b>cluster</b>
-		&nbsp;&nbsp;&nbsp; root_cluster: &quot;$EIFFEL4\examples\store\insert&quot;;
-		&nbsp;&nbsp;&nbsp; estore_examples_objects:&quot;$EIFFEL4\examples\store\Utilities&quot;;
-		&nbsp;&nbsp;&nbsp; oracle_handle: &quot;$EIFFEL4\examples\store\Utilities\oracle&quot;;
-<font color="#FF0000">-- EiffelBase</font>
+<b>cluster</b>
+	root_cluster: &quot;$EIFFEL4\examples\store\insert&quot;;
+	estore_examples_objects:&quot;$EIFFEL4\examples\store\Utilities&quot;;
+	oracle_handle: &quot;$EIFFEL4\examples\store\Utilities\oracle&quot;;
 
+		<font color="#FF0000">-- EiffelBase</font>
 	<b>all</b> base: &quot;$EIFFEL4/library/base&quot;
 		<b>exclude</b>
 			&quot;desc&quot;;&quot;table_eiffel3&quot;
-		<b>end</b>
-<font color="#FF0000">-- EiffelStore
-</font>
-		estore_support: &quot;$EIFFEL4\library\store\support&quot;;
-		estore_interface: &quot;$EIFFEL4\library\store\interface&quot;;
-		estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;
-		estore_oracle: &quot;$EIFFEL4\library\store\dbms\rdbms\oracle&quot;;
-<font color="#FF0000">-- EiffelTime
-</font>
-		time: &quot;$EIFFEL4\library\time&quot;;
-		time_format(time): &quot;$\format&quot;;
-		english_format(time_format): &quot;$\english&quot;;
+		<b>end
+
+</b>		<font color="#FF0000">-- EiffelStore
+</font>	estore_support: &quot;$EIFFEL4\library\store\support&quot;;
+	estore_interface: &quot;$EIFFEL4\library\store\interface&quot;;
+	estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;
+	estore_oracle: &quot;$EIFFEL4\library\store\dbms\rdbms\oracle&quot;;
+
+<font color="#FF0000">		-- EiffelTime
+</font>	time: &quot;$EIFFEL4\library\time&quot;;
+	time_format(time): &quot;$\format&quot;;
+	english_format(time_format): &quot;$\english&quot;;
 
 <b>external</b>
 
@@ -222,14 +244,22 @@ you need to see other Ace file).</p>
 			&quot;$(EIFFEL4)\library\time\spec\$(COMPILER)\lib\datetime.lib&quot;,
 			&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\oracle_store.lib&quot;,
 			&quot;$(ORACLE_HOME)\OCI\lib\msvc\oci.lib&quot;
-<b>end</b></span></i></pre>
+<b>end</b></pre>
+</td>
+  </tr>
+</table>
+</center>
 <h1><a name="connectData">How connect your Database</a></h1>
 <p>To see all the step of connecting to your Database, let's see the init
 feature of the <a href="#Insert"> Insert example</a>:<br>
 We use in that case the Oracle example as the connection only ask for a login
 name and a password.</p>
-<pre><span style="background-color: #FFFFFF"><i>init is
-</i><font color="#FF0000">		-- Init session.</font><i>
+<center>
+<table border="0">
+  <tr>
+    <td bgcolor="#FFFFE6">
+    <pre>init is
+<font color="#FF0000">		-- Init session.</font><i>
 	local
 		tmp_string: STRING
 	do
@@ -262,13 +292,25 @@ name and a password.</p>
 	ensure
 		not (session_control = Void)
 		not (base_store = Void)
-	end</i></span></pre>
+	end</pre>
+
+    </i>
+
+</td>
+  </tr>
+</table>
+</center>
+
 <p>Now you are connected to your database, and you can perform a query.</p>
 <h1><a name="query">How to realize a basic query</a></h1>
 <p>To see all the step of a basic query, let's see the make_selection feature of
 the <a href="#Select"> Select example</a>.</p>
-<pre><span style="background-color: #FFFFFF"><i>make_selection is
-</i><font color="#FF0000">		-- Select books whose author's name match
+<center>
+<table border="0">
+  <tr>
+    <td bgcolor="#FFFFE6">
+<pre>make_selection is
+<font color="#FF0000">		-- Select books whose author's name match
 		-- a specific name.
 		-- The name must be written in upper-case letters, and
 		-- enclosed in '%' (This caracter is used by SQL to match&nbsp;
@@ -316,14 +358,18 @@ the <a href="#Select"> Select example</a>.</p>
 			io.putstring (&quot;Author? ('exit' to terminate):&quot;)
 			io.readline
 		end
-	end</i></span></pre>
+	end</pre>
+</i>
+</td>
+</tr>
+</table>
+</center>
 <p>Thus, to perform a query you need to create a DB_SELECTION object (base_selection
-in this example).<br>
-Then you can follow all the steps of this example.</p>
+in this example). Then you can follow all the steps of this example.</p>
 <h1><a name="Examples">Some Working Examples</a></h1>
 <p>We developed 7 Examples that you can try to understand EiffelStore.</p>
 <p>They are in the directory : &quot;$EIFFEL4\examples\store&quot;</p>
-<p>You should test these examples in the following Order:</p>
+<p>We recommend you to try the examples in the following order:</p>
 <ul>
   <li><a href="#Esql">Esql</a><br>
     &nbsp;&nbsp;&nbsp; Very useful to test you Database connection.</li>
@@ -379,11 +425,9 @@ with `db_book' access key for instance.</p>
 <br>
 Class DB_CHANGE encapsulates features supporting insertion statements.<br>
 <br>
-SQL insert statements insert new objects into existing repositories<br>
-(i.e existing RDM tables).<br>
+SQL insert statements insert new objects into existing repositories (i.e existing RDM tables).<br>
 <br>
-Class DB_CONTROL provides facilities to manage the session,<br>
-control the DB status, and query the results.</p>
+Class DB_CONTROL provides facilities to manage the session, control the DB status, and query the results.</p>
 <h2><a name="Nesting">Nesting</a></h2>
 <p>Make sure that you have read the <a href="#TOP">previous explanations</a>
 before running this example.</p>
@@ -417,7 +461,7 @@ To apply the example on a model of your choice, replace in the Ace file referenc
 <br>
 <br>
 Remarks:<br>
-Some problems have been encountered when using generic containers classes derived with simple type.<br>
+Some problems have been encountered when using generic containers classes derived with simple type.
 To overcome this problem, rather use ARRAY [INTEGER_REF] instead of ARRAY [INTEGER].</p>
 <h2><a name="Convert">Convert</a></h2>
 <p>Make sure that you have read the <a href="#TOP">previous explanations</a>
@@ -430,12 +474,6 @@ detection mechanism.<br>
 When the example has been compiled, put the two files "example1.dat" and "example2.dat" in the
 directory "EIFGEN/W_CODE" or in &quot;EIFGEN/F_code&quot; directory depending on your type of Eiffel
 compilation.</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><br>
-&nbsp;&nbsp;&nbsp; </p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

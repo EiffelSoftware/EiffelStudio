@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision bar item, mswin implementation."
 	status: "See notice at end of class"
@@ -10,11 +9,7 @@ indexing
 deferred class
 	EV_BAR_ITEM_IMP
 	
-inherit
-	
---	EV_PRIMITIVE_IMP
-
-end
+end -- class EV_BAR_ITEM_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

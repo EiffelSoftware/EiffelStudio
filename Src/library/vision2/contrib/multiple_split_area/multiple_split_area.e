@@ -329,7 +329,7 @@ feature -- Status setting
 		require
 			pixmap_not_void: pixmap /= Void
 		do
-			maximize_pixmap := clone (pixmap)
+			maximize_pixmap := pixmap.twin
 		end
 		
 	set_minimize_pixmap (pixmap: EV_PIXMAP) is
@@ -337,7 +337,7 @@ feature -- Status setting
 		require
 			pixmap_not_void: pixmap /= Void
 		do
-			minimize_pixmap := clone (pixmap)
+			minimize_pixmap := pixmap.twin
 		end
 		
 	set_close_pixmap (pixmap: EV_PIXMAP) is
@@ -345,7 +345,7 @@ feature -- Status setting
 		require
 			pixmap_not_void: pixmap /= Void
 		do
-			close_pixmap := clone (pixmap)
+			close_pixmap := pixmap.twin
 		end
 
 	set_restore_pixmap (pixmap: EV_PIXMAP) is
@@ -353,7 +353,7 @@ feature -- Status setting
 		require
 			pixmap_not_void: pixmap /= Void
 		do
-			restore_pixmap := clone (pixmap)
+			restore_pixmap := pixmap.twin
 		end
 
 	extend (widget: EV_WIDGET; name: STRING) is

@@ -64,17 +64,17 @@ feature {NONE} -- Initialization
 			label_box.set_data (display_name)
 			create tool_bar
 			create minimize_button
-			minimize_button.set_pixmap (clone (parent_area.minimize_pixmap))
+			minimize_button.set_pixmap (parent_area.minimize_pixmap.twin)
 			minimize_button.select_actions.extend (agent change_minimized_state)
 			minimize_button.set_tooltip (minimize_tooltip)
 			tool_bar.extend (minimize_button)
 			create maximize_button
-			maximize_button.set_pixmap (clone (parent_area.maximize_pixmap))
+			maximize_button.set_pixmap (parent_area.maximize_pixmap.twin)
 			maximize_button.select_actions.extend (agent change_maximized_state)
 			maximize_button.set_tooltip (maximize_tooltip)
 			tool_bar.extend (maximize_button)
 			create close_button
-			close_button.set_pixmap (clone (parent_area.close_pixmap))
+			close_button.set_pixmap (parent_area.close_pixmap.twin)
 			close_button.select_actions.extend (agent close)
 			close_button.set_tooltip (close_tooltip)
 			label_box.extend (tool_bar)

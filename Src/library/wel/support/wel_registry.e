@@ -142,7 +142,7 @@ feature {NONE} -- Internal Results
 			from
 				i :=1
 				j := 1
-				s := clone (path)
+				s := path.twin
 			until
 				j < 1
 			loop

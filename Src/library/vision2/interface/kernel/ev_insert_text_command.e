@@ -13,14 +13,39 @@ inherit
 creation
 	make
 
+feature -- Access
+
+	is_seperator: BOOLEAN is
+		local
+			chr: CHARACTER
+		do
+			if
+				event_data.text.count = 1
+			then
+				chr := event_data.text.item (1) 
+				Result := not chr.is_digit and not chr.is_alpha
+			else
+				Result := True
+			end
+		end
+
 feature -- Basic operation
 
 	execute (arg: EV_ARGUMENT; a_event_data: EV_EVENT_DATA) is
 			-- Execution to be done by the command.
+		local
+			editor: EV_TEXT_EDITOR
 		do
 			event_data ?= a_event_data
-			print ("EV INS TXT execute%N")
-			event_data.print_contents
+--			print ("EV INS TXT execute%N")
+--			event_data.print_contents
+			editor ?= event_data.rich_text
+			check
+				editor /= Void
+			end
+			
+			--editor.update_highlighting_lines_from_character_position (event_data.position, event_data.position + event_data.text.count)
+			--editor.update_highlighting_all
 		ensure then
 			event_data_set: event_data /= Void
 		end

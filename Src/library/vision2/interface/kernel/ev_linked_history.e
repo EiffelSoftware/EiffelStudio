@@ -19,6 +19,33 @@ feature {NONE} -- Initialization
 		do
 			create {TWO_WAY_LIST [EV_UNDOABLE_COMMAND]} list.make
 		end
+feature -- Access
+
+
+	can_undo: BOOLEAN is
+		do
+			Result := not list.empty and not list.before
+		end
+		
+	can_redo: BOOLEAN is
+		do
+			Result := not list.empty and not list.islast
+		end
+
+
+	next_undo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the undo queue
+		do
+			Result := list.item
+		end
+
+	next_redo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the redo queue
+		do
+			list.forth
+			Result := list.item
+			list.back
+		end
 
 feature -- Basic operations
 
@@ -48,14 +75,18 @@ feature -- Basic operations
 			list.item.redo
 		end
 
-	can_undo: BOOLEAN is
+	fake_undo is
+			-- Moves the history cursor to the next undo position,
+			-- but does not execute the command.
 		do
-			Result := not list.empty and not list.before
+			list.back
 		end
-		
-	can_redo: BOOLEAN is
+
+	fake_redo is
+			-- Moves the history cursor to the next redo position,
+			-- but does not execute the command.
 		do
-			Result := not list.empty and not list.islast
+			list.forth
 		end
 
 feature {NONE} -- Implementation

@@ -569,6 +569,7 @@ feature {NONE} -- Implementation
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			str: STRING
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
+			signature: STRING
 		do
 			if not is_label_expanded then
 				label_group.wipe_out
@@ -603,35 +604,32 @@ feature {NONE} -- Implementation
 				until
 					l_features.after
 				loop
+					signature := model.full_signature_compiled (l_features.item)
+					signature.replace_substring_all (model.supplier.name, "...")
+					if signature.substring (signature.count - 4, signature.count).is_equal (": ...") then
+						signature.replace_substring_all (": ...", "")
+					end
 					l_feature_names := l_features.item.ast.feature_names
-					if l_feature_names.count > 1 then
-						--skip synonyms
-						from
-							l_feature_names.start
-							l_feature_names.forth
-						until
-							l_feature_names.after
-						loop
-							l_feature_names.forth
-							l_features.forth
+					from
+						l_feature_names.start
+					until
+						l_feature_names.after
+					loop
+						str := l_feature_names.item.visual_name.twin + signature
+						create txt.make_with_text (str)
+						txt.set_identified_font (bon_client_label_font)
+						txt.set_foreground_color (bon_client_label_color)
+						if world /= Void then
+							txt.scale (world.scale_factor)
 						end
+						txt.set_pebble (create {FEATURE_STONE}.make (l_features.item))
+						txt.set_accept_cursor (cursors.cur_feature)
+						txt.set_deny_cursor (cursors.cur_x_feature)
+						sorted_names.extend (txt)
+						
+						l_feature_names.forth
+						l_features.forth
 					end
-					str := model.full_name (l_features.item.ast)
-					str.replace_substring_all (model.supplier.name, "...")
-					if str.substring (str.count - 4, str.count).is_equal (": ...") then
-						str.replace_substring_all (": ...", "")
-					end
-					create txt.make_with_text (str)
-					txt.set_identified_font (bon_client_label_font)
-					txt.set_foreground_color (bon_client_label_color)
-					if world /= Void then
-						txt.scale (world.scale_factor)
-					end
-					txt.set_pebble (create {FEATURE_STONE}.make (l_features.item))
-					txt.set_accept_cursor (cursors.cur_feature)
-					txt.set_deny_cursor (cursors.cur_x_feature)
-					sorted_names.extend (txt)
-					l_features.forth
 				end
 				check
 					is_sorted: sorted_names.sorted

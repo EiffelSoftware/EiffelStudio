@@ -31,10 +31,7 @@ feature -- Command Execution
 
 feature -- EiffelBench specific calls
 
-	link_eiffel_driver (c_code_dir, 
-			system_name, 
-			prelink_cmd_name, 
-			driver_name: STRING) is
+	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING) is
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
 		do
@@ -51,9 +48,8 @@ feature -- EiffelBench specific calls
 	invoke_finish_freezing (c_code_dir, freeze_command: STRING) is
 			-- Invoke the `finish_freezing' script.
 		do
-			print (server_mode)
 			if server_mode then
-					eif_gr_call_finish_freezing (request, c_code_dir.to_c, 
+				eif_gr_call_finish_freezing (request, c_code_dir.to_c, 
 					freeze_command.to_c)
 			else
 				eif_call_finish_freezing (c_code_dir.to_c, 
@@ -71,10 +67,7 @@ feature {NONE} -- Shell
 
 feature {NONE} -- Externals
 
-	eif_link_driver (c_code_dir, 
-				system_name, 
-				prelink_cmd_name, 
-				driver_name: ANY) is
+	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
 		external
 			"C"
 		end;
@@ -84,15 +77,12 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	eif_gr_call_finish_freezing (rqst: ANY; 
-				c_code_dir, freeze_cmd: ANY) is
+	eif_gr_call_finish_freezing (rqst: ANY; c_code_dir, freeze_cmd: ANY) is
 		external
 			"C"
 		end;
 
-	eif_gr_link_driver (rqst: ANY; c_code_dir, 
-				syst_name, prelink_cmd, 
-				driver_name: ANY) is
+	eif_gr_link_driver (rqst: ANY; c_code_dir, syst_name, prelink_cmd, driver_name: ANY) is
 		external
 			"C"
 		end

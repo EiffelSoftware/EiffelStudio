@@ -247,7 +247,8 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			loop
 				trg ?= id_object (pnd_targets.item)
 				if trg = Void or trg.is_destroyed then
-					pnd_targets.prune_all (pnd_targets.item)
+					pnd_targets.forth
+					-- This will be removed on the next pick.
 				else
 					imp ?= trg.implementation
 					if imp = Void then
@@ -276,6 +277,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
+			i: INTEGER
 		do
 			cur := pnd_targets.cursor
 			from
@@ -285,7 +287,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			loop
 				trg ?= id_object (pnd_targets.item)
 				if trg = Void or else trg.is_destroyed then
-					pnd_targets.prune_all (pnd_targets.item)
+					i := pnd_targets.index
+					pnd_targets.remove
+					pnd_targets.go_i_th (i)
 				else
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
@@ -317,13 +321,13 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			loop
 				trg ?= id_object (pnd_targets.item)
 				if trg = Void or else trg.is_destroyed then
-					pnd_targets.prune_all (pnd_targets.item)
+					pnd_targets.forth
 				else
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
 						imp ?= trg.implementation
-						if imp /= Void and then imp.is_displayed then
+						if imp /= Void then
 							imp.disable_pnd_prelight_state
 						end
 					end

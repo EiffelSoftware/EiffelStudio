@@ -5,7 +5,7 @@ class
 	CONSUMED_FUNCTION
 
 inherit
-	CONSUMED_METHOD
+	CONSUMED_PROCEDURE
 		rename
 			make as method_make
 		end

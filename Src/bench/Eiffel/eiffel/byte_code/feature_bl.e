@@ -211,7 +211,7 @@ end
 				f.putchar ('(')
 				real_type (type).c_type.generate_function_cast (f, <<>>)
 				f.putstring (" RTNR)")
-			elseif entry.is_polymorphic (typ.type_id) then
+			elseif precursor_type = Void and then entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
@@ -224,13 +224,7 @@ end
 				f.putint (entry.min_used - 1)
 				f.putstring (")[")
 				if reg.is_current then
-					if precursor_type /= Void then
-						-- Use dynamic type of parent instead 
-						-- of dynamic type of Current.
-						f.putint (precursor_type.type_id - 1)
-					else
-						context.generate_current_dtype
-					end
+					context.generate_current_dtype
 				else
 					f.putstring (gc_upper_dtype_lparan)
 					reg.print_register
@@ -257,8 +251,7 @@ end
 
 					if not rout_table.item.written_type_id.is_equal (Context.original_class_type.type_id) then
 							-- Remember extern routine declaration
-						Extern_declarations.add_routine
-								(type_c, internal_name)
+						Extern_declarations.add_routine (type_c, internal_name)
 					end
 
 					f.putchar ('(')

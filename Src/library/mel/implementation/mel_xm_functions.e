@@ -93,7 +93,9 @@ feature {NONE} -- Implementation
 			target_not_null: a_target /= default_pointer;
 			resource_name_not_null: a_resource_name /= default_pointer
 		do
-			!! Result.make_from_existing (c_get_font_list (a_target, a_resource_name))
+			!! Result.make_from_existing (
+				c_get_font_list (a_target, a_resource_name));
+			Result.set_shared
 		end;
 
 	set_xm_font_list (a_target: POINTER; a_resource_name: POINTER; a_font: MEL_FONT_LIST) is

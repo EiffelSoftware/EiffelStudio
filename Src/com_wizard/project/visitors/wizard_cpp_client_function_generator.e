@@ -37,11 +37,8 @@ feature -- Basic operations
 			ccom_feature_writer.set_name (ccom_func_name)
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			-- Set arguments and precondition for eiffel code
-			if func_desc.argument_count > 0 then
-				-- Argument for ccom feature
-				set_client_result_type_and_signature
-			end
+			-- Argument for ccom feature
+			set_client_result_type_and_signature
 
 			ccom_feature_writer.set_body (feature_body (interface_name))
 
@@ -111,7 +108,7 @@ feature {NONE} -- Implementation
 							variables.append (retval_struct_pointer_set_up (visitor))
 							
 							signature.append (Space)
-							signature.append ("a_ptr")
+							signature.append (Return_value_name)
 							signature.append (Comma)
 							
 							return_value.append (Space)
@@ -126,33 +123,27 @@ feature {NONE} -- Implementation
 								create visitor
 								visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
 
-								variables.append (visitor.c_type)
-								variables.append (Space)
-								variables.append (Tmp_clause)
-								variables.append (arguments.item.name)
-								variables.append (visitor.c_post_type)
-								variables.append (Semicolon)
-								variables.append (New_line_tab)
-
 								signature.append (Space)
 								signature.append (Ampersand)
 								signature.append (Tmp_clause)
 								signature.append (arguments.item.name)
 								signature.append (Comma)
 							else
-								variables.append (visitor.c_type)
-								variables.append (Space)
-								variables.append (Tmp_clause)
-								variables.append (arguments.item.name)
-								variables.append (visitor.c_post_type)
-								variables.append (Semicolon)
-								variables.append (New_line_tab)
-
 								signature.append (Space)
 								signature.append (Tmp_clause)
 								signature.append (arguments.item.name)
 								signature.append (Comma)
 							end
+
+							variables.append (visitor.c_type)
+							variables.append (Space)
+							variables.append (Tmp_clause)
+							variables.append (arguments.item.name)
+							variables.append (visitor.c_post_type)
+							variables.append (Space_equal_space)
+							variables.append (Zero)
+							variables.append (Semicolon)
+							variables.append (New_line_tab)
 
 							if visitor.is_basic_type then
 								return_value.append (Space_open_parenthesis)
@@ -568,7 +559,7 @@ feature {NONE} -- Implementation
 
 			Result.append (visitor.c_type)
 			Result.append (Space)
-			Result.append ("a_ptr")
+			Result.append (Return_value_name)
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -628,10 +619,13 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- a_ptr = eif_field (eif_access (result), "item", EIF_POINTER)
+			-- 'return_value_name' = eif_field (eif_access (result), "item", EIF_POINTER)
 
-			Result.append (Item_clause)
+			Result.append (Return_value_name)
 			Result.append (Space_equal_space)
+			Result.append (Open_parenthesis)
+			Result.append (visitor.c_type)
+			Result.append (Close_parenthesis)
 			Result.append (Eif_field)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
@@ -639,6 +633,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (C_result)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
 			Result.append (Double_quote)
 			Result.append (Item_clause)
 			Result.append (Double_quote)

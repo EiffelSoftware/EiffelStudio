@@ -249,7 +249,7 @@ feature -- Code generation
 			end
 		end
 
-	access_tree_view_item (a_tree_view_item: INTEGER): TDS_RESOURCE is
+	access_tree_view_item (a_tree_view_item: POINTER): TDS_RESOURCE is
 			-- Give the associated object to `a_tree_view_item'.
 		local
 			resource_type: TDS_RESOURCE

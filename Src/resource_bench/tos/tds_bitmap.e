@@ -21,7 +21,7 @@ feature	-- Initialization
 	make is
 		do
 			list_make
-			set_type (R_icon)
+			set_type (R_bitmap)
 		end
 
 feature -- Code generation

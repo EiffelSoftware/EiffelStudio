@@ -41,6 +41,7 @@ feature
 	R_dialog: INTEGER is 29
 	R_anicursor: INTEGER is 30
 	R_aniicon: INTEGER is 31
+	R_bitmap: INTEGER is 32
 
 end -- class TDS_RESOURCE_CONSTANTS
 

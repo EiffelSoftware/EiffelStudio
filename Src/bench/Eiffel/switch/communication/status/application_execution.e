@@ -10,26 +10,25 @@ inherit
 		export
 			{NONE} all
 		end
-
-	OBJECT_ADDR
-		export
-			{NONE} all
-		end
-
+		
 	EXEC_MODES
-
-	IPC_SHARED
-
+	
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 			{ANY} Eiffel_project
 		end
 
-	SHARED_CONFIGURE_RESOURCES
-
 	EB_ERROR_MANAGER
-
+		export
+			{NONE} all
+		end
+	
+	SHARED_APPLICATION_EXECUTION
+		export
+			{NONE} all
+		end
+		
 create {SHARED_APPLICATION_EXECUTION}
 	make
 
@@ -42,11 +41,26 @@ feature {NONE} -- Initialization
 			displayed_string_size := 50
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
-			create {APPLICATION_STOPPED_CMD} before_stopped_command
-			create {APPLICATION_STOPPED_CMD} after_stopped_command
+			
+			--| FIXME: JFIAT 
+			--| get rid of APPLICATION_STOPPED_CMD .. useless, even the execute is doing nothing special ..
+			
+--			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
+--			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_after_stopped)
+
+--			create {APPLICATION_STOPPED_CMD} before_stopped_command
+--			create {APPLICATION_STOPPED_CMD} after_stopped_command
 		ensure
 			displayed_string_size: displayed_string_size = 50
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
+		end
+
+feature -- execution mode
+
+	is_dotnet: BOOLEAN is
+			-- Is this application a dotnet system ?
+		do
+			Result := Eiffel_system.System.il_generation
 		end
 
 feature -- load and save
@@ -64,6 +78,11 @@ feature -- load and save
 				create debug_info.make
 			end
 			debug_info.load (load_filename)
+
+			if is_dotnet then
+				imp_dotnet.load_dotnet_debug_info
+			end
+
 			resynchronize_breakpoints
 		end
 
@@ -89,34 +108,34 @@ feature -- Properties
 
 	status: APPLICATION_STATUS
 			-- Status of the running application
-
-	termination_command: E_CMD
-			-- Command executed after application has been terminated
-			-- (is_running will be false after executing this command)
-
-	application_launched_command: E_CMD
-			-- Command executed after application has been launced
-			-- (If `is_running' is false then application was unable to
-			-- be executed because of a timeout)
-
-	before_stopped_command: E_CMD
-			-- Command executed before receiving information from
-			-- the application when an exception occur or a breakpoint
-			-- has been reached (useful to set waiting cursor and
-			-- `is_stopped' has not been flagged to true)
-
-	after_stopped_command: E_CMD
-			-- Command executed after the application is stopped due
-			-- to an exception or a breakpoint
-			-- (status.is_stopped is true when `after_stopped_command'
-			-- is called)
+		
+--	termination_command: E_CMD
+--			-- Command executed after application has been terminated
+--			-- (is_running will be false after executing this command)
+--
+--	application_launched_command: E_CMD
+--			-- Command executed after application has been launced
+--			-- (If `is_running' is false then application was unable to
+--			-- be executed because of a timeout)
+--
+--	before_stopped_command: E_CMD
+--			-- Command executed before receiving information from
+--			-- the application when an exception occur or a breakpoint
+--			-- has been reached (useful to set waiting cursor and
+--			-- `is_stopped' has not been flagged to true)
+--
+--	after_stopped_command: E_CMD
+--			-- Command executed after the application is stopped due
+--			-- to an exception or a breakpoint
+--			-- (status.is_stopped is true when `after_stopped_command'
+--			-- is called)
 
 	execution_mode: INTEGER
 			-- Execution mode (Step by step, stop at stoop points, ...)
 
 	displayed_string_size: INTEGER
 			-- Size of string to be retrieved from the application
-			-- when debugging (size of `string_value' in REFERENCE_VALUE)
+			-- when debugging (size of `string_value' in ABSTRACT_REFERENCE_VALUE)
 			-- (Default value is 50)
 
 	current_execution_stack_number: INTEGER
@@ -170,7 +189,7 @@ feature -- Properties
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			Result := is_hector_addr (addr)
+			Result := imp_application.is_valid_object_address (addr)
 		end
 
 	error_in_bkpts: BOOLEAN is
@@ -199,6 +218,10 @@ feature -- Properties
 
 feature -- Access
 
+	eiffel_error_dotnet_initialization_message: STRING is "An error occured during initialization of the ICorDebug Debugger (.NET)"
+			-- Message displayed when estudio is unable to launch
+			-- the system because unable to iniatialize the dotnet debugger
+
 	eiffel_timeout_message: STRING is
 			-- Message displayed when ebench is unable to launch
 			-- the system (because of a timeout)
@@ -216,6 +239,29 @@ feature -- Access
 			is_stopped: is_stopped
 		do	
 			Result := status.where.count
+		end
+
+feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_APPLICATION_EXECUTION} -- Implemenation
+
+	process_termination is
+			-- Process the termination of the executed
+			-- application. Also execute the `termination_command'.
+		require
+			is_running: is_running
+		do
+			debug_info.restore
+			imp_application.process_termination  --			addr_table.clear_all
+			
+			Application_notification_controller.notify_on_terminated
+			status := Void --| then is_running = False  (status /= Void)
+			current_execution_stack_number := 1
+debug ("DEBUGGER_TRACE")
+	io.error.putstring ("terminating project%N")
+end
+		ensure
+			not_running: not is_running
+			reset_current_execution_stack_number:
+					current_execution_stack_number = 1
 		end
 
 feature -- Element change
@@ -563,21 +609,8 @@ feature -- Execution
 			app_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: interrupt_number >= 0
-		local
-			app: STRING
 		do
-			app := Eiffel_system.application_name (True)
-			if args /= Void then
-				app.extend (' ')
-				app.append (args)
-			end
-			run_request.set_application_name (app)
-			run_request.set_working_directory (cwd)
-			run_request.send
-			if status /= Void then
-					-- Application was able to be started
-				status.set_is_stopped (False)
-			end
+			imp_application.run (args, cwd)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -594,10 +627,7 @@ feature -- Execution
 			non_void_keep_objects: kept_objects /= Void
 			non_negative_interrupt: interrupt_number >= 0
 		do
-			keep_objects (kept_objects)
-			cont_request.send_breakpoints
-			status.set_is_stopped (False)
-			cont_request.send_rqst_3 (Rqst_resume, Resume_cont, interrupt_number, critical_stack_depth)
+			imp_application.continue (kept_objects)
 		end
 
 	interrupt is
@@ -607,8 +637,7 @@ feature -- Execution
 			app_is_running: is_running
 			not_stopped: not is_stopped
 		do	
-			quit_request.make (Rqst_interrupt)
-			quit_request.send
+			imp_application.interrupt
 		end
 
 	notify_newbreakpoint is
@@ -620,25 +649,15 @@ feature -- Execution
 			app_is_running: is_running
 			not_stopped: not is_stopped
 		do	
-			quit_request.make (Rqst_new_breakpoint)
-			quit_request.send
+			imp_application.notify_newbreakpoint
 		end
 		
-
 	kill is
 			-- Ask the application to terminate itself.
 		require
 			app_is_running: is_running
 		do
-			quit_request.make (Rqst_kill)
-			quit_request.send;		
-			process_termination
-				-- Don't wait until the next event loop to
-				-- to process the actual termination of the application.
-				-- `recv_dead' will wait until the application is dead.
-			if quit_request.recv_dead then end
-		ensure
-			app_is_not_running: not is_running
+			imp_application.kill
 		end
 
 feature -- Setting
@@ -673,38 +692,6 @@ feature -- Setting
 			critical_stack_depth := d
 		end
 
-	set_launched_command (cmd: like application_launched_command) is
-			-- Set `application_launched_command' to `cmd'.
-		do
-			application_launched_command := cmd
-		ensure
-			set: application_launched_command = cmd
-		end
-
-	set_after_stopped_command (cmd: like after_stopped_command) is
-			-- Set `after_stopped_command' to `cmd'.
-		do
-			after_stopped_command := cmd
-		ensure
-			set: after_stopped_command = cmd
-		end
-
-	set_before_stopped_command (cmd: like before_stopped_command) is
-			-- Set `before_stopped_command' to `cmd'.
-		do
-			before_stopped_command := cmd
-		ensure
-			set: before_stopped_command = cmd
-		end
-
-	set_termination_command (cmd: like termination_command) is
-			-- Set `termination_command' to `cmd'.
-		do
-			termination_command := cmd
-		ensure
-			set: termination_command = cmd
-		end
-
 	set_displayed_string_size (i: like displayed_string_size) is
 			-- Set `displayed_string_size' to `i'.
 		require
@@ -715,7 +702,7 @@ feature -- Setting
 			set: displayed_string_size = i
 		end
 
-	set_current_execution_stack (i: INTEGER) is
+	set_current_execution_stack_number (i: INTEGER) is
 			-- Set the `current_execution_stack_number' to `i'.
 			--| If `current_execution_stack_number' is greater than
 			--| the number of stack elements then 
@@ -739,7 +726,7 @@ feature -- Implementation
 			debug_info.resynchronize_breakpoints
 		end
 
-feature {DEAD_HDLR, RUN_REQUEST} -- Setting
+feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
 
 	set_status (s: like status) is
 			-- Set `status' to `s'.
@@ -749,57 +736,34 @@ feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 			set: status = s
 		end
 
-feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE} -- Implemenation
-
-	process_termination is
-			-- Process the termination of the executed
-			-- application. Also execute the `termination_command'.
-		require
-			is_running: is_running
-		do
-			debug_info.restore
-			addr_table.clear_all
-			if termination_command /= Void then
-				termination_command.execute
-			end
-			status := Void
-			current_execution_stack_number := 1
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("terminating project%N")
-end
-		ensure
-			not_running: not is_running
-			reset_current_execution_stack_number:
-					current_execution_stack_number = 1
-		end
-
-feature {RUN_REQUEST} -- Implementation
-
-	invoke_launched_command (successful: BOOLEAN) is
-			-- Process after the launch of the application according
-			-- to `successful' and the execute `application_launch_command'. 
-		do
-		end
-
-feature {SHARED_DEBUG, STOPPOINTS_STATUS, OPEN_PROJECT, QUIT_PROJECT}
+feature {SHARED_DEBUG, STOPPOINTS_STATUS, OPEN_PROJECT, QUIT_PROJECT, APPLICATION_EXECUTION_IMP}
 
 	debug_info: DEBUG_INFO
+	
+feature -- Implementation
 
-feature {APPLICATION_STATUS} 
-
-	quit_request: EWB_REQUEST is
+	imp_application: APPLICATION_EXECUTION_IMP is
+			-- 
 		once
-			create Result.make (Rqst_quit)
+			if is_dotnet then -- Eiffel_system.System.il_generation then
+				create {APPLICATION_EXECUTION_DOTNET} Result.make
+			else
+				create {APPLICATION_EXECUTION_CLASSIC} Result.make
+			end
+		end
+		
+	imp_dotnet: APPLICATION_EXECUTION_DOTNET is
+		require
+			is_dotnet
+		do
+			Result ?= Imp_application
 		end
 
-	run_request: RUN_REQUEST is
-		once
-			create Result.make (Rqst_application)
-		end
-
-	cont_request: EWB_REQUEST is
-		once
-			create Result.make (Rqst_cont)
+	imp_classic: APPLICATION_EXECUTION_CLASSIC is
+		require
+			not is_dotnet
+		do
+			Result ?= Imp_application
 		end
 
 invariant

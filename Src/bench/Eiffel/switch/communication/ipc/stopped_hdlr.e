@@ -40,18 +40,19 @@ feature
 			offset: INTEGER;
 			address: STRING;
 			reason: INTEGER;
-			status: APPLICATION_STATUS;	
+			status: APPLICATION_STATUS_CLASSIC;	
 			e_cmd: E_CMD
 			retry_clause: BOOLEAN
-			cse: CALL_STACK_ELEMENT
+			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
 			need_to_stop: BOOLEAN
 		do
 			if not retry_clause then
-				e_cmd := Application.before_stopped_command;
-				if e_cmd /= Void then
-					e_cmd.execute
-				end;
+				Application_notification_controller.notify_on_before_stopped
+--				e_cmd := Application.before_stopped_command;
+--				if e_cmd /= Void then
+--					e_cmd.execute
+--				end;
 
 				debug ("DEBUGGER_TRACE")
 					io.error.putstring ("STOPPED_HDLR: Application is stopped - reading information from application%N")
@@ -101,7 +102,7 @@ feature
 					io.error.putstring (name)
 					io.error.new_line
 				end
-				status := Application.status;
+				status := Application.imp_classic.status;
 				check
 					application_launched: status /= Void
 				end
@@ -116,10 +117,10 @@ feature
 				if reason /= Pg_new_breakpoint then
 					need_to_stop := True
 					if reason = Pg_break then
-						status.where.extend (create {CALL_STACK_ELEMENT}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
-						Application.set_current_execution_stack (1)
+						status.where.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
+						Application.set_current_execution_stack_number (1)
 							-- Test if the breakpoint is conditional, and if so, its condition.
-						cse := Application.status.where.i_th (1)
+						cse := Application.imp_classic.status.where.i_th (1)
 						expr := Application.condition (cse.routine, cse.break_index)
 						if expr /= Void then
 							expr.evaluate
@@ -134,12 +135,15 @@ feature
 					if need_to_stop then
 							-- Load the call stack.
 						Application.status.reload_call_stack
-						Application.set_current_execution_stack (Application.status.where.count)
+						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 							-- Inspect the application's current state.
-						e_cmd := Application.after_stopped_command
-						if e_cmd /= Void then
-							e_cmd.execute
-						end
+
+						Application_notification_controller.notify_on_after_stopped
+							
+--						e_cmd := Application.after_stopped_command
+--						if e_cmd /= Void then
+--							e_cmd.execute
+--						end
 					
 						debug ("DEBUGGER_TRACE")
 							io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")

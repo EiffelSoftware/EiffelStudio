@@ -1,7 +1,8 @@
 indexing
 
 	description: 
-		"List of Text lines of the graphical window.";
+		"Manages a list of Text lines -- adding, searching %
+		%and updating text lines.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -18,7 +19,7 @@ inherit
 		export
 			{NONE} arrayed_list_wipe_out, array_search, array_cursor, array_go_to
 		end;
-	GRAPHICAL_CONSTANTS
+	GRAPHICAL_VALUES
 		undefine
 			copy, setup
 		end;
@@ -29,7 +30,7 @@ inherit
 		undefine
 			copy, setup
 		redefine
-			put_address, put_feature_name, put_feature,
+			put_address, put_feature_name, put_feature, put_feature_error,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
 		   	process_breakpoint, process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, put_symbol, put_ace_syntax,
@@ -42,7 +43,7 @@ inherit
 		undefine
 			copy, setup
 		redefine
-			put_address, put_feature_name, put_feature, put_ace_syntax,
+			put_address, put_feature_name, put_feature, put_ace_syntax, put_feature_error,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
 			process_breakpoint, process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, is_editable,
@@ -229,7 +230,7 @@ feature -- Input
 		do
 			!! fig;
 			fig.set_stone (a_stone);
-			fig.set_foreground_color (g_Stop_fg_color);
+			fig.set_foreground_color (stop_color);
 			add_text_figure (fig, stone_string)
 		end
 
@@ -309,29 +310,29 @@ end
 			add_text_figure (fig, str)
 		end;
 
-    put_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
-            -- Put `address' for `e_class'.
+	put_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
+			-- Put `address' for `e_class'.
 		local
 			fig: CLASS_TEXT_IMAGE;
-            stone: CL_SYNTAX_STONE
-        do
-            !! stone.make (syn, e_class);
+			stone: CL_SYNTAX_STONE
+		do
+			!! stone.make (syn, e_class);
 			!! fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
-        end;
+		end;
 
-    put_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
-            -- Put `address' for `e_class'.
-        local
+	put_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
+			-- Put `address' for `e_class'.
+		local
 			fig: DEFAULT_TEXT_IMAGE;
-            stone: ACE_SYNTAX_STONE
-        do
-            !! stone.make (syn);
+			stone: ACE_SYNTAX_STONE
+		do
+			!! stone.make (syn);
 			!! fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
-        end;
+		end;
 
 	put_error (error: ERROR; str: STRING) is
 			-- Put `error' with string representation
@@ -341,6 +342,19 @@ end
 			stone: ERROR_STONE
 		do
 			!! stone.make (error);
+			!! fig;
+			fig.set_stone (stone);
+			add_text_figure (fig, str)
+		end;
+
+	put_feature_error (feat: E_FEATURE; str: STRING; a_pos: INTEGER) is
+			-- Put feature `feat' defined in `e_class' with string
+			-- representation `str' at current position.
+		local
+			fig: FEATURE_TEXT_IMAGE;
+			stone: FEATURE_ERROR_STONE
+		do
+			!! stone.make (feat, a_pos);
 			!! fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
@@ -481,7 +495,7 @@ feature -- Text formatting
 			column_pos: INTEGER;
 			one_space_size: INTEGER
 		do
-			one_space_size := g_String_text_font.width_of_string (" ");
+			one_space_size := string_text_font.width_of_string (" ");
 			column_pos := (one_space_size * t.column_number) + 
 					2*one_space_size;
 			if current_x > column_pos then
@@ -568,7 +582,7 @@ feature {NONE} -- Implementation
 			text_position := text_position + s.count;
 			fig.set_text (s);
 			fig.set_base_left (current_x, current_y);
-			w := fig.font.width_of_string (s);
+			w := fig.font (Current).width_of_string (s);
 			fig.set_width (w);
 			current_line.extend (fig);
 			current_x := current_x + w;
@@ -580,14 +594,14 @@ feature {NONE} -- Implementation
 		do
 			if for_format then
 				maximum_height_per_line :=
-						g_Font_max_height;
+						font_max_height;
 				maximum_descent_per_line :=
-						g_Font_max_descent;
+						font_max_descent;
 			else
 				maximum_height_per_line :=
-						g_Font_max_height;
+						font_max_height;
 				maximum_descent_per_line :=
-						g_Font_max_descent;
+						font_max_descent;
 			end;
 			current_y := maximum_height_per_line + 5
 		end;
@@ -615,16 +629,16 @@ feature {NONE} -- Implementation
 					-- Execution stopped at that point.
 				if Application.is_breakpoint_set (stone.routine, stone.index) then
 					fig.set_pixmap (bm_graphical_Stoppoint);
-					fig.set_foreground_color (g_Stop_fg_color);
+					fig.set_foreground_color (stop_color);
 				else
-					fig.set_foreground_color (g_Breakable_fg_color);
+					fig.set_foreground_color (breakable_color);
 					fig.set_pixmap (bm_graphical_Breakablepoint)
 				end;
 			elseif Application.is_breakpoint_set (stone.routine, stone.index) then
 				fig.set_pixmap (bm_graphical_Stoppoint);
-				fig.set_foreground_color (g_Stop_fg_color);
+				fig.set_foreground_color (stop_color);
 			else
-				fig.set_foreground_color (g_Breakable_fg_color);
+				fig.set_foreground_color (breakable_color);
 				fig.set_pixmap (bm_graphical_Breakablepoint)
 			end
 		end;

@@ -41,7 +41,11 @@ feature -- Access
 		require
 			exists: not destroyed
 		do
-			Result := implementation.parent
+			if implementation.parent_imp /= Void then
+				Result ?= implementation.parent_imp.interface
+			else
+				Result := Void
+			end
 		end
 
 feature -- Status setting

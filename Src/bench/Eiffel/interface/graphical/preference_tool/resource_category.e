@@ -23,6 +23,23 @@ feature -- Initialization
 		deferred
 		end
 
+feature -- Status report
+
+	page_number: INTEGER 
+			-- Page number of category in preference tool
+
+feature -- Status setting
+
+	set_page_number (a_nbr: INTEGER) is
+			-- Set `page_number' to `a_nbr'.
+		require
+			position_nbr: a_nbr > 0
+		do
+			page_number := a_nbr
+		ensure
+			set: page_number = a_nbr
+		end;
+
 feature -- Access
 
 	users: LINKED_LIST [RESOURCE_USER];
@@ -75,7 +92,8 @@ feature -- Update
 			loop
 				users.item.finish_update;
 				users.forth
-			end
+			end;
+			modified_resources.wipe_out
 		end
 
 end -- class RESOURCE_CATEGORY

@@ -569,6 +569,7 @@ extern "C" {
 
 /* Let's define low level efficient mutexes */
 #ifdef EIF_WIN32
+
 	/* We use Windows Critical section here */
 #define EIF_LW_MUTEX_TYPE	CRITICAL_SECTION
 #define EIF_LW_MUTEX_CREATE(m,msg) \
@@ -599,10 +600,10 @@ extern "C" {
 #else
 	/* We use default mutex implementation here */
 #define EIF_LW_MUTEX_TYPE EIF_MUTEX_TYPE
-#define EIF_LW_MUTEX_CREATE(m,msg)		EIF_MUTEX_CREATE
-#define EIF_LW_MUTEX_LOCK(m,msg)		EIF_MUTEX_LOCK
-#define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK
-#define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY
+#define EIF_LW_MUTEX_CREATE(m,msg)		EIF_MUTEX_CREATE(m,msg)
+#define EIF_LW_MUTEX_LOCK(m,msg)		EIF_MUTEX_LOCK(m,msg)
+#define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK(m,msg)
+#define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY(m,msg)
 #endif
 
 #endif	/* EIF_THREADS */

@@ -352,7 +352,6 @@ feature -- Element change
 				if b.parent.managed then
 					delete_item (id_children.item (b))
 				end
-					-- Guillaume
 				if associated_root /= Void then
 					associated_root.remove (id_children.item (b))
 				end

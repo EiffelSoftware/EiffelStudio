@@ -490,11 +490,14 @@ feature {NONE} -- Implementation
 			-- Place the children in columns
 		local
 			i,j, placed : INTEGER
+			new_x, new_y: INTEGER
+			max_h: INTEGER
 			ci : WIDGET_WINDOWS
 		do
 			from
+				new_y := margin_height
+					-- i is the row indicator
 				i := 1
-				-- i is the row indicator
 				placed := 1
 			variant
 				c.count - i
@@ -502,8 +505,10 @@ feature {NONE} -- Implementation
 				placed > c.count
 			loop
 				from
+					new_x := margin_width
+						-- j is the column indicator
 					j := 1
-					-- j is the column indicator
+					max_h := 0
 				variant
 					preferred_count - j
 				until
@@ -511,18 +516,26 @@ feature {NONE} -- Implementation
 				loop
 					ci := c.i_th (c.count - placed + 1) 
 					if ci /= Void and then ci.managed then
-						if i > 1 then
-							ci.set_x_y (margin_width + (j - 1) * (spacing + largest_w), 
-								spacing + c.i_th (c.count - placed + preferred_count + 1).height +
-								c.i_th (c.count - placed + preferred_count+1).y)
-						else
-							ci.set_x_y (margin_width + (j - 1) * (spacing + largest_w), margin_height)
+						ci.set_x_y (new_x, new_y)
+						if new_x > margin_width then
+								-- We know that there must have been a previous
+								-- managed child in this loop.
+							new_x := new_x + spacing
 						end
+						new_x := new_x + largest_w
+						max_h := max_h.max (ci.height)
 					elseif ci /= Void and then ci.exists and then ci.wel_shown then
 						ci.wel_hide
 					end
 					j := j + 1
 					placed := placed + 1
+				end
+				if max_h > 0 then
+						-- We know that there were managed children in the just
+						-- finished loop.
+					new_y := new_y + spacing
+						-- If `max_h' is zero we don't add it to `new_y'.
+					new_y := new_y + max_h
 				end
 				i := i + 1
 			end

@@ -44,7 +44,7 @@ inherit
 		export
 			{NONE} all
 			{EIFNET_EXPORTER} dbg_timer_active, stop_dbg_timer, start_dbg_timer, 
-					lock_and_wait_for_callback, 
+					process_debugger_evaluation, 
 					callback_notification_processing, set_callback_notification_processing,
 					restore_callback_notification_state,
 					notify_debugger
@@ -349,6 +349,7 @@ feature {NONE} -- Logging
 		local
 			st: STRUCTURED_TEXT
 		do
+			jfiat_tools.out_string (Current, m + "%N")
 			if context_output_tool /= Void then
 				create st.make
 				st.add_string (m)
@@ -381,13 +382,18 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			
 		end
 	
+	estudio_callback_event_processing: BOOLEAN
+	
 	estudio_callback_event (cb_id: INTEGER) is
 			-- Callback trigger for processing at end of dotnet callback
+		require else
+			not estudio_callback_event_processing
 		local
 			may_stop_on_callback: BOOLEAN
 			s: APPLICATION_STATUS
 			execution_stopped: BOOLEAN
 		do
+			estudio_callback_event_processing := True
 			debug ("debugger_trace_callback")
 				print ("<" + generator + ".estudio_callback_event>%N")
 				print ("  ::Callback [" + managed_callback_name (cb_id) + "]. %N")
@@ -451,22 +457,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			debug ("debugger_trace_callback")
 				print ("</" + generator + ".estudio_callback_event>%N")
 			end
-		end
-		
-	ask_if_break_on_first_chance_exception: BOOLEAN is
-		require
-			exception_occurred
-		local
-			dlg: EV_MESSAGE_DIALOG
-			t: STRING
-		do
-			t := "First chance exception occurred : %N"
-			t.append_string (exception_message)
-			create dlg.make_with_text (t)
-			dlg.set_title ("Exception occurred : First chance")
-			dlg.set_buttons (<<"Break", "Continue">>)
-			dlg.show_modal_to_window (application.debugger_manager.debugging_window.window)
-			Result := dlg.selected_button.is_equal ("Break")
+
+			estudio_callback_event_processing := False
 		end
 
 	consume_managed_callback_info (cb_id: INTEGER) is
@@ -508,7 +500,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					io.put_string ("  error = " + (r & 0x0FFFF).to_hex_string + "%N")
 				end
 				r := dbg_cb_info_integer_item (4) -- dw_error
-				context_output_message ("BreakpointSetError occurred : error = " + (r & 0x0FFFF).to_hex_string )
+				context_output_message (" -> BreakpointSetError occurred : error = " + (r & 0x0FFFF).to_hex_string )
 				dbgsync_cb_without_stopping := True
 			when Cst_managed_cb_control_ctrap then
 					--| p_process
@@ -584,9 +576,9 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					--| unhandled /= 1 --> FALSE
 				p := dbg_cb_info_pointer_item (4) -- pExceptionValue
 				set_last_exception_by_pointer (p)
-				if eifnet_debugger_info.last_exception_is_handled then
-					dbgsync_cb_without_stopping := not ask_if_break_on_first_chance_exception
-				end
+--				if eifnet_debugger_info.last_exception_is_handled then
+--					dbgsync_cb_without_stopping := not ask_if_break_on_first_chance_exception
+--				end
 			when Cst_managed_cb_exit_app_domain then
 					--| p_process, p_app_domain
 				p := dbg_cb_info_pointer_item (1) -- p_process
@@ -634,7 +626,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
 					end
 					Eifnet_debugger_info.register_new_module (l_module)
-					context_output_message ("Loading module : " + l_module.module_name)
+					context_output_message (" -> module : " + l_module.module_name)
 				end
 				
 			when Cst_managed_cb_log_message then

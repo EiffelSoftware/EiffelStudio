@@ -437,7 +437,7 @@ feature {NONE}
 				end
 			else			
 					--| And we wait for all callback to be finished
-				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (eifnet_debugger.icor_debug_controller)
 				if 
 					eifnet_debugger.last_managed_callback_is_exception 
 				then
@@ -478,7 +478,7 @@ feature {NONE}
 				end
 			else
 					--| And we wait for all callback to be finished
-				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.process_debugger_evaluation (eifnet_debugger.icor_debug_controller)
 				lmcb := eifnet_debugger.last_managed_callback
 				if 
 					eifnet_debugger.managed_callback_is_exception (lmcb)

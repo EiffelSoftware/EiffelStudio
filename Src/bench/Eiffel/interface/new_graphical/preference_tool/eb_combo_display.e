@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (par)
 			Create combo_box.make (Current)
-			combo_box.set_expand (False)
+			set_child_expandable (combo_box, False)
 			Create resources.make
 		end
 

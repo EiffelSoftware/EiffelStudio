@@ -118,15 +118,15 @@ feature -- Basic operations
 				temp_descriptor := db_spec.new_descriptor
 				if immediate_execution then
 					handle.status.set (db_spec.pre_immediate (temp_descriptor, 0))
-					handle.status.set (db_spec.exec_immediate (temp_descriptor, tmp_string))
+					db_spec.exec_immediate (temp_descriptor, tmp_string)
 				else
-					handle.status.set (db_spec.init_order (temp_descriptor, tmp_string))
+					db_spec.init_order (temp_descriptor, tmp_string)
 					if is_ok then
-						handle.status.set (db_spec.start_order (temp_descriptor))
+						db_spec.start_order (temp_descriptor)
 					end
-				--	if is_ok then
-						handle.status.set (db_spec.terminate_order (temp_descriptor))
-				--	end
+					if is_ok then
+						db_spec.terminate_order (temp_descriptor)
+					end
 				end
 			end
 

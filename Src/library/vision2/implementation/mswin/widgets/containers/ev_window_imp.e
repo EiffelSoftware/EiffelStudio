@@ -87,7 +87,6 @@ inherit
 			on_kill_focus,
 			background_brush,
 			on_draw_item,
-			on_accelerator_command,
 			on_set_cursor,
 			window_process_message,
 			on_color_control,
@@ -288,7 +287,7 @@ feature -- Element change
 		do
 			maximum_width := value
 			if value < width then
-		--		request_resize (value, height)
+				wel_resize (value, height)
 			end
 		end
 
@@ -299,7 +298,7 @@ feature -- Element change
 		do
 			maximum_height := value
 			if value < height then
-		--		request_resize (width, value)
+				wel_resize (width, value)
 			end
 		end
 
@@ -423,52 +422,6 @@ feature {NONE} -- Implementation
 			sbi.menu_item_clicked (menu_id)
 		end
 
-feature -- Event - command association
-
---|FIXME	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the window is closed.
---|FIXME		do
---|FIXME			add_command (Cmd_close, cmd, arg)
---|FIXME		end
-
---|FIXME	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the window is resized.
---|FIXME		do
---|FIXME			add_command (Cmd_size, cmd, arg)
---|FIXME		end
-
---|FIXME	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the widget is resized.
---|FIXME		do
---|FIXME			add_command (Cmd_move, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_close_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the window is closed.
---|FIXME		do
---|FIXME			remove_command (Cmd_close)
---|FIXME		end
-
---|FIXME	remove_resize_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the window is resized.
---|FIXME		do
---|FIXME			remove_command (Cmd_size)
---|FIXME		end
-
---|FIXME	remove_move_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the widget is resized.
---|FIXME		do
---|FIXME			remove_command (Cmd_move)
---|FIXME		end
-
 feature -- Assertion features
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
@@ -491,7 +444,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
 			if value > width then
-		--		request_resize (value, height)
+				wel_resize (value, height)
 			end
 		end
 
@@ -502,7 +455,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
 			if value > height then
-		--		request_resize (width, value)
+				wel_resize (width, value)
 			end
 		end
 
@@ -900,6 +853,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/21 02:29:39  brendel
+--| Removed old command code.
+--|
 --| Revision 1.31  2000/03/17 18:22:23  rogers
 --| The following features are now also exported to EV_WIDGET_IMP: title_height, frame_height, frame_width, border_width.
 --|

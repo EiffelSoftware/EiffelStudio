@@ -20,7 +20,7 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\..\samples\vision2\widgets"
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\widgets"
 
 	library base:		"$ISE_EIFFEL\library\base"
 		exclude

@@ -143,6 +143,12 @@
 			<li>In <span class="eclass">WEL_TREE_VIEW</span>, calling <span class="efeature">deselect_item</span> will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
 			<li>In <span class="eclass">WEL_REGISTRY</span>, <span class="efeature">open_value_key</span> will now accept an empty 
             string so that the default key value can be read.</li>
+			<li>Fixed issue with <span class="efeature">dword_value</span> in <span class="eclass">WEL_REGISTRY_KEY_VALUE</span> 
+            which returned incorrect values.</li>
+			<li>Made <span class="efeature">make</span> in <span class="eclass">WEL_REGISTRY_KEY_VALUE</span> accepts 
+            only string values, if you want to create a new instance with a 
+            value of a different type you need to use the new creation 
+            procedure <span class="efeature">make_with_value</span>.</li>
         </ul>
         <h3>.NET libraries</h3>
         <ul>

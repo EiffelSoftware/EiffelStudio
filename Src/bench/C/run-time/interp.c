@@ -1,4 +1,4 @@
-/*
+k*
 
 	#    #    #   #####  ######  #####   #####            ####
 	#    ##   #     #    #       #    #  #    #          #    #
@@ -3500,7 +3500,7 @@ null:
 /*
  * Invariant checking
  */
-char *inv_mark_table;	/* Marking table to avoid checking the same
+char *inv_mark_table = (char *) 0;	/* Marking table to avoid checking the same
 									 * invariant several times
 									 */ /* %%ss mt */
 #endif /* EIF_THREADS */

@@ -114,11 +114,11 @@ feature -- Generation
 			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				local_copy := Current
 				nb := i + start
 				entry_item := local_copy.item (i)
 				if entry_item /= Void then

@@ -21,10 +21,8 @@ inherit
 		export
 			{NONE} all
 		end;
+	SHARED_GENERATION_CONSTANTS
 
-
-
-	
 feature 
 
 	generated_file: INDENT_FILE is

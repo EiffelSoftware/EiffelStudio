@@ -188,7 +188,8 @@ feature -- IL code generation
 		do
 			if System.il_generation then
 				il_ext ?= extension
-				Result := need_current (il_ext.type)
+					-- It can either be a C externals or an IL static external
+				Result := il_ext = Void or else need_current (il_ext.type)
 			else
 				Result := False
 			end

@@ -10,6 +10,7 @@ class EDITOR_MGR
 inherit
 
 	GRAPHICS;
+	WINDOWS
 
 feature -- Initialization
 
@@ -134,11 +135,39 @@ feature {WINDOW_MGR} -- Properties
 			if not active_editors.after then
 				Result := active_editors.item
 			else
-				Result := editor
+				Result := top_shell_editor
 			end
 		end;
 
-	editor: like editor_type is
+	form_d_editor: like editor_type is
+		local
+			mp: MOUSE_PTR;
+			ed: BAR_AND_TEXT;
+			fd: EB_FORM_DIALOG
+		do
+			!! mp.set_watch_cursor;
+			!! fd.make ("", Project_tool);
+			ed := shell_editor (fd);
+			fd.set_title (ed.tool_name);
+			Result ?= ed;
+			mp.restore;
+		end;
+
+	top_shell_editor: like editor_type is
+		local
+			mp: MOUSE_PTR;
+			ed: BAR_AND_TEXT;
+			ts: EB_TOP_SHELL
+		do
+			!! mp.set_watch_cursor;
+			!! ts.make ("", Project_tool.screen);
+			ed := shell_editor (ts);
+			ts.set_title (ed.tool_name);
+			Result ?= ed
+			mp.restore;
+		end;
+
+	shell_editor (a_parent: EB_SHELL): like editor_type is
 			-- Creates new editor. (Either creates one or
 			-- retrieves one from the free_list).
 		local
@@ -150,13 +179,11 @@ feature {WINDOW_MGR} -- Properties
 				free_list.start;
 				Result := free_list.item;
 				Result.set_default_position;
-				Result.text_window.set_tab_length_to_default; 
-				Result.text_window.set_font_to_default; 
+				Result.text_window.set_tab_length_to_default;
+				Result.text_window.set_font_to_default;
 				free_list.remove;
 			else
-				!! mp.set_watch_cursor;
-				!! Result.make (screen);
-				mp.restore;
+				!! Result.make_shell (a_parent);
 			end;
 			active_editors.extend (Result);
 		end;
@@ -195,7 +222,7 @@ feature {WINDOW_MGR} -- Implementation
 			loop
 				ed := active_editors.item;
 				ed.show;
-				ed.set_x_y (ed.x, ed.y);
+				ed.set_x_y (ed.eb_shell.x, ed.eb_shell.y);
 				active_editors.forth
 			end
 		end;
@@ -209,10 +236,10 @@ feature {WINDOW_MGR} -- Implementation
 			if
 				not active_editors.after
 			then
-				ed.hide;
-				ed.reset;
+				ed.close;
 				active_editors.remove;
 				if free_list.count >= free_list_max then
+print("First destroy:%N")
 					ed.destroy
 				else
 					free_list.extend (ed)
@@ -220,10 +247,11 @@ feature {WINDOW_MGR} -- Implementation
 			else
 					--| Should never happen but this is ultra
 					--| safe programming.
-				ed.hide;
-				ed.reset;
+				ed.close;
 				ed.unregister_holes;
-				ed.destroy;
+				if ed.is_a_shell then
+					ed.destroy
+				end
 			end;
 		end;
 

@@ -34,7 +34,7 @@ inherit
 
 creation
 
-	make
+	make_shell
 
 feature -- Properties
 
@@ -195,11 +195,13 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	build_widgets is
 		do
-			set_default_size;
+			if eb_shell /= Void then
+				set_default_size
+			end;
 			if tabs_disabled then
-				!! text_window.make (new_name, global_form, Current);
+				!! text_window.make (new_name, Current, Current);
 			else
-				!SYSTEM_TAB_TEXT! text_window.make (new_name, global_form, Current);
+				!SYSTEM_TAB_TEXT! text_window.make (new_name, Current, Current);
 			end;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
@@ -316,13 +318,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			command_bar.attach_bottom_widget (shell_button, case_storage_button, 10)
 		end;
 
-feature {NONE} -- Attributes
+feature {WINDOWS} -- Attributes
 
 	tool_name: STRING is
 			-- Name of the tool representwed by Current.
 		do
 			Result := l_System
 		end;
+
+feature {NONE} -- Attributes
 
 	editable:BOOLEAN is True;
 			-- Is Current editable?

@@ -10,8 +10,6 @@ class EXPLAIN_W
 inherit
 
 	BAR_AND_TEXT
-		rename
-			make as normal_create
 		redefine
 			text_window, build_format_bar, 
 			tool_name, build_text_window, hole, stone_type, 
@@ -20,10 +18,8 @@ inherit
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole_button,
-			tool_name, make, build_text_window, 
+			tool_name, build_text_window, 
 			hole, stone_type, process_any, build_menus
-		select
-			make
 		end;
 
 creation
@@ -32,10 +28,10 @@ creation
 
 feature -- Creation
 
-	make (a_screen: SCREEN) is
+	make (a_shell: EB_SHELL) is
 			-- Create a explain window tool
 		do
-			normal_create (a_screen);
+			make_shell (a_shell);
 			text_window.set_read_only
 		end;
 
@@ -83,9 +79,9 @@ feature -- Graphical Interface
 			-- the tabulation mecanism is disable or not
 		do
 			if tabs_disabled then
-				!! text_window.make (new_name, global_form, Current)
+				!! text_window.make (new_name, Current, Current)
 			else
-				!EXPLAIN_TAB_TEXT! text_window.make (new_name, global_form, Current)
+				!EXPLAIN_TAB_TEXT! text_window.make (new_name, Current, Current)
 			end
 		end;
 

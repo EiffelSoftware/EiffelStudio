@@ -41,25 +41,25 @@ feature -- Properties
 	routine_window: ROUTINE_W is
 			-- Make a routine window 
 		do
-			Result := routine_win_mgr.editor
+			Result := routine_win_mgr.top_shell_editor
 		end;
 
 	class_window: CLASS_W is
 			-- Make a class window 
 		do
-			Result := class_win_mgr.editor
+			Result := class_win_mgr.top_shell_editor
 		end;
 
-	object_window: OBJECT_W is
+	dialog_object_window: OBJECT_W is
 			-- Make an object window
 		do
-			Result := object_win_mgr.editor
+			Result := object_win_mgr.form_d_editor
 		end;
 
 	explain_window: EXPLAIN_W is
 			-- Create a context editor
 		do
-			Result := explain_win_mgr.editor
+			Result := explain_win_mgr.top_shell_editor
 		end;
 
 	class_windows_count: INTEGER is

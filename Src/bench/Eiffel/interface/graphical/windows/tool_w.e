@@ -20,9 +20,26 @@ inherit
 			target as text_window
 		export
 			{ANY} receive
-		end
+		end;
+	CLOSEABLE
 
 feature -- Window Properties
+
+	is_a_shell: BOOLEAN is
+			-- Is Current part of a shell?
+		do
+			Result := eb_shell /= Void
+		end;
+
+	eb_shell: EB_SHELL is
+			-- Shell representing Current
+		deferred
+		end;
+
+	global_form: FORM is
+			-- Form representing Current
+		deferred
+		end;
 
 	history: STONE_HISTORY;
 			-- History list for Current.
@@ -82,15 +99,7 @@ feature -- Window Implementation
 	display is
 			-- Display tool.
 		do
-			if realized then
-				if not shown then
-					show
-				else
-					raise
-				end
-			else
-				realize
-			end
+			eb_shell.display
 		end;
 
 	realize is
@@ -110,11 +119,15 @@ feature -- Window Implementation
 
 	destroy is
 			-- Destroy the window.
+		require
+			is_a_shell: is_a_shell
 		deferred
 		end;
 
 	hide is
 			-- Hide Current from the screen.
+		require
+			is_a_shell: is_a_shell
 		deferred
 		end
 
@@ -122,6 +135,13 @@ feature -- Window Implementation
 			-- Close the related windows.
 			-- Used for popping down.
 		deferred
+		end;
+
+	close is
+			-- Close Current.
+		do
+			hide;
+			reset
 		end;
 
 feature -- Window settings
@@ -208,7 +228,11 @@ feature -- Update
 				f ?= text_window.last_format.associated_command;
 				old_do_format := f.do_format;
 				f.set_do_format (true);
-				f.execute (history.item);
+				if history.item.origin_text /= Void then
+					f.execute (history.item)
+				else
+					f.execute (stone)
+				end;
 				f.set_do_format (old_do_format)
 			else
 					-- The root stone is not valid anymore.
@@ -248,7 +272,9 @@ feature -- Pick and Throw Implementation
 	unregister_holes is
 			-- Unregister holes.
 		do
-			unregister;
+			if is_a_shell then
+				unregister
+			end
 		ensure
 			current_unregistered: not registered
 		end;
@@ -270,9 +296,10 @@ feature {NONE} -- Implementation
 			then
 				last_confirmer.raise
 			elseif
-				name_chooser.is_popped_up
+				last_name_chooser /= Void and then
+				last_name_chooser.is_popped_up
 			then
-				name_chooser.raise
+				last_name_chooser.raise
 			else
 				window_manager.class_win_mgr.raise_shell_popup
 			end

@@ -48,6 +48,11 @@ feature -- Error messages
 			"%%X is not a valid file name.";
 	Invalid_feature_name_er: STRING is 
 			"%%X is not a valid feature name.";
+	Invalid_state_name_er: STRING is 
+			"%%X is not a valid state name (identifier).";
+	Label_name_clash_er: STRING is
+			"There is a label with the same name from inherited class.%N%%X";
+	Empty_project_name_er: STRING is "You must specify a project name !";
 	Eb_project_not_exists_er: STRING is 
 			"Project directory :%N %%X does not exist!";
 	Not_eb_project_er: STRING is 
@@ -56,6 +61,7 @@ feature -- Error messages
 	Remove_parent_er: STRING is "Cannot remove parent for predefined command!";
 	Retrieve_er: STRING is 
 			"Cannot retrieve application from directory %N%%X";
+	State_name_exists_er: STRING is "State with name %%X already exists!";
 	Update_text_er: STRING is
 			"Could not update file:%N %%X";
 	Write_dir_er: STRING  is "Cannot write to directory%N%%X";

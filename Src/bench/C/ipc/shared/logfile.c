@@ -193,14 +193,10 @@ char *where;
 	extern char *sys_errlist[];				/* Maps error code to string */
 #endif
 
-#ifdef HAS_STRERROR
-	sprintf(where, "%s", strerror(errno));
-#else
-#ifdef HAS_SYS_ERRLIST
-	sprintf(where, "%s", strerror(errno));	/* Macro defined by Configure */
+#if defined HAS_STRERROR || defined HAS_SYS_ERRLIST
+	sprintf(where, "%s", Strerror(errno));
 #else
 	sprintf(where, "error #%d", errno);
-#endif
 #endif
 
 	return strlen(where);		/* FIXME */

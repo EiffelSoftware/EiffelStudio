@@ -4889,6 +4889,7 @@ rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
 	 * Return the arena value (bottom of stack).
 	 */
 
+	EIF_GET_CONTEXT
 	register2 struct item *arena;		/* Address for the arena */
 	register3 struct stochunk *chunk;	/* Address of the chunk */
 
@@ -4910,6 +4911,7 @@ rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
 	chunk->sk_prev = (struct stochunk *) 0;
 
 	return arena;			/* Stack allocated */
+	EIF_END_GET_CONTEXT
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one
@@ -5111,6 +5113,7 @@ rt_public struct item *otop(EIF_CONTEXT_NOARG)
 	 * stack has been created).
 	 */
 	
+	EIF_GET_CONTEXT
 	register1 struct item *last_item;		/* Address of last item stored */
 	register2 struct stochunk *prev;		/* Previous chunk in stack */
 
@@ -5129,6 +5132,7 @@ rt_public struct item *otop(EIF_CONTEXT_NOARG)
 #endif
 	
 	return prev->sk_end - 1;			/* Last item of previous chunk */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private struct item *oitem(EIF_CONTEXT uint32 n)
@@ -5138,6 +5142,7 @@ rt_private struct item *oitem(EIF_CONTEXT uint32 n)
 	 * stack has been created).
 	 */
 	
+	EIF_GET_CONTEXT
 	register1 struct item *last_item;		/* Address of last item stored */
 	register2 struct stochunk *prev;		/* Previous chunk in stack */
 
@@ -5155,6 +5160,7 @@ rt_private struct item *oitem(EIF_CONTEXT uint32 n)
 #endif
 
 	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void stack_truncate(EIF_CONTEXT_NOARG)
@@ -5164,6 +5170,7 @@ rt_private void stack_truncate(EIF_CONTEXT_NOARG)
 	 * next one. Otherwise, we skip the next chunk and free the remainder.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 struct item *top;		/* The current top of the stack */
 	struct stochunk *next;			/* Address of next chunk */
 
@@ -5182,6 +5189,7 @@ rt_private void stack_truncate(EIF_CONTEXT_NOARG)
 			wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void wipe_out(register struct stochunk *chunk)

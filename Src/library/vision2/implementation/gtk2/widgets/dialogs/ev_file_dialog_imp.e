@@ -89,7 +89,24 @@ feature -- Access
 	selected_filter_index: INTEGER is
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
+		local
+			a_current_filter, a_filter_list: POINTER
+			i: INTEGER
 		do
+			a_current_filter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filter (c_object)
+			a_filter_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
+			if a_current_filter /= NULL and then a_filter_list /= NULL then
+				from
+					i := 0
+				until
+					feature {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i) = a_current_filter
+				loop
+					i := i + 1
+				end
+				feature {EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
+				Result := i + 1
+			end
+			
 		end
 
 	start_directory: STRING

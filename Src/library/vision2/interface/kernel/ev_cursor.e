@@ -19,7 +19,8 @@ inherit
 
 create
 	default_create,
-	make_with_code
+	make_with_code,
+	make_with_pixmap
 
 feature {NONE} -- Initialization
 
@@ -27,6 +28,12 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_code (a_code)
+		end
+
+	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+		do
+			default_create
+			set_pixmap (a_pixmap)
 		end
 
 feature -- Access
@@ -111,6 +118,9 @@ end -- class EV_CURSOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/15 22:47:20  king
+--| Implemented a make_with_pixmap creation procedure
+--|
 --| Revision 1.6  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

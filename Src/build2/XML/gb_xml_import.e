@@ -175,9 +175,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			a_display_object: GB_DISPLAY_OBJECT
 		do
 			an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
-			an_object.window_selector_item.unparent
-			parent_common_item.add_alphabetically (an_object.window_selector_item)
-			parent_common_item.expand
 			from
 				window.start
 			until
@@ -206,6 +203,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							end
 							an_object.modify_from_xml (current_element)
 							object_handler.add_object_to_objects (an_object)
+							an_object.window_selector_item.unparent
+							parent_common_item.add_alphabetically (an_object.window_selector_item)
+							parent_common_item.expand
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
@@ -620,6 +620,7 @@ feature {NONE} -- Implementation
 
 				-- Update all names in `window_selector' to ensure that
 				-- they are current after the load.
+				--| FIXME why is this needed?
 			Window_selector.update_displayed_names
 			
 				-- Build any constants that were deferred.

@@ -470,6 +470,8 @@ end;
 				else
 					parser := Eiffel_parser
 					parser.set_has_syntax_warning (False)
+					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
+					parser.set_has_old_verbatim_strings_warning (False)
 					parser.parse (file)
 					Result := parser.root_node
 					file.close

@@ -453,6 +453,68 @@ feature -- SystemParameter (Windows 98, Windows 2000 and above)
 	Spi_setcaretwidth: INTEGER is 8199
 			-- Declared in Windows as SPI_SETCARETWIDTH
 
+feature -- SystemParameter (Windows XP and above)
+
+	Spi_getmousesonar: INTEGER is 4124
+			-- Declared in Windows as SPI_GETMOUSESONAR
+
+	Spi_setmousesonar: INTEGER is 4125
+			-- Declared in Windows as SPI_SETMOUSESONAR
+
+	Spi_getmouseclicklock: INTEGER is 4126
+			-- Declared in Windows as SPI_GETMOUSECLICKLOCK
+
+	Spi_setmouseclicklock: INTEGER is 4127
+			-- Declared in Windows as SPI_SETMOUSECLICKLOCK
+
+	Spi_getmousevanish: INTEGER is 4128
+			-- Declared in Windows as SPI_GETMOUSEVANISH
+
+	Spi_setmousevanish: INTEGER is 4129
+			-- Declared in Windows as SPI_SETMOUSEVANISH
+
+	Spi_getflatmenu: INTEGER is 4130
+			-- Declared in Windows as SPI_GETFLATMENU
+
+	Spi_setflatmenu: INTEGER is 4131
+			-- Declared in Windows as SPI_SETFLATMENU
+
+	Spi_getdropshadow: INTEGER is 4132
+			-- Declared in Windows as SPI_GETDROPSHADOW
+
+	Spi_setdropshadow: INTEGER is 4133
+			-- Declared in Windows as SPI_SETDROPSHADOW
+
+	Spi_getmouseclicklocktime: INTEGER is 8200
+			-- Declared in Windows as SPI_GETMOUSECLICKLOCKTIME
+
+	Spi_setmouseclicklocktime: INTEGER is 8201
+			-- Declared in Windows as SPI_SETMOUSECLICKLOCKTIME
+
+	Spi_getfontsmoothingtype: INTEGER is 8202
+			-- Declared in Windows as SPI_GETFONTSMOOTHINGTYPE
+
+	Spi_setfontsmoothingtype: INTEGER is 8203
+			-- Declared in Windows as SPI_SETFONTSMOOTHINGTYPE
+
+	Spi_getfontsmoothingcontrast: INTEGER is 8204
+			-- Declared in Windows as SPI_GETFONTSMOOTHINGCONTRAST
+
+	Spi_setfontsmoothingcontrast: INTEGER is 8205
+			-- Declared in Windows as SPI_SETFONTSMOOTHINGCONTRAST
+
+	Spi_getfocusborderwidth: INTEGER is 8206
+			-- Declared in Windows as SPI_GETFOCUSBORDERWIDTH
+
+	Spi_setfocusborderwidth: INTEGER is 8207
+			-- Declared in Windows as SPI_SETFOCUSBORDERWIDTH
+
+	Spi_getfocusborderheight: INTEGER is 8208
+			-- Declared in Windows as SPI_GETFOCUSBORDERHEIGHT
+
+	Spi_setfocusborderheight: INTEGER is 8209
+			-- Declared in Windows as SPI_SETFOCUSBORDERHEIGHT
+
 feature -- SystemParameterInfo Flags (all Windows)
 
 	Spif_updateinifile: INTEGER is 1

@@ -14,7 +14,8 @@ inherit
 			set_width, set_height,
 			real_x, real_y,
 			realize,
-			unrealize, realized
+			unrealize, realized,
+			raise, lower
 		end
 
 
@@ -32,6 +33,21 @@ feature
 		end;
 
 	top_shell: TOP_SHELL;
+
+	raise is 
+		do
+			top_shell.raise;
+		end
+
+	lower is
+		do
+			top_shell.lower;
+		end;
+
+	parent_shell: TOP_SHELL is
+		do
+			Result := top_shell;
+		end;
 
 	title: STRING is
 		do
@@ -57,6 +73,8 @@ feature
 		do
 			Result := top_shell.icon_name
 		end;
+
+
 
 	set_icon_name (a_name: STRING) is
 		do

@@ -31,44 +31,6 @@ inherit
 		end;
 	ERROR_POPUPER
 
-feature {NONE}
-
-	Windows_directory: STRING is
-		once
-			Result := Generated_directory;
-			Result.append ("/Windows");
-		end;
-
-	States_directory: STRING is
-		once
-			Result := Generated_directory;
-			Result.append ("/State");
-		end;
-
-	Context_directory: STRING is 
-		once
-			Result := Generated_directory;
-			Result.append ("/Widgets");
-		end;
-
-	Group_directory: STRING is 
-		once
-			Result := Generated_directory;
-			Result.append ("/Groups");
-		end;
-
-	Command_directory: STRING is
-		once
-			Result := Generated_directory;
-			Result.append ("/Commands");
-		end;
-
-	Application_directory: STRING is
-		once
-			Result := Generated_directory;
-			Result.append ("/Application");
-		end;
-
 feature 
 
 	rescued: BOOLEAN;
@@ -158,35 +120,37 @@ feature
 				-- ===========================
 				-- Command classes generation.
 				-- ===========================
-			from
-				user_cmds := command_catalog.user_commands;
-				user_cmds.start
-			until
-				user_cmds.after
-			loop
-				cmd_list := user_cmds.item;
-				from
-					cmd_list.start
-				until
-					cmd_list.after
-				loop
-					cmd := cmd_list.item;
-					!!doc;
-					doc.set_directory_name (Command_directory);
-					doc.set_document_name (cmd.eiffel_type);
-					temp := clone (cmd.eiffel_text);
-					if temp.item (1) /= '-' and cmd.label /= Void 
-					  and then not cmd.label.empty then
-						temp.prepend ("%N");
-						temp.prepend (cmd.label);
-						temp.prepend ("-- ");
-					end;
-					doc.update (temp);
-					doc := Void;
-					cmd_list.forth
-				end;
-				user_cmds.forth;
-			end;
+				--now done from command editor
+				-- every time the command is changed
+			--from
+				--user_cmds := command_catalog.user_commands;
+			--	user_cmds.start
+			--until
+			--	user_cmds.after
+			--loop
+			--	cmd_list := user_cmds.item;
+			--	from
+			--		cmd_list.start
+			--	until
+			--		cmd_list.after
+			--	loop
+			----		cmd := cmd_list.item;
+			--		!!doc;
+			--		doc.set_directory_name (Command_directory);
+			--		doc.set_document_name (cmd.eiffel_type);
+			--		temp := clone (cmd.eiffel_text);
+			--		if temp.item (1) /= '-' and cmd.label /= Void 
+			--		  and then not cmd.label.empty then
+			----			temp.prepend ("%N");
+			--			temp.prepend (cmd.label);
+			--			temp.prepend ("-- ");
+			--		end;
+			--		doc.update (temp);
+			--		doc := Void;
+			--		cmd_list.forth
+			--	end;
+			--	user_cmds.forth;
+			--end;
 				
 				-- =========================
 				-- Windows class generation.
@@ -326,7 +290,7 @@ feature {NONE}
 				if temp_w_context = Void then
 					Result.append ("application_screen"); 
 				else
-					Result.append (temp_w_context.popup_parent.entity_name);
+					Result.append (temp_w_context.parent.entity_name);
 				end;
 				Result.append (");%N%T%Tend;%N%N"); 
 				window_list.forth;

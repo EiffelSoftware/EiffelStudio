@@ -67,11 +67,11 @@ feature {NONE}
 	cursor_file_content (fn: STRING): SCREEN_CURSOR is
 		local
 			temp: PIXMAP;
-            full_path: STRING
+			full_path: STRING
 		do
-            full_path := Bitmaps_directory;
-            full_path.append ("/");
-            full_path.append (fn);
+			full_path := Bitmaps_directory;
+			full_path.append ("/");
+			full_path.append (fn);
 			!!Result.make;
 			!!temp.make;
 			temp.read_from_file (full_path);

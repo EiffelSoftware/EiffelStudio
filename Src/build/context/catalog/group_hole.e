@@ -53,12 +53,15 @@ feature {NONE}
 			a_context: CONTEXT;
 			menu_c: MENU_C;
 			menu_pull_c: MENU_PULL_C;
+			a_group_c: GROUP_C;
 		do
 			a_context := stone.original_stone;
 			menu_c ?= a_context;
 			menu_pull_c ?= a_context;
+			a_group_c ?= a_context;
 			if not a_context.is_root and then (menu_c = Void)
 				and then (menu_pull_c = Void)
+				and then ((a_group_c = Void) or else (a_group_c.grouped))
 				and then not a_context.parent.is_in_a_group then
 				set_symbol (a_context.symbol);
 			else
@@ -74,6 +77,7 @@ feature {NONE}
 			found: BOOLEAN;
 			a_name: STRING;
 			mp: MOUSE_PTR
+			a_group_c: GROUP_C;
 		do
 			a_name := argument.text;
 			a_name.to_lower;
@@ -99,8 +103,11 @@ feature {NONE}
 						!!context_group.make;
 						context_group.put_right (a_context);
 					end;
-					!!new_group.make (a_name, context_group);
-					set_symbol (Context_pixmap);
+					a_group_c ?= a_context;
+					if a_group_c = Void or else context_group.count /= 1 then
+						!!new_group.make (a_name, context_group);
+						set_symbol (Context_pixmap);
+					end;
 					argument.set_text ("");
 					stone := Void;
 					mp.restore

@@ -3,6 +3,10 @@
 class STORER 
 
 inherit
+	MEMORY
+		export
+			{NONE} all
+		end;
 
 	STORAGE_INFO
 		export
@@ -126,7 +130,10 @@ feature
 			fn: STRING;	
 			c: STATE_CIRCLE;
 			a_context: CONTEXT;
+			old_gc_status: BOOLEAN;
 		do
+			old_gc_status := collecting;
+			collection_off;
 			for_save.set_value (True);
 			clear_all;
 				fn := clone (file_name);
@@ -187,6 +194,9 @@ feature
 			end;
 			clear_uneeded;
 			for_save.set_value (False);
+			if old_gc_status then
+				collection_on;
+			end;
 		end;
 
 	display_retrieved_windows is

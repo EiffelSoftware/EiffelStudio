@@ -12,17 +12,21 @@ inherit
 		end;
 
 	PULLDOWN_C
+		rename
+			context_initialization as pull_context_initialization
 		redefine
-			stored_node, real_y, real_x, 
+			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, option_list, widget, 
 			remove_widget_callbacks, initialize_transport, add_widget_callbacks
 		end;
 
 	PULLDOWN_C
 		redefine
-			stored_node, real_y, real_x, 
+			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, option_list, widget, 
 			remove_widget_callbacks, initialize_transport, add_widget_callbacks
+		select
+			context_initialization
 		end;
 
 feature 
@@ -61,6 +65,24 @@ feature {NONE}
 	
 feature 
 
+	caption_modified: BOOLEAN;
+
+	caption: STRING is
+		do
+			Result := widget.caption;
+		end;
+
+	context_initialization (context_name: STRING): STRING is
+		do
+			!!Result.make (0);
+			if caption_modified then
+				function_string_to_string (Result, context_name, "set_caption", caption);
+			else
+				function_string_to_string (Result, context_name, "set_caption", "");
+			end;
+			Result.append (pull_context_initialization (context_name));
+		end
+	
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make (entity_name, a_parent);

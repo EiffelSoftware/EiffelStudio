@@ -16,24 +16,23 @@ inherit
 			copy_attributes as old_copy_attributes,
 			cut as old_cut,
 			undo_cut as old_undo_cut,
-			create_context as window_create_context,
-			retrieve_oui_widget as window_retrieve_oui_widget,
-			import_oui_widget as window_import_oui_widget
+			create_context as window_create_context
 		redefine
 			show, hide, stored_node, widget,
 			context_initialization, 
-			position_initialization
+			position_initialization, shown,
+			realize
 		end;
 
 	WINDOW_C
 		redefine
 			show, hide, stored_node, widget, 
 			copy_attributes, context_initialization, option_list,
-			cut, undo_cut, create_context, retrieve_oui_widget,
-			import_oui_widget, position_initialization
+			cut, undo_cut, create_context, position_initialization,
+			shown, realize
 		select
 			option_list, copy_attributes, cut, undo_cut,
-			create_context, retrieve_oui_widget, import_oui_widget
+			create_context
 		end
 
 
@@ -48,25 +47,37 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, main_panel.base);
+			!!widget.make (entity_name, a_parent);
 			widget.set_default_position (False);
 			disable_resize_policy (False);
 			widget_set_title (entity_name);
-			set_size (300, 300);
+			widget.set_size (300, 300);
 			set_default_pixmap;
 			add_window_geometry_action;
 		end;
 
 	add_window_geometry_action is 
 		do
-			widget.set_action ("<Configure>", Current, Fourth);
+			widget.set_parent_action ("<Configure>", Current, Fourth);
 		 end;
 
 	remove_window_geometry_action is 
 		do
-			widget.remove_action ("<Configure>");
+			widget.remove_parent_action ("<Configure>");
  		end;
 
+		
+	skip_configure_action is
+		do
+			remove_window_geometry_action;
+			widget.set_parent_action ("<Configure>", Current, Fifth);
+		end;
+
+	skip_two_configure_action is
+		do
+			remove_window_geometry_action;
+			widget.set_parent_action ("<Configure>", Current, Sixth);
+		end;
 
 	widget: TEMP_WIND;
 
@@ -80,12 +91,6 @@ feature
 			widget.popdown;
 		end;
 
-	popup_parent: COMPOSITE_C;
-
-	set_popup_parent (c: COMPOSITE_C) is
-		do
-			popup_parent := c;
-		end;
 
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
@@ -95,38 +100,17 @@ feature
 		do
 			Result := New;
 			Result.link_to_parent;
+			Result.set_parent (a_parent);
 			Result.generate_internal_name;
-			Result.oui_create (void_parent);
+			Result.oui_create (a_parent.widget);
 			if not (widget = Void) then
 				Result.set_size (width, height);
 				copy_attributes (Result);
 			end;
 			!!create_command;
 			create_command.execute (Result);
-			Result.set_popup_parent (a_parent);
 		end;
 
-	retrieve_oui_widget is
-		local
-			parent_context: COMPOSITE_c;
-			temp_node: S_TEMP_WIND;
-		do
-			temp_node ?= retrieved_node;
-			parent_context := find_parent (temp_node.parent_name);
-			set_popup_parent (parent_context);
-			window_retrieve_oui_widget;
-		end;
-
-	import_oui_widget (group_table: INT_H_TABLE [INTEGER]) is
-		local
-			parent_context: COMPOSITE_c;
-			temp_node: S_TEMP_WIND;
-		do
-			temp_node ?= retrieved_node;
-			window_import_oui_widget (group_table);
-			parent_context := find_parent (temp_node.parent_name);
-			set_popup_parent (parent_context);
-		end;
 
 feature {NONE}
 
@@ -193,6 +177,7 @@ feature
 
 	undo_cut is
 		do
+			skip_configure_action;
 			widget.show;
 			old_undo_cut;
 		end;
@@ -205,6 +190,17 @@ feature
 	show is
 		do
 			widget.popup
+		end;
+
+	shown: BOOLEAN is
+		do
+			Result := widget.is_poped_up;
+		end;
+
+	realize is
+			-- This is a do end as temp windows are realized
+			-- when the parent perm window is realized
+		do
 		end;
 
 

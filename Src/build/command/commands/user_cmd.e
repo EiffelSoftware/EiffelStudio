@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end;
 	NAMABLE;
-	ERROR_POPUPER
+	ERROR_POPUPER;
 
 creation
 
@@ -88,7 +88,7 @@ feature -- Stone
 
 	label: STRING is
 		do
-			if not (visual_name = Void) then
+			if  visual_name /= Void then
 				Result := visual_name
 			else
 				Result := eiffel_type
@@ -404,13 +404,15 @@ feature  -- Generation
 			-- Template of the Eiffel
 			-- command.
 		local
-			parent_name: STRING;
+			parent_name, temp: STRING;
 			inherited_args: LINKED_LIST [STRING];
 			found: BOOLEAN;
 		do
 			!!Result.make (0);
 			Result.append ("class ");
-			Result.append (eiffel_type);
+			temp := clone (eiffel_type);
+			temp.to_upper;
+			Result.append (temp);
 			if visual_name /= Void and then not visual_name.empty then
 				Result.append ("%T%T-- ");
 				Result.append (visual_name);
@@ -659,7 +661,9 @@ feature -- Text generation
 			-- Update edited eiffel text by applying
 			-- a `diff3' between the current edited text
 			-- the previous template and the new template.
+			-- Then update class text
 		local
+			doc: EB_DOCUMENT;
 			merger: MERGER;
 			temp: STRING;
 			mp: MOUSE_PTR;
@@ -675,13 +679,34 @@ feature -- Text generation
 				end;
 				!!merger;
 				temp := merger.integrate (temp, old_template, template);
-				if edited then
-					command_editor.text_editor.set_text ("");
-					command_editor.text_editor.append (temp);
+				if temp = Void then
+					!!msg.make (0);
+					msg.append ("System call failed%N");
+					msg.append ("%NCould not update ");
+					msg.append (label);
+					msg.append (" text");
+					error_box.popup (Current, msg)
+				else
+					if edited then
+						command_editor.text_editor.set_text ("");
+						command_editor.text_editor.append (temp);
+					end;
+					old_template := Void;
+					eiffel_text := temp;
+					!!doc;
+					doc.set_directory_name (Command_directory);
+					doc.set_document_name (eiffel_type);
+					temp := clone (eiffel_text);
+					if temp.item (1) /= '-' and label /= Void 
+					  and then not label.empty then
+						temp.prepend ("%N");
+						temp.prepend (label);
+						temp.prepend ("-- ");
+					end;
+					doc.update (temp);
+					doc := Void;
+					mp.restore
 				end;
-				old_template := Void;
-				eiffel_text := temp;
-				mp.restore
 			else
 				rescued := False;
 				!!msg.make (0);
@@ -704,5 +729,46 @@ feature -- Text generation
 			old_template := template
 		end;
 
-end
-	
+
+	remove_class is	
+		local
+			class_file: UNIX_FILE;
+			file_name, temp: STRING;
+		do
+			!!file_name.make(50);
+			file_name.append (Command_directory);
+			file_name.append ("/");
+			temp := clone (eiffel_type);
+			temp.to_lower;
+			file_name.append (temp);
+			file_name.append (".e");
+			!!class_file.make (file_name);
+			if class_file.exists then
+				class_file.delete;
+			end;
+		end;
+
+	recreate_class is		
+		local
+			class_file: UNIX_FILE;
+			file_name, temp: STRING;
+		do
+			!!file_name.make(50);
+			file_name.append (Command_directory);
+			file_name.append ("/");
+			temp := clone (eiffel_type);
+			temp.to_lower;
+			file_name.append (temp);
+			file_name.append (".e");
+			!!class_file.make (file_name);
+			if not class_file.exists then
+				class_file.open_binary_write;
+				class_file.putstring (eiffel_text);
+				class_file.close;
+			end;
+		end;
+
+
+
+
+end -- class USER_CMD

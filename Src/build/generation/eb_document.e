@@ -8,6 +8,10 @@ inherit
 			{NONE} all
 		end;
 
+	WINDOWS;
+
+	ERROR_POPUPER
+
 
 
 	
@@ -57,7 +61,7 @@ feature
 			new_template_file_name: STRING;
 			file: UNIX_FILE;
 			unix_command: STRING;
-			temp: ANY
+			msg: STRING;
 		do
 			template_file_name := clone (Template_directory);
 			template_file_name.append ("/");
@@ -83,8 +87,15 @@ feature
 			unix_command.append (" ");
 			unix_command.append (new_template_file_name);
 
-			temp := unix_command.to_c;
-			eb_document_system ($temp);
+			system (unix_command);
+			if return_code /= 0 then
+				!!msg.make (0);
+				msg.append ("System call failed%N");
+				msg.append ("%NCould not update ");
+				msg.append (document_name);
+				msg.append (" text");
+				error_box.popup (Current, msg);
+			end;
 		end;
 
 	updated_text: STRING is
@@ -112,14 +123,5 @@ feature
 
 	end;
 
-
-feature {NONE} -- External features
-
-	eb_document_system (cmd: ANY) is
-		external
-			"C"
-		alias
-			"system"
-		end; -- eb_document_system
 	
 end	

@@ -57,7 +57,7 @@ feature
 				!!text.make (0);
 				text.append ("Item");
 				text.append (to_string (i));
-				widget.add_right (text);
+				widget.put_right (text);
 				i := i + 1;
 				widget.forth;
 			end;

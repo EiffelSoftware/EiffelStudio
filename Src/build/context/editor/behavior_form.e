@@ -67,7 +67,7 @@ feature
 			!!event_catalog.make ("Event Catalog", Current);
 			!!behavior_editor.make ("Behavior Editor", Current);
 
-			set_fraction_base (5);
+			set_fraction_base(5);
 			attach_top (event_catalog, 0);
 			attach_left (event_catalog, 0);
 			attach_right (event_catalog, 0);

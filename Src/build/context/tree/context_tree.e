@@ -170,7 +170,8 @@ feature
 			add_button_press_action (3, Current, Third);
 			initialize_transport;
 
-			set_action ("~Ctrl<Btn1Down>", Current, select_action);
+			set_action ("<Btn1Down>", Current, select_action);
+			set_action ("Shift<Btn1Down>", Current, Nineth);
 			set_action ("Ctrl<Btn1Down>", Current, Fourth);
 			set_action ("<Key>Left", Current, Fifth);
 			set_action ("<Key>Right", Current, Sixth);
@@ -277,7 +278,8 @@ feature {NONE}
 			a_context: CONTEXT;
 			cmd: ARROW_MOVE_CMD;
 			void_stone: STONE;
-			d_x, d_y: INTEGER
+			d_x, d_y: INTEGER;
+			wind_c: WINDOW_C;
 		do
 			if (argument = Second) then
 					-- Expose event
@@ -309,6 +311,18 @@ feature {NONE}
 						a_context.set_grouped (True);
 					end;
 					display (a_context);
+				elseif (argument = Nineth) then
+					wind_c ?= element.original_stone;
+					if wind_c /= Void  then
+						wind_c.skip_configure_action;
+						if not wind_c.shown then
+							wind_c.skip_two_configure_action;
+							wind_c.show;
+						end;
+						wind_c.raise;
+					else
+						element.original_stone.raise
+					end;
 				else
 					a_context := element.original_stone;
 					if (a_context.parent = Void) or else
@@ -429,7 +443,7 @@ feature {NONE}
 							new_context := context_type.create_context (perm_w_context);
 						else
 							temp_w_context ?= element.original_stone.root;
-							perm_w_context ?= temp_w_context.popup_parent;
+							perm_w_context ?= temp_w_context.parent;
 							if perm_w_context /= Void then	
 								new_context := context_type.create_context (perm_w_context);
 							end;
@@ -445,7 +459,7 @@ feature {NONE}
 							new_context := window_c.create_context (perm_w_context);
 						else
 							temp_w_context ?= element.original_stone.root;
-							perm_w_context ?= temp_w_context.popup_parent;
+							perm_w_context ?= temp_w_context.parent;
 							if perm_w_context /= Void then	
 								new_context := window_c.create_context (perm_w_context);
 							end;

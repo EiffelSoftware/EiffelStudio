@@ -58,7 +58,10 @@ feature {NONE}
 			dropped_context: CONTEXT;
 			window_c: WINDOW_C;
 			a_temp_wind: TEMP_WIND_C;
+			position_x, position_y: INTEGER;
 		do
+			position_x := eb_screen.x;
+			position_y := eb_screen.y
 			old_process_stone;
 			if 
 				not original_stone.is_in_a_group 
@@ -94,7 +97,7 @@ feature {NONE}
 					end;
 				end;
 				if not (a_context = Void) then
-					a_context.set_position (eb_screen.x, eb_screen.y);
+					a_context.set_position (position_x, position_y);
 					a_context.realize;
 					a_temp_wind ?= a_context;
 					if a_temp_wind /= Void then

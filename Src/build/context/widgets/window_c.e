@@ -121,6 +121,7 @@ feature {NONE}
 
 feature 
 
+
 	set_start_hidden (flag: BOOLEAN) is
 		do
 			start_hidden := flag;
@@ -141,6 +142,14 @@ feature
 			else
 				set_title (s);
 			end;
+		end;
+
+	shown: BOOLEAN is
+			-- is the widget shown
+		require
+			valid_widget: widget /= Void;
+		do
+			Result := widget.shown;
 		end;
 
 	is_bulletin: BOOLEAN is
@@ -268,6 +277,15 @@ feature
 		deferred 
 		end;
 	
+	skip_configure_action is
+		deferred
+		end;
+	
+	skip_two_configure_action is
+		deferred
+		end;
+
+
 	execute (argument: like Current) is
 		do
 			if win_cmd = void then
@@ -283,6 +301,10 @@ feature
 				old_width := width;
 				old_height := height;
 				win_cmd.execute (argument);
+			elseif argument = Fifth then
+				add_window_geometry_action;
+			elseif argument = Sixth then
+				skip_configure_action;
 			end;
 		end;
 

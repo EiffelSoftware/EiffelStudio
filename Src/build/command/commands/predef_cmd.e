@@ -41,4 +41,9 @@ feature
 			f.close;
 		end;
 
+
+	remove_class is do end;
+
+	recreate_class is do end;
+
 end

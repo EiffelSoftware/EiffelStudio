@@ -184,9 +184,9 @@ feature
 			history_list.put_right (cmd);
 			history_list.forth;
 			if cmd.n_ame /= Void then
-				list.add_right (cmd.n_ame);
+				list.put_right (cmd.n_ame);
 			else
-				list.add_right ("Unknown command");
+				list.put_right ("Unknown command");
 			end;
 			list.forth;
 			saved_application := False;

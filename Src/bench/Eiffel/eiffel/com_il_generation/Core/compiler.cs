@@ -938,6 +938,8 @@ feature -- Generation Structure
 					}
 					MethodIL.Emit (OpCodes.Call, DefinitionMethod.method_builder);
 					if (Method.has_return_type) {
+							// It is inverted from the parameter has we need to pull the
+							// result from `DefinitionMethod' to match the signature of `Method'.
 						generate_cast (DefinitionMethod.return_type_id, Method.return_type_id);
 					}
 				}
@@ -1010,6 +1012,13 @@ feature -- Generation Structure
 						Method.parameter_type_ids [i]);
 				}
 				MethodIL.Emit (OpCodes.Callvirt, Method.method_builder);
+
+				if (Method.has_return_type) {
+						// It is inverted from the parameter has we need to pull the
+						// result from `Method' to match the signature of `ParentMethod'.
+					generate_cast (Method.return_type_id, ParentMethod.return_type_id);
+				}
+
 				MethodIL.Emit (OpCodes.Ret);
 
 				((TypeBuilder) Classes [CurrentTypeID].Builder).

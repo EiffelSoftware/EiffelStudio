@@ -570,7 +570,8 @@ feature {NONE} -- Implementation
 		%		-- EiffelBase%N%
 		%	all base:						%"$EIFFEL4\library\base%"%N%
 		%		exclude%N%
-		%			%"table_eiffel3%"%N%
+		%			%"table_eiffel3%";%N%
+		%			%"desc%"%N%
 		%		visible%N%
 		%			INTEGER_REF;%N%
 		%			CHARACTER_REF;%N%
@@ -596,8 +597,7 @@ feature {NONE} -- Implementation
 		%	all common:						%"..\common%"%N%N%
 		%external%N%
 		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
-		%			%"$EIFFEL4\library\com\library\include%",%N%
-		%			%"$EIFFEL4\library\com\runtime\include%",%N"
+		%			%"$EIFFEL4\library\com\include%",%N"
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system

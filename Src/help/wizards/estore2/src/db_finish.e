@@ -151,6 +151,7 @@ feature -- Processing
 			create f_name.make_from_string(wizard_information.location)
 			s1 := clone(s)
 			s1.to_lower
+			normalize (s1)
 			f_name.extend(s1)
 			f_name.add_extension("e")
 			create f.make_open_write(f_name)
@@ -199,6 +200,13 @@ feature -- Processing
 			s.replace_substring (new_begin_code, i3 - 2, i3 - 1)
 			s.replace_substring (new_end_code, i4 + new_begin_code.count - 4 , i4 + new_begin_code.count - 3)
 
+		end
+
+	normalize (s: STRING) is
+		do
+			if s.has ('$') then
+				s.replace_substring_all ("$", "")
+			end
 		end
 
 	generate_basic_facade is
@@ -260,10 +268,10 @@ feature -- Processing
 			notify_user ("Importing db_action_dyn ...")
 			copy_class ("db_action_dyn")
 			notify_user ("Importing parameter_hdl ...")
-			copy_file ("parameter_hdl", "e")
+			copy_file ("parameter_hdl", "e", wizard_information.location)
 			if is_odbc then
 				notify_user ("Importing store_odbc.lib ...")
-				copy_file ("odbc_store", "lib")
+				copy_file ("odbc_store", "lib", wizard_information.location)
 			end
 			if wizard_information.example then
 				copy_class("estore_example")
@@ -296,35 +304,6 @@ feature -- Processing
 			f_name.add_extension("e")
 			create fi.make_open_write(f_name)
 			fi.put_string(new_s)
-			fi.close
-		end
-
-	copy_file (name: STRING; extension: STRING) is
-			-- Copy Class whose name is 'name'.
-		require
-			name /= Void
-		local
-			f1,f_name: FILE_NAME
---			fi: PLAIN_TEXT_FILE
-			fi: RAW_FILE
-			s: STRING
-			command: STRING
-		do
---			command := "copy " + wizard_resources_path + "\" + name + "." + extension + " " + wizard_information.location
---			system (command)
-			create f1.make_from_string (wizard_resources_path)
-			f_name := clone (f1)
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_open_read (f_name)
-			fi.read_stream (fi.count)
-			s := fi.last_string
-			fi.close
-			create f_name.make_from_string (wizard_information.location)
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_open_write (f_name)
-			fi.put_string (s)
 			fi.close
 		end
 
@@ -433,28 +412,12 @@ feature -- Processing
 			fi.close
 		end
 
-feature -- Output
-
-	notify_user(s: STRING) is
-			-- Output
-		require
-			not_void: s /= Void
-		do
-			progress_text.set_text(s)
-			iteration := iteration + 1
-			progress.set_proportion(iteration/total)
-		end
 			
 feature -- Implementation
 
-	progress_text: EV_LABEL
-
-	progress: EV_HORIZONTAL_PROGRESS_BAR
 
 	repositories: LINKED_LIST[DB_REPOSITORY]
 		-- Repositories relative to Current DB.
-
-	total,iteration: INTEGER
 
 	to_compile: BOOLEAN
 		-- is the project will be compile ?

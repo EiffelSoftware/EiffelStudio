@@ -26,99 +26,139 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-Wizard_Initial_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+Wizard_Initial_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "EiffelCOM Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,22,247,50,14
-    GROUPBOX        "Location",Location_Static,115,85,65,65
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,5,10,100,145
-    EDITTEXT        Definition_File_Edit,5,185,175,15,ES_AUTOHSCROLL
-    LTEXT           "Definition File",IDL_Static,5,175,100,10
-    PUSHBUTTON      "Browse",Browse_Button,130,170,50,14
-    EDITTEXT        Generate_Edit,5,225,175,15,ES_AUTOHSCROLL
-    LTEXT           "Destination Folder",Generate_Static,5,215,100,10
-    PUSHBUTTON      "Browse",Browse2_Button,130,210,50,14
-    CONTROL         "In Process",In_Process_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,120,100,55,15
-    CONTROL         "Local",Local_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,120,115,55,15
-    CONTROL         "Remote",Remote_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,120,130,55,15
-    PUSHBUTTON      "Help",Help_Button,130,10,50,14
-    GROUPBOX        "Generate",Generate_Code_Static,115,31,65,49
-    CONTROL         "Client",Client_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,119,43,55,16
-    CONTROL         "Server",Server_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,119,58,55,16
+                    SS_SUNKEN,5,5,100,145
+    EDITTEXT        Definition_File_Edit,110,70,175,15,ES_AUTOHSCROLL
+    LTEXT           "Definition File",IDL_Static,110,60,100,10
+    PUSHBUTTON      "Browse",Browse_Button,290,70,50,14
+    EDITTEXT        Generate_Edit,110,136,175,15,ES_AUTOHSCROLL
+    LTEXT           "Destination Folder",Generate_Static,110,126,100,10
+    PUSHBUTTON      "Browse",Browse2_Button,290,135,50,14
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    PUSHBUTTON      "< &Back",IDOK2,130,160,50,14,WS_DISABLED
+    LTEXT           "Paths",Introduction_Static,110,5,230,10
+    LTEXT           "A Definition Files is either an Interface Definition Language (IDL) file or a Type Library (.tlb) file. A type library can be linked to an executable or dll as a resource. Enter the component definition file.",
+                    Paths_Static,110,30,230,25
+    LTEXT           "The destination folder is the folder where the wizard will generate all the files. Enter the destination folder.",
+                    Paths_Static2,110,105,230,20
 END
 
-Wizard_IDL_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+Wizard_PS_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "EiffelCOM Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
-    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
-    CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,5,10,100,145
-    PUSHBUTTON      "Help",Help_Button,130,10,50,14
-    GROUPBOX        "Marshaling",Marshaling2_Static,102,170,78,49,WS_GROUP
-    CONTROL         "Universal",Universal2_Radio,"Button",BS_AUTORADIOBUTTON,
-                    105,185,54,10
-    CONTROL         "Standard",Standard2_Radio,"Button",BS_AUTORADIOBUTTON,
-                    105,198,54,10
-    GROUPBOX        "Server Type",Type2_Static,7,170,78,49,WS_GROUP
-    CONTROL         "Automation",Automation2_Radio,"Button",
-                    BS_AUTORADIOBUTTON,10,185,54,10
-    CONTROL         "Virtual Table",Virtual_Table2_Radio,"Button",
-                    BS_AUTORADIOBUTTON,10,198,54,10
-END
-
-Wizard_PS_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
-    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
-    GROUPBOX        "Marshaling",Marshaling_Static,115,109,65,47
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    GROUPBOX        "Marshaling",Marshaling_Static,110,70,65,47
     CONTROL         116,Wizard3_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,5,10,100,145
-    EDITTEXT        Proxy_Stub_File_Edit,5,185,175,15,ES_AUTOHSCROLL | 
+                    SS_SUNKEN,5,5,100,145
+    EDITTEXT        Proxy_Stub_File_Edit,110,135,175,15,ES_AUTOHSCROLL | 
                     WS_DISABLED
-    LTEXT           "Proxy/Stub",Proxy_Stub_Static,5,175,100,10
-    PUSHBUTTON      "Browse",Browse_Button,130,170,50,14,WS_DISABLED
-    PUSHBUTTON      "Help",Help_Button,130,10,50,14
+    LTEXT           "Proxy/Stub",Proxy_Stub_Static,110,125,100,10
+    PUSHBUTTON      "Browse",Browse_Button,290,135,50,14,WS_DISABLED
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
     CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
-                    117,124,55,10
+                    115,86,55,10
     CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    117,138,55,10
+                    115,99,55,10
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    LTEXT           "Marshalling",Introduction_Static,110,5,230,10
+    LTEXT           "Marshalling defines how data is passed between components. Universal marshalling is built in Windows while Standard marshalling requires a proxy/stub dll.",
+                    Marshalling_Static,110,20,230,25
+    LTEXT           "Choose between Universal or Standard marshalling and enter the path to the proxy/stub dll if you have chosen Standard marshalling.",
+                    Marshalling2_Static,110,50,230,20
 END
 
-Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+Wizard_IDL_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "EiffelCOM Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Generate",IDOK,115,247,50,14
-    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
-    GROUPBOX        "Output Level",Output_level_Static,115,99,65,57
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,5,100,145
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    GROUPBOX        "Marshaling",Marshaling2_Static,145,105,75,45,WS_GROUP
+    CONTROL         "Universal",Universal2_Radio,"Button",BS_AUTORADIOBUTTON,
+                    155,121,54,10
+    CONTROL         "Standard",Standard2_Radio,"Button",BS_AUTORADIOBUTTON,
+                    155,135,54,10
+    GROUPBOX        "Server Type",Type2_Static,231,105,74,45,WS_GROUP
+    CONTROL         "Automation",Automation2_Radio,"Button",
+                    BS_AUTORADIOBUTTON,239,121,54,10
+    CONTROL         "Virtual Table",Virtual_Table2_Radio,"Button",
+                    BS_AUTORADIOBUTTON,239,135,54,10
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    LTEXT           "Marshalling",Introduction_Static,110,5,230,10
+    LTEXT           "Marshalling defines how data is passed between components. Universal marshalling is built in Windows while Standard marshalling uses the proxy/stub dll compiled from the files generated when processing the IDL definition file.",
+                    Marshalling_Static,110,30,230,35
+    LTEXT           "Components can be accessed either through Automation or directly through their interfaces virtual table. Choose how the component you are wrapping or creating should be accessed.",
+                    Marshalling2_Static,110,70,230,30
+END
+
+Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Finish",IDOK,180,160,50,14
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    GROUPBOX        "Output Level",Output_level_Static,115,60,65,57
     CONTROL         117,Wizard4_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,5,10,100,145
-    PUSHBUTTON      "Help",Help_Button,130,10,50,14
-    CONTROL         "Maximum",Maximum_Radio,"Button",BS_AUTORADIOBUTTON,119,
-                    114,55,10
+                    SS_SUNKEN,5,5,100,145
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    CONTROL         "Maximum",Maximum_Radio,"Button",BS_AUTORADIOBUTTON,121,
+                    76,55,10
     CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    119,127,55,10
-    CONTROL         "Minimum",Minimum_Radio,"Button",BS_AUTORADIOBUTTON,119,
-                    140,55,10
-    CTEXT           "A summary of all generated classes will be available in the file ""generated.txt""",
-                    Final_Static2,24,182,134,20
-    CTEXT           "Ready to start generation.",Final_Static,23,169,137,14
+                    121,90,55,10
+    CONTROL         "Minimum",Minimum_Radio,"Button",BS_AUTORADIOBUTTON,121,
+                    105,55,10
+    LTEXT           "A summary of all the generated classes will be available in the file ""generated.txt""",
+                    Output2_Static,110,125,139,20
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    LTEXT           "Output",Introduction_Static,110,5,230,10
+    LTEXT           "The wizard will display information on the generation process in real time. Minimum output will only display errors messages. Standard output will display both errors and warnings messages. Maximum output will display information messages as well.",
+                    Output_Static,110,20,230,40
+END
+
+Wizard_Introduction_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    GROUPBOX        "Location",Location_Static,230,90,65,60
+    CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,5,100,145
+    CONTROL         "In Process",In_Process_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,240,105,50,15
+    CONTROL         "Local",Local_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,240,120,50,15
+    CONTROL         "Remote",Remote_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,240,135,50,15
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    GROUPBOX        "Component",Generate_Code_Static,150,90,65,49
+    CONTROL         "Client",Client_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,160,105,51,16
+    CONTROL         "Server",Server_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,160,121,51,16
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
+    CTEXT           "Welcome to the EiffelCOM wizard",Introduction_Static,
+                    110,5,230,10
+    LTEXT           "The wizard can generate code for using a component (client) or creating a new one (server). ",
+                    Introduction2_Static,110,25,230,20
+    LTEXT           "The component can be a dll (in-process) or a standard executable (local or remote). The wizard can generate code for multiple locations.",
+                    Introduction3_Static,110,55,230,25
 END
 
 
@@ -133,33 +173,41 @@ BEGIN
     Wizard_Initial_Dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 180
+        RIGHTMARGIN, 340
         TOPMARGIN, 7
-        BOTTOMMARGIN, 267
-    END
-
-    Wizard_IDL_Dialog, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 180
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 267
+        BOTTOMMARGIN, 174
     END
 
     Wizard_PS_Dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 180
+        RIGHTMARGIN, 340
         TOPMARGIN, 7
-        BOTTOMMARGIN, 267
+        BOTTOMMARGIN, 174
+    END
+
+    Wizard_IDL_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 340
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
     END
 
     Wizard_Final_Dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 180
+        RIGHTMARGIN, 340
         TOPMARGIN, 7
-        BOTTOMMARGIN, 267
+        BOTTOMMARGIN, 174
+    END
+
+    Wizard_Introduction_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 340
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -201,6 +249,7 @@ Wizard1_Bitmap          BITMAP  DISCARDABLE     "Wizard1.bmp"
 Wizard2_Bitmap          BITMAP  DISCARDABLE     "Wizard2.bmp"
 Wizard3_Bitmap          BITMAP  DISCARDABLE     "Wizard3.bmp"
 Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
+Wizard_Icon             BITMAP  DISCARDABLE     "Wizard.ico"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -210,7 +259,7 @@ Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -225,14 +274,18 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
+            VALUE "Comments", "\0"
             VALUE "CompanyName", "Interactive Software Engineering Inc.\0"
-            VALUE "FileDescription", "Wizard Application\0"
+            VALUE "FileDescription", "EiffelCOM Wizard Application\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "Wizard\0"
-            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "InternalName", "EiffelCOM Wizard\0"
+            VALUE "LegalCopyright", "Copyright © 1999 Interactive Software Engineering Inc.\0"
+            VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "Wizard.rc\0"
-            VALUE "ProductName", "Interactive Software Engineering Inc. Wizard Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Interactive Software Engineering Inc. EiffelCOM Wizard Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 2\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"

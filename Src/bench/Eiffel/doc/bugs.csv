@@ -46,7 +46,7 @@ Editor,,,,,,,,,,
 Debugger,,,,,,,,,,
 ,3,2,"There are sometimes 2 breakpoints at the same line, which causes strange behaviors",,Xavier,Xavier,1,test,DBG0001,11/16/2001
 ,3,2,Implement a deferred feature without preconditions in a descendant and add a precondition => breakpoints are messed up,,Xavier,,,,DBG0002,11/16/2001
-,5,2,t: EV_TREE_ITEM; n: EV_TREE_NODE; create t; n?=t.item => crash at run-time,,Xavier,,,,DBG0003,11/16/2001
+,5,2,t: EV_TREE_ITEM; n: EV_TREE_NODE; create t; n?=t.item => crash at run-time,,Xavier,Xavier,1,closed,DBG0003,11/16/2001
 ,5,2,"Freeze, run, cancel, end freeze, run => EiffelStudio is frozen",,Julian,,,,DBG0004,11/16/2001
 
 

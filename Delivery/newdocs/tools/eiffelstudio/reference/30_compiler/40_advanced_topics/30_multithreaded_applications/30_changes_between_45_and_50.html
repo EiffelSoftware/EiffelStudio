@@ -1,0 +1,53 @@
+<HTML>
+	<HEAD>
+		<TITLE>Once features in multithreaded mode</TITLE>
+		<META NAME="MS-HKWD" CONTENT="multithreaded systems and onces">
+		<META NAME="MS-HKWD" CONTENT="onces and multithreaded systems">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+
+<h1>Changes between 4.5 and 5.0</h1>
+
+
+<p>Users of EiffelThread in 4.5 will notice a few changes that we made to make
+their life easier.</p>
+
+
+<p>&nbsp;</p>
+
+
+<h2><a name="object_sharing">Object sharing</a></h2>
+<p>&nbsp;Indeed one aspect of EiffelThread in 4.5 that was not easy to implement
+was object sharing between threads. Most of the difficulty came from our special
+implementation of the ISE GC (Garbage Collector) where each thread had its own
+GC.</p>
+<p>A consequence was that an object in thread A referencing an object in thread
+B needed to let the GC of B that it had a reference to an object that belongs to
+him. This was done by using the PROXY class and instead of referencing the
+object directly you were referencing the PROXY object. Another limitation of
+this approach was that the referred object could not hold reference to other
+objects, it could only hold values of basic expanded types (also previously
+called flat objects)</p>
+<p>Now, there is a global GC and therefore you do not need to use the PROXY
+class anymore and you can reference any kind of objects. The PROXY class is
+still available for backward compatibility, but it is now obsolete and its
+implementation has been reduced to a bare minimum.</p>
+<p>The class OBJECT_CONTROL has been removed altogether and the class
+OBJECT_OWNER is now obsolete as well.</p>
+
+
+<p>&nbsp;</p>
+<h2><a name="global_onces">Global onces</a></h2>
+<p>In 4.5, you would have to use a special tricky way to create once per process
+feature by using an existing once per thread feature and an external C feature
+that we were providing to achieve a once per process behavior.</p>
+<p>In 5.0, this has been simplified and you can now specify at the level of the
+source code if it will be a once per process or once per thread. Click <a href="20_once_features.html">here</a>
+for more details on how this is done.</p>
+
+
+</body>
+
+</html>

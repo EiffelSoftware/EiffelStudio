@@ -28,25 +28,14 @@ has been already computed in this thread. If not, the once feature will be
 initialized and computed. This seems to be a relevant way of managing once
 features in multithreaded mode: most of the time, a once called in a thread&nbsp;is
 not likely to share its result.
-<p>Besides, for reasons we do not want to detail here, current implementation
-of threads with a non once per thread implementation would require to
-encapsulate each once feature, which could be called by several threads, in
-a proxy.
-<p>That would mean heavy signatures in thread creation procedures and inelegant
-lines of code. However, in some case, we need to share once features.
+<p> However, in some case, we need to share once features.
 <p>Moreover, an Eiffel programmer should be able to have an alternative between
 a once per thread or per process implementation.
 <h2><a name="using_once_per_process_thread">Using Once per process/thread
 features in EIFFEL</a></h2>
-<p>Keeping the default management of the once features in EIFFEL,&nbsp;a once
-per process could be implemented by calling the external&nbsp;C function 'eif_global_function'
-as described below:
-<pre>	<SPAN class="ekeyword">class</SPAN>
+<p>Here is what you will do to implement a once per process feature:<pre>	<SPAN class="ekeyword">class</SPAN>
 		<SPAN class="eclass">TEST_ONCE_PER_PROCESS</SPAN>
 
-	<SPAN class="ekeyword">inherit</SPAN>
-		<SPAN class="eclass">ONCE_CONTROL</SPAN> <SPAN class="ecomment">-- contains global_once_function</SPAN>
-		...
 	<SPAN class="ekeyword">feature</SPAN>
 	
 		<SPAN class="efeature">object_per_thread</SPAN>: <SPAN class="eclass">OBJECT</SPAN> <SPAN class="ekeyword">is</SPAN>
@@ -58,97 +47,16 @@ as described below:
 		<SPAN class="efeature">object_per_process</SPAN>: <SPAN class="eclass">OBJECT</SPAN> <SPAN class="ekeyword">is</SPAN>
 				<SPAN class="ecomment">-- New 'object' (once per process)</SPAN>
 				<SPAN class="ecomment">-- that could be shared between threads</SPAN>
-				<SPAN class="ecomment">-- without reinitializing it.</SPAN>
+				<SPAN class="ecomment">-- without reinitializing it.
+			indexing
+				once_status: global</SPAN>
 			<SPAN class="ekeyword">once</SPAN>
-				<SPAN class="ekeyword">Result</SPAN> ?= <SPAN class="efeature">global_once_function</SPAN> (<SPAN class="ekeyword">Current</SPAN>, $<SPAN class="efeature">object_per_thread</SPAN>)
+				create Result.make
 			<SPAN class="ekeyword">end</SPAN>
-			
-		...
 
 	<SPAN class="ekeyword">end</SPAN> <SPAN class="ecomment">-- class TEST_ONCE_PER_PROCESS</SPAN>
 
-	<SPAN class="ekeyword">class</SPAN>
-		<SPAN class="eclass">ONCE_CONTROL</SPAN>
-		...
-	<SPAN class="ekeyword">feature</SPAN>
-
-		<SPAN class="efeature">global_once_function</SPAN> (Currt: <SPAN class="eclass">ANY</SPAN>; once_func: <SPAN class="eclass">POINTER</SPAN>): <SPAN class="eclass">ANY</SPAN> <SPAN class="ekeyword">is</SPAN>
-				<SPAN class="ecomment">-- Return the result of the once feature</SPAN>
-				<SPAN class="ecomment">-- pointed by 'once_func' which will be</SPAN>
-				<SPAN class="ecomment">-- evaluated once per process.</SPAN>
-			<SPAN class="ekeyword">external</SPAN>
-				&quot;C | %&quot;eif_once.h%&quot;&quot;
-			<SPAN class="ekeyword">alias</SPAN>
-				&quot;eif_global_function&quot;
-			<SPAN class="ekeyword">end</SPAN>
-		...
-
-	<SPAN class="ekeyword">end</SPAN> <SPAN class="ecomment">-- class ONCE_CONTROL</SPAN></pre>
-<p>Note that object_per_thread is passed through a pointer so as&nbsp;not to
-be computed once more, at the first call in a new thread.
-<p>We admit that passing 'Current' as a formal argument of global_once&nbsp;is
-not very elegant, but this is necessary to evaluate 'object_per_thread'.
-<p>In the same way, there is a once_per_process procedure mechanism:
-<pre> 	<SPAN class="efeature">procedure_per_process</SPAN> <SPAN class="ekeyword">is</SPAN>
-		<SPAN class="ekeyword">once</SPAN>
- 			<SPAN class="efeature">global_once_procedure</SPAN> (<SPAN class="efeature">Current</SPAN>, $<SPAN class="efeature">procedure_per_thread</SPAN>)
- 		<SPAN class="ekeyword">end</SPAN>
-
- 	<SPAN class="efeature">procedure_per_thread</SPAN> <SPAN class="ekeyword">is</SPAN>
- 		<SPAN class="ekeyword">once</SPAN>
- 			<SPAN class="ecomment">-- do something...</SPAN>
- 		<SPAN class="ekeyword">end</SPAN>
 </pre>
-in class <SPAN class="eclass">ONCE_CONTROL</SPAN>:
-<pre> 	...
-	<SPAN class="efeature">global_once_procedure</SPAN> (Currt: <SPAN class="eclass">ANY</SPAN>; once_proc: <SPAN class="eclass">POINTER</SPAN>) <SPAN class="ekeyword">is</SPAN>
- 		<SPAN class="ekeyword">external</SPAN>
- 			&quot;C | %&quot;eif_once.h%&quot;&quot;
- 		<SPAN class="ekeyword">alias</SPAN>
- 			&quot;eif_global_procedure&quot;&nbsp;
- 		<SPAN class="ekeyword">end</SPAN>
-
- 	...
-
-</pre>
-<h2><a name="limitations">Limitations</a></h2>
-<p>At the moment, you must call the once_per_process for the first&nbsp;time in
-the process in the root_thread. If you did it in a thread,&nbsp;it will work
-until this thread dies (because it will reclaim&nbsp;the once_per_process object
-that belongs to its private memory).&nbsp;
-<p>Such as the proxy objects, your once per process function must return a flat
-Eiffel object (no subreferences in it).
-<p>Using interwoven once per process functions could cause a deadlock (the once
-per process table is protected by a mutex: if you call a once per process in
-another once per process&nbsp;for the first time in a process or a thread, this
-will raise a deadlock. This can happen in some tricky situation.
-<p>Ex: Do not write:
-<pre>	<SPAN class="efeature">my_opp1</SPAN>: <SPAN class="eclass">A_TYPE</SPAN> <SPAN class="ekeyword">is</SPAN>
-		<SPAN class="ekeyword">once</SPAN>
-			<SPAN class="ekeyword">Result</SPAN> ?= <SPAN class="efeature">global_function</SPAN> (<SPAN class="ekeyword">Current</SPAN>, $<SPAN class="efeature">my_oppt</SPAN>)
-			<SPAN class="ecomment">-- lock access to</SPAN>
-			<SPAN class="ecomment">-- the once per process functions table</SPAN>
-		<SPAN class="ekeyword">end</SPAN>
-
-	<SPAN class="efeature">my oppt</SPAN>: <SPAN class="eclass">A_TYPE</SPAN> <SPAN class="ekeyword">is</SPAN>
-		<SPAN class="ekeyword">once</SPAN>
-			<SPAN class="ekeyword">create</SPAN> <SPAN class="ekeyword">Result</SPAN>.<SPAN class="efeature">make</SPAN> (<SPAN class="efeature">my_opp2</SPAN>)
-		<SPAN class="ekeyword">end</SPAN>
-
-
-	<SPAN class="efeature">my_opp2</SPAN>: <SPAN class="eclass">A_TYPE2</SPAN> <SPAN class="ekeyword">is</SPAN>
-		<SPAN class="ekeyword">once</SPAN>
-			<SPAN class="ekeyword">global_once</SPAN> (<SPAN class="ekeyword">Current</SPAN>, $<SPAN class="efeature">my_opt2</SPAN>)
-			<SPAN class="ecomment">-- will fail in attempting to lock the once</SPAN>
-			<SPAN class="ecomment">-- per process functions table</SPAN>
-		<SPAN class="ekeyword">end</SPAN>
-
-	<SPAN class="efeature">my_opt2</SPAN>: <SPAN class="eclass">A_TYPE2</SPAN> <SPAN class="ekeyword">is</SPAN>
-		<SPAN class="ekeyword">once</SPAN>
-			<SPAN class="ekeyword">create</SPAN> <SPAN class="ekeyword">Result</SPAN>.<SPAN class="efeature">make</SPAN>
-		<SPAN class="ekeyword">end</SPAN></pre>
-<p class="note"><b>Note</b>: Nevertheless, you can call on once per process procedure in
-a once per process function and vice versa since they do not lock
-the same once per process table.</p>
+<pre>You can do the same with once procedures.</pre>
 </BODY>
 </HTML>

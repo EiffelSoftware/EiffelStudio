@@ -219,6 +219,7 @@ feature -- Inlining
 			nested_b: NESTED_B
 			inlined_current_b: INLINED_CURRENT_B
 			access: like target
+			access_expr_b: ACCESS_EXPR_B
 		do
 			if parent /= Void then
 				Result := Current
@@ -226,11 +227,13 @@ feature -- Inlining
 					-- First call
 				access := target;
 
+				access_expr_b ?= access;
 				if
 					access.is_argument or else
 					access.is_local or else
 					access.is_result or else
-					access.is_current
+					access.is_current or else
+					access_expr_b /= Void
 				then
 						-- `pre_inlined_code' in the target will take
 						-- care of the special byte code

@@ -46,10 +46,10 @@ feature -- Access
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
+			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
-			item_selected: selected
+--			item_selected: selected
 		deferred
 		end
 
@@ -61,7 +61,7 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		require
 			exists: not destroyed
-			item_selected: selected
+--			item_selected: selected
 		deferred
 		end
 
@@ -128,16 +128,8 @@ feature -- Element change
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when an item is
-			-- selected.
+			-- Make `command' executed when the selection has
+			-- changed.
 		require
 			exists: not destroyed
 		deferred

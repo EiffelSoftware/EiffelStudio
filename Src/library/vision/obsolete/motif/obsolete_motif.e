@@ -10,7 +10,8 @@ class OBSOLETE_MOTIF
 
 inherit
 
-	MOTIF
+	MOTIF;
+	OBSOLETE_TOOLKIT
 	
 creation
 	make

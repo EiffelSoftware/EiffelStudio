@@ -21,7 +21,6 @@ feature -- Initialization
 			-- Initialize Current.
 		do
 			precursor
---			Object_resources.add_user (Current)
 		end
 
 

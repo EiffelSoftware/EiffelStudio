@@ -39,7 +39,6 @@ feature -- Initialization
 				realize_current
 				realize_children
 				set_enclosing_size
-				show
 			end
 		end
 

@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			if attributes_local.is_selected then
 				project_settings.set_attributes_locality (True_string)
 			else
-				project_settings.set_attributes_locality (Optimal_string)
+				project_settings.set_attributes_locality (False_optimal_string)
 			end
 		end
 		

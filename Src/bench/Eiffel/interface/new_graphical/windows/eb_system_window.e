@@ -159,15 +159,23 @@ feature -- Content initialization
 		local
 			is_incorrect: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
+			l_file_name: STRING
+			l_file: PLAIN_TEXT_FILE
 		do
-			if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
-				has_content := True
+			l_file_name := Eiffel_ace.file_name
+			if Workbench.system_defined or else l_file_name /= Void then
+				create l_file.make (l_file_name)
+				if l_file.exists and then l_file.is_readable then
+					has_content := True
 
-					-- Create a new freshly parsed AST. If there is a
-					-- syntax error during parsing of chose Ace file,
-					-- we open an empty window.
-				root_ast := Eiffel_ace.Lace.parsed_ast
-				if root_ast = Void then
+						-- Create a new freshly parsed AST. If there is a
+						-- syntax error during parsing of chose Ace file,
+						-- we open an empty window.
+					root_ast := Eiffel_ace.Lace.parsed_ast
+					if root_ast = Void then
+						is_incorrect := True
+					end
+				else
 					is_incorrect := True
 				end
 			else

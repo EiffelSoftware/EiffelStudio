@@ -14,6 +14,9 @@ inherit
 	LINKED_LIST [STRING]
 
 	STORABLE
+		undefine
+			is_equal, copy
+		end
 
 create
 

@@ -451,8 +451,6 @@ feature -- Status setting
 			mode_set: mode = rop2
 		end
 
-feature -- Status setting
-
 	select_palette (a_palette: WEL_PALETTE) is
 			-- Select the `a_palette' as the current palette.
 		require
@@ -795,6 +793,7 @@ feature -- Basic operations
 			bit_blt (x, y, width, height, bitmap_dc, 0, 0, Srccopy)
 			bitmap_dc.unselect_bitmap
 			bitmap_dc.unselect_palette
+			bitmap_dc.delete
 		end
 
 	draw_icon (icon: WEL_ICON; x, y: INTEGER) is
@@ -1066,6 +1065,19 @@ feature -- Basic operations
 		do
 			cwin_pat_blt (item, x_destination, y_destination,
 				width, height, raster_operation)
+		end
+
+feature -- Removal
+
+	delete is
+			-- Delete the current device context.
+		require
+			exists: exists
+		do
+			cwin_delete_dc (item)
+			item := default_pointer
+		ensure
+			not_exists: not exists
 		end
 
 feature {NONE} -- Implementation

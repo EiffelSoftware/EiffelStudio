@@ -548,9 +548,6 @@ feature {NONE} -- Initialization
 				-- Build the editor tool
 			create editor_tool.make (Current, right_panel)
 			bottom_tools.extend (editor_tool.explorer_bar_item)
-			create show_cmd.make (Current, editor_tool.explorer_bar_item)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
 			editor_tool.text_area.add_edition_observer(save_cmd)
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
 			editor_tool.text_area.add_edition_observer(print_cmd)

@@ -19,10 +19,10 @@ feature -- Status setting
 			-- Set both `button' and `menu_entry'
 			-- to be selected or not, according to `flag'.
 		do
-			if button /= Void then
+			if button /= Void and then (button.is_selected /= flag) then
 				button.set_selected (flag)
 			end
-			if menu_item /= Void then
+			if menu_item /= Void and then (menu_item.is_selected /= flag) then
 				menu_item.set_selected (flag)
 			end
 		end

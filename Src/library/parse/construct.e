@@ -233,7 +233,10 @@ feature {NONE} -- Implementation
 			if not production.is_empty then
 				production.go_i_th (child_index + 1)
 				if not production.after then
-					n := clone (production.item)
+					n := production.item
+					if n /= Void then
+						n := n.twin
+					end
 					put_component (n)
 				else
 					child_finish
@@ -267,7 +270,7 @@ feature {NONE} -- Implementation
 		local
 			s2 : STRING
 		do  
-			s2 := clone (s)
+			s2 := s.twin
 			s2.append (" in ") 
 			s2.append (construct_name) 
 			if parent /= Void then

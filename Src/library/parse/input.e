@@ -105,7 +105,10 @@ feature  -- Input
 						analyzer.get_token
 					end
 				end;
-				new_token := clone (analyzer.last_token);
+				new_token := analyzer.last_token
+				if new_token /= Void then
+					new_token := new_token.twin
+				end
 				put_right (new_token)
 			end;
 			forth

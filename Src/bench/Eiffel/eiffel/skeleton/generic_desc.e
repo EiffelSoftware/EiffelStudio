@@ -29,9 +29,24 @@ feature
 		do
 			if {ATTR_DESC} Precursor (other) then
 				other_generic ?= other;
-				Result := type.same_as (other_generic.type);
+				Result := (other_generic /= Void) 
+								and then
+						  identical_types (other_generic.type)
 			end;
 		end;
+
+	identical_types (otype : TYPE_I) : BOOLEAN is
+			-- Are `type' and `otype' identical?
+		do
+			if type = Void then
+				Result := (otype = Void)
+			else
+				if otype /= Void then
+					Result := type.is_identical (otype) and then
+							  otype.is_identical (type)
+				end
+			end
+		end
 
 	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is
 			-- Instantiation of the current description in		

@@ -336,7 +336,7 @@ feature -- Status
 			loop
 				expanded_desc ?= current_area.item (i)
 				expanded_skeleton := expanded_desc.class_type.skeleton;
-				buffer.putstring (" + OVERHEAD + ");
+				buffer.putstring (" + OVERHEAD +");
 				expanded_skeleton.generate_size (buffer);
 				i := i + 1;
 			end;
@@ -749,6 +749,33 @@ feature -- Skeleton byte code
 			end;
 		end;
 
+	make_gen_type_byte_code (ba: BYTE_ARRAY) is
+			-- Generate full type array byte code
+		require
+			good_argument: ba /= Void
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+			edesc: EXPANDED_DESC
+		do
+			from
+				current_area := area
+				i := 0
+				nb := count - 1	
+			until
+				i > nb
+			loop
+				edesc ?= current_area.item (i)
+				if edesc /= Void then
+					ba.append_short_integer (1)
+					edesc.make_gen_type_byte_code (ba)
+				else
+					ba.append_short_integer (0)
+				end
+				i := i + 1
+			end;
+		end;
+
 	make_size_byte_code (ba: BYTE_ARRAY) is
 			-- Generate datas for evaluation of the skeleton size
 		do
@@ -817,6 +844,58 @@ feature -- Skeleton byte code
 			loop
 				current_area.item (i).generate_code (buffer);
 				buffer.putstring (",%N");
+				i := i + 1;
+			end;
+			buffer.putstring ("};%N%N");
+		end;
+
+	generate_generic_type_arrays (code : INTEGER) is
+			-- Generate static C arrays of attributes full type codes in the
+			-- skeleton file.
+		require
+			not empty;
+		local
+			buffer: GENERATION_BUFFER
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+			edesc: EXPANDED_DESC
+		do
+			buffer := generation_buffer
+			current_area := area
+
+			from
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				edesc ?= current_area.item (i)
+				if edesc /= Void then
+					edesc.generate_generic_code (buffer, code, i);
+				end
+				i := i + 1;
+			end;
+			buffer.new_line;
+			buffer.putstring ("static int16 *gtypes")
+			buffer.putint (code)
+			buffer.putstring (" [] = {%N")
+
+			from
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				edesc ?= current_area.item (i)
+				if edesc /= Void then
+					buffer.putstring ("g_atype")
+					buffer.putint (code)
+					buffer.putchar ('_')
+					buffer.putint (i)
+				else
+					buffer.putstring ("(int16*)0")
+				end
+				buffer.putstring (",%N")
 				i := i + 1;
 			end;
 			buffer.putstring ("};%N%N");

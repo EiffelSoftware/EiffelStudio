@@ -2763,6 +2763,7 @@ feature -- Actual class type
 				end
 			end
 			Result.set_base_class_id (id)
+			Result.set_is_expanded (is_expanded)
 		end
 		
 	insert_changed_feature (feature_name: STRING) is

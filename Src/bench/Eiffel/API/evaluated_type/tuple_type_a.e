@@ -164,6 +164,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				!!Result
 				Result.set_base_class_id (base_class_id)
 				Result.set_generics (new_generics)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 

@@ -125,6 +125,30 @@ feature
 		deferred
 		end;
 
+	generate_generic_code (buffer: GENERATION_BUFFER; code, idx : INTEGER) is
+			-- Generate full type code for current attribute description in
+			-- `buffer'.
+		require
+			buffer /= Void;
+		do
+			buffer.putstring ("static int16 g_atype")
+			buffer.putint (code)
+			buffer.putchar ('_')
+			buffer.putint (idx)
+			buffer.putstring (" [] = {0,")
+			generate_generic_info (buffer)
+			buffer.putstring ("-1};%N")
+		end;
+
+	generate_generic_info (buffer: GENERATION_BUFFER) is
+			-- Generate type array for current attribute description in
+			-- `buffer'.
+		require
+			buffer /= Void;
+		do
+			-- Nothing by default.
+		end;
+
 	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is
 			-- Instantiation in `class_type' of the current
 			-- attribute description

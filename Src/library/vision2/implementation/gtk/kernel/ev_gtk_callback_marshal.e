@@ -310,15 +310,6 @@ feature {NONE} -- Implementation
 		end
 	
 feature {EV_ANY_IMP} -- Tuple optimizations.
-
-	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
-			-- Retrieve index of switched page.
-		local
-			gtkarg2: POINTER
-		do
-			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
-			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
-		end
 		
 	empty_tuple_tuple: TUPLE is
 		once

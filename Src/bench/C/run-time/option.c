@@ -35,7 +35,9 @@
 #include "eif_tools.h"		/* For hashcode() */
 #include "eif_err_msg.h"
 
-
+#ifndef MAX_PATH
+#define MAX_PATH 255
+#endif
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
@@ -461,7 +463,7 @@ void initprf(void)
 	if(prof_enabled) {
 			/* Get the current working directory, ie the one where we
 			/* are going to save the profile_ouput_file */
-		if ( getcwd(cwd, MAX_PATH) == NULL)
+		if (getcwd(cwd, MAX_PATH) == NULL)
 			print_err_msg(stderr, "Unable to get the current working directory.\n");
 
 			/* Allocate table */

@@ -28,10 +28,18 @@ feature -- Access
 	Days_in_non_leap_year: INTEGER is 365
 				-- Number of days in a non-leap year
 
-	i_th_leap_year (i:INTEGER): BOOLEAN is 
-			-- Is the i-th year a leap year? 
+	i_th_leap_year (i: INTEGER): BOOLEAN is 
+		obsolete "Use `is_leap_year' instead."
+			-- Is the `i'-th year a leap year? 
 		do 
-			Result := (mod (i,4) = 0) and ((mod (i,100) /= 0) or (mod (i,400) = 0)) 
+			Result := is_leap_year (i)
+		end;
+
+	is_leap_year (y: INTEGER): BOOLEAN is 
+			-- Is year `y' a leap year? 
+		do 
+			Result := (mod (y, 4) = 0) and ((mod (y, 100) /= 0) or 
+				(mod (y, 400) = 0)) 
 		end;
 
 	days_in_i_th_month (i, y: INTEGER): INTEGER is 
@@ -41,32 +49,37 @@ feature -- Access
 			i_small_enough: i <= Months_in_year 
 		do 
 			Result := Days_in_months @ i; 
-			if (i = 2 and then i_th_leap_year(y)) then
+			if i = 2 and then is_leap_year (y) then
 				Result := Result + 1 
 			end 
 		end; 
 
 	date_default_format_string: STRING is
+			-- Default output format for dates
 		do
 			Result := date_time_tools.date_default_format_string
 		end
 
 	days_text: ARRAY [STRING] is
+			-- Short text representation of days
 		do
 			Result := date_time_tools.days_text
 		end
 
 	months_text: ARRAY [STRING] is
+			-- Short text representation of months
 		do
 			Result := date_time_tools.months_text
 		end
 
 	long_days_text: ARRAY [STRING] is
+			-- Long text representation of days
 		do
 			Result := date_time_tools.long_days_text
 		end
 
 	long_months_text: ARRAY [STRING] is
+			-- Long text representation of months
 		do
 			Result := date_time_tools.long_months_text
 		end

@@ -121,7 +121,7 @@ rt_private int stream_buffer_position;
 rt_private long stream_buffer_size;
 
 /* Functions to write on the specified IO_MEDIUM */
-rt_private int (char_write) (char *, int);
+rt_public  int (char_write) (char *, int);
 rt_private int (stream_write) (char *, int);
 
 

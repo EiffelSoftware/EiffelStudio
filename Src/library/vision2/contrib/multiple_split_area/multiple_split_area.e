@@ -195,7 +195,6 @@ feature -- Status setting
 			has_widget: linear_representation.has (a_widget) or is_item_external (a_widget)
 			height_positive: a_height >= 0
 		local
-			an_index: INTEGER
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			reset_timer: EV_TIMEOUT
 		do
@@ -325,8 +324,6 @@ feature -- Status setting
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			dialog: MULTIPLE_SPLIT_AREA_DOCKABLE_DIALOG
-			l_all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
-			--temp_holders: ARRAY [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
 		do
 			create holder.make_with_tool (widget, name, Current)
 			holder.set_position_docked_from (position)
@@ -523,7 +520,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			split_area: GB_VERTICAL_SPLIT_AREA
 			current_split_area: EV_SPLIT_AREA
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			iterations: INTEGER
 			cursor: CURSOR
 		do
 			if not rebuilding_locked then
@@ -842,8 +838,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 	restore_stored_positions is
 			-- Restore all positions of splitters from `store_positions'.
-		local
-			split_area: EV_SPLIT_AREA
 		do
 			
 			if not platform_is_windows then
@@ -1377,7 +1371,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			new_position_positive: new_position >= 1 and new_position <= count + 1
 		local
 			real_new_position: INTEGER
-			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			widget: EV_WIDGET
 			original_position: INTEGER
 		do

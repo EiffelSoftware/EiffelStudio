@@ -27,6 +27,38 @@ default
 cluster
 	root_cluster:		"."
 
-	all base:		"$ISE_EIFFEL\library.net\base"
+	base:			"$ISE_EIFFEL\library.net\base"
+	
+	kernel (base):		"$\kernel"
+	
+	properties (base):	"$\properties"
+	
+	structures (base):	"$\structures"
+	
+	access (structures): 	"$\access"
+	
+	cursor (structures): 	"$\cursor"
+		exclude
+			"linked_list_cursor.e";
+		end
+	
+	list (structures): 	"$\list"
+		exclude
+			"linkable.e";
+		end
+	
+	all set (structures): 	"$\set"
+	
+	sort (structures): 	"$\sort"
+	
+	storage (structures):	"$\storage"
+	
+	table (structures):	"$\table"
+	
+	traversing (structures):"$\traversing"
+	
+	tree (structures):	"$\tree"
+	
+	support (base): 	"$\support"
 
 end

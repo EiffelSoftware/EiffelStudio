@@ -130,11 +130,11 @@ feature -- Access
 							pnum_words := pnum_words + 1
 							if not word_counter.contains_key (words.item (word)) then
 								-- If we've never seen this word before, add it to the sorted list with a count of 1
-								word_counter.add (words.item (word), 1)
+								word_counter.extend (words.item (word), 1)
 							else
 								-- If we have seen this word before, just increment its count
 								an_integer ?= word_counter.get_item (words.item (word)) 
-								word_counter.set_item (words.item (word), an_integer + 1)
+								word_counter.put_i_th (words.item (word), an_integer + 1)
 							end
 						end
 						word := word + 1
@@ -160,7 +160,7 @@ feature -- Access
 			description: "Enumerator for the words (sorted alphabetically)"
 			external_name: "WordsAlphabeticallyEnumerator"
 		do
-			Result ?= word_counter.get_enumerator_idictionary_enumerator
+			Result ?= word_counter.get_dictionary_enumerator
 		end
 
 	words_by_occurence_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
@@ -185,9 +185,9 @@ feature -- Access
 				-- to sort WordOccurrence objects by occurrence value and then alphabetically by the word itself.
 				value ?= de.get_value
 				key ?= de.get_key
-				sorted_list.add (create {WORD_OCCURENCE}.make (value, key), Void)
+				sorted_list.extend (create {WORD_OCCURENCE}.make (value, key), Void)
 			end
-			Result := sorted_list.get_enumerator_idictionary_enumerator
+			Result := sorted_list.get_dictionary_enumerator
 		end
 
 	unique_words: INTEGER is

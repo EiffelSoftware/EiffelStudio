@@ -98,7 +98,7 @@ feature -- Basic Operations
 				until
 					i = files.count
 				loop
-					an_integer := pathnames.add (files.item (i).get_full_name)
+					an_integer := pathnames.extend (files.item (i).get_full_name)
 					i := i + 1
 				end
 			end

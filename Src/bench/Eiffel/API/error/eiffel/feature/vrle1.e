@@ -19,7 +19,7 @@ feature
 	build_explain is
 		do
 			put_string ("%T`");
-			feature_i.append_clickable_name (error_window);
+			feature_i.append_clickable_name (error_window, feature_i.written_class);
 			put_string ("' is a feature and cannot be used as a local%N");
 		end;
 

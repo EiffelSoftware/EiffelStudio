@@ -38,7 +38,7 @@ feature
 			class_c.append_clickable_signature (error_window);
 			if feature_i /= Void then
 				put_string ("%NFeature: ");
-				feature_i.append_clickable_name (error_window);
+				feature_i.append_clickable_name (error_window, class_c);
 				new_line;
 			elseif feature_name /= Void then
 				put_string ("%NFeature: ");

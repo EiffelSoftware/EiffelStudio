@@ -1376,6 +1376,8 @@ end;
 			Rep_server.take_control (Tmp_rep_server);
 				-- Just clear the rep info server
 			Tmp_rep_info_server.clear;
+
+			original_body_index_table := Void
 		end;
 
 feature  -- Freeezing

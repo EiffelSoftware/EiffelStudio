@@ -20,7 +20,7 @@ feature
 	print_called_feature is
 		do
 			put_string ("Called feature: `");
-			called_feature.append_clickable_signature (error_window);
+			called_feature.append_clickable_signature (error_window, called_feature.written_class);
 			put_string ("' written in `");
 			called_feature.written_class.append_clickable_name (error_window);
 			put_char ('%'');

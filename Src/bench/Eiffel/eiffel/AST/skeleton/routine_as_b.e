@@ -310,7 +310,6 @@ feature -- Type check, byte code and dead code removal
 								-- current analyzed class.
 							!!vrle1;
 							context.init_error (vrle1);
-							vrle1.set_local_name (local_name);
 							Error_handler.insert_error (vrle1);
 						end;
 							-- Build the local table in the context

@@ -728,7 +728,6 @@ feature -- Byte code computation
 			Tmp_byte_server.change_key (new_body_id, old_body_id);
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index);
-			Original_body_index_table.force (new_body_id, body_index);
 		end;
 	
 feature -- Polymorphism

@@ -104,6 +104,7 @@ feature {NONE}
 			file: EXTEND_FILE;
 			changed: BOOLEAN;
 			vd11: VD11;
+			error: BOOLEAN
 		do
 				-- Time check only the valid classes
 			if System.class_of_id (a_class.id) /= Void then

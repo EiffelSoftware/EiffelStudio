@@ -44,7 +44,7 @@ feature
 					put_string (info.parent.class_name);
 					put_string (": ");
 				end;
-				info.a_feature.append_clickable_signature (error_window);
+				info.a_feature.append_clickable_signature (error_window, info.a_feature.written_class);
 				new_line;
 
 				selection_list.forth;

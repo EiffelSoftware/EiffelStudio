@@ -8,11 +8,11 @@ default
 
 cluster
 	
-	ROOT_CLUSTER:	"$ISE_EIFFEL\examples\bench\objtour";
+	ROOT_CLUSTER:	"$ISE_EIFFEL\examples\studio\objtour";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $ISE_EIFFEL\examples\bench\objtour
+				-- copy all the files of $ISE_EIFFEL\examples\studio\objtour
 				-- into one of your directories, and replace
-				-- $ISE_EIFFEL\examples\bench\objtour by the name of
+				-- $ISE_EIFFEL\examples\studio\objtour by the name of
 				-- that directory on the above line.
 
 		-- EiffelBase:

@@ -24,7 +24,7 @@ default
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\bench\tour"
+	root_cluster:		"$ISE_EIFFEL\examples\studio\tour"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

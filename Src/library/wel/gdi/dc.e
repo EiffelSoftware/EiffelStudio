@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	pen: WEL_PEN
@@ -79,7 +84,7 @@ feature -- Status report
 		end
 
 	is_transparent: BOOLEAN is
-			-- Does the background mode is transparent?
+			-- Is the background mode transparent?
 		require
 			exists: exists
 		do
@@ -87,7 +92,7 @@ feature -- Status report
 		end
 
 	is_opaque: BOOLEAN is
-			-- Does the background mode is opaque?
+			-- Is the background mode opaque?
 		require
 			exists: exists
 		do
@@ -228,6 +233,72 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
+	tabbed_text_size (text: STRING): WEL_SIZE is
+			-- Size of a tabbed `text'
+		require
+			exists: exists
+			text_not_void: text /= Void
+		local
+			a: ANY
+			size: INTEGER
+		do
+			a := text.to_c
+			size := cwin_get_tabbed_text_extend (item, $a,
+				text.count, 0, default_pointer)
+			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+			positive_width: Result.width >= 0
+			positive_height: Result.height >= 0
+		end
+
+	tabbed_text_width (text: STRING): INTEGER is
+			-- Width of a tabbed `text'
+		require
+			exists: exists
+			text_not_void: text /= Void
+		do
+			Result := tabbed_text_size (text).width
+		ensure
+			positive_width: Result >= 0
+		end
+
+	tabbed_text_height (text: STRING): INTEGER is
+			-- Height of a tabbed `text'
+		require
+			exists: exists
+			text_not_void: text /= Void
+		do
+			Result := tabbed_text_size (text).height
+		ensure
+			positive_height: Result >= 0
+		end
+
+	tabbed_text_size_with_tabulation (text: STRING;
+			tabulations: ARRAY [INTEGER]): WEL_SIZE is
+			-- Size of a tabbed `text', with `tabulations' as
+			-- tabulation positions.
+		require
+			exists: exists
+			text_not_void: text /= Void
+			tabulations_not_void: tabulations /= Void
+		local
+			a1, a2: ANY
+			size: INTEGER
+		do
+			a1 := text.to_c
+			a2 := tabulations.to_c
+			size := cwin_get_tabbed_text_extend (item, $a1,
+				text.count, tabulations.count, $a2)
+			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+			positive_width: Result.width >= 0
+			positive_height: Result.height >= 0
+		end
+
 	device_caps (capability: INTEGER): INTEGER is
 			-- Give device-specific information about
 			-- the current display device.
@@ -241,13 +312,39 @@ feature -- Status report
 
 	map_mode: INTEGER is
 			-- Current mapping mode
+			-- See class WEL_MM_CONSTANTS for values.
 		require
 			exists: exists
 		do
 			Result := cwin_get_map_mode (item)
 		end
 
+	text_face: STRING is
+			-- Typeface name of the font that is currently selected
+		require
+			exists: exists
+		local
+			a: ANY
+		do
+			!! Result.make (Max_text_face)
+			Result.fill_blank
+			a := Result.to_c
+			Result.head (cwin_get_text_face (item,
+				Max_text_face, $a))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status setting
+
+	set_text_alignment (an_alignment: INTEGER) is
+			-- Set the text alignment with `an_alignement'.
+			-- See class WEL_TA_CONSTANTS for `an_alignement'.
+		require
+			exists: exists
+		do
+			cwin_set_text_align (item, an_alignment)
+		end
 
 	set_map_mode (mode: INTEGER) is
 			-- Set the mapping mode `mode' of the device context.
@@ -287,7 +384,7 @@ feature -- Status setting
 		do
 			cwin_set_viewport_ext_ex (item, x_extent, y_extent,
 				default_pointer)
-                end
+		end
 
 	set_viewport_origin (x_origin, y_origin: INTEGER) is
 			-- Set the `x_origin' and `y_origin' of the viewport
@@ -628,6 +725,10 @@ feature -- Basic operations
 
 	select_clip_region (a_region: WEL_REGION) is
 			-- Select `a_region' as the current clipping region
+		require
+			exists: exists
+			a_region_not_void: a_region /= Void
+			a_region_exists: a_region.exists
 		do
 			cwin_select_clip_rgn (item, a_region.item)
 		end
@@ -727,6 +828,8 @@ feature -- Basic operations
 		end
 
 	poly_line (points: ARRAY [INTEGER]) is
+			-- Draws a series of line segments by connecting the
+			-- points specified in `points'.
 		require
 			exists: exists
 			points_not_void: points /= Void
@@ -757,7 +860,7 @@ feature -- Basic operations
 
 	rectangle (left, top, right, bottom: INTEGER) is
 			-- Draw a rectangle from `left', `top'
-			-- to `right', `botton'
+			-- to `right', `bottom'.
 		require
 			exists: exists
 		do
@@ -984,6 +1087,9 @@ feature {NONE} -- Implementation
 
 	old_hbitmap: POINTER
 		-- Old hbitmap selected
+
+	Max_text_face: INTEGER is 255
+		-- Maximum text face name for `text_face'
 
 feature {NONE} -- Externals
 
@@ -1240,6 +1346,14 @@ feature {NONE} -- Externals
 			"DeleteDC"
 		end
 
+	cwin_set_text_align (hdc: POINTER; an_alignment: INTEGER) is
+			-- SDK SetTextAlign
+		external
+			"C [macro <wel.h>] (HDC, UINT)"
+		alias
+			"SetTextAlign"
+		end
+
 	cwin_set_map_mode (hdc: POINTER; mode: INTEGER) is
 			-- SDK SetMapMode
 		external
@@ -1365,6 +1479,16 @@ feature {NONE} -- Externals
 			"GetTextExtentPoint"
 		end
 
+	cwin_get_tabbed_text_extend (hdc: POINTER; s: POINTER;
+			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
+			-- SDK GetTabbedTextExtent
+		external
+			"C [macro <wel.h>] (HDC, LPCTSTR, int, int, %
+				%LPINT): EIF_INTEGER"
+		alias
+			"GetTabbedTextExtent"
+		end
+
 	cwin_device_caps (hdc: POINTER; capability: INTEGER): INTEGER is
 			-- SDK GetDeviceCaps
 		external
@@ -1411,6 +1535,15 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC, POINT *)"
 		alias
 			"GetCurrentPositionEx"
+		end
+
+	cwin_get_text_face (hdc: POINTER; count: INTEGER;
+				buffer: POINTER): INTEGER is
+			-- SDK GetTextFace
+		external
+			"C [macro <wel.h>] (HDC, int, LPSTR): EIF_INTEGER"
+		alias
+			"GetTextFace"
 		end
 
 	Opaque: INTEGER is

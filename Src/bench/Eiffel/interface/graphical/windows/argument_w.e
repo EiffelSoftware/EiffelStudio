@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make
+	make, make_plain
 	
 feature -- Initialization
 
@@ -41,6 +41,33 @@ feature -- Initialization
 			set_composite_attributes (Current)
 		end;
 	
+	make_plain is
+			-- Create Current object
+		do
+		end;
+
+	initialize (a_composite: COMPOSITE; cmd: COMMAND_W) is
+			-- Initialize Current with `a_composite' as parent and
+			-- `cmd' as command window.
+			--| Use this in conjunction with `make_plain' to
+			--| create a shared argument window.
+		do
+			prompt_dialog_create (l_Argument_w, a_composite);
+			set_title (l_Argument_w);
+			set_selection_label ("Specify arguments");
+			hide_help_button;
+			show_apply_button;
+			!! apply_it;
+			!! cancel_it;
+			set_ok_label ("Run");
+			set_apply_label ("OK");
+			add_ok_action (Current, Void);
+			add_apply_action (Current, apply_it);
+			add_cancel_action (Current, cancel_it);
+			run := cmd;
+			set_composite_attributes (Current)
+		end;
+
 feature -- Properties
 
 	argument_list: STRING is

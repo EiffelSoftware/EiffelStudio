@@ -2,7 +2,7 @@ class EIFFEL_FILE
 
 creation
 
-	make, make_for_feature_comments
+	make, make_for_feature_comments, dummy_make
 
 feature
 
@@ -118,6 +118,12 @@ end;
 		ensure
 			file_closed: f.is_closed
 		end;
+
+	dummy_make is
+		do
+			!! lines.make (0);
+			!! comments.make (0);
+		end
 			
 	go_after (pos: INTEGER) is
 			-- Make current position greater than or equal to pos

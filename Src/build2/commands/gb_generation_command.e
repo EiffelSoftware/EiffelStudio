@@ -64,45 +64,9 @@ feature -- Basic operations
 			sensitive_i: EV_SENSITIVE_I
 			sensitive: EV_SENSITIVE
 		do
-				-- Disable all other floating windows.
-				-- Note that we cannot perform the following:
-				-- all_floating_tools.do_all (agent {EV_DIALOG}.disable_sensitive)
-				-- because, doing this means, that when we generate the code, a query to
-				-- the interface, will return that the window for the display window is
-				-- not sensitive. So, here we have to go through the _I, so that the code
-				-- generator handles this correctly, and we do not effect the status
-				-- when queried from the display window.
-	
-			from
-				all_floating_tools.start
-			until
-				all_floating_tools.off
-			loop
-				sensitive ?= all_floating_tools.item
-				check
-					floating_tool_is_sensitive: sensitive /= Void
-				end
-				sensitive_i ?= sensitive.implementation
-				
-				sensitive_i.disable_sensitive
-				all_floating_tools.forth
-			end
 			create dialog.make_default
 			dialog.show_modal_to_window (main_window)
-			from
-				all_floating_tools.start
-			until
-				all_floating_tools.off
-			loop
-				sensitive ?= all_floating_tools.item
-				check
-					floating_tool_is_sensitive: sensitive /= Void
-				end
-				sensitive_i ?= sensitive.implementation
-				
-				sensitive_i.enable_sensitive
-				all_floating_tools.forth
-			end
+
 		end
 
 	dialog: GB_CODE_GENERATION_DIALOG

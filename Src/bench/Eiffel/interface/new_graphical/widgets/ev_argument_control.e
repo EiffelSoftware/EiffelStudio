@@ -42,6 +42,13 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	EB_SHARED_ARGUMENTS
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end	
 
 create 
 	make
@@ -169,6 +176,7 @@ feature {NONE} -- Retrieval
 				end
 				if l_pnem_last_string /= Void then
 					saved_argument := l_pnem_last_string
+					Current_selected_cmd_line_argument.put (saved_argument)
 				end
 			else
 				-- File was empty so it must have just been created.
@@ -197,10 +205,11 @@ feature -- Storage
 			-- arguments for system execution.
 		do
 			if not argument_check.is_selected or current_argument.text.is_empty then
-				saved_argument := No_arg_string
+				saved_argument := ""
 			else
       			saved_argument := current_argument.text	
       		end
+      		current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
       			Lace.argument_list.put_front (saved_argument)
       		end
@@ -219,7 +228,7 @@ feature {NONE} -- Storage
             val: OPT_VAL_SD
             d_option: D_OPTION_SD
             opt: OPTION_SD
-            wd, argument_text: STRING
+            wd, argument_text, sel_arg: STRING
      	do
          	if root_ast = Void then
             	root_ast := retrieve_ace
@@ -251,14 +260,23 @@ feature {NONE} -- Storage
            	end
             
             if ace_arguments_list.count > 0 then
+            	if ace_arguments_list.selected_item /= Void then
+            		sel_arg := clone (ace_arguments_list.selected_item.i_th (1))
+            		defaults.extend (new_d_option (sel_arg))
+            	end
  				from
              		ace_arguments_list.start
              	until
             		ace_arguments_list.after
              	loop
-             		argument_text := clone (ace_arguments_list.item.i_th (1))
-             		defaults.extend (new_d_option (argument_text))
-			    	ace_arguments_list.forth
+             		if 
+             			sel_arg /= Void and then 
+             			not ace_arguments_list.item.i_th (1).is_equal (sel_arg) 
+             		then
+             			argument_text := clone (ace_arguments_list.item.i_th (1))
+             			defaults.extend (new_d_option (argument_text))
+			    	end
+		    		ace_arguments_list.forth
              	end
              end
             

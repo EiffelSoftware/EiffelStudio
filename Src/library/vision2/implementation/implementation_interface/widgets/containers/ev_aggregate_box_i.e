@@ -7,19 +7,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class 
+deferred class 
 	EV_AGGREGATE_BOX_I
 
 inherit
-	EV_HORIZONTAL_BOX_IMP
+	EV_HORIZONTAL_BOX_I
 		redefine			
 			parent,
 			screen_x,
 			screen_y
 		end
 
-create
-	make
+--create
+--	make
 	
 feature -- Access
 
@@ -42,16 +42,17 @@ feature -- Access
 
 	real_parent: EV_AGGREGATE_WIDGET_IMP is
 			-- Contains `Current'.
-		local
-			c_parent: POINTER
-		do
-			c_parent := C.gtk_widget_struct_parent (c_object)
-			check
-				c_parent_not_void: c_parent /= Void
-			end
-			Result ?= eif_object_from_c (c_parent)
-		ensure
-			not_void: Result /= Void
+		--local
+		--	c_parent: POINTER
+		--do
+		--	c_parent := C.gtk_widget_struct_parent (c_object)
+		--	check
+		--		c_parent_not_void: c_parent /= Void
+		--	end
+		--	Result ?= eif_object_from_c (c_parent)
+		--ensure
+		--	not_void: Result /= Void
+		deferred
 		end
 
 invariant
@@ -80,6 +81,9 @@ end -- class EV_AGGREGATE_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/15 19:23:18  rogers
+--| Now deferred, inherits EV_HORIZONTAL_BOX_I, made parent deferred. Removed creation.
+--|
 --| Revision 1.2  2000/02/14 12:05:09  oconnor
 --| added from prerelease_20000214
 --|

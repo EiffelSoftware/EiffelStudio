@@ -47,6 +47,8 @@ o New H2E utility
 o New WEL tutorial
   A tutorial to learn WEL step by step.
   See directory $EIFFEL3\examples\wel\tutorial.
+  This tutorial is also available on our WEB site at:
+  http://www.eiffel.com/doc/manuals/technology/wel/tutorial/index.html
 
 o New WEL reference manual
   This manual describes all the WEL classes (description, interface, example).

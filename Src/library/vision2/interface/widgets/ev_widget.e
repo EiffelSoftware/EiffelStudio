@@ -478,7 +478,7 @@ feature -- Resizing
 		do
 			implementation.set_y (value)
 		ensure
-			y_set: implementation.y_set (x)		
+			y_set: implementation.y_set (value)		
 		end
 
 feature -- Assertion features

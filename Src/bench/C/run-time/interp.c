@@ -10,6 +10,7 @@
 	The Interpreter.
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_interp.h"
@@ -1554,27 +1555,27 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			if (head_type != SK_BIT) {
 				switch (head_type) {
 				case SK_BOOL:
-					new_obj = RTLN(bool_ref_dtype);
+					new_obj = RTLN(egc_bool_ref_dtype);
 					*new_obj = last->it_char;
 					break;
 				case SK_CHAR:	
-					new_obj = RTLN(char_ref_dtype);
+					new_obj = RTLN(egc_char_ref_dtype);
 					*new_obj = last->it_char;
 					break;
 				case SK_INT:
-					new_obj = RTLN(int_ref_dtype);
+					new_obj = RTLN(egc_int_ref_dtype);
 					*(long *) new_obj = last->it_long;
 					break;
 				case SK_FLOAT:
-					new_obj = RTLN(real_ref_dtype);
+					new_obj = RTLN(egc_real_ref_dtype);
 					*(float *) new_obj = last->it_float;
 					break;
 				case SK_DOUBLE:
-					new_obj = RTLN(doub_ref_dtype);
+					new_obj = RTLN(egc_doub_ref_dtype);
 					*(double *) new_obj = last->it_double;
 					break;
 				case SK_POINTER:
-					new_obj = RTLN(point_ref_dtype);
+					new_obj = RTLN(egc_point_ref_dtype);
 					*(char **) new_obj = last->it_ptr;
 					break;
 				case SK_REF:			/* Had to do this for bit operations */
@@ -3401,7 +3402,7 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 			if (body_id < zeroc) { 				/* Frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
 	
-				((void (*)()) frozen[body_id])(obj, where);
+				((void (*)()) egc_frozen[body_id])(obj, where);
 	
 				if (tagval != stagval)			/* Resynchronize registers */
 					sync_registers(MTC scur, stop);
@@ -4092,7 +4093,7 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
 	old_IC = IC;				/* IC back up */
 	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body);
-		(pattern[pid].toc)(frozen[body], is_extern); /* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else 
@@ -4170,7 +4171,7 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int
 	old_IC = IC;				/* IC back up */
 	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body);
-		(pattern[pid].toc)(frozen[body], is_extern); /* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else 

@@ -12,7 +12,7 @@ inherit
 	
 	APPLICATION_EXECUTION_IMP
 		redefine
-			make
+			make, recycle
 		end
 
 	APPLICATION_STATUS_EXPORTER
@@ -65,6 +65,13 @@ feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 		do
 			Precursor
 			Eifnet_debugger.init
+		end
+
+feature -- recycling data
+
+	recycle is
+		do
+			Debug_value_keeper.recycle
 		end
 
 feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done

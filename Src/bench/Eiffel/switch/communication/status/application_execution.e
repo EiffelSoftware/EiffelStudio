@@ -51,6 +51,7 @@ feature -- Recylcing
 	recycle is
 			-- Clean debugging session data
 		do
+			imp_application.recycle
 			set_status (Void)
 		end
 

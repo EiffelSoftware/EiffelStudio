@@ -10,16 +10,6 @@ deferred class
 inherit
 	EV_MESSAGE_DIALOG_I
 
-feature {NONE} -- Implementation		
-
-	icon_build (par: EV_CONTAINER) is
-			-- Load the icon
-		local
-			icon: EV_PIXMAP
-		do
-			--!!icon.make (par)
-		end
-
 end -- class EV_WARNING_DIALOG_I
 
 --|----------------------------------------------------------------

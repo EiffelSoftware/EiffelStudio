@@ -11,38 +11,6 @@ deferred class
 
 	EV_PIXMAP_CONTAINER
 
-inherit
-
---	EV_CONTAINER
---		redefine
---			implementation
---		end
-	
---creation	
-
---	make_from_primitive
-
-feature {NONE} -- Initialization
-	
---	make (par: EV_CONTAINER) is
---		do
---			check
---				do_not_call: False
---			end
---		end
-
---	make_from_primitive (primitive: EV_BUTTON) is
---			-- Create pixmap container inside of 'primitive'
---		do
---			!EV_PIXMAP_CONTAINER_IMP!implementation.make_from_primitive (primitive)
---		end
-
---feature {EV_PIXMAP} -- Implementation
-
---	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add a pixmap in the container.
---		deferred
---		end
 	
 feature -- Implementation
 	

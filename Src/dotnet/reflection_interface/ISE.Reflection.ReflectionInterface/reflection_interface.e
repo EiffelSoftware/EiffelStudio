@@ -32,7 +32,7 @@ feature -- Access
 	last_error: ISE_REFLECTION_ERRORINFO
 		indexing
 			description: "Last error (either during storage or retrieval)"
-			external_name: "last_error"
+			external_name: "LastError"
 		end
 
 	search_result: ISE_REFLECTION_EIFFELASSEMBLY
@@ -217,7 +217,7 @@ feature -- Retrieval
 				last_read_successful := True
 				from					
 				until
-					not xml_reader.get_Name.Equals_String (Assembly_Filename_Element) or not last_read_successful
+					not xml_reader.get_Name.Equals_String (Assembly_Filename_Element) 
 				loop
 					assembly_path := xml_reader.read_element_string_string (Assembly_Filename_Element)	
 					assembly_path := assembly_path.replace (reflection_support.eiffel_key, reflection_support.Eiffel_delivery_path)

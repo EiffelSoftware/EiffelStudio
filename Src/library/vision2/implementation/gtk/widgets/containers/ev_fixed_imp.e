@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 	
-        make (parent: EV_CONTAINER) is
+        make (par: EV_CONTAINER) is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_fixed_new ()

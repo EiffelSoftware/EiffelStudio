@@ -320,6 +320,23 @@ feature {NONE} -- GTK C functions
 	gtk_text_set_editable (text: POINTER; editable: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
+	
+	--notebook
+	gtk_notebook_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_notebook_set_tab_pos (notebook: POINTER; pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_notebook_append_page (notebook, child, label: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_notebook_set_page (notebook: POINTER; page: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
 
 feature {NONE} -- code in the glue library
 

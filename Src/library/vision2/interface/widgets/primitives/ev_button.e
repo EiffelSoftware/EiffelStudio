@@ -29,12 +29,12 @@ creation
 	
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
-                        -- Create a push button with, `parent' as
+        make (par: EV_CONTAINER) is
+                        -- Create a push button with, `par' as
                         -- parent
 		do
-			!EV_BUTTON_IMP!implementation.make (parent)
-			Precursor (parent)
+			!EV_BUTTON_IMP!implementation.make (par)
+			Precursor (par)
 		end
 	
 

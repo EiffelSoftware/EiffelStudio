@@ -22,8 +22,8 @@ creation
 	
 feature {NONE} -- Initialization
 
-        make (parent: CONTAINER) is
-                        -- Create a push button with, `parent' as
+        make (par: CONTAINER) is
+                        -- Create a push button with, `par' as
                         -- parent
 
 feature -- Status report

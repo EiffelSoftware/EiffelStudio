@@ -24,12 +24,12 @@ creation
 	
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
-                        -- Create a fixed widget with, `parent' as
+        make (par: EV_CONTAINER) is
+                        -- Create a fixed widget with, `par' as
                         -- parent
 		do
-			!EV_HORIZONTAL_BOX_IMP!implementation.make (parent)
-			Precursor (parent)
+			!EV_HORIZONTAL_BOX_IMP!implementation.make (par)
+			Precursor (par)
 		end	
 	
 feature {NONE} -- Implementation

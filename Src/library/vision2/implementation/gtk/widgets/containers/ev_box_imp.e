@@ -22,7 +22,7 @@ inherit
 	
 feature {NONE} -- Initialization
 	
-        make (parent: EV_CONTAINER) is
+        make (par: EV_CONTAINER) is
                         -- Create a fixed widget. 
 		deferred
 		end	

@@ -28,12 +28,12 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
-                        -- Create a label with, `parent' as
+        make (par: EV_CONTAINER) is
+                        -- Create a label with, `par' as
                         -- parent
 		do
-			!EV_LABEL_IMP!implementation.make (parent)
-			Precursor (parent)
+			!EV_LABEL_IMP!implementation.make (par)
+			Precursor (par)
 		end
 		
 

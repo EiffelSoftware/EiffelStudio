@@ -24,7 +24,7 @@ creation
 
 feature --Access
 
-	label_b, fixed_b, box_b: EV_BUTTON
+	label_b, fixed_b, box_b, notebook_b: EV_BUTTON
 	box: EV_VERTICAL_BOX
 			-- Push buttons
 	
@@ -39,6 +39,7 @@ feature -- Initialization
 			!!label_b.make (box)
 			!!fixed_b.make (box)
 			!!box_b.make (box)
+			!!notebook_b.make (box)
 			set_values
 			set_commands
 		end
@@ -51,6 +52,7 @@ feature -- Status setting
 			label_b.set_text ("Label")
 			fixed_b.set_text ("Fixed")
 			box_b.set_text ("Box")
+			notebook_b.set_text ("Notebook")
 		end
 
 
@@ -59,6 +61,7 @@ feature -- Status setting
 			c1: LABEL_DEMO_WINDOW
 			c2: FIXED_DEMO_WINDOW
 			c3: BOX_DEMO_WINDOW
+			c4: NOTEBOOK_DEMO_WINDOW
 			e: EV_EVENT
 			a: EV_ARGUMENT1 [STRING]
 		do
@@ -67,9 +70,11 @@ feature -- Status setting
 			!!c1.make
 			!!c2.make
 			!!c3.make
+			!!c4.make
 			label_b.add_command (e, c1, a)
 			fixed_b.add_command (e, c2, a)
 			box_b.add_command (e, c3, a)
+			notebook_b.add_command (e, c4, a)
 		end
 end
 --|----------------------------------------------------------------

@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (parent: EV_CONTAINER) is
+	make (par: EV_CONTAINER) is
 		deferred
 		end
 	
@@ -68,7 +68,7 @@ feature -- Status setting
 			exist: not destroyed
 		deferred
 		ensure
-			shown		
+			shown: shown		
 		end
 
 	set_insensitive (flag: BOOLEAN) is

@@ -123,7 +123,7 @@ feature -- Initialization
 				realize_current
 				realize_children
 				shown := true
-			--	resize_for_working_area
+--				resize_for_working_area
 				update_scrolling
 			end
 				-- set initial focus
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	resize_for_working_area is
 			-- Set size to working area
 		do
-			if working_area.realized then
+			if working_area /= Void and then working_area.realized then
 				if exists then
 					set_form_width (working_area.width)
 					set_form_height (working_area.height)
@@ -245,10 +245,12 @@ feature {NONE} -- Implementation
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			wel_set_horizontal_position (position)
-			working_area.set_x (- position)
-			!! cd.make (widget_oui, 0, position, False)
-			value_changed_actions.execute (Current, cd)
+			if working_area /= Void then
+				wel_set_horizontal_position (position)
+				working_area.set_x (- position)
+				!! cd.make (widget_oui, 0, position, False)
+				value_changed_actions.execute (Current, cd)
+			end
 		end
 
 	vertical_update (inc, position: INTEGER) is
@@ -256,10 +258,12 @@ feature {NONE} -- Implementation
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			wel_set_vertical_position (position)
-			working_area.set_y (- position)
-			!! cd.make (widget_oui, 0, position, True)
-			value_changed_actions.execute (Current, cd)
+			if working_area /= Void then
+				wel_set_vertical_position (position)
+				working_area.set_y (- position)
+				!! cd.make (widget_oui, 0, position, True)
+				value_changed_actions.execute (Current, cd)
+			end
 		end
 
 	set_default is

@@ -319,6 +319,9 @@ feature {NONE}
 
 	w_Pebble_not_valid: STRING is "Pebble is not valid";
 
+	w_Precompile_warning: STRING is "Precompiling implies some C compilation%N%
+									%and linking. Do you want to do it now?";
+
 	w_Project_corrupted (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void

@@ -747,9 +747,12 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 	EIF_GET_CONTEXT
 
 	EIF_INTEGER elem_size, i;
-	EIF_REFERENCE exp;
 	union overhead *zone;
-
+	uint32 dtype = Deif_bid(dftype);
+	EIF_INTEGER offset;
+	void *(*cp) (EIF_REFERENCE);
+	void *(*init) (EIF_REFERENCE, EIF_REFERENCE);
+	
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE) 0);
 	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
 	REQUIRE ("Special object", HEADER (obj)->ov_flags & EO_SPEC);
@@ -757,17 +760,70 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 	REQUIRE ("Valid lower", ((lower >= 0) && (lower <= RT_SPECIAL_COUNT(obj))));
 	REQUIRE ("Valid upper", ((upper >= lower - 1) && (upper <= RT_SPECIAL_COUNT(obj))));
 
-	RT_GC_PROTECT(obj);
+#ifdef WORKBENCH
+	cp = (void *(*) (EIF_REFERENCE)) init_exp;
+#else
+	cp = (void *(*) (EIF_REFERENCE)) egc_exp_create [dtype];
+#endif
+	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
+
 	elem_size = RT_SPECIAL_ELEM_SIZE(obj);
-	for (i = lower; i <= upper; i++) {
-		EIF_INTEGER offset = elem_size * i;
-		zone = (union overhead *) (obj + offset);
-		zone->ov_size = OVERHEAD + offset;	/* For GC */
-		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
-		exp = RTLX(dftype);					/* Create new expanded */
-		ecopy(exp, obj + OVERHEAD + offset);
+#ifndef WORKBENCH
+	if (References(dtype) > 0) {
+#endif
+		if (init) {
+			if (cp) {
+				RT_GC_PROTECT(obj);
+				for (i = lower; i <= upper; i++) {
+					offset = elem_size * i;
+					zone = (union overhead *) (obj + offset);
+					zone->ov_size = OVERHEAD + offset;	/* For GC */
+					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
+					(cp) (obj + OVERHEAD + offset);
+				}
+				RT_GC_WEAN(obj);
+			} else {
+				RT_GC_PROTECT(obj);
+				for (i = lower; i <= upper; i++) {
+					offset = elem_size * i;
+					zone = (union overhead *) (obj + offset);
+					zone->ov_size = OVERHEAD + offset;	/* For GC */
+					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					(cp) (obj + OVERHEAD + offset);
+				}
+				RT_GC_WEAN(obj);
+			}
+		} else {
+			if (cp) {
+				RT_GC_PROTECT(obj);
+				for (i = lower; i <= upper; i++) {
+					offset = elem_size * i;
+					zone = (union overhead *) (obj + offset);
+					zone->ov_size = OVERHEAD + offset;	/* For GC */
+					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					(cp) (obj + OVERHEAD + offset);
+				}
+				RT_GC_WEAN(obj);
+			} else {
+				EIF_REFERENCE exp = obj;
+				for (i = lower; i <= upper; i++, exp += elem_size) {
+					zone = (union overhead *) exp;
+					zone->ov_size = OVERHEAD + elem_size * i;	/* For GC */
+					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+				}
+			}
+		}
+#ifndef WORKBENCH
+	} else {
+		if (cp) {
+			for (i = lower; i <= upper; i++) {
+				offset = elem_size * i;
+				cp (obj + offset);
+			}
+		}
 	}
-	RT_GC_WEAN(obj);
+#endif
 
 	return obj;
 }
@@ -1166,7 +1222,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		object = sp_init(object, HEADER(object + OVERHEAD)->ov_flags & EO_TYPE, count, nbitems - 1);
+		uint32 exp_dftype = eif_gen_param_id (-1, (int16) Dftype(object), 1);
+		object = sp_init(object, exp_dftype, count, nbitems - 1);
 	}
 
 #ifdef ISE_GC

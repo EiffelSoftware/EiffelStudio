@@ -197,6 +197,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.print_context
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Status setting

@@ -753,7 +753,7 @@ rt_public EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound)
 	 */
 
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
-	int c;					/* Last char read */
+	int c = 0;					/* Last char read */
 	
 	while (amount-- > 0) {
 		c = getc(f);
@@ -781,7 +781,7 @@ rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 	 */
 
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
-	int c;			/* Last char read */
+	int c = 0;			/* Last char read */
 
 	amount = bound - start;		/* Characters to be read */
 	s += start;					/* Where read characters are written */

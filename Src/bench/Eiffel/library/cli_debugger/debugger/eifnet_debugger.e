@@ -656,7 +656,9 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			l_cse: CALL_STACK_ELEMENT_DOTNET
 		do
 			l_cse ?= application.status.current_call_stack_element
-			Result := l_cse.icd_frame
+			if l_cse /= Void then
+				Result := l_cse.icd_frame
+			end
 		end
 
 feature -- Easy access

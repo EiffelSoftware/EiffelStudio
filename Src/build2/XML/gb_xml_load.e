@@ -64,7 +64,12 @@ inherit
 	GB_SHARED_STATUS_BAR
 		export
 			{NONE} all
-		end	
+		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 
 	GB_POST_LOAD_OBJECT_EXPANDER
 		export
@@ -133,13 +138,18 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			current_name: STRING
 			window_object: GB_TITLED_WINDOW_OBJECT
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			if titled_window_object = Void then
 					-- As `titled_window_object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
 				window_object := object_handler.add_root_window
 				if not directory_name.is_empty then
-					Window_selector.directory_object_from_name (directory_name).add_selector_item (window_object.window_selector_item)
+						--| FIXME should probably add a procedure in the directory item to handle this.
+					directory_item := Window_selector.directory_object_from_name (directory_name)
+					unparent_tree_node (window_object.window_selector_item)
+					directory_item.extend (window_object.window_selector_item)
+					directory_item.expand
 				end
 			end
 				--| FIXME we must now look at the current type of `window'

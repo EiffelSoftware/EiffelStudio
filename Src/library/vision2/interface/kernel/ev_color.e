@@ -17,7 +17,7 @@ creation
 	make,
 	make_rgb
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make is
 			-- Create a black color. 
@@ -51,6 +51,12 @@ feature -- Access
 			-- Intensity value for the blue component
 		do
 			Result := implementation.blue
+		end
+
+	equal_color (other: EV_COLOR): BOOLEAN is
+			-- Is this the same color as the other
+		do
+			Result := other.red = red and other.green = green and other.blue = blue
 		end
 
 feature -- Element change

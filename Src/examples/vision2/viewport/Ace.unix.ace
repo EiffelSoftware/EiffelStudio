@@ -36,7 +36,7 @@ external
 			"\$(ISE_EIFFEL)/library/vision2/spec/include",
 			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+			"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 end
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.

@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			-- What is used to write in the file.
 		do
 			if internal_bwriter = Void then
-				create internal_bwriter.make (internal_stream)
+				create internal_bwriter.make_from_output (internal_stream)
 			end
 			Result := internal_bwriter
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			-- What is used to read in the file.
 		do
 			if internal_breader = Void then
-				create internal_breader.make (internal_stream)
+				create internal_breader.make_from_input (internal_stream)
 			end
 			Result := internal_breader
 		end

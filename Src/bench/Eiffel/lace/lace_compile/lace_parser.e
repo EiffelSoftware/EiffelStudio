@@ -101,7 +101,6 @@ feature
 				check
 					syntax_error_not_void: syntax_error /= Void
 				end;
-				Error_handler.error_list.wipe_out;
 				set_last_syntax_error (syntax_error);
 				retried := False
 			end
@@ -133,6 +132,7 @@ feature -- Removal
 	clear_syntax_error is
 			-- Clear the syntax error information.
 		do
+			Error_handler.error_list.wipe_out;
 			last_syntax_cell.put (Void)
 		end;
 

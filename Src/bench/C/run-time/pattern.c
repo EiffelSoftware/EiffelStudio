@@ -15,6 +15,10 @@
 	ACM, volume 35, number 4, April 1992 (Technical Correspondance).
 */
 
+/*
+doc:<file name="pattern.c" header="eif_pattern.h" version="$Id$" summary="Pattern matching (substrings, not regular expressions)">
+*/
+
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_hector.h"
@@ -25,8 +29,27 @@
 
 
 #ifndef EIF_THREADS
-rt_private uint32 eif_delta[ASIZE];				/* Records shifting deltas */ /* %%ss mt */
-rt_private uint32 **darray = (uint32 **) 0;	/* Pointer to array recording shifting tables */ /* %%ss mt */
+/*
+doc:	<attribute name="eif_delta" return_type="uint32 [ASIZE]" export="private">
+doc:		<summary>Records shifting deltas.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private uint32 eif_delta[ASIZE];
+
+/*
+doc:	<attribute name="darray" return_type="uint32 **" export="private">
+doc:		<summary>Pointer to array recording shifting tables.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private uint32 **darray = (uint32 **) 0;
 #endif /* EIF_THREADS */
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
@@ -248,3 +271,6 @@ rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int 
 	return (char *) 0;		/* No substring found */
 }
 
+/*
+doc:</file>
+*/

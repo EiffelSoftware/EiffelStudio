@@ -25,7 +25,7 @@ feature --Initialization
 	
 	make (a_name: STRING; a_parent: SPLIT_WINDOW_CHILD) is
 		do
-			{SCROLLABLE_LIST} Precursor (a_name,a_parent)
+			make_fixed_size (a_name,a_parent)
 			set_widget_attributes (Current)
  			add_click_action (Current,"selector_command")
 			selector_parent?= a_parent

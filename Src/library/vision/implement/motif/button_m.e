@@ -111,23 +111,25 @@ feature {NONE} -- Implementation
 			keysym: CHARACTER
 		do
 			if is_able_have_accerlators then
-				from
-					count := a_text.count;
-					pos := 1
-				until
-					finished
-				loop
-					pos := a_text.index_of ('&', pos);
-					if pos = 0 then
-						finished := True
-					elseif pos = count then
-						pos := 0;
-						finished := True
-					elseif a_text.item (pos + 1) /= '&' then	
-						finished := True
-					else
-						pos := pos + 1
-					end	
+				count := a_text.count;
+				if count > 0 then
+					from
+						pos := 1
+					until
+						finished
+					loop
+						pos := a_text.index_of ('&', pos);
+						if pos = 0 then
+							finished := True
+						elseif pos = count then
+							pos := 0;
+							finished := True
+						elseif a_text.item (pos + 1) /= '&' then	
+							finished := True
+						else
+							pos := pos + 1
+						end	
+					end
 				end
 				if pos = 0 then
 					if set_text_explicity then

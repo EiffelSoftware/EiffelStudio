@@ -132,8 +132,11 @@ feature -- GB_EV_FIXED
 feature -- Miscellaneous
 
 	Internal_properties_string: STRING is "Internal_properties"
-		-- Xml tag used to store properties stored by GB_OBJECT
+		-- XML tag used to store properties stored by GB_OBJECT
 		-- but not in the interface of Vision2.
+		
+	Directory_string: STRING is "Directory"
+		-- XML tag used to represent a directory.
 	
 feature -- Directories
 
@@ -160,6 +163,9 @@ feature -- Default values
 		
 	Default_height_of_type_selector: INTEGER is 250
 		-- The default_height of the type selector.
+		
+	Spacing_to_holder_tool_bar: INTEGER is 8
+		-- The distance between a tool holders label and any associated tool bar.
 
 
 feature -- Generation constants

@@ -4,7 +4,7 @@ EiffelStore
 
 Installation 
 
-1. Make sure the environment variables EIFFEL4 and PLATFORM are set.
+1. Make sure the environment variables ISE_EIFFEL and ISE_PLATFORM are set.
 
 2. Configure your setup for the database
 
@@ -16,11 +16,11 @@ Installation
 
 	type "finish_freezing" in the following directories:
 
-	$EIFFEL4/library/time/Clib
-	$EIFFEL4/library/store/support/Clib
+	$ISE_EIFFEL/library/time/Clib
+	$ISE_EIFFEL/library/store/support/Clib
 
 	and in the directory specific to the handle you are using. For instance,
 	for the Ingres handle:
 
-	$EIFFEL4/library/store/dbms/rdbms/ingres/Clib
+	$ISE_EIFFEL/library/store/dbms/rdbms/ingres/Clib
 

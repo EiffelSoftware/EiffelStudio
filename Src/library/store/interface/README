@@ -8,7 +8,7 @@ This directory contains the upper level classes of EiffelStore
 This class provides session control and management primivites: 
 connect, disconnect, commit, rollback, and database status flags.
 
-It uses classes from the $EIFFEL4/library/store/support directory.
+It uses classes from the $ISE_EIFFEL/library/store/support directory.
 
 
 2. DB_CHANGE

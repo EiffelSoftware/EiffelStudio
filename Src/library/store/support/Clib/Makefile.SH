@@ -18,7 +18,7 @@ SHELL = /bin/sh
 AR = ar rc
 CC = $cc
 CTAGS = ctags
-CFLAGS = $optimize $ccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
 LN = $ln
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -53,11 +53,11 @@ local_realclean::
 	$(RM) libsupport.a
 
 libsupport.a: $(OBJS)
-	mkdir -p ../../spec/$(PLATFORM)/lib
+	mkdir -p ../../spec/$(ISE_PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJS)
 	$(RANLIB) $@
-	$(MV) $@ ../../spec/$(PLATFORM)/lib
+	$(MV) $@ ../../spec/$(ISE_PLATFORM)/lib
 	$(MAKE) clobber
 
 ########################################################################

@@ -1,6 +1,6 @@
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
-CFLAGS = -O2 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib
+CFLAGS = -O2 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib
 RANLIB = echo
 RM = -del
 MV = copy

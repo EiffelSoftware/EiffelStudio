@@ -49,6 +49,13 @@ feature -- Status Report
 			Result := is_dialog_closeable
 		end
 
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := not is_modal and C.gtk_window_struct_transient_parent (c_object) /= default_pointer
+				and is_show_requested
+		end
+		
 feature -- Status Setting
 	
 	enable_closeable is

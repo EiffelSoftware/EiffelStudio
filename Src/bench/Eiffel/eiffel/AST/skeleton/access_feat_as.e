@@ -80,7 +80,6 @@ feature -- Type check, byte code and dead code removal
 			-- Type check an access to a feature
 		local
 			id_type: TYPE_A
-			veen: VEEN
 		do
 			id_type := access_type
 			check

@@ -36,7 +36,6 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			
 			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 		do
---			Eifnet_debugger_info.reset_current_callstack
 			Eifnet_debugger_info.init_current_callstack
 
 			l_current_stack_info := Eifnet_debugger_info.current_stack_info
@@ -44,7 +43,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				l_curr_mod_name := l_current_stack_info.current_module_name
 				l_curr_class_tok := l_current_stack_info.current_class_token
 				l_curr_feature_tok := l_current_stack_info.current_feature_token
-				if Il_debug_info_recorder.has_info_about_module (l_module_name) then
+				if Il_debug_info_recorder.has_info_about_module (l_curr_mod_name) then
 					l_dyn_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_curr_mod_name, l_curr_class_tok)
 					l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_curr_mod_name, l_curr_feature_tok)
 					if l_feature_i = Void then

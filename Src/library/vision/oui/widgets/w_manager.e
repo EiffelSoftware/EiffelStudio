@@ -118,6 +118,7 @@ feature -- Widget
 			-- Add `widget' to the list as a child of `parent'.
 		require
 			widget_exists: widget /= Void;
+			implementation_not_created: widget.implementation = Void;
 			a_parent_exists_unless_depth_null: (a_parent = Void) 
 								implies (widget.depth = 0);
 			depth_not_null_unless_parent_exists: (widget.depth > 0) 
@@ -291,6 +292,8 @@ feature -- Widget
 				widget_area.put (Void, nbr_to_remove + count - 1);
 				nbr_to_remove := nbr_to_remove - 1
 			end;
+		ensure
+			no_void_entries: not has_void_entries 
 		end;
 
 	screen (widget: WIDGET): SCREEN is
@@ -457,9 +460,10 @@ feature {COMPOSITE} -- Child/descendents widgets
 				position = wc or else finished
 			loop
 				widget := widget_area.item (position);
-				desc.extend (widget);
 				if widget.depth <= current_depth then
 					finished := True
+				else
+					desc.extend (widget);
 				end;
 				position := position + 1
 			end
@@ -570,6 +574,18 @@ feature {NONE}
 			Widget_found: widget.same (area.item (Result))
 		end;
 
+	has_void_entries: BOOLEAN is
+			-- Are there void entries in the array?
+		do
+			from	
+				start
+			until	
+				after or else Result
+			loop
+				Result := item = Void or else item.implementation = Void
+				forth
+			end
+		end;
 
 invariant
 

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			make (par)
 			implementation.set_default (msg, dtitle)
+			show
 		end
 
 feature -- Status settings

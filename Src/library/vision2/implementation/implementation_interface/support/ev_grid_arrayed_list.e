@@ -14,7 +14,7 @@ inherit
 		export
 			{NONE}
 				arrayed_list_make
-			{EV_GRID_I}
+			{EV_GRID_DRAWER_I, EV_GRID_I}
 				area
 		redefine
 			grow

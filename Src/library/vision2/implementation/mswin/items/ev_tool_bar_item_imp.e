@@ -27,11 +27,19 @@ feature -- Access
 		deferred
 		end
 		
-	image_index: INTEGER is
+	image_index: INTEGER
 			-- Index of the pixmaps in the imagelists.
-		deferred
-		end
 		
+	set_image_index (an_index: INTEGER) is
+			-- Assign `an_index' to `image_index'.
+		require
+			valid_index: an_index >= -1
+		do
+			image_index := an_index
+		ensure
+			image_index_set: image_index = an_index
+		end
+
 	is_sensitive: BOOLEAN is
 			-- Is `Current' sensitive?
 		deferred
@@ -67,8 +75,6 @@ feature -- Status setting
 	set_pixmap_in_parent is
 			-- Add the pixmap to the parent by updating the 
 			-- parent's image list.
-		require
-			button_has_pixmap: has_pixmap
 		deferred
 		end
 		

@@ -926,7 +926,7 @@ feature {COMPILER_EXPORTER} -- Element change
 				class_file.close
 				if Result /= Void then
 						-- Eiffel class in file
-					Result.to_lower
+					Result.to_upper
 				else
 						-- No class in file
 					create vd10
@@ -1163,7 +1163,7 @@ feature {COMPILER_EXPORTER} -- Element change
 					classes.forth
 				end
 			end
-			l_classes := universe.classes_with_name ("any")
+			l_classes := universe.classes_with_name ("ANY")
 			if l_classes.is_empty then
 					-- It means that we cannot find ANY in universe. We are in big
 					-- trouble.

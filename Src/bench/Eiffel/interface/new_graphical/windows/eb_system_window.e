@@ -41,7 +41,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	default_create
 
 feature -- Tab access
 
@@ -146,8 +147,7 @@ feature -- Content initialization
 			-- Initialize content of Window.
 		do
 				-- Clean previously entered data
-			reset_content
-					
+			reset_content					
 			check_content
 
 			if is_content_valid then

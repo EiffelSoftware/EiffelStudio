@@ -16,25 +16,25 @@ inherit
 		redefine
 			record_separate,
 			class_name, generics
-		end;
+		end
 
 	CLASS_TYPE_AS_B
 		rename
 			actual_type as basic_actual_type,
-			solved_type as basic_solved_type,
-			format as basic_format
+			solved_type as basic_solved_type
 		undefine
 			set, dump, simple_format
 		redefine
 			class_name, generics
-		end;
+		end
+
 	CLASS_TYPE_AS_B
 		undefine
 			set, dump, simple_format
 		redefine
-			actual_type, solved_type, format, class_name, generics
+			actual_type, solved_type, class_name, generics
 		select
-			actual_type, solved_type, format
+			actual_type, solved_type
 		end
 
 feature -- Properties
@@ -69,15 +69,6 @@ feature
 		do
 			Result := basic_actual_type;
 			Result.set_is_separate (True);
-		end;
-
-feature -- Output
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.put_text_item (ti_Separate_keyword);
-			ctxt.put_space;
-			basic_format (ctxt);
 		end;
 
 end -- class SEPARATE_TYPE_AS_B

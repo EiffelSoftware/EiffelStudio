@@ -1212,8 +1212,7 @@ feature -- Features info
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
-			l_feat := l_class_type.associated_class.feature_table.
-				feature_of_feature_id (a_feature_id)
+			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
 
 			byte_context.set_class_type (l_class_type)
 

@@ -348,6 +348,7 @@ feature -- Status setting
 			--| Used for optimization purposes, to avoid computing a lot
 			--| when changing completely the display of the window.
 		do
+			status_bar.widget.hide
 			panel.hide
 		end
 
@@ -355,6 +356,7 @@ feature -- Status setting
 			-- Show all tools.
 		do
 			panel.show
+			status_bar.widget.show
 		end
 
 feature -- Memory management

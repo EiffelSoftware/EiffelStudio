@@ -1,0 +1,97 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Differences between ETL 2nd edition and ISE implementation</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Freeze">
+		<META NAME="MS-HKWD" CONTENT="Melt">
+		<META NAME="MS-HKWD" CONTENT="Finalize">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Differences between ETL 2nd edition and ISE implementation</H1>
+        <h2>Added keywords:</h2>
+        <ul>
+          <li><a href="/eiffel/language/precursor_description.html"><span class="ekeyword">Precursor</span></a>
+          <li><span class="ekeyword">agent</span>: new keyword used by the Agent mechanism.
+          <li><span class="ekeyword">create</span>: Instead of using the
+            famous exclamation mark to create an instance of a class, you can
+            use the keyword `<span class="ekeyword">create</span>'. Below
+            you will find a correspondence table between the old and the new
+            syntaxes. The old syntax is still valid, but at some points ISE will
+            remove it from its implementation:<center>
+            <table border="1" cellSpacing="0">
+              <tbody>
+                <tr>
+                  <td bgColor="#ffffcc" width="50%">Old syntax</td>
+                  <td bgColor="#ffffcc" width="50%">New syntax</td>
+                </tr>
+                <tr>
+                  <td bgColor="#ffffff" width="50%"><b>!! </b>a</td>
+                  <td bgColor="#ffffff" width="50%"><b>create</b> a</td>
+                </tr>
+                <tr>
+                  <td bgColor="#ffffff" width="50%"><b>!! </b>a.make</td>
+                  <td bgColor="#ffffff" width="50%"><b>create</b> a.make</td>
+                </tr>
+                <tr>
+                  <td bgColor="#ffffff" width="50%"><b>!</b>B<b>!</b> a</td>
+                  <td bgColor="#ffffff" width="50%"><b>create</b> {B} a</td>
+                </tr>
+                <tr>
+                  <td bgColor="#ffffff" width="50%"><b>!</b>B<b>!</b> a.make</td>
+                  <td bgColor="#ffffff" width="50%"><b>create</b> {B} a.make</td>
+                </tr>
+              </tbody>
+            </table>
+            </center></li>
+        </ul>
+        <h2>Added semantics:</h2>
+        <ul>
+          <li><a href="/eiffel/language/generic_creation.html">Generic
+            creation</a>
+          <li>Expression creation: you can now create an object within an
+            expression. For example, you want to create an object and pass it as
+            an argument to a function. Whereas you had to create a local
+            variable, create the object and pass it to the function,
+            you now simply need to pass to the function the creation expression.
+            Here is a small example:<center>
+            <table border="1" cellSpacing="0">
+              <tbody>
+                <tr>
+                  <td bgColor="#ffffcc">Old method</td>
+                  <td bgColor="#ffffcc">New method</td>
+                </tr>
+                <tr>
+                  <td bgColor="#ffffff">
+                    <pre><span class="ekeyword">local</span>
+	a: <span class="eclass">STRING</span>
+<span class="ekeyword">do</span>
+	!! a.<span class="efeature">make</span> (10)
+	<span class="efeature">f</span> (a)
+<span class="ekeyword">end</span></pre>
+                  </td>
+                  <td bgColor="#ffffff">
+                    <pre><span class="ekeyword">do</span>
+	<span class="efeature">f</span> (<span class="ekeyword">create</span> {<span class="eclass">STRING</span>}.<span class="efeature">make</span> (10))
+<span class="ekeyword">end</span></pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            </center>This is also very useful since it can improve the
+            power of assertions.
+          <li>Mutually recursive constraints: one can now write class A [H,
+            G-&gt;H] or class B [H -&gt; C, G -&gt; ARRAY [H]]. As a result, the
+            declaration A [D, E] is valid only if E is a descendant of D.
+            Similarly, the declaration B [E, ARRAY [D]] is not valid, if E is a
+            descendant of D.
+          <li><a href="/eiffel/language/tuples.html">Tuples</a>
+          <li><a href="/eiffel/language/agents.html">Agents</a></li>
+        </ul>
+        <h2>Added external support</h2>
+        <p>Look at the page for <a href="30_external_features/10_c_externals.html">C</a>
+        and <a href="30_external_features/20_cpp_externals.html">C++</a>
+        with the introduction of `struct' and C++ external features encapsulation.</p>
+	</BODY>
+</HTML>

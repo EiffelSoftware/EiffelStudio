@@ -11,6 +11,9 @@ inherit
 			type_check, byte_node
 		end
 
+create
+	initialize
+	
 feature {AST_FACTORY} -- Initialization
 
 	initialize (t: like terminal) is

@@ -95,14 +95,34 @@ feature -- Basic Oprtations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 			path_exists: (create {RAW_FILE}.make (a_path)).exists
+		local
+			l_paths: LIST [STRING]
 		do	
 			is_successful := True
 			last_error_message := ""
 
+			from
+				l_paths := a_path.split (';')
+				l_paths.start
+			until
+				l_paths.after
+			loop			
+				assembly_resolver.add_resolver_assembly (l_paths.item)
+				l_paths.forth
+			end
+
 			add_to_eac := True
-			assembly_resolver.add_resolver_path_from_file_name (a_path)
-			add_assembly_to_eac (a_path)
-			assembly_resolver.remove_resolver_path_from_file_name (a_path)
+			from
+				l_paths := a_path.split (';')
+				l_paths.start
+			until
+				l_paths.after
+			loop
+				assembly_resolver.add_resolver_path_from_file_name (l_paths.item)
+				add_assembly_to_eac (l_paths.item)
+				assembly_resolver.remove_resolver_path_from_file_name (l_paths.item)
+				l_paths.forth
+			end
 		ensure
 			successful: is_successful
 		end

@@ -8,17 +8,15 @@ class
 
 inherit
 	CALL_AS
-		rename
-			position as start_position
 		redefine
-			type_check, is_equivalent, line_number, start_position
+			type_check, is_equivalent, location
 		end
 
 	SHARED_INSTANTIATOR
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like type; c: like call; s, l: INTEGER) is
+	initialize (t: like type; c: like call; l: like location) is
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
@@ -27,8 +25,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			type := t
 			call := c
-			start_position := s
-			line_number := l
+			location := clone (l)
 
 				-- If there's no call create 'default_call'
 			if call = Void then
@@ -40,8 +37,7 @@ feature {AST_FACTORY} -- Initialization
 		ensure
 			type_set: type = t
 			call_set: call = c
-			start_position_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -93,10 +89,8 @@ feature {AST_EIFFEL} -- Output
 
 feature -- Access
 
-	line_number : INTEGER
-
-	start_position: INTEGER
-			-- Start position of AST
+	location: TOKEN_LOCATION
+			-- Location of current.
 
 	type: TYPE
 			-- Creation Type.

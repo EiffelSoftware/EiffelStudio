@@ -14,16 +14,16 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like check_list; s, l: INTEGER) is
+	initialize (c: like check_list; l: like location) is
 			-- Create a new CHECK AST node.
+		require
+			l_not_void: l /= Void
 		do
 			check_list := c
-			start_position := s
-			line_number := l
+			location := clone (l)
 		ensure
 			check_list_set: check_list = c
-			start_postion_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

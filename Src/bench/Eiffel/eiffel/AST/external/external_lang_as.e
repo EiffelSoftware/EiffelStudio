@@ -3,7 +3,7 @@ class EXTERNAL_LANG_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			is_equivalent, location
 		end
 
 	EXTERNAL_CONSTANTS
@@ -17,17 +17,18 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (l: like language_name; s: INTEGER) is
+	initialize (l: like language_name; s: like location) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
 		require
 			l_not_void: l /= Void
+			s_not_void: s /= Void
 		do
 			language_name := l
-			start_position := s
+			location := clone (s)
 			parse
 		ensure
 			language_name_set: language_name = l
-			start_position_set: start_position = s
+			location_set: location.is_equal (s)
 		end
 
 feature -- Attributes
@@ -39,8 +40,8 @@ feature -- Attributes
 	extension: EXTERNAL_EXTENSION_AS
 			-- Parsed external extension
 
-	start_position: INTEGER
-			-- Start position of AST
+	location: TOKEN_LOCATION
+			-- Location of Current.
 
 feature -- Comparison
 

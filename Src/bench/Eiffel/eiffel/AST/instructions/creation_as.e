@@ -10,18 +10,18 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (tp: like type; tg: like target; c: like call; s, l: INTEGER) is
+	initialize (tp: like type; tg: like target; c: like call; l: like location) is
 			-- Create a new CREATION AST node.
 		require
 			tg_not_void: tg /= Void
+			l_not_void: l /= Void
 		local
 			dcr_id: ID_AS
 		do
 			type := tp
 			target := tg
 			call := c
-			start_position := s
-			line_number := l
+			location := clone (l)
 
 				-- If there is no call we create `default_call'
 			if call = Void then
@@ -34,8 +34,7 @@ feature {AST_FACTORY} -- Initialization
 			type_set: type = tp
 			target_set: target = tg
 			call_set: call = c
-			start_position_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

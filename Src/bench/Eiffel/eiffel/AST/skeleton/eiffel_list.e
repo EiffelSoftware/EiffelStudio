@@ -8,7 +8,7 @@ class EIFFEL_LIST [T -> AST_EIFFEL]
 inherit
 	AST_EIFFEL
 		rename
-			position as text_position
+			start_position as text_position
 		undefine
 			copy, is_equal
 		redefine

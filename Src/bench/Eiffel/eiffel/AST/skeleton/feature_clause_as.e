@@ -8,26 +8,26 @@ class FEATURE_CLAUSE_AS
 inherit
 	AST_EIFFEL
 		redefine
-			position, is_equivalent
+			location, is_equivalent
 		end
 	
 	SHARED_EXPORT_STATUS
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like clients; f: like features; p: INTEGER) is
+	initialize (c: like clients; f: like features; l: like location) is
 			-- Create a new FEATURE_CLAUSE AST node.
 		require
 			f_not_void: f /= Void
-			p_non_negative: p > 0
+			l_not_void: l /= Void
 		do
 			clients := c
 			features := f
-			position := p
+			location := clone (l)
 		ensure
 			clients_set: clients = c
 			features_set: features = f
-			position_set: position = p
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes
@@ -38,7 +38,7 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_AS]
 			-- Features
 
-	position: INTEGER
+	location: TOKEN_LOCATION
 			-- Position after feature keyword
 
 	comment (class_text: STRING): STRING is
@@ -50,7 +50,7 @@ feature -- Attributes
 			retried: BOOLEAN
 		do
 			if not retried then
-				real_pos := class_text.substring_index ("--", position)
+				real_pos := class_text.substring_index ("--", end_position)
 				if real_pos /= 0 then
 					if not features.is_empty then
 						end_pos := features.first.start_position
@@ -380,7 +380,7 @@ feature {COMPILER_EXPORTER, CLASS_AS} -- Element change
 		end
 
 	update_positions_with_offset (offset: INTEGER) is
-			-- Add `offset' to the position information
+			-- Add `offset' to the end position information
 			-- of features belonging to Current feature clause.
 		local
 			feat_count, i: INTEGER
@@ -405,10 +405,10 @@ feature {AST_EIFFEL} -- Output
 		local
 			comments: EIFFEL_COMMENTS
 		do
-			ctxt.put_text_item (ti_Feature_keyword)
+			ctxt.put_text_item (ti_feature_keyword)
 			ctxt.put_space
 			if clients /= Void then
-				ctxt.set_separator (ti_Comma)
+				ctxt.set_separator (ti_comma)
 				ctxt.set_space_between_tokens
 				clients.simple_format (ctxt)
 			end

@@ -11,16 +11,14 @@ inherit
 			byte_node
 		redefine
 			number_of_breakpoint_slots, 
-			line_number,
+			location,
 			type_check
 		end
 
 feature -- Access
 
-	line_number : INTEGER
-
-	start_position: INTEGER
-			-- Start position of AST
+	location: TOKEN_LOCATION
+			-- Location of Current.
 
 	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST

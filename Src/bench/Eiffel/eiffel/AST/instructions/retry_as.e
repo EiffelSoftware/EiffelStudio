@@ -16,10 +16,14 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (l: INTEGER) is
+	initialize (l: like location) is
 			-- Create a new RETRY AST node.
+		require
+			l_not_void: l /= Void
 		do
-			line_number := l
+			location := clone (l)
+		ensure
+			location_set: location.is_equal (l)			
 		end
 
 feature -- Comparison

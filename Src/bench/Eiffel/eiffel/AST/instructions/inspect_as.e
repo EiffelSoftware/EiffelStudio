@@ -16,22 +16,21 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (s: like switch; c: like case_list; e: like else_part; p, l: INTEGER) is
+	initialize (s: like switch; c: like case_list; e: like else_part; l: like location) is
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			switch := s
 			case_list := c
 			else_part := e
-			start_position := p
-			line_number := l
+			location := clone (l)
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
-			start_position_set: start_position = p
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

@@ -10,7 +10,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			format, number_of_breakpoint_slots
+			format, number_of_breakpoint_slots, location
 		end
 
 	COMPARABLE
@@ -44,12 +44,13 @@ feature {AST_FACTORY} -- Initialization
 			feature_names := f
 			body := b
 			indexes := i
-			start_position := s
-			end_position := e
 			id := System.feature_as_counter.next_id
 			if body.is_unique then
 				System.current_class.set_has_unique
 			end
+			create location.reset
+			location.set_start_position (s)
+			location.set_end_position (e)
 			set_start_position
 			set_end_position
 		ensure
@@ -64,20 +65,23 @@ feature {NONE} -- Initialization
 		do
 			--| No need to test whether feature_names is empty, because the class is
 			--| FEATURE_AS and there is allwas at least one feature name
-			start_position := start_position - feature_names.first.offset
+			location.set_start_position (location.start_position - feature_names.first.offset)
 		end
 
 	set_end_position is
 		do
 			--| No need to test whether feature_names is empty, because the class is
 			--| FEATURE_AS and there is allwas at least one feature name
-			end_position := end_position + feature_names.first.end_offset
+			location.set_end_position (location.end_position + feature_names.first.end_offset)
 		end
 
 feature -- Access
 
 	feature_names: EIFFEL_LIST [FEATURE_NAME]
 			-- Names of feature
+
+	location: TOKEN_LOCATION
+			-- Location of current feature.
 
 	body: BODY_AS
 			-- Feature body: this attribute will be compared during
@@ -89,9 +93,6 @@ feature -- Access
 
 	id: INTEGER
 			-- Id of the current instance used by the temporary AST server
-
-	start_position, end_position: INTEGER
-			-- Start and end of the text of the feature in origin file
 
 	external_name: STRING is
 			-- External name if any of current feature.
@@ -463,8 +464,8 @@ feature {COMPILER_EXPORTER} -- Setting
 	update_positions (sp: like start_position; ep: like end_position) is
 			-- Set `start_position' to `sp' and `end_position' to `ep'
 		do
-			start_position := sp
-			end_position := ep
+			location.set_start_position (sp)
+			location.set_end_position (ep)
 		ensure
 			start_position_set: start_position = sp
 			end_position_set: end_position = ep
@@ -476,8 +477,8 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- same position in the source file.
 			--| `offset' may be positive as well as negative.
 		do
-			start_position := start_position + offset
-			end_position := end_position + offset
+			location.set_start_position (start_position + offset)
+			location.set_end_position (end_position + offset)
 		ensure
 			start_position_set: start_position = old start_position + offset
 			end_position_set: end_position = old end_position + offset
@@ -515,20 +516,6 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 		end
 
 feature {COMPILER_EXPORTER} -- Initialization
- 
-	set_names (names: like feature_names) is
-		do
-			feature_names := names
-		end
-
-	set_content (other: like Current) is
-		require
-			good_argument: other /= Void
-		do
-			body := other.body
-			start_position := other.start_position
-			end_position := other.end_position
-		end
 
 	trace is
 		do

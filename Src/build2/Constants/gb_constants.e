@@ -71,6 +71,8 @@ feature -- Menu texts.
 	
 feature -- String representations of class names.
 
+	Gb_parent_object_class_name: STRING is "GB_PARENT_OBJECT"
+
 	Gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
 	
 	Gb_cell_object_class_name: STRING is "GB_CELL_OBJECT"

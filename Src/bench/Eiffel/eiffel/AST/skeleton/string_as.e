@@ -211,7 +211,7 @@ feature {DOCUMENTATION_ROUTINES} -- Output
 			end
 		end
 
-feature {INFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
+feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
 
 	set_value (s: STRING) is
 		do

@@ -31,18 +31,24 @@ feature
 			unit: ROUT_ENTRY
 			old_position: INTEGER
 		do
-			dispose_rout_id := System.memory_dispose_id
-			table ?= Tmp_poly_server.item (dispose_rout_id);
-			from
-				table.start
-			until
-				table.after
-			loop
-				unit := table.item;
-				old_position := table.position
-				mark (unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
-				table.go_to (old_position)	
-				table.forth
+			if System.memory_class_i /= Void and then System.memory_class_i.is_compiled then
+				dispose_rout_id := System.memory_dispose_id
+				table ?= Tmp_poly_server.item (dispose_rout_id);
+				if table /= Void then
+						-- There might be no `dispose' routine in the system if
+						-- MEMORY is not used at all.
+					from
+						table.start
+					until
+						table.after
+					loop
+						unit := table.item;
+						old_position := table.position
+						mark (unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
+						table.go_to (old_position)	
+						table.forth
+					end
+				end
 			end
 		end
 			

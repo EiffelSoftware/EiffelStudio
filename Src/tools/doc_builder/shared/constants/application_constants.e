@@ -347,7 +347,23 @@ feature -- Platform
 
 feature -- Access 
 
-	allowed_file_types: HASH_TABLE [EV_PIXMAP, STRING] is
+	allowed_file_types: ARRAYED_LIST [STRING] is
+			-- List of recognized file types in application with appropriate icon identifier
+		once
+			create Result.make (9)
+			Result.compare_objects
+			Result.extend ("xml")
+			Result.extend ("htm")
+			Result.extend ("html")
+			Result.extend ("png")
+			Result.extend ("gif")
+			Result.extend ("jpg")
+			Result.extend ("css")
+			Result.extend ("js")
+			Result.extend ("bmp")
+		end	
+
+	file_type_icons: HASH_TABLE [EV_PIXMAP, STRING] is
 			-- Hash of recognized file types in application with appropriate icon identifier
 		local
 			l_graphical_constants: GRAPHICAL_CONSTANTS

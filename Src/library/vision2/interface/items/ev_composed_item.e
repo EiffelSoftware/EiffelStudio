@@ -105,6 +105,7 @@ feature -- Element change
 			exists: not destroyed
 			valid_index: index >= 1 and index <= count
 			valid_pixmap: is_valid (pix)
+			valid_size: pixmap_size_ok (pix)
 		do
 			implementation.set_cell_pixmap (index, pix)
 		end
@@ -124,8 +125,25 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_pixmaps: pix /= Void
+			valid_size: pixmaps_size_ok (pix)
 		do
 			implementation.set_pixmap (pix)
+		end
+
+feature -- Assertion features
+
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := implementation.pixmap_size_ok (pix)
+		end
+
+	pixmaps_size_ok (pix_array: ARRAY[EV_PIXMAP]): BOOLEAN is
+			-- Check if the size of the pixmaps is ok for
+			-- the container.
+		do
+			Result := implementation.pixmaps_size_ok (pix_array)
 		end
 
 feature -- Implementation

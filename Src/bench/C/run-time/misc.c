@@ -264,7 +264,7 @@ rt_public char * eif_getenv (char * k)
 		strcpy (lower_k, k);
 		CharLowerBuff (lower_k, key_len);
 	
-		strcpy (key, "Software\\ISE\\Eiffel55\\");
+		strcpy (key, "Software\\ISE\\Eiffel56\\");
 		strncat (key, egc_system_name, appl_len);
 	
 		if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {

@@ -85,10 +85,6 @@ feature -- Access
 	occurrence: INTEGER
 			-- Occurrence of the file in the server control
 
-	number_of_objects: INTEGER
-			-- Number of objects stored in this file including dead
-			-- objects
-
 	is_open: BOOLEAN
 			-- Is the current file open ?
 
@@ -104,7 +100,6 @@ feature -- Access
 			-- Add one occurrence.
 		do
 			occurrence := occurrence + 1
-			number_of_objects := number_of_objects + 1
 		end
 
 	remove_occurrence is
@@ -119,8 +114,8 @@ feature -- Access
 			positive_occurrence: occurrence > 0
 		do
 			occurrence := occurrence - 1
-			if occurrence = 0 then
-				Server_controler.forget_file (Current)
+			if occurrence = 0 and is_open then
+				server_controler.close_file (Current)
 			end
 		ensure
 			occurrence = 0 implies (not is_open)
@@ -190,12 +185,6 @@ end
 			file_close (file_pointer)
 			file_pointer := default_pointer
 			is_open := False
-			file_pointer := default_pointer
-debug ("SERVER")
-	io.error.put_string ("Closing file ")
-	io.error.put_string (file_name (file_id))
-	io.error.put_new_line
-end
 		ensure
 			is_closed: not is_open
 		end
@@ -272,20 +261,6 @@ feature -- Status report
 			Result := file_counter.is_precompiled (file_id)
 		end
 
-	need_purging: BOOLEAN is
-			-- Does the file need purging?
-		do
-			Result := not (precompiled) and then
-				(occurrence = 0 or else
-				occurrence / number_of_objects < .25)
-debug ("SERVER")
-	trace
-	io.error.put_string ("Need purging: ")
-	io.error.put_boolean (Result)
-	io.error.put_new_line
-end
-		end
-
 feature -- Removal
 
 	delete is
@@ -307,23 +282,6 @@ feature -- Removal
 		rescue
 			retried := True
 			retry
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string ("File E")
-			io.error.put_integer (file_id)
-			io.error.put_string ("%Nnb objects: ")
-			io.error.put_integer (number_of_objects)
-			io.error.put_string ("%Noccurrence: ")
-			io.error.put_integer (occurrence)
-			io.error.put_string ("%Nsize: ")
-			io.error.put_integer (last_offset)
-			io.error.put_string ("%Nneed_purging: ")
-			io.error.put_boolean (need_purging)
-			io.error.put_new_line
 		end
 
 feature -- Disposal

@@ -20,6 +20,7 @@
 #include "local.h"
 #include "interp.h"
 #include "hashin.h"
+#include "bits.h"
 
 #ifndef lint
 private char *rcsid =

@@ -57,8 +57,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				code_dom_generator.generate_expression_from_dom (l_target_object)
 				set_last_expression (create {CODE_ROUTINE_REFERENCE_EXPRESSION}.make (a_source.method_name, last_expression))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["method reference expression"])
-				set_last_expression (Empty_expression)
+				set_last_expression (create {CODE_ROUTINE_REFERENCE_EXPRESSION}.make (a_source.method_name, create {CODE_THIS_REFERENCE_EXPRESSION}.make (current_type)))
 			end
 		ensure
 			non_void_last_expression: last_expression /= Void

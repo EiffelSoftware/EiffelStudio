@@ -50,6 +50,7 @@ feature -- Access
 
 			eiffel_writer.add_creation_routine ("make")
 			eiffel_writer.add_creation_routine ("make_by_pointer")
+			eiffel_writer.add_creation_routine ("make_from_pointer")
 
 			an_external_size_name := external_size_name (a_descriptor.name)
 			eiffel_writer.add_feature (structure_size_feature (an_external_size_name), Measurement)

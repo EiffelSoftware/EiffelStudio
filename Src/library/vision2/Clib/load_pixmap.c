@@ -13,11 +13,12 @@
 #include <stdio.h>
 #ifdef EIF_WIN32
 #include <windows.h>
+#include "png.h"
 #else
 #include <stdlib.h>
+#include <png.h>
 #endif
 #include "load_pixmap.h"
-#include "png.h"
 
 /* Classic constants */
 #define DEBUG	1

@@ -350,8 +350,6 @@ feature {NONE} -- Implementation
 	on_wm_command (wparam, lparam: INTEGER) is
 			-- Wm_command message.
 		local
-			button_actions: EV_NOTIFY_ACTION_SEQUENCE
-			button: EV_BUTTON
 			text_field_imp: EV_TEXT_FIELD_IMP
 		do
 				-- Escape has been pressed in `Current', so we 
@@ -361,40 +359,47 @@ feature {NONE} -- Implementation
 				if focus_on_widget.item /= Void then
 					focus_on_widget.item.process_standard_key_press (Vk_escape)	
 				end
-				if not interface.is_destroyed then
-					button := interface.default_cancel_button
-					if button /= Void then
-						button_actions := button.select_actions
-						if button_actions /= Void then
-							button_actions.call ([])
-						end
-					end
-				end
+				call_default_button_action (False)
 				
 				-- Enter has been pressed in `Current', so we 
 				-- call the `select_actions' of the default_push_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			elseif wparam = bn_clicked or (wparam = idok and lparam = 0) then
-				if focus_on_widget.item /= Void and
-					focus_on_widget.item.interface /= interface.default_push_button then
-					focus_on_widget.item.process_standard_key_press (Vk_return)	
+				if focus_on_widget.item /= Void and then
+					focus_on_widget.item.interface /= interface.default_push_button
+				then
+					focus_on_widget.item.process_standard_key_press (Vk_return)
 						-- We must now call the `return_actions' on the text_field.
 					text_field_imp ?= focus_on_widget.item
-						if text_field_imp /= Void then
-							text_field_imp.return_actions.call ([])
-						end
-				end
-				if not interface.is_destroyed then
-					button := interface.default_push_button
-					if button /= Void and button.has_focus then
-						button_actions := button.select_actions
-						if button_actions /= Void then
-							button_actions.call ([])
-						end
+					if text_field_imp /= Void then
+						text_field_imp.return_actions.call ([])
 					end
 				end
+				call_default_button_action (True)
 			else
 				Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
+			end
+		end
+		
+	call_default_button_action (use_push_button: BOOLEAN) is
+			-- Call the action for the default push button if `a_push_button' is
+			-- set, for the default cancel button otherwise.
+		local
+			button_actions: EV_NOTIFY_ACTION_SEQUENCE
+			button: EV_BUTTON
+		do
+			if not interface.is_destroyed then
+				if use_push_button then
+					button := interface.default_push_button
+				else
+					button := interface.default_cancel_button
+				end
+				if button /= Void and then button.is_sensitive and then button.is_displayed then
+					button_actions := button.select_actions
+					if button_actions /= Void then
+						button_actions.call ([])
+					end
+				end
 			end
 		end
 

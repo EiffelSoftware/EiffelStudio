@@ -3491,7 +3491,7 @@ feature -- External C functions
 			--                                            struct tm   *tm);
 			-- (from C_GLIB)
 		external
-			"C (GDate*, tm*) | <gtk/gtk.h>"
+			"C signature (GDate*, struct tm*) use <gtk/gtk.h>, <time.h>"
 		end
 
 	g_date_valid (a_date: POINTER): BOOLEAN is
@@ -4903,13 +4903,13 @@ feature -- External C functions
 			"C (GScanner*): GTokenType | <gtk/gtk.h>"
 		end
 
-	g_scanner_cur_value (a_scanner: POINTER): INTEGER is
-			-- GTokenValue	g_scanner_cur_value		(GScanner	*scanner);
-			-- (from C_GLIB)
-		external
-			"C (GScanner*): GTokenValue | <gtk/gtk.h>"
-		end
-
+--	g_scanner_cur_value (a_scanner: POINTER): INTEGER is
+--			-- GTokenValue	g_scanner_cur_value		(GScanner	*scanner);
+--			-- (from C_GLIB)
+--		external
+--			"C (GScanner*): GTokenValue | <gtk/gtk.h>"
+--		end
+--
 	g_scanner_destroy (a_scanner: POINTER) is
 			-- void		g_scanner_destroy		(GScanner	*scanner);
 			-- (from C_GLIB)

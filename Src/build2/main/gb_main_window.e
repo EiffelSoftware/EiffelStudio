@@ -60,7 +60,14 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_main_window_title)
+				-- Initialize the menu bar for `Current'.
+			create a_menu_bar
+			set_menu_bar (a_menu_bar)
+				-- Initialize menu
+			initialize_menu
+				-- Build the menu
 			build_menu
+				-- Build the tools and other widgets within `Current'.
 			build_widget_structure
 			set_minimum_size (640, 480)
 				-- Tell `system_settings' that `Current' is the
@@ -83,6 +90,10 @@ feature -- Basic operation
 			wipe_out
 				-- Add the tools.
 			extend (tool_holder)
+				-- We build the menus here, as the only time they
+				-- change at the moment is in conjunction with the
+				-- tools being displayed. This may have to change later.
+			build_menu
 			unlock_update
 		ensure
 			has_item: item /= Void
@@ -101,6 +112,10 @@ feature -- Basic operation
 			wipe_out
 				-- Add the filler
 			extend (filler)
+				-- We build the menus here, as the only time they
+				-- change at the moment is in conjunction with the
+				-- tools being displayed. This may have to change later.
+			build_menu
 			unlock_update
 		ensure
 			has_item: item /= Void
@@ -109,23 +124,19 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	build_menu is
-			-- Generate menu for `Current'.
+	initialize_menu is
+			-- Initialize menus.
+			-- Create menu items, and place in `menu_items'.
+		require
+			menus_not_initialized: menus_initialized = False
 		local
-			a_menu_bar: EV_MENU_BAR
-			file_menu, help_menu, view_menu, project_menu: EV_MENU
 			help_about, file_exit, view_menu_display_window,
 			view_menu_builder_window, view_menu_history, project_menu_build,
 			project_menu_settings,  file_new: EV_MENU_ITEM
 			menu_separator: EV_MENU_SEPARATOR
 		do
-				-- Initialize the menu bar.
-			create a_menu_bar
-			set_menu_bar (a_menu_bar)
-			
 				-- Initialize the file menu.
 			create file_menu.make_with_text (Gb_file_menu_text)
-			a_menu_bar.extend (file_menu)
 			create menu_separator
 			file_menu.extend (command_handler.open_project_command.new_menu_item)
 			file_menu.extend (command_handler.new_project_command.new_menu_item)
@@ -147,19 +158,33 @@ feature {NONE} -- Implementation
 
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)
-			a_menu_bar.extend (project_menu)
 			project_menu.extend (command_handler.project_settings_command.new_menu_item)
 			create project_menu_build.make_with_text (Gb_project_menu_build_text)
 			project_menu.extend (project_menu_build)
 			
 				-- Initialize the help menu.
 			create help_menu.make_with_text (Gb_help_menu_text)
-			a_menu_bar.extend (help_menu)
 			create help_about.make_with_text (Gb_help_about_menu_text)
 			help_menu.extend (help_about)
 			help_about.select_actions.extend (agent show_about_dialog)
-			
-			
+				
+				-- Assign `True' to `menus_initialized'.
+			menus_initialized := True
+		end
+		
+
+	build_menu is
+			-- Generate menu for `Current'.
+		require
+			menus_intitialized : menus_initialized
+		do
+			a_menu_bar.wipe_out
+			a_menu_bar.extend (file_menu)
+			if system_status.project_open then
+				a_menu_bar.extend (view_menu)
+				a_menu_bar.extend (project_menu)
+			end
+			a_menu_bar.extend (help_menu)
 		end
 		
 	build_widget_structure is
@@ -261,6 +286,19 @@ feature {NONE} -- Implementation
 	filler: EV_TREE
 		-- To be placed in `Current' when we do not want
 		-- the tools to be available.
-
+		
+	a_menu_bar: EV_MENU_BAR
+		-- The menu bar of `Current'.
+		
+	file_menu, project_menu, view_menu, help_menu: EV_MENU
+		-- Top level menus used in `Current'.
+		
+	menus_initialized: BOOLEAN
+		-- Has `initialize_menus' been called?
+		
+invariant
+	
+	menus_initalized_so_top_level_menu_items_not_void: menus_initialized implies file_menu /= Void
+		and project_menu /= Void and view_menu /= Void and help_menu /= Void
 
 end -- class GB_MAIN_WINDOW

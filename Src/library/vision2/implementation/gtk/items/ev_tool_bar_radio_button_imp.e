@@ -50,7 +50,7 @@ feature -- Status report
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
 		do
-			Result := create {EV_TOOL_BAR_RADIO_BUTTON}
+			Result := interface
 		end
 
 feature {NONE} -- Implementation
@@ -70,23 +70,6 @@ feature {NONE} -- Implementation
 	on_activate is
 			-- The button has been activated by the user (pushed).
 		do		
-			if group /= Void then
-				if  is_selected then
-						-- The radio button has been depressed.
-					if not group.just_selected (Current) then
-						interface.press_actions.call ([])
-					end
-					group.set_last_selected(Current)
-					group.set_selection_at_no_event (Current)
-				else
-						-- The radio button has been deselected.
-					if group.just_selected (Current) then
-						-- The button has been reselected
-						enable_select
-						-- This will make GTK recall the on_activate callback									
-					end
-				end
-			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -116,6 +99,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/11 23:17:52  king
+--| Made compilable and invariant happy
+--|
 --| Revision 1.15  2000/04/11 17:07:26  brendel
 --| Removed references to obsolete EV_RADIO.
 --|

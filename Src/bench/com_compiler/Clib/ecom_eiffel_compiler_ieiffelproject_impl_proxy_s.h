@@ -59,6 +59,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Load only the ace file for a project.
+	-----------------------------------------------------------*/
+	void ccom_load_ace_file_only(  /* [in] */ EIF_OBJECT a_ace_file_name );
+
+
+	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_project_file_name(  );

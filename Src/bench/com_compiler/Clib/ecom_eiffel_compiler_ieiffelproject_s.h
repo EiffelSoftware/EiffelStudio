@@ -102,6 +102,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Load only the ace file for a project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP load_ace_file_only(  /* [in] */ BSTR a_ace_file_name ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP project_file_name(  /* [out, retval] */ BSTR * return_value ) = 0;

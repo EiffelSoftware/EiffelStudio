@@ -105,6 +105,32 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::create_project(  /* [in] */ B
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::load_ace_file_only(  /* [in] */ BSTR a_ace_file_name )
+
+/*-----------------------------------------------------------
+	Load only the ace file for a project.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_a_ace_file_name = NULL;
+	if (a_ace_file_name != NULL)
+	{
+		tmp_a_ace_file_name = eif_protect (rt_ce.ccom_ce_bstr (a_ace_file_name));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("load_ace_file_only", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_ace_file_name != NULL) ? eif_access (tmp_a_ace_file_name) : NULL));
+	if (tmp_a_ace_file_name != NULL)
+		eif_wean (tmp_a_ace_file_name);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::project_file_name(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------

@@ -100,14 +100,6 @@ feature {NONE} -- Implmentation
 			"C"
 		end
 
-	cwin_destroy_window (hwnd: POINTER) is
-			-- SDK DestroyWindow
-		external
-			"C [macro <wel.h>] (HWND)"
-		alias
-			"DestroyWindow"
-		end
-
 end -- class IO_HANDLER_WINDOWS
 
 

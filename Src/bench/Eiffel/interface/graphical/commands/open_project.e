@@ -12,6 +12,8 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND
+		rename
+			init as make
 		redefine
 			is_sensitive
 		end;
@@ -25,14 +27,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			text_window := a_text_window
-		end;
-
 feature -- Callbacks
 
 	exit_bench is
@@ -43,7 +37,7 @@ feature -- Callbacks
 
 	open_project (argument: ANY) is
 		do
-			last_name_chooser.set_window (text_window);
+			last_name_chooser.set_window (popup_parent);
 			last_name_chooser.call (Current)
 		end;
 
@@ -64,18 +58,17 @@ feature {NONE} -- Implementation
 			last_char: CHARACTER;
 			dir_name: STRING
 		do
-
 			if not project_tool.initialized then
-				name_chooser (text_window).set_directory_selection;
-				last_name_chooser.hide_file_selection_list;
-				last_name_chooser.hide_file_selection_label;
-				last_name_chooser.set_title (l_Select_a_directory)
-				if argument = project_tool.text_window then
+				if argument = project_tool then
+					name_chooser (popup_parent).set_directory_selection;
+					last_name_chooser.hide_file_selection_list;
+					last_name_chooser.hide_file_selection_label;
+					last_name_chooser.set_title (l_Select_a_directory)
 					open_project (argument)
 				else
 					dir_name := clone (last_name_chooser.selected_file);
 					if dir_name.empty then
-						warner (text_window).custom_call (Current,
+						warner (popup_parent).custom_call (Current,
 							w_Directory_not_exist (dir_name), 
 							" OK ", Void, Void);
 					else
@@ -173,7 +166,7 @@ feature -- Project Initialization
 			if ok then
 				project_tool.set_initialized
 			else	
-				warner (text_window).custom_call (Current, temp, 
+				warner (popup_parent).custom_call (Current, temp, 
 					" OK ", Void, Void);
 			end
 		end;
@@ -183,14 +176,14 @@ feature -- Project Initialization
 		do	
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
-				warner (text_window).custom_call (Current, 
+				warner (popup_parent).custom_call (Current, 
 						w_Project_corrupted (project_dir.name),
 						Void, "Exit now", Void)
 			elseif Eiffel_project.read_write_error then
-				warner (text_window).custom_call (Current,
+				warner (popup_parent).custom_call (Current,
 						w_Cannot_open_project, Void, "Exit", Void)
 			elseif Eiffel_project.is_read_only then
-				warner (text_window).custom_call (Current,
+				warner (popup_parent).custom_call (Current,
 						w_Read_only_project, " OK ", "Exit", Void)
 			end;
 		end;

@@ -16,6 +16,8 @@ inherit
 		end;
 
 	AST_EIFFEL_B
+		undefine
+			is_equal
 		redefine
 			format
 		end;

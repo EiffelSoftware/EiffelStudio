@@ -7,55 +7,61 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class
+deferred class
 	
 	EV_PIXMAP_CONTAINER_IMP
 	
 inherit
 	
 	EV_PIXMAP_CONTAINER_I
-		
+
 	EV_CONTAINER_IMP
 		redefine
 			add_child
 		end
 	
-	
-creation	
+feature -- Access
 
-	make_from_primitive
-
-feature {NONE} -- Initialization
-	
-	make (par: EV_CONTAINER) is
-		do
-			check
-				do_not_call: False
-			end
+	box: POINTER is
+			-- The box that will receive the pixmaps
+		deferred
 		end
-	
-	make_from_primitive (primitive: EV_BUTTON) is
-			-- Create pixmap container inside of 'primitive'
-		local
-			primitive_imp: EV_BUTTON_IMP
-		do
-			primitive_imp ?= primitive.implementation
-			check
-				valid_primitive: primitive_imp /= Void
-			end
-			
-			widget := primitive_imp.box
-		end	
 	
 feature {EV_CONTAINER} -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
+
+	add_pixmap (pixmap: EV_PIXMAP) is
+			-- Add a pixmap in the container
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
-			gtk_box_pack_start (GTK_BOX (widget), child_imp.widget, True, False, 0)
+			pixmap_imp ?= pixmap.implementation
+			check
+				pixmap_imp_not_void: pixmap_imp /= Void
+			end
+			add_child (pixmap_imp)
+			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, True, False, 0)
 		end
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite.
+			-- We just set the child for the postconditions.
+		do
+			child := child_imp
+		end
+
+feature {NONE} -- Implementation
+		-- We defined this here because the label must be added
+		-- by EV in case we want to add a pixmap.
+
+	set_label_widget (new_label_widget: POINTER) is
+		do
+			label_widget := new_label_widget
+		end        
 	
-end
+        label_widget: POINTER 
+                        -- gtk widget of the label inside the button
+
+end -- EV_PIXMAP_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

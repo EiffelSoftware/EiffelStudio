@@ -7,21 +7,18 @@ root
 default
 	assertion (check)
 	assertion (require)
-	assertion (ensure)
 	disabled_debug (yes)
-	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("vision2_windows")
-	disabled_debug ("vision2_windows_gdi")
-	disabled_debug ("wel")
-	disabled_debug ("wel_gdi_count")
-	disabled_debug ("wel_gdi_references")
-	disabled_debug ("win_dispatcher")
+	disabled_debug ("ev_gtk_c_object_dispose")
+	disabled_debug ("ev_gtk_creation")
+	disabled_debug ("ev_gtk_destroy")
+	disabled_debug ("ev_gtk_dispose")
 	debug (no)
 	line_generation (no)
 	profile (no)
 	trace (no)
 	check_vape (yes)
 	console_application (no)
+	syntax_warning (no)
 	array_optimization (no)
 	dead_code_removal (yes)
 	exception_trace (yes)
@@ -36,35 +33,34 @@ default
 -- EiffelBase
 -- WEL
 -- EiffelVision2
+--	"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `pkg-config gtk+-2.0 --cflags`"
 
 cluster
-	all root_cluster:		"."
+	all root_cluster:		"$EIFFEL_SRC/examples/vision2/widget_test"
 		exclude
-			"templates";
+			"templates"; 
 		end
 
-
-	all base:		"$EIFFEL_SRC/library/base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end
 
-	all gel:		"$EIFFEL_SRC/library/gel"
+	all contrib: "$EIFFEL_SRC/library/vision2/contrib"
+		exclude
+			"mswin"
+		end
 
 	all vision2:		"$EIFFEL_SRC/library/vision2"
 		exclude
-			"mswin"; "ev_pixmap.e"; "ev_pixmapable.e";
+			"contrib";"mswin"; "ev_pixmap.e"; "ev_pixmapable.e"; "gtk2"; 
 		end
 
 external
 	include_path:
-			"\$(EIFFEL_SRC)/library/event/Clib",
-			"\$(EIFFEL_SRC)/library/vision2/spec/include",
-			"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+			"\$(ISE_EIFFEL)/library/event/Clib",
+			"\$(ISE_EIFFEL)/library/vision2/spec/include",
+			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
-			"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-			"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
-			"$(EIFFEL_SRC)/C_library/zlib/libz.a",
-			"-L/usr/X11R6/lib -lXtst"
+			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 end

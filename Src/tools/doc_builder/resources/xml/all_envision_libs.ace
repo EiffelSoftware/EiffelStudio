@@ -1,0 +1,55 @@
+system
+	"all_envision_libs"
+
+root
+	ANY
+
+default
+ 	assertion (no)
+ 	msil_generation (yes)
+ 	il_verifiable (yes)
+ 	cls_compliant (yes)
+ 	dotnet_naming_convention (no)
+ 	msil_generation_type ("dll")
+ 	use_all_cluster_name_as_namespace (yes)
+ 	use_cluster_name_as_namespace (yes)
+
+cluster
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+ 
+ 	all base:		"$ISE_EIFFEL\library\base"
+ 		exclude
+ 			"table_eiffel3"; "desc"; "classic";
+ 		end
+ 
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"; "clib"; "classic";
+		end
+
+	all wel_net:		"$ISE_EIFFEL\library.net\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp.e"; "gtk2";
+		end
+
+	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"
+
+	all vision2_extensions:		"$ISE_EIFFEL\library\vision2_extension"
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\C_library\zlib"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

@@ -1,0 +1,67 @@
+system
+	all_libs
+
+root
+	NONE
+
+default
+	assertion (all);
+
+cluster 
+
+		-- EiffelBase
+	all base: 		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "EIFGEN"; "Documentation"; "libraries"
+		end
+		
+		-- WEL
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"clib"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "spec"; "extra"; 
+		end
+
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"; "french"; "german"; "doc"; 
+		end
+
+	all com:		"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"; "Clib_runtime"; "spec"; 
+		end
+		
+	all eiffel2java: "$EIFFEL_SRC\library\Eiffel2Java"
+			exclude
+				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		end
+		
+	all lex:		"$EIFFEL_SRC\library\lex"
+			exclude
+				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+			end
+		
+	all parse:		"$EIFFEL_SRC\library\parse"
+	
+	all net:		"$EIFFEL_SRC\library\net"
+		exclude
+			"Clib"; "Clib_kr"; "CVS"; "EIFGEN"; "Documentation"; "libraries"; "mel_socket_poller.e"; "vision_socket_poller.e"
+		end
+		
+	all thread: "$EIFFEL_SRC\library\thread"
+			exclude
+				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+		end
+		
+	all vision2:	"$EIFFEL_SRC\library\vision2"
+			exclude
+				"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"
+		end
+		
+	all web:		"$EIFFEL_SRC\library\web"
+			exclude
+				"CVS"; "EIFGEN"; "Documentation"; "libraries"
+		end
+
+		
+end -- system base

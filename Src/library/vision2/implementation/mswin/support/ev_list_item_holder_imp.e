@@ -95,6 +95,10 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		deferred
 		end
 
+	deselect_item (id: INTEGER) is
+		deferred
+		end
+
 	is_selected (id: INTEGER): BOOLEAN is
 		deferred
 		end

@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 	reset_brush is
 			-- Restore brush to tile or color.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: EV_PIXMAP_IMP_STATE
 			a_wel_bitmap: WEL_BITMAP
 		do
 			get_dc

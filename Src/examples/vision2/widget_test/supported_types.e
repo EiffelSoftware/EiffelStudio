@@ -57,6 +57,8 @@ feature -- Basic operation
 			tool_bar_radio_button: EV_TOOL_BAR_RADIO_BUTTON
 			tool_bar_separator: EV_TOOL_BAR_SEPARATOR
 			list_item: EV_LIST_ITEM
+			checkable_list: EV_CHECKABLE_LIST
+			checkable_tree: EV_CHECKABLE_TREE
 			
 			gb_ev_sensitive: GB_EV_SENSITIVE
 			gb_ev_tooltipable: GB_EV_TOOLTIPABLE

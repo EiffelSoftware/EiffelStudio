@@ -317,6 +317,10 @@ feature {NONE} -- Implementation
 
 				Result.append (Space_equal_space)
 
+				Result.append (Open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
+
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else

@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"NOTEBOOK_DEMO_WINDOW, demo window to test notebook widget. Belongs to EiffelVision example."
+		"NOTEBOOK_DEMO_WINDOW, demo window to test notebook widget.%
+		% Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	NOTEBOOK_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,37 +19,41 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_NOTEBOOK is
+			-- The main widget of the demo
 		once
 			!!Result.make (Current)
 		end
 	
 feature -- Access
 
-	button1: EV_BUTTON
+	button1, button_box: EV_BUTTON
+		-- Buttons for the demo
+
 	box: EV_VERTICAL_BOX
-	button_box: EV_BUTTON
+		-- Box for the demo
 	
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
-			!!button1.make (main_widget)
-			!!box.make (main_widget)
-			!!button_box.make_with_text (box, "button 1")
-			!!button_box.make_with_text (box, "button 2")
-			!!button_box.make_with_text (box, "button 3")
-			!!button_box.make_with_text (box, "button 4")
+			!! button1.make (main_widget)
+			!! box.make (main_widget)
+			!! button_box.make_with_text (box, "button 1")
+			!! button_box.make_with_text (box, "button 2")
+			!! button_box.make_with_text (box, "button 3")
+			!! button_box.make_with_text (box, "button 4")
 		end
 	
 feature -- Status setting
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Notebook demo")
 			button1.set_text ("Button")			
@@ -58,19 +61,7 @@ feature -- Status setting
 			main_widget.append_page (box, "Pixmap 2")
 		end
 
-
-	set_commands is
-		local
-		--	c: HELLO_COMMAND
-			e: EV_EVENT
-			a: EV_ARGUMENT1 [STRING]
-		do
-		--	!!e.make ("clicked")
-		--	!!a.make (button.text)
-		--	!!c
-		--	button.add_command (e, c, a)
-		end
-end
+end -- class NOTEBOOK_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,6 +1,6 @@
 indexing
 	description: 
-	"MAIND_WINDOW, main window for the application. Belongs to EiffelVision example."
+		"MAIN_WINDOW class of the test_all_widget example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -20,7 +20,6 @@ inherit
 	EXECUTION_ENVIRONMENT
 
 creation
-
 	make_top_level
 
 feature --Access
@@ -32,6 +31,7 @@ feature --Access
 feature -- Initialization
 	
 	make_top_level is
+			-- Create the main window and the demo windows.
 		local
 			b: MAIN_WINDOW_BUTTON
 			c1: LABEL_DEMO_WINDOW
@@ -51,13 +51,11 @@ feature -- Initialization
 			c15: MC_LIST_DEMO_WINDOW
 			c16: DIALOG_DEMO_WINDOW
 			c18: COMBO_DEMO_WINDOW
-
 		do
-			Precursor
+			{EV_WINDOW} Precursor
 			!!container.make (Current)
 			container.set_finite_dimension (3)
 			container.set_row_layout
-			set_x_y (0, 0)
 			!!c1.make (Current)
 			!!c2.make (Current)
 			!!c3.make (Current)
@@ -97,10 +95,10 @@ feature -- Initialization
 			set_values
 		end
 
-feature -- Status setting
+feature -- Command execution
 	
 	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]; data: EV_EVENT_DATA) is
-			-- called when actions window is deleted
+			-- called when actions window is deleted.
 		do
  			arg.first.effective_button.set_state (False)
 			if not arg.first.actions_window.destroyed then
@@ -113,11 +111,9 @@ feature -- Status setting
 feature -- Status setting
 	
 	set_values is
-		local
-			tfield: EV_TEXT_FIELD
+			-- Set the values on the widgets
 		do
 			set_title ("Test all widgets")
-			!!tfield.make (container)
 		end
 
 feature -- Basic operation
@@ -126,12 +122,13 @@ feature -- Basic operation
 			-- Return the complete path of the given pixmap : root/../pixmaps/name
 		do
 --			Result := root_directory_name
-			Result := "d:\aitkaci\vision2\temp_examples\test_all_widgets\bitmap\"
+			Result := "d:\vision2_kaci\example\test_all_widgets\bitmap\"
 			Result.append (a_name)
 			Result.append (".bmp")
 		end
 
-end
+end -- class MAIN_WINDOW
+
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

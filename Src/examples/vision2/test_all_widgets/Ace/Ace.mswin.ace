@@ -1,5 +1,5 @@
 system
-	test_all_widget
+	example
 
 root
 
@@ -7,112 +7,95 @@ root
 
 default
 
-	assertion (all)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug (no)
-	inlining (no)
-	--inlining_size ("4")
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/wel");
+	assertion (all);
 
 cluster
 
-	ROOT_CLUSTER: 		"main"
-	commands:			"commands"
-		
+	ROOT_CLUSTER: 		"main";
+	commands: 			"commands";
 
--- EiffelBase:
-        base:                           "$EIFFEL4\library\base";
-        structures(base):               "$\structures";
-        kernel(base):                   "$\kernel";
-        support(base):                  "$\support";
+------------------------ EiffelBase:
 
-        access(structures):             "$\access";
-        cursors(structures):            "$\cursors";
-        cursor_tree(structures):        "$\cursor_tree";
-        dispenser(structures):          "$\dispenser";
-        iteration(structures):          "$\iteration";
-        list(structures):               "$\list";
-        set(structures):                "$\set";
-        sort(structures):               "$\sort";
-        storage(structures):            "$\storage";
-        table(structures):              "$\table"
-			default
-				assertion (no)
-			end;
-        traversing(structures):         "$\traversing";
-        tree(structures):               "$\tree";
+		base:						"$EIFFEL4/library/base";
+		structures(base):			"$/structures";
+		kernel(base):				"$/kernel";
+		support(base):				"$/support";
+		access(structures):			"$/access";
+		cursors(structures):		"$/cursors";
+		cursor_tree(structures):	"$/cursor_tree";
+		dispenser(structures):		"$/dispenser";
+		iteration(structures):		"$/iteration";
+		list(structures):			"$/list";
+		set(structures):			"$/set";
+		sort(structures):			"$/sort";
+		storage(structures):		"$/storage";
+		table(structures):			"$/table";
+		traversing(structures):		"$/traversing";
+		tree(structures):			"$/tree";
 
--- Wel
-		wel:					"$EIFFEL4\library\wel";
+------------------------ Wel:
 
-		wel_constants(wel):			"$\consts";
-		wel_controls(wel):			"$\controls";
-		wel_gdi(wel):				"$\gdi";
-		wel_gdi_stocks(wel):		"$\gdistock";
-		wel_standard_dialogs(wel):	"$\stddlgs";
-		wel_structures(wel):		"$\structs";
-		wel_support(wel):			"$\support"
-			default
-				assertion (no)
-			end
-		wel_windows(wel):			"$\windows";
-		wel_messages(wel):			"$\messages";
+	wel:						"$EIFFEL4\library\wel";
+	wel_constants(wel):			"$\consts";
+	wel_controls(wel):			"$\controls";
+	wel_gdi(wel):				"$\gdi";
+	wel_gdi_stocks(wel):		"$\gdistock";
+	wel_standard_dialogs(wel):	"$\stddlgs";
+	wel_structures(wel):		"$\structs";
+	wel_support(wel):			"$\support";
+	wel_windows(wel):			"$\windows";
+	wel_messages(wel):			"$\messages";
 
                         
--- EiffelVision
+------------------------ EiffelVision
 
-	  	vision:                 	"d:\aitkaci\vision2";
-	
-	-- Interface
-	
-		vision_userdata (vision):					"$\interface\user_data";
-		vision_kernel (vision): 	       			"$\interface\kernel";
-		vision_properties (vision):					"$\interface\properties";
-		vision_items (vision):						"$\interface\items";
-		vision_widgets (vision):        			"$\interface\widgets";
-		vision_primitives (vision_widgets):     	"$\primitives";
-		vision_containers (vision_widgets):     	"$\containers";
-		vision_common_dialog (vision_widgets):		"$\common_dialogs";
-		vision_uncommon_widgets (vision_widgets):	"$\uncommon_widgets";
+--	vision:		"$EIFFEL4\library\vision";
+	vision:		"d:/temp/test/vision2";
 
-	-- Implementation
-	
-		vision_i (vision):		"$\implementation";
+-- Interface
+	interface(vision):							"$\interface";
+ 	vision_userdata (interface):				"$\user_data";
+	vision_kernel (interface):					"$\kernel";
+	vision_support (interface):					"$\support";
+	vision_properties (interface):				"$\properties";
+	vision_items (interface):					"$\items";
+	vision_widgets (interface):					"$\widgets";
+	vision_primitives (vision_widgets):			"$\primitives";
+	vision_containers (vision_widgets):			"$\containers";
+	vision_common_dialog (vision_widgets):		"$\common_dialogs";
+	vision_uncommon_widgets (vision_widgets):	"$\uncommon_widgets";
 
-	-- Implementation Interface
-	
-		vision_ii (vision_i):							"$\implementation_interface";
-		vision_ii_kernel (vision_ii): 	       			"$\kernel";
-		vision_ii_properties (vision_ii):				"$\properties";
-		vision_ii_items (vision_ii):					"$\items";
-		vision_ii_widgets (vision_ii):        			"$\widgets";
-		vision_ii_primitives (vision_ii_widgets):     	"$\primitives";
-		vision_ii_containers (vision_ii_widgets):     	"$\containers";
-		vision_ii_common_dialog (vision_ii_widgets):	"$\common_dialogs";
-		vision_ii_uncommon_widgets (vision_ii_widgets):	"$\uncommon_widgets";
+-- Implementation Interface
+	vision_ii (vision):								"$\implementation\implementation_interface";
+	vision_ii_kernel (vision_ii):					"$\kernel";
+	vision_ii_support (vision_ii):					"$\support";
+	vision_ii_properties (vision_ii):				"$\properties";
+	vision_ii_items (vision_ii):					"$\items";
+	vision_ii_widgets (vision_ii):					"$\widgets";
+	vision_ii_primitives (vision_ii_widgets):		"$\primitives";
+	vision_ii_containers (vision_ii_widgets):    	"$\containers";
+	vision_ii_common_dialog (vision_ii_widgets):	"$\common_dialogs";
+	vision_ii_uncommon_widgets (vision_ii_widgets):	"$\uncommon_widgets";
 
-	-- Implementation clusters for MS Windows
-	
-		vision_imp (vision_i):								"$\mswin";
-		vision_imp_userdata (vision_imp):					"$\user_data";
-		vision_imp_kernel (vision_imp): 	       			"$\kernel";
-		vision_imp_support (vision_imp):					"$\support";
-		vision_imp_properties (vision_imp):					"$\properties";
-		vision_imp_items (vision_imp):						"$\items";
-		vision_imp_widgets (vision_imp):        			"$\widgets";
-		vision_imp_primitives (vision_imp_widgets):     	"$\primitives";
-		vision_imp_containers (vision_imp_widgets):     	"$\containers";
-		vision_imp_common_dialog (vision_imp_widgets):		"$\common_dialogs";
-		vision_imp_uncommon_widgets (vision_imp_widgets):	"$\uncommon_widgets";
+-- Implementation clusters for MS Windows
+	vision_imp (vision):								"$\implementation\mswin";
+	vision_imp_userdata (vision_imp):					"$\user_data";
+	vision_imp_kernel (vision_imp):						"$\kernel";
+	vision_imp_support (vision_imp):					"$\support";
+	vision_imp_properties (vision_imp):					"$\properties";
+	vision_imp_items (vision_imp):						"$\items";
+	vision_imp_widgets (vision_imp):					"$\widgets";
+	vision_imp_primitives (vision_imp_widgets):			"$\primitives";
+	vision_imp_containers (vision_imp_widgets):			"$\containers";
+	vision_imp_common_dialog (vision_imp_widgets):		"$\common_dialogs";
+	vision_imp_uncommon_widgets (vision_imp_widgets):	"$\uncommon_widgets";
 
 external
         include_path:
-               	"$EIFFEL4\library\wel\spec\windows\include";
+               	"$(EIFFEL4)/library/wel/spec/windows/include";
         object:
-                "$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib";
+                "$(EIFFEL4)/library/wel/spec/$(COMPILER)/lib/wel.lib";
 
 end

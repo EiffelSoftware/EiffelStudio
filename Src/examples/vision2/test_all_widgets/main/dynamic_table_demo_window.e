@@ -1,7 +1,8 @@
 indexing
-
 	description:
-		"";
+		"DYNAMIC_TABLE_DEMO_WINDOW, demo window to test the%
+		% dynamic table widget. Belongs to EiffelVision example%
+		% test_all_widgets.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -9,7 +10,6 @@ class
 	DYNAMIC_TABLE_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -18,14 +18,14 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_DYNAMIC_TABLE is
+			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 			Result.set_row_layout
 			Result.set_finite_dimension (2)
 		end
@@ -37,6 +37,7 @@ feature -- Access
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
 			!!button.make_with_text (main_widget, "Element 1")
 			!!button.make_with_text (main_widget, "Element 2")
@@ -51,9 +52,8 @@ feature -- Status setting
 			!!button.make_with_text (main_widget, "Element 11")
 		end
 	
-feature -- Status setting
-	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Dynamic table demo")
 			main_widget.set_homogeneous (True)

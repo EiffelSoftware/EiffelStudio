@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"main window button for the application. Belongs to EiffelVision example."
+		"Main window button for the application.%
+		% Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,7 +16,6 @@ inherit
 	EV_COMMAND
 
 creation
-	
 	make_button
 	
 feature {NONE} --Initialization
@@ -24,7 +23,7 @@ feature {NONE} --Initialization
 	make_button (main_w: MAIN_WINDOW; button_name, pixmap_file_name: STRING; cmd: DEMO_WINDOW) is
 		local
 			p: EV_PIXMAP
-			a: EV_ARGUMENT1 [MAIN_WINDOW]
+			arg: EV_ARGUMENT1 [MAIN_WINDOW]
 		do
 			make (main_w.container)
 
@@ -34,25 +33,39 @@ feature {NONE} --Initialization
 			end
 			demo_window := cmd
 			demo_window.set_effective_button (Current)
-			!! a.make (main_w)
-			add_toggle_command (Current, a)
+			!! arg.make (main_w)
+			add_toggle_command (Current, arg)
 		end
 
 feature -- Access
 
 	demo_window: DEMO_WINDOW
+			-- Demo window launch by the button
 
-feature -- Command
+feature -- Command execution
 
-	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]; data: EV_EVENT_DATA) is
-		local
-			temp_dem: DEMO_WINDOW
+	execute (arg: EV_ARGUMENT1[MAIN_WINDOW]; data: EV_EVENT_DATA) is
+			-- Executed when the button is pressed.
 		do
 			if state then
-				demo_window.activate (argument.first)
+				demo_window.activate (arg.first)
 			end
 		end
 
-end
+end -- class MAIN_WINDOW_BUTTON
 
-	
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

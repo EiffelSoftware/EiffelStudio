@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"TEXT_FIELD_DEMO_WINDOW, demo window to test text_field widget. Belongs to EiffelVision example."
+		"TEXT_FIELD_DEMO_WINDOW, demo window to test%
+		% text_field widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	TEXT_FIELD_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,30 +19,31 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_TEXT_FIELD is
+			-- The main widget of the demo
 		once
 			!!Result.make (Current)
 		end
-	
 
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
 			main_widget.set_text ("edit me")
 		end
 	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Text field demo")
 		end
 	
-end
+end -- class TEXT_FIELD_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

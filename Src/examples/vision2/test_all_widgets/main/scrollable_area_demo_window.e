@@ -1,7 +1,7 @@
 indexing
-
 	description: 
-	"SCROLLABLE_AREA_DEMO_WINDOW, demo window to test scrollable area widget. Belongs to EiffelVision example."
+		"SCROLLABLE_AREA_DEMO_WINDOW, demo window to test%
+		% scrollable area widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -11,7 +11,6 @@ class
 	SCROLLABLE_AREA_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
 		redefine
 			main_widget,
@@ -20,36 +19,35 @@ inherit
 		end
 	
 creation
-
 	make
 
 feature -- Access
 
 	main_widget: EV_SCROLLABLE_AREA is
+			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 			Result.set_minimum_size(200,200)
 		end
-	
-	
+
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		local
-			t: EV_TEXT_AREA
+			ta: EV_TEXT_AREA
 		do
-			!!t.make (main_widget)
-			t.set_size (300, 300)
+			!! ta.make (main_widget)
+			ta.set_size (300, 300)
 		end
 	
-feature -- Status setting
-	
 	set_values is
+			-- Set the values on the widgets of the window.
 		do
 			set_title ("Scrollable area demo")
 		end
 
-end
+end -- class SCROLLABLE_AREA_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

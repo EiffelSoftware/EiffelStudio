@@ -24,6 +24,7 @@ creation
 feature -- Access
 
 	main_widget: EV_MULTI_COLUMN_LIST is
+			-- The main widget of the demo
 		once
 			!!Result.make_with_size (Current, 5)
 
@@ -52,6 +53,7 @@ feature -- Access
 feature -- Status setting
 	
 	set_widgets is
+			-- Set the widgets in the demo windows.
 		do
 			!! row.make_with_text (main_widget, <<"This", "is", "a", "row", "item">>)
 			row.set_selected (True)
@@ -64,9 +66,8 @@ feature -- Status setting
 			row.set_selected (True)
 		end
 	
-feature -- Status setting
-	
 	set_values is
+			-- Set the values on the widgets of the window.
 		local
 			cols: INTEGER
 			tmpstr: STRING
@@ -77,13 +78,7 @@ feature -- Status setting
 			set_title (tmpstr)
 		end
 
-
-	set_commands is
-		local
-		do
-		end
-	
-end -- EV_MULTI_COLUMN_LIST
+end -- EV_MC_LIST_DEMO_WINDOW
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

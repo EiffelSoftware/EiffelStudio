@@ -7,7 +7,9 @@ inherit
 			is_char, is_boolean, dump, same_as,
 			description, hash_code,
 			associated_reference, generate_cecil_value, sk_value,
-			generate_sk_value, type_a
+			generate_sk_value, type_a,
+			generate, generate_cast, generate_access_cast,
+			generate_function_cast, generate_size
 		end
 
 feature
@@ -70,5 +72,35 @@ feature
 		do
 			!BOOLEAN_A!Result
 		end
+
+	generate (file: INDENT_FILE) is
+			-- Generate C type in file `file'.
+		do
+			file.putstring ("EIF_BOOLEAN ");
+		end;
+
+	generate_cast (file: INDENT_FILE) is
+			-- Generate C type cast in file `file'.
+		do
+			file.putstring ("(EIF_BOOLEAN) ");
+		end;
+
+	generate_access_cast (file: INDENT_FILE) is
+			-- Generate access C cast in file `file'.
+		do
+			file.putstring ("(EIF_BOOLEAN *) ");
+		end;
+
+	generate_function_cast (file: INDENT_FILE) is
+			-- Generate C function cast in file `file'.
+		do
+			file.putstring ("(EIF_BOOLEAN (*)()) ");
+		end;
+
+	generate_size (file: INDENT_FILE) is
+			-- Generate size of C type
+		do
+			file.putstring ("sizeof(EIF_BOOLEAN)");
+		end;
 
 end

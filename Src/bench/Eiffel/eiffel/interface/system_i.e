@@ -3229,21 +3229,23 @@ feature -- Dispose routine
 		local
 			entry: ROUT_TABLE
 		do
-				-- Get the polymorphic table corresponding to the `dispose' routine
-				-- from MEMORY.
-			entry ?= Eiffel_table.poly_table (memory_dispose_id)
+			if memory_class_i /= Void and then memory_class_i.is_compiled then
+					-- Get the polymorphic table corresponding to the `dispose' routine
+					-- from MEMORY.
+				entry ?= Eiffel_table.poly_table (memory_dispose_id)
 
-			if entry /= Void then
-					-- We are using `header_generation_buffer' for the generation
-					-- because this is used for routine tables (look at
-					-- `generate_routine_table').
-					-- We are using `routine_id_counter.dispose_rout_id' and not
-					-- `memory_dispose_id' to generate the table, because we are not
-					-- generating a standard polymorphic table and so, we cannot reuse the
-					-- one which could have been generated if there was any polymorphic
-					-- call on `dispose'.
-				entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
-												header_generation_buffer)
+				if entry /= Void then
+						-- We are using `header_generation_buffer' for the generation
+						-- because this is used for routine tables (look at
+						-- `generate_routine_table').
+						-- We are using `routine_id_counter.dispose_rout_id' and not
+						-- `memory_dispose_id' to generate the table, because we are not
+						-- generating a standard polymorphic table and so, we cannot reuse the
+						-- one which could have been generated if there was any polymorphic
+						-- call on `dispose'.
+					entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
+													header_generation_buffer)
+				end
 			end
 		end 
 
@@ -3719,7 +3721,9 @@ feature -- Precompilation
 			else
 				add_visible_classes
 			end
-			Workbench.change_all
+			if root_class = any_class then
+				Workbench.change_all
+			end
 			private_freeze := True
 		end
 

@@ -57,7 +57,7 @@ feature -- Access
 feature -- Status report
 
 	is_editable: BOOLEAN is
-			-- Is the text editable?
+			-- Is `text' editable?
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -280,7 +280,7 @@ feature -- Basic operation
 		end
 
 	delete_selection is
-			-- Delete the current selection.
+			-- Delete current selection.
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection

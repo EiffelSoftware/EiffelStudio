@@ -69,6 +69,7 @@ feature -- Element change
 				item := Void
 				notify_change (2 + 1)
 			else
+				new_child.implementation.on_parented
 				child_imp ?= new_child.implementation
 				check
 					new_child_implementation_not_void: child_imp /= Void
@@ -174,6 +175,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/14 21:41:18  brendel
+--| Fixed put for PIXMAP's.
+--|
 --| Revision 1.7  2000/02/28 16:30:56  brendel
 --| Added action sequence calls for on-remove and on-add of items.
 --| Since this class has not been reviewed yet, I did not know exactly

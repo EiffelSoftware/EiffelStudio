@@ -27,6 +27,28 @@
 
 		<P CLASS="note"><B>Note</B>: you can also click on a component in the image above to find out more.</P>
 
+		<H2>Example</H2>
+
+		<CENTER>
+		<IMG SRC="../../../../images/eiffelbench/feature-wizard-procedure-example.png">
+		</CENTER>
+		<CODE><PRE>class
+    PRODUCT
+
+feature {PERSON} -- Element change
+
+    place_order (person: PERSON; quantity: INTEGER) is
+            -- Mail `quantity' to `person'.
+        require
+            person /= Void and quantity > 0
+        do
+            person.mail_order (Current, quantity)
+        ensure
+            person.has_ordered (Current)
+        end
+
+end -- class PRODUCT</PRE></CODE>
+
 <!--
   NOTE: VB Image map below generated with MapEdit 2.63.
   Get it from download.com or something.

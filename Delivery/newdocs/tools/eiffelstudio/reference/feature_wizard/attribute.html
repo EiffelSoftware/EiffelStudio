@@ -26,6 +26,36 @@
 
 		<P CLASS="note"><B>Note</B>: you can also click on a component in the image above to find out more.</P>
 
+		<H2>Example</H2>
+
+		<CENTER>
+		<IMG SRC="../../../../images/eiffelbench/feature-wizard-attribute-example.png">
+		</CENTER>
+		<CODE><PRE>class
+    PRODUCT
+
+feature {NONE} -- Access
+
+    price: DOUBLE
+            -- Cost in dollars.
+
+feature -- Element change
+
+    set_price (a_price: DOUBLE) is
+            -- Assign `a_price' to `price'.
+        require
+            a_price_non_negative: a_price >= 0.0
+        do
+            price := a_price
+        ensure
+            price_assigned: price = a_price
+        end
+
+invariant
+    price_non_negative: price >= 0.0
+
+end -- class PRODUCT</PRE></CODE>
+
 <!--
   NOTE: VB Image map below generated with MapEdit 2.63.
   Get it from download.com or something.

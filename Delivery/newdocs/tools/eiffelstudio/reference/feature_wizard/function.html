@@ -28,6 +28,28 @@
 
 		<P CLASS="note"><B>Note</B>: you can also click on a component in the image above to find out more.</P>
 
+		<H2>Example</H2>
+
+		<CENTER>
+		<IMG SRC="../../../../images/eiffelbench/feature-wizard-function-example.png">
+		</CENTER>
+		<CODE><PRE>class
+    PRODUCT
+
+feature -- Status report
+
+    order_price (quantity: INTEGER): DOUBLE is
+            -- Total price when ordering `quantity'.
+        require
+            quantity_non_negative: quantity >= 0
+        do
+            Result := quantity * price
+        ensure
+            correct: Result = quantity * price
+        end
+
+end -- class PRODUCT</PRE></CODE>
+
 <!--
   NOTE: VB Image map below generated with MapEdit 2.63.
   Get it from download.com or something.

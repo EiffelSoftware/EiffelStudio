@@ -1,13 +1,14 @@
 indexing
-	description: "Initial State"
-	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Initial State"
+	author		: "pascalf"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_INITIAL_STATE
+
 inherit
-	WIZARD_INITIAL_STATE_WINDOW
+	BENCH_WIZARD_INITIAL_STATE_WINDOW
 		redefine
 			proceed_with_current_info
 		end
@@ -25,16 +26,20 @@ feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("EIFFELWIZARD CONSTRUCTOR")
-			message.set_text ("%TWelcome.%N%NThis wizard will help you to build an Eiffel wizard.%N%
-								%%NYou will have to choose how many state should be in your wizard.%
-								%%NThen all the usefull classes will be generated, and you will%
-								%%Njust have to fill the WIZARD_xxxx_STATE classes.%N%
-								%%NThe generated project is compilable as the ace will also be%
-								%%Ngenerated. You must however have the Wizard library.")
+			title.set_text ("Welcome to the New Wizard%NApplication Wizard")
+			message.set_text (
+				"Using this wizard you can create a Wizard application%N%
+				%%N%
+				%You will have to choose how many state should be in%N%
+				%your wizard.%N%
+				%Then all the usefull classes will be generated, and you will%N%
+				%just have to fill the WIZARD_xxxx_STATE classes.%N%
+				%%N%
+				%%N%
+				%To continue, click Next.")
 		end
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-		-- Icon for the Eiffel Store Wizard
+			-- Icon for the Eiffel Store Wizard
 	
 end -- class WIZARD_INITIAL_STATE

@@ -1,8 +1,8 @@
 system
-	Web_wizard
+	wizard
 
 root
-	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+	WIZARD_PROJECT_MANAGER (wizard_library): "make_and_launch"
 
 default
 	assertion (ensure)
@@ -16,40 +16,39 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-
+	arguments ("C:\50dev\help\wizards\ewizard -callback c:\test.txt")
 
 cluster
 	
-	root_cluster: "D:\src\help\Wizards\ewizard";
-	src(root_cluster): "$\src"
+	root_cluster: 			"$EIFFEL_SRC\help\Wizards\ewizard"
+
+	src (root_cluster): 	"$\src"
 
 		-- EiffelBase
-	all base:						"$EIFFEL4\library\base"
+	all base:				"$EIFFEL_SRC\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	all vision2: 			"$EIFFEL4\library\vision2_devel"
+	all vision2: 			"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk"
 			"test"
 		end
 
-	all Events:				"$EIFFEL4\library\event"
+	all wel: 				"$EIFFEL_SRC\library\wel"
 
-	all wel: 				"$EIFFEL4\library\wel_devel"
-
-	all wizard_tool:				"$EIFFEL4\tools\wizard"
+	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 
 
 external
 	include_path:	
-			"$EIFFEL4\library\wel_devel\spec\windows\include",
-			"$EIFFEL4\library\vision2_devel\spec\include"
+			"$EIFFEL_SRC\library\wel\spec\windows\include",
+			"$EIFFEL_SRC\library\vision2\spec\include"
 
 	object:
-			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
+			"$EIFFEL_SRC\library\wel\spec\msc\lib\wel.lib",
+			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
 end

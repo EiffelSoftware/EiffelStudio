@@ -23,6 +23,18 @@ feature -- Markers
 				io.error.put_new_line
 			end
 		end
+		
+	to_implement (comment: STRING) is
+			-- Mark code that has to be "implemented" with `comment'.
+		require
+			comment_not_void: comment /= Void
+		do
+			debug ("refactor_fixme")
+				io.error.put_string ("TO_BE_IMPLEMENTED: ")
+				io.error.put_string (comment)
+				io.error.put_new_line
+			end
+		end
 
 indexing
 

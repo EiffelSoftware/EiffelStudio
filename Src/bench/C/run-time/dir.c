@@ -262,7 +262,7 @@ rt_public EIF_OBJECT dir_current(void)
 
 	cwd = getcwd(NULL, PATH_MAX);
 	cwd_string = makestr(cwd, strlen (cwd));
-	eif_free (cwd);
+	free (cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
 	return ((EIF_OBJECT)cwd_string);
 }
 

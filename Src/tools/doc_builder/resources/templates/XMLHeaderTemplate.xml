@@ -1,8 +1,7 @@
 <span>
 	<table style="header_filler">
 		<row>
-			<cell style="bordered_cell">
-			</cell>
+			<cell style="bordered_cell"></cell>
 			<cell style="header_filler"><span style="heading_text">Welcome to the Online Eiffel Documentation</span></cell>
 		</row>
 	</table>
@@ -18,7 +17,7 @@
 	</table>
 	<table>
 		<row>
-			<cell class="content_style">
+			<cell style="title_style">
 				<heading><size>1</size>[!Title!]</heading>
 			</cell>
 		</row>

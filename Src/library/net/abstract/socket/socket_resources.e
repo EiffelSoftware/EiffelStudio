@@ -426,6 +426,12 @@ feature {NONE} -- Externals: error messages
 			"C"
 		end;
 
+	c_reset_error is
+			-- Reset C error number.
+		external
+			"C"
+		end;
+
 	family_no_support: INTEGER is
 			-- Family is not supported on this machine.
 		external

@@ -39,6 +39,7 @@ feature -- Initialization
 	make is
 			-- Create an unix datagram socket.
 		do
+			c_reset_error
 			family := af_unix;
 			type := sock_dgrm;
 			make_socket;

@@ -42,6 +42,7 @@ feature -- Initialization
 	make is
 			-- Make an unix socket stream.
 		do
+			c_reset_error
 			family := af_unix;
 			type := sock_stream;			
 			make_socket

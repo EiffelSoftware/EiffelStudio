@@ -66,6 +66,7 @@ feature -- Access
 		ensure
 			bridge_ok: equal (Result, implementation.icon_name)
 			result_not_void: Result /= Void
+			cloned: Result /= implementation.icon_name
 		end 
 
 	icon_pixmap: EV_PIXMAP is

@@ -45,7 +45,7 @@ feature -- Execution
 		deferred
 		end;
 
-feature {ISE_BUTTON} -- Implementation
+feature {ISE_BUTTON, ISE_MENU_ENTRY} -- Implementation
 
 	button_three_action: ANY is
 			-- Action to specify that the third button was pressed

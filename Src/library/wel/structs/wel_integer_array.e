@@ -26,14 +26,24 @@ feature {NONE} -- Initialization
 		require
 			an_array_not_void: an_array /= Void
 		local
-			a: ANY
+			i, j, nb: INTEGER
+			l_val: INTEGER
 		do
 			count := an_array.count
 			structure_make
-			a := an_array.to_c
-			c_memcpy (item, $a, structure_size)
+			from
+				i := an_array.lower
+				nb := an_array.upper
+			until
+				i > nb
+			loop
+				l_val := an_array.item (i)
+				(item + j * Integer_size).memory_copy ($l_val, Integer_size)
+				i := i + 1
+				j := j + 1
+			end
 		ensure
---			set: to_array (an_array.lower).is_equal (an_array)
+			set: to_array (an_array.lower).is_equal (an_array)
 		end
 
 feature -- Conversion
@@ -41,11 +51,21 @@ feature -- Conversion
 	to_array (a_lower: INTEGER): ARRAY [INTEGER] is
 			-- Eiffel array
 		local
-			a: ANY
+			i, j, nb: INTEGER
+			l_val: INTEGER
 		do
-			create Result.make (a_lower, a_lower + count - 1)
-			a := Result.to_c
-			c_memcpy ($a, item, structure_size)
+			from
+				i := a_lower
+				nb := a_lower + count - 1
+				create Result.make (a_lower, nb)
+			until
+				i > nb
+			loop
+				($l_val).memory_copy (item + j * Integer_size, Integer_size)
+				Result.put (l_val, i)
+				i := i + 1
+				j := j + 1
+			end
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = a_lower
@@ -60,8 +80,13 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of the array (in bytes)
 		do
-			Result := 4*count
+			Result := Integer_size * count
 		end
+		
+feature {NONE} -- Constants
+
+	Integer_size: INTEGER is 4
+			-- Size of integers.
 
 invariant
 	positive_count: count > 0

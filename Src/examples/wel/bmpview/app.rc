@@ -1,0 +1,23 @@
+#include "app_ids.h"
+
+ID_ICO_APPLICATION ICON "app.ico"
+ID_ICO_CHILD_WINDOW ICON "child.ico"
+
+ID_MENU_APPLICATION MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&Open...", CMD_FILE_OPEN
+		MENUITEM "&Close", CMD_FILE_CLOSE
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_FILE_EXIT
+	}
+
+	POPUP "&Window"
+	{
+		MENUITEM "Tile &vertical", CMD_WINDOW_TILE_VERTICAL
+		MENUITEM "Tile &horizontal", CMD_WINDOW_TILE_HORIZONTAL
+		MENUITEM "&Cascade", CMD_WINDOW_CASCADE
+		MENUITEM "&Arrange icons", CMD_WINDOW_ARRANGE
+	}
+}

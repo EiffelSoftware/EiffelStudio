@@ -32,6 +32,7 @@ feature
 		local
 			nothing: ANY
 		do
+-- FIXME
 		end
 
 end

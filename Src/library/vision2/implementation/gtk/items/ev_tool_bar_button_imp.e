@@ -1,7 +1,5 @@
 indexing
-	description:
-		" EiffelVision2 Toolbar button, a specific button that goes%
-		% in a tool-bar."
+	description: "EiffelVision2 Toolbar button, a specific button that goes in a tool-bar."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,9 +20,9 @@ inherit
 			set_text
 		redefine
 			parent_imp,
-			make_with_text
+			make_with_text,
+			initialize
 		end
-
 
 	EV_BUTTON_IMP
 		rename
@@ -34,6 +32,10 @@ inherit
 		undefine
 			has_parent,
 			pixmap_size_ok
+		redefine
+			initialize,
+			set_text,
+			create_pixmap_place
 		select
 			remove_double_click_commands,
 			add_double_click_command	
@@ -43,19 +45,47 @@ create
 	make,
 	make_with_text
 
-
 feature {NONE} -- Initialization
 
+	initialize is
+			-- Creation of vbox for pixmap and caption.
+		do
+			box := gtk_vbox_new (False, 5)
+			gtk_widget_show (box)
+			gtk_container_add (GTK_CONTAINER (widget), box)
+		end
 
+	set_text (txt: STRING) is
+			-- Set the caption of the tool bar button to txt.
+			-- Aligns pixmap to the middle of the button.
+		do
+			{EV_BUTTON_IMP} Precursor (txt)
+			if pixmap_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+			end
+		end
+
+	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
+		do
+			-- Redfinition needed to align pixmap in centre of button.
+			{EV_BUTTON_IMP} Precursor (pix_imp)
+			if pixmap_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
+			end
+			if label_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+			end
+		end
 
 feature -- Access
 
 	parent_imp: EV_TOOL_BAR_IMP
 
-	
 	index: INTEGER is
 			-- Index of the button in the tool-bar.
 		do
+			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
 feature -- Element change
@@ -84,6 +114,7 @@ feature -- Element change
 			-- Make `pos' the new index of the item in the
 			-- list.
 		do
+			parent_imp.insert_item (Current, pos)
 		end
 
 feature -- Status report
@@ -91,6 +122,7 @@ feature -- Status report
 	is_insensitive: BOOLEAN is
 			-- Is the current button insensitive?
 		do
+			Result := insensitive
 		end
 
 feature -- Event : command association
@@ -99,6 +131,7 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
 		do
+			add_command (widget, "clicked", com, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -107,8 +140,8 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the item is selected.
 		do
+			remove_commands (widget, clicked_id)
 		end
-
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 

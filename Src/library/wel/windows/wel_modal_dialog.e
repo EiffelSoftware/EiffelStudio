@@ -13,7 +13,20 @@ inherit
 
 creation
 	make_by_id,
-	make_by_name
+	make_by_name,
+	make_with_template
+	
+feature {NONE} -- initialization
+
+	make_with_template (a_parent: WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE) is
+		do
+			register_dialog
+			create dialog_children.make
+			item := cwin_dialog_box_indirect (main_args.current_instance.item, a_template.item,
+				a_parent.item, cwel_dialog_procedure_address)
+		ensure
+			dialog_children_not_void: dialog_children /= Void		
+		end
 
 feature -- Basic operations
 
@@ -73,6 +86,13 @@ feature {NONE} -- Implementation
 	
 
 feature {NONE} -- Externals
+
+	cwin_dialog_box_indirect (hinst, template, hwnd, dlgproc: POINTER): POINTER is
+		external
+			"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): EIF_POINTER"
+		alias
+			"DialogBoxIndirect"
+		end
 
 	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER is
 			-- SDK DialogBox

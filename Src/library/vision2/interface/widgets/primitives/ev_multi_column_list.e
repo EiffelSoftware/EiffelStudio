@@ -3,7 +3,7 @@ indexing
 		"EiffelVision multi-column-list. Contains a list of items%
 		% from which the user can select."
 	note: "The list start at the index 1, the titles are not count among%
-		%the rows."	
+		%the rows. The columns start also at the index 1."	
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
@@ -13,11 +13,10 @@ class
 	EV_MULTI_COLUMN_LIST
 
 inherit
-	EV_LIST
-		rename
-			count as row_count
+	EV_PRIMITIVE
 		redefine
-			implementation
+			implementation,
+			make
 		end
 
 creation
@@ -36,15 +35,93 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	column_count: INTEGER is
-			-- Nimber of columns in the list.
+	rows: INTEGER is
+			-- Number of rows
 		require
 			exists: not destroyed
 		do
-			Result := implementation.column_count
+			Result := implementation.rows
+		end
+
+	columns: INTEGER is
+			-- Number of columns in the list.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.columns
+		end
+
+	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		require
+			exists: not destroyed
+			item_exists: index <= rows
+		do
+			Result := implementation.get_item(index)
+		end
+
+	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+			-- Item which is currently selected, for a multiple
+			-- selection, it gives the item which has the focus.
+		require
+			exists: not destroyed
+			item_selected: selected
+		do
+			Result := implementation.selected_item
+		end
+
+	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+			-- List of all the selected items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
+		require
+			exists: not destroyed
+			item_selected: selected
+		do
+			Result := implementation.selected_items
+		end
+
+feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is at least one item selected ?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.selected
+		end
+
+	is_multiple_selection: BOOLEAN is
+			-- True if the user can choose several items
+			-- False otherwise
+		require
+			exist: not destroyed
+		do
+			Result := implementation.is_multiple_selection
 		end
 
 feature -- Status setting
+
+	set_multiple_selection is
+			-- Allow the user to do a multiple selection simply
+			-- by clicking on several choices.
+		require
+			exists: not destroyed
+		do
+			implementation.set_multiple_selection	
+		end
+
+	set_single_selection is
+			-- Allow the user to do only one selection. It is the
+			-- default status of the list
+		require
+			exists: not destroyed
+		do
+			implementation.set_single_selection
+		end
 
 	show_title_row is
 			-- Show the row of the titles.
@@ -62,6 +139,33 @@ feature -- Status setting
 			implementation.hide_title_row
 		end
 
+	set_left_alignment (column: INTEGER) is
+			-- Align the text of the column at left.
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		do
+			implementation.set_column_alignment (0, column)
+		end
+
+	set_center_alignment (column: INTEGER) is
+			-- Align the text of the column at left.
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		do
+			implementation.set_column_alignment (2, column)
+		end
+	
+	set_right_alignment (column: INTEGER) is
+			-- Align the text of the column at left.
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		do
+			implementation.set_column_alignment (1, column)
+		end
+
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
@@ -69,7 +173,7 @@ feature -- Element change
 			-- `number'.
 		require
 			exists: not destroyed
---			column_exists: column >= 1 and column <= column_count
+			column_exists: column >= 1 and column <= columns
 		do
 			implementation.set_column_title (txt, column)
 		end
@@ -79,7 +183,7 @@ feature -- Element change
 			-- `column'.
 		require
 			exists: not destroyed
---			column_exists: column >= 1 and column <= column_count
+			column_exists: column >= 1 and column <= columns
 		do
 			implementation.set_column_width (value, column)
 		end
@@ -88,14 +192,42 @@ feature -- Element change
 			-- Make`value' the new height of all the rows.
 		require
 			exists: not destroyed
---			row_exists: row >= 0 and row <= row_count
 		do
 			implementation.set_rows_height (value)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+			command_not_void: a_command /= Void
+		do
+			implementation.add_selection_command (a_command, arguments)
+		end
+
+	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when an item is
+			-- selected by double clicked.
+		require
+			exists: not destroyed
+			command_not_void: a_command /= Void
+		do
+			implementation.add_double_click_selection_command (a_command, arguments)
+		end
+
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 	
 	implementation: EV_MULTI_COLUMN_LIST_I	
+
+feature {NONE} -- Inapplicable
+
+	make (par: EV_CONTAINER) is
+			-- Do nothing, but need to be implemented.
+		do
+		end
 
 end -- class EV_MULTI_COLUMN_LIST
 

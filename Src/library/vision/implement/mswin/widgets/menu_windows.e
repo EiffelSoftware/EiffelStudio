@@ -157,21 +157,29 @@ feature -- Status setting
 			toggle_b: TOGGLE_B_WINDOWS
 			separator: SEPARATOR_WINDOWS
 			pulldown: MENU_PULL_WINDOWS
+			menu_b: MENU_BUTTON_WINDOWS
 		do
 			button ?= widget
 			if button /= Void then
-				associated_root.add (button)
-				if button.managed then
-					append_string (button.text, associated_root.value)
-					button.set_hash_code
-					id_children.put (associated_root.value, button)
-				end
-				toggle_b ?= widget
-				if toggle_b /= Void and then toggle_b.managed then
-					if toggle_b.state then
-						check_item (associated_root.value)
-					else
-						uncheck_item (associated_root.value)
+				menu_b ?= widget
+				if menu_b = Void or menu_b.associated_menu = Void then
+					if button.managed then
+						if id_children.has (button) then
+							associated_root.remove (id_children.item (button))
+							id_children.remove (button)
+						end
+						associated_root.add (button)
+						button.set_hash_code
+						id_children.put (associated_root.value, button)
+						append_string (button.text, associated_root.value)
+					end
+					toggle_b ?= widget
+					if toggle_b /= Void and then toggle_b.managed then
+						if toggle_b.state then
+							check_item (associated_root.value)
+						else
+							uncheck_item (associated_root.value)
+						end
 					end
 				end
 			else
@@ -195,63 +203,10 @@ feature -- Status setting
 			end
 		end
 
-	xxput_child_in_menu (widget: WIDGET_WINDOWS; root: ROOT_MENU_WINDOWS) is
-			-- Add `widget' to the menu
-		require
-			widget_exists: widget /= Void
-		local
-			button: BUTTON_WINDOWS
-			toggle_b: TOGGLE_B_WINDOWS
-			separator: SEPARATOR_WINDOWS
-			pulldown: MENU_PULL_WINDOWS
-			menu_b: MENU_BUTTON_WINDOWS
-		do
-			button ?= widget
-			if button /= Void then
-				menu_b ?= widget
-				if menu_b = Void or menu_b.associated_menu = Void then
-					root.add (button)
-					if button.managed then
-						append_string (button.text, root.value)
-					end
-					button.set_hash_code
-					id_children.put (root.value, button)
-					toggle_b ?= widget
-					if toggle_b /= Void and then toggle_b.managed then
-						if toggle_b.state then
-							check_item (root.value)
-						else
-							uncheck_item (root.value)
-						end
-					end
-				end
-			else
-				separator ?= widget
-				if separator /= Void and then separator.managed then
-					append_separator
-				else
-					pulldown ?= widget
-					if pulldown /= Void then
-						pulldown.create
-						pulldown.put_children_in_menu (root)
-						if pulldown.managed then
-							append_popup (pulldown, pulldown.menu_button.text)
-						end
-					else
-						io.error.putstring ("Unknown type in menu ")
-						io.error.putstring (widget.generator)
-						io.error.new_line
-					end
-				end
-			end
-		end
-
 feature -- Element change
 
 	manage_item (w: WIDGET_WINDOWS) is
 			-- Manage a item in the menu.
-		require
-			root_present: associated_root /= Void
 		local
 			ba: BAR_WINDOWS
 			mp: MENU_PULL_WINDOWS
@@ -265,7 +220,7 @@ feature -- Element change
 				check
 					parent_not_void: mp /= Void
 				end
-				associated_root.new_id
+				associated_root.add (b)
 				mp.insert_button (b, associated_root.value)
 				b.set_hash_code
 				id_children.put (associated_root.value, b)
@@ -288,13 +243,13 @@ feature -- Element change
 					end
 				end
 			end
-			associated_shell.wel_draw_menu
+			if associated_shell.has_menu then
+				associated_shell.wel_draw_menu
+			end
 		end
 
 	unmanage_item (w: WIDGET_WINDOWS) is
 			-- Unmanage a item in the menu
-		require
-			root_present: associated_root /= Void
 		local
 			ba: BAR_WINDOWS
 			s: SEPARATOR_WINDOWS
@@ -307,7 +262,10 @@ feature -- Element change
 				check
 					parent_not_void: mp /= Void
 				end
-				delete_item (id_children.item (b))
+				if b.parent.managed then
+					delete_item (id_children.item (b))
+				end
+				associated_root.remove (id_children.item (b))
 				id_children.remove (b)
 			else
 				s ?= w
@@ -318,13 +276,15 @@ feature -- Element change
 					if ba /= Void then
 						ba.remove_popup (w)
 					else
-						cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
-						--delete_item (id_children.item (mp))
-						--id_children.remove (mp)
+						if w.parent.managed then
+							cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
+						end
 					end
 				end
 			end
-			associated_shell.wel_draw_menu
+			if associated_shell.has_menu then
+				associated_shell.wel_draw_menu
+			end
 		end
 
 feature -- Removal

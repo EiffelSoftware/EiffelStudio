@@ -16,6 +16,13 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	KL_EQUALITY_TESTER [CL_TYPE_A]
+		export
+			{NONE} all
+		redefine
+			test
+		end
 
 feature -- Initialization/Checking
 
@@ -157,6 +164,70 @@ feature -- Initialization/Checking
 				(a_class.convert_to /= Void or a_class.convert_from /= Void)
 		end
 
+	system_validity_checking (an_array: ARRAY [CLASS_C]) is
+			-- Check convertibility validity on all system. That is to say, check
+			-- that there is only one way to convert to type.
+			-- Note: Check is done on base class. Is this sufficient?
+		require
+			an_array_not_void: an_array /= Void
+		local
+			i, k, nb: INTEGER
+			l_convertible_classes: ARRAYED_LIST [CLASS_C]
+			l_class, l_other_class: CLASS_C
+			l_vncp: VNCP
+		do
+				-- Reset error flag
+			has_error := False
+
+				-- First extract classes that have a convert clause.
+			from
+				i := an_array.lower
+				nb := an_array.upper
+				create l_convertible_classes.make (30)
+			until
+				i > nb
+			loop
+				l_class := an_array.item (i)
+				if
+					l_class /= Void and then
+					(l_class.convert_from /= Void or l_class.convert_to /= Void)
+				then
+					l_convertible_classes.extend (l_class)
+				end
+				i := i + 1
+			end
+			
+				-- Now check all convertible classes between themself to ensure that
+				-- between two classes, there is no ambiguity when trying to convert from one
+				-- to the other.
+			from
+				i := 1
+				nb := l_convertible_classes.count
+			until
+				i > nb
+			loop
+				l_class := l_convertible_classes.i_th (i)
+				from
+					k := i + 1
+				until
+					k > nb
+				loop
+					l_other_class := l_convertible_classes.i_th (k)
+					if
+						is_conversion_ambiguous (l_class, l_other_class) or
+						is_conversion_ambiguous (l_other_class, l_class)
+					then
+						create l_vncp.make ("Two classes convert to each other.")
+						l_vncp.set_class (l_class)
+						Error_handler.insert_error (l_vncp)
+						has_error := True
+					end
+					k := k + 1
+				end
+				i := i + 1
+			end
+		end
+		
 feature {NONE} -- Implementation: initialization
 
 	new_convert_table: DS_HASH_TABLE [INTEGER, CL_TYPE_A] is
@@ -165,7 +236,7 @@ feature {NONE} -- Implementation: initialization
 		do
 			create Result.make (10)
 				-- Compare keys using `same_as'.
-			Result.set_key_equality_tester (Cl_type_a_tester)
+			Result.set_key_equality_tester (Current)
 		ensure
 			new_convert_table_not_void: Result /= Void
 		end
@@ -302,6 +373,45 @@ feature {NONE} -- Implementation: checking
 		
 feature {NONE} -- Implementation: status report
 
+	is_conversion_ambiguous (a, b: CLASS_C): BOOLEAN is
+			-- Does `a' convert to `b'?
+		require
+			a_not_void: a /= Void
+			b_not_void: b /= Void
+		local
+			l_convert: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+		do
+				-- First check if there are no conversion to `b' from `a'.
+			l_convert := a.convert_to
+			if l_convert /= Void then
+				from
+					l_convert.start
+				until
+					l_convert.after or Result
+				loop
+					Result := l_convert.key_for_iteration.associated_class = b
+					l_convert.forth
+				end
+			end
+			
+			if Result then
+					-- If conversion found, then check that there are no
+					-- conversions from `a' in `b'.
+				l_convert := b.convert_from
+				Result := False
+				if l_convert /= Void then
+					from
+						l_convert.start
+					until
+						l_convert.after or Result
+					loop
+						Result := l_convert.key_for_iteration.associated_class = a
+						l_convert.forth
+					end
+				end
+			end
+		end
+
 	valid_signature (a_feat: FEATURE_I): BOOLEAN is
 			-- Is `a_feat' valid for a conversion routine.
 		require
@@ -320,29 +430,16 @@ feature {NONE} -- Implementation: access
 	has_error: BOOLEAN
 			-- Did we find an error in last checking.
 
-	Cl_type_a_tester: AGENT_BASED_EQUALITY_TESTER [CL_TYPE_A] is
-			-- Compare instances of CL_TYPE_A using `same_as'.
-			-- Once is ok now, but if we start doing operations on convert tables
-			-- in 2 different threads, then it would need to become a once per object.
-		once
-				-- FIXME: Manu 04/23/2003, there is a bug in the parser that prevents us to
-				-- write:
-				-- create Result.make (agent {CL_TYPE_A}.same_as ({CL_TYPE_A}))
-				-- Because the second {CL_TYPE_A} has an ambiguity, it can be the start
-				-- of an agent expression (using the old syntax), or a type specification.
-				-- By default it considers it to be the new agent expression
-			create Result.make (agent compare_cl_type_a)
-		ensure
-			cl_type_a_tester_not_void: Result /= Void
-		end
-
-	compare_cl_type_a (u, v: CL_TYPE_A): BOOLEAN is
-			-- Compare two instances of CL_TYPE_A.
-		require
-			u_not_void: u /= Void
-			v_not_void: v /= Void
+	test (u, v: CL_TYPE_A): BOOLEAN is
+			-- Compare two instances `u' and `v' of CL_TYPE_A using `same_as'.
 		do
-			Result := u.same_as (v)
+			if v = Void then
+				Result := (u = Void)
+			elseif u = Void then
+				Result := False
+			else
+				Result := u.same_as (v)
+			end			
 		end
 
 end -- class CONVERTIBILITY_CHECKER

@@ -53,6 +53,11 @@ feature
 		do
 			save_b.set_unsaved_symbol
 		end;
+
+	set_interface_toggle is
+		do
+			interface_t.set_toggle_on;
+		end;
 	
 feature {NONE}
 

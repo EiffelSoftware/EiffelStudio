@@ -70,6 +70,17 @@ typedef unsigned int uint32;
 /*
  * Scope control pseudo-keywords
  */
+
+#ifdef  EIF_USE_DLL
+#define RT_LNK	__declspec(dllimport)
+#elif   EIF_MAKE_DLL
+#define RT_LNK	__declspec(dllexport)
+#else
+#define RT_LNK extern
+#endif
+
+
+
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */

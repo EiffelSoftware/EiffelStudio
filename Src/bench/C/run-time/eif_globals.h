@@ -414,7 +414,7 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
 /* Exported data-structure declarations */
-extern struct stack loc_stack;			/* Local indirection stack */
+RT_LNK struct stack loc_stack;			/* Local indirection stack */
 RT_LNK struct stack loc_set;	/* Local variable stack */
 extern struct stack moved_set;	/* Describes the new generation */
 extern struct stack once_set;	/* Once functions */

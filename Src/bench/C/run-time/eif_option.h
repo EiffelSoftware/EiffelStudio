@@ -96,9 +96,9 @@ extern SYSTEMTIME *init_date;
 /* #define prof_enabled    EIF_TEST(egc_prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
 #define prof_recording	EIF_TEST(egc_prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
 
-extern int trace_call_level;			/* Call level to report at E-TRACE output */
+RT_LNK int trace_call_level;			/* Call level to report at E-TRACE output */
 
-extern struct stack *prof_stack;		/* Stack that maintains profile information */
+RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
 
 RT_LNK void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
 RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */

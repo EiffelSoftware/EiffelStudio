@@ -52,6 +52,28 @@ EXPORTS
 	rt_norout
 
 ;COMMON
+	trace_call_level
+	prof_stack
+	expop
+	eraise
+	xraise
+	eviol
+	enomem
+	exret
+	exhdlr
+	exinv
+	exasrt
+	exfail
+	eif_panic
+	fatal_error
+	exok
+	exclear
+	esfail
+	ereturn
+	exget
+	excatch
+	exresc
+
 	EIF_once_count
 	EIF_once_values
 	arg_number
@@ -209,9 +231,7 @@ EXPORTS
 	eif_system
 	eif_volume_name
 	emalloc
-	enomem
 	epop
-	eraise
 	eremb
 	erembq
 	eretrieve
@@ -231,13 +251,8 @@ EXPORTS
 	esreal_size
 	estore
 	estypeg
-	eviol
 	ewean
-	exasrt
-	exclear
 	exdata
-	exinv
-	expop
 	exset
 	failure
 	file_access

@@ -10,6 +10,8 @@ class
 inherit
 	
 	INTERNAL
+	
+	GB_CONSTANTS
 
 feature -- Basic operation.
 
@@ -60,5 +62,19 @@ feature -- Basic operation.
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	modified_action_sequence_name (current_type: STRING; action_sequence_info: GB_ACTION_SEQUENCE_INFO): STRING is
+			-- `Result' is action sequence name of `action_sequence_info' in class represented by
+			-- `Current_type'. This is necessayr as in some places in the Vision2 interface, the
+			-- events are renamed.
+		do
+			Result := action_sequence_info.name
+			if current_type.is_equal (Ev_spin_button_string) then
+				if action_sequence_info.class_name.is_equal ("EV_TEXT_COMPONENT_ACTION_SEQUENCES") then
+					Result := "text_change_actions"
+				end
+			end
+		end
+		
 
 end -- class GB_EVENT_UTILITIES

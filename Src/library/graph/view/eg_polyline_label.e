@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			label_group.set_x_y (nx.truncated_to_integer, ny.truncated_to_integer )
+			label_group.set_x_y (nx.truncated_to_integer + 1, ny.truncated_to_integer + 1)
 		end
 
 	project_to_line (ax, ay, x1, y1, x2, y2: DOUBLE): TUPLE [DOUBLE, DOUBLE] is

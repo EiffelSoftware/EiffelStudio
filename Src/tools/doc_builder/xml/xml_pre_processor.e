@@ -292,7 +292,11 @@ feature {NONE} -- Processing
 			l_util: UTILITY_FUNCTIONS
 		do
 			if not shared_constants.help_constants.is_tree_web_help then				
-				l_toc_name := "simple_toc.js"
+				if generation_data.filter_toc_hash.count < 2 then					
+					l_toc_name := "simple_toc_single.js"
+				else						
+					l_toc_name := "simple_toc.js"
+				end
 			else				
 				l_toc_name := "toc.js"
 			end
@@ -358,6 +362,9 @@ feature {NONE} -- Implementation
 			Result := l_link.relative_url
 			if Result.last_index_of ('/', Result.count) > 0 then				
 				Result := Result.substring (1, Result.last_index_of ('/', Result.count))
+			end
+			if generation_data.filter_toc_hash.count < 2 and then Result.substring (1, 3).is_equal ("../") then
+				Result.replace_substring ("", 1, 3)
 			end
 		end		
 		

@@ -139,12 +139,14 @@
 			<italic>melted_path.reg</italic> in $ISE_EIFFEL\wizard\config. Edit this file as needed (replace 
 			<italic>string_manipulator</italic> with the name of your system and change the path to point on the correct location using `\\' as directory separator) and then double click on it to enter the information into the registry.
 			<line_break/>
+			<line_break/>
 			<link/>To test the component, you need to register it first. Register an in-process component via the 
 			<italic>regsvr32</italic> utility using the following syntax: 
 			<italic>regsvr32 system_name.dll</italic> where 
 			<italic>system_name</italic> is the name of the dll (e.g. string_manipulator). Register an out-of-process component using the following syntax: 
 			<italic>system_name.exe -Regserver</italic> where 
 			<italic>system_name</italic> is thename of the component executable file.
+			<line_break/>
 			<line_break/>
 			<link/>To complete this tutorial you need to register the component with the following command (run from a dos console): 
 			<italic>regsvr32string_manipulator.dll</italic> and to enter the information in 

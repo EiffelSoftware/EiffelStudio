@@ -6,9 +6,9 @@
 			<size>2</size>IDL Marshalling Definition Dialog
 		</heading>
 		<image>
-			<url>../images/com_image10.gif</url>
+			<url>../images/COM_image10.gif</url>
 		</image>
-		<paragraph> If you choose Automation, then the Universal marshaler will be used (for additional information on Marshalling please see the chapter COM).If you specify Virtual Table access, then you have the choice between using the Windows Universal marshaler and the marshaler generated from the definition file. Since this dialog is displayed only when the definition file is an IDL file, choosing Standard Marshalling will force the wizard to compile the marshaler from the code generated with the MIDL compiler. Standard marshalling should be used whenever some interface functions make use of non-Automation compatible types.</paragraph>
+		<paragraph> If you choose Automation, then the Universal marshaler will be used (for additional information on Marshalling please see the chapter COM). If you specify Virtual Table access, then you have the choice between using the Windows Universal marshaler and the marshaler generated from the definition file. Since this dialog is displayed only when the definition file is an IDL file, choosing Standard Marshalling will force the wizard to compile the marshaler from the code generated with the MIDL compiler. Standard marshalling should be used whenever some interface functions make use of non-Automation compatible types.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

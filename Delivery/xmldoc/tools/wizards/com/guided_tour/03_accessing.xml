@@ -20,6 +20,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
+		<paragraph>
 		<link/>The third tutorial describes how to access a COM component and build reusable library.
 		<heading>
 			<size>2</size> Step by step instructions
@@ -91,11 +92,9 @@
 		<code>
 			<class_name>MY_STRING_MANIPULATOR</class_name>
 		</code> includes the followingcommented line:
-		<paragraph>
-			<code>
-				<comment>-- Result := True</comment>
-			</code>
-		</paragraph>
+<code_block>
+<comment>-- Result := True</comment>
+</code_block>
 		<link/> Un-comment this lineby removing the preceding ` 
 		<code>
 			<comment>--</comment>
@@ -106,6 +105,7 @@
 				<label>replace_substring</label>
 			</feature_name>
 		</code> feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click Replace you will see an error message box warning you that a precondition was violated on the server side. This is how you can use contracts `over the wire'. The preconditions was violated in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.
+		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

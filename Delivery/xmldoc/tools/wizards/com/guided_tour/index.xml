@@ -20,7 +20,9 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<link/>This chapter explains how to use the EiffelCOM wizard to create COM components and to access existing components.
+		<paragraph>
+		This chapter explains how to use the EiffelCOM wizard to create COM components and to access existing components.
+		<line_break/>
 		<list ordered="false">
 			<item>
 				<link>
@@ -41,6 +43,7 @@
 				</link>
 			</item>
 		</list>
+		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

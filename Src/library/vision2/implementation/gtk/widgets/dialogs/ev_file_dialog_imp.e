@@ -122,7 +122,8 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			filter := clone (a_filter)
-			create a_gs.make (a_filter)
+			filter.append ("/")
+			create a_gs.make (filter)
 			C.gtk_file_selection_complete (c_object, a_gs.item)
 		end
 
@@ -158,10 +159,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- The user has requested that the dialog be activated.
 		local
 			temp_filename: STRING
+			temp_file: RAW_FILE
 		do
 			create temp_filename.make (0)
 			temp_filename.from_c (C.gtk_file_selection_get_filename (c_object))
-			if not temp_filename.item (temp_filename.count).is_equal ('/') then
+			create temp_file.make (temp_filename)
+			if (not temp_file.exists or else not temp_file.is_directory) and not 
+					temp_filename.item (temp_filename.count).is_equal ('/') then
 				Precursor {EV_STANDARD_DIALOG_IMP}
 			end	
 		end

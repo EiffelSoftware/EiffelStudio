@@ -43,6 +43,7 @@ feature -- Status setting
 			file: PLAIN_TEXT_FILE
 		do
 			file_name := class_name (widget)
+			file_name.to_lower
 			--file_name := file_name.substring (4, file_name.count)
 			file_name.append ("_flatshort.txt")
 			create directory_name.make_from_string (".")

@@ -93,11 +93,11 @@ feature {GB_XML_STORE} -- Output
 				end
 			end
 
-			if full_information @ (Padding_string) /= Void then
+			if attribute_set (Padding_string) then
 				for_all_objects (agent {EV_BOX}.set_padding_width (retrieve_and_set_integer_value (Padding_string)))
 			end
 			
-			if full_information @ (Border_string) /= Void then
+			if attribute_set (Border_string) /= Void then
 				for_all_objects (agent {EV_BOX}.set_border_width (retrieve_and_set_integer_value (Border_string)))
 			end
 		
@@ -127,15 +127,12 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 			end
 			
-			
-			element_info := full_information @ (Padding_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_padding_width (" + element_info.data + ")"
+			if attribute_set (Padding_string) then
+				Result := Result + indent + info.name + ".set_padding_width (" + retrieve_integer_setting (padding_string) + ")"
 			end
 			
-			element_info := full_information @ (Border_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_border_width (" + element_info.data + ")"
+			if attribute_set (Border_string) then
+				Result := Result + indent + info.name + ".set_border_width (" + retrieve_integer_setting (border_string) + ")"
 			end
 
 			element_info := full_information @ (Is_item_expanded_string)

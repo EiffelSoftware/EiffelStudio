@@ -25,16 +25,16 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-                        -- Create a horizontal gtk separator.
+				-- Create a horizontal gtk separator.
 		local
 			p: POINTER
-                do
+		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
 			p := C.gtk_hseparator_new
 			C.gtk_widget_show (p)
 			C.gtk_container_add (c_object, p)
-                end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

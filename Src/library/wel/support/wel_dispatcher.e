@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			debug ("win_dispatcher")
 				if window /= Void then
 					io.print (" after look at windows table ")
-					io.print (window)
+					io.print (window.generating_type)
 					io.new_line
 				end
 			end

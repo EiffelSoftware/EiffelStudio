@@ -50,7 +50,7 @@ feature -- Access
 		local
 			l_item: like item
 		do
-			create {ARRAYED_LIST} Result.make (1)
+			create {ARRAYED_LIST [like item]} Result.make (1)
 			l_item := item
 			if l_item /= Void then
 				Result.extend (l_item)

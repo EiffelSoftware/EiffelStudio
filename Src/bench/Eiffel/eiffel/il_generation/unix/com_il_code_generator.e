@@ -39,7 +39,7 @@ feature -- Target of generation
 
 feature -- Generation Structure
 
-	generate_key is
+	generate_key (final_mode: BOOLEAN) is
 		do
 		end
 

@@ -187,8 +187,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Executed when `pebble' is being moved.
 			-- Draw a rubber band from pick position to pointer position.
 		require
-			accept_cursor_not_void: accept_cursor /= Void
-			deny_cursor_not_void: deny_cursor /= Void
+			accept_cursor_not_void: default_accept_cursor /= Void
+			deny_cursor_not_void: default_deny_cursor /= Void
 		local
 			target: EV_PICK_AND_DROPABLE
 			target_imp: EV_PICK_AND_DROPABLE_IMP
@@ -304,6 +304,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/21 18:45:00  rogers
+--| Fixed pre-conditions on execute.
+--|
 --| Revision 1.20  2000/03/21 01:33:12  rogers
 --| Fixed the changing of the mouse pointer within execute.
 --|

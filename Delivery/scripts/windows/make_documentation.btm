@@ -18,17 +18,9 @@ endiff
 
 remtrace Retrieve the documentation
 cdd %DOCUMENT_DIR
-iff isdir newdocs then
-	up newdocs
-	iff %? != 0 then
-		echo Couldn't update newdocs... checking out instead
-		fullrd newdocs
-		co -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
-	endiff
-else
-	if exist newdocs fullrf newdocs
-	co -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
-endiff
+if isdir newdocs then fullrd newdocs
+if exist newdocs fullrf newdocs
+exprt -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
 remtrace Setup files
 cd newdocs
 copy default.css ..

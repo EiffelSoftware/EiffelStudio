@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Profiling</TITLE>
+		<META NAME="MS-HKWD" CONTENT="profiling">
+		<META NAME="MS-HKWD" CONTENT="using the profiler">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Profiling</H1>
+        <p>The profiler is a tool that gives dynamic execution time information.
+        It is very useful to detect which parts of a program need to be
+        optimized most.</p>
+
+        <p>To use the profiler, the first thing to do is to enable it.</p>
+
+        <p>To enable the profiler:</p>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Debug/Profile</b> tab, check the <b>Profiling</b>
+              check box.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>SCREENSHOT(profiling in project settings dialog).</p>
+
+        <P>By default the profiler will profile the entire program. However it is possible to enable or disable the
+        profiler on certain clusters only. To do this:</P>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Cluters</b> tab, check the <b>Profile</b>
+              check box in the clusters where you want the profiler to be
+              enabled.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>It is also possible to dynamically start and stop the profiler in a
+        program. To do this:</p>
+
+		<UL>
+			<LI>Create an object of type PROFILING_SETTING HYPERLINK(base
+              reference support PROFILING_SETTING).
+			<LI>Call `start_profiling' on this object to start the profiler.
+			<LI>Call `stop_profiling' on this object to stop the profiler.
+		</UL>
+
+        <P CLASS="tip"><B>Tip</B>: To profile only part of a program, turn off
+        the profiler at the very beginning of the program, turn it on just
+        before the part of the code that should be profiled, and turn it back
+        off after this section. Typically, it results in the following code:</P>
+
+        <p>In the root feature:</p>
+
+		<CODE>
+        <p><SPAN CLASS="ekeyword">local</span><br>
+        &nbsp;&nbsp;&nbsp; ps: <SPAN CLASS="eclass">PROFILING_SETTING</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Other local variables if
+        necessary.</span><br>
+        <SPAN CLASS="ekeyword">do</span><br>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
+        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">stop_profiling</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Real program execution.</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">start_profiling</span><br>
+        <SPAN CLASS="ekeyword">end</span></p>
+		</CODE>
+
+        <p>And in the feature(s) that needs to be profiled:</p>
+
+		<CODE>
+        <p><SPAN CLASS="ekeyword">local</span><br>
+        &nbsp;&nbsp;&nbsp; ps: <SPAN CLASS="eclass">PROFILING_SETTING</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Other local variables if
+        necessary.</span><br>
+        <SPAN CLASS="ekeyword">do</span><br>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
+        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">start_profiling</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--
+        What needs to be profiled.</span><br>
+        &nbsp;&nbsp;&nbsp; ps.<SPAN CLASS="efeature">stop_profiling</span><br>
+        <SPAN CLASS="ekeyword">end</span></p>
+		</CODE>
+
+        <p>&nbsp;</p>
+
+        <P CLASS="note"><B>Note</B>: Even if the profiler should only work in certain sections of code, the <b>Profiling</b>
+        check box of the <a href="HYPERLINK(reference_project_settings)">System Settings</A>
+        dialog must be checked or the <b>profile</b> option must be set in
+        certain clusters.</P>
+
+        <p>Once the profiler has been enabled and the program has been
+        recompiled, it is necessary to launch the program.</p>
+        <P CLASS="tip"><B>Tip</B>: It is possible to profile debuggable
+        (frozen/melted) executables as well as finalized ones. It is more
+        interesting to profile finalized executables, though, since the
+        execution speed is more representative of what will be obtained by your
+        end users.&nbsp;</P>
+
+        <P>When the program exits, a file named 'profinfo' should be generated
+        next to it.</P>
+
+        <P>All that's left to do is launch the Profiler wizard
+        HYPERLINK(Profiler wizard reference) and follow the instructions.</P>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../40_compiling/10_generating_executables.html">Generating executables</A><BR>
+					<A HREF="10_running_an_application.html">Running a program</a><br>
+			        <A HREF="../40_compiling/50_tuning_a_program.html">Tuning a program</a>
+		</P>
+	</BODY>
+</HTML>

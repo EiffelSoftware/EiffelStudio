@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Running an application</TITLE>
+		<META NAME="MS-HKWD" CONTENT="application, running">
+		<META NAME="MS-HKWD" CONTENT="running an application">
+		<META NAME="MS-HKWD" CONTENT="launching an application">
+		<META NAME="MS-HKWD" CONTENT="starting an application">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Running an application</H1>
+        <p>There are several ways to launch an application. Not all are
+        available depending on the way you compiled your system.</p>
+
+        <p>Melted and frozen executables can be debugged. Several methods can be
+        used to launch such an executable:</p>
+
+		<UL>
+			<LI>The default <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/10_run_and_debug.html">
+				<b>Run</b> command <IMG SRC="/images/eiffelstudio/icon_debug_run_color.gif"></a>.
+              It launches the executable located in the EIFGEN|W_code directory
+              under the project directory. The execution stops whenever a
+              breakpoint is encountered.
+			<LI>The <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/20_run_without_breakpoints.html">
+				<b>Run without breakpoints</b> command <IMG SRC="/images/eiffelstudio/icon_no_stop_color.gif" width="16" height="16"></a>.
+              It has the same behavior except that the execution won't
+              stop when a breakpoint is met.
+			<LI>The step commands, which execute only a small part of the
+              program at a time:
+			<UL><LI>The <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/40_step_into_a_feature.html">
+                    <b>
+					step into</b> command <IMG SRC="/images/eiffelstudio/icon_step_into_color.gif" width="16" height="16"></a>,
+					which tries to enter the feature that is about to be called.
+                <LI>The <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/50_step_by_step.html">
+                <b>
+                step by step</b> command <IMG SRC="/images/eiffelstudio/icon_exec_step_color.gif" width="16" height="16"></a>, which
+                executes one execution line.
+                <LI>The <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/60_step_out.html">
+                <b>
+                step out</b> command <IMG SRC="/images/eiffelstudio/icon_step_out_color.gif" width="16" height="16"></a>, which
+                launches the application and stops it as soon as the application exits the
+                feature it is stopped in.
+			</UL>
+		</UL>
+
+        <P CLASS="tip"><B>Tip</B>: All the above commands can be accessed either in the <b>Project</b> toolbar or in the
+        <b>Debug</b> menu.<br>
+        They can be used either to launch the program or to resume its execution
+        after it has been paused.</P>
+
+		<UL>
+			<LI>It is also possible to select <b>Run to breakpoint</b> in a
+              <A HREF="/tools/eiffelstudio/reference/40_debugger/20_breakpoints/10_breakpoint_menu.html">breakpoint context menu</a>
+              to have the application be launched and
+              executed until it reaches the selected execution line.
+		</UL>
+
+        <p>Finalized executables can also be run, but they are not debuggable
+        and cannot be interrupted. To run a finalized executable, use the
+        <A HREF="/tools/eiffelstudio/reference/40_debugger/10_execution/30_run_a_finalized_executable.html"><b>Run
+        finalized</b> command <IMG SRC="/images/eiffelstudio/icon_run_color.gif" width="16" height="16"></a>,
+        located in the <b>Project</b> menu and the <b>Project</b>
+        toolbar.</p>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../40_compiling/10_generating_executables.html">Compiling an executable</A><BR>
+					<A HREF="35_using_breakpoints.html">Using breakpoints<br>
+        </A>
+        <A HREF="20_interrupting_an_application.html">Interrupting an application</a>
+		</P>
+	</BODY>
+</HTML>

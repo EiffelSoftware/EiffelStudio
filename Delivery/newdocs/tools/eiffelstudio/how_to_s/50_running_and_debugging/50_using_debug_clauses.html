@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Using debug clauses</TITLE>
+		<META NAME="MS-HKWD" CONTENT="debug clauses">
+		<META NAME="MS-HKWD" CONTENT="using debug clauses">
+		<META NAME="MS-HKWD" CONTENT="enabling debug clauses">
+		<META NAME="MS-HKWD" CONTENT="disabling debug clauses">
+		<META NAME="MS-HKWD" CONTENT="setting debug clauses">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Using debug clauses</H1>
+        <p>Eiffel provides ways to add debug code to features to help during
+        their debugging. You may think of it as the well-known C construct:
+		<CODE>
+        <p>#ifdef MY_DEBUG_FLAG
+
+        <br>/* Debug code is here */
+
+        <br>#endif
+        </P>
+		</CODE>
+        <p>The corresponding construct in Eiffel is provided by the debug
+        keyword. It is possible to wrap code inside a debug clause like this:
+		</P>
+		<CODE>
+        <p><SPAN CLASS="ekeyword">debug</SPAN> (&quot;MY_DEBUG_FLAG&quot;)<br>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Debug code is here.</SPAN><br>
+        <SPAN CLASS="ekeyword">end</SPAN>
+		</P>
+		</CODE>
+        <p>It is then possible to enable or disable debug clauses globally.</p>
+
+        <p>To modify the debug clauses status:</p>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Debug/Profile</b> tab, the <b>enable debug</b> check
+              box affects the system globally.
+			<LI>The list under it gives the possibility to enable or disable
+              each debug clause separately, through a context menu that appears
+              when right-clicking on them.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>SCREENSHOT(debug clauses in project settings dialog).</p>
+
+    <P CLASS="tip"><B>Tip</B>: Debug clauses make it easy to remove all debug
+    messages when finalizing a system.</P>
+
+	</BODY>
+</HTML>

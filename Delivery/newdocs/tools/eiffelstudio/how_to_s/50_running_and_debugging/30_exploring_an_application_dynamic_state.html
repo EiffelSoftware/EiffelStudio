@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Exploring an application dynamic state</TITLE>
+		<META NAME="MS-HKWD" CONTENT="debugging, viewing the dynamic context">
+		<META NAME="MS-HKWD" CONTENT="viewing the dynamic state of an application">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Exploring an application dynamic state</H1>
+        <p>To view the dynamic state of a debugged application, just stop it at
+        the point where you want to see its context. The debugger tools will
+        automatically be popped up then, yielding the call stack of the
+        application, as well as the state of the objects located in the object
+        tree, which include at least the object corresponding to the level of
+        the call stack where the call stack cursor
+        <IMG SRC="/images/eiffelstudio/icon_green_arrow.gif" width="16" height="16">
+        is.</p>
+        <p>To see at which point the features in the call stack have stopped,
+        just double-click the feature on which you want this information in the
+        call stack. Doing this will change the cursor position in the call stack
+        and display the flat form of the feature in the context tool.</p>
+
+        <p>To follow an object state between pauses of the application, pick and
+        drop it into the object tree, which will make it stay in it.</p>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="20_interrupting_an_application.html">Pausing an application</a><br>
+					<A HREF="/tools/eiffelstudio/reference/40_debugger/30_call_stack_tool/00_introduction.html">Call stack tool</A><BR>
+					<A HREF="/tools/eiffelstudio/reference/40_debugger/40_object_tool/00_introduction.html">Object tool</A>
+		</P>
+	</BODY>
+</HTML>

@@ -203,6 +203,8 @@ feature -- Basic operations
 					sent_txt := postscript_representation
 				else
 					sent_txt := text.image
+					sent_txt.prune_all ('%R')
+					sent_txt.replace_substring_all ("%N", "%R%N")
 				end
 					-- Generate the file we put the text in.
 				tmp_dir := (create {EXECUTION_ENVIRONMENT}).get ("TMP")
@@ -224,6 +226,7 @@ feature -- Basic operations
 					-- Generate the actual command line.
 				cmd := clone (external_command)
 				cmd.replace_substring_all ("$target", file_name)
+				cmd.replace_substring_all ("$printer", context.printer_name)
 					-- Send the command.
 				create shell_request
 				shell_request.execute (cmd)
@@ -307,26 +310,6 @@ feature {NONE} -- Implementation: graphical interface
 			else
 				print_text
 			end
-		end
-
-	generate_temp_name: STRING is
-			-- Generate a temporary file name.
-		local
-			prefix_name: STRING
-			a: ANY
-			p: POINTER
-		do
-			prefix_name := "estudio_"
-			a := prefix_name.to_c
-			p := tempnam (default_pointer, $a)
-
-			create Result.make (0)
-			Result.from_c (p)
-		end
-
-	tempnam (d,p: POINTER): POINTER is
-		external
-			"C | <stdio.h>"
 		end
 
 end -- class EB_PRINTER

@@ -288,7 +288,6 @@ typedef unsigned char   EIF_BOOLEAN;
 
 #ifdef DELETE_SEP_OBJ
 #define constant_sep_obj_size   5
-#define constant_sep_obj_dtype  EO_TYPE
  
 #define set_host_port(obj, host, port)  \
             ((EIF_INTEGER *)(obj))[0] = host; \
@@ -302,6 +301,12 @@ typedef unsigned char   EIF_BOOLEAN;
 #define sep_obj_sock(obj)       ((EIF_INTEGER *)(obj))[2]
 #define sep_obj_oid(obj)        ((EIF_INTEGER *)(obj))[3]
 #define sep_obj_proxy_id(obj)   ((EIF_INTEGER *)(obj))[4]
+
+/* "x" is direct address */
+#define sep_obj_make_without_connection(x, y) \
+	set_oid(x, y); \
+	set_sock(x, -2)
+
 #endif
  
 
@@ -505,15 +510,23 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 	if (_concur_para_num) \
 		get_data(x)
 
-#define eif_str_to_c_str(eif_str) (eif_strtoc)(eif_str)
 #define adjust_parameter_array(size) _concur_paras_size = adjust_array(&_concur_paras, _concur_paras_size, size)
 
+#ifndef DELETE_SEP_OBJ
 #define hostaddr_of_sep_obj(x) eif_field(x, "hostaddr", EIF_INTEGER)
 #define pid_of_sep_obj(x) eif_field(x, "pid", EIF_INTEGER)
 #define sock_of_sep_obj(x) eif_field(x, "sock", EIF_INTEGER)
 #define oid_of_sep_obj(x) eif_field(x, "oid", EIF_INTEGER)
 #define on_same_processor(s1, s2) \
 	hostaddr_of_sep_obj(s1) == hostaddr_of_sep_obj(s2) && pid_of_sep_obj(s1) == pid_of_sep_obj(s2)
+#else
+#define hostaddr_of_sep_obj(x) sep_obj_host(x)
+#define pid_of_sep_obj(x) sep_obj_port(x)
+#define sock_of_sep_obj(x) sep_obj_sock(x)
+#define oid_of_sep_obj(x) sep_obj_oid(x)
+#define on_same_processor(s1, s2) \
+	hostaddr_of_sep_obj(s1) == hostaddr_of_sep_obj(s2) && pid_of_sep_obj(s1) == pid_of_sep_obj(s2)
+#endif
 
 #define CONCUR_RESC_DECLARE jmp_buf _concur_exenv1, _concur_exenv2, _concur_exenv3, _concur_exenv4
 #define CONCUR_RESC_START1 start: if (setjmp(_concur_exenv1)) goto rescue

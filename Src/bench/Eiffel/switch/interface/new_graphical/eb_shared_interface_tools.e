@@ -25,7 +25,9 @@ feature -- Access
 	has_modified_classes: BOOLEAN is
 			-- Are there unsaved class texts in the interface?
 		do
-			Result := Window_manager.has_modified_windows
+			if not mode.item then
+				Result := Window_manager.has_modified_windows
+			end
 		end
 
 feature {NONE} -- Element change

@@ -352,9 +352,7 @@ feature {NONE} -- Implementation
 					-- object editors all referencing the same object, the first
 					-- that performed the update will unlink the constant context.
 				if constant_context /= Void then
-					constant ?= constant_context.constant
-					last_selected_constant.remove_referer (constant_context)
-					object.constants.remove (type + Pixmap_path_string)
+					constant_context.destroy
 				end
 				last_selected_constant := Void
 			end

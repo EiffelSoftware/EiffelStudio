@@ -225,6 +225,8 @@ feature -- Element change
 		local
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
+			referers: ARRAYED_LIST [GB_CONSTANT_CONTEXT]
+			context: GB_CONSTANT_CONTEXT
 		do
 			if a_constant.type.is_equal (String_constant_type) then
 				string_constants.prune_all (a_constant)
@@ -248,6 +250,19 @@ feature -- Element change
 			end
 			all_constants.remove (a_constant.name)
 			all_constant_names.prune_all (a_constant.name)
+			
+				-- Now remove all referers.
+			referers := a_constant.referers
+			from
+				referers.start
+			until
+				referers.is_empty
+			loop
+				context := referers.item
+				context.object.constants.remove (context.property + context.attribute)
+				referers.remove
+			end
+			
 			deleted_constants.extend (a_constant)
 		ensure
 			constant_deleted: deleted_constants.has (a_constant)

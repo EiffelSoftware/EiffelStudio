@@ -40,7 +40,7 @@ feature -- Start output features
 
 	put_header (displayed_version_number: STRING) is
 		do
-			interface.event_output_string (
+			put_string (
 				"Eiffel compilation manager (version " + 
 				displayed_version_number + ")")
 		end
@@ -48,19 +48,19 @@ feature -- Start output features
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			interface.event_output_string ("Processing options")
+			put_string ("Processing options")
 		end
 		
 	put_melting_changes_message  is
 			-- Put message indicating that melting changes is ocurring.
 		do
-			interface.event_output_string (melting_changes_message)
+			put_string (melting_changes_message)
 		end
 
 	put_freezing_message is
 			-- Put message indicating that freezing is occurring.
 		do
-			interface.event_output_string (freezing_system_message)
+			put_string (freezing_system_message)
 		end
 
 	put_start_dead_code_removal_message  is
@@ -72,13 +72,13 @@ feature -- Start output features
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			interface.event_output_string (a_message)
+			put_string (a_message)
 		end				
 
 	put_system_compiled is
 			-- Put message indicating that the system has been compiled.
 		do
-			interface.event_output_string ("System recompiled.")
+			put_string ("System recompiled.")
 		end
 				
 feature -- Output on per class
@@ -87,7 +87,7 @@ feature -- Output on per class
 			-- Put message progress the start of dead code removal.
 		do
 			processed := processed + total_nbr
-			interface.event_output_string ("Features done: " + 
+			put_string ("Features done: " + 
 											processed.out + 
 											"%TFeatures to go: " + 
 											nbr_to_go.out)
@@ -105,7 +105,7 @@ feature -- Other
 			interface.event_should_continue (b)
 			if b.item then
 				total_number := total
-				interface.event_output_string (percentage_output (to_go) + deg_nbr)
+				put_string (percentage_output (to_go) + deg_nbr)
 			else
 				Error_handler.insert_interrupt_error (True)
 			end
@@ -118,17 +118,24 @@ feature {NONE} -- Implementation
 			
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
-		local
-			should_continue: BOOLEAN_REF
 		do
-			interface.event_output_string (percentage_output (to_go) + 
+			put_string (percentage_output (to_go) + 
 										deg_nbr + a_name)
-			create should_continue
-			should_continue.set_item (True)
-			interface.event_should_continue (should_continue)
-			if not should_continue.item then
+			if not should_continue then
 				Error_handler.insert_interrupt_error (True)
 			end
 		end
+		
+	should_continue: BOOLEAN is
+			-- should compilation continue?
+		local
+			l_should_continue: BOOLEAN_REF
+		do
+			create l_should_continue
+			l_should_continue.set_item (True)
+			interface.event_should_continue (l_should_continue)
+			Result := l_should_continue.item
+		end
+		
 		
 end -- class COM_DEGREE_OUTPUT

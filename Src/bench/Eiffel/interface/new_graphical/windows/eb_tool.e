@@ -21,6 +21,9 @@ inherit
 feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
+			-- creates a new tool.
+			-- To insure atomicity of make, and avoid some problems during linking with manager,
+			-- this function does not call build_interface.
 		require
 			man_exists: man /= Void
 		do
@@ -30,24 +33,24 @@ feature {NONE} -- Initialization
 			parent_window := manager.associated_window
 
 			init_commands
-			build_interface
 		ensure
-			exists: not destroyed
 			parent_set: parent /= Void
 		end
+
+	init_commands is
+			-- initializes commands
+		do
+			create close_cmd.make (Current)
+			create exit_app_cmd
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
 			-- build all the tool's widgets
 		deferred
 		ensure
 			contains_something: not container.destroyed
-		end
-
-	init_commands is
-			--
-		do
-			create close_cmd.make (Current)
-			create exit_app_cmd
 		end
 
 feature -- Tool Properties
@@ -124,7 +127,7 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- is Current destroyed?
 		do
-			Result := container.destroyed
+			Result := (container = Void) or else container.destroyed
 		end
 
 	shown: BOOLEAN is

@@ -36,8 +36,6 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			create token_buffer.make (Initial_buffer_size)
 			create comment_list.make (10)
-			create current_position.reset
-			line_number := 1
 			filename := ""
 		end
 
@@ -50,8 +48,6 @@ feature -- Initialization
 		do
 			Precursor {YY_COMPRESSED_SCANNER_SKELETON}
 			token_buffer.clear_all
-			current_position.reset
-			line_number := 1
 		end
 
 	reset_comment_list is
@@ -64,12 +60,6 @@ feature -- Access
 
 	filename: STRING
 			-- Name of file being parsed
-
-	line_number: INTEGER
-			-- Current line number
-
-	current_position: TOKEN_LOCATION
-			-- Position of last token read
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -88,7 +78,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
+			create an_error.make (line, column, filename, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -98,7 +88,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -111,7 +101,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -126,7 +116,7 @@ feature -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -139,7 +129,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EMPTY
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -149,7 +139,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -183,7 +173,6 @@ feature {NONE} -- Constants
 invariant
 
 	token_buffer_not_void: token_buffer /= Void
-	current_position_not_void: current_position /= Void
 	filename_not_void: filename /= Void
 
 end -- class LACE_SCANNER_SKELETON

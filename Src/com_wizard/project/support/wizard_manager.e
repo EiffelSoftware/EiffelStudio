@@ -55,6 +55,11 @@ feature -- Basic Operations
 					Environment.set_abort (No_ise_eiffel)
 				end
 				if not environment.abort then
+					l_path := env.get ("PATH")
+					l_path.append (";")
+					l_path.append (Eiffel_installation_dir_name)
+					l_path.append ("\studio\spec\windows\bin")
+					env.put (l_path, "PATH")
 					if use_bcb then
 						l_path := env.get ("PATH")
 						l_path.append (";")
@@ -73,7 +78,8 @@ feature -- Basic Operations
 				end
 				if not environment.abort then
 					message_output.add_title ("Processing  %"" + environment.project_name + "%"")
-					create l_tasks.make (8)
+					create l_tasks.make (9)
+					l_tasks.extend (create {WIZARD_INITIALIZATION_TASK})
 					if environment.cleanup then
 						l_tasks.extend (create {WIZARD_CLEANUP_TASK})
 					end

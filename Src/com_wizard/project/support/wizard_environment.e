@@ -120,6 +120,52 @@ feature -- Access
 			non_void_message: Result /= Void
 		end
 	
+	expanded_path (a_path: STRING): STRING is
+			-- Expand all environment variables in `a_path'.
+		require
+			non_void_path: a_path /= Void
+		local
+			l_list: LIST [STRING]
+			l_value: STRING
+		do
+			if not a_path.has ('$') then
+				-- Optimization
+				Result := a_path
+			else
+				create Result.make (a_path.count)
+				l_list := a_path.split (Directory_separator)
+				from
+					l_list.start
+					if not l_list.after then
+						l_value := l_list.item
+						if l_value.count > 0 and then l_value.item (1) = '$' then
+							l_value.keep_tail (l_value.count - 1)
+							l_value := get (l_value)
+						end
+						if l_value /= Void then
+							Result.append (l_value)
+						end
+						l_list.forth
+					end
+				until
+					l_list.after
+				loop
+					Result.append_character (Directory_separator)
+					l_value := l_list.item
+					if l_value.count > 0 and then l_value.item (1) = '$' then
+						l_value.keep_tail (l_value.count - 1)
+						l_value := get (l_value)
+					end
+					if l_value /= Void then
+						Result.append (l_value)
+					end
+					l_list.forth
+				end
+			end
+		ensure
+			non_void_expanded_path: Result /= Void
+		end
+
 feature -- Element Change
 
 	set_is_eiffel_interface is
@@ -235,9 +281,9 @@ feature -- Element Change
 			non_void_name: p_name /= Void
 			valid_name: not p_name.is_empty
 		do
-			eiffel_project_name := p_name
+			eiffel_project_name := expanded_path (p_name)
 		ensure
-			name_set: eiffel_project_name.is_equal (p_name)
+			name_set: eiffel_project_name.is_equal (expanded_path (p_name))
 		end
 
 	set_destination_folder (a_folder: like destination_folder) is
@@ -247,7 +293,7 @@ feature -- Element Change
 			valid_folder: not a_folder.is_empty
 		do
 			destination_folder := expanded_path (a_folder)
-			if destination_folder.item (destination_folder.count) /= Directory_separator then
+			if not destination_folder.is_empty and then destination_folder.item (destination_folder.count) /= Directory_separator then
 				destination_folder.append_character (Directory_separator)
 			end
 			update_idl_file_name
@@ -280,7 +326,7 @@ feature -- Element Change
 			idl_file_name := expanded_path (a_idl_file_name)
 			idl := True
 		ensure
-			idl_file_name_set: idl_file_name.is_equal (expanded_path(a_idl_file_name))
+			idl_file_name_set: idl_file_name.is_equal (expanded_path (a_idl_file_name))
 			idl: idl
 		end
 	
@@ -403,53 +449,6 @@ feature -- Element Change
 		end
 
 feature {NONE} -- Implementation
-
-	expanded_path (a_path: STRING): STRING is
-			-- Expand all environment variables in `a_path'.
-		require
-			non_void_path: a_path /= Void
-		local
-			l_list: LIST [STRING]
-			l_value: STRING
-		do
-			if not a_path.has ('$') then
-				-- Optimization
-				Result := a_path
-			else
-				create Result.make (a_path.count)
-				l_list := a_path.split (Directory_separator)
-				from
-					l_list.start
-					if not l_list.after then
-						l_value := l_list.item
-						if l_value.count > 0 and then l_value.item (1) = '$' then
-							l_value.keep_tail (l_value.count - 1)
-							l_value := get (l_value)
-						end
-						if l_value /= Void then
-							Result.append (l_value)
-						end
-						l_list.forth
-					end
-				until
-					l_list.after
-				loop
-					Result.append_character (Directory_separator)
-					l_value := l_list.item
-					if l_value.count > 0 and then l_value.item (1) = '$' then
-						l_value.keep_tail (l_value.count - 1)
-						l_value := get (l_value)
-					end
-					if l_value /= Void then
-						Result.append (l_value)
-					end
-					l_list.forth
-				end
-			end
-		ensure
-			non_void_expanded_path: Result /= Void
-			expanded_path: not Result.has ('$')
-		end
 
 	update_idl_file_name is
 			-- Update `idl_file_name' according to `is_eiffel_interface', `destination_folder' and `eiffel_class_name'.

@@ -29,8 +29,7 @@ feature -- Initialization
 	display_state_text is
 		do
 			title.set_text ("CONNECTION ERROR")
-			message.set_text ("%TYou are not connected to your Database%
-								%%N%NCheck the Username and Password%N or the setup of your connection")
+			message.set_text ("Unable to connect to database%N%NCheck the Username and Password%Nor the setup of your connection")
 		end
 
 	final_message: STRING is

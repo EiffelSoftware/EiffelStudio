@@ -245,42 +245,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		require
 			child_not_void: child /= Void
 			child_dirty: child.update_needed
-		local
-			cur: CURSOR
-			txt: STRING
-			list: LINKED_LIST [STRING]
-		do
-			list := child.interface
-			cur := list.cursor
-			from
-				list.start
-			until
-				list.index > columns or else list.after
-			loop
-				txt := list.item
-				if txt = Void then
-					txt := ""
-				end
-				set_cell_text (list.index, a_row, txt)
-				list.forth
-			end
-			list.go_to (cur)
-			child.update_performed
+		deferred
 		ensure
 			child_updated: not child.update_needed
 		end
 
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
 			-- Agent object for `update_children'.
-
-	set_cell_text (a_x, a_y: INTEGER; a_text: STRING) is
-			-- Set cell `a_x', `a_y' to `a_text'.
-		require
-			a_x_within_bounds: a_x >= 1 and then  a_x <= columns
-			a_y_within_bounds: a_y >= 1 and then  a_x <= count
-			a_text_not_void: a_text /= Void
-		deferred
-		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
@@ -314,6 +285,10 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/24 17:56:28  brendel
+--| Made `update_child' deferred because it needs some platform specific
+--| stuff.
+--|
 --| Revision 1.34  2000/03/24 17:29:35  brendel
 --| Moved platform independent update code here.
 --|

@@ -37,6 +37,24 @@ feature -- Access
 			Result := vartype_namer.eiffel_name (type)
 		end
 
+	visitor: WIZARD_DATA_TYPE_VISITOR is
+			-- Data type visitor.
+		do
+			if instance_visitor /= Void then
+				Result := instance_visitor
+			else
+				create Result
+				Result.visit (Current)
+				instance_visitor := Result
+			end
+		ensure
+			non_void_instance_visitor: instance_visitor /= Void
+			non_void_visitor: Result /= Void
+		end
+
+	pointing_visitor: WIZARD_DATA_TYPE_VISITOR
+			-- Pointing data type visitor.
+
 feature -- Status report
 
 	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
@@ -67,6 +85,12 @@ feature -- Basic Operations
 			valid_counter: counter_value = a_counter
 		end
 
+	set_pointing_visitor (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Set `pointing_visitor' with `a_visitor'
+		do
+			pointing_visitor := a_visitor
+		end
+
 feature -- Visitor
 
 	visit (a_visitor: WIZARD_DATA_VISITOR) is
@@ -81,6 +105,11 @@ feature -- Visitor
 
 	counter_value: INTEGER
 			-- Value of counter when descriptor was visited first time.
+
+feature {NONE} -- Implementation
+
+	instance_visitor: WIZARD_DATA_TYPE_VISITOR
+			-- Data type visitor.
 
 end -- class WIZARD_DATA_TYPE_DESCRIPTOR
 

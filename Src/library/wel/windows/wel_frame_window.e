@@ -35,7 +35,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_child (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING) is
+	make_child (a_parent: WEL_WINDOW; a_name: STRING) is
 			-- Make the window as a child of `a_parent' and
 			-- `a_name' as a title.
 		require

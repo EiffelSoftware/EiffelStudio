@@ -188,15 +188,15 @@ feature -- Properties
 			-- Value from which to start the dynamic type_id numbering
 			-- for newly created class types
 
-	melted_set: LINKED_SET [CLASS_C]
+	melted_set: SEARCH_TABLE [CLASS_C]
 			-- Set of class ids for which feature table needs to be updated
 			-- when melting
 
-	freeze_set1: LINKED_SET [CLASS_C]
+	freeze_set1: SEARCH_TABLE [CLASS_C]
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
 
-	freeze_set2: LINKED_SET [CLASS_C]
+	freeze_set2: SEARCH_TABLE [CLASS_C]
 			-- List of class ids for which a hash table recompilation
 			-- is needed when freezing
 
@@ -316,8 +316,8 @@ feature -- Properties
 			!! pattern_table.make
 
 				-- Freeze control sets creation
-			!! freeze_set1.make
-			!! freeze_set2.make
+			!! freeze_set1.make (200)
+			!! freeze_set2.make (200)
 
 				-- Body index table creation
 			!! body_index_table.make (System_chunk)
@@ -326,7 +326,7 @@ feature -- Properties
 				-- Run-time table creation
 			!! dispatch_table.make
 			!! execution_table.make
-			!! melted_set.make
+			!! melted_set.make (200)
 			!! rout_info_table.make (500)
 			!! onbidt.make (50)
 			!! optimization_tables.make
@@ -1337,7 +1337,7 @@ end
 			no_error: not Error_handler.has_error
 		local
 			a_class: CLASS_C
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: SEARCH_TABLE [CLASS_C]
 			i: INTEGER
 			deg_output: DEGREE_OUTPUT
 		do
@@ -1364,7 +1364,7 @@ end
 				until
 					class_list.after
 				loop
-					a_class := class_list.item
+					a_class := class_list.item_for_iteration
 						-- Verbose
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1481,7 +1481,7 @@ end
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: SEARCH_TABLE [CLASS_C]
 			types: TYPE_LIST
 			nb_tables: INTEGER
 			feat_tbl: MELTED_FEATURE_TABLE
@@ -1498,10 +1498,10 @@ end
 			loop
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T")
-	io.error.putstring (class_list.item.name)
+	io.error.putstring (class_list.item_for_iteration.name)
 	io.error.new_line
 end
-				nb_tables := nb_tables + class_list.item.types.nb_modifiable_types
+				nb_tables := nb_tables + class_list.item_for_iteration.types.nb_modifiable_types
 				class_list.forth
 			end
 
@@ -1520,10 +1520,10 @@ end
 			loop
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T")
-	io.error.putstring (class_list.item.name)
+	io.error.putstring (class_list.item_for_iteration.name)
 	io.error.new_line
 end
-				types := class_list.item.types
+				types := class_list.item_for_iteration.types
 				from
 					types.start
 				until
@@ -1847,7 +1847,7 @@ feature -- Freeezing
 			root_class.compiled
 		local
 			a_class: CLASS_C
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: SEARCH_TABLE [CLASS_C]
 			i, nb: INTEGER
 			temp: STRING
 			descriptors: ARRAY [CLASS_ID]
@@ -1894,7 +1894,7 @@ end
 				until
 					class_list.after
 				loop
-					a_class := class_list.item
+					a_class := class_list.item_for_iteration
 					deg_output.put_degree_minus_1 (a_class, i)
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1929,7 +1929,7 @@ end
 				until
 					class_list.after
 				loop
-					a_class := class_list.item
+					a_class := class_list.item_for_iteration
 debug ("COUNT")
 	io.error.putstring ("[")
 	io.error.putint (i)
@@ -1957,7 +1957,7 @@ end
 			until
 				class_list.after
 			loop
-				a_class := class_list.item
+				a_class := class_list.item_for_iteration
 				deg_output.put_degree_minus_2 (a_class, i)
 debug ("COUNT")
 	io.error.putstring ("[")
@@ -1981,7 +1981,7 @@ end
 				until
 					class_list.after
 				loop
-					a_class := class_list.item
+					a_class := class_list.item_for_iteration
 debug ("COUNT")
 	io.error.putstring ("[")
 	io.error.putint (i)
@@ -2068,7 +2068,7 @@ end
 
 	update_valid_body_ids is
 		local
-			class_list: LINKED_LIST [CLASS_C]
+			class_list: SEARCH_TABLE [CLASS_C]
 		do
 				-- If we are not using any precompilation, ie classes.count = 1
 				-- which correspond to the classes.item (Normal_compilation),
@@ -2080,7 +2080,7 @@ end
 				until
 					class_list.after
 				loop
-					class_list.item.update_valid_body_ids
+					class_list.item_for_iteration.update_valid_body_ids
 					class_list.forth
 				end
 			end

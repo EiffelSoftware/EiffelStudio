@@ -52,7 +52,13 @@ feature -- Access
 			-- Variable is not declared as pointer type in IDL file
 
 	Not_variant_type: STRING is "Variable is not a variant type"
-			-- Variable is not variant type
+			-- Variable is not variant type.
+
+	name_is_C_keyword: STRING is " is C/C++ keyword, please choose another feature name"
+			-- feature name is C++ keyword.
+
+	Not_e2idl_convertable_type: STRING is "is not convertable to COM type"
+			-- E2idl cannot convert to COM type.
 
 end -- class WIZARD_WARNINGS
 

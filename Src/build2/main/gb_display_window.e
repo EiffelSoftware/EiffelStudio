@@ -28,6 +28,7 @@ feature -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_display_window_title)
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_display_window @ 1)
 			close_request_actions.extend (agent (show_hide_display_window_command).execute)
 		end
 

@@ -4,7 +4,7 @@ deferred class BYTE_CODE
 
 inherit
 
-	IDABLE
+	COMPILER_IDABLE
 		rename
 			id as byte_id,
 			set_id as set_byte_id
@@ -15,30 +15,29 @@ inherit
 		redefine
 			make_byte_code, enlarge_tree
 		end;
-	SHARED_ENCODER;
 	SHARED_C_LEVEL;
 	SHARED_PATTERN_TABLE;
 	ASSERT_TYPE;
 
 feature 
 
-	byte_id: INTEGER;
+	byte_id: BODY_ID;
 			-- Id of byte code
 
-	set_byte_id (i: INTEGER) is
+	set_byte_id (i: BODY_ID) is
 			-- Assign `i' to `byte_id'.
 		do
 			byte_id := i;
 		end;
 
-	real_body_id: INTEGER;
+	real_body_id: REAL_BODY_ID;
 			-- Real body id of the feature to which current byte code belongs
 
 	feature_name: STRING;
 			-- Name of the feature to which the current byte code tree
 			-- belongs to
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 			-- Feature body index
 
 	rout_id: ROUTINE_ID;
@@ -105,7 +104,7 @@ feature
 			-- Do nothing
 		end;
 
-	body_id: INTEGER is
+	body_id: BODY_ID is
 			-- Body id to the associated feature
 		do
 			Result := System.body_index_table.item (body_index);
@@ -117,13 +116,13 @@ feature
 			feature_name := s;
 		end;
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: BODY_INDEX) is
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
 		end;
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: REAL_BODY_ID) is
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i
@@ -352,10 +351,11 @@ feature -- Inherited Assertions
 			inh_f: INH_ASSERT_INFO;
 			ct: CLASS_TYPE;
 			inh_c: CLASS_C;
-			bd_id, i: INTEGER;
+			bd_id: BODY_ID;
+			i: INTEGER;
 			gen_prec: BOOLEAN;
 			has_assertion: BOOLEAN;
-			bd_index: INTEGER;
+			bd_index: BODY_INDEX;
 		do
 				--| Check to see if origin feature has precondition
 			from
@@ -394,7 +394,7 @@ feature -- Inherited Assertions
 					end;
 					bd_index := inh_f.body_index;
 					bd_id := System.body_index_table.item (bd_index);
-					byte_code := System.byte_server.item (bd_id);
+					byte_code := System.byte_server.item (bd_id.id);
 					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code);
 					end;
@@ -440,7 +440,7 @@ feature -- Byte code generation
 				-- Header for debuggable byte code.
 			if context.debug_mode then
 				Temp_byte_code_array.append (Bc_debuggable);
-				Temp_byte_code_array.append_integer (body_id);	
+				Temp_byte_code_array.append_integer (body_id.id);	
 			else
 				Temp_byte_code_array.append (Bc_start);
 			end;
@@ -464,7 +464,7 @@ feature -- Byte code generation
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
-				Temp_byte_code_array.append_integer (real_body_id - 1);
+				Temp_byte_code_array.append_integer (real_body_id.id - 1);
 					-- once routines real_body_ids
 					-- Allocate space for storeing a result instance in
 					-- the byte code itself
@@ -577,8 +577,7 @@ feature -- Byte code generation
 					i > nb
 				loop
 					item := old_expressions.item;
-					Context.add_local
-						(context.real_type (item.type));
+					Context.add_local (context.real_type (item.type));
 					item.set_position (position);
 					position := position + 1;
 					old_expressions.forth;

@@ -5,7 +5,6 @@ class INVARIANT_B
 inherit
 
 	COMPILER_IDABLE;
-	SHARED_ENCODER;
 	SHARED_BODY_ID;
 	BYTE_NODE
 		redefine
@@ -47,7 +46,8 @@ feature
 		require
 			has_invariant: byte_list /= Void
 		local
-			i, body_id: INTEGER;
+			i: INTEGER;
+			body_id: BODY_ID;
 			internal_name: STRING;
 		do
 				-- Set the control flag for enlarging the assertions
@@ -61,13 +61,12 @@ feature
 				-- Routine's name				
 			generated_file.putstring ("void ");
 			if context.final_mode then	
-				body_id := Invariant_id;
+				body_id := Invariant_body_id;
 			else
 				body_id := associated_class.invariant_feature.body_id;
 			end;
-			internal_name := Encoder.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id.id,
-				body_id);
+			internal_name := body_id.feature_name
+				(System.class_type_of_id (context.current_type.type_id).id);
 			generated_file.putstring (internal_name);
 				-- Arguments
 			generated_file.putstring ("(Current,where)");

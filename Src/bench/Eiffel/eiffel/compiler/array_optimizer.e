@@ -14,7 +14,6 @@ inherit
 	SHARED_OPTIMIZATION_TABLES;
 	SHARED_INST_CONTEXT;
 	SHARED_BYTE_CONTEXT;
-	SHARED_ENCODER;
 	SHARED_TABLE;
 	COMPILER_EXPORTER
 
@@ -106,11 +105,12 @@ feature {NONE} -- Array optimization
 			byte_code: BYTE_CODE;
 			dep: DEPEND_UNIT;
 			lower, area: FEATURE_I;
-			b_id: INTEGER
+			b_id: BODY_ID
 		do
 				-- Callers of area, lower with assignment
 			from
 				!!unsafe_body_ids.make
+				unsafe_body_ids.compare_objects;
 				array_descendants.start
 			until
 				array_descendants.after
@@ -138,7 +138,7 @@ feature {NONE} -- Array optimization
 								-- Calls to `lower' or `area'
 								-- See if assignment
 							b_id := a_feature.body_id;
-							byte_code := Byte_server.item (b_id);
+							byte_code := Byte_server.item (b_id.id);
 							if lower = Void then
 									-- Optimization: get the FEATURE_Is only
 									-- if the sets are not disjoint
@@ -274,7 +274,7 @@ feature
 						-- then if the routine has a descendant of ARRAY
 						-- as a local variable, an argument or Result and then
 						-- calls put or item on this local/argument/Result
-					byte_code := Byte_server.disk_item (a_feature.body_id);
+					byte_code := Byte_server.disk_item (a_feature.body_id.id);
 						-- `disk_item' is used because the byte code will be modified and
 						-- we don't want the modified byte code to remain in the cache
 					if
@@ -427,7 +427,7 @@ feature -- Detection of safe/unsafe features
 			-- Set of all the features that cannot be called
 			-- within a loop
 
-	unsafe_body_ids: TWO_WAY_SORTED_SET [INTEGER];
+	unsafe_body_ids: TWO_WAY_SORTED_SET [BODY_ID];
 
 	test_safety (a_feature: FEATURE_I; a_class: CLASS_C) is
 			-- Insert the feature in the safe or unsafe set
@@ -449,7 +449,7 @@ feature -- Detection of safe/unsafe features
 			unit: ROUT_UNIT;
 			written_class, descendant_class: CLASS_C;
 			body_table: BODY_INDEX_TABLE;
-			other_body_id: INTEGER
+			other_body_id: BODY_ID
 		do
 			if f.is_external then
 				Result := False

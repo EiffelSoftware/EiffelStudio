@@ -116,6 +116,28 @@ feature -- Access
 
 	minimum_height_set_by_user: BOOLEAN
 		-- Has `set_minimum_height' been called by the user?
+		
+	real_target: EV_DOCKABLE_TARGET is
+			-- `Result' is target used during a dockable transport if
+			-- mouse pointer is above `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.real_target
+		ensure
+			bridge_ok: Result = implementation.real_target
+		end
+		
+	set_real_target (a_target: EV_DOCKABLE_TARGET) is
+			-- Assign `a_target' to `real_target'.
+		require
+			not_destroyed: not is_destroyed
+			target_not_void: a_target /= Void
+		do
+			implementation.set_real_target (a_target)
+		ensure
+			assigned: real_target = a_target
+		end
 
 feature -- Status report
 

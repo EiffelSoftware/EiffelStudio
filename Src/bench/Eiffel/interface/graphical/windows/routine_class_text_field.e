@@ -111,8 +111,6 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					cname.to_upper;
 					set_text (cname);
 					execute (class_i)
-				else
-					close_choice_window
 				end
 				class_list := Void;
 			else
@@ -205,7 +203,6 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					end
 					!! stone.make (class_i.compiled_eclass);
 					tool.routine_text_field.execute (stone);
-					close_choice_window
 				end
 			end
 		end;
@@ -250,7 +247,7 @@ feature {NONE} -- Implementation
 			if choice = Void then
 				!! choice.make_with_widget (parent, Current)
 			end;
-			choice.popup (Current, class_names)
+			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end
 
 	choice: CHOICE_W;

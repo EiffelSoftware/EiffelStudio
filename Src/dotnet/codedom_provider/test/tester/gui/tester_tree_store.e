@@ -318,17 +318,27 @@ feature -- Basic Operations
 		require
 			non_void_path: a_path /= Void
 		do
-			compile_units_paths.prune (a_path)
-			namespaces_paths.prune (a_path)
-			types_paths.prune (a_path)
-			expressions_paths.prune (a_path)
-			statements_paths.prune (a_path)
+			if compile_units_paths /= Void then
+				compile_units_paths.prune (a_path)
+			end
+			if namespaces_paths /= Void then
+				namespaces_paths.prune (a_path)
+			end
+			if types_paths /= Void then
+				types_paths.prune (a_path)
+			end
+			if expressions_paths /= Void then
+				expressions_paths.prune (a_path)
+			end
+			if statements_paths /= Void then
+				statements_paths.prune (a_path)
+			end
 		ensure
-			removed_if_compile_unit: (old compile_units_paths).has (a_path) implies not compile_units_paths.has (a_path)
-			removed_if_namespace: (old namespaces_paths).has (a_path) implies not namespaces_paths.has (a_path)
-			removed_if_type: (old types_paths).has (a_path) implies not types_paths.has (a_path)
-			removed_if_expression: (old expressions_paths).has (a_path) implies not expressions_paths.has (a_path)
-			removed_if_statement: (old statements_paths).has (a_path) implies not statements_paths.has (a_path)
+			removed_if_compile_unit: compile_units_paths /= Void implies ((old compile_units_paths).has (a_path) implies not compile_units_paths.has (a_path))
+			removed_if_namespace: namespaces_paths /= Void implies ((old namespaces_paths).has (a_path) implies not namespaces_paths.has (a_path))
+			removed_if_type: types_paths /= Void implies ((old types_paths).has (a_path) implies not types_paths.has (a_path))
+			removed_if_expression: expressions_paths /= Void implies ((old expressions_paths).has (a_path) implies not expressions_paths.has (a_path))
+			removed_if_statement: statements_paths /= Void implies ((old statements_paths).has (a_path) implies not statements_paths.has (a_path))
 		end
 
 	add_compile_unit (a_path: STRING) is

@@ -456,20 +456,21 @@ feature {NONE} -- Implementation
 			ev_list.append (lst)
 		end
 		
-	recycle_row_item (a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
+	recycle_row_item (a_item: EV_MULTI_COLUMN_LIST_ROW): EB_MULTI_COLUMN_LIST_ROW is
 			-- 
 		do
 			if a_item /= Void then
-				Result := a_item
+				Result ?= a_item
 				Result.wipe_out
 				Result.remove_pebble
+				Result.remove_tooltip
 				Result.pointer_double_press_actions.wipe_out
 			else
 				create Result
 			end			
 		end		
 
-	expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
+	expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EB_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 		require
 			valid_expression: expr /= Void
@@ -479,17 +480,26 @@ feature {NONE} -- Implementation
 			res: STRING
 			typ: STRING
 			evaluator: DBG_EXPRESSION_EVALUATOR
+			l_tooltip: STRING
 		do
 				-- Recycle Row ..
 			Result := recycle_row_item (a_item)
 			Result.extend (expr.context)
+			create l_tooltip.make (20)
+			l_tooltip.append_string ("--< CONTEXT >--%N  " + expr.context + "%N")
 			Result.extend (expr.expression)
+			l_tooltip.append_string ("--< EXPRESSION >--%N  " + expr.expression + "%N%N")
+			
 			if expr.error_message = Void then
 				evaluator := expr.expression_evaluator
 				dmp := evaluator.final_result_value
 				res := dmp.full_output
-				Result.extend (res)
 				typ := dmp.generating_type_representation
+				
+				l_tooltip.append_string ("--< TYPE >--%N  " + typ + "%N")
+				l_tooltip.append_string ("--< VALUE >--%N  " + res + "%N")
+				
+				Result.extend (res)
 				Result.extend (typ)
 				
 				if dmp.address /= Void then
@@ -499,9 +509,12 @@ feature {NONE} -- Implementation
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
+				l_tooltip.prepend_string ("[!] Error occured : " + expr.error_message + "%N%N")
+				
 				Result.extend (expr.error_message)
 				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			
 			end
+			Result.set_tooltip (l_tooltip)			
 			Result.set_data (expr)
 		end
 		
@@ -515,7 +528,7 @@ feature {NONE} -- Implementation
 			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 		end
 		
-	unevaluated_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
+	unevaluated_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EB_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 			-- `expr' is assumed not to have been evaluated.
 		do
@@ -525,10 +538,15 @@ feature {NONE} -- Implementation
 			Result.extend (expr.expression)
 			Result.extend (Unevaluated)
 			Result.extend (Unevaluated)
+			Result.set_tooltip (
+				"UnEvaluated expression%N%N"
+				+ "--< CONTEXT >--%N  " + expr.context + "%N"
+				+ "--< EXPRESSION >--%N  " + expr.expression
+			)
 			Result.set_data (expr)
 		end
 		
-	disabled_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW is
+	disabled_expression_to_row (expr: EB_EXPRESSION; a_item: EV_MULTI_COLUMN_LIST_ROW): EB_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 			-- `expr' is assumed to be disable for evaluation.
 		require
@@ -541,6 +559,12 @@ feature {NONE} -- Implementation
 			Result.extend (expr.expression)
 			Result.extend (Unevaluated)
 			Result.extend (Unevaluated)
+			Result.set_tooltip (
+				"Disabled expression%N%N"
+				+ "--< CONTEXT >--%N  " + expr.context + "%N"
+				+ "--< EXPRESSION >--%N  " + expr.expression
+			)
+			
 			Result.set_data (expr)
 		end		
 

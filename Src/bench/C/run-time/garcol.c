@@ -33,6 +33,11 @@ extern "C" {
 #include "eif_sig.h"
 #include "eif_urgent.h"
 #include "eif_search.h"
+
+#ifdef EIF_THREADS
+#include "eif_once.h"
+#endif
+
 #include <stdio.h>		/* For stream flushing */
 
 #if ! defined CUSTOM || defined NEED_DLE_H

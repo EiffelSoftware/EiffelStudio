@@ -17,27 +17,55 @@ inherit
 		export
 			{NONE} menu_accelerator, menu_history, menu_help_widget, mnemonic,
 			mnemonic_char_set, radio_behavior, is_working_area, is_menu_bar,
-			is_menu_popup, is_menu_option, is_menu_pulldown, sub_menu,
+			is_menu_popup, is_menu_option, is_menu_pulldown, 
 			set_menu_accelerator, set_menu_history, set_menu_help_widget,
 			set_mnemonic, set_mnemonic_char_set, set_radio_behavior,
-			set_sub_menu, rc_make
+			rc_make
+		redefine
+			parent
 		end
 
 creation 
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif popup menuwidget.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
-			screen_object := xm_create_popup_menu (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			screen_object := 
+				xm_create_popup_menu (a_parent.screen_object, 
+					$widget_name, default_pointer, 0);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add_without_parent (Current);
 			set_default
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
+		end;
+
+feature -- Access
+
+	parent: MEL_MENU_SHELL
+			-- Parent of popup menu
+
+feature -- Update
+
+	set_menu_position (a_button_event: MEL_BUTTON_EVENT) is
+			-- Set the menu position from `a_button_event'.
+		require
+			exists: not is_destroyed;
+			button_event_not_void: a_button_event /= Void;
+			button_press_event: a_button_event.is_button_press
+		do
+			xm_menu_position (screen_object, a_button_event.handle)	
 		end;
 
 feature {NONE} -- Implementation
@@ -47,6 +75,13 @@ feature {NONE} -- Implementation
 			"C [macro <Xm/RowColumn.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
 		alias
 			"XmCreatePopupMenu"
+		end;
+
+	xm_menu_position (a_widget: POINTER; an_event: POINTER) is
+		external
+			"C [macro <Xm/RowColumn.h>] (Widget, XButtonPressedEvent *)"
+		alias
+			"XmMenuPosition"
 		end;
 
 end -- class MEL_POPUP_MENU

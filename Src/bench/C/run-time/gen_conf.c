@@ -1841,8 +1841,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	if (RTUD(dftype) == egc_bit_dtype) {
 		(*intab)++;
-		**outtab = dftype;
 		dftype = eif_register_bit_type ((long) (**intab));
+		**outtab = dftype;
 		(*intab)++;
 		(*outtab)++;
 		return dftype;
@@ -2480,8 +2480,7 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
 	needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-	if ((dftype < first_gen_id) && (dftype != egc_bit_dtype))
-	{
+	if (dftype < first_gen_id) {
 		if (needs_expanded) {
 			strcat (result, "expanded ");
 		} else if (needs_reference) {
@@ -2594,8 +2593,7 @@ rt_shared int eif_typename_len (int16 dftype)
 	needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
 	needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-	if ((dftype < first_gen_id) && (dftype != egc_bit_dtype))
-	{
+	if (dftype < first_gen_id) {
 		if (needs_expanded) {
 			len = 9;
 		} else if (needs_reference) {
@@ -2671,27 +2669,25 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 	int16       i, len;
 
 	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
+	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
+	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
 
-	/* Simple id */
-
-	if ((dftype < first_gen_id) && (dftype != egc_bit_dtype))
+		/* Simple id */
+	if (dftype < first_gen_id) {
 		return 1;
+	}
 
-	/* Generic or BIT id */
-
+		/* It's a generic type or a BIT type */
 	gdp = eif_derivations[dftype];
 
-	/* Is it a BIT type? */
-
-	if (gdp->is_bit)
+		/* Is it a BIT type? */
+	if (gdp->is_bit) {
 		return 2;
-
-	/* It's a generic type */
+	}
 
 	len = 0;
 
-	/* Is it a TUPLE? */
-
+		/* Is it a TUPLE? */
 	if (gdp->is_tuple) {
 			/* Size is TUPLE_OFFSET because we need to take into account
 			 * TUPLE_TYPE constant, number of generic parameters
@@ -2716,35 +2712,29 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16 apply_rtud)
 {
 	EIF_GEN_DER *gdp;
-	int16 i, len, dtype;
+	int16 i, len;
 
 	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
-
-	dtype = dftype;
+	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
+	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
 
 	/* Simple id */
 
-	if ((dftype < first_gen_id) && (dftype != egc_bit_dtype))
-	{
-		if (dtype < 0) {
-				/* Special id */
-			typearr [*idx] = dtype;
+	if (dftype < first_gen_id) {
+		if (dftype < 0) {
+			typearr [*idx] = dftype;
 		} else {
-			typearr [*idx] = (apply_rtud ? RTUD(dtype) : dtype);
+			typearr [*idx] = (apply_rtud ? RTUD(dftype) : dftype);
 		}
-
 		(*idx)++;
 		return;
 	}
 
-	/* Generic or BIT id */
+		/* It's a generic type or a BIT type */
+	gdp = eif_derivations[dftype];
 
-	gdp = eif_derivations[dtype];
-
-	/* Is it a BIT type? */
-
-	if (gdp->is_bit)
-	{
+		/* Is it a BIT type? */
+	if (gdp->is_bit) {
 		typearr [*idx] = egc_bit_dtype;    /* Bit type */
 		(*idx)++;
 		typearr [*idx] = (int16) (gdp->size); /* Nr of bits */
@@ -2752,26 +2742,20 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 		return;
 	}
 
-	/* Is it a TUPLE type? */
-
-	if (gdp->is_tuple)
-	{
+		/* Is it a TUPLE type? */
+	if (gdp->is_tuple) {
 		typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
 		(*idx)++;
 		typearr [*idx] = (int16) (gdp->size);   /* Nr of generics */
 		(*idx)++;
 	}
 
-	/* It's a generic type */
-
 	typearr [*idx] = RTUD(gdp->base_id);
-
 	(*idx)++;
 
 	len = (int16) gdp->size;
 
-	for (i = 0; i < len; ++i)
-	{
+	for (i = 0; i < len; ++i) {
 		eif_put_gen_seq (gdp->typearr [i], typearr, idx, 1);
 	}
 }

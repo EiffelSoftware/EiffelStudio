@@ -8,17 +8,26 @@ class
 	RESOURCE_STRUCTURE
 
 create
-	make
+	make_from_location, make_from_file
 
 feature {NONE} -- Initialization
 
-	make is
+	make_from_location (default_file_name: STRING; location: STRING) is
 		local
 			imp: RESOURCE_STRUCTURE_IMP
 		do
 			create imp.make (Current)
 			implementation := imp
-			imp.initialize ("D:\46dev\bench.xml")
+			imp.initialize (default_file_name, location)
+		end
+
+	make_from_file (default_file_name: STRING; normal_file_name: STRING) is
+		local
+			imp: RESOURCE_STRUCTURE_IMP
+		do
+			create imp.make (Current)
+			implementation := imp
+			imp.initialize_from_file (default_file_name, normal_file_name)
 		end
 
 feature  -- Access

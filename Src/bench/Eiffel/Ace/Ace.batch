@@ -40,6 +40,7 @@ cluster
 -- ES4 SPECIFIC CLUSTERS
 
 		liman_abstract:		"$BENCH/Eiffel/limand/abstract";
+		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		liman_client:		"$BENCH/Eiffel/limand/client";
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";

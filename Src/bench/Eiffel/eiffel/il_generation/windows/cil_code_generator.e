@@ -1044,7 +1044,11 @@ feature -- Class info
 				-- Predefined .NET basic types.
 			external_class_mapping.put (create {BOOLEAN_I}, "System.Boolean")
 			external_class_mapping.put (create {CHAR_I}.make (False), "System.Char")
-			external_class_mapping.put (create {INTEGER_I}.make (8), "System.Byte")
+			external_class_mapping.put (create {NATURAL_I}.make (8), "System.Byte")
+			external_class_mapping.put (create {NATURAL_I}.make (16), "System.IUnt16")
+			external_class_mapping.put (create {NATURAL_I}.make (32), "System.IUnt32")
+			external_class_mapping.put (create {NATURAL_I}.make (64), "System.UInt64")
+			external_class_mapping.put (create {INTEGER_I}.make (8), "System.SByte")
 			external_class_mapping.put (create {INTEGER_I}.make (16), "System.Int16")
 			external_class_mapping.put (create {INTEGER_I}.make (32), "System.Int32")
 			external_class_mapping.put (create {INTEGER_I}.make (64), "System.Int64")

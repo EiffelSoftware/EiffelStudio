@@ -51,6 +51,7 @@ feature -- Access
 			end
 		ensure
 			Result_not_void: Result /= Void
+			Result_not_has_void: not Result.has (Void)
 		end
 		
 	to_array: ARRAY [EV_WIDGET] is

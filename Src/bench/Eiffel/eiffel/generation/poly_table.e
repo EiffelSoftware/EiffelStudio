@@ -60,9 +60,10 @@ inherit
 feature -- Initialization
 
 	make (routine_id: INTEGER) is
-			-- Create table with associated `routine_ioid'
+			-- Create table with associated `routine_id'
 		do
 			rout_id := routine_id
+			array_make (1, 1)
 		end
 
 	create_block (n: INTEGER) is
@@ -70,7 +71,7 @@ feature -- Initialization
 		require
 			large_enough: n > 0
 		do
-			array_make (1,n)
+			array_make (1, n)
 		end	
 
 	extend_block (n: INTEGER) is

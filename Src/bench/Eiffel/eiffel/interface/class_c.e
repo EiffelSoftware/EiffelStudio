@@ -1330,7 +1330,7 @@ feature
 			d_name.extend (subdirectory)
 			!!dir.make (d_name)
 			if not dir.exists then	
-				dir.create
+				dir.create_dir
 			end
 			!!f_name.make_from_string (d_name)
 			f_name.set_file_name (base_file_name)

@@ -139,14 +139,24 @@ feature -- Commands
 		require
 			text_void: a_text /= Void
 		local
-			l_file: PLAIN_TEXT_FILE
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 		do
-			create l_file.make_create_read_write ("temporary_file.xml")
-			if l_file.exists then
-				l_file.put_string (a_text)
-				l_file.close
-				Result := deserialize_document (create {FILE_NAME}.make_from_string (l_file.name))
-				l_file.delete
+			create l_parser.make
+			create l_tree_pipe.make
+			create l_xm_concatenator.make_null
+			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+			l_parser.parse_from_string (a_text)
+			if l_parser.is_correct then 
+				if not l_tree_pipe.error.has_error then
+					Result := l_tree_pipe.document
+				else
+					error_description := l_tree_pipe.error.last_error
+				end
+			else
+				error_description := l_parser.last_error_extended_description
+				Result := Void
 			end
 		end
 

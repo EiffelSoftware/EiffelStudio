@@ -180,7 +180,7 @@ feature {NONE} -- Retrieval
 				end
 			else
 					-- File was empty so it must have just been created.
-				saved_argument := "[]"
+				saved_argument := ""
 			end
 			arguments_file.close
 		end

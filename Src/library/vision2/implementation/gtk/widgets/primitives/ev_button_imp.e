@@ -25,11 +25,6 @@ creation
 
 feature {NONE} -- Initialization
 	
-	make (par: EV_CONTAINER) is
- 		do
- 			make_with_text (par, "")
- 		end
-
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
                         -- Create a gtk push button.
                 local

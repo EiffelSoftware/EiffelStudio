@@ -9,18 +9,19 @@ indexing
 	
 deferred class
 	
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_MENU_ITEM_CONTAINER_IMP
 	
 inherit
 	
-	EV_INVISIBLE_CONTAINER_I
+	EV_MENU_ITEM_CONTAINER_I
 		
 	EV_CONTAINER_IMP
-	
+
 end
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
+
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

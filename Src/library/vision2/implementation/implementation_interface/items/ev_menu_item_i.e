@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision invisible container, gtk implementation."
+		"EiffelVision menu_item, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -9,14 +9,38 @@ indexing
 	
 deferred class
 	
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_MENU_ITEM_I
 	
 inherit
+	EV_PRIMITIVE_I
+
+
+	EV_TEXT_CONTAINER_I
+
+
+feature {NONE} -- Initialization
 	
-	EV_INVISIBLE_CONTAINER_I
+	
+	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+		deferred
+		end
+
+feature -- Element change
+	
+	set_menu (menu_i: EV_MENU_I) is
+			-- Set menu for menu item
+		require
+			valid_menu: menu_i /= Void
+		deferred
+		end
 		
-	EV_CONTAINER_IMP
+feature -- Event - command association
 	
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENTS) is	
+		deferred
+		end
+		
 end
 
 --|----------------------------------------------------------------

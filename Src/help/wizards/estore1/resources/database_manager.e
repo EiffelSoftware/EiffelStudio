@@ -86,7 +86,7 @@ feature -- Connections
 			selection.load_result
  			selection.terminate
 
-			if db_actions.list.count>=1 then
+			if db_actions.list.count > 0 then
 				Result := db_actions.list
 			else
 				Create Result.make 
@@ -94,6 +94,34 @@ feature -- Connections
 		ensure
 			Result_exists: Result /= Void
   		end
+
+  	retrieve (s: STRING): LINKED_LIST[DB_TUPLE] is
+  			-- Load a list of DB_TUPLE in which one can retrieve any data for each tuple
+  			-- Using this function, you don't need to create an Object to retrieve the data.
+		require
+			is_connected: session_control.is_connected
+			meaningfull_select: s /= Void and s.count > 0
+		local
+			db_actions: DB_ACTION_DYN
+			selection: DB_SELECTION
+		do
+			Create selection.make
+			selection.set_query (s)
+			Create db_actions.make (selection)
+			selection.set_action (db_actions)
+			selection.execute_query
+			selection.load_result
+			selection.terminate
+
+			if db_actions.list.count > 0 then
+				Result := db_actions.list
+			else
+				Create Result.make
+			end
+		ensure
+			Result_exists: Result /= Void
+		end
+
  
  	execute_query(a_query: STRING) is
  			-- Execute the query 'a_query' to the Database.

@@ -14,7 +14,7 @@ inherit
 		redefine
 			symbol, full_symbol, icon_symbol,
 			name, stone_type, process_class, process_feature,
-			compatible, process_classi
+			compatible, process_classi, receive
 		end
 
 creation
@@ -90,17 +90,21 @@ feature -- Update
 
 	process_feature (st: FEATURE_STONE) is
 		do
-			if tool = Project_tool then
-				if not st.is_valid then
-					warner (Project_tool).gotcha_call
-									(w_Feature_not_compiled);
-				else
-					create_class_tool (st)
-				end
+			if not st.is_valid then
+				warner (Project_tool).gotcha_call
+								(w_Feature_not_compiled);
 			else
-				tool.receive (st)
+				create_class_tool (st)
 			end
 		end;
+
+    receive (a_stone: STONE) is
+            -- Process dropped stone `a_stone'
+        do
+            if a_stone.is_valid and then compatible (a_stone) then
+                a_stone.process (Current)
+            end
+        end;
 
 feature {NONE} -- Implementation
 

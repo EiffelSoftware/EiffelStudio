@@ -62,9 +62,10 @@ RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
 /* #define prof_enabled    EIF_TEST(egc_prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
 #define prof_recording	EIF_TEST(egc_prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
 
+#ifndef EIF_THREADS
 RT_LNK int trace_call_level;			/* Call level to report at E-TRACE output */
-
 RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
+#endif
 
 RT_LNK void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
 RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
@@ -73,12 +74,11 @@ RT_LNK void start_trace(char *name, int origin, int dtype);			/* Prints entering
 RT_LNK void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
 
 RT_LNK void initprf(void);				/* Generates table for profiling */
-RT_LNK void exitprf(void);				/* Saves table as textfile */
 
-extern void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */
-extern void stop_profile(void);			/* Stops profiling of a certain feature */
+RT_LNK void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */
+RT_LNK void stop_profile(void);			/* Stops profiling of a certain feature */
 
-extern void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
+RT_LNK void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
 						 * the stack items,
 						 * updates the table, and
 						 * pops the items from the stack

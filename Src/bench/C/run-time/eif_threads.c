@@ -40,6 +40,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_store.h"
 #include "rt_except.h"
 #include "rt_memory.h"
+#include "rt_option.h"
 
 #include <string.h>
 
@@ -160,8 +161,9 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
 #endif
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
-	EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");
-	EIF_LW_MUTEX_CREATE (eif_memory_mutex, "Couldn't create memory mutex");
+	EIF_LW_MUTEX_CREATE(eif_except_lock, "Couldn't create exception lock");
+	EIF_LW_MUTEX_CREATE(eif_memory_mutex, "Couldn't create memory mutex");
+	EIF_LW_MUTEX_CREATE(eif_trace_mutex, "Couldn't create tracemutex");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 #ifdef EIF_WIN32
@@ -411,6 +413,8 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Locking GC mutex");
 		initsig();
 		initstk();
+		if (egc_prof_enabled)
+			initprf();
 		exvect = new_exset((char *) 0, 0, (char *) 0, 0, 0, 0);
 		exvect->ex_jbuf = &exenv;
 
@@ -468,6 +472,8 @@ rt_public void eif_thr_exit(void)
 	int ret;	/* Return Status of "eifaddr_offset". */
 	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 	EIF_REFERENCE thread_object = NULL;
+
+	exitprf();
 
 		/* Mark current thread so that it is not taken into account by GC
 		 * synchronization */

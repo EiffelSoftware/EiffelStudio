@@ -41,24 +41,23 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #include <stdio.h>
 #include <string.h>
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="trace_call_level" return_type="int" export="public">
 doc:		<summary>Call level for Eiffel tracing recursive calls (wether direct or indirect).</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in public per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_public int trace_call_level = 0;
 
 /*
 doc:	<attribute name="prof_stack" return_type="struct stack *" export="public">
-doc:		<summary>Profiler stack where `struct prof_info *' are stored.</summary>
+doc:		<summary>Profiler stack where `struct prof_info *' are stored. In multithreaded mode, we perform a per thread profiling.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>It depends whether we want to do a per thread profiling or not. For the moment I suggest we do a process profiling by adding a synchronization mutex for access to profiler.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_public struct stack *prof_stack;
@@ -69,9 +68,8 @@ rt_public struct stack *prof_stack;
 doc:	<attribute name="last_dtype" return_type="int" export="private">
 doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private int last_dtype;
@@ -80,9 +78,8 @@ rt_private int last_dtype;
 doc:	<attribute name="last_origin" return_type="int" export="private">
 doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private int last_origin;
@@ -91,9 +88,8 @@ rt_private int last_origin;
 doc:	<attribute name="last_name" return_type="int" export="private">
 doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private char *last_name;
@@ -105,7 +101,7 @@ doc:	<attribute name="init_date" return_type="struct prof_rusage/double/SYSTEMTI
 doc:		<summary>Store starting date of profiling.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since initialized in `initprf'.</synchronization>
+doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 #ifdef HAS_GETRUSAGE
@@ -116,6 +112,22 @@ rt_private double 	       init_date;
 rt_private SYSTEMTIME 	*init_date;
 #endif  /* HAS_GERUSAGE */
 
+#define EIF_TRACE_LOCK
+#define EIF_TRACE_UNLOCK
+#else	/* EIF_THREADS */
+
+/*
+doc:	<attribute name="eif_trace_mutex" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:		<summary>Ensure that outputs of tracing are properly synchronized.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_shared	EIF_LW_MUTEX_TYPE *eif_trace_mutex = (EIF_LW_MUTEX_TYPE *) 0;
+#define EIF_TRACE_LOCK	EIF_LW_MUTEX_LOCK (eif_trace_mutex, "Couldn't lock trace mutex");
+#define EIF_TRACE_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_trace_mutex, "Couldn't unlock trace mutex");
+
+#endif
 
 /* Struct to keep the information gathered */
 #ifdef HAS_GETRUSAGE
@@ -379,17 +391,18 @@ struct feat_table {
 	struct htable *htab;		/* Features of class corresponding to 'dtype' */
 };
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="class_table" return_type="struct htable *" export="private">
-doc:		<summary>The hash-table containing all profiling information.</summary>
+doc:		<summary>The hash-table containing all profiling information. In multithreaded mode, it records a per thread profiling.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>Dtype</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Apply same fix as `prof_stack'.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private struct htable *class_table;		/* The H table that contains all info */
+#endif
 
 /* INTERNAL PROFILE DEFINITIONS */
 
@@ -531,6 +544,7 @@ void initprf(void)
 	 */
 
 	if(egc_prof_enabled) {
+		RT_GET_CONTEXT
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
@@ -567,6 +581,7 @@ void exitprf(void)
 	 * might not be called if user disabled profiling in the Ace file and 
 	 * enabled it through the PROFILING_SETTING class. */
 
+	RT_GET_CONTEXT
 	if (egc_prof_enabled && init_date) {
 
 #ifdef HAS_GETRUSAGE
@@ -584,6 +599,10 @@ void exitprf(void)
 	    	j,					/* Inner-loop-counter */
 	    	index;				/* Index counter for output */
 		FILE *prof_output;		/* Storage file */
+#ifdef EIF_THREADS
+		char *file_name;
+		char buffer[256];
+#endif
 			
 		double percentage; /* the computed percentage of each routine */
 
@@ -618,8 +637,18 @@ void exitprf(void)
 #endif  /* HAS_GERUSAGE */
 
 		record_time (execution_time); 
-		
+
+#ifdef EIF_THREADS
+		sprintf(buffer, "%x\0", eif_thr_id);
+		file_name = malloc (strlen(profile_output_file) + strlen(buffer) + 2);
+		file_name[0] = '\0';
+		strcat (file_name, profile_output_file);
+		strcat (file_name, "_");
+		strcat (file_name, buffer);
+		prof_output = fopen(file_name, "w");
+#else
 		prof_output = fopen(profile_output_file, "w");
+#endif
 		if (!prof_output) {
 				/* Too bad: no file */
 			eraise("Unable to open to output file for profile", EN_FATAL);
@@ -694,6 +723,9 @@ void exitprf(void)
 		ht_free(class_table);		/* Free memory */
 		prof_stack_free();			/* Deallocate stack */
 
+#ifdef EIF_THREADS
+		if (eif_thr_is_root())
+#endif
 		egc_prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
 								/* the `full_sweep' from `reclaim' which makes come calls */
 								/* calls to the `dispose' routines and since there are */
@@ -789,10 +821,16 @@ void start_trace(char *name, int origin, int dtype)
 	 * The user can redirect the output to a file, when he/she wants that.
 	 */
 
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	int i;				/* Counter needed for loops */
 
 	if (trace_call_level != 0 && last_dtype != -1) {
+		EIF_TRACE_LOCK
 		print_err_msg(stderr, "\n");
+#ifdef EIF_THREADS
+		print_err_msg(stderr, "Thread ID 0x%016lX:", eif_thr_id);
+#endif
 		for (i = 0; i < trace_call_level - 1; i++)
 			print_err_msg (stderr, "|  ");		/* Print preceding spaces */
 
@@ -800,6 +838,7 @@ void start_trace(char *name, int origin, int dtype)
 
 		if (last_dtype != last_origin)	/* Check if it is inherited... */
 			print_err_msg(stderr, " (%s)", Classname(last_origin));
+		EIF_TRACE_UNLOCK
 	}
 
 	trace_call_level++;		/* Increase the call_level */
@@ -816,11 +855,17 @@ void stop_trace(char *name, int origin, int dtype)
 {
 	/* Prints that feature 'name' in class 'dtype' inherited from 'origin' is about to leave. */
 
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	int i;				/* Counter needed for loops */
 
 	trace_call_level--;		/* Decrease the call_level */
 
+	EIF_TRACE_LOCK
 	print_err_msg(stderr, "\n");
+#ifdef EIF_THREADS
+		print_err_msg(stderr, "Thread ID 0x%016lX:", eif_thr_id);
+#endif
 
 	for (i = 0; i < trace_call_level; i++)
 		print_err_msg(stderr, "|  ");		/* Print preceding spaces */
@@ -836,6 +881,8 @@ void stop_trace(char *name, int origin, int dtype)
 
 	if (dtype != origin)	/* Check if it is inherited... */
 		print_err_msg(stderr, " (%s)", Classname(origin));
+
+	EIF_TRACE_UNLOCK
 }
 
 struct prof_info* prof_stack_pop(void)
@@ -845,6 +892,7 @@ struct prof_info* prof_stack_pop(void)
 	 */
 
 	if(prof_recording) {
+	EIF_GET_CONTEXT
 		register1 struct prof_info *stk_item;	/* Top item of stack */
 
 		if((stk_item = prof_stack_top())) {
@@ -873,6 +921,7 @@ struct prof_info* prof_stack_top(void)
 	 */
 
 	if(prof_recording) {
+		EIF_GET_CONTEXT
 		char **top;
 
 		top = prof_stack->st_top;	/* Next eif_free location */
@@ -913,6 +962,7 @@ void prof_stack_init(void)
 	 */
 
 	if(egc_prof_enabled) {
+		EIF_GET_CONTEXT
 			/* Allocate profile stack */
 		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
 		if(!prof_stack)
@@ -929,6 +979,7 @@ void prof_stack_free(void)
 	/* Free the memory allocated for `prof_stack'. */
 
 	if(egc_prof_enabled) {
+		EIF_GET_CONTEXT
 		xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
 		xfree((char *)prof_stack);			/* Free memory used by stack */
 	}
@@ -941,6 +992,7 @@ void prof_stack_push(struct prof_info *new_item)
 	 */
 
 	if(prof_recording) {
+		EIF_GET_CONTEXT
 		if(epush(prof_stack, (char *) new_item) == -1) {
 				/* Bad Luck! */
 			eif_panic(MTC "Push profile info failed.");
@@ -969,6 +1021,8 @@ void update_class_table(struct prof_info *item)
  	*/
 
 	if(prof_recording) {
+		RT_GET_CONTEXT
+		EIF_GET_CONTEXT
 		struct feat_table *f_t;		/* Feature table */
 		struct prof_info *p_i;		/* New item */
 		unsigned long f_hcode;		/* Feature H code */
@@ -1079,6 +1133,7 @@ void prof_stack_rewind(char **old_top)
  	*/
 
 	if(prof_recording) {
+		EIF_GET_CONTEXT
 			/* Traverse the stack to a certain point */
 		while(prof_stack->st_top > old_top) {
 				/* Stop profiling top item */

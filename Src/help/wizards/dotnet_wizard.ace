@@ -134,9 +134,9 @@ cluster
 				end
 		end
 
-	all assembly_retriver:		"$EIFFEL_SRC\bench\Eiffel\eiffel\il_generation\windows"
+	all assembly_retriver:		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
 
-	all fusion:		"$EIFFEL_SRC\bench\Eiffel\library\cli_writer"
+	all fusion:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
 external
 
@@ -145,7 +145,7 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib",
-		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -156,7 +156,7 @@ external
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib",
-		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\spec\$(ISE_C_COMPILER)\lib\cli_writer.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\$(ISE_C_COMPILER)\lib\cli_writer.lib",
 		"corguids.lib"
 
 end

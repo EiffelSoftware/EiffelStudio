@@ -6,15 +6,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SHELL_M 
+class 
+	SHELL_M 
 
 inherit
 
 	COMPOSITE_M
 		undefine
-			real_x, real_y, managed,
-			make_from_existing, unmanage, manage,
-			clean_up_callbacks
+			real_x, real_y, mel_destroy, make_from_existing, 
+			unmanage, manage, clean_up_callbacks
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
@@ -59,31 +59,20 @@ feature {ALL_CURS_X} -- Implementation
 
 	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
 			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
 		local
-			display_pointer, void_pointer: POINTER;
-			a_cursor_implementation: SCREEN_CURSOR_X
+			cursor_implementation: SCREEN_CURSOR_X
 		do
-			--window := xt_window (screen_object);
-			--if window /= void_pointer then
-				--display_pointer := xt_display (screen_object);
-				--a_cursor_implementation ?= a_cursor.implementation;
-				--x_define_cursor (display_pointer, window, a_cursor_implementation.cursor_id (screen));
-				--x_flush (display_pointer)
-			--end
+			cursor_implementation ?= a_cursor.implementation;
+			cursor_implementation.allocate_cursor;
+			define_cursor (cursor_implementation);
+			display.flush
 		end;
 
 	undefine_cursor_if_shell is
 			-- Undefine the cursor if the current widget is a shell.
-		local
-			display_pointer: POINTER
 		do
-			--if window /= 0 then
-				--display_pointer := xt_display (screen_object);
-				--x_undefine_cursor (display_pointer, window);
-				--x_flush (display_pointer)
-			--end
+			undefine_cursor;
+			display.flush
 		end;
 
 end -- class SHELL_M

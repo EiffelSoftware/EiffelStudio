@@ -14,7 +14,8 @@ inherit
 		end
 
 create 
-	make
+	make,
+	make_from_array
 
 feature -- Access
 

@@ -32,6 +32,7 @@ create
 	make_month_day_year,
 	make_day_month_year,
 	make_now,
+	make_now_utc,
 	make_by_days,
 	make_from_string_default,
 	make_from_string_default_with_base,
@@ -83,6 +84,15 @@ feature -- Initialization
 			l_date: C_DATE
 		do
 			create l_date
+			make (l_date.year_now, l_date.month_now, l_date.day_now)
+		end
+
+	make_now_utc is
+			-- Set the current object to today's date in utc format.
+		local
+			l_date: C_DATE
+		do
+			create l_date.make_utc
 			make (l_date.year_now, l_date.month_now, l_date.day_now)
 		end
 

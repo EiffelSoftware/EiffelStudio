@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
+			new_item_actions.extend (~widget_contained)
 			create remove_item_actions.make ("remove_item", <<"widget">>)
 			remove_item_actions.extend (~remove_radio_button)
 			{EV_WIDGET_IMP} Precursor
@@ -341,6 +342,17 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+	widget_contained (w: EV_WIDGET) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= w.implementation
+			w_imp.on_contained
+		end
+
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP]
@@ -459,6 +471,10 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/20 23:24:46  pichery
+--| - Added `on_contained' notion. A container now notify its widget when it
+--|   put them into itself (usefull for pixmap)
+--|
 --| Revision 1.43  2000/03/14 20:09:08  brendel
 --| Rearranged initialization
 --|

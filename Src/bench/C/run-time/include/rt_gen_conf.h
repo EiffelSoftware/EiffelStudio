@@ -59,6 +59,9 @@ extern int eif_par_table2_size;
  * `x' being the compiled type, it returns the type in current compilation */
 extern int16 eif_find_true_type (int16 x);
 
+extern void eif_gen_conf_thread_init (void);
+extern void eif_gen_conf_thread_cleanup (void);
+
 /* Maximum nr. of entries in a compound typeid array */
 #define MAX_CID_SIZE    2048
 

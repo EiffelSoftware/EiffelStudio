@@ -169,9 +169,6 @@ rt_private int s_fides;
  */
 rt_shared void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
-rt_shared void st_write(EIF_REFERENCE object);
-rt_shared void ist_write(EIF_REFERENCE object);
-rt_shared void gst_write(EIF_REFERENCE object);
 rt_public void make_header(void);				/* Make header */
 rt_public void rmake_header(void);
 #ifdef RECOVERABLE_SCAFFOLDING
@@ -183,7 +180,6 @@ rt_private void st_write_cid (uint32);
 rt_private void ist_write_cid (uint32);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
-rt_public void store_write(void);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
 rt_public void buffer_write(register char *data, int size);
@@ -553,6 +549,12 @@ rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	return stream_buffer_size;
 }
 
+rt_public void basic_general_free_store (EIF_REFERENCE object)
+{
+	allocate_gen_buffer();
+	internal_store(object);
+}
+
 #ifdef RECOVERABLE_SCAFFOLDING
 /*
 doc:	<attribute name="eif_is_new_recoverable_format" return_type="EIF_BOOLEAN" export="private">
@@ -662,6 +664,19 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	rt_reset_store ();
 	*real_size = stream_buffer_position;
 	return stream_buffer_size;
+}
+
+rt_public void independent_free_store (EIF_REFERENCE object)
+{
+		/* Initialize serialization streams for writting (1 stands for write) */
+	run_idr_init (buffer_size, 1);
+	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+
+	internal_store(object);
+
+	run_idr_destroy ();
+	xfree (idr_temp_buf);
+	idr_temp_buf = (char *)0;
 }
 
 /* Stream allocation */
@@ -906,7 +921,7 @@ rt_private void st_store(EIF_REFERENCE object)
 
 }
 
-rt_shared void st_write(EIF_REFERENCE object)
+rt_public void st_write(EIF_REFERENCE object)
 {
 	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
@@ -960,7 +975,7 @@ rt_shared void st_write(EIF_REFERENCE object)
 
 }
 
-rt_shared void gst_write(EIF_REFERENCE object)
+rt_public void gst_write(EIF_REFERENCE object)
 {
 	/* Write an object.
 	 * used for general store
@@ -1008,7 +1023,7 @@ rt_shared void gst_write(EIF_REFERENCE object)
 
 }
 
-rt_shared void ist_write(EIF_REFERENCE object)
+rt_public void ist_write(EIF_REFERENCE object)
 {
 	/* Write an object.
 	 * used for independent store

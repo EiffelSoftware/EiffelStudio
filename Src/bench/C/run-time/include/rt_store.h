@@ -41,30 +41,12 @@ extern "C" {
  */
 extern char *account;			/* Array of traversed dyn types */
 extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
-extern void flush_st_buffer(void);
 extern void allocate_gen_buffer(void);
 extern void buffer_write(register char *data, int size);
 
 RT_LNK void set_buffer_size (EIF_INTEGER);
 
-extern void store_write(void);
-
 extern int char_write(char *pointer, int size);
-
-extern void rt_init_store(
-	void (*store_function) (void),
-	int (*char_write_function)(char *, int),
-	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE),
-	void (*make_header_function) (void),
-	int accounting_type);
-extern void rt_reset_store(void);
-
-extern void make_header(void);				/* Make header */
-extern void imake_header(void);				/* Make header */
-extern void st_write(EIF_REFERENCE object);		/* Write an object in file */
-extern void ist_write(EIF_REFERENCE object);
-extern void gst_write(EIF_REFERENCE object);
 
 extern long get_offset(uint32 o_type, uint32 attrib_num);          /* get offset of attrib in object*/
 

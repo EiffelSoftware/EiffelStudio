@@ -27,14 +27,12 @@
 		<heading>
 			<size>3</size>Borland users
 		</heading>
-		<paragraph>On Windows, the JDK includes a set of C libraries which have been    compiled for the Microsoft C compiler. Before being able to use the JDK from Eiffel you need to perform the following operation:</paragraph>
+		<paragraph>On Windows, the JDK includes a set of C libraries which have been compiled for the Microsoft C compiler. Before being able to use the JDK from Eiffel you need to perform the following operation:</paragraph>
 		<list ordered="true">
 			<item>In $JDK_HOME\lib, rename javai.lib into javai.lib.microsoft</item>
 			<item>From the DOS command prompt and in the directory $JDK_HOME\lib, launch the following command
 				<line_break/>
-				<code_block>
-	%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll
-				</code_block>
+				<code_block>%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll</code_block>
 			</item>
 		</list>
 		<heading>
@@ -44,7 +42,7 @@
 			<item>In this version, you can only use one JNI environment.</item>
 			<item>Only one thread can interact with the Java Virtual Machine (JVM).</item>
 			<item>It is not possible to call Eiffel features from Java program.</item>
-			<item>The Eiffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java NativeInterface that is not fully implemented in jdk 1.1.8.  This function, calledDestroyJavaVM, always returns -1 in jdk     1.1.8. For further information, go on theJNI pages at the address above.</item>
+			<item>The Eiffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java NativeInterface that is not fully implemented in jdk 1.1.8.  This function, called DestroyJavaVM, always returns -1 in jdk 1.1.8. For further information, go on the JNI pages at the address above.</item>
 		</list>
 		<heading>
 			<size>2</size>Interface classes
@@ -73,7 +71,7 @@
 		<heading>
 			<size>3</size>JAVA_OBJECT
 		</heading>
-		<paragraph> This class gives Eiffel access to Java objects. You can use itdirectly or inherit from to and create a more convienient Eiffelclass that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object. </paragraph>
+		<paragraph> This class gives Eiffel access to Java objects. You can use itdirectly or inherit from to and create a more convienient Eiffel class that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object. </paragraph>
 		<warning>
 			<bold>Warning:</bold> to access the static fields or routines of a Java Class, you have to use the features of a JAVA_CLASS instance!!
 		</warning>
@@ -142,7 +140,7 @@
 				<paragraph>
 					<bold>The signature of Java methods and attributes:</bold>
 				</paragraph>
-				<paragraph> When you want to call a Java method or access a field, you need to specify its signature.The Eiffel to Java   interface follows the JNI specifications.The table below summarizes the encoding for the Java type signatures: </paragraph>
+				<paragraph> When you want to call a Java method or access a field, you need to specify its signature.The Eiffel to Java interface follows the JNI specifications. The table below summarizes the encoding for the Java type signatures: </paragraph>
 				<table>
 					<row>
 						<cell>
@@ -194,22 +192,14 @@
 					</row>
 				</table>
 				<paragraph> The signature for a Java class has the following form: </paragraph>
-				<code_block>
-	L fully-qualified-class;
-				</code_block>
+				<code_block>L fully-qualified-class;</code_block>
 				<paragraph> For example, class String:
-					<code_block>
-	Ljava/lang/String;
-					</code_block>
+					<code_block>Ljava/lang/String;</code_block>
 				</paragraph>
 				<paragraph> The signature for a method has the following form: </paragraph>
-				<code_block> 
-	(arguments-types) returned-types 
-				</code_block>
+				<code_block>(arguments-types) returned-types</code_block>
 				<paragraph> For example, the signature of a method that takes as arguments an integer and a string and return void is:
-					<code_block>
-	(ILjava/lang/String;)V
-					</code_block>
+					<code_block>(ILjava/lang/String;)V</code_block>
 				</paragraph>
 			</paragraph>
 		</paragraph>

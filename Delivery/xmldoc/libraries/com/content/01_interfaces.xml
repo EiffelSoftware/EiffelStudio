@@ -33,9 +33,7 @@
 				</class_name>
 			</code>, which has a creation routine
 		</paragraph>
-		<code_block>
-	<feature_name>make_from_other</feature_name> <symbol>(</symbol>other<symbol>:</symbol> <class_name>ECOM_INTERFACE</class_name><symbol>)</symbol>
-		</code_block>
+		<code_block><feature_name>make_from_other</feature_name> <symbol>(</symbol>other<symbol>:</symbol> <class_name>ECOM_INTERFACE</class_name><symbol>)</symbol></code_block>
 		<paragraph>that queries a COM component internally.        Every interface proxy class inherits from 
 			<code>
 				<class_name>

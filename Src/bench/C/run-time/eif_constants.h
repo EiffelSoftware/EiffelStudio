@@ -27,6 +27,10 @@ extern "C" {
 
 #include <signal.h>
 
+	/*----------------*/
+	/*  eif_memory.h  */
+	/*----------------*/
+#define CLSC_PER	0;
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
@@ -55,7 +59,13 @@ following.
 */
 #define GST_GEN		1				/* Index for generation collection
 stats */
+#define	EIF_REFERENCE_BITS	2		/* To divide by sizeof(EIF_REFERENCE). 
+								     * Do >> EIF_REFERENCE_BITS instead. */	
+#ifdef EIF_REM_SET_OPTIMIZATION
+#define AGE_BITS	2				/* How many bits are used to store
+#else
 #define AGE_BITS	4				/* How many bits are used to store
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 age */
 #define TENURE_MAX	(1<<AGE_BITS)	/* Non reached age */
 

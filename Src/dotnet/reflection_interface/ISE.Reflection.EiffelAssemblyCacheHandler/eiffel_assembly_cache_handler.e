@@ -149,121 +149,113 @@ feature -- Basic Operations
 			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
 			notifier: ISE_REFLECTION_NOTIFIER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
-			retried: BOOLEAN
 			error_code: INTEGER
-		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
 			returned_value: INTEGER
---			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do	
-			if not retried then
-				create reflection_support.make_reflectionsupport
-				reflection_support.make
-				assembly_path := reflection_support.Eiffeldeliverypath
-				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
-				if support.HasWriteLock (assembly_path) then
-					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+			create reflection_support.make_reflectionsupport
+			reflection_support.make
+			assembly_path := reflection_support.Eiffeldeliverypath
+			assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
+			if support.HasWriteLock (assembly_path) then
+				support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+				last_error := support.lasterror
+				last_removal_successful := False
+			else
+				if support.HasReadLock (assembly_path) then
+					support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 					last_error := support.lasterror
-					last_removal_successful := False
+					last_removal_successful := False			
 				else
-					if support.HasReadLock (assembly_path) then
-						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+					write_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))	
+					if write_lock = Void then
+						support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
 						last_error := support.lasterror
-						last_removal_successful := False			
+						last_removal_successful := False
 					else
-						write_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))	
-						if write_lock = Void then
-						 	support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-						 	last_error := support.lasterror
-							last_removal_successful := False
-						else
-							write_lock.Close
-								-- Delete Write lock
-							file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))
+						write_lock.Close
+							-- Delete Write lock
+						file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))
 
-								-- Delete assembly folder.
-							dir.Delete_String_Boolean (assembly_path, True)
+							-- Delete assembly folder.
+						dir.Delete_String_Boolean (assembly_path, True)
 
-								-- Remove assembly folder name from `index.xml'.
-							index_path := reflection_support.Eiffeldeliverypath
-							index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
-							create xml_reader.make_xmltextreader_10 (index_path)
-								-- WhitespaceHandling = None
-							xml_reader.set_WhitespaceHandling (2)
-							xml_reader.ReadStartElement_String (AssembliesElement)
-							from
-								create assembly_folders_list.make
-							until
-								not xml_reader.Name.Equals_String (AssemblyFilenameElement)
-							loop
-								a_folder_name := xml_reader.ReadElementString_String (AssemblyFilenameElement)
-								assembly_folder_name_added := assembly_folders_list.Add (a_folder_name)
-							end
-							xml_reader.ReadEndElement
-							xml_reader.Close
-							
-							path_to_remove := assembly_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
-							assembly_folders_list.Remove (path_to_remove)
-							
-							if assembly_folders_list.Count /= 0 then
-								create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
-									-- Set generation options
-									-- `1' for `Formatting.Indented'
-								text_writer.set_Formatting (1)
-								text_writer.set_Indentation (1)
-								text_writer.set_IndentChar ('%T')
-								text_writer.set_Namespaces (False)
-								text_writer.set_QuoteChar ('%"')
-
-									-- Write `<!DOCTYPE ...>
-								text_writer.WriteDocType (IndexFilename, public_string, IndexFilename.Concat_String_String (IndexFilename, DtdExtension), subset)
-									-- <assemblies>
-								text_writer.writestartelement (AssembliesElement)			
-								from
-								until
-									i = assembly_folders_list.Count
-								loop
-									a_folder_name ?= assembly_folders_list.item (i)
-									if a_folder_name /= Void then
-											-- <assembly_folder_name>
-										text_writer.writeelementstring (AssemblyFilenameElement, a_folder_name)
-									end
-									i := i + 1
-								end
-									-- </assemblies>
-								text_writer.WriteEndElement
-								text_writer.Close
-							else
-								file.Delete (index_path)
-							end
-
-								-- Notify assembly removal
-							create notifier_handle.make1
-							notifier := notifier_handle.currentnotifier
-							notifier.NotifyRemove (a_descriptor)
-							last_removal_successful := True
+							-- Remove assembly folder name from `index.xml'.
+						index_path := reflection_support.Eiffeldeliverypath
+						index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
+						create xml_reader.make_xmltextreader_10 (index_path)
+							-- WhitespaceHandling = None
+						xml_reader.set_WhitespaceHandling (2)
+						xml_reader.ReadStartElement_String (AssembliesElement)
+						from
+							create assembly_folders_list.make
+						until
+							not xml_reader.Name.Equals_String (AssemblyFilenameElement)
+						loop
+							a_folder_name := xml_reader.ReadElementString_String (AssemblyFilenameElement)
+							assembly_folder_name_added := assembly_folders_list.Add (a_folder_name)
 						end
+						xml_reader.ReadEndElement
+						xml_reader.Close
+
+						path_to_remove := assembly_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+						assembly_folders_list.Remove (path_to_remove)
+
+						if assembly_folders_list.Count /= 0 then
+							create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
+								-- Set generation options
+								-- `1' for `Formatting.Indented'
+							text_writer.set_Formatting (1)
+							text_writer.set_Indentation (1)
+							text_writer.set_IndentChar ('%T')
+							text_writer.set_Namespaces (False)
+							text_writer.set_QuoteChar ('%"')
+
+								-- Write `<!DOCTYPE ...>
+							text_writer.WriteDocType (IndexFilename, public_string, IndexFilename.Concat_String_String (IndexFilename, DtdExtension), subset)
+								-- <assemblies>
+							text_writer.writestartelement (AssembliesElement)			
+							from
+							until
+								i = assembly_folders_list.Count
+							loop
+								a_folder_name ?= assembly_folders_list.item (i)
+								if a_folder_name /= Void then
+										-- <assembly_folder_name>
+									text_writer.writeelementstring (AssemblyFilenameElement, a_folder_name)
+								end
+								i := i + 1
+							end
+								-- </assemblies>
+							text_writer.WriteEndElement
+							text_writer.Close
+						else
+							file.Delete (index_path)
+						end
+
+							-- Notify assembly removal
+						create notifier_handle.make1
+						notifier := notifier_handle.currentnotifier
+						notifier.NotifyRemove (a_descriptor)
+						last_removal_successful := True
 					end
 				end
 			end
 		rescue
-			retried := True
 			support.createerror (error_messages.Assembly_removal_failed, error_messages.Assembly_removal_failed_message)
 			last_error := support.lasterror
-			retried := True
 			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
 			last_error := support.lasterror
 			if not last_removal_successful then
 				error_code := last_error.code
 				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-					--returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-					--if returned_value = Retry_result then
-					--	retry
-					--elseif returned_value = Ignore then
-					--	create reflection_interface.make_reflectioninterface
-					--	reflection_interface.makereflectioninterface
-					--	reflection_interface.cleanassembly (a_descriptor)
-					--	retry
-					--end						
+					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+					if returned_value = Retry_result then
+						retry
+					elseif returned_value = Ignore_result then
+						reflection_support.cleanassembly (a_descriptor)
+						retry
+					end						
 				end
 			end
 		end
@@ -433,50 +425,33 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			error_code: INTEGER
-		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
 			returned_value: INTEGER
-		--	message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
-			if not retried then
-				check
-					non_void_descriptor: assembly_descriptor /= Void
-					non_void_assembly_name: assembly_descriptor.Name /= Void
-					not_empty_assembly_name: assembly_descriptor.Name.Length > 0
-				end
-				create reflection_support.make_reflectionsupport
-				reflection_support.Make
-				assembly_folder_path := reflection_support.Eiffeldeliverypath
-				assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (assembly_descriptor))
+			check
+				non_void_descriptor: assembly_descriptor /= Void
+				non_void_assembly_name: assembly_descriptor.Name /= Void
+				not_empty_assembly_name: assembly_descriptor.Name.Length > 0
+			end
+			create reflection_support.make_reflectionsupport
+			reflection_support.Make
+			assembly_folder_path := reflection_support.Eiffeldeliverypath
+			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (assembly_descriptor))
 
-					-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
-					-- Set `last_write_successful' and `last_error_info' if needed.
-				if dir.Exists (assembly_folder_path) then
-					if support.HasWriteLock (assembly_folder_path) then
-						support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+				-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
+				-- Set `last_write_successful' and `last_error_info' if needed.
+			if dir.Exists (assembly_folder_path) then
+				if support.HasWriteLock (assembly_folder_path) then
+					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					last_error := support.lasterror
+					last_write_successful := False
+				else
+					if support.HasReadLock (assembly_folder_path) then
+						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 						last_error := support.lasterror
 						last_write_successful := False
 					else
-						if support.HasReadLock (assembly_folder_path) then
-							support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-							last_error := support.lasterror
-							last_write_successful := False
-						else
-							write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
-							if write_lock = Void then
-								support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-								last_error := support.lasterror
-								last_write_successful := False
-							else
-								write_lock.Close
-								update_index
-								last_write_successful := True
-							end
-						end
-					end				
-				else
-					assembly_folder := dir.CreateDirectory (assembly_folder_path)
-					if assembly_folder /= Void then
-						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))
+						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
 						if write_lock = Void then
 							support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
 							last_error := support.lasterror
@@ -486,31 +461,41 @@ feature {NONE} -- Implementation
 							update_index
 							last_write_successful := True
 						end
-					else
-						support.createerror (error_messages.Assembly_directory_creation_failed, error_messages.Assembly_directory_creation_failed_message)
+					end
+				end				
+			else
+				assembly_folder := dir.CreateDirectory (assembly_folder_path)
+				if assembly_folder /= Void then
+					write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))
+					if write_lock = Void then
+						support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
 						last_error := support.lasterror
 						last_write_successful := False
+					else
+						write_lock.Close
+						update_index
+						last_write_successful := True
 					end
+				else
+					support.createerror (error_messages.Assembly_directory_creation_failed, error_messages.Assembly_directory_creation_failed_message)
+					last_error := support.lasterror
+					last_write_successful := False
 				end
-			else
 			end
 		rescue
-			retried := True
 			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
 			last_error := support.lasterror
 			if not last_write_successful then
 				error_code := last_error.code
-				--if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-				--	returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-				--	if returned_value = Retry_result then
-				--		retry
-				--	elseif returned_value = Ignore then
-				--		create reflection_interface.make_reflectioninterface
-				--		reflection_interface.makereflectioninterface
-				--		reflection_interface.cleanassemblies
-				--		retry
-				--	end						
-				--end
+				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
+					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+					if returned_value = Retry_result then
+						retry
+					elseif returned_value = Ignore_result then
+						reflection_support.cleanassemblies
+						retry
+					end						
+				end
 			end
 		end			
 
@@ -746,67 +731,57 @@ feature {NONE} -- Implementation
 			file: SYSTEM_IO_FILE
 			assembly_folder: SYSTEM_IO_DIRECTORYINFO
 			write_lock: SYSTEM_IO_FILESTREAM
-			retried: BOOLEAN
 			error_code: INTEGER
-		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
 			returned_value: INTEGER
-		--	message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
-			if not retried then
-				create reflection_support.make_reflectionsupport
-				reflection_support.Make
-				assembly_folder_path := reflection_support.Eiffeldeliverypath
-				assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (an_assembly_descriptor))
-				
-					-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
-					-- Set `last_write_successful' and `last_error_info' if needed.
-				if dir.Exists (assembly_folder_path) then
-					if support.HasWriteLock (assembly_folder_path) then
-						support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+			create reflection_support.make_reflectionsupport
+			reflection_support.Make
+			assembly_folder_path := reflection_support.Eiffeldeliverypath
+			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (an_assembly_descriptor))
+
+				-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
+				-- Set `last_write_successful' and `last_error_info' if needed.
+			if dir.Exists (assembly_folder_path) then
+				if support.HasWriteLock (assembly_folder_path) then
+					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					last_error := support.lasterror
+					last_write_successful := False
+				else
+					if support.HasReadLock (assembly_folder_path) then
+						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 						last_error := support.lasterror
 						last_write_successful := False
 					else
-						if support.HasReadLock (assembly_folder_path) then
-							support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
+						if write_lock = Void then
+							support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
 							last_error := support.lasterror
 							last_write_successful := False
 						else
-							write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
-							if write_lock = Void then
-								support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-								last_error := support.lasterror
-								last_write_successful := False
-							else
-								write_lock.Close
-								last_write_successful := True
-							end
+							write_lock.Close
+							last_write_successful := True
 						end
-					end	
-				else
-					last_write_successful := False
-				end
+					end
+				end	
 			else
 				last_write_successful := False
 			end
 		rescue
-			retried := True
 			support.createerror (error_messages.Type_storage_failed, error_messages.Type_storage_failed_message)
 			last_error := support.lasterror
-			retried := True
 			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
 			last_error := support.lasterror
 			if not last_write_successful then
 				error_code := last_error.code
 				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-				--	returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-				--	if returned_value = Retry_result then
-				--		retry
-				--	elseif returned_value = Ignore then
-				--		create reflection_interface.make_reflectioninterface
-				--		reflection_interface.makereflectioninterface
-				--		reflection_interface.cleanassembly (an_assembly_descriptor)
-				--		retry
-				--	end						
+					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+					if returned_value = Retry_result then
+						retry
+					elseif returned_value = Ignore_result then
+						reflection_support.cleanassembly (an_assembly_descriptor)
+						retry
+					end						
 				end
 			end
 		end
@@ -889,6 +864,12 @@ feature {NONE} -- Implementation
 			external_name: "RetryResult"
 		end
 
+	Ignore_result: INTEGER is 5
+		indexing
+			description: "Returned value in case user clicked on `Ignore'"
+			external_name: "IgnoreResult"
+		end
+		
 	Error_caption: STRING is "ERROR - ISE Assembly Manager"
 		indexing
 			description: "Caption for error message boxes"

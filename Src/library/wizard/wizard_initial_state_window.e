@@ -71,7 +71,11 @@ feature -- Basic Operations
 			main_box.extend (interior_box)			
 		end
 
-	pixmap_location: STRING is "eiffel_wizard.bmp"
+	pixmap_location: STRING is
+			-- Pixmap location
+		once
+			Result := "eiffel_wizard_icon" + pixmap_extension
+		end
 
 	pixmap_icon_location: STRING is
 			-- Path in which can be found the pixmap icon associated with

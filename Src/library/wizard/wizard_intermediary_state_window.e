@@ -154,8 +154,11 @@ feature {NONE} -- Basic Operations
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
-	pixmap_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_location: STRING is
 			-- Pixmap location
+		once
+			Result := "eiffel_wizard_icon" + pixmap_extension
+		end
 
 feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 

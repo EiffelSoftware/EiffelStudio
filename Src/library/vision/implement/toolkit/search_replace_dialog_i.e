@@ -110,7 +110,7 @@ feature -- Status setting
 	set_replace_text (a_text: STRING)  is
 			-- Set `replace_text' to `a_text'
 		require
-			replace_mode: replace_mode
+			text_not_void: a_text /= Void
 		deferred
 		end
 
@@ -123,6 +123,8 @@ feature -- Status setting
 
 	set_search_text (a_text: STRING) is
 			-- Set `search_text' to `a_text'
+		require
+			text_not_void: a_text /= Void
 		deferred
 		end
 

@@ -147,15 +147,10 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
-				if is_positioned or positioned_by_user then
-					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_none_enum)
-					app_implementation.process_events
-					Precursor {EV_CONTAINER_IMP}
-					set_position (user_x_position, user_y_position)
-				else
+				if not (is_positioned or positioned_by_user) then
 					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum)
-					Precursor {EV_CONTAINER_IMP}
 				end
+				Precursor {EV_CONTAINER_IMP}
 				is_positioned := True
 			end
 			if blocking_window /= Void then

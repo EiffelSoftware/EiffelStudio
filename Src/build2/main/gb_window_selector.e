@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 			if retried then
 					-- We do not rebuild the dialog, as using the previous one
 					-- retains its position on screen.
-				dialog.show
+				dialog.show_actions.wipe_out
 				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
 				create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name. Please ensure that it is valid and is not already in use.", agent valid_directory_name)
@@ -886,8 +886,14 @@ feature {NONE} -- Implementation
 			last_dialog_name_not_void: last_dialog_name /= Void
 		local
 			warning_dialog: EV_WARNING_DIALOG
+			actual_warning: STRING
 		do
-			create warning_dialog.make_with_text ("The directory name '" + last_dialog_name + "' is not valid.%N%NPlease enter a valid directory name.")
+			if last_dialog_name.is_empty then
+				actual_warning := "You have not entered a name."
+			else
+				actual_warning := "The directory name '" + last_dialog_name + "' is not valid."
+			end
+			create warning_dialog.make_with_text (actual_warning + "%N%NPlease enter a valid directory name.")
 			warning_dialog.show_modal_to_window (a_dialog)
 		end
 		

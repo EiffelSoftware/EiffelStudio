@@ -119,6 +119,14 @@ feature -- Properties
 			yes_implies_status_is_stop: Result implies status.is_stopped
 		end;
 
+	is_ignoring_stop_points: BOOLEAN is
+			-- Is the application ignoring all stop points?
+		do
+			Result := execution_mode = No_stop_points
+		ensure
+			yes_implies_status_is_stop: Result implies status.is_stopped
+		end;
+
 	valid_debugged_feature (f: E_FEATURE): BOOLEAN is
 			-- Is the feature `f' valid for the
 			-- debugger context?

@@ -43,6 +43,7 @@ feature -- Formatting
 --			mp: MOUSE_PTR
 			same_stone: BOOLEAN
 			c_stone: CLASSC_STONE
+			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
 				c_stone ?= stone
@@ -92,7 +93,7 @@ feature -- Formatting
 --				if mp /= Void then
 --					mp.restore
 --				end
---				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Cannot_retrieve_info)
 			end
 		rescue
 --			if original_exception = Io_exception then

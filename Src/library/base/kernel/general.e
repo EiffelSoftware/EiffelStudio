@@ -20,6 +20,13 @@ feature -- Access
 			Result := c_generator ($Current);
 		end;
 
+ 	generating_type: STRING is
+			-- Name of current object's generating type
+			-- (type of which it is a direct instance)
+ 		do
+ 			Result := c_generating_type ($Current)
+ 		end
+
 feature -- Status report
 
 	conforms_to (other: GENERAL): BOOLEAN is
@@ -358,6 +365,13 @@ feature {NONE} -- Implementation
 		external
 			"C | %"eif_copy.h%""
 		end;
+
+ 	c_generating_type (obj: POINTER): STRING is
+ 		external
+ 			"C | %"eif_gen_conf.h%""
+ 		alias
+ 			"eif_gen_typename"
+ 		end
 
 invariant
 

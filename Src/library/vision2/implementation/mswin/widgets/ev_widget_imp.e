@@ -354,8 +354,8 @@ feature -- Status setting
 		end
 
 	disable_sensitive is
-			-- Set `Current' to insensitive mode if
-			-- `flag'. This means that any events with an
+			-- Set `Current' to insensitive mode.
+			-- This means that any events with an
 			-- event type of KeyPress, KeyRelease,
 			-- ButtonPress, ButtonRelease, MotionNotify,
 			-- EnterNotify, LeaveNotify, FocusIn or
@@ -584,9 +584,9 @@ feature {NONE} -- Implementation, mouse_button_events
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is released.
 		do
-			check_dragable_release (x_pos, y_pos)
 			check_drag_and_drop_release (x_pos, y_pos)
 			on_button_up (x_pos, y_pos, 1)
+			check_dragable_release (x_pos, y_pos)
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is

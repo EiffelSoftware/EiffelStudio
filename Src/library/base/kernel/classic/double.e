@@ -10,8 +10,9 @@ indexing
 expanded class DOUBLE inherit
 
 	DOUBLE_REF
-
-create {NONE}
+ 
+create
+	default_create
 
 indexing
 

@@ -18,7 +18,8 @@ inherit
 			{NONE} pointer_item
 		end
 
-create {NONE}
+create
+	default_create
 
 convert
 	to_pointer: {POINTER}

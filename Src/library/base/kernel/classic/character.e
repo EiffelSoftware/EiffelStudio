@@ -10,7 +10,8 @@ expanded class
 inherit
 	CHARACTER_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

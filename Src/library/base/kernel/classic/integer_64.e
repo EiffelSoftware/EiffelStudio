@@ -10,7 +10,8 @@ expanded class INTEGER_64
 inherit
 	INTEGER_64_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

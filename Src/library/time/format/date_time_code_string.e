@@ -33,16 +33,18 @@ feature -- Creation
 				pos1 >= s.count 
 			loop
 				pos2 := find_separator (s, pos1)
-				substrg := s.substring(pos1, pos2-1)
+				substrg := s.substring(pos1, pos2 - 1)
 				substrg2 := s.substring (pos2, pos2)
 				substrg.to_lower
 			--	if substrg = "pm" or tmp_strg = "am" then
 			--		pos1 := s.count + 1
 			--	else
-					!! code.make (substrg)
-					value.put (code, i)
-					i := i + 1
-					if not substrg2.is_equal("") then
+					if substrg.count > 0 then
+						!! code.make (substrg)
+						value.put (code, i)
+						i := i + 1
+					end
+					if substrg2.count > 0 then
 						!! code_separator.make (substrg2)
 						value.put (code_separator, i)
 					end

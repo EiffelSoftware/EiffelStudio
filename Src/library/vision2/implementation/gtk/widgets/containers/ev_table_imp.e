@@ -14,7 +14,12 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface,
+			set_item_position,
+			set_item_span,
+			remove,
+			put,
+			resize
 		end
 
 	EV_CONTAINER_IMP
@@ -37,6 +42,12 @@ feature {NONE} -- Implementation
 				-- table created with 0 row and 0 column.
 			C.gtk_widget_show (container_widget)
 			C.gtk_container_add (c_object, container_widget)
+			
+			-- Initialize internal values
+			rows := 1
+			columns := 1
+			create internal_array.make (1, 1)
+			rebuild_internal_item_list
 		end
 
 	container_widget: POINTER
@@ -76,6 +87,7 @@ feature -- Status report
 
 	resize (a_column, a_row: INTEGER) is
 		do
+			Precursor {EV_TABLE_I} (a_column, a_row)
 			C.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
@@ -120,6 +132,7 @@ feature -- Status settings
 		local
 			item_imp: EV_WIDGET_IMP
 		do
+			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			C.gtk_table_attach_defaults (
@@ -137,6 +150,7 @@ feature -- Status settings
 		local
 			item_imp: EV_WIDGET_IMP
 		do
+			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Void)
 			C.gtk_object_ref (item_imp.c_object)
@@ -148,6 +162,7 @@ feature -- Status settings
 		local
 			a_column, a_row: INTEGER
 		do
+			Precursor {EV_TABLE_I} (v, column_span, row_span)
 			a_column := item_column_position (v)
 			a_row := item_row_position (v)
 			remove (v)
@@ -159,6 +174,7 @@ feature -- Status settings
 		local
 			column_span, row_span: INTEGER
 		do
+			Precursor {EV_TABLE_I} (v, a_column, a_row)
 			column_span := item_column_span (v)
 			row_span := item_row_span (v)
 			remove (v)
@@ -177,7 +193,7 @@ feature -- Status settings
 			until
 				end_span or (column_index - 1) = interface.columns
 			loop
-				if interface.item (column_index, row_index) = widget then
+				if item_at_position (column_index, row_index) = widget then
 					Result := Result + 1
 				else
 					end_span := True
@@ -198,7 +214,7 @@ feature -- Status settings
 			until
 				end_span or else (row_index - 1) = interface.rows
 			loop
-				if interface.item (column_index, row_index) = widget then
+				if item_at_position (column_index, row_index) = widget then
 					Result := Result + 1
 				else
 					end_span := True
@@ -223,7 +239,7 @@ feature -- Status settings
 				until
 					column_cnt > interface.columns or found					
 				loop
-					if interface.item (column_cnt, row_cnt) = widget then
+					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := row_cnt
 						found := True
 					end
@@ -249,7 +265,7 @@ feature -- Status settings
 				until
 					column_cnt > interface.columns or found			
 				loop
-					if interface.item (column_cnt, row_cnt) = widget then
+					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := column_cnt
 						found := True
 					end

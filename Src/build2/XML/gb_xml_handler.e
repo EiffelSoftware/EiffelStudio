@@ -123,7 +123,7 @@ feature -- Basic operations
 			first_element.force_last (component_element)
 			new_element := create_widget_instance (component_element, an_object.type)
 			component_element.force_last (new_element)
-			xml_store.add_new_object_to_output (an_object, new_element, False)
+			xml_store.add_new_object_to_output (an_object, new_element, create {GB_GENERATION_SETTINGS})
 		end
 
 	save_components is

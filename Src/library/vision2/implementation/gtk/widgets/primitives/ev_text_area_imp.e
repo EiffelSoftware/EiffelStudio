@@ -15,23 +15,31 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		undefine
-			build
+			set_default_options
 		end
 
 creation
-
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
+        make is
                         -- Create a gtk label.
                 do
                         widget := gtk_text_new (Default_pointer, 
 						Default_pointer)
-			show
+			gtk_object_ref (widget)
 			gtk_text_set_editable (widget, True)
                 end
+
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			make
+			set_text (txt)
+		end
 
 feature -- Access
 
@@ -44,19 +52,14 @@ feature -- Access
 			Result.from_c (p)
 		end
 
---	text_length: INTEGER is
---		do
---			Result := gtk_text_get_length (widget)
---		end
-
 feature -- Status setting
 	
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
-		do
-			gtk_text_set_editable (widget, flag)
-		end
+--	set_editable (flag: BOOLEAN) is
+--			-- `flag' true make the component read-write and
+--			-- `flag' false make the component read-only.
+--		do
+--			gtk_text_set_editable (widget, flag)
+--		end
 
 	insert_text (txt: STRING) is
 		local
@@ -96,25 +99,25 @@ feature -- Status setting
 			gtk_text_backward_delete (widget, finish - start + 1)
 		end
 
-	set_position (pos: INTEGER) is
-			-- set current insertion position
-		do
-			gtk_text_set_point (widget, pos)
-		end
-	
-	set_maximum_line_length (len: INTEGER) is
+	set_maximum_text_length (len: INTEGER) is
 			-- Maximum number of charachters on line
 		do
-		--	gtk_entry_set_max_length (widget, len)
+			gtk_entry_set_max_length (widget, len)
 		end
-	
-	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- 'start_pos' and 'end_pos'
+
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
 		do
-	--		gtk_entry_select_region (widget, start_pos-1, end_pos-1)
-		end	
-	
+			check
+				not_yet_implemented: False
+			end
+		end
+
 end -- class EV_TEXT_AREA_IMP
 
 --|----------------------------------------------------------------

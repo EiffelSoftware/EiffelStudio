@@ -12,22 +12,46 @@ inherit
 	EV_DYNAMIC_TABLE_I
 
 	EV_TABLE_IMP
-		undefine
-			add_child
 		redefine
-			make
+			make,
+			add_child
 		end
 
 creation
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create an empty dynamic table.
 		do
-			{EV_TABLE_IMP} Precursor (par)
+			{EV_TABLE_IMP} Precursor
 			finite_dimension := 1
+		end
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite. Several children
+			-- possible.
+		do
+			{EV_TABLE_IMP} Precursor (child_imp)
+			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
+			if is_row_layout then
+				if column_index + 1 >= finite_dimension then
+					row_index := row_index + 1
+					column_index := 0
+				else
+					column_index := column_index + 1
+				end
+			else
+				if row_index + 1 >= finite_dimension then
+					column_index := column_index + 1
+					row_index := 0
+				else
+					row_index := row_index + 1
+				end
+			end			
 		end
 
 end -- class EV_DYNAMIC_TABLE_IMP

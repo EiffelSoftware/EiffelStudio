@@ -13,7 +13,8 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			add_child
+			add_child,
+			child_added
 		end
 
 creation
@@ -21,12 +22,12 @@ creation
 
 feature {NONE} -- Implementation
 
-	make (par: EV_CONTAINER) is
+	make is
                         -- Create a table widget with `par' as
                         -- parent.
 		do
 			widget := gtk_table_new (0, 0, Default_homogeneous)
-			show
+			gtk_object_ref (widget)
 		end
 
 feature -- Status report
@@ -77,13 +78,23 @@ feature -- Status settings
 				left, right, top, bottom)
 		end
 
-feature {EV_TABLE} -- Implementation
+feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			child := child_imp
+			check
+				Nothing_to_do: True
+			end
+		end
+
+feature -- Assertion test
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := True
 		end
 
 end -- class EV_TABLE_IMP

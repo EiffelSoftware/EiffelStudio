@@ -11,27 +11,25 @@ class
 	EV_NOTEBOOK_IMP
 	
 inherit
-	
 	EV_NOTEBOOK_I
 		
 	EV_CONTAINER_IMP
-		undefine
-			add_child_ok
 		redefine
-			add_child
+			add_child,
+			add_child_ok,
+			child_added
 		end
 	  
 creation
-	
 	make
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_notebook_new ()
-			show
+			gtk_object_ref (widget)
 		end	
 
 feature -- Status report
@@ -91,11 +89,18 @@ feature -- Element change
 		do
 			a ?= label.to_c
 			p := gtk_label_new ($a)
-			--c.show
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
 						  p)
 		end	
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into container
+		do
+			check
+				Do_nothing_here: True
+			end
+		end
 
 feature -- Event - command association
 	
@@ -115,16 +120,32 @@ feature -- Event -- removing command association
 			check False end
 		end	
 
-feature {EV_CONTAINER} -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into container
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
 		do
-			child := child_imp
-			--gtk_container_add (widget, child_imp.widget)
+			Result := True
 		end
 
-end
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := True
+		end
+
+--feature {EV_CONTAINER} -- Element change
+	
+--	add_child (child_imp: EV_WIDGET_IMP) is
+--			-- Add child into container
+--		do
+--			child := child_imp
+--			--gtk_container_add (widget, child_imp.widget)
+--		end
+
+end -- class EV_NOTEBOOK_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

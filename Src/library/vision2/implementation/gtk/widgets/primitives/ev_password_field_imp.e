@@ -13,7 +13,8 @@ inherit
 	EV_TEXT_FIELD_IMP
 
 creation
-	make
+	make,
+	make_with_text
 
 feature -- Access
 

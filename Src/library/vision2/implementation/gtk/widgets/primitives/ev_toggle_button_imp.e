@@ -19,16 +19,16 @@ inherit
 		end
         
 creation
-
-         make, make_with_text
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a gtk toggle button.
 		do
                         widget := gtk_toggle_button_new
-			show
+			gtk_object_ref (widget)
 			initialize 
                 end
 	

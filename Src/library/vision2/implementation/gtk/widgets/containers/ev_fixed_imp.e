@@ -23,14 +23,14 @@ creation
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_fixed_new
-			show
-		end	
-	
-end
+			gtk_object_ref (widget)
+		end
+
+end -- class EV_FIXED
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

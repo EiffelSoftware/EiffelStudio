@@ -17,20 +17,20 @@ inherit
 		
 	EV_BOX_IMP
 		redefine
+			add_child,
 			child_packing_changed
 		end
 	
 creation
-	
-	make
+		make
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_hbox_new (Default_homogeneous, Default_spacing)
-			show
+			gtk_object_ref (widget)
 		end	
 	
 feature {EV_BOX} -- Implementation
@@ -39,7 +39,6 @@ feature {EV_BOX} -- Implementation
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			child ?= child_imp
 			gtk_box_pack_start (widget, child_imp.widget, 
 			    child_imp.expandable,
 			    child_imp.horizontal_resizable, 0)

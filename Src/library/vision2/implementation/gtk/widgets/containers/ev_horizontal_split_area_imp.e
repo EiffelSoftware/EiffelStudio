@@ -23,14 +23,14 @@ creation
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_hpaned_new 
-			show
+			gtk_object_ref (widget)
 		end	
 	
-end
+end -- class EV_HORIZONTAL_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

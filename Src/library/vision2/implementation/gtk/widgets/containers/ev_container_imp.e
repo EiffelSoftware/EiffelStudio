@@ -55,15 +55,62 @@ feature {EV_RADIO_BUTTON_IMP} -- Access
 			rbg_pointer := new_rbg_pointer
 		end
 	
-feature {EV_CONTAINER, EV_WIDGET_IMP} -- Element change
+feature -- Element change
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child := child_imp
-			gtk_container_add (widget, child_imp.widget)
+			gtk_container_add (GTK_CONTAINER (widget), child_imp.widget)
 		end
-	
+
+	remove_child (child_imp: EV_WIDGET_IMP) is	
+			-- Remove the given child from the children of
+			-- the container.
+		do
+			gtk_container_remove (GTK_CONTAINER (widget), child_imp.widget)
+		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the
+			-- container to the children.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the
+			-- container to the children.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
+		do
+			Result := c_gtk_container_nb_children (widget)= 0
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := c_gtk_container_has_child (widget, a_child.widget)
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := c_gtk_container_has_child (widget, a_child.widget)
+		end
 
 feature {NONE} -- Implementation
 	

@@ -1,5 +1,5 @@
 TOP = ..
-OUTDIR = $(TOP)\LIB
+OUTDIR = .\LIB
 INDIR = .\OBJDIR
 RTSRC = .
 CC = $cc

@@ -20,7 +20,7 @@ sharedlink: "link"
 
 -- optimization flags
 wkoptimize: "-Od -Zi"
-optimize: "-O2"
+optimize: "-Ox"
 
 -- compiler flags
 ccflags: "-w -nologo -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION $(ISE_CFLAGS)"

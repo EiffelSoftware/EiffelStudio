@@ -27,7 +27,7 @@ feature -- Change
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
 			routine_name_not_void: a_fn /= Void
-			break_index_positive: a_bi > 0
+			break_index_positive: a_bi >= 0
 		do
 			class_name := a_cn
 			routine_name := a_fn

@@ -113,6 +113,9 @@ feature -- Event for lists and combo boxes
 	selection_changed_id: INTEGER is 19
 			-- the selection has changed
 
+	select_child_id: INTEGER is 20
+			-- the selection has changed
+
 feature -- Event for ctrees
 
 	tree_select_row_id: INTEGER is 19
@@ -122,10 +125,15 @@ feature -- Event for ctrees
 			-- an item has been unselected
 
 	tree_expand_id: INTEGER is 21
-			-- an item has been unselected
+			-- an item has been expanded
 
 	tree_collapse_id: INTEGER is 22
-			-- an item has been unselected
+			-- an item has been collapsed
+
+	tree_subtree_id: INTEGER is 23
+			-- an item has been expanded or collapsed.
+			-- This signal does not exist in GTK.
+			-- We need this constants for EV_TREE_ITEM_IMP. 
 
 feature -- Event for multi column lists
 
@@ -139,7 +147,6 @@ feature -- Event for multi column lists
 			-- a column of the column list has been clicked
 
 feature -- Event for text components and combo boxes
-
 	changed_id: INTEGER is 19
 			-- the selection has changed
  
@@ -155,6 +162,22 @@ feature -- Event for selection dialog
 			-- `help' button has been clicked.
 			-- Event only for color selection dialog.
  
+feature -- Event for rich texts
+
+	insert_text_id: INTEGER is 19
+			-- Text has been inserted.
+
+	delete_text_id: INTEGER is 20
+			-- Text has been inserted.
+
+feature -- Event for scrollbars, spin buttons and range (GtkScale)
+
+--	motion_id: INTEGER is 19
+--			-- The scrollbar has been moved.
+
+	value_changed_id: INTEGER is 19
+			-- The scrollbar has been moved.
+
 feature -- Upper constants value
 
 	command_count: INTEGER is 23

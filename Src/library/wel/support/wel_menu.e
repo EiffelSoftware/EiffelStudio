@@ -116,6 +116,33 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
+	append_string_with_break (a_string: STRING; an_id: INTEGER; has_separator: BOOLEAN) is
+			-- Append an item with a break to the menu.
+			-- All the following items will be set in a new column.
+			-- If `has_separator' is True, then a vertical separator
+			-- appears between the two columns.
+		require
+			exists: exists
+			a_string_not_void: a_string /= Void
+			positive_id: an_id > 0
+			item_not_exists: not item_exists (an_id)
+		local
+			a_wel_string: WEL_STRING
+		do
+			!! a_wel_string.make(a_string)
+			if has_separator then
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubarbreak,
+					an_id, a_wel_string.item)
+			else
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubreak,
+					an_id, a_wel_string.item)
+			end
+		ensure
+			new_count: count = old count + 1
+			item_exists: item_exists (an_id)
+			string_set: id_string (an_id).is_equal (a_string)
+		end
+
 	append_bitmap (bitmap: WEL_BITMAP; an_id: INTEGER) is
 			-- Append `bitmap' with the identifier `an_id' to the
 			-- menu.

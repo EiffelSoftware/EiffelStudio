@@ -3,16 +3,16 @@
 class SPECIAL_B
 
 inherit
-
 	CLASS_C
 		redefine
 			check_validity, new_type, is_special
-		end;
-	SPECIAL_CONST;
+		end
+
+	SPECIAL_CONST
+
 	SHARED_TYPES
 
 creation
-
 	make
 	
 feature
@@ -24,32 +24,28 @@ feature
 			feat_table: FEATURE_TABLE;
 			item_feature, put_feature: FEATURE_I;
 		do
-			-- First, check if class has one formal generic parameter
+				-- First, check if class has one formal generic parameter
 			if generics = Void or else generics.count /= 1 then
 				!!special_error.make (Case_11, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
-			-- Second, check if class has a feature item (INTEGER): Generic #1
+				-- Second, check if class has a feature item (INTEGER): Generic #1
 			feat_table := feature_table;
 			item_feature := feat_table.item ("item");
-			if	item_feature = Void
-				or else
-				not equal (item_feature.written_in, id)
-				or else
-				not item_feature.same_signature (Item_signature)
+			if item_feature = Void
+				or else not equal (item_feature.written_in, id)
+				or else not item_feature.same_signature (Item_signature)
 			then
 				!!special_error.make (Case_12, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
-			-- Third, check if class has a feature put (Generic #1, INTEGER)
+				-- Third, check if class has a feature put (Generic #1, INTEGER)
 			put_feature := feat_table.item ("put");
 			if put_feature = Void
-				or else
-				not equal (put_feature.written_in, id)
-				or else
-				not put_feature.same_signature (Put_signature)
+				or else not equal (put_feature.written_in, id)
+				or else not put_feature.same_signature (Put_signature)
 			then
 				!!special_error.make (Case_13, Current);
 				Error_handler.insert_error (special_error);
@@ -91,16 +87,14 @@ feature
 	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is
 			-- New class type for class SPECIAL
 		do
-			!!Result.make (data);
+			!! Result.make (data);
 		end;
 
 	is_special: BOOLEAN is True;
 			-- Is the class special ?
-
 	
 	generate_dynamic_types is
-			-- Generate dynamic types of type classes available in the
-			-- system
+			-- Generate dynamic types of type classes available in the system
 		local
 			class_type: CLASS_TYPE;
 			gen_type: GEN_TYPE_I;

@@ -168,8 +168,7 @@ feature -- Check
 			if file.is_incompatible then
 				!! vd52;
 				vd52.set_path (compilation_path);
-				vd52.set_precompiled_version 
-					(file.project_version_number);
+				vd52.set_precompiled_version (file.project_version_number);
 				vd52.set_compiler_version (version_number);
 				Error_handler.insert_error (vd52);
 				Error_handler.raise_error
@@ -179,8 +178,7 @@ feature -- Check
 				if file.precompilation_id = 0 then
 					vd53.set_precompiled_date ("unknown")
 				else
-					vd53.set_precompiled_date 
-						(date_string (file.precompilation_id));
+					vd53.set_precompiled_date (date_string (file.precompilation_id));
 				end
 				vd53.set_expected_date (date_string (precomp_id));
 				Error_handler.insert_error (vd53);

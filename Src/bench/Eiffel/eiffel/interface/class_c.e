@@ -1709,8 +1709,8 @@ feature -- Class initialization
 					-- no parent at all (we don't want a cycle in the
 					-- inheritance graph, otherwise the topological sort
 					-- on the classes will fail...).
-				!! pars.make_filled (1);
-				pars.put_i_th (Any_type, 1);
+				!! pars.make (1);
+				pars.extend (Any_type);
 					-- Add a descendant to class ANY
 				System.any_class.compiled_class.add_descendant (Current);
 					-- Fill parent list of corresponding class info

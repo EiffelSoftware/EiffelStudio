@@ -9,7 +9,7 @@ class CLASS_COMMENTS_SERVER
 
 inherit
 
-	SERVER [CLASS_COMMENTS]
+	COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]
 		export
 			{NONE} all;
 			{ANY} has, disk_item, clear, take_control
@@ -27,8 +27,8 @@ feature -- Update
 			-- Take control of `other'.
 		local
 			info, old_info: SERVER_INFO;
-			id: INTEGER;
-			other_file_ids: LINKED_SET [INTEGER];
+			an_id: CLASS_ID;
+			other_file_ids: LINKED_SET [FILE_ID];
 			old_server_file: SERVER_FILE;
 		do
 			flush;
@@ -39,8 +39,8 @@ feature -- Update
 				other.after
 			loop
 				info := other.item_for_iteration;
-				id := other.key_for_iteration;
-				old_info := tbl_item (id);
+				an_id := other.key_for_iteration;
+				old_info := tbl_item (an_id);
 				if old_info /= Void then
 					old_server_file := Server_controler.file_of_id
 																(old_info.id);
@@ -49,7 +49,7 @@ feature -- Update
 						file_ids.prune (old_server_file.id);
 					end;
 				end;
-				force (info, id);
+				force (info, an_id);
 				other.forth;
 			end;
 			other.clear_all;
@@ -96,7 +96,7 @@ feature -- Removal
 
 feature -- Removal
 
-	remove (an_id: INTEGER) is
+	remove (an_id: CLASS_ID) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
@@ -105,7 +105,7 @@ feature -- Removal
 		local
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: CLASS_ID
 		do
 			real_id := updated_id (an_id);
 			old_info := tbl_item (real_id);
@@ -119,10 +119,17 @@ feature -- Removal
 			end;
 		end;
 
+feature -- Access
+
+	id (t: CLASS_COMMENTS): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
 
 feature {NONE} -- Implementation
 
-	Cache: CACHE [CLASS_COMMENTS] is
+	Cache: CACHE [CLASS_COMMENTS, CLASS_ID] is
 			-- No caching machanism 
 			-- (Returns void)
 		do

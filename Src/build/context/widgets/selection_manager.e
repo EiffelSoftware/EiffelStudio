@@ -603,14 +603,16 @@ feature {PERM_WIND_C}
 					set_cursor
 				elseif ctrl_selected then
 					move_group
-				elseif not grabbed then
+				elseif context.is_movable then
+					if not grabbed then
 						-- First call
 						-- Keep track of old values
-					begin_mvt
-				elseif cursor_shape = Cursors.move_cursor then
-					move_rectangle
-				elseif cursor_shape /= Void then
-					resize_rectangle
+						begin_mvt
+					elseif cursor_shape = Cursors.move_cursor then
+						move_rectangle
+					elseif cursor_shape /= Void then
+						resize_rectangle
+					end
 				end;
 			elseif (argument = Second) then
 					-- Button release

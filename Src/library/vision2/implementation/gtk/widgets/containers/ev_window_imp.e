@@ -86,11 +86,21 @@ feature -- Access
 
 feature -- Status report
 
-	is_minimized: BOOLEAN
+	is_minimized: BOOLEAN is
 			-- Is displayed iconified/minimised?
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
-	is_maximized: BOOLEAN
+	is_maximized: BOOLEAN is
 			-- Is displayed at maximum size?
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 feature -- Status setting
 
@@ -109,16 +119,37 @@ feature -- Status setting
 	minimize is
 			-- Display iconified/minimised.
 		do
+			is_minimized := True
+			check
+				to_be_implemented: False
+			end
 		end
 
 	maximize is
 			-- Display at maximum size.
 		do
+			is_maximized := True
+			create old_geometry.make (
+				x_position, y_position,
+				width, height)
+			C.gtk_widget_set_usize (c_object,
+				C.gdk_screen_width,
+				C.gdk_screen_height)
 		end
 
 	restore is
 			-- Restore to original position when minimized or maximized.
 		do
+			if is_maximized or is_minimized then
+				is_maximized := False
+				is_minimized := False
+				C.gtk_widget_set_uposition (c_object,
+					old_geometry.x,
+					old_geometry.y)
+				C.gtk_widget_set_usize (c_object,
+					old_geometry.width,
+					old_geometry.height)
+			end
 		end
 
 feature -- Element change
@@ -192,10 +223,14 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
+	old_geometry: EV_RECTANGLE
+
 	icon_name_holder: STRING
 			-- Name holder for applications icon name
 
 	interface: EV_TITLED_WINDOW
+
+feature {NONE} -- Externals
 
 end -- class EV_TITLED_WINDOW_IMP
 
@@ -220,6 +255,10 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/07 02:51:43  brendel
+--| Implemented maximize and restore.
+--| For is_minimized, is_maximized and minimize we need to call X.
+--|
 --| Revision 1.37  2000/03/07 01:37:59  brendel
 --| Reviewed.
 --| is_minimized and is_maximized are now attributes.

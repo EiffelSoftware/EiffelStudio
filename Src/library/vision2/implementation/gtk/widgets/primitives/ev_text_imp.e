@@ -22,7 +22,8 @@ inherit
 			insert_text,
 			visual_widget,
 			set_background_color,
-			create_change_actions
+			create_change_actions,
+			remove_selection_on_lose_focus
 		end
 		
 	EV_FONTABLE_IMP
@@ -542,6 +543,9 @@ feature -- Basic operation
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	remove_selection_on_lose_focus: BOOLEAN is False
+		-- We don't want the selection to be lost when we lose the focus
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do

@@ -1,0 +1,5 @@
+Syntax error: precursor appears in a routine which is declared
+              with synonyms.
+What to do  : remove precursor construct or provide separate
+              declarations for the synonyms.
+

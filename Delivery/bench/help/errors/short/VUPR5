@@ -1,0 +1,5 @@
+Semantic error: precursor construct qualifies a parent but the
+                enclosing routine is not a redefinition of a
+                feature of that parent.
+What to do    : qualify the correct parent.
+

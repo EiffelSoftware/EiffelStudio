@@ -1,0 +1,4 @@
+Syntax error: precursor appears in a routine which is not a
+              redefinition.
+What to do  : remove precursor construct.
+

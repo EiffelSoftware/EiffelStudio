@@ -64,7 +64,7 @@ glibc-2.0.7 and elf format.
   <p>If you are using an environment as described above you should set the
   PLATFORM environment variable to `<b>linux-glibc</b>'. If you plan to release
   your software on different version of the Linux OS you should statically link
-  your application otherwise it may not work as expected on different version of
+  your application, otherwise it may not work as expected on different versions of
   the Linux kernel.
 
 </p>
@@ -97,7 +97,7 @@ glibc-2.0.7 and elf format.
  BUG with the backspace key</h3>
 
   <blockquote>
-    <p>Under certain linux configuration, the BackSpace key has a strange behaviour within ebench: it deletes the character before the cursor,
+    <p>Under certain linux configurations, the BackSpace key has a strange behaviour within ebench: it deletes the character before the cursor,
     then moves the cursor to right. This bug hasn't been fixed yet, but there is a workaround. Add these two lines into your .Xdefaults file
     (you may have to perform a "xrdb .Xdefaults" if you don't launch X again after the modification):<br>
     <br>
@@ -176,7 +176,7 @@ Linux kernel.
 <p>setenv LD_LIBRARY_PATH $EIFFEL4/bench/spec/$PLATFORM/lib:$LD_LIBRARY_PATH
 </blockquote>
 
-<p>You need to have at least a Digital Unix system version 4.0 or higher. The C configuration file uses cc as default compiler.
+<p>You need to have a Digital Unix system version 4.0 or higher. The C configuration file uses cc as default compiler.
 
 <p>ISE EiffelBench doesn't support any multithreaded mechanism on Digital Unix. However, you can compile multi-threaded programs using the POSIX libraries,
 since ISE Eiffel 4.5 provides with Beta-test multi-threaded run-times.&nbsp;
@@ -378,7 +378,7 @@ Updating PLATFORM:<br>
 
 <h1><a name="Motif12">Motif 1.2</a></h1>
 <blockquote>
-<p>Most of the Unix version of ISE products are linked either dynamically or
+<p>Most of the Unix versions of ISE products are linked either dynamically or
 statically with the Motif 1.2 version given with the corresponding Platform. Due
 to limitations or Motif 1.2 certains graphical functionality of some ISE
 products are limited:</p>

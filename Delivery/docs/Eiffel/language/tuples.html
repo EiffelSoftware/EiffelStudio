@@ -1,0 +1,301 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Tuples</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<table cols="1" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>Tuples</h1>
+      <p>This technical note is excerpted from the text of a proposal submitted
+      by ISE to the Nonprofit International Consortium for Eiffel (NICE). It
+      describes a set of extensions to Eiffel.
+      <p>This is a working document, precise for the most part but informal in
+      places, and is currently under discussion.
+      <p>The original form of this document was entitled <i>Tuples, routine
+      objects and iterators</i> and covered important applications of tuples.
+      These applications now have a <a href="http://eiffel.com/doc/manuals/language/delayed/page.html">detailed
+      discussion of their own</a>. Make sure to read that discussion once you
+      have learned about tuples.
+      <p>Because the note followed earlier discussions within the language
+      committee of NICE, it lacks the customary &quot;introduction&quot; and
+      &quot;rationale&quot; parts explaining the purpose of the proposed
+      extensions. The rationale and applications should, however, quickly become
+      clear to any reader familiar with Eiffel.
+      <p>The mechanism described below is available in ISE Eiffel 4.3, with a
+      few limitations detailed <a href="#limitations">below</a>.</p>
+      <h2>1. Tuple types</h2>
+      <p>A new Kernel Library class is introduced: <font color="#0000a0"><i>TUPLE</i></font>.
+      <p>Alone among all classes, class <font color="#0000a0"><i>TUPLE</i></font>
+      has a variable number of generic parameters. <font color="#0000a0"><i>TUPLE</i>,
+      <i>TUPLE</i> [<i>X</i>], <i>TUPLE</i> [<i>X</i>, <i>Y</i>], <i>TUPLE</i> [<i>X</i>,
+      <i>Y</i>, <i>Z</i>]</font> and so on are all valid types, assuming valid
+      types <font color="#0000a0"><i>X</i>, <i>Y</i>, <i>Z</i></font> and so on.
+      <p>Conformance rules:
+      <pre>[CONF1]
+	For <font color="#0000a0"><i>n</i></font> &gt;= 0
+
+		<font color="#0000a0"><i>TUPLE</i> [<i>U</i><sub>1</sub>, <i>U</i><sub>2</sub>, ..., <i>U</i><sub><i>n</i></sub>, <i>U</i><sub><i>n</i>+1</sub>]</font> conforms to
+		<font color="#0000a0"><i>TUPLE</i> [<i>U</i><sub>1</sub>, <i>U</i><sub>2</sub>, ..., <i>U</i><sub><i>n</i></sub>]</font>
+</pre>
+      <p>&nbsp;
+      <ul>
+        <ul>
+          (and hence to <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>,
+          <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font> if each
+          of the <font color="#0000a0"><i>U</i><sub><i>i</i></sub></font>
+          conforms to each of the <font color="#0000a0"><i>T</i><sub><i>i</i></sub></font>
+          for 1 &lt;= <font color="#0000a0"><i>i</i></font> &lt;= <font color="#0000a0"><i>n</i></font>.
+          This is fully supported in ISE Eiffel 4.3; see the <a href="http://eiffel.com/doc/manuals/language/genconf/page.html">note
+          on generic conformance</a>.)
+        </ul>
+      </ul>
+      <p>In particular all tuple types conform to <font color="#0000a0"><i>TUPLE</i></font>,
+      with no parameter.
+      <pre>[CONF2]
+
+	For <font color="#0000a0"><i>n</i></font> &gt;= 0
+
+		If *every* one of the types <font color="#0000a0"><i>T</i><sub>1</sub>, <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub></font> conforms
+		to a type <font color="#0000a0"><i>T</i></font>, then <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>, <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font> conforms
+		to <font color="#0000a0"><i>ARRAY</i> [<i>T</i>]</font>.	
+</pre>
+      <p>Definition: a &quot;tuple type&quot; is any type based on class <font color="#0000a0"><i>TUPLE</i></font>,
+      <i>i</i>.e. any type of the form <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>,
+      <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font> for any <font color="#0000a0"><i>n</i></font>
+      (including 0, for which there is no generic parameter).
+      <p>&nbsp;
+      <ul>
+        (Note 1: CONF1 should be understood in terms of the underlying
+        mathematical model. Mathematically, <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>,
+        <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font> is the
+        set <font color="#0000a0"><i>TUPLE</i><sub><i>n</i></sub></font> of all
+        partial functions <font color="#0000a0"><i>f</i></font> from N+ (the set
+        of non-negative integers) to <font color="#0000a0"><i>T</i><sub>1</sub> <i>U</i>
+        <i>T</i><sub>2</sub> <i>U</i> ... <i>T</i><sub><i>n</i></sub></font>,
+        such that:
+        <p>&nbsp;
+        <ul>
+          <li>
+          The domain of <font color="#0000a0"><i>f</i></font> contains the
+          interval 1..<font color="#0000a0"><i>n</i></font> (in other words, <font color="#0000a0"><i>f</i></font>
+          is defined for any <font color="#0000a0"><i>i</i></font> such that 1
+          &lt;= <font color="#0000a0"><i>i</i></font> &lt;= <font color="#0000a0"><i>n</i></font>).</li>
+          <li>
+          For 1 &lt;= <font color="#0000a0"><i>i</i></font> &lt;= <font color="#0000a0"><i>n</i>,
+          f (<i>i</i>)</font> is a member of <font color="#0000a0"><i>T</i><sub><i>i</i></sub></font>.</p>
+          </li>
+        </ul>
+        <p>With this definition, <font color="#0000a0"><i>TUPLE</i><sub><i>n</i></sub></font>
+        is indeed a subset of <font color="#0000a0"><i>TUPLE</i><sub><i>n</i>+1</sub></font>,
+        and in particular <font color="#0000a0"><i>TUPLE</i><sub>0</sub></font>,
+        the empty set, is a subset of <font color="#0000a0"><i>TUPLE</i><sub><i>n</i></sub></font>
+        for any <font color="#0000a0"><i>n</i></font>.)</p>
+      </ul>
+      <p>Semantics: an instance of <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>,
+      <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font> is a tuple
+      whose first element is an instance of <font color="#0000a0"><i>T</i><sub>1</sub></font>,
+      the second element being an instance of <font color="#0000a0"><i>T</i><sub>2</sub></font>
+      etc. (The precise definition is the mathematical one given in note 1.)
+      Note that there can be more than <font color="#0000a0"><i>n</i></font>
+      elements to the tuple: for example a tuple with first element 5 and second
+      element &quot;FOO&quot; is an instance of all of the following tuple
+      types: <font color="#0000a0"><i>TUPLE</i>; <i>TUPLE</i> [<i>INTEGER</i>]; <i>TUPLE</i>
+      [<i>INTEGER</i>, <i>STRING</i>]</font>.
+      <p>&nbsp;
+      <p>&nbsp;
+      <ul>
+        (Note 2: It may seem restrictive at first to permit only one class, <font color="#0000a0"><i>TUPLE</i></font>,
+        to have an arbitrary number of actual generic parameters. Why not have a
+        general mechanism for declaring any class <font color="#0000a0"><i>C</i></font>
+        so that all of <font color="#0000a0"><i>C</i> [<i>X</i>]</font>, <font color="#0000a0"><i>C</i>
+        [<i>X</i>, <i>Y</i>]</font> etc. are valid? But in fact this is not
+        really a restriction. To obtain this effect without any complicated
+        language convention, just declare C as
+        <pre>	<font color="#0000a0"><i>C </i>[<i>G -&gt; TUPLE</i>]</font>
+</pre>
+        <p>and then use the generic derivations
+        <pre>	<font color="#0000a0"><i>C </i>[<i>TUPLE </i>[<i>X</i>]]<i>
+	C </i>[<i>TUPLE </i>[<i>X, Y</i>]]</font>
+</pre>
+        and so on. This also makes it possible to have the effect of some fixed
+        parameters and some variable ones, as in
+        <pre>	<font color="#0000a0"><i>C </i>[<i>G, H, I -&gt; TUPLE</i>]</font>
+</pre>
+        <p>so we have all the necessary flexibility.)</p>
+      </ul>
+      <h2>2. Tuple expressions</h2>
+      Let <font color="#0000a0"><i>e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub></i></font>
+      be expressions of respective types <font color="#0000a0"><i>T</i><sub>1</sub>,
+      <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub></font>. Then the
+      expression
+      <pre>	<font color="#0000a0">[<i>e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub></i>]</font>
+</pre>
+      <p>denotes an instance of <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>,
+      <i>T</i><sub>2</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font>, whose
+      first element is <font color="#0000a0">e<sub>1</sub>, the second element
+      being e<sub>2</sub></font> etc.
+      <p>Tuple expressions can be nested: whereas
+      <pre>	<font color="#0000a0">[<i>1, 2, 3</i>]</font>
+</pre>
+      <p>is a tuple with three elements (representing an instance of <font color="#0000a0"><i>TUPLE</i>
+      [<i>INTEGER</i>, <i>INTEGER</i>, <i>INTEGER</i>]</font>),
+      <pre>	<font color="#0000a0"> [<i>1, </i>[<i>2, 3</i>]]</font>
+</pre>
+      <p>is a tuple with two elements, the second one itself a tuple; the
+      overall expression represents an instance of <font color="#0000a0"><i>TUPLE</i>
+      [<i>INTEGER</i>, <i>TUPLE</i> [<i>INTEGER</i>, <i>INTEGER</i>]</font>.
+      <p>As a special case of tuple expression syntax, the delimiters <font color="#0000a0">[</font>
+      and <font color="#0000a0">]</font> are replaced by parentheses for the
+      tuple representing the actual argument list of a routine call (see section
+      4).</p>
+      <h2>3. <i>TUPLE</i> features</h2>
+      <p>The exact specification of class <font color="#0000a0"><i>TUPLE</i></font>
+      will be described in an addition to ELKS. The principal features are:
+      <ul>
+        <li>
+        <font color="#0000a0"><i>count</i></font> (number of significant
+        elements)
+        </li><li>
+        <font color="#0000a0"><i>item</i> (<i>i</i>)</font>, with the obvious
+        precondition: the <font color="#0000a0"><i>i</i></font>-th element, of
+        type <font color="#0000a0"><i>ANY</i></font> (since the value of <font color="#0000a0"><i>i</i></font>
+        is not known at compile time); also <font color="#0000a0"><i>first</i></font>,
+        <font color="#0000a0"><i>second</i></font>, <font color="#0000a0"><i>third</i></font>,
+        <font color="#0000a0"><i>fourth</i></font> and <font color="#0000a0"><i>fifth</i></font>,
+        of the appropriate types.
+        </li><li>
+        <font color="#0000a0"><i>put</i> (<i>x</i>, <i>i</i>)</font>, with the
+        obvious precondition: replace <font color="#0000a0"><i>i</i></font>-th
+        element with <font color="#0000a0"><i>x</i></font>. If argument <font color="#0000a0"><i>x</i></font>
+        is not of the appropriate type <font color="#0000a0"><i>T</i><sub><i>i</i></sub></font>
+        there is no effect.
+        </li><li>
+        <font color="#0000a0"><i>is_equal</i></font>: redefined to consider only
+        the first <font color="#0000a0"><i>n</i></font> elements, where <font color="#0000a0"><i>n</i></font>
+        is the smaller length.</li>
+      </ul>
+      <p>Other features under consideration include:
+      <ul>
+		<li>
+        <font color="#0000a0"><i>stripped</i> (<i>i</i>)</font>: a tuple of type
+        <font color="#0000a0"><i>TUPLE</i> [<i>T</i><sub>1</sub>, <i>T</i><sub>2</sub>,
+        <i>T</i><sub><i>i</i>-1</sub>, <i>T</i><sub><i>i</i>+1</sub>, ..., <i>T</i><sub><i>n</i></sub>]</font>,
+        derived from the current one by removing the <i>i</i>-th component,
+        again with the obvious precondition.
+        </li><li>
+        <font color="#0000a0"><i>wedged</i> (<i>x</i>, <i>i</i>)</font>: a tuple
+        with one more element, inserted at position <font color="#0000a0"><i>i</i></font>.
+         </li><li>
+         <b><font color="#0000a0">infix</font></b> &quot;+&quot;: tuple
+        concatenation
+        </li><li>
+        <b><font color="#0000a0">infix</font></b> &quot;++&quot;: element
+        concatenation; <font color="#0000a0"><i>t</i> ++ <i>x</i></font> is the
+        same thing as <font color="#0000a0"><i>t.wedged</i> (<i>x</i>, <i>t.count</i>
+        + 1)</font><i>.
+        </ul>
+        <p>In addition, there may be in class <font color="#0000a0">GENERAL</font>
+        the following three features:
+        <pre>	<font color="#0000a0">acceptable_tuple (t: TUPLE): BOOLEAN
+				-- Is t convertible into an object of the current
+				-- type?
+
+	associated_tuple: TUPLE
+			-- Tuple made of all of this object's field
+		<b>ensure</b>
+			acceptable_tuple (Result)
+
+	make_from_tuple (t: TUPLE)
+			-- Reset from t.
+		<b>require</b>
+			acceptable_tuple (t)
+		<b>ensure</b>
+			equal (associated_tuple, t)</font>
+</pre>
+        <p>&nbsp;</p>
+        <h2>4. What have we gained?</h2>
+        <p>First we have solved the only case in the Eiffel language in which an
+        expression has no precisely defined type: polymorphic manifest arrays.
+        We don't have manifest arrays any more, but manifest tuples, with a
+        precisely defined type. No incompatibility is introduced thanks to rule
+        CONF2. The original syntax for manifest arrays, <font color="#0000a0">Result
+        := &lt;&lt;e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub>&gt;&gt;</font>,
+        will continue to be supported.
+        <p>Second, we can define functions that return multiple results. This is
+        a quite significant increase in expressive power. No common language has
+        that. (You have to go to Lisp and functional languages.) Just define <font color="#0000a0">TUPLE
+        [...]</font> as the result type; in the function, you will write things
+        like
+        <pre>	<font color="#0000a0"> Result := [e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub>]</font>
+</pre>
+        <p>Also, from a theoretical viewpoint, feature calls are simpler and
+        more homogeneous: every feature takes exactly one tuple as argument and
+        returns exactly one tuple as a result. (Either of these tuples may be
+        empty: the first for a feature with no argument, the second for a
+        procedure.) The syntax for a call becomes
+        <pre>	<font color="#aa00ff">Feature Arguments</font>
+</pre>
+        <p>with <font color="#aa00ff">Arguments</font> defined as
+        <pre>	<font color="#aa00ff">Tuple_expression</font>
+</pre>
+        <p>where the <font color="#aa00ff">Tuple_expression</font> uses the form
+        given in section 2 but with the outermost [ and ] delimiters replaced by
+        parentheses to conform to usual practice. So the call
+        <pre>	<font color="#0000a0">f (a, b, c)</font>
+</pre>
+        <p>which we continue to think of as having three arguments <font color="#0000a0">a,
+        b</font> and <font color="#0000a0">c</font>, formally has only one tuple
+        argument <font color="#0000a0">[a, b, c]</font>. This is of course not
+        to be confused with a call of the form
+        <pre>	<font color="#0000a0">g ([a, b, c])</font>
+</pre>
+        <p>which has one argument (a tuple with three elements) in both the
+        ordinary and the formal sense.</p>
+        <h2>5. Active, iterators, numerical applications, introspection</h2>
+        <p>For a set of important applications of tuples see the book chapter on
+        <a href="http://eiffel.com/doc/manuals/language/active/page.html">delayed
+        calls and iterators</a> which also covers aspects of numerical software
+        and related topics following from the tuple mechanism. <a name="limitations"></a></p>
+        <h2>6. Temporary limitations</h2>
+        <p>The implementation of tuples in ISE Eiffel 4.3 has the following
+        limitations:
+        <ul>
+		<li>
+          Conformance of <font color="#0000a0">ARRAY</font> types to <font color="#0000a0">TUPLE</font>
+          types is not yet fully supported.
+        </li><li>          Class <font color="#0000a0">TUPLE</font> does not have features such
+          as <font color="#0000a0">first</font> and <font color="#0000a0">second</font>.
+          You must use <font color="#0000a0">item</font> and, in most cases, an
+          assignment attempt.</li>
+        </ul>
+      </i>
+      <p>&nbsp;</td>
+  </tr>
+</table>
+&nbsp;
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

@@ -3,7 +3,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VJRV 
+deferred class VJRV 
 
 inherit
 	FEATURE_ERROR

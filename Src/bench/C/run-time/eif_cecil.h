@@ -13,6 +13,7 @@
 #define _eif_cecil_h_
 
 #include "eif_plug.h"
+#include "eif_macros.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -149,6 +150,13 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_bit_ith			eifibit			/* Value of the ith bit */
 #define eif_bit_set			eifsibit		/* Set ith bit to 1 */
 #define eif_bit_clear		eifribit		/* Reset ith bit to 0 */
+
+/*
+ * Creation an Eiffel string.
+ */
+
+#define	eif_string(x) RTMS(x)	i
+		/* Create an Eiffel string from a C string `x' */
 
 /* 
  * Error report codes 

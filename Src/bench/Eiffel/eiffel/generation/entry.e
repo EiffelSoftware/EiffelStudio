@@ -82,7 +82,7 @@ feature -- previously in POLY_UNIT
 		local
 			gen_type: GEN_TYPE_I;
 		do
-			Result := type_a.actual_type.type_i;
+			Result := type_a.actual_type.type_i
 			if Result.has_formal then
 				gen_type ?= class_type.type;
 				Result := Result.instantiation_in (gen_type);

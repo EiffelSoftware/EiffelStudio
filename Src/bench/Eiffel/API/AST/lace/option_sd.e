@@ -58,6 +58,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_multithreaded: BOOLEAN is
+			-- Is the option a multithreaded option?
+		do
+			-- Do nothing
+		end
+
 	is_free_option: BOOLEAN is
 		do
 			-- Do nothing

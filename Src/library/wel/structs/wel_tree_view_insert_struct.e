@@ -35,7 +35,6 @@ feature -- Access
 			-- Handle to the item after which the new item is to
 			-- be inserted or one of the Tvi_* values.
 			-- See class WEL_TVI_CONSTANTS.
-
 		do
 			Result := cwel_insertstruct_get_hinsertafter (item)
 		end
@@ -69,8 +68,15 @@ feature -- Element change
 
 	set_tree_view_item (a_tree_view_item: WEL_TREE_VIEW_ITEM) is
 			-- Set `tree_view_item' with `a_tree_view_item'.
+			-- In this case, windows copy the structure we
+			-- send into another structure. Therefore, we need
+			-- to keep a reference on the first structure in case
+			-- the user is using it.
+			-- At insertion time, the h_item paremeter of both
+			-- structure will be set at the good value.
 		do
 			cwel_insertstruct_set_item (item, a_tree_view_item.item)
+			user_tree_view_item := a_tree_view_item
 		end
 
 	set_first is
@@ -104,6 +110,11 @@ feature -- Measurement
 		once
 			Result := c_size_of_insertstruct
 		end
+
+feature {WEL_TREE_VIEW} -- Implementation
+
+	user_tree_view_item: WEL_TREE_VIEW_ITEM
+			-- The tree-item given by the user. 
 
 feature {NONE} -- Externals
 

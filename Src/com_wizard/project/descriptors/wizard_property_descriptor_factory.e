@@ -59,6 +59,10 @@ feature -- Basic operations
 			else
 				name := clone (a_documentation.name)
 			end
+			if eiffel_key_words.has (name) then
+				name.append (One)
+			end
+
 			eiffel_name := name_for_feature (name)
 			description := clone (a_documentation.doc_string)
 			if description.empty then

@@ -77,6 +77,9 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (member_id)
 			end
+			if eiffel_key_words.has (name) then
+				name.append (One)
+			end
 			eiffel_name := name_for_feature (name)
 			arguments := create_arguments (tmp_names, a_count, a_func_desc.parameters, 
 					a_type_info)

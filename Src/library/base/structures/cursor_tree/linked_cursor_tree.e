@@ -15,7 +15,7 @@ class LINKED_CURSOR_TREE [G] inherit
 
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
-			extend, put_right,
+			put_right,
 			active, cursor_anchor, is_leaf
 		end
 

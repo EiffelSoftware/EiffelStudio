@@ -16,6 +16,9 @@ interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
+interface IEnumClass;
+interface IEnumCluster;
+interface IEnumFeature;
 
 typedef enum __EIF_COMPILATION_TYPES
 {
@@ -621,6 +624,18 @@ library eiffel_compiler
 {
   importlib ("stdole2.tlb");
   importlib ("stdole2.tlb");
+  interface IEiffelProject;
+  interface IEiffelCompiler;
+  interface IEiffelCompilerEvents;
+  interface IEiffelSystemBrowser;
+  interface IEiffelClusterDescriptor;
+  interface IEiffelClassDescriptor;
+  interface IEiffelFeatureDescriptor;
+  interface IEiffelProjectProperties;
+  interface IEiffelClusterProperties;
+  interface IEnumClass;
+  interface IEnumCluster;
+  interface IEnumFeature;
   
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)

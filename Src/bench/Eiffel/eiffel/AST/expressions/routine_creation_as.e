@@ -10,7 +10,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node,
 			fill_calls_list, replicate
 		end
 
@@ -322,12 +322,6 @@ feature -- Type check, byte code and dead code removal
 						 type.type_i, tuple_b, open_b, closed_b)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			-- FIXME
-		end
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -371,7 +365,31 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			-- FIXME
+			ctxt.put_breakable
+		
+			if target = Void then
+					-- A open operand for target.
+				ctxt.put_text_item (Ti_question)
+			else
+				if target /= Void then
+					if
+						target.class_type /= Void or
+						target.expression /= Void or
+						target.target /= Void
+					then
+							-- A closed operand for target
+						ctxt.format_ast (target)
+					end
+				else
+						-- Nothing to do, because it simply means
+						-- that the target is the Current object.
+				end
+			end
+
+			ctxt.put_text_item (Ti_tilda)
+
+				-- Display routine used by the Agent.
+			ctxt.format_ast (call_ast)
 		end
 
 feature {ROUTINE_CREATION_AS} -- Replication

@@ -1,6 +1,8 @@
 indexing
-	description: "Description of an area of the display that is %
-		%combination of rectangles, other polygons and ellipses."
+	description: "A region is a rectangle, polygon, or ellipse (or a %
+		%combination of two or more of these shapes) that can be %
+		%filled, painted, inverted, framed, and used to perform hit %
+		%testing."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

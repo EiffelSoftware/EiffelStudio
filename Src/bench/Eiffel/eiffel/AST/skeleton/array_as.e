@@ -5,6 +5,11 @@ inherit
 		redefine
 			type_check, byte_node, is_equivalent
 		end
+		
+	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
 
 feature {AST_FACTORY} -- Initialization
 
@@ -92,6 +97,8 @@ feature -- Type check, byte code, dead code removal and formatter
 			create array_type.make (System.array_id, generics)
 
 			multi_type.set_last_type (array_type)
+
+			Instantiator.dispatch (array_type, Context.current_class)
 
 				-- Update type stack
 			context.replace (multi_type)

@@ -129,7 +129,9 @@ feature
 			not_void_c: c /= Void
 		do
 			set_instance_only (c)
-			if realized and then command_editor_shown then
+			if realized and then command_editor_shown and then
+				command_editor.current_command /= c.associated_command
+			then
 				command_editor.set_command (c.associated_command)
 			end
 		end

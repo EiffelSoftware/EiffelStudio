@@ -12,7 +12,7 @@ inherit
 		redefine
 			init_toolkit
 		end;
-	MEL_CALLBACK;
+	MEL_COMMAND;
 	INTERFACE_W
 	
 creation
@@ -43,7 +43,7 @@ feature -- Communications
                 -- Set `Current' as callback to be called
                 -- when there is something new to read on
                 -- the `Listen_to_const' pipe.
-			app_context.add_input_read_callback (listen_to, Current, Void)
+			app_context.set_input_read_callback (listen_to, Current, Void)
         end;
 
 end -- class EWB_MOTIF

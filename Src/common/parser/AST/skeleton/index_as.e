@@ -15,7 +15,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like tag; i: like index_list; l: location) is
+	initialize (t: like tag; i: like index_list; l: like location) is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void

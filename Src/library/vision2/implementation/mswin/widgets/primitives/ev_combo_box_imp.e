@@ -811,6 +811,10 @@ feature {NONE} -- WEL Implementation
 							([old_selected_item.interface])
 					end
 				end
+				
+					-- Remember the current selected item.
+				old_selected_item := new_selected_item
+				
 					-- Send a "Select Action" to the new item, and
 					-- to the combo box.
 				if new_selected_item /= Void then
@@ -822,8 +826,6 @@ feature {NONE} -- WEL Implementation
 							([new_selected_item.interface])
 					end
 				end
-					-- Remember the current selected item.
-				old_selected_item := new_selected_item
 			end
 		end
 

@@ -226,7 +226,7 @@ feature
 			Result := implementation.pattern
 		end;
 
-	pattern_name: SRING
+	pattern_name: STRING is
 			-- Name of the search pattern
 		require
 			exists: not destroyed

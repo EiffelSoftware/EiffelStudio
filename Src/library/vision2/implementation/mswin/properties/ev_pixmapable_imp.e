@@ -39,30 +39,18 @@ feature -- Element change
 			pixmap.copy (pix)
 		end
 
-	set_pixmap_by_filename (file_name: FILE_NAME) is
-			-- Load `file_name' into the pixmap.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
 	remove_pixmap is
 			-- Remove the pixmap from the container
 		local
 			current_pixmap_imp: EV_PIXMAP_IMP
 		do
 			pixmap := Void
-	--		current_pixmap_imp := pixmap_imp
-	--		current_pixmap_imp.unreference
-	--		current_pixmap_imp ?= Void
-	--		invalidate
 		end
 
 feature {NONE} -- deferred features
 
 	invalidate is
-			deferred
+		deferred
 		end
 
 end -- class EV_PIXMAPABLE_IMP
@@ -88,6 +76,9 @@ end -- class EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/11 19:35:52  pichery
+--| cosmetics, removed unused features and instructions.
+--|
 --| Revision 1.12  2000/03/07 01:17:01  brendel
 --| Improved implementation of set_pixmap.
 --|

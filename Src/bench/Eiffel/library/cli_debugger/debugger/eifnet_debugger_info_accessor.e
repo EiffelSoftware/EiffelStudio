@@ -68,13 +68,15 @@ feature {NONE} -- Callback actions
 		local
 			s: APPLICATION_STATUS
 		do
-			Eifnet_debugger_info.set_data_changed (True)
-			if is_stopped then
-				s := eifnet_debugger_info.application.status
-				s.set_is_stopped (is_stopped)
-				if not eifnet_debugger_info.last_managed_callback_is_exit_process then
-					s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
-					s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+			if not eifnet_debugger_info.is_inside_function_evaluation then
+				Eifnet_debugger_info.set_data_changed (True)
+				if is_stopped then
+					s := eifnet_debugger_info.application.status
+					s.set_is_stopped (is_stopped)
+					if not eifnet_debugger_info.last_managed_callback_is_exit_process then
+						s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+						s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+					end
 				end
 			end
 			

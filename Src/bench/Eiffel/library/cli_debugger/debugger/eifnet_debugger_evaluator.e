@@ -349,6 +349,10 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 			l_status: APPLICATION_STATUS_DOTNET
 		do
+			debug ("debugger_trace_eval")
+				print ("<start> " + generator + ".prepare_evaluation %N")
+				eifnet_debugger.notify_debugger ("preparing evaluation")
+			end			
 			last_eval_is_exception := False
 			save_state_info
 
@@ -363,12 +367,15 @@ feature {NONE}
 				--| then let's disable the timer for ec callback
 			
 			if stop_timer_required then
-				eifnet_debugger.stop_dbg_timer				
+				eifnet_debugger.stop_dbg_timer
 			end
 
 			last_icor_debug_eval := l_icd_eval
 			last_app_status := l_status
 				--| We then call effective evaluation
+			debug ("debugger_trace_eval")
+				print ("<stop> " + generator + ".prepare_evaluation %N")
+			end			
 		end
 		
 	evaluation_termination (restart_timer_required: BOOLEAN) is
@@ -378,7 +385,13 @@ feature {NONE}
 			l_status := last_app_status
 			l_status.set_is_evaluating (False)
 			if restart_timer_required then
-				eifnet_debugger.start_dbg_timer				
+				if eifnet_debugger.callback_notification_processing then
+					eifnet_debugger.restore_callback_notification_state
+				else
+					if not application.is_stopped then
+						eifnet_debugger.start_dbg_timer						
+					end
+				end
 			end
 			restore_state_info
 			clean_temp_data
@@ -412,9 +425,7 @@ feature {NONE}
 		do
 			l_icd_eval := last_icor_debug_eval
 			last_call_success := l_icd_eval.last_call_success			
--- FIXME jfiat: we should let the synchro mecanism trigger the Continue (..)
--- to be sure we are in synchronized context
---			eifnet_debugger.do_continue
+
 				--| And we wait for all callback to be finished
 			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
 			eifnet_debugger.reset_data_changed
@@ -448,9 +459,6 @@ feature {NONE}
 			l_icd_eval := last_icor_debug_eval
 			last_call_success := l_icd_eval.last_call_success
 
--- FIXME jfiat: we should let the synchro mecanism trigger the Continue (..)
--- to be sure we are in synchronized context
---			eifnet_debugger.do_continue
 				--| And we wait for all callback to be finished
 			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
 			eifnet_debugger.reset_data_changed

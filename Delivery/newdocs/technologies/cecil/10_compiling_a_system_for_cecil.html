@@ -3,7 +3,7 @@
 	<HEAD>
 		<TITLE>Compiling an Eiffel system for CECIL</TITLE>
 		<META NAME="MS-HKWD" CONTENT="CECIL from Eiffel">
-		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+		<LINK REL=Stylesheet HREF="../../default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
@@ -62,12 +62,9 @@
           MS-DOS prompt (Windows), go to the subdirectory that contains the
           Makefile, and then type:
           <ul>
-            <b>make cecil </b>(on unix)<br>
-            <b>nmake cecil </b>(on windows, with VC++)
+            <b>make cecil </b>(on unix and on windows with Borland)<br>
+            <b>nmake cecil </b>(on windows with VC++)
           </ul>
-          <p>On version 4.4 and later, the CECIL library is automatically
-          generated, you do not need to call `nmake cecil' any longer. This will
-          be done when freezing or finalizing.
           <p>This generates a CECIL archive whose name derived from the name
           &lt;system name&gt; of the Eiffel system, as follows:
           <ul>
@@ -91,9 +88,10 @@
             file is updated.</p>
         <p class="warning"><b>Caution</b>: in the second case (workbench mode), it is not possible to call
         through the CECIL interface any routine that has been melted in the last
-        compilation; this would raise the run-time exception
+        compilation; this would raise the run-time exception:
         <br>
         <b>
+          &nbsp;&nbsp;&nbsp;
           $ applied to melted routine</b><br>
         The solution is simply to refreeze the system.</P>
 	</BODY>

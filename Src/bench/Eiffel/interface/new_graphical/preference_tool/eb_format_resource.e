@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			actual_value := a_value
 		end
 
-	make_default (a_name: STRING; rt: RESOURCE_TABLE; a_color_name: STRING; a_font_name: STRING) is
+	make_default (a_name: STRING; rt: RESOURCE_TABLE; default_color_value: STRING; default_font_value: STRING) is
 			-- Initialize Current
 			-- bad implementation: one can mistake color_name and a_color_name
 		local
@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 			c: EV_COLOR
 		do
 			name := a_name
-			default_string_value := clone (a_color_name) + a_font_name
+			default_string_value := clone (default_color_value) + default_font_value
 			create actual_value.make
-			create f.make_by_system_name (rt.get_string (font_name, a_font_name))
+			create f.make_by_system_name (rt.get_string (font_name, default_font_value))
 			actual_value.set_font (f)
-			c := color_from_table (rt.get_string (color_name, a_color_name))
+			c := color_from_table (rt.get_string (color_name, default_color_value))
 			actual_value.set_color (c)
 		end
 

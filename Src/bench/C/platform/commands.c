@@ -51,7 +51,7 @@ void eif_beep (void)
 #ifdef EIF_WIN32
 	MessageBeep (MB_ICONEXCLAMATION);
 #else
-	beep ();
+/*	beep ();*/
 #endif
 }
 

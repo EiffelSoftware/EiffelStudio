@@ -33,6 +33,16 @@ feature -- Access
 		deferred
 		end
 
+feature -- Evaluation
+
+	evaluate: VALUE_I is
+			-- Evaluate current expression, if possible.
+		once
+			create {NO_VALUE_I} Result
+		ensure
+			evaluate_not_void: Result /= Void
+		end
+		
 feature -- Il code generation
 
 	generate_il_metamorphose (a_type, target_type: TYPE_I; real_metamorphose: BOOLEAN) is

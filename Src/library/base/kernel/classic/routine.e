@@ -183,7 +183,7 @@ feature -- Status report
 							a_real_ref ?= arg
 							mismatch := a_real_ref = Void
 						when feature {TUPLE}.reference_code then
-							if arg /= Void and then not eif_gen_conf (
+							if arg /= Void and then not int.type_conforms_to (
 								int.dynamic_type (arg),
 								open_operand_type (i))
 							then
@@ -426,13 +426,17 @@ feature {NONE} -- Implementation
 		require
 			positive: i >= 1
 			within_bounds: i <= open_count
+		local
+			l_internal: INTERNAL
 		do
 			if open_types = Void then
 				create open_types.make (1, open_map.count)
 			end
 			Result := open_types.item (i)
 			if Result = 0 then
-				Result := eif_gen_param_id (-1, eif_gen_create ($Current, 2), i)
+				create l_internal
+				Result := l_internal.generic_dynamic_type_of_type (
+					l_internal.generic_dynamic_type (Current, 2), i)
 				open_types.force (Result, i)
 			end
 		end
@@ -444,23 +448,6 @@ feature {NONE} -- Externals
 			-- `a_target_pos' in `a_target'.
 		external
 			"C macro use %"eif_rout_obj.h%""
-		end
-
-	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
-			-- Does `type1' conform to `type2'?
-		external "C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
-			-- Adapt `args' for `idx' and `val'.
-		external
-			"C signature (EIF_REFERENCE, int): EIF_REFERENCE use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
-			-- Type of generic parameter in `obj' at position `pos'.
-		external
-			"C signature (int16, EIF_REFERENCE, int): EIF_INTEGER use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode_str (obj: POINTER): STRING is

@@ -186,11 +186,19 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
+	generic_dynamic_type_of_type (type_id: INTEGER; i: INTEGER): INTEGER is
+			-- Dynamic type of generic parameter of `type_id' at position `i'.
+		do
+			Result := eif_gen_param_id (- 1, type_id, i)
+		ensure
+			dynamic_type_nonnegative: Result >= 0
+		end
+
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `object' at
 			-- position `i'.
 		do
-			Result := eif_gen_param_id (- 1, $object, i)
+			Result := eif_gen_param_id (- 1, feature {ISE_RUNTIME}.dynamic_type ($object), i)
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
@@ -780,10 +788,10 @@ feature {NONE} -- Implementation
 			"ei_set_pointer_field"
 		end
 
-	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
+	eif_gen_param_id (stype: INTEGER; dftype: INTEGER; pos: INTEGER): INTEGER is
 			-- Type of generic parameter in `obj' at position `pos'.
 		external
-			"C (int16, EIF_REFERENCE, int): EIF_INTEGER | %"eif_gen_conf.h%""
+			"C (int16, int16, int): EIF_INTEGER | %"eif_gen_conf.h%""
 		end
 
 	c_new_instance_of (type_id: INTEGER): ANY is

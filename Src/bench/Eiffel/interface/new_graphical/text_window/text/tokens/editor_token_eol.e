@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
  				a_device.set_font(font)
  
  					-- Display the text.
- 				a_device.draw_text_top_left (position, d_y + height // 8, eol_symbol)
+ 				draw_text_top_left (position, d_y, eol_symbol, a_device)
  			end
 		end
 

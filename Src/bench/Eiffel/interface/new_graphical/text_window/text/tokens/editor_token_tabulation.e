@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
  
  					-- Display the tabulation symbol
  				if view_tabulation_symbol then
- 					device.draw_text_top_left(symbol_position, d_y + height // 8, tabulation_symbol)
+ 					draw_text_top_left(symbol_position, d_y, tabulation_symbol, device)
  				end
  
  					-- update the local position & prepare next iteration

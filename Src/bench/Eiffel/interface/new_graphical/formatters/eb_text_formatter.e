@@ -52,7 +52,7 @@ feature {EB_FEATURE_TOOL_LIST} -- Displaying
 feature -- Formatting
 
 	format (stone: STONE) is
-			-- Show text of `stone' in `text_window'
+			-- Show text of `stone' in `text_area'
 		local
 			stone_text, class_name: STRING
 			filed_stone: FILED_STONE
@@ -106,29 +106,26 @@ feature -- Formatting
 --							(same_stone and tool.last_format = class_tool.showclick_frmt_holder) or
 --							(do_format and tool.last_format = Current))
 --						then
---							cur := tool.text_window.cursor
+--							cur := tool.text_area.cursor
 --						end
-						tool.text_window.clear_window
+						tool.text_area.clear_window
 --						tool.set_editable_text
-						filed_stone ?= stone
-						if filed_stone = Void then
-							tool.set_file_name (Void)
-						else
-							tool.set_file_name (file_name (filed_stone))
-						end
 						tool.set_stone (stone)
+		--| FIXME
+		--| Christophe, 18 oct 1999
+		--| Watch for last saving date.
 						routine_w ?= tool
 						if 	
 							routine_w /= Void and then
 							routine_w.stone.e_feature.written_class.lace_class.hide_implementation
 						then
 							st := rout_flat_context_text (routine_w.stone)
-							tool.text_window.process_text (st)
-							tool.text_window.show
+							tool.text_area.process_text (st)
+							tool.text_area.show
 						else	
-							tool.text_window.set_text (stone_text)
+							tool.text_area.set_text (stone_text)
 						end
-						tool.update_save_symbol
+--						tool.update_save_symbol
 						tool.set_mode_for_editing
 --						tool.show_editable_text
 						if stone.clickable then
@@ -143,11 +140,11 @@ feature -- Formatting
 										Warning_messages.w_Class_modified (class_name))
 								end
 							elseif st = Void then
-								tool.text_window.update_clickable_from_stone (stone)
+								tool.text_area.update_clickable_from_stone (stone)
 							end
 						end
 --						if cur /= Void then
---							tool.text_window.go_to (cur)
+--							tool.text_area.go_to (cur)
 --						end
 						tool.set_last_format (Current)
 						display_header (stone)

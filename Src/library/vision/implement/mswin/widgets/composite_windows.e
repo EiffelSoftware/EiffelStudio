@@ -167,15 +167,15 @@ feature {WIDGET_WINDOWS} -- Implementation
 		do
 			!! Result.make (10);
 			widget_area := widget_manager.area
-			wc := widget_manager.count;
-			local_widget_oui := widget_oui
+			wc := widget_manager.count;			
 			from
 				position := 0
 			until
-				position = wc or else widget_area.item (position).implementation = Current
+				widget_area.item (position).implementation = Current
 			loop
 				position := position + 1
 			end
+			local_widget_oui := widget_area.item (position)
 			current_depth := local_widget_oui.depth;
 			from
 				position := position + 1;

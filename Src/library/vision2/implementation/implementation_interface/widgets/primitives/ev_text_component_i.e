@@ -111,10 +111,12 @@ feature -- Status setting
 		deferred
 		end
 	
-	set_maximum_line_length (lenght: INTEGER) is
-			-- Maximum number of charachters on line
+	set_maximum_text_length (value: INTEGER) is
+			-- Make `value' the new maximal lenght of the text
+			-- in characte number.
 		require
-			exist: not destroyed			
+			exist: not destroyed
+			valid_length: value >= 0
 		deferred
 		end
 	
@@ -240,9 +242,29 @@ feature -- Basic operation
 			exists: not destroyed
 		deferred
 		end
+
+feature -- Event - command association
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+feature -- Event -- removing command association
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		require
+			exists: not destroyed
+		deferred
+		end
 	
 end --class EV_TEXT_COMPONENT_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

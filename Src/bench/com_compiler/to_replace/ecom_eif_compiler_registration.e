@@ -80,15 +80,6 @@ feature {NONE}  -- Implementation
 	Gacutil_arguments: STRING is " -silent -nologo -if "
 			-- Gacutil arguments
 			
-	Regasm: STRING is "RegAsm.exe"
-			-- Regasm utility
-	
-	Regasm_arguments: STRING is " -silent -nologo "
-			-- Regasm arguments
-	
-	Eif_generator: STRING is "EiffelCompiler.dll"
-			-- Eiffel managed IL generator
-	
 	Ise_runtime: STRING is "ise_runtime.dll"
 			-- ISE managed runtime dll
 
@@ -116,19 +107,14 @@ feature {NONE}  -- Implementation
 	register_server is
 			-- Register Server
 		local
-			sdk_directory, gacutil_command, regasm_command, a_string, working_directory: STRING
+			sdk_directory, gacutil_command, a_string, working_directory: STRING
 		do
 			sdk_directory := get (Sdk_directory_key)
 			gacutil_command := sdk_directory + "\Bin\" + Gacutil
-			regasm_command := c_net_directory + Regasm
-			if (create {RAW_FILE}.make (gacutil_command)).exists and (create {RAW_FILE}.make (regasm_command)).exists then
+			if (create {RAW_FILE}.make (gacutil_command)).exists then
 				working_directory := current_working_directory
 				change_working_directory ((create {EIFFEL_ENV}).Eiffel_installation_dir_name + Compiler_path)
 				a_string := "%"" + gacutil_command + "%"" + Gacutil_arguments + Ise_runtime;
-				system (a_string)
-				a_string := "%"" + gacutil_command + "%"" + Gacutil_arguments + Eif_generator;
-				system (a_string)
-				a_string := "%"" + regasm_command + "%"" + Regasm_arguments + Eif_generator;
 				system (a_string)
 				change_working_directory (working_directory)
 			end
@@ -165,14 +151,6 @@ feature {NONE}  -- Externals
 			-- Unregister server.
 		external
 			"C++[macro %"server_registration.h%"]"
-		end
-
-	c_net_directory: STRING is
-			-- Path to .NET directory.
-		external
-			"C[macro %"c_net_directory.h%"](): EIF_REFERENCE"
-		alias
-			"c_net_directory()"
 		end
 
 end -- ECOM_EIF_COMPILER_REGISTRATION

@@ -22,6 +22,12 @@
 #include "plug.h"
 #include "except.h"
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 /* Bit shifting */
 private char *b_left_shift();		/* Shift bit field to the left */
 private char *b_right_shift();		/* Shift bit field to the right */

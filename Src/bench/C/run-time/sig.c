@@ -19,11 +19,16 @@
 #include "except.h"
 #include "sig.h"
 #include <errno.h>
+#include <stdio.h>				/* For sprintf() */
 
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
+#endif
+
+#ifdef __VMS
+#define sigmask(m)	(1<<((m)-1))
 #endif
 
 /* For debugging */

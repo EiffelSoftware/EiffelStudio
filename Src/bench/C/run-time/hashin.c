@@ -15,6 +15,12 @@
 #include "hashin.h"
 #include "malloc.h"
 
+#ifdef I_STRING
+#include <string.h>		/* For memset(), bzero() */
+#else
+#include <strings.h>
+#endif
+
 #ifndef lint
 private char *rcsid =
 	"$Id$";

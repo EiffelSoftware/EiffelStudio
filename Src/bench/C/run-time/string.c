@@ -15,6 +15,8 @@
 #include "portable.h"
 #include <ctype.h>
 
+#include <stdio.h>					/* For sscanf() */
+
 #ifdef I_STRING
 #include <string.h>
 #else

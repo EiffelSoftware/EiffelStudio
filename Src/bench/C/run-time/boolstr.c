@@ -13,6 +13,12 @@
 #include "config.h"
 #include "portable.h"
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 public char *bl_str_set(a1, s, n)
 char *a1;
 int s;			/* number of boolean in `a1' */

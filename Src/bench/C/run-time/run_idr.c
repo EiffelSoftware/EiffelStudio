@@ -20,7 +20,7 @@
 #include <netinet/in.h>
 #else
 #ifdef I_SYS_IN
-#include <sys_in.h>
+#include <sys/in.h>
 #endif
 #endif
 #include "eiffel.h"

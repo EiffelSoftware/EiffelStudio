@@ -18,6 +18,12 @@
 #include "except.h"
 #include "macros.h"
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 extern uint32 gen_scavenge;		/* Malloc flag, controls scavenging */
 extern int cc_for_speed;		/* Optimized for speed of for memory */
 extern long th_alloc;			/* Allocation threshold, in bytes */

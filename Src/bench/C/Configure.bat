@@ -161,6 +161,7 @@ echo del *.bak >> cleanup.bat
 echo del *.zip >> cleanup.bat
 echo del *.pdb >> cleanup.bat
 echo del *.pch >> cleanup.bat
+echo del *.dll >> cleanup.bat
 echo del config.sh >> cleanup.bat
 echo del makefile >> cleanup.bat
 echo del make.bat >> cleanup.bat
@@ -189,7 +190,7 @@ cd ..\daemon
 call cleanup
 cd ..\ewb
 call cleanup
-cd .\shared
+cd ..\shared
 call cleanup
 cd ..\..\parsing\eiffel
 call cleanup
@@ -201,7 +202,7 @@ cd ..\..\platform
 call cleanup
 cd ..\idrs
 call cleanup
-cd ..\runtime
+cd ..\run-time
 call cleanup
 cd ..
 
@@ -210,9 +211,11 @@ del parsing\lace\lace_y.h
 del parsing\eiffel\y_tab.*
 del parsing\eiffel\parser.c
 del parsing\eiffel\parser.h
+del parsing\eiffel\wpstore.c
 del run-time\eif_config.h
 del run-time\eif_size.h
 del run-time\eif_portable.h
+del config.sh
 del confmagc.h
 del eif_config.h
 del make.w32
@@ -232,6 +235,7 @@ del run-time\wcopy.c
 del run-time\wdir.c
 del run-time\wdle.c
 del run-time\weif_threads.c
+del run-time\weif_cond_var.c
 del run-time\wequal.c
 del run-time\werror.c
 del run-time\wexcept.c
@@ -244,6 +248,7 @@ del run-time\winterna.c
 del run-time\wlocal.c
 del run-time\wmain.c
 del run-time\wmalloc.c
+del run-time\wlmalloc.c
 del run-time\wmath.c
 del run-time\wmemory.c
 del run-time\wmisc.c
@@ -264,6 +269,7 @@ del run-time\wtools.c
 del run-time\wtravers.c
 del run-time\wumain.c
 del run-time\wurgent.c
+del cleanup.bat
 
 :end
 echo Make completed

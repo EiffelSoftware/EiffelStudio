@@ -83,7 +83,7 @@ extern int retrieve_read_with_compression(void);
 extern void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
 extern void rt_reset_retrieve(void);
 
-extern int (*retrieve_read_func)();
+extern int (*retrieve_read_func)(void);
 extern int (*char_read_func)(char *, int);
 
 #ifdef __cplusplus

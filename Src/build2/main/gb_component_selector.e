@@ -8,7 +8,6 @@ class
 	GB_COMPONENT_SELECTOR
 
 inherit
-	
 	EV_LIST
 		undefine
 			is_in_default_state
@@ -57,6 +56,20 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+	
+	GB_SHARED_PREFERENCES	
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -70,6 +83,7 @@ feature {NONE} -- Initialization
 			set_minimum_height (tool_minimum_height)
 			drop_actions.extend (agent add_new_component)
 			drop_actions.set_veto_pebble_function (agent is_valid_object)
+			key_press_actions.extend (agent check_for_component_delete)
 		end
 		
 feature -- Access
@@ -120,33 +134,28 @@ feature -- Basic operation
 		require
 			vaid_component_name: component_name /= Void and not component_name.is_empty
 		local
-			dialog: EV_CONFIRMATION_DIALOG
 			found: BOOLEAN
 		do
-			create dialog.make_with_text (Delete_component_warning)
-			dialog.show_modal_to_window (main_window)
-			if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				xml_handler.remove_component (component_name)
-					-- We must now remove the child of `Current' representing
-					-- the component named `component_name'.
-				from
-					start
-				until
-					off or found
-				loop
-					if item.text.is_equal (component_name) then
-						found := True
-						remove
-					end
-						-- We need this protection, as otherwise, if we
-						-- remove the last item, `forth' will fail.
-					if not found then
-						forth
-					end
+			xml_handler.remove_component (component_name)
+				-- We must now remove the child of `Current' representing
+				-- the component named `component_name'.
+			from
+				start
+			until
+				off or found
+			loop
+				if item.text.is_equal (component_name) then
+					found := True
+					remove
 				end
-				check
-					component_matched_correctly: found
+					-- We need this protection, as otherwise, if we
+					-- remove the last item, `forth' will fail.
+				if not found then
+					forth
 				end
+			end
+			check
+				component_matched_correctly: found
 			end
 		end
 
@@ -190,6 +199,26 @@ feature {GB_XML_HANDLER} -- Basic operation
 		end
 		
 feature {NONE} -- Implementation
+
+	check_for_component_delete (a_key: EV_KEY) is
+			-- Respond to keypress of `a_key' and delete selected object.
+		require
+			a_key_not_void: a_key /= Void
+		local
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			if a_key.code = Key_delete and selected_item /= Void then
+					-- Only perform deletion if delete key pressed, and an
+					-- object was selected.
+				if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
+					create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "component" + delete_warning2, delete_do_not_show_again)
+					warning_dialog.set_ok_action (agent delete_component (selected_item.text))
+					warning_dialog.show_modal_to_window (parent_window (Current))
+				else
+					delete_component (selected_item.text)
+				end
+			end
+		end
 
 	all_component_names: ARRAYED_LIST [STRING] is
 			-- `Result' is all named components displayed in `Current'.

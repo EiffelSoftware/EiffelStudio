@@ -23,7 +23,7 @@ inherit
 			put_class_syntax, put_ace_syntax, process_breakpoint, 
 			process_padded, disable_clicking, update_clickable_from_stone,
 			put_operator, process_column_text, process_call_stack_item,
-			put_feature_error
+			put_feature_error, put_exported_feature_name
 		end
 
 feature -- Properties
@@ -161,6 +161,14 @@ feature -- Input
 			stone: FEATURE_NAME_STONE	
 		do
 			!! stone.make (f_name, e_class)
+			put_stone (stone, f_name)
+		end
+
+	put_exported_feature_name (f_name: STRING; class_c: CLASS_C; alias_name: STRING) is
+		local
+			stone: EXPORTED_FEATURE_NAME_STONE	
+		do
+			!! stone.make (f_name, class_c, alias_name)
 			put_stone (stone, f_name)
 		end
 

@@ -17,7 +17,7 @@ inherit
 			put_feature_error, put_error, put_class, put_classi, put_cluster,
 			process_breakpoint, process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, put_symbol,
-			put_keyword, put_comment, put_stone,
+			put_keyword, put_comment, put_stone, put_exported_feature_name,
 			put_string, new_line,  put_after_class, 
 			put_normal_string, process_text, disable_clicking, is_graphical
 		end
@@ -216,6 +216,12 @@ feature -- Update
 		do
 			implementation.set_character_format_word (feature_format)
 			{SCROLLED_TEXT_WINDOW} precursor (f_name, e_class)
+		end
+
+	put_exported_feature_name (f_name: STRING; e_class: CLASS_C; alias_name: STRING) is
+		do
+			implementation.set_character_format_word (feature_format)
+			{SCROLLED_TEXT_WINDOW} precursor (f_name, e_class, alias_name)
 		end
 
 	put_address (address: STRING a_name: STRING; e_class: CLASS_C) is

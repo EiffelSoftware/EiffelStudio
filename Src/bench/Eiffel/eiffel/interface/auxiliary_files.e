@@ -92,7 +92,7 @@ feature -- Dynamic Library file
 			-- generate dynamic_lib.
 		local
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
-			dl_exp:DYNAMIC_LIB_EXPORT_FEATURE
+			dl_exp: DYNAMIC_LIB_EXPORT_FEATURE
 			dynamic_lib_def_file: INDENT_FILE
 			dynamic_lib_def_file_name: FILE_NAME
 			C_dynamic_lib_file: INDENT_FILE
@@ -149,7 +149,7 @@ feature -- Dynamic Library file
 					if (dynamic_lib_exports.item_for_iteration /= Void) then
 						def_buffer.putstring( "%N; CLASS [" )
 
-						class_name := clone(dynamic_lib_exports.item_for_iteration.item.dl_class.name_in_upper)
+						class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
 						def_buffer.putstring(class_name)
 						def_buffer.putstring( "]%N" )
 
@@ -158,26 +158,31 @@ feature -- Dynamic Library file
 						until
 							dynamic_lib_exports.item_for_iteration.after
 						loop
-							if (dynamic_lib_exports.item_for_iteration.item /=Void)
-							then
+							if (dynamic_lib_exports.item_for_iteration.item /=Void) then
 								internal_creation_name := Void
 
 								dl_exp := dynamic_lib_exports.item_for_iteration.item
 								buffer.putstring ("/***************************%N * ")
 								buffer.putstring (class_name)
 
-								if (dl_exp.dl_creation /= Void) and then (dl_exp.dl_routine.id /= dl_exp.dl_creation.id) then
+								if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
 										buffer.putstring (" (")
-										buffer.putstring (dl_exp.dl_creation.name)
+										buffer.putstring (dl_exp.creation_routine.name)
 										buffer.putstring (")")
-										internal_creation_name := dl_exp.dl_creation.body_id.feature_name (dl_exp.dl_class.types.first.id)
-								elseif (dl_exp.dl_creation = Void) then
+										internal_creation_name := dl_exp.creation_routine.body_id
+											.feature_name (dl_exp.creation_routine.written_in.associated_class.types.first.id)
+								elseif (dl_exp.creation_routine = Void) then
 										buffer.putstring (" (!!)")
 								end
-								if (dl_exp.dl_routine /= Void) then
-									feature_name := clone(dl_exp.dl_routine.name)
-									internal_feature_name := dl_exp.dl_routine.body_id.feature_name (dl_exp.dl_class.types.first.id)
-									args:= dl_exp.dl_routine.arguments
+								if (dl_exp.routine /= Void) then
+									if dl_exp.has_alias then
+										feature_name := clone(dl_exp.alias_name)
+									else
+										feature_name := clone(dl_exp.routine.name)
+									end
+									internal_feature_name := dl_exp.routine.body_id
+											.feature_name (dl_exp.routine.written_in.associated_class.types.first.id)
+									args:= dl_exp.routine.arguments
 
 									def_buffer.putstring("%T")
 									def_buffer.putstring(feature_name)
@@ -209,7 +214,7 @@ feature -- Dynamic Library file
 
 									----- Routine function
 									buffer.putstring ("%Nextern ")
-									return_type := clone ( cecil_type(dl_exp.dl_routine.type) )
+									return_type := clone ( cecil_type(dl_exp.routine.type) )
 									buffer.putstring (return_type)
 										
 									buffer.putstring (" ")
@@ -313,10 +318,10 @@ feature -- Dynamic Library file
 
 									if Context.workbench_mode then
 										buffer.putstring ("RTUD(");
-										dl_exp.dl_class.actual_type.type_i.associated_class_type.id.generated_id (buffer)
+										dl_exp.compiled_class.actual_type.type_i.associated_class_type.id.generated_id (buffer)
 										buffer.putchar (')');
 									else
-										buffer.putint (dl_exp.dl_class.actual_type.type_i.type_id - 1);
+										buffer.putint (dl_exp.compiled_class.actual_type.type_i.type_id - 1);
 									end
 									buffer.putstring (");")
 
@@ -366,9 +371,9 @@ feature -- Dynamic Library file
 									buffer.putstring ("%N}%N")
 
 								end
-								if (dl_exp.dl_index /= 0) then
+								if (dl_exp.index /= 0) then
 									def_buffer.putstring (" @ ")
-									def_buffer.putint (dl_exp.dl_index)
+									def_buffer.putint (dl_exp.index)
 								end
 								def_buffer.putstring ("%N")
 								buffer.putstring ("%N")

@@ -18,12 +18,13 @@ creation
 
 feature -- Initialization
 
-	make (d_c:CLASS_C; d_r:E_FEATURE; d_i:INTEGER) is
+	make (d_c:CLASS_C; d_r:E_FEATURE; d_i:INTEGER; d_a: STRING) is
 		do
 			init (Project_tool)
 			d_class := d_c
 			d_routine := d_r
 			d_index := d_i
+			d_alias := d_a
 		end
 
 feature -- Properties
@@ -48,6 +49,7 @@ feature -- Properties
 	d_class: CLASS_C
 	d_routine: E_FEATURE
 	d_index: INTEGER
+	d_alias: STRING
 
 feature -- Interface
 
@@ -81,7 +83,7 @@ feature {NONE} -- Execution
 						end
 						list.forth
 					end
-					dynamic_lib_tool.process (d_class, d_creation, d_routine, d_index)
+					dynamic_lib_tool.process (d_class, d_creation, d_routine, d_index, d_alias)
 				end
 				dynamic_lib_tool.synchronize
 			end
@@ -112,7 +114,7 @@ feature {NONE} -- Implementation
 						if tmp_creation /= Void and then tmp_creation.arguments = Void then
 							Result.extend (tmp_creation)
 						elseif tmp_creation = Void then
-							io.put_string ("%NError: no creation procedure.%N")
+								-- Error: no creation procedure available	
 						end
 						i:=i+1
 					end
@@ -133,11 +135,11 @@ feature {NONE} -- Implementation
 			list := valid_creation (d_class)
 
 			if list = Void then				
-				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index)
+				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index, d_alias)
 			elseif list.empty then
 				warner (dynamic_lib_tool.eb_shell).gotcha_call ("There is no valid creation for this feature.%N(ie: with no argument)")
 			elseif list.count =1 then
-				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index)
+				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index, d_alias)
 			elseif list /= Void and then not list.empty then
 				!! a_list.make
 				from 

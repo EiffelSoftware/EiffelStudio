@@ -73,20 +73,21 @@ feature {NONE} -- Implementation
 			lower_entry.update_constant_display (first.value_range.lower.out)
 		end
 		
-	set_up_user_events (vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
 		do
-			--| For now, just deal with widgets. At some point items may be supported also.
-		user_event_widget := vision2_object
-		widget ?= vision2_object
-		check
-			we_are_dealing_with_a_widget: widget /= Void
-		end
-		objects.extend (an_object)
-		objects.extend (vision2_object)
-		widget.pointer_button_release_actions.force_extend (agent start_timer)
+				--| For now, just deal with widgets. At some point items may be supported also.
+			user_event_widget := vision2_object
+			widget ?= vision2_object
+			check
+				we_are_dealing_with_a_widget: widget /= Void
+			end
+			set_object (actual_object)
+			objects.extend (an_object)
+			objects.extend (vision2_object)
+			widget.pointer_button_release_actions.force_extend (agent start_timer)
 		end	
 		
 	start_timer is

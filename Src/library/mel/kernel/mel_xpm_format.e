@@ -9,10 +9,6 @@ indexing
 class
 	MEL_XPM_FORMAT
 
-inherit
-
-	MEL_PIXMAP_FORMAT
-
 creation
 	make_from_file
 

@@ -103,7 +103,7 @@ feature {COMPILER_EXPORTER}
 					int_value ?= constant.value
 					error := int_value = Void
 					if not error then
-						bits_value := int_value.value
+						bits_value := int_value.integer_32_value
 						error := bits_value <= 0
 					end
 				end

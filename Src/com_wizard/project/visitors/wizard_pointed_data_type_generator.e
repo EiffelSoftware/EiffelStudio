@@ -942,6 +942,8 @@ feature {NONE} -- Implementation
 			
 			if is_interface_wrapper then
 				Result.append (addition_for_interface (c_type_name))
+			else
+				Result.append (addition_for_structure (eiffel_type_name))
 			end
 
 			-- eif_wean (eif_object);
@@ -971,6 +973,29 @@ feature {NONE} -- Implementation
 			valid_result: not Result.empty
 		end
 
+	addition_for_structure (eiffel_type_name: STRING): STRING is
+			-- Addition for structure in EC function wrapper.
+		require
+			non_void_eiffel_type: eiffel_type_name /= Void
+			valid_eiffel_type: not eiffel_type_name.empty
+		do
+			create Result.make (1000)
+			Result.append (New_line_tab)
+
+			Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"")
+			Result.append (eiffel_type_name)
+			Result.append ("%");")
+			Result.append (New_line_tab)
+
+			Result.append ("EIF_PROCEDURE set_shared =  eif_procedure (%"set_shared%", type_id);")
+			Result.append (New_line_tab)
+
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));")
+			Result.append (New_line_tab)
+		ensure
+			non_void_addition: Result /= Void
+			valid_addition: not Result.empty
+		end
 
 	addition_for_interface (c_type_name: STRING): STRING is
 			-- Addition for interface in EC function wrapper.
@@ -979,7 +1004,6 @@ feature {NONE} -- Implementation
 			valid_c_type: not c_type_name.empty
 		do
 			create Result.make (1000)
-			Result.append (Tab)
 			
 			-- if (a_pointer == NULL)
 			

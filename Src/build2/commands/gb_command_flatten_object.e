@@ -261,6 +261,30 @@ feature -- Basic Operation
 			end
 			Result := object_name  + " flattened"
 		end
+		
+feature {GB_WINDOW_SELECTOR} -- Implementation
+
+	silent_execute is
+			-- Execute a shallow flatten silently, without addition to the history
+			-- and therefore not undoable.
+		local
+			an_object: GB_OBJECT
+			top_object: GB_OBJECT
+		do
+				-- Recreate structures each time we execute which ensures that
+				-- they are reset if we call `execute' and `undo' multiple times.
+			create new_links.make (4)
+			create original_links.make (4)
+			create original_instances.make (4)
+
+			an_object := object_handler.deep_object_from_id (object_id)
+			top_object := object_handler.deep_object_from_id (top_id)
+			check
+				links_correct: top_object.instance_referers.has (an_object.id) and an_object.associated_top_level_object = top_object.id
+			end
+			an_object.unconnect_instance_referers (top_object, an_object)
+			internal_shallow_flatten (an_object, top_object)
+		end
 
 feature {NONE} -- Implementation
 
@@ -329,7 +353,14 @@ feature {NONE} -- Implementation
 						new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
 						current_item.set_associated_top_level_object (new_link_object)
 						current_object.connect_instance_referers (new_link_object, original_instance_object)
-						new_link_object.add_client_representation (original_instance_object)
+						
+							-- This next check ensures that the object already exists in the object structure.
+							-- If we are executing this as a result of dropping an object from the clipboard (so
+							-- not yet parented), it is not possible to add representations and this must be performed by the
+							-- subsequent addition.
+						if original_instance_object.top_level_parent_object.window_selector_item /= Void then
+							new_link_object.add_client_representation (original_instance_object)
+						end
 	
 							-- Ensure that the representations are updated to reflect the fact that they are locked.
 						current_item.represent_as_locked_instance

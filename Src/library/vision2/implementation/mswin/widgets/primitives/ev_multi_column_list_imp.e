@@ -836,7 +836,7 @@ feature {NONE} -- Implementation, Pixmap handling
 				child_imp.set_parent_imp (Void)
 				if internal_selected_items.has (child_imp.interface) then	
 					if child_imp.deselect_actions_internal /= Void then
-						child_imp.deselect_actions_internal.call ([])
+						child_imp.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call ([child_imp.interface])
@@ -1154,7 +1154,7 @@ feature {NONE} -- WEL Implementation
 						-- Item is being selected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.interface.select_actions.call ([])
+					item_imp.interface.select_actions.call (Void)
 					interface.select_actions.call ([item_imp.interface])
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
@@ -1163,7 +1163,7 @@ feature {NONE} -- WEL Implementation
 						-- Item is being deselected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.interface.deselect_actions.call ([])
+					item_imp.interface.deselect_actions.call (Void)
 					interface.deselect_actions.call ([item_imp.interface])
 				end
 			end

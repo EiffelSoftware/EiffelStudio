@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 	make_with_text_and_actions (
 		a_text: STRING;
-		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
+		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	) is
 			-- Create `Current', assign `a_text' to `text' and `actions' to `select_actions'
 			-- of `buttons'.
@@ -262,7 +262,7 @@ feature -- Status setting
 
 	set_buttons_and_actions (
 		button_labels: ARRAY [STRING]
-		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
+		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	) is
 			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
 		require
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_button_with_action
-		(a_text: STRING; a_action: PROCEDURE [ANY, TUPLE []]) is
+		(a_text: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed

@@ -25,7 +25,7 @@ feature -- Access
 	pebble: ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 
 	pebble_positioning_enabled: BOOLEAN is
@@ -85,7 +85,7 @@ feature -- Status setting
 			is_transport_enabled: interface.implementation.is_transport_enabled
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
 			-- Assign `a_function' to `pebble_function'.
 		require
 			a_function_not_void: a_function /= Void

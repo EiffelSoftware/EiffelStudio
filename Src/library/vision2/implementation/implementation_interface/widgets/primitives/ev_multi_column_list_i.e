@@ -567,7 +567,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
+	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
 			-- Agent object for `update_children'.
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation

@@ -88,7 +88,7 @@ feature -- Basic operations
 				update_needed := True
 				app := (create {EV_ENVIRONMENT}).application.implementation
 				if interface.count > parent_imp.count then
-					parent_imp.update_children_agent.call ([])
+					parent_imp.update_children_agent.call (Void)
 					app.once_idle_actions.prune (parent_imp.update_children_agent)
 				elseif not app.once_idle_actions.has (
 						parent_imp.update_children_agent) then

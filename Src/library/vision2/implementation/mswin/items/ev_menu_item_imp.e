@@ -756,7 +756,7 @@ feature {EV_ANY_I} -- Implementation
 			-- `Current' has been clicked on.
 		do
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])
+				select_actions_internal.call (Void)
 			end
 		end
 

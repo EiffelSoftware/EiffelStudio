@@ -183,7 +183,7 @@ feature {EV_DIALOG} -- Implementation
 					if default_cancel_button.is_sensitive then
 							-- Escape key pressed and `default_cancel_button' is
 							-- sensitive so simulate a press.
-						default_cancel_button.select_actions.call ([])
+						default_cancel_button.select_actions.call (Void)
 					end
 	
 				elseif a_key_code = Key_constants.Key_enter and then
@@ -191,7 +191,7 @@ feature {EV_DIALOG} -- Implementation
 					if current_push_button.is_sensitive then
 							-- Enter key pressed and `current_push_button' is
 							-- sensitive so simulate a press.
-						current_push_button.select_actions.call ([])
+						current_push_button.select_actions.call (Void)
 					end
 				end
 			end

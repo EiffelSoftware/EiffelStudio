@@ -80,7 +80,7 @@ feature -- Basic operations
 					show_internal
 				end
 				if show_actions_internal /= Void then
-					show_actions_internal.call ([])
+					show_actions_internal.call (Void)
 				end
 			else
 				other_menu_bar := interface.implementation.menu_bar
@@ -88,7 +88,7 @@ feature -- Basic operations
 				parent_window_imp ?= a_parent_window.implementation
 				internal_dialog_make (parent_window_imp, 0, Void)
 				if show_actions_internal /= Void then
-					show_actions_internal.call ([])
+					show_actions_internal.call (Void)
 				end
 				if other_menu_bar /= Void then
 					interface.set_menu_bar (other_menu_bar)

@@ -156,7 +156,7 @@ feature -- Status setting
 			end
 			set_checked
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])	
+				select_actions_internal.call (Void)	
 			end
 		end
 

@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 				d.activate
 			end
 			if post_launch_actions_internal /= Void then
-				post_launch_actions_internal.call ([])
+				post_launch_actions_internal.call (Void)
 			end
 			message_loop
 		end
@@ -148,10 +148,10 @@ feature -- Basic operation
 					process_message (msg)
 				else
 					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call ([])
+						internal_idle_actions.call (Void)
 					elseif idle_actions_internal /= Void and then
 						not idle_actions_internal.is_empty then 
-						idle_actions_internal.call ([])
+						idle_actions_internal.call (Void)
 					else
 						done := True
 					end
@@ -442,10 +442,10 @@ feature {NONE} -- Implementation
 					process_message (msg)
 				else
 					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call ([])
+						internal_idle_actions.call (Void)
 					elseif idle_actions_internal /= Void and then
 						not idle_actions_internal.is_empty then 
-						idle_actions_internal.call ([])
+						idle_actions_internal.call (Void)
 					else
 						msg.wait
 					end

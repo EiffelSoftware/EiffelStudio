@@ -55,7 +55,7 @@ feature -- Access
 	pebble: ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 
@@ -257,7 +257,7 @@ feature -- Element change
 			pebble_function := Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
 			-- Set `a_function' to compute `pebble'.
 		do
 			pebble_function := a_function
@@ -525,7 +525,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_PROJECTION_ROUTINES} -- Access
 			-- Calculated `pebble'.
 		do
 			if pebble_function /= Void then
-				Result := pebble_function.item ([])
+				Result := pebble_function.item (Void)
 			else
 				Result := pebble
 			end

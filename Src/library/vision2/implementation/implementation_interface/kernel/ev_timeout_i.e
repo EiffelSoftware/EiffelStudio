@@ -52,7 +52,7 @@ feature -- Implementation
 	on_timeout is
 			-- Call actions and increment count.
 		do
-			interface.actions.call ([])
+			interface.actions.call (Void)
 			count := count + 1
 		ensure
 			count_incremented_or_reset:

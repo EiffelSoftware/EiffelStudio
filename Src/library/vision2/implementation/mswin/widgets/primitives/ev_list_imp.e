@@ -535,7 +535,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				child_imp.set_parent_imp (Void)
 				if internal_selected_items.has (child_imp.interface) then	
 					if child_imp.deselect_actions_internal /= Void then
-						child_imp.deselect_actions_internal.call ([])
+						child_imp.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call ([child_imp.interface])
@@ -637,7 +637,7 @@ feature {EV_ANY_I} -- Implementation
 						item_imp := ev_children @ (info.iitem + 1)
 						item_interface := item_imp.interface
 						if item_imp.select_actions_internal /= Void then
-							item_imp.select_actions_internal.call ([])
+							item_imp.select_actions_internal.call (Void)
 						end
 						if select_actions_internal /= Void then
 							select_actions_internal.call ([item_interface])
@@ -651,7 +651,7 @@ feature {EV_ANY_I} -- Implementation
 						item_imp := ev_children @ (info.iitem + 1)
 						item_interface := item_imp.interface
 						if item_imp.deselect_actions_internal /= Void then
-							item_imp.deselect_actions_internal.call ([])
+							item_imp.deselect_actions_internal.call (Void)
 						end
 						if deselect_actions_internal /= Void then
 							deselect_actions_internal.call ([item_interface])

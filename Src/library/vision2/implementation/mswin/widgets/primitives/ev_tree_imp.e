@@ -231,7 +231,7 @@ feature -- Basic operations
 				item_imp.set_internal_children (c)
 			end
 			if item_imp = selected_item_imp then
-				item_imp.deselect_actions.call ([])
+				item_imp.deselect_actions.call (Void)
 				deselect_actions.call ([item_imp.interface])
 			end
 			all_ev_children.remove (item_imp.h_item)
@@ -535,7 +535,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				elem := clist.item (p)
 				if elem /= Void then
 						-- Call the deselect actions on `elem'.
-					elem.deselect_actions.call ([])
+					elem.deselect_actions.call (Void)
 					deselect_actions.call ([elem.interface])
 				end
 			end
@@ -546,7 +546,7 @@ feature {EV_ANY_I} -- WEL Implementation
 					elem := clist.item (p)
 					if elem /= Void then
 							-- Call the select_actions on `elem'.
-						elem.select_actions.call ([])
+						elem.select_actions.call (Void)
 						select_actions.call ([elem.interface])
 					end
 				end
@@ -580,7 +580,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			if not is_expanded (tree_item) then
 				cwin_send_message (wel_item, Tvm_expand, Tve_expand,
 					cwel_pointer_to_integer (an_item.h_item))
-				tree_item.interface.expand_actions.call ([])
+				tree_item.interface.expand_actions.call (Void)
 			end
 			expand_called_manually := False
 		end
@@ -597,7 +597,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			if is_expanded (tree_item) then
 				cwin_send_message (wel_item, Tvm_expand, Tve_collapse,
 					cwel_pointer_to_integer (an_item.h_item))
-				tree_item.interface.collapse_actions.call ([])
+				tree_item.interface.collapse_actions.call (Void)
 			end
 			expand_called_manually := False
 		end
@@ -610,10 +610,10 @@ feature {EV_ANY_I} -- WEL Implementation
 			if not expand_called_manually then
 				if info.action = Tve_collapse then
 					(all_ev_children @ info.new_item.h_item).interface.
-						collapse_actions.call ([])
+						collapse_actions.call (Void)
 				elseif info.action = Tve_expand then
 					(all_ev_children @ info.new_item.h_item).interface.
-						expand_actions.call ([])
+						expand_actions.call (Void)
 				end
 			end
 		end

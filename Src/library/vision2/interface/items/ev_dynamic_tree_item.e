@@ -56,7 +56,7 @@ feature -- Access
 			i: INTEGER
 		do
 			check
-				subtree_function_not_void: subtree_function /= void 
+				subtree_function_not_void: subtree_function /= Void 
 			end
 			subtree_function_call
 			linear := subtree_function.last_result
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	subtree_function: FUNCTION [ANY, TUPLE [], LINEAR [EV_TREE_NODE]]
+	subtree_function: FUNCTION [ANY, TUPLE, LINEAR [EV_TREE_NODE]]
 			-- Function be be executed to fill `Current' with items of
 			-- type EV_TREE_NODE.
 
@@ -95,7 +95,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			not_Void: a_subtree_function /= Void
-			valid_operands: a_subtree_function.valid_operands ([])
+			valid_operands: a_subtree_function.valid_operands (Void)
 		do
 			if subtree_function /= Void then
 				remove_subtree_function
@@ -158,7 +158,7 @@ feature -- Access
 				or
 				last_subtree_function_call_time = 0
 			then
-				subtree_function.call ([])
+				subtree_function.call (Void)
 				last_subtree_function_call_time := now
 			end
 		end
@@ -237,7 +237,7 @@ feature -- Cursor movement
 			i: INTEGER
 		do
 			if
-				subtree_function /= void
+				subtree_function /= Void
 			then
 				subtree_function_call
 				linear := subtree_function.last_result

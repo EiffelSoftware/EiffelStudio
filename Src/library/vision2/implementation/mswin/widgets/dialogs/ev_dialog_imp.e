@@ -193,7 +193,7 @@ feature -- Basic operations
 					-- the show actions are called in this case. Is there a way to avoid this?		
 				if call_show_actions then
 					if show_actions_internal /= Void then
-						show_actions_internal.call ([])
+						show_actions_internal.call (Void)
 					end
 					call_show_actions := False
 				end
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 				if button /= Void and then button.is_sensitive and then button.is_displayed then
 					button_actions := button.select_actions
 					if button_actions /= Void then
-						button_actions.call ([])
+						button_actions.call (Void)
 					end
 				end
 			end

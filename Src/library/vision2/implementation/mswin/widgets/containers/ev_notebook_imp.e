@@ -596,7 +596,7 @@ feature {NONE} -- WEL Implementation
 							tab_rect.width, tab_rect.height, True)
 
 			if selection_actions_internal /= Void then
-				selection_actions_internal.call ([])
+				selection_actions_internal.call (Void)
 			end
 		end
 

@@ -265,7 +265,6 @@ feature -- Element change
 			-- Make `pix' the pixmap of `Current'.
 		local
 			wel_icon: WEL_ICON
-			a_wel_bitmap: WEL_BITMAP
 			internal_pixmap_state: EV_PIXMAP_IMP_STATE
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
@@ -380,7 +379,7 @@ feature {NONE} -- WEL Implementation
 			-- `Current' has been pressed.
 		do
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])
+				select_actions_internal.call (Void)
 			end
 		end
 

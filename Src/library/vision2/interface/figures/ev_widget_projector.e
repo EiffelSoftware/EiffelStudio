@@ -362,7 +362,7 @@ feature {NONE} -- Event implementation
 						event_fig = Void or else has_focus (event_fig)
 					loop
 						call_actions (event_fig, 
-							event_fig.internal_pointer_leave_actions, [])
+							event_fig.internal_pointer_leave_actions, Void)
 						p := True
 						event_fig := event_fig.group
 					end
@@ -375,7 +375,7 @@ feature {NONE} -- Event implementation
 						event_fig = same_fig
 					loop
 						call_actions (event_fig, 
-							event_fig.internal_pointer_enter_actions, [])
+							event_fig.internal_pointer_enter_actions, Void)
 						p := True
 						event_fig := event_fig.group
 					end

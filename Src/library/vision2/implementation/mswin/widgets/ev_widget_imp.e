@@ -739,7 +739,7 @@ feature {NONE} -- Implementation
 			-- Called when the mouse enters `Current'.
 		do
 			if pointer_enter_actions_internal /= Void then
-				pointer_enter_actions_internal.call ([])
+				pointer_enter_actions_internal.call (Void)
 			end
 		end
 
@@ -751,7 +751,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- in on_mouse_move.
 		do
 			if pointer_leave_actions_internal /= Void then
-				pointer_leave_actions_internal.call ([])
+				pointer_leave_actions_internal.call (Void)
 			end
 		end
 
@@ -872,7 +872,7 @@ feature {NONE} -- Implementation, focus event
 			update_current_push_button
 			Focus_on_widget.put (Current)
 			if focus_in_actions_internal /= Void then
-				focus_in_actions_internal.call ([])
+				focus_in_actions_internal.call (Void)
 			end
 		end
 		
@@ -880,7 +880,7 @@ feature {NONE} -- Implementation, focus event
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
 			if focus_out_actions_internal /= Void then
-				focus_out_actions_internal.call ([])
+				focus_out_actions_internal.call (Void)
 			end
 		end
 

@@ -147,7 +147,7 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return and is_editable then
 				set_caret_position (1)
-				interface.return_actions.call ([])
+				interface.return_actions.call (Void)
 			end
 				--| EV_SPIN_BUTTON_IMP is composed of `Current'.
 				--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
@@ -173,7 +173,7 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			interface.change_actions.call ([])
+			interface.change_actions.call (Void)
 		end
 
 	enable is

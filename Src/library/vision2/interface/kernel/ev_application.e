@@ -267,7 +267,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE []]) is
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time when the application is next idle.
 		require
 			not_destroyed: not is_destroyed

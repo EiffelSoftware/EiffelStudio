@@ -207,7 +207,7 @@ feature -- Events
 			-- Actions to be preformed once when no events are in queue.
 			-- Wiped out after being called.
 
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE []]) is
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time only on idle.
 		do
 			once_idle_actions.extend (an_action)
@@ -225,10 +225,10 @@ feature -- Events
 			snapshot := clone (once_idle_actions)
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
-			snapshot.call ([])
+			snapshot.call (Void)
 		end
 
-	do_once_idle_actions_agent: PROCEDURE [EV_APPLICATION_I, TUPLE []]
+	do_once_idle_actions_agent: PROCEDURE [EV_APPLICATION_I, TUPLE]
 			-- Agent for `do_once_idle_actions'.
 
 feature -- Event handling

@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 						-- We must now call the `return_actions' on the text_field.
 					text_field_imp ?= focus_on_widget.item
 					if text_field_imp /= Void then
-						text_field_imp.return_actions.call ([])
+						text_field_imp.return_actions.call (Void)
 					end
 						-- If something in the text field return actions has caused the
 						-- dialog to close, we do not process the standard key press.
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 					-- Julian 07/11/02
 				if not interface.is_empty then
 					if focus_out_actions_internal /= Void then
-						focus_out_actions_internal.call ([])
+						focus_out_actions_internal.call (Void)
 					end
 				end
 			end

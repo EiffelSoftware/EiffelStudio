@@ -333,7 +333,7 @@ feature -- Basic operations
 						move_dialog_to_pointer (dockable_dialog_source)
 					end
 					if dock_ended_actions_internal /= Void then
-						dock_ended_actions_internal.call ([])
+						dock_ended_actions_internal.call (Void)
 					end
 				end
 			else
@@ -361,7 +361,7 @@ feature -- Basic operations
 						dockable_dialog_source.destroy
 					end
 					if dock_ended_actions_internal /= Void then
-						dock_ended_actions_internal.call ([]) -- dfgdfgdfg
+						dock_ended_actions_internal.call (Void) -- dfgdfgdfg
 					end
 				else
 					move_dialog_to_pointer (dockable_dialog_source)
@@ -457,7 +457,7 @@ feature -- Basic operations
 				end
 				end
 				if dock_ended_actions_internal /= Void then
-					dock_ended_actions_internal.call ([])
+					dock_ended_actions_internal.call (Void)
 				end
 			end
 			
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			tool_bar_button: EV_TOOL_BAR_BUTTON
 		do
 			if dock_started_actions_internal /= Void then
-				dock_started_actions_internal.call ([])
+				dock_started_actions_internal.call (Void)
 			end
 				-- Now block the motion actions from the interface
 			widget ?= source

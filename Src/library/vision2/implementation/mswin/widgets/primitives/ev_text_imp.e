@@ -413,7 +413,7 @@ feature {NONE} -- WEL Implementation
 			--| We call the change_actions.
 		do
 			if change_actions_internal /= Void then
-				change_actions_internal.call ([])
+				change_actions_internal.call (Void)
 			end
 		end
 

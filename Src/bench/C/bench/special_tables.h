@@ -1,15 +1,11 @@
 #include "eif_eiffel.h"
 
-#ifdef DEBUG
 struct poly_debug {
 	int size;
 	unsigned char* area;
 };
 
-#define AREA_TYPE struct poly_debug *
-#else
-#define AREA_TYPE unsigned char *
-#endif
+typedef struct poly_debug * AREA_TYPE;
 
 AREA_TYPE table_malloc (int nb_classes);
 /* initialise the table of a poly_table */

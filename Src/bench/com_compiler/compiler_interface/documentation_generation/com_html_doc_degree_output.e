@@ -18,8 +18,8 @@ inherit
 		end
 		
 	ERROR_HANDLER
-		redefine
-			make
+		rename
+			make as make_error
 		end
 
 create
@@ -27,88 +27,32 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (a_callback: like callback) is
 			-- Initialize structure.
 		do
-			Precursor {ERROR_HANDLER}
-			create callbacks.make
+			make_error
+			callback := a_callback
+		ensure
+			callback_set: callback = a_callback
 		end
 
 feature -- Access
 
 	interrupted: BOOLEAN
-			-- was generation interrupted?
-
-feature -- Basic Operations
-
-	add_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
-			-- add a interface to the list of callback interfaces
-		do
-			callbacks.extend (interface)
-		end
-		
-	
-	remove_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
-			-- remove an interface from the list of callback interfaces
-			-- removes only the last occurance (FILO) of 'interface'
-		local
-			removed: BOOLEAN
-		do
-			from
-				callbacks.finish
-			until
-				callbacks.before or removed
-			loop
-				if callbacks.item.is_equal (interface) then
-					callbacks.remove
-					removed := true
-				else
-					callbacks.back
-				end
-			end
-		end
-		
+			-- was generation interrupted?		
 
 feature -- Start output features
 
 	put_header (displayed_version_number: STRING) is
 			-- output header
-		local
-			l_bool: BOOLEAN_REF
 		do
-			from 
-				callbacks.start
-				l_bool := False
-			until
-				callbacks.after or l_bool.item
-			loop
-				callbacks.item.output_header (displayed_version_number)
-				callbacks.item.should_continue (l_bool)
-				callbacks.forth
-			end
-			if not l_bool.item then
-				interrupt
-			end
+			callback.event_output_header (displayed_version_number)
 		end
 		
 	put_string (s: STRING) is
 			-- output string `s'
-		local
-			l_bool: BOOLEAN_REF
 		do
-			from 
-				callbacks.start
-				l_bool := False
-			until
-				callbacks.after or l_bool.item
-			loop
-				callbacks.item.output_string (s)
-				callbacks.item.should_continue (l_bool)
-				callbacks.forth
-			end
-			if not l_bool.item then
-				interrupt
-			end
+			callback.event_output_string (s)
 		end
 
 	put_start_documentation (total_num: INTEGER; type: STRING) is
@@ -121,46 +65,14 @@ feature -- Start output features
 
 	put_initializing_documentation is
 			-- output initializing message
-		local
-			l_bool: BOOLEAN_REF
 		do
-			from 
-				callbacks.start
-				l_bool := False
-			until
-				callbacks.after or l_bool.item
-			loop
-				callbacks.item.notify_initalizing_documentation
-				callbacks.item.should_continue (l_bool)
-				callbacks.forth
-			end
-			if not l_bool.item then
-				interrupt
-			end
+			callback.event_notify_initalizing_documentation
 		end
 		
 	put_class_document_message (c: CLASS_C) is
 			-- Put the class name to the output
-		local
-			l_bool: BOOLEAN_REF
 		do
-			from 
-				callbacks.start
-				l_bool := False
-			until
-				callbacks.after or l_bool.item
-			loop
-				callbacks.item.output_class_document_message (c.name_in_upper)
-				processed := processed + 1
-				if total_number >0 then
-					callbacks.item.notify_percentage_complete (((processed * 100) / (total_number)).floor)	
-				end
-				callbacks.item.should_continue (l_bool)
-				callbacks.forth
-			end
-			if not l_bool.item then
-				interrupt
-			end
+			callback.event_notify_percentage_complete (((processed * 100) / (total_number)).floor)	
 		end
 		
 	put_case_class_message (c: CLASS_C) is
@@ -171,8 +83,8 @@ feature -- Start output features
 		
 feature {NONE} -- Implementation
 
-	callbacks: LINKED_LIST [IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE]
-		-- list of clients to notify
+	callback: CEIFFEL_HTML_DOCUMENTATION_GENERATOR_COCLASS
+		-- client to notify
 
 	interrupt is
 			-- interrupts generation of HTML documentation
@@ -184,5 +96,7 @@ feature {NONE} -- Implementation
 			is_interrupted: interrupted
 		end
 		
+invariant
+	callback_not_void: callback /= Void
 	
 end -- class COM_HTML_DOC_DEGREE_OUTPUT

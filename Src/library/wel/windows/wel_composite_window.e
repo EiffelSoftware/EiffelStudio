@@ -34,6 +34,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_SHARED_FONTS
+		export
+			{NONE} all
+		end
+
+	WEL_SYSTEM_COLORS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -41,26 +51,15 @@ feature -- Access
 			-- Construct a linear representation of children.
 		require
 			exists: exists
-		local
-			hwnd: POINTER
-			win: WEL_WINDOW
 		do
-			create {ARRAYED_LIST [WEL_WINDOW]} Result.make (10)
-			from
-				hwnd := cwin_get_window (item, Gw_child)
-			until
-				hwnd = default_pointer
-			loop
-				win := window_of_item (hwnd)
-				if win /= Void then
-					Result.extend (win)
-				end
-				hwnd := cwin_get_window (hwnd, Gw_hwndnext)
-			end
+			create internal_children.make (1)
+			cwel_enum_child_windows_procedure ($Current, $enumerate_child_windows_callback, item)
+			Result := internal_children
+			internal_children := Void
 		ensure
 			result_not_void: Result /= Void
 		end
-
+		
 	menu: WEL_MENU is
 			-- Associated menu
 		require
@@ -885,6 +884,59 @@ feature {NONE} -- Implementation
 				cwin_post_quit_message (0)
 			end
 		end
+	
+	on_wm_setting_change is
+			-- Wm_settingchange message
+			-- Update the system fonts.
+		do
+				-- Invalidate the fonts
+			menu_font_cell.put (Void)
+			message_font_cell.put (Void)
+			status_font_cell.put (Void)
+			caption_font_cell.put (Void)
+			small_caption_font_cell.put (Void)
+		end
+
+	on_wm_syscolor_change is
+			-- Wm_syscolorchange message
+			-- Update the system colors.
+		local
+			child_wnd: LIST [WEL_WINDOW]
+		do
+				-- Invalidate the colors
+			system_color_scrollbar_cell.put (Void)
+			system_color_background_cell.put (Void)
+			system_color_activecaption_cell.put (Void)
+			system_color_inactivecaption_cell.put (Void)
+			system_color_menu_cell.put (Void)
+			system_color_window_cell.put (Void)
+			system_color_windowframe_cell.put (Void)
+			system_color_menutext_cell.put (Void)
+			system_color_windowtext_cell.put (Void)
+			system_color_captiontext_cell.put (Void)
+			system_color_activeborder_cell.put (Void)
+			system_color_inactiveborder_cell.put (Void)
+			system_color_appworkspace_cell.put (Void)
+			system_color_highlight_cell.put (Void)
+			system_color_highlighttext_cell.put (Void)
+			system_color_btnface_cell.put (Void)
+			system_color_btnshadow_cell.put (Void)
+			system_color_graytext_cell.put (Void)
+			system_color_btntext_cell.put (Void)
+			system_color_inactivecaptiontext_cell.put (Void)
+			system_color_btnhighlight_cell.put (Void)
+			
+			 -- Propagate the message to the children
+			child_wnd := children
+			from
+				child_wnd.start
+			until
+				child_wnd.after
+			loop
+				cwin_send_message (child_wnd.item.item, Wm_syscolorchange, 0, 0)
+				child_wnd.forth
+			end
+		end
 
 	application_main_window: WEL_APPLICATION_MAIN_WINDOW is
 			-- Once object used by `on_wm_destroy' to test if `Current'
@@ -918,8 +970,7 @@ feature {WEL_DISPATCHER}
 			when Wm_command then
 				on_wm_command (wparam, lparam)
 			when Wm_syscommand then
-				on_sys_command (wparam, cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+				on_sys_command (wparam, cwin_lo_word (lparam), cwin_hi_word (lparam))
 			when Wm_menuselect then
 				on_wm_menu_select (wparam, lparam)
 			when Wm_vscroll then
@@ -935,13 +986,15 @@ feature {WEL_DISPATCHER}
 			when Wm_windowposchanging then
 				on_wm_window_pos_changing (lparam)
 			when Wm_paletteischanging then
-				on_palette_is_changing (window_of_item (
-					cwel_integer_to_pointer (wparam)))
+				on_palette_is_changing (window_of_item (cwel_integer_to_pointer (wparam)))
 			when Wm_palettechanged then
-				on_palette_changed (window_of_item (
-					cwel_integer_to_pointer (wparam)))
+				on_palette_changed (window_of_item (cwel_integer_to_pointer (wparam)))
 			when Wm_querynewpalette then
 				on_query_new_palette
+			when Wm_settingchange then
+				on_wm_setting_change
+			when Wm_syscolorchange then
+				on_wm_syscolor_change
 			when Wm_close then
 				on_wm_close
 			else
@@ -960,8 +1013,30 @@ feature {WEL_DISPATCHER}
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	enumerate_child_windows_callback (child_hwnd: POINTER) is
+			-- Callback feature called by `children'.
+		local
+			wnd: WEL_WINDOW
+		do
+			wnd := window_of_item (child_hwnd)
+			if wnd /= Void and then wnd.exists then
+				internal_children.extend (wnd)
+			end
+		end
+		
+	internal_children: ARRAYED_LIST [WEL_WINDOW]
+			-- Temporary container for `children'. Used in
+
 feature {NONE} -- Externals
 
+	cwel_enum_child_windows_procedure (cur_obj: POINTER; callback: POINTER; hwnd: POINTER) is
+			-- SDK EnumChildWindows
+		external
+			"C | %"wel_enum_child_windows.h%""
+		end
+		
 	cwin_set_menu (hwnd, hmenu: POINTER) is
 			-- SDK SetMenu
 		external

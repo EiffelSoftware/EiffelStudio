@@ -76,7 +76,9 @@ feature
 			generated_file.putstring ("RTMB(");
 			generated_file.putchar('"');
 			generated_file.escape_string (value);
-			generated_file.putchar('"');
+			generated_file.putchar ('"')
+			generated_file.putstring(", ")
+			generated_file.put_integer (value.count)
 			generated_file.putchar(')');
 		end;
 

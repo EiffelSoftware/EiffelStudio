@@ -274,7 +274,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		local
 			cur: CURSOR
-			imp: EV_ANY_IMP
+			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
 			cur := pnd_targets.cursor
@@ -292,9 +292,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					then
 						imp ?= trg.implementation
 						if imp /= Void then
-							C.gtk_widget_set_state
-								(imp.c_object, C.Gtk_state_prelight_enum)
-							C.gtk_widget_draw (imp.c_object, NULL)
+							imp.enable_pnd_prelight_state
 						end
 					end
 					pnd_targets.forth
@@ -308,7 +306,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		local
 			cur: CURSOR
-			imp: EV_ANY_IMP
+			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
 			cur := pnd_targets.cursor
@@ -326,9 +324,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					then
 						imp ?= trg.implementation
 						if imp /= Void then
-							C.gtk_widget_set_state
-								(imp.c_object, C.Gtk_state_normal_enum)
-							C.gtk_widget_draw (imp.c_object, NULL)
+							imp.disable_pnd_prelight_state
 						end
 					end
 					pnd_targets.forth

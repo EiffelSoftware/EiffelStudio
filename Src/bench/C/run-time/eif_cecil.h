@@ -31,7 +31,11 @@ extern "C" {
  * Specific Cecil types.
  */ 
 
-typedef EIF_REFERENCE*	EIF_OBJECT;			/* Eiffel object: safe indirecteion to an Eiffel reference */
+#if defined(ISE_GC) && !defined(EIF_IL_DLL)
+typedef EIF_REFERENCE*	EIF_OBJECT;			/* Eiffel object: safe indirection to an Eiffel reference */
+#else
+typedef EIF_REFERENCE	EIF_OBJECT;			/* Eiffel object: safe indirection to an Eiffel reference */
+#endif
 typedef struct bit *	EIF_BIT;			/* Structure used for bits */
 typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 

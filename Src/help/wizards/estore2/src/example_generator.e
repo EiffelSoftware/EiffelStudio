@@ -12,7 +12,7 @@ creation
  
 feature -- Initialization
 
-	make (li: LINKED_LIST [DB_REPOSITORY]) is
+	make (li: ARRAYED_LIST [DB_REPOSITORY]) is
 		require
 			li_exists: li /= Void
 		local
@@ -118,7 +118,7 @@ feature {ROOT_GENERATOR} -- Access
 
 feature -- Implementation
 
-	repositories: LINKED_LIST [DB_REPOSITORY]
+	repositories: ARRAYED_LIST [DB_REPOSITORY]
 		-- Repositories used for generating valid SQL query.
 
 invariant

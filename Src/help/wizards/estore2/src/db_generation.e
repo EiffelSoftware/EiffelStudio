@@ -66,13 +66,13 @@ feature -- basic Operations
 		do
 			Create cl_name.make
 			if is_oracle then
-				unselected_table_list := db_manager.load_list_from_select ("select TABLE_NAME from USER_TABLES",cl_name)
+				unselected_table_list := db_manager.load_list_with_select ("select TABLE_NAME from USER_TABLES",cl_name)
 			elseif is_odbc then
-				unselected_table_list := db_manager.load_list_from_select ("Sqltables()",cl_name)
+				unselected_table_list := db_manager.load_list_with_select ("Sqltables()",cl_name)
 			else
-				create unselected_table_list.make
+				create unselected_table_list.make (0)
 			end
-			create table_list.make
+			create table_list.make (0)
 			wizard_information.set_generate_all_table (generate_all_tables.is_selected)
 			wizard_information.set_unselected_table_list (unselected_table_list)
 			if generate_all_tables.is_selected then
@@ -98,10 +98,10 @@ feature -- Implementation
 		-- the user to choose which type of generation he	
 		-- wish to do.
 
-	table_list: LINKED_LIST [CLASS_NAME]
+	table_list: ARRAYED_LIST [CLASS_NAME]
 		-- List of all the system tables.
 
-	unselected_table_list: LINKED_LIST [CLASS_NAME]
+	unselected_table_list: ARRAYED_LIST [CLASS_NAME]
 		-- List of unselected tables.
 
 end -- class DB_GENERATION

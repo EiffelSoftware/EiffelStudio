@@ -238,11 +238,11 @@ feature -- basic Operations
 	update_state_information is
 			-- Check user entries
 		local
-			li: LINKED_LIST[CLASS_NAME]
+			li: ARRAYED_LIST [CLASS_NAME]
 			cl_name: CLASS_NAME
 		do
 			from
-				create li.make
+				create li.make (selected_items.count)
 				selected_items.start
 			until
 				selected_items.after
@@ -253,7 +253,7 @@ feature -- basic Operations
 			end
 			wizard_information.set_table_list(li)
 			from
-				create li.make
+				create li.make (unselected_items.count)
 				unselected_items.start
 			until
 				unselected_items.after

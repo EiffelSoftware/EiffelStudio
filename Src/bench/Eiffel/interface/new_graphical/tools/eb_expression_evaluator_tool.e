@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_EXPRESSION_EVALUATOR
+	EB_EXPRESSION_EVALUATOR_TOOL
 
 inherit
 	EB_TOOL
@@ -53,7 +53,9 @@ feature {NONE} -- Initialization
 			create ev_list
 			ev_list.set_column_titles (<<Interface_names.l_Context,
 										Interface_names.l_Expression,
-										Interface_names.l_Value>>)
+										Interface_names.l_Value,
+										"Type"										
+										>>)
 			ev_list.set_column_widths (<<70, 120, 100>>)
 			ev_list.drop_actions.extend (agent on_element_drop)
 			ev_list.key_press_actions.extend (agent key_pressed)
@@ -78,7 +80,7 @@ feature {NONE} -- Initialization
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
 			tb.extend (create_expression_cmd.new_mini_toolbar_item)
-			
+
 				--| Edit command
 			create edit_expression_cmd.make
 			edit_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_edit_expression)
@@ -86,6 +88,14 @@ feature {NONE} -- Initialization
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~edit_dropped)
+			tb.extend (tbb)
+			
+				--| Enable/Disable command
+			create toggle_state_of_expression_cmd.make
+			toggle_state_of_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_toggle_state_very_small)
+			toggle_state_of_expression_cmd.set_tooltip (Interface_names.e_Toggle_state_of_expressions)
+			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
+			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
 			tb.extend (tbb)
 
 				--| Delete command
@@ -95,7 +105,7 @@ feature {NONE} -- Initialization
 			delete_expression_cmd.add_agent (agent remove_selected)
 			tbb := delete_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~delete_dropped)
-			tb.extend (tbb)
+			tb.extend (tbb)		
 			
 			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
 			explorer_bar_item.set_menu_name (menu_name)
@@ -228,6 +238,30 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	toggle_state_of_selected is
+			-- Toggle state of the selected expressions from the list.
+		local
+			sel: LIST [EV_MULTI_COLUMN_LIST_ROW]
+			cv_expr: EB_EXPRESSION
+		do
+			sel := ev_list.selected_items
+			from
+				sel.start
+			until
+				sel.after
+			loop
+				cv_expr ?= sel.item.data
+				if cv_expr.evaluation_disabled then
+					cv_expr.enable_evaluation
+				else
+					cv_expr.disable_evaluation
+				end
+				refresh_expression (cv_expr)
+				sel.forth
+			end
+			on_item_deselected (Void)
+		end
+
 	remove_selected is
 			-- Remove the selected expressions from the list.
 		local
@@ -281,18 +315,17 @@ feature {NONE} -- Event handling
 			l_tree_item: EV_TREE_ITEM
 			l_dv: ABSTRACT_DEBUG_VALUE			
 		do
-			l_tree_item := ost.tree_item
-			if l_tree_item /= Void then
-				l_dv ?= l_tree_item.data
-				if l_dv /= Void then
-					if Application.is_dotnet then
-							--| FIXME: JFIAT : find a nicer way to manage kept objects						
-						Application.imp_dotnet.keep_object (l_dv)
-					end
-				end
-			end
-		end
-		
+--			l_tree_item := ost.tree_item
+--			if l_tree_item /= Void then
+--				l_dv ?= l_tree_item.data
+--				if l_dv /= Void then
+--					if Application.is_dotnet then
+--							--| FIXME: JFIAT : find a nicer way to manage kept objects						
+--						Application.imp_dotnet.keep_object (l_dv)
+--					end
+--				end
+--			end
+		end		
 
 	on_item_selected (unused: EV_MULTI_COLUMN_LIST_ROW) is
 			-- An item in the list of expression was selected.
@@ -300,9 +333,11 @@ feature {NONE} -- Event handling
 			if ev_list.selected_item /= Void then
 				delete_expression_cmd.enable_sensitive
 				edit_expression_cmd.enable_sensitive
+				toggle_state_of_expression_cmd.enable_sensitive
 			else
 				delete_expression_cmd.disable_sensitive
 				edit_expression_cmd.disable_sensitive
+				toggle_state_of_expression_cmd.disable_sensitive				
 			end
 		end
 
@@ -312,9 +347,11 @@ feature {NONE} -- Event handling
 			if ev_list.selected_item /= Void then
 				delete_expression_cmd.enable_sensitive
 				edit_expression_cmd.enable_sensitive
+				toggle_state_of_expression_cmd.enable_sensitive				
 			else
 				delete_expression_cmd.disable_sensitive
 				edit_expression_cmd.disable_sensitive
+				toggle_state_of_expression_cmd.disable_sensitive				
 			end
 		end
 
@@ -335,13 +372,20 @@ feature {NONE} -- Event handling
 
 	add_expression (dlg: EB_EXPRESSION_DEFINITION_DIALOG) is
 			-- Add a new expression defined by `dlg'.
+		local
+			l_expr: EB_EXPRESSION
 		do
-			expressions.extend (dlg.new_expression)
-			if Application.is_running and Application.is_stopped then
-				dlg.new_expression.evaluate
-				ev_list.extend (expression_to_row (dlg.new_expression))
+			l_expr := dlg.new_expression
+			expressions.extend (l_expr)
+			if l_expr.evaluation_disabled then
+				ev_list.extend (disabled_expression_to_row (l_expr))
 			else
-				ev_list.extend (unevaluated_expression_to_row (dlg.new_expression))
+				if Application.is_running and Application.is_stopped then
+					dlg.new_expression.evaluate
+					ev_list.extend (expression_to_row (l_expr))
+				else
+					ev_list.extend (unevaluated_expression_to_row (l_expr))
+				end
 			end
 		end
 
@@ -355,6 +399,9 @@ feature {NONE} -- Implementation: internal data
 
 	edit_expression_cmd: EB_STANDARD_CMD
 			-- Command that creates a new expression.
+			
+	toggle_state_of_expression_cmd: EB_STANDARD_CMD
+			-- Command that enable/disable a new expression
 
 	ev_list: EV_MULTI_COLUMN_LIST
 			-- Graphical representation of the list of expressions to evaluate.
@@ -372,6 +419,7 @@ feature {NONE} -- Implementation
 		local
 			lst: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			eval: BOOLEAN
+			l_expr: EB_EXPRESSION
 		do
 			ev_application.idle_actions.prune_all (update_agent)
 			if Application.is_running and Application.is_stopped then
@@ -384,12 +432,18 @@ feature {NONE} -- Implementation
 			until
 				expressions.after
 			loop
-				if eval then
-					expressions.item.evaluate
-					lst.extend (expression_to_row (expressions.item))
-				else
-					lst.extend (unevaluated_expression_to_row (expressions.item))
+				l_expr := expressions.item
+				if l_expr.evaluation_disabled then
+					lst.extend (disabled_expression_to_row (l_expr))
+				else					
+					if eval then
+						expressions.item.evaluate
+						lst.extend (expression_to_row (l_expr))
+					else
+						lst.extend (unevaluated_expression_to_row (l_expr))
+					end
 				end
+
 				expressions.forth
 			end
 			ev_list.append (lst)
@@ -403,33 +457,48 @@ feature {NONE} -- Implementation
 			dmp: DUMP_VALUE
 			ost: OBJECT_STONE
 			res: STRING
-
-			en_drv: EIFNET_DEBUG_REFERENCE_VALUE
+			typ: STRING
+--			en_drv: EIFNET_DEBUG_REFERENCE_VALUE
+			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			create Result
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			if expr.error_message = Void then
-				dmp := expr.final_result_value
+				evaluator := expr.expression_evaluator
+				dmp := evaluator.final_result_value
 				res := dmp.full_output
 				Result.extend (res)
+				typ := dmp.generating_type_representation
+				Result.extend (typ)
+				
 				if dmp.address /= Void then
 					create ost.make (dmp.address, " ", dmp.dynamic_class)
-					en_drv ?= dmp.eifnet_debug_value
-					if en_drv /= Void then
-						application.imp_dotnet.keep_object (en_drv)
-						
-					end
+--					en_drv ?= dmp.eifnet_debug_value
+--					if en_drv /= Void then
+--						application.imp_dotnet.keep_object (en_drv)
+--					end
 					Result.set_pebble (ost)
 					Result.set_accept_cursor (ost.stone_cursor)
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
 				Result.extend (expr.error_message)
+				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			
 			end
 			Result.set_data (expr)
 		end
-
+		
+	show_text_in_popup (txt: STRING; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			--
+			-- (export status {NONE})
+		local
+			w_dlg: EB_INFORMATION_DIALOG
+		do
+			create w_dlg.make_with_text (txt)
+			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+		end
+		
 	unevaluated_expression_to_row (expr: EB_EXPRESSION): EV_MULTI_COLUMN_LIST_ROW is
 			-- Create a multi-column list row that represents expression `expr'.
 			-- `expr' is assumed not to have been evaluated.
@@ -438,8 +507,24 @@ feature {NONE} -- Implementation
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			Result.extend (Unevaluated)
+			Result.extend (Unevaluated)
 			Result.set_data (expr)
 		end
+		
+	disabled_expression_to_row (expr: EB_EXPRESSION): EV_MULTI_COLUMN_LIST_ROW is
+			-- Create a multi-column list row that represents expression `expr'.
+			-- `expr' is assumed to be disable for evaluation.
+		require
+			expression_evaluation_disabled: expr.evaluation_disabled
+		do
+			create Result
+--			Result.extend (expr.context)
+			Result.extend ("Disabled")
+			Result.extend (expr.expression)
+			Result.extend (Unevaluated)
+			Result.extend (Unevaluated)
+			Result.set_data (expr)
+		end		
 
 	refresh_expression (expr: EB_EXPRESSION) is
 			-- Refresh the display of `expr'.
@@ -459,11 +544,15 @@ feature {NONE} -- Implementation
 				ev_list.forth
 			end
 			ev_list.go_i_th (pos)
-			if Application.is_running and Application.is_stopped then
-				expr.evaluate
-				ev_list.replace (expression_to_row (expr))
-			else
-				ev_list.replace (unevaluated_expression_to_row (expr))
+			if expr.evaluation_disabled then
+				ev_list.replace (disabled_expression_to_row (expr))
+			else				
+				if Application.is_running and Application.is_stopped then
+					expr.evaluate
+					ev_list.replace (expression_to_row (expr))
+				else
+					ev_list.replace (unevaluated_expression_to_row (expr))
+				end
 			end
 		end
 
@@ -484,7 +573,11 @@ feature {NONE} -- Implementation
 				expr ?= row.data
 				if expr.on_context then
 					expr.evaluate
-					ev_list.replace (expression_to_row (expr))
+					if expr.evaluation_disabled then
+						ev_list.replace (disabled_expression_to_row (expr))						
+					else
+						ev_list.replace (expression_to_row (expr))
+					end
 				end
 				ev_list.forth
 			end
@@ -497,4 +590,4 @@ invariant
 	not_void_delete_expression_cmd: delete_expression_cmd /= Void
 	expressions.count = ev_list.count
 
-end -- class EB_EXPRESSION_EVALUATOR
+end

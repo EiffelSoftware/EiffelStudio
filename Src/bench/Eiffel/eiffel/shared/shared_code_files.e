@@ -28,7 +28,7 @@ feature {NONE}
 			-- a `.c' extension.
 		do
 			if final_mode then
-				Result := final_file_name (base_name, Dot_c)
+				Result := final_file_name (base_name, Dot_c, 1)
 			else
 				Result := workbench_file_name (base_name)
 			end;
@@ -39,13 +39,15 @@ feature {NONE}
 			-- a `.x' extension.
 		do
 			if final_mode then
-				Result := final_file_name (base_name, Dot_x)
+				Result := final_file_name (base_name, Dot_x, 1)
 			else
 				Result := workbench_file_name (base_name)
 			end;
 		end
 
-	final_file_name (base_name, extension: STRING): STRING is
+	final_file_name (base_name, extension: STRING; n: INTEGER): STRING is
+			-- Generate a file in final_mode with file `extension'
+			-- in system directory E`n'.
 		local
 			subdir_name: STRING;
 			subdir: DIRECTORY;
@@ -56,7 +58,7 @@ feature {NONE}
 			finished_file_name: FILE_NAME
 		do
 			subdir_name := clone (System_object_prefix);
-			subdir_name.append_integer (1);
+			subdir_name.append_integer (n);
 
 			!!dir_name.make_from_string (Final_generation_path);
 			dir_name.extend (subdir_name);

@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 	clusters_names: SEARCH_TABLE [STRING]
 			-- Memorize all cluster names to make sure it is valid.
 			
-	recursive_traversal (parent_node: EV_TREE_NODE_CONTAINER; tree_item: EV_TREE_ITEM) is
+	recursive_traversal (parent_node: EV_TREE_NODE_LIST; tree_item: EV_TREE_ITEM) is
 		require
 			parent_node_not_void: parent_node /= Void
 			tree_item_not_void: tree_item /= Void

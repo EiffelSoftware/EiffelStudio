@@ -1536,6 +1536,7 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 rt_private char *recursive_mark(char *root)
 
 {
+	EIF_GET_CONTEXT
 	/* Recursively mark all the objects referenced by the root object.
 	 * I carefully avoided declaring things in registers, because as this
 	 * is a recursive routine, the time we would otherwise spend in saving
@@ -3731,6 +3732,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 #ifdef RECURSIVE_MARKING
 rt_private char *generation_mark(char *root)
 {
+	EIF_GET_CONTEXT
 	/* This function is the same as recursive_mark() but slightly different :-).
 	 * Hmm..., I know this is a bad comment and a bad practice, but, for once,
 	 * it has to be done--RAM. In effect, I want to reduce the overhead on the

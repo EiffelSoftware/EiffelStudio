@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			other_imp_not_void: other_imp /= Void
 		local
 			app_imp: EV_APPLICATION_IMP
+			a_menu_bar: EV_MENU_BAR
 		do
 			apply_center_dialog := False
 
@@ -358,6 +359,8 @@ feature {NONE} -- Implementation
 
 	copy_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON) is
 			-- Fill current with `other_imp' content.
+		local
+			other_menu_bar: EV_MENU_BAR
 		do
 			accel_list := other_imp.accel_list
 			accelerators := other_imp.accelerators
@@ -410,6 +413,11 @@ feature {NONE} -- Implementation
 			lower_bar := other_imp.lower_bar
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
+			other_menu_bar := other_imp.menu_bar
+			if other_menu_bar /= Void then
+				other_imp.remove_menu_bar
+				set_menu_bar (other_menu_bar)
+			end
 			move_actions_internal := other_imp.move_actions_internal
 			new_item_actions_internal := other_imp.new_item_actions_internal
 			pebble := other_imp.pebble

@@ -81,6 +81,10 @@ feature
 				-- of the GC
 			context.generate_temporary_ref_variables;
 				-- Dynamic type of Current
+			if context.dftype_current > 1 then
+				buf.putstring ("RTCFDT;");
+				buf.new_line;
+			end;
 			if context.dt_current > 1 then
 				buf.putstring ("RTCDT;");
 				buf.new_line;

@@ -39,7 +39,7 @@ feature
 			require_meta: BOOLEAN
 		do
 			-- We need 'Current'
-			context.mark_current_used
+			context.add_dftype_current
 
 			real_ty ?= context.real_type (type)
 

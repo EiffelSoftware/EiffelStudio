@@ -54,6 +54,7 @@ feature
 				closed_map.analyze
 			end
 			get_register
+			context.add_dftype_current
 		end
 
 	free_register is

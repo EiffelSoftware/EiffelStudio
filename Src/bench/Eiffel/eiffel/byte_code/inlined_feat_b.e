@@ -149,8 +149,10 @@ feature
 				compound.analyze;
 			end;
 			inlined_dt_current := context.inlined_dt_current;
+			inlined_dftype_current := context.inlined_dftype_current;
 
 			context.reset_inlined_dt_current;
+			context.reset_inlined_dftype_current;
 
 				-- Free resources
 			free_inlined_registers (local_regs);
@@ -267,25 +269,40 @@ feature -- Generation
 
 			end;
 
-			if inlined_dt_current > 1 then
-				context.set_inlined_dt_current (inlined_dt_current);
-				buf.putchar ('{');
-				buf.new_line;
-				buf.putstring ("int inlined_dtype = ");
-				buf.putstring (gc_upper_dtype_lparan);
-				current_reg.print_register;
-				buf.putstring (");");
+			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
+				buf.putchar ('{')
+				if inlined_dftype_current > 1 then
+					context.set_inlined_dftype_current (inlined_dftype_current)
+					buf.new_line
+					buf.putstring ("int inlined_dftype = ")
+					buf.putstring (gc_upper_dftype_lparan)
+					current_reg.print_register
+					buf.putstring (");")
+				end
+				if inlined_dt_current > 1 then
+					context.set_inlined_dt_current (inlined_dt_current)
+					buf.new_line
+					buf.putstring ("int inlined_dtype = ")
+					buf.putstring (gc_upper_dtype_lparan)
+					current_reg.print_register
+					buf.putstring (");")
+				end
 				buf.new_line
-			end;
-
+			end
+			
 			if compound /= Void then
 				compound.generate
 			end
 
-			if inlined_dt_current > 1 then
+			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
 				buf.putchar ('}');
 				buf.new_line
-				context.set_inlined_dt_current (0);
+				if inlined_dt_current > 1 then
+					context.set_inlined_dt_current (0);
+				end
+				if inlined_dftype_current > 1 then
+					context.set_inlined_dftype_current (0);
+				end
 			end
 
 			Context.set_inlined_current_register (Void);
@@ -514,7 +531,10 @@ feature {NONE} -- Registers
 		end
 
 	inlined_dt_current: INTEGER;
-		-- Do we optimize the access to the Dynamic type of Current?
+			-- Do we optimize the access to the Dynamic type of Current?
+
+	inlined_dftype_current: INTEGER
+			-- Do we optimize access to full dynamic type of Current?
 
 feature -- Code to inline
 

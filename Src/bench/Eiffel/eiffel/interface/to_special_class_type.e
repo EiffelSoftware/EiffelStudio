@@ -266,7 +266,7 @@ feature -- C Code generation
 						gen_ptype.generate_cid (buffer, final_mode, True)
 					end
 
-					buffer.putstring ("pdtype = RTCID(&typcache, Current,")
+					buffer.putstring ("pdtype = RTCID2(&typcache, Dftype(Current),")
 					buffer.putint (gen_ptype.generated_id (final_mode))
 					buffer.putstring (", typarr);")
 					buffer.new_line

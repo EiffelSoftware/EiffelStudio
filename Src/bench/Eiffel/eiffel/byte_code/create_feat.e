@@ -80,8 +80,8 @@ feature -- C code generation
 			if context.final_mode then
 				entry := Eiffel_table.poly_table (routine_id)
 				if entry /= Void and then (not entry.has_one_type or else is_generic) then
-					context.mark_current_used
-					context.add_dt_current
+						-- We are in polymorphic case
+					context.add_dftype_current
 				end
 			else
 				context.mark_current_used
@@ -125,7 +125,7 @@ feature -- C code generation
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID(")
+						buffer.putstring ("RTFCID2(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putchar (',')
 						buffer.putstring (table_name)
@@ -133,7 +133,7 @@ feature -- C code generation
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
 						buffer.putstring (", ")
-						context.Current_register.print_register
+						context.generate_current_dftype
 						buffer.putstring (", ")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putchar (')')
@@ -284,7 +284,7 @@ feature -- Genericity
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID(")
+						buffer.putstring ("RTFCID2(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putchar (',')
 						buffer.putstring (table_name)
@@ -292,7 +292,7 @@ feature -- Genericity
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
 						buffer.putstring (", ")
-						context.Current_register.print_register
+						context.generate_current_dftype
 						buffer.putstring (", ")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
@@ -429,7 +429,7 @@ feature -- Genericity
 
 						buffer.putstring ("typarr[")
 						buffer.putint (idx_cnt.value)
-						buffer.putstring ("] = RTFCID(")
+						buffer.putstring ("] = RTFCID2(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putchar (',')
 						buffer.putstring (table_name)
@@ -437,7 +437,7 @@ feature -- Genericity
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
 						buffer.putstring (", ")
-						context.Current_register.print_register
+						context.generate_current_dftype
 						buffer.putstring (", ")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring (");")
@@ -536,7 +536,7 @@ feature -- Genericity
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID(")
+						buffer.putstring ("RTFCID2(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putchar (',')
 						buffer.putstring (table_name)
@@ -544,7 +544,7 @@ feature -- Genericity
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
 						buffer.putstring (", ")
-						context.Current_register.print_register
+						context.generate_current_dftype
 						buffer.putstring (", ")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putchar (')')

@@ -167,11 +167,13 @@ feature -- Analyzis
 			end
 			if trace_enabled then
 					-- For RTTR and RTXT
-				context.add_to_dt_current (2)
+				context.add_dt_current
+				context.add_dt_current
 			end
 			if profile_enabled then
 					-- For RTPR and RTXP
-				context.add_to_dt_current (2)
+				context.add_dt_current
+				context.add_dt_current
 			end
 
 		end
@@ -848,8 +850,18 @@ end
 				-- dynamic type of current. To avoid unnecssary computations,
 				-- this is not done in case of a once, before we know we have
 				-- to really enter the body of the routine.
-			if context.dt_current > 1 then
+			if context.dftype_current > 1 then
 					-- There has to be more than one usage of the dynamic type
+					-- of current in order to have this variable generated.
+				if l_is_once then
+					buf.putstring ("RTCFDD;")
+				else
+					buf.putstring ("RTCFDT;")
+				end
+				buf.new_line
+			end
+			if context.dt_current > 1 then
+					-- There has to be more than one usage of the full dynamic type
 					-- of current in order to have this variable generated.
 				if l_is_once then
 					buf.putstring ("RTCDD;")
@@ -994,6 +1006,19 @@ end
 					end
 					buf.new_line
 				end
+			end
+		end
+
+	init_dftype is
+			-- Initializes the value of 'dftype' in once routines. For regular
+			-- ones, the variable is initialized directly in the declaration.
+		local
+			buf: GENERATION_BUFFER
+		do
+			if context.dt_current > 1 then
+				buf := buffer
+				buf.putstring ("dtype = Dftype(Current);")
+				buf.new_line
 			end
 		end
 

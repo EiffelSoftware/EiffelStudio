@@ -64,10 +64,12 @@ feature
 				-- Current needed in the access if target is not predefined
 				-- or if target is generic.
 
-			if (not target.is_predefined and target.c_type.is_pointer)
-						or else (gen_type /= Void) then
+			if (not target.is_predefined and target.c_type.is_pointer) then
 				context.mark_current_used;
 			end;
+			if (gen_type /= Void) then
+				context.add_dftype_current
+			end
 			source.analyze;
 			source.free_register;
 			if register.is_temporary and not register_propagated then

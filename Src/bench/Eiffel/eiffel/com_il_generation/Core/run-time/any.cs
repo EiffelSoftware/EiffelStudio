@@ -97,12 +97,12 @@ feature -- Status report
 						// Parent type represented by the `other' instance
 						// is not generic, therefore `Current' should directly
 						// conform to the parent type.
-					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+					Result = ISE_RUNTIME.interface_type (other_info.GetType()).IsAssignableFrom (Current.GetType ());
 				} else if (l_current_type == null) {
 						// Parent is generic, but not type represented by
 						// `Current', so let's first check if it simply
 						// conforms without looking at the generic parameter.
-					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+					Result = ISE_RUNTIME.interface_type (other_info.GetType()).IsAssignableFrom (Current.GetType ());
 					if (Result) {
 							// It does conform, so now we have to go through
 							// the parents to make sure it has the same generic
@@ -111,7 +111,7 @@ feature -- Status report
 				} else {
 						// Both types are generic. We first check if they
 						// simply conforms.
-					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+					Result = ISE_RUNTIME.interface_type (other_info.GetType()).IsAssignableFrom (Current.GetType ());
 					if (Result) {
 							// It does conform, so now we have to go through
 							// the parents to make sure it has the same generic
@@ -558,18 +558,6 @@ feature {NONE} -- Implementation
 		// when first argument of static routine of ANY is Void.
 	{
 		throw new System.NullReferenceException ();
-	}
-
-	private static System.Type interface_type (EIFFEL_TYPE_INFO obj)
-		// Given an Eiffel object `obj' retrieves its associated interface type.
-		// Used for conformance because the .NET routine `GetType()' will always return
-		// the implementation type and it cannot be used for conformance because two implementation
-		// classes do not conform even if their interfaces do.
-	{
-		INTERFACE_TYPE_ATTRIBUTE type_attr;
-		type_attr = (INTERFACE_TYPE_ATTRIBUTE)
-			obj.GetType().GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
-		return type_attr.class_type;
 	}
 
 /*

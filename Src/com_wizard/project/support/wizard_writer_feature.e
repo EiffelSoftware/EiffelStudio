@@ -80,79 +80,77 @@ feature -- Access
 				if constant then
 					Result.append (Space)
 					Result.append (body)
+				end
+			end
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Double_dash)
+			Result.append (Space)
+			Result.append (comment)
+
+			if not is_attribute and not constant then
+				Result.append (New_line_tab_tab)
+				from
+					preconditions.start
+					if not preconditions.after then
+						Result.append (Require_keyword)
+					end
+				until
+					preconditions.after
+				loop
 					Result.append (New_line_tab_tab_tab)
-					Result.append (Double_dash)
-					Result.append (Space)
-					Result.append (comment)
+					Result.append (preconditions.item.generated_code)
+					preconditions.forth
+				end
+				if not preconditions.empty then
+					Result.append (New_line_tab_tab)
+				end
+				if not is_deferred then
+					from
+						local_variables.start
+						if not local_variables.after then
+							Result.append (Local_keyword)
+						end
+					until
+						local_variables.after
+					loop
+						Result.append (New_line_tab_tab_tab)
+						Result.append (local_variables.item)
+						local_variables.forth
+					end
+					if not local_variables.empty then
+						Result.append (New_line_tab_tab)
+					end
+				end
+				if is_deferred then
+					Result.append (Deferred_keyword)
+				elseif is_once then
+					Result.append (Once_keyword)
+				elseif is_external then
+					Result.append (External_keyword)
 				else
+					Result.append (Do_keyword)
+				end
+				Result.append (New_line)
+				if not is_deferred then
+					Result.append (body)
+				end
+				Result.append (New_line_tab_tab)
+				from
+					postconditions.start
+					if not postconditions.after then
+						Result.append (Ensure_keyword)
+					end
+				until
+					postconditions.after
+				loop
 					Result.append (New_line_tab_tab_tab)
-					Result.append (Double_dash)
-					Result.append (Space)
-					Result.append (comment)
+					Result.append (postconditions.item.generated_code)
+					postconditions.forth
+				end
+				if postconditions /= Void and then not postconditions.empty then
 					Result.append (New_line_tab_tab)
-					from
-						preconditions.start
-						if not preconditions.after then
-							Result.append (Require_keyword)
-						end
-					until
-						preconditions.after
-					loop
-						Result.append (New_line_tab_tab_tab)
-						Result.append (preconditions.item.generated_code)
-						preconditions.forth
-					end
-					if not preconditions.empty then
-						Result.append (New_line_tab_tab)
-		 			end
-					if not is_deferred then
-						from
-							local_variables.start
-							if not local_variables.after then
-								Result.append (Local_keyword)
-							end
-						until
-							local_variables.after
-						loop
-							Result.append (New_line_tab_tab_tab)
-							Result.append (local_variables.item)
-							local_variables.forth
-						end
-						if not local_variables.empty then
-							Result.append (New_line_tab_tab)
-	 					end
-					end
-					if is_deferred then
-						Result.append (Deferred_keyword)
-					elseif is_once then
-						Result.append (Once_keyword)
-					elseif is_external then
-						Result.append (External_keyword)
-					else
-						Result.append (Do_keyword)
-					end
-					Result.append (New_line)
-					if not is_deferred then
-						Result.append (body)
-					end
-					Result.append (New_line_tab_tab)
-					from
-						postconditions.start
-						if not postconditions.after then
-							Result.append (Ensure_keyword)
-						end
-					until
-						postconditions.after
-					loop
-						Result.append (New_line_tab_tab_tab)
-						Result.append (postconditions.item.generated_code)
-						postconditions.forth
-					end
-					if postconditions /= Void and then not postconditions.empty then
-						Result.append (New_line_tab_tab)
-					end
-					Result.append (End_keyword)
-				end 
+				end
+				Result.append (End_keyword)
 			end
 		end
 

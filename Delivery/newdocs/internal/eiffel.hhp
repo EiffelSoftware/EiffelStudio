@@ -4,7 +4,7 @@ Compatibility=1.1 or later
 Compiled file=eiffel.chm
 Contents file=eiffel.hhc
 Default Window=EDHC
-Default topic=e:\newdocs\root.html
+Default topic=root.html
 Display compile progress=No
 Full text search stop list file=stop_words.stp
 Full-text search=Yes
@@ -12,11 +12,11 @@ Language=0x409 English (United States)
 Title=Eiffel Developer Help Center
 
 [WINDOWS]
-EDHC="Eiffel Developer Help Center 1.0","eiffel.hhc",,"e:\newdocs\root.html","e:\newdocs\root.html",,,,,0x63520,,0x304e,,0x30000,,,,,,0
+EDHC="Eiffel Developer Help Center 1.0","eiffel.hhc",,"root.html",root.html",,,,,0x63520,,0x304e,,0x30000,,,,,,0
 
 
 [FILES]
-e:\newdocs\root.html
+root.html
 
 [INFOTYPES]
 

@@ -107,12 +107,6 @@ feature -- Element change
 			icon_name_assigned: icon_name.is_equal (an_icon_name)
 		end
 
-	remove_icon_name is
-			-- make `icon_name' `void'
-		do
-			set_icon_name ("")
-		end
-
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
 		require

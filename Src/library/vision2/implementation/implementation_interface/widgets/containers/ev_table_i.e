@@ -62,7 +62,7 @@ feature -- Access
 			-- use this if you relied on the inheritence of ARRAY, and
 			-- is only temporary to ease this change.
 		do
-			Result := clone (internal_array)
+			Result := internal_array.twin
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation
 	rebuild_internal_item_list is
 			-- Rebuild `internal_item_list'.
 		do
-			internal_item_list := clone (item_list)
+			internal_item_list := item_list.twin
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -694,6 +694,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	internal_item_list_not_void: internal_item_list /= Void
 	internal_item_list_matches_count: internal_item_list.count = count
+	internal_array_not_void: internal_array /= Void
 
 end -- class EV_TABLE_I
 

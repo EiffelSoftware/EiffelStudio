@@ -26,7 +26,7 @@ inherit
 feature -- Access
 
 	delete_files is
-			--
+			-- Delete files associated with `orignal_id', and store contents.
 		local
 			full_file_name, file_location: FILE_NAME
 			window_object: GB_TITLED_WINDOW_OBJECT
@@ -59,9 +59,8 @@ feature -- Access
 		end
 	
 	restore_files is
-			--
+			-- Restore files deleted by last call to `delete_files'.
 		local
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name: FILE_NAME
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do
@@ -129,8 +128,5 @@ feature {NONE} -- Implementation
 		
 	last_stored_string: STRING
 		-- Last string stored as  result of a call to `store_file_contents'.
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class GB_FILE_REMOVE_RESTORE

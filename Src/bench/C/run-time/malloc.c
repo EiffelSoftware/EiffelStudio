@@ -692,10 +692,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
 	 */
 
-	if (zone->ov_size & B_FWD)				/* Does zone need to be updated? */
-			zone = HEADER (zone->ov_fwd);	/* `ptr' has moved, update zone. */
-
-	if (object != ptr && zone->ov_flags & EO_REM)
+	if ((object != ptr) && (HEADER (ptr)->ov_flags & EO_REM))
 	{
 #ifdef EIF_REM_SET_OPTIMIZATION 
 		if (zone->ov_flags & EO_REF)

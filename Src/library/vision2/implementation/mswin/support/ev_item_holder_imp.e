@@ -24,7 +24,6 @@ inherit
 	EV_DYNAMIC_LIST_IMP [G, EV_ITEM_IMP]
 		redefine
 			interface,
-			item,
 			insert_i_th,
 			remove_i_th
 		end

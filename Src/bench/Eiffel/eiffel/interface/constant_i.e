@@ -141,47 +141,33 @@ feature -- C code generation
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body
-				file.indent;
 					-- If constant is a string, it is the semantic of a once
 				if is_once then
-					file.putstring ("static int done = 0;%N");
-					file.putstring ("static char *Result;");
-					file.new_line;
-					file.putstring ("if (done)");
-					file.indent;
-					file.putstring ("return Result;");
-					file.exdent;
-					file.new_line;
-					file.putstring ("done = 1;");
-					file.new_line;
-					file.putstring ("Result = ");
--- FIXME double /real
+					file.putstring ("%TEIF_ONCE_TYPE *key = EIF_once_keys + EIF_oidx_off + ");
+					file.putint (byte_context.once_index);
+					file.putstring (";%N%
+						%%TEIF_REFERENCE Result;%N%
+						%%TEIF_REFERENCE *PResult;%N%
+						%%Tif (MTOG(*key,PResult)) return *PResult;%N%
+						%%TResult = ");
 					value.generate (file);
-					file.putchar (';');
-					file.new_line;
-					file.putstring ("RTOC;");
-					file.new_line;
+					file.putstring (";%N%
+						%%TPResult = (EIF_REFERENCE *) RTOC((char **)0);%N%
+						%%T*PResult = Result;%N%
+						%%TMTOS(*key,PResult);%N");
 					if byte_context.workbench_mode then
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
-						file.putstring ("RTWO(");
+						file.putstring ("%TRTWO(");
 						file.putstring (real_body_id.generated_id);
-						file.putstring (");");
-						file.new_line
+						file.putstring (");%N");
 					end;
-					file.putstring ("return Result;");
+					file.putstring ("%Treturn Result");
 				else
 					file.putstring ("return ");
--- FIXME double /real
 					value.generate (file);
-					file.putchar (';');
 				end;
-				file.new_line;
-				file.putstring ("EDCX%N"); -- ss MT
-				file.exdent;
-				file.putchar ('}');
-				file.new_line;
-				file.new_line;
+				file.putstring (";%N%TEDCX%N}%N%N");
 			elseif  not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end;
@@ -227,18 +213,15 @@ feature -- Byte code generation
 			ba.append_integer (result_type.sk_value);
 				-- Argument count
 			ba.append_short_integer (0);
-				-- Once mark
+
 			if is_once then
-				ba.append ('%/001/');
-					-- Once not done
-				ba.append ('%U');
-					-- Real body id to be stored in the id list of 
-					-- already called once routines.
+					-- Real body id to be stored in the id list of already 
+					-- called once routines to prevent supermelting them
+					-- (losing in that case their memory (already called and
+					-- result)) and to allow result inspection.
 				ba.append_integer (real_body_id.id - 1);
-				ba.allocate_space (Reference_c_type);
-			else
-				ba.append ('%U');
 			end;
+
 				-- Local count
 			ba.append_short_integer (0);
 				-- No argument clone

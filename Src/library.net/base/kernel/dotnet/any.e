@@ -173,7 +173,6 @@ feature -- Duplication
 		 	-- to change copying/cloning semantics, redefine `copy'.
 		local
 			temp: BOOLEAN
-			c: CONSTRUCTOR_INFO
 		do
 			if other /= Void then
 				temp := feature {ISE_RUNTIME}.check_assert (False)
@@ -189,8 +188,6 @@ feature -- Duplication
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
 			-- Always uses default copying semantics.
-		local
-			temp: BOOLEAN
 		do
 			if other /= Void then
 					-- No need for removing assertions checking

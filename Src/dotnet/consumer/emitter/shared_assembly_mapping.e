@@ -29,14 +29,13 @@ feature -- Access
 				am := assembly_mapping
 				am.search (t.assembly.full_name)
 				if am.found then
+					l_name := t.full_name
 					if t.is_array then
-						l_name := t.full_name
 						create {CONSUMED_ARRAY_TYPE} Result.make (
-							t.full_name,
-							am.found_item,
+							l_name, am.found_item,
 							referenced_type_from_type (t.get_element_type))
 					else
-						create Result.make (t.full_name,
+						create Result.make (l_name,
 							am.found_item)
 					end
 				end

@@ -24,7 +24,7 @@ feature -- Access
 			Result := arg_option (i)
 		end
 
-	argument_array: ARRAY [STRING] is
+	Argument_array: ARRAY [STRING] is
 			-- Array containing command name (position 0) and arguments
 		local
 			i: INTEGER
@@ -39,13 +39,14 @@ feature -- Access
 			end
 		end
 
-	command_line: STRING is
+	Command_line: STRING is
 			-- Total command line
 		local
 			i: INTEGER
 		once
-			create Result.make (command_name.count)
+			Result := Command_name
 			from
+				i := 1
 			until
 				i > argument_count
 			loop
@@ -57,7 +58,7 @@ feature -- Access
 			Result.count >= command_name.count
 		end
 
-	command_name: STRING is
+	Command_name: STRING is
 			-- Name of command that started system execution
 		once
 			Result := arg_option (0)

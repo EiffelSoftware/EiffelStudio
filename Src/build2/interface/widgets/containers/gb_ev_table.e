@@ -96,7 +96,7 @@ feature -- Access
 			column_spacing_entry.set_text (first.column_spacing.out)
 			row_spacing_entry.set_text (first.row_spacing.out)
 
-				-- We cannot check whether layout_wnidow.is_shoq_requested,
+				-- We cannot check whether layout_window.is_show_requested,
 				-- which is what we really should be checking for, as
 				-- checking this re-creates the window which is not good.
 				-- If world /= Void, then the layout window has been shown 

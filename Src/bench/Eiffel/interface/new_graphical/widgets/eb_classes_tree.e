@@ -254,7 +254,7 @@ feature -- Observer pattern
 	on_class_removed (a_class: CLASS_I) is
 			-- Refresh the tree not to display the old class.
 		do
-			on_class_moved (a_class, a_class.cluster)
+			--on_class_moved (a_class, a_class.cluster)
 			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
 		end
 
@@ -291,14 +291,13 @@ feature -- Observer pattern
 			conv_clu: EB_SORTED_CLUSTER
 		do
 			if a_folder /= Void then
-					-- If `a_folder' is Void, it probably means that the cluster is not loaded: we do not have to erase it.
 				from
 					a_folder.start
 				until
 					found or a_folder.after
 				loop
 					conv_clu ?= a_folder.item.data
-					if conv_clu.actual_cluster = a_cluster then
+					if conv_clu /= Void and then conv_clu.actual_cluster = a_cluster then
 						a_folder.remove
 						found := True
 					else
@@ -308,6 +307,21 @@ feature -- Observer pattern
 				if not a_folder.is_expanded then
 						-- We may have removed the only loaded cluster of the cluster.
 					a_folder.fake_load
+				end
+			else
+					-- We have to remove a top-cluster, or a cluster whose parent is not displayed (nothing to do).
+				from
+					start
+				until
+					found or after
+				loop
+					conv_clu ?= item.data
+					if conv_clu.actual_cluster = a_cluster then
+						remove
+						found := True
+					else
+						forth
+					end
 				end
 			end
 		end
@@ -409,28 +423,14 @@ feature -- Observer pattern
 	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER) is
 			-- Refresh the tree not to display the old cluster.
 		local
-			clist: EV_TREE_NODE_LIST
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			found: BOOLEAN
+			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			clist ?= folder_from_cluster (a_cluster.actual_cluster).parent 
-			if clist = Void then
-				clist := Current
+			if a_cluster.parent = Void then
+				folder := Void
+			else
+				folder := folder_from_cluster (a_cluster.parent.actual_cluster)
 			end
- 
-			from
-				clist.start
-			until
-				clist.after or else found
-			loop
-				conv_folder ?= clist.item
-				if conv_folder /= Void and then conv_folder.data = a_cluster then
-					found := True
-					clist.remove
-				else
-					clist.forth
-				end
-			end
+			remove_cluster_from_folder (a_cluster.actual_cluster, folder)
 		end
 
 	on_project_loaded is

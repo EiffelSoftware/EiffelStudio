@@ -25,7 +25,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]) is
+	make (precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER];
+			check_license: BOOLEAN) is
 			-- Create a new structure containing precompilation info.
 		require
 			precomp_dirs_not_void: precomp_dirs /= Void
@@ -39,6 +40,8 @@ feature {NONE} -- Initialization
 			compiler_version := Version_number;
 			compilation_id := System.compilation_id
 			compilation_size := System.body_index_table.count
+			licensed := check_license
+			name := System.system_name
 		end
 
 feature -- Access
@@ -51,5 +54,11 @@ feature -- Access
 
 	compilation_size: INTEGER
 			-- Approximative size of the compilation unit
+
+	licensed: BOOLEAN
+			-- Is this precompilation protected by a license?
+
+	name: STRING
+			-- Name of the precompiled system
 
 end -- class PRECOMP_INFO

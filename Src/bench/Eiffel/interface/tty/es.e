@@ -15,6 +15,7 @@ inherit
 		redefine
 			add_usage_special_cmds, add_help_special_cmds,
 			loop_cmd, is_precompiled_option,
+			is_precompiled_licensed_option,
 			process_special_options
 		end
 
@@ -33,6 +34,12 @@ feature -- Access
 			-- Is the current option `precompile'?
 		do
 			Result := option.is_equal ("-precompile")
+		end;
+
+	is_precompiled_licensed_option: BOOLEAN is
+			-- Is the current option `precompile_licensed'?
+		do
+			Result := option.is_equal ("-precompile_licensed")
 		end;
 
 feature -- Update

@@ -65,6 +65,18 @@ feature -- Status setting
 			has_precompiled_preobj := b
 		end
 
+	set_licensed (b: BOOLEAN) is
+			-- Set `licensed' to `b'.
+		do
+			licensed := b
+		end
+
+	set_system_name (n: STRING) is
+			-- Set `system_name' to `n'
+		do
+			system_name := n
+		end
+
 feature -- Access
 
 	dollar_name: STRING
@@ -76,7 +88,10 @@ feature -- Access
 			!! Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, Comp>>)
 		end;
-	
+
+	licensed: BOOLEAN
+			-- Is this precompilation protected by a license?
+
 	project_txt_name: FILE_NAME is
 			-- Full name of the project.txt file
 		do
@@ -133,6 +148,9 @@ feature -- Access
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 			Result.set_file_name (Driver)
 		end
+
+	system_name: STRING
+			-- Name of the precompiled library
 
 feature -- Check
 

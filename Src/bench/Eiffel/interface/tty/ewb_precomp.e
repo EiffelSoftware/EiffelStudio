@@ -16,6 +16,17 @@ inherit
 			save_project_again
 		end
 
+creation
+	make
+
+feature -- Initialization
+
+	make (check_license: BOOLEAN) is
+			-- Set `licensed' to `check_license'
+		do
+			licensed := check_license
+		end
+
 feature -- Properties
 
 	name: STRING is
@@ -32,6 +43,9 @@ feature -- Properties
 		do
 			Result := precompile_abb
 		end;
+
+	licensed: BOOLEAN
+			-- Is this precompilation protected by a license?
 
 feature {NONE} -- Execution
 
@@ -54,7 +68,7 @@ feature {NONE} -- Execution
 
 	perform_compilation is
 		do
-			Eiffel_project.precompile
+			Eiffel_project.precompile (licensed)
 		end;
 
 	save_project_again is
@@ -79,7 +93,7 @@ feature {NONE} -- Execution
 					if finished then
 						lic_die (-1)
 					else
-						Eiffel_project.save_precomp
+						Eiffel_project.save_precomp (licensed)
 					end;
 				elseif Eiffel_project.save_error then
 					!! temp.make (0);
@@ -95,7 +109,7 @@ feature {NONE} -- Execution
 					else
 						Eiffel_project.save_project;
 						if not Eiffel_project.save_error then
-							Eiffel_project.save_precomp
+							Eiffel_project.save_precomp (licensed)
 						end
 					end
 				end

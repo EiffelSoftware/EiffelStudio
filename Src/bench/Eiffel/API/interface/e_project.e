@@ -576,7 +576,7 @@ feature -- Update
 			invoke_finish_freezing (path, freeze_command_name)
 		end;
 
-	precompile is
+	precompile (licensed: BOOLEAN) is
 			-- Precompile eiffel project.
 		require
 			able_to_compile: able_to_compile;
@@ -589,7 +589,7 @@ feature -- Update
 				Comp_system.save_precompilation_info;
 				save_project;
 				if not save_error then
-					save_precomp
+					save_precomp (licensed)
 				end
 			end;
 		ensure
@@ -660,7 +660,7 @@ feature -- Output
 			retry
 		end;
 
-	save_precomp is
+	save_precomp (licensed: BOOLEAN) is
 			-- Save precompilation information to disk.
 		require
 			initialized: initialized;
@@ -672,7 +672,7 @@ feature -- Output
 		do
 			if not retried then
 				error_status_mode.put (Ok_status);
-				!! precomp_info.make (Precompilation_directories);
+				!! precomp_info.make (Precompilation_directories, licensed);
 				!! file.make (Precompilation_file_name);
 				file.open_write;
 				precomp_info.independent_store (file);

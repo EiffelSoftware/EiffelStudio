@@ -28,38 +28,38 @@ OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: ebench.exe
+all:: estudio.exe
 
-$microsoft-ebench.exe: $(LIBS) ebench.lmk
-	link $(LDFLAGS) $(LIBS) -OUT:$@ @ebench.lmk
+$microsoft-estudio.exe: $(LIBS) estudio.lmk
+	link $(LDFLAGS) $(LIBS) -OUT:$@ @estudio.lmk
 
-ebench.res: ebench.rc
-	$resource_compiler -r ebench.rc
+estudio.res: estudio.rc
+	$resource_compiler -r estudio.rc
 
-ebench.lmk: $(OBJECTS) ebench.res
-	del ebench.lmk
-	echo $(OBJECTS) > ebench.lmk
-	echo GDI32.LIB ADVAPI32.LIB USER32.LIB ebench.res >> ebench.lmk
+estudio.lmk: $(OBJECTS) estudio.res
+	del estudio.lmk
+	echo $(OBJECTS) > estudio.lmk
+	echo GDI32.LIB ADVAPI32.LIB USER32.LIB estudio.res >> estudio.lmk
 
-$borland-ebench.exe: $(LIBS) ebench.lbk
-	ilink32 @ebench.lbk
+$borland-estudio.exe: $(LIBS) estudio.lbk
+	ilink32 @estudio.lbk
 
-ebench.lbk: $(OBJECTS) ebench.res
-	del ebench.lbk
+estudio.lbk: $(OBJECTS) estudio.res
+	del estudio.lbk
 	echo $compiler_path\lib\c0w32.$obj $(OBJECTS), \
-	ebench.exe,, CW32 IMPORT32 ..\shared\ipc.lib \
-	$(TOP)\idrs\idr.lib,,ebench.res >> ebench.lbk
+	estudio.exe,, CW32 IMPORT32 ..\shared\ipc.lib \
+	$(TOP)\idrs\idr.lib,,estudio.res >> estudio.lbk
 
-$watcom-ebench.exe: $(LIBS) ebench.lwk
-	wlink @ebench.lwk
-	wrc /fe=ebench.exe ebench
+$watcom-estudio.exe: $(LIBS) estudio.lwk
+	wlink @estudio.lwk
+	wrc /fe=estudio.exe estudio
 
-ebench.lwk: $(OBJECTS)
-	echo SYSTEM nt_win > ebench.lwk
-	echo OPTION CASEEXACT >> ebench.lwk
-	echo NAME ebench.exw >> ebench.lwk
-	for %i in ($(OBJECTS)) do echo FILE %i >> ebench.lwk
-	echo LIB ..\shared\ipc.lwb >> ebench.lwk
-	echo LIB $(TOP)\idrs\idr.lwb >> ebench.lwk
+estudio.lwk: $(OBJECTS)
+	echo SYSTEM nt_win > estudio.lwk
+	echo OPTION CASEEXACT >> estudio.lwk
+	echo NAME estudio.exw >> estudio.lwk
+	for %i in ($(OBJECTS)) do echo FILE %i >> estudio.lwk
+	echo LIB ..\shared\ipc.lwb >> estudio.lwk
+	echo LIB $(TOP)\idrs\idr.lwb >> estudio.lwk
 
 listen.$obj: ..\shared\select.h

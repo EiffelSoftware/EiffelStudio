@@ -381,7 +381,7 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (left_alignment_button)
 			end
-			create paragraph
+			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_left_alignment
 			if rich_text.has_selection then
 				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
@@ -402,7 +402,7 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (center_alignment_button)
 			end
-			create paragraph
+			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_center_alignment
 			if rich_text.has_selection then
 				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
@@ -423,7 +423,7 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (right_alignment_button)
 			end
-			create paragraph
+			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_right_alignment
 			if rich_text.has_selection then
 				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
@@ -444,7 +444,7 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (justified_button)
 			end
-			create paragraph
+			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_justification
 			if rich_text.has_selection then
 				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
@@ -598,6 +598,7 @@ feature {NONE} -- Implementation
 			local
 				format: EV_CHARACTER_FORMAT
 				formatting: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+				paragraph_formatting: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 				paragraph: EV_PARAGRAPH_FORMAT
 				current_value: STRING
 			do
@@ -692,9 +693,11 @@ feature {NONE} -- Implementation
 					italic_button.select_actions.resume
 					
 						-- Now handle information regarding paragraphs.
-
 					paragraph := rich_text.selected_paragraph_format
-					if rich_text.paragraph_format_contiguous (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end)) then
+					paragraph_formatting := rich_text.paragraph_format_range_information (rich_text.line_number_from_position (rich_text.selection_start),
+						rich_text.line_number_from_position (rich_text.selection_end))
+
+					if paragraph_formatting.alignment then
 						if paragraph.is_left_aligned then
 							unselect_all_buttons_except (left_alignment_button)
 						elseif paragraph.is_center_aligned then
@@ -705,11 +708,39 @@ feature {NONE} -- Implementation
 							unselect_all_buttons_except (justified_button)
 						else
 							check
-								invalid_alignment: FALSE
+								invalid_alignment: False
 							end
 						end	
 					else
 						unselect_all_buttons (paragraph_toolbar)
+					end
+					if paragraph_formatting.left_margin then
+						left_margin.change_actions.block
+						left_margin.set_text (paragraph.left_margin.out)
+						left_margin.change_actions.resume
+					else
+						left_margin.remove_text
+					end
+					if paragraph_formatting.right_margin then
+						right_margin.change_actions.block
+						right_margin.set_text (paragraph.right_margin.out)
+						right_margin.change_actions.resume
+					else
+						right_margin.remove_text
+					end
+					if paragraph_formatting.top_spacing then
+						top_spacing.change_actions.block
+						top_spacing.set_text (paragraph.top_spacing.out)
+						top_spacing.change_actions.resume
+					else
+						top_spacing.remove_text
+					end
+					if paragraph_formatting.bottom_spacing then
+						bottom_spacing.change_actions.block
+						bottom_spacing.set_text (paragraph.bottom_spacing.out)
+						bottom_spacing.change_actions.resume
+					else
+						bottom_spacing.remove_text
 					end
 				else
 						-- `selection_changed_actions' is fired once when the selection is removed,

@@ -434,8 +434,8 @@ feature -- IL Generation
 					generate_feature_standard_twin (feat)
 				else
 					if feat.is_once then
-						implementation_class_id := feat.origin_class_id
-						implementation_feature_id := feat.origin_feature_id
+						implementation_class_id := feat.access_in
+						implementation_feature_id := system.class_of_id (implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id
 					else
 						implementation_class_id := feat.written_in
 						implementation_feature_id := feat.written_feature_id

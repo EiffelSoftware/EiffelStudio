@@ -9,23 +9,24 @@ inherit
 	BASIC_I
 		undefine
 			is_equal, generate_cid, il_type_name, generate_cid_array,
-			generate_cid_init, creation_instantiation_in, is_explicit,
+			generate_cid_init, is_explicit,
 			has_true_formal, is_identical, generate_gen_type_il,
-			append_signature, has_formal, same_as, make_gen_type_byte_code,
+			has_formal, same_as, make_gen_type_byte_code,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
-			complete_instantiation_in
+			debug_output, complete_instantiation_in, generic_derivation
 		redefine
-			dump, is_feature_pointer,
+			is_feature_pointer, name,
 			description, sk_value, generate_cecil_value,
-			element_type, metamorphose_type
+			element_type, reference_type, tuple_code
 		end
 		
 	GEN_TYPE_I
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, is_valid
 		redefine
-			dump, is_feature_pointer, type_a, description, sk_value,
-			generate_cecil_value, element_type
+			is_feature_pointer, type_a, description, sk_value,
+			generate_cecil_value, element_type, tuple_code,
+			name
 		end
 
 create
@@ -38,7 +39,7 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		do
-			class_id := id
+			make (id)
 			create meta_generic.make (1)
 			create true_generics.make (1, 1)
 			meta_generic.put (a_type.meta_type, 1)
@@ -49,18 +50,24 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	metamorphose_type: POINTER_I is
+	reference_type: CL_TYPE_I is
 			-- Type to which we metamorphose. Because generation of
 			-- metamorphose on generic basic types is not done properly
 			-- we do this as a temporary solution.
 		once
-			Result := Pointer_c_type
+			create Result.make (Pointer_c_type.class_id)
 		end
 
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_ptr
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
 		end
 
 feature
@@ -74,12 +81,14 @@ feature
 	is_feature_pointer: BOOLEAN is True
 			-- Is the type a feature pointer type ?
 
-	dump (buffer: GENERATION_BUFFER) is
+	name: STRING is
 			-- Debug purpose
 		do
-			meta_generic.item (1).dump (buffer)
-			buffer.putchar ('*')
-			buffer.putchar (' ')
+			create Result.make (32)
+			Result.append ("expanded ")
+			Result.append (meta_generic.item (1).name)
+			Result.append_character ('*')
+			Result.append_character (' ')
 		end
 
 	description: POINTER_DESC is
@@ -110,23 +119,8 @@ feature
 			Result.append_character ('*')
 			Result.append_character (' ')
 		end
-
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_pointer_name_id
-		end
 		
 	union_tag: STRING is "parg"
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type. See comments of `metamorphose_type'
-			-- to understand why we say that POINTER_REF is the associated reference type of Current.
-			-- This is a temporary solution as metamorphose of basic types doesn't like
-			-- generic basic types.
-		do
-			Result := system.pointer_ref_class.compiled_class.types.first
-		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.

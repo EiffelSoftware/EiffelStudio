@@ -130,24 +130,24 @@ feature -- Removal
 	 
 feature -- Basic operations
 
-	symdif (other: SUBSET [G]) is
+	symdif (other: TRAVERSABLE_SUBSET [G]) is
 			-- Remove all items also in `other', and add all
 			-- items of `other' not already present.
 		local
 			s: SUBSET_STRATEGY [G]
-			l_other: like Current
 		do
 			if not other.is_empty then
-				l_other ?= other
-				if l_other /= Void then
-					if is_empty then
-						copy (l_other)
-					else
-						s := subset_strategy (l_other)
-						s.symdif (Current, l_other)
+				if is_empty then
+					from
+						other.start
+					until
+						other.after
+					loop
+						extend (other.item)
 					end
 				else
-					Precursor {SUBSET} (other)
+					s := subset_strategy (other)
+					s.symdif (Current, other)
 				end
 			end
 		end

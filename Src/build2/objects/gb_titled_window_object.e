@@ -208,12 +208,10 @@ feature -- Access
 				end
 				add_child (menu_object, 1)
 				display_object_window.set_menu_bar (menu_object.display_object)
-				if not layout_item.has (menu_object.layout_item) then
-					layout_item.start
-					layout_item.put_left (menu_object.layout_item)
-					if layout_item.is_expandable then
-						layout_item.expand	
-					end
+				layout_item.start
+				layout_item.put_left (menu_object.layout_item)
+				if layout_item.is_expandable then
+					layout_item.expand	
 				end
 			else
 				widget ?= an_object.object
@@ -226,9 +224,7 @@ feature -- Access
 					display_object_is_a_widget: widget /= Void
 				end
 				display_object.child.extend (widget)
-				if not layout_item.has (an_object.layout_item) then
-					layout_item.extend (an_object.layout_item)
-				end
+				layout_item.extend (an_object.layout_item)
 				add_child (an_object, children.count + 1)
 			end
 		end

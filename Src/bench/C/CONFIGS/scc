@@ -27,8 +27,8 @@ if [ $MINUS_O = 2 ] ; then
   if [ $MINUS_C = 1 ] ; then
     cp $SRC $dummy_c_file
     cc $args
-    mv `echo $dummy_c_file | sed 's/\.c/\.o/'` $OBJ
-    rm $dummy_c_file
+    mv -f `echo $dummy_c_file | sed 's/\.c/\.o/'` $OBJ
+    rm -f $dummy_c_file
   else
     cc $*
   fi

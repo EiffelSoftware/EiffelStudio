@@ -1,7 +1,7 @@
 CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs
 
-CSFLAGS = -nologo -w:4 -optimize+ -debug
-#CSFLAGS = -nologo -w:4 -debug -d:DEBUG
+#CSFLAGS = -nologo -w:4 -optimize+ -debug
+CSFLAGS = -nologo -w:4 -debug
 GACFLAGS=-nologo
 NMAKEFLAGS=-nologo
 #COM_WIZARD_FLAGS = -output_all

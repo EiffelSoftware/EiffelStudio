@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(75DA17F3-0D39-354C-A339-564A657C805F),
+      uuid(3002B2FE-D778-33A1-A8A6-E874E5D74206),
       version(1.0),
       oleautomation
     ]
@@ -45,7 +45,7 @@ library EiffelCompiler
         HRESULT _stdcall generate_class_type_class_mapping([in] long type_id);
         HRESULT _stdcall generate_generic_type_class_mapping([in] long type_id);
         HRESULT _stdcall generate_formal_type_class_mapping([in] long type_id);
-        HRESULT _stdcall generate_anchored_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_none_type_class_mapping([in] long type_id);
         HRESULT _stdcall generate_basic_type_class_mapping([in] long type_id);
         HRESULT _stdcall GenerateClassHeader(
                         [in] VARIANT_BOOL IsInterface, 
@@ -57,7 +57,7 @@ library EiffelCompiler
         HRESULT _stdcall EndClass();
         HRESULT _stdcall AddToParentsList([in] long TypeID);
         HRESULT _stdcall AddInterface([in] long TypeID);
-        HRESULT _stdcall AddEiffelInterface([in] long TypeID);
+        HRESULT _stdcall set_implementation_class();
         HRESULT _stdcall EndParentsList();
         HRESULT _stdcall StartFeaturesList([in] long TypeID);
         HRESULT _stdcall MarkInvariant([in] long FeatureID);
@@ -118,7 +118,7 @@ library EiffelCompiler
         HRESULT _stdcall AddCAArrayCharacterArg([in] SAFEARRAY(unsigned short) Value);
         HRESULT _stdcall AddCAArrayBooleanArg([in] SAFEARRAY(VARIANT_BOOL) Value);
         HRESULT _stdcall StartIlGeneration([in] long TypeID);
-        HRESULT _stdcall generate_formal_feature([in] long feature_id);
+        HRESULT _stdcall generate_type_feature([in] long feature_id);
         HRESULT _stdcall GenerateFeatureIL(
                         [in] long FeatureID, 
                         [in] long TypeID, 
@@ -279,3 +279,4 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
+

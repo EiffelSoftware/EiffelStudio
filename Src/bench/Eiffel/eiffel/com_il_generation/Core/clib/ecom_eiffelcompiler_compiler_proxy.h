@@ -120,7 +120,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_anchored_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+	void ccom_generate_none_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
 
 
 	/*-----------------------------------------------------------
@@ -156,7 +156,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_eiffel_interface(  /* [in] */ EIF_INTEGER type_id );
+	void ccom_set_implementation_class();
 
 
 	/*-----------------------------------------------------------
@@ -342,7 +342,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_formal_feature(  /* [in] */ EIF_INTEGER feature_id );
+	void ccom_generate_type_feature(  /* [in] */ EIF_INTEGER feature_id );
 
 
 	/*-----------------------------------------------------------

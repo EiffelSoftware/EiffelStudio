@@ -210,10 +210,10 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		internal_generate_type_class_mapping (Ise_formal_type, type_id);
 	}
 
-	public void generate_anchored_type_class_mapping (int type_id)
-		// Generate mapping between `ISE.Runtime.ANCHORED_TYPE and `type_id'.
+	public void generate_none_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.NONE_TYPE and `type_id'.
 	{
-		internal_generate_type_class_mapping (Ise_anchored_type, type_id);
+		internal_generate_type_class_mapping (Ise_none_type, type_id);
 	}
 
 	public void generate_basic_type_class_mapping (int type_id)
@@ -242,6 +242,9 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 					throw (new ApplicationException ("Could not find type " +
 								eiffel_class.name));
 				eiffel_class.SetTypeBuilder (ExternalType);
+				eiffel_class.SetIsInterface (ExternalType.IsInterface);
+				eiffel_class.SetIsDeferred (ExternalType.IsAbstract);
+				eiffel_class.SetIsExpanded (ExternalType.IsValueType);
 			} else {
 				if (nb_classes_generated % nb_classes_per_module == 0) {
 					string module_name = "internal_module_" + (nb_classes_generated / nb_classes_per_module) + ".dll";
@@ -315,9 +318,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		#if DEBUG
 			Log ("AddToParentsList" + " (" + TypeID + ")");
 		#endif
-		if (!Classes [CurrentTypeID].IsInterface || Classes [TypeID].IsInterface) {
-			Classes [CurrentTypeID].AddParent (TypeID);
-		}
+		Classes [CurrentTypeID].AddParent (TypeID);
 	}
 	
 	// Add interface with id `TypeID' into list of parents of current type.
@@ -328,12 +329,10 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		Classes [CurrentTypeID].AddParent (TypeID);
 	}
 
-	// Add interface with id `TypeID' into list of parents of current type.
-	public void AddEiffelInterface (int TypeID) {
-		#if DEBUG
-			Log ("AddEiffelInterface" + " (" + TypeID + ")");
-		#endif
-		Classes [CurrentTypeID].AddEiffelInterface (TypeID);
+	public void set_implementation_class ()
+		// Make class of ID `CurrentTypeID' to be an implementation class.
+	{
+		Classes [CurrentTypeID].set_implementation_class ();
 	}
 
 	// Finish inheritance part description
@@ -831,7 +830,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		}
 	}
 
-	public void generate_formal_feature (int feature_id)
+	public void generate_type_feature (int feature_id)
 		// Prepare for code generation of formal derivation.
 	{
 		CurrentMethod = (FEATURE) Classes [CurrentTypeID].FeatureIDTable [feature_id];
@@ -1898,7 +1897,7 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 		Ise_class_type = ise_runtime_assembly.GetType ("ISE.Runtime.CLASS_TYPE");
 		Ise_generic_type = ise_runtime_assembly.GetType ("ISE.Runtime.GENERIC_TYPE");
 		Ise_formal_type = ise_runtime_assembly.GetType ("ISE.Runtime.FORMAL_TYPE");
-		Ise_anchored_type = ise_runtime_assembly.GetType ("ISE.Runtime.ANCHORED_TYPE");
+		Ise_none_type = ise_runtime_assembly.GetType ("ISE.Runtime.NONE_TYPE");
 		Ise_basic_type = ise_runtime_assembly.GetType ("ISE.Runtime.BASIC_TYPE");
 		Ise_eiffel_derivation_type = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_DERIVATION");
 	}
@@ -2160,7 +2159,7 @@ feature {NONE} -- Implementation
 	public static Type Ise_class_type = null;
 	public static Type Ise_generic_type = null;
 	public static Type Ise_formal_type = null;
-	public static Type Ise_anchored_type = null;
+	public static Type Ise_none_type = null;
 	public static Type Ise_basic_type = null;
 	public static Type Ise_eiffel_derivation_type = null;
 

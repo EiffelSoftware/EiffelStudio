@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_value, actual_value: INTEGER;
+	default_value, actual_value: INTEGER
 			-- Value represented by Current
 
 	value: STRING is
@@ -33,16 +33,16 @@ feature -- Access
 			Result := actual_value.out
 		end
 
-	has_changed: BOOLEAN is
-			-- Has the resource changed from the default value?
-		do
-			Result := default_value /= actual_value
-		end
-
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?
 		do
 			Result := a_value.is_integer
+		end
+
+	has_changed: BOOLEAN is
+			-- Has the resource changed from the default value?
+		do
+			Result := actual_value /= default_value
 		end
 
 feature -- Setting
@@ -79,7 +79,7 @@ feature -- Output
 	registry_name: STRING is
 			-- name of Current in the registry
 		do
-			Result := name
+			Result := "EIFINT_" + name
 		end
 
 

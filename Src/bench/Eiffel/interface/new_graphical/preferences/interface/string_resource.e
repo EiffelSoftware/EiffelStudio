@@ -70,7 +70,7 @@ feature -- Output
 	registry_name: STRING is
 			-- name of Current in the registry
 		do
-			Result := name
+			Result := "EIFSTR_" + name
 		end
 
 end -- class STRING_RESOURCE

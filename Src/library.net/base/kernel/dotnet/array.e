@@ -322,7 +322,7 @@ feature -- Element change
 			until
 				i > end0
 			loop
-				other_area.put (area @ (index0 + i), start0 + i)
+				area.put (other_area.item (i), index0 + i)
 				i := i + 1
 			end
 		ensure

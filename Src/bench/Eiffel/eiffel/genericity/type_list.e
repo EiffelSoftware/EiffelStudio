@@ -1,7 +1,6 @@
 class TYPE_LIST
 
 inherit
-
 	LINKED_LIST [CLASS_TYPE]
 		rename
 			search as linked_list_search,

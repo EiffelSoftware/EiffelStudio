@@ -21,10 +21,10 @@ feature
 	is_feature_pointer: BOOLEAN is True
 			-- Is the type a feature pointer type ?
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			file.putstring ("POINTER")
+			buffer.putstring ("POINTER")
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -39,7 +39,7 @@ feature
 			!!Result
 		end
 
-	generate_cecil_value (f: INDENT_FILE) is
+	generate_cecil_value (f: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
 			f.putstring ("SK_POINTER")
@@ -54,28 +54,28 @@ feature
 	separate_send_macro: STRING is "CURSQRP"
 			-- String generated to return the result of a separate call
 
-	generate (file: INDENT_FILE) is
-			-- Generate C type in file `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate C type in `buffer'.
 		do
-			file.putstring ("EIF_POINTER ")
+			buffer.putstring ("EIF_POINTER ")
 		end
 
-	generate_cast (file: INDENT_FILE) is
-			-- Generate C cast in file `file'.
+	generate_cast (buffer: GENERATION_BUFFER) is
+			-- Generate C cast in `buffer'.
 		do
-			file.putstring ("(EIF_POINTER) ")
+			buffer.putstring ("(EIF_POINTER) ")
 		end
 
-	generate_access_cast (file: INDENT_FILE) is
-			-- Generate access C cast in file `file'.
+	generate_access_cast (buffer: GENERATION_BUFFER) is
+			-- Generate access C cast in `buffer'.
 		do
-			file.putstring ("(EIF_POINTER *) ")
+			buffer.putstring ("(EIF_POINTER *) ")
 		end
 
-	generate_size (file: INDENT_FILE) is
+	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(EIF_POINTER)")
+			buffer.putstring ("sizeof(EIF_POINTER)")
 		end
 
 	hash_code: INTEGER is
@@ -96,17 +96,17 @@ feature
 			Result := Sk_pointer
 		end
 
-	generate_union (file: INDENT_FILE) is
+	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `file'.
+			-- to the current C type in `buffer'.
 		do
-			file.putstring ("it_ptr")
+			buffer.putstring ("it_ptr")
 		end
 
-	generate_sk_value (file: INDENT_FILE) is
-			-- Generate SK value associated to current C type in `file'.
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
 		do
-			file.putstring ("SK_POINTER")
+			buffer.putstring ("SK_POINTER")
 		end
 
 	type_a: POINTER_A is

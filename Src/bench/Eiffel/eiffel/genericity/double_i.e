@@ -40,10 +40,10 @@ feature
 			Result := other.is_double
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			file.putstring ("DOUBLE")
+			buffer.putstring ("DOUBLE")
 		end
 
 	description: DOUBLE_DESC is
@@ -52,10 +52,10 @@ feature
 			!!Result
 		end
 
-	generate_cecil_value (file: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
-			file.putstring ("SK_DOUBLE")
+			buffer.putstring ("SK_DOUBLE")
 		end
 
 	c_string: STRING is "EIF_DOUBLE"
@@ -67,28 +67,28 @@ feature
 	separate_send_macro: STRING is "CURSQRD"
 			-- String generated to return the result of a separate call
 
-	generate (file: INDENT_FILE) is
-			-- Generate C type in file `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate C type in `buffer'.
 		do
-			file.putstring ("EIF_DOUBLE ")
+			buffer.putstring ("EIF_DOUBLE ")
 		end
 
-	generate_cast (file: INDENT_FILE) is
-			-- Generate C cast in file `file'.
+	generate_cast (buffer: GENERATION_BUFFER) is
+			-- Generate C cast in `buffer'.
 		do
-			file.putstring ("(EIF_DOUBLE) ")
+			buffer.putstring ("(EIF_DOUBLE) ")
 		end
 
-	generate_access_cast (file: INDENT_FILE) is
-			-- Generate access C cast in file `file'.
+	generate_access_cast (buffer: GENERATION_BUFFER) is
+			-- Generate access C cast in `buffer'.
 		do
-			file.putstring ("(EIF_DOUBLE *) ")
+			buffer.putstring ("(EIF_DOUBLE *) ")
 		end
 
-	generate_size (file: INDENT_FILE) is
+	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(EIF_DOUBLE)")
+			buffer.putstring ("sizeof(EIF_DOUBLE)")
 		end
 
 	hash_code: INTEGER is
@@ -109,17 +109,17 @@ feature
 			Result := Sk_double
 		end
 
-	generate_union (file: INDENT_FILE) is
+	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `file'.
+			-- to the current C type in `buffer'.
 		do
-			file.putstring ("it_double")
+			buffer.putstring ("it_double")
 		end
 
-	generate_sk_value (file: INDENT_FILE) is
-			-- Generate SK value associated to current C type in `file'.
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
 		do
-			file.putstring ("SK_DOUBLE")
+			buffer.putstring ("SK_DOUBLE")
 		end
 
 	type_a: DOUBLE_A is

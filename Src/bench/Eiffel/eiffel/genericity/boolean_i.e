@@ -33,16 +33,16 @@ feature
 			!! Result
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			file.putstring ("BOOLEAN")
+			buffer.putstring ("BOOLEAN")
 		end
 
-	generate_cecil_value (file: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil type value
 		do
-			file.putstring ("SK_BOOL")
+			buffer.putstring ("SK_BOOL")
 		end
 
 	c_string: STRING is "EIF_BOOLEAN"
@@ -66,10 +66,10 @@ feature
 			Result := Sk_bool
 		end
 
-	generate_sk_value (file: INDENT_FILE) is
-			-- Generate SK value associated to current C type in `file'.
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
 		do
-			file.putstring ("SK_BOOL")
+			buffer.putstring ("SK_BOOL")
 		end
 
 	type_a: BOOLEAN_A is
@@ -83,35 +83,35 @@ feature
 	separate_send_macro: STRING is "CURSQRB"
 			-- String generated to return the result of a separate call
 
-	generate (file: INDENT_FILE) is
-			-- Generate C type in file `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate C type in `buffer'.
 		do
-			file.putstring ("EIF_BOOLEAN ")
+			buffer.putstring ("EIF_BOOLEAN ")
 		end
 
-	generate_cast (file: INDENT_FILE) is
-			-- Generate C type cast in file `file'.
+	generate_cast (buffer: GENERATION_BUFFER) is
+			-- Generate C type cast in `buffer'.
 		do
-			file.putstring ("(EIF_BOOLEAN) ")
+			buffer.putstring ("(EIF_BOOLEAN) ")
 		end
 
-	generate_access_cast (file: INDENT_FILE) is
-			-- Generate access C cast in file `file'.
+	generate_access_cast (buffer: GENERATION_BUFFER) is
+			-- Generate access C cast in `buffer'.
 		do
-			file.putstring ("(EIF_BOOLEAN *) ")
+			buffer.putstring ("(EIF_BOOLEAN *) ")
 		end
 
-	generate_size (file: INDENT_FILE) is
+	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(EIF_BOOLEAN)")
+			buffer.putstring ("sizeof(EIF_BOOLEAN)")
 		end
 
-	generate_union (file: INDENT_FILE) is
+	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `file'.
+			-- to the current C type in `buffer'.
 		do
-			file.putstring ("it_char")
+			buffer.putstring ("it_char")
 		end
 
 feature -- Generic conformance

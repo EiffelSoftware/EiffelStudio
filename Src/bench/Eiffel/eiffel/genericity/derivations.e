@@ -40,7 +40,7 @@ debug
 	io.error.putstring ("Inserting a new derivation ");
 	an_id.trace;
 	io.error.new_line;
-	a_type.dump (io.error);
+	a_type.trace
 	io.error.new_line;
 end;
 			derivations := item (an_id);

@@ -70,6 +70,8 @@ feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Set `text' with `a_text'.
+		require
+			a_text_not_void: a_text /= Void
 		do
 			!! str_text.make (a_text)
 			cwel_tv_item_set_psztext (item, str_text.item)

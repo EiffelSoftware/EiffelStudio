@@ -59,6 +59,16 @@ feature -- Status report
 
 feature -- Status report
 
+	has_error: BOOLEAN is
+			-- Has an error occured during last database operation?
+		do
+			Result := database_manager.has_error or else has_local_error
+		end
+
+	error_message: STRING
+			-- Error message if an error occured during last
+			-- database operation.
+
 	select_query_prepared: BOOLEAN
 			-- Is a select query prepared?
 
@@ -129,7 +139,7 @@ feature -- Access
 --				if code_list /= Void and then code_list.count = 1 then
 --					Result := code_list.first.codestring
 --				else
---					has_error := True
+--					has_local_error := True
 --					error_message := "Error in table CODES: no value for code "
 --							+ codeinteger.out + " located in "
 --							+ codes_description.Table_name + "/"
@@ -284,7 +294,7 @@ feature {NONE} -- Implementation
 
 feature -- Queries
 
-	load_integer_with_select (s: STRING): INTEGER is
+	load_integer_with_select (s: STRING): ANY is
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
@@ -307,61 +317,67 @@ feature -- Queries
 
 feature -- Queries without result to load.
 
-	build_updater is
-			-- Build an updater to execute many update queries
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				session_control.begin
-				create db_change.make
-				updater_build := True
-			else
-				has_error := True
-				error_message := "Failure preparing an update."
-			end
-		rescue
-			rescued := TRUE
-			retry
-		end
+--	build_updater is
+--			-- Build an updater to execute many update queries
+--		local
+--			rescued: BOOLEAN
+--		do
+--			if not rescued then
+--				session_control.begin
+--				create db_change.make
+--				updater_build := True
+--			else
+--				has_local_error := True
+--				error_message := "Failure preparing an update."
+--			end
+--		rescue
+--			rescued := TRUE
+--			retry
+--		end
+--
+--	execute_query_from_updater (a_query: STRING) is
+--		require
+--			not_void: a_query /= Void
+--			updater_build: updater_build
+--		local
+--			s: STRING
+--			rescued: BOOLEAN
+--		do
+--			if not rescued then
+--				has_local_error := False
+--				db_change.set_query (a_query)
+--				db_change.execute_query				
+--			else
+--				has_local_error := True
+--				error_message := "Database query execution failure : " + s
+--			end
+--		rescue
+--			rescued := TRUE
+--			retry
+--		end
+--
+--	commit_query is
+--			-- Commit updates in the database
+--		require
+--			updater_build: updater_build
+--		local
+--			rescued: BOOLEAN
+--		do
+--			if not rescued then
+--				session_control.commit		
+--			else
+--				has_local_error := True
+--				error_message := "Database commit failure."
+--			end
+--		rescue
+--			rescued := TRUE
+--			retry
+--		end
 
-	execute_query_from_updater (a_query: STRING) is
-		require
-			not_void: a_query /= Void
-			updater_build: updater_build
-		local
-			s: STRING
-			rescued: BOOLEAN
+	commit is
+			-- Commit changes in the database.
 		do
-			if not rescued then
-				has_error := False
-				db_change.set_query (a_query)
-				db_change.execute_query				
-			else
-				has_error := True
-				error_message := "Database query execution failure : " + s
-			end
-		rescue
-			rescued := TRUE
-			retry
-		end
-
-	commit_query is
-			-- Commit updates in the database
-		require
-			updater_build: updater_build
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				session_control.commit		
-			else
-				has_error := True
-				error_message := "Database commit failure."
-			end
-		rescue
-			rescued := TRUE
-			retry
+			database_manager.commit
 		end
 
 feature -- Update
@@ -376,7 +392,7 @@ feature -- Update
 			proc_name: STRING
 		do
 			if not rescued then
-				has_error := False
+				has_local_error := False
 				description := tablerow.table_description
 				proc_name := "UPDATE_" + description.Table_name
 				create pr.make (proc_name)
@@ -386,9 +402,12 @@ feature -- Update
 						description.attribute_list)
 				pr.execute (expr)
 				expr.clear_all
-				session_control.commit
+				commit
+				if has_error then
+					error_message := Update_failed + database_manager.error_message
+				end
 			else
-				has_error := True
+				has_local_error := True
 				error_message := "An error occured while executing the following procedure in the database: " + proc_name
 						+ ".%NPlease keep this dialog open and contact your DBA."
 			end
@@ -417,9 +436,12 @@ feature -- Update
 						table_descr.attribute_list)
 				pr.execute (expr)
 				expr.clear_all
-				session_control.commit
+				commit
+				if has_error then
+					error_message := Update_failed + database_manager.error_message
+				end
 			else
-				has_error := True
+				has_local_error := True
 				error_message := "Database procedure execution failure: " + proc_name
 			end
 		rescue
@@ -449,14 +471,27 @@ feature {NONE} -- Update implementation
 
 feature -- Creation
 
-	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): INTEGER is
+	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): NUMERIC is
 			-- Next available ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
-		do		
-			Result := load_integer_with_select (max_id_query (table_descr)) + 1
-		ensure
-			possible: Result > 0
+		local
+			res: ANY
+			double_ref: DOUBLE_REF
+			integer_ref: INTEGER_REF
+		do
+			res := load_integer_with_select (max_id_query (table_descr))
+			double_ref ?= res
+			if res /= Void then
+				Result := double_ref.item + 1
+			else
+				integer_ref ?= res
+				if integer_ref /= Void then
+					Result := integer_ref.item + 1
+				end
+			end
+	--	ensure
+		--	possible: Result > 0
 		end
 
 	set_id_and_create_tablerow, create_item_with_id (an_obj: DB_TABLE) is
@@ -529,6 +564,9 @@ feature {NONE}-- Deletions
 			q := "delete from " + description.Table_name + " where " + description.id_name
 				+ " = " + description.printable_id
 			database_manager.execute_query (q)
+			if has_error then
+				error_message := Deletion_failed + database_manager.error_message
+			end
 		end 
 
 	load_and_delete_tablerows (table_code, fkey_code, fkey_value: INTEGER) is
@@ -581,14 +619,17 @@ feature {NONE} -- Implementation
 			rep: DB_REPOSITORY
 		do
 			if not rescued then
-				has_error := False
+				has_local_error := False
 				create store_objects.make
 				rep := repository_list.i_th (tablecode)
 				store_objects.set_repository (rep)
 				store_objects.put (an_obj)	
-				session_control.commit
+				commit
+				if has_error then
+					error_message := Creation_failed + database_manager.error_message
+				end
 			else
-				has_error := True
+				has_local_error := True
 				error_message := "An error occured while creating a table row in the database.%NTable%
 						% name is " + an_obj.table_description.Table_name + ".%N"
 			end
@@ -631,5 +672,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Status report implementation
+
+	has_local_error: BOOLEAN
+			-- Has an error occured during last database operation
+			-- in this class?
+
+feature {NONE} -- Error messages
+
+	Update_failed: STRING is
+			-- Database update failed.
+		do
+			Result := "Database update failed:%N"
+		end
+
+	Creation_failed: STRING is
+			-- Database creation failed.
+		do
+			Result := "Table row creation failed:%N"
+		end
+
+	Deletion_failed: STRING is
+			-- Database deletion failed.
+		do
+			Result := "Table row deletion failed:%N"
+		end
 
 end -- class DATABASE_MANAGER

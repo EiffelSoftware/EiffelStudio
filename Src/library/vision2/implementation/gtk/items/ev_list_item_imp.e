@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 				-- Padding of 2 pixels used for pixmap
 			C.gtk_box_pack_start (item_box, text_label, True, True, 0)
 
-			C.gtk_widget_hide (pixmap_box)	
+			--C.gtk_widget_hide (pixmap_box)	
 			is_initialized := True
 		end
 

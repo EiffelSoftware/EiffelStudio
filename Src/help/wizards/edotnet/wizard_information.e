@@ -200,7 +200,9 @@ feature -- Access
 			a_dependency: STRING
 			a_key: STRING
 			an_item: STRING
-		do
+			i: INTEGER
+			a_name: STRING
+		once
 			from
 				create Result.make
 				local_assemblies.start
@@ -216,11 +218,16 @@ feature -- Access
 					until
 						an_assembly_dependencies.after
 					loop
-						a_dependency := an_assembly_dependencies.item					
-						if a_dependency.substring_index ("mscorlib", 1) < 1 and not Result.has (a_dependency) then
-							Result.extend (a_dependency)
-						end
+						a_name := an_assembly_dependencies.item
 						an_assembly_dependencies.forth
+						if not an_assembly_dependencies.after then
+							a_dependency := an_assembly_dependencies.item
+							if a_name /= Void and then not a_name.is_empty and a_dependency.substring_index ("mscorlib", 1) < 1 and not Result.has (a_dependency) then
+								Result.extend (a_name)
+								Result.extend (a_dependency)
+							end
+							an_assembly_dependencies.forth
+						end
 					end
 				end
 				local_assemblies.forth
@@ -546,6 +553,7 @@ feature {NONE} -- Implementation
 			locals: ECOM_ARRAY [STRING]
 			i: INTEGER
 			a_location: STRING
+			a_name: STRING
 		do
 			locals := proxy.local_assembly_dependencies (a_filename)
 			check
@@ -557,11 +565,13 @@ feature {NONE} -- Implementation
 			until
 				i = locals.count
 			loop
-				a_location := locals.array_item (i)
-				if (a_location /= Void and then not a_location.is_empty) then 
+				a_name := locals.array_item (i)
+				a_location := locals.array_item (i + 1)
+				if a_name /= Void and then not a_name.is_empty and (a_location /= Void and then not a_location.is_empty) then 
+					Result.extend (a_name)
 					Result.extend (a_location)
 				end
-				i := i + 1
+				i := i + 2
 			end
 		end
 		

@@ -24,8 +24,8 @@ all:: cli_writer cli_debugger
 cli_writer: cli_writer.lib
 cli_debugger: cli_debugger.lib
 
-cli_writer.obj: cli_writer.cpp ise_cache_manager.idl cli_writer.h Makefile
-	midl -notlb -header ise_cache_manager.h -iid ise_cache_manager.c ise_cache_manager.idl
+cli_writer.obj: cli_writer.cpp metadata_consumer.idl cli_writer.h Makefile
+	midl -notlb -header metadata_consumer.h -iid metadata_consumer.c metadata_consumer.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_writer.cpp
 
 cli_debugger.obj: cli_debugger.cpp  cli_debugger.h Makefile
@@ -37,7 +37,7 @@ cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h Ma
 cli_debugger_callback_id.obj:  cli_debugger_callback_id.cpp cli_debugger_callback_id.h Makefile
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback_id.cpp
 
-OBJ_WRITER = cli_writer.obj ise_vs_fusion_support.obj ise_cache_manager.obj
+OBJ_WRITER = cli_writer.obj ise_vs_fusion_support.obj metadata_consumer.obj
 OBJ_DEBUGGER = cli_debugger.obj cli_debugger_callback.obj cli_debugger_callback_id.obj
 
 cli_writer.lib: $(OBJ_WRITER)

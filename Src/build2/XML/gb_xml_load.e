@@ -146,21 +146,20 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		
 	build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST) is
 			-- Build a new window representing `window', represented in
-			-- directory `directory_name'. if `directory_name' is
-			-- empty, the window will be built into the root of the
-			-- window selector.
+			-- directory representation `parent_list'.
 		require
 			window_not_void: window /= Void
---			directory_not_void: directory_name /= Void
+			parent_list_not_void: parent_list /= Void
 		do
 			internal_build_window (window, parent_list, Void)
 		end
 
 	internal_build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST; object: GB_OBJECT) is
 			-- Build a window representing `window', represented in
-			-- directory `directory_name'. if `directory_name' is
-			-- empty, the window will be built into the root of the
-			-- window selector.
+			-- `window' to directory `parent_list'. If `object' is Void we must create it.
+		require
+			window_not_void: window /= Void
+			parent_list_not_void: parent_list /= Void
 		local
 			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
@@ -390,7 +389,10 @@ feature {NONE} -- Implementation
 		end
 		
 	build_window_structure (an_element: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
-			--
+			-- Build window represented by `an_element into `parent_node_list'.
+		require
+			an_element_not_void: an_element /= Void
+			parent_node_list /= Void
 		local
 			current_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING

@@ -85,6 +85,9 @@ feature -- Status report
 	type_parser: BOOLEAN
 			-- Is current Eiffel parser a type parser?
 
+	has_syntax_warning: BOOLEAN
+			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
+
 feature -- Parsing
 
 	parse (a_file: IO_MEDIUM) is
@@ -168,6 +171,14 @@ feature -- Setting
 		do
 			yacc_position := l.start_position
 			yacc_line_number := l.line_number
+		end
+
+	set_has_syntax_warning (b: BOOLEAN) is
+			-- Set `has_syntax_warning' to `b'
+		do
+			has_syntax_warning := b
+		ensure
+			has_syntax_warning_set: has_syntax_warning = b
 		end
 
 feature -- Removal
@@ -385,7 +396,7 @@ feature {NONE} -- Actions
 		do
 			Result := new_precursor_as (n.first, args)
 			n.second.set_node (Result)
-			if old_syntax_location /= Void then
+			if old_syntax_location /= Void and has_syntax_warning then
 				Error_handler.insert_warning (
 					create {SYNTAX_WARNING}.make (old_syntax_location.start_position,
 					old_syntax_location.end_position, filename, 0,

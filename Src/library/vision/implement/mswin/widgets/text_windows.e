@@ -96,18 +96,18 @@ feature -- Initialization
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not realized then
-				if width = 0 then
-					set_width (200)
-				end
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
 				if private_font /= Void then
 					set_font (private_font)
 				end
-				if height = 0 then 
+				if private_attributes.height = 0 then
 					fw ?= font.implementation
 					set_height (fw.string_height (Current, "I") * 7 // 4)
+				end
+				if private_attributes.width = 0 then
+					set_width (200)
 				end
 				set_text (private_text)
 				if maximum_size > 0 then
@@ -846,11 +846,11 @@ feature {NONE} -- Implementation
 				pos := a_text.index_of ('%N', 1)
 				if pos > 1 then
 					if a_text.item (pos-1) /= '%R' then
-						translation_table.put (pos, 1)
+						translation_table.force (pos, 1)
 						i := 2
 					end
 				elseif pos = 1 then
-					translation_table.put (1, 1) 
+					translation_table.force (1, 1) 
 					i := 2
 				end
 			until
@@ -858,10 +858,10 @@ feature {NONE} -- Implementation
 			loop
 				pos := a_text.index_of ('%N', pos+1)
 				if a_text.item (pos -1) /= '%R' then
-					translation_table.put (pos,i) 
+					translation_table.force (pos,i) 
 					i := i + 1
 				end
-			end	
+			end
 		end
 
 	special_translation: BOOLEAN

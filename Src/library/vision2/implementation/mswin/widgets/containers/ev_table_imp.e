@@ -378,8 +378,8 @@ feature {NONE} -- Basic operation
 				tchild.widget.set_move_and_size
 					((cm @ (tchild.left_attachment)).last,
 					 (rw @ (tchild.top_attachment)).last,
-					 (cm @ (tchild.right_attachment)).last - (cm @ (tchild.left_attachment)).last - column_spacing,
-					 (rw @ (tchild.bottom_attachment)).last - (rw @ (tchild.top_attachment)).last - row_spacing)
+					 (cm @ (tchild.right_attachment)).last - (cm @ (tchild.left_attachment)).last - column_spacing - 1,
+					 (rw @ (tchild.bottom_attachment)).last - (rw @ (tchild.top_attachment)).last - row_spacing - 1)
 				list.forth
 			end
 		end
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation to resize the table when it comes from the pare
 				size_loop_body (rows_value, temp_value // rows, temp_value \\ rows)
 			end
 			-- We resize the children
-			resize (columns_value.last.last, rows_value.last.last)
+			resize (columns_value.last.last - column_spacing, rows_value.last.last - row_spacing)
 			adjust_children
 		end
 

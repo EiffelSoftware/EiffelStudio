@@ -93,6 +93,18 @@ feature -- Element Change
 		ensure
 			value_set: value.is_equal (v)
 		end
+		
+	set_dword_value (v: like dword_value) is
+			-- Set `dword_value' with `v'.
+			-- Set `type' with `reg_dword'.
+		do
+			type := reg_dword
+			create internal_value.make_empty (integer_32_bytes)
+			internal_value.item.memory_copy ($v, integer_32_bytes)
+		ensure
+			type_set: type = reg_dword
+			dword_value_set: dword_value = v
+		end
 
 end -- class WEL_REGISTRY_KEY_VALUE
 

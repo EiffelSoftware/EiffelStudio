@@ -1361,6 +1361,13 @@ feature -- Line info
 		do
 		end
 
+	flush_sequence_points (a_class_type: CLASS_TYPE) is
+			-- Flush all sequence points.
+		require
+			a_class_type_not_void: a_class_type /= Void
+		do
+		end
+
 feature -- Compilation error handling
 
 	last_error: STRING

@@ -20,10 +20,10 @@ default
 
 	profile (no)
 
-	debug ("DEBUGGER")
 
 	--trace (yes)
 	--trace ("SERVER");
+	--debug ("DEBUGGER")
 	--debug ("CACHE_SERVER");
 	--debug ("Freeze_set");
 	--debug ("SERVER");

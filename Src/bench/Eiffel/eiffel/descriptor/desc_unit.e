@@ -230,8 +230,7 @@ feature -- Generation
 					buffer.putstring (desc2);
 					buffer.putint (nb);
 					buffer.putstring (gen_type)
-					buffer.putint (0)
-					buffer.new_line
+					buffer.putstring (non_generic);
 				end;
 				i := i + 1
 			end;

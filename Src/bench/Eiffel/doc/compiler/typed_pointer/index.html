@@ -66,6 +66,21 @@ instance to another is only authorized when it points to the inside of an
 object. Otherwise if we were authorizing to keep reference to the stack, the 
 reference could be invalid if reference falls outside the scope of the stack 
 during execution.</p>
+
+<p>However there is one issue with the following pattern &quot;$area + off&quot; which is 
+used for computing the address of the element at offset `off' in `area' a 
+<span class="eclass">SPECIAL</span> [G]. Because $area will now generate the address of the location of area 
+instead of area itself this code does not work anymore. Instead we introduce in 
+<span class="eclass">SPECIAL</span> a new feature called <span class="efeature">element_address</span> whose signature is:</p>
+
+<pre><span class="efeature">element_address</span> (i: <span class="eclass">INTEGER</span>): <span class="eclass">TYPED_POINTER</span> [G] <span class="ekeyword">is</span>
+	<span class="ekeyword">require</span>
+		index_big_enough: i &gt;= 0
+		index_small_enough: i &lt; <span class="efeature">count</span>
+	<span class="ekeyword">ensure</span>
+		not_null: Result /= <span class="efeature">default_pointe</span>r</pre>
+<p>This will enable a migration of unsafe code to completely safe code as <span class="eclass">TYPED_POINTER</span>
+ are GC safe.</p>
 <h2>Implementation</h2>
 <p>On .NET it is a managed pointer of the given type. When passed to a C 
 externals, it is considered as EIF_XX * where XX is one of the Eiffel basic 

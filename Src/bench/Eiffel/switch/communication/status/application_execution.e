@@ -218,6 +218,9 @@ feature -- Element change
 		do
 			if not has_feature (f) then
 				add_feature (f)
+				if not is_breakpoint_set (f, 1) then
+					switch_breakpoint (f, 1)
+				end
 			end
 		end;
 

@@ -287,8 +287,11 @@ feature -- Access
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
+		local
+			l_formatter: BINARY_FORMATTER
 		do
-			Result := c_retrieved (descriptor)
+			create l_formatter.make
+			Result ?= l_formatter.deserialize (internal_stream)
 		end
 
 feature -- Measurement
@@ -1217,10 +1220,11 @@ feature -- Element change
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
+		local
+			l_formatter: BINARY_FORMATTER
 		do
-			check
-				not_supported: False
-			end
+			create l_formatter.make
+			l_formatter.serialize (internal_stream, object)
 		end
  
 	general_store (object: ANY) is
@@ -1232,9 +1236,7 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		do
-			check
-				not_supported: False
-			end
+			basic_store (object)
 		end
 
 	independent_store (object: ANY) is
@@ -1243,9 +1245,7 @@ feature -- Element change
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		do
-			check
-				not_supported: False
-			end
+			basic_store (object)
 		end
 
 feature -- Removal
@@ -1525,42 +1525,6 @@ feature {NONE} -- Implementation
 			file_exists: exists
 		do
 			buffered_file_info.update (name)
-		end
-
-	c_retrieved (file_handle: INTEGER): ANY is
-			-- Object structured retrieved from file of pointer
-			-- `file_ptr'
-		do
-			check
-				not_implemented: False
-			end
-		end
- 
-	c_basic_store (file_handle: INTEGER; object: POINTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		do
-			check
-				not_implemented: False
-			end
-		end
- 
-	c_general_store (file_handle: INTEGER; object: POINTER)is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		do
-			check
-				not_implemented: False
-			end
-		end
- 
-	c_independent_store (file_handle: INTEGER; object: POINTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		do
-			check
-				not_implemented: False
-			end
 		end
 
 feature {NONE} -- Inapplicable

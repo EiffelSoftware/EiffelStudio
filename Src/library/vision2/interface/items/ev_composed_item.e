@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME Needs major revision !!!! - sam
 --| Should it inherit somthing LINEAR ???
 --| What does the class name mean anyway?
@@ -243,6 +244,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/10 19:45:49  brendel
+--| Unreleased.
+--|
 --| Revision 1.14  2000/03/22 23:50:50  oconnor
 --| added comments!!
 --|

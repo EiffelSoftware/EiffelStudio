@@ -47,7 +47,9 @@ cluster
 
 		-- Wizard library
 	all wizard_library:		"$ISE_EIFFEL\library\wizard"
-
+		exclude
+			"unix"
+		end
 
 external
 	include_path:	

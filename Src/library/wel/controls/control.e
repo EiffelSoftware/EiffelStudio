@@ -97,6 +97,16 @@ feature {WEL_DIALOG} -- Status setting
 feature {WEL_COMPOSITE_WINDOW}
 
 	process_notification (notification_code: INTEGER) is
+			-- Process a `notification_code' sent by Windows
+		require
+			exists: exists
+		do
+			default_process_notification (notification_code)
+		end
+
+	default_process_notification (notification_code: INTEGER) is
+			-- Process a `notification_code' which has not been
+			-- processed by `process_notification'.
 		require
 			exists: exists
 		do

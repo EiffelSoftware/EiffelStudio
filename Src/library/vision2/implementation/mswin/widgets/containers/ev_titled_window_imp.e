@@ -162,7 +162,7 @@ feature  -- Access
 	        end
 		end 
 
-	top_level_window_imp: WEL_WINDOW is
+	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		do
 			Result := Current
@@ -642,7 +642,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do

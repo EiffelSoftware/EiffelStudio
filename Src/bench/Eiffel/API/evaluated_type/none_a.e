@@ -85,7 +85,7 @@ feature {COMPILER_EXPORTER}
 		fake_id: CLASS_ID
         do
 		!! fake_id.make (0)
-		!! Result.make ("NONE", fake_id)
+		!! Result.make_for_bench ("NONE", fake_id)
         end
 
 end -- class NONE_A

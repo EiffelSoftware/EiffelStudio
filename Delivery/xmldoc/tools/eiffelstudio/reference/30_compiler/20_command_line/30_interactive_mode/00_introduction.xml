@@ -26,7 +26,7 @@
     (Q) Quit : terminate session.
     (Y) Yank : yank (save) output of last command to a file.
 Command =&amp;gt;</code_block>
-		<line_break/>The revision number in the first line, v5.5.0425  above, may be different in your case to indicate that you have a more recent delivery. In this menu, and in all subsequent ones, the commands appear in two groups.
+		<line_break></line_break>The revision number in the first line may be different in your case to indicate that you have a more recent delivery. In this menu, and in all subsequent ones, the commands appear in two groups.
 		<list ordered="false">
 			<item>commands in the first group are specific to each menu</item>
 			<item>commands in the second group H (Help) to repeat the list of choices, Y (Yank) to save the output of the last command to a file that you will be prompted to name, and Q (Quit) to quit appear in all menus, and will be complemented in the Item Menus below by the M (Main) command which returns to the main menu.</item>

@@ -345,14 +345,17 @@ feature {NONE} -- Type description
 				-- Generate set of types as they are known from Eiffel
 				-- We simply define a basic correspondance between Eiffel
 				-- and IDs used by the IL code generator in a topological
-				-- order.
-			generate_class_mappings (classes)
+				-- order. But we first defines all interfaces and then
+				-- the implementation if any.
+			generate_class_mappings (classes, True)
+			generate_class_mappings (classes, False)
 			generate_class_attributes (classes)
 
 				-- Generate only features description for each Eiffel class type
 				-- with their IL code.
 			generate_features_description (classes)
 			generate_features_implementation (classes)
+			generate_creation_classes (classes)
 		end
 
 	generate_class_interfaces (classes: ARRAY [CLASS_C]) is
@@ -412,7 +415,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_class_mappings (classes: ARRAY [CLASS_C]) is
+	generate_class_mappings (classes: ARRAY [CLASS_C]; for_interface: BOOLEAN) is
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
@@ -446,7 +449,7 @@ feature {NONE} -- Type description
 								-- CIL information.
 							if cl_type.is_generated then
 								Il_generator.set_current_module_with (cl_type)
-								Il_generator.generate_class_mappings (cl_type)
+								Il_generator.generate_class_mappings (cl_type, for_interface)
 							end
 
 							types.forth
@@ -647,6 +650,54 @@ feature {NONE} -- Type description
 
 								-- Generate entity to represent current Eiffel implementation class
 							il_generator.generate_il_implementation (class_c, cl_type)
+						end
+
+						types.forth
+					end
+				end
+				i := i + 1
+			end
+			if is_single_module then
+				degree_output.put_end_degree
+			end
+		end
+
+	generate_creation_classes (classes: ARRAY [CLASS_C]) is
+			-- Generate mapping between Eiffel and IL generator with `classes'
+			-- sorted in the topological order.
+		require
+			classes_not_void: classes /= Void
+		local
+			class_c: CLASS_C
+			i, nb: INTEGER
+			types: TYPE_LIST
+			l_class_processed: BOOLEAN
+			cl_type: CLASS_TYPE
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if is_class_generated (class_c) then
+					System.set_current_class (class_c)
+					from
+						types := class_c.types
+						types.start
+						l_class_processed := False
+					until
+						types.after
+					loop
+						cl_type := types.item
+						if cl_type.is_generated then
+							context.init (cl_type)
+							Il_generator.set_current_module_with (cl_type)
+
+								-- Generate entity to represent current Eiffel implementation class
 							il_generator.generate_creation_procedures (class_c, cl_type)
 						end
 

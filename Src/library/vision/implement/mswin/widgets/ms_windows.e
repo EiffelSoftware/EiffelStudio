@@ -106,6 +106,13 @@ feature
 			!! Result.make (a_pixmap)
 		end;
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_WINDOWS is
+			-- Toolkit implementation of `a_message'
+		do
+			!! Result.make (a_message, managed, oui_parent)
+		end;
+
 	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_WINDOWS is
 			-- Toolkit implementation of `a_pixmap' for `a_screen'
 		do
@@ -140,6 +147,7 @@ feature
                         -- MS-Windows implementation of `a_task'
 		do
 			!! Result.make (a_task, Current)
+			tasks.extend (Result)
 		end;
 
 	timer (a_timer: TIMER): TIMER_WINDOWS is

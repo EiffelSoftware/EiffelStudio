@@ -29,9 +29,6 @@ feature -- basic Operations
 			create h1
 			create handle_b.make_with_text (handle_name)
 			handle_b.select_actions.extend(~set_handle_insensitive(FALSE))
-	--		Create db_name.make("Data Source Name",wizard_information.data_source,10,20,Current, FALSE)
-	--		create username.make("Username",wizard_information.username,10,20,Current, FALSE)
-	--		create password.make("Password",wizard_information.password,10,20,Current, TRUE)
 			create db_name.make (Current)
 			create username.make (Current)
 			create password.make (Current)
@@ -79,7 +76,7 @@ feature -- basic Operations
 			precursor
 			if not b then
 					set_database(database_type)
-				if db_manager.connected then
+				if db_manager.is_connected then
 					db_manager.disconnect
 				end
 				uname := username.text
@@ -94,9 +91,10 @@ feature -- basic Operations
 				if dname = Void then
 					dname := ""
 				end
-				db_manager.log_and_connect (username.text,password.text,db_name.text)
+				db_manager.set_connection_information (uname, pword, dname)
+				db_manager.establish_connection
 			end
-			if not b and then db_manager.connected then
+			if not b and then db_manager.is_connected then
 				proceed_with_new_state(Create {DB_GENERATION}.make(wizard_information))
 			else
 				proceed_with_new_state(Create {WIZARD_NOT_CONNECTED_STATE}.make(wizard_information))

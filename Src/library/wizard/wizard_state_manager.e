@@ -18,7 +18,10 @@ feature {WIZARD_WINDOW} -- Basic Operations
 			possible: history.count > 1 and then not history.isfirst
 		do
 			first_window.lock_update
-
+			
+			if history.item.entries_changed then
+				history.item.update_state_information
+			end
 			history.back
 			history.item.clean_screen
 			history.item.display_pixmap

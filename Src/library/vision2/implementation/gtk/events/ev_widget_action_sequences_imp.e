@@ -21,14 +21,8 @@ feature -- Event handling
 			-- Attach to GTK "motion-notify-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_motion_notify_event, Result, default_translate)
 			connect_signal_to_actions ("motion-notify-event", Result, default_translate)
 		end
-
---	Gtk_signal_motion_notify_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("motion-notify-event")
---		end
 
 	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Create a pointer_button_press action sequence.
@@ -47,42 +41,24 @@ feature -- Event handling
 			-- Attach to GTK "button-release-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_button_release_event, Result, default_translate)
 			connect_signal_to_actions ("button-release-event", Result, default_translate)
 		end
-
---	Gtk_signal_button_release_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("button-release-event")
---		end
 
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.
 			-- Attach to GTK "enter-notify-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_enter_notify_event, Result, default_translate)
 			connect_signal_to_actions ("enter-notify-event", Result, default_translate)
 		end
-
---	Gtk_signal_enter_notify_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("enter-notify-event")
---		end
 
 	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_leave action sequence.
 			-- Attach to GTK "leave-notify-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_leave_notify_event, Result, default_translate)
 			connect_signal_to_actions ("leave-notify-event", Result, default_translate)
 		end
-
---	Gtk_signal_leave_notify_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("leave-notify-event")
---		end
 
 	create_key_press_actions: EV_KEY_ACTION_SEQUENCE is
 			-- Create a key_press action sequence.
@@ -107,28 +83,16 @@ feature -- Event handling
 			-- Attach to GTK "focus-in-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_focus_in_event, Result, default_translate)
-			connect_signal_to_actions ("focus-in-event", Result, default_translate)
+			real_connect_signal_to_actions (visual_widget, "focus-in-event", Result, default_translate)
 		end
-
---	Gtk_signal_focus_in_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("focus-in-event")
---		end
 
 	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_out action sequence.
 			-- Attach to GTK "focus-out-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_focus_out_event, Result, default_translate)
-			connect_signal_to_actions ("focus-out-event", Result, default_translate)
+			real_connect_signal_to_actions (visual_widget, "focus-out-event", Result, default_translate)
 		end
-
---	Gtk_signal_focus_out_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("focus-out-event")
---		end
 
 	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Create a resize action sequence.

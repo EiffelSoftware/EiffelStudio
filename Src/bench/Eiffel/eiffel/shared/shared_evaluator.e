@@ -7,24 +7,24 @@ feature {NONE}
 	Result_evaluator: RESULT_EVALUATOR is
 			-- Evaluator of Result types
 		once
-			!!Result;
+			create Result;
 		end;
 
 	Arg_evaluator: ARG_EVALUATOR is
 			-- Evaluator of argument types
 		once
-			!!Result;
+			create Result;
 		end;
 
 	Local_evaluator: LOCAL_EVALUATOR is
 			-- Evaluator  of argument types
 		once
-			!!Result;
+			create Result;
 		end;
 
 	Creation_evaluator: CREATION_EVALUATOR is
 			-- Evaluator for type creation
 		once
-			!!Result
+			create Result
 		end
 end

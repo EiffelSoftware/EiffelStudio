@@ -18,7 +18,7 @@ inherit
 
 	SK_CONST
 
-creation
+create
 
 	make
 

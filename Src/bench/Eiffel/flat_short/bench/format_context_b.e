@@ -30,7 +30,7 @@ inherit
 	SHARED_FORMAT_INFO;
 	COMPILER_EXPORTER;
 
-creation
+create
 
 	make
 
@@ -63,9 +63,9 @@ feature -- Initialization
 			valid_source_class: source_class /= Void
 			valid_ast: feature_as /= Void
 		do
-			!! global_adapt.make_with_classes (source_class, class_c);
+			create global_adapt.make_with_classes (source_class, class_c);
 			global_adapt.set_locals (feature_as);
-			!! unnested_local_adapt;
+			create unnested_local_adapt;
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt;
 		ensure
@@ -84,9 +84,9 @@ feature -- Initialization
 			valid_ast: feature_as /= Void;
 			valid_target: target /= Void
 		do
-			!! global_adapt.make (source, target, class_c)
+			create global_adapt.make (source, target, class_c)
 			global_adapt.set_locals (feature_as);
-			!! unnested_local_adapt;
+			create unnested_local_adapt;
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt;
 		ensure
@@ -316,8 +316,8 @@ feature -- Setting
 			both_void: source = Void implies target = Void;
 			both_non_void: source /= Void implies target /= Void;
 		do
-			!! global_adapt.make_with_classes (source, target);
-			!! local_adapt;
+			create global_adapt.make_with_classes (source, target);
+			create local_adapt;
 			if source /= Void then
 				local_adapt.update_from_global (global_adapt);
 			end;
@@ -335,7 +335,7 @@ feature -- Setting
 		do
 			global_adapt := clone (global_adapt);
 			global_adapt.update_new_source_in_assertion (source);
-			!! unnested_local_adapt;
+			create unnested_local_adapt;
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt;
 		end;
@@ -411,7 +411,7 @@ feature -- Execution
 					client := system.any_class.compiled_class;
 				end;
 
-				!! format_registration.make (class_c, client);
+				create format_registration.make (class_c, client);
 				if is_flat_short then
 					format_registration.initialize_creators;
 				end;
@@ -431,7 +431,7 @@ feature -- Execution
 					execution_error := true
 				end;
 debug ("FLAT_SHORT")
-	!! simple_ctxt.make (format_registration.target_ast, class_c.file_name)
+	create simple_ctxt.make (format_registration.target_ast, class_c.file_name)
 	format_registration.target_ast.simple_format (simple_ctxt);
 	io.error.putstring (simple_ctxt.text.image)
 end
@@ -455,9 +455,9 @@ feature -- Update
 	initialize is
 			-- Initialize structures for Current.
 		do
-			!! format_stack.make;
-			!! text.make;
-			!! format;
+			create format_stack.make;
+			create text.make;
+			create format;
 			format_stack.extend (format);
 		end;
 
@@ -663,7 +663,7 @@ feature -- Output
 	register_ancestors_invariants is
 			-- Register the invariants for target class.
 		do
-			!! format_registration.make (class_c, client);
+			create format_registration.make (class_c, client);
 			format_registration.register_ancestors_invariants
 		end;
 
@@ -741,9 +741,9 @@ feature {NONE} -- Implementation
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
 					c := adapt.target_class;
-					!FEATURE_TEXT! item.make (feature_i.api_feature (c.id), f_name);
+					create {FEATURE_TEXT} item.make (feature_i.api_feature (c.id), f_name);
 				else			
-					!! item.make (f_name)
+					create item.make (f_name)
 				end;
 				text.add (item);
 				args := arguments;
@@ -795,7 +795,7 @@ feature {NONE} -- Implementation
 			last_was_printed := True;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class;
-				!! ot.make (feature_i.api_feature (c.id), f_name)
+				create ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword
 				end;
@@ -803,9 +803,9 @@ feature {NONE} -- Implementation
 				text.insert_two (format.insertion_point, item, ti_Space)
 			else
 				if is_key then
-					!KEYWORD_TEXT! item.make (f_name)
+					create {KEYWORD_TEXT} item.make (f_name)
 				else
-					!SYMBOL_TEXT! item.make (f_name)
+					create {SYMBOL_TEXT} item.make (f_name)
 				end;
 				text.go_to (format.insertion_point)
 				text.add (item);
@@ -856,15 +856,15 @@ feature {NONE} -- Implementation
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class;
-				!! ot.make (feature_i.api_feature (c.id), f_name)
+				create ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword
 				end;
 				item := ot
 			elseif is_key then
-				!KEYWORD_TEXT! item.make (f_name)
+				create {KEYWORD_TEXT} item.make (f_name)
 			else
-				!SYMBOL_TEXT! item.make (f_name)
+				create {SYMBOL_TEXT} item.make (f_name)
 			end;
 			text.add (item);
 			last_was_printed := true;

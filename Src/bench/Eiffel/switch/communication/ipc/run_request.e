@@ -11,7 +11,7 @@ inherit
 
 	SHARED_STATUS
 
-creation
+create
 
 	make 
 

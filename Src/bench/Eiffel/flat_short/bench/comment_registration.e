@@ -13,7 +13,7 @@ inherit
 	SHARED_TMP_SERVER;
 	COMPILER_EXPORTER
 
-creation
+create
 	
 	make
 
@@ -26,8 +26,8 @@ feature {NONE} -- Initialization
 			valid_class_ast: ast /= Void;
 			valid_class_c: class_c /= Void;
 		do
-			!! eiffel_file.make (class_c.file_name, ast.end_position);
-			!! class_comments.make (class_c.class_id, 20);
+			create eiffel_file.make (class_c.file_name, ast.end_position);
+			create class_comments.make (class_c.class_id, 20);
 			class_ast := ast
 		ensure
 			set: class_ast = ast	

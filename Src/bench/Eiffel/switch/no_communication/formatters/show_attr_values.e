@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -55,7 +55,7 @@ feature {NONE} -- Properties
 
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
 		do
-			!! Result.make;
+			create Result.make;
 		end;
 
 feature {NONE} -- Implementation

@@ -26,7 +26,7 @@ inherit
 		end
 	SHARED_APPLICATION_EXECUTION
 
-creation {RUN_REQUEST}
+create {RUN_REQUEST}
 
 	do_nothing
 
@@ -315,7 +315,7 @@ feature -- Output
 			st.add_string ("Code: ")
 			st.add_int (exception_code)
 			st.add_string (" (")
-			!!e
+			create e
 			m := e.meaning (exception_code)
 			if m = Void then
 				m := "Undefined"

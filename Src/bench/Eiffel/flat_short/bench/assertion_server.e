@@ -10,7 +10,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+create
 	make, 
 	make_for_class_only, 
 	make_for_feature

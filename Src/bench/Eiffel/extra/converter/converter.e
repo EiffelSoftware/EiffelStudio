@@ -7,7 +7,7 @@ indexing
 
 class CONVERTER
 
-creation
+create
 
 	make
 
@@ -26,8 +26,8 @@ feature {NONE} -- Initialization
 				print (" <input file> [<output_file>]");
 				error := True
 			else
-				!! i_file_name.make_from_string (arguments.item (1));
-				!! input_file.make (i_file_name);
+				create i_file_name.make_from_string (arguments.item (1));
+				create input_file.make (i_file_name);
 				if 
 					not configure_file.exists or else
 					not configure_file.is_readable
@@ -66,9 +66,9 @@ feature {NONE} -- Access
 		local	
 			f_name: FILE_NAME
 		once
-			!! f_name.make_from_string ("config");
+			create f_name.make_from_string ("config");
 			f_name.add_extension ("sh");
-			!! Result.make (f_name);
+			create Result.make (f_name);
 		end
 
 	input_file: RAW_FILE
@@ -89,11 +89,11 @@ feature {NONE} -- Access
 			f_name: FILE_NAME
 		once
 			if output_file_name /= Void then
-				!! f_name.make_from_string (output_file_name);
+				create f_name.make_from_string (output_file_name);
 			else
-				!! f_name.make_from_string ("makefile");
+				create f_name.make_from_string ("makefile");
 			end
-			!! Result.make (f_name)
+			create Result.make (f_name)
 		end
 
 feature {NONE} -- Update
@@ -107,7 +107,7 @@ feature {NONE} -- Update
 		local
 			configure_line: STRING
 		do
-			!! configure_list.make;
+			create configure_list.make;
 			if not configure_file.empty then
 				configure_file.open_read;
 				from
@@ -218,7 +218,7 @@ feature {NONE} -- Update
 						msg := "Could not process second quote"
 						error := True
 					else
-						!! name.make (10);
+						create name.make (10);
 						name.extend ('$');
 						name.append (configure_line.substring (1, colon_pos - 1));
 						start_quote_pos := start_quote_pos + 1;
@@ -237,7 +237,7 @@ feature {NONE} -- Update
 				io.new_line;
 				print ("usage: <name>: %"<value>%"");
 			else
-				!! c_value.make (name, value);
+				create c_value.make (name, value);
 				configure_list.extend (c_value)
 			end
 		end

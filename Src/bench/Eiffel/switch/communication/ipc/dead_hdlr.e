@@ -6,7 +6,7 @@ inherit
 	SHARED_DEBUG;
 	OBJECT_ADDR
 
-creation
+create
 
 	make
 

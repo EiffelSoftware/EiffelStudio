@@ -88,7 +88,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -98,7 +98,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -111,7 +111,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -126,7 +126,7 @@ feature -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -139,7 +139,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EMPTY
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -149,7 +149,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

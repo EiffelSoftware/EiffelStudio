@@ -22,7 +22,7 @@ inherit
 			is_equal, copy
 		end
 
-creation {RUN_INFO, APPLICATION_STATUS}
+create {RUN_INFO, APPLICATION_STATUS}
 
 	make, dummy_make
 
@@ -44,7 +44,7 @@ feature -- Output
 			st.add_string ("Call stack:");
 			st.add_new_line;
 			st.add_new_line;
-			!! cs.do_nothing; -- For padding
+			create cs.do_nothing; -- For padding
 			st.add (cs);
 			st.add_string ("Object");
 			st.add_column_number (14);
@@ -52,7 +52,7 @@ feature -- Output
 			st.add_column_number (26);
 			st.add_string ("Routine");
 			st.add_new_line;
-			!! cs.do_nothing; -- For padding
+			create cs.do_nothing; -- For padding
 			st.add (cs);
 			st.add_string ("------");
 			st.add_column_number (14);
@@ -72,9 +72,9 @@ feature -- Output
 				after
 			loop
 				if i = stack_num then
-					!! cs.make_selected (i);
+					create cs.make_selected (i);
 				else
-					!! cs.make (i);
+					create cs.make (i);
 				end;
 				st.add (cs)
 				item.display_feature (st);

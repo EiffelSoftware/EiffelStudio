@@ -7,7 +7,7 @@ indexing
 
 class CALL_STACK_ELEMENT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

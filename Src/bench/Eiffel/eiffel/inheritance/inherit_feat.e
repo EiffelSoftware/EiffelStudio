@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 	
 feature 
@@ -224,7 +224,7 @@ feature
 			loop
 				info := deferred_features.item;
 				if info.parent.is_undefining (feature_name) then
-					!!vdus3;
+					create vdus3;
 					vdus3.set_class (System.current_class);
 					vdus3.set_parent (info.parent.parent);
 					vdus3.set_a_feature (info.a_feature);
@@ -241,7 +241,7 @@ feature
 				if info.parent.is_undefining (feature_name) then
 					a_feature := info.a_feature;
 					if not a_feature.undefinable then
-						!!vdus2;
+						create vdus2;
 						vdus2.set_class (System.current_class);
 						vdus2.set_parent (info.parent.parent);
 						vdus2.set_a_feature (a_feature);
@@ -303,7 +303,7 @@ feature
 				end
 			else
 					-- Name clash
-				!!vmfn2;
+				create vmfn2;
 				vmfn2.set_class (System.current_class);
 				vmfn2.set_features (features);
 				Error_handler.insert_error (vmfn2);
@@ -331,7 +331,7 @@ feature
 
 				if Result and then not inherit_info.a_feature.redefinable then
 						-- Cannot redefine frozen feature, constant or once
-					!!vdrs2;
+					create vdrs2;
 					vdrs2.set_class (System.current_class);
 					vdrs2.set_feature_name (feature_name);
 					vdrs2.set_parent (inherit_info.parent.parent);

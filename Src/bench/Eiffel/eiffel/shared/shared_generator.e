@@ -10,13 +10,13 @@ feature {NONE}
 	Attr_generator: ATTR_GENERATOR is
 			-- Generator of attribute tables
 		once
-			!! Result
+			create Result
 		end;
 
 	Rout_generator: ROUT_GENERATOR is
 			-- Generator of routine tables
 		once
-			!! Result
+			create Result
 		end;
 
 end

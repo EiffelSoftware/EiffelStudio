@@ -7,7 +7,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -1628,7 +1628,7 @@ feature {NONE} -- Implementation
 
 			from
 				wordend := wordstart + 1
-				!!Result.make (10)
+				create Result.make (10)
 			until
 				wordend > line.count 
 				or else line.item (wordend) = ' '

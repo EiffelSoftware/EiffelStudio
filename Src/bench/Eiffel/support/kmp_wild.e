@@ -23,7 +23,7 @@ inherit
 			lengths
 		end
 
-creation
+create
 	make, make_empty
 
 feature {NONE} -- Initialization
@@ -174,9 +174,9 @@ feature -- Search
 				text.to_lower
 			end
 			init_list
-			!! sr.make (1);
+			create sr.make (1);
 			sr.extend (string_representation);
-			!! cr.make (1);
+			create cr.make (1);
 			cr.extend (character_representation);
 			tc := text.count;
 			pc := pattern.count;
@@ -188,7 +188,7 @@ feature -- Search
 				end
 			end;
 
-			!! kmp_matcher.make (pattern, text)
+			create kmp_matcher.make (pattern, text)
 
 			str_without_wild := clone (pattern)
 			str_without_wild.prune_all (string_representation)
@@ -386,11 +386,11 @@ feature {NONE} -- Implementation
 			sr, cr: STRING
 		do
 			from
-				!! string_list.make;
-				!! str.make (0);
-				!! sr.make (1);
+				create string_list.make;
+				create str.make (0);
+				create sr.make (1);
 				sr.extend (string_representation);
-				!! cr.make (1);
+				create cr.make (1);
 				cr.extend (character_representation);
 				pa := pattern.area;
 				pc := pattern.count;
@@ -403,13 +403,13 @@ feature {NONE} -- Implementation
 						string_list.extend (str);
 					end
 					string_list.extend (sr);
-					!! str.make (0);
+					create str.make (0);
 				elseif pa.item (i) = character_representation then
 					if str.count > 0 then
 						string_list.extend (str);
 					end
 					string_list.extend (cr);
-					!! str.make (0);
+					create str.make (0);
 				else
 					str.extend (pa.item (i));
 				end

@@ -10,7 +10,7 @@ class
 inherit
 	FORMAT_CONTEXT
 
-creation
+create
 	make, make_for_case
 
 end -- class CLASS_DEBUG_CONTEXT

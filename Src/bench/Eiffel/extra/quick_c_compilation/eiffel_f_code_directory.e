@@ -15,7 +15,7 @@ inherit
 
 	OPERATING_ENVIRONMENT
 
-creation
+create
 	make
 
 feature

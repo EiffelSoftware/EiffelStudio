@@ -30,7 +30,7 @@ inherit
 
 	EB_ERROR_MANAGER
 
-creation {SHARED_APPLICATION_EXECUTION}
+create {SHARED_APPLICATION_EXECUTION}
 	make
 
 feature {NONE} -- Initialization
@@ -789,17 +789,17 @@ feature {APPLICATION_STATUS}
 
 	quit_request: EWB_REQUEST is
 		once
-			!! Result.make (Rqst_quit)
+			create Result.make (Rqst_quit)
 		end
 
 	run_request: RUN_REQUEST is
 		once
-			!! Result.make (Rqst_application)
+			create Result.make (Rqst_application)
 		end
 
 	cont_request: EWB_REQUEST is
 		once
-			!! Result.make (Rqst_cont)
+			create Result.make (Rqst_cont)
 		end
 
 invariant

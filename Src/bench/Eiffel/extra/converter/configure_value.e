@@ -7,7 +7,7 @@ indexing
 
 class CONFIGURE_VALUE
 
-creation
+create
 
 	make
 

@@ -6,7 +6,7 @@ feature {NONE}
 			-- Context of construction of actual types, instances of
 			-- CL_TYPE_A
 		once
-			!!Result;
+			create Result;
 		end;
 
 end

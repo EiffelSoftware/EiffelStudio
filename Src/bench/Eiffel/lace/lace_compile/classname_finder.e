@@ -11,7 +11,7 @@ inherit
 
 	CLASSNAME_FINDER_SKELETON
 
-creation
+create
 
 	make
 

@@ -8,7 +8,7 @@ feature
 
 	error_window: TERM_WINDOW is
 		once
-			!!Result
+			create Result
 		end
 
 	info_window: TERM_WINDOW is
@@ -23,7 +23,7 @@ feature
 
 	Progress_dialog: DEGREE_OUTPUT is
 		once
-			!! Result
+			create Result
 		end
 
 end

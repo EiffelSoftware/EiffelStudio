@@ -18,7 +18,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -78,13 +78,13 @@ feature {NONE} -- Properties
 			elseif not status.is_stopped then
 				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
-				!! Result.make;
+				create Result.make;
 				dynamic_class := object.dynamic_class;
 				once_func_list := dynamic_class.once_functions;
-				!! once_request.make;
+				create once_request.make;
 				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
-				!! cs.make (dynamic_class);
+				create cs.make (dynamic_class);
 				Result.add_classi (dynamic_class.lace_class, type_name);
 				Result.add_string (" [");
 				Result.add_address (object.object_address, object.name, dynamic_class);

@@ -17,7 +17,7 @@ inherit
 			emit_tabs, execute
 		end
 
-creation
+create
 
 	make
 
@@ -46,7 +46,7 @@ feature {NONE}
 			bp: BREAKPOINT_ITEM
 		do
 			breakpoint_index := breakpoint_index + 1;
-			!! bp.make (e_feature, breakpoint_index);
+			create bp.make (e_feature, breakpoint_index);
 			added_breakpoint := True;
 			text.add (bp)
 		end;

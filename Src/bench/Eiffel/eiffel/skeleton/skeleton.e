@@ -25,7 +25,7 @@ inherit
 			{ANY} context
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

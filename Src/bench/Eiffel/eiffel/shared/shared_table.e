@@ -14,7 +14,7 @@ feature {NONE}
 			-- (instance of ROUT_TABLE) or an attribute offset table (instance
 			-- of ATTR_TABLE)
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 end

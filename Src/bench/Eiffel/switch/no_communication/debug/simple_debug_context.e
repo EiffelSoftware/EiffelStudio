@@ -27,7 +27,7 @@ inherit
 		end;
 	SHARED_WORKBENCH
 
-creation
+create
 
 	make
 
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			e_class := a_feat.associated_class;
 			e_feature := a_feat;	
 			ast := a_feat.ast;	
-			!! eiffel_file.make_with_positions 
+			create eiffel_file.make_with_positions 
 				(a_feat.written_class.file_name, 
 					ast.start_position, ast.end_position);
 			eiffel_file.set_current_feature (ast);
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			bp: BREAKPOINT_ITEM
 		do
 			breakpoint_index := breakpoint_index + 1;
-			!! bp.make (e_feature, breakpoint_index);
+			create bp.make (e_feature, breakpoint_index);
 			added_breakpoint := True;
 			text.add (bp)
 		end;

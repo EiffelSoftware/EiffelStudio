@@ -20,7 +20,7 @@ inherit
 		end;
 	COMPILER_EXPORTER
 
-creation
+create
 
 	make, initialize
 
@@ -49,11 +49,11 @@ feature -- Initialization
 	initialize is
 			-- Initialize Current structures.
 		do
-			!! ancestors.make (5);
-			!! categories.make;
-			!! invariant_server.make;
-			!! current_category.make;
-			!! creation_table.make (2);
+			create ancestors.make (5);
+			create categories.make;
+			create invariant_server.make;
+			create current_category.make;
+			create creation_table.make (2);
 		end;
 
 feature -- Properties
@@ -195,7 +195,7 @@ feature -- Element change
 			elseif Feat_tbl_server.server_has (class_id) then
 				target_feature_table := Feat_tbl_server.server_item (class_id);
 			else
-				!! target_feature_table.make (0);
+				create target_feature_table.make (0);
 				target_feature_table.init_origin_table
 			end;
 
@@ -204,10 +204,10 @@ feature -- Element change
 					target_feature_table.replicated_features;
 			end;
 			if current_class_only then
-				!! assert_server.make_for_class_only
+				create assert_server.make_for_class_only
 			else
-				!! assert_server.make (target_feature_table.count);
-				!! l.make;
+				create assert_server.make (target_feature_table.count);
+				create l.make;
 				l.extend (System.any_class.compiled_class);
 				register_skipped_classes_assertions (l);
 			end;
@@ -287,7 +287,7 @@ end;
 		local
 			feat_adapter: FEATURE_ADAPTER;
 		do
-			!! feat_adapter;
+			create feat_adapter;
 			feat_adapter.register (feature_as, Current);
 		end;
 
@@ -316,7 +316,7 @@ end;
 					end
 				end
 			end;
-			!! current_category.make;
+			create current_category.make;
 		end;
 
 	register_invariant (invariant_part: INVARIANT_AS) is
@@ -324,7 +324,7 @@ end;
 		local
 			inv_adapter: INVARIANT_ADAPTER
 		do
-			!! inv_adapter;
+			create inv_adapter;
 			inv_adapter.register (invariant_part, Current);	
 		end;
 
@@ -441,7 +441,7 @@ end;
 				elseif Feat_tbl_server.server_has (class_id) then
 					current_feature_table := Feat_tbl_server.server_item (class_id)
 				else
-					!! current_feature_table.make (0);
+					create current_feature_table.make (0);
 					current_feature_table.init_origin_table
 				end;
 
@@ -457,9 +457,9 @@ debug ("FLAT_SHORT")
 	io.error.new_line;
 end;
 				class_file_name := current_class.file_name;
-				!! file.make (class_file_name);
+				create file.make (class_file_name);
 				if not (file.exists and then file.is_readable) then
-					!!vd21;
+					create vd21;
 					vd21.set_cluster (current_class.cluster);
 					vd21.set_file_name (current_class.file_name);
 					Error_handler.insert_error (vd21);
@@ -569,7 +569,7 @@ end
 					if id = f.written_in and then 
 						f.has_assertion
 					then	
-						!! f_adapter;
+						create f_adapter;
 						f_adapter.register_for_assertions (f);
 						assert_server.register_adapter (f_adapter);
 					end
@@ -590,7 +590,7 @@ end
 				if Class_comments_server.has (current_class.class_id) then
 					class_comments := Class_comments_server.disk_item (current_class.class_id);
 				else
-					!! class_comments.make (current_class.class_id, 0);
+					create class_comments.make (current_class.class_id, 0);
 				end;
 				debug ("COMMENTS")
 					if class_comments = Void then
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			comment: STRING;
 			eif_comments: EIFFEL_COMMENTS
 		do
-			!! feature_clause_order_table.make (array.count);
+			create feature_clause_order_table.make (array.count);
 			from
 				i := 1;
 				c := array.count

@@ -8,7 +8,7 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 	EB_SHARED_DEBUG_TOOLS
 
-creation
+create
 	
 	make
 
@@ -232,6 +232,6 @@ feature {NONE} -- Implementation
 	cont_request: EWB_REQUEST is
 			-- Request to relaunch the application when needed.
 		once
-			!! Result.make (Rqst_cont)
+			create Result.make (Rqst_cont)
 		end
 end

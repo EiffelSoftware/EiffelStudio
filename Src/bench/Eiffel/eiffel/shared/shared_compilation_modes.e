@@ -11,7 +11,7 @@ feature -- Access
 	compilation_modes: COMPILATION_MODES is
 			-- Status of current compilation
 		once
-			!! Result
+			create Result
 		end
 
 end -- class SHARED_COMPILATION_MODES

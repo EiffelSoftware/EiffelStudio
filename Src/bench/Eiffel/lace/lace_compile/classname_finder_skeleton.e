@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a new classname finder.
 		do
 			make_with_buffer (Empty_buffer)
-			!! verbatim_marker.make (Initial_verbatim_marker_size)
+			create verbatim_marker.make (Initial_verbatim_marker_size)
 		end
 
 feature -- Initialization

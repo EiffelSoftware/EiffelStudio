@@ -12,7 +12,7 @@ inherit
 	WINDOWS
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			classC ?= cl
 			if classC.creators /= Void then
 				list_creators ?= classC.creators.current_keys
-				!! Result.make
+				create Result.make
 				if list_creators /= Void then
 					max:= list_creators.upper
 					from

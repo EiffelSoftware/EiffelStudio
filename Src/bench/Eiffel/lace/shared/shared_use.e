@@ -6,7 +6,7 @@ feature
 			-- Table of use file description for clusters
 			-- [Key is the path of a cluster]
 		once
-			!!Result.make (10);
+			create Result.make (10);
 		end
 
 end

@@ -7,7 +7,7 @@ feature
 	context: LACE_CONTEXT is
 			-- Lace compilation context
 		once
-			!!Result
+			create Result
 		end
 
 end

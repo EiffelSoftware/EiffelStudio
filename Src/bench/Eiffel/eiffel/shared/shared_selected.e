@@ -6,7 +6,7 @@ feature {NONE}
 			-- Feature actually selected by second pass: the goal is to 
 			-- track useless selection
 		once
-			!!Result.make;
+			create Result.make;
 		end;
 
 end

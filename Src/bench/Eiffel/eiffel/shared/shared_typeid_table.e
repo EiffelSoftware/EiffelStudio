@@ -11,7 +11,7 @@ feature {NONE}
 			-- Correpondance of type id: index the old one, output
 			-- the new one.
 		once
-			!!Result.make (1, 1);
+			create Result.make (1, 1);
 		end;
 
 end

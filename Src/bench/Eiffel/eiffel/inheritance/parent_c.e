@@ -166,13 +166,13 @@ feature
 					old_name := local_renaming.key_for_iteration;
 					new_name := local_renaming.item_for_iteration;
 					if old_name.is_equal (new_name) then
-						!!vhrc3;
+						create vhrc3;
 						vhrc3.set_class (System.current_class);
 						vhrc3.set_parent (parent);
 						vhrc3.set_feature_name (old_name);
 						Error_handler.insert_error (vhrc3);
 					elseif not parent_table.has (old_name) then
-						!!vhrc1;
+						create vhrc1;
 						vhrc1.set_class (System.current_class);
 						vhrc1.set_parent (parent);
 						vhrc1.set_feature_name (old_name);
@@ -184,7 +184,7 @@ feature
 						or else
 							(f.type.is_void)
 						then
-							!!vhrc5;
+							create vhrc5;
 							vhrc5.set_class (System.current_class);
 							vhrc5.set_parent (parent);
 							vhrc5.set_feature_name (old_name);
@@ -197,7 +197,7 @@ feature
 						or else
 							(f.type.is_void)
 						then
-							!!vhrc4;
+							create vhrc4;
 							vhrc4.set_class (System.current_class);
 							vhrc4.set_parent (parent);
 							vhrc4.set_feature_name (old_name);
@@ -253,7 +253,7 @@ feature
 					real_name := renaming_of (feature_name);
 					
 					if real_name = Void or else not parent_table.has (real_name) then
-						!!vdrs1;
+						create vdrs1;
 						vdrs1.set_class (System.current_class);
 						vdrs1.set_parent (parent);
 						vdrs1.set_feature_name (feature_name);
@@ -276,7 +276,7 @@ feature
 					real_name := renaming_of (feature_name);
 
 					if real_name = Void or else not parent_table.has (real_name) then
-						!!vmss1;
+						create vmss1;
 						vmss1.set_class (System.current_class);
 						vmss1.set_parent (parent);
 						vmss1.set_feature_name (feature_name);
@@ -299,7 +299,7 @@ feature
 					real_name := renaming_of (feature_name);
 
 					if real_name = Void or else not parent_table.has (real_name) then
-						!!vdus1;
+						create vdus1;
 						vdus1.set_class (System.current_class);
 						vdus1.set_parent (parent);
 						vdus1.set_feature_name (feature_name);
@@ -322,7 +322,7 @@ feature
 					real_name := renaming_of (feature_name);
 	
 					if real_name = Void or else not parent_table.has (real_name) then
-						!!vlel2;
+						create vlel2;
 						vlel2.set_class (System.current_class);
 						vlel2.set_parent (parent);
 						vlel2.set_feature_name (feature_name);
@@ -353,7 +353,7 @@ feature
 				local_selected.compare_objects
 				local_selected.search (local_selecting.item_for_iteration);
 				if local_selected.after then
-					!!vmss2;
+					create vmss2;
 					vmss2.set_class (System.current_class);
 					vmss2.set_parent (parent);
 					vmss2.set_feature_name (selecting.item_for_iteration);

@@ -1,6 +1,6 @@
 class CASE_INTERFACE
 
-creation
+create
 	make
 
 feature
@@ -9,7 +9,7 @@ feature
 		local
 			format: FORMAT_CASE_STORAGE
 		do
-			!! format.make (output_w, rev_w, True)
+			create format.make (output_w, rev_w, True)
 				-- FIXME: manus 11/24/1999
 			format.execute ("")
 		end;

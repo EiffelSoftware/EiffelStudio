@@ -6,7 +6,7 @@ feature {NONE}
 
 	Execution_environment: EXECUTION_ENVIRONMENT is
 		once
-			!!Result;
+			create Result;
 		end;
 
 end

@@ -37,7 +37,7 @@ inherit
 			is_equal
 		end
 
-creation {RECV_VALUE, ATTR_REQUEST}
+create {RECV_VALUE, ATTR_REQUEST}
 
 	make, make_attribute
 

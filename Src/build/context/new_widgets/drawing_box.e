@@ -30,7 +30,8 @@ inherit
 		redefine
 			x, y, set_x_y, hide, show, realize, 
 			set_managed, shown, unrealize, realized,
-			managed, unmanage, manage, background_color, set_cursor
+			managed, unmanage, manage, --background_color, foreground_color,
+			set_cursor
 -- make_unmanaged,
 		end;
 
@@ -43,7 +44,8 @@ inherit
 			set_foreground_color, realize, show, hide, shown, set_size, 
 			set_x_y, height, width, real_y, real_x, y, x, 
 			set_managed, unrealize, realized,
-			managed, unmanage, manage, background_color, set_cursor
+			managed, unmanage, manage, --background_color, foreground_color,
+			set_cursor
 --make_unmanaged, 
 		select
 			set_background_pixmap, set_background_color, 
@@ -124,35 +126,47 @@ feature
 	set_cursor (a_cursor: SCREEN_CURSOR) is
 				-- set `cursor' of current widget to `a_cursor'.
 		do
-			precursor (a_cursor)
+			Precursor (a_cursor)
 			scrolled_window.set_cursor (a_cursor)
 		end
 
 feature -- Color 	
 	-- note: foreground and background colors are those of scrolled_window 
 
-	set_foreground_color (a_color: COLOR) is
-			-- Set foreground color to `a_color'.
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground color to `new_color'.
 		do
-			scrolled_window.set_foreground_color (a_color);
+			drawing_area_set_foreground_color (new_color)
+			drawing_area_set_background_color (background_color)
+--			scrolled_window.set_foreground_color (new_color);
 		end;
 
-	set_background_color (a_color: COLOR) is
-			-- Set background color to `a_color'.
+	set_background_color (new_color: COLOR) is
+			-- Set background color to `new_color'.
 		do
-			scrolled_window.set_background_color (a_color);
+			drawing_area_set_background_color (new_color)
+			drawing_area_set_foreground_color (foreground_color)
+--			scrolled_window.set_background_color (new_color);
 		end;
 
-	background_color: COLOR is
-		-- Background color of scrolled window
-		do
-			Result := scrolled_window.background_color
-		end 
-
+-- 	background_color: COLOR is
+-- 		-- Background color of scrolled window
+-- 		do
+-- 			Result := scrolled_window.background_color
+-- 		end 
+-- 
+-- 	foreground_color: COLOR is
+-- 		-- Foreground color of scrolled window
+-- 		do
+-- 			Result := scrolled_window.foreground_color
+-- 		end
+-- 
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background pixmap to `a_pixmap'.
 		do
-			scrolled_window.set_background_pixmap (a_pixmap);
+			drawing_area_set_background_pixmap (a_pixmap)
+			drawing_area_set_foreground_color (foreground_color)
+--			scrolled_window.set_background_pixmap (a_pixmap);
 		end;
 
 	x: INTEGER is

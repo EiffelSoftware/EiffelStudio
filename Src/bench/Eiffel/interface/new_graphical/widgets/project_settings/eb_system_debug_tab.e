@@ -392,12 +392,12 @@ feature {NONE} -- Graphical initialization
 			-- A note book containing tabs for displaying system arguments
 			-- and system debug options.
 		local
-			l_debug: EV_FRAME
+			l_debug: EV_BOX
 		do
 			create Result.default_create
 				
 				-- Debug clauses
-			l_debug := debug_frame ("Default debug clauses")
+			l_debug := debug_box
 			Result.extend (l_debug)
 			Result.set_item_text (l_debug, "Default debug clauses")
 				
@@ -430,16 +430,11 @@ feature {NONE} -- Graphical initialization
 			Result.extend (hbox)
 		end
 
-	debug_frame (st: STRING): EV_FRAME is
+	debug_box: EV_VERTICAL_BOX is
 			-- Frame containing all debug option
-		require
-			st_not_void: st /= Void
-		local
-			vbox: EV_VERTICAL_BOX
 		do
-			create Result.make_with_text (st)
-			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
+			create Result
+			Result.set_border_width (Layout_constants.Small_border_size)
 
 				-- Create debug list with first element to enable/disable
 				-- all debug clauses.
@@ -450,12 +445,12 @@ feature {NONE} -- Graphical initialization
 			enable_select (debug_check)
 			debug_check.select_actions.extend (agent desactivation_action
 								(debug_check, debug_list))
-			vbox.extend (debug_check)
-			vbox.disable_item_expand (debug_check)
+			Result.extend (debug_check)
+			ResulT.disable_item_expand (debug_check)
 
-			vbox.extend (debug_list)
-
-			Result.extend (vbox)
+			Result.extend (debug_list)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	clean_debug_list is

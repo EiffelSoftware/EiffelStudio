@@ -15,6 +15,14 @@ inherit
 			show_modal_to_window,
 			destroy
 		end
+		
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} All
+		undefine
+			copy,
+			default_create
+		end
 
 	EB_SHARED_MANAGERS
 		export
@@ -366,7 +374,7 @@ feature {NONE} -- Execution
 			end
 			file_dialog.show_modal_to_window (Current)
 
-			success := file_dialog.selected_button.is_equal("OK")
+			success := file_dialog.selected_button.is_equal(ev_open)
 			if success then
 				create create_project_dialog.make_with_ace (Current, file_dialog.file_name, file_dialog.file_path)
 				create_project_dialog.show_modal_to_parent

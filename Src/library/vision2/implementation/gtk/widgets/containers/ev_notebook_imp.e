@@ -24,8 +24,6 @@ inherit
 			on_new_item,
 			replace,
 			initialize,
---			set_foreground_color,
---			set_background_color,
 			remove_i_th
 		end
 	  
@@ -41,6 +39,10 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_notebook_new ())
+			C.gtk_notebook_set_tab_border (c_object, 1)
+			C.gtk_notebook_set_show_border (c_object, False)
+			C.gtk_notebook_set_tab_hborder (c_object, 0)
+			C.gtk_notebook_set_tab_vborder (c_object, 0)
 			real_signal_connect (c_object, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 

@@ -418,10 +418,13 @@ feature -- Element change
 			al ?= s
 			if al /= Void then -- Optimization for arrayed lists
 				c := al.count
-				new_count := count + c
-				conservative_resize (1, new_count)
-				subcopy (al, 1, c, count + 1)
-				set_count (new_count)
+					-- If `s' is empty nothing to be done.
+				if c > 0 then
+					new_count := count + c
+					conservative_resize (1, new_count)
+					subcopy (al, 1, c, count + 1)
+					set_count (new_count)
+				end
 			else
 				Precursor {DYNAMIC_LIST} (s)
 			end

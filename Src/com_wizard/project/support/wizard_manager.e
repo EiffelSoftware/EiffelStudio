@@ -54,7 +54,7 @@ feature -- Basic Operations
 				if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
 					Environment.set_abort (No_ise_eiffel)
 				end
-				if not Environment.abort then
+				if not environment.abort then
 					if use_bcb then
 						l_path := env.get ("PATH")
 						l_path.append (";")
@@ -94,11 +94,15 @@ feature -- Basic Operations
 						if not environment.abort then
 							l_tasks.wipe_out
 							l_tasks.extend (create {WIZARD_CODE_GENERATION_TASK})
-							if environment.compile_c then
-								l_tasks.extend (create {WIZARD_CODE_COMPILATION_TASK})
-							end
 							run_tasks (l_tasks)
 						end	
+					end
+				end
+				if not environment.abort then
+					if environment.compile_c then
+						create l_tasks.make (1)
+						l_tasks.extend (create {WIZARD_CODE_COMPILATION_TASK})
+						run_tasks (l_tasks)
 					end
 					clean_all
 					set_system_descriptor (Void)

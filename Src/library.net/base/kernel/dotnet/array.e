@@ -317,14 +317,38 @@ feature -- Element change
 			start0 := start_pos - other_lower
 			end0 := end_pos - other_lower
 			index0 := index_pos - lower
-			from
-				i := start0
-			until
-				i > end0
-			loop
-				area.put (other_area.item (i), index0 + j)
-				i := i + 1
-				j := j + 1
+				-- Instead of finding out if we are copying overlapping zones,
+				-- we simply find out in which direction we should copy elements
+				-- from one zone to the other to avoid potential problem with
+				-- overlapping zones.
+			if start0 >= index0 then
+					-- Destination position is located before `other' starting position.
+					-- To avoid overlapping issues, we copy from `start0' to `end0' into
+					-- destination.
+				from
+					i := start0
+					j := index0
+				until
+					i > end0
+				loop
+					area.put (other_area.item (i), j)
+					i := i + 1
+					j := j + 1
+				end
+			else
+					-- Destination position is located after `other' starting position.
+					-- To avoid overlapping issues, we copy in reverse order from `end0'
+					-- to `start0' into destination.
+				from
+					i := end0
+					j := index0 + (end0 - start0)
+				until
+					i < start0
+				loop
+					area.put (other_area.item (i), j)
+					i := i - 1
+					j := j - 1
+				end
 			end
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),

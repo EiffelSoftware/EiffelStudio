@@ -166,6 +166,9 @@ feature -- Properties
 	is_finish_freezing_called: BOOLEAN
 			-- Should a freeze or a finalize call `finish_freezing' after generating
 			-- C code
+			
+	is_precompiling: BOOLEAN
+			-- Should compilation actual precompile?
 
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
@@ -327,7 +330,7 @@ feature -- Update
 
 	add_usage_special_cmds is
 		do
-			io.putstring ("-freeze | %N%T-finalize [-keep] | -precompile | -c_compile |%N%T")
+			io.putstring ("-freeze | %N%T-finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 		end
 
 	add_help_special_cmds is
@@ -353,7 +356,11 @@ feature -- Update
 			end
 				-- Default command
 			if (not option_error) and then (command = Void) then
-				create {EWB_COMP} command
+				if is_precompiling then
+					create {EWB_PRECOMP} command.make (False)
+				else
+					create {EWB_COMP} command
+				end
 			end
 		end
 
@@ -792,7 +799,7 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					create {EWB_PRECOMP} command.make (False)
+					is_precompiling := True
 				end
 			elseif is_precompiled_licensed_option then
 				if command /= Void then
@@ -827,7 +834,12 @@ feature -- Update
 							keep := True
 						end
 					end
-					create {EWB_FINALIZE} command.make (keep)
+					if is_precompiling then
+						create {EWB_FINALIZE_PRECOMP} command.make (False, keep)
+					else
+						create {EWB_FINALIZE} command.make (keep)
+					end
+					
 				end
 			else
 				option_error := True

@@ -671,6 +671,18 @@ feature -- Status report
 			Result := (i > 0) and (i <= count);
 		end;
 
+feature -- Pattern matching
+
+	search_character (c: CHARACTER; start: INTEGER): INTEGER is
+		do
+			Result := str_search (area, c, start, count)
+		end;
+
+	search_substring (other: STRING; start: INTEGER): INTEGER is
+		do
+			Result := str_str (area, other.area, count, other.count, start, 0)
+		end;
+
 feature -- Obsolete, Access
 
 	to_external: ANY is obsolete "Use ``to_c''"

@@ -25,8 +25,6 @@ feature -- Access
 
 	item: G is
 			-- Current item
-		require
-			readable: readable
 		deferred
 		end;
 

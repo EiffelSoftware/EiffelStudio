@@ -97,6 +97,8 @@ feature -- Modification & Insertion
 	add_left (v: like item) is
 			-- Put `v' to the left of cursor position.
 			-- Do not move cursor.
+		require else
+			True
 		local
 			p: like first_element;
 		do

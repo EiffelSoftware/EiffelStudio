@@ -21,8 +21,6 @@ feature -- Access
 
 	item: G is
 			-- Current item of `Current'
-		require
-			is_readable: readable	
 		deferred
 		end;
 	

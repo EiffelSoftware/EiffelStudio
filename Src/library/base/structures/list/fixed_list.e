@@ -227,6 +227,8 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
+		require else
+			True
 		local
 			fl_c: FIXED_LIST_CURSOR
 		do

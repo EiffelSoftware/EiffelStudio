@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 		do
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
-				"pressed",
+				"clicked",
 				~on_ok)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
-				"pressed",
+				"clicked",
 				~on_cancel)
 			is_initialized := True
 		end
@@ -133,6 +133,10 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/01 00:02:39  brendel
+--| Changed "pressed" signal to "clicked" which fixed a bug occurring when
+--| a dialog is shown inside the signal of another dialog.
+--|
 --| Revision 1.8  2000/02/26 01:49:39  oconnor
 --| added ref after creation of dialog
 --|

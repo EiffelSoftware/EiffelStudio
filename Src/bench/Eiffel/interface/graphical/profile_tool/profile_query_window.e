@@ -124,6 +124,7 @@ feature -- Status Setting
 			subquery_text.clear
 			text_window.clear_window;
 			text_window.process_text (st);
+			text_window.set_cursor_position (0)
 			text_window.display
 		end
 

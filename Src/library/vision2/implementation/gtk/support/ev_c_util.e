@@ -52,6 +52,16 @@ feature -- Conversion
 			"C | %"ev_c_util.h%""
 		end
 
+	pointer_to_integer (pointer: POINTER): INTEGER is
+			-- int pointer_to_integer (void* pointer) {
+			--     return (int) pointer;
+			-- }
+		external
+			"C [macro <stdio.h>]"
+		alias
+			" "
+		end
+
 	-- FIXME this is a hack and needs to be thought over.
 
   	 eiffel_to_c (o: ANY): POINTER is
@@ -136,6 +146,27 @@ feature {NONE} -- Nasty hack
 				"C [macro <stdio.h>]"
 			alias
 				"NULL"
+			end
+
+		sizeof_pointer: INTEGER is
+			external
+				"C [macro <stdio.h>]"
+			alias
+				"sizeof(void*)"
+			end
+
+		calloc (nmemb, size: INTEGER): POINTER is
+				-- void *calloc(size_t nmemb, size_t size);
+			external
+				"C (size_t, size_t): void* | <stdlib.h>"
+			end
+
+		c_free (ptr: POINTER) is
+				-- free (void* ptr);
+			external
+				"C (void*) | <stdlib.h>"
+			alias
+				"free"
 			end
 		
 end

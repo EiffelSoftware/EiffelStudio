@@ -32,6 +32,35 @@ feature {NONE} -- Initialization
 			set_title ("Open")
 		end
 
+	multiple_selection_enabled: BOOLEAN
+		-- Is dialog enabled to select multiple files.
+
+	file_names: ARRAYED_LIST [STRING] is
+			-- List of filenames selected by user
+
+		do
+			create Result
+			Result.extend (filename)
+		end
+
+	enable_multiple_selection is
+			-- Enable multiple file selection
+		do
+			check
+				do_not_call: False
+			end
+			multiple_selection_enabled := True 
+		end
+
+	disable_multiple_selection is
+			-- Disable multiple file selection
+		do
+			check
+				do_not_call: False
+			end
+			multiple_selection_enabled := False
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_FILE_OPEN_DIALOG

@@ -130,8 +130,8 @@ feature {NONE} -- Implementation
 			if window /= Void then
 				-- Message are "authorized" if they are for the blocking window (and one
 				-- of its control, or if they are listed in the list of authorized messages.
-				if (blocking_dispatcher_window = Void) or else 
-				   (not unauthorized_messages.has(msg) and not special_messages.has(msg)) or else
+				if (blocking_dispatcher_window = Void)  or else 
+				   (msg /= 0 and then not unauthorized_messages.has(msg) and not special_messages.has(msg)) or else
 				   (window.is_located_inside (blocking_dispatcher_window))
 				then
 					Result := process_received_message (window, hwnd, msg, wparam, lparam)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 				-- For "activate" message, we activate the window that asks the activation but
 				-- then we activate the blocking window, so that the blocking window stays on
 				-- top of the window.
-				elseif (blocking_dispatcher_window /= Void) and then special_messages.has(msg) then
+				elseif (blocking_dispatcher_window /= Void) and then (msg /= 0 and then special_messages.has(msg)) then
 					Result := process_special_message (window, hwnd, msg, wparam, lparam)
 				end
 			else

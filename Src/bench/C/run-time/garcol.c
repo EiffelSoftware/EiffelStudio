@@ -87,8 +87,8 @@ extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE);
 doc:	<attribute name="g_data" return_type="struct gcinfo" export="shared">
 doc:		<summary>Internal data structure used to monitor the activity of the garbage collection process and help the auto-adaptative algorithm in its decisions (heuristics).</summary>
 doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Mostly through `eif_gc_mutex'</synchronization>
-doc:		<fixme>Some access to `g_data' are not protected.</fixme>
+doc:		<synchronization>Safe if caller holds either `eif_gc_mutex' or `eif_g_data_mutex'.</synchronization>
+doc:		<fixme>Because it is very easy to turn the GC on or off, if more than one threads plays with it we are stuck a most likely the GC will be off. We need to have a better synchronization thanwhat we have at the moment, so that we only let one thread turn the GC off, no one else but this threads can turn it back on.</fixme>
 doc:	</attribute>
 */
 rt_shared struct gacinfo g_data = {			/* Global status */
@@ -420,6 +420,16 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;
+
+#ifdef ISE_GC
+/*
+doc:	<attribute name="eif_g_data_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to access `g_data' when not protected by `eif_gc_mutex'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_public EIF_LW_MUTEX_TYPE *eif_g_data_mutex = NULL;
+#endif
 
 /*
 doc:	<attribute name="eif_global_once_mutex" return_type="EIF_MUTEX_TYPE *" export="public">
@@ -1028,7 +1038,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 #endif
 
 	UNDISCARD_BREAKPOINTS;
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return status;		/* Forward status report */
 }
 #endif /* ISE_GC */
@@ -1047,8 +1057,10 @@ rt_public void gc_stop(void)
 	 */
 
 #ifdef ISE_GC
+	EIF_G_DATA_MUTEX_LOCK;
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status |= GC_STOP;		/* Stop GC */
+	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 }
 
@@ -1064,8 +1076,10 @@ rt_public void gc_run(void)
 	 */
 
 #ifdef ISE_GC
+	EIF_G_DATA_MUTEX_LOCK;
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status &= ~GC_STOP;		/* Restart GC */
+	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 }
 
@@ -2428,7 +2442,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	 */
 
 	RT_GET_CONTEXT
-	if (g_data.status & GC_STOP)
+	if ((g_data.status & GC_STOP) GC_THREAD_PROTECT(|| !thread_can_launch_gc))
 		return;							/* Garbage collection stopped */
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
@@ -4460,13 +4474,17 @@ rt_shared void gfree(register union overhead *zone)
 									then call the dispose routine */
 		if (zone->ov_flags & EO_DISP) { 
 			dtype = Deif_bid(zone->ov_flags);
+			EIF_G_DATA_MUTEX_LOCK;
 			gc_status = g_data.status;			/* Save GC status */
 			g_data.status |= GC_STOP;			/* Stop GC */
+			EIF_G_DATA_MUTEX_UNLOCK;
 			saved_in_assertion = in_assertion;	/* Save in_assertion */
 			in_assertion = ~0;					/* Turn off assertion checking */
 			DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose' */
 			in_assertion = saved_in_assertion;	/* Set in_assertion back */
+			EIF_G_DATA_MUTEX_LOCK;
 			g_data.status = gc_status;			/* Restore previous GC status */
+			EIF_G_DATA_MUTEX_UNLOCK;
 		}
 	}
 

@@ -37,7 +37,8 @@ feature
 		do
 			if {ATTR_DESC} Precursor (other) then
 				other_bits ?= other;
-				Result := other_bits.value = value
+				Result := (other_bits /= Void) and then
+						  (other_bits.value = value)
 			end;
 		end;
 

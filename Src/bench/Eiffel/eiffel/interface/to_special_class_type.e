@@ -130,53 +130,24 @@ feature
 				--		zone = HEADER(l[1]);
 			buffer.putstring ("%Tzone = HEADER(l[1]);%N");
 			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);");
+			buffer.new_line
 
 				-- Set dynamic type
-			buffer.new_line
-			buffer.indent
-			buffer.putchar ('{')
-			buffer.new_line
-			buffer.indent
 
 			!!gen_type;
 			gen_type.set_base_id (System.special_id);
 			gen_type.set_meta_generic (clone (type.meta_generic));
 			gen_type.set_true_generics (clone (type.true_generics));
 
-			if gen_type.is_explicit then
-				-- Optimize: Use static array
-				buffer.putstring ("static int16 typarr [] = {")
-			else
-				buffer.putstring ("int16 typarr [] = {")
-			end
-
-			buffer.putint (byte_context.current_type.generated_id (final_mode))
-			buffer.putstring (", ")
-			gen_type.generate_cid (buffer, final_mode, True)
-			buffer.putstring ("-1};")
-			buffer.new_line
-			buffer.putstring ("int16 typres;")
-			buffer.new_line
-			buffer.putstring ("static int16 typcache = -1;")
-			buffer.new_line
-			buffer.new_line
-			buffer.putstring ("typres = RTCID(&typcache, l[0],")
-
-			buffer.putint (gen_type.generated_id (final_mode))
-			buffer.putstring (", typarr);")
-			buffer.new_line
-
+			generate_ov_flags_start (buffer, gen_type)
 			buffer.putstring ("zone->ov_flags |= typres");
+
 			if gen_param.is_reference or else gen_param.is_bit then
 				buffer.putstring (" | EO_REF");
 			end;
+			generate_ov_flags_finish (buffer)
 
-			buffer.putchar (';')
 			buffer.new_line
-			buffer.exdent
-			buffer.putchar ('}')
-			buffer.new_line
-			buffer.exdent
 
 				-- Set count
 			buffer.putstring ("%T*(long *) ref = arg1;%N");

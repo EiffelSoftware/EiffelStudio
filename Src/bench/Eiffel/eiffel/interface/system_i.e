@@ -2952,11 +2952,11 @@ if cl_type /= Void then
 else
 		-- FIXME
 	if final_mode then
-		buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}")
+		buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0,0,0,0,0,0}")
 	else
 		buffer.putstring 
 			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
-			%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
+			%(uint32*) 0,%N(int16**) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
 			%(int32) 0,(int32) 0,'\0',%N(int32*) 0,%N%
 			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}")
 	end
@@ -2968,7 +2968,7 @@ end
 				if not final_mode then
 					buffer.putstring 
 						("{%N0L,%N%"SEP_OBJ%",%N(char**) 0,%N(int*) 0,%N%
-						%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
+						%(uint32*) 0,%N(int16**)0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
 						%(int32) 0,(int32) 0, %N1,%N(int32*) 0,%N%
 						%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}%N")
 				end

@@ -371,6 +371,7 @@ feature -- Generation
 					end
 					file.put_string (buffer)
 					file.close
+
 				else
 						-- The file hasn't been generated
 					System.makefile_generator.record_empty_class_type (id)
@@ -530,6 +531,7 @@ feature -- Generation
 			bits_desc: BITS_DESC
 			creation_feature: FEATURE_I
 			value: INTEGER
+			gen_type: GEN_TYPE_I
 		do
 			c_name := init_procedure_name
 			nb_ref := skeleton.nb_reference
@@ -603,13 +605,27 @@ feature -- Generation
 
 				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
-				buffer.putstring ("HEADER(l[0]")
-				skeleton.generate(buffer, False)
-				skeleton.go_to (position)
-				buffer.putstring(")->ov_flags = ")
-				buffer.putint(exp_desc.type_id - 1)
-				buffer.putchar (';')
-				buffer.new_line
+				gen_type ?= exp_desc.type_i
+
+				if gen_type = Void then
+					-- Not an expanded generic
+					buffer.putstring ("HEADER(l[0]")
+					skeleton.generate(buffer, False)
+					skeleton.go_to (position)
+					buffer.putstring(")->ov_flags = ")
+					buffer.putint(exp_desc.type_id - 1)
+					buffer.putchar (';')
+					buffer.new_line
+				else
+					-- Expanded generic
+					generate_ov_flags_start (buffer, gen_type)
+					buffer.putstring ("HEADER(l[0]")
+					skeleton.generate(buffer, False)
+					skeleton.go_to (position)
+					buffer.putstring(")->ov_flags = typres")
+					generate_ov_flags_finish (buffer)
+					buffer.new_line
+				end
 
 					-- Mark expanded object
 				buffer.putstring ("HEADER(l[0]")
@@ -655,6 +671,58 @@ feature -- Generation
 				i := i + 1
 			end
 			buffer.putstring ("RTLE;%N}%N%N")
+			buffer.exdent
+		end
+
+	generate_ov_flags_start (buffer: GENERATION_BUFFER; gen_type: GEN_TYPE_I) is
+			-- Start creation of generic type for ov_flags.
+		require
+			buffer_exists: buffer /= Void
+			type_exists: gen_type /= Void
+		local
+			final_mode: BOOLEAN
+		do
+			final_mode := byte_context.final_mode
+
+			buffer.indent
+			buffer.putchar ('{')
+			buffer.new_line
+			buffer.indent
+
+			if gen_type.is_explicit then
+				-- Optimize: Use static array
+				buffer.putstring ("static int16 typarr [] = {")
+			else
+				buffer.putstring ("int16 typarr [] = {")
+			end
+
+			buffer.putint (byte_context.current_type.generated_id (final_mode))
+			buffer.putstring (", ")
+			gen_type.generate_cid (buffer, final_mode, False)
+			buffer.putstring ("-1};")
+			buffer.new_line
+			buffer.putstring ("int16 typres;")
+			buffer.new_line
+			buffer.putstring ("static int16 typcache = -1;")
+			buffer.new_line
+			buffer.new_line
+			buffer.putstring ("typres = RTCID(&typcache, l[0],")
+
+			buffer.putint (gen_type.generated_id (final_mode))
+			buffer.putstring (", typarr);")
+			buffer.new_line
+		end
+
+	generate_ov_flags_finish (buffer: GENERATION_BUFFER) is
+			-- Finish creation of generic type for ov_flags.
+		require
+			buffer_exists: buffer /= Void
+		do
+			buffer.putchar (';')
+			buffer.new_line
+			buffer.exdent
+			buffer.putchar ('}')
+			buffer.new_line
 			buffer.exdent
 		end
 
@@ -863,6 +931,9 @@ feature -- Skeleton generation
 				buffer.putstring (" [] =%N")
 				skeleton.generate_type_array
 
+					-- Generate expanded generic type arrays
+				skeleton.generate_generic_type_arrays (type_id)
+
 				if byte_context.final_mode then	
 	
 						-- Generate attribute offset table pointer array
@@ -942,8 +1013,12 @@ feature -- Skeleton generation
 				buffer.putstring ("types")
 				buffer.putint (type_id)
 				buffer.putstring (",%N")
+				buffer.putstring ("gtypes")
+				buffer.putint (type_id)
+				buffer.putstring (",%N")
 			else
 				buffer.putstring ("(uint32 *) 0,%N")
+				buffer.putstring ("(int16 **) 0,%N")
 			end
 
 			if byte_context.final_mode then
@@ -1137,9 +1212,10 @@ feature -- Byte code generation
 				-- 3. number of attributes
 			ba.append_integer (skeleton.count)
 
-				-- 4. attribute names and meta-types
+				-- 4. attribute names, meta-types and full types
 			skeleton.make_names_byte_code (ba)
 			skeleton.make_type_byte_code (ba)
+			skeleton.make_gen_type_byte_code (ba)
 
 				-- 5. Parent list
 			from

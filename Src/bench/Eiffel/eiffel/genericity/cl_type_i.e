@@ -138,6 +138,7 @@ feature
 				is_expanded := False
 				exp.set_class_type (base_class.types.conservative_search_item (Current))
 				is_expanded := True
+				exp.set_type_i (Current)
 				Result := exp
 			elseif is_separate then
 				-- FIXME

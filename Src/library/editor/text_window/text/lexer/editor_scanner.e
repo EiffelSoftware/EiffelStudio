@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			eif_buffer := STRING_.make (Init_buffer_size)
+			create eif_buffer.make (Init_buffer_size)
 		end
 
 feature -- Start Job / Reinitialization 

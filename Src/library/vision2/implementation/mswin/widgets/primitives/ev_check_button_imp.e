@@ -30,7 +30,6 @@ inherit
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
-			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
 			window_process_message,
@@ -71,6 +70,7 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 			extra_width := 20
+			set_default_minimum_size	
 		end
 
 feature -- Status report

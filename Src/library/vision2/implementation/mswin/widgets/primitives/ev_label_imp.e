@@ -36,7 +36,6 @@ inherit
 			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
-			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
 			window_process_message,
@@ -78,6 +77,7 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 			set_font (font)
+			set_default_minimum_size
 		end
 
 feature -- Status setting

@@ -82,8 +82,6 @@ extern void sync_registers();		/* Resynchronize registers on routine */
 #define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
 
 extern char *IC;					/* Byte code to interpret */
-extern struct item *xstop;
-extern struct stochunk *xcur;
 extern struct opstack op_stack;		/* Operational stack */
 
 /*

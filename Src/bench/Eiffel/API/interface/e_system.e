@@ -15,22 +15,7 @@ inherit
 	SHARED_MELT_ONLY;
 	PROJECT_CONTEXT
 
-creation
-
-	make
-
-feature -- Initialization
-
-	make is
-			-- Create an eiffel system.
-		do
-			!! classes.make (System_chunk);
-		end;
-
 feature -- Properties
-
-	classes: HASH_TABLE [E_CLASS, CLASS_ID];
-			-- Table of compiled eiffel classes indexed by their class `id's
 
 	root_class_name: STRING is
 			-- Root class name
@@ -71,17 +56,6 @@ feature -- Properties
 		end
 
 feature -- Access
-
-	current_class: E_CLASS is
-		obsolete "to be removed"
-		local
-			c: CLASS_C
-		do
-			c := System.current_class;
-			if c /= Void then
-				Result := c.e_class
-			end
-		end;
 
 	cluster: CLUSTER_I is		
 		obsolete "to be removed"
@@ -170,8 +144,6 @@ feature -- Access
 
 	number_of_classes: INTEGER is
 			-- Number of compiled classes in the system
-		require
-			classes_not_void: classes /= Void
 		do
 			Result := System.nb_of_classes;
 		end;
@@ -180,13 +152,8 @@ feature -- Access
 			-- Eiffel Class of id `i'
 		require
 			valid_id: i /= Void
-		local
-			classc: CLASS_C
 		do
-			classc := System.class_of_id (i);
-			if classc /= Void then
-				Result := classc.e_class
-			end
+			Result := System.class_of_id (i)
 		end;
 
 	root_class: CLASS_I is
@@ -254,34 +221,5 @@ feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPAN
 		do
 			Result := System.class_types.item (i)
 		end
-
-feature {COMPILER_EXPORTER} -- Merging
-
-	merge (other: like Current) is
-			-- Merge `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		local
-			other_classes: HASH_TABLE [E_CLASS, CLASS_ID];
-			class_id: CLASS_ID;
-		do
-			other_classes := other.classes;
-			from other_classes.start until other_classes.after loop
-				class_id := other_classes.key_for_iteration;
-				if not classes.has (class_id) then
-					classes.put (other_classes.item_for_iteration, class_id)
-				end;
-				other_classes.forth
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	System_chunk: INTEGER is 500
-
-invariant
-
-	non_void_classes: classes /= Void
 
 end -- class E_SYSTEM

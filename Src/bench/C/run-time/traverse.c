@@ -93,11 +93,30 @@ rt_private void account_attributes (int16 dtype)
 		for (k=0; gtypes[k] != TERMINATOR; k++) {
 			int gtype = gtypes[k];
 			if (gtype <= EXPANDED_LEVEL)
-				gtype = RTUD (EXPANDED_LEVEL - gtype);
-			else if (gtype >= 0)
+				gtype = EXPANDED_LEVEL - gtype;
+			if (gtype == TUPLE_TYPE) {
+				k = k + 3;
+				gtype = gtypes[k];
+				if (gtype <= EXPANDED_LEVEL) {
+					gtype = EXPANDED_LEVEL - gtype;
+				}
+			}
+			if
+				((gtype == LIKE_FEATURE_TYPE)||(gtype == LIKE_PFEATURE_TYPE) ||
+				(gtype == LIKE_ARG_TYPE) || (gtype == LIKE_CURRENT_TYPE))
+			{
+				k = k + 1;
+				gtype = gtypes [k];
+				if (gtype <= EXPANDED_LEVEL) {
+					gtype = EXPANDED_LEVEL - gtype;
+				}
+			}
+			if (gtype >= 0) {
 				gtype = RTUD (gtype);
-			if (gtype >= 0)
+			}
+			if (gtype >= 0) {
 				account[gtype] |= ACCOUNT_TYPE;
+			}
 		}
 	}
 }
@@ -108,6 +127,13 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 	int16  *cidarr, dtype, i;
 
 	dtype = Deif_bid(dftype);
+
+# ifdef RECOVERABLE_DEBUG
+	if ((account[dtype] & ACCOUNT_TYPE) == 0) {
+		printf ("Processing traversal of %s\n", eif_typename ((int16) dftype));
+	}
+# endif
+
 	account[dtype] |= ACCOUNT_TYPE;	/* This type is present */
 
 	/* Account for declared types of the attributes of the type. This
@@ -117,24 +143,38 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 	 */
 	if (p_accounting & TR_ACCOUNT_ATTR)
 		if ((account[dtype] & ACCOUNT_ATTRIBUTES) == 0) {
-			account_attributes (dtype);
 			account[dtype] |= ACCOUNT_ATTRIBUTES;
+			account_attributes (dtype);
 		}
 
-	/* Now insert generics */
+	if (dftype != (uint32) dtype) {
+		/* Now insert generics if any */
+		cidarr = eif_gen_cid ((int16) dftype);
+		i = *(cidarr++); /* count */
 
-	cidarr = eif_gen_cid ((int16) dftype);
-	i = *(cidarr++); /* count */
+		while (i--)
+		{
+			dtype = *(cidarr++);
 
-	while (i--)
-	{
-		dtype = *(cidarr++);
+			if (dtype <= EXPANDED_LEVEL)
+				dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
 
-		if (dtype <= EXPANDED_LEVEL)
-			dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
+			if (dtype == TUPLE_TYPE) {
+				i = i - 3;
+				cidarr += 3;
+				dtype = *cidarr;
+				if (dtype <= EXPANDED_LEVEL) {
+					dtype = EXPANDED_LEVEL - dtype;
+				}
+			}
 
-		if (dtype >= 0)
-			account [dtype] |= ACCOUNT_TYPE;
+			/* No need to handle LIKE_XX_TYPE since they should not appear in an object
+			 * type.
+			 */
+
+			if (dtype >= 0)
+				account[dtype] |= ACCOUNT_TYPE;
+		}
 	}
 }
 
@@ -196,10 +236,11 @@ rt_shared void traversal(char *object, int p_accounting)
 		account_type (flags & EO_TYPE, p_accounting);
 # ifdef RECOVERABLE_DEBUG
 		if (flags & EO_EXP)
-			printf ("      expanded %s [%p]\n", eif_typename (flags & EO_TYPE), object);
+			printf ("      expanded %s [%p]\n", eif_typename ((int16) (flags & EO_TYPE)), object);
 		else
-			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename (flags & EO_TYPE), object);
+			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename ((int16) (flags & EO_TYPE)), object);
 # endif
+
 	}
 #endif
 

@@ -772,7 +772,7 @@ rt_public void ist_write(char *object)
 	/* register1 uint32 nb_char;*/ /* %%ss removed unused */
 
 #ifdef RECOVERABLE_DEBUG
-	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename (Dftype (object)), object);
+	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename ((int16) Dftype (object)), object);
 #endif
 
 	zone = HEADER(object);
@@ -1608,6 +1608,9 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	int16 num_gtypes;
 	int16 i;
 	unsigned char basic_type;
+#ifdef RECOVERABLE_DEBUG
+	int16 *typearr = gtypes;
+#endif
 
 	for (num_gtypes=0; gtypes[num_gtypes] != TERMINATOR; num_gtypes++)
 		; /* count types */
@@ -1623,12 +1626,13 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 
 	/* Write type information: "num_gtypes attribute_type {gen_types}*" */
 	widr_multi_int16 (&num_gtypes, 1);
-//	widr_multi_int16 (gtypes, num_gtypes);
+	/* Write type array */
 	for (i=0; i<num_gtypes; i++) {
 		int16 gtype = gtypes[i];
 #ifdef RECOVERABLE_DEBUG
-		rt_shared char *name_of_attribute_type (int16 type);
-		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (gtype));
+		rt_shared char *name_of_attribute_type (int16 **type);
+		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
+		typearr++;
 #endif
 		if (gtype >= 0)
 			gtype = RTUD (gtype);

@@ -493,23 +493,22 @@ feature {NONE} -- Implementation
 				a_width, a_height: INTEGER; repaint: BOOLEAN) is
 				-- Apply new size when minimum size changed but not size.
 		local
-			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
 			tab_rect: WEL_RECT
 		do
-			from
-				counter := 0
+				-- Resize ourself first.
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+
+				-- Only resize active tab. Resizing the other tabs is useless
+				-- because they are hidden and our implementation will not
+				-- update their real size (i.e. no windows call is made to
+				-- force a resize of the hidden tab) and the call to `sheet_rect'
+				-- will therefore return a bogus size.
+			child_imp ?= selected_window
+			if child_imp /= Void then
 				tab_rect := sheet_rect
-			until
-				counter = count
-			loop
-				child_imp ?= (get_item (counter)).window
-				check
-					valid_cast: child_imp /= Void
-				end
 				child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y,
 					tab_rect.width, tab_rect.height, True)
-				counter := counter + 1
 			end
 		end
 

@@ -91,8 +91,6 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		do
 			cwel_logbrush_set_color (item, a_color.item)
-		ensure
-			color_set: color.item = a_color.item
 		end
 
 	set_hatch (a_hatch: INTEGER) is

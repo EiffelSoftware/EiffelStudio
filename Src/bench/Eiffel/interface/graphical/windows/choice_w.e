@@ -76,7 +76,7 @@ feature
 			list.wipe_out;
 			!! str.make (0);
 			str.append ("-- cancel --");
-			list.put_right (str);
+			list.extend (str);
 			list.forth;
 			from
 				name_list.start
@@ -85,7 +85,7 @@ feature
 			loop
 				!! str.make (0);
 				str.append (name_list.item);
-				list.put_right (str);
+				list.extend (str);
 				name_list.forth
 			end
 			if list.count >= 15 then

@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MENU_PULL_M 
+class 
+	MENU_PULL_M 
 
 inherit
 
@@ -26,7 +27,7 @@ inherit
 			set_x_y, 
 			real_x, real_y, 
 			x, y, set_x, set_y, height, width,
-			managed, set_managed
+			managed, set_managed, parent
 		end;
 
 	MENU_M
@@ -36,10 +37,9 @@ inherit
 			create_callback_struct
 		redefine
 			set_x_y, set_size, set_width, set_height, 
-			real_x, real_y, 
-			x, y,
+			real_x, real_y, x, y,
 			set_x, set_y, height, width, managed, set_managed,
-			set_foreground_color, set_background_color
+			set_foreground_color, set_background_color, parent
 		select
 			set_size, set_width, set_height, 
 			set_foreground_color, set_background_color
@@ -58,9 +58,9 @@ inherit
 			screen as mel_screen,
             is_shown as shown
 		redefine
-			set_size, set_width, set_height, managed,
+			set_size, set_width, set_height, 
 			set_x, set_x_y, set_y, real_x, real_y,
-			x, y, height, width
+			x, y, height, width, parent
 		end
 
 creation
@@ -69,12 +69,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: MENU) is
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
-			p: MENU;
-			mel_p: MEL_COMPOSITE;
 			mel_c: MEL_CASCADE_BUTTON;
 		do
 				-- The widget index is incremented by one since
@@ -83,24 +81,21 @@ feature {NONE} -- Initialization
 			widget_index := widget_manager.last_inserted_position + 1;
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
-			p ?= widget_manager.parent_using_index (a_pulldown, 
-						widget_index - 1);
-			check
-				intern: p /= Void
-			end;
 			if man then
-				!! menu_button.make (a_pulldown.identifier, p);
+				!! menu_button.make (a_pulldown.identifier, oui_parent);
 			else
-				!! menu_button.make_unmanaged (a_pulldown.identifier, p);
+				!! menu_button.make_unmanaged (a_pulldown.identifier, oui_parent);
 			end;
-			mel_p ?= p.implementation;
-			mel_make_menu_pull (pulldown_identifier, mel_p);
 			mel_c ?= menu_button.implementation;
+			mel_make_menu_pull (pulldown_identifier, mel_c.parent);
 			mel_c.set_sub_menu (Current);
-			abstract_menu := a_pulldown;
+			abstract_menu := a_pulldown
 		end;
 
 feature -- Access
+
+	parent: MEL_MENU_SHELL
+			-- Parent of pulldown
 
 	text: STRING is
 			-- Label of option button
@@ -125,7 +120,6 @@ feature -- Access
 		do
 			Result := menu_button.width;
 		end;
-
 
 	real_x: INTEGER is
 			-- Relative x position of button

@@ -722,18 +722,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
---| FIXME IEK 10/28/02 Removed until further notice		
---	update_child_requisition (a_child: POINTER) is
---			-- Force the event loop to update the requistion of `a_child'.
---		local
---			temp_int: INTEGER
---		do
---			if is_displayed then
---				temp_int := C.gtk_main_iteration_do (False)
---			end
---		end
-
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.
 		local

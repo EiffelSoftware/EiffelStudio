@@ -3815,7 +3815,7 @@ main()
 }
 EOCP
 if $cc -o try $ccflags try.c >/dev/null 2>&1; then
-	sh -c ./try > try.out 2>/dev/null
+	`sh -c ./try > try.out 2>/dev/null`
 	if $contains abc try.out >/dev/null 2>&1; then
 		echo "Yes, they do."
 		val="$define";
@@ -5591,7 +5591,7 @@ main()
 		exit(1);	/* Not enough memory */
 	if (nbrk != obrk)
 		exit(2);	/* Unreliable sbrk() */
-	nbrk = sbrk(-INC);
+	nbrk = (char *) sbrk(-INC);
 	if (nbrk == (char *) -1)
 		exit(3);	/* May have understood negative arg as huge positive */
 	if (obrk != (char *) sbrk(0))

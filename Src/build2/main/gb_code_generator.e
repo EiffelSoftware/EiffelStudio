@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 						-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
 						-- the new line character check.
 						-- The second check ignores the new line character if we are at the last position in `local_string'.
-					if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%R') or
+					if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%N') or
 						(index_of_type + local_type.count - 1  = local_string.count) then
 						found_correctly := True
 						-- Otherwise, continue searching.
@@ -825,7 +825,7 @@ feature {NONE} -- Implementation
 						search_counter = index_of_type - 80 or found_correctly or
 						search_counter = 0
 					loop
-						if (local_string @ search_counter) = '%R' then
+						if (local_string @ search_counter) = '%N' then
 							found_correctly := True
 						end
 						search_counter := search_counter - 1

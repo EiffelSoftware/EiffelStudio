@@ -70,7 +70,7 @@ feature -- Basic Operations
 					method := method_list.item
 					same_param_count := same_param_count and method.arguments.count = param_count
 					from
-						name := format_feature_name (method.dotnet_name)
+						name := formatted_feature_name (method.dotnet_name)
 						is_unique := is_unique_signature (method, method_list, 0)
 						i := 1
 					until
@@ -81,7 +81,7 @@ feature -- Basic Operations
 						if index > 0 then
 							type := type.substring (index + 1, type.count) 
 						end
-						name := name + "_" + format_variable_name (type)
+						name := name + "_" + formatted_variable_name (type)
 						is_unique := is_unique_signature (method, method_list, i)
 						i := i + 1
 					end
@@ -95,7 +95,7 @@ feature -- Basic Operations
 				end
 				if same_param_count then
 					from
-						name := format_feature_name (first_method.dotnet_name)
+						name := formatted_feature_name (first_method.dotnet_name)
 						i := 1
 					until
 						i > param_count
@@ -105,7 +105,7 @@ feature -- Basic Operations
 						if index > 0 then
 							type := type.substring (index + 1, type.count) 
 						end
-						name := name + "_" + format_variable_name (type)
+						name := name + "_" + formatted_variable_name (type)
 						i := i + 1
 					end
 					first_method.set_eiffel_name (unique_feature_name (name))

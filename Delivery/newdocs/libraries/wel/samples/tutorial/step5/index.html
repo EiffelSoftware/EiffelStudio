@@ -1,54 +1,84 @@
-<script src="../../../../../technologies/dotnet/samples/instal.js"></script>
 
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="WEL Tutorial" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
-		<TITLE>Step5</TITLE>
-		<LINK REL=StyleSheet HREF="/default.css">
-		<META NAME="MS-HKWD" CONTENT="WEL Tutorial, Step5">
+		<TITLE>WEL Tutorial, Step 5</TITLE>
+		<LINK HREF="../../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">WEL Tutorial, Step 5</TD>
+				<TD ALIGN=right>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="/technologies/dotnet/sample/sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\wel\step5"
+							SamplePrj = "tutorial_step5.eifp"
+						End Sub							
+					</SCRIPT>
 
-	<BODY>
-		<H1>Tutorial Step 5</H1>
-		<P>The sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step4/index.html">step 4</A> and also demonstrates the use of
-		a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A>. The output is shown below:
-		</P>
-		<CENTER><IMG SRC="step5.png" ALT="step5" /></CENTER><BR><BR>
-		<H2>Compiling</H2>
-<script language="JavaScript">
-<!--
-var path_to_ace_file = Eiffel_version + "\\examples\\wel\\tutorial\\step5\\";
-var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\samples\\wel\\tutorial\\step5\\"
-var eifp_name = "step5.eifp";
+					<P>The sample builds on tutorial
+					<A HREF="/libraries/wel/samples/tutorial/step4/index.html">step 4</A>
+					and also demonstrates the use of a
+					<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A>.
+					The output is shown below:</P>
+					
+					<IMG SRC="step5.png" ALT="step5" />
 
-if (eiffel_studio) {
-	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
-}
-else {
-	write_envision_compiling_instruction (path_eifp_file, eifp_name)
-}
--->
-        </script>
-<noscript>
-        <p>To see compiling instructions, you have to enable javascript.</p></noscript>
+					<H2>Running</H2>
+					
+					<P>After launching the sample, you will see a
+					<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>
+					displayed. By holding down the left mouse button, and moving the mouse
+					(Within the client area of the window), you will be able to draw on the
+					client are of the window. If you press the right mouse button, a
+					<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A>
+					will pop up which allows you to enter the thickness of the line that is drawn.</P>
 
-		<H2>Running</H2>
-		<P>After launching the sample, you will see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
-		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button,
-		a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> will pop up which allows you to enter the thickness of the line that is drawn.</P>
-
-		<H2>Under the Hood</H2>
-		<P>This sytem builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step4/index.html">step 4</A> by adding a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A>.
-		The class <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/line_thickness_dialog_chart.html">LINE_THICKNESS_DIALOG</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> and
-		uses a <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_single_line_edit_chart.html">WEL_SINGLE_LINE_EDIT</A> to input the desired line width.
-		<P>This sample contains the following classes:
-			<UL>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/tutorial_step5_chart.html">TUTORIAL_STEP5</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/line_thickness_dialog_chart.html">LINE_THICKNESS_DIALOG</A>
-				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
-			</UL>
+					<H2>Under the Hood</H2>
+					
+					<P>This sytem builds on tutorial
+					<A HREF="/libraries/wel/samples/tutorial/step4/index.html">step 4</A> 
+					by adding a
+					 <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A>.
+					The class <SPAN CLASS="eclass">LINE_THICKNESS_DIALOG</A> inherits
+					<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> and
+					uses a <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_single_line_edit_chart.html">WEL_SINGLE_LINE_EDIT</A>
+					to input the desired line width.</p>
+					
+					<P>This sample contains the following classes:</p>
+					
+					<UL>
+						<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/tutorial_step5_chart.html">TUTORIAL_STEP5</A>
+						<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+						<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/line_thickness_dialog_chart.html">LINE_THICKNESS_DIALOG</A>
+						<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step5/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+					</UL>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
 	</BODY>
 </HTML>

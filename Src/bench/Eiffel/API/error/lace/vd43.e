@@ -8,16 +8,12 @@ indexing
 class VD43
 
 inherit
-
-	WARNING
+	LACE_WARNING
 		redefine
 			build_explain
 		end;
 
 feature -- Properties
-
-	code: STRING is "VD43";
-			-- Error code
 
 	path: STRING;
 			-- path name

@@ -28,6 +28,11 @@ feature -- Properties
 
 	subcode: INTEGER is 1;
 
+	file_name: STRING is
+			-- No associated file name
+		do
+		end
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

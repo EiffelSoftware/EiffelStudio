@@ -15,8 +15,7 @@ inherit
 			syntax_message
 		end
 
-create {ERROR_HANDLER}
-
+create
 	init
 
 feature -- Property

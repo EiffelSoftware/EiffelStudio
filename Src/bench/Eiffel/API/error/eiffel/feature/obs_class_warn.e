@@ -8,16 +8,13 @@ indexing
 class OBS_CLASS_WARN
 
 inherit
-	WARNING
+	EIFFEL_WARNING
 		redefine
 			build_explain, help_file_name,
 			is_defined
 		end;
 
 feature -- Properties
-
-	associated_class: CLASS_C;
-			-- Class using the obsolete class
 
 	obsolete_class: CLASS_C;
 			-- Obsolete class

@@ -9,15 +9,12 @@ class VD32
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end;
 
 feature -- Property
-
-	code: STRING is "VD32";
-			-- Error code
 
 	option_name: STRING;
 			-- Option name

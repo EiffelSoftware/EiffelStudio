@@ -3,84 +3,27 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	SYNTAX_MESSAGE
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (s, e: INTEGER; f: like file_name; c: INTEGER; m: STRING) is
-			-- Create a new SYNTAX_ERROR.
-		require
-			f_not_void: f /= Void
-			m_not_void: m /= Void
-		do
-			start_position := s
-			end_position := e
-			file_name := f
-			code := c
-			message := m
-		ensure
-			start_position_set: start_position = s
-			end_position_set: end_position = e
-			file_name_set: file_name = f
-			code_set: code = c
-			message_set: message = m
-		end
 
 feature -- Properties
 
-	file_name: STRING
+	file_name: STRING is
 			-- Path to file where syntax issue happened
+		deferred
+		end
 
-	start_position: INTEGER
-			-- Stating position token involved in syntax issue
+	line: INTEGER is
+			-- Line number of token involved in syntax issue
+		deferred
+		end
 
-	end_position: INTEGER
-			-- Ending position of of token involved in syntax issue
-
-	code: INTEGER
-			-- Specify syntax issue.
-
-	message: STRING
-			-- Specify syntax issue message.
-
-	line_number: INTEGER
-			-- Line number in `filename' where `start_position' is located.
+	column: INTEGER is
+			-- Column number of token involved in syntax issue
+		deferred
+		end
 
 feature {NONE} -- Output
-
-	previous_line, current_line, next_line: STRING
-			-- Surrounding lines where syntax message occurs.
-			
-	start_line_pos: INTEGER
-			-- Start position of line in `filename' where `start_position' is located.
-			
-	initialize_output is
-			-- Set `previous_line', `current_line' and `next_line' with their proper values
-			-- taken from file `file_name'.
-		local
-			file: PLAIN_TEXT_FILE
-		do
-			create file.make_open_read (file_name)
-			from
-			until
-				file.position > start_position or else file.end_of_file
-			loop
-				previous_line := current_line
-				start_line_pos := file.position
-				line_number := line_number + 1
-				file.read_line
-				current_line := file.last_string.twin
-			end
-			if not file.end_of_file then
-				file.read_line
-				next_line := file.last_string.twin
-			end
-			file.close
-		end
 
 	display_line (st: STRUCTURED_TEXT; a_line: STRING) is
 			-- Display `a_line' in `st'. It translates `%T' accordingly to `st' specification
@@ -101,7 +44,10 @@ feature {NONE} -- Output
 					i := i + 1
 					c := a_line.item (i)
 					if c = '%T' then
-						st.add_indent
+						st.add_char (' ')
+						st.add_char (' ')
+						st.add_char (' ')
+						st.add_char (' ')
 					else
 						st.add_char (c)
 					end
@@ -110,9 +56,9 @@ feature {NONE} -- Output
 			end
 		end
 
-	display_syntax_line (st: STRUCTURED_TEXT; a_line: STRING; pos: INTEGER) is
+	display_syntax_line (st: STRUCTURED_TEXT; a_line: STRING) is
 			-- Display `a_line' which does like `display_line' but with an additional
-			-- arrowed line that points out to `pos' where syntax issue is located.
+			-- arrowed line that points out to `column' where syntax issue is located.
 		require
 			st_not_void: st /= Void
 			a_line_not_void: a_line /= Void
@@ -129,8 +75,11 @@ feature {NONE} -- Output
 				i := i + 1
 				c := a_line.item (i)
 				if c = '%T' then
-					st.add_indent
-					if i <= pos then
+					st.add_char (' ')
+					st.add_char (' ')
+					st.add_char (' ')
+					st.add_char (' ')
+					if i <= column then
 						nb_tab := nb_tab + 1
 					end
 				else
@@ -138,7 +87,11 @@ feature {NONE} -- Output
 				end
 			end
 			st.add_new_line
-			position := pos + 3*nb_tab
+			if column > 0 then
+				position := (column - 1) + 3 * nb_tab
+			else
+				position := 3 * nb_tab
+			end
 			if position = 0 then
 				st.add_string ("^---------------------------")
 				st.add_new_line

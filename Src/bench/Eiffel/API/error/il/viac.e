@@ -17,7 +17,12 @@ feature -- Properties
 
 	code: STRING is "VIAC"
 		-- Error code
-	
+
+	file_name: STRING is
+			-- No associated file name
+		do
+		end
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

@@ -7,7 +7,10 @@ deferred class
 	VIFI
 
 inherit
-	ERROR
+	EIFFEL_ERROR
+		undefine
+			build_explain
+		end
 
 feature {NONE} -- Initialization
 
@@ -20,11 +23,6 @@ feature {NONE} -- Initialization
 		ensure
 			class_c_set: class_c = cl
 		end
-
-feature -- Access
-
-	class_c: CLASS_C
-			-- Class in which error occurred.
 
 feature -- Properties
 

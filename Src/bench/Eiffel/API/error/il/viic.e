@@ -7,7 +7,10 @@ class
 	VIIC
 
 inherit
-	ERROR
+	EIFFEL_ERROR
+		redefine
+			build_explain
+		end
 
 create
 	make

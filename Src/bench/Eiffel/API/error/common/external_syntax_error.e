@@ -40,16 +40,20 @@ feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 			file_name := new_filename
 		end
 
-	set_start_position (i: INTEGER) is
-			-- Assign `i' to `start_position'.
+	set_line (i: INTEGER) is
+			-- Assign `i' to `line'.
 		do
-			start_position := i
+			line := i
+		ensure
+			line_set: line = i
 		end
 
-	set_end_position (i: INTEGER) is
-			-- Assign `i' to `end_position'.
+	set_column (i: INTEGER) is
+			-- Assign `i' to `column'.
 		do
-			end_position := i
+			column := i
+		ensure
+			column_set: column = i
 		end
 
 end -- class EXTERNAL_SYNTAX_ERROR

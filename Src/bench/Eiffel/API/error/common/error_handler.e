@@ -9,6 +9,8 @@ inherit
 	EXCEPTIONS
 
 	SHARED_RESCUE_STATUS
+	
+	REFACTORING_HELPER
 
 create {SHARED_ERROR_HANDLER}
 
@@ -36,9 +38,6 @@ feature -- Properties
 
 	new_error: BOOLEAN
 			-- Boolean for testing if new error since last `mark'
-
-	error_position: INTEGER
-			-- Position in file where error occurred (during degree 3)?
 
 feature -- Status
 
@@ -80,7 +79,6 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
 			if has_error then
 				error_displayer.trace_errors (Current)
-				error_position := 0
 				error_list.wipe_out
 			end
 		end
@@ -98,28 +96,16 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
 feature {COMPILER_EXPORTER} -- Error handling primitives
 
-	set_error_position (i: like error_position) is
-			-- Set `error_position' to `i'.
-		require
-			non_negative_value: i >= 0
-		do
-			error_position := i
-		ensure
-			set: error_position = i
-		end
-
 	insert_error (e: ERROR) is
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void
-		local
-			f_error: FEATURE_ERROR
 		do
 			new_error := True
-			f_error ?= e
-			if f_error /= Void then
-				f_error.set_error_position (error_position)
-			end
+			fixme ("[
+				Callers should set the error position. We have checked this for most errors
+				but some may not be correct, this is why there is still a fixme.
+				]")
 			error_list.extend (e)
 			error_list.finish
 		end
@@ -195,32 +181,6 @@ feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 			error_displayer := ed
 		ensure
 			set: error_displayer = ed
-		end
-
-feature {EXPR_ADDRESS_AS} -- Passed to C
-
-	make_syntax_error is
-			-- Build a syntax error message
-			-- [Called by the parsers]
-		local
-			syntax_error: SYNTAX_ERROR
-		do
-			create syntax_error.init
-			insert_error (syntax_error)
-			raise_error
-		end
-
-feature {COMPILER_EXPORTER}
-
-	make_separate_syntax_error is
-			-- Build an error message for using `separate' when
-			-- Concurrent Eiffel is not enabled
-		local
-			separate_error: SEPARATE_SYNTAX_ERROR
-		do
-			create separate_error.init
-			insert_error (separate_error)
-			raise_error
 		end
 
 invariant

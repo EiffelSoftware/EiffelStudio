@@ -37,6 +37,11 @@ feature -- Properties
 		
 	precompiled_path: STRING
 		-- Path to precompiled library
+		
+	file_name: STRING is
+			-- No associated file name
+		do
+		end
 	
 feature -- Output
 

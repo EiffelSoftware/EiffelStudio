@@ -6,7 +6,7 @@ indexing
 class UNUSED_LOCAL_WARNING
 
 inherit
-	WARNING
+	EIFFEL_WARNING
 		redefine
 			build_explain
 		end
@@ -36,9 +36,6 @@ feature {NONE} -- Initialization
 		
 feature -- Properties
 
-	associated_class: CLASS_C
-			-- class where `associated_feature' is defined
-		
 	associated_feature: E_FEATURE
 			-- Feature containing the unused local variable
 

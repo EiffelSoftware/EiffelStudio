@@ -7,7 +7,7 @@ class
 	OBSOLETE_INDEXING_TAG
 
 inherit
-	WARNING
+	EIFFEL_WARNING
 		redefine
 			trace
 		end
@@ -22,7 +22,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class; a_old_tag, a_new_tag: STRING; a_location: TOKEN_LOCATION) is
+	make (a_class: like associated_class; a_old_tag, a_new_tag: STRING; a_location: LOCATION_AS) is
 			-- Create new instance of `OBSOLETE_INDEXING_TAG'.
 		require
 			a_class_not_void: a_class /= Void
@@ -60,7 +60,7 @@ feature -- Output
 				-- Error happened in a class
 			associated_class.append_signature (st, False)
 			st.add_string (" at line ")
-			st.add_string (location.line_number.out)
+			st.add_string (location.line.out)
 			st.add_string (".")
 			st.add_new_line
 			st.add_string ("It uses obsolete indexing tag `")
@@ -75,13 +75,10 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	associated_class: CLASS_C
-			-- Class in which warning occurs
-
 	old_tag, new_tag: STRING
 			-- Old obsolete tag and new tag
 			
-	location: TOKEN_LOCATION
+	location: LOCATION_AS
 			-- Location of indexing clause.
 
 invariant

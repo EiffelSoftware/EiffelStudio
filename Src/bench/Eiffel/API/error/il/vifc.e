@@ -36,6 +36,12 @@ feature -- Access
 	full_name: STRING
 			-- Full name on which there is a conflict.
 
+	file_name: STRING is
+			-- No associated file name
+		do
+			
+		end
+		
 feature -- Properties
 
 	code: STRING is "VIFC"

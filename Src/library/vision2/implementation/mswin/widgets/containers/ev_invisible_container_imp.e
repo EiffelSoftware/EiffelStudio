@@ -89,7 +89,7 @@ feature -- Basic operation
 					i := i + 1
 				end
 			end
-			parent_ask_resize (minimum_width, minimum_height)
+--			parent_ask_resize (minimum_width, minimum_height)
 		end
 
 feature -- Basic operations

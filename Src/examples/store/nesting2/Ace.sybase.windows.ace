@@ -2,7 +2,7 @@ system nesting2
 
 root
 	
-	test_i (root_cluster): "make"
+	test_i: "make"
 
 default
 
@@ -10,40 +10,42 @@ default
 	multithreaded(yes);
 cluster
 
-	root_cluster:		"$ISE_EIFFEL/examples/store/nesting2";
-	estore_examples_objects:"$ISE_EIFFEL/examples/store/Utilities";
-	sybase_handle:		"$ISE_EIFFEL/examples/store/Utilities/sybase"
+	root_cluster:		"$ISE_EIFFEL\examples\store\nesting2";
+	estore_examples_objects:"$ISE_EIFFEL\examples\store\Utilities";
+	sybase_handle:		"$ISE_EIFFEL\examples\store\Utilities\sybase"
 		exclude
 				"action_1_i.e";"action_2_i.e"
 		end;
 
 -- EiffelBase
 
-	all base:			"$ISE_EIFFEL/library/base"
+	all base:			"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 -- EiffelStore
 
-	estore_support:		"$ISE_EIFFEL/library/store/support";
-	estore_interface:	"$ISE_EIFFEL/library/store/interface";
-	estore_sybase:		"$ISE_EIFFEL/library/store/dbms/rdbms/sybase";
-	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
-	estore_converter:	"$ISE_EIFFEL/library/store/converter";
+	estore_support:		"$ISE_EIFFEL\library\store\support";
+	estore_interface:	"$ISE_EIFFEL\library\store\interface";
+	estore_sybase:		"$ISE_EIFFEL\library\store\dbms\rdbms\sybase";
+	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
+	estore_converter:	"$ISE_EIFFEL\library\store\converter";
 
 -- EiffelTime
 	
-	time:				"$ISE_EIFFEL/library/time";
-	time_format:		"$ISE_EIFFEL/library/time/format";
-	time_english:		"$ISE_EIFFEL/library/time/format/english";		
+	time:				"$ISE_EIFFEL\library\time";
+	time_format:		"$ISE_EIFFEL\library\time\format";
+	time_english:		"$ISE_EIFFEL\library\time\format\english";		
 
 external
+	include_path:
+		"$(ISE_EIFFEL)\library\time\Clib"
 
 	object:
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/sybase_store.lib",
-		"$(SYBASE)/lib/libsybdb.lib"
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+		"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\sybase_store.lib",
+		"$(SYBASE)\lib\libsybdb.lib"
 
 end

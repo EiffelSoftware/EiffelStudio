@@ -41,13 +41,13 @@ cluster
 external
 
 	include_path:
-		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc\Clib",
-		"$ISE_EIFFEL\library\time\Clib"
+		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib",
+		"$(ISE_EIFFEL)\library\time\Clib"
 
 	object:
-		"$ISE_EIFFEL/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
 		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
-		"$ISE_EIFFEL/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
 		"odbc32.lib" -- Specify the path
 
 end

@@ -35,7 +35,7 @@ cluster
 external
 	include_path: "$(ISE_EIFFEL)\library\store\dbms\rdbms\oracle\Clib",
 		"$(ORACLE_HOME)\OCI\include",
-				"$ISE_EIFFEL\library\time\Clib"
+		"$(ISE_EIFFEL)\library\time\Clib"
 
 	object:
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",

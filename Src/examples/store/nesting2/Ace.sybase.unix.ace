@@ -2,7 +2,7 @@ system nesting2
 
 root
 	
-	test_i (root_cluster): "make"
+	test_i: "make"
 
 default
 
@@ -39,12 +39,14 @@ cluster
 		end
 
 external
+	include_path:
+		"\$(ISE_EIFFEL)/library/time/Clib"
 
-	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib";
-		"-lsupport";
-		"-lsybase_store";
-		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib";
-		"-ldatetime";
+	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
+		"-lsupport",
+		"-lsybase_store",
+		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib",
+		"-ldatetime",
 		"$(SYBASE)/lib/libsybdb.a" 
 
 end

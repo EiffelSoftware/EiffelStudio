@@ -2,7 +2,7 @@ system nesting
 
 root
 	
-	test_i (root_cluster): "make"
+	test_i: "make"
 
 default
 
@@ -40,13 +40,15 @@ cluster
 	time_english:		"$ISE_EIFFEL/library/time/format/english";
 
 external
+	include_path:
+		"\$(ISE_EIFFEL)/library/time/Clib"
 
-	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib";
-		"-lsupport";
-		"-lingres_store";
-		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib";
-		"-ldatetime";
-		"-L$(II_SYSTEM)/ingres/lib"; 
+	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
+		"-lsupport",
+		"-lingres_store",
+		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib",
+		"-ldatetime",
+		"-L$(II_SYSTEM)/ingres/lib", 
 		"-lingres"
 
 end

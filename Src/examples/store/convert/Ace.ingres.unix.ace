@@ -40,13 +40,16 @@ cluster
 	lex: 				"$ISE_EIFFEL/library/lex"
 
 external
+	include_path:
+		"\$(ISE_EIFFEL)/library/time/Clib"
 
-	object: "-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib";
-		"-lsupport";
-		"-lingres_store";
-		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib";
-		"-ldatetime";
-		"-L$(II_SYSTEM)/ingres/lib"; 
+	object:
+		"-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
+		"-lsupport",
+		"-lingres_store",
+		"-L$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib",
+		"-ldatetime",
+		"-L$(II_SYSTEM)/ingres/lib",
 		"-lingres"
 
 end

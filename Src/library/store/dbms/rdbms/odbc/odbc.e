@@ -79,7 +79,7 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.from_c (odbc_date_to_str (object.year, object.month, object.day, object.hour, object.minute, object.second, 2))
 			Result.prepend ("{ts %'")
 			Result.append ("%'}")
@@ -109,7 +109,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			c_temp: ANY
 		do
 			c_temp := sql.to_c
-			!! tmp_str.make (1)
+			create tmp_str.make (1)
 			tmp_str.from_c (odbc_hide_qualifier ($c_temp))
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
@@ -124,7 +124,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						para.release
 						para.resize (uht.count)
 					else
-						!! para.make (uht.count)
+						create para.make (uht.count)
 					end
 					bind_args_value (descriptor, uht, uhandle) -- PGC: Pourquoi ???
 				end
@@ -152,9 +152,9 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				para.release
 				para.resize (table.count)
 			else
-				!! para.make (table.count)
+				create para.make (table.count)
 			end
-			!! tmp_str.make (1)
+			create tmp_str.make (1)
 			from 
 				i := table.lower
 			until 
@@ -204,7 +204,7 @@ feature -- For DATABASE_STORE
 		local
 			i, j: INTEGER
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.append (" (")
 			i := 0
 			from 
@@ -254,7 +254,7 @@ feature -- DATABASE_DATETIME
 		local
 			sep: STRING
 		once
-			!! sep.make (1)
+			create sep.make (1)
 			sep.from_c (odbc_driver_name)
 			if sep.substring_index ("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
 				Result := " date"
@@ -324,9 +324,9 @@ feature -- For DATABASE_PROC
 		local
 			driver_name: STRING
 		do
-			!! driver_name.make (1)
+			create driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
-			!! Result.make (1)
+			create Result.make (1)
 			io.new_line
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
@@ -353,7 +353,7 @@ feature -- For DATABASE_PROC
 		local
 			driver_name: STRING
 		do
-			!! driver_name.make (1)
+			create driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
@@ -380,7 +380,7 @@ feature -- For DATABASE_PROC
 		local
 			driver_name: STRING
 		do
-			!! driver_name.make (1)
+			create driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
@@ -398,7 +398,7 @@ feature -- For DATABASE_PROC
 		local
 			driver_name: STRING
 		do
-			!! driver_name.make (1)
+			create driver_name.make (1)
 			driver_name.from_c (odbc_driver_name)
 			io.new_line
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
@@ -419,7 +419,7 @@ feature -- For DATABASE_PROC
 
 	Select_exists (name: STRING): STRING is
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.append ("SQLProcedures (")
 			Result.append (name)
 			Result.extend (')')
@@ -444,7 +444,7 @@ feature -- For DATABASE_REPOSITORY
 			odbc_set_qualifier ($c_tmp)
 			c_tmp := rep_owner.to_c
 			odbc_set_owner ($c_tmp)
-			!!Result.make (1)
+			create Result.make (1)
 			Result.append ("SQLColumns (")
 			Result.append (repository_name)
 			Result.extend (')')
@@ -543,13 +543,13 @@ feature -- External
 
 	identifier_quoter: STRING is
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.from_c (odbc_identifier_quoter)
 		end
 
 	qualifier_seperator: STRING is 
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.from_c (odbc_qualifier_seperator)
 		end
 
@@ -723,7 +723,7 @@ feature -- External
 
 	database_handle: DATABASE_HANDLE [ODBC] is
 		once
-			!! Result
+			create Result
 		end
 
 	support_proc: INTEGER is
@@ -1046,7 +1046,7 @@ feature {NONE} -- External features
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
-			arguments_mapped: not uht.empty
+			arguments_mapped: not uht.is_empty
 		local 
 			i: INTEGER
 			tmp_str: STRING
@@ -1055,7 +1055,7 @@ feature {NONE} -- External features
 			tmp_date: DATE_TIME
 			type: INTEGER
 		do
-			!! tmp_str.make (1)
+			create tmp_str.make (1)
 			i := 1
 			from
 				uht.start

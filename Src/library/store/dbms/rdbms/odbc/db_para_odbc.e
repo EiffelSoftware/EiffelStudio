@@ -18,7 +18,7 @@ feature -- Initialization
 
 	make ( size: INTEGER) is
 		do
-			!! ptr.make(1, size)
+			create ptr.make(1, size)
 			count := size
 		end
 

@@ -53,7 +53,7 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.append ("to_date ('")
 			Result.append (object.formatted_out ("[0]mm/[0]dd/yyyy [0]hh:mi:ss"))
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
@@ -121,7 +121,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
-			arguments_mapped: not uht.empty
+			arguments_mapped: not uht.is_empty
 		local 
 			tmp_c, tmp_c2, c_temp: ANY
 		do
@@ -200,7 +200,7 @@ feature -- For database types
 		do
 			if field_name.is_equal ("data_type") then
 				if class_name.is_equal ("STRING") then
-					!! data_type
+					create data_type
 					if r_any.is_equal ("VARCHAR2") or else r_any.is_equal ("CHAR") then
 						data_type.set_item (ora_string_type)
 					elseif r_any.is_equal ("NUMBER") then
@@ -214,7 +214,7 @@ feature -- For database types
 				end
 			elseif field_name.is_equal ("nullable") then
 				if class_name.is_equal ("STRING") then
-					!! data_type
+					create data_type
 					if r_any.is_equal ("Y") then
 						data_type.set_item (1)
 					else
@@ -424,7 +424,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_hour)
 			Result := tmp_strg.to_integer
 		end
@@ -433,7 +433,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_sec)
 			Result := tmp_strg.to_integer
 		end
@@ -442,7 +442,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_min)
 			Result := tmp_strg.to_integer
 		end
@@ -451,7 +451,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_year)
 			Result := tmp_strg.to_integer
 		end
@@ -460,7 +460,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_day)
 			Result := tmp_strg.to_integer
 		end
@@ -469,7 +469,7 @@ feature -- External features
 		local
 			tmp_strg: STRING
 		do
-			!! tmp_strg.make (0)
+			create tmp_strg.make (0)
 			tmp_strg.from_c (ora_get_month)
 			Result := tmp_strg.to_integer
 		end
@@ -554,7 +554,7 @@ feature -- External features
 
 	database_handle: DATABASE_HANDLE [ORACLE] is
 		once
-			!! Result
+			create Result
 		end
 
 feature {NONE} -- External features
@@ -815,7 +815,7 @@ feature {NONE} -- External features
 		local
 			i: INTEGER
 		do
-			!! Result.make (s.count + ( (s.count // Max_char_size) * Concat_string.count))
+			create Result.make (s.count + ( (s.count // Max_char_size) * Concat_string.count))
 			from
 				i := 1
 			until

@@ -327,7 +327,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_TSD_GET(val_type,key,val,msg) \
     if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) eraise(msg, EN_EXT)
 #endif
-#define EIF_TSD_DESTROY(key,msg, EN_EXT) if (pthread_key_delete(key) eraise(msg, EN_EXT)
+#define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key) eraise(msg, EN_EXT)
 
 
 /*

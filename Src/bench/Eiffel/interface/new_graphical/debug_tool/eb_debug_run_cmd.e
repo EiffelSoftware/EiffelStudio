@@ -63,6 +63,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_DEBUG_TOOLS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -132,6 +137,13 @@ feature -- Execution
 					create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
 					cd.button ("OK").select_actions.extend (~launch_application)
 					cd.show_modal_to_window (Window_manager.last_focused_window.window)
+				elseif not Debugger_manager.can_debug then
+						-- A class was removed since the last compilation.
+						-- It is VERY dangerous to launch the debugger in these conditions.
+						-- However, forbidding it completely may be too frustating.
+					create cd.make_with_text (Warning_messages.w_Removed_class_debug)
+					cd.button ("OK").select_actions.extend (~launch_application)
+					cd.show_modal_to_window (Window_manager.last_focused_window.window)					
 				else
 					launch_application
 				end

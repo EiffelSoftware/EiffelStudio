@@ -19,6 +19,7 @@ extern "C" {
 
 #include "cecil.h"
 #include "garcol.h"		/* For struct stack */
+#include "eif_globals.h"
 
 /* Macros to remap cryptic names to meaningful ones. Note that the
  * interface defined in ETL uses the remaped names. Only this interface
@@ -32,8 +33,8 @@ extern "C" {
 #define eif_frozen(object)	(HEADER(object)->ov_size & B_C)			/* Is object frozen? */
 
 /* Declarations of exported stacks */
-extern struct stack hec_stack;		/* Indirection table "hector" */
-extern struct stack hec_saved;		/* Saved indirection pointers */
+/*extern struct stack hec_stack;*//* %%ss *//* Indirection table "hector" */
+/*extern struct stack hec_saved;*//* %%ss *//* Saved indirection pointers */
 
 /* Declaration of hector routines */
 extern char *efreeze(EIF_OBJ object);				/* Freeze object's address (no more move) */

@@ -14,7 +14,6 @@ inherit
 			set_current_widget
 		end
 
-
 creation
 	make
 
@@ -24,15 +23,10 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
---		do
-		once
-			{ANY_TAB} Precursor (Void)
+		do
+			{ANY_TAB} Precursor (par)
 				
-				-- Create the features of the window	
-
-			set_parent(par)			
-
-				-- Creates the commands for the buttons	
+			-- Creates the commands for the buttons	
 			!!cmd1.make (~set_xcoor)
 			!!cmd2.make (~get_xcoor)
 			create f1.make(Current, "X", cmd1, cmd2)
@@ -51,14 +45,7 @@ feature -- Initialization
 			!!cmd1.make (~set_min_height)
 			!!cmd2.make (~get_min_height)
 			create f6.make (Current, "Min Height", cmd1, cmd2)
-			 
 		end
-
-
-feature -- Access
-
-	temp_par:EV_CONTAINER
-	f1,f2,f3,f4,f5,f6:FEATURE_MODIFIER
 
 feature -- element change
 
@@ -87,6 +74,9 @@ feature -- Access
 			Result:="Widget"
 		end
 
+	f1, f2, f3, f4, f5, f6: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
+
 feature -- Execution feature
 
 	get_xcoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
@@ -105,7 +95,7 @@ feature -- Execution feature
 			-- Returns the width of the demo
 		do
 			f3.set_text(current_widget.width.out)
-	end
+		end
 
 	get_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Returns the height of the demo

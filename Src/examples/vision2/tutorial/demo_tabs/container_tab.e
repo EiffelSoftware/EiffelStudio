@@ -22,12 +22,11 @@ feature -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects.
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
---		do
-		once
+			cmd1, cmd2: EV_ROUTINE_COMMAND
+		do
 			{ANY_TAB} Precursor (Void)
 		
-				-- Create the objects and their commands
+			-- Create the objects and their commands
 			create cmd2.make (~get_client_width)
 			create f1.make (Current, "client width", Void, cmd2)
 			create cmd2.make (~get_client_height)
@@ -37,10 +36,22 @@ feature -- Initialization
 			set_parent(par)
 		end
 
+feature -- Access
+
+	name:STRING is
+			-- Returns the name of the tab
+		do
+			Result:="Container"
+		end
+
+	current_widget: EV_CONTAINER
+			-- Current widget we are working on.
+
+	f1, f2, f3: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
+
 feature -- Execution feature
-	
-	
-	
+
 	get_client_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Get the width of the client
 		do
@@ -62,20 +73,6 @@ feature -- Execution feature
 				f3.set_text("No")
 			end
 		end
-	
-feature -- Access
-	
-	name:STRING is
-			-- Returns the name of the tab
-		do
-			Result:="Container"
-		end
-
-feature -- Access
-
-	current_widget: EV_CONTAINER
-	f1,f2,f3:feature_modifier
-	
 
 end -- class CONTAINER_TAB
  

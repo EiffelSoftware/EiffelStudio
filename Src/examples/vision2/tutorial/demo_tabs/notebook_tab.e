@@ -22,8 +22,8 @@ feature -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects.
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+			cmd1, cmd2: EV_ROUTINE_COMMAND
+		do
 			{ANY_TAB} Precursor (Void)
 		
 				-- Create the objects and their commands
@@ -51,6 +51,15 @@ feature -- Access
 		do
 			Result:="Notebook"
 		end
+
+	current_widget: EV_NOTEBOOK
+			-- Current widget we are working on.
+
+	b1, b2: EV_BUTTON
+			-- Buttons.
+
+	f1, f2: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
 
 feature -- Execution feature
 
@@ -100,10 +109,5 @@ feature -- Execution feature
 				current_widget.set_tab_top
 			end
 		end
-feature -- Access
-
-	current_widget: EV_NOTEBOOK
-	f1,f2: FEATURE_MODIFIER
-	b1,b2: EV_BUTTON
 
 end -- class NOTEBOOK_TAB

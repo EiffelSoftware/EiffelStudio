@@ -166,7 +166,7 @@ feature -- Status
 				end
 
 				if Result then
-					Result := byte_code.size < min_inlining_threshold
+					Result := byte_code.size <= min_inlining_threshold
 				end
 			end
 		end

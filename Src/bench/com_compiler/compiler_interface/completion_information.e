@@ -450,11 +450,14 @@ feature {NONE} -- Implementation
 					if type_extracted then
 						Result := extracted_type
 					else
+						target.prune_all (' ')
+						if target.item (target.count).is_equal ('.') then
+							target.keep_head (target.count - 1) -- Remove trailing '.'								
+						end
 						c := target.item (1)
 						if c = '?' then
 							Result := class_i.compiled_class.actual_type
 						else
-							target.keep_head (target.count - 1) -- Remove trailing '.'
 							Result := identifier_type (target, table, ids)
 						end
 					end
@@ -521,15 +524,14 @@ feature {NONE} -- Implementation
 				end
 				c := target.item (1)
 				if c = '{' then
-					s := target.substring (2, target.index_of ('}', 3))
+					s := target.substring (2, target.index_of ('}', 3) - 1)
 					if not s.is_empty then
 						extracted_type := type_from_type_name (s)
 					end
-					target.keep_tail (target.count - target.index_of ('}', 1) - 1)
 				else
 					extracted_type := Void
-					type_extracted := False
 				end
+				type_extracted := extracted_type /= Void
 			end
 		ensure
 			keyword_removed: not target.substring (1, keyword.count).is_equal (keyword)

@@ -25,7 +25,6 @@ inherit
 		end;
 	TEXT_WINDOW
 		rename
-			process_text as old_process_text,
 			current_line as current_text_line
 		undefine
 			copy, setup
@@ -36,22 +35,6 @@ inherit
 			put_quoted_comment, put_operator, put_symbol, put_ace_syntax,
 			put_keyword, put_indent, process_quoted_text, put_comment,
 			process_basic_text, process_column_text, process_call_stack_item
-		end;
-	TEXT_WINDOW
-		rename
-			current_line as current_text_line
-		undefine
-			copy, setup
-		redefine
-			put_address, put_feature_name, put_feature, put_ace_syntax, put_feature_error,
-			put_error, put_class, put_after_class, put_classi, put_cluster,
-			process_breakpoint, process_padded, put_class_syntax,
-			put_quoted_comment, put_operator, is_editable,
-			process_text, put_symbol, put_keyword, 
-			put_indent, process_quoted_text, put_comment, process_basic_text, 
-			process_column_text, process_call_stack_item
-		select
-			process_text
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
@@ -454,14 +437,6 @@ feature -- Text formatting
 			add_text_figure (fig, s.image);
 		end;
 
-	process_text (t: STRUCTURED_TEXT) is
-			-- Process structured text `text' to be
-			-- generated as output.
-		do
-			init_values (True);
-			old_process_text (t);
-		end;
-
 	process_padded is
 			-- Process padded value (used when processing breakpoints).
 		do
@@ -588,21 +563,14 @@ feature {NONE} -- Implementation
 			current_x := current_x + w;
 		end;
 
-	init_values (for_format: BOOLEAN) is
+	init_values is
 			-- Initialize values for output text. If appropriate values
 			-- according to `for_format'.
 		do
-			if for_format then
-				maximum_height_per_line :=
-						font_max_height;
-				maximum_descent_per_line :=
-						font_max_descent;
-			else
-				maximum_height_per_line :=
-						font_max_height;
-				maximum_descent_per_line :=
-						font_max_descent;
-			end;
+			maximum_height_per_line :=
+					font_max_height;
+			maximum_descent_per_line :=
+					font_max_descent;
 			current_y := maximum_height_per_line + 5
 		end;
 

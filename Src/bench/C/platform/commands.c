@@ -226,7 +226,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 	if (source_exe == (char *)0)
 		enomem();
 	strncpy (source_exe, eif_access (driver_name), amount);
-	source_exe [amount + 1] = '\0';
+	source_exe [amount] = '\0';
 	fi = fopen (source_exe, "rb");
 	target_exe = malloc (strlen (eif_access (system_name)) + strlen (eif_access (c_code_dir)) + 6);
 	sprintf (target_exe, "%s\\%s.exe", eif_access (c_code_dir), eif_access (system_name));

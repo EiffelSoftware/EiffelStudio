@@ -2,11 +2,11 @@ SHELL= \bin\sh
 CC=		cl
 LD=		cl
 
-CFLAGS= -Zi -YX -c -nologo  -Ie:\EIFFEL42e\bench\spec\windows\include -Id:\jdk1.1.5\include -Id:\jdk1.1.5\include\win32 
-CFLAGSMT= -Zi -YX -c -nologo -MTd -DEIF_THREADS  -DWORKBENCH -Ie:\EIFFEL42e\bench\spec\windows\include -Id:\jdk1.1.5\include -Id:\jdk1.1.5\include\win32 -Id:\cvs_dir\mtC\run-time
+CFLAGS= -Zi -YX -c -nologo  -I$(EIFFEL4)\bench\spec\windows\include -Id:\apps\jdk1.1.8\include -Id:\apps\jdk1.1.8\include\win32 
+CFLAGSMT= -Zi -YX -c -nologo -MTd -DEIF_THREADS  -DWORKBENCH -I$(EIFFEL4)\bench\spec\windows\include -Id:\apps\jdk1.1.8\include -Id:\apps\jdk1.1.8\include\win32 -Id:\cvs_dir\mtC\run-time
 
 .c.obj:
-        $(CC) $(CFLAGSMT) $<
+        $(CC) $(CFLAGS) $<
 
 all:	e2j.obj 
 

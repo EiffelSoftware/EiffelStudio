@@ -3571,7 +3571,7 @@ rt_public void onceset(register char **ptr)
 	flush;
 #endif
 	
-	if (-1 == epush(&once_set, ptr))
+	if (-1 == epush(&once_set, (char *)ptr))
 		eraise("once function recording", EN_MEM);
 }
 

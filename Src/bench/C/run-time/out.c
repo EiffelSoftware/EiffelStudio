@@ -489,7 +489,7 @@ rt_shared char *simple_out(struct item *val)
 	case SK_EXP:
 	case SK_REF:
 		xfree(tagged_out);					/* What a waste of CPU cycles */
-		return build_out(&val->it_ref);		/* Only for the beauty of it */
+		return build_out((EIF_OBJ)(&val->it_ref));		/* Only for the beauty of it */
 	case SK_VOID:
 		sprintf(tagged_out, "Not an object!");
 		break;

@@ -164,8 +164,8 @@ rt_private void free_structures(int n)
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 
 	while (n > 0)
-		xfree(darray[n--]);			/* Free allocated delta tables */
-	xfree(darray);					/* Free main table */
+		xfree((char *) (darray[n--]));	/* Free allocated delta tables */
+	xfree((char *) darray);					/* Free main table */
 }
 
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)

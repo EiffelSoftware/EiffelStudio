@@ -611,8 +611,8 @@ void prof_stack_free(void)
 	/* Free the memory allocated for `prof_stack'. */
 
 	if(prof_enabled) {
-		xfree(prof_stack->st_cur);	/* Free memory used by chunk */
-		xfree(prof_stack);			/* Free memory used by stack */
+		xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
+		xfree((char *)prof_stack);			/* Free memory used by stack */
 	}
 }
 
@@ -733,7 +733,7 @@ item->descendent_time);
 				add_time(((struct prof_info *)*address)->all_total_time, ((struct prof_info *)*address)->all_total_time, p_i->all_total_time);
 			}
 
-			free_prof_info(item);
+			free_prof_info((char *) item);
 		}
 	}
 }

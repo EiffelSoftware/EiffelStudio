@@ -233,9 +233,9 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 	}
 
 	if (rt_kind)
-		xfree((char *)dtypes);					/* Free the correspondance table */
+		xfree((char *) dtypes);					/* Free the correspondance table */
 	if (rt_kind == INDEPENDENT_STORE)
-		xfree((char *)spec_elm_size);					/* Free the element size table */
+		xfree((char *) spec_elm_size);					/* Free the element size table */
 
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
@@ -254,9 +254,9 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 			idr_temp_buf = (char *) 0;
 			for (i = 0; i < scount; i++) {
 				if (*(dattrib + i))
-					xfree ((char *)*(dattrib +i));
+					xfree ((char *)(*(dattrib +i)));
 			}
-			xfree ((char *)dattrib);
+			xfree ((char *) dattrib);
 			dattrib = (int **) 0;
 			break;
 		}
@@ -273,7 +273,7 @@ rt_public char *rt_make(void)
 	long objectCount;
 
 	/* Read the object count in the file header */
-	buffer_read(&objectCount, (sizeof(long)));
+	buffer_read((char *)(&objectCount), (sizeof(long)));
 
 #if DEBUG & 2
 		printf ("\n %ld", objectCount);
@@ -325,7 +325,7 @@ rt_public char *rt_nmake(long int objectCount)
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
 
-		buffer_read(&oldadd, (sizeof(char *)));
+		buffer_read((char *)(&oldadd), (sizeof(char *)));
 
 #if DEBUG & 2
 		printf ("\n  %lx", oldadd);
@@ -333,7 +333,7 @@ rt_public char *rt_nmake(long int objectCount)
 
 
 		/* Read object flags (dynamic type) */
-		buffer_read(&flags, (sizeof(uint32)));
+		buffer_read((char *)(&flags), (sizeof(uint32)));
 
 #if DEBUG & 2
 		printf (" %x", flags);
@@ -345,7 +345,7 @@ rt_public char *rt_nmake(long int objectCount)
 			uint32 count, elm_size;
 
 			/* Special object: read the saved size */
-			buffer_read(&spec_size, (sizeof(uint32)));
+			buffer_read((char *)(&spec_size), (sizeof(uint32)));
 			nb_char = (spec_size & B_SIZE) * sizeof(char);
 			newadd = spmalloc(nb_char);
 			if (rt_kind) {
@@ -425,7 +425,7 @@ rt_public char *grt_make(void)
 	long objectCount;
 
 	/* Read the object count in the file header */
-	buffer_read(&objectCount, sizeof(long));
+	buffer_read((char *)(&objectCount), sizeof(long));
 
 #if DEBUG & 1
 		printf ("\n %ld", objectCount);
@@ -468,14 +468,14 @@ rt_public char *grt_nmake(long int objectCount)
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
-		buffer_read(&oldadd, sizeof(EIF_REFERENCE));
+		buffer_read((char *)(&oldadd), sizeof(EIF_REFERENCE));
 
 #if DEBUG & 1
 		printf ("\n  %lx", oldadd);
 #endif
 
 		/* Read object flags (dynamic type) */
-		buffer_read(&flags, sizeof(uint32));
+		buffer_read((char *)(&flags), sizeof(uint32));
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -542,9 +542,9 @@ rt_public char *grt_nmake(long int objectCount)
 			} else {
 				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
-			buffer_read(&count, sizeof(uint32));
+			buffer_read((char *)(&count), sizeof(uint32));
 			nb_char = CHRPAD(count * spec_size ) + LNGPAD(2);
-			buffer_read(&elm_size, sizeof(uint32));
+			buffer_read((char *)(&elm_size), sizeof(uint32));
 
 #if DEBUG & 1
 		printf (" %x", count);
@@ -654,7 +654,7 @@ rt_public char *irt_nmake(long int objectCount)
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
-		ridr_multi_any (&oldadd, 1);
+		ridr_multi_any ((char *) (&oldadd), 1);
 
 #if DEBUG & 1
 		printf ("\n  %lx", oldadd);
@@ -834,7 +834,7 @@ rt_private void rt_clean(void)
 				cell = rt_info->rt_list;
 				while (cell != (struct rt_cell *) 0) {
 					next_cell = cell->next;
-					xfree(cell);
+					xfree((char *) cell);
 					cell = next_cell;
 				}
 			}
@@ -842,11 +842,11 @@ rt_private void rt_clean(void)
 		ht_free(rt_table);						/* Free hash table descriptor */
 	}
 	if (dtypes != (int *) 0) {
-		xfree(dtypes);
+		xfree((char *) dtypes);
 		dtypes = (int *) 0;
 	}
 	if (spec_elm_size != (uint32 *)0) {
-		xfree(spec_elm_size);
+		xfree((char *) spec_elm_size);
 		spec_elm_size = (uint32 *)0;
 	}
 
@@ -866,9 +866,9 @@ rt_private void rt_clean(void)
 
 			for (i = 0; i < scount; i++) {
 				if (*(dattrib + i))
-					xfree (*(dattrib +i));
+					xfree ((char *) (*(dattrib +i)));
 			}
-			xfree (dattrib);
+			xfree ((char *) dattrib);
 			dattrib = (int **) 0;
 		}
 	}
@@ -920,7 +920,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJ new)
 		RTAS(supplier, client);					/* Age check */
 		*(char **)(client + offset) = supplier;	/* Attachment */
 	
-		xfree(rt_unsolved);		/* Free reference solving cell */
+		xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_unsolved = next;	
 	}
 
@@ -1099,7 +1099,7 @@ rt_private void read_header(char rt_type)
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
 #endif
 		if (sorted_attributes == (unsigned int **)0) {
-			xfree (dtypes);
+			xfree ((char *) dtypes);
 			xraise(EN_MEM);
 			}
 		}
@@ -1336,11 +1336,11 @@ rt_private void iread_header(void)
 					xraise (EN_MEM);
 				for (; num_attrib > 0;) {
 					if (idr_read_line(r_buffer, bsize) <= 0) {
-						xfree (attrib_order);
+						xfree ((char *) attrib_order);
 						eio();
 					}
 					if (sscanf(r_buffer," %lu %s", &read_attrib, att_name) != 2) {
-						xfree (attrib_order);
+						xfree ((char *) attrib_order);
 						eio();
 					}
 								/* check attribute types */
@@ -1355,7 +1355,7 @@ rt_private void iread_header(void)
 							while (strcmp(att_name, 
 									*(System (new_dtype).cn_names + i++))) {
 								if (i > chk_attrib){
-									xfree (attrib_order);
+									xfree ((char *) attrib_order);
 									eraise(vis_name, EN_RETR); 
 										/* non matching attributes */
 								}
@@ -1369,7 +1369,7 @@ rt_private void iread_header(void)
 									== (uint32) read_attrib) {
 								*(attrib_order + num_attrib) = i;
 							} else {
-								xfree (attrib_order);
+								xfree ((char *) attrib_order);
 								eraise(vis_name, EN_RETR);
 									/* non matching attributes */
 							}
@@ -1377,7 +1377,7 @@ rt_private void iread_header(void)
 							*(attrib_order + num_attrib) = num_attrib;
 						}
 					} else {
-						xfree (attrib_order);
+						xfree ((char *) attrib_order);
 						eraise(vis_name, EN_RETR);	/* non matching attributes */
 					}
 				}
@@ -1698,10 +1698,10 @@ rt_private void gen_object_read (char *object, char *parent)
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
 							HEADER(bptr)->ov_flags = bit_dtype;
-							buffer_read(&old_flags, sizeof(uint32));
+							buffer_read((char *) (&old_flags), sizeof(uint32));
 							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
 
-							buffer_read(bptr, bptr->b_length);
+							buffer_read((char *) bptr, bptr->b_length);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
 								eio();
 						}
@@ -1712,7 +1712,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					long size_count;
 
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
-					buffer_read(&old_flags, sizeof(uint32));
+					buffer_read((char *) (&old_flags), sizeof(uint32));
 					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
 					size_count = get_expanded_pos (o_type, --num_attrib);
 
@@ -1764,23 +1764,23 @@ rt_private void gen_object_read (char *object, char *parent)
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
 					case SK_INT:
-						buffer_read((long *)object, count*sizeof(EIF_INTEGER));
+						buffer_read((char *)object, count*sizeof(EIF_INTEGER));
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
 						buffer_read(object, count*sizeof(EIF_CHARACTER));
 						break;
 					case SK_FLOAT:
-						buffer_read((float *)object, count*sizeof(EIF_REAL));
+						buffer_read((char *)object, count*sizeof(EIF_REAL));
 						break;
 					case SK_DOUBLE:
-						buffer_read((double *)object, count*sizeof(EIF_DOUBLE));
+						buffer_read((char *)object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_EXP: {
 						uint32 old_flags;
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_read(&old_flags, sizeof(uint32));
+						buffer_read((char *) (&old_flags), sizeof(uint32));
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
@@ -1794,7 +1794,7 @@ rt_private void gen_object_read (char *object, char *parent)
 						uint32 l;
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_read((struct bit *)object, count*elem_size);
+						buffer_read((char *)object, count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
 					case SK_POINTER:
@@ -1810,7 +1810,7 @@ rt_private void gen_object_read (char *object, char *parent)
 				} else {						/* Special of composites */
 					uint32  old_flags;
 
-					buffer_read(&old_flags, sizeof(uint32));
+					buffer_read((char *) (&old_flags), sizeof(uint32));
 					elem_size = *(long *) (o_ptr + sizeof(long));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
@@ -1847,7 +1847,7 @@ rt_private void object_read (char *object, char *parent)
 
 			switch (types_cn & SK_HEAD) {
 				case SK_INT:
-					ridr_multi_int (object + attrib_offset, 1);
+					ridr_multi_int ((long int *) (object + attrib_offset), 1);
 #if DEBUG & 1
 					printf (" %lx", *((long *)(object + attrib_offset)));
 #endif
@@ -1862,14 +1862,14 @@ rt_private void object_read (char *object, char *parent)
 
 					break;
 				case SK_FLOAT:
-					ridr_multi_float (object + attrib_offset, 1);
+					ridr_multi_float ((float *) (object + attrib_offset), 1);
 #if DEBUG & 1
 					printf (" %f", *((float *)(object + attrib_offset)));
 #endif
 
 					break;
 				case SK_DOUBLE:
-					ridr_multi_double (object + attrib_offset, 1);
+					ridr_multi_double ((double *) (object + attrib_offset), 1);
 #if DEBUG & 1
 					printf (" %lf", *((double *)(object + attrib_offset)));
 #endif
@@ -1885,7 +1885,7 @@ rt_private void object_read (char *object, char *parent)
 							ridr_norm_int (&old_flags);
 							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
 
-							ridr_multi_bit (bptr, 1, NULL);
+							ridr_multi_bit (bptr, 1, 0);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
 								eio();
 #if DEBUG & 1

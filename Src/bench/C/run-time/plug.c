@@ -57,11 +57,11 @@ rt_public char *argarr(int argc, char **argv)
 	 * Create the array
 	 */
 	array = emalloc(arr_dtype);		/* If we return, it succeeded */
-	epush(&loc_stack, &array); 		/* Protect address in case it moves */
+	epush(&loc_stack, (char *) &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 	(eif_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(char **) array;			/* Get the area of the ARRAY */
-	epush (&loc_stack, &sp);		/* Protect the area */
+	epush (&loc_stack, (char *) &sp);		/* Protect the area */
 
 	/* 
 	 * Fill the array
@@ -118,13 +118,13 @@ rt_public char *striparr(register char *curr, register int dtype, register char 
 
 	stripped_nbr = nbr_attr - nbr;
 	array = emalloc(arr_dtype);	/* If we return, it succeeded */
-	epush(&loc_stack, &array); 	/* Protect address in case it moves */
+	epush(&loc_stack, (char *) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
 	(eif_arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 
 	sp = *(char **) array;		/* Get the area of the ARRAY */
-	epush (&loc_stack, &sp);	/* Protect the area */
+	epush (&loc_stack, (char *) &sp);	/* Protect the area */
 
 	while (nbr_attr--) {
 		found = (char) NULL;
@@ -201,7 +201,7 @@ rt_public char *makestr(register char *s, register int len)
 	char *string;					/* Were string object is located */
 
 	string = emalloc(str_dtype);	/* If we return, it succeeded */
-	epush(&loc_stack, &string);		/* Protect address in case it moves */
+	epush(&loc_stack, (char *) &string); /* Protect address in case it moves */
 	nstcall = 0;
 	(eif_strmake)(string, len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
@@ -342,7 +342,7 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 	else
 		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
 
-	epush(&loc_stack, &obj);		/* Automatic protection of `obj' */
+	epush(&loc_stack, (char *) &obj);	/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
 
 	/* The list of parent dynamic types is always terminated by a
@@ -419,7 +419,7 @@ char *cr_exp(uint32 type)
 	register1 struct cnode *exp_desc;	/* Expanded object description */
 
 	result = emalloc(type);
-	epush(&loc_stack, &result);			/* Protect address in case it moves */
+	epush(&loc_stack, (char *)(&result));	/* Protect address in case it moves */
 	exp_desc = &System(type);
 	if (exp_desc->cn_routids) {
 		int32 feature_id;              	/* Creation procedure feature id */

@@ -40,8 +40,6 @@ cluster
 			"gtk"
 			"test"
 		end
-	all Events:				"$EIFFEL4\library\event"
-
 
 		-- EiffelTime
 	time:				"$EIFFEL4\library\time";
@@ -53,6 +51,7 @@ cluster
 	estore_interface:	"$EIFFEL4\library\store\interface"
 	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
 	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc"
+	all estore_generation:	"$EIFFEL4\library\store\generation"
 
 
 external

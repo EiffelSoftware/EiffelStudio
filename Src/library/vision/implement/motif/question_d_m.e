@@ -47,7 +47,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_question_dialog: QUESTION_D) is
+	make (a_question_dialog: QUESTION_D; oui_parent: COMPOSITE) is
 			-- Create a motif question dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

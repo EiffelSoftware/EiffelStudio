@@ -28,7 +28,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_font_box: FONT_BOX; man: BOOLEAN) is
+	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif font box.
 		local
 			ext_name: ANY

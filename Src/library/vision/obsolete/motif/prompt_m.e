@@ -43,7 +43,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_prompt: PROMPT; man: BOOLEAN) is
+	make (a_prompt: PROMPT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif prompt.
 		do
 			widget_index := widget_manager.last_inserted_position;

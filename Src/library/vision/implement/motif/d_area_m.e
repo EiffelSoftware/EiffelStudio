@@ -43,7 +43,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN) is
+	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif drawing area.
 		do
 			widget_index := widget_manager.last_inserted_position;

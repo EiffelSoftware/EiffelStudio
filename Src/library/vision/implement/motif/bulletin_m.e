@@ -41,7 +41,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_bulletin: BULLETIN; man: BOOLEAN) is
+	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif bulletin.
 		local
 			ext_name_bull: ANY

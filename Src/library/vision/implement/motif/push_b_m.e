@@ -42,7 +42,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_push_b: PUSH_B; man: BOOLEAN) is
+	make (a_push_b: PUSH_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif push button.
 		do
 			widget_index := widget_manager.last_inserted_position;

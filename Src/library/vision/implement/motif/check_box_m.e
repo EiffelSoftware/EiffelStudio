@@ -40,7 +40,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_check_box: CHECK_BOX; man: BOOLEAN) is
+	make (a_check_box: CHECK_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif check_box.
 		do
 			widget_index := widget_manager.last_inserted_position;

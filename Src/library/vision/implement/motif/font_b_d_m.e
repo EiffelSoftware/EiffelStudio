@@ -35,7 +35,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_font_box_dialog: FONT_BOX_D) is
+	make (a_font_box_dialog: FONT_BOX_D; oui_parent: COMPOSITE) is
 			-- Create a motif font box.
 		local
 			ext_name: ANY

@@ -39,7 +39,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_bar: BAR; man: BOOLEAN) is
+	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif bar menu.
 		do
 			widget_index := widget_manager.last_inserted_position;

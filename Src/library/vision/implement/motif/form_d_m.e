@@ -67,7 +67,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_form_dialog: FORM_D) is
+	make (a_form_dialog: FORM_D; oui_parent: COMPOSITE) is
 			-- Create a motif form dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

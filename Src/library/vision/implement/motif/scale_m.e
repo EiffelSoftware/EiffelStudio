@@ -75,7 +75,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scale: SCALE; man: BOOLEAN) is
+	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scale.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -56,7 +56,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_bulletin_d: BULLETIN_D) is
+	make (a_bulletin_d: BULLETIN_D; oui_parent: COMPOSITE) is
 			-- Create a motif bulletin dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

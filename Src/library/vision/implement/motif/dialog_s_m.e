@@ -49,7 +49,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_dialog_shell: DIALOG_SHELL) is
+	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE) is
 			-- Create a dialog shell.
 		do
 			widget_index := widget_manager.last_inserted_position;

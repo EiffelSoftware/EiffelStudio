@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_label_gadget: LABEL_G; man: BOOLEAN) is
+	make (a_label_gadget: LABEL_G; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif label gadget.
 		do
 			widget_index := widget_manager.last_inserted_position;

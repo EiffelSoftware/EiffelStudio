@@ -47,10 +47,11 @@ feature -- Access
 
 feature -- Widget Access
 
-	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN): ARROW_B_M is
+	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN; oui_parent:
+COMPOSITE): ARROW_B_M is
 			-- Motif implementation of `an_arrow_button'
 		do
-			!! Result.make (an_arrow_button, managed)
+			!! Result.make (an_arrow_button, managed, oui_parent)
 		end; 
 
 	base (a_base: BASE): BASE_M is
@@ -71,16 +72,17 @@ feature -- Widget Access
 			!! Result.make (a_cursor)
 		end;
 
-	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN): DRAW_B_M is
+	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN; oui_parent: COMPOSITE): DRAW_B_M is
 			-- Motif implementation of `a_draw_b'
 		do
-			!! Result.make (a_draw_b, managed)
+			!! Result.make (a_draw_b, managed, oui_parent)
 		end; 
 
-	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN): D_AREA_M is
+	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN;
+oui_parent: COMPOSITE): D_AREA_M is
 			-- Motif implementation of `a_drawing_area'
 		do
-			!! Result.make (a_drawing_area, managed)
+			!! Result.make (a_drawing_area, managed, oui_parent)
 		end; 
 
 	exit is
@@ -95,22 +97,24 @@ feature -- Widget Access
 			!! Result.make (a_font)
 		end;
 
-	font_box (a_font_box: FONT_BOX; managed: BOOLEAN): FONT_BOX_M is
+	font_box (a_font_box: FONT_BOX; managed: BOOLEAN; oui_parent:
+COMPOSITE): FONT_BOX_M is
 			-- Motif implementation of `a_font_box'
 		do
-			!! Result.make (a_font_box, managed)
+			!! Result.make (a_font_box, managed, oui_parent)
 		end; 
 
-	font_box_d (a_font_box_d: FONT_BOX_D): FONT_B_D_M is
+	font_box_d (a_font_box_d: FONT_BOX_D; oui_parent: COMPOSITE): FONT_B_D_M is
 			-- Motif implementation of `a_font_box_d'
 		do
-			!! Result.make (a_font_box_d)
+			!! Result.make (a_font_box_d, oui_parent)
 		end; 
 
-	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN): PICT_COL_B_M is
+	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN;
+oui_parent: COMPOSITE): PICT_COL_B_M is
 			-- Motif implementation of `a_picture_color_button'
 		do
-			!! Result.make (a_picture_color_button, managed)
+			!! Result.make (a_picture_color_button, managed, oui_parent)
 		end;
 
 	pixmap (a_pixmap: PIXMAP): PIXMAP_X is

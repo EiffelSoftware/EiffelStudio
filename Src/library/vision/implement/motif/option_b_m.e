@@ -64,7 +64,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_option_menu: OPTION_B; man: BOOLEAN) is
+	make (an_option_menu: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif option menu button.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -71,7 +71,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN) is
+	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif list, get screen_object value of srolled
 			-- window which contains current list.
 		local

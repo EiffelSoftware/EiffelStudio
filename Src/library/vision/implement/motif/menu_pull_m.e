@@ -69,7 +69,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_pulldown: MENU_PULL; man: BOOLEAN) is
+	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;

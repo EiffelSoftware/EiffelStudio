@@ -37,7 +37,8 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN) is
+	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN; oui_parent:
+COMPOSITE) is
 			-- Create a motif separator gadget.
 		do
 			widget_index := widget_manager.last_inserted_position;

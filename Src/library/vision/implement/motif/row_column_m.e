@@ -40,7 +40,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_row_column: ROW_COLUMN; man: BOOLEAN) is
+	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif row_column.
 		do
 			widget_index := widget_manager.last_inserted_position;

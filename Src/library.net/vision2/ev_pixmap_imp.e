@@ -728,6 +728,13 @@ feature {EV_ANY_I} -- Delegated features
 			Result := Void
 		end
 
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		do
+		end
+
 	internal_enable_dockable is
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.

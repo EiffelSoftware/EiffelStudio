@@ -224,6 +224,15 @@ feature {NONE} -- Implementation
 				set_tag_index := class_text.substring_index (set_tag, 1)
 				class_text.replace_substring_all (set_tag, "")			
 				class_text.insert (set_string, set_tag_index)
+				
+					-- Need to add pixmap initialization if `class_text' contains
+					-- `pixmap'. If it does, this means that some pixmaps have been set,
+					-- and we must add a pixmap to `class_text'. This really is somewhat of a hack. Julian.
+				if class_text.substring_index (pixmap_name, 1) /= 0 then
+					class_text.insert (pixmap_name + ": EV_PIXMAP" + indent, local_tag_index)
+					class_text.insert ("create " + pixmap_name + indent, create_tag_index + pixmap_name.count +
+						(": EV_PIXMAP").count + indent.count)
+				end
 					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)

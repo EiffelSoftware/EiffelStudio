@@ -60,7 +60,7 @@ extern void eif_thr_join_all(void);
 
 /* --------------------------------------- */
 
-#ifdef _POSIX_THREADS
+#ifdef EIF_POSIX_THREADS
 
 /*-----------------------*/
 /*---  POSIX Threads  ---*/
@@ -106,10 +106,10 @@ extern void eif_thr_join_all(void);
 	if (pthread_key_create(&(key),NULL))	\
 		eif_thr_panic(msg)
 #define EIF_TSD_SET(key,val,msg)			\
-	if (pthread_key_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) \
+	if (pthread_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) \
 		eif_thr_panic(msg)
 #define EIF_TSD_GET0(val_type,key,val)		\
-	pthread_key_getspecific((key),(EIF_TSD_VAL_TYPE *)(val))
+	pthread_getspecific((key),(void **)(val))
 #define EIF_TSD_GET(val_type,key,val,msg)	\
 	if (EIF_TSD_GET0(val_type,key,val))  eif_thr_panic(msg)
 

@@ -27,6 +27,8 @@ inherit
 			{NONE} all
 		end
 
+	TYPE_NAME_ID
+
 feature -- Access
 
 	deserialized_object: ANY
@@ -53,21 +55,26 @@ feature -- Basic Operations
 				if bin_des.deserialized_object /= Void then
 					deserialized_object := bin_des.deserialized_object
 				else
-					last_error := No_error
-					last_error_context := Void
-					create xml_reader.make_from_url (path.to_cil)
-					xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
-					read_next
-					if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
+					if feature {SYSTEM_FILE}.exists (path.to_cil) then
+						last_error := No_error
+						last_error_context := Void
+						create xml_reader.make_from_url (path.to_cil)
+						xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
 						read_next
-						deserialized_object := reference_from_xml
-						create ser
-						ser.serialize (deserialized_object, path)
+						if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
+							read_next
+							deserialized_object := reference_from_xml
+							create ser
+							ser.serialize (deserialized_object, path)
+						else
+							last_error := Invalid_xml_file_error
+							last_error_context := clone (path)
+						end
+						xml_reader.close
 					else
-						last_error := Invalid_xml_file_error
-						last_error_context := clone (path)
+						last_error := Generic_error
+						last_error_context := "File " + path + " does not exist."
 					end
-					xml_reader.close
 				end
 			end
 		ensure
@@ -230,7 +237,7 @@ feature {NONE} -- Implementation
 			if name_att /= Void then
 				create name.make_from_cil (name_att)
 	-- FIXME: Hardcoded "Impl." Should really use {INTERNAL}.namespace when implemented
-				dt := dynamic_type_from_string ("ISE.Cache.Impl." + name)
+				dt := dynamic_type_from_string (name.to_integer)
 				if dt = -1 then
 					last_error := Type_not_in_system_error
 					last_error_context := name
@@ -500,27 +507,25 @@ feature {NONE} -- Implementation - internal speedup
 			create Result.make (10)
 		end
 
-	dynamic_type_from_string (name: STRING): INTEGER is
+	dynamic_type_from_string (name: INTEGER): INTEGER is
 			-- Given a type name `name' retrieves its corresponding 
 			-- dynamic type.
 		local
-			l_table: like internal_dynamic_types
+			l_full_name: STRING
 		do
-			l_table := internal_dynamic_types
-			l_table.search (name)
-			if l_table.found then
-				Result := l_table.found_item
-			else
-				Result := internal_dynamic_type_from_string (name)
-				l_table.put (Result, name)
+			Result := internal_dynamic_types.item (name)
+			if Result = 0 then
+				l_full_name := "ISE.Cache.Impl." + types.item (name)
+				Result := internal_dynamic_type_from_string (l_full_name)
+				internal_dynamic_types.put (Result, name)
 			end
 		end
 
-	internal_dynamic_types: HASH_TABLE [INTEGER, STRING] is
+	internal_dynamic_types: ARRAY [INTEGER] is
 			-- List of correspondance between type names and their
 			-- corresponding dynamic types.
 		once
-			create Result.make (10)
+			create Result.make (1, 19)
 		end
 
 end -- class EIFFEL_XML_DESERIALIZER

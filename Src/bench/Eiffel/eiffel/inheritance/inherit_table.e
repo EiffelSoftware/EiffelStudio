@@ -998,7 +998,7 @@ end;
 					-- Feature has changed of body between two 
 					-- recompilations; attribute `body_id' must be renew and the
 					-- old body id should be remove from the body
-					-- server after compilation if successfull.
+					-- server after compilation if successful.
 					if old_feature_in_class then
 						if not feature_i.is_code_replicated then
 							Tmp_body_server.desactive (old_body_id);
@@ -1125,7 +1125,7 @@ end;
 		end;
 
 	update_body_server is
-			-- Update `Tmp_body_server' after a successfull second
+			-- Update `Tmp_body_server' after a successful second
 			-- pass
 		require
 			no_error: not Error_handler.has_error;
@@ -1135,7 +1135,7 @@ end;
 
 	update_changed_features is
 			-- Update table `changed_features' of `a_class' after a
-			-- successfull second pass
+			-- successful second pass
 		require
 			no_error: not Error_handler.has_error;
 		local

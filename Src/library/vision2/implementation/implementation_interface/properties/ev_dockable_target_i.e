@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Implementation interface for dockable target."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,16 +12,10 @@ inherit
 			interface
 		end
 
-feature -- Access
-
-feature -- Measurement
-
 feature -- Status report
 
-	real_target: EV_DOCKABLE_TARGET
-	
 	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
-		--
+		-- Function used to veto transport.
 		
 	is_docking_enabled: BOOLEAN
 		-- May `Current' be docked to?
@@ -52,27 +45,8 @@ feature -- Status setting
 			id_not_stored_in_application: not (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)
 		end
 		
-		
-	set_real_target (a_real_target: EV_DOCKABLE_TARGET) is
-			--
-		require
-			real_target_not_void: a_real_target /= Void
-		do
-			real_target := a_real_target
-		ensure
-			real_target_set: real_target = a_real_target
-		end
-
-	remove_real_target is
-			--
-		do
-			real_target := Void
-		ensure
-			real_target_void: real_target = Void
-		end
-		
 	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]) is
-			--
+			-- Assign `a_function' to `veto_dock_function'.
 		require
 			a_function_not_void: a_function /= Void
 		do
@@ -84,8 +58,5 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_TARGET
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_DOCKABLE_TARGET_I

@@ -43,7 +43,7 @@ feature -- Comparison
 	includes (other: like Current): BOOLEAN is
 			-- Does the rectangle surround `other'?
 		require
-			rectangle_exists: not (other = Void);
+			rectangle_exists: other /= Void;
 			rectangle_not_empty: not other.empty
 		do
 			if not infinite  and not other.infinite then
@@ -111,23 +111,23 @@ feature -- Modification & Insertion
 			else
 				empty := true
 			end
-		end; -- set
+		end;
 
 	set_bound (p1, p2: COORD_XY_FIG) is
 			-- Set coordinates
 		require
-			not (p1 = Void);
-			not (p2 = Void)
+			p1_exists: p1 /= Void;
+			p2_exists: p2 /= Void
 		do
 			wipe_out;
 			enlarge (p1);
 			enlarge (p2)
-		end; -- set_bound
+		end; 
 
 	enlarge (p: COORD_XY_FIG) is
 			-- Enlarge the rectangle in order to include `p'
 		require
-			point_exists: not (p = Void)
+			point_exists: p /= Void
 		do
 			if not infinite then
 				if empty then
@@ -146,7 +146,7 @@ feature -- Modification & Insertion
 	merge (other: like Current) is
 			-- Enlarge the rectangle in order to include `other'.
 		require
-			rectangle_exists: not (other = Void)
+			rectangle_exists: other /= Void
 		do
 			if not infinite and not other.infinite then
 				if not other.empty then
@@ -167,7 +167,7 @@ feature -- Modification & Insertion
 	merge_clip (clip: CLIP) is
 			-- Enlarge the rectangle in order to include `clip'.
 		require
-			not (clip = Void)
+			clip_exists: clip /= Void
 		local
 			clip_up_left, clip_down_right: COORD_XY_FIG;
 		do

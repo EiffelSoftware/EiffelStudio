@@ -70,7 +70,7 @@ feature -- Modification & Insertion
 	set_center (a_point: like center) is
             		-- Set `center' to `a_point'.
         	require
-            		a_point_exits: not (a_point = Void)
+            		a_point_exits: a_point /= Void
         	do
             		center := a_point;
 					set_conf_modified
@@ -83,7 +83,7 @@ feature -- Modification & Insertion
         	do
             		origin_user_type := 2;
         	ensure then
-            		origin.is_surimposable (center)
+            		origin.is_superimposable (center)
         	end;
 
     	set_radius (new_radius: like radius) is
@@ -142,13 +142,12 @@ feature -- Output
 
 feature -- Status report
 
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is the current circle surimposable to `other' ?
+    	is_superimposable (other: like Current): BOOLEAN is
+            		-- Is the current circle superimposable to `other' ?
             		--| not finished
-        	require else
-            		other_exists: not (other = Void)
         	do
-            		Result := center.is_surimposable (other.center) and (radius = other.radius)
+            		Result := center.is_superimposable (other.center) and 
+						(radius = other.radius)
         	end;
 
 feature {CONFIGURE_NOTIFY} -- Updating
@@ -165,9 +164,9 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 invariant
 
-    	origin_user_type <= 2;
-    	radius >= 0;
-    	not (center = Void)
+    	origin_user_type_constraint: origin_user_type <= 2;
+    	meaningful_radius: radius >= 0;
+    	center_exists: center /= Void
 
 end -- class CIRCLE
 

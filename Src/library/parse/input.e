@@ -15,7 +15,7 @@ class INPUT inherit
 			make as arrayed_list_make
 		end
 
-creation
+create
 
 	make
 
@@ -92,7 +92,7 @@ feature  -- Input
 		local
 			new_token: TOKEN
 		do
-			if empty or else islast then
+			if is_empty or else islast then
 				analyzer.get_token;
 				if analyzer.last_token.type = 0 then
 					io.put_string("unrecognized_tokens%N");
@@ -118,7 +118,7 @@ feature  -- Input
 		local
 			retrieved_file: RAW_FILE
 		do
-			!! retrieved_file.make_open_read (filename);
+			create retrieved_file.make_open_read (filename);
 			analyzer ?= retrieved_file.retrieved;
 			retrieved_file.close
 		end;
@@ -128,7 +128,7 @@ feature  -- Output
 	out_list is
 			-- Output tokens recognized so far.
 		do
-			if not empty then
+			if not is_empty then
 				from
 					start;
 					io.put_string ("Printing all tokens ");
@@ -165,7 +165,7 @@ feature {NONE}
 	error_message : STRING is
 			-- Last error message output
 		once
-			!! Result.make (120)
+			create Result.make (120)
 		end
 
 	file_name : STRING is
@@ -180,13 +180,11 @@ feature {NONE}
 			Result := analyzer.token_line_number
 		end;
 
-
 end -- class INPUT
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

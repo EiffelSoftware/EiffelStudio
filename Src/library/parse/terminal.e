@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 		once 
 		end; 
 
-	left_recursion: BOOLEAN is false;
+	left_recursion: BOOLEAN is False;
 
 	check_recursion is
 			-- Do nothing.
@@ -57,9 +57,9 @@ feature {NONE} -- Implementation
 			if token_correct then
 				token := document.token;
 				document.get_token;
-				complete := true
+				complete := True
 			else
-				complete := false
+				complete := False
 			end
 		end; 
 
@@ -80,11 +80,10 @@ feature {NONE} -- Implementation
 		end 
 
 end -- class TERMINAL
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

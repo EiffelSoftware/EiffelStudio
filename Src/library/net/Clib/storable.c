@@ -7,6 +7,7 @@
 #include "winsock.h"
 #define GET_SOCKET_ERROR WSAGetLastError()
 #else
+#include <sys/types.h>		/* select */
 #include <sys/time.h>		/* select */
 #define SOCKET_ERROR -1
 #define GET_SOCKET_ERROR errno
@@ -14,7 +15,6 @@
 
 #define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
 #define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
-
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
 /* read = 0, check the socket to be rrready for writing */
@@ -65,7 +65,7 @@ int net_char_read(char *pointer, int size)
 #else
 	i = read(r_fides, pointer, size);
 #endif
-	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EAGAIN)
+	if (i == SOCKET_ERROR)
 	{
 		if (!net_socket_ready(1))
 		{
@@ -88,7 +88,7 @@ int net_char_write(char *pointer, int size)
 #else
 	i = write(fides, pointer, size);
 #endif
-	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EAGAIN)
+	if (i == SOCKET_ERROR)
 	{
 	 	if (!net_socket_ready(0))
 		{

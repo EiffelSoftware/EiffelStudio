@@ -25,7 +25,8 @@ inherit
 		end;
 	TEXT_WINDOW
 		rename
-			current_line as current_text_line
+			current_line as current_text_line,
+			count as text_count
 		undefine
 			copy, setup
 		redefine
@@ -66,6 +67,9 @@ feature -- Access
 	maximum_width: INTEGER;
 			-- Max width of workarea
 
+	cursor_position: INTEGER;
+			-- Cursor position
+ 
 	drawing: DRAWING_X is
 			-- Drawing implementation
 		deferred
@@ -73,6 +77,11 @@ feature -- Access
 
 	workarea_width: INTEGER is
 			-- Width of workarea
+		deferred
+		end;
+
+	workarea_height: INTEGER is
+			-- Height of workarea
 		deferred
 		end;
 
@@ -92,29 +101,103 @@ feature -- Access
 				Result.extend ('%T');
 				Result.multiply (n)
 			end
-		end
+		end;
+
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
+		do
+			if y_pos <= 0 then
+				Result := 0
+			else
+				find_text (x_pos, y_pos);
+				if current_line = Void then
+						-- Can't find line (coord MUST be after document)
+					Result := text.count - 1
+				else
+					if current_text /= Void then
+						-- Get the closest character position in text
+						Result := current_text.character_position (Current, x_pos)
+					elseif x_pos <= initial_x_position then
+							-- Get the text position at the start of current next line
+						Result := i_th (index).text_position
+					elseif index = count then 
+						Result := text.count - 1
+					else
+							-- Get the text position at the end of current next line.
+						Result := i_th (index + 1).text_position - 1
+					end
+				end
+			end
+		end;
+
+	coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate of character postion `char_pos'
+		local
+			a: like area;
+			i, c: INTEGER;
+			fig: TEXT_FIGURE;
+			line: TEXT_LINE;
+			found: BOOLEAN;
+		do
+			from
+				c := count;
+				a := area;
+				i := 0
+			until
+				found or else i >= c
+			loop
+				line := a.item (i);
+				found := line.text_position > char_pos;
+				i := i + 1
+			end;
+			if found then
+				if char_pos = 0 then
+					-- go back to previous line
+					line := a.item (0);
+				else
+					line := a.item (i - 2);
+				end;
+			elseif i = c then
+				line := a.item (i - 1);
+			end
+			if line /= Void then
+				if line.empty then
+					-- Must only be a new line
+					!! Result;
+					Result.set (workarea_width, line.base_left_y)
+				else
+					fig := line.text_with_position (char_pos);
+					if fig /= Void then
+						Result := fig.coordinate (Current, char_pos)
+					end
+				end
+			end;
+			if Result = Void then
+				line := i_th (count);
+				-- Must be after end of document
+				!! Result;
+				Result.set (workarea_width, line.base_left_y)
+			end
+		end;
 
 feature -- Update
-
-	find_text (button_data: BUTTON_DATA) is
-			-- Find clickable text from `button_data' coordinates.
+	find_text (relative_x, relative_y: INTEGER) is
+			-- Find clickable text from coordinates.
 		local
 			fig: TEXT_FIGURE;
 			p: COORD_XY
 		do
 			current_text := Void;
-			find_line (button_data);
+			find_line (relative_y);
 			if current_line /= Void then
 				!! p;
-				p.set (button_data.relative_x, button_data.relative_y);
+				p.set (relative_x, relative_y);
 				current_text := current_line.text_figure (p);
 			end;
 		end;
 
-	find_line (button_data: BUTTON_DATA) is
-			-- Find text line text from `button_data' coordinates.	
-		require
-			valid_button_data: button_data /= Void
+	find_line (relative_y: INTEGER) is
+			-- Find text line text from `relative_y' coordinate.	
 		local
 			a: like area;
 			i, c: INTEGER;
@@ -124,7 +207,7 @@ feature -- Update
 			rel_y: INTEGER;
 			desc: INTEGER
 		do
-			rel_y := button_data.relative_y + y_offset;
+			rel_y := relative_y + y_offset;
 			desc := maximum_descent_per_line;
 			from
 				c := count;
@@ -152,7 +235,7 @@ feature -- Update
 		end;
 
 	find_clickable_figure_with_stone (stone: STONE) is
-			-- Find clickable text from `button_data' coordinates.	
+			-- Find clickable text from `stone'.
 		local
 			a: like area;
 			i, c: INTEGER;
@@ -173,8 +256,8 @@ feature -- Update
 			current_text := fig;
 		end;
 
-	find_clickable (button_data: BUTTON_DATA) is
-			-- Find clickable text from `button_data' coordinates.	
+	find_clickable (relative_x, relative_y: INTEGER) is
+			-- Find clickable text from coordinates.	
 		local
 			a: like area;
 			i, c: INTEGER;
@@ -184,8 +267,8 @@ feature -- Update
 			line: like current_line
 		do
 			!! p;
-			p.set (button_data.relative_x + x_offset, button_data.relative_y + y_offset);
-			find_line (button_data);
+			p.set (relative_x + x_offset, relative_y + y_offset);
+			find_line (relative_y);
 			if current_line /= Void then
 				fig := current_line.clickable_figure (p);
 				if fig = Void then
@@ -270,12 +353,12 @@ debug ("DRAWING")
 		end
 	end
 end
+			text_position := text_position + 1;
 			!! current_line.make (Current);
 			maximum_width := maximum_width.max (current_x);
 			current_x := initial_x_position;
 			current_y := current_y + maximum_height_per_line;
 			text.extend ('%N');
-			text_position := text_position + 1;
 		end;
 
 	put_classi (e_class: CLASS_I; str: STRING) is
@@ -425,29 +508,35 @@ end
 			add_text_figure (fig, s);
 		end;
 
-    process_indentation (t: INDENT_TEXT) is
-            -- Process indentation `t'.
+	process_indentation (t: INDENT_TEXT) is
+			-- Process indentation `t'.
 		local
+			fig: STRING_TEXT_IMAGE;
+			w: INTEGER;
 			str: STRING
 		do
-			current_x := (tab_pixel_length * t.indent_depth) + current_x
 			str := t.image;
+			!! fig;
+			fig.set_is_tab;
+			w := tab_pixel_length * t.indent_depth;
+			fig.set_width (w);
+			fig.set_text_info (str, text_position);
+			fig.set_base_left (current_x, current_y);
+			current_line.extend (fig);
+
+			current_x := w + current_x;
 			text.append (str);
 			text_position := text_position + str.count
-        end;
+		end;
 
 	put_indent (depth: INTEGER) is
 			-- Put indent of depth `d'.
 		local
-			str: STRING
+			str: STRING;
+			t: INDENT_TEXT
 		do
-			str := "%T";
-			if depth > 1 then	
-				str.multiply (depth)
-			end;
-			current_x := (tab_pixel_length * depth) + current_x
-			text.append (str);
-			text_position := text_position + str.count
+			!! t.make (depth);
+			process_indentation (t)
 		end;
 
 	put_quoted_comment (s: STRING) is
@@ -491,6 +580,7 @@ feature -- Text formatting
 			else
 				!! fig;
 				fig.set_stone (breakable_stone);
+				fig.set_text_info ("", text_position);
 				fig.set_base_left (0, current_y);
 				current_line.extend (fig);
 				current_x := padded_width
@@ -564,13 +654,13 @@ feature {TEXT_LINE} -- Implementation
 	padded_width: INTEGER is 25;
 			-- Padded width
 
-feature {NONE} -- Implementation
+	tab_pixel_length: INTEGER;
+			-- Tab length in pixels
 
-	text_position: INTEGER;
+	text_position: INTEGER
 			-- Current text position
 
-	tab_pixel_length: INTEGER
-			-- Tab length in pixels
+feature {NONE} -- Implementation
 
 	current_x: INTEGER;
 			-- Current y value in text
@@ -592,15 +682,16 @@ feature {NONE} -- Implementation
 			w: INTEGER;
 			tp: INTEGER
 		do
+			tp := text_position;
 			text.append (s);
-			tp := tp + s.count;
-			text_position := tp;
 			fig.set_text_info (s, tp);
 			fig.set_base_left (current_x, current_y);
 			w := fig.font (Current).width_of_string (s);
 			fig.set_width (w);
 			current_line.extend (fig);
 			current_x := current_x + w;
+			tp := tp + s.count;
+			text_position := tp
 		end;
 
 	init_values is
@@ -612,6 +703,8 @@ feature {NONE} -- Implementation
 			maximum_descent_per_line :=
 					font_max_descent;
 			current_y := maximum_height_per_line + 5;
+			text_position := 0;
+			cursor_position := 0;
 			!! current_line.make (Current)
 		end;
 

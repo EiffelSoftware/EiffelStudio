@@ -119,7 +119,12 @@ feature -- Access
 	maximum_height_per_line: INTEGER is
 			-- Maximum height per line
 		deferred
-		end
+		end;
+
+	maximum_width: INTEGER is
+			-- Maximum width of document
+		deferred
+		end;
 
 	total_width: INTEGER is
 			-- Total width
@@ -223,7 +228,10 @@ feature -- Execution
 			rel_x, rel_y: INTEGER;
 			coord: COORD_XY;
 			clip: CLIP;
-			app_context: MEL_APPLICATION_CONTEXT
+			app_context: MEL_APPLICATION_CONTEXT;
+			button_data: BUTTON_DATA;
+			motnot_data: MOTNOT_DATA;
+			end_highlight_pos: INTEGER
 		do
 			if arg = Expose_action then
 				expose_data ?= context_data;
@@ -278,7 +286,10 @@ end
 				if task = Void then
 					!! task.make;
 					task.add_action (Current, Mouse_action);
-				end
+				end;
+				motnot_data ?= context_data;
+				update_scrolling_selection
+					(motnot_data.relative_x, motnot_data.relative_y);
 			elseif arg = Release_action then
 				if task /= Void then
 					task.destroy;
@@ -329,6 +340,9 @@ end
 				elseif x_incr /= 0 then
 					update_scroll_position (horizontal_scrollbar, x_offset + x_incr)
 					update_text
+				end;
+				if arg = Mouse_action then
+					update_scrolling_selection (rel_x, rel_y)
 				end
 			end
 		end;
@@ -351,12 +365,19 @@ feature -- Output
 			w_clr, h_clr: INTEGER;
 			redraw_window, update: BOOLEAN;
 			d: like drawing;
-			mp: MEL_POINT
+			mp, mp1: MEL_POINT
 		do
 			new_x_offset := horizontal_scrollbar.value;
 			new_y_offset := vertical_scrollbar.value;
 			d := drawing;
 			if new_x_offset /= x_offset then
+				if not highlight_points.empty then
+					mp := highlight_points.i_th (1);
+					mp1 := highlight_points.i_th (2);
+					if mp.x /= 0 or else mp1.x /= maximum_width then
+						mp.set_x (mp.x + x_offset - new_x_offset)
+					end
+				end;
 					-- X position changed
 				update := True;
 				x_diff := (x_offset - new_x_offset).abs;
@@ -470,34 +491,40 @@ feature {NONE} -- Implementation
 feature {NONE} -- Selection implementation
 
 	selected_text: STRING is
-		-- Text selected from the drawing area
+			-- Text selected from the drawing area
 		once
 			!! Result.make (0)
 		end;
 		
 	nbr_of_clicks: INTEGER;
-		-- Number of clicks for the mouse at a given location
+			-- Number of clicks for the mouse at a given location
 		
 	prev_time: INTEGER;
-		-- Saved time of last mouse click
+			-- Saved time of last mouse click
 		
 	prev_x, prev_y: INTEGER
-		-- Saved x and y coordinate
+			-- Saved x and y coordinate
+
+	prev_motion_y: INTEGER
+			-- Saved x and y coordinate for button motion
 		
 	highlight_points: ARRAYED_LIST [MEL_POINT];
-		-- Polygon coordinates to highlight area of text
+			-- Polygon coordinates to highlight area of text
+
+	start_highlight_pos: INTEGER
+			-- Character position of the first mouse click
 		
 	process_mouse_press_action is
-		-- Process the mouse event action.
+			-- Process the mouse event action.
 		local
 			button_event: MEL_BUTTON_EVENT;
 			button_data: BUTTON_DATA;
 			curr_x, curr_y: INTEGER
 		do
 			button_event ?= last_callback_struct.event;
+			curr_x := button_event.x;
+			curr_y := button_event.y;
 			if prev_time + 400 > button_event.time then
-				curr_x := button_event.x;
-				curr_x := button_event.y;
 				-- 200 milliseconds for a double click
 				-- then check to see if it is in the same region
 				if
@@ -505,9 +532,7 @@ feature {NONE} -- Selection implementation
 					(curr_y < prev_y + 10 or else curr_y > prev_y + 10)
 				then
 					-- Is within range
-					nbr_of_clicks := nbr_of_clicks + 1;
-					prev_x := curr_x;
-					prev_y := curr_y;
+					nbr_of_clicks := nbr_of_clicks + 1
 				else
 					nbr_of_clicks := 1
 				end
@@ -515,34 +540,36 @@ feature {NONE} -- Selection implementation
 				nbr_of_clicks := 1;
 				-- Reset it
 			end;
-			prev_time := button_event.time;
 			clear_selection;
 			inspect nbr_of_clicks
 				when 2 then
 					button_data ?= context_data;
-					select_word (button_data);
+					select_word (button_data.relative_x, button_data.relative_y);
 				when 3 then
 					button_data ?= context_data;
-					select_line (button_data);
+					select_line (button_data.relative_y);
 				when 4 then
 					select_all;
 				else
 					-- Reset number of clicks
 					nbr_of_clicks := 1;
+			end;
+			prev_time := button_event.time;
+			prev_x := curr_x;
+			prev_y := curr_y;
+			prev_motion_y := curr_y;
+			if nbr_of_clicks = 1 then
+				start_highlight_pos := character_position (prev_x, prev_y)
 			end
 		end;
 		
-	select_word (button_data: BUTTON_DATA) is
+	select_word (relative_x, relative_y: INTEGER) is
 			-- Select a word.
-		require
-			valid_button_data: button_data /= Void
 		deferred
 		end;
 		
-	select_line (button_data: BUTTON_DATA) is
+	select_line (relative_y: INTEGER) is
 			-- Select a line.
-		require
-			valid_button_data: button_data /= Void
 		deferred
 		end;
 		
@@ -554,7 +581,7 @@ feature {NONE} -- Selection implementation
 	clear_selection is
 			-- Clear the current selections.
 		do
-			is_select_all := True;
+			is_select_all := False;
 			drawing.set_logical_mode (6); -- Xor
 			drawing.set_foreground_gc_color (foreground_color);
 			drawing.mel_fill_polygon (drawing, highlight_points, NonConvex, False);
@@ -581,13 +608,25 @@ feature {NONE} -- Selection implementation
 			selection_is_void: selection = Void
 		local
 			atom: MEL_ATOM;
-			button_event: MEL_BUTTON_EVENT
+			motion_event: MEL_MOTION_EVENT;
+			button_event: MEL_BUTTON_EVENT;
+			key_event: MEL_KEY_EVENT;
+			t: INTEGER
 		do
 			if not a_text.empty then
 				button_event ?= last_callback_struct.event;
+				motion_event ?= last_callback_struct.event;
+				key_event ?= last_callback_struct.event;
+				if button_event /= Void then
+					t := button_event.time
+				elseif motion_event /= Void then
+					t := motion_event.time
+				elseif key_event /= Void then
+					t := key_event.time
+				end;
 				!! atom.make_string;
 				!! selection.make_own_selection
-					(drawing, atom, button_event.time, a_text, Current, Void,
+					(drawing, atom, t, a_text, Current, Void,
 					Void, Void)
 			end
 			selected_text.wipe_out;
@@ -614,6 +653,54 @@ feature {NONE} -- Selection implementation
 	highlight_text (a_text: TEXT_FIGURE) is
 			-- Highlight a_text.
 		deferred
+		end;
+
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
+		deferred
+		end;
+
+	set_selection (sp, ep: INTEGER) is
+			-- Set the selection from `start_pos' to `end_pos'.
+		require
+			non_negative_values: sp >= 0 and then ep >= 0;
+			valid_pos: ep >= sp
+		deferred
+		end;
+
+	update_scrolling_selection (relative_x, relative_y: INTEGER) is
+			-- Update the scrolling selection.
+		local
+			coord: COORD_XY;
+			clip: CLIP;
+			end_highlight_pos: INTEGER
+		do
+			!! coord;
+			!! clip;
+			if relative_y >= prev_motion_y then
+				coord.set (0, prev_motion_y - 2*maximum_height_per_line);
+				if coord.y > height then
+					coord.set (0, height)
+				end;
+				clip.set (coord, width,
+					relative_y - prev_motion_y + 3*maximum_height_per_line);
+			else
+				coord.set (0, relative_y - maximum_height_per_line);
+				if coord.y < 0 then
+					coord.set (coord.x, 0)
+				end;
+				clip.set (coord, width,
+					prev_motion_y - relative_y + 2*maximum_height_per_line);
+			end
+			end_highlight_pos := character_position (relative_x, relative_y);
+			set_clip (clip);
+			if end_highlight_pos < start_highlight_pos then
+				set_selection (end_highlight_pos, start_highlight_pos)
+			else
+				set_selection (start_highlight_pos, end_highlight_pos)
+			end;
+			prev_motion_y := relative_y
+			set_no_clip
 		end;
 
 end -- class SCROLLED_DRAWING_AREA

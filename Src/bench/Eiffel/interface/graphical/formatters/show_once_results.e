@@ -22,14 +22,6 @@ creation
 
 	make
 
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-		do
-			init (a_text_window);
-			indent := 2
-		end;
-
 feature -- Properties
 
 	symbol: PIXMAP is 

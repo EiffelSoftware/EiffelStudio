@@ -18,14 +18,6 @@ creation
 
 	make
 
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-		do
-			init (a_text_window);
-			indent := 4
-		end;
-
 feature -- Properties
 
 	symbol: PIXMAP is 

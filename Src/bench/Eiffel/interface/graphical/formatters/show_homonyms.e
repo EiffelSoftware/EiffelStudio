@@ -19,13 +19,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-		do
-			init (a_text_window)
-		end;
-
 feature -- Porperties
 
 	symbol: PIXMAP is 

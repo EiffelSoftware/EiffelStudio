@@ -32,7 +32,7 @@
 #include "eif_lmalloc.h"
 
 #ifdef EIF_VMS
-#include <assert>
+#include <assert.h>
 #include <lib$routines>
 #include <descrip>
 #include <dvidef>
@@ -44,9 +44,16 @@
 #define DX_BUF(d,buf) DX d = { sizeof buf, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
 /* VMS filenames or types (.extensions) may contain any of the following. */
 static const char vms_valid_filename_chars[] 
-    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890$_-";
+    = "$_-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 static const int vms_max_filename = 39;	    /* max length of filename, type (component) */
-static const char vms_filespec_delimiters[] = ":[]<>";
+/* The set of VMS specific path delimiters. NB. period is excluded. */
+static const char vms_path_delimiters[] = ":[]<>";
+/* does path p end in a VMS path delimiter? */
+#define IS_VMS_PATH_TERMINATED(p) ( strchr (vms_path_delimiters, (p)[strlen(p) -1]) )
+/* Is path p VMS or a UNIX filespec? */
+/* NB. these are not complementary; a simple filename with no path delimiters is neither. */
+#define IS_VMS_FILESPEC(p)  ( strpbrk (p, vms_path_delimiters) )
+#define IS_UNIX_FILESPEC(p) ( strchr (p, '/') )
 #endif  /* EIF_VMS */
 
 #if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
@@ -123,15 +130,21 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 	return result;
 
 #elif defined EIF_VMS
-	/* first check to see if p includes a ] */
-	/* in fact, the last character should be ] */
-	if ( p[strlen(p)-1] != ']')		/* end with ] */
+	EIF_BOOLEAN result = EIF_FALSE;
+
+	if (p && *p) {
+	    char last = p[strlen(p)-1];
+	    /* first check to see if p includes a ] */
+	    /* in fact, the last character should be ] */
+	    if (last != ']')		/* end with ] */
 		return EIF_FALSE;
-	if ( strchr( (char *)p,'[') == NULL)	/* has a opening bracket */
+	    if (strchr ((char*)p, '[') == NULL) 	/* has a opening bracket */
 		return EIF_FALSE;
-	if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+	    if (strchr ((char*)p, '/') != NULL) 	/* no slash allowed */
 		return EIF_FALSE;
-	return EIF_TRUE;
+	    return EIF_TRUE;
+	}
+	return result;
 
 #else  /* must be Unix */
 		/* FIXME */
@@ -195,7 +208,7 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 #elif defined EIF_VMS
 	/* VMS filenames are of the form [ <name> ] [ . [ <ext> ] ] */
 	/* where <name> and <ext> start with an alphabetic and may be followed */
-	/* by up to 38 alphanumeric chars. Alphabetic are A-Z, $, _.   */
+	/* by up to 38 alphanumeric chars. Alphabetic are [A-Za-z$_-]   */
 	/* but since those restrictions may be relaxed, lets ask the system. */
 	if (p && *p) {
 	    /* perform a parse on the name supplied */
@@ -278,14 +291,16 @@ rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_POINTER p)
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return eif_is_file_name_valid (p);
+
 #elif defined EIF_VMS
 	/* For VMS, allow "subdir" or "[.subdir]" or "dev:[sub.subdir]" */
-	if ( strchr( (char *)p,'[') != NULL) /* if it has a [ ... */
-		if ( p[strlen(p)-1] != ']')	/* ... end with ] */
+	if (strchr (p, '[') != NULL) /* if it has a [ ... */
+		if (p[strlen(p)-1] != ']')	/* ... end with ] */
 			return EIF_FALSE;
-	if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+	if (strchr (p, '/') != NULL)	/* no slash allowed */
 		return EIF_FALSE;
 	return EIF_TRUE;
+
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -305,7 +320,9 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_IN
 #endif
 }
 
+
 /* Concatenation */
+
 
 rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
@@ -313,15 +330,27 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 		/* Otherwise, it will just be a relative path name */
 
 #ifdef EIF_VMS
-	if (strchr (p, '/')) {	    /* probably non-VMS (unix) path spec */
+	/*** DEBUG ***/
+	char *pu = decc$translate_vms (p);   /* note: returns in static buffer */
+	char *vu = decc$translate_vms (v);
+	/*** END DEBUG ***/
+	/* if unix path delimiters in either string use unix syntax, else use VMS syntax. */
+	if ( IS_UNIX_FILESPEC(p) || IS_UNIX_FILESPEC(v) ) {
 	    strcat (strcat (p, "/"), v);
+	} else if (!*p && !strcspn (v, vms_valid_filename_chars)) { 
+	    /* HACK: if p is empty and v is a simple filename (no .type), force unix syntax */
+	    /* This works around the problem of es4 using append_directory ("kernel", "any.e")   */
+	    /* when it should be using append_filename() by forcing the relative path to    */
+	    /* be unix syntax ("./kernel", "any.e") so that the distinction is nugatory.    */
+	    strcat (strcpy (p, "./"), v);
 	} else {
 	    /* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
 	    /* allowable forms for p are device:[dir]file	*/
 	    /* allowable forms for v are [.subdir] or subdir */
 	    /* make p "[x]" look like "[x." if p is not "[x.]" */
-	    if (*p == '\0') strcpy (p, "[.]");
-	    if (*((char *)p) != '\0') {
+	    if (*p == '\0') 
+		strcpy (p, "[.]");
+	    if (*v != '\0') { 
 		char *q = p + strlen(p) - 1;	/* q --> last char of p	*/
 		char *w = (char*)v;		/* w --> 1st char of v	*/
 		/* skip leading delimiters [ or [. in second string */
@@ -358,7 +387,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 #endif  /* Windows/Unix */
 	strcat ((char *)p, (char *)v);
 
-#endif	/* EIF_VMS */
+#endif	/* platform */
 
 	(egc_strset)(string, strlen ((char *)p));
 }
@@ -366,14 +395,23 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* Set the absolute part of the path name p to directory name v */
-#ifdef EIF_VMS
+
+#if defined EIF_VMS_V6_ONLY
 	/* VMS FIXME: this is not correct - what if path is relative? */
 	/* assume *p == '\0' ? */
 	*p = '\0';
 	strcat (strcat (strcat ((char*)p, "["), (char*)v), "]");
 	strcpy (p, v);
+
+#elif defined EIF_VMS
+	/* assume *p == '\0' ? */
+	if (!IS_VMS_FILESPEC(v) && *v != '/')
+	    strcat (p, "/");
+	strcat (p, v);
+
 #elif defined EIF_WIN32 || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
+
 #else	/* Unix */
 	if (*((char*)v) != '/' )
 		strcat ((char *)p, "/");
@@ -385,7 +423,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTE
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
 {
 		/* Append the file name part in the path name */
-	if (*((char *)p) == '\0'){
+	if (*((char *)p) == '\0') {
 		strcat ((char *)p, (char *)v);
 	} else {
 
@@ -393,21 +431,35 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 		if (p[strlen(p) - 1] != '\\')
 			strcat ((char *)p, "\\");
 
-#elif defined EIF_VMS_V6_ONLY
+#elif defined EIF_VMS_V6_ONLY  /* obsolete */
 		/* vms: append unix separator iff no delimiter present */
 		if (strchr (vms_valid_filename_chars, p[strlen(p) -1]))
 			strcat ((char *)p, "/");
 
 #elif defined EIF_VMS
+		/* vms: check for mixed unix/vms syntax, correct */
+		char *q;
+		if (IS_UNIX_FILESPEC(p) && IS_VMS_FILESPEC(v)) {
+		    q = decc$translate_vms(v);
+		    if (q) strcpy (v, q);
+		} else if (IS_VMS_FILESPEC(p) && IS_UNIX_FILESPEC(v)) {
+		    q = decc$translate_vms(p);
+		    if (q) strcpy (p, q);
+		}		
 		/* vms: append unix separator iff no vms-specific delimiter at end of path */
-		if (!strchr (vms_filespec_delimiters, p[strlen(p) -1]))
-			strcat ((char *)p, "/");
+		if (!strchr (vms_path_delimiters, p[strlen(p)-1])) {
+		    strcat (p, "/");
+		    /* remove leading "./" if present */
+		    if (strlen (v) > 2 && *v == '.' && *(v+1) == '/')
+			v += 2;
+		}
+
 #else /* Not Windows or VMS: append unix delimiter */
 		strcat ((char *)p, "/");
+
 #endif
 		strcat ((char *)p, (char *)v);
 	}
-
 	(egc_strset)(string, strlen ((char *)p));
 }
 
@@ -425,7 +477,7 @@ rt_public EIF_REFERENCE eif_current_dir_representation(void)
 {
 		/* String representation of Current directory */
 #ifdef EIF_VMS
-	return RTMS("[]");	    /* VMS FIXME: perhaps this should be sys$disk:[]  */
+	return RTMS("[]");	/* VMS FIXME: perhaps this should be sys$disk:[]  */
 #else
 	return RTMS(".");
 #endif
@@ -456,8 +508,10 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 		/* String representation of $HOME */
 #ifdef EIF_WIN32
 	return NULL;
-#elif defined (EIF_VMS)
+#elif defined EIF_VMS_V6_ONLY
 	return RTMS(getenv("SYS$LOGIN"));
+#elif defined (EIF_VMS)
+	return RTMS("SYS$LOGIN");
 #else
 	return RTMS(getenv("HOME"));
 #endif
@@ -505,7 +559,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
  
 #if defined EIF_WINDOWS || defined EIF_OS2
 	/* To implement */
-#elif defined (EIF_VMS)
+#elif defined EIF_VMS
 	/* To implement */
 #else
 	/* Unix */
@@ -523,7 +577,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 rt_public int eifrt_vms_has_path_terminator (const char* path)
 {
     if (path && *path) {
-	if (strchr (vms_filespec_delimiters, path[strlen(path) -1]))
+	if (strchr (vms_path_delimiters, path[strlen(path) -1]))
 	    return 1;	/* TRUE (VMS delimiter found) */
     }
     return 0;	/* FALSE */
@@ -611,7 +665,7 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 	*subdir++ = dirdelim;			/* insert directory delimiter (replace '.') */
 	{
 	    int dbg1 = strcspn (subdir, vms_valid_filename_chars);
-	    int dbg2 = strspn  (subdir, vms_filespec_delimiters);	    
+	    int dbg2 = strspn  (subdir, vms_path_delimiters);	    
 	}
 	if ( (len=strcspn (subdir, vms_valid_filename_chars)) > 0) {
 	    int rem = strlen(subdir);	/* debug */
@@ -629,5 +683,5 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 	return buf;
     }
     return NULL;    
-}
+} /* end eifrt_vms_directory_file_name() */
 #endif   /* EIF_VMS */

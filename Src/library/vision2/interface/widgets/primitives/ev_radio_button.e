@@ -22,23 +22,6 @@ create
 	default_create,
 	make_with_text
 
-feature -- Status setting
-
-	set_peer (peer: EV_RADIO_BUTTON) is
-			-- Group with `peer'.
-			-- Only one of a group may be selected a one time.
-		require 
-			peer_not_void: peer /= Void
-		do
-			implementation.set_peer (peer)
-		end
-
-	remove_from_group is
-			-- Remove from current group.
-		do
-			implementation.remove_from_group
-		end
-
 feature -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
@@ -75,6 +58,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/17 01:42:05  king
+--| Removed deprecated radio grouping features
+--|
 --| Revision 1.10  2000/02/14 11:40:53  oconnor
 --| merged changes from prerelease_20000214
 --|

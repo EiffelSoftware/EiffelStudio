@@ -268,6 +268,13 @@ feature {NONE} -- Externals.
 		alias
 			"child2_resize"
 		end
+		
+--	gtk_style_set_prop_experimental (a_style: POINTER; a_window: POINTER; value: INTEGER) is 
+--			-- GtkStyle* gtk_style_attach		     (GtkStyle	    *style,
+--			-- 					      GdkWindow	    *window);
+--		external
+--			"C (GtkStyle*, gchar*, gint) | <gtk/gtk.h>"
+--		end
 
 feature {EV_ANY_I} -- Implementation
 

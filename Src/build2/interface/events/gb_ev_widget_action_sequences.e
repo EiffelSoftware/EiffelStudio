@@ -68,8 +68,9 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when size changes.")
 		end
 		
-	actions_agent (widget: EV_WIDGET; an_agent: PROCEDURE [ANY, TUPLE]; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
-			--
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
 		local
 			gb_ev_action_sequence: GB_EV_ACTION_SEQUENCE
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
@@ -78,7 +79,6 @@ feature -- Access
 			motion_sequence: GB_EV_POINTER_MOTION_ACTION_SEQUENCE
 			geometry_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
 			pointer_press_sequence: GB_EV_POINTER_BUTTON_ACTION_SEQUENCE
-			
 		do
 			if action_sequence.is_equal ("pointer_motion_actions") then
 				if adding then
@@ -89,23 +89,22 @@ feature -- Access
 				end
 			elseif action_sequence.is_equal ("pointer_button_press_actions") then
 				if adding then
-					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_POINTER_BUTTON_ACTION_SEQUENCE"))
 					widget.pointer_button_press_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
 				else
 					widget.pointer_button_press_actions.wipe_out
 				end
 			elseif action_sequence.is_equal ("pointer_double_press_actions") then
 				if adding then
-					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_POINTER_BUTTON_ACTION_SEQUENCE"))
 					widget.pointer_double_press_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
 				else
 					widget.pointer_double_press_actions.wipe_out
 				end
 			elseif action_sequence.is_equal ("pointer_button_release_actions") then
 				if adding then
-					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
+					pointer_press_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_POINTER_BUTTON_ACTION_SEQUENCE"))
 					widget.pointer_button_release_actions.extend (pointer_press_sequence.display_agent (action_sequence, textable))
-					--widget.pointer_double_press_actions.extend (agent display_pointer_button_press_actions (?, ?, ?, ?, ?, ?, ?, ?, action_sequence, textable))
 				else
 					widget.pointer_button_release_actions.wipe_out
 				end

@@ -130,6 +130,7 @@ rt_public void epop(register struct stack *stk, register int nb_items)
 }
 
 
+#ifdef ISE_GC
 rt_public char **eget(register int num)
 {
 	/* Get 'num' entries in the 'loc_set' stack to hold Eiffel local reference
@@ -274,6 +275,8 @@ rt_public void eback(register char **top)
 	st_truncate(&loc_set);				/* Free unneeded chunks */
 }
 
+#endif
+
 rt_private int extend(register struct stack *stk)
                             			/* The stack to be extended */
 {
@@ -345,12 +348,14 @@ rt_shared void initstk(void)
 #endif
 #endif
 
+#ifdef ISE_GC
 	top = st_alloc(&loc_set, STACK_CHUNK);
 	if (top != (char **) 0)
 		top = st_alloc(&hec_stack, STACK_CHUNK);
 
 	if (top == (char **) 0)
 		eif_panic(MTC "can't create runtime stacks");
+#endif
 
 #ifdef WORKBENCH
 	initdb();				/* Initialize debugger stack */

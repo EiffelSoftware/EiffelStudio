@@ -86,7 +86,7 @@ feature -- Access
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-
+						gb_ev_any.set_object (a_new_object)
 						gb_ev_any.add_object (a_new_object.object)
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
@@ -154,8 +154,8 @@ feature -- Access
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-
-						gb_ev_any.add_object (a_new_object.object)			
+						gb_ev_any.set_object (a_new_object)
+						gb_ev_any.add_object (a_new_object.object)
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
 							gb_ev_any.add_object (a_new_object.display_object)

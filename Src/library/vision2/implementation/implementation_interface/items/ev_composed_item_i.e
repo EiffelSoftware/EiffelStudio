@@ -123,6 +123,15 @@ feature -- Element change
 		deferred
 		end
 
+	unset_cell_pixmap (index: INTEGER) is
+			-- Remove the pixmap of the 
+			-- `index'-th cell of the item.
+		require
+			valid_index: index >= 1 and index <= count
+			has_pixmap: (pixmap @ index) /= Void
+		deferred
+		end
+
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is
 			-- Make `pix' the new pixmaps of the item.
 		require

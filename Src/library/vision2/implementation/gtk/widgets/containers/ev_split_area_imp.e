@@ -126,12 +126,7 @@ feature -- Access
 	set_split_position (a_split_position: INTEGER) is
 			-- Set the position of the splitter.
 		do
-			if is_displayed then
-				feature {EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
-				user_split_position := -1
-			else
-				user_split_position := a_split_position
-			end
+			internal_set_split_position (a_split_position)
 		end
 
 	enable_flat_separator is
@@ -194,6 +189,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	internal_set_split_position (a_split_position: INTEGER) is
+			-- Set the position of the splitter.
+		do
+			if is_displayed then
+				feature {EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
+				user_split_position := -1
+			else
+				user_split_position := a_split_position
+			end
+		end
+
 	user_split_position: INTEGER
 			-- Split position as set by user, -1 if unset.
 
@@ -201,7 +207,7 @@ feature {NONE} -- Implementation
 			-- `Current' has been mapped to screen.
 		do
 			if user_split_position /= -1 then
-				set_split_position (user_split_position)
+				internal_set_split_position (user_split_position)
 			end
 		end
 

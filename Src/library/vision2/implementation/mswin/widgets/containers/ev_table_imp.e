@@ -91,13 +91,13 @@ feature -- Access
 	row_spacing: INTEGER is
 			-- Spacing between two rows
 		do
-			Result := rows_value.first.first
+			Result := rows_value.first @ 3
 		end
 
 	column_spacing: INTEGER is
 			-- spacing between two columns
 		do
-			Result := columns_value.first.first
+			Result := columns_value.first @ 3
 		end
 
 	is_homogeneous: BOOLEAN
@@ -149,7 +149,7 @@ feature -- Status settings
 	set_row_spacing (value: INTEGER) is
 			-- Make `value' the new `row_spacing'.
 		do
-			rows_value.first.put_i_th (value, 1)
+			rows_value.first.put_i_th (value, 3)
 			if not ev_children.empty then
 				initialize_at_minimum
 			end			
@@ -158,7 +158,7 @@ feature -- Status settings
 	set_column_spacing (value: INTEGER) is
 			-- Make `value' the new `column_spacing'.
 		do
-			columns_value.first.put_i_th (value, 1)
+			columns_value.first.put_i_th (value, 3)
 			if not ev_children.empty then
 				initialize_at_minimum
 			end
@@ -172,41 +172,47 @@ feature -- Status settings
 			-- the child, otherwise, the child won't appear in
 			-- the table.
 		local
+			cm: ARRAYED_LIST [FIXED_LIST [INTEGER]]
+			rw: ARRAYED_LIST [FIXED_LIST [INTEGER]]
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 			fix: FIXED_LIST [INTEGER]
 			index: INTEGER
 		do
+			cm := columns_value
+			rw := rows_value
 			-- First, we change the number of cells of the table if it is too small.
-			if right >= columns_value.count then
+			if right >= cm.count then
 				from
-					index := columns_value.count
+					index := cm.count
 				until
 					index = right + 1
 				loop
 					!! fix.make_filled (4)
 					if the_child.expandable then
 						fix.put_i_th (1, 1)
+						cm.first.put_i_th (cm.first.first + 1, 1)
 					else
 						fix.put_i_th (0, 1)
 					end
-					columns_value.extend (fix)
+					cm.extend (fix)
 					index := index + 1
 				end
 			end
-			if bottom >= rows_value.count then
+			if bottom >= rw.count then
 				from
-					index := rows_value.count
+					index := rw.count
 				until
 					index = bottom + 1
 				loop
 					!! fix.make_filled (4)
 					if the_child.expandable then
 						fix.put_i_th (1, 1)
+						rw.first.put_i_th (rw.first.first + 1, 1)
 					else
 						fix.put_i_th (0, 1)
 					end
-					rows_value.extend (fix)
+					rw.extend (fix)
 					index := index + 1
 				end
 			end
@@ -271,26 +277,34 @@ feature {NONE} -- Implementation attributes
 	columns_value: ARRAYED_LIST [FIXED_LIST [INTEGER]]
 			-- Information about the columns from the left to the right
 			-- The fixed list keep the three following informations :
-			-- 1 -> Is the column expanded (0 or 1)?.
-			--		In the first field of the 0 index, there is the column_spacing 
-			--		value stored.	
+			-- 1 -> Difference between the number of expanded and non expanded
+			--		children of the column?.
+			--		In the first field of the 0 index, there is the number of column
+			--		which are expanded.	
 			-- 2 -> What is the size of the biggest element in the column number index?
 			--      In the second field of the 0 index, there is the homogeneous value
 			--      of the columns.
 			-- 3 -> Did the current column receive any rest already (0 or 1)?
+			--		In the third field of the 0 index, there is the column_spacing
+			--		value stored.
 			-- 4 -> What is the current width of the column?
+			--		In the forth field of the 0 index, there is the value of the border.
 
 	rows_value: ARRAYED_LIST [FIXED_LIST[INTEGER]]
 			-- Information about the rows from the top to the bottom.
 			-- The fixed list keep the three following informations :
-			-- 1 -> Is the row expanded (0 or 1)?
-			--		In the first field of the 0 index, there is the row_spacing
-			--		value stored.
+			-- 1 -> Difference between the number of expanded and non expanded
+			--		children of the row?
+			--		In the first field of the 0 index, there is the number of rows
+			--		which are expanded.
 			-- 2 -> What is the size of the biggest element in the row number index?
 			--      In the second field of the 0 index, there is the homogeneous value
 			--      of the rows.
 			-- 3 -> Did the current row received any rest already (0 or 1)?
+			--		In the thired field of the 0 indes, there is the row_spacing
+			--		value stored.
 			-- 4 -> What is the current height of the row?
+			--		In the forth field of the 0 index, there is the value of the border.
 
 feature {NONE} -- Basic operation
 
@@ -300,20 +314,21 @@ feature {NONE} -- Basic operation
 		require
 			valid_child: a_child /= Void
 			current_child: a_child.parent_imp = Current
+			valie_children: ev_children /= Void
 		local
-			clist: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 		do
-			clist := ev_children
-			if not clist.empty then
+			list := ev_children
+			if not list.empty then
 				from
-					clist.start
+					list.start
 				until
-					clist.after or Result /= Void
+					list.after or Result /= Void
 				loop
-					if clist.item.widget = a_child then
-						Result := clist.item
+					if list.item.widget = a_child then
+						Result := list.item
 					end
-					clist.forth
+					list.forth
 				end
 			else
 				Result := Void
@@ -323,11 +338,13 @@ feature {NONE} -- Basic operation
 	clear_line (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]) is
 			-- Clear the 2nd, 3rd and 4th element of all the items of
 			-- the line to refill them after with new values.
+		require
+			valid_line: line /= Void and then not line.empty
 		local
 			fix: FIXED_LIST [INTEGER]
 		do
 			from
-				line.start
+				line.go_i_th (2)
 			until
 				line.after
 			loop
@@ -343,13 +360,16 @@ feature {NONE} -- Basic operation
 			-- Put the rest of all the lines to `value' which depends of the
 			-- sign of the rest. Do not use `start', `after' and `force'
 			-- because it is already called in a feature that use the index.
+		require
+			valid_line: line /= Void and then not line.empty
+			valid_value: value = 0 or value = 1
 		local
 			index: INTEGER
 		do
 			from
-				index := 1
+				index := 2
 			until
-				index = line.count
+				index = line.count + 1
 			loop
 				(line @ index).put_i_th (value, 3)
 				index := index + 1
@@ -366,21 +386,23 @@ feature {NONE} -- Basic operation
 		do
 			-- Initialize some local variables to be faster.
 			list := ev_children
-			cm := columns_value
-			rw := rows_value
-			-- Then resize the children.
-			from
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				tchild.widget.set_move_and_size
-					((cm @ (tchild.left_attachment)).last,
-					 (rw @ (tchild.top_attachment)).last,
-					 (cm @ (tchild.right_attachment)).last - (cm @ (tchild.left_attachment)).last - column_spacing - 1,
-					 (rw @ (tchild.bottom_attachment)).last - (rw @ (tchild.top_attachment)).last - row_spacing - 1)
-				list.forth
+			if not list.empty then
+				cm := columns_value
+				rw := rows_value
+				-- Then resize the children.
+				from
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					tchild.widget.set_move_and_size
+						((cm @ (tchild.left_attachment)).last,
+   						(rw @ (tchild.top_attachment)).last,
+   						(cm @ (tchild.right_attachment)).last - (cm @ (tchild.left_attachment)).last - column_spacing,
+   						(rw @ (tchild.bottom_attachment)).last - (rw @ (tchild.top_attachment)).last - row_spacing)
+					list.forth
+				end
 			end
 		end
 
@@ -417,12 +439,16 @@ feature {NONE} -- Implementation to resize the table when it comes from the pare
 			-- For the width first.
 			if new_width /= width then
 				temp_value := new_width - width
-				size_loop_body (columns_value, temp_value // columns, temp_value \\ columns)
+				if columns_value.first.first /= 0 then
+					size_loop_body (columns_value, temp_value // columns_value.first.first, temp_value \\ columns_value.first.first)
+				end
 			end
 			-- Then, the height :
 			if new_height /= height then
 				temp_value := new_height - height
-				size_loop_body (rows_value, temp_value // rows, temp_value \\ rows)
+				if rows_value.first.first /= 0 then
+					size_loop_body (rows_value, temp_value // rows_value.first.first, temp_value \\ rows_value.first.first)
+				end
 			end
 			-- We resize the children
 			resize (columns_value.last.last - column_spacing, rows_value.last.last - row_spacing)
@@ -444,65 +470,88 @@ feature {NONE} -- Implementation to resize the table when it comes from the pare
 			last: INTEGER
 		do
 			-- We do something only if is necessary
-			if (step /= 0) or (a_rest /= 0) then
-				rest := a_rest
+			rest := a_rest
+			if (step > 0) or (rest > 0) then
 				from
 					line.go_i_th (2)
 					last := 0
 				until
-					line.after or (step = 0 and then rest = 0)
+					line.after
 				loop
-					if rest > 0 and (line.item @ 3) = 0 then
-						line.item.put_i_th (1, 3)
-						last := last + step + 1
-						rest := rest - 1
-					elseif rest < 0 and (line.item @ 3) = 1 then
-						line.item.put_i_th (0, 3)
-						last := last + step - 1
-						rest := rest + 1
-					else
-						last := last + step
+					-- If the line is expanded
+					if line.item.first > 0 then
+						if rest > 0 and (line.item @ 3) = 0 then
+							line.item.put_i_th (1, 3)
+							last := last + step + 1
+							rest := rest - 1
+						else
+							last := last + step
+						end
 					end
 					line.item.put_i_th ((line.item @ 4) + last, 4)
 					line.forth
 				end
 				-- If there is still some rest, it means that all
-				-- the lines have the same size.
+				-- the expanded lines have the same size.
 				if rest /= 0 then
 					check
-						valid_rest: rest < line.count
+						valid_rest: rest.abs < line.first.first
 					end	
-					if rest > 0 then
-						initialize_rest (line, 0)
-						from
-							line.go_i_th (2)
-							last := 0
-						until
-							line.after
-						loop
-							if rest > last and (line.item @ 3) = 0 then
-								line.item.put_i_th (1, 3)
-								last := last + 1
-							end
-							line.item.put_i_th ((line.item @ 4) + last, 4)
-							line.forth
+					initialize_rest (line, 0)
+					from
+						line.go_i_th (2)
+						last := 0
+					until
+						line.after
+					loop
+						if rest > last and (line.item @ 3) = 0 then
+							line.item.put_i_th (1, 3)
+							last := last + 1
 						end
-					elseif rest < 0 then
-						initialize_rest (line, 1)
-						from
-							line.go_i_th (2)
-							last := 0
-						until
-							line.after
-						loop
-							if rest < last and (line.item @ 3) = 1 then
-								line.item.put_i_th (0, 3)
-								last := last - 1
-							end
-							line.item.put_i_th ((line.item @ 4) + last, 4)
-							line.forth
-						end
+						line.item.put_i_th ((line.item @ 4) + last, 4)
+						line.forth
 					end	
+				end
+			elseif (rest < 0) or (step < 0) then
+				from
+					line.go_i_th (2)
+					last := 0
+				until
+					line.after
+				loop
+					-- If the line is expanded
+					if line.item.first > 0 then
+						if rest < 0 and (line.item @ 3) = 1 then
+							line.item.put_i_th (0, 3)
+							last := last + step - 1
+							rest := rest + 1
+						else
+							last := last + step
+						end
+					end
+					line.item.put_i_th ((line.item @ 4) + last, 4)
+					line.forth
+				end
+				-- If there is still some rest, it means that all
+				-- the expanded lines have the same size.
+				if rest /= 0 then
+					check
+						valid_rest: rest.abs < line.first.first
+					end	
+					initialize_rest (line, 1)
+					from
+						line.go_i_th (2)
+						last := 0
+					until
+						line.after
+					loop
+						if rest < last and (line.item @ 3) = 1 then
+							line.item.put_i_th (0, 3)
+							last := last - 1
+						end
+						line.item.put_i_th ((line.item @ 4) + last, 4)
+						line.forth
+					end
 				end
 			end
 		end
@@ -511,10 +560,13 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 
 	first_body_loop (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]; value, last: INTEGER) is
 			-- Loop on the one-cell widget, to check there minimum parameter.
+			-- If `value' is bigger than the biggest element of the current line (`last'),
+			-- we set this new value for the line. Then, if it is bigger than the homogeneous
+			-- value, we set a new homogeneous value.
 		do
 			if value > (line @ last) @ 2 then
 				(line @ last).put_i_th (value, 2)
-				(line @ last).put_i_th (0, 3)
+		--		(line @ last).put_i_th (0, 3)
 				if value > line.first @ 2 then
 					line.first.put_i_th (value, 2)
 				end
@@ -523,59 +575,39 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 
 	second_body_loop (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]; value, first, last, spacing: INTEGER) is
 			-- Loop on the several-cells widget to check their minimum parameter.
+			-- We check than the current size is bigger than the actual lenght of the
+			-- cells the widget wants to cover. Then, if it is bigger indeed, we
+			-- distribute this value to the covered cells.
+			-- And we set the atttributes of the line if it is necessary.
 		local
 			length: INTEGER
 			test: INTEGER
 			step: INTEGER
 			rest: INTEGER
 		do
+			-- Lets see what is the length of the current cells the
+			-- widget covers.
 			length := last - first
-			if length > 1 then
-				-- Lets see what is the length of the current cells the
-				-- widget covers.
+			from
+				line.go_i_th (first + 1)
+				test := line.item @ 2
+				line.forth
+			until
+				line.index = last + 1
+			loop
+				test := test + line.item @ 2 + spacing
+				line.forth
+			end
+			if test < value then 
+				-- We need to distribute the extra-space among
+				-- the cells.
+				step := (value - test) // length
+				rest := (value - test) \\ length
 				from
 					line.go_i_th (first + 1)
-					test := line.item @ 2
-					line.forth
 				until
 					line.index = last + 1
 				loop
-					test := test + line.item @ 2 + spacing
-					line.forth
-				end
-				if test < value then 
-					-- We need to distribute the extra-space among
-					-- the cells.
-					step := (value - test) // length
-					rest := (value - test) \\ length
-					from
-						line.go_i_th (first + 1)
-						if rest > 0 and (line.item @ 3) = 0 then
-							line.item.put_i_th (1, 3)
-							line.item.put_i_th ((line.item @ 2) + spacing + step + 1, 2)
-							rest := rest - 1
-						else
-							line.item.put_i_th ((line.item @ 2) + spacing + step, 2)
-						end
-						if line.item @ 2 > line.first @ 2 then
-							line.first.put_i_th (line.item @ 2, 2)
-						end
-						line.forth
-					until
-						line.index = last
-					loop
-						if rest > 0 and (line.item @ 3) = 0 then
-							line.item.put_i_th (1, 3)
-							line.item.put_i_th ((line.item @ 2) + spacing + step + 1, 2)
-							rest := rest - 1
-						else
-							line.item.put_i_th ((line.item @ 2) + spacing + step, 2)
-						end
-						if line.item @ 2 > line.first @ 2 then
-							line.first.put_i_th (line.item @ 2, 2)
-						end
-						line.forth
-					end
 					if rest > 0 and (line.item @ 3) = 0 then
 						line.item.put_i_th (1, 3)
 						line.item.put_i_th ((line.item @ 2) + step + 1, 2)
@@ -586,34 +618,34 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 					if line.item @ 2 > line.first @ 2 then
 						line.first.put_i_th (line.item @ 2, 2)
 					end
-					-- If there is still some rest, we need to distribute
-					-- it to the the following lines.
-					if rest > 0 then
-						from
+					line.forth
+				end
+				-- If there is still some rest, we need to distribute
+				-- it to the the following lines.
+				if rest > 0 then
+					from
+					until
+						rest = 0
+					loop
+						if (line.item @ 3) = 0 then
+							line.item.put_i_th (1, 3)
+							line.item.put_i_th ((line.item @ 2) + 1, 2)
+							rest := rest - 1
+							if line.item @ 2 > line.first @ 2 then
+								line.first.put_i_th (line.item @ 2, 2)
+							end
+						end
+						-- Are we back at the beginning = All the cells
+						-- have the same size?
+						if line.index = first then
+							initialize_rest (line, 0)
+						end
+						-- Are we at the end of the list?
+						if line.after then
+							-- First line has a different meaning
+							line.go_i_th (2)
+						else
 							line.forth
-						until
-							rest = 0
-						loop
-							if (line.item @ 3) = 0 then
-								line.item.put_i_th (1, 3)
-								line.item.put_i_th ((line.item @ 2) + 1, 2)
-								rest := rest - 1
-								if line.item @ 2 > line.first @ 2 then
-									line.first.put_i_th (line.item @ 2, 2)
-								end
-							end
-							-- Are we back at the beginning = All the cells
-							-- have the same size?
-							if line.index = first then
-								initialize_rest (line, 0)
-							end
-							-- Are we at the end of the list?
-							if line.after then
-								-- First line has a different meaning
-								line.go_i_th (2)
-							else
-								line.forth
-							end
 						end
 					end
 				end
@@ -649,8 +681,10 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 					list.after
 				loop
 					tchild := list.item
-					second_body_loop (rows_value, tchild.widget.minimum_height, tchild.top_attachment,
+					if (tchild.bottom_attachment - tchild.top_attachment > 1) then
+						second_body_loop (rows_value, tchild.widget.minimum_height, tchild.top_attachment,
 											tchild.bottom_attachment, row_spacing)
+					end
 					list.forth
 				end	
 			end
@@ -685,8 +719,10 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 					list.after
 				loop
 					tchild := list.item
-					second_body_loop (columns_value, tchild.widget.minimum_width, tchild.left_attachment,
-											tchild.right_attachment, column_spacing)		
+					if (tchild.right_attachment - tchild.left_attachment > 1) then
+						second_body_loop (columns_value, tchild.widget.minimum_width, tchild.left_attachment,
+											tchild.right_attachment, column_spacing)
+					end
 					list.forth
 				end
 			end	
@@ -738,12 +774,7 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				until
 					cm.after
 				loop
-					-- Be carefull, in some cases, the spacing is already counted.
-					if cm.item @ 3 <= 1 then
-						last := last + cm.item @ 2 + column_spacing 
-					else
-						last := last + cm.item @ 2
-					end
+					last := last + cm.item @ 2 + column_spacing 
 					cm.item.put_i_th (last, 4)
 					cm.forth
 				end
@@ -756,16 +787,14 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				until
 					rw.after
 				loop
-					-- Be carefull, in some cases, the spacing is already counted.
-					if rw.item @ 3 <= 1 then
-						last := last + rw.item @ 2 + row_spacing
-					else
-						last := last + rw.item @ 2
-					end
+					last := last + rw.item @ 2 + row_spacing
 					rw.item.put_i_th (last, 4)
 					rw.forth
 				end
 			end
+			-- We initialize the rest to 0 to be sure the proportion won't change
+			initialize_rest (cm, 0)
+			initialize_rest (rw, 0)
 			-- We resize the window and the children
 			set_minimum_width (cm.last.last - column_spacing)
 			set_minimum_height (rw.last.last - row_spacing)

@@ -26,9 +26,6 @@ inherit
 		redefine
 			parent_imp,
 			wel_move_and_resize,
-			on_left_button_up,
-			on_right_button_up,
-			on_middle_button_up,
 			on_mouse_move,
 			on_key_down,
 			destroy,
@@ -527,48 +524,6 @@ feature {NONE} -- WEL Implementation
 			disable_default_processing
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_release) then
---				execute_command (Cmd_button_one_release, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_one_release, x_pos, y_pos, ev_data)
-		end
-
-	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_mbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_release) then
---				execute_command (Cmd_button_two_release, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_two_release, x_pos, y_pos, ev_data)
-		end
-
-	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_rbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (3, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_release) then
---				execute_command (Cmd_button_three_release, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_three_release, x_pos, y_pos, ev_data)
-		end
-
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
@@ -693,6 +648,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/31 17:54:34  rogers
+--| Removed on_*****_button_up.
+--|
 --| Revision 1.36  2000/03/31 17:46:06  rogers
 --| Now inherits EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP. Removed
 --| on_*****_button_down. Added internal_propagate_pointer_press.

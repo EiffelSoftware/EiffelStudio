@@ -24,6 +24,8 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!! widget.make_unmanaged (entity_name, a_parent)
+				--| Resize parent window under Ms-Windows
+			a_parent.set_height (a_parent.height + widget.height)
 				--| The next lines are needed on Motif platforms.
 --			forbid_recompute_size;
 --			set_size (40, 40);

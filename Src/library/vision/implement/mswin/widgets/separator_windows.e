@@ -14,21 +14,25 @@ inherit
 		rename
 			set_managed as widget_set_managed
 		redefine
+			set_foreground_color,
 			realize,
 			realized,
 			set_width, 
 			set_height,
+			set_size,
 			set_x,
 			set_y
 		end
 
 	PRIMITIVE_WINDOWS
 		redefine
+			set_foreground_color,			
 			set_managed,
 			realize,
 			realized,
 			set_width, 
 			set_height,
+			set_size,
 			set_x,
 			set_y
 		select
@@ -124,6 +128,19 @@ feature -- Status report
 		
 feature -- Status setting
 
+	set_foreground_color (c: COLOR) is
+			-- Set the foreground color of current widget.
+		do
+			private_foreground_color := c
+			if double then
+				set_double_line
+			else
+				set_single_line
+			end				
+			if exists then
+				invalidate
+			end
+		end
 
 	set_managed (flag: BOOLEAN) is
 			-- Enable geometry managment on screen widget implementation,
@@ -155,36 +172,69 @@ feature -- Status setting
 			end
 		end
 
-	set_width (a_width: INTEGER) is
+	set_size (a_width, a_height: INTEGER) is
 		do
-			if in_menu then
-				debug ("WINDOWS")
-					io.print ("Inapplicable feature: set_width%N")
-					io.print ("called in SEPARATOR_WINDOWS%N")
-					io.print ("Reason: Separator is in menu%N")
-				end
-			else
-				if exists then
-					wel_set_width (a_width)
+			if private_attributes.width /= a_width
+			or else private_attributes.height /= a_height then
+				if in_menu then
+					debug ("WINDOWS")
+						io.print ("Inapplicable feature: set_size%N")
+						io.print ("called in SEPARATOR_WINDOWS%N")
+						io.print ("Reason: Separator is in menu%N")
+					end
+				else
+					private_attributes.set_width (a_width)
+					private_attributes.set_height (a_height)
+					if exists then
+						resize (a_width, a_height)
+					end
+					if parent /= Void then
+						parent.child_has_resized
+					end
 				end
 			end
-			private_attributes.set_width (a_width)
+		end
+
+	set_width (a_width: INTEGER) is
+		do
+			if private_attributes.width /= a_width then
+				if in_menu then
+					debug ("WINDOWS")
+						io.print ("Inapplicable feature: set_width%N")
+						io.print ("called in SEPARATOR_WINDOWS%N")
+						io.print ("Reason: Separator is in menu%N")
+					end
+				else
+					private_attributes.set_width (a_width)
+					if exists then
+						wel_set_width (a_width)
+					end
+					if parent /= Void then
+						parent.child_has_resized
+					end
+				end
+			end
 		end
 
 	set_height (a_height: INTEGER) is
 		do
-			if in_menu then
-				debug ("WINDOWS")
-					io.print ("Inapplicable feature: set_height%N")
-					io.print ("called in SEPARATOR_WINDOWS%N")
-					io.print ("Reason: Separator is in menu%N")
-				end
-			else
-				if exists then
-					wel_set_height (a_height)
+			if private_attributes.height /= a_height then
+				if in_menu then
+					debug ("WINDOWS")
+						io.print ("Inapplicable feature: set_height%N")
+						io.print ("called in SEPARATOR_WINDOWS%N")
+						io.print ("Reason: Separator is in menu%N")
+					end
+				else
+					private_attributes.set_height (a_height)
+					if exists then
+						wel_set_height (a_height)
+					end
+					if parent /= Void then
+						parent.child_has_resized
+					end
 				end
 			end
-			private_attributes.set_height (a_height)
 		end
 
 	set_x (a_x: INTEGER) is

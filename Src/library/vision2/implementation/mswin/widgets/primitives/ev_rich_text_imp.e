@@ -41,7 +41,6 @@ inherit
 			set_selection
 		redefine
 			interface,
-			initialize,
 			make,
 			enable_word_wrapping,
 			disable_word_wrapping,
@@ -56,7 +55,8 @@ inherit
 			line_number_from_position,
 			enable_redraw,
 			on_en_change,
-			text_length
+			text_length,
+			wel_text_length
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -208,13 +208,17 @@ feature {NONE} -- Initialization
 			logical_pixels: INTEGER
 		do
 			base_make (an_interface)
+				-- Associate `Current' as `rich_text' inherited from EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+				-- This is because instances of EV_RICH_TEXT_BUFFERING_STRUCTURES need access to
+				-- a rich text implementation object and they may be created independently.
+			set_rich_text (Current)
+			
 			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, -1)
-			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
+			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			enable_all_notifications
 			cwin_send_message (wel_item, Em_settypographyoptions, to_advancedtypography, to_advancedtypography)
-			
 			
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
@@ -229,11 +233,7 @@ feature {NONE} -- Initialization
 			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
 			screen_dc.release
 			tab_width := logical_pixels // 2
-			
-				-- Associate `Current' as `rich_text' inherited from EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-				-- This is because instances of EV_RICH_TEXT_BUFFERING_STRUCTURES need access to
-				-- a rich text implementation object and they may be created independently.
-			set_rich_text (Current)
+
 				-- Ensure all structures for buffering are set to defaults.
 			clear_structures
 		end
@@ -251,12 +251,6 @@ feature {NONE} -- Initialization
 			-- Extended windows style used to create `Current'.
 		do
 			Result := Ws_ex_clientedge
-		end
-		
-	initialize is
-			-- Initialize `Current'.
-		do
-			Precursor {EV_TEXT_IMP}
 		end
 
 feature -- Status report
@@ -1512,7 +1506,7 @@ feature {NONE} -- Implementation
 	text_up_to_date: BOOLEAN
 		-- Is `text' of `Current' up to date? Used to buffer calls to `text' and `text_length'.
 		
-	text_length: INTEGER is
+	wel_text_length, text_length: INTEGER is
 			-- Number of characters comprising `text'. This is an optimized
 			-- version, which only recomputes the length if not `text_up_to_date'.
 		do

@@ -37,6 +37,12 @@ inherit
 			default_create
 		end
 
+	INTERMEDIARY_ROUTINES
+		undefine
+			default_create
+		redefine
+			empty_tuple
+		end
 
 create
 	default_create
@@ -313,6 +319,12 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			-- Column is zero based in gtk.
 		end
 	
+	agent_from_action_sequence (a_action_seq: ACTION_SEQUENCE [TUPLE]): PROCEDURE [ANY, TUPLE] is
+			-- 
+		do
+			Result := agent a_action_seq.call (?)
+		end
+
 	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE]):
 		PROCEDURE [ANY, TUPLE []] is
@@ -339,200 +351,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
 		
-	is_destroyed: BOOLEAN	
-		
-feature {EV_ANY_IMP} -- Intermediary agent routines
-
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_tuple: TUPLE [POINTER]) is
-			-- 
-		local
-			a_notebook_imp: EV_NOTEBOOK_IMP
-		do
-			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_notebook_imp.page_switch (a_tuple)
-		end
-
-	on_tool_bar_radio_button_activate (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_tool_bar_radio_button_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
-		do
-			a_tool_bar_radio_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_tool_bar_radio_button_imp.on_activate
-		end
-		
-
-	on_drawing_area_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_drawing_area_imp: EV_DRAWING_AREA_IMP
-		do
-			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			inspect
-				a_event_number
-			when 1 then		
-				a_drawing_area_imp.set_focus
-			when 2 then
-				a_drawing_area_imp.lose_focus
-			end
-		end
-
-	on_gauge_value_changed_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_gauge_imp: EV_GAUGE_IMP
-		do
-			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_gauge_imp.value_changed_handler			
-		end
-
-	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		do
-			c_get_eif_reference_from_object_id (a_c_object).on_key_event (a_key, a_key_string, a_key_press)
-		end
-		
-	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_list_item_list: EV_LIST_ITEM_LIST_IMP
-		do
-			a_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_list_item_list.on_key_pressed (a_key, a_key_string, a_key_press)
-		end
-		
-	on_list_item_list_item_clicked_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_list_item_list: EV_LIST_ITEM_LIST_IMP
-		do
-			a_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_list_item_list.on_item_clicked
-		end
-
-	widget_focus_in_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		do
-			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (True)
-		end
-		
-	widget_focus_out_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		do
-			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (False)
-		end	
-		
-	text_component_change_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_text_component_imp: EV_TEXT_COMPONENT_IMP
-		do
-			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_component_imp.change_actions_internal.call (Empty_tuple)
-		end
-		
-	text_field_return_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_text_field_imp: EV_TEXT_FIELD_IMP
-		do
-			a_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_field_imp.return_actions_internal.call (Empty_tuple)
-		end	 	
-		
-	button_select_intermediary (a_c_object: POINTER) is
-			-- Intermediate agent to prevent reference on implementation object from agent.
-		local
-			a_button_imp: EV_BUTTON_IMP
-		do
-			a_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_button_imp.select_actions_internal.call (Empty_tuple)
-		end
-
-	connect_button_press_switch_intermediary (a_c_object: POINTER) is
-			-- 
-		do
-			c_get_eif_reference_from_object_id (a_c_object).connect_button_press_switch
-		end
-		
-	button_press_switch_intermediary (
-			a_c_object: POINTER;
-			a_type: INTEGER;
-			a_x, a_y, a_button: INTEGER;
-			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER
-		) is
-				-- 
-		do
-			c_get_eif_reference_from_object_id (a_c_object).button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-		
-	on_combo_box_button_release (
-			a_c_object: POINTER
-		) is
-				--
-		local
-			a_combo_box_imp: EV_COMBO_BOX_IMP
-		do
-			a_combo_box_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_combo_box_imp.on_button_released
-		end
-			
-	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
-			--
-		do
-			c_get_eif_reference_from_object_id (a_c_object).on_size_allocate (a_x, a_y, a_width, a_height)
-		end
-		
-	on_window_close_request (a_c_object: POINTER) is
-			-- 
-		local
-			a_window_imp: EV_WINDOW_IMP
-		do
-			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check
-				a_window_imp_not_void: a_window_imp /= Void
-			end
-			a_window_imp.call_close_request_actions
-		end		
-	
-	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is
-			-- 
-		local
-			a_tree_imp: EV_TREE_IMP
-		do
-			a_tree_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			inspect
-				a_event_number
-			when 1 then		
-				a_tree_imp.select_callback (a_tree_item)
-			when 2 then
-				a_tree_imp.deselect_callback (a_tree_item)
-			when 3 then
-				a_tree_imp.expand_callback (a_tree_item)
-			when 4 then
-				a_tree_imp.collapse_callback (a_tree_item)
-			end
-		end
-
-	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tup_int: TUPLE [INTEGER]) is
-			-- 
-		local
-			a_mcl_imp: EV_MULTI_COLUMN_LIST_IMP
-		do
-			a_mcl_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			inspect
-				a_event_number
-			when 1 then		
-				a_mcl_imp.select_callback (a_tup_int)
-			when 2 then
-				a_mcl_imp.deselect_callback (a_tup_int)
-			when 3 then
-				a_mcl_imp.column_click_callback (a_tup_int)
-			when 4 then
-				a_mcl_imp.column_resize_callback (a_tup_int)
-			end
-		end
+	is_destroyed: BOOLEAN			
 
 feature {EV_APPLICATION_IMP} -- Destruction
 
@@ -641,14 +460,6 @@ feature {NONE} -- Externals
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
-		end
-		
-	c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_WIDGET_IMP is
-			-- Get Eiffel object from `a_c_object'.
-		external
-			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
 
 feature {EV_ANY_IMP} -- Externals

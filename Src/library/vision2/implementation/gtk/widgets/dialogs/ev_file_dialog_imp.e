@@ -56,13 +56,13 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
-				agent on_ok,
+				agent Gtk_marshal.file_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
 				"clicked",
-				agent on_cancel,
+				agent Gtk_marshal.file_dialog_on_cancel_intermediary (c_object),
 				Void
 			)
 			enable_closeable
@@ -152,7 +152,7 @@ feature -- Element change
 			)
 		end
 
-feature {NONE} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_ok is
 			-- The user has requested that the dialog be activated.
@@ -165,6 +165,8 @@ feature {NONE} -- Implementation
 				Precursor {EV_STANDARD_DIALOG_IMP}
 			end	
 		end
+
+feature {NONE} -- Implementation
 
 	interface: EV_FILE_DIALOG
 

@@ -38,9 +38,12 @@ inherit
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
 		export
-			{EV_GTK_CALLBACK_MARSHAL} 
+			{INTERMEDIARY_ROUTINES} 
 				focus_in_actions_internal,
-				focus_out_actions_internal
+				focus_out_actions_internal,
+				pointer_motion_actions_internal,
+				pointer_button_release_actions,
+				pointer_leave_actions
 		redefine
 			interface
 		end
@@ -110,7 +113,7 @@ feature {NONE} -- Initialization
 	button_press_switch_is_connected: BOOLEAN
 			-- Is `button_press_switch' connected to its event source.
 		
-feature {EV_WINDOW_IMP, EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {EV_WINDOW_IMP, INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.

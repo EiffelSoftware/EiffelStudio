@@ -10,13 +10,19 @@ class
 inherit
 	EV_MENU_ITEM_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_TEXTABLE_IMP
@@ -44,7 +50,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.		
 		do
-			signal_connect ("activate", agent on_activate_callback_as.call ([c_object]), Void)
+			real_signal_connect (c_object, "activate", agent gtk_marshal.menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
@@ -52,21 +58,21 @@ feature {NONE} -- Initialization
 			{EV_ITEM_IMP} Precursor
 		end
 		
-	on_activate_callback_as: EV_NOTIFY_ACTION_SEQUENCE is
-			-- 
-		once
-			create Result
-			Result.extend (agent on_activate_callback (?))
-		end
+--	on_activate_callback_as: EV_NOTIFY_ACTION_SEQUENCE is
+--			-- 
+--		once
+--			create Result
+--			Result.extend (agent on_activate_callback (?))
+--		end
 		
-	on_activate_callback (a_c_object: POINTER) is
-			-- 
-		local
-			menu_item_imp: EV_MENU_ITEM_IMP
-		do
-			menu_item_imp ?= eif_object_from_c (a_c_object)
-			menu_item_imp.on_activate
-		end
+--	on_activate_callback (a_c_object: POINTER) is
+--			-- 
+--		local
+--			menu_item_imp: EV_MENU_ITEM_IMP
+--		do
+--			menu_item_imp ?= eif_object_from_c (a_c_object)
+--			menu_item_imp.on_activate
+--		end
 
 	initialize_menu_item_box is
 			-- Create and initialize menu item box.
@@ -134,7 +140,13 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Assignment optimization
 			Result := Item_type
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, INTERMEDIARY_ROUTINES} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	real_text: STRING
 			-- Internal `text'. (with ampersands)

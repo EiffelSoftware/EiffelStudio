@@ -11,13 +11,19 @@ class
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
 			interface,
-			make
+			make,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 create
@@ -58,6 +64,14 @@ feature -- Status report
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_TOGGLE_BUTTON
+
+feature {EV_ANY_I} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 

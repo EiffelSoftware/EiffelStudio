@@ -11,8 +11,13 @@ class
 
 inherit
 	EV_TOOL_BAR_BUTTON_I
+		export
+			{INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface
+			interface,
+			pointer_double_press_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_motion_actions_internal
 		select
 			interface
 		end
@@ -29,36 +34,36 @@ inherit
 			foreground_color_pointer,
 			visual_widget
 		redefine
-			initialize
+			initialize,
+			pointer_double_press_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_motion_actions_internal
 		end
 
 	EV_BUTTON_IMP
 		rename
 			interface as button_interface,
 			parent as button_parent,
-			select_actions_internal as button_select_actions_internal,	
-			pointer_motion_actions_internal as button_pointer_motion_actions_internal,	
-			pointer_button_press_actions_internal as button_pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal as button_pointer_double_press_actions_internal,
-			parent_imp as widget_parent_imp 
+			parent_imp as widget_parent_imp,
+			select_actions_internal as button_select_actions_internal
 		undefine
 			button_press_switch,
-			select_actions,
 			pointer_motion_actions,	
 			pointer_button_press_actions,
 			pointer_double_press_actions,
-			create_select_actions,
 			create_pointer_button_press_actions,
-			create_pointer_double_press_actions
+			create_pointer_double_press_actions,
+			select_actions
 		redefine
 			make,
 			initialize,
-			initialize_button_box
+			initialize_button_box,
+			pointer_double_press_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_motion_actions_internal--,
+			--create_select_actions
 		select
-			button_parent,
-			button_pointer_motion_actions_internal,	
-			button_pointer_button_press_actions_internal,
-			button_pointer_double_press_actions_internal 
+			button_parent
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -68,11 +73,12 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
-		redefine
-			select_actions_internal,
-			create_select_actions
-		end
+--	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
+--		rename
+--			select_actions as tool_bar_button_select_actions
+--		undefine
+--			create_select_actions
+--		end
 
 create
 	make
@@ -87,11 +93,19 @@ feature {NONE} -- Initialization
 			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		do
-			create Result
-			connect_signal_to_actions ("clicked", Result, Void)
-		end
+--	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+--		local
+--			action_sequence: ACTION_SEQUENCE [TUPLE]
+--		do
+--			create Result
+--			create action_sequence
+--			action_sequence.extend (agent Gtk_marshal.toolbar_button_select_actions_intermediary (c_object))
+--			real_connect_signal_to_actions (
+--				c_object,
+--				"clicked",
+--				action_sequence,
+--				Void)
+--		end
 
 	initialize is
 			-- Initialization of button box and events.
@@ -159,6 +173,14 @@ feature -- Status report
 				) + 1
 			end 
 		end
+
+feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature {EV_ANY_I} -- Implementation
 

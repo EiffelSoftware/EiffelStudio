@@ -10,7 +10,10 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_ITEM_IMP
@@ -19,6 +22,9 @@ inherit
 		redefine
 			interface,
 			initialize,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal,
 			make
 		end
 
@@ -130,6 +136,14 @@ feature -- Status setting
 				C.gtk_list_unselect_child (par, c_object);
 			end
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature -- Element change
 

@@ -21,7 +21,12 @@ feature -- Event handling
 			-- Attach to GTK "motion-notify-event" signal.
 		do
 			create Result
-			connect_signal_to_actions ("motion-notify-event", Result, default_translate)
+			real_signal_connect (
+					c_object,
+					"motion-notify-event",
+					agent gtk_marshal.pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
+					default_translate
+				)
 		end
 
 	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
@@ -41,15 +46,26 @@ feature -- Event handling
 			-- Attach to GTK "button-release-event" signal.
 		do
 			create Result
-			connect_signal_to_actions ("button-release-event", Result, default_translate)
+			real_signal_connect (
+					c_object,
+					"button-release-event",
+					agent gtk_marshal.pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
+					default_translate
+				)
 		end
 
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.
 			-- Attach to GTK "enter-notify-event" signal.
+		local
+			action_sequence: ACTION_SEQUENCE [TUPLE]
 		do
+			create action_sequence
+			action_sequence.extend (agent Gtk_marshal.pointer_enter_actions_intermediary (c_object))
 			create Result
-			connect_signal_to_actions ("enter-notify-event", Result, default_translate)
+			real_connect_signal_to_actions (c_object, "enter-notify-event", 
+				action_sequence,
+				default_translate)
 		end
 
 	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -57,7 +73,12 @@ feature -- Event handling
 			-- Attach to GTK "leave-notify-event" signal.
 		do
 			create Result
-			connect_signal_to_actions ("leave-notify-event", Result, default_translate)
+			real_signal_connect (
+				c_object,
+				"leave-notify-event",
+				agent gtk_marshal.pointer_leave_action_intermediary (c_object),
+				default_translate
+			)
 		end
 
 	create_key_press_actions: EV_KEY_ACTION_SEQUENCE is
@@ -82,7 +103,6 @@ feature -- Event handling
 			-- Create a focus_in action sequence.
 			-- Attach to GTK "focus-in-event" signal.
 		do
-			--real_connect_signal_to_actions (visual_widget, "focus-in-event", Result, default_translate)
 			create Result
 			real_signal_connect (visual_widget, "focus-in-event", agent gtk_marshal.widget_focus_in_intermediary (c_object), Void)
 		end

@@ -11,7 +11,10 @@ class
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		select
 			interface
 		end
@@ -22,7 +25,10 @@ inherit
 		undefine
 			parent
 		redefine
-			initialize
+			initialize,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		select
 			widget_parent,
 			initialize,
@@ -35,9 +41,6 @@ inherit
 			initialize as vsep_initialize,
 			interface as vsep_interface,
 			parent as vsep_parent,
-			pointer_motion_actions_internal as widget_pointer_motion_actions_internal,
-			pointer_button_press_actions_internal as widget_pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal as widget_pointer_double_press_actions_internal,
 			create_pointer_button_press_actions as widget_create_pointer_button_press_actions,
 			create_pointer_double_press_actions as widget_create_pointer_double_press_actions,
 			parent_imp as widget_parent_imp
@@ -46,6 +49,10 @@ inherit
 			pointer_motion_actions,	
 			pointer_button_press_actions,
 			pointer_double_press_actions
+		redefine
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 create
@@ -79,6 +86,13 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_SEPARATOR
 
+feature {EV_ANY_I} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
 --|----------------------------------------------------------------

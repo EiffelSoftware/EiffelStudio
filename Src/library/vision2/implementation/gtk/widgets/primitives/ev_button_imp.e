@@ -43,7 +43,7 @@ inherit
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 		export
-			{EV_GTK_CALLBACK_MARSHAL} select_actions_internal
+			{INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
 			interface,
 			visual_widget

@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_ACCELERATOR_I
+		export
+			{INTERMEDIARY_ROUTINES} actions_internal
 		redefine
 			interface
 		end
@@ -34,13 +36,10 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+		local
+			action_sequence: ACTION_SEQUENCE [TUPLE]
 		do
-			create actions_internal
-			connect_signal_to_actions (
-				"show",
-				actions_internal,
-				Void
-			)
+			real_signal_connect (c_object, "show", agent gtk_marshal.accelerator_actions_internal_intermediary (c_object), Void)
 			is_initialized := True
 		end
 

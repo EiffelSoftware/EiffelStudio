@@ -12,7 +12,10 @@ class
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
@@ -23,7 +26,10 @@ inherit
 			initialize,
 			create_select_actions,
 			enable_sensitive,
-			disable_sensitive
+			disable_sensitive,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_RADIO_PEER_IMP
@@ -93,7 +99,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (c_object, "toggled", agent Gtk_marshal.on_tool_bar_radio_button_activate (c_object), Void)
 		end
 		
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_activate is
 			-- The button has been activated by the user (pushed).
@@ -171,6 +177,14 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
+
+feature {EV_ANY_I} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 

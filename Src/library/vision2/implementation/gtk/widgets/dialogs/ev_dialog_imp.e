@@ -22,7 +22,7 @@ inherit
 			interface,
 			call_close_request_actions
 		end
-
+		
 create
 	make
 

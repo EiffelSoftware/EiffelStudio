@@ -299,7 +299,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 
 	select_callback (int: TUPLE [INTEGER]) is
 		local
@@ -748,7 +748,10 @@ feature -- Implementation
 			if button_press_connection_id > 0 then
 				signal_disconnect (button_press_connection_id)
 			end
-			signal_connect ("button-press-event", agent start_transport_filter, default_translate)
+			real_signal_connect (c_object,
+				"button-press-event", 
+				agent Gtk_marshal.mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		end

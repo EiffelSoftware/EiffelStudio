@@ -147,7 +147,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := C.gtk_widget_struct_window (c_object)
 		end
 		
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 
 	lose_focus is
 		do

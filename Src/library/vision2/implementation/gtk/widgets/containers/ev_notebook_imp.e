@@ -194,7 +194,7 @@ feature -- Element change
 			)
 		end
 
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 
 	page_switch (a_page: TUPLE [POINTER]) is
 			-- Called when the page is switched.

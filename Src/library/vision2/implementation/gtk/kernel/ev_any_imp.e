@@ -296,7 +296,8 @@ feature {EV_ANY_I} -- Event handling
 			real_signal_connect (
 				a_c_object,
 				a_signal_name,
-				agent an_action_sequence.call (?),
+				--agent an_action_sequence.call (?),
+				Gtk_marshal.agent_from_action_sequence (an_action_sequence),
 				translate
 			)
 			disconnect_agent := agent gtk_marshal.signal_disconnect_agent_routine (c_object, last_signal_connection_id, signal_ids)

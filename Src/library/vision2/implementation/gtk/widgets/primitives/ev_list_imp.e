@@ -42,36 +42,32 @@ feature -- Initialize
 
 	initialize is
 			-- Initialize the list.
-		local
-			temp_sig_id: INTEGER
-			a_gs: GEL_STRING
 		do
 			{EV_LIST_ITEM_LIST_IMP} Precursor
 			
-			--| FIXME IEK These should be modified to use Gtk_marshal.
-			create a_gs.make ("leave-notify-event")
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (
 					list_widget,
-					a_gs.item ,
-					agent set_is_out (True)
+					"leave-notify-event",
+					agent gtk_marshal.list_proximity_intermediary (c_object, True),
+					size_allocate_translate_agent
 			)
-			create a_gs.make ("enter-notify-event")
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (
 					list_widget,
-					a_gs.item,
-					agent set_is_out (False)
+					"enter-notify-event",
+					agent gtk_marshal.list_proximity_intermediary (c_object, False),
+					size_allocate_translate_agent
 			)
-			create a_gs.make ("focus-in-event")
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (
 					visual_widget,
-					a_gs.item,
-					agent attain_focus
+					"focus-in-event",
+					agent gtk_marshal.widget_focus_in_intermediary (c_object),
+					size_allocate_translate_agent
 			)
-			create a_gs.make ("focus-out-event")
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (
 					visual_widget,
-					a_gs.item,
-					agent lose_focus
+					"focus-out-event",
+					agent gtk_marshal.widget_focus_out_intermediary (c_object),
+					size_allocate_translate_agent
 			)
 			disable_multiple_selection
 		end
@@ -150,6 +146,46 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST
 	
+feature {INTERMEDIARY_ROUTINES} -- Implementation	
+	
+	set_is_out (a_value: BOOLEAN) is
+			-- Assign `a_value' to `is_out'.
+		do
+			is_out := a_value
+		end
+	
+	attain_focus is
+			-- The list has just grabbed the focus.
+		do
+			if not has_focus then
+				has_focus := True
+				top_level_window_imp.set_focus_widget (Current)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call (empty_tuple)				
+				end
+			end
+		end
+
+	lose_focus is
+			-- The list has just lost the focus.
+		do
+				-- This routine is called when an item loses the focus too.
+				-- The follwing test prevent call to `focus_out_actions' when
+				-- the user has only changed the selected item.
+			if (not has_capture) and then 
+				(is_out or else not button_is_pressed) and then
+				(not list_has_been_clicked) and then
+				(not arrow_used)
+			then
+				has_focus := False
+				top_level_window_imp.set_focus_widget (Void)
+				if not has_focus and focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call (empty_tuple)
+				end
+			end
+			arrow_used := False
+		end
+	
 feature {NONE} -- Implementation
 
 	select_callback (n_args: INTEGER; args: POINTER) is
@@ -202,59 +238,19 @@ feature {NONE} -- Implementation
 			-- (export status {NONE})
 		local
 			v_imp: EV_ITEM_IMP
-			temp_sig_id: INTEGER
-			a_gs: GEL_STRING
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v)
 			v_imp ?= v.implementation
-			create a_gs.make ("focus-out-event")
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (
 				v_imp.c_object,
-				a_gs.item,
-				agent lose_focus
+				"focus-out-event",
+				agent gtk_marshal.on_list_focus_intermediary (c_object, False),
+				size_allocate_translate_agent
 				)
 		end
 		
-	attain_focus is
-			-- The list has just grabbed the focus.
-		do
-			if not has_focus then
-				has_focus := True
-				top_level_window_imp.set_focus_widget (Current)
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (empty_tuple)				
-				end
-			end
-		end
-
-	lose_focus is
-			-- The list has just lost the focus.
-		do
-				-- This routine is called when an item loses the focus too.
-				-- The follwing test prevent call to `focus_out_actions' when
-				-- the user has only changed the selected item.
-			if (not has_capture) and then 
-				(is_out or else not button_is_pressed) and then
-				(not list_has_been_clicked) and then
-				(not arrow_used)
-			then
-				has_focus := False
-				top_level_window_imp.set_focus_widget (Void)
-				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (empty_tuple)
-				end
-			end
-			arrow_used := False
-		end
-
 	is_out: BOOLEAN
 			-- Is the mouse pointer over the list?
-		
-	set_is_out (a_value: BOOLEAN) is
-			-- Assign `a_value' to `is_out'.
-		do
-			is_out := a_value
-		end
 		
 	button_is_pressed: BOOLEAN is
 			-- Is one of the mouse buttons pressed?

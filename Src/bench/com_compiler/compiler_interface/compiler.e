@@ -216,6 +216,7 @@ feature -- Basic Operations
 					end
 					if Eiffel_project.successful then
 						is_successful := True
+-- TODO: Set warnings from compiler here
 					end
 				end
 			else

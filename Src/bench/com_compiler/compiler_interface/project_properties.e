@@ -97,16 +97,16 @@ feature -- Access
 			-- Namespace generation for cluster
 		do
 			if ace.use_cluster_name_as_namespace then
-				Result := feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_cluster_name
+				Result := feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_cluster_name
 			elseif ace.use_all_cluster_name_as_namespace then
-				Result := feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
+				Result := feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
 			else
-				Result := feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none				
+				Result := feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none				
 			end
 		ensure
 			valid_result:
-				Result >= feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none and then
-				Result <= feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
+				Result >= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none and then
+				Result <= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
 		end
 		
 	default_namespace: STRING is
@@ -131,21 +131,21 @@ feature -- Access
 			
 			if l_dll then
 				if l_precompile then
-					Result := feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library					
+					Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library					
 				else
-					Result := feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
+					Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library
 				end
 			else
 				if l_console then
-					Result := feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application
+					Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application
 				else
-					Result := feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_windows_application
+					Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_windows_application
 				end
 			end
 		ensure
 			valid_result:
-				Result >= feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
-				Result <= feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
+				Result >= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
+				Result <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
 		end
 		
 	dot_net_naming_convention: BOOLEAN is
@@ -171,19 +171,19 @@ feature -- Access
 			-- Project assertions
 		do
 			if ace.require_evaluated then
-				Result := Result + feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_require
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_require
 			end
 			if ace.ensure_evaluated then
-				Result := Result + feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure
 			end
 			if ace.check_evaluated then				
-				Result := Result + feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_check
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_check
 			end
 			if ace.invariant_evaluated then
-				Result := Result + feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant
 			end
 			if ace.loop_evaluated then
-				Result := Result + feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
+				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
 			end
 		ensure
 			valid_result: Result >= 0
@@ -309,16 +309,16 @@ feature -- Element change
 			-- Assign `a_namespace_generation' to namespace generation for cluster
 		require else
 			valid_namespace_generation:
-				a_namespace_generation >= feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none and then
-				a_namespace_generation <= feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
+				a_namespace_generation >= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none and then
+				a_namespace_generation <= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
 		do
-			if a_namespace_generation = feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none then
+			if a_namespace_generation = feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none then
 				ace.set_use_cluster_name_as_namespace (False)
 				ace.set_use_all_cluster_name_as_namespace (False)
-			elseif a_namespace_generation = feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_cluster_name then
+			elseif a_namespace_generation = feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_cluster_name then
 				ace.set_use_cluster_name_as_namespace (True)
 				ace.set_use_all_cluster_name_as_namespace (False)
-			elseif a_namespace_generation = feature {ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name then
+			elseif a_namespace_generation = feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name then
 				ace.set_use_cluster_name_as_namespace (False)
 				ace.set_use_all_cluster_name_as_namespace (True)
 			end
@@ -334,19 +334,19 @@ feature -- Element change
 			-- Assign `a_project_type' to project type
 		require else
 			valid_project_type:
-				a_project_type >= feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
-				a_project_type <= feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
+				a_project_type >= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
+				a_project_type <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
 		do
-			if a_project_type = feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application then
+			if a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application then
 				ace.set_console_application (True)
 				ace.set_il_generation_type (ace.Il_generation_exe)
-			elseif a_project_type = feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_windows_application then
+			elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_windows_application then
 				ace.set_console_application (False)
 				ace.set_il_generation_type (ace.Il_generation_exe)
-			elseif a_project_type = feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library then
+			elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library then
 				ace.set_console_application (False)
 				ace.set_il_generation_type (ace.Il_generation_dll)
-			elseif a_project_type = feature {ECOM_TAG_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library then
+			elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library then
 				ace.set_root_class_name ("ANY")
 				ace.set_creation_routine_name (Void)
 				ace.set_il_generation_type (ace.Il_generation_dll)
@@ -376,11 +376,11 @@ feature -- Element change
 		require else
 			valid_assertions: 
 				a_assertions >= 0 and then 
-				a_assertions <= feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_require + 
-					feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure +
-					feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_check +
-					feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant +
-					feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
+				a_assertions <= feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_require + 
+					feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure +
+					feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_check +
+					feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant +
+					feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
 		local
 			l_require: BOOLEAN
 			l_ensure: BOOLEAN
@@ -389,11 +389,11 @@ feature -- Element change
 			l_loop: BOOLEAN
 		do
 			if a_assertions > 0 then
-				l_require := a_assertions.bit_and (feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_require) /= 0
-				l_ensure := a_assertions.bit_and (feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure) /= 0
-				l_check := a_assertions.bit_and (feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_check) /= 0
-				l_invariant := a_assertions.bit_and (feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0
-				l_loop := a_assertions.bit_and (feature {ECOM_TAG_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0	
+				l_require := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_require) /= 0
+				l_ensure := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure) /= 0
+				l_check := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_check) /= 0
+				l_invariant := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0
+				l_loop := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0	
 			end
 
 			ace.set_assertions (l_require, l_ensure, l_check, l_loop, l_invariant)

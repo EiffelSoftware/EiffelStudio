@@ -7,29 +7,6 @@ class
 	PROJECT_MANAGER
 	
 inherit
---	CEIFFEL_PROJECT_COCLASS_IMP
---		rename 
---			make as make_project_coclass
---		redefine
---			project_file_name,
---			ace_file_name,
---			project_directory,
---			valid_project,
---			last_error_message,
---			last_exception,
---			compiler,
---			is_compiled,
---			project_has_updated,
---			system_browser,
---			project_properties,
---			completion_information,
---			html_doc_generator,
---			retrieve_eiffel_project,
---			create_eiffel_project,
---			retrieve_project,
---			create_project
---		end
-	
 	SHARED_EIFFEL_PROJECT
 		export {NONE}
 			all
@@ -63,9 +40,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize structure.
 		do
---			make_project_coclass
 			valid_ace_file := False
-			create last_error_message.make_from_string ("No project loaded")
 			create eifgen_init.make
 				--| FIXME do not forget to call `dispose' one day !
 		end
@@ -92,7 +67,8 @@ feature -- Access
 				end
 				Result := system_browser_internal
 			else
-				raise (last_error_message)
+				create last_exception.make (errors_table.item (eif_exceptions_no_project_loaded), eif_exceptions_no_project_loaded)
+				last_exception.raise
 			end
 		end
 
@@ -105,7 +81,8 @@ feature -- Access
 				end
 				Result := completion_information_internal
 			else
-				raise (last_error_message)
+				create last_exception.make (errors_table.item (eif_exceptions_no_project_loaded), eif_exceptions_no_project_loaded)
+				last_exception.raise
 			end
 		end
 			
@@ -120,7 +97,8 @@ feature -- Access
 				end
 				Result := html_doc_generator_internal
 			else
-				raise (last_error_message)
+				create last_exception.make (errors_table.item (eif_exceptions_no_project_loaded), eif_exceptions_no_project_loaded)
+				last_exception.raise
 			end
 		end
 			
@@ -130,9 +108,6 @@ feature -- Access
 			Result := Valid_project_ref.item
 		end
 
-	last_error_message: STRING
-			-- Last error message.
-			
 	last_exception: EXCEPTION
 			-- last exception raised
 
@@ -215,8 +190,6 @@ feature -- Basic Operations
 			valid_file_name: not a_project_file_name.is_empty
 		local
 			l_file: RAW_FILE
-			l_exception: EXCEPTION
-			retried: BOOLEAN
 		do
 			-- clear last exception
 			last_exception := Void
@@ -289,104 +262,6 @@ feature -- Basic Operations
 				else
 					create last_exception.make (errors_table.item (eif_exceptions_project_already_initialized), eif_exceptions_project_already_initialized)
 					last_exception.raise
-				end
-			end
-		end
-
-	retrieve_project (file_name: STRING) is
-			-- Retrieve project.
-		indexing
-			obsolete "use retrieve_eiffel_project_instead"
-		require else
-			non_void_file_name: file_name /= Void
-			valid_file_name: not file_name.is_empty
-		local
-			rescued: BOOLEAN
-			file: RAW_FILE
-			l_exception: EXCEPTION
-			temp: INTEGER
-		do
-			-- clear last exception
-			last_exception := Void
-			
-			-- FIXME Paul
-			-- Need to added check for .NET project type
-			-- use project_properties.msil_generation
-			
-			if not Valid_project_ref.item then
-				if file_name /= Void then
-					create file.make (valid_file_name (file_name))
-					if not file.exists or else file.is_directory then
-						last_error_message := "File does not exist"
-					else
-						if not Eiffel_project.initialized then
-							open_project_file (file_name)
-							if not Eiffel_project.retrieval_error then
-								create {PROJECT_PROPERTIES} project_properties_internal.make
-								Valid_project_ref.set_item (True)
-							end
-						else
-							create last_exception.make (errors_table.item (eif_exceptions_project_already_initialized), eif_exceptions_project_already_initialized)
-							last_exception.raise
-						end
-					end
-				end
-			end
-		rescue
-			last_error_message := "Project could not be retrieved"
-			rescued := True
-			retry
-		end
-
-	create_project (ace_name: STRING; project_directory_path: STRING) is
-			-- Create new project.
-		indexing
-			obsolete "use create_eiffel_project instead"
-		require else
-			non_void_ace_name: ace_name /= Void
-			valid_ace_name: not ace_name.is_empty
-			non_void_project_directory: project_directory_path /= Void
-			valid_project_direction: not project_directory_path.is_empty
-		local
-			dir: DIRECTORY
-			pp: PROJECT_PROPERTIES
-		do
-			if not Valid_project_ref.item then
-				if ace_name /= Void and project_directory_path /= Void then
-					if  not Eiffel_project.initialized then
-						check_ace_file (ace_name)
-						if valid_ace_file then
-							Project_directory_name.wipe_out
-							Project_directory_name.set_directory (project_directory_path)
-							
-							create dir.make (project_directory_path)
-							if not dir.exists then
-								dir.create_dir
-							end
-							
-							create project_dir.make (project_directory_path, Void)
-							Eiffel_project.make_new (project_dir, True, Void, Void)
-							if Eiffel_project.initialized then
-								Eiffel_ace.set_file_name (ace_name)
-								Valid_project_ref.set_item (True)
-								create {PROJECT_PROPERTIES} project_properties_internal.make
-								pp ?= project_properties
-								if not pp.msil_generation then
-									Valid_project_ref.set_item (False)
-									last_error_message := "Not a .NET ace file"
-								end
-								
-							else
-								last_error_message := "Project could not be initialized"
-							end
-						else
-							last_error_message := "Could not load project settings"
-						end
-					else
-						last_error_message := "Project has already been initialized"
-					end
-				else
-					last_error_message := "File name is void"
 				end
 			end
 		end

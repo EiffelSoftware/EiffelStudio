@@ -8,7 +8,7 @@ class
 	PROJECT_MANAGER_ERRORS
   
 inherit
-	ECOM_TAG_eif_exceptions_ENUM
+	ECOM_eif_exceptions_ENUM
 		export
 			{NONE} all
 		end

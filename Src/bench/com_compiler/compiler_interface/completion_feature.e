@@ -264,17 +264,17 @@ feature {NONE} -- Implementation
 	set_feature_type (a_feature_type: INTEGER) is
 			-- set feature type attributes
 		do
- 			is_attribute := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_attribute) > 0
-			is_constant := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_constant) > 0
-			is_deferred := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_deferred) > 0
-			is_external := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_external) > 0
-			is_frozen := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_frozen) > 0
-			is_function := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_function) > 0
-			is_infix := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_infix) > 0
-			is_obsolete := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_obsolete) > 0
-			is_once := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_once) > 0
-			is_prefix := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_prefix) > 0
-			is_procedure := a_feature_type.bit_and (feature {ECOM_TAG_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_procedure) > 0
+ 			is_attribute := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_attribute) > 0
+			is_constant := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_constant) > 0
+			is_deferred := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_deferred) > 0
+			is_external := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_external) > 0
+			is_frozen := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_frozen) > 0
+			is_function := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_function) > 0
+			is_infix := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_infix) > 0
+			is_obsolete := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_obsolete) > 0
+			is_once := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_once) > 0
+			is_prefix := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_prefix) > 0
+			is_procedure := a_feature_type.bit_and (feature {ECOM_EIF_FEATURE_TYPES_ENUM}.Eif_feature_types_procedure) > 0
 		end
 		
 	arguments_internal: ARRAYED_LIST [PARAMETER_DESCRIPTOR]

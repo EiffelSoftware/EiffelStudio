@@ -197,9 +197,9 @@ feature {NONE} -- Basic Operations
 	add_default_excluded_clusters is
 			-- remove the default set of clusters - these include those that are external (precompiled or assemblies)
 		local
-			clusters: ARRAYED_LIST [CLUSTER_I]
-			cluster: CLUSTER_I
-			assembly: ASSEMBLY_I
+--			clusters: ARRAYED_LIST [CLUSTER_I]
+--			cluster: CLUSTER_I
+--			assembly: ASSEMBLY_I
 		do
 --			clusters := Eiffel_universe.clusters
 --			from 

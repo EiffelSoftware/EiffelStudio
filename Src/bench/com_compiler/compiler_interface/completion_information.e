@@ -179,7 +179,7 @@ feature -- Access
 			l_names: ECOM_ARRAY [STRING]
 			l_signatures: ECOM_ARRAY [STRING]
 			l_image_indexes: ECOM_ARRAY [INTEGER]
-			l_image_index_enum: ECOM_TAG_EIF_ENTITY_IMAGES_ENUM
+			l_image_index_enum: ECOM_EIF_ENTITY_IMAGES_ENUM
 			l_image_index: INTEGER
 			retried: BOOLEAN
 		do

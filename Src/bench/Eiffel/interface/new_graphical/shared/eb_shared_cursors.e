@@ -119,6 +119,18 @@ feature -- Other cursor
 
 feature {NONE} -- Implementation
 
+	pixmap_width: INTEGER is 32
+		-- Width in pixels of generated factory image
+		
+	pixmap_height: INTEGER is 32
+		-- Height in pixels of generated factory image
+
+	image_matrix: EV_PIXMAP is
+			-- Matrix pixmap containing all of the screen cursors
+		once
+			Result := pixmap_file_content ("studio_cursor_matrix")
+		end
+
 	cursor_file_content (fn: STRING): EV_CURSOR is
 			-- Load the cursor contained in file `fn'.ico or `fn'.xpm, depending on the platform.
 		local
@@ -133,6 +145,32 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_string (eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
+		end
+
+	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
+			-- Lookup hash table for Studio pixmaps
+		once
+			create Result.make (256)
+			Result.put ([1, 1], "class")
+			Result.put ([1, 2], "clientlnk")
+			Result.put ([1, 3], "cluster")
+			Result.put ([1, 4], "favorites_folder")
+			Result.put ([1, 5], "feature")
+			Result.put ([1, 6], "inheritlnk")
+			Result.put ([1, 7], "interro")
+			Result.put ([1, 8], "object")
+			Result.put ([1, 9], "stopexec")
+			Result.put ([1, 10], "Xclass")
+			Result.put ([1, 11], "Xcluster")
+			Result.put ([1, 12], "Xobject")
+			Result.put ([1, 13], "Xfavorites_folder")
+			Result.put ([1, 14], "Xfeature")
+			Result.put ([1, 15], "Xinterro")
+			Result.put ([1, 16], "Xstopexec")
+			Result.put ([2, 1], "cut_selection")
+			Result.put ([2, 2], "copy_selection")
+
+			Result.compare_objects
 		end
 
 end -- class EB_SHARED_CURSORS

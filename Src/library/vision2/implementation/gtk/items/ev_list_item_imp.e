@@ -128,19 +128,6 @@ feature {EV_CHECKABLE_LIST_IMP} -- Implementation
 	check_box: POINTER
 		-- Pointer to the check box used in EV_CHECKABLE_LIST_IMP
 
-feature -- Access
-
-	index: INTEGER is
-			-- Index of the current item.
-		local
-			par: POINTER
-		do
-			par := parent_imp.list_widget
-			if par /= NULL then
-				Result := 1 + feature {EV_GTK_EXTERNALS}.gtk_list_child_position (par, c_object)
-			end
-		end
-
 feature -- Status report
 
 	is_selected: BOOLEAN is

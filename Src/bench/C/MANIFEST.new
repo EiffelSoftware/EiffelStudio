@@ -7,6 +7,7 @@ U/End.U
 U/Myinit.U
 U/add_log.U
 U/panic.U
+config_h.SH
 hints/
 hints/dgux.sh
 hints/mips.sh
@@ -271,7 +272,6 @@ parsing/eiffel/prefix.c
 parsing/lace
 parsing/lace/Jmakefile
 parsing/lace/Makefile.SH
-parsing/lace/eif_c.c
 parsing/lace/eif_l.l
 parsing/lace/keyword.c
 parsing/lace/lac_err.c
@@ -294,7 +294,6 @@ parsing/shared/yacc_err.c
 platform/Jmakefile
 platform/Makefile.SH
 platform/names.c
-platform/sizes.c
 platform/commands.c
 portable.h
 run-time/
@@ -382,4 +381,3 @@ run-time/wbench.c
 run-time/wbench.h
 run-time/x2c.c
 confmagic.h                  Magic symbol remapping
-config_h.SH                  Produces config.h

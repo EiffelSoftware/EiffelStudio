@@ -43,6 +43,8 @@ wkeiflib='wkbench'
 suffix='.a'
 
 optimize='-O'
+wkoptimze=''
+
 large=''
 mkdep='/lannion3/manuelt/Misc/mkdep'
 mv='/usr/5bin/mv'
@@ -50,6 +52,10 @@ ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
 command_makefile='make'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
 
 #######################################
 # Flags for run-time compilation only #

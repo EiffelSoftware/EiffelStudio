@@ -110,6 +110,13 @@ feature -- Basic operation
 			
 			remove_load_output
 			
+				-- Now mark one window as the main window of the system if it is
+				-- `Void' which will occur when you load an old project that did not
+				-- have a root window.
+			if Object_handler.root_window_object = Void then
+				window_selector.mark_first_window_as_root
+			end
+			
 				-- Flag to the system that a load is no longer underway.
 			System_status.disable_loading_project
 		end

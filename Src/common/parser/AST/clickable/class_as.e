@@ -48,9 +48,6 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	id: CLASS_ID;
-			-- Class id
-
 	class_name: ID_AS;
 			-- Class name
 
@@ -275,12 +272,6 @@ feature {COMPILER_EXPORTER} -- Output
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting
-
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end;
 
 	set_class_name (c: like class_name) is
 		do

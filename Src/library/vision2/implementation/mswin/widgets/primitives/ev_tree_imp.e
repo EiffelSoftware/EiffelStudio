@@ -527,12 +527,11 @@ feature {EV_ANY_I} -- WEL Implementation
 			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			p: POINTER
 			elem: EV_TREE_NODE_IMP
-			a_default_pointer: POINTER
 		do
 			clist := all_ev_children
 
 			p := info.old_item.h_item
-			if p /= a_default_pointer then
+			if p /= default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
 						-- Call the deselect actions on `elem'.
@@ -541,13 +540,15 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 			end
 
-			p := info.new_item.h_item
-			if p /= a_default_pointer then
-				elem := clist.item (p)
-				if elem /= Void then
-						-- Call the select_actions on `elem'.
-					elem.select_actions.call ([])
-					select_actions.call ([elem.interface])
+			if info.new_item /= Void then	
+				p := info.new_item.h_item
+				if p /= default_pointer then
+					elem := clist.item (p)
+					if elem /= Void then
+							-- Call the select_actions on `elem'.
+						elem.select_actions.call ([])
+						select_actions.call ([elem.interface])
+					end
 				end
 			end
 		end

@@ -1578,8 +1578,7 @@ static int get_string()
 	}
 }
 
-static int eif_char(c)
-char c;
+static int eif_char(char c)
 {
 	int i;
 	int dec_value = 0;
@@ -1638,8 +1637,7 @@ void reset_class_name_parser()
 #endif
 }
 
-char  *c_clname(file_pointer)
-FILE *file_pointer;
+char  *c_clname(FILE *file_pointer)
 {
 	/* Parse Eiffel source file `file_pointer'. It assumes that the file
 	 * has been correctly opened in reading mode.

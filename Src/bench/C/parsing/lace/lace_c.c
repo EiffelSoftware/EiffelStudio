@@ -66,9 +66,7 @@ void lp_ebuild_init()
 	count_top = -1;
 }
 
-char *lp_file(file_pointer, filename)
-FILE *file_pointer;
-char *filename;
+char *lp_file(FILE *file_pointer, char *filename)
 {
 	/* Parse Lace source file `file_pointer'. It assumes that the file
 	 * has been correctly opened.
@@ -126,8 +124,7 @@ char *filename;
 	return rn_ast;
 }
 
-char *lace_id (s)
-char s[];
+char *lace_id (char s[])
 {
 	/* Create an instance of ID_SD with string `s' and test
 	 * the hash table where all the different ids are stored in

@@ -122,7 +122,7 @@ rt_ce.free_memory_bstr (tmp_type);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_features(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name )
+void ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_features(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name,  /* [out] */ VARIANT * return_names,  /* [out] */ VARIANT * return_signatures,  /* [out] */ VARIANT * return_image_indexes )
 
 /*-----------------------------------------------------------
 	Features accessible from target.
@@ -145,9 +145,8 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_features(
 	tmp_feature_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (feature_name));
 	BSTR tmp_file_name = 0;
 	tmp_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (file_name));
-	ecom_eiffel_compiler::IEnumCompletionEntry * ret_value = 0;
 	
-	hr = p_IEiffelCompletionInfo->target_features(tmp_target,tmp_feature_name,tmp_file_name, &ret_value);
+	hr = p_IEiffelCompletionInfo->target_features(tmp_target,tmp_feature_name,tmp_file_name,return_names,return_signatures,return_image_indexes);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -159,8 +158,6 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompletionInfo::ccom_target_features(
 rt_ce.free_memory_bstr (tmp_feature_name);
 rt_ce.free_memory_bstr (tmp_file_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_236 (ret_value));
-	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

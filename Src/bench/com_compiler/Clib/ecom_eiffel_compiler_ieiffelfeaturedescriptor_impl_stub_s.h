@@ -47,18 +47,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Feature signature.
-	-----------------------------------------------------------*/
-	STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Is entry a feature?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_feature(  /* [out] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
 	Feature external name.
 	-----------------------------------------------------------*/
 	STDMETHODIMP external_name(  /* [out, retval] */ BSTR * return_value );
@@ -74,6 +62,12 @@ public:
 	Name of class where feature was evaluated in.
 	-----------------------------------------------------------*/
 	STDMETHODIMP evaluated_class(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Feature signature.
+	-----------------------------------------------------------*/
+	STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -18,12 +18,8 @@ ecom_eiffel_compiler_ieiffelproject_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelproject_impl_proxy_s.obj \
 ecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.obj \
-ecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.obj \
-ecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.obj \
-#ecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.obj \
-#ecom_eiffel_compiler_ceiffelhtmldocevents_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.obj \
 ecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj \
@@ -70,12 +66,8 @@ wecom_eiffel_compiler_ieiffelproject_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelproject_impl_proxy_s.obj \
 wecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.obj \
-wecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.obj \
-wecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.obj \
-#wecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.obj \
-#wecom_eiffel_compiler_ceiffelhtmldocevents_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.obj \
 wecom_eiffel_compiler_ieiffelparameterdescriptor_impl_stub_s.obj \
@@ -116,13 +108,6 @@ all:: ecom.lib ecom_final.lib
 ecom.lib: $(WOBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(WOBJ)
-	if not exist msc mkdir msc
-	$(MV) $@ msc
-	del $@
-
-ecom_final.lib: $(OBJ)
-	if exist $@ del $@
-	lib -OUT:$@ $(OBJ)
 	if not exist msc mkdir msc
 	$(MV) $@ msc
 	del $@
@@ -172,12 +157,6 @@ wecom_eiffel_compiler_ieiffelclusterproperties_impl_stub_s.obj: ecom_eiffel_comp
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 	
-wecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.obj: ecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-
-wecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-
 wecom_eiffel_compiler_ieiffelcompiler_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelcompiler_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 	

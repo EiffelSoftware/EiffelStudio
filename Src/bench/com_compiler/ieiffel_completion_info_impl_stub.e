@@ -28,11 +28,14 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
+	target_features (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
 			-- `target' [in].  
 			-- `feature_name' [in].  
 			-- `file_name' [in].  
+			-- `return_names' [out].  
+			-- `return_signatures' [out].  
+			-- `return_image_indexes' [out].  
 		do
 			-- Put Implementation here.
 		end

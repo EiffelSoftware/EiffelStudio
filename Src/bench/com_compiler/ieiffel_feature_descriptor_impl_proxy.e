@@ -31,12 +31,6 @@ feature -- Access
 			Result := ccom_name (initializer)
 		end
 
-	signature: STRING is
-			-- Feature signature.
-		do
-			Result := ccom_signature (initializer)
-		end
-
 	external_name: STRING is
 			-- Feature external name.
 		do
@@ -53,6 +47,12 @@ feature -- Access
 			-- Name of class where feature was evaluated in.
 		do
 			Result := ccom_evaluated_class (initializer)
+		end
+
+	signature: STRING is
+			-- Feature signature.
+		do
+			Result := ccom_signature (initializer)
 		end
 
 	description: STRING is
@@ -237,13 +237,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	is_feature (return_value: BOOLEAN_REF) is
-			-- Is entry a feature?
-			-- `return_value' [out].  
-		do
-			ccom_is_feature (initializer, return_value)
-		end
-
 	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
 			-- Feature location, full path to file and line number
 			-- `file_path' [in, out].  
@@ -268,18 +261,6 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_signature (cpp_obj: POINTER): STRING is
-			-- Feature signature.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_is_feature (cpp_obj: POINTER; return_value: BOOLEAN_REF) is
-			-- Is entry a feature?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
 	ccom_external_name (cpp_obj: POINTER): STRING is
 			-- Feature external name.
 		external
@@ -294,6 +275,12 @@ feature {NONE}  -- Externals
 
 	ccom_evaluated_class (cpp_obj: POINTER): STRING is
 			-- Name of class where feature was evaluated in.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_signature (cpp_obj: POINTER): STRING is
+			-- Feature signature.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

@@ -13,8 +13,7 @@ feature -- Event handling
 			-- Actions to be performed when `pebble' is picked up.
 		do
 			if dock_started_actions_internal = Void then
-				dock_started_actions_internal :=
-					 create_dock_started_actions
+				create dock_started_actions_internal
 			end
 			Result := dock_started_actions_internal
 		ensure
@@ -22,12 +21,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Create a pick action sequence.
-		do
-			create Result
-		end
 
 	dock_started_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pick_actions'.

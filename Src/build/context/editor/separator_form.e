@@ -68,6 +68,8 @@ feature
 			!!b_no_line.make (Widget_names.no_line_name, radio_b, 
 					Sep_line_cmd, editor);
 
+			radio_b.set_always_one (True);
+
 			attach_left (is_vertical, 10);
 			attach_left (line_style, 10);
 			attach_left (radio_b, 100);
@@ -89,16 +91,21 @@ feature {NONE}
 		do
 			is_vertical.set_state (context.is_vertical);
 			l_mode := context.line_mode;
+			b_no_line.set_toggle_off;
+			b_double_line.set_toggle_off;
+			b_single_dashed_line.set_toggle_off;
+			b_double_dashed_line.set_toggle_off;
+			b_single_line.set_toggle_off;
 			if l_mode = Context_const.no_line then
-				b_no_line.arm
+				b_no_line.set_toggle_on
 			elseif l_mode = Context_const.double_line then
-				b_double_line.arm
+				b_double_line.set_toggle_on
 			elseif l_mode = Context_const.single_dashed_line  then
-				b_single_dashed_line.arm
+				b_single_dashed_line.set_toggle_on
 			elseif l_mode = Context_const.double_dashed_line then
-				b_double_dashed_line.arm
+				b_double_dashed_line.set_toggle_on
 			else
-				b_single_line.arm
+				b_single_line.set_toggle_on
 			end;
 		end;
 

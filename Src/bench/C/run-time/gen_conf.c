@@ -1401,7 +1401,7 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 /* Full type name of `obj' as STRING object.                        */
 /*------------------------------------------------------------------*/
 
-rt_public char *eif_gen_typename (EIF_REFERENCE obj)
+rt_public EIF_REFERENCE eif_gen_typename (EIF_REFERENCE obj)
 {
 	char    *name;
 	EIF_REFERENCE ret;	/* Return value. */
@@ -1420,7 +1420,6 @@ rt_public char *eif_gen_typename (EIF_REFERENCE obj)
 #endif
 
 	ret = makestr(name, strlen(name));
-	eif_free (name);
 	return ret;
 }
 /*------------------------------------------------------------------*/
@@ -2072,6 +2071,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 		result->is_tuple    = is_tuple;
 		result->is_array    = (char) 0;
 		result->name        = (char *) 0;       /* Generated on request only */
+				/* `name' must be allocated dynamically. */
 		result->next        = (EIF_GEN_DER *)0;
 
 		if (size > 0)
@@ -2118,6 +2118,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 	result->is_tuple    = is_tuple;
 	result->is_array    = (char) 0;
 	result->name        = (char *) 0;       /* Generated on request only */
+				/* `name' must be allocated dynamically. */
 	result->next        = (EIF_GEN_DER *)0;
 
 finish:
@@ -2157,9 +2158,6 @@ finish_simple:
 		}
 	}
 
-#ifdef EIF_NEW_GEN_DER_DEBUG
-	printf ("EIF_NEW_GEN_DER_DEBUG: return : 0x%x\n", result);
-#endif
 	return result;
 }
 /*------------------------------------------------------------------*/
@@ -2508,38 +2506,37 @@ rt_private void eif_expand_tables(int new_size)
 /* Full type name for type `dftype' as C string.                    */
 /*                                                                  */
 /* dftype : full type id; RTUD(yes)                                 */
+/* Attentionr! This routine is not threaded safe (because of the    */
+/* static buffer "result"). It must be protected by a lock.         */
 /*------------------------------------------------------------------*/
 
 rt_private char *eif_typename (int16 dftype)
 {
+	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;
 	int         len;
-	char        *result;
-
+	static char result [MAX_NUM_LEN + 1];	/* Limited in size */
+			
 	if (dftype < 0)
 		eif_panic ("Invalid type");
 
 	if (dftype < first_gen_id)
 	{
 		/* Compiler generated id */
-		return par_info(RTUD_INV(dftype))->class_name;
+		return par_info(RTUD_INV(dftype))->class_name;	/* allocated statically! */
 	}
 
 	gdp = eif_derivations [dftype];
 
 	if (gdp->name != (char *) 0)    /* Already computed */
 	{
-		return gdp->name;
+		return gdp->name;	/* Allocated dynamically! */
 	}
 
 	len = eif_typename_len (dftype);
 
-	/* We use eif_malloc here! */
-
-	result = eif_malloc (len + 1);
-
-	if (result == (char *) 0)
-		enomem();
+	if (len > MAX_NUM_LEN)
+		eif_panic ("Class name is too long");
 
 	*result = '\0';
 
@@ -2637,6 +2634,7 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 		strcat (result, bits);
 
 		gdp->name = bits;
+				/* `name' must be allocated dynamically. */
 
 		return;
 	}
@@ -2995,9 +2993,6 @@ rt_private void eif_compute_ctab (int16 dftype)
 	{
 		gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
 
-#ifdef	EIF_COMPUTE_CTAB_DEBUG
-		printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", dftype, gdp);
-#endif
 		eif_derivations [dftype] = gdp;
 	}
 

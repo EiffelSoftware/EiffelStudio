@@ -153,6 +153,9 @@ feature -- Status report
 			a_character_ref: CHARACTER_REF
 			a_double_ref: DOUBLE_REF
 			an_integer_ref: INTEGER_REF
+			an_integer_8_ref: INTEGER_8_REF
+			an_integer_16_ref: INTEGER_16_REF
+			an_integer_64_ref: INTEGER_64_REF
 			a_pointer_ref: POINTER_REF
 			a_real_ref: REAL_REF
 			int: INTERNAL
@@ -171,48 +174,76 @@ feature -- Status report
 					arg := args.item (i)
 					arg_type_code := args.arg_item_code (i)
 					open_arg_type_code := open_type_codes.item (i + 1)
-					if arg_type_code = 'r' then				
+					if arg_type_code = eif_reference_code then				
 						inspect	open_arg_type_code
-						when 'b' then
+						when eif_boolean_code then
 							a_boolean_ref ?= arg
 							mismatch := a_boolean_ref = Void
-						when 'c' then
+						when eif_character_code then
 							a_character_ref ?= arg
 							mismatch := a_character_ref = Void
-						when 'd' then
+						when eif_double_code then
 							a_double_ref ?= arg
 							mismatch := a_double_ref = Void
-						when 'i' then
+						when eif_integer_64_code then
+							an_integer_64_ref ?= arg
 							an_integer_ref ?= arg
-							mismatch := an_integer_ref = Void
-						when 'p' then
+							an_integer_16_ref ?= arg
+							an_integer_8_ref ?= arg
+							mismatch := an_integer_64_ref = Void and then an_integer_ref = Void
+								and then an_integer_16_ref = Void and then an_integer_8_ref = Void
+						when eif_integer_code then
+							an_integer_ref ?= arg
+							an_integer_16_ref ?= arg
+							an_integer_8_ref ?= arg
+							mismatch := an_integer_ref = Void and then
+								an_integer_16_ref = Void and then an_integer_8_ref = Void
+						when eif_integer_16_code then
+							an_integer_16_ref ?= arg
+							an_integer_8_ref ?= arg
+							mismatch := an_integer_16_ref = Void and then an_integer_8_ref = Void
+						when eif_integer_8_code then
+							an_integer_8_ref ?= arg
+							mismatch := an_integer_8_ref = Void
+						when eif_pointer_code then
 							a_pointer_ref ?= arg
 							mismatch := a_pointer_ref = Void
-						when 'f' then
+						when eif_real_code then
 							a_real_ref ?= arg
 							mismatch := a_real_ref = Void
-						when 'r' then
+						when eif_reference_code then
 							if arg /= Void and then not eif_gen_conf (
 								int.dynamic_type (arg),
-								open_operand_type (i)
-)
+								open_operand_type (i))
 							then
 								mismatch := True
 							end
 						end
 					else
-						if
-							arg_type_code /= open_arg_type_code
-							and (
-								open_arg_type_code = 'r' implies
-								open_operand_type (i) > 0
-)
-						then
-							mismatch := True
+						if arg_type_code /= open_arg_type_code then
+							inspect
+								open_arg_type_code
+							when eif_integer_64_code then
+								mismatch := arg_type_code /= eif_integer_code and then
+									arg_type_code /= eif_integer_16_code and then
+									arg_type_code /= eif_integer_8_code
+							when eif_integer_code then
+								mismatch := arg_type_code /= eif_integer_16_code and then
+									arg_type_code /= eif_integer_8_code
+							when eif_integer_16_code then
+								mismatch := arg_type_code /= eif_integer_8_code
+							when eif_integer_8_code then
+									-- As seen in above if statement, `arg_type_code' is not
+									-- equal to `open_arg_type_code'.
+								mismatch := True
+							else
+								mismatch := (open_arg_type_code = eif_reference_code implies
+									open_operand_type (i) > 0)
+							end
 						end
 					end
-						i := i + 1
-					end
+					i := i + 1
+				end
 				Result := not mismatch
 			end
 		end

@@ -81,7 +81,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = boolean_code)
+			Result := (generic_typecode (index - 1) = boolean_code)
 		end
 
 	is_character_item (index: INTEGER): BOOLEAN is
@@ -89,7 +89,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = character_code)
+			Result := (generic_typecode (index - 1) = character_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -97,7 +97,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = double_code)
+			Result := (generic_typecode (index - 1) = double_code)
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN is
@@ -105,7 +105,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = integer_8_code)
+			Result := (generic_typecode (index - 1) = integer_8_code)
 		end
 
 	is_integer_16_item (index: INTEGER): BOOLEAN is
@@ -113,7 +113,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = integer_16_code)
+			Result := (generic_typecode (index - 1) = integer_16_code)
 		end
 
 	is_integer_item, is_integer_32 (index: INTEGER): BOOLEAN is
@@ -121,7 +121,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = integer_code)
+			Result := (generic_typecode (index - 1) = integer_code)
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN is
@@ -129,7 +129,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = integer_64_code)
+			Result := (generic_typecode (index - 1) = integer_64_code)
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN is
@@ -137,7 +137,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = pointer_code)
+			Result := (generic_typecode (index - 1) = pointer_code)
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN is
@@ -145,7 +145,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = real_code)
+			Result := (generic_typecode (index - 1) = real_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -153,7 +153,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode.item (index - 1) = reference_code)
+			Result := (generic_typecode (index - 1) = reference_code)
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
@@ -163,7 +163,7 @@ feature -- Type queries
 		local
 			tcode: INTEGER_8
 		do
-			tcode := generic_typecode.item (index - 1)
+			tcode := generic_typecode (index - 1)
 			inspect tcode
 			when
 				integer_8_code, integer_16_code, integer_code,
@@ -286,7 +286,7 @@ feature -- Type conversion queries
 			until
 				i >= cnt or else not Result
 			loop
-				tcode := generic_typecode.item (i)
+				tcode := generic_typecode (i)
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_code,
@@ -315,7 +315,7 @@ feature -- Type conversion queries
 			until
 				i >= cnt or else not Result
 			loop
-				tcode := generic_typecode.item (i)
+				tcode := generic_typecode (i)
 				inspect tcode
 				when
 					integer_8_code, integer_16_code, integer_code,
@@ -610,7 +610,7 @@ feature {ROUTINE, TUPLE}
 			valid_index: valid_index (index)
 		do
 				-- FIXME
-			Result := generic_typecode.item (index - 1)
+			Result := generic_typecode (index - 1)
 		end
 
 	boolean_code: INTEGER_8 is 0
@@ -660,14 +660,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generic_typecode: NATIVE_ARRAY [INTEGER_8] is
+	generic_typecode (pos: INTEGER): INTEGER_8 is
 			-- Code for generic parameter `pos' in `obj'.
 		do
-			check
-				False
-			end
+			Result ?= reverse_lookup.get_item (fast_item (pos).get_type)
 		end
 
+	reverse_lookup: HASHTABLE is
+			-- Given a TYPE object, returns its associated `typecode'.
+		once
+			create Result.make_1 (10)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Boolean").to_cil), boolean_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Char").to_cil), character_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), double_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Single").to_cil), real_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Int32").to_cil), integer_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), pointer_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Object").to_cil), reference_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Byte").to_cil), integer_8_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Int16").to_cil), integer_16_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Int64").to_cil), integer_64_code)
+		end
+		
 	codemap: NATIVE_ARRAY [TYPE] is
 			-- Conversion between `code' type and TYPE object.
 		once
@@ -679,7 +693,7 @@ feature {NONE} -- Implementation
 			Result.put (integer_code, feature {TYPE}.get_type_string (("System.Int32").to_cil))
 			Result.put (pointer_code, feature {TYPE}.get_type_string (("System.IntPtr").to_cil))
 			Result.put (reference_code, feature {TYPE}.get_type_string (("System.Object").to_cil))
-			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.Int8").to_cil))
+			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))
 			Result.put (integer_16_code, feature {TYPE}.get_type_string (("System.Int16").to_cil))
 			Result.put (integer_64_code, feature {TYPE}.get_type_string (("System.Int64").to_cil))
 		end

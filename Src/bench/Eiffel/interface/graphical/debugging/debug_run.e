@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end;
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			text_window
 		end;
@@ -36,12 +36,10 @@ feature -- Initialization
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			init (c, a_text_window);
-			!!run_request.make (Rqst_application);
-			!!cont_request.make (Rqst_cont);
-			!!argument_window.make (c, Current);
-			add_button_click_action (3, Current, specify_args);
-			set_action ("!c<Btn1Down>", Current, melt_and_run)
+			init (a_text_window);
+			!! run_request.make (Rqst_application);
+			!! cont_request.make (Rqst_cont);
+			!! argument_window.make (c, Current);
 		end;
 
 feature -- Callbacks
@@ -93,10 +91,12 @@ feature -- Execution
 			debug_text: TEXT_WINDOW;
 			ready_to_run: BOOLEAN;
 			temp: STRING;
-			update_command: UPDATE_PROJECT
+			update_command: UPDATE_PROJECT;
+			project_w: PROJECT_W
 		do
 			if argument = melt_and_run then
-				update_command := text_window.tool.update_command;
+				project_w ?= text_window.tool;
+				update_command ?= project_w.update_cmd_holder.associated_command;
 				update_command.set_run_after_melt (true);
 				update_command.execute (text_window);
 				update_command.set_run_after_melt (false)
@@ -191,7 +191,7 @@ end;
  
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Debug_run

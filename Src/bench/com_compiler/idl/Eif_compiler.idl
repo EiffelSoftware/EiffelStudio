@@ -19,6 +19,8 @@ interface IEiffelClusterProperties;
 interface IEnumClass;
 interface IEnumCluster;
 interface IEnumFeature;
+interface IEnumClusterProp;
+interface IEiffelSystemClusters;
 
 typedef enum __EIF_COMPILATION_TYPES
 {
@@ -178,6 +180,32 @@ interface IEnumFeature : IUnknown
         [out] IEnumFeature ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelFeatureDescriptor **rgelt); 
+    
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(57C162F4-18A3-4abd-BDB1-3E8B759C3E4D),
+    helpstring ("Eiffel Cluster Properties Enumeration.")
+]
+
+interface IEnumClusterProp : IUnknown
+{
+    HRESULT Next(
+        [out] IEiffelClusterProperties **rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumClusterProp ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterProperties **rgelt); 
     
     HRESULT count ([out, retval] ULONG *return_value);
 };
@@ -518,35 +546,14 @@ interface IEiffelProjectProperties: IDispatch
   [id (109), propput, helpstring ("Should class invariants be evaluated?")]
   HRESULT evaluate_invariant ([in] VARIANT_BOOL new_value);
   
-  [id (120), propget, helpstring ("Working directory.")]
-  HRESULT working_directory ([out, retval] BSTR * return_value);
-  
-  [id (120), propput, helpstring ("Working directory.")]
-  HRESULT working_directory ([in] BSTR new_directory); 
-  
-  [id (110), propget, helpstring ("Program arguments.")]
-  HRESULT arguments ([out, retval] BSTR * return_value);
-  
-  [id (110), propput, helpstring ("Program arguments.")]
-  HRESULT arguments ([in] BSTR new_arguments); 
-
   [id (111), propget, helpstring ("Generate debug info?")]
   HRESULT debug_info ([out, retval] VARIANT_BOOL * return_value);
   
   [id (111), propput, helpstring ("Generate debug info?")]
   HRESULT debug_info ([in] VARIANT_BOOL new_value);
   
-  [id (112), propget, helpstring ("List of clusters in current project (list of IEiffelClusterProperties*).")]
-  HRESULT clusters ([out, retval] VARIANT * return_value);
-
-  [id (113), helpstring ("Add a cluster to the project.")]
-  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
-  
-  [id (114), helpstring ("Remove a cluster from the project.")]
-  HRESULT remove_cluster ([in] BSTR cluster_name);
-
-  [id (115), helpstring ("Cluster properties.")]
-  HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
+  [id (112), propget, helpstring ("Project Clusters.")]
+  HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
   
   [id (116), propget, helpstring ("Imported assemblies.")]
   HRESULT assemblies ([out, retval] SAFEARRAY (BSTR) * return_value);
@@ -567,6 +574,35 @@ interface IEiffelProjectProperties: IDispatch
   HRESULT Apply ();
 
 };
+//---------------------------------------------------------------------
+
+[
+  dual, object,
+  uuid (D2773ADF-FD21-4cfa-9A4F-8773CFF62CFD),
+  helpstring ("Eiffel System Clusters.")
+]
+interface IEiffelSystemClusters: IDispatch
+{
+  [helpstring ("Cluster tree.")]
+  HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
+  
+  [helpstring ("Save changes.")]
+  HRESULT store ();
+
+  [helpstring ("Add a cluster to the project.")]
+  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
+  
+  [helpstring ("Remove a cluster from the project.")]
+  HRESULT remove_cluster ([in] BSTR cluster_name);
+
+  [helpstring ("Cluster properties.")]
+  HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
+
+
+  [helpstring ("Cluster properties.")]
+  HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
+};
+
 //---------------------------------------------------------------------
 
 [
@@ -604,7 +640,7 @@ interface IEiffelClusterProperties: IDispatch
   HRESULT all ([out, retval] VARIANT_BOOL * return_value);
   
   [id (203), propput, helpstring ("Should all subclusters be included?")]
-  HRESULT all ([in] VARIANT_BOOL return_value);
+  HRESULT all ([in] VARIANT_BOOL new_value);
   
   [id (204), propget, helpstring ("Should use system default?")]
   HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
@@ -614,42 +650,53 @@ interface IEiffelClusterProperties: IDispatch
 
   [id (205), propget, helpstring ("Should preconditions be evaluated by default?")]
   HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
-
-  [id (205), propput, helpstring ("Should preconditions be evaluated by default?")]
-  HRESULT evaluate_require_by_default ([in] VARIANT_BOOL new_value);
   
   [id (206), propget, helpstring ("Should postconditions be evaluated by default?")]
   HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
-    
-  [id (206), propput, helpstring ("Should postconditions be evaluated by default?")]
-  HRESULT evaluate_ensure_by_default ([in] VARIANT_BOOL new_value);
-  
+      
   [id (207), propget, helpstring ("Should check assertions be evaluated by default?")]
   HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
-  
-  [id (207), propput, helpstring ("Should check assertions be evaluated by default?")]
-  HRESULT evaluate_check_by_default ([in] VARIANT_BOOL new_value);
-  
+    
   [id (208), propget, helpstring ("Should loop assertions be evaluated by default?")]
   HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
-  
-  [id (208), propput, helpstring ("Should loop assertions be evaluated by default?")]
-  HRESULT evaluate_loop_by_default ([in] VARIANT_BOOL new_value);
-  
+    
   [id (209), propget, helpstring ("Should class invariants be evaluated by default?")]
   HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
   
-  [id (209), propput, helpstring ("Should class invariants be evaluated by default?")]
-  HRESULT evaluate_invariant_by_default ([in] VARIANT_BOOL new_value);
+  [id (210), helpstring ("Set assertions for cluster.")]
+  HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check, 
+                          [in] VARIANT_BOOL evaluate_require, 
+                          [in] VARIANT_BOOL evaluate_ensure, 
+                          [in] VARIANT_BOOL evaluate_loop, 
+                          [in] VARIANT_BOOL evaluate_invariant);
   
-  [helpstring ("List of excluded directories.")]
+  [id (211), helpstring ("List of excluded directories.")]
   HRESULT excluded ([out, retval] SAFEARRAY (BSTR) * return_value);
   
-  [helpstring ("Add a directory to exclude.")]
+  [id (212), helpstring ("Add a directory to exclude.")]
   HRESULT add_exclude ([in] BSTR dir_name);
   
-  [helpstring ("Remove a directory to exclude.")]
+  [id (213), helpstring ("Remove a directory to exclude.")]
   HRESULT remove_exclude ([in] BSTR dir_name);  
+
+  [id (214), propget, helpstring ("Name of the parent cluster.")]
+  HRESULT parent_name ([out, retval] BSTR * return_value);
+
+  [id (214), propput, helpstring ("Name of the parent cluster.")]
+  HRESULT parent_name ([in] BSTR new_value);  
+
+  [id (215), propget, helpstring ("Does the current cluster have a parent cluster?")]
+  HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (216), propget, helpstring ("List of subclusters (list of IEiffelClusterProperties*).")]
+  HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
+
+  [id (217), propget, helpstring ("Does the current cluster have children?")]
+  HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (218), propget, helpstring ("Cluster identifier.")]
+  HRESULT cluster_id ([out, retval] ULONG * return_value);
+
 };
 //---------------------------------------------------------------------
 
@@ -672,6 +719,8 @@ library eiffel_compiler
   interface IEnumClass;
   interface IEnumCluster;
   interface IEnumFeature;
+  interface IEnumClusterProp;
+  interface IEiffelSystemClusters;
   
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)

@@ -69,7 +69,7 @@ feature -- Setting
 			set: feature_clause_order = fco
 		end;
 
-feature -- Execution
+feature -- Output
 
 	format (e_class: E_CLASS) is
 			-- Format text for eiffel class `e_class'.
@@ -96,6 +96,23 @@ feature -- Execution
 				f.set_feature_clause_order (feature_clause_order)
 			end;
 			f.execute;
+			text := f.text;
+			error := f.execution_error
+		end;
+
+	format_invariants (e_class: E_CLASS) is
+			-- Format invariants for eiffel class `e_class'.
+		require
+			valid_e_class: e_class /= Void
+		local
+			f: FORMAT_CONTEXT_B
+		do
+			!! f.make (e_class);
+			if is_clickable then
+				f.set_in_bench_mode
+			end;
+			f.register_ancestors_invariants;
+			f.format_invariants;
 			text := f.text;
 			error := f.execution_error
 		end;

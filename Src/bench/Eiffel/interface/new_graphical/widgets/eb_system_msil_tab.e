@@ -47,6 +47,9 @@ feature -- MSIL options
 			
 	signing_key_field: EV_PATH_FIELD
 			-- Filename of the cryptographic assembly key
+			
+	generate_key_button: EV_BUTTON
+			-- Button to generate a public/private key pair for assembly
 
 	full_name_field: EV_TEXT_FIELD
 			-- Full name of current assembly.
@@ -76,6 +79,20 @@ feature -- Parent access
 
 	system_window: EB_SYSTEM_WINDOW
 			-- Graphical parent of Current.
+			
+feature -- Actions
+
+	show_key_dialog is
+			-- Display the save as dialog for key generation file
+		local
+			fd: EV_FILE_SAVE_DIALOG
+		do
+			create fd
+			fd.save_actions.extend (agent generate_and_save_key (fd))
+			fd.set_filter ("*.snk")
+			fd.set_title ("Save key file as...")
+			fd.show_modal_to_window (system_window.window)
+		end
 			
 feature -- Store/Retrieve
 
@@ -223,6 +240,8 @@ feature {NONE} -- Filling
 					copyright_field.set_text (val.value)
 				when feature {FREE_OPTION_SD}.Msil_culture then
 					select_culture (val.value)
+				when feature {FREE_OPTION_SD}.Msil_assembly_compatibility then
+					select_assembly_compatibility (val.value)
 				when feature {FREE_OPTION_SD}.Msil_key_file_name then
 					signing_key_field.set_text (val.value)
 				when feature {FREE_OPTION_SD}.Il_verifiable then
@@ -287,9 +306,10 @@ feature {NONE} -- Initialization
 			st_not_void: st /= Void
 			st_not_empty: not st.is_empty
 		local
-			hbox: EV_HORIZONTAL_BOX
+			hbox, h_item_box: EV_HORIZONTAL_BOX
 			label: EV_LABEL
 			item_box, vbox, vbox2: EV_VERTICAL_BOX
+			cell: EV_CELL
 		do
 			create Result.make_with_text (st)
 			create vbox
@@ -399,21 +419,32 @@ feature {NONE} -- Initialization
 			vbox2.disable_item_expand (item_box)
 	
 			create vbox2
-			vbox2.set_padding (Layout_constants.Small_padding_size)
+			create h_item_box
 			create item_box
+			vbox2.set_padding (Layout_constants.Small_padding_size)
+			h_item_box.set_padding (Layout_constants.Tiny_padding_size)
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			label.align_text_left
 			create signing_key_field.make_with_text_and_parent ("Signing key:",
 				system_window.window)
 			signing_key_field.set_padding (Layout_constants.Tiny_padding_size)
 			signing_key_field.set_browse_for_file ("*.snk")
-			item_box.extend (signing_key_field)
-			vbox2.extend (item_box)
-			vbox2.disable_item_expand (item_box)
-	
+			h_item_box.extend (signing_key_field)
+			create cell
+			create generate_key_button.make_with_text_and_action ("Generate..", agent show_key_dialog)
+			cell.set_minimum_height (signing_key_field.i_th (1).height)
+			item_box.extend (cell)
+			item_box.extend (generate_key_button)
+			h_item_box.extend (item_box)
+			h_item_box.disable_item_expand (item_box)
+			
+			vbox2.extend (h_item_box)
+			vbox2.disable_item_expand (h_item_box)
+		
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
 			vbox.extend (vbox2)
+			vbox.disable_item_expand (vbox2)
 
 			Result.extend (vbox)
 		end
@@ -506,7 +537,46 @@ feature {NONE} -- Implementation
 				if not match_found then
 					culture_combo.i_th (1).enable_select
 				end
+			end	
+			
+	select_assembly_compatibility (a_comp_type: STRING) is
+			-- Select a compatiblity type associated with 'a_comp_type'
+		require
+			compatibility_not_void: a_comp_type /= Void
+		local
+			match_found: BOOLEAN
+			curr_comp: STRING
+		do
+			from
+				compatibility_combo.start
+			until
+				compatibility_combo.after or match_found
+			loop
+				curr_comp := compatibility_combo.item.text
+				if curr_comp.is_equal (a_comp_type) then
+						compatibility_combo.item.enable_select
+						match_found := True
+				end
+				compatibility_combo.forth
 			end
+			if not match_found then
+				compatibility_combo.i_th (1).enable_select
+			end
+		end
+		
+	generate_and_save_key (fd: EV_FILE_SAVE_DIALOG) is
+			-- Generate a new signing key in the chosen file from 'fd'
+			--and set as new assembly key
+		require
+			file_dialog_not_void: fd /= Void
+		local
+			ilkg: IL_KEY_GENERATOR
+		do
+			create ilkg
+			ilkg.generate_key (fd.file_name)
+			signing_key_field.set_text (fd.file_name)
+		end
+		
 
 invariant
 	verifiable_check_not_void: verifiable_check /= Void 

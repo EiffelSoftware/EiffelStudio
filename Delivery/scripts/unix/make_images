@@ -45,33 +45,20 @@ if [ ! -e Eiffel51 ]; then
 	gunzip -c Eiffel51_deliv.tgz | tar -xf -
 fi
 
-if [ -f build_deliv.tgz ]; then
-	remtrace copying EiffelBuild delivery
-	cd $INSTALL_DIR
-	gunzip -c $EXPORT_DIR/build_deliv.tgz | tar -xf -
-	cd $EXPORT_DIR
-fi
-
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
+	if [ -f build_deliv.tgz ]; then
+		remtrace copying EiffelBuild delivery
+		cd $INSTALL_DIR
+		gunzip -c $EXPORT_DIR/build_deliv.tgz | tar -xf -
+		cd $EXPORT_DIR
+	fi
 	remtrace Preparing normal Enterprise delivery
 	mv Eiffel51 cdrom
 	cp cdrom/Eiffel51/INSTALL cdrom	
 	make_cd_image Eiffel51 Eiffel51.iso cdrom
 	mv cdrom/Eiffel51 Eiffel51
 else
-	remtrace Preparing Enterprise version
-	cp -r pro_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-	remtrace Building Enterprise CD image
-	mv Eiffel51 cdrom
-	cp cdrom/Eiffel51/INSTALL cdrom	
-	make_cd_image Eiffel51_enterprise Eiffel51_enterprise.iso cdrom
-	mv cdrom/Eiffel51 Eiffel51
-
-
 	remtrace Preparing Professional version
 	cp -r pro_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 	gunzip -c $EXPORT_DIR/ecs/ec_pro.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
@@ -108,6 +95,13 @@ else
 	mv cdrom/Eiffel51 Eiffel51
 
 
+	if [ -f build_deliv.tgz ]; then
+		remtrace copying EiffelBuild delivery
+		cd $INSTALL_DIR
+		gunzip -c $EXPORT_DIR/build_deliv.tgz | tar -xf -
+		cd $EXPORT_DIR
+	fi
+
 	remtrace Preparing Evaluation version
 	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 	gunzip -c $EXPORT_DIR/ecs/ec_evaluation.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
@@ -117,5 +111,17 @@ else
 	mv Eiffel51 cdrom
 	cp cdrom/Eiffel51/INSTALL cdrom	
 	make_cd_image Eiffel51_eval Eiffel51_eval.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Enterprise version
+	cp -r pro_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Enterprise CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_enterprise Eiffel51_enterprise.iso cdrom
 	mv cdrom/Eiffel51 Eiffel51
 fi

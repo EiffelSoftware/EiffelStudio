@@ -1,18 +1,17 @@
 indexing
-
 	description:
 		"HTML generation. This class may be used as ancestor by classes %
-		%needing its facilities";
+		%needing its facilities"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	HTML_GENERATOR
 
 inherit
-	HTML_CONSTANTS;
+	HTML_CONSTANTS
 	SHARED_STDOUT
 
 feature -- Miscellaneous
@@ -22,8 +21,8 @@ feature -- Miscellaneous
 		require
 			text_not_Void: text /= Void
 		do
-			put_basic (Bold_start);
-			put_basic (text);
+			put_basic (Bold_start)
+			put_basic (text)
 			put_basic (Bold_end)
 		end
 
@@ -44,14 +43,14 @@ feature -- Miscellaneous
 		require
 			text_not_Void: text /= Void
 		do
-			put_basic (Glossary_term);
+			put_basic (Glossary_term)
 			put_basic (text)
 		end
 
 	put_glossary_definition is
 			-- Put glossary definition tag.
 		do
-			put_basic (Glossary_definition);
+			put_basic (Glossary_definition)
 		end
 
 	put_header1 (title: STRING) is
@@ -59,9 +58,9 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H1_start);
-			put_basic (title);
-			put_basic (H1_end);
+			put_basic (H1_start)
+			put_basic (title)
+			put_basic (H1_end)
 			put_basic ("%N")
 		end
 
@@ -70,9 +69,9 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H2_start);
-			put_basic (title);
-			put_basic (H2_end);
+			put_basic (H2_start)
+			put_basic (title)
+			put_basic (H2_end)
 			put_basic ("%N")
 		end
 
@@ -81,9 +80,9 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H3_start);
-			put_basic (title);
-			put_basic (H3_end);
+			put_basic (H3_start)
+			put_basic (title)
+			put_basic (H3_end)
 			put_basic ("%N")
 		end
 
@@ -92,9 +91,9 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H4_start);
-			put_basic (title);
-			put_basic (H4_end);
+			put_basic (H4_start)
+			put_basic (title)
+			put_basic (H4_end)
 			put_basic ("%N")
 		end
 
@@ -103,9 +102,9 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H5_start);
-			put_basic (title);
-			put_basic (H5_end);
+			put_basic (H5_start)
+			put_basic (title)
+			put_basic (H5_end)
 			put_basic ("%N")
 		end
 
@@ -114,16 +113,16 @@ feature -- Miscellaneous
 		require
 			title_not_Void: title /= Void
 		do
-			put_basic (H6_start);
-			put_basic (title);
-			put_basic (H6_end);
+			put_basic (H6_start)
+			put_basic (title)
+			put_basic (H6_end)
 			put_basic ("%N")
 		end
 
 	put_horizontal_rule is
 			-- Put a horizontal rule.
 		do
-			put_basic (Horizontal_rule);
+			put_basic (Horizontal_rule)
 			put_basic ("%N")
 		end
 
@@ -132,8 +131,8 @@ feature -- Miscellaneous
 		require
 			text_not_Void: text /= Void
 		do
-			put_basic (Italic_start);
-			put_basic (text);
+			put_basic (Italic_start)
+			put_basic (text)
 			put_basic (Italic_end)
 		end
 
@@ -149,11 +148,11 @@ feature -- Miscellaneous
 			anchor_not_Void: anchor /= Void;
 			url_not_Void: url /= Void
 		do
-			put_basic ("<A HREF=%"");
-			put_basic (url);
-			put_basic ("%">");
-			put_basic (anchor);
-			put_basic ("</A>");
+			put_basic ("<A HREF=%"")
+			put_basic (url)
+			put_basic ("%">")
+			put_basic (anchor)
+			put_basic ("</A>")
 		end
 
 	put_list_item_start is
@@ -197,9 +196,9 @@ feature -- Miscellaneous
 		require
 			text_not_Void: text /= Void
 		do
-			put_basic (Preformatted_start);
-			put_basic (text);
-			put_basic (Preformatted_end);
+			put_basic (Preformatted_start)
+			put_basic (text)
+			put_basic (Preformatted_end)
 			put_basic ("%N")
 		end
 

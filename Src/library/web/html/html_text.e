@@ -1,100 +1,101 @@
 class
 	HTML_TEXT
+
 inherit
 	HTML_GENERATOR
 		undefine
 			out
 		redefine
 			put_basic
-		end;
+		end
 
-creation
+create
 	make
 	
 feature
 
 	make is
 		do
-			!! html_text.make(1);
-		end;
+			create html_text.make (1)
+		end
 
 feature -- Redefinition
 
-	put_basic(s: STRING) is
+	put_basic (s: STRING) is
 			-- Append 's' to the temporary string
 		do
-			html_text.append(s);
-		end;
+			html_text.append (s)
+		end
 
 feature -- Out representation
 
 	out: STRING is
 			-- Provide a STRING representation for the HTML text
 		do
-			Result := clone(html_text);
-		end;
+			Result := clone (html_text)
+		end
 
 feature -- Add some new features
 
 	wipe_out is
 			-- Restore a empty HTML text
 		do
-			html_text.wipe_out;
+			html_text.wipe_out
 				-- This is useful if we don't want to create each time
 				-- a new object just for displaying HTML text
-		end;
+		end
 
-	put_center(s: STRING) is
+	put_center (s: STRING) is
 			-- Put 's' centered on the window
 		do
-			put_basic("<CENTER>");
-			put_basic(s);
-			put_basic("</CENTER>");
-			put_basic("%N");
+			put_basic ("<CENTER>")
+			put_basic (s)
+			put_basic ("</CENTER>")
+			put_basic ("%N")
 		end;
 
-	put_font(s: STRING; n: INTEGER) is
+	put_font (s: STRING; n: INTEGER) is
 			-- Put 's' with font size set to 'n'
 		do
-			put_basic("<FONT SIZE=");
+			put_basic ("<FONT SIZE=")
 			if n >= 0 then
-				put_basic("+");
-			end;
-			put_basic(n.out);
-			put_basic(">");
-			put_basic(s);
-			put_basic("</FONT>");
-			put_basic("%N");
-		end;
+				put_basic ("+")
+			end
+			put_basic (n.out)
+			put_basic (">")
+			put_basic (s)
+			put_basic ("</FONT>")
+			put_basic ("%N")
+		end
 
-	put_indent(s: STRING) is
+	put_indent (s: STRING) is
 		do
-			put_basic("<BLOCKQUOTE>");
-			put_basic(s);
-			put_basic("</BLOCKQUOTE>");
-			put_basic("%N");
-		end;
+			put_basic ("<BLOCKQUOTE>")
+			put_basic (s)
+			put_basic ("</BLOCKQUOTE>")
+			put_basic ("%N")
+		end
 
-	put_blink(s: STRING) is
+	put_blink (s: STRING) is
 		do
-			put_basic("<BLINK>");
-			put_basic(s);
-			put_basic("</BLINK>");
-			put_basic("%N");
-		end;
+			put_basic("<BLINK>")
+			put_basic(s)
+			put_basic("</BLINK>")
+			put_basic("%N")
+		end
 
-	put_address(s: STRING) is
+	put_address (s: STRING) is
 		do
-			put_basic("<ADDRESS>");
-			put_basic(s);
-			put_basic("</ADDRESS>");
-			put_basic("%N");
-		end;
+			put_basic ("<ADDRESS>")
+			put_basic (s)
+			put_basic ("</ADDRESS>")
+			put_basic ("%N")
+		end
 
 
 feature {NONE}
 
-	html_text: STRING;
+	html_text: STRING
 
 end -- class HTML_TEXT
 

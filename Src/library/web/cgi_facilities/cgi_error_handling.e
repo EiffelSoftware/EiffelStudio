@@ -26,7 +26,7 @@ feature -- Basic Operations
 			else
 				msg := ""
 			end
-			response_header.send_trace(msg+exception_trace)
+			response_header.send_trace (msg + exception_trace)
 		end
 
 	raise_error(msg: STRING) is

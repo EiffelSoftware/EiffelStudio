@@ -15,7 +15,7 @@ feature -- Access
 	stdin: STDIN is
 			-- Shared standard input (stdin).
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end -- class SHARED_STDIN

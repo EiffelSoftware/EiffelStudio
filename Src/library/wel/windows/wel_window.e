@@ -1383,7 +1383,7 @@ feature {NONE} -- Implementation
 
 feature {WEL_DISPATCHER}
 
-	frozen window_process_message, process_message (hwnd: POINTER; msg,
+	window_process_message, process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.

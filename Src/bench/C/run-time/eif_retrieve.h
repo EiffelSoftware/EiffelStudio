@@ -54,8 +54,9 @@ struct rt_struct {
 /*
  * Eiffel calls
  */
-extern char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
-extern char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(char *, int));
+RT_LNK char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
+RT_LNK char *stream_eretrieve(char **);		/* Retrieve object store in stream */
+RT_LNK char *portable_retrieve(int (*char_read_function)(char *, int));
 
 
 /*
@@ -79,8 +80,6 @@ extern void rt_reset_retrieve(void);
 
 extern int (*retrieve_read_func)();
 extern int (*char_read_func)(char *, int);
-extern int char_read(char *pointer, int size);
-
 
 #ifdef __cplusplus
 }

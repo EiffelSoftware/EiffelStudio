@@ -49,12 +49,13 @@
 
 /*#define DEBUG 1 /**/
 
-
 /* Internal representation of the different kinds of storage */
-
 #define BASIC_STORE '\0'
 #define GENERAL_STORE '\01'
 #define INDEPENDENT_STORE '\02'
+
+/* Size of the buffer to retrieve an object */
+#define RETRIEVE_BUFFER_SIZE 262144L
 
 /*
  * Public data declarations 
@@ -73,21 +74,17 @@ rt_private uint32 *spec_elm_size;			/*array of special element sizes*/
 rt_private uint32 old_overhead = 0;		/*overhead size from stored object*/
 rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
-/* Public data declarations */
-
 #ifndef EIF_THREADS
-
-#if defined EIF_OS2 || defined SYMANTEC_CPP	/* skip r_fides, r_fstoretype definition for these platforms */
-#else
-rt_public int r_fides;			/* File descriptor use for retrieve */ /* %%zmt */
-rt_public char r_fstoretype;	/* File storage type used for retrieve */ /* %%zmt */
-#endif
-
+rt_private int r_fides;			/* File descriptor use for retrieve */
 #endif /* EIF_THREADS */
 
 /*
  * Function declations
  */
+rt_public char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
+rt_public char *stream_eretrieve(char **);		/* Retrieve object store in stream */
+rt_public char *portable_retrieve(int (*char_read_function)(char *, int));
+
 rt_public char *irt_make(void);			/* Do the independant retrieve */
 rt_public char *grt_make(void);			/* Do the general retrieve (3.3 and later) */
 rt_public char *irt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects independent form*/
@@ -106,6 +103,13 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
 
+/* Initialization and Resetting for retrieving an independent store */
+rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short);
+rt_private void independent_retrieve_reset (void);
+
+/* Functions to write on the specified IO_MEDIUM */
+rt_private int (char_read) (char *, int);
+rt_private int (stream_read) (char *, int);
 
 /* read function declarations */
 int retrieve_read (void);
@@ -119,7 +123,13 @@ int (*char_read_func)(char *, int) = char_read;
 /*
  * Convenience functions
  */
- 
+
+/* Declarations to work with streams */
+rt_private char *stream_buffer;
+rt_private int stream_buffer_position;
+rt_private int stream_buffer_size;
+
+
 /* Initialize retrieve function pointers and globals */
  
 rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
@@ -135,14 +145,28 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read
 rt_public void rt_reset_retrieve(void) {
     retrieve_read_func = retrieve_read_with_compression;
 	char_read_func = char_read;
+	buffer_size = RETRIEVE_BUFFER_SIZE;
 }
- 
 
 /*
  * Function definitions
  */
 
-rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(char *, int))
+rt_public char *eretrieve(EIF_INTEGER file_desc)
+{
+	r_fides = file_desc;
+
+	return portable_retrieve(char_read);
+}
+
+rt_public char *stream_eretrieve(char **buffer)
+{
+	stream_buffer = *buffer;
+
+	return portable_retrieve(stream_read);
+}
+
+rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 {
 	/* Retrieve object store in file `filename' */
 
@@ -154,9 +178,6 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 	/* Reset nb_recorded */
 	nb_recorded = 0;
 
-	/* Open file */
-	r_fides = file_desc;
-	
 	/* Read the kind of stored hierachy */
 	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char))
 		eio();
@@ -165,45 +186,50 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 
 	switch (rt_type) {
 		case BASIC_STORE_3_1:			/*old basic store */
-			rt_init_retrieve(old_retrieve_read, char_read_function, 1024);
+			rt_init_retrieve(old_retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case BASIC_STORE_3_2:			/* New basic store */
-			rt_init_retrieve(retrieve_read, char_read_function, 1024);
+			rt_init_retrieve(retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case BASIC_STORE_4_0:
+			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case GENERAL_STORE_3_1:			/* Old general store */
-			rt_init_retrieve(old_retrieve_read, char_read_function, 1024);
+			rt_init_retrieve(old_retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
 		case GENERAL_STORE_3_2:			/* New General store */
 		case GENERAL_STORE_3_3:			/* New General store 3.3 */
-			rt_init_retrieve(retrieve_read, char_read_function, 1024);
+			rt_init_retrieve(retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
+			allocate_gen_buffer ();
+			rt_kind = GENERAL_STORE;
+			break;
 		case GENERAL_STORE_4_0:			/* New General store */
+			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
 		case INDEPENDENT_STORE_3_2:		/* New Independent store */
-		case INDEPENDENT_STORE_4_0:		/* New Independent store */
-			char_read_func = char_read_function;
-			run_idr_init ();
 			rt_kind = INDEPENDENT_STORE;
-			idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
-			if (idr_temp_buf == (char *)0)
-				xraise (EN_MEM);
-			dattrib = (int **) xmalloc (scount * sizeof (int *), C_T, GC_OFF);
-			if (dattrib == (int **)0){
-				xfree(idr_temp_buf);
-				xraise (EN_MEM);
-				}
-			bzero ((char *)dattrib, scount * sizeof (int *));
+			rt_init_retrieve(retrieve_read, char_read_function, 4096);
+			independent_retrieve_init (4096, 1);
+			break;
+		case INDEPENDENT_STORE_4_0:		/* New Independent store */
+			rt_kind = INDEPENDENT_STORE;
+			rt_init_retrieve(retrieve_read_with_compression, char_read_function, 4096);
+			independent_retrieve_init (4096, 1);
+			break;
+		case INDEPENDENT_STORE_4_3:		/* New Independent store */
+			rt_kind = INDEPENDENT_STORE;
+			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
+			independent_retrieve_init (RETRIEVE_BUFFER_SIZE, 0);
 			break;
 		default: 			/* If not one of the above, error!! */
 			eraise("invalid retrieve type", EN_RETR);	
@@ -241,20 +267,9 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 			break;
 		case INDEPENDENT_STORE_3_2:
 		case INDEPENDENT_STORE_4_0:
-			{
-			int i;
-
-			run_idr_destroy ();
-			xfree (idr_temp_buf);
-			idr_temp_buf = (char *) 0;
-			for (i = 0; i < scount; i++) {
-				if (*(dattrib + i))
-					xfree ((char *)(*(dattrib +i)));
-			}
-			xfree ((char *) dattrib);
-			dattrib = (int **) 0;
+		case INDEPENDENT_STORE_4_3:
+			independent_retrieve_reset ();
 			break;
-		}
 	}
 	rt_reset_retrieve();
 
@@ -262,9 +277,39 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *eretrieve(EIF_INTEGER file_desc)
+/* Initialization for retrieving an independent store
+ * We need to give the size of the buffer since it can now be more than SHORT_MAX
+ * For compatibility reason, it is 32767 bytes for version previous INDEPENDENT_STORE_4_3
+ * and it is now RETRIEVE_BUFFER_SIZE.
+ */
+rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short)
 {
-	return portable_retrieve(file_desc, char_read);
+	run_idr_init (idrf_size, is_limited_by_short);
+
+	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	if (idr_temp_buf == (char *)0)
+		xraise (EN_MEM);
+
+	dattrib = (int **) xmalloc (scount * sizeof (int *), C_T, GC_OFF);
+	if (dattrib == (int **)0){
+		xfree(idr_temp_buf);
+		xraise (EN_MEM);
+	}
+	bzero ((char *)dattrib, scount * sizeof (int *));
+}
+
+rt_private void independent_retrieve_reset (void) {
+	int i;
+
+	run_idr_destroy ();
+	xfree (idr_temp_buf);
+	idr_temp_buf = (char *) 0;
+	for (i = 0; i < scount; i++) {
+		if (*(dattrib + i))
+			xfree ((char *)(*(dattrib +i)));
+	}
+	xfree ((char *) dattrib);
+	dattrib = (int **) 0;
 }
 
 rt_public char *rt_make(void)
@@ -1454,12 +1499,10 @@ rt_private int direct_read (register char *object, int size)
 	EIF_END_GET_CONTEXT
 }
 
-		
-			
 rt_private int buffer_read (register char *object, int size)
 {
 	register i;
-
+ 
 #if DEBUG & 2
 	printf ("Current position %d\n", current_position);
 	printf ("Size %d\n", size);
@@ -1480,6 +1523,38 @@ rt_private int buffer_read (register char *object, int size)
 		}
 	}
 	return (i);
+}
+
+rt_private int new_buffer_read (register char *object, int size)
+{
+	register int read;
+
+	if (current_position + size > end_of_buffer) {
+		if (read = end_of_buffer - current_position) {
+			memcpy (object, general_buffer + current_position, read);
+				/* This line is useless since current_position is set to `0'
+				 * after retrieve_read_func */
+			/* current_position += read; */
+			object += read;
+		}
+		if ((retrieve_read_func() == 0) && size != read + 1)
+			eraise("incomplete file" , EN_RETR);
+
+		if (size - read > end_of_buffer) {
+			memcpy (object, general_buffer, end_of_buffer);
+			read += end_of_buffer;
+			current_position = end_of_buffer;
+			return read + buffer_read (object + end_of_buffer, size - read);
+		} else {
+			current_position = size - read;
+			memcpy (object, general_buffer, current_position);
+			return size;
+		}
+	} else {
+		memcpy (object, general_buffer + current_position, size);
+		current_position += size;
+		return size;
+	}
 }
 
 rt_public int old_retrieve_read (void)
@@ -2124,3 +2199,19 @@ int char_read(char *pointer, int size)
 	return read(r_fides, pointer, size);
 	EIF_END_GET_CONTEXT
 }
+
+int stream_read(char *pointer, int size)
+{
+	EIF_GET_CONTEXT
+
+	if (stream_buffer_size - stream_buffer_position < size) {
+		stream_buffer_size += buffer_size;
+		stream_buffer = realloc (stream_buffer, stream_buffer_size);
+	}	
+
+	memcpy (pointer, (stream_buffer + stream_buffer_position), size);
+	stream_buffer_position += size;
+	return size;
+	EIF_END_GET_CONTEXT
+}
+

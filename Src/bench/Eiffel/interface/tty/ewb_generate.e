@@ -37,6 +37,12 @@ feature {NONE} -- Execution
 			else
 				compile_type := command_line_io.last_input
 			end;
+			command_line_io.get_profiler;
+			if command_line_io.last_input.empty then
+				profiler := "eiffel"
+			else
+				profiler := command_line_io.last_input
+			end;
 			execute;
 		end;
 
@@ -46,7 +52,7 @@ feature {NONE} -- Execution
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
 		do
-			!! conf_load.make_and_load;
+			!! conf_load.make_and_load (profiler);
 			if conf_load.error_occured then
 				raise_config_error;
 			else
@@ -60,7 +66,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Attributes
 
-	proffile_dir, compile_type: STRING
+	proffile_dir, compile_type, profiler: STRING
 		-- Arguments needed for the prof_converter.
 
 feature {NONE} -- Implementation

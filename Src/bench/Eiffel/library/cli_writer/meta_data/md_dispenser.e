@@ -29,6 +29,9 @@ feature -- Definition
 	emitter: MD_EMIT is
 			-- Create new scope and returns an emitter.
 		do
+			debug ("MD out-of-order")
+				c_define_option_for_md_emit (item, 0xffffffff)
+			end
 			create Result.make_by_pointer (c_define_scope_for_md_emit (item))
 		end
 		
@@ -42,6 +45,12 @@ feature {NONE} -- Implementation
 
 	c_define_scope_for_md_emit (an_item: POINTER): POINTER is
 			-- Call `DefineScope (CLSID_CorMetaDataRuntime, 0, IID_IMetaDataEmit, (IUnknown **) &imde)'.
+		external
+			"C use %"cli_writer.h%""
+		end
+		
+	c_define_option_for_md_emit (an_item: POINTER; val: INTEGER) is
+			-- Call `SetOption' to check some more errors.
 		external
 			"C use %"cli_writer.h%""
 		end

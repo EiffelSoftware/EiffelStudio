@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			parent_area_set: parent_area = a_parent
 		end
 		
-feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
+feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 	
 	lower_box, upper_box: EV_VERTICAL_BOX
 		-- Lower and upper boxes for `Current' which may hold widgets when required.
@@ -438,6 +438,9 @@ feature {NONE} -- Implementation
 					-- dialog via the cross.
 				if original_position = 0 then
 					parent_area.all_holders.prune_all (Current)
+						-- Must now remove the tool from its parent, part of `Current'.
+					tool.parent.prune_all (tool)
+					
 						-- FIXME Need to insert the tool back at its current size.
 						-- However, at this point, we have no access to its previous size. If
 						-- the size was stored when a dock began (`dock_started_actions'), then it could be

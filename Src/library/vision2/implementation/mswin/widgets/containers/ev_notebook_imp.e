@@ -326,24 +326,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Event - command association
-	
---|FIXME	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add 'cmd' to the list of commands to be executed
---|FIXME			-- when a page is switch in the notebook.
---|FIXME		do
---|FIXME			add_command (Cmd_switch, cmd, arg)
---|FIXME		end	
-
-feature -- Event -- removing command association
-
---|FIXME	remove_switch_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when a page is switch in the notebook.
---|FIXME		do
---|FIXME			remove_command (Cmd_switch)
---|FIXME		end	
-
 feature -- Basic operation
 
 	get_child_index (a_child: EV_WIDGET_IMP): INTEGER is
@@ -779,12 +761,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-
-feature --|FIXME all of these need implementating
-		--| A lot of the coments will come from the
-		--| Corresponding functions in EV_WIDGET_LIST
-		--|Julian 01/13/2000	
-
 	check_notebook_assertions: BOOLEAN
 
 	disable_notebook_assertions is
@@ -984,6 +960,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/04/28 21:13:03  rogers
+--| Removed old command association and a redundent FIXME.
+--|
 --| Revision 1.52  2000/04/14 21:32:51  brendel
 --| Fixed insert_i_th for PIXMAP's.
 --|

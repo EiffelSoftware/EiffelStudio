@@ -389,18 +389,15 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 
 			if is_unsigned_long (type) then
-				Result.append (Open_parenthesis)
-				Result.append ("long *")
-				Result.append (Close_parenthesis)
+				Result.append ("(long *)")
+			elseif is_unsigned_int (type) then
+				Result.append ("(int *)")
 			elseif is_unsigned_short (type) then
 				Result.append (Open_parenthesis)
 				Result.append ("short *")
 				Result.append (Close_parenthesis)	
-			elseif is_character (type) then
-				Result.append (Open_parenthesis)
-				Result.append (Eif_character)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
+			elseif is_unsigned_char (type) then
+				Result.append ("(char *)")
 			else
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)

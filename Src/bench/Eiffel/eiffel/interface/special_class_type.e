@@ -142,7 +142,7 @@ feature
 				file.new_line;
 			end;
 
-			file.putstring ("};%N%N");
+			file.putstring ("}%N%N");
 
 		end;
 

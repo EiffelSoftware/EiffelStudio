@@ -29,7 +29,6 @@ feature -- Access
 	count: INTEGER is
 			-- Number of items in the menu.
 		deferred
---			Result := ev_children.count
 		end
 
 	get_item (index: INTEGER): EV_MENU_ITEM is
@@ -39,7 +38,6 @@ feature -- Access
 			exists: not destroyed
 			item_exists: (index <= count) and (index >= 0)
 		deferred
---			Result ?= (ev_children.i_th (index)).interface
 		end
 
 	text: STRING is
@@ -60,27 +58,12 @@ feature -- Element change
 
 feature {EV_MENU_ITEM_IMP, EV_OPTION_BUTTON_IMP} -- Implementation
 
---	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
---			-- List of the children
-
---	clear_ev_children is
---			-- Clear all the items of the list.
---9		require
---			exists: not destroyed
---		local
---			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
---		do
---			from
---				list := ev_children
---				list.start
---			until
---				list.after
---			loop
---				list.item.interface.remove_implementation
---				list.forth
---			end
---			list.wipe_out
---		end
+	clear_ev_children is
+			-- Clear all the items of the list.
+		require
+			exists: not destroyed
+		deferred
+		end
 
 end -- class EV_MENU_I
 

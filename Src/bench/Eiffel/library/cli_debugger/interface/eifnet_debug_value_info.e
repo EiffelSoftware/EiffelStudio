@@ -64,7 +64,18 @@ feature {NONE} -- Internal Initialisation
 			l_type: INTEGER
 		do
 			if not error_occured then
-				address := icd_prepared_value.get_address
+					--| FIXME JFIAT: check if we sometimes used the address of unreference, unboxed ... value
+				referenced_address := icd_referenced_value.get_address
+				object_address := icd_prepared_value.get_address					
+				
+--				if referenced_address = 0 then
+--					-- FIXME jfiat: 20040316 : Check this, 
+--					-- why sometime the referenced value has null address but is not null !!!
+--					-- so for now let's use the icd_prepared_value when it occurs ..
+--					-- ANSWER: If the value is at least partly in registers, 
+--					--         the address value is 0
+--				end
+				
 				l_type := icd_prepared_value.get_type		
 
 				is_reference_type := True			
@@ -107,15 +118,19 @@ feature {NONE} -- Internal Initialisation
 
 feature -- Access
 
-	address: INTEGER_64
+	referenced_address: INTEGER_64
 			-- Address of `icd_referenced_value'
+
+	object_address: INTEGER_64
+			-- Address of `icd_prepared_value'
+			-- or physical address
 
 feature -- Queries
 
 	address_as_hex_string: STRING is
 			-- hexadecimal representation for `address'
 		do
-			Result := "0x" + address.to_integer.to_hex_string
+			Result := "0x" + object_address.to_integer.to_hex_string
 		end
 
 	value_to_string: STRING is
@@ -179,7 +194,9 @@ feature -- Queries
 				if has_object_interface then
 					once_value_class_type := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)			
 				else
-					once_value_class_type := eifnet_debug_value.dynamic_class.types.first 
+					once_value_class_type := eifnet_debug_value.dynamic_class.types.first
+--| FIXME JFIAT: lead to stack overflow !!!
+
 --FIXME jfiat [02/01/2004]
 --  in case of generic ?
 				end	

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.AssemblyDescriptor"
+
 external class
 	ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 
@@ -22,32 +23,60 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen version: STRING is
+	get_culture: STRING is
 		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+			"IL signature (): System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
-			"Version"
+			"get_Culture"
 		end
 
-	frozen culture: STRING is
+	get_name: STRING is
 		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+			"IL signature (): System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
-			"Culture"
+			"get_Name"
 		end
 
-	frozen name: STRING is
+	frozen a_internal_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
-			"Name"
+			"_internal_Name"
 		end
 
-	frozen public_key: STRING is
+	get_public_key: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"get_PublicKey"
+		end
+
+	frozen a_internal_culture: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
-			"PublicKey"
+			"_internal_Culture"
+		end
+
+	frozen a_internal_public_key: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"_internal_PublicKey"
+		end
+
+	frozen a_internal_version: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"_internal_Version"
+		end
+
+	get_version: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"get_Version"
 		end
 
 feature -- Basic Operations

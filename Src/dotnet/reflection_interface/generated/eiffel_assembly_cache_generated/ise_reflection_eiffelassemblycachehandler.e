@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandler"
+
 external class
 	ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
 
@@ -19,53 +20,102 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen assembly_folder_path: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"AssemblyFolderPath"
-		end
-
-	frozen error_messages: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLERERRORMESSAGES is
+	frozen a_internal_error_messages: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLERERRORMESSAGES is
 		external
 			"IL field signature :ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"ErrorMessages"
+			"_internal_ErrorMessages"
 		end
 
-	frozen last_write_successful: BOOLEAN is
+	get_last_removal_successful: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_LastRemovalSuccessful"
+		end
+
+	frozen a_internal_assembly_folder_path: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"_internal_AssemblyFolderPath"
+		end
+
+	get_assembly_folder_path: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_AssemblyFolderPath"
+		end
+
+	frozen a_internal_last_removal_successful: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"LastWriteSuccessful"
+			"_internal_LastRemovalSuccessful"
 		end
 
-	frozen assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+	frozen a_internal_last_write_successful: BOOLEAN is
 		external
-			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"AssemblyDescriptor"
+			"_internal_LastWriteSuccessful"
 		end
 
-	frozen eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+	frozen a_internal_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
 		external
 			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"EiffelAssembly"
+			"_internal_EiffelAssembly"
 		end
 
-	frozen last_removal_successful: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"LastRemovalSuccessful"
-		end
-
-	frozen last_error: ISE_REFLECTION_ERRORINFO is
+	frozen a_internal_last_error: ISE_REFLECTION_ERRORINFO is
 		external
 			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"last_error"
+			"_internal_last_error"
+		end
+
+	get_last_write_successful: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_LastWriteSuccessful"
+		end
+
+	get_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL signature (): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_AssemblyDescriptor"
+		end
+
+	frozen a_internal_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"_internal_AssemblyDescriptor"
+		end
+
+	get_error_messages: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLERERRORMESSAGES is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_ErrorMessages"
+		end
+
+	get_last_error: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_last_error"
+		end
+
+	get_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"get_EiffelAssembly"
 		end
 
 feature -- Basic Operations

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelAssemblyFactory"
+
 external class
 	ISE_REFLECTION_EIFFELASSEMBLYFACTORY
 
@@ -16,53 +17,102 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen assembly_name: STRING is
+	frozen a_internal_emitter_version_number: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"AssemblyName"
+			"_internal_EmitterVersionNumber"
 		end
 
-	frozen eiffel_cluster_path: STRING is
+	frozen a_internal_assembly_culture: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"EiffelClusterPath"
+			"_internal_AssemblyCulture"
 		end
 
-	frozen types: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_assembly_name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"_internal_AssemblyName"
+		end
+
+	get_assembly_public_key: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"get_AssemblyPublicKey"
+		end
+
+	get_eiffel_cluster_path: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"get_EiffelClusterPath"
+		end
+
+	frozen a_internal_assembly_public_key: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"_internal_AssemblyPublicKey"
+		end
+
+	get_assembly_version: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"get_AssemblyVersion"
+		end
+
+	get_emitter_version_number: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"get_EmitterVersionNumber"
+		end
+
+	frozen a_internal_assembly_version: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"_internal_AssemblyVersion"
+		end
+
+	frozen a_internal_types: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"Types"
+			"_internal_Types"
 		end
 
-	frozen assembly_culture: STRING is
+	get_types: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"get_Types"
+		end
+
+	frozen a_internal_eiffel_cluster_path: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"AssemblyCulture"
+			"_internal_EiffelClusterPath"
 		end
 
-	frozen assembly_public_key: STRING is
+	get_assembly_name: STRING is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"AssemblyPublicKey"
+			"get_AssemblyName"
 		end
 
-	frozen assembly_version: STRING is
+	get_assembly_culture: STRING is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"AssemblyVersion"
-		end
-
-	frozen emitter_version_number: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"EmitterVersionNumber"
+			"get_AssemblyCulture"
 		end
 
 feature -- Basic Operations

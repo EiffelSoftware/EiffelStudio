@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.RenameClause"
+
 external class
 	ISE_REFLECTION_RENAMECLAUSE
 
@@ -19,11 +20,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen target_name: STRING is
+	frozen a_internal_target_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.RenameClause"
 		alias
-			"TargetName"
+			"_internal_TargetName"
+		end
+
+	get_target_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
+		alias
+			"get_TargetName"
 		end
 
 feature -- Basic Operations

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelAssembly"
+
 external class
 	ISE_REFLECTION_EIFFELASSEMBLY
 
@@ -19,32 +20,60 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen xml_elements: ISE_REFLECTION_XMLELEMENTS is
+	frozen a_internal_emitter_version_number: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"_internal_EmitterVersionNumber"
+		end
+
+	get_eiffel_cluster_path: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"get_EiffelClusterPath"
+		end
+
+	get_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL signature (): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssembly"
+		alias
+			"get_AssemblyDescriptor"
+		end
+
+	get_xml_elements: ISE_REFLECTION_XMLELEMENTS is
+		external
+			"IL signature (): ISE.Reflection.XmlElements use ISE.Reflection.EiffelAssembly"
+		alias
+			"get_XmlElements"
+		end
+
+	frozen a_internal_xml_elements: ISE_REFLECTION_XMLELEMENTS is
 		external
 			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.EiffelAssembly"
 		alias
-			"XmlElements"
+			"_internal_XmlElements"
 		end
 
-	frozen eiffel_cluster_path: STRING is
+	get_emitter_version_number: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"get_EmitterVersionNumber"
+		end
+
+	frozen a_internal_eiffel_cluster_path: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
-			"EiffelClusterPath"
+			"_internal_EiffelClusterPath"
 		end
 
-	frozen assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+	frozen a_internal_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
 		external
 			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssembly"
 		alias
-			"AssemblyDescriptor"
-		end
-
-	frozen emitter_version_number: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
-		alias
-			"EmitterVersionNumber"
+			"_internal_AssemblyDescriptor"
 		end
 
 feature -- Basic Operations

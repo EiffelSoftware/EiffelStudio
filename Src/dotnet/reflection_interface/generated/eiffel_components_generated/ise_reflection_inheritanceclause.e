@@ -1,16 +1,24 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.InheritanceClause"
+
 deferred external class
 	ISE_REFLECTION_INHERITANCECLAUSE
 
 feature -- Access
 
-	frozen source_name: STRING is
+	get_source_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.InheritanceClause"
+		alias
+			"get_SourceName"
+		end
+
+	frozen a_internal_source_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.InheritanceClause"
 		alias
-			"SourceName"
+			"_internal_SourceName"
 		end
 
 feature -- Basic Operations

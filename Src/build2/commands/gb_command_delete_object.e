@@ -43,6 +43,9 @@ feature -- Basic Operation
 		do
 			update_object_editors_for_delete (child_layout_item.object, all_editors)
 			child_layout_item.object.unparent
+				-- We now need to mark the deleted object and all children as
+				-- deleted.
+			object_handler.mark_as_deleted (child_layout_item.object)
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -55,6 +58,9 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		do
 			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
+				-- We now need to ensure that the object is no longer marked as
+				-- deleted.
+			object_handler.mark_existing (child_layout_item.object)
 			command_handler.update
 		end
 		

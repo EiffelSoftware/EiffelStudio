@@ -46,6 +46,7 @@ private void bit_inspect();
 private void string_inspect();		/* String object inspection */
 private void once_inspect();		/* Once routines inspection */
 
+private long sp_lower, sp_upper; /* Special objects' bounds to be inspected */
 private IDRF idrf;			/* IDR filter for serialize communications */
 
 extern char *simple_out();	/* Out routine for simple time (from run-time) */
@@ -99,6 +100,12 @@ Request *rqst;				/* The received request to be processed */
 	case INSPECT:					/* Object inspection */
 		inspect(writefd (sp), &rqst->rq_opaque);
 		break;
+	case SP_LOWER:					/* Bounds for special object inspection */
+		sp_lower = arg_3;
+		break;
+	case SP_UPPER:					/* Bounds for special object inspection */
+		sp_upper = arg_3;
+		break;
 	case DUMP:						/* General stack dump request */
 		send_stack(writefd (sp), arg_1);
 		break;
@@ -140,6 +147,13 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case ONCE:						/* Once routines inspection */
 		once_inspect(writefd (sp), &rqst->rq_opaque);
+		break;
+	case INTERRUPT_OK:				/* Stop execution and send call stack */
+		(void) rem_input(s);		/* exit listening loop */
+		dbreak(PG_INTERRUPT);
+		break;
+	case INTERRUPT_NO:				/* Resume execution with no further ado */
+		(void) rem_input(s);		/* exit listening loop */
 		break;
 	}
 
@@ -664,103 +678,129 @@ register1 char *object;
 
 	union overhead *zone;		/* Object header */
 	register5 uint32 flags;		/* Object flags */
-	register3 long count;		/* Element count */
+	register3 long sp_index;	/* Element index */
 	register4 long elem_size;	/* Element size */
 	char *o_ref;
 	char *reference, *bit;
-	long old_count;
+	long count;					/* Element count */
+	long sp_start, sp_end;		/* Bounds for inspection */
 	int dt_type;
 
 	zone = HEADER(object);
 	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
 	count = *(long *) o_ref;
-	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;
 	dt_type = (int) (flags & EO_TYPE);
 
 	
-	/* Send the item number */
+	/* Send the capacity of the special object */
 	sprintf(buffer, "%ld", count);
 	twrite (buffer, strlen(buffer));
 
-	if (!(flags & EO_REF)) 
-		if (flags & EO_COMP) 
-			for (o_ref = object + OVERHEAD; count > 0; count--,
-						o_ref += elem_size) {
-				sprintf(buffer, "%ld", old_count - count);
+	/* Compute the number of items within the bounds */
+	if (sp_upper < 0)				/* A negative `sp_upper' means `count' */
+		sp_end = count - 1;
+	else if (count > sp_upper + 1)	/* Must be truncated */
+		sp_end = sp_upper;
+	else							/* No need to truncate */
+		sp_end = count - 1;
+	if (sp_lower <= 0)				/* A negative `sp_lower' means 0 */
+		sp_start = 0;
+	else if (sp_lower > 0)			/* Must be truncated */
+		sp_start = sp_lower;
+		
+	if (sp_start > sp_end) {		/* No item within the bounds */
+		/* Send the number of items to be inspected */
+		sprintf(buffer, "0");
+		twrite (buffer, strlen(buffer));
+	} else {
+		/* Send the number of items to be inspected */
+		sprintf(buffer, "%ld", sp_end - sp_start + 1);
+		twrite (buffer, strlen(buffer));
+
+		/* Send the items within the bounds */
+		if (!(flags & EO_REF)) 
+			if (flags & EO_COMP) 
+				for (o_ref = object + OVERHEAD + (sp_start * elem_size), 
+									sp_index = sp_start; sp_index <= sp_end; 
+									sp_index++, o_ref += elem_size) {
+					sprintf(buffer, "%ld", sp_index);
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "expanded");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
+					twrite (buffer, strlen(buffer));
+					rec_inspect(o_ref);
+				}
+			else
+				for (o_ref = object + (sp_start * elem_size), 
+									sp_index = sp_start; sp_index <= sp_end; 
+									sp_index++, o_ref += elem_size) {
+					sprintf(buffer, "%ld", sp_index);
+					twrite (buffer, strlen(buffer));
+					if (dt_type == sp_char) {
+						sprintf(buffer, "CHARACTER");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%d", *o_ref);
+						twrite (buffer, strlen(buffer));
+					} else if (dt_type == sp_int) {
+						sprintf(buffer, "INTEGER");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%ld", *(long *)o_ref);
+						twrite (buffer, strlen(buffer));
+					} else if (dt_type == sp_bool) {
+						sprintf(buffer, "BOOLEAN");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%s", (*o_ref ? "True" : "False"));
+						twrite (buffer, strlen(buffer));
+					} else if (dt_type == sp_real) {
+						sprintf(buffer, "REAL");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%g", *(float *)o_ref);
+						twrite (buffer, strlen(buffer));
+					} else if (dt_type == sp_double) {
+						sprintf(buffer, "DOUBLE");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%.17g", *(double *)o_ref);
+						twrite (buffer, strlen(buffer));
+					} else if (dt_type == sp_pointer) {
+						sprintf(buffer, "POINTER");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "0x%lX", *(fnptr *)o_ref);
+						twrite (buffer, strlen(buffer));
+					} else {
+						/* Must be bit */
+						sprintf(buffer, "BIT");
+						twrite (buffer, strlen(buffer));
+						sprintf(buffer, "%s", b_out(*(char **)o_ref));
+						twrite (buffer, strlen(buffer));
+					}
+				}
+		else 
+			for (o_ref = (char *) ((char **)object + sp_start), 
+						sp_index = sp_start; sp_index <= sp_end; sp_index++, 
+						o_ref = (char *) ((char **)o_ref + 1)) {
+				sprintf(buffer, "%ld", sp_index);
 				twrite (buffer, strlen(buffer));
-				sprintf(buffer, "expanded");
-				twrite (buffer, strlen(buffer));
-				sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
-				twrite (buffer, strlen(buffer));
-				rec_inspect(o_ref);
-			}
-		else
-			for (o_ref = object; count > 0; count--,
-						o_ref += elem_size) {
-				sprintf(buffer, "%ld", old_count - count);
-				twrite (buffer, strlen(buffer));
-				if (dt_type == sp_char) {
-					sprintf(buffer, "CHARACTER");
+				reference = *(char **)o_ref;
+				if (0 == reference) {
+					sprintf(buffer, "Void");
 					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%d", *o_ref);
+						/* Send "Void" twice: one for the type and */
+						/* the other for the value of the item. */
 					twrite (buffer, strlen(buffer));
-				} else if (dt_type == sp_int) {
-					sprintf(buffer, "INTEGER");
-					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%ld", *(long *)o_ref);
-					twrite (buffer, strlen(buffer));
-				} else if (dt_type == sp_bool) {
-					sprintf(buffer, "BOOLEAN");
-					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%s", (*o_ref ? "True" : "False"));
-					twrite (buffer, strlen(buffer));
-				} else if (dt_type == sp_real) {
-					sprintf(buffer, "REAL");
-					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%g", *(float *)o_ref);
-					twrite (buffer, strlen(buffer));
-				} else if (dt_type == sp_double) {
-					sprintf(buffer, "DOUBLE");
-					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%.17g", *(double *)o_ref);
-					twrite (buffer, strlen(buffer));
-				} else if (dt_type == sp_pointer) {
+				} else if (HEADER(reference)->ov_flags & EO_C) {
 					sprintf(buffer, "POINTER");
 					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "0x%lX", *(fnptr *)o_ref);
+					sprintf(buffer, "0x%lX", reference);
 					twrite (buffer, strlen(buffer));
 				} else {
-					/* Must be bit */
-					sprintf(buffer, "BIT");
+					sprintf(buffer, "%s", System(Dtype(reference)).cn_generator);
 					twrite (buffer, strlen(buffer));
-					sprintf(buffer, "%s", b_out(*(char **)o_ref));
+					sprintf(buffer, "0x%lX", reference);
 					twrite (buffer, strlen(buffer));
 				}
-			}
-	else 
-		for (o_ref = object; count > 0; count--,
-					o_ref = (char *) ((char **)o_ref + 1)) {
-			sprintf(buffer, "%ld", old_count - count);
-			twrite (buffer, strlen(buffer));
-			reference = *(char **)o_ref;
-			if (0 == reference) {
-				sprintf(buffer, "Void");
-				twrite (buffer, strlen(buffer));
-					/* Send "Void" twice: one for the type and */
-					/* the other for the value of the item. */
-				twrite (buffer, strlen(buffer));
-			} else if (HEADER(reference)->ov_flags & EO_C) {
-				sprintf(buffer, "POINTER");
-				twrite (buffer, strlen(buffer));
-				sprintf(buffer, "0x%lX", reference);
-				twrite (buffer, strlen(buffer));
-			} else {
-				sprintf(buffer, "%s", System(Dtype(reference)).cn_generator);
-				twrite (buffer, strlen(buffer));
-				sprintf(buffer, "0x%lX", reference);
-				twrite (buffer, strlen(buffer));
 			}
 		}
 }
@@ -804,5 +844,7 @@ EIF_OBJ object;		/* Reference to a string object */
 			string_area = *(char **) o_ref;
 		}
 	}
+	if (string_count > DEFAULT_SLICE + 1)	/* Send only the beginning of */
+		string_count = DEFAULT_SLICE + 1;	/* the string if it is too big */
 	twrite (string_area, string_count);
 }

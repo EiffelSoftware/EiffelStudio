@@ -1,0 +1,56 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Hello</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Hello">
+	</HEAD>
+
+	<BODY>
+		<H1>Hello World Sample</H1>
+		<CENTER><IMG SRC="hello.png" ALT="hello" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\hello\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>
+			After you launch the sample, You should see a window displayed as illustrated above. You will have full control over the window,
+			and the program will quit when you close the window.
+		</P>
+
+		<H2>Under the Hood</H2>
+		<P>
+		<A CLASS="eclass" HREF="/libraries/wel/samples/hello/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. In this example, we have redefined on_paint as shown below:</P>
+		<code>
+		<SPAN CLASS="efeature">on_paint</SPAN><SPAN CLASS="esymbol"> (</SPAN><SPAN CLASS="elocal">paint_dc</SPAN>:
+	        <A CLASS="efeature" HREF="../../reference/gdi/wel_paint_dc_chart.html">WEL_PAINT_DC</A><SPAN CLASS="esymbol">; </SPAN><SPAN CLASS="elocal">invalid_rect</SPAN><SPAN CLASS="esymbol">: </SPAN><A CLASS="efeature" HREF="../../reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esmbol">)</SPAN><SPAN CLASS="ekeyword"> is</SPAN><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--Draw a centered text</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">is</SPAN><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<SPAN CLASS="elocal">paint_dc</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">draw_centered_text</SPAN><SPAN CLASS="esymbol">("</SPAN><SPAN CLASS="estring">Hello, World!</SPAN><SPAN CLASS="esymbol">",</SPAN><SPAN CLASS="efeature"> client_rect</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN>
+		</code>
+		</P>	
+		<P CLASS="note">
+			<B>Note:</b> If you look at <A CLASS="eclass" HREF="root_cluster/main_window_chart.html">MAIN_WINDOW</A>, you will
+			see that it contains many features. However, nearly all of these are features are inherited from <A CLASS="eclass" HREF="../../reference/windows/WEL_FRAME_WINDOW_CHART.html">WEL_FRAME_WINDOW</A>.	
+		</P>
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/hello/root_cluster/hello_demo_chart.html">HELLO_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/hello/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/samples/tutorial/step3/index.html">Tutorial Step3</A>
+			<BR><A HREF="/libraries/content/common_concepts/common_message_hooks.html">Common message hooks</A></P>
+	</BODY>
+</HTML>

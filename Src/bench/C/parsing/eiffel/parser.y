@@ -161,7 +161,7 @@ Actual_generics
 Formal_generics Formal_generic Constraint Conditional Elsif Elsif_part
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
-Creation Creation_type Creation_target Creation_call Expression
+Creation Creation_type Creation_target Creation_call Expression Actual_parameter
 Manifest_array Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
@@ -1149,11 +1149,15 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node2(UN_FREE_AS,$1,$2);}
 	|						TE_STRIP {yyerrok;list_init();} TE_LPARAN Strip_identifier_list TE_RPARAN
 								{yyerrok;$$ = create_node1(UN_STRIP_AS,list_new(CONSTRUCT_LIST_AS));}
-	| TE_ADDRESS Feature_name
-		{
-		yyerrok;
-		$$ = create_node1(ADDRESS_AS,click_list_elem($<value>2));
-		}
+	;
+
+Actual_parameter:			Expression
+								{$$ = $1;}
+	|						TE_ADDRESS Feature_name
+								{
+								yyerrok;
+								$$ = create_node1(ADDRESS_AS,click_list_elem($<value>2));
+								}
 	|						TE_ADDRESS TE_CURRENT
 								{yyerrok;$$ = create_node(ADDRESS_CURRENT_AS);}
 	|						TE_ADDRESS TE_RESULT
@@ -1235,8 +1239,14 @@ Parameters:					/* empty */
 								{$$ = NULL;}
 	|						TE_LPARAN TE_RPARAN
 								{$$ = NULL;}
-	|						TE_LPARAN {list_init();} Expression_list TE_RPARAN
+	|						TE_LPARAN {list_init();} Parameter_list TE_RPARAN
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
+	;
+
+Parameter_list:				Actual_parameter
+								{list_push($1);}
+	|						Parameter_list TE_COMMA Actual_parameter
+								{list_push($3);}
 	;
 
 Expression_list:			Expression

@@ -26,6 +26,7 @@
 public void dexit();
 
 extern char *rindex();
+extern unsigned TIMEOUT;
 
 public void main(argc, argv)
 int argc;
@@ -58,7 +59,7 @@ char **argv;
 	 */
 
 	(void) new_stream(EWBIN, EWBOUT);
-	alarm(20);			/* Ensure we'll die in 20 seconds */
+	alarm(TIMEOUT);			/* Ensure we'll die in TIMEOUT seconds */
 	wide_listen();
 
 	exit(0);

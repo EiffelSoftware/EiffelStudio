@@ -67,6 +67,10 @@ private Signal_t emergency();			/* Emergency exit */
 
 extern void umain();					/* User's initialization routine */
 extern void arg_init();					/* Command line arguments saving */
+#ifndef __WINDOWS_386__
+public unsigned TIMEOUT;     /* Time out for interprocess communications */
+#endif
+
 
 #ifdef DEBUG
 extern void mem_diagnose();				/* Memory usage dump */
@@ -79,6 +83,11 @@ char **envp;
 {
 	struct ex_vect *exvect;				/* Execution vector for main */
 	jmp_buf exenv;						/* Jump buffer for rescue */
+#ifndef __WINDOWS_386__
+	char *eif_timeout;
+	extern char *getenv();				/* Get environment variable value */
+#endif
+
 
 	/* Compute the program name, so that all the error messages can be tagged
 	 * with that name (with the notable exception of the stack trace, for
@@ -117,6 +126,20 @@ char **envp;
 	esignal(SIGUSR1, mem_diagnose);
 	esignal(SIGUSR2, mem_diagnose);
 #endif
+
+
+#ifndef __WINDOWS_386__
+	/* Check if the user wants to override the default timeout value
+	 * for interprocess communications. This new value is specified in
+	 * the EIF_TIMEOUT environment variable
+	 */
+	eif_timeout = getenv("EIF_TIMEOUT");
+	if (eif_timeout != (char *) 0)		/* Environment variable set */
+		TIMEOUT = (unsigned) atoi(eif_timeout);
+	else
+		TIMEOUT = 120;
+#endif
+
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */

@@ -39,7 +39,7 @@ private void set_signal();		/* Set up the signal handler */
 extern STREAM *spawn_child();	/* Start up child with ipc link */
 extern char *getenv();			/* Get environment variable value */
 extern Malloc_t malloc();		/* Memory allocation */
-extern int TIMEOUT;				/* Time to let the child initialize */
+public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
 public struct d_flags d_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_rqst */
@@ -61,7 +61,7 @@ char **argv;
 	STREAM *sp;			/* Stream used to talk to the child */
 	Pid_t pid;			/* Pid of the spawned child */
 	char *ewb_path;		/* Path leading to the ewb executable */
-	char *eiffel3;		/* Eiffel 3.0 installation directory */
+	char *eiffel3;		/* Eiffel 3 installation directory */
 	char *platform;
 	char *eif_timeout;	/* Timeout specified in environment variable */
 
@@ -72,7 +72,7 @@ char **argv;
 	 */
 	eif_timeout = getenv("EIF_TIMEOUT");
 	if (eif_timeout != (char *) 0)			/* Environment variable set */
-		TIMEOUT = atoi(eif_timeout);
+		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
 		TIMEOUT = 120;
 

@@ -96,6 +96,30 @@ public class GENERIC_CONFORMANCE {
 		return Result;
 	}
 
+	public static EIFFEL_TYPE_INFO create_like_object (EIFFEL_TYPE_INFO an_obj)
+		// Given an Eiffel object `an_obj' create a new one of same type.
+	{
+		EIFFEL_DERIVATION der;
+		EIFFEL_TYPE_INFO Result;
+		ConstructorInfo constructor;
+
+		der = an_obj.____type ();
+
+		if (der == null) {
+				// It is not a generic type, so we can simply find its type through
+				// Reflection and then gets its constructor.
+			constructor = an_obj.GetType ().GetConstructor (Type.EmptyTypes);
+			Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
+		} else {
+				// It is a generic type, so we can simply find its type through
+				// its RuntimeTypeHandle and then gets its constructor.
+			constructor = Type.GetTypeFromHandle (der.type.type).GetConstructor (Type.EmptyTypes);
+			Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
+			Result.____set_type (der);
+		}
+		return Result;
+	}
+
 	public static Boolean conforms_to (Object obj1, Object obj2)
 		// Does dynamic type of object attached to `obj1' conform to
 		// dynamic type of object attached to `obj2'?

@@ -109,14 +109,18 @@ when 94 then
 --|#line 174
 
 										if not in_comments then
-											create {EDITOR_TOKEN_CLASS} curr_token.make(text, tab_size_cell)
+											if not Eiffel_universe.classes_with_name (text).is_empty then
+												create {EDITOR_TOKEN_CLASS} curr_token.make(text, tab_size_cell)
+											else
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+											end
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
 										end
 										update_token_list
 										
 when 95 then
---|#line 184
+--|#line 188
 
 										if not in_comments then
 											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
@@ -126,7 +130,7 @@ when 95 then
 										update_token_list
 										
 when 96 then
---|#line 196
+--|#line 200
 
 										if not in_comments then
 											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
@@ -136,7 +140,7 @@ when 96 then
 										update_token_list
 										
 when 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118 then
---|#line 210
+--|#line 214
 
 					if not in_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text, tab_size_cell)
@@ -146,7 +150,7 @@ when 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112
 					update_token_list
 					
 when 119 then
---|#line 240
+--|#line 244
 
 					if not in_comments then
 						code_ := text_substring (4, text_count - 2).to_integer
@@ -162,7 +166,7 @@ when 119 then
 					update_token_list
 					
 when 120, 121 then
---|#line 255
+--|#line 259
 
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
@@ -173,7 +177,7 @@ when 120, 121 then
 					update_token_list
 					
 when 122, 123 then
---|#line 269
+--|#line 273
 
 					-- Eiffel String
 					if not in_comments then
@@ -184,7 +188,7 @@ when 122, 123 then
 					update_token_list
 					
 when 124 then
---|#line 282
+--|#line 286
 
 					-- Eiffel Bit
 					if not in_comments then
@@ -195,7 +199,7 @@ when 124 then
 					update_token_list
 					
 when 125, 126 then
---|#line 294
+--|#line 298
 
 						-- Eiffel Integer
 						if not in_comments then
@@ -206,7 +210,7 @@ when 125, 126 then
 						update_token_list
 						
 when 127 then
---|#line 304
+--|#line 308
 
 						-- Eiffel Integer Error (considered as text)
 						if not in_comments then
@@ -218,7 +222,7 @@ when 127 then
 						
 when 128 then
 	yy_position := yy_position - 1
---|#line 316
+--|#line 320
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -229,7 +233,7 @@ when 128 then
 						update_token_list
 						
 when 129, 130 then
---|#line 317
+--|#line 321
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -241,7 +245,7 @@ when 129, 130 then
 						
 when 131 then
 	yy_position := yy_position - 1
---|#line 319
+--|#line 323
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -252,7 +256,7 @@ when 131 then
 						update_token_list
 						
 when 132, 133 then
---|#line 320
+--|#line 324
 
 							-- Eiffel reals & doubles
 						if not in_comments then
@@ -263,13 +267,13 @@ when 132, 133 then
 						update_token_list
 						
 when 134 then
---|#line 337
+--|#line 341
 
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
 					update_token_list
 					
 when 135 then
---|#line 345
+--|#line 349
 
 					-- Error (considered as text)
 				if not in_comments then

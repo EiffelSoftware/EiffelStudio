@@ -173,7 +173,11 @@ create
 
 [A-Z][A-Z0-9_]*							{
 										if not in_comments then
-											create {EDITOR_TOKEN_CLASS} curr_token.make(text, tab_size_cell)
+											if not Eiffel_universe.classes_with_name (text).is_empty then
+												create {EDITOR_TOKEN_CLASS} curr_token.make(text, tab_size_cell)
+											else
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+											end
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
 										end

@@ -479,7 +479,7 @@ feature -- Status report
 				range_already_selected := True
 			else
 				safe_store_caret
-				set_selection (start_position, end_position - 1)
+				set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
@@ -508,6 +508,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
+				set_selection (start_index - 1, end_index - 1)
 			end
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
@@ -571,7 +572,7 @@ feature -- Status report
 				range_already_selected := True
 			else
 				safe_store_caret
-				set_selection (start_position, end_position - 1)
+				set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
@@ -729,10 +730,10 @@ feature -- Status setting
 			safe_restore_caret
 		end
 		
-	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		do
-			format_paragraph_internal (start_line, end_line, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
+			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
 		
 	cformat_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is

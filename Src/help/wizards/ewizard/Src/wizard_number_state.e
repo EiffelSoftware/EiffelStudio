@@ -88,8 +88,10 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("MY STATE")
-			message.set_text ("My message")
+			title.set_text ("WIZARD SPECIFICATION")
+			message.set_text ("Choose:%N%T+ The name of the wizard.(No space !)%
+								%%N%T+ The location where you want to generate the eiffel classes%
+								%%N%T+ The number of state (10 Max.)")
 		end
 
 	number_state, location, wizard_name: WIZARD_SMART_TEXT_FIELD
@@ -104,7 +106,7 @@ feature -- Process
 			dir_selector: EV_DIRECTORY_DIALOG	
 		do
 			create dir_selector
-			dir_selector.ok_actions.extend(~directory_selected(dir_selector))
+			dir_selector.ok_actions.extend (~directory_selected (dir_selector))
 			dir_selector.show_modal
 		end
 

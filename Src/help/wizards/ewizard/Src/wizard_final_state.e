@@ -130,8 +130,8 @@ feature -- Process
 			copy_file ("wizard_final_state", "e", wizard_information.location + "/src")
 			copy_file ("wizard_information", "e", wizard_information.location + "/src")
 			copy_file ("project_wizard_shared", "e", wizard_information.location + "/src")
-			copy_file ("database_small", "bmp", wizard_information.location + "/pixmaps")
-			copy_file ("Eiffel_wizard_new", "bmp", wizard_information.location + "/pixmaps")
+			copy_file ("eiffel_wizard_icon", "bmp", wizard_information.location + "/pixmaps")
+			copy_file ("eiffel_wizard", "bmp", wizard_information.location + "/pixmaps")
 
 			
 		end
@@ -141,12 +141,16 @@ feature -- Access
 
 	display_state_text is
 		do
-			title.set_text ("Final Step")
-			message.set_text ("My text")
+			title.set_text ("WIZARD GENERATION")
+			message.set_text ("%N%NAll the states will be generated in the directory that you have%
+								%%Nspecified.")
 		end
 
 	final_message: STRING is
 		do
 		end
+
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Store Wizard
 
 end -- class WIZARD_FINAL_STATE

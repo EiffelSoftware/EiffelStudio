@@ -25,8 +25,16 @@ feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("EiffelWIizard wizard")
-			message.set_text ("Welcome.%NThis wizard will help you to build your first Eiffel wizard.")
+			title.set_text ("EIFFELWIZARD CONSTRUCTOR")
+			message.set_text ("%TWelcome.%N%NThis wizard will help you to build an Eiffel wizard.%N%
+								%%NYou will have to choose how many state should be in your wizard.%
+								%%NThen all the usefull classes will be generated, and you will%
+								%%Njust have to fill the WIZARD_xxxx_STATE classes.%N%
+								%%NThe generated project is compilable as the ace will also be%
+								%%Ngenerated. You must however have the Wizard library.")
 		end
+
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Store Wizard
 	
 end -- class WIZARD_INITIAL_STATE

@@ -117,6 +117,7 @@ modifications are relative to the previously released version.</p>
 		</ul></li>
 	<li><b>EV_TEXT_COMPONENT</b> - Fixed `text_length' which was returning incorrect value for all descendents.</li>
 	<li><b>EV_TEXT</b> - Fixed `line_count' which was previously returning the correct result + 1.</li>
+	<li><b>EV_SCROLLABLE_AREA</b> - Fixed crash which occurred when you attempted to use `set_x_offset' or `set_y_offset' before the area had been parented or displayed.</li>
 	</ul>
   <li><b>Gtk</b>
     <ul>

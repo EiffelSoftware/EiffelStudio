@@ -72,32 +72,29 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		local
-			a_grid_row: EV_GRID_ROW_I
+			grid_row_i: EV_GRID_ROW_I
 			grid_row: SPECIAL [EV_GRID_ITEM_I]
 			a_item: EV_GRID_ITEM
 			a_grid_column_i: EV_GRID_COLUMN_I
 			grid_item_i: EV_GRID_ITEM_I
 			col_index: INTEGER
 		do
-			a_grid_row := row_internal (a_row)
+			grid_row_i := row_internal (a_row)
 			grid_row :=  internal_row_data @ a_row
 			if a_column > grid_row.count then
 				enlarge_row (a_row, a_column)
 				grid_row := internal_row_data @ a_row
 			end
 			
-			a_grid_column_i := grid_columns @ a_column
-			if a_grid_column_i /= Void then
-				col_index := a_grid_column_i.physical_index
-			else
-				col_index := a_column - 1
-			end
+			a_grid_column_i := column_internal (a_column)
+			col_index := a_grid_column_i.physical_index
 			
 			grid_item_i := grid_row @ (col_index)
 			
 			if grid_item_i = Void  then
 				create a_item
 				grid_item_i := a_item.implementation
+				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
 				grid_row.put (grid_item_i, (col_index))
 			end
 			Result := grid_item_i.interface
@@ -659,11 +656,12 @@ feature -- Element change
 			a_grid_row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-			a_item.implementation.set_parent_grid_i (Current)
-			
 				-- Create the corresponding row and column if not already present
 			a_grid_col_i :=  column_internal (a_column)
 			a_grid_row_i := row_internal (a_row)
+			
+				-- Set the appropriate parent values for grid, column and row
+			a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i)
 
 			a_row_data := internal_row_data @ a_row
 			if a_row_data.count < a_grid_col_i.physical_index + 1 then

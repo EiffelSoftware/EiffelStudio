@@ -11,14 +11,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (assembly_ids: ARRAY [CONSUMED_ASSEMBLY]) is
+	make (assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]) is
 			-- Set `assemblies' with `assembly_ids'.
 		require
 			non_void_ids: assembly_ids /= Void
+		local
+			i: INTEGER
 		do
-			assemblies := assembly_ids
+			create assemblies.make (1, assembly_ids.count)
+			from
+				assembly_ids.start
+				i := 1
+			until
+				assembly_ids.after
+			loop
+				assemblies.put (assembly_ids.item, i)
+				i := i + 1
+				assembly_ids.forth
+			end
+--			assemblies := assembly_ids
 		ensure
-			assemblies_set: assemblies = assembly_ids
+--			assemblies_set: assemblies = assembly_ids
 		end
 
 feature -- Access

@@ -174,16 +174,8 @@ feature -- Properties
 
 	is_feature_short: BOOLEAN is
 			-- Is the Current format doing a flat-short?
-		local
-			f: FEATURE_I
 		do
 			Result := is_short
-			if not Result then
-				f := global_adapt.target_enclosing_feature
-				if f /= Void then
-					Result := f.written_class.is_precompiled
-				end
-			end
 		end
 
 	class_c: CLASS_C

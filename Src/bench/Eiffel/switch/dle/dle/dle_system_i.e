@@ -111,7 +111,7 @@ feature -- Initialization
 			class_types := static.class_types;
 			type_set := static.type_set;
 			pattern_table := static.pattern_table;
-			successfull := static.successfull;
+			successful := static.successful;
 			private_freeze := static.private_freeze;
 			freezing_occurred := static.freezing_occurred;
 			history_control := static.history_control;

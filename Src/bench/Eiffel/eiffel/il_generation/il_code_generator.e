@@ -346,6 +346,25 @@ feature -- Generation type
 			implementation.set_dll
 		end
 
+feature -- Generation Info
+
+	set_version (build, major, minor, revision: INTEGER) is
+			-- Assign current generated assembly with given version details.
+		require
+			valid_build: build >= 0
+			valid_major: major >= 0
+			valid_minor: minor >= 0
+			valid_revision: revision >= 0
+		do
+			implementation.set_version (build, major, minor, revision)
+		end
+
+	set_verifiability (verifiable: BOOLEAN) is
+			-- Mark current generation to generate verifiable code.
+		do
+			implementation.set_verifiability (verifiable)
+		end
+
 feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is
@@ -1526,6 +1545,7 @@ feature -- Conversion
 		require
 			il_generation_started: il_generation_started
 			type_not_void: type /= Void
+			type_is_basic: type.is_basic
 		local
 			int: LONG_I
 		do
@@ -2131,6 +2151,8 @@ feature -- Compilation error handling
 			-- Last exception which occurred during IL generation
 		do
 			Result := implementation.last_error
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Convenience

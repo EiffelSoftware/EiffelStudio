@@ -96,6 +96,18 @@ feature -- Toolbar icons filename
 			not_empty_filename: Result.length > 0			
 		end
 
+	Import_tool_icon_filename: STRING is 
+		indexing
+			description: "Filename of icon appearing in import tool header"
+			external_name: "ImportToolIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Import_tool_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
+		end
+		
 feature -- Other constants
 
 	Caption_text: STRING is "Shared Assemblies"
@@ -114,12 +126,6 @@ feature -- Other constants
 			icon_created: Result /= Void
 		end
 
-	Import_tool_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_tool_title_color.ico"
-		indexing
-			description: "Filename of icon appearing in import tool header"
-			external_name: "ImportToolIconFilename"
-		end
-
 feature {NONE} -- Implementation
 
 	Open_icon_relative_filename: STRING is "icon_open_file_color.ico"
@@ -132,6 +138,12 @@ feature {NONE} -- Implementation
 		indexing
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconRelativeFilename"
+		end
+
+	Import_tool_icon_relative_filename: STRING is "\icon_import_tool_title_color.ico"
+		indexing
+			description: "Filename of icon appearing in import tool header"
+			external_name: "ImportToolIconRelativeFilename"
 		end
 		
 end -- class IMPORT_TOOL_DICTIONARY	

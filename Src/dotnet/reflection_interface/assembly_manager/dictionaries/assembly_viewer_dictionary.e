@@ -108,16 +108,16 @@ feature -- Shortcuts
 			external_name: "CtrlNShortcut"
 		end	
 
-	Ctrl_V_shortcut: INTEGER is 131158
+	Ctrl_R_shortcut: INTEGER is 131154
 		indexing
-			description: "Ctrl+V shortcut, enum value: 0x 20056"
-			external_name: "CtrlVShortcut"
-		end	
+			description: "Ctrl+R shortcut, enum value: 0x 20052"
+			external_name: "CtrlRShortcut"
+		end
 	
-	Ctrl_C_shortcut: INTEGER is 131139
+	Ctrl_U_shortcut: INTEGER is 131157
 		indexing
-			description: "Ctrl+C shortcut, enum value: 0x 20043"
-			external_name: "CtrlCShortcut"
+			description: "Ctrl+U shortcut, enum value: 0x 20055"
+			external_name: "CtrlUShortcut"
 		end	
 	
 	Ctrl_K_shortcut: INTEGER is 131147
@@ -138,10 +138,10 @@ feature -- Shortcuts
 			external_name: "CtrlAShortcut"
 		end	
 
-	Ctrl_S_shortcut: INTEGER is 131155
+	Ctrl_W_shortcut: INTEGER is 131159
 		indexing
-			description: "Ctrl+S shortcut, enum value: 0x 20053"
-			external_name: "CtrlSShortcut"
+			description: "Ctrl+W shortcut, enum value: 0x 20057"
+			external_name: "CtrlWShortcut"
 		end	
 		
 	Ctrl_I_shortcut: INTEGER is 131145
@@ -340,9 +340,9 @@ feature -- Other constants
 			external_name: "NoDependancy"
 		end
 
-	Relative_help_filename: STRING is "\docs\eiffel.chm"
+	Relative_help_filename: STRING is "\wizards\dotnet\assembly_manager.chm"
 		indexing
-			description: "Filename to `ISE.AssemblyManager.chm' (relatively to Eiffel delivery path)"
+			description: "Filename to `assembly_manager.chm' (relatively to Eiffel delivery path)"
 			external_name: "RelativeHelpFilename"
 		end
 		

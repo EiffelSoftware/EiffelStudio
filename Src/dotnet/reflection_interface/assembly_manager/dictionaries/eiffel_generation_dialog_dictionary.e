@@ -32,10 +32,16 @@ feature -- Access
 			external_name: "EiffelGenerationError"
 		end
 
-	Eiffel_generation_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_export_to_eiffel_color.ico"
+	Eiffel_generation_icon_filename: STRING is
 		indexing
 			description: "Filename of icon appearing in Eiffel generation dialog header"
 			external_name: "EiffelGenerationIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Eiffel_generation_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 
 	Title: STRING is "Generate Eiffel classes"
@@ -49,5 +55,13 @@ feature -- Access
 			description: "Window height"
 			external_name: "WindowHeight"
 		end
-		
+
+feature {NONE} -- Implementation
+
+	Eiffel_generation_icon_relative_filename: STRING is "\icon_export_to_eiffel_color.ico"
+		indexing
+			description: "Filename of icon appearing in Eiffel generation dialog header"
+			external_name: "EiffelGenerationIconRelativeFilename"
+		end
+
 end -- class EIFFEL_GENERATION_DIALOG_DICTIONARY

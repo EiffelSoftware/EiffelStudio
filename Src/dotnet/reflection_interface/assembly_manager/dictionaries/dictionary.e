@@ -17,10 +17,16 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 
-	Assembly_manager_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_dotnet_wizard_color.ico"
+	Assembly_manager_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon appearing in dialogs header"
 			external_name: "AssemblyManagerIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Assembly_manager_icon_relative_filename)
+		ensure
+			filename_created: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 
 	Base_filename: STRING is
@@ -136,6 +142,14 @@ feature -- Access
 		indexing
 			description: "Regular style"
 			external_name: "RegularStyle"
+		end
+
+feature {NONE} -- Implementation
+
+	Assembly_manager_icon_relative_filename: STRING is "\icon_dotnet_wizard_color.ico"
+		indexing
+			description: "Filename of icon appearing in dialogs header"
+			external_name: "AssemblyManagerIconRelativeFilename"
 		end
 		
 end -- class DICTIONARY

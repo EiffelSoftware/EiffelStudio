@@ -20,11 +20,11 @@
 EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
 
-RT_LNK HANDLE ghInstance;
-RT_LNK HINSTANCE eif_hInstance;
-RT_LNK HINSTANCE eif_hPrevInstance;
-RT_LNK LPSTR eif_lpCmdLine;
-RT_LNK int eif_nCmdShow;
+rt_public HANDLE ghInstance;
+rt_public HINSTANCE eif_hInstance;
+rt_public HINSTANCE eif_hPrevInstance;
+rt_public LPSTR eif_lpCmdLine;
+rt_public int eif_nCmdShow;
 
 static char *temp = NULL;
 rt_private void shword(char *cmd, int *argc, char ***argvp);

@@ -138,9 +138,6 @@ feature {NONE} -- WEL Implemenation
 	controls_dll: WEL_INIT_COMMCTRL_EX
 			-- Needed for loading the common controls dlls.
 
---	common_control_dll: WEL_COMMON_CONTROLS_DLL
---			-- Needed for the common controls.
-
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit.
 
@@ -153,8 +150,9 @@ feature {NONE} -- WEL Implemenation
 	init_application is
 			-- Load the dll needed sometimes
 		do
-			!! controls_dll.make_with_flags (Icc_userex_classes + Icc_win95_classes)
---			!! common_control_dll.make
+			!! controls_dll.make_with_flags (Icc_userex_classes
+					+ Icc_win95_classes + Icc_cool_classes
+					+ Icc_bar_classes)
 			!! rich_edit_dll.make
 		end
 

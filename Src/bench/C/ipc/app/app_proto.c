@@ -32,7 +32,7 @@
 #include "bits.h"
 #include "eiffel.h"
 
-extern void set_breakpoint_number()		/* Sets the breakpoint interrupt number */
+extern void set_breakpoint_number();		/* Sets the breakpoint interrupt number */
 rt_public int rqstcnt = 0;				/* Request count */
 rt_private char gc_stopped;
 

@@ -7,20 +7,22 @@ indexing
 class ROUT_INFO_TABLE
 
 inherit
-
-	EXTEND_TABLE [ROUT_INFO, INTEGER]
+	HASH_TABLE [ROUT_INFO, INTEGER]
 		rename
 			make as ht_make,
 			put as table_put
 		end
+		
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal
 		end
+		
 	SHARED_ARRAY_BYTE
 		undefine
 			copy, is_equal
 		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
@@ -59,12 +61,11 @@ feature -- Insertion
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.
-					info.set_offset (new_offset (org))
-					info.set_origin (org.class_id)
+					info.make (org, new_offset (org))
 				end
 			else
 					-- The routine is brand new.
-				!! info.make (org, new_offset (org))
+				create info.make (org, new_offset (org))
 				force (info, rout_id)
 			end
 		end
@@ -92,7 +93,7 @@ feature -- Offset processing
 			Result := counter.next
 		end
 
-	offset_counters: EXTEND_TABLE [COUNTER, INTEGER]
+	offset_counters: HASH_TABLE [COUNTER, INTEGER]
 			-- Offset counters for feature introducted
 			-- in the corresponding class
 
@@ -253,31 +254,6 @@ feature -- Melting
 				-- Return correctly sized structure.
 			Result := Byte_array.character_array
 			Byte_array.clear
-		end
-
-feature -- Trace
-
-	trace is
-		local
-			rout_infos: ARRAY [ROUT_INFO]
-			nb_elements: INTEGER
-			i: INTEGER
-		do
-			rout_infos := renumbered_table
-			nb_elements := rout_infos.count
-			from
-				i := 1
-			until
-				i > nb_elements
-			loop
-				if rout_infos.item (i) /= Void then
-					io.putstring ("Routine id: ")
-					io.putint (i)
-					rout_infos.item (i).trace
-					io.new_line
-				end
-				i := i + 1
-			end
 		end
 
 feature -- Merging

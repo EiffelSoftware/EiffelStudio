@@ -96,6 +96,7 @@ feature -- IL code generation
 		local
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
+			target_type: TYPE_I
 			class_c: CLASS_C
 		do
 				-- Type of attribute in current context
@@ -107,6 +108,8 @@ feature -- IL code generation
 			else
 					-- Type of class which defines current attribute.
 				cl_type ?= context_type
+				target_type := il_generator.implemented_type (written_in, cl_type)
+
 				check
 					valid_type: cl_type /= Void
 				end
@@ -132,17 +135,15 @@ feature -- IL code generation
 						-- If `need_real_metamorphose (cl_type)' a box operation will
 						-- occur meaning that current attribute was written in a
 						-- non-expanded class.
-					generate_il_metamorphose (cl_type, Void, need_real_metamorphose (cl_type))
+					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
 				end
 
 					-- We push code to access Current attribute.
 				class_c := System.class_of_id (written_in)
 				if class_c.is_frozen then
-					il_generator.generate_attribute (
-						il_generator.implemented_type (written_in, cl_type), attribute_id)
+					il_generator.generate_attribute (target_type, attribute_id)
 				else
-					il_generator.generate_feature_access (
-						il_generator.implemented_type (written_in, cl_type), attribute_id, True)
+					il_generator.generate_feature_access (target_type, attribute_id, True)
 				end
 
 					-- Generate cast if we have to generate verifiable code

@@ -43,48 +43,6 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_with_position (pos: INTEGER) is
-			-- create the untitled window with `position'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		deferred
-		end
-
-	make_root_with_position (pos: INTEGER) is
-			-- create the untitled window with `position'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		deferred
-		end
-
-	make_with_owner_and_position (par: EV_UNTITLED_WINDOW; pos: INTEGER) is
-			-- create the untitled window with `position'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		deferred
-		end
-
 feature {EV_UNTITLED_WINDOW} -- Initialization
 
 	set_default_colors is

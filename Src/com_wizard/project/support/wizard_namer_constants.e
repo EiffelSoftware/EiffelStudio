@@ -94,9 +94,19 @@ feature -- C to Eiffel conversion function names for arrays.
 
 	Ccom_ce_array_character: STRING is "ccom_ce_array_character"
 
+	Ccom_ce_array_unsigned_character: STRING is "ccom_ce_array_unsigned_character"
+
 	Ccom_ce_array_short: STRING is "ccom_ce_array_short"
 
+	Ccom_ce_array_unsigned_short: STRING is "ccom_ce_array_unsigned_short"
+
 	Ccom_ce_array_long: STRING is "ccom_ce_array_long"
+
+	Ccom_ce_array_unsigned_long: STRING is "ccom_ce_array_unsigned_long"
+
+	Ccom_ce_array_integer: STRING is "ccom_ce_array_integer"
+
+	Ccom_ce_array_unsigned_integer: STRING is "ccom_ce_array_unsigned_integer"
 
 	Ccom_ce_array_float: STRING is "ccom_ce_array_float"
 
@@ -137,6 +147,16 @@ feature -- Eiffel to C conversion function names for arrays.
 	Ccom_ec_array_short: STRING is "ccom_ec_array_short"
 
 	Ccom_ec_array_long: STRING is "ccom_ec_array_long"
+
+	Ccom_ec_array_integer: STRING is "ccom_ec_array_integer"
+
+	Ccom_ec_array_unsigned_character: STRING is "ccom_ec_array_unsigned_character"
+
+	Ccom_ec_array_unsigned_short: STRING is "ccom_ec_array_unsigned_short"
+
+	Ccom_ec_array_unsigned_long: STRING is "ccom_ec_array_unsigned_long"
+
+	Ccom_ec_array_unsigned_integer: STRING is "ccom_ec_array_unsigned_integer"
 
 	Ccom_ec_array_float: STRING is "ccom_ec_array_float"
 

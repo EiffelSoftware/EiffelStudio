@@ -23,7 +23,6 @@ feature
 			vd09: VD09;
 			vd21: VD21;
 			vd22: VD22;
-			a: ANY;
 		do
 			cluster := context.current_cluster;
 			path := Environ.interpret (file__name);
@@ -50,8 +49,7 @@ feature
 					vd22.set_file_name (f_name);
 					Error_handler.insert_error (vd22);
 				else
-					a := file.file_pointer;
-					class_name := c_clname ($a);
+					class_name := c_clname (file.file_pointer);
 					file.close;
 					if class_name = Void then
 							-- No class in include
@@ -84,7 +82,7 @@ feature
 
 feature {NONE} -- Externals
 
-	c_clname (file_ptr: ANY): STRING is
+	c_clname (file_ptr: POINTER): STRING is
 		external
 			"C"
 		end;

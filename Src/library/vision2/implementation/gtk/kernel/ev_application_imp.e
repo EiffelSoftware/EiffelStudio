@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			end
 			if temp_int = 1 or temp_int = 2 then
 				print (
-					"Gtk version = " +
+					"Vision2 GTK Debug Mode, Gtk version = " +
 					gtk_maj_ver.out + "." + gtk_min_ver.out + "."+ gtk_mic_ver.out + "%N"
 				)
 				(create {EV_C_UTIL}).enable_ev_gtk_log (temp_int)
@@ -70,7 +70,8 @@ feature {NONE} -- Initialization
 			end
 			gtk_init
 			C.gdk_rgb_init			
-			c_ev_gtk_callback_marshal_init (Current, $marshal)
+			-- Initialize the marshaller.
+			create gtk_marshal
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)
 
@@ -108,9 +109,12 @@ feature {NONE} -- Initialization
 			is_in_gtk_main := True
 			C.gtk_main
 			is_in_gtk_main := False
-			c_ev_gtk_callback_marshal_destroy
+			gtk_marshal.destroy
 			is_destroyed := True
 		end
+		
+	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
+		-- Marshal object for all gtk signal emission event handling.
 
 feature -- Access
 
@@ -334,29 +338,6 @@ feature {EV_TOOLTIPABLE_IMP} -- Implementation
 
 feature -- Implementation
 
-	f_of_tuple_type_id: INTEGER is
-		once
-			Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
-		end
-
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
-			-- Call `action' with GTK+ event data from `args'.
-			-- There are `n_args' GtkArg*s in `args'.
-			-- Called by C funtion `c_ev_gtk_callback_marshal'.
-		require
-			action_not_void: action /= Void
-			n_args_not_negative: n_args >= 0
-			args_not_null: n_args > 0 implies args /= NULL
-		do
-			if
-				type_conforms_to (dynamic_type (action), f_of_tuple_type_id) 
-			then
-				action.call ([[]])
-			else
-				action.call ([n_args, args])
-			end
-		end
-
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?
 
@@ -410,21 +391,6 @@ feature -- Implementation
 		end
 		
 feature -- External implementation
-
-	c_ev_gtk_callback_marshal_init (
-		object: EV_APPLICATION_IMP; a_marshal: POINTER
-		) is
-			-- See ev_gtk_callback_marshal.c
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
-		end
-
-	c_ev_gtk_callback_marshal_destroy
-		is
-			-- See ev_gtk_callback_marshal.c
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
-		end
 
 	c_ev_gtk_callback_marshal_delayed_agent_call
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is

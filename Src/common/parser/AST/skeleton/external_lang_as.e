@@ -1,7 +1,7 @@
 indexing
 	description: "AST representation of an external structure."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class EXTERNAL_LANG_AS
 

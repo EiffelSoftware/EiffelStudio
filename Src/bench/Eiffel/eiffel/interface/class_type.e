@@ -67,6 +67,16 @@ feature {NONE} -- Initialization
 			is_changed := True
 			type_id := System.type_id_counter.next
 			static_type_id := Static_type_id_counter.next_id
+			if System.il_generation then
+				if
+					associated_class.is_external or 
+					associated_class.is_frozen
+				then
+					implementation_id := static_type_id
+				else
+					implementation_id := Static_type_id_counter.next_id
+				end
+			end
 			System.reset_melted_conformance_table
 		end
 	
@@ -74,10 +84,15 @@ feature -- Access
 
 	static_type_id: INTEGER
 			-- Unique static_type_id for current class type
-			--| Useful to set the name of the associated generated file
+			--| Useful to set name of associated generated file
 			--| which has to be dynamic type (`type_id') independant.
 			--| Remeber that after during each freezing, dynamic types
 			--| are reprocessed.
+	
+	implementation_id: INTEGER
+			-- Same as `static_type_id' but used in IL mode only to
+			-- give a different ID wether we are handling interface
+			-- or implementation of current CLASS_TYPE.
 
 	type: CL_TYPE_I
 			-- Type of the class: it includes meta-instantiation of
@@ -110,6 +125,9 @@ feature -- Access
 		do
 			Result := Static_type_id_counter.is_precompiled (static_type_id)
 		end
+
+	class_interface: CLASS_INTERFACE
+			-- Corresponding interface of current generic derivation.
 
 feature -- Settings
 
@@ -159,6 +177,16 @@ feature -- Settings
 			type_id := i
 		ensure
 			type_id_set: type_id = i
+		end
+
+	set_class_interface (cl: like class_interface) is
+			-- Assign `cl' to `class_interface'.
+		require
+			cl_not_void: cl /= Void
+		do
+			class_interface := cl
+		ensure
+			class_interface_set: class_interface = cl
 		end
 
 feature -- Conveniences
@@ -885,9 +913,10 @@ feature -- IL code generation
 			-- Generate feature `feat' in Current class type
 		require
 			feature_not_void: f /= Void
-			to_generate_in: f.to_generate_in (associated_class)
 		do
-			f.generate_il
+			if not f.is_external then
+				f.generate_il
+			end
 		end
 
 feature -- Byte code generation
@@ -1411,6 +1440,7 @@ feature -- Debug
 invariant
 	type_not_void: type /= Void
 	valid_type_id: type_id > 0
-	valid_static_type_id: type_id > 0
+	valid_static_type_id: static_type_id > 0
+	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 end

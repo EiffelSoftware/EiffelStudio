@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			create ev_children.make (2)
-		end
+		end		
 
 feature -- Status setting
 
@@ -92,9 +92,6 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	invalidate_agent: PROCEDURE [ANY, TUPLE []]
-			-- Called after a change has occurred.
 	
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- Child widgets in z-order starting with farthest away.

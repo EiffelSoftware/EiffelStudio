@@ -117,6 +117,8 @@ feature -- Status setting
 			end
 			create si.make_from_file_name (nm)
 			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
+			np.wait_for_exit
+			return_code := np.get_exit_code
 		end
 
 	launch (s: STRING) is
@@ -137,8 +139,6 @@ feature -- Status setting
 			end
 			create si.make_from_file_name (nm)
 			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
-			np.wait_for_exit
-			np.close
 		end
 
 feature {NONE} -- Implementation

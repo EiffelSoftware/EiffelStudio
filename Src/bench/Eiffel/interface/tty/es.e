@@ -20,7 +20,7 @@ inherit
 
 creation
 
-	make
+	make, make_batch
 
 feature -- Access
 
@@ -33,6 +33,26 @@ feature -- Access
 			-- Is the current option `precompile'?
 		do
 			Result := option.is_equal ("-precompile")
+		end;
+
+feature -- Creation
+
+	make_batch is
+		do
+			if init_licence then
+				make;
+				discard_licence;
+			end;
+		end; 
+
+feature -- Licensing
+
+	init_licence: BOOLEAN is
+		do
+			licence.set_version (3.5);
+			licence.set_application_name ("eiffelbench");
+			licence.get_licence;
+			Result := licence.licensed;
 		end;
 
 feature -- Update

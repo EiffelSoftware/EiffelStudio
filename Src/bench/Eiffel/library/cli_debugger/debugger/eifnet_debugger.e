@@ -604,9 +604,7 @@ feature -- Function Evaluation
 	icd_function_by_feature (ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_feat'
 		local
-			l_feat_i : FEATURE_I
 			l_feat_tok: INTEGER
-			l_class_c: CLASS_C			
 		do
 			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
 			

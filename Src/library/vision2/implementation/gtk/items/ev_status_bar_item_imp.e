@@ -20,7 +20,8 @@ inherit
 			parent
 		redefine
 			interface,
-			initialize
+			initialize,
+			width
 		end
 
 	EV_TEXTABLE_IMP
@@ -68,9 +69,25 @@ feature -- Initialization
 			status_bar_item_box /= default_pointer
 		end
 
+feature -- Access
+
+	width: INTEGER
+			-- Horizontal dimension in pixels.
+
 feature -- Status setting
 
 	set_width (value: INTEGER) is
+			-- Make `value' the new width of the item.
+			-- If -1, then the item adapt its size to fit the space
+			-- when the bar gets bigger.
+		do
+			width := value
+			if parent_imp /= Void then
+				internal_set_width (value)
+			end
+		end
+
+	internal_set_width (value: INTEGER) is
 			-- Make `value' the new width of the item.
 			-- If -1, then the item adapt its size to fit the space
 			-- when the bar gets bigger.
@@ -145,6 +162,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/26 21:06:28  brendel
+--| Improved set_width to also work when there is no parent yet.
+--|
 --| Revision 1.25  2000/04/18 19:46:13  oconnor
 --| Reimplemented without externals.
 --|

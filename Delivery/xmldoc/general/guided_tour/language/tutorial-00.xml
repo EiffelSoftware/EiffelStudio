@@ -1,4 +1,4 @@
-<document title="----An Eiffel Tutorial----" output="studio">
+<document title="An Eiffel Tutorial" output="studio">
 	<meta_data>
 		<help/>
 	</meta_data>
@@ -6,10 +6,12 @@
 		<heading>
 			<size>2</size>Interactive Software Engineering
 		</heading>
-		<link>
-			<url/>
-			<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
-		</link>
+		<paragraph>
+			<link>
+				<url>../../../general/guided_tour/studio/index-99-document-info.xml#pgfId-467816</url>
+				<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
+			</link>
+		</paragraph>
 		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
 			<link>
 				<url>http://docs.eiffel.com/general/guided_tour/language/tutorial-00.xml</url>

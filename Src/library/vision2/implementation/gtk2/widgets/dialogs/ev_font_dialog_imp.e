@@ -97,7 +97,7 @@ feature -- Access
 
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
-			font_imp.set_height (split_values.last.to_integer)
+			font_imp.set_height (App_implementation.pixel_value_from_point_value (split_values.last.to_integer))
 			
 			if split_values.has ("italic") or else split_values.has ("oblique") then
 				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
@@ -126,7 +126,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			font_imp ?= a_font.implementation
-			create a_cs.make (font_imp.name + " " + font_imp.height.out)
+			create a_cs.make (font_imp.name + " " + App_implementation.point_value_from_pixel_value (font_imp.height).out)
 			a_success_flag := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 							c_object,
 							a_cs.item

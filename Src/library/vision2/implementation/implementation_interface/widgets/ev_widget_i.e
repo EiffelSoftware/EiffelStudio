@@ -1,5 +1,4 @@
 indexing
-
 	description: "General widget implementation"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -35,9 +34,24 @@ feature -- Access
 			-- The interface of the current implementation
 			-- Used to give the parent of a widget to the user
 			-- and in the implementation of some widgets
+	
+	parent: EV_WIDGET is
+			-- The parent of the Current widget
+			-- If the widget is an EV_WINDOW without parent,
+			-- this attribute will be `Void'
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface
+			else
+				Result := Void
+			end
+		end
 
-	parent_imp: EV_CONTAINER_IMP
-			-- Parent container of this widget
+	parent_imp: EV_CONTAINER_IMP is
+			-- Parent container of this widget. The same than
+			-- parent but with a different type.
+		deferred
+		end
 
 	automatic_resize: BOOLEAN
 			-- Is the widget resized automatically when
@@ -51,18 +65,7 @@ feature -- Access
 			-- (If it does, its size doesn't changed).  
 			-- False by default.
 
-	parent: EV_WIDGET is
-			-- The parent of the Current widget
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
-		do
-			Result := parent_imp.interface
-		end
-
 feature -- Status Report
-
-	automatic_state: INTEGER
-			-- Current state of the widget. 
 
 	destroyed: BOOLEAN is			
 			-- Is Current widget destroyed?
@@ -419,12 +422,7 @@ feature -- Implementation
 			-- It is not possible to change the parent,
 			-- therefore, if there is already a parent,
 			-- we don't do anything
-		do
-			if parent_imp = Void then
-				parent_imp ?= par.implementation
-			end
-		ensure
-			valid_container: parent_imp /= Void
+		deferred
 		end
 
 	set_interface (the_interface: EV_WIDGET) is

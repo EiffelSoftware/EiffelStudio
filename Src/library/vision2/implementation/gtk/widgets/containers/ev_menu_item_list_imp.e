@@ -20,16 +20,24 @@ inherit
 			remove_i_th
 		end
 
+	EV_ANY_IMP
+		undefine
+			needs_event_box
+		redefine
+			interface
+		end
+
 	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
 
-feature {NONE} -- implementation
+feature {EV_MENU_ITEM_IMP} -- implementation
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-			--| Do nothing more than calling gtk-reorder.
+	list_widget: POINTER is
+			-- 
 		do
-			check do_not_call: False end
+			Result := c_object
 		end
+
+feature {NONE} -- Implementation
 
 	insert_i_th (v: like item; pos: INTEGER) is
 		local
@@ -157,7 +165,12 @@ feature {NONE} -- implementation
 			check
 				item_imp_not_void: item_imp /= Void
 			end
-			Precursor (a_position)
+
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
+			child_array.go_i_th (a_position)
+			child_array.remove
+			item_imp.set_item_parent_imp (Void)
 			
 			radio_imp ?= item_imp
 			if radio_imp /= Void then
@@ -206,8 +219,6 @@ feature {NONE} -- implementation
 					interface.go_i_th (an_index)						
 				end
 			end
-
-			item_imp.set_item_parent_imp (Void)
 		end
 
 feature -- Access

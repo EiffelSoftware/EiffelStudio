@@ -41,8 +41,8 @@ feature -- Access
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
-			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
---			Result.select_actions.put_front (~execute_from (Result))
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+--			Result.select_actions.put_front (agent execute_from (Result))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
@@ -59,6 +59,7 @@ feature -- Basic operations
 			first, second: EB_DEVELOPMENT_WINDOW
 			a: SPECIAL [ANY]
 			pretty: EB_PRETTY_PRINT_DIALOG
+			mem_info: MEM_INFO
 		do
 			if not rescued then
 				if
@@ -72,6 +73,20 @@ feature -- Basic operations
 					mem.full_collect
 					mem.full_coalesce
 					mem.full_collect
+					
+					debug ("MEMORY")
+						mem_info := mem.memory_statistics (feature {MEM_CONST}.Eiffel_memory)
+						print ("Eiffel total memory: " + mem_info.total.out + "%N")
+						print ("Eiffel used memory: " + mem_info.used.out + "%N")
+						print ("Eiffel overhead memory: " + mem_info.overhead.out + "%N")
+						print ("Eiffel free memory: " + mem_info.free.out + "%N")
+
+						mem_info := mem.memory_statistics (feature {MEM_CONST}.C_memory)
+						print ("C total memory: " + mem_info.total.out + "%N")
+						print ("C used memory: " + mem_info.used.out + "%N")
+						print ("C overhead memory: " + mem_info.overhead.out + "%N")
+						print ("C free memory: " + mem_info.free.out + "%N")
+					end
 				end
 
 				if

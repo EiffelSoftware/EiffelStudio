@@ -41,7 +41,19 @@ public:
 	virtual ~IEiffelProject_impl_stub ();
 
 	/*-----------------------------------------------------------
-	Retrieve project.
+	Retrieve Eiffel Project
+	-----------------------------------------------------------*/
+	STDMETHODIMP retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name );
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path );
+
+
+	/*-----------------------------------------------------------
+	Retrieve project. Obsolete
 	-----------------------------------------------------------*/
 	STDMETHODIMP retrieve_project(  /* [in] */ BSTR a_project_file_name );
 
@@ -77,9 +89,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Last error message.
+	Last error message
 	-----------------------------------------------------------*/
 	STDMETHODIMP last_error_message(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Last exception raised
+	-----------------------------------------------------------*/
+	STDMETHODIMP last_exception(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelException * * a_result );
 
 
 	/*-----------------------------------------------------------

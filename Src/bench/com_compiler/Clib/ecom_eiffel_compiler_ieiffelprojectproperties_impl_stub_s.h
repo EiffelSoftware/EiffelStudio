@@ -77,111 +77,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	STDMETHODIMP compilation_type(  /* [out, retval] */ long * return_value );
+	STDMETHODIMP namespace_generation(  /* [out, retval] */ long * penu_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_compilation_type(  /* [in] */ long return_value );
-
-
-	/*-----------------------------------------------------------
-	Is console application?
-	-----------------------------------------------------------*/
-	STDMETHODIMP console_application(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Is console application?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_console_application(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Should preconditions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP evaluate_require(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should preconditions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_require(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP evaluate_ensure(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_ensure(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Should check assertions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP evaluate_check(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should check assertions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_check(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP evaluate_loop(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_loop(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Should class invariants be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP evaluate_invariant(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Should class invariants be evaluated?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_evaluate_invariant(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Generate debug info?
-	-----------------------------------------------------------*/
-	STDMETHODIMP debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Generate debug info?
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_debug_info(  /* [in] */ VARIANT_BOOL return_value );
-
-
-	/*-----------------------------------------------------------
-	Project Clusters.
-	-----------------------------------------------------------*/
-	STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value );
-
-
-	/*-----------------------------------------------------------
-	Externals.
-	-----------------------------------------------------------*/
-	STDMETHODIMP externals(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemExternals * * return_value );
+	STDMETHODIMP set_namespace_generation(  /* [in] */ long penu_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
@@ -197,21 +101,81 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Project type
+	-----------------------------------------------------------*/
+	STDMETHODIMP project_type(  /* [out, retval] */ long * penum_project_type );
+
+
+	/*-----------------------------------------------------------
+	Project type
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_project_type(  /* [in] */ long penum_project_type );
+
+
+	/*-----------------------------------------------------------
+	.NET Naming convention
+	-----------------------------------------------------------*/
+	STDMETHODIMP dot_net_naming_convention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention );
+
+
+	/*-----------------------------------------------------------
+	.NET Naming convention
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_dot_net_naming_convention(  /* [in] */ VARIANT_BOOL pvb_naming_convention );
+
+
+	/*-----------------------------------------------------------
+	Generate debug info?
+	-----------------------------------------------------------*/
+	STDMETHODIMP generate_debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Generate debug info?
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_generate_debug_info(  /* [in] */ VARIANT_BOOL return_value );
+
+
+	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	STDMETHODIMP precompiled_library(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_precompiled_library(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Project assertions
+	-----------------------------------------------------------*/
+	STDMETHODIMP assertions(  /* [out, retval] */ ULONG * p_assertions );
+
+
+	/*-----------------------------------------------------------
+	Project assertions
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_assertions(  /* [in] */ ULONG p_assertions );
+
+
+	/*-----------------------------------------------------------
+	Project Clusters.
+	-----------------------------------------------------------*/
+	STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value );
+
+
+	/*-----------------------------------------------------------
+	Externals.
+	-----------------------------------------------------------*/
+	STDMETHODIMP externals(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemExternals * * return_value );
+
+
+	/*-----------------------------------------------------------
 	Assemblies.
 	-----------------------------------------------------------*/
 	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemAssemblies * * return_value );
-
-
-	/*-----------------------------------------------------------
-	Precompiled file.
-	-----------------------------------------------------------*/
-	STDMETHODIMP precompiled(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Precompiled file.
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_precompiled(  /* [in] */ BSTR return_value );
 
 
 	/*-----------------------------------------------------------
@@ -299,6 +263,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	STDMETHODIMP culture(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_culture(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
 	Asembly signing key file name.
 	-----------------------------------------------------------*/
 	STDMETHODIMP key_file_name(  /* [out, retval] */ BSTR * return_value );
@@ -311,15 +287,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 	-----------------------------------------------------------*/
-	STDMETHODIMP culture(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * pbstr_working_directory );
 
 
 	/*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_culture(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_working_directory(  /* [in] */ BSTR pbstr_working_directory );
 
 
 	/*-----------------------------------------------------------

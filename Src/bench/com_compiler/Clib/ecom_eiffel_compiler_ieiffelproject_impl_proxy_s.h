@@ -22,6 +22,8 @@ class IEiffelProject_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelProject_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelException_s.h"
+
 #include "ecom_eiffel_compiler_IEiffelCompiler_s.h"
 
 #include "ecom_eiffel_compiler_IEiffelSystemBrowser_s.h"
@@ -47,7 +49,19 @@ public:
 	virtual ~IEiffelProject_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	Retrieve project.
+	Retrieve Eiffel Project
+	-----------------------------------------------------------*/
+	void ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT a_project_file_name );
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project.
+	-----------------------------------------------------------*/
+	void ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT a_ace_file_name,  /* [in] */ EIF_OBJECT a_project_directory_path );
+
+
+	/*-----------------------------------------------------------
+	Retrieve project. Obsolete
 	-----------------------------------------------------------*/
 	void ccom_retrieve_project(  /* [in] */ EIF_OBJECT a_project_file_name );
 
@@ -83,9 +97,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Last error message.
+	Last error message
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_last_error_message(  );
+
+
+	/*-----------------------------------------------------------
+	Last exception raised
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_exception(  );
 
 
 	/*-----------------------------------------------------------

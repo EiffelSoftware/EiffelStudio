@@ -80,7 +80,7 @@ feature -- Status setting
 			table.set_child_position (height_entry.box, 1, 2, 2, 4)
 
 			-- Get and set buttons
-			!! aaa.make_3 (active_widget, width_entry, height_entry)
+			!! aaa.make (active_widget, width_entry, height_entry)
 			!! g_s_c
 			!! get_size_b.make_with_text (table, "Get")
  			get_size_b.add_click_command (g_s_c, aaa)
@@ -101,7 +101,7 @@ feature -- Status setting
 			table.set_child_position (min_height_entry.box, 6, 2, 7, 4)
 			
 			-- Get and set buttons
-			!! aaa.make_3 (active_widget, min_width_entry, min_height_entry)
+			!! aaa.make (active_widget, min_width_entry, min_height_entry)
 			!! g_ms_c
 			!! get_size_b.make_with_text (table, "Get")
 			get_size_b.add_click_command (g_ms_c, aaa)

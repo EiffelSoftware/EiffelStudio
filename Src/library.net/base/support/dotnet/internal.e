@@ -235,6 +235,16 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
+	generic_dynamic_type_of_type (type_id, i: INTEGER): INTEGER is
+			-- Dynamic type of generic parameter of `type_id' at position `i'.
+		do
+			check
+				False
+			end
+		ensure
+			dynamic_type_nonnegative: Result >= 0
+		end
+
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `object' at
 			-- position `i'.

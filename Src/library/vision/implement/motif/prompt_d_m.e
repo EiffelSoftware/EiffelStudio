@@ -15,9 +15,9 @@ inherit
 
 	DIALOG_M;
 
-	PROMPT_M
+	SELECTION_M
 		rename
-			make as prompt_make
+			make as sel_make
 		undefine
 			lower, raise, hide,
 			show, destroy, selection_make,

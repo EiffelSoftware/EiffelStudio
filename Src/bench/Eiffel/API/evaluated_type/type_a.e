@@ -8,36 +8,30 @@ inherit
 		rename
 			position as comment_position
 		undefine
-			append_clickable_signature
+			append_to
 		redefine
 			is_solved, same_as, format
 		end;
-	SHARED_EIFFEL_PROJECT;
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end;
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end;
 	SHARED_CONSTRAINT_ERROR;
-	SHARED_TYPE_I;
+	SHARED_TYPE_I
 
 feature -- Properties
 
 	base_type: INTEGER;
 			-- Base type of the actual type
 
-	evaluated_type: TYPE_A is
-			-- Evaluated type (for like types)	
-		do
-			Result := actual_type
-		end;
-
 	generics: ARRAY [TYPE_A] is
 			-- Actual generic types
 		do
 			-- Void
-		end;
-
-	has_generics: BOOLEAN is
-			-- Has the current type generics types ?
-		do
-			Result := generics /= Void;
 		end;
 
 	is_valid: BOOLEAN is
@@ -138,14 +132,14 @@ feature -- Properties
 
 feature -- Access
 
-	valid_base_type: BOOLEAN is
-			-- Is the base type valid
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
 		do
-			Result := base_type > 0
+			-- Do nothing
 		end;
 
 	has_associated_class: BOOLEAN is
-			-- Does Current have associated class?
+			-- Does Current have an associated class?
 		do
 			Result := not (is_void or else is_formal or else is_none)
 		ensure
@@ -153,28 +147,40 @@ feature -- Access
 								is_formal or else is_none)
 		end;
 
+	evaluated_type: TYPE_A is
+			-- Evaluated type (for like types)	
+		do
+			Result := actual_type
+		end;
+
+	actual_type: TYPE_A is
+			-- Actual type of the interpreted type
+			--| *** FIXME this will become obsolete
+		do
+			Result := Current
+		end;
+
+	has_generics: BOOLEAN is
+			-- Has the current type generics types ?
+		do
+			Result := generics /= Void;
+		end;
+
 	associated_eclass: E_CLASS is
 			-- Eiffel class associated to the current type
-		require
-			valid_base_type: not has_associated_class implies valid_base_type
 		deferred
 		ensure
-			non_void_if_not_formal: not has_associated_class implies Result /= Void
+			non_void_if_has_associated_class: 
+				has_associated_class implies Result /= Void
 		end;
 
 feature -- Output
 
-	append_clickable_signature (click_window: CLICK_WINDOW) is
+	append_to (click_window: OUTPUT_WINDOW) is
 		deferred
 		end;
 
-feature 
-
-	actual_type: TYPE_A is
-			-- Actual type of the interpreted type
-		do
-			Result := Current
-		end;
+feature {COMPILER_EXPORTER} -- Access
 
 	has_expanded: BOOLEAN is
 			-- Has the current type some expanded types in itself ?
@@ -394,12 +400,6 @@ feature
 			end;
 		end;
 
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			-- Do nothing
-		end;
-
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
 		require
@@ -433,7 +433,7 @@ feature
 			end;
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text

@@ -31,6 +31,19 @@ feature -- Properties
 
 feature -- Access
 
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			other_class_type: CL_TYPE_A;
+		do
+			other_class_type ?= other;
+			Result := 	other_class_type /= Void
+						and then
+						base_type = other_class_type.base_type
+						and then
+						is_expanded = other_class_type.is_expanded
+		end;
+
 	associated_eclass: E_CLASS is
 			-- Associated class to the type
 		do
@@ -39,12 +52,12 @@ feature -- Access
 
 feature -- Output
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
 			if is_expanded then
-				a_clickable.put_string ("expanded ");
+				ow.put_string ("expanded ");
 			end;
-			associated_class.append_clickable_name (a_clickable);
+			associated_class.append_name (ow);
 		end;
 
 	dump: STRING is
@@ -63,7 +76,7 @@ feature -- Output
 			Result.append (class_name);
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	set_is_expanded (b: BOOLEAN) is
 			-- Assign `b' to `is_expanded'.
@@ -286,19 +299,6 @@ feature
 			Result := clone (Current);
 		end;
 
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_class_type: CL_TYPE_A;
-		do
-			other_class_type ?= other;
-			Result := 	other_class_type /= Void
-						and then
-						base_type = other_class_type.base_type
-						and then
-						is_expanded = other_class_type.is_expanded
-		end;
-
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
@@ -318,7 +318,7 @@ feature
 			ctxt.put_class_name (associated_class);
 		end;
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

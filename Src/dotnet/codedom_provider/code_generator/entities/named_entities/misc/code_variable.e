@@ -38,6 +38,17 @@ feature -- Access
 			Result := variable.eiffel_name
 		end
 
+	declaration_code: STRING is
+			-- Result := "name: TYPE"
+		do
+			create Result.make (100)
+			Result.append (Indent_string)
+			Result.append (variable.eiffel_name)
+			Result.append (": ")
+			Result.append (variable.type.eiffel_name)
+			Result.append ("%N")
+		end
+
 feature -- Comparison
 
 	is_equal (other: CODE_VARIABLE): BOOLEAN is

@@ -253,6 +253,44 @@ feature -- Debugger access
 			end
 		end
 
+	number_of_all_precondition_slots: INTEGER is
+			-- Number of precondition slots in feature (:::)
+			-- It includes precondition (inner & herited).
+		local
+			loc_assert_id_set		: ASSERT_ID_SET
+			inh_assert_info			: INH_ASSERT_INFO
+			i						: INTEGER
+		do
+			Result := number_of_precondition_slots
+
+				-- Add the number of breakpoint slots for inherited
+				-- preconditions.
+			loc_assert_id_set := assert_id_set
+			if loc_assert_id_set /= Void then
+				from
+					i := 1
+				until
+					i > loc_assert_id_set.count
+				loop
+					inh_assert_info := loc_assert_id_set @ i
+					if loc_assert_id_set.has_precondition then
+						Result := Result + inh_assert_info.precondition_count
+					end
+					i := i + 1
+				end
+					-- If the inherited assertions does not define a precondition,
+					-- the precondition will be true and thus no precondition
+					-- clause will be generated at all, so we have to remove the
+					-- inner preconditions that we have already counted
+					--
+					-- Note: the inner preconditions have been added by the
+					-- operation "Result := number_of_precondition_slots".
+				if not loc_assert_id_set.has_precondition then
+					Result := Result - number_of_precondition_slots
+				end
+			end
+		end
+
 	number_of_precondition_slots: INTEGER is 
 			-- Number of preconditions
 			-- (inherited assertions are not taken into account)

@@ -16,10 +16,8 @@ inherit
 
 feature -- Access
 
-	resources: LINKED_LIST [PREFERENCE_RESOURCE] is
+	resources: LINKED_LIST [PREFERENCE_RESOURCE]
 			-- All resources for the user interface
-		deferred
-		end;
 
 feature {PREFERENCE_TOOL} -- Initialization
 
@@ -44,20 +42,6 @@ feature -- Properties
 			-- Category Current is about
 		deferred
 		end;
-
-feature -- User Interface
-
-	display is
-			-- Display Current
-			--| This feature is used to initialize `resources'.
-		deferred
-		end;
-
-	undisplay is
-			-- Undisplay Current
-			--| This will update `button'.
-		deferred
-		end
 
 feature -- Validation
 
@@ -124,10 +108,53 @@ feature -- Access
 			associated_category.update
 		end
 
+feature -- Output
+
+	display is
+			-- Display Current
+			--| This feature is used to initialize `resources'.
+		local
+			mp: MOUSE_PTR
+		do
+			holder.set_selected (True);
+			if been_displayed then
+				manage
+			else
+				!! mp.set_watch_cursor;
+				from
+					resources.start
+				until
+					resources.after
+				loop
+					resources.item.display;
+					resources.forth
+				end;
+				init_colors;
+				mp.restore;
+				been_displayed := True
+			end
+		end;
+
+	undisplay is
+			-- Undisplay Current
+			--| This only updates the pixmap on the button
+		do
+			holder.set_selected (False);
+			unmanage
+		end
+
 feature {NONE} -- Properties
 
 	holder: CATEGORY_HOLDER;
 			-- Holder for the visual aspects
+
+	been_displayed: BOOLEAN
+			-- Has Current already been displayed?
+
+	init_colors is
+			-- Initialize the colors.
+		do
+		end;
 
 feature {PREFERENCE_COMMAND} -- Execution
 

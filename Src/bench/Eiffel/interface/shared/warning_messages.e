@@ -1202,6 +1202,8 @@ feature -- Warning messages
 												
 	w_Inheritance_from_any: STRING is "Cannot remove inheritance from ANY."
 		
+	w_Class_syntax_error: STRING is "Current class text has a syntax error.%NCode generation was cancelled."
+		
 	w_New_feature_syntax_error: STRING is "New feature has syntax error.%NCode generation cancelled."
 		
 	w_Wrong_class_name: STRING is "Syntax error in name or generics"

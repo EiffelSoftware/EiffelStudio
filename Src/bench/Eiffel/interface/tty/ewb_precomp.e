@@ -95,23 +95,8 @@ feature {NONE} -- Execution
 					else
 						Eiffel_project.save_precomp (licensed)
 					end;
-				elseif Eiffel_project.save_error then
-					!! temp.make (0);
-					temp.append ("Error: could not write to ");
-					temp.append (Project_file_name);
-					temp.append ("%NPlease check permissions and disk space");
-					io.error.putstring (temp);
-					io.error.new_line;
-					finished := stop_on_error or else
-						command_line_io.termination_requested;
-					if finished then
-						lic_die (-1)
-					else
-						Eiffel_project.save_project;
-						if not Eiffel_project.save_error then
-							Eiffel_project.save_precomp (licensed)
-						end
-					end
+				else
+					{EWB_COMP} Precursor 
 				end
 			end
 		end;

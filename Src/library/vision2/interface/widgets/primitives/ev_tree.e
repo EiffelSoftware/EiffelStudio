@@ -25,6 +25,10 @@ inherit
 			create_action_sequences
 		end
 
+create
+	default_create,
+	make_for_test
+
 feature -- Access
 
 	selected_item: EV_TREE_ITEM is
@@ -130,6 +134,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/01 03:26:55  oconnor
+--| added make_for_test
+--|
 --| Revision 1.20  2000/02/29 00:03:38  king
 --| Added multiple selection features
 --|

@@ -28,7 +28,8 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_for_test
 
 feature {NONE} -- Initialization
 
@@ -295,6 +296,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/01 03:28:43  oconnor
+--| added make_for_test
+--|
 --| Revision 1.29  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

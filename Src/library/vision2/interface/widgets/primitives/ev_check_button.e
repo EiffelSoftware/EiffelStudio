@@ -18,7 +18,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_for_test
 
 feature {NONE} -- Implementation
 
@@ -55,6 +56,9 @@ end -- class EV_CHECK_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.12  2000/02/25 21:28:16  brendel
 --| Formatting.
 --|

@@ -16,7 +16,8 @@ inherit
 		end
 	
 create
-	default_create	
+	default_create,
+	make_for_test
 	
 feature {EV_ANY_I} -- Implementation
  	
@@ -51,6 +52,9 @@ end -- class EV_HORIZONTAL_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.9  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

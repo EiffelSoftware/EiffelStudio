@@ -18,7 +18,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_for_test
 	
 feature {NONE} -- Initialization
 
@@ -100,6 +101,9 @@ end -- class EV_TEXT_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/01 03:27:30  oconnor
+--| added make_for_test
+--|
 --| Revision 1.20  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

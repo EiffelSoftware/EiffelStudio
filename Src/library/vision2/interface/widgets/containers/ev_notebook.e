@@ -19,6 +19,10 @@ inherit
 			create_action_sequences
 		end
 
+create
+	default_create,
+	make_for_test
+
 feature -- Access 
 
 	item_text (an_item: like item): STRING is
@@ -206,6 +210,9 @@ end -- class EV_NOTEBOOK
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.16  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

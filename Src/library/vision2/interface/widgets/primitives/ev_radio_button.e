@@ -27,7 +27,8 @@ inherit
 create
 	default_create,
 	make_with_text,
-	make_with_text_and_action
+	make_with_text_and_action,
+	make_for_test
 
 feature {NONE} -- Initialization
 
@@ -76,6 +77,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/01 03:28:04  oconnor
+--| added make_for_test
+--|
 --| Revision 1.17  2000/02/29 02:13:58  brendel
 --| Added `make_with_text_and_action' creation procedure.
 --|

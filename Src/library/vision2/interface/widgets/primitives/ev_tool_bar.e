@@ -24,7 +24,8 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_for_test
 
 feature -- Initialization
 
@@ -60,6 +61,9 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/01 03:27:05  oconnor
+--| added make_for_test
+--|
 --| Revision 1.9  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

@@ -16,7 +16,8 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_for_test
 
 feature {NONE} -- Implementation
 
@@ -53,6 +54,9 @@ end -- class EV_HORIZONTAL_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.7  2000/02/29 19:20:23  oconnor
 --| removed simicolons from indexing
 --|

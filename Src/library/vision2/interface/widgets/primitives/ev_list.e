@@ -25,7 +25,8 @@ inherit
 
 create
 	default_create,
-	make_with_strings
+	make_with_strings,
+	make_for_test
 
 feature -- Initialization
 
@@ -182,6 +183,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/01 03:28:59  oconnor
+--| added make_for_test
+--|
 --| Revision 1.32  2000/02/24 19:59:15  rogers
 --| Corrected postconditions in select_item and deselect_item, they now reference an_index instead of index.
 --|

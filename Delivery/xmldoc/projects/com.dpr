@@ -1,0 +1,26 @@
+<project>
+	<project_name>com</project_name>
+	<root_directory>D:/Delivery/xmldoc</root_directory>
+	<schema>D:/Src/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>D:/Delivery/xmldoc/default.css</html_css>
+	<header_override>True</header_override>
+	<use_header_from_file>False</use_header_from_file>
+	<footer_override>True</footer_override>
+	<use_footer_from_file>False</use_footer_from_file>
+	<process_includes>True</process_includes>
+	<process_header>True</process_header>
+	<process_footer>True</process_footer>
+	<process_html_stylesheet>True</process_html_stylesheet>
+	<include_navigation_links>False</include_navigation_links>
+	<generate_dhtml_filter>False</generate_dhtml_filter>
+	<generate_feature_nodes>True</generate_feature_nodes>
+	<toc_folders>
+		<folder>D:/Delivery/xmldoc\libraries\com\content</folder>
+		<folder>D:/Delivery/xmldoc\libraries\com</folder>
+		<folder>D:/Delivery/xmldoc\technologies\com\images</folder>
+		<folder>D:/Delivery/xmldoc\technologies\com</folder>
+		<folder>D:/Delivery/xmldoc\tools\wizards\com\guided_tour</folder>
+		<folder>D:/Delivery/xmldoc\tools\wizards\com\images</folder>
+		<folder>D:/Delivery/xmldoc\tools\wizards\com\reference</folder>
+		<folder>D:/Delivery/xmldoc\tools\wizards\com</folder>
+	</toc_folders></project>

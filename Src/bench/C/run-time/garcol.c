@@ -1573,7 +1573,7 @@ private void clean_zones()
 #else
 			bcopy(&ps_from, &ps_to, sizeof(struct sc_zone));
 #endif
-			ps_to.sc_flags = ((union overhead *) ps_from.sc_arena)->ov_size;
+			ps_to.sc_flgs = ((union overhead *) ps_from.sc_arena)->ov_size;
 
 #ifdef DEBUG
 			dprintf(1)("clean_zones: 'from' zone kept for next 'to'\n");
@@ -1666,7 +1666,7 @@ private void split_to_block()
 		 */
 
 		old_size = base->ov_size;			/* Save size of 1st block */
-		base->ov_size = ps_to.sc_flags;		/* Malloc flags for whole space */
+		base->ov_size = ps_to.sc_flgs;		/* Malloc flags for whole space */
 		(void) split_block(base, size - OVERHEAD);
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
@@ -1687,7 +1687,7 @@ private void split_to_block()
 		size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
 
 		m_data.ml_used -= size;
-		if (ps_to.sc_flags & B_CTYPE)
+		if (ps_to.sc_flgs & B_CTYPE)
 			c_data.ml_used -= size;
 		else
 			e_data.ml_used -= size;
@@ -2067,7 +2067,7 @@ private int find_scavenge_spaces()
 
 	g_data.gc_to++;								/* Count 'to' zone allocation */
 	ps_to.sc_arena = to_space - OVERHEAD;		/* Overwrite the header */
-	ps_to.sc_flags = HEADER(to_space)->ov_size;	/* Save flags */
+	ps_to.sc_flgs = HEADER(to_space)->ov_size;	/* Save flags */
 	ps_to.sc_size = from_size;					/* Used for statistics */
 	ps_to.sc_end = ps_to.sc_arena + from_size;	/* First free location beyond */
 	ps_to.sc_top = ps_to.sc_arena;				/* Is empty */
@@ -2164,7 +2164,7 @@ struct sc_zone *to;		/* The zone structure we want to fill in */
 	 */
 
 	to->sc_top = to->sc_arena = arena;
-	to->sc_flags = flags;
+	to->sc_flgs = flags;
 	to->sc_end = to->sc_arena + (flags & B_SIZE) + OVERHEAD;
 
 	/* This zone is now used for scavening, so it must be removed from the free

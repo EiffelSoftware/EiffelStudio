@@ -237,6 +237,12 @@ rt_public char *emalloc(uint32 type)
 	char *object;				/* Pointer to the freshly created object */
 	unsigned int nbytes;		/* Object's size */
 
+#ifdef EMCHK
+	printf("--- Start of emalloc (DT %d) ---\n",type);
+	memck(0);
+	printf("--- ------------------------ ---\n");
+#endif
+ 
 #ifdef WORKBENCH
 	if (System(type).cn_deferred) {	/* Cannot create deferred */
 		eraise(System(type).cn_generator, EN_CDEF);
@@ -261,7 +267,19 @@ rt_public char *emalloc(uint32 type)
 	if (!(gen_scavenge & GS_OFF) && nbytes <= GS_LIMIT && 0 == Disp_rout(type)) {
 		object = malloc_from_zone(nbytes);
 		if (object != (char *) 0)
-			return eif_set(object, nbytes, type);	/* Set for Eiffel use */
+			{
+#ifdef EMCHK
+			rt_public char *ret_val;
+
+			ret_val = eif_set(object, nbytes, type);	/* Set for Eiffel use */
+			printf("--- End of emalloc (malloc_from_zone) ---\n");
+			memck(0);
+			printf("--- --------------------------------- ---\n\n");
+			return ret_val;
+#else
+			return eif_set(object, nbytes, type);		/* Set for Eiffel use */
+#endif
+			}
 	}
 
 	/* Try an allocation in the free list, with garbage collection turned on.
@@ -272,15 +290,39 @@ rt_public char *emalloc(uint32 type)
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
 
 	if (object != (char *) 0)
-		return eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
-	
+		{
+#ifdef EMCHK
+		rt_public char *ret_val;
+
+		ret_val = eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
+		printf("--- End of emalloc (xmalloc) ---\n");
+		memck(0);
+		printf("--- ------------------------ ---\n\n");
+		return ret_val;
+#else
+		return eif_set(object, nbytes, type | EO_NEW);		/* Set for Eiffel use */
+#endif
+		}
+
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
 	object = xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
 
 	if (object != (char *) 0)
-		return eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
+		{
+#ifdef EMCHK
+		rt_public char *ret_val;
+
+		ret_val = eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
+		printf("--- End of emalloc (xmalloc after gen_scav) ---\n");
+		memck(0);
+		printf("--- --------------------------------------- ---\n\n");
+		return ret_val;
+#else
+		return eif_set(object, nbytes, type | EO_NEW);		/* Set for Eiffel use */
+#endif
+		}
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
@@ -288,6 +330,7 @@ rt_public char *emalloc(uint32 type)
 }
 
 rt_public char *spmalloc(unsigned int nbytes)
+
 {
 	/* Memory allocation for an Eiffel special object. It either succeeds or
 	 * raises the "No more memory" exception. The routine returns the pointer
@@ -993,6 +1036,9 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 #endif
 	SIGBLOCK;			/* Critical section starts */
 
+/* add ???? <= from Purify
+bzero (oldbrk, sizeof(struct chunk) + OVERHEAD);
+*/
 	/* Accounting informations */
 	m_data.ml_chunk++;
 	m_data.ml_total += asked;				/* Counts overhead */

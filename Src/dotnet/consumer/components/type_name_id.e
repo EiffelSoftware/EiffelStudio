@@ -9,7 +9,7 @@ feature {NONE} -- Implementation
 	types: ARRAY [STRING] is
 			-- types to be serialized.
 		once
-			create Result.make (1, 19)
+			create Result.make (1, 20)
 			Result.put ("CONSUMED_TYPE", 1)
 			Result.put ("CONSUMED_PROPERTY", 2)
 			Result.put ("CONSUMED_EVENT", 3)
@@ -29,6 +29,7 @@ feature {NONE} -- Implementation
 			Result.put ("NONE", 17)
 			Result.put ("CONSUMED_NESTED_TYPE", 18)
 			Result.put ("CONSUMED_LITERAL_FIELD", 19)
+			Result.put ("LOCAL_CACHE_INFO", 20)
 		ensure
 			non_void_types: Result /= Void
 		end

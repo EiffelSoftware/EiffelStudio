@@ -97,7 +97,7 @@ feature -- Properties
 			end;
 		end;
 
-	stone: STONE is
+	stone: EC_STONE is
 		deferred
 		end
 

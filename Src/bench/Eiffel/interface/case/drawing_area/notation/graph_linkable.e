@@ -77,7 +77,7 @@ feature -- Properties
 			valid_result: Result /= Void
 		end;
 
-	stone: STONE is
+	stone: EC_STONE is
 		do
 			Result := data.stone
 		end

@@ -49,7 +49,7 @@ feature {HOLE} -- Properties
 
 feature {HOLE} -- Access
 
-	compatible (dropped: STONE): BOOLEAN is 
+	compatible (dropped: EC_STONE): BOOLEAN is 
 			-- Is dropped stone compatible with the hole associated
 			-- to Current command?
 			--| Put here to avoid the need for specific heirs
@@ -69,7 +69,7 @@ feature -- Stone processing
 		--| do assignment attempts when a hole may accept several stones,
 		--| and which avoid doing the work done by `compatible' twice.
 
-	process_any (dropped: STONE) is
+	process_any (dropped: EC_STONE) is
 			-- Accept all stone types being dropped into the associated hole
 		require
 			valid_stone: dropped /= Void

@@ -72,7 +72,7 @@ feature -- Drag and drop
 			Result := active_entity.data
 		end;
 
-	stone: STONE;
+	stone: EC_STONE;
 			-- This is transported
 
 	want_initial_position: BOOLEAN is 

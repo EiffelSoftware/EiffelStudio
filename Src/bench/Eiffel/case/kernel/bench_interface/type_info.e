@@ -59,11 +59,11 @@ feature {TYPE_DECLARATION, GENERIC_DATA} -- Implementation
 			valid_result: Result /= Void
 		end;
 
-	dummy_stone (a_data: DATA; type_dec: TYPE_DECLARATION): STONE is
+	dummy_stone (a_data: DATA; type_dec: TYPE_DECLARATION): EC_STONE is
 		deferred
 		end;
 
-	stone (a_data: DATA; type_dec: TYPE_DECLARATION): STONE is
+	stone (a_data: DATA; type_dec: TYPE_DECLARATION): EC_STONE is
 		deferred
 		end;
 

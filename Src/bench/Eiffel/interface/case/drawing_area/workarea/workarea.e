@@ -97,7 +97,7 @@ feature -- Drag and drop
 			end
 		end
 
-	stone: STONE
+	stone: EC_STONE
 		-- Current Stone.
 
 	want_initial_position: BOOLEAN is

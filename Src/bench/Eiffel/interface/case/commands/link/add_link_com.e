@@ -168,11 +168,11 @@ feature -- Execution
 			context_data := void
 		end 
 
-stone_tmp : STONE
+stone_tmp : EC_STONE
 
 proc : PROCESS_WORKAREA_STONE
 
-set_special ( s: STONE; p : PROCESS_WORKAREA_STONE ) is
+set_special ( s: EC_STONE; p : PROCESS_WORKAREA_STONE ) is
 do
 	stone_tmp := s
 	proc := p

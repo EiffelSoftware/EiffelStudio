@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	stone (a_data: DATA): STONE is
+	stone (a_data: DATA): EC_STONE is
 			-- Stone representing Current data
 		deferred
 		end;

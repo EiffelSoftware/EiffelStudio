@@ -27,9 +27,46 @@ create
 
 feature {NONE} -- Initialization
 
-	build_edit_bar is
-			-- Build formatting buttons in `format_bar'.
+	build_edit_bar (a_toolbar: EV_BOX) is
 		local
+			b: EV_BUTTON
+		do
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Up_stack)
+			b.add_click_command (display_exception_cmd, display_exception_cmd.go_up)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Down_stack)
+			b.add_click_command (display_exception_cmd, display_exception_cmd.go_down)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Debug_status)
+			b.add_click_command (debug_status_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Debug_quit)
+			b.add_click_command (debug_quit_cmd, debug_quit_cmd.kill_it)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Exec_step)
+			b.add_click_command (step_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Exec_last)
+			b.add_click_command (step_out_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Exec_nostop)
+			b.add_click_command (nostop_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Debug_run)
+			b.add_click_command (debug_run_cmd, Void)
+		end
+
+--	build_edit_bar is
+--			-- Build formatting buttons in `format_bar'.
+--		local
 --			step_out_cmd: EXEC_LAST
 --			step_out_button: EB_BUTTON
 --			step_out_menu_entry: EB_MENU_ENTRY
@@ -58,7 +95,7 @@ feature {NONE} -- Initialization
 --			down_exception_stack_button: EB_BUTTON
 --			display_exception_menu_entry: EB_MENU_ENTRY
 --			do_nothing_cmd: DO_NOTHING_CMD
-		do
+--		do
 --			!! debug_run_cmd.make (Current)
 --			!! debug_run_button.make (debug_run_cmd, format_bar)
 --			!! debug_run_menu_entry.make (debug_run_cmd, menus @ debug_menu)
@@ -107,20 +144,7 @@ feature {NONE} -- Initialization
 --			!! nostop_button.make (nostop_cmd, format_bar)
 --			!! nostop_menu_entry.make (nostop_cmd, menus @ debug_menu)
 --			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry)
---
---			!! run_final_cmd.make (Current)
---			!! run_final_menu_entry.make (run_final_cmd, menus @ debug_menu)
---
---			!! sep1.make (Interface_names.t_empty, format_bar)
---			sep1.set_horizontal (False)
---
---			!! sep2.make (Interface_names.t_empty, format_bar)
---			sep2.set_horizontal (False)
---
---			!! sep3.make (Interface_names.t_empty, format_bar)
---			sep3.set_horizontal (False)
---
-		end
+--		end
 
 	init_commands is
 		do
@@ -433,7 +457,7 @@ feature -- Information
 				if root_class_name /= Void then
 					st.add_new_line
 					st.add_comment_text("ROOT CLASS    : ")
-					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
+					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(1).compiled_class
 					root_class_name.to_upper
 					st.add_classi(root_class_c.lace_class, root_class_name)
 

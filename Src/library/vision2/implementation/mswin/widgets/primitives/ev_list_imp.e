@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_LIST_I
+		undefine
+			pixmaps_size_changed
 		redefine	
 			interface, initialize, selected_item, selected_items, wipe_out
 		end
@@ -247,39 +249,45 @@ feature -- Status setting
 		local
 			item_imp: EV_LIST_ITEM_IMP
 		do
+				-- Do nothing if we are already sensitive.
+			if not is_sensitive then
 				-- If we had any selected items when calling `disable_sensitive' then
 				-- restore these to be selected again.
-			if selected_items_at_disable_sensitive /= Void then
-				from
-					selected_items_at_disable_sensitive.start
-				until
-					selected_items_at_disable_sensitive.off
-				loop
-					item_imp ?= selected_items_at_disable_sensitive.item.implementation
-					if has (item_imp.interface) then
-						internal_select_item (item_imp)
+				if selected_items_at_disable_sensitive /= Void then
+					from
+						selected_items_at_disable_sensitive.start
+					until
+						selected_items_at_disable_sensitive.off
+					loop
+						item_imp ?= selected_items_at_disable_sensitive.item.implementation
+						if has (item_imp.interface) then
+							internal_select_item (item_imp)
+						end
+						selected_items_at_disable_sensitive.forth
 					end
-					selected_items_at_disable_sensitive.forth
+					internal_selected_items_uptodate := False	
 				end
-				internal_selected_items_uptodate := False	
+				Precursor
+				invalidate
+				update
 			end
-			Precursor
-			invalidate
-			update
 		end
 
 	disable_sensitive is
 			-- Make object desensitive to user input.
 		do
-				-- Copy `selected_items' into `selected_items_at_disable_sensitive'
-			if selected_items /= Void then
-				selected_items_at_disable_sensitive := clone (selected_items)
+				-- Do nothing if we are already not sensitive.
+			if is_sensitive then
+					-- Copy `selected_items' into `selected_items_at_disable_sensitive'
+				if selected_items /= Void then
+					selected_items_at_disable_sensitive := clone (selected_items)
+				end
+				Precursor
+					-- We now remove the selection on all selected items.
+				clear_selection
+				invalidate
+				update
 			end
-			Precursor
-				-- We now remove the selection on all selected items.
-			clear_selection
-			invalidate
-			update
 		end
 		
 	set_background_color (color: EV_COLOR) is
@@ -503,12 +511,12 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		local
-			l_font: WEL_FONT
+			log_font: WEL_LOG_FONT
 		do
-			l_font := (create {WEL_SHARED_FONTS}).gui_font
+			log_font := wel_font.log_font
 			ev_set_minimum_size (
-				l_font.width.abs * 15 + 7, -- 15 characters wide
-				l_font.height.abs	* 3 + 7	 -- 3 characters tall
+				log_font.width.abs * 15 + 7, -- 15 characters wide
+				log_font.height.abs	* 3 + 7	 -- 3 characters tall
 				)
 		end
 

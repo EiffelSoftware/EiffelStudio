@@ -136,6 +136,16 @@ feature -- Settings
 			local_token_set: local_token = token
 		end
 		
+	increment_stack_depth (i: INTEGER) is
+			-- Increment current stack depth of `i'. Used for special cases
+			-- such as a catch block where the stack is automatically grown
+			-- of 1 element, the exception object.
+		require
+			valid_i: i > 0
+		do
+			update_stack_depth (1)
+		end
+		
 feature -- Opcode insertion
 
 	put_opcode (opcode: INTEGER_16) is
@@ -459,6 +469,9 @@ feature {NONE} -- Stack depth management
 			if current_stack_depth > max_stack then
 				max_stack := current_stack_depth
 			end
+		ensure
+			current_stack_depth_set: current_stack_depth = old current_stack_depth + delta
+			max_stack_set: max_stack >= current_stack_depth
 		end
 
 feature {NONE} -- Implementation

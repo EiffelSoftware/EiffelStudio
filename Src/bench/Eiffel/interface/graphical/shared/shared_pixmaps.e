@@ -11,7 +11,7 @@ inherit
 
 	EIFFEL_ENV
 	
-feature {NONE} 
+feature -- Access
 
 	bm_Breakpoint: PIXMAP is
 		once
@@ -297,31 +297,6 @@ feature {NONE}
 	bm_Filter: PIXMAP is
 		once
 			Result := pixmap_file_content ("filter");
-		end;
-
-	bm_Finalize: PIXMAP is
-		once
-			Result := pixmap_file_content ("finalize");
-		end;
-
-	bm_Font: PIXMAP is
-		once
-			Result := pixmap_file_content ("font");
-		end;
-
-	bm_Freeze: PIXMAP is
-		once
-			Result := pixmap_file_content ("freeze");
-		end;
-
-	bm_Grey_finalize: PIXMAP is
-		once
-			Result := pixmap_file_content ("gfinaliz")
-		end;
-
-	bm_Grey_font: PIXMAP is
-		once
-			Result := pixmap_file_content ("gfont")
 		end;
 
 	bm_Hide_object: PIXMAP is

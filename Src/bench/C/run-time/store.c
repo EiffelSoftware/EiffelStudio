@@ -10,6 +10,7 @@
 	Eiffel storing mechanism.
 */
 
+#include <assert.h>
 #include "eif_project.h" /* for egc_ce_gtype */
 #include "eif_config.h"
 #include "eif_portable.h"
@@ -71,7 +72,6 @@ rt_public void ist_write(char *object);
 rt_public void gst_write(char *object);
 rt_public void make_header(void);				/* Make header */
 rt_public void imake_header(void);				/* Make header */
-rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
 rt_private void st_write_cid (uint32);
@@ -378,11 +378,11 @@ rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
 	char *buffer;
 	char **real_buffer;
 
-	buffer = (char *) malloc(stream_size);
+	buffer = (char *) eif_malloc(stream_size);
 	if (buffer == (char *) 0) 
 		enomem ();
 	else {
-		real_buffer = (char **) malloc (sizeof (char *));
+		real_buffer = (char **) eif_malloc (sizeof (char *));
 		if (real_buffer == (char **) 0)
 			enomem ();
 		else
@@ -808,6 +808,9 @@ rt_private void gen_object_write(char *object)
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 
 			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
@@ -816,22 +819,22 @@ rt_private void gen_object_write(char *object)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0); /* must be generic. */
+
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
+				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
+
 	
 			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {
@@ -985,6 +988,9 @@ rt_private void object_write(char *object)
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen, dgen_typ;
+			int16 *gt_type;
+			int32 *gt_gen;
+			int nb_gen;
 			struct gt_info *info;
 
 			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
@@ -993,26 +999,24 @@ rt_private void object_write(char *object)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			assert (info != (struct gt_info *) 0);	/* Must be generic. */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-				int16 *gt_type = info->gt_type;
-				int32 *gt_gen;
-				int nb_gen = info->gt_param;
-	
-				for (;;) {
+			gt_type = info->gt_type;
+			nb_gen = info->gt_param;
+
+			for (;;) {
 #if DEBUG &1
-					if (*gt_type == SK_INVALID)
-						eif_panic("corrupted cecil table");
+				if (*gt_type == SK_INVALID)
+					eif_panic("corrupted cecil table");
 #endif
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-						break;
-				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					break;
 			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dgen = *gt_gen;
 	
 			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {

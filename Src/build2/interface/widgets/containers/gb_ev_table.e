@@ -585,18 +585,17 @@ feature {NONE} -- Implementation
 					if not resizing_widget then
 						set_all_pointer_styles (sizenesw_cursor)	
 					end
---				elseif close_to_line (x, y, widget.y_position + widget.height, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) or
---					close_to_line (x, y, widget.y_position, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
---					if not resizing_widget then
---						set_all_pointer_styles (sizens_cursor)	
---					end
---				elseif close_to_line (y, x, widget.x_position, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) or
---					close_to_line (y, x, widget.x_position + widget.width, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) then
---					if not resizing_widget then
---						set_all_pointer_styles (sizewe_cursor)	
---					end
+				elseif close_to_line (x, y, end_row_position, column_position + accuracy_value, end_column_position - accuracy_value) or
+					close_to_line (x, y, row_position, column_position + accuracy_value, end_column_position - accuracy_value) then
+					if not resizing_widget then
+						set_all_pointer_styles (sizens_cursor)	
+					end
+				elseif close_to_line (y, x, column_position, row_position + accuracy_value, end_row_position - accuracy_value) or
+					close_to_line (y, x, end_column_position, row_position + accuracy_value, end_row_position - accuracy_value) then
+					if not resizing_widget then
+						set_all_pointer_styles (sizewe_cursor)	
+					end
 				elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
-
 					if not resizing_widget then
 						set_all_pointer_styles (sizeall_cursor)	
 					end
@@ -661,29 +660,18 @@ feature {NONE} -- Implementation
 				new_y := y - ((y - y_offset) \\ grid_size)	
 				x := ((new_x - x_offset) // grid_size + 1).min (first.columns - first.item_column_span (selected_item) + 1).max (1)
 				y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
---				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) and
---					first.area_clear_excluding_widget (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
---					set_item_position_and_span (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item))
---					draw_greyed_widget := False
---				else
---					draw_greyed_widget := True
---					grey_x := x * grid_size + diagram_border
---					grey_y := y * grid_size + diagram_border
---					grey_x_span := first.item_column_span (selected_item) * grid_size + diagram_border
---					grey_y_span := first.item_row_span (selected_item) * grid_size + diagram_border
---				end
 				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) then
 					if
-					first.area_clear_excluding_widget (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
-					set_item_position_and_span (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item))
-					draw_greyed_widget := False
-				else
-					draw_greyed_widget := True
-					grey_x := x - 1
-					grey_y := y - 1
-					grey_x_span := first.item_column_span (selected_item)
-					grey_y_span := first.item_row_span (selected_item)
-				end
+						first.area_clear_excluding_widget (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
+						set_item_position_and_span (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item))
+						draw_greyed_widget := False
+					else
+						draw_greyed_widget := True
+						grey_x := x - 1
+						grey_y := y - 1
+						grey_x_span := first.item_column_span (selected_item)
+						grey_y_span := first.item_row_span (selected_item)
+					end
 				end
 				draw_widgets
 			end
@@ -815,23 +803,22 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 						x_offset := column_span
 						y_offset := 0
 						x_scale := 1; y_scale := 1
---					elseif close_to_line (x, y, widget.y_position + widget.height, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
---						x_offset := x - widget.x_position
---						y_offset := widget.height
---						x_scale := 0; y_scale := 1
---					elseif close_to_line (x, y, widget.y_position, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
---						x_offset := x
---						y_offset := 0
---						x_scale := 0; y_scale := 1
---					elseif close_to_line (y, x, widget.x_position, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) then
---						x_offset := 0
---						y_offset := y
---						x_scale := 1; y_scale := 0
---					elseif close_to_line (y, x, widget.x_position + widget.width, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) then
---						x_offset := widget.width
---						y_offset := y
---						x_scale := 1; y_scale := 0
---					--elseif
+					elseif close_to_line (x, y, end_row_position, column_position + accuracy_value, end_column_position - accuracy_value) then
+						x_offset := x - column_position
+						y_offset := row_span
+						x_scale := 0; y_scale := 1
+					elseif close_to_line (x, y, row_position, column_position + accuracy_value, end_column_position - accuracy_value) then
+						x_offset := x
+						y_offset := 0
+						x_scale := 0; y_scale := 1
+					elseif close_to_line (y, x, column_position, row_position + accuracy_value, end_row_position - accuracy_value) then
+						x_offset := 0
+						y_offset := y
+						x_scale := 1; y_scale := 0
+					elseif close_to_line (y, x, end_column_position, row_position + accuracy_value, end_row_position - accuracy_value) then
+						x_offset := column_span
+						y_offset := y
+						x_scale := 1; y_scale := 0
 					elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
 						moving_widget := True
 						resizing_widget := False

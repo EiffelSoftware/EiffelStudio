@@ -39,21 +39,22 @@ feature {GB_XML_STORE} -- Output
 		do
 			gauge ?= default_object_by_type (class_name (first))
 			
-			if gauge.value /= first.value or object.constants.item (type + Value_string) /= Void then
+			if gauge.value /= first.value or uses_constant (Value_string) then
 				add_integer_element (element, Value_string, objects.first.value)
 			end
-			if gauge.step /= first.step or object.constants.item (type + Step_string) /= Void then
+			if gauge.step /= first.step or uses_constant (Step_string) then
 				add_integer_element (element, Step_string, objects.first.step)
 			end
-			if gauge.leap /= first.leap or object.constants.item (type + leap_string) /= Void then
+			if gauge.leap /= first.leap or uses_constant (Leap_string) then
 				add_integer_element (element, Leap_string, objects.first.leap)
 			end
 				-- We always store the lower and upper values for the value range, as it is much easier to
 				-- restore them if we know they are always together. We need them in pairs for the
 				-- restoration anyway.
-			if gauge.value_range.lower /= first.value_range.lower or gauge.value_range.upper /= first.value_range.upper then
-				add_element_containing_integer (element, Lower_string, objects.first.value_range.lower)
-				add_element_containing_integer (element, Upper_string, objects.first.value_range.upper)
+			if gauge.value_range.lower /= first.value_range.lower or gauge.value_range.upper /= first.value_range.upper
+			or uses_constant (Lower_string) or uses_constant (Upper_string) then		
+				add_integer_element (element, Lower_string, objects.first.value_range.lower)
+				add_integer_element (element, Upper_string, objects.first.value_range.upper)
 			end
 		end
 		
@@ -74,7 +75,7 @@ feature {GB_XML_STORE} -- Output
 				check
 					info_not_void: element_info2 /= Void
 				end
-				create interval.make (element_info2.data.to_integer, element_info.data.to_integer)
+				create interval.make (retrieve_and_set_integer_value (Lower_string), retrieve_and_set_integer_value (Upper_string))
 				first.value_range.adapt (interval)
 				(objects @ 2).value_range.adapt (interval)
 			end

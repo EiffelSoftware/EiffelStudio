@@ -39,7 +39,7 @@ inherit
 	HOLE
 		redefine
 			compatible, process_type, process_context,
-			process_attribute
+			process_attribute, process_instance
 		select
 			init_toolkit
 		end
@@ -336,7 +336,38 @@ feature -- Hole
 			Result :=
 				st.stone_type = Stone_types.attribute_type or else
 				st.stone_type = Stone_types.context_type or else
-				st.stone_type = Stone_types.type_stone_type
+				st.stone_type = Stone_types.type_stone_type or else
+				st.stone_type = Stone_types.command_type	
+		end
+
+	process_instance (dropped: CMD_INST_STONE) is
+			-- Add command associated to `dropped' in current
+			-- state defined on the main panel.
+		local
+			the_stone: COMMAND_TOOL_HOLE
+			the_behavior: BEHAVIOR
+		do
+			the_stone ?= dropped
+			find
+			if found and then the_stone /= Void then
+				if main_panel.current_state = Void then
+					main_panel.set_current_state (app_editor.initial_state_circle.data)
+				end
+				main_panel.current_state.find_input (element.data)
+				if main_panel.current_state.after then					
+					!! the_behavior.make
+					the_behavior.set_context (element.data)
+					the_behavior.set_internal_name ("")
+					main_panel.current_state.add (element.data, the_behavior)
+				else
+					the_behavior := main_panel.current_state.output.data
+				end
+				the_behavior.set_input_data (element.data.default_event)
+				the_behavior.set_output_data (the_stone.data)
+				the_behavior.drop_pair
+				the_behavior.reset_input_data
+				the_behavior.reset_output_data
+			end
 		end
 
 	process_attribute (dropped: ATTRIB_STONE) is

@@ -82,6 +82,31 @@ char *tagged_out;       /* String where the tagged out is written */
 int tagged_max;         /* Actual maximum size of `tagged_out' */
 int tagged_len;         /* Actual length of `tagged_out' */
 
+
+		/* malloc.c */
+	struct emallinfo m_data;		/* general information about the memory */
+	struct emallinfo c_data;		/* Informations on C memory */
+	struct emallinfo e_data;		/* Informations on Eiffel memory */
+	struct ck_list cklst;			/* Record head and tail of the chunk list */
+	union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */
+	union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */
+	union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */
+	union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */
+	struct sc_zone sc_from;				/* Scavenging 'from' zone */
+	struct sc_zone sc_to;				/* Scavenging 'to' zone */
+	uint32 gen_scavenge;				/* Generation scavenging to be set */
+	long eiffel_usage;					/* Monitor Eiffel memory usage */
+	uint32 *type_use;					/* Object usage table by dynamic type */
+	uint32 c_mem;						/* C memory used (bytes) */
+
+		/* memory.c */
+	int m_largest;						/* Size of the largest coalesced block */
+	struct emallinfo mem_stats;			/* Memory usage.*/
+	struct gacstat gc_stats;			/* GC statistics.*/
+	long gc_count;						/* GC statistics.*/
+
+
+
 } eif_global_context_t;
 
 
@@ -109,9 +134,9 @@ int tagged_len;         /* Actual length of `tagged_out' */
 
 #endif
 
-#define op_stack          (eif_globals->op_stack)         /* rt_shared */
+#define op_stack	          (eif_globals->op_stack)         /* rt_shared */
 #define IC                    (eif_globals->IC)               /* rt_public */
-#define iregs             (eif_globals->iregs)            /* rt_private */
+#define iregs			      (eif_globals->iregs)            /* rt_private */
 #define iregsz                (eif_globals->iregsz)           /* rt_private */
 #define argnum                (eif_globals->argnum)           /* rt_private */
 #define locnum                (eif_globals->locnum)           /* rt_private */
@@ -121,13 +146,36 @@ int tagged_len;         /* Actual length of `tagged_out' */
 #define nstcall               (eif_globals->nstcall)          /* rt_public */
 #define inv_mark_tablep       (eif_globals->inv_mark_tablep)  /* rt_private */
  
-#define delta             (eif_globals->delta)            /* rt_private */
+#define delta				  (eif_globals->delta)            /* rt_private */
 #define darray                (eif_globals->darray)           /* rt_private */
 
 #define buffero               (eif_globals->buffero)          /* rt_private */
 #define tagged_out            (eif_globals->tagged_out)       /* rt_private */
 #define tagged_max            (eif_globals->tagged_max)       /* rt_private */
 #define tagged_len            (eif_globals->tagged_len)       /* rt_private */
+
+	/* malloc.c */
+#define m_data					(eif_globals->m_data)         /* rt_shared */
+#define c_data					(eif_globals->c_data)         /* rt_shared */
+#define e_data					(eif_globals->e_data)         /* rt_shared */
+#define cklst					(eif_globals->cklst)		  /* rt_shared */
+#define c_hlist					(eif_globals->c_hlist)		  /* rt_private */
+#define e_hlist					(eif_globals->e_hlist)		  /* rt_private */
+#define c_buffer				(eif_globals->c_buffer)		  /* rt_private */
+#define e_buffer				(eif_globals->e_buffer)		  /* rt_private */
+#define sc_from					(eif_globals->sc_from)        /* rt_shared */
+#define sc_to					(eif_globals->sc_to)		  /* rt_shared */
+#define gen_scavenge			(eif_globals->gen_scavenge)	  /* rt_shared */
+#define eiffel_usage			(eif_globals->eiffel_usage)   /* rt_public */
+#define type_use				(eif_globals->type_use)		  /* rt_private */
+#define c_mem					(eif_globals->c_mem)		  /* rt_private */
+
+	/* memory.c */
+#define m_largest				(eif_globals->m_largest)	  /* rt_private */
+#define mem_stats				(eif_globals->mem_stats)	  /* rt_private */
+#define gc_stats				(eif_globals->gc_stats)		  /* rt_private */
+#define gc_count				(eif_globals->gc_count)		  /* rt_private */
+
 
 
 #else
@@ -140,6 +188,7 @@ int tagged_len;         /* Actual length of `tagged_out' */
 #define EIF_STATIC_OPT static
 
 #define EIF_GET_CONTEXT
+#define EIF_END_GET_CONTEXT
 
 
 	/* except.c */
@@ -161,6 +210,19 @@ extern struct opstack op_stack;
 
 /* plug.c */
 extern int nstcall;
+
+
+	/* malloc.h */
+extern struct emallinfo m_data;		/* Accounting info from malloc */
+extern struct emallinfo c_data;		/* Accounting info from malloc for C */
+extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */
+extern struct ck_list cklst;		/* Head and tail of chunck list */
+extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
+extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
+extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
+extern long eiffel_usage;			/* For memory statistics */
+
+
 
 #endif	/* EIF_REENTRANT */
 

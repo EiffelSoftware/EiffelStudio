@@ -375,9 +375,7 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
-			Eifnet_debugger.stop_dbg_timer
-			Eifnet_debugger_info.set_controller (Void)
-			Eifnet_debugger_info.reset
+			Eifnet_debugger.terminate_debugger_session
 		end
 		
 feature -- Controle execution
@@ -388,7 +386,7 @@ feature -- Controle execution
 		do
 			debug ("debugger_trace_operation")
 				print ("%N%N")
-				print ("/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\%N")				
+				print ("/\/\/\/\/\/\  Process before running  /\/\/\/\/\/\/\/\/\%N")				
 				print ("%N%N")
 			end
 			

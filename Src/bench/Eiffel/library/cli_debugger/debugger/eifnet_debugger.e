@@ -155,6 +155,15 @@ feature -- Initialization
 			
 feature -- Termination ...
 
+	terminate_debugger_session is
+			-- Terminate debugging session and clean what need to be cleaned
+		do
+			stop_dbg_timer
+			terminate_dbg_synchronisation
+			eifnet_debugger_info.set_controller (Void)
+			eifnet_debugger_info.reset			
+		end		
+
 	terminate_debugger is
 			-- Terminate the debugging session
 		require

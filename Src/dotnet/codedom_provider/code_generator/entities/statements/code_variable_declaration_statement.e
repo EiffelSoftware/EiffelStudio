@@ -61,17 +61,6 @@ feature -- Code generation
 			end
 		end
 
-	declaration_code: STRING is
-			-- Result := "name: TYPE"
-		do
-			create Result.make (100)
-			Result.append (Indent_string)
-			Result.append (variable.eiffel_name)
-			Result.append (": ")
-			Result.append (variable.type.eiffel_name)
-			Result.append ("%N")
-		end
-		
 invariant
 	non_void_variable: variable /= Void
 	

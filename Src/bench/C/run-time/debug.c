@@ -144,21 +144,29 @@ rt_shared struct opstack cop_stack = {
 };
 #endif /* !EIF_THREADS */
 
-#ifdef WORKBENCH
 rt_shared struct dbglobalinfo d_globaldata = {
 	0,				/* db_discard_breakpoints */
 	NULL			/* db_bpinfo */
-#ifdef EIF_THREADS
-	,NULL			/* db_mutex */
-#endif /* EIF_THREADS */
 };
-#endif /* WORKBENCH */
 
 #ifdef EIF_THREADS
-#define DBGMTX_CREATE 	EIF_MUTEX_CREATE(d_globaldata.db_mutex, "Cannot create mutex for the debugger [dbreak]\n")
-#define DBGMTX_DESTROY	EIF_MUTEX_DESTROY(d_globaldata.db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n")
-#define DBGMTX_LOCK   	EIF_MUTEX_LOCK(d_globaldata.db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
-#define DBGMTX_UNLOCK 	EIF_MUTEX_UNLOCK(d_globaldata.db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n")
+rt_shared EIF_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
+#endif /* EIF_THREADS */
+
+#ifdef EIF_THREADS
+#define DBGMTX_CREATE \
+	EIF_MUTEX_CREATE(db_mutex, "Cannot create mutex for the debugger [dbreak]\n")
+#define DBGMTX_DESTROY \
+	EIF_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
+#define DBGMTX_LOCK	\
+	EIF_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
+#define DBGMTX_UNLOCK \
+	EIF_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
+#else
+#define DBGMTX_CREATE 
+#define DBGMTX_DESTROY 
+#define DBGMTX_LOCK 
+#define DBGMTX_UNLOCK 
 #endif
 
 /* Context set up */
@@ -432,32 +440,26 @@ rt_private int should_be_interrupted(void)
 rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
-	{
+{
 	/* update execution stack with current line number, i.e. offset */
 	exvect->ex_linenum = break_index;
 			
-	if (debug_mode)
-		{
+	if (debug_mode) {
 		EIF_GET_CONTEXT	/* Not declared at the beggining because we only need it here.
 						 * As dstop is called even when the application is not launched
-						 * from Ebench, we can avoid the execution of this declaration
+						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-#ifdef EIF_THREADS
 		DBGMTX_LOCK;	/* Enter critical section */
-#endif
 									
-		if (!d_globaldata.db_discard_breakpoints) /* test the 'discard_breakpoint' flag */
-			{
+		if (!d_globaldata.db_discard_breakpoints) { /* test the 'discard_breakpoint' flag */
 			int bodyid = exvect->ex_bodyid;
 			
-			if (d_data.db_stepinto_mode /* test stepinto flag */
-				||
-				d_data.db_callstack_depth<d_data.db_callstack_depth_stop /* test the stack depth */
-				||
-				is_dbreak_set(bodyid, break_index)	/* test the presence of a breakpoint */
-			   )
-				{
+			if
+				(d_data.db_stepinto_mode /* test stepinto flag */
+				|| d_data.db_callstack_depth<d_data.db_callstack_depth_stop /* test the stack depth */
+				|| is_dbreak_set(bodyid, break_index))	/* test the presence of a breakpoint */
+			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
 				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
 				dbreak(PG_BREAK);		 			/* stop the application */
@@ -465,67 +467,63 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 				/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
 				previous_break_index = break_index;
-				}
-			else if (should_be_interrupted())
-				{
-				if (dinterrupt())	/* Ask daemon whether application should be interrupted here.*/
-					{
-					/* update previous value for next call */
+			} else if (should_be_interrupted()) {
+				if (dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
+						/* update previous value for next call */
 					previous_bodyid = bodyid;
 					previous_break_index = break_index;
-					}
 				}
 			}
-#ifdef EIF_THREADS
-		DBGMTX_UNLOCK; /* Leave critical section */
-#endif
 		}
+		DBGMTX_UNLOCK; /* Leave critical section */
 	}
+}
 
 /* dstop for nested calls */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
-	{
+{
 	int bodyid;
 
-	if (debug_mode)
-		{	
+	if (debug_mode) {	
 		EIF_GET_CONTEXT	/* Not declared at the beggining because we only need it here.
 	   					* As dstop if called even when the application is not launched
-	   					* with Ebench, we can avoid the execution of this declaration
+	   					* with Estudio, we can avoid the execution of this declaration
 	   					* when the application is started from the command line
 	   					*/
 
-#ifdef EIF_THREADS
 		DBGMTX_LOCK;	/* Enter critical section */
-#endif
 						
-		if (d_globaldata.db_discard_breakpoints) /* test the 'discard_breakpoint' flag */
+		if (d_globaldata.db_discard_breakpoints) { /* test the 'discard_breakpoint' flag */
+			DBGMTX_UNLOCK; /* Leave critical section */
 			return;
+		}
 
 		bodyid = exvect->ex_bodyid;
 			
 		/* test if we are in a middle of a qualified call, if so, ignore stop */
-		if (previous_bodyid==bodyid && previous_break_index==break_index)
+		if (previous_bodyid==bodyid && previous_break_index==break_index) {
+			DBGMTX_UNLOCK; /* Leave critical section */
 			return;
+		}
 			
-		if (d_data.db_stepinto_mode || /* test stepinto flag */
-			d_data.db_callstack_depth<d_data.db_callstack_depth_stop) /* test the stack depth */
-			{
-			d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
+		if 
+			(d_data.db_stepinto_mode /* test stepinto flag */
+			|| d_data.db_callstack_depth<d_data.db_callstack_depth_stop) /* test the stack depth */
+		{
+			d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
+												   already cleared */
 			d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
 			dbreak(PG_BREAK);		 			/* stop the application */
-			}
-		/* we don't test the other case: breakpoint & interruption to avoid stopping in the middle of a
-		 * nested call
-		 */
-
-#ifdef EIF_THREADS
-		DBGMTX_UNLOCK; /* Leave critical section */
-#endif
 		}
+
+		/* we don't test the other case: breakpoint & interruption to avoid
+		 * stopping in the middle of a nested call */
+
+		DBGMTX_UNLOCK; /* Leave critical section */
 	}
+}
 /*************************************************************************************************************************
 * Breakpoints handling.
 *************************************************************************************************************************/
@@ -819,10 +817,9 @@ rt_public void dbreak_create_table(void)
 	{
 	EIF_GET_CONTEXT
 
-#ifdef EIF_THREADS
-	/* create the mutex used to access the table safely between threads */
+		/* create the mutex used to access the table safely between threads */
 	DBGMTX_CREATE;
-#endif
+
 	/* allocate memory for BP_TABLE_SIZE pointers */
 	d_globaldata.db_bpinfo = (struct db_bpinfo **)cmalloc(BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
 	if (d_globaldata.db_bpinfo == NULL)

@@ -113,6 +113,22 @@ feature {NONE} -- Implementation
 			Result := parent_imp /= Void and then parent_imp.item_exists (id)
 		end
 
+	--|FIXME implement as now pick and dropable
+
+	set_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	release_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	on_activate is
@@ -150,6 +166,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/10 00:32:20  rogers
+--| Added set_capture and release_capture with a fixme and a check False so they compile. They need to be fixed.
+--|
 --| Revision 1.30  2000/02/25 20:28:49  brendel
 --| Added function has_parent. Calls with target parent_imp are now protected
 --| using this conditional.

@@ -66,6 +66,23 @@ feature -- Access
 				end
               end
 
+
+--|FIXME implement as now pick and dropable
+
+	set_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	release_capture is
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
 feature -- Status report
 
 	text: STRING
@@ -198,6 +215,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/10 00:32:00  rogers
+--| Added set_capture and release_capture with a fixme and a check False so they compile. They need to be fixed.
+--|
 --| Revision 1.30  2000/03/02 16:58:33  rogers
 --| Set_text now sets the text to a clone of the passed text.
 --|

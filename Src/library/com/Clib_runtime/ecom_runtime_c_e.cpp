@@ -365,7 +365,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJE
 
 	set_item = (EIF_SET_REAL_ITEM)eif_procedure ("set_item", type_id);
 
-	set_item (eif_access (result), *a_real);
+	set_item (eif_access (result), (EIF_REAL)*a_real);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);

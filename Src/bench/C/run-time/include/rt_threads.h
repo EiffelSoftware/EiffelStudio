@@ -567,6 +567,44 @@ extern "C" {
 
 #endif	/* end of POSIX, WIN32, SOLARIS_THREADS, VXWORKS... */
 
+/* Let's define low level efficient mutexes */
+#ifdef EIF_WIN32
+	/* We use Windows Critical section here */
+#define EIF_LW_MUTEX_TYPE	CRITICAL_SECTION
+#define EIF_LW_MUTEX_CREATE(m,msg) \
+    	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
+		InitializeCriticalSection(m);
+#define EIF_LW_MUTEX_LOCK(m,msg) \
+		EnterCriticalSection(m);
+#define EIF_LW_MUTEX_UNLOCK(m,msg) \
+		LeaveCriticalSection(m);
+#define EIF_LW_MUTEX_DESTROY(m,msg) \
+		DeleteCriticalSection(m); \
+		eif_free(m);
+
+#elif defined(SOLARIS_THREADS)
+	/* We use Solaris lwp_mutex hrere */
+#define EIF_LW_MUTEX_TYPE	lwp_mutex_t
+#define EIF_LW_MUTEX_CREATE(m,msg) \
+    	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE));
+#define EIF_LW_MUTEX_LOCK(m,msg) \
+		if (_lwp_mutex_lock(m)) \
+			eraise (msg, EN_EXT);
+#define EIF_LW_MUTEX_UNLOCK(m,msg) \
+		if (_lwp_mutex_unlock(m) \
+			eraise (msg, EN_EXT);
+#define EIF_LW_MUTEX_DESTROY(m,msg) \
+		eif_free(m);
+
+#else
+	/* We use default mutex implementation here */
+#define EIF_LW_MUTEX_TYPE EIF_MUTEX_TYPE
+#define EIF_LW_MUTEX_CREATE(m,msg)		EIF_MUTEX_CREATE
+#define EIF_LW_MUTEX_LOCK(m,msg)		EIF_MUTEX_LOCK
+#define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK
+#define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY
+#endif
+
 #endif	/* EIF_THREADS */
 
 #ifdef __cplusplus

@@ -24,12 +24,12 @@
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
 			<HEAD>Dynamic data</HEAD>
-			<TEXT>build_window__height<INTEGER>640</INTEGER></TEXT>
-			<TEXT>build_window__width<INTEGER>480</INTEGER></TEXT>
+			<TEXT>build_window__width<INTEGER>640</INTEGER></TEXT>
+			<TEXT>build_window__height<INTEGER>480</INTEGER></TEXT>
 			<TEXT>build_window__x_position<INTEGER>200</INTEGER></TEXT>
 			<TEXT>build_window__y_position<INTEGER>200</INTEGER></TEXT>
 			<TEXT>main_split__position<INTEGER>100</INTEGER></TEXT>
-			<TEXT>tool_order<LIST_STRING>typeselector_normal_200_200;componentselector_normal_200_200;windowselector_normal_200_200</LIST_STRING></TEXT>
+			<TEXT>tool_order<LIST_STRING>typeselector_normal_100_100;componentselector_normal_100_100;windowselector_normal_100_100</LIST_STRING></TEXT>
 			<TEXT>external_tool_order<LIST_STRING></LIST_STRING></TEXT>
 			<TEXT>tip_of_day_index<INTEGER>1</INTEGER></TEXT>
 			<TEXT>recent_projects<LIST_STRING></LIST_STRING></TEXT>

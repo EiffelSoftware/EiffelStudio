@@ -146,16 +146,14 @@ feature
 		local
 			entry: T
 			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
 		do
 			from
-				local_copy := Current
 				i := lower
 				nb := max_position
 			until
 				Result > 0
 			loop
-				entry := local_copy.array_item (i)
+				entry := array_item (i)
 				if entry.used then
 					Result := entry.type_id
 				end
@@ -171,16 +169,14 @@ feature
 		local
 			entry: T
 			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
 		do
 			from
-				local_copy := Current
 				i := max_position
 				nb := lower
 			until
 				Result > 0
 			loop
-				entry := local_copy.array_item (i)
+				entry := array_item (i)
 				if entry.used then
 					Result := entry.type_id
 				end
@@ -192,16 +188,14 @@ feature
 			-- Is the table effectively used ?
 		local
 			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
 		do
 			from
-				local_copy := Current
 				i := lower
 				nb := max_position
 			until
 				Result or else i > nb
 			loop
-				Result := local_copy.array_item(i).used
+				Result := array_item(i).used
 				i := i + 1
 			end;	
 		end
@@ -240,14 +234,12 @@ feature
 			positive: type_id > 0
 		local
 			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
 		do
 			from
-				local_copy := Current
 				i := binary_search (type_id)
 				nb := max_position
 			until
-				local_copy.array_item(i).used or else i = nb
+				array_item(i).used or else i = nb
 			loop
 				i := i + 1
 			end
@@ -266,20 +258,18 @@ feature
 			not_empty: not is_empty
 		local
 			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
 			first_type, this_type: TYPE_I
 		do
 			from
-				local_copy := Current
 				i := lower
-				first_type := local_copy.array_item (i).type
+				first_type := array_item (i).type
 				i := i + 1
 				nb := max_position
-				Result := true
+				Result := True
 			until
 				i > nb or else not Result
 			loop
-				this_type := local_copy.array_item (i).type
+				this_type := array_item (i).type
 				Result := (first_type = Void and then this_type = Void)
 						or else ((first_type /= Void and then this_type /= Void)
 						and then first_type.is_identical (this_type)
@@ -293,10 +283,8 @@ feature
 		local
 			i, j, nb, index: INTEGER
 			entry: T
-			local_copy: POLY_TABLE [T]
 			c_name: STRING
 		do
-			local_copy := Current
 
 				-- First generate type arrays for generic types.
 			c_name := Encoder.type_table_name (rout_id)
@@ -309,7 +297,7 @@ feature
 			until
 				i > nb
 			loop
-				entry := local_copy.array_item (index);
+				entry := array_item (index);
 				if i = entry.type_id then
 					if entry.is_generic then
 						buffer.putstring ("static int16 ");
@@ -340,7 +328,7 @@ feature
 			until
 				i > nb
 			loop
-				entry := local_copy.array_item (index)
+				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
 						buffer.putstring (c_name);
@@ -372,7 +360,7 @@ feature
 			until
 				i > nb
 			loop
-				entry := local_copy.array_item (index)
+				entry := array_item (index)
 				if i = entry.type_id then
 					buffer.putint (entry.feature_type_id - 1)
 					buffer.putstring (",%N")
@@ -539,11 +527,9 @@ feature {NONE} -- Implementation of quick sort algorithm
 			up, down : INTEGER
 			x: INTEGER
 			temp: T 
-			local_copy: POLY_TABLE [T]
 		do
-			local_copy := Current
 				-- Define the pivot value as the first element of table
-			x := local_copy.array_item (min).type_id
+			x := array_item (min).type_id
 
 				-- Initialize UP to first
 			up := min
@@ -559,7 +545,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 					-- greater than the pivot value
 				from
 				until
-					up >= max or else local_copy.array_item (up).type_id > x
+					up >= max or else array_item (up).type_id > x
 				loop
 					up := up + 1
 				end
@@ -568,7 +554,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 					-- lesser than or equal to the pivot
 				from
 				until
-					local_copy.array_item (down).type_id <= x
+					array_item (down).type_id <= x
 				loop
 					down := down - 1
 				end
@@ -576,14 +562,14 @@ feature {NONE} -- Implementation of quick sort algorithm
 				if up < down then
 						-- If up < down  exchange their values until up
 						-- meets or passes down
-					temp := local_copy.array_item (up)
-					put (local_copy.array_item (down), up)
+					temp := array_item (up)
+					put (array_item (down), up)
 					put (temp, down)
 				end
 			end
 
-			temp := local_copy.array_item (down)
-			put (local_copy.array_item (min), down)
+			temp := array_item (down)
+			put (array_item (min), down)
 			put (temp, min)
 			Result := down
 		end
@@ -594,20 +580,18 @@ feature {NONE} -- Implementation
 			-- Return position where `type_id' is in POLY_TABLE.
 		local
 			i, j, m: INTEGER
-			local_copy: POLY_TABLE [T]
 		do
-			local_copy := Current
 			j := max_position
 			if j = 1 then
 				Result := 1
 			else
 				from
-					i := local_copy.lower
+					i := lower
 				until
 					i = j
 				loop
 					m := (i + j) // 2 + 1
-					if local_copy.array_item (m).type_id > type_id then
+					if array_item (m).type_id > type_id then
 						j := j - 1
 					else
 						i := m

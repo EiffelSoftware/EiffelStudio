@@ -266,7 +266,9 @@ feature {NONE} -- Implementation
 				if remembered_list.has (s) then
 					remembered_list.start
 					remembered_list.prune (s)
+					remembered_list.compare_references
 					remembered_list.extend (Void)
+					remembered_list.compare_objects
 				end
 				if not remembered_list.empty then
 					from

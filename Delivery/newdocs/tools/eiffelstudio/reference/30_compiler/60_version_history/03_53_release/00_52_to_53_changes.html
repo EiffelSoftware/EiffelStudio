@@ -30,6 +30,11 @@
         
         <ul>
           <li>Made `\\' follow the balancing rules for various integer types.</li>
+          <li>Precompiled libraries now precompiles all classes reachable from 
+          clusters defined in project settings only if root class is ANY, 
+          otherwise it will only precompile classes reachable from the root 
+          class. In 5.1 and prior version it was precompiling all classes 
+          reachable from clusters.</li>
 </ul>
         
         
@@ -58,6 +63,18 @@
           <li>Fixed issue in melted code where computation such as <span class="eclass">INTEGER_X</span> // 
           <span class="eclass">INTEGER_Y</span> will either crash or give an incorrect computation where X 
           and Y represents integers that are either 8, 16, 32 or 64 bits long and X &lt; Y.</li>
+          <li>Fixed incorrect C code generation of finalized code when your 
+          project configuration includes a precompiled library and that you 
+          cancel finalization process at degree -2, and then restart a 
+          finalization.</li>
+          <li>Fixed issue in IL code generation where having a class that 
+          inherits from a non-Eiffel .NET class. And the class has the following 
+          features:<br>
+          <pre>	<span class="efeature">a</span>: <span class="eclass">ARRAY</span> [<span class="ekeyword">like</span> <span class="efeature">f</span>]
+          <span class="efeature">f</span>: <span class="eclass">STRING</span>  <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span></pre>
+          Then you could neither load nor execute the generated code.</li>
 </ul>
         
         

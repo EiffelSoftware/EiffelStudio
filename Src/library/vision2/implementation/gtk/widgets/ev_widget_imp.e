@@ -23,6 +23,7 @@ inherit
 	EV_GTK_GENERAL_EXTERNALS
 	EV_GTK_CONTAINERS_EXTERNALS
         EV_GTK_CONSTANTS
+	EV_GDK_EXTERNALS
 
 feature {NONE} -- Initialization	
 
@@ -438,7 +439,7 @@ feature -- Event - command association
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		do
-			add_command (widget, "destroy_event", cmd, arg)
+			add_command (widget, "destroy", cmd, arg)
 		end
 	
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -565,7 +566,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the widget is destroyed.
 		do
-			remove_commands (widget, destroy_event_id)
+			remove_commands (widget, destroy_id)
 		end
 
 	remove_expose_commands is

@@ -52,6 +52,7 @@ feature -- Initialization
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
 			file_name: FILE_NAME
+			file_location: STRING
 		do
 			default_create
 			set_title ("EiffelVision2 Tour")
@@ -59,14 +60,22 @@ feature -- Initialization
 
 				-- Create controls.
 				--| FIXME check for other locations/missing.
-			create file_name.make_from_string (get ("ISE_VISION2_TOUR"))
-			file_name.extend ("bitmaps")
-			file_name.extend ("png")
-			file_name.extend ("bm_about.png")
-			create eiffel_image
-			eiffel_image.set_with_named_file (file_name.out)
-			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-			eiffel_image.set_background_color (White)
+			file_location := get ("ISE_VISION2_TOUR")
+			if file_location = Void then
+				file_location := get ("ISE_EIFFEL")
+			end
+			if file_location /= Void then
+				create file_name.make_from_string (file_location)
+				file_name.extend ("bitmaps")
+				file_name.extend ("png")
+				file_name.extend ("bm_about.png")
+				create eiffel_image
+				eiffel_image.set_with_named_file (file_name.out)
+				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
+				eiffel_image.set_background_color (White)
+			else
+				create eiffel_image
+			end
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
 			info_label.set_background_color (White)

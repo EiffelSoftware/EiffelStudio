@@ -41,7 +41,6 @@ feature -- Element change
 		do
 			search_after (v);
 			put_left (v);
-			
 			back
 		end;
 

@@ -469,28 +469,6 @@ feature -- line debug access
 			Result := l_breakable_line
 		end
 
---	next_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
---			-- Next IL offset for the il offset `a_current_il_offset' or current offset if on a breakable point
---		require
---			class_type_not_void: a_class_type /= Void
---			feat_not_void: a_feat /= Void
---		local
---			l_list: SORTED_LIST [INTEGER]
---		do
---			l_list := feature_breakable_il_offsets_sorted_list (a_class_type, a_feat)
---			if l_list /= Void then
---				from
---					l_list.start
---				until
---					l_list.after
---					or else Result >= a_il_offset
---				loop
---					Result := l_list.item --| LIST.index => 1
---					l_list.forth
---				end			
---			end
---		end
---		
 	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
 			-- Approximate IL offset for the il offset `a_current_il_offset' 
 			-- previous or current offset if on a breakable point
@@ -900,24 +878,6 @@ feature {NONE} -- Debugger Info List Access
 		ensure
 			(Result = Void) implies (not a_create_if_not_found)
 		end
-
---	remove_info_for_class_type (a_class_type: CLASS_TYPE) is
---			-- remove Info for Class_type.
---		require
---			class_type_not_void: a_class_type /= Void
---		local
---			l_class_static_type_id: INTEGER
---		do
---			last_info_from_class_type := Void
---			l_class_static_type_id := a_class_type.static_type_id
---			dbg_info_class_types.remove (l_class_static_type_id)
---
---			check
---				removed: not dbg_info_class_types.has (l_class_static_type_id)
---			end
---		ensure
---			removed: not dbg_info_class_types.has (a_class_type.static_type_id)
---		end
 
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used

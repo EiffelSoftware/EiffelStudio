@@ -325,7 +325,7 @@ feature -- Dependents: 4
 	 		clients_table_not_void: indirect_clients_table /= Void
 	 		class_not_void: a_class /= Void
 		local
-			clients_list: LINKED_LIST [CLASS_C]
+			clients_list: ARRAYED_LIST [CLASS_C]
 			cursor: CURSOR
 		do
 			clients_list := a_class.clients
@@ -375,7 +375,7 @@ feature -- Dependents: 4
 	 		heirs_table_not_void: indirect_heirs_table /= Void
 	 		class_not_void: a_class /= Void
 		local
-			heirs_list: LINKED_LIST [CLASS_C]
+			heirs_list: ARRAYED_LIST [CLASS_C]
 		do
 			heirs_list := a_class.descendants
 			from

@@ -421,7 +421,7 @@ feature {NONE} -- Propagation to Degree 4
 			a_class_not_void: a_class /= Void
 		local
 			descendant: CLASS_C
-			desc: LINKED_LIST [CLASS_C]
+			desc: ARRAYED_LIST [CLASS_C]
 			chg3a: BOOLEAN
 			assert_prop_list: LINKED_LIST [INTEGER]
 		do
@@ -488,7 +488,7 @@ feature {NONE} -- Propagation to Degree 3
 			pass2_control_valid: pass2_control.propagate_pass3
 		local
 			client: CLASS_C
-			clients: LINKED_LIST [CLASS_C]
+			clients: ARRAYED_LIST [CLASS_C]
 		do
 							debug ("ACTIVITY")
 								io.error.put_string ("Propagate pass3%N")

@@ -46,7 +46,7 @@ feature -- Execution
 	show_current_callers is
 			-- Show the callers of `current_feature'.
 		local
-			clients: LINKED_LIST [CLASS_C];
+			clients: ARRAYED_LIST [CLASS_C];
 			cfeat: STRING;
 			client: CLASS_C;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];

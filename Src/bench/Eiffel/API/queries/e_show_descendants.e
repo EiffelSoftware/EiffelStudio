@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 	rec_display (i: INTEGER; c: CLASS_C; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local
-			descendants: LINKED_LIST [CLASS_C]
+			descendants: ARRAYED_LIST [CLASS_C]
 			descendant_class: CLASS_C;
 		do
 			descendants := c.descendants;

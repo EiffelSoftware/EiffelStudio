@@ -1239,7 +1239,7 @@ feature {NONE} -- Synchronizing
 		a_cluster: CLUSTER_I) is
 			-- Add descendants of `a_class' until `depth' is reached.
 		local
-			l: LINKED_LIST [CLASS_C]
+			l: ARRAYED_LIST [CLASS_C]
 			ci: CLASS_I
 			cf: CLASS_FIGURE
 			cur: CURSOR
@@ -1285,7 +1285,7 @@ feature {NONE} -- Synchronizing
 		a_cluster: CLUSTER_I) is
 			-- Add clients of `a_class' until `depth' is reached.
 		local
-			l: LINKED_LIST [CLASS_C]
+			l: ARRAYED_LIST [CLASS_C]
 			ci: CLASS_I
 			cf: CLASS_FIGURE
 			cur: CURSOR

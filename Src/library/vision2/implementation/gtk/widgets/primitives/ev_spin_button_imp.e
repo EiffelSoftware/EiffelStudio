@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	make (an_interface: like interface) is
 			-- Create the spin button.
 		do
-			{EV_GAUGE_IMP} Precursor (an_interface)
+			Precursor {EV_GAUGE_IMP} (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
 			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 	initialize is
 		do
-			{EV_TEXT_FIELD_IMP} Precursor
+			Precursor {EV_TEXT_FIELD_IMP}
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
 		end
 

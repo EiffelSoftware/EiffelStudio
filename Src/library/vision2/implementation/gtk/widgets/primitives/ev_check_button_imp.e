@@ -46,7 +46,7 @@ feature -- Element change
 			-- Set current button text to `txt'.
 			-- Redefined because we want the text to be left-aligned.
 		do
-			{EV_TOGGLE_BUTTON_IMP} Precursor (txt)
+			Precursor {EV_TOGGLE_BUTTON_IMP} (txt)
 
 			-- We left-align and vertical_center-position the text
 			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)

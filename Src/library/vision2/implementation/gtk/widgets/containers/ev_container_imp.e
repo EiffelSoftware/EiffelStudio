@@ -363,7 +363,7 @@ feature -- Basic operations
 			-- Propagate the current foreground color of the
 			-- container to the children.
 		do
-			{EV_CONTAINER_I} Precursor
+			Precursor {EV_CONTAINER_I}
 			propagate_foreground_color_internal (foreground_color, c_object)
 		end
 
@@ -371,7 +371,7 @@ feature -- Basic operations
 			-- Propagate the current background color of the
 			-- container to the children.
 		do
-			{EV_CONTAINER_I} Precursor
+			Precursor {EV_CONTAINER_I}
 			propagate_background_color_internal (background_color, c_object)
 		end
 

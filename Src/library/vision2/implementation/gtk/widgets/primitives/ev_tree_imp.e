@@ -119,9 +119,9 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Connect action sequences to signals.
 		do
-			{EV_ITEM_LIST_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
-			{EV_TREE_I} Precursor
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {EV_TREE_I}
 			
 			--| Event position 1 in intermediary
 			real_signal_connect (

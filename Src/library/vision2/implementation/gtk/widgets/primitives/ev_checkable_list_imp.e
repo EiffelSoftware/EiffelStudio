@@ -25,7 +25,7 @@ inherit
 		
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
 	
-creation
+create
 	make
 
 feature -- Implementation

@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- 
 		do
-			{EV_CONTAINER_IMP} Precursor
-			{EV_DYNAMIC_LIST_IMP} Precursor
+			Precursor {EV_CONTAINER_IMP}
+			Precursor {EV_DYNAMIC_LIST_IMP}
 		end
 
 feature {NONE} -- Implementation

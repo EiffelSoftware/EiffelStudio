@@ -627,7 +627,6 @@ feature -- Function Evaluation
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
 			-- Debug ouput string value
 		local
-
 			l_icd: ICOR_DEBUG_VALUE		
 			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
@@ -637,12 +636,8 @@ feature -- Function Evaluation
 			
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
-			l_icd_thread: ICOR_DEBUG_THREAD
-
-			l_icd_eval: ICOR_DEBUG_EVAL
 			l_func: ICOR_DEBUG_FUNCTION
 
-			l_status: APPLICATION_STATUS_DOTNET
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 			skip_debug_output_evaluation: BOOLEAN
 		do	
@@ -702,15 +697,7 @@ feature -- Function Evaluation
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
 			l_feature_token: INTEGER
-			
-			l_feat: FEATURE_I
-			l_class_type: CLASS_TYPE
-			l_icd_thread: ICOR_DEBUG_THREAD
-
-			l_icd_eval: ICOR_DEBUG_EVAL
 			l_func: ICOR_DEBUG_FUNCTION
-
-			l_status: APPLICATION_STATUS_DOTNET
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 			skip_debug_output_evaluation: BOOLEAN
 			l_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER

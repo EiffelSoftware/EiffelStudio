@@ -967,7 +967,7 @@ end
 									!!def_resc_depend.make (class_id, def_resc)
 									f_suppliers.extend (def_resc_depend)
 								end
-								f_suppliers.set_feature_name (feature_name)
+								f_suppliers.set_feature_name_id (feature_name_id)
 								dependances.put (f_suppliers, feature_i.body_index)
 								if new_suppliers = Void then
 									new_suppliers := suppliers.same_suppliers
@@ -1111,7 +1111,7 @@ end
 						end
 						f_suppliers := clone (ast_context.supplier_ids)
 						if invariant_feature /= Void then
-							f_suppliers.set_feature_name (invariant_feature.feature_name)
+							f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
 							dependances.put (f_suppliers, invariant_feature.body_index)
 						end
 						if new_suppliers = Void then
@@ -1231,7 +1231,7 @@ end
 				dependances.remove (body_index)
 			end
 			!!f_suppliers.make
-			f_suppliers.set_feature_name (feature_i.feature_name)
+			f_suppliers.set_feature_name_id (feature_i.feature_name_id)
 			feature_i.record_suppliers (f_suppliers)
 			dependances.put (f_suppliers, body_index)
 		end

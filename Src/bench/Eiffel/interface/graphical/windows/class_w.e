@@ -140,7 +140,7 @@ feature -- Status setting
 			c: CLASSC_STONE
 			ci: CLASSI_STONE
 		do
-			{BAR_AND_TEXT} precursor (s)
+			{BAR_AND_TEXT} Precursor (s)
 			c ?= stone
 			ci ?= stone
 			if c /= Void then
@@ -340,7 +340,7 @@ feature -- Update
 	reset is
 			-- Reset the window contents
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			reset_format_buttons
 			class_text_field.clear
 		end
@@ -444,7 +444,7 @@ feature -- Window Settings
 	close_windows is
 			-- Close sub-windows.
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			class_text_field.close_choice_window
 			version_cmd.close_choice_window
 		end
@@ -599,7 +599,6 @@ feature {NONE} -- Implementation Graphical Interface
 	create_edit_buttons is
 		local
 			quit_cmd: QUIT_FILE
-			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_FILE
@@ -623,9 +622,8 @@ feature {NONE} -- Implementation Graphical Interface
 			build_save_as_menu_entry
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, edit_bar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -735,10 +733,6 @@ feature {NONE} -- Implementation Graphical Interface
 
 			edit_bar.attach_top (class_text_field, 0)
 			edit_bar.attach_left_widget (next_target_button, class_text_field, 3)
-
-			edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
-			edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
-
 		end
 
 	build_format_bar is

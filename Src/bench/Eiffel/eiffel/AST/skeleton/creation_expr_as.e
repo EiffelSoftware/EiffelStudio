@@ -114,7 +114,7 @@ feature -- Type check
 				!!vgcc3
 				context.init_error (vgcc3)
 				vgcc3.set_target_name ("")
-				vgcc3.set_type (creation_type)
+				vgcc3.set_type (new_creation_type)
 				Error_handler.insert_error (vgcc3)
 			else
 				creation_type := new_creation_type

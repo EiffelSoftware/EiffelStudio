@@ -11,10 +11,12 @@
 */
 %{
 #include "eiffel_c.h"
+#include <stdio.h>
 
 #define NORMAL_LEVEL	0
 #define ASSERT_LEVEL	1
 #define INVARIANT_LEVEL	2
+#define SET_POS(x) yacc_position = x
 
 #ifndef FALSE
 #define FALSE 0
@@ -27,6 +29,7 @@
 #endif
 
 extern char token_str[];
+/* extern int yacc_current_position; */
 
 #define CR_EMPTY	0
 #define CR_ROUTINE	1
@@ -171,7 +174,7 @@ Call_on_feature_access Feature_access Class_invariant Free_operator
 Call_on_expression Inspect_default
 
 %type <value> Sign Pushing_id Infix_operator Prefix_operator New_feature Feature_name
-Infix Prefix New_feature_list
+Infix Prefix New_feature_list Set_position
 
 %type <cr_node> Feature_value Constant_or_routine
 
@@ -669,15 +672,15 @@ Local_declarations:			/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Compound:					Instructionl Instruction1 Opt_Semi
-								{list_push($2);}
+Compound:					Instructionl Set_position Instruction1 Opt_Semi
+								{list_push($3);}
 	|						/* empty */ Opt_Semi
 	;
 Opt_Semi:					Opt_Semi TE_SEMICOLON
 	|						/* empty */
 	;
-Instructionl:				Instructionl Instruction1 Opt_Semi
-								{list_push($2);}
+Instructionl:				Instructionl Set_position Instruction1 Opt_Semi
+								{list_push($3);}
 	|						/* empty */ Opt_Semi
 	;
 Instruction1:
@@ -735,21 +738,21 @@ Assertion:					{list_init();} Assertion_list
 Assertion_list:				/* empty */
 	|						Assertion_list_non_empty
 	;
-Assertion_list_non_empty:	Assertion_clause ASemi
-								{list_push($1);}
-	|						Assertion_list_non_empty Assertion_clause ASemi
+Assertion_list_non_empty:	Set_position Assertion_clause ASemi
 								{list_push($2);}
+	|						Assertion_list_non_empty Set_position Assertion_clause ASemi
+								{list_push($3);}
 	;
 
-Assertion_clause: 			Expression 
+Assertion_clause: 			Expression
 								{
-									$$ = create_node2(TAGGED_AS,NULL,$1);
+									$<node>$ = create_node2(TAGGED_AS,NULL,$1);
 								}
 	|						Identifier TE_COLON Expression
 								{
-									$$ = create_node2(TAGGED_AS,$1,$3);
+									$<node>$ = create_node2(TAGGED_AS,$1,$3);
 								}
-	|						Identifier TE_COLON
+	|						Identifier TE_COLON 
 								{ $$ = NULL;}
 	;
 
@@ -873,9 +876,8 @@ Constraint:
  * Instructions
  */
 
-Conditional:				TE_IF Expression TE_THEN {list_init();} Compound {$$ =
-list_new(CONSTRUCT_LIST_AS);} Elsif Else_part TE_END
-								{$$ = create_node4(IF_AS,$2,$<node>6,$7,$8);}
+Conditional:				{$<value>$ = start_position;} TE_IF Expression TE_THEN {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Elsif Else_part TE_END
+								{SET_POS($<value>1); $$ = create_node4(IF_AS,$3,$<node>7,$8,$9);}
 	;
 
 Elsif:						/* empty */
@@ -906,10 +908,10 @@ Else_part:					/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Multi_branch:				TE_INSPECT
+Multi_branch:				{$<value>$ = start_position;} TE_INSPECT
 							Expression {list_init();} When_part_list {$$ = list_new(CONSTRUCT_LIST_AS);}
 							Inspect_default TE_END
-								{$$ = create_node3(INSPECT_AS,$2,$<node>5,$6);}
+								{SET_POS($<value>1); $$ = create_node3(INSPECT_AS,$3,$<node>6,$7);}
 	;
 
 /*
@@ -957,8 +959,8 @@ Choice:						Integer_constant
 				{$$ = create_node2(INTERVAL_AS,$1,$3);}
 	;
 
-Loop:						TE_FROM {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Invariant Variant TE_UNTIL Expression TE_LOOP {list_init();} Compound TE_END
-								{$$ = create_node5(LOOP_AS,$<node>4,$5,$6,$8,list_new(CONSTRUCT_LIST_AS));}
+Loop:						{$<value>$ = start_position;} TE_FROM {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Invariant Variant TE_UNTIL Expression TE_LOOP {list_init();} Compound TE_END
+								{SET_POS($<value>1); $$ = create_node5(LOOP_AS,$<node>5,$6,$7,$9,list_new(CONSTRUCT_LIST_AS));}
 	;
 
 Invariant:					/* empty */
@@ -985,8 +987,8 @@ Variant:					/* empty */
 								{$$ = create_node2(VARIANT_AS,NULL,$2);}
 	;
 
-Debug:						TE_DEBUG Debug_keys {list_init();} Compound TE_END 
-								{$$ = create_node2(DEBUG_AS,$2,list_new(CONSTRUCT_LIST_AS));}
+Debug:						{$<value>$ = start_position; } TE_DEBUG Debug_keys {list_init();} Compound TE_END 
+								{SET_POS($<value>1); $$ = create_node2(DEBUG_AS,$3,list_new(CONSTRUCT_LIST_AS));}
 	;
 
 Debug_keys:					/* empty */
@@ -1012,18 +1014,32 @@ Rescue:						/* empty */
 	|						TE_RESCUE {list_init();} Compound 
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
-
-Assignment:					Identifier TE_ASSIGN Expression
-								{$$ = create_node2(ASSIGN_AS,create_node2(ACCESS_ID_AS,$1,NULL),$3);}
-	|						TE_RESULT TE_ASSIGN Expression
-								{$$ = create_node2(ASSIGN_AS,create_node(RESULT_AS),$3);}
+/*
+Assignment:					Set_position Identifier TE_ASSIGN Expression
+								{$$ = create_node2(ASSIGN_AS,create_node2(ACCESS_ID_AS,$2,NULL),$4);}
+	|						Set_position TE_RESULT TE_ASSIGN Expression
+								{$$ = create_node2(ASSIGN_AS,create_node(RESULT_AS),$4);}
 	;
 
-Reverse_assignment:			Identifier TE_ACCEPT Expression
-								{$$ = create_node2(REVERSE_AS,create_node2(ACCESS_ID_AS,$1,NULL),$3);}
-	|						TE_RESULT TE_ACCEPT Expression
-								{$$ = create_node2(REVERSE_AS,create_node(RESULT_AS),$3);}
+Reverse_assignment:			Set_position Identifier TE_ACCEPT Expression
+								{$$ = create_node2(REVERSE_AS,create_node2(ACCESS_ID_AS,$2,NULL),$4);}
+	|						Set_position TE_RESULT TE_ACCEPT Expression
+								{$$ = create_node2(REVERSE_AS,create_node(RESULT_AS),$4);}
 	;
+*/
+
+Assignment:                 Identifier TE_ASSIGN Expression
+                                {$$ = create_node2(ASSIGN_AS,create_node2(ACCESS_ID_AS,$1,NULL),$3);}
+    |                       TE_RESULT TE_ASSIGN Expression
+                                {$$ = create_node2(ASSIGN_AS,create_node(RESULT_AS),$3);}
+    ;
+
+Reverse_assignment:         Identifier TE_ACCEPT Expression
+                                {$$ = create_node2(REVERSE_AS,create_node2(ACCESS_ID_AS,$1,NULL),$3);}
+    |                       TE_RESULT TE_ACCEPT Expression
+                                {$$ = create_node2(REVERSE_AS,create_node(RESULT_AS),$3);}
+    ;
+
 
 Creators:					/* empty */
 								{$$ = NULL;}
@@ -1085,8 +1101,8 @@ Call:						A_feature
 								{$$ = create_node1(INSTR_CALL_AS,$1);}
 	;
 
-Check:						TE_CHECK Assertion TE_END
-								{$$ = create_node1(CHECK_AS,$2);}
+Check:						{$<value>$ = start_position; } TE_CHECK Assertion TE_END
+								{SET_POS($<value>1); $$ = create_node1(CHECK_AS,$3);}
 	;
 
 /*
@@ -1349,6 +1365,9 @@ Non_empty_string:		TE_STRING
 
 Manifest_array:			TE_LARRAY {list_init();} Manifest_expression_list TE_RARRAY
 							{$$ = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));}
+	;
+
+Set_position: 			{$$ = SET_POS(start_position);}
 	;
 
 %%

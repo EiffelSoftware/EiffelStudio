@@ -408,11 +408,14 @@ feature -- Element Change
 			-- Set `namespace' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_syntax: a_name.item (1) /= '%R' and a_name.item (a_name.count) /= '%N'
+			valid_syntax: not a_name.is_empty implies (a_name.item (1) /= '%R' and a_name.item (a_name.count) /= '%N')
 		do
-			namespace := a_name
+			if not a_name.is_empty then
+				namespace := a_name
+			end
 		ensure
-			namespace_set: namespace.is_equal (a_name)
+			namespace_set: not a_name.is_empty implies namespace.is_equal (a_name)
+			void_if_empty: a_name.is_empty implies namespace = Void
 		end
 
 	set_declaration_header_file_name (a_name: like declaration_header_file_name) is

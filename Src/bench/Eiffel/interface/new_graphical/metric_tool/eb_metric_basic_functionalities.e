@@ -30,7 +30,7 @@ feature -- Classes: 1
 			create Result.make (1000)
 				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
-			scope := clone (s)
+			scope := s.twin
 			a_cluster := scope.cluster_i
 			sub_clusters := a_cluster.sub_clusters
 			if sub_clusters.count /= 0 then
@@ -236,7 +236,7 @@ feature -- Clusters: 2
 		do
 				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
-			scope := clone (s)
+			scope := s.twin
 			sub_clusters := scope.cluster_i.sub_clusters
 			Result := Result + sub_clusters.count
 			if sub_clusters.count /= 0 then

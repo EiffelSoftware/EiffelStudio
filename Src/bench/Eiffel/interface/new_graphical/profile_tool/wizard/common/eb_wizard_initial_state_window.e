@@ -64,7 +64,7 @@ feature -- Basic Operations
 			message_and_title_box.disable_item_expand (choice_box)
 			message_and_title_box.extend (white_cell) -- Expandable item
 
-			local_pixmap := clone (pixmap)
+			local_pixmap := pixmap.twin
 			local_pixmap.set_minimum_size (
 				dialog_unit_to_pixels(165),
 				dialog_unit_to_pixels(312))

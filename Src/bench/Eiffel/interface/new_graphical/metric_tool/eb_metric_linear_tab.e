@@ -444,7 +444,7 @@ feature -- Metric constituents.
 				sub_formula.after
 			loop
 				if equal (sub_formula.item, plus) or equal (sub_formula.item, minus) then
-					operator := clone (sub_formula.item)
+					operator := sub_formula.item.twin
 					sub_formula.forth
 					create sub_list.make (1)
 					from
@@ -458,7 +458,7 @@ feature -- Metric constituents.
 					Result.append (translate_formula_to_polish_syntax (sub_list, a_metric_definition))
 					Result.extend (Xml_routines.xml_node (a_metric_definition, "OPERATOR", operator))
 				elseif equal (sub_formula.item, multiply) then
-					operator := clone (sub_formula.item)
+					operator := sub_formula.item.twin
 					sub_formula.forth
 				elseif sub_formula.item.is_double then
 					Result.extend (Xml_routines.xml_node (a_metric_definition, "PARAMETER", sub_formula.item))

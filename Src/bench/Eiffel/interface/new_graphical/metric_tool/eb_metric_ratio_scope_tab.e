@@ -462,7 +462,7 @@ feature -- Metric constituents
 				sub_formula.after
 			loop
 				if equal (sub_formula.item, divide) then
-					operator := clone (sub_formula.item)
+					operator := sub_formula.item.twin
 					sub_formula.forth
 				elseif interface.tool.metric (sub_formula.item) /= Void then
 						-- Retrieve min_scope of metric_object.

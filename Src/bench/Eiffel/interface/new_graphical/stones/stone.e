@@ -26,7 +26,7 @@ feature  -- Access
 			-- Explaination of what current element means,
 			-- "No help available" by default
 		do
-			Result := clone (Interface_names.h_No_help_available)
+			Result := Interface_names.h_No_help_available.twin
 		end
 
 	stone_signature: STRING is 

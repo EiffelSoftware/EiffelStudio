@@ -30,7 +30,7 @@ feature -- Basic operations
 			a_directory_name_string: STRING
 			ending_char: CHARACTER
 		do
-			a_directory_name_string := clone (a_directory_name)
+			a_directory_name_string := a_directory_name.twin
 
 				-- Remove blanks
 			a_directory_name_string.left_adjust
@@ -78,7 +78,7 @@ feature -- Basic operations
 
 				-- Find the first existing directory in the path name
 			from
-				built_directory := clone (a_directory_name)
+				built_directory := a_directory_name.twin
 				separator_index := built_directory.count
 				create a_directory.make (built_directory)
 			until
@@ -139,7 +139,7 @@ feature -- Basic operations
 			loc_directory_separator := operating_environment.directory_separator
 
 			if a_max_length >= a_path.count then
-				Result := clone (a_path)
+				Result := a_path.twin
 			else
 				create Result.make (a_max_length)
 				slash_index := a_path.index_of (loc_directory_separator, 1)

@@ -105,7 +105,7 @@ feature -- Access
 	synchronized_stone: CLASSI_STONE is
 		do
 			if is_valid then
-				Result := clone (Current)
+				Result := twin
 			else
 				Result := Precursor {FEATURE_STONE}
 			end

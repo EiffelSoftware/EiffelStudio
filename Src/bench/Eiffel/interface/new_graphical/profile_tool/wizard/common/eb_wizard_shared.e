@@ -81,8 +81,8 @@ feature -- Element change
 			valid_left_pixmap: left_pixmap /= Void
 			valid_icon_pixmap: icon_pixmap /= Void
 		do
-			pixmap_cell.put (clone (left_pixmap))
-			pixmap_icon_cell.put (clone (icon_pixmap))
+			pixmap_cell.put (left_pixmap.twin)
+			pixmap_icon_cell.put (icon_pixmap.twin)
 		ensure
 			pixmap_not_void: pixmap /= Void
 			pixmap_icon_not_void: pixmap_icon /= Void

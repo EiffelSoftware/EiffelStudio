@@ -15,7 +15,8 @@ inherit
 
 	EV_SCROLL_BAR_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 create
@@ -58,6 +59,10 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/16 04:10:32  brendel
+--| Added redefinition of `make'. Does not call precursor, since
+--| we want to keep the page size the same as leap.
+--|
 --| Revision 1.5  2000/02/15 16:34:31  brendel
 --| Fixed bug in initialization found after adding `is_in_default_state' in
 --| interface classes.

@@ -13,14 +13,22 @@ inherit
 	EV_MENU_HOLDER_IMP
 
 	EV_BUTTON_IMP
+		rename
+			add_click_command as add_popup_command
+		export {NONE}
+			box,
+			initialize,
+			create_text_label,
+			make_with_text
 		undefine
 			set_center_alignment,
 			set_left_alignment, 
 			set_right_alignment,
-			set_text,
-			add_click_command			
+			set_text
 		redefine
-			make
+			make,
+			add_popup_command,
+			text			
 		end
 
 creation
@@ -60,22 +68,44 @@ feature {NONE} -- Status report
 			items_array: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 			menu_item_found: BOOLEAN
 		do
-			selected_item_p := c_gtk_option_button_selected_menu_item (widget)
-			from
-				items_array := menu_items_array
-				menu_item_found := False
-				items_array.start
-			until
-				items_array.after or menu_item_found
-			loop
-				local_menu_item := items_array.item
-				if local_menu_item.widget = selected_item_p then
-					menu_item_found := True
+			if (menu /= Void) then
+				selected_item_p := c_gtk_option_button_selected_menu_item (widget)
+				from
+					items_array := menu_items_array
+					menu_item_found := False
+					items_array.start
+				until
+					items_array.after or menu_item_found
+				loop
+					local_menu_item := items_array.item
+					if local_menu_item.widget = selected_item_p then
+						menu_item_found := True
+					end
+					items_array.forth
 				end
-				items_array.forth
+				if menu_item_found then
+					Result ?= local_menu_item.interface
+				else
+					-- If we are here this means, the selected item
+					-- is the menu.
+					Result := Void
+				end
+			else
+				-- there is no menu.
+				Result := void
 			end
-			if menu_item_found then
-				Result ?= local_menu_item.interface
+		end
+
+	text: STRING is
+			-- Text shown on the option button if 
+			-- an item has been selected.
+		do
+			if ( menu /= Void) then
+				if (selected_item /= Void) then
+					Result := selected_item.text
+				else
+					Result := menu.text
+				end
 			else
 				Result := Void
 			end
@@ -89,7 +119,7 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			wid: POINTER
 			a: ANY
 		do
-			-- Create a menu item with the label `text':
+			-- Create a menu item with the label set to `text' of `menu_imp':
 			-- This menu_item is not put in the menu_items_array.
 			-- It is only used when the user want to have a title
 			-- for the option button.
@@ -102,6 +132,7 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 
 			-- Add the menu to the option button.
 			gtk_option_menu_set_menu (widget, menu_imp.widget)
+			menu := menu_imp
 		end
 	
 	remove_menu (menu_imp: EV_MENU_IMP) is
@@ -109,6 +140,20 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 		do
 			gtk_option_menu_remove_menu (widget)
 		end
+
+feature -- Event - command association
+
+	add_popup_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add 'cmd' to the list of commands to be executed
+			-- just before the popup is shown.
+		do
+			add_button_press_command (1, cmd, arg)
+		end
+
+feature -- Implementation
+
+	menu: EV_MENU_IMP
+		-- The menu contained in the option button.
 
 end -- class EV_OPTION_BUTTON_IMP
 

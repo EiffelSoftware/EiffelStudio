@@ -30,24 +30,25 @@ feature {NONE} -- Implementation
 			tool_bar_separator: EV_TOOL_BAR_SEPARATOR
 		do
 			set_title ("Component viewer ")
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_window @ 1)
 			create vertical_box
 			extend (vertical_box)
 			
 			create tool_bar
 			create component_button
-			component_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_delete_small @ 1)
+			component_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_viewer @ 1)
 			component_button.drop_actions.extend (agent set_component (?))
 			tool_bar.extend (component_button)
 			create tool_bar_separator
 			tool_bar.extend (tool_bar_separator)
 			create display_button
-			display_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_delete_small @ 1)
+			display_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_display_view)
 			tool_bar.extend (display_button)
 			display_button.enable_select
 			display_button.select_actions.extend (agent set_display_view)
 			
 			create builder_button
-			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_delete_small @ 1)
+			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_build_view)
 			builder_button.select_actions.extend (agent set_build_view)
 			tool_bar.extend (builder_button)
 			

@@ -174,11 +174,9 @@ feature -- Status report
 			variant
 				some_element_counts.count - i + 1
 			until
-				i > some_element_counts.count
+				i > some_element_counts.count or not Result
 			loop
-				if some_element_counts.item (i) < 1 then
-					Result := False
-				end
+				Result := some_element_counts.item (i) >= 0
 				i := i + 1
 			end
 		end
@@ -199,10 +197,8 @@ feature -- Status report
 				until
 					i > dimension_count or not Result
 				loop
-					if some_indices.item (i) < lower_indices.item (i) or
-							some_indices.item (i) > upper_indices.item (i) then
-						Result := False
-					end
+					Result := (some_indices.item (i) >= lower_indices.item (i)) and
+							(some_indices.item (i) <= upper_indices.item (i))
 					i := i + 1
 				end
 			end
@@ -224,9 +220,7 @@ feature -- Status report
 				until
 					i > dimension_count or not Result
 				loop
-					if some_indices.item (i) < lower_indices.item (i) then
-						Result := False
-					end
+					Result := some_indices.item (i) >= lower_indices.item (i)
 					i := i + 1
 				end
 			end

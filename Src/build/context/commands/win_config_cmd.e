@@ -82,7 +82,6 @@ feature
 			Result := Command_names.cont_geometry_cmd_name
 		end;
 
-
 	context_undo is do end;
 
 end

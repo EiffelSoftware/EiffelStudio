@@ -91,6 +91,10 @@ feature {NONE} -- Initialization
 			else
 				real_signal_connect (c_object, "size-allocate", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
+			
+	real_signal_connect (c_object, "configure-event", agent do_nothing, Void)
+	--| FIXME This is a hack to prevent the implementation object from saying goodbye.
+	
 			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)

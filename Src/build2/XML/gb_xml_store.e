@@ -73,7 +73,7 @@ feature {NONE} -- Basic operation.
 			file.close
 		end
 		
-feature {GB_XML_HANDLER} -- Implementation
+feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 
 	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			-- Add XML representation of `an_object' to `element'.
@@ -102,7 +102,6 @@ feature {GB_XML_HANDLER} -- Implementation
 				end
 			end
 		end
-		
 		
 	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			--Output attributes of `an_object' to `element'. If `add_names' then generate

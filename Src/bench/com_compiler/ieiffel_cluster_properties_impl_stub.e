@@ -212,7 +212,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub %"ecom_EiffelComCompiler_IEiffelClusterProperties_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB

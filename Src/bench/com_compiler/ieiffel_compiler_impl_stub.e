@@ -131,6 +131,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	set_display_warnings (vb_show: BOOLEAN) is
+			-- Set state indicating if compiler warnings should be displayed
+			-- `vb_show' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do
@@ -142,7 +149,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_COMPILER_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelCompiler_impl_stub %"ecom_eiffel_compiler_IEiffelCompiler_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelCompiler_impl_stub %"ecom_EiffelComCompiler_IEiffelCompiler_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_COMPILER_IMPL_STUB

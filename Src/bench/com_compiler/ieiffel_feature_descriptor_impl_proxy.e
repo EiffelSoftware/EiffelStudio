@@ -258,235 +258,235 @@ feature {NONE}  -- Externals
 	ccom_name (cpp_obj: POINTER): STRING is
 			-- Feature name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_external_name (cpp_obj: POINTER): STRING is
 			-- Feature external name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_written_class (cpp_obj: POINTER): STRING is
 			-- Name of class where feature is written in.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_evaluated_class (cpp_obj: POINTER): STRING is
 			-- Name of class where feature was evaluated in.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_signature (cpp_obj: POINTER): STRING is
 			-- Feature signature.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_description (cpp_obj: POINTER): STRING is
 			-- Feature description.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_parameters (cpp_obj: POINTER): IENUM_PARAMETER_INTERFACE is
 			-- Feature parameters.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_return_type (cpp_obj: POINTER): STRING is
 			-- Feature return type.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_feature_location (cpp_obj: POINTER; file_path: CELL [STRING]; line_number: INTEGER_REF) is
 			-- Feature location, full path to file and line number
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_all_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, including callers of ancestor and descendant versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_all_callers_count (cpp_obj: POINTER): INTEGER is
 			-- Number of all callers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_local_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of feature callers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_local_callers_count (cpp_obj: POINTER): INTEGER is
 			-- Number of local callers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_descendant_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of feature callers, including callers of descendant versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_descendant_callers_count (cpp_obj: POINTER): INTEGER is
 			-- Number of descendant callers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_implementers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of implementers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_implementer_count (cpp_obj: POINTER): INTEGER is
 			-- Number of feature implementers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_ancestor_versions (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of ancestor versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_ancestor_version_count (cpp_obj: POINTER): INTEGER is
 			-- Number of ancestor versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_descendant_versions (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of descendant versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_descendant_version_count (cpp_obj: POINTER): INTEGER is
 			-- Number of descendant versions.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_exported_to_all (cpp_obj: POINTER): BOOLEAN is
 			-- Is feature exported to all classes?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_once (cpp_obj: POINTER): BOOLEAN is
 			-- Is once feature?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_external (cpp_obj: POINTER): BOOLEAN is
 			-- Is external feature?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_deferred (cpp_obj: POINTER): BOOLEAN is
 			-- Is deferred feature?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_constant (cpp_obj: POINTER): BOOLEAN is
 			-- Is constant?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_frozen (cpp_obj: POINTER): BOOLEAN is
 			-- is frozen feature?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_infix (cpp_obj: POINTER): BOOLEAN is
 			-- Is infix?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_prefix (cpp_obj: POINTER): BOOLEAN is
 			-- Is prefix?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_attribute (cpp_obj: POINTER): BOOLEAN is
 			-- Is attribute?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_procedure (cpp_obj: POINTER): BOOLEAN is
 			-- Is procedure?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_function (cpp_obj: POINTER): BOOLEAN is
 			-- Is function?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_unique (cpp_obj: POINTER): BOOLEAN is
 			-- Is unique?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_obsolete (cpp_obj: POINTER): BOOLEAN is
 			-- Is obsolete feature?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_has_precondition (cpp_obj: POINTER): BOOLEAN is
 			-- Does feature have precondition?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_has_postcondition (cpp_obj: POINTER): BOOLEAN is
 			-- Does feature have postcondition?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_feature_descriptor_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_feature_descriptor_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY

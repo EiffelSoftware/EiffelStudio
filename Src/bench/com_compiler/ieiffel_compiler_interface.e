@@ -143,6 +143,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_display_warnings_user_precondition (vb_show: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_display_warnings'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -296,6 +303,15 @@ feature -- Basic Operations
 			-- Can product be run? (i.e. is it activated or was run less than 10 times)
 		require
 			can_run_user_precondition: can_run_user_precondition
+		deferred
+
+		end
+
+	set_display_warnings (vb_show: BOOLEAN) is
+			-- Set state indicating if compiler warnings should be displayed
+			-- `vb_show' [in].  
+		require
+			set_display_warnings_user_precondition: set_display_warnings_user_precondition (vb_show)
 		deferred
 
 		end

@@ -127,103 +127,103 @@ feature {NONE}  -- Externals
 	ccom_retrieve_eiffel_project (cpp_obj: POINTER; a_project_file_name: STRING) is
 			-- Retrieve Eiffel Project
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_create_eiffel_project (cpp_obj: POINTER; a_ace_file_name: STRING; a_project_directory_path: STRING) is
 			-- Create new Eiffel project.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_project_file_name (cpp_obj: POINTER): STRING is
 			-- Full path to .epr file.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_ace_file_name (cpp_obj: POINTER): STRING is
 			-- Full path to Ace file.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_project_directory (cpp_obj: POINTER): STRING is
 			-- Project directory.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_valid_project (cpp_obj: POINTER): BOOLEAN is
 			-- Is project valid?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_last_exception (cpp_obj: POINTER): IEIFFEL_EXCEPTION_INTERFACE is
 			-- Last exception raised
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_compiler (cpp_obj: POINTER): IEIFFEL_COMPILER_INTERFACE is
 			-- Compiler.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_is_compiled (cpp_obj: POINTER): BOOLEAN is
 			-- Has system been compiled?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_project_has_updated (cpp_obj: POINTER): BOOLEAN is
 			-- Has the project updated since last compilation?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_system_browser (cpp_obj: POINTER): IEIFFEL_SYSTEM_BROWSER_INTERFACE is
 			-- System Browser.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_project_properties (cpp_obj: POINTER): IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
 			-- Project Properties.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_completion_information (cpp_obj: POINTER): IEIFFEL_COMPLETION_INFO_INTERFACE is
 			-- Completion information
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_html_doc_generator (cpp_obj: POINTER): IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
 			-- Help documentation generator
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_project_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_project_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_PROJECT_IMPL_PROXY

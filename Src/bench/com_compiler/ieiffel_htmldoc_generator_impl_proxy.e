@@ -117,67 +117,67 @@ feature {NONE}  -- Externals
 	ccom_is_loaded (cpp_obj: POINTER): BOOLEAN is
 			-- Is the project loaded?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_corrupted (cpp_obj: POINTER): BOOLEAN is
 			-- Is the project oorrupted?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_incompatible (cpp_obj: POINTER): BOOLEAN is
 			-- Is the project incompatible with the current version of the compiled?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_add_status_callback (cpp_obj: POINTER; new_callback: POINTER) is
 			-- Add a callback interface.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_eiffel_compiler::IEiffelHTMLDocEvents *)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_EiffelComCompiler::IEiffelHTMLDocEvents *)"
 		end
 
 	ccom_remove_status_callback (cpp_obj: POINTER; old_callback: POINTER) is
 			-- Remove a callback interface.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_eiffel_compiler::IEiffelHTMLDocEvents *)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](ecom_EiffelComCompiler::IEiffelHTMLDocEvents *)"
 		end
 
 	ccom_add_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
 			-- Exclude a cluster from being generated.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_remove_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
 			-- Include a cluster to be generated.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_generate (cpp_obj: POINTER; path: STRING) is
 			-- Generate the HTML documents into path.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_delete_ieiffel_htmldoc_generator_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_htmldoc_generator_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_HTMLDOC_GENERATOR_IMPL_PROXY

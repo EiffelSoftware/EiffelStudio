@@ -17,7 +17,7 @@ class CEiffelCompiler_factory;
 
 #include "eif_eiffel.h"
 
-#include "ecom_eiffel_compiler_CEiffelCompiler_s.h"
+#include "ecom_EiffelComCompiler_CEiffelCompiler_s.h"
 
 #ifdef __cplusplus
 extern "C" {

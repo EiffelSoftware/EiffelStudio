@@ -82,55 +82,55 @@ feature {NONE}  -- Externals
 	ccom_next (cpp_obj: POINTER; rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
 	ccom_reset (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"]()"
 		end
 
 	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_CLUSTER_PROP_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_ith_item (cpp_obj: POINTER; an_index: INTEGER; rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_count (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_delete_ienum_cluster_prop_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ienum_cluster_prop_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEnumClusterProp_impl_proxy %"ecom_eiffel_compiler_IEnumClusterProp_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IENUM_CLUSTER_PROP_IMPL_PROXY

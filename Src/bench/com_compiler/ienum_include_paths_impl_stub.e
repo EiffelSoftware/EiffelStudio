@@ -67,7 +67,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IENUM_INCLUDE_PATHS_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumIncludePaths_impl_stub %"ecom_eiffel_compiler_IEnumIncludePaths_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub %"ecom_EiffelComCompiler_IEnumIncludePaths_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- IENUM_INCLUDE_PATHS_IMPL_STUB

@@ -94,55 +94,55 @@ feature {NONE}  -- Externals
 	ccom_add_local (cpp_obj: POINTER; name: STRING; type: STRING) is
 			-- Add a local variable used for solving member completion list
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_add_argument (cpp_obj: POINTER; name: STRING; type: STRING) is
 			-- Add an argument used for solving member completion list
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_target_features (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING; return_names: POINTER; return_signatures: POINTER; return_image_indexes: POINTER) is
 			-- Features accessible from target.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,VARIANT *,VARIANT *,VARIANT *)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,VARIANT *,VARIANT *,VARIANT *)"
 		end
 
 	ccom_target_feature (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature information
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_flush_completion_features (cpp_obj: POINTER; a_file_name: STRING) is
 			-- Flush temporary completion features for a specifi file
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_initialize_feature (cpp_obj: POINTER; a_name: STRING; a_arguments: POINTER; a_argument_types: POINTER; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
 			-- Initialize a feature for completion without compiltation
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *,VARIANT *,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *,VARIANT *,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_delete_ieiffel_completion_info_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_completion_info_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompletionInfo_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompletionInfo_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_COMPLETION_INFO_IMPL_PROXY

@@ -9,15 +9,15 @@ Component registration code
 
 #include "eif_eiffel.h"
 
-#include "ecom_eiffel_compiler_CEiffelProject_s.h"
+#include "ecom_EiffelComCompiler_CEiffelProject_s.h"
 
 #include "CEiffelProject_factory.h"
 
-#include "ecom_eiffel_compiler_CEiffelCompiler_s.h"
+#include "ecom_EiffelComCompiler_CEiffelCompiler_s.h"
 
 #include "CEiffelCompiler_factory.h"
 
-#include "ecom_eiffel_compiler_CEiffelCompletionInfo_s.h"
+#include "ecom_EiffelComCompiler_CEiffelCompletionInfo_s.h"
 
 #include "CEiffelCompletionInfo_factory.h"
 

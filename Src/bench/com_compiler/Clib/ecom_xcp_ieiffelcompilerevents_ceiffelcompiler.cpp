@@ -10,7 +10,7 @@ static const IID IID_IEiffelCompilerEvents_ = {0x75b32e73,0xa00e,0x4bcf,{0x9a,0x
 extern "C" {
 #endif
 
-ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler::ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler( ecom_eiffel_compiler::CEiffelCompiler * an_outer, EIF_OBJECT an_object, EIF_TYPE_ID a_type_id )
+ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler::ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler( ecom_EiffelComCompiler::CEiffelCompiler * an_outer, EIF_OBJECT an_object, EIF_TYPE_ID a_type_id )
 {
 	outer = an_outer;
 	eiffel_object = an_object;
@@ -91,7 +91,7 @@ STDMETHODIMP ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler::Advise( IUnknown * 
 	if ((pUnk == NULL) || (pdwCookie == NULL))
 		return E_POINTER;
 	*pdwCookie = 0;
-	ecom_eiffel_compiler::IEiffelCompilerEvents * pIEiffelCompilerEvents;
+	ecom_EiffelComCompiler::IEiffelCompilerEvents * pIEiffelCompilerEvents;
 	HRESULT hr = pUnk->QueryInterface (IID_IEiffelCompilerEvents_, (void**)&pIEiffelCompilerEvents);
 	if (hr == E_NOINTERFACE)
 		hr = CONNECT_E_NOCONNECTION;

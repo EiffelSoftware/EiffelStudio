@@ -104,12 +104,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	apply is
-			-- Apply changes
-		do
-			-- Put Implementation here.
-		end
-
 	set_system_name (return_value: STRING) is
 			-- System name.
 			-- `return_value' [in].  
@@ -234,6 +228,26 @@ feature -- Basic Operations
 	remove_assembly (assembly_path: STRING) is
 			-- Remove an assembly from the project.
 			-- `assembly_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	update_project_ace_file (project_ace_file_name: STRING) is
+			-- Update the project Ace file according to the current settings.
+			-- `project_ace_file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
+			-- Synchronize the current settings with the project Ace file.
+			-- `project_ace_file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	apply is
+			-- Apply changes
 		do
 			-- Put Implementation here.
 		end

@@ -20,7 +20,7 @@ feature -- Preconditions
 
 	time_valid (s: STRING; code_string: STRING): BOOLEAN is
 			-- Is the code_string enough precise
-			-- To create an instance of type TIME
+			-- to create an instance of type TIME?
 			-- And does the string `s' correspond to `code_string'?
 		require
 			s_exists: s /= Void
@@ -34,6 +34,7 @@ feature -- Preconditions
 		end
 
 	compact_time_valid (c_t: INTEGER): BOOLEAN is
+			-- Is compact time `c_t' valid?
 		require
 			c_t_not_void: c_t /= Void
 		local
@@ -47,11 +48,26 @@ feature -- Preconditions
 			s >= 0 and s < Seconds_in_minute)	
 		end
 
-	Is_correct_time (h, m: INTEGER; s: DOUBLE): BOOLEAN is
-			-- Is time represented by `h', `m', and `s' correct?
+	Is_correct_time (h, m: INTEGER; s: DOUBLE; 
+					 twelve_hour_scale: BOOLEAN): BOOLEAN is
+			-- Is time represented by `h', `m', `code', and `s' correct?
+			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
+			-- (if True) or 0 - 23 (if False).
+		local
+			min_hour: INTEGER
+			max_hour: INTEGER
 		do
-			Result := h >= 0 and h < Hours_in_day and then m >= 0 and
-				m < Minutes_in_hour and then s >= 0 and s < Seconds_in_minute
+			if twelve_hour_scale then
+				min_hour := 1
+				max_hour := 12
+			else
+				min_hour := 0
+				max_hour := Hours_in_day - 1
+			end
+			
+			Result := h >= min_hour and h <= max_hour and then 
+				m >= 0 and m < Minutes_in_hour and then s >= 0 and 
+				s < Seconds_in_minute
 		end
 
 end -- class TIME_VALIDITY_CHECKER

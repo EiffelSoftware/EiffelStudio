@@ -19,13 +19,6 @@ inherit
 			interface
 		end
 
-	EV_SEPARATOR_ITEM_IMP
-		rename
-			parent_imp as old_item_parent_imp
-		undefine
-			parent
-		end
-
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
 			interface as ev_tool_bar_button_interface
@@ -83,6 +76,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/10 17:44:09  brendel
+--| Removed inheritance of obsolete class EV_SEPARATOR_ITEM.
+--|
 --| Revision 1.8  2000/02/19 05:44:59  oconnor
 --| released
 --|

@@ -34,9 +34,6 @@ feature {NONE} -- Initialization
 				10, 70, 90, 35, -1)
 			!! demo3d_button.make (Current, "3D",
 				10, 110, 90, 35, -1)
-			if not is_win32 then
-				demo3d_button.disable
-			end
 		end
 
 feature -- Access
@@ -62,7 +59,14 @@ feature {NONE} -- Implementation
 			elseif control = rectangle_button then
 				!! rectangle_demo.make
 			elseif control = demo3d_button then
-				!! three_d_demo.make
+				if is_win32 then
+					!! three_d_demo.make
+				else
+					warning_message_box ("Sorry, 3D demonstration %
+						%is not available under%NWindows 3.1 for %
+						%DC limitation problems.%NRetry under %
+						%Windows 95/NT.", "3D")
+				end
 			end
 		end
 

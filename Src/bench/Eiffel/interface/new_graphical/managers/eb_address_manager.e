@@ -1378,6 +1378,7 @@ feature {NONE} -- open new class
 			last_caret_position: INTEGER
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
 			l_class: CLASS_C
+			truncated: BOOLEAN
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
@@ -1385,20 +1386,19 @@ feature {NONE} -- open new class
 			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				last_caret_position := class_address.caret_position
 				class_address.change_actions.block
-				if str /= Void then
-					str.left_adjust
-					str.right_adjust
-					str.to_lower
-					nb := str.count
-					do_not_complete :=	last_key_was_delete or
-										not enable_complete or
-										not is_typing or
-										last_caret_position /= str.count + 1 or
-										not Workbench.system_defined
-					if nb > 0 and last_key_was_backspace and had_selection then
-						str.head (nb - 1)
-						nb := nb - 1
-					end
+				str.left_adjust
+				str.right_adjust
+				str.to_lower
+				nb := str.count
+				do_not_complete :=	last_key_was_delete or
+									not enable_complete or
+									not is_typing or
+									last_caret_position /= nb + 1 or
+									not Workbench.system_defined
+				if nb > 0 and not do_not_complete and last_key_was_backspace and had_selection then
+					str.head (nb - 1)
+					nb := nb - 1
+					truncated := True
 				end
 				is_typing := False
 				
@@ -1462,7 +1462,11 @@ feature {NONE} -- open new class
 						current_found := clone (current_found)
 						current_found.to_upper
 						class_address.set_text (current_found)
-						class_address.select_region (nb + 1, current_found.count)
+						if nb < current_found.count then
+							class_address.select_region (nb + 1, current_found.count)
+						else
+							class_address.set_caret_position (current_found.count + 1)
+						end
 					elseif not (last_key_was_backspace and had_selection) then
 						str.to_upper
 						class_address.set_text (str)
@@ -1471,7 +1475,11 @@ feature {NONE} -- open new class
 				else
 					str.to_upper
 					class_address.set_text (str)
-					class_address.set_caret_position (last_caret_position)
+					if not truncated then
+						class_address.set_caret_position (last_caret_position)
+					else
+						class_address.set_caret_position (nb + 1)
+					end
 				end
 			end
 			class_address.change_actions.resume
@@ -1491,11 +1499,12 @@ feature {NONE} -- open new class
 			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
+			truncated: BOOLEAN
 		do
 			cluster_address.change_actions.block
 			last_caret_position := cluster_address.caret_position
 			str := clone (cluster_address.text)
-			if str /= Void then
+			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower
@@ -1504,75 +1513,84 @@ feature {NONE} -- open new class
 									not enable_complete or
 									not is_typing or
 									last_caret_position /= str.count + 1
-				if nb > 0 and last_key_was_backspace and cluster_had_selection then
+				if nb > 0 and not do_not_complete and last_key_was_backspace and cluster_had_selection then
 					str.head (nb - 1)
 					nb := nb - 1
+					truncated := True
 				end
-			end
-			is_typing := False
-			
-			if not do_not_complete and nb > 0 then
-				list := Universe.clusters
-				from
-					str_area := str.area
-					list.start
-				until
-					list.after
-				loop
-					cname := list.item.cluster_name
-					other_area := cname.area
-						-- We first check that other_area and str_area have the same start.
-					if other_area.count >= nb then
-						from
-							j := 0
-							same_st := True
-						until
-							j = nb or not same_st
-						loop
-							same_st := (str_area.item (j)) = (other_area.item (j))
-							j := j + 1
-						end
-						if same_st then
-							if current_found = Void then
-								current_found := cname
-								current_area := other_area
-							else
-								from
-									minc := other_area.count.min (current_area.count)
-									dif := False
-								until
-									dif or j = minc
-								loop
-									if (current_area.item (j)) /= (other_area.item (j)) then
-										dif := True
-										if (current_area.item (j)) > (other_area.item (j)) then
-											current_found := cname
-											current_area := other_area
-										end
-									end
-									j := j + 1
-								end
-								if not dif and other_area.count < current_area.count then
-										-- Other and Current have the same characters.
-										-- Return the shorter one.
+				is_typing := False
+				
+				if not do_not_complete and nb > 0 then
+					list := Universe.clusters
+					from
+						str_area := str.area
+						list.start
+					until
+						list.after
+					loop
+						cname := list.item.cluster_name
+						other_area := cname.area
+							-- We first check that other_area and str_area have the same start.
+						if other_area.count >= nb then
+							from
+								j := 0
+								same_st := True
+							until
+								j = nb or not same_st
+							loop
+								same_st := (str_area.item (j)) = (other_area.item (j))
+								j := j + 1
+							end
+							if same_st then
+								if current_found = Void then
 									current_found := cname
 									current_area := other_area
+								else
+									from
+										minc := other_area.count.min (current_area.count)
+										dif := False
+									until
+										dif or j = minc
+									loop
+										if (current_area.item (j)) /= (other_area.item (j)) then
+											dif := True
+											if (current_area.item (j)) > (other_area.item (j)) then
+												current_found := cname
+												current_area := other_area
+											end
+										end
+										j := j + 1
+									end
+									if not dif and other_area.count < current_area.count then
+											-- Other and Current have the same characters.
+											-- Return the shorter one.
+										current_found := cname
+										current_area := other_area
+									end
 								end
 							end
 						end
+						list.forth
 					end
-					list.forth
-				end
-				if current_found /= Void then
-					cluster_address.set_text (current_found)
-					cluster_address.select_region (nb + 1, current_found.count)
-				elseif not (last_key_was_backspace and cluster_had_selection) then
+					if current_found /= Void then
+						cluster_address.set_text (current_found)
+						if nb < current_found.count then
+							cluster_address.select_region (nb + 1, current_found.count)
+						else
+							cluster_address.set_caret_position (current_found.count + 1)
+						end
+					elseif not (last_key_was_backspace and cluster_had_selection) then
+						cluster_address.set_text (str)
+						cluster_address.set_caret_position (str.count + 1)
+					end
+				else
 					cluster_address.set_text (str)
-					cluster_address.set_caret_position (str.count + 1)
+					if not truncated then
+						cluster_address.set_caret_position (last_caret_position)
+					else
+						cluster_address.set_caret_position (nb + 1)
+					end
 				end
-			else
-				cluster_address.set_text (str)
-				cluster_address.set_caret_position (last_caret_position)
 			end
 			cluster_address.change_actions.resume
 			is_typing := False
@@ -1592,24 +1610,24 @@ feature {NONE} -- open new class
 			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
+			truncated: BOOLEAN
 		do
 			feature_address.change_actions.block
 			str := clone (feature_address.text)
 			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
 				last_caret_position := feature_address.caret_position
-				if str /= Void then
-					str.left_adjust
-					str.right_adjust
-					str.to_lower
-					nb := str.count
-					do_not_complete :=	last_key_was_delete or
-										not enable_complete or
-										not is_typing or
-										last_caret_position /= str.count + 1
-					if nb > 0 and last_key_was_backspace and feature_had_selection then
-						str.head (nb - 1)
-						nb := nb - 1
-					end
+				str.left_adjust
+				str.right_adjust
+				str.to_lower
+				nb := str.count
+				do_not_complete :=	last_key_was_delete or
+									not enable_complete or
+									not is_typing or
+									last_caret_position /= str.count + 1
+				if nb > 0 and not do_not_complete and last_key_was_backspace and feature_had_selection then
+					str.head (nb - 1)
+					nb := nb - 1
+					truncated := True
 				end
 				is_typing := False
 	
@@ -1672,14 +1690,22 @@ feature {NONE} -- open new class
 					end
 					if current_found /= Void then
 						feature_address.set_text (current_found)
-						feature_address.select_region (nb + 1, current_found.count)
+						if nb < current_found.count then
+							feature_address.select_region (nb + 1, current_found.count)
+						else
+							feature_address.set_caret_position (current_found.count + 1)
+						end
 					elseif not (last_key_was_backspace and feature_had_selection) then
 						feature_address.set_text (str)
 						feature_address.set_caret_position (str.count + 1)
 					end
 				else
 					feature_address.set_text (str)
-					feature_address.set_caret_position (last_caret_position)
+					if not truncated then
+						feature_address.set_caret_position (last_caret_position)
+					else
+						feature_address.set_caret_position (nb + 1)
+					end
 				end
 			end
 			feature_address.change_actions.resume

@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			ace_template_file, ace_output_file: RAW_FILE
 			temp_string: STRING
 			i, j: INTEGER
-		do	
+		do
 			set_progress (0.1)
 			project_settings := system_status.current_project_settings
 			if Eiffel_platform.is_equal ("windows") then
@@ -174,7 +174,9 @@ feature {NONE} -- Implementation
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name: FILE_NAME
 				local_tag_index, create_tag_index: INTEGER
+				project_settings: GB_PROJECT_SETTINGS
 			do
+				project_settings := system_status.current_project_settings
 				set_progress (0.3)
 				create store
 					-- Generate an XML representation of the current project.
@@ -218,7 +220,16 @@ feature {NONE} -- Implementation
 				generate_events (current_document.root_element, 1)
 	
 					-- Add code for local declarations to `class_text'.
-				add_generated_string (class_text, local_string, local_tag)
+					-- Need to generate slightly different code dependent
+					-- on whether the attributes are local or not. Then
+					-- remove unused tag.
+				if project_settings.attributes_local then
+					add_generated_string (class_text, local_string, local_tag)
+					class_text.replace_substring_all (attribute_tag + "%R%N", "")
+				else
+					add_generated_string (class_text, local_string, attribute_tag)
+					class_text.replace_substring_all (local_tag + "%R%N%T%T", "")
+				end
 
 					-- Add code for creation of widgets to `class_text'.
 				add_generated_string (class_text, create_string, create_tag)
@@ -619,14 +630,26 @@ feature {NONE} -- Implementation
 			-- Each new local is placed on an individual line. e.g.
 			-- button1: EV_BUTTON
 			-- button2: EV_BUTTON
-		local
-			temp_string: STRING
+		local	
+			temp_string,local_string_start, indent_string: STRING
+			project_settings: GB_PROJECT_SETTINGS
 		do
+				-- Need to generate slightly different code dependent
+				-- on whether the atrributes are local or not.
+			project_settings := system_status.current_project_settings
+			if project_settings.attributes_local then
+				indent_string := indent
+				local_string_start := "local " + indent
+			else
+				indent_string := indent_less_two
+				local_string_start := "" + indent_less_two
+			end
+			
 			if local_string = Void then
-				local_string := ""
+				local_string := local_string_start
 				temp_string := name + ": " + local_type
 			else
-				temp_string := indent + name + ": " + local_type
+				temp_string := indent_string + name + ": " + local_type
 			end
 			
 			local_string := local_string + temp_string
@@ -638,13 +661,24 @@ feature {NONE} -- Implementation
 			-- Each new local will be grouped with other locals of same type. e.g.
 			-- button1, button2: EV_BUTTON
 		local
-			temp_string: STRING
-			index_of_type: INTEGER
+			temp_string, local_string_start, indent_string: STRING
+			index_of_type, search_counter: INTEGER
 			found_correctly: BOOLEAN
-			search_counter: INTEGER
+			project_settings: GB_PROJECT_SETTINGS
 		do
+			project_settings := system_status.current_project_settings
+				-- Need to generate slightly different code dependent
+				-- on whether the atrributes are local or not.
+			if project_settings.attributes_local then
+				indent_string := indent
+				local_string_start := "local " + indent
+			else
+				indent_string := indent_less_two
+				local_string_start := "" + indent_less_two
+			end
+			
 			if local_string = Void then
-				local_string := name + ": " + local_type
+				local_string := local_string_start + name + ": " + local_type
 			else
 				from
 					search_counter := 1
@@ -684,10 +718,10 @@ feature {NONE} -- Implementation
 						search_counter := search_counter - 1
 					end
 					if not found_correctly then
-						local_string.insert_string (indent, index_of_type)--"%R%N", index_of_type)
+						local_string.insert_string (indent_string, index_of_type)--"%R%N", index_of_type)
 					end
 				else
-					temp_string := indent + name + ": " + local_type
+					temp_string := indent_string + name + ": " + local_type
 					local_string := local_string + temp_string
 				end
 			end

@@ -1,4 +1,9 @@
-// Class that generates custom attributes
+/*
+indexing
+	description: "Class that generates custom attributes"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
 
 using System;
 using System.Reflection;

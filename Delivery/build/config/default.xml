@@ -24,6 +24,9 @@
 			<TEXT DESCRIPTION="Display warning when a constant selection has been rejected due to an out of bounds value">show_invalid_constant_selection_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when converting a deleted constant reference to a manifest value">show_constant_manifest_conversion_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when project location changed">show_project_location_changed_warning<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display warning when deleting via the keyboard">show_deleting_keyboard_warning<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display warning when deleting a directory containing one or more windows">show_deleting_directories_warning<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display warning when deleting final directory containing root window">show_deleting_final_directory_warning<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

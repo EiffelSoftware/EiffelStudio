@@ -48,12 +48,12 @@ feature -- Output
 		local
 			guid_str: STRING
 		do
-			Result := "//%R%N// File : "
+			Result := "//%N// File : "
 			Result.append (name)
 			Result.append (".idl")
-			Result.append ("%R%N// Description : ")
+			Result.append ("%N// Description : ")
 			Result.append (coclass.description)
-			Result.append ("%R%N//%R%N%R%Nimport %"oaidl.idl%";%R%N%R%N")
+			Result.append ("%N//%N%Nimport %"oaidl.idl%";%N%N")
 			
 
 			if not coclass.interfaces.is_empty then
@@ -63,29 +63,29 @@ feature -- Output
 					coclass.interfaces.after
 				loop
 					Result.append (coclass.interfaces.item.code)
-					Result.append ("%R%N%R%N")
+					Result.append ("%N%N")
 					coclass.interfaces.forth
 				end
 			end
 
-			Result.append ("%R%N%(%R%N%Tuuid (")
+			Result.append ("%N%(%N%Tuuid (")
 
 			guid_str := guid.to_string.twin
 			guid_str.remove (1)
 			guid_str.remove (guid_str.count)
 
 			Result.append (guid_str)
-			Result.append ("),%R%N%Thelpstring (%"")
+			Result.append ("),%N%Thelpstring (%"")
 			Result.append (description)
-			Result.append ("%"),%R%N%Tversion (")
+			Result.append ("%"),%N%Tversion (")
 			Result.append_real (version)
-			Result.append (")%R%N%)%R%N")
+			Result.append (")%N%)%N")
 
 			Result.append ("library ")
 			Result.append (name)
-			Result.append ("%R%N{%R%N%Timportlib (%"stdole32.tlb%");%R%N")
+			Result.append ("%N{%N%Timportlib (%"stdole32.tlb%");%N")
 			Result.append (coclass.code)
-			Result.append ("%R%N}")
+			Result.append ("%N}")
 		ensure
 			code_generated: Result /= Void
 		end

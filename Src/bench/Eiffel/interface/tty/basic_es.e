@@ -235,13 +235,17 @@ feature -- Output
 			io.putstring (" [-help | ");
 			add_usage_special_cmds;
 			io.putstring ("%
-				%-loop | -clients class | -suppliers class |%N%
+				%-loop | -clients [-filter filtername] class |%N%
+				%%T-suppliers [-filter filtername] class |%N%
 				%%T-flatshort [-filter filtername] class |%N%
 				%%T-flat [-filter filtername] class |%N%
 				%%T-short [-filter filtername] class | -filter filtername class |%N%
-				%%T-descendants class | -ancestors class |%N%
-				%%T-aversions class feature | -dversions class feature |%N%
-				%%T-implementers class feature | -callers class feature |%N%
+				%%T-descendants [-filter filtername] class |%N%
+				%%T-ancestors [-filter filtername] class |%N%
+				%%T-aversions [-filter filtername] class feature |%N%
+				%%T-dversions [-filter filtername] class feature |%N%
+				%%T-implementers [-filter filtername] class feature |%N%
+				%%T-callers [-filter filtername] class feature |%N%
 				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 
@@ -327,6 +331,7 @@ feature -- Update
 			cn, fn: STRING;
 			filter_name: STRING
 		do
+			filter_name := "";
 			option := argument (current_option);	
 
 			if option.is_equal ("-help") then
@@ -338,58 +343,102 @@ feature -- Update
 					command := loop_cmd
 				end;
 			elseif option.is_equal ("-implementers") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						current_option := current_option + 1;
-						fn := argument (current_option);
-						!EWB_HISTORY!command.make (cn, fn);
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							current_option := current_option + 1;
+							fn := argument (current_option);
+							!EWB_HISTORY!command.make (cn, fn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
 			elseif option.is_equal ("-aversions") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						current_option := current_option + 1;
-						fn := argument (current_option);
-						!EWB_PAST!command.make (cn, fn);
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							current_option := current_option + 1;
+							fn := argument (current_option);
+							!EWB_PAST!command.make (cn, fn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
 			elseif option.is_equal ("-dversions") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						current_option := current_option + 1;
-						fn := argument (current_option);
-						!EWB_FUTURE!command.make (cn, fn);
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							current_option := current_option + 1;
+							fn := argument (current_option);
+							!EWB_FUTURE!command.make (cn, fn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
 			elseif option.is_equal ("-callers") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						current_option := current_option + 1;
-						fn := argument (current_option);
-						!EWB_SENDERS!command.make (cn, fn);
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							current_option := current_option + 1;
+							fn := argument (current_option);
+							!EWB_SENDERS!command.make (cn, fn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
@@ -402,7 +451,7 @@ feature -- Update
 --						cn := argument (current_option);
 --						current_option := current_option + 1;
 --						fn := argument (current_option);
---						!EWB_DEPEND!command.make (cn, fn);
+--						!EWB_DEPEND!command.make (cn, fn, filter_name);
 --					end;
 --				else
 --					option_error := True
@@ -452,8 +501,10 @@ feature -- Update
 								option_error := True
 							end
 						end;
-						cn := argument (current_option);
-						!EWB_FLAT!command.make (cn, filter_name)
+						if not option_error then
+							cn := argument (current_option);
+							!EWB_FLAT!command.make (cn, filter_name)
+						end;
 					end;
 				else
 					option_error := True
@@ -467,7 +518,7 @@ feature -- Update
 						filter_name := argument (current_option)
 						current_option := current_option + 1;
 						cn := argument (current_option);
---						!EWB_FILTER!command.make (cn, filter_name)
+						!EWB_TEXT!command.make (cn, filter_name)
 					end;
 				else
 					option_error := True
@@ -478,9 +529,20 @@ feature -- Update
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						!EWB_ANCESTORS!command.make (cn)
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							!EWB_ANCESTORS!command.make (cn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
@@ -490,9 +552,20 @@ feature -- Update
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						!EWB_CLIENTS!command.make (cn)
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							!EWB_CLIENTS!command.make (cn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
@@ -502,9 +575,20 @@ feature -- Update
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						!EWB_SUPPLIERS!command.make (cn)
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							!EWB_SUPPLIERS!command.make (cn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;
@@ -514,9 +598,20 @@ feature -- Update
 						option_error := True
 					else
 						current_option := current_option + 1;
-						cn := argument (current_option);
-						!EWB_DESCENDANTS!command.make (cn)
-					end;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option);
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
+						if not option_error then
+							cn := argument (current_option);
+							!EWB_DESCENDANTS!command.make (cn, filter_name)
+						end
+					end
 				else
 					option_error := True
 				end;

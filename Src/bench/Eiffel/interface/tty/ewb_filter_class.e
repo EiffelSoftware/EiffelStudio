@@ -12,9 +12,23 @@ inherit
 
 	EWB_FILTER;
 	EWB_CLASS
+		rename
+			make as class_make
 		redefine
 			process_compiled_class, loop_action
 		end
+
+feature -- Initialization
+
+	make (cn, filter: STRING) is
+			-- Initialize Current with class_name `cn',
+			-- and `filter_name' `filter'.
+		require
+			cn_not_void: cn /= Void
+		do
+			class_make (cn);
+			init (filter);
+		end;
 
 feature {NONE} -- Execution
 
@@ -36,9 +50,13 @@ feature {NONE} -- Execution
 			cmd.set (e_class, st);
 			cmd.execute;
 			st := cmd.structured_text;
-			!! filter.make (filter_name);
-			filter.process_text (st);
-			output_window.put_string (filter.image);
+			if filter_name /= Void and then not filter_name.empty then
+				!! filter.make (filter_name);
+				filter.process_text (st);
+				output_window.put_string (filter.image)
+			else
+				output_window.put_string (st.image)
+			end;
 			output_window.new_line
 		end;
 

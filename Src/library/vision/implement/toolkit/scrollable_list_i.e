@@ -5,18 +5,23 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	SCROLLABLE_LIST_I
+	SCROLLABLE_LIST_I 
 
 inherit
 
 	FONTABLE_I
+		undefine
+			copy, setup
+		end
 
 	PRIMITIVE_I
 		rename
 			cursor as screen_cursor
+		undefine
+			copy, setup
 		end
 
-	LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
+	ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]
 		rename
 			make as ll_make,
 			append as ll_append,
@@ -36,7 +41,8 @@ inherit
 			remove as ll_remove,
 			remove_left as ll_remove_left,
 			remove_right as ll_remove_right,
-			wipe_out as ll_wipe_out
+			wipe_out as ll_wipe_out,
+			lower as ll_lower
 		end
 
 feature  -- Element change
@@ -80,7 +86,7 @@ feature  -- Element change
 			item_inserted: has (v)
 		end;
 
-	merge_left (other: like Current) is
+	merge_left (other: LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
 		require 
@@ -94,7 +100,7 @@ feature  -- Element change
 			other_is_empty: other.empty
 		end;
 
-	merge_right (other: like Current) is
+	merge_right (other: LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
 		require 
@@ -351,6 +357,14 @@ feature  -- Status setting
 			a_count_large_enough: a_count > 0
 		deferred
 		end
+
+feature -- Update
+
+	update is
+			-- Update the content of the scrollable list from
+			-- `list'.
+		deferred
+		end;
 
 invariant
 	before_definition: before = (index = 0);

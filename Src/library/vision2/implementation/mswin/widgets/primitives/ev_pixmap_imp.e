@@ -39,7 +39,8 @@ inherit
 			fill_pie_slice,
 			interface,
 			initialize,
-			set_size
+			set_size,
+			on_contained
 		end
 
 	EV_DRAWING_AREA_IMP
@@ -66,7 +67,8 @@ inherit
 			fill_pie_slice,
 			interface,
 			initialize,
-			set_size
+			set_size,
+			on_contained
 		select
 			dc,
 			width,
@@ -89,20 +91,105 @@ feature {NONE} -- Initialization
 
 	initialize is
 		local
-			bmp: WEL_BITMAP
 			s_dc: WEL_SCREEN_DC
 		do
 			create s_dc
 			s_dc.get
 			create bitmap_dc.make_by_dc (s_dc)
-			create bmp.make_compatible (s_dc, 1, 1)
-			bitmap_dc.select_bitmap (bmp)
+			create mask_bitmap_dc.make_by_dc (s_dc)
+			create bitmap.make_compatible (s_dc, 1, 1)
+			bitmap_dc.select_bitmap (bitmap)
 			s_dc.release
-
-			interface.expose_actions.extend (~paint_bitmap)
 
 			{EV_DRAWING_AREA_IMP} Precursor
 		end
+
+	read_from_file (a_file: IO_MEDIUM) is
+			-- Load the pixmap described in 'file_name'. 
+			--| FIXME: If the file is in a wrong format, an exception is raised.
+		local
+			file: RAW_FILE
+			dib: EV_WEL_DIB
+		do
+			create dib.make_by_stream (a_file)
+			bitmap_dc.select_palette (dib.palette)
+			create bitmap.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
+
+				-- Initialize the new device context
+			dc_to_reset := True
+		end
+
+	read_from_named_file (file_name: STRING) is
+			-- Load the pixmap described in 'file_name'. 
+			--
+			-- Exceptions "Unable to retrieve icon information", "Unable to load the file"
+		local
+			filename_ptr: ANY
+		do
+			filename_ptr := file_name.to_c
+			c_ev_load_pixmap($Current, $filename_ptr, $update_fields)
+		end
+
+	update_fields(error_code: INTEGER; data_type: INTEGER; pixmap_width, pixmap_height:INTEGER; rgb_data, alpha_data: POINTER) is
+			-- Callback function called from the C code by c_ev_load_pixmap.
+			-- 
+			-- See `read_from_named_file'
+			-- Exceptions "Unable to retrieve icon information", "Unable to load the file"
+		require
+			valid_data_type: 
+				data_type = Loadpixmap_hicon or 
+				data_type = Loadpixmap_hbitmap or 
+				data_type = Loadpixmap_rgb_data or 
+				data_type = Loadpixmap_alpha_data
+		local
+			icon_info: WEL_ICON_INFO
+			dib: WEL_DIB
+			size_row: INTEGER
+			memory_dc: WEL_MEMORY_DC
+		do
+			if error_code = Loadpixmap_error_noerror then
+					-- No error while loading the file
+				if data_type = Loadpixmap_hicon then
+						-- create the icon
+					create icon.make_by_pointer(rgb_data)
+
+						-- retrieve the bitmap from the icon.
+					icon_info := icon.get_icon_info
+					if icon_info /= Void then
+						bitmap := icon_info.color_bitmap
+						mask_bitmap := icon_info.mask_bitmap
+					else
+						exception_raise ("Unable to retrieve icon information")
+					end
+				end
+
+				if data_type = Loadpixmap_hbitmap then
+					create bitmap.make_by_pointer(rgb_data)
+--					bitmap.set_unshared
+					create mask_bitmap.make_by_pointer(alpha_data)
+--					mask_bitmap.set_unshared
+				end
+
+				if data_type = Loadpixmap_rgb_data then
+					size_row := 4 * ((pixmap_width * 24 + 31) // 32)
+					create dib.make_by_content_pointer (rgb_data, size_row * pixmap_height + 40)
+					create bitmap.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
+					palette := dib.palette
+
+					size_row := 4 * ((pixmap_width * 1 + 31) // 32)
+					create dib.make_by_content_pointer (alpha_data, size_row * pixmap_height + 40 + 8)
+					create memory_dc.make
+					create mask_bitmap.make_by_dib (memory_dc, dib, Dib_rgb_colors)
+				end
+			else
+					-- An error occurred while loading the file
+				exception_raise ("Unable to load the file")
+			end
+
+				-- Initialize the new device context
+			dc_to_reset := True
+		end
+		
 
 feature -- Access
 
@@ -112,14 +199,18 @@ feature -- Access
 			Result := bitmap_dc
 		end
 
-	bitmap_dc: WEL_MEMORY_DC
-			-- The DC of the bitmap in memory.
+	bitmap: WEL_BITMAP
+		-- Current bitmap used. Void if not initialized, not
+		-- Void otherwise.
 
-	bitmap: WEL_BITMAP is
-			-- Current Bitmap displayed on the screen.
-		do
-			Result := bitmap_dc.bitmap
-		end
+	mask_bitmap: WEL_BITMAP
+		-- Monochrome bitmap used as mask. Void if none.
+
+	icon: WEL_ICON
+		-- Current icon used. Void if none.
+
+	palette: WEL_PALETTE
+		-- Current palette used. Void if none.
 
 	transparent_color: EV_COLOR
 			-- Color used as transparent (Void by default).
@@ -127,7 +218,7 @@ feature -- Access
 feature -- Status setting
 
 	set_with_buffer (a_buffer: STRING) is
-			-- Load pixmap data from `a_buffer' in memory.
+			-- Load pixmap data from `a_buffer' intoemory.
 		do
 			--|FIXME Implement
 			check
@@ -154,6 +245,14 @@ feature -- Status setting
 			old_bitmap_dc: like bitmap_dc
 			old_width, old_height: INTEGER
 		do
+			--| FIXME ----------------------------------------------
+			check
+				mask_not_implemented: False
+			end
+			--|-----------------------------------------------------
+				-- Operation not possible on icons, so we convert..
+			convert_icon_to_bitmap
+
 				-- Retrieve the current values
 			old_bitmap_dc := bitmap_dc
 			old_width := width
@@ -173,6 +272,7 @@ feature -- Status setting
 
 				-- Copy the content of the old bitmap into the
 				-- new one
+
 			bitmap_dc.bit_blt(0, 0, new_width.min(old_width), new_height.min(old_height),
 				old_bitmap_dc, 0, 0, Srccopy)
 
@@ -218,25 +318,43 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operation
-
-	read_from_file (a_file: IO_MEDIUM) is
-			-- Load the pixmap described in 'file_name'. 
-			-- If the file does not exist or it is in a 
-			-- wrong format, an exception is raised.
-		local
-			file: RAW_FILE
-			dib: EV_WEL_DIB
-			bmp:WEL_BITMAP
+	reset_dc(always_reset: BOOLEAN) is
+			-- Perform the reset of the dc.
 		do
-			create dib.make_by_stream (a_file)
-			bitmap_dc.select_palette (dib.palette)
-			create bmp.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
-			bitmap_dc.select_bitmap (bmp)
+			if dc_to_reset and (in_container or always_reset) then
+				dc_to_reset := False
+
+				if bitmap_dc.palette_selected then
+					bitmap_dc.unselect_palette
+				end
+				if palette /= Void then
+					bitmap_dc.select_palette (palette)
+				end
+	
+				if bitmap_dc.bitmap_selected then
+					bitmap_dc.unselect_bitmap
+				end
+				bitmap_dc.select_bitmap (bitmap)
+
+				if mask_bitmap_dc.bitmap_selected then
+					mask_bitmap_dc.unselect_bitmap
+				end
+				if mask_bitmap /= Void then
+					mask_bitmap_dc.select_bitmap(mask_bitmap)
+				end
+
+				bitmap_dc.set_background_opaque
+				bitmap_dc.set_background_transparent
+				reset_pen
+				reset_brush
+				update_display_bitmap := True
+			end
 		end
 
+feature {NONE} -- Internal states and Operations
+
 	update_display is
-			-- Update the display.
+			-- Update the screen.
 		do
 				-- If the bitmap is exposed, then ask for
 				-- redrawing it (`invalidate' causes
@@ -244,9 +362,49 @@ feature -- Basic operation
 			if parent /= Void then
 				invalidate
 			end
+			update_display_bitmap := True
+		end
+
+	update_display_bitmap: BOOLEAN
+			-- Should we update the temporary bitmap used
+			-- for display.
+
+	dc_to_reset: BOOLEAN
+			-- Should we perform a reset of the dc before
+			-- drawing?
+
+	in_container: BOOLEAN
+			-- Is the pixmap in a container?
+	
+	on_contained is
+			-- `Current' has just been added to a container
+		do
+			convert_icon_to_bitmap
+			dc_to_reset := True
+			in_container := True
+			reset_dc(True)
+			interface.expose_actions.extend (~paint_bitmap)
 		end
 
 feature {NONE} -- Implementation
+
+	bitmap_dc: WEL_MEMORY_DC
+			-- The DC of the bitmap in memory.
+
+	mask_bitmap_dc: WEL_MEMORY_DC
+			-- The DC of the mask bitmap in memory
+
+	display_bitmap: WEL_BITMAP
+			-- Temporary bitmap used for display
+
+	display_mask_bitmap: WEL_BITMAP
+			-- Temporary bitmap used for display
+
+	display_bitmap_dc: WEL_MEMORY_DC
+			-- Temporary device context used for display
+
+	display_mask_dc: WEL_MEMORY_DC
+			-- Temporary device context bitmap used for display
 
 	interface: EV_PIXMAP
 
@@ -255,6 +413,18 @@ feature {NONE} -- Implementation
 		do
 			bitmap_dc.delete
 			screen_dc.delete
+		end
+
+	convert_icon_to_bitmap is
+			-- Stop using the WEL_ICON internally.
+			-- Drawing on a WEL_ICON is not possible so
+			-- we stop using icon.
+		do
+			if icon /= Void then
+				dc_to_reset := True		
+					-- Stop using the icon...
+				icon := Void
+			end	
 		end
 
 	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
@@ -269,9 +439,12 @@ feature {NONE} -- Implementation
 			window_width, window_height: INTEGER
 		do
 			if bitmap /= Void then
+
+				reset_dc(False)
+
 					-- Compute usefull constants
-				bitmap_height := bitmap.height
-				bitmap_width := bitmap.width
+				bitmap_height := height
+				bitmap_width := width
 				window_width := display_width
 				window_height := display_height
 				bitmap_left := (display_width - bitmap_width) // 2
@@ -281,7 +454,41 @@ feature {NONE} -- Implementation
 							
 					-- Draw the bitmap (If it is larger than the displayed
 					-- area, it will be clipped by Windows.
-				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, bitmap_dc, 0, 0, Srccopy)
+				if icon /= Void then
+						-- Erase the background (otherwise we cannot apply the mask
+					create wel_rect.make (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+
+					display_dc.draw_icon(icon, bitmap_left, bitmap_top)
+				elseif mask_bitmap /= Void then
+
+						-- Create the mask and image used for display. They are different
+						-- than the real image because we need to apply logical operation in
+						-- order to display the masked bitmap.
+					if display_bitmap = Void or display_mask_bitmap = Void or update_display_bitmap then
+						create display_mask_bitmap.make_by_bitmap(mask_bitmap)
+						create display_mask_dc.make_by_dc(display_dc)
+						display_mask_dc.select_bitmap(display_mask_bitmap)
+						display_mask_dc.pat_blt(0, 0, bitmap_width, bitmap_height, Dstinvert)
+
+						create display_bitmap.make_by_bitmap(bitmap)
+						create display_bitmap_dc.make_by_dc(display_dc)
+						display_bitmap_dc.select_bitmap(display_bitmap)
+						display_bitmap_dc.bit_blt (0, 0, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Srcand)
+
+						update_display_bitmap := False
+					end
+
+						-- Erase the background (otherwise we cannot apply the mask
+					create wel_rect.make (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+
+					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Maskpaint)
+					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_bitmap_dc, 0, 0, Srcpaint)
+				else
+					display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, bitmap_dc, 0, 0, Srccopy)
+				end
+				
 
 					--|  if the displayed area is larger than the bitmap, we erase the
 					--|  background that is outside the bitmap (i.e: AREA 1, 2, 3 & 4)
@@ -336,6 +543,8 @@ feature -- Drawing primitives
 	clear is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor
 			update_display
 		end
@@ -343,6 +552,8 @@ feature -- Drawing primitives
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (x1, y1, x2, y2)
 			update_display
 		end
@@ -350,6 +561,8 @@ feature -- Drawing primitives
 	draw_point (a_x, a_y: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y)
 			update_display
 		end
@@ -357,6 +570,8 @@ feature -- Drawing primitives
 	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_text)
 			update_display
 		end
@@ -364,6 +579,8 @@ feature -- Drawing primitives
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (x1, y2, x2, y2)
 			update_display
 		end
@@ -371,6 +588,8 @@ feature -- Drawing primitives
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (x1, y1, x2, y2)
 			update_display
 		end
@@ -378,6 +597,8 @@ feature -- Drawing primitives
 	draw_arc (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
 			update_display
 		end
@@ -385,6 +606,8 @@ feature -- Drawing primitives
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_pixmap)
 			update_display
 		end
@@ -392,6 +615,8 @@ feature -- Drawing primitives
 	draw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_width, a_height)
 			update_display
 		end
@@ -399,6 +624,8 @@ feature -- Drawing primitives
 	draw_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
 			update_display
 		end
@@ -406,6 +633,8 @@ feature -- Drawing primitives
 	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (points, is_closed)
 			update_display
 		end
@@ -413,6 +642,8 @@ feature -- Drawing primitives
 	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
 			update_display
 		end
@@ -420,6 +651,8 @@ feature -- Drawing primitives
 	fill_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_width, a_height)
 			update_display
 		end
@@ -427,6 +660,8 @@ feature -- Drawing primitives
 	fill_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
 			update_display
 		end
@@ -434,6 +669,8 @@ feature -- Drawing primitives
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (points)
 			update_display
 		end
@@ -441,8 +678,26 @@ feature -- Drawing primitives
 	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
+			convert_icon_to_bitmap
+			reset_dc(False)
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
 			update_display
+		end
+
+feature -- Duplication
+
+	copy_pixmap (other: EV_PIXMAP) is
+			-- Update `Current' to have same appearence as `other'.
+			-- (So as to satisfy `is_equal'.)
+		local
+			other_implementation: like Current
+		do
+			other_implementation ?= other.implementation
+			bitmap_dc ?= other_implementation.dc
+			bitmap := other_implementation.bitmap
+			mask_bitmap := other_implementation.mask_bitmap
+			icon := other_implementation.icon
+			transparent_color := other_implementation.transparent_color
 		end
 
 feature -- Obsolete
@@ -454,69 +709,31 @@ feature -- Obsolete
 			Result := bitmap_dc
 		end
 
---	internal_mask: WEL_BITMAP is
---			-- The mask corresponding to the transparent color.
---		require
---		local
---			monochrome_dc: WEL_MEMORY_DC
---		do
---			create monochrome_dc.make
---			create Result.make_compatible (monochrome_dc, width, height)
---			monochrome_dc.select_bitmap (Result)
---		end
-
---	internal_dc: WEL_MEMORY_DC
-			-- A dc to draw on it
-
---	internal_bitmap: WEL_BITMAP
-			-- A bitmap kept in memory when the dc is destroyed.
-
---	internal_ref: INTEGER
-			-- Number of object that currently use the
-			-- bitmap. Drawing areas not counted.
-
 	character_representation: ARRAY [CHARACTER] is
 			-- Return a representation of the pixmap in
 			-- an array of character.
 		local
 			info: WEL_BITMAP_INFO
-			bmp: WEL_BITMAP
-			int: INTEGER
 		do
-			bmp := deep_clone (bitmap_dc.bitmap)
-			create info.make_by_dc (bitmap_dc, bmp, Dib_rgb_colors)
-			Result := bitmap_dc.di_bits (bmp, 0, height, info, Dib_rgb_colors)
+			create info.make_by_dc (bitmap_dc, bitmap, Dib_rgb_colors)
+			Result := bitmap_dc.di_bits (bitmap, 0, height, info, Dib_rgb_colors)
 		end
 
-	redraw_pixmap (left, top, right, bottom: INTEGER) is
-			-- Redraw the area if necessary.
-		local
-			rect: WEL_RECT
-		do
---			if parent_imp /= Void then
---				create rect.make (left, top, right, bottom)
---				parent_imp.dc.copy_dc (internal_dc, rect)
---			end
+feature {NONE} -- Externals
+
+	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER) is
+		external
+			"C | %"load_pixmap.h%""
 		end
 
---	reference is
-			-- Reference the current pixmap.
---		do
---			if internal_ref = 0 then
---				internal_delete_dc
---			end
---			internal_ref := internal_ref + 1
---		end
+	Loadpixmap_error_noerror: INTEGER is 0
+	Loadpixmap_rgb_data: INTEGER is 0
+	Loadpixmap_alpha_data: INTEGER is 1
+	Loadpixmap_hicon: INTEGER is 2
+	Loadpixmap_hbitmap: INTEGER is 3
 
---	unreference is
---			-- Unreference the current pixmap.
---		do
---			internal_ref := internal_ref - 1
---			if internal_ref = 0 then
---				internal_create_dc
---			end
-
---		end
+invariant
+	bitmap_not_void: is_initialized implies bitmap /= Void
 
 end -- class EV_PIXMAP_IMP
 
@@ -541,6 +758,13 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/20 23:18:02  pichery
+--| - Entirely reviewed the implementation of pixmaps.
+--| - Added mask notion
+--| - Added ICON support (a pixmap can be internally stored as an HICON)
+--| - Added multiple format loading (Currently supported under Windows: BMP,
+--|   ICO & PNG)
+--|
 --| Revision 1.20  2000/02/25 01:07:51  pichery
 --| Added a small trick to speed up the display of pixmaps under Windows.
 --|

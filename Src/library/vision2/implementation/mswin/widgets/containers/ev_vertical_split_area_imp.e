@@ -29,7 +29,7 @@ feature {NONE} -- Access
 			-- Position of the splitter in the window
 		do
 			if child1 /= Void then
-				Result := child1.height
+				Result := child1.child_cell.height
 			else
 				Result := 0
 			end
@@ -68,10 +68,10 @@ feature -- Implementation
 			if the_child = child1 then
 				refresh
 			else
-				local_height := size + child1.height
+				local_height := size + child1.child_cell.height
 				if child2 /= Void then
 					child2.set_y (local_height)
-					local_height := local_height + child2.height
+					local_height := local_height + child2.child_cell.height
 					set_height (local_height)
 				end
 				parent_imp. child_height_changed (height, Current)
@@ -94,11 +94,13 @@ feature -- Implementation
 		do
 			if new_height > minimum_height then
 				set_height (new_height)
-				child2.parent_ask_resize (child2.width, new_height - child1.height - size)
+				if child2 /= Void then
+					child2.parent_ask_resize (child2.width, new_height - child1.child_cell.height - size)
+				end
 			end
 		end
 
-	child_minheight_changed (child_new_minimum: INTEGER) is
+	child_minheight_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_width because the child did.
 		local
 			local_height: INTEGER
@@ -112,7 +114,7 @@ feature -- Implementation
 			set_minimum_height (local_height + size)
 		end
 
-	child_minwidth_changed (child_new_minimum: INTEGER) is
+	child_minwidth_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_height because onr of the children did.
 		do
 			set_minimum_width (child_new_minimum.max(minimum_width))

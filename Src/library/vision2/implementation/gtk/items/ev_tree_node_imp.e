@@ -300,7 +300,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 					$is_leaf,
 					$is_expded
 				)
-					C.gtk_ctree_node_set_pixtext (
+				C.gtk_ctree_node_set_pixtext (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
 					0,

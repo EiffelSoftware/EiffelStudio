@@ -625,23 +625,6 @@ feature -- Delegated features
 			Result := False
 		end
 
-	minimum_dimensions_set (
-			new_width: INTEGER; 
-			new_height: INTEGER
-		): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- When the widget is not shown, the result is 0
-		obsolete "don't use it"
-		do
-			promote_to_widget
-			Result := interface.implementation.minimum_dimensions_set (
-				new_width,
-				new_height
-				)
-		end
-
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		do
@@ -816,6 +799,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/08 20:49:24  rogers
+--| Removed minimum_dimensions_set.
+--|
 --| Revision 1.7  2000/06/07 17:28:02  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

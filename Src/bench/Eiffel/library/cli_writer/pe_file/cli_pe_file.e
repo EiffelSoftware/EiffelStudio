@@ -252,7 +252,7 @@ feature {NONE} -- Saving
 			meta_data_size := emitter.save_size
 
 			if method_writer /= Void then
-				code_size := method_writer.size
+				code_size := method_writer.count
 			end
 
 			if has_debug_info then

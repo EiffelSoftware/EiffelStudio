@@ -139,4 +139,12 @@ feature -- Primitives
 			!!Result
 		end;
 
+feature -- Storage information for EiffelCase
+
+	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		do
+			!! Result.make ("like Current")
+		end;
+
 end

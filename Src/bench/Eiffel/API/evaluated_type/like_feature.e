@@ -239,4 +239,17 @@ end;
 			Result.set_feature_name (feature_name);
 		end
 
+feature -- Storage information for EiffelCase
+
+	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		local
+			tmp: STRING
+		do
+			!! tmp.make (0);
+			tmp.append ("like ");
+			tmp.append (feature_name);
+			!! Result.make (tmp);
+		end;
+
 end

@@ -284,15 +284,16 @@ feature {NONE} -- Class information
 			class_path: STRING;
 			old_classes: HASH_TABLE [INTEGER, STRING];
 			class_info: CASE_CLASS_INFO;
+			new_class_views: LINKED_LIST [S_CLASS_DATA];
 			view_id: INTEGER
 		do
 			old_classes := View_id_info.old_classes_with_cluster_name (name);
 			!! Result.make (classes.count);
 			!! flat_struct.initialize;
+			!! new_class_views.make;
 			from
 				classes.start;
 				Result.start;
-				i := 1
 			until
 				classes.after
 			loop
@@ -304,34 +305,53 @@ feature {NONE} -- Class information
 				class_info.formulate_class_data (flat_struct);
 				flat_struct.wipe_out;
 				s_class_data := class_info.s_class_data;
-				if old_classes = Void then
-					View_id_info.increment_class_view_number;
-					view_id := View_id_info.class_view_number;
-				else
+				view_id := 0;
+				if old_classes /= Void then
 					view_id := old_classes.item (s_class_data.name);
-					if view_id = 0 then
-							-- Class never existed so give it a
-							-- new view_id count
-						View_id_info.increment_class_view_number;
-						view_id := View_id_info.class_view_number;
-					else
+					if view_id /= 0 then
+							-- Remove the class so we can detect old
+							-- classes that needs to be removed
+							-- from the system
 						old_classes.remove (s_class_data.name)
 					end
 				end;
-				s_class_data.set_view_id (view_id);
 					-- Record parent cluster
-				Case_file_server.tmp_save_class (s_class_data);
+				if view_id = 0 then
+					View_id_info.increment_class_view_number;
+					view_id := View_id_info.class_view_number;
+					new_class_views.extend (s_class_data)
+				else
 debug ("CASE_ID")
 	io.error.putstring ("id: ");
 	io.error.putint (s_class_data.id);
-	io.error.putstring (" view id: ");
+	io.error.putstring (" reusing view id: ");
 	io.error.putint (s_class_data.view_id);
 	io.error.new_line;
 end
-				Result.replace (s_class_data);
-				Result.forth;
+					Result.replace (s_class_data);
+					Result.forth;
+				end;
+				s_class_data.set_view_id (view_id);
+				Case_file_server.tmp_save_class (s_class_data);
 				classes.forth;
-				i := i + 1
+			end;
+			from
+				new_class_views.start
+			until
+				new_class_views.after
+			loop
+				View_id_info.increment_class_view_number;
+				view_id := View_id_info.class_view_number;
+				Result.replace (new_class_views.item);
+debug ("CASE_ID")
+	io.error.putstring (" id: ");
+	io.error.putint (s_class_data.id);
+	io.error.putstring (" with new view id: ");
+	io.error.putint (s_class_data.view_id);
+	io.error.new_line;
+end
+				Result.forth;
+				new_class_views.forth
 			end
 		ensure
 			valid_result: result /= Void;

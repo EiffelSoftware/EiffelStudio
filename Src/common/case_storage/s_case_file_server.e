@@ -51,7 +51,7 @@ feature
 		require
 			path_set: path /= Void
 		do
-debug ("SERVER")
+debug ("CASE_SERVER")
 	io.error.putstring ("Saving into directory: ");		
 	io.error.putstring (path);
 	io.error.new_line
@@ -66,6 +66,8 @@ end
 				saved_classes.forth	
 			end;
 			saved_system.save_information (path)
+			saved_classes.clear_all;
+			saved_system := Void;
 		end;
 
 	clear is
@@ -90,12 +92,21 @@ end
 	remove_tmp_files is
 			-- Remove temporary files (in case of a crash)
 		do
+debug ("CASE_SERVER")
+	io.error.putstring ("Crash occurred: Removing tmp files: ");		
+	io.error.new_line
+end
 			if saved_classes /= Void then
 				from
 					saved_classes.start	
 				until
 					saved_classes.after	
 				loop
+debug ("CASE_SERVER")
+	io.error.putstring ("%T class: ");
+	io.error.putstring (saved_classes.item_for_iteration.name);		
+	io.error.new_line
+end
 					saved_classes.item_for_iteration.remove_tmp_file (path);
 					saved_classes.forth	
 				end
@@ -109,6 +120,11 @@ feature -- Class information
 			-- (Void if not found).
 		do
 			Result := saved_classes.item (view_id);
-		end;
+			if Result /= Void then
+				Result.retrieve_from_disk (path, True);
+			end;
+		ensure
+			valid_result: Result /= Void implies Result.is_valid
+		end
 
 end

@@ -55,4 +55,13 @@ feature
 			Result := other.is_void
 		end;
 
+feature -- Storage information for EiffelCase
+
+	storage_info_with_name, storage_info (classc: CLASS_C): S_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		do
+		ensure then
+			not_to_be_called: False
+		end;
+
 end

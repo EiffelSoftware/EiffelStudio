@@ -28,7 +28,9 @@ inherit
 			same_as,
 			same_class_type,
 			format,
-			is_deep_equal
+			is_deep_equal,
+			storage_info,
+			storage_info_with_name
 		end;
 	CL_TYPE_A
 		redefine
@@ -53,7 +55,9 @@ inherit
 			same_as,
 			same_class_type,
 			format,
-			is_deep_equal
+			is_deep_equal,
+			storage_info,
+			storage_info_with_name
 		select
 			dump, expanded_deferred, valid_expanded_creation,
 			is_valid, append_clickable_signature
@@ -610,5 +614,53 @@ feature -- Primitives
 			end;
 			ctxt.put_text_item (ti_R_bracket)
 		end;
+
+feature -- Storage information for EiffelCase
+
+	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		local
+			gens: FIXED_LIST [S_TYPE_INFO];
+			count, i: INTEGER
+		do
+			!! Result.make (Void, associated_class.id);
+			count := generics.count;
+			!! gens.make (count);
+			from
+				gens.start;
+				i := 1;
+			until
+				i > count
+			loop
+				gens.replace (generics.item (i).storage_info (classc));
+				gens.forth;
+				i := i + 1
+			end;
+			Result.set_generics (gens)
+		end;
+
+    storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
+            -- Storage info for Current type in class `classc'
+            -- and store the name of the class for Current
+		local
+			gens: FIXED_LIST [S_TYPE_INFO];
+			count, i: INTEGER
+        do
+			!! Result.make (associated_class.class_name, associated_class.id);
+			count := generics.count;
+			!! gens.make (count);
+			from
+				gens.start;
+				i := 1;
+			until
+				i > count
+			loop
+				gens.replace (generics.item (i).storage_info_with_name 
+								(classc));
+				gens.forth;
+				i := i + 1
+			end;
+			Result.set_generics (gens)
+        end;
 
 end

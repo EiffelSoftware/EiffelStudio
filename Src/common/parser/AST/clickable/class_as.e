@@ -231,9 +231,11 @@ feature -- formatting
 
 feature {CASE_CLASS_INFO} -- Case storage 
 
-	header_storage_info: S_CLASS_DATA is
+	header_storage_info (classc: CLASS_C): S_CLASS_DATA is
 			-- Header storage information for Current
 			-- (such as index and class name)
+		require
+			valid_classc: classc /= Void
 		local
 			g_l: FIXED_LIST [S_GENERIC_DATA];
 			i_l: FIXED_LIST [S_TEXT_DATA];
@@ -243,7 +245,6 @@ feature {CASE_CLASS_INFO} -- Case storage
 			gen_data: S_GENERIC_DATA;
 			type_info: S_TYPE_INFO;
 			name: STRING;
-			classc: CLASS_C
 		do
 			name := class_name.string_value;
 			name.to_upper;
@@ -279,8 +280,7 @@ feature {CASE_CLASS_INFO} -- Case storage
 					if gen.constraint = Void then
 						!! gen_data.make (gen_name, Void)
 					else
-						classc := gen.constraint_type.associated_class;
-						!! type_info.make (Void, classc.id);
+						type_info := gen.constraint_type.storage_info (classc);
 						!! gen_data.make (gen_name, type_info)
 					end;
 					g_l.replace (gen_data);

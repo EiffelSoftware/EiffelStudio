@@ -1957,19 +1957,21 @@ feature -- Case storage informatio
 			valid_f: f /= Void;
 		local
 			result_type: S_RESULT_DATA;
-			type_info: S_TYPE_INFO;	
 			id: INTEGER;
 			type_a: TYPE_A;
-			a_class: CLASS_C
+			classc: CLASS_C;
+			gen_type_a: GEN_TYPE_A
 		do
-			type_a ?= type;
-			if type_a /= Void then
-				a_class := type_a.associated_class;
-				if a_class /= Void then
-					!! type_info.make (Void, a_class.id); 
-					!! result_type.make (Void, type_info);
-					f.set_result_type (result_type)
-				end;
+			type_a := type.actual_type;
+			classc := written_class;
+			if not type_a.is_void then;
+				if type_a.has_generics then
+					!! result_type.make 
+						(Void, type_a.storage_info_with_name (classc))
+				else
+					!! result_type.make (Void, type_a.storage_info (classc))
+				end
+				f.set_result_type (result_type)
 			end;
 			if is_deferred then
 				f.set_is_deferred
@@ -1990,7 +1992,7 @@ feature -- Case storage informatio
 				f.set_is_attribute
 			end;
 			if arguments /= Void then
-				f.set_arguments (arguments.storage_info)
+				f.set_arguments (arguments.storage_info (classc))
 			end
 		end;
 

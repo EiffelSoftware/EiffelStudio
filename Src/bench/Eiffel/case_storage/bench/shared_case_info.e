@@ -12,7 +12,7 @@ feature
 			-- File server for case
 		once
 			!! Result
-		end
+		end;
 
 end
 

@@ -14,14 +14,11 @@ feature {NONE}
 			-- Set id to `s' and set
 			-- type to `t'.
 		require
-			both_not_void: id = Void implies t /= Void and then
-						t = Void implies id /= Void
+			valid_id: i /= Void; 
+			valid_t:  t /= Void 
 		do
 			id := i;
 			type := t
-		ensure
-			id_set: i = id;
-			type_set: type = t;
 		end;
 
 feature 
@@ -31,5 +28,10 @@ feature
 
 	type: S_TYPE_INFO;
 			-- Type of Current
+
+invariant
+
+	valid_id: id /= Void;
+	valid_type: type /= Void
 
 end

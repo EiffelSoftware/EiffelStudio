@@ -400,4 +400,19 @@ feature
 			ctxt.put_string (dump);
 		end;
 
+	storage_info (classc: CLASS_C): S_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		deferred
+		ensure
+			valid_result: result /= Void
+		end;
+
+	storage_info_with_name (classc: CLASS_C): S_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+			-- and store the name of the class for Current
+		deferred
+		ensure
+			valid_result: result /= Void
+		end;
+
 end

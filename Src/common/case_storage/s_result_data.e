@@ -14,8 +14,7 @@ feature {NONE}
 			-- Set id to `s' and set
 			-- type to `t'.
 		require
-			both_not_void: txt = Void implies t /= Void and then
-						t = Void implies txt /= Void
+			t_not_viod: t /= Void 
 		do
 			text := txt;
 			type := t
@@ -31,5 +30,9 @@ feature
 
 	type: S_TYPE_INFO;
 			-- Type of Current
+
+invariant
+
+	has_type: type /= Void
 
 end

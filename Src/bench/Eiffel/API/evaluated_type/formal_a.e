@@ -123,5 +123,19 @@ feature
 			ctxt.put_string (ctxt.formal_name (base_type));
 		end;
 
+feature -- Storage information for EiffelCase
+
+	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		local
+			gens: EIFFEL_LIST [FORMAL_DEC_AS];
+		do
+			gens := classc.generics;
+			if gens /= Void and then base_type <= gens.count then
+				!! Result.make (gens.i_th (base_type).formal_name)
+			else
+				!! Result.make ("G")
+			end
+		end;
 
 end

@@ -20,18 +20,7 @@ feature
 	cluster_view_number: INTEGER;
 			-- Last number use for default cluster name
 
-	was_generated_from_bench: BOOLEAN;
-			-- Was Current generated from bench?
-
 feature -- Setting values
-
-	set_was_generated_from_bench is
-			-- Set was_generated_from_bench to True.
-		do
-			was_generated_from_bench := True;
-		ensure
-			was_generated_from_bench: was_generated_from_bench
-		end;
 
 	set_class_id_number (value: like class_id_number) is
 			-- Set class_id_number to `value'.

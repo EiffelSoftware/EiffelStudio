@@ -1,43 +1,38 @@
-class S_TYPE_INFO
+deferred class S_TYPE_INFO
 
-creation
-	
-	make
+feature 
 
-feature {NONE}
+	free_text_name: STRING;
 
-	make (s: STRING; id: like class_id) is
-			-- Set id to `s' and set
-			-- class_id to `id'.
-		require
-			valid_s: s = Void implies id > 0; 
-			valid_id: id = 0 implies s /= void; 
-		do
-			name := s;
-			class_id := id
-		ensure
-			name_set: name = s;
-			class_id_set: class_id = id;
+	is_valid: BOOLEAN is
+		deferred
 		end;
 
-feature
+	is_basic: BOOLEAN is
+		do
+		end;
 
-	class_id: INTEGER;
+	has_generics: BOOLEAN is
+		do
+		end;
 
-	name: STRING;
+	is_normal_class: BOOLEAN is
+		do
+			Result := not is_basic and then not has_generics
+		end;
 
-    is_valid: BOOLEAN is
-            -- Is Current valid?
-        do
-            if name = Void then
-                Result := class_id > 0
-            else
-                Result := class_id = 0
-            end
-        end
+	string_value: STRING is
+			-- String value of Current
+		require
+			valid_free_text_name: free_text_name /= Void
+		deferred
+		ensure
+			valid_result: Result /= Void
+		end;
 
-invariant
-
-	is_valid: is_valid
+	real_class_ids: LINKED_LIST [INTEGER] is
+		do
+			!! Result.make;
+		end
 
 end

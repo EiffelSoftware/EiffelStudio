@@ -43,6 +43,7 @@ feature
 						process_clusters;
 						convert_to_case_format;
 						remove_old_classes;
+						error_window.put_string ("Finished storing EiffelCase project.%N");
 					end
 				else
 					error_window.put_string ("Project is in an unstable state.%N");
@@ -54,13 +55,15 @@ feature
 			end
 		rescue
 			flat_ctxt.clear;
+			Case_file_server.remove_tmp_files;
+			Case_file_server.clear;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				rescued := True;
-				retry
 			else
-				error_window.put_string ("Internal error: Cannot generate case format.%N")
+				error_window.put_string ("Internal error: Cannot generate EiffelCase project.%N")
 			end
+			--/*** REMOVEretry
 		end
 
 feature {NONE}
@@ -86,11 +89,11 @@ feature {NONE}
 			root_cluster.set_view_id (view_id);
 			!! s_system_data;
 			s_system_data.set_root_cluster (root_cluster);
-			s_system_data.set_was_generated_from_bench;
 			s_system_data.set_class_view_number (View_id_info.class_view_number);
 			s_system_data.set_class_id_number (System.class_counter.value);
 			s_system_data.set_cluster_view_number (View_id_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
+			io.error.putstring ("Saving EiffelCase project to disk.%N");
 			Case_file_server.save_eiffelcase_format;
 			Case_file_server.clear;
 		rescue
@@ -101,7 +104,6 @@ feature {NONE}
 				Rescue_status.set_is_error_exception (True);
 				error_window.put_string ("EiffelCase format maybe corrupted.%N");
 			end;
-			Case_file_server.clear;
 		end;
 
 	remove_old_classes is

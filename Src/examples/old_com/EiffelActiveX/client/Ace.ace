@@ -6,9 +6,7 @@ root
 
 default
 	assertion (all)
-	debug  (yes)
-	
-
+	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
 
 cluster
 	
@@ -51,7 +49,7 @@ cluster
 	wel_windows:				"$EIFFEL4\library\wel\windows";
 
 		-- EiffelCom
-	com:						"$EIFFEL4\library\old_com"
+	com:						"$EIFFEL4\library\com"
 	ecom_auto(com):				"$\ecom_automation"
 		visible
 			EOLE_DISPATCH;
@@ -105,11 +103,10 @@ cluster
 
 external
 
-	include_path:	"$EIFFEL4\library\old_com\spec\windows\include",
-					"$EIFFEL4\library\old_com\private_clib",
+	include_path:	"$EIFFEL4\library\com\spec\windows\include",
 					"$EIFFEL4\library\wel\spec\windows\include";
 
-	object:		"$EIFFEL4\library\old_com\spec\$(COMPILER)\lib\eifole.lib",
+	object:		"$EIFFEL4\library\com\spec\$(COMPILER)\lib\eifole.lib",
 				"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib";
 
 end

@@ -60,7 +60,7 @@ feature
 							set_global_cursor (watch_cursor);
 							text_window.clean;
 							text_window.set_file_name (file_name (stone));
-							display_info (0, stone);
+							display_info (stone);
 							if 
 								text_window.last_format = 
 									text_window.tool.showtext_command
@@ -116,7 +116,7 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Click_form_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
 		do
 			text_window.process_text (clickable_context_text (c));	

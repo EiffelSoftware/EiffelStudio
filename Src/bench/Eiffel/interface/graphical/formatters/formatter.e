@@ -98,7 +98,7 @@ feature
 							text_window.clean;
 							text_window.set_root_stone (stone);
 							text_window.set_file_name (file_name (stone));
-							display_info (0, stone);
+							display_info (stone);
 							text_window.set_editable;
 							text_window.show_image;
 							text_window.set_read_only;
@@ -215,8 +215,8 @@ feature {NONE}
 			end;
 		end;
 
-	display_info (i: INTEGER; d: STONE) is
-			-- Display special format of `d' eventually in tree form (with 'i' tabulations).
+	display_info (s: STONE) is
+			-- Display special format of for stone `s'.
 		deferred
 		end;
 

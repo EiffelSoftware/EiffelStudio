@@ -45,7 +45,7 @@ feature -- Status Setting
 			-- 
 		require
 			exists: exists
-			tracking_reference_disabled: not reference_tracked
+			tracking_reference_not_started: not reference_tracked
 		do
 			reference_tracked := True
 			if not shared then
@@ -53,6 +53,10 @@ feature -- Status Setting
 			else
 				references_number := -1 -- Shared
 			end
+
+				-- Give a unique number to this object, to follow it.
+			internal_number_id := internal_number_id_cell.item
+			internal_number_id_cell.put (internal_number_id + 1)
 		end
 
 	decrement_reference is
@@ -95,9 +99,14 @@ feature {NONE} -- Removal
 			if exists and then not shared then
 				debug ("WEL")
 					if reference_tracked and references_number > 0 then
+						io.putstring ("----------------------------------------------------------------%N")
 						io.putstring ("Warning, reference tracking was enabled for the following object%N")
 						io.putstring ("but `reference_number' was not equal to zero at dispose time%N")
+						io.new_line
+						io.putstring ("Put a conditional breakpoint in `enable_reference_tracking' to%N")
+						io.putstring ("discover when the object with `internal_number_id'="+internal_number_id.out+" is created.%N%N")
 						print (Current)
+						io.putstring ("----------------------------------------------------------------%N")
 						io.new_line
 					end
 				end
@@ -118,7 +127,7 @@ feature -- Removal
 		require
 			reference_not_tracked: not reference_tracked
 		do
-			if exists and then (not shared) then
+ 			if exists and then (not shared) then
 				destroy_item
 			end
 		ensure
@@ -143,6 +152,19 @@ feature {ANY} -- Implementation
 
 	references_number: INTEGER
 			-- Number of object referring to this object.
+
+	internal_number_id: INTEGER
+			-- Debugging purpose
+			--
+			-- Number identifying uniquely every object (do not change
+			-- during the whole run). Helps debugging object disposed
+			-- by a reference_number > 0
+
+	internal_number_id_cell: CELL [INTEGER] is
+			-- Cell to give a unique integer to each new object.
+		once
+			create Result.put (0)
+		end
 
 end -- class WEL_REFERENCE_TRACKABLE
 

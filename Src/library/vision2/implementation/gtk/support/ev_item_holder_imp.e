@@ -222,6 +222,17 @@ feature -- Implementation
 		deferred
 		end
 
+	item_from_c_object (a_c_object: POINTER): G is
+			-- Item at current position.
+		local
+			item_imp: EV_ITEM_IMP
+		do
+			item_imp ?= eif_object_from_c (a_c_object)
+			if item_imp /= Void then
+				Result := (create {ASSIGN_ATTEMPT [G]}).attempt (item_imp.interface)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM_LIST [G]
@@ -251,6 +262,10 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/22 19:52:47  brendel
+--| Added feature `item_from_c_object' to be able to retreive the Eiffel object
+--| in redefined gtk_reorder_child functions. See: EV_MENU_ITEM_LIST_IMP.
+--|
 --| Revision 1.12  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

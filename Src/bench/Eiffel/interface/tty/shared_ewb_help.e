@@ -119,7 +119,7 @@ feature {NONE}
 
 	queries_help: STRING is "manipulate subqueries";
 
-	quick_melt_help: STRING is "quick melt of the system";
+	quick_melt_help: STRING is "quick melt the system";
 
 	quit_help: STRING is "terminate session";
 

@@ -28,10 +28,6 @@ feature {NONE} -- Initialization
 			-- Make a progress bar.
 		require
 			a_parent_not_void: a_parent /= Void
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
 		do
 			internal_window_make (a_parent, Void,
 				default_style, a_x, a_y, a_width, a_height,
@@ -41,10 +37,6 @@ feature {NONE} -- Initialization
 			exists: exists
 			parent_set: parent = a_parent
 			id_set: id = an_id
-			x_set: x = a_x
-			y_set: y = a_y
-			width_set: width = a_width
-			height_set: height = a_height
 		end
 
 feature -- Element change

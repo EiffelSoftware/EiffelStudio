@@ -39,10 +39,6 @@ feature {NONE} -- Intialization
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 			a_name_not_void: a_name /= Void
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
 		do
 			register_class
 			internal_window_make (a_parent, a_name, default_style,
@@ -50,10 +46,6 @@ feature {NONE} -- Intialization
 				default_pointer)
 		ensure
 			parent_set: parent = a_parent
-			x_set: x = a_x
-			y_set: y = a_y
-			width_set: width = a_width
-			height_set: height = a_height
 		end
 
 feature -- Status report

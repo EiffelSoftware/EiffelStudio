@@ -390,12 +390,12 @@ Frozen_mark: -- Empty
 			}
 	|	TE_FROZEN
 			{
-				if il_parser then
-					is_frozen_class := True
-				else
-						-- Trigger a syntax error.
-					raise_error
-				end
+					-- I'm adding a few comments line
+					-- here because otherwise the generated
+					-- parser is very different from the
+					-- previous one, since line numbers are
+					-- emitted.
+				is_frozen_class := True
 			}
 	;
 

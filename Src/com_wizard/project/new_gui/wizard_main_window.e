@@ -121,8 +121,18 @@ feature -- Basic Operations
 			if not destination_folder_validity (l_text).is_error then
 				environment.set_destination_folder (l_text)
 			end
-			environment.set_compile_c (not compile_c_code_check_button.is_selected)
-			environment.set_compile_eiffel (not compile_eiffel_check_button.is_selected)
+			environment.set_compile_c (compile_c_code_check_button.is_selected)
+			environment.set_compile_eiffel (compile_eiffel_check_button.is_selected)
+			if backup_radio_button.is_selected then
+				environment.set_backup (True)
+				environment.set_cleanup (False)
+			elseif cleanup_radio_button.is_selected then
+				environment.set_backup (False)
+				environment.set_cleanup (True)
+			elseif overwrite_radio_button.is_selected then
+				environment.set_backup (False)
+				environment.set_cleanup (False)
+			end
 		end
 
 feature {WIZARD_OUTPUT_BOX} -- Implementation

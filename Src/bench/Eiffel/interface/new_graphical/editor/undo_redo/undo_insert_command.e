@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that ..."
-	author: ""
+	author: "Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,7 +64,8 @@ feature -- Basic operations
 		local
 			cur: TEXT_CURSOR
 		do
-			create cur.make_from_character_pos (x_start, y_start, chwin)
+			cur := chwin.cursor
+			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.delete_n_chars (message.count)
 		end
 
@@ -72,7 +73,8 @@ feature -- Basic operations
 		local
 			cur: TEXT_CURSOR
 		do
-			create cur.make_from_character_pos (x_start, y_start, chwin)
+			cur := chwin.cursor
+			cur.make_from_character_pos (x_start, y_start, chwin)
 			cur.insert_string (message)
 		end
 

@@ -15,24 +15,8 @@
 
 #include <objbase.h>
 
-#include "eif_cecil.h"
 
+#define ccom_set_ularge_integer(_ptr_,v) ULISet32(*((ULARGE_INTEGER*)_ptr_), v)
 
-class E_ULarge_Integer
-{
-public:
-	// Commands
-	E_ULarge_Integer (){};
-	E_ULarge_Integer (ULARGE_INTEGER * ularge);
-	~E_ULarge_Integer (){};
-	void ccom_set_from_integer(EIF_INTEGER i);
-
-	// Queries
-	ULARGE_INTEGER * ccom_ularge_integer();
-	
-private:
-	ULARGE_INTEGER * puli;
-	ULARGE_INTEGER uli;
-};
 
 #endif // !__ECOM_E_ULARGE_INTEGER_H_INC__

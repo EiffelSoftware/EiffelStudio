@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that test EV_LABEL."
+	description: "Objects that test EV_VERTICAL_PROGRESS_BAR."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

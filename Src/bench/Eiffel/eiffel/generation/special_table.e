@@ -47,7 +47,7 @@ feature
 			until
 				i > nb
 			loop
-				if 	(not after) and then i = item.type_id then
+				if (not after) and then i = item.type_id then
 					entry := item;
 					r_name := entry.routine_name;
 					file.putstring ("(char *(*)()) ");
@@ -57,15 +57,14 @@ feature
 					forth;
 	
 						-- Remember external declaration
-					Extern_declarations.add_routine
-								(void_type, clone (r_name));
+					Extern_declarations.add_routine (void_type, clone (r_name));
 				else
-					file.putstring ("(fnptr) 0,%N");
+					file.putstring ("(char *(*)()) 0,%N");
 				end;
 				i := i + 1;
 			end;
 			if System.has_separate then
-				file.putstring ("(fnptr) sep_obj_dispose%N");
+				file.putstring ("(char *(*)()) sep_obj_dispose%N");
 			end;
 			file.putstring ("};%N%N");
 

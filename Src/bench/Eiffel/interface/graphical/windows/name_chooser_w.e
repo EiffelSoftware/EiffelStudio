@@ -13,15 +13,16 @@ inherit
 	FILE_SEL_D
 		rename
 			make as file_sel_d_create,
-			popup as file_sel_d_popup
+			popup as file_sel_d_popup,
+			popdown as file_sel_d_popdown
 		end;
 	FILE_SEL_D
 		rename
 			make as file_sel_d_create
 		redefine
-			popup
+			popup, popdown
 		select
-			popup
+			popup, popdown
 		end;
 	SHARED_LICENSE;
 	WINDOW_ATTRIBUTES
@@ -48,7 +49,7 @@ feature -- Initialization
 
 feature -- Graphical Interface
 
-	call (a_command: COMMAND_W) is
+	call (a_command: COMMAND) is
 			-- Record calling command `a_command' and popup current.
 		do
 			last_caller := a_command;
@@ -62,6 +63,14 @@ feature -- Graphical Interface
 			window := wind
 		end;
 
+	popdown is
+			-- Popdown the name chooser.
+		do
+			last_directory_viewed.wipe_out;
+			last_directory_viewed.append (directory);
+			file_sel_d_popdown
+		end;
+
 feature {PROJECT_W} -- Re mapping
 
 	popup is
@@ -69,6 +78,9 @@ feature {PROJECT_W} -- Re mapping
 		local
 			new_x, new_y: INTEGER
 		do
+			if not last_directory_viewed.empty then
+				set_directory (last_directory_viewed)
+			end
 			if is_popped_up then popdown end;
 			if window /= Void then
 				new_x := window.real_x + (window.width - width) // 2;
@@ -95,11 +107,17 @@ feature {PROJECT_W} -- Re mapping
 
 feature {NONE} -- Properties
 
-	last_caller: COMMAND_W
+	last_caller: COMMAND
 			-- Last command which popped up current
 
 	window: WIDGET;
 			-- Window to which the file selection will apply
+
+	last_directory_viewed: STRING is
+			-- Last directory viewed
+		once
+			!! Result.make (0);
+		end
 
 feature {NONE} -- Implementation
 

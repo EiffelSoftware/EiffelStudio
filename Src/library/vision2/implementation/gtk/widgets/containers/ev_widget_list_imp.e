@@ -89,7 +89,6 @@ feature {NONE} -- Implementation
 			C.gtk_object_ref (p)
 			C.gtk_container_remove (list_widget, p)
 			C.set_gtk_widget_struct_parent (p, NULL)
-			C.gtk_object_unref (p)
 			
 			child_array.go_i_th (i)
 			child_array.remove

@@ -43,6 +43,14 @@
 			<li><B>EV_CHECKABLE_LIST</B> - New class added which behaves as an EV_LIST, except that for each EV_LIST_ITEM contained, an associated check box is displayed.</li>
 			<li><B>EV_MESSAGE_DIALOG</B> - No longer deferred, and has two creation procedures `default_create' and `make_with_text'.</li>
 			<li><B>EV_STANDARD_DIALOG</B> - All descendents now have `make_with_text' as a creation procedure'</li>.
+			<li><B>EV_TABLE</B> - Now inherits CHAIN instead of ARRAY. This is a breaking change, and may require some modification to your code. The inheritence from ARRAY was seriously flawed. For example, if you were to call `extend' on an EV_CONTAINER object that was currently referencing an EV_TABLE, then this would fail. Now that we inherit CHAIN, this problem, among others of a similar nature are fixed. Another advantage of inheriting CHAIN, is that the table may now be iterated which allows for greater flexibility.<br><br>The following list details some of the breaking changes, and how to fix them:
+				<ul>
+					<li><B>item</B> - If you were using `item', you should change this to `item_at_position'. A call to `item' will now return the current item.</li>
+					<li><B>put</B> - If you were using `put', you must now replace this with `put_at_position'.
+					<li><B>extend</B> and <B>replace</B> - These are now both exported, as before, they were exported to {NONE}.</li>
+					<li>features inherited from <B>ARRAY</B> - These are no longer available, but the feature `item_list' is available, which returns the table represented as an ARRAYED_LIST [WIDGET].</li>
+				</ul>
+			</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>
@@ -97,6 +105,7 @@
 						both.</li>
 					<li>
 						<b>EV_TEXT</b> - If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
+					<li><b>EV_PRINT_DIALOG</b> - Fixed `set_from_page' and `set_to_page' which were previously not implemented.</li>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

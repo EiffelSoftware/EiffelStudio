@@ -27,57 +27,53 @@ feature -- Access
 			non_void_result: Result /= Void
 		end		
 
+	Default_assemblies: ARRAY [STRING] is
+			-- Default assemblies added with `add_default_assemblies'
+		once
+			Result := <<"mscorlib.dll", "system.dll", "system.xml.dll">>
+		end
+		
 feature -- Status Report
 
 	assembly_added: BOOLEAN
 			-- Was last call to `add_referenced_assembly_from_file_name' successful?
 
-	has (a_file_name: STRING): BOOLEAN is
+	has_file (a_file_name: STRING): BOOLEAN is
 			-- Do referenced assemblies have assembly with path `a_file_name'?
+		require
+			non_void_file_name: a_file_name /= Void
 		local
-			old_cursor: CURSOR
+			l_assembly: ASSEMBLY
 		do
-			old_cursor := Referenced_assemblies.cursor
+			if feature {SYSTEM_FILE}.exists (a_file_name) then
+				l_assembly := feature {ASSEMBLY}.load_file (a_file_name)
+				if l_assembly /= Void then
+					Result := has (l_assembly.get_name)
+				end
+			end
+		ensure
+			cusor_unchanged: Referenced_assemblies.index = old Referenced_assemblies.index
+		end
+		
+	has (a_name: ASSEMBLY_NAME): BOOLEAN is
+			-- Do referenced assemblies have assembly with name `a_name'?
+		local
+			l_old_cursor: CURSOR
+		do
+			l_old_cursor := Referenced_assemblies.cursor
 			from
 				Referenced_assemblies.start
 			until
 				Referenced_assemblies.after or Result
 			loop
-				Result := assembly_has_file_name (Referenced_assemblies.item, a_file_name)
+				Result := Referenced_assemblies.item.assembly.get_name.full_name.equals (a_name.full_name)
 				Referenced_assemblies.forth
 			end
-			Referenced_assemblies.go_to (old_cursor)
+			Referenced_assemblies.go_to (l_old_cursor)
 		ensure
 			cusor_unchanged: Referenced_assemblies.index = old Referenced_assemblies.index
 		end
 		
-	assembly_has_file_name (a_assembly: CODE_REFERENCED_ASSEMBLY; a_file_name: STRING): BOOLEAN is
-			-- Does assembly have file name `a_name'?
-			-- Can be either simple name of full path name with or without extension
-		require
-			non_void_name: a_file_name /= Void
-			non_void_assembly: a_assembly /= Void
-		local
-			l_location: STRING
-			l_index: INTEGER
-			l_file_name: STRING
-		do
-			l_file_name := a_file_name.as_lower
-			l_location := a_assembly.assembly.location
-			Result := l_file_name.is_equal (l_location)
-			if not Result then
-				l_index := l_location.last_index_of (Directory_separator, l_location.count)
-				if l_index > 1 then
-					l_location.keep_tail (l_location.count - l_index)
-					Result := l_file_name.is_equal (l_location)
-					if not Result then
-						l_location.keep_head ((l_location.last_index_of ('.', l_location.count) - 1).max (1))
-						Result := l_file_name.is_equal (l_location)
-					end
-				end
-			end
-		end
-
 feature -- Status Setting
 
 	add_referenced_assembly (a_file_name: STRING) is
@@ -85,7 +81,7 @@ feature -- Status Setting
 			-- Set `assembly_added' accordingly.
 		require
 			non_void_name: a_file_name /= Void
-			not_has_assembly: not has (a_file_name)
+			not_has_assembly: not has_file (a_file_name)
 		local
 			l_path: STRING
 			l_assembly: ASSEMBLY
@@ -108,13 +104,33 @@ feature -- Status Setting
 				end
 			end
 		ensure
-			added: assembly_added implies referenced_assemblies.there_exists (agent assembly_has_file_name (?, a_file_name))
+			added: assembly_added implies referenced_assemblies.count = old referenced_assemblies.count + 1
 		rescue
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [(create {EXCEPTIONS}).exception_trace])
 			l_retried := True
 			retry
 		end
 
+	add_default_assemblies is
+			-- Add mscorlib, system and system.xml if not already in list.
+		local
+			i, l_count: INTEGER
+			l_assembly: STRING
+		do
+			from
+				l_count := Default_assemblies.count
+				i := 1
+			until
+				i > l_count
+			loop
+				l_assembly := Default_assemblies.item (i)
+				if not has_file (l_assembly) then
+					add_referenced_assembly (l_assembly)
+				end
+				i := i + 1
+			end
+		end
+		
 	reset_referenced_assemblies is
 			-- Reset content of `Referenced_assemblies'.
 		do
@@ -132,6 +148,9 @@ feature -- Basic Operations
 			i, l_count: INTEGER
 			l_assembly_list: ARRAYED_LIST [STRING]
 			l_found_new: BOOLEAN
+			l_code_base, l_location: STRING
+			l_uri: SYSTEM_DLL_URI
+			l_name: ASSEMBLY_NAME
 		do
 			from
 				create l_assembly_list.make (30)
@@ -146,22 +165,29 @@ feature -- Basic Operations
 				until
 					i = l_count
 				loop
-					l_assembly := feature {ASSEMBLY}.load_assembly_name (l_referenced_assemblies.item (i))
-					l_assembly_list.extend (l_assembly.location)
+					l_name := l_referenced_assemblies.item (i)
+					l_found_new := not has (l_name)
+					if l_found_new then
+						l_code_base := l_name.code_base
+						if l_code_base /= Void and then not l_code_base.is_empty then
+							create l_uri.make (l_code_base)
+							if l_uri.is_file then
+								l_location := l_uri.local_path
+							end
+						end
+						if l_location = Void then
+							l_assembly := feature {ASSEMBLY}.load (l_name)
+							if l_assembly /= Void then
+								l_location := l_assembly.location
+							end
+						end
+						if l_location /= Void then
+							add_referenced_assembly (l_location)
+						end
+					end
 					i := i + 1
 				end
 				Referenced_assemblies.forth
-			end
-			from
-				l_assembly_list.start
-			until
-				l_assembly_list.after
-			loop
-				if not has (l_assembly_list.item) then
-					add_referenced_assembly (l_assembly_list.item)
-					l_found_new := l_found_new or assembly_added
-				end
-				l_assembly_list.forth
 			end
 			if l_found_new then
 				complete -- Complete until all references are added
@@ -175,6 +201,9 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
+
+invariant
+	non_void_default_assemblies: Default_assemblies /= Void
 
 end -- Class CODE_REFERENCED_ASSEMBLIES
 

@@ -58,6 +58,16 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
+	make_by_template (a_parent: WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE) is
+		do
+			register_dialog
+			create dialog_children.make
+			item := cwin_dialog_box_indirect (main_args.current_instance.item, a_template.item,
+				a_parent.item, cwel_dialog_procedure_address)
+		ensure
+			dialog_children_not_void: dialog_children /= Void		
+		end
+
 feature -- Access
 
 	result_id: INTEGER

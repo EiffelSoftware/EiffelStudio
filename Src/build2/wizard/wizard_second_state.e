@@ -56,9 +56,6 @@ feature -- Basic Operation
 
 	proceed_with_current_info is
 			-- User has clicked next, go to next step.
-		local
-			application_name_lower, class_name_lower, project_name_lower,
-			invalid_text, warning_message: STRING
 		do
 			Precursor
 			validate
@@ -75,7 +72,7 @@ feature -- Basic Operation
 	validate is
 			-- Validate input fields of `Current'.
 		local
-			application_name_lower, class_name_lower, project_name_lower: STRING
+			application_name_lower, class_name_lower: STRING
 		do
 				-- Check for invalid eiffel names as language specification.
 			validate_successful := True

@@ -36,10 +36,16 @@ interface IEiffelProject: IUnknown
   HRESULT retrieve_project ([in] BSTR a_project_file_name);
   
   [helpstring ("Create new project.")]
-  HRESULT create_project ([in] BSTR ace_file_name, [in] BSTR project_directory_path);
+  HRESULT create_project ([in] BSTR an_ace_file_name, [in] BSTR project_directory_path);
   
-  [helpstring ("Full path to .epr file")]
+  [helpstring ("Full path to .epr file.")]
   HRESULT project_file_name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Full path to Ace file.")]
+  HRESULT ace_file_name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Project directory.")]
+  HRESULT project_directory ([out, retval] BSTR * return_value);
   
   [helpstring ("Is project valid?")]
   HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);

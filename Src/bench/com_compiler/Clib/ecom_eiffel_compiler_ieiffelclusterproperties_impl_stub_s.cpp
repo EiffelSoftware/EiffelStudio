@@ -20,7 +20,6 @@ ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::IEiffelClusterProperti
 	type_id = eif_type (eiffel_object);
 	
 	pTypeInfo = 0;
-	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -33,7 +32,6 @@ ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::~IEiffelClusterPropert
 	eif_wean (eiffel_object);
 	if (pTypeInfo)
 		pTypeInfo->Release ();
-	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -1905,6 +1903,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::R
 	Decrement reference count
 -----------------------------------------------------------*/
 {
+	UnlockModule ();
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
@@ -1925,6 +1924,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::A
 	Increment reference count
 -----------------------------------------------------------*/
 {
+	LockModule ();
 	return InterlockedIncrement (&ref_count);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

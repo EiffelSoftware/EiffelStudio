@@ -1,4 +1,9 @@
--- Cells containing two items
+indexing
+
+	description: 
+		"Cells containing two items.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class
 	

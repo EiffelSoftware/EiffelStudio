@@ -105,6 +105,9 @@ feature {NONE} -- Implementation
 			pixmap_drawing_test: PIXMAP_DRAWING_TEST
 			pixmap_figure_string_size_test: PIXMAP_FIGURE_STRING_SIZE_TEST
 			text_basic_test: TEXT_BASIC_TEST
+			rich_text_basic_test: RICH_TEXT_BASIC_TEST
+			rich_text_buffering_test: RICH_TEXT_BUFFERING_TEST
+			rich_text_tab_test: RICH_TEXT_TAB_TEST
 			test_scroll_to_line_test: TEXT_SCROLL_TO_LINE_TEST
 			cell_background_pixmap_test: CELL_BACKGROUND_PIXMAP_TEST
 			cell_basic_test: CELL_BASIC_TEST

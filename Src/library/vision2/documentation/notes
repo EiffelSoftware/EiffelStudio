@@ -21,12 +21,13 @@ To be revised:
     ev_multi_column_list_row.e
     ev_text.e (PR 2219)
     ev_text_format.e
+    ev_simple_item.e
+
     ev_dynamic_table.e
     ev_fixed.e
     ev_password_field.e
     ev_scrollable_text.e
     ev_dynamic_tree_item.e
-    ev_simple_item.e
 
 To do:
 - Right click interface to pick and drop.
@@ -77,13 +78,13 @@ X   complete but found to have bugs
                                                         IF   WEL  GEL  TEST
   Base:                                        
     kernel/ev_any.e                                     *    .    *    .
-    properties/ev_drawable.e                            .    .    *    .
-    properties/ev_drawable_constants.e                  .    .    *    .
-    properties/ev_fontable.e                            .    .    o    .
+    properties/ev_drawable.e                            *    .    *    .
+    properties/ev_drawable_constants.e                  *    .    *    .
+    properties/ev_fontable.e                            *    .    o    .
     properties/ev_pick_and_dropable.e                   o    o    o    .
     properties/ev_pixmapable.e                          *    o    *    .
     properties/ev_textable.e                            *    o    *    .
-    support/ev_dynamic_list.e                           .    .    o    .
+    support/ev_dynamic_list.e                           o    .    o    .
     widgets/ev_widget.e                                 o    o    o    .
     widgets/primitives/ev_primitive.e                   *    o    *    .
     items/ev_item.e                                     *    o    *    .
@@ -102,7 +103,7 @@ X   complete but found to have bugs
     kernel/ev_font.e                                    o    .    *    .
     kernel/ev_rectangle.e                               o    .    -    .
     kernel/ev_timeout.e                                 *    .    *    .
-    support/ev_default_font.e                           .    .    -    .
+    support/ev_default_font.e                           *    .    -    .
     support/ev_radio_peer.e                             *    *    *    .
 
   System:
@@ -187,21 +188,21 @@ X   complete but found to have bugs
     items/ev_select_menu_item.e                         *    *    *    .
 
   Status bar:
-    items/ev_status_bar_item.e                          .    .    *    .
-    widgets/uncommon_widgets/ev_status_bar.e            .    .    *    .
+    items/ev_status_bar_item.e                          *    .    *    .
+    widgets/uncommon_widgets/ev_status_bar.e            *    .    *    .
 
   Tool bar:
     widgets/primitives/ev_tool_bar.e                    o    *    *    .
-    items/ev_tool_bar_item.e                            .    o    *    .
-    items/ev_tool_bar_button.e                          .    o    *    .
-    items/ev_tool_bar_radio_button.e                    .    .    o    .
-    items/ev_tool_bar_separator.e                       .    .    *    .
-    items/ev_tool_bar_toggle_button.e                   .    .    *    .
+    items/ev_tool_bar_item.e                            *    o    *    .
+    items/ev_tool_bar_button.e                          o    o    *    .
+    items/ev_tool_bar_radio_button.e                    *    .    o    .
+    items/ev_tool_bar_separator.e                       *    .    *    .
+    items/ev_tool_bar_toggle_button.e                   *    .    *    .
 
   Tree:
     widgets/primitives/ev_tree.e                        o    o    X    .
-    support/ev_tree_item_holder.e                       .    o    *    .
-    items/ev_tree_item.e                                .    o    X    .
+    support/ev_tree_item_holder.e                       *    o    *    .
+    items/ev_tree_item.e                                *    o    X    .
 
   List:
     widgets/primitives/ev_list.e                        *    o    *    .
@@ -209,4 +210,4 @@ X   complete but found to have bugs
 
   Multi column list:
     widgets/primitives/ev_multi_column_list.e           *    o    o    .
-    items/ev_multi_column_list_row.e                    .    o    o    .
+    items/ev_multi_column_list_row.e                    *    o    o    .

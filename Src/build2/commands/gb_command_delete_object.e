@@ -58,6 +58,9 @@ feature {NONE} -- Initialization
 			original_id := an_object.id
 			parent_id := an_object.parent_object.id
 			position := an_object.parent_object.children.index_of (an_object, 1)
+			create child_objects.make (5)
+			create previous_parents.make (5)
+			record_previous_parents (an_object.parent_object)
 		end
 
 feature -- Basic Operation
@@ -66,7 +69,7 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			previous_parent_object: GB_OBJECT
-			child_object: GB_OBJECT
+			current_child, child_object: GB_OBJECT
 		do
 			child_object := Object_handler.deep_object_from_id (original_id)
 			
@@ -78,8 +81,20 @@ feature -- Basic Operation
 				-- in objects editors, so we must do it ourselves by calling
 				-- `update_object_editors_for_delete'.
 			previous_parent_object := child_object.parent_object
-
+			
 			previous_parent_object.remove_child (child_object)
+			from
+				previous_parents.start
+				child_objects.start
+			until
+				previous_parents.off
+			loop
+				current_child := object_handler.deep_object_from_id (child_objects.item)
+				object_handler.deep_object_from_id (previous_parents.item).remove_child (current_child)
+				object_handler.mark_as_deleted (current_child)
+				previous_parents.forth
+				child_objects.forth
+			end
 			object_handler.update_object_editors_for_delete (child_object, previous_parent_object)
 				-- We now need to mark the deleted object and all children as
 				-- deleted.
@@ -105,6 +120,17 @@ feature -- Basic Operation
 				-- Calling `add_object' on the obejct handler, will automatically
 				-- update any parent representations in the object editor.
 			object_handler.add_object (parent_object, child_object, position)
+			from
+				previous_parents.start
+				child_objects.start
+			until
+				previous_parents.off
+			loop
+				object_handler.mark_existing (object_handler.deep_object_from_id (child_objects.item))
+				object_handler.add_object (object_handler.deep_object_from_id (previous_parents.item), object_handler.deep_object_from_id (child_objects.item), position)
+				previous_parents.forth
+				child_objects.forth
+			end
 			command_handler.update
 		end
 		
@@ -142,5 +168,56 @@ feature {NONE} -- Implementation
 	position: INTEGER
 		-- Position of `child_layout_item' within `parent_layout_item' when `make'
 		-- was called.
+		
+	previous_parents: ARRAYED_LIST [INTEGER]
+		-- All previous parents if the object was originally parented within another object.
+		
+	child_objects: ARRAYED_LIST [INTEGER]
+	
+feature {NONE} -- Iteration implementation
+
+	record_previous_parents (parent_object: GB_OBJECT) is
+			-- Record all instance referers of `parent' recursively in `previous_parents' and also for
+			-- each child object at `previous_position_in_parent', store in `child_objects'.
+		require
+			parent_object_not_void: parent_object /= Void
+		local
+			temp_parent: GB_PARENT_OBJECT
+			child: GB_OBJECT
+		do
+			from
+				parent_object.instance_referers.start
+			until
+				parent_object.instance_referers.off
+			loop
+				temp_parent ?= object_handler.deep_object_from_id (parent_object.instance_referers.item_for_iteration)
+				check
+					temp_parent_not_void: temp_parent /= Void
+				end
+				
+					-- *** IMPORTANT ***
+					-- Not all previous parents are recorded, only those that are not already deleted.
+					-- This is because all `instance_referers' are kept even when objects are deleted
+					-- as if we change the property of a widget, we must update all representations, even
+					-- those in the history, in case we perform an undo.
+					-- If we do not perform this check, EiffelBuild would crash when you performed the following :
+					-- Delete a top level object instance from somewhere in an interface
+					-- Remove a widget from the actual top level window that had just been removed.
+					-- As performing the second step attempted to go through all references recursively, those that are
+					-- deleted must not be recursed.
+					-- *** IMPORTANT ***
+				if not object_handler.deleted_objects.has (temp_parent.id) then
+						-- We retrieve the child via `orig_index'.
+					child := temp_parent.children.i_th (position)
+
+					previous_parents.extend (temp_parent.id)
+					child_objects.extend (child.id)
+					record_previous_parents (object_handler.deep_object_from_id (parent_object.instance_referers.item_for_iteration))
+				end
+				parent_object.instance_referers.forth
+			end
+		ensure
+			lists_consistent: child_objects.count = previous_parents.count
+		end
 
 end -- class GB_COMMAND_DELETE_OBJECT

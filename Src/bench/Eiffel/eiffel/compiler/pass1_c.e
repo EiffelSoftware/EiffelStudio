@@ -36,7 +36,13 @@ feature
 					!! comment_reg.make (ast, associated_class);
 					comment_reg.register
 				end
+debug ("PARSE")
+	io.error.putstring ("parsed%N")
+end;
 			elseif Tmp_ast_server.has (class_id) then
+debug ("PARSE")
+	io.error.putstring ("retrieved%N")
+end
 				ast := Tmp_ast_server.item (class_id)
 			else
 				ast := Ast_server.item (class_id)

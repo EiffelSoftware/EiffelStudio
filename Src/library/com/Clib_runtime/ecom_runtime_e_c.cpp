@@ -3053,3 +3053,17 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void **
 		return result;
 };
 //-----------------------------------------------------------------------------------
+
+void ** ecom_runtime_ec::ccom_ec_pointed_c_pointer (void * a_pointer)
+
+// Create pointed pointer from pointer.
+{
+
+	void ** result;
+	
+	result = (void **) CoTaskMemAlloc (sizeof (void *));
+	* result = a_pointer;
+
+	return result;
+};
+//-----------------------------------------------------------------------------------

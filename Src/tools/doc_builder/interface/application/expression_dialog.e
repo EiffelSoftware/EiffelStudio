@@ -280,7 +280,9 @@ feature {NONE} -- Implementation
 			until
 				documents.after
 			loop
-				run_expressions_on_document (documents.item)
+				if documents.item /= Void then
+					run_expressions_on_document (documents.item)
+				end				
 				documents.forth
 			end
 		end		
@@ -358,6 +360,7 @@ feature {NONE} -- Implementation
 					l_file.wipe_out
 					l_file.open_write
 					l_file.putstring (l_final_string)
+					l_file.close
 				end
 			else
 				

@@ -77,21 +77,10 @@ feature {NONE} -- Implementation
 				create l_dir.make (loc_text.text)
 			end
 				-- For [XML -> HTML -> Help] always put HTML into intermediate directory
-			create l_dir.make (l_constants.Temporary_html_directory)
-			if l_dir.exists then
-				l_dir.recursive_delete
-			end
-			l_dir.create_dir
+			create l_dir.make (l_constants.Temporary_html_directory)			
 			if l_dir.exists then				
 				Result := True
-				l_constants.set_html_location (l_dir.name)
-				if studio_radio.is_selected then
---					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.studio_filter)
-				elseif envision_radio.is_selected then
---					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.envision_filter)
-				elseif all_radio.is_selected then
---					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.all_filter)
-				end
+				l_constants.set_html_location (l_dir.name)				
 			else
 				set_validation_error ((create {MESSAGE_CONSTANTS}).directory_not_exist)
 			end			
@@ -123,14 +112,7 @@ feature {NONE} -- Implementation
 			-- Set summary data
 		do
 			Summary.wipe_out
-			remove_summary
-			if envision_radio.is_selected then
-				add_option ("Filtered for ENViSioN.%N")
-			elseif studio_radio.is_selected then
-				add_option ("Filtered for EiffelStudio.%N")
-			elseif all_radio.is_selected then
-				add_option ("Not filtered (full content).%N")
-			end
+			remove_summary			
 			add_option ("Location of files to transform:" + loc_text.text + "%N")
 			Summary_list.extend (Summary)
 		end

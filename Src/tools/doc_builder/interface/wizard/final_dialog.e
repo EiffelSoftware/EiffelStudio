@@ -137,7 +137,7 @@ feature {NONE} -- Implmentation
 				-- Target directory for HTML
 			create l_code_dir_name.make_from_string (Shared_constants.Application_constants.Temporary_html_directory)
 			l_code_dir_name.extend ("libraries")		
-			create l_code_target_dir.make (l_code_dir_name)
+			create l_code_target_dir.make (l_code_dir_name.string)
 			if l_code_target_dir /= Void then
 				if not l_code_target_dir.exists then
 					l_code_target_dir.create_dir
@@ -147,38 +147,40 @@ feature {NONE} -- Implmentation
 				-- Src directory of XML code files				
 			create l_code_dir_name.make_from_string (Shared_project.root_directory)
 			l_code_dir_name.extend ("libraries")
-			create l_code_dir.make (l_code_dir_name)
+			create l_code_dir.make (l_code_dir_name.string)
 			
-				-- Build directories and code HTML into 'reference' directory of top-level cluster				
-			from
-				l_code_dir.open_read
-				l_code_dir.start
-				create l_curr_dir.make_empty
-			until
-				l_curr_dir = Void
-			loop
-				l_code_dir.readentry
-				l_curr_dir := l_code_dir.lastentry
-				if l_curr_dir /= Void and then not l_curr_dir.is_equal (".") and not l_curr_dir.is_equal ("..") then
-					create l_code_dir_name.make_from_string (l_code_dir.name)
-					l_code_dir_name.extend (l_curr_dir)
-					l_code_dir_name.extend ("reference")
-					create l_sub_dir.make (clone (l_code_dir_name))
-					if l_sub_dir.exists then
-							-- We are in `project_root/libraries/library_name/reference', a code directory
-						Shared_constants.Application_constants.add_code_directory (l_sub_dir.name)
-						l_code_dir_name.make_from_string (l_code_target_dir.name)
+			if l_code_dir.exists then
+					-- Build directories and code HTML into 'reference' directory of top-level cluster				
+				from
+					l_code_dir.open_read
+					l_code_dir.start
+					create l_curr_dir.make_empty
+				until
+					l_curr_dir = Void
+				loop
+					l_code_dir.readentry
+					l_curr_dir := l_code_dir.lastentry
+					if l_curr_dir /= Void and then not l_curr_dir.is_equal (".") and not l_curr_dir.is_equal ("..") then
+						create l_code_dir_name.make_from_string (l_code_dir.name)
 						l_code_dir_name.extend (l_curr_dir)
 						l_code_dir_name.extend ("reference")
-						create l_target_sub_dir.make (l_code_dir_name)
-						if not l_target_sub_dir.exists then
-							l_target_sub_dir.create_dir							
+						create l_sub_dir.make (clone (l_code_dir_name.string))
+						if l_sub_dir.exists then
+								-- We are in `project_root/libraries/library_name/reference', a code directory
+							Shared_constants.Application_constants.add_code_directory (l_sub_dir.name)
+							l_code_dir_name.make_from_string (l_code_target_dir.name)
+							l_code_dir_name.extend (l_curr_dir)
+							l_code_dir_name.extend ("reference")
+							create l_target_sub_dir.make (l_code_dir_name.string)
+							if not l_target_sub_dir.exists then
+								l_target_sub_dir.create_dir							
+							end
+							create l_code_html_filter.make (l_target_sub_dir, l_sub_dir)
 						end
-						create l_code_html_filter.make (l_target_sub_dir, l_sub_dir)
-					end
-				end				
-				l_cnt := l_cnt + 1
-			end	
+					end				
+					l_cnt := l_cnt + 1
+				end		
+			end
 		end		
 	
 	generate_help is

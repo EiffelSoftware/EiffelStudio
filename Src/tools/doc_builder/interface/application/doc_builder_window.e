@@ -101,6 +101,7 @@ feature {NONE} -- Initialization
 			toc_new_heading.select_actions.extend 			(agent Shared_toc_manager.new_node (True))
 			toc_new_page.select_actions.extend 				(agent Shared_toc_manager.new_node (False))
 			toc_remove_topic.select_actions.extend 			(agent Shared_toc_manager.remove_node)
+			toc_exclude_button.select_actions.extend 		(agent Shared_toc_manager.toggle_include_node)
 				
 					-- Misc Interface Events
 			editor_close.select_actions.extend	 			(agent Shared_document_editor.close_document)
@@ -117,7 +118,8 @@ feature {NONE} -- Initialization
 			initialize_path_constants
 			initialize_temp_directory
 			should_update := True
-			update			
+			update
+			resize_actions.force_extend (agent on_resize)
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
@@ -136,7 +138,7 @@ feature {NONE} -- Initialization
 			-- size of path names.
 		local
 			l_dir: DIRECTORY
-		do
+		once
 					-- Main temporary directory
 			create l_dir.make (Shared_constants.Application_constants.Temporary_directory)
 			if l_dir.exists then
@@ -290,6 +292,13 @@ feature -- Interface Events
 				l_curr_doc := Shared_document_editor.current_document
 				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
 				
+						-- Title bar
+				if l_curr_widget = Void then
+					set_title ("Doc Builder")
+				else
+					set_title ("Doc Builder: " + l_curr_doc.name)
+				end				
+				
 						-- File Menu
 				toggle_sensitivity (save_menu_item, l_curr_doc.is_modified)
 				toggle_sensitivity (close_menu_item, True)
@@ -369,6 +378,7 @@ feature -- GUI Updating
 			update_toolbar
 			update_menus
 			update_toc_toolbar
+			update_status_report (False, "")
 		end		
 	
 	update_sub_element_list (a_el_name: STRING; list: SORTED_TWO_WAY_LIST [STRING]) is
@@ -518,6 +528,20 @@ feature {NONE} -- Implementation
 				a_item.set_tooltip (element.annotation)
 			end
 		end			
+
+	on_resize is
+			-- Window resized
+		local
+			document_widget: DOCUMENT_WIDGET
+--			l_winform: EV_WINFORM_CONTAINER
+		do
+--			document_widget := Shared_document_editor.current_widget
+--			if document_widget /= Void then
+--				l_winform := document_widget.internal_html_widget.browser_container
+--				l_winform.set_minimum_width (l_winform.width + 1) --resize_widget_to (Shared_web_browser, Shared_web_browser.height)
+--				l_winform.set_minimum_width (1)
+--			end
+		end		
 
 	render_factory: SCHEMA_RENDERING_FACTORY
 			-- Factory for rendering schema views

@@ -56,6 +56,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_namespace: BOOLEAN is
+			-- Is option a namespace one?
+		do
+			-- False by default.
+		end
+		
 	is_free_option: BOOLEAN is
 		do
 			-- Do nothing
@@ -109,9 +115,13 @@ feature {COMPILER_EXPORTER} -- Update
 		do
 		end;
 
-	adapt (	value: OPT_VAL_SD;
+	adapt (value: OPT_VAL_SD;
 			classes: HASH_TABLE [CLASS_I, STRING];
-			list: LACE_LIST [ID_SD]) is
+			list: LACE_LIST [ID_SD])
+		is
+			-- If `list' is Void, adapt Current option to `classes'.
+			-- Otherwise, only adapt Current option to classes whose name
+			-- is in `list'.
 		deferred
 		end;
 

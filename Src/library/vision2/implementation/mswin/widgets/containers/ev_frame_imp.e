@@ -54,6 +54,9 @@ inherit
 		end
 
 	EV_SYSTEM_PEN_IMP
+		export
+			{NONE} all
+		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
@@ -63,10 +66,24 @@ inherit
 		redefine
 			on_paint,
 			top_level_window_imp,
-			on_erase_background
+			on_erase_background,
+			on_wm_theme_changed
 		end
 
 	WEL_DRAWING_ROUTINES
+		export
+			{NONE} all
+		end
+	
+	WEL_THEME_PART_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	WEL_THEME_GBS_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -81,6 +98,8 @@ feature {NONE} -- Initialization
 			ev_wel_control_container_make
 			frame_style := Ev_frame_etched_in
 			text_alignment := default_alignment
+				-- Retrieve the theme for the frame (which is a special type of button).
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
 		
 	initialize is
@@ -89,7 +108,6 @@ feature {NONE} -- Initialization
 			set_default_font
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 		end
-		
 
 feature -- Access
 
@@ -288,7 +306,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	Text_padding: INTEGER is 4
+	Text_padding: INTEGER is 7
 			-- Number of pixels left and right of `text'.
 
 	text_height: INTEGER
@@ -313,14 +331,24 @@ feature {NONE} -- WEL Implementation
 		local
 			wel_style: INTEGER
 			text_pos: INTEGER
-			half: INTEGER
 			cur_width: INTEGER
 			cur_height: INTEGER
 			r: WEL_RECT
 			bk_brush: WEL_BRUSH
 			pen: WEL_PEN
 			font_imp: EV_FONT_IMP
+			theme_drawer: EV_THEME_DRAWER_IMP
+			text_rect: WEL_RECT
+			drawstate: INTEGER
+			memory_dc: WEL_MEMORY_DC
+			wel_bitmap: WEL_BITMAP
 		do
+			theme_drawer := application_imp.theme_drawer
+			
+			create memory_dc.make_by_dc (paint_dc)
+			create wel_bitmap.make_compatible (paint_dc, width, height)
+			memory_dc.select_bitmap (wel_bitmap)
+			wel_bitmap.dispose
 			
 				-- Cache value of `ev_width' and `ev_height' for
 				-- faster access
@@ -341,79 +369,51 @@ feature {NONE} -- WEL Implementation
 
 			create r.make (0,0,0,0)
 			bk_brush := background_brush
-
-				-- Fill empty space
-			if not text.is_empty then
-				if alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
-					text_pos := Text_padding
-				elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
-					text_pos := (cur_width - text_width) // 2
-				elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
-					text_pos := cur_width - text_width - Text_padding
-				end
-
-				half := text_height // 2
-
-					-- Paint left part of text
-				create r.make (0, 0, text_pos, half)
-				paint_dc.fill_rect (r, bk_brush)
-				r.set_rect (0, half, text_pos, cur_height)
-				paint_dc.fill_rect (r, bk_brush)
-
-					-- Paint right part of text
-				r.set_rect (text_pos + text_width, 0, cur_width, text_height)
-				paint_dc.fill_rect (r, bk_brush)
-				
-					-- Paint under the text
-				r.set_rect (text_pos, text_height, text_pos + text_width, text_height)
-				paint_dc.fill_rect (r, bk_brush)
-			end
 			
-				-- Fill background.
-			if item = Void then
-					-- If there is no item, then we must always fill in the background.
-				r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
-				paint_dc.fill_rect (r, bk_brush)
-			elseif cur_height - item.height > 4 then
-				-- If the item does not cover all of the background area then
-				-- we must draw the remaining background ourselves.
-				-- Note the 4 is due to the frame border.			
-				r.set_rect (1, item.height - 2, cur_width - 1, cur_height - 1)
-				paint_dc.fill_rect (r, bk_brush)
+			theme_drawer.draw_widget_background (Current, memory_dc, invalid_rect, bk_brush)
+
+			if alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
+				text_pos := Text_padding
+			elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
+				text_pos := (cur_width - text_width) // 2
+			elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
+				text_pos := cur_width - text_width - Text_padding
 			end
 
 			r.set_rect (0, text_height // 2, cur_width, cur_height)
 
-			draw_edge (
-				paint_dc, 
-				r,
-				wel_style, 
-				Bf_rect
-				)
-
-			if not text.is_empty and then not is_sensitive then
-				r.set_rect (text_pos, 0, text_pos + text_width, text_height)
-				paint_dc.fill_rect (r, bk_brush)
+			drawstate := 1
+				-- GBS_normal
+			if wel_style = edge_etched and application_imp.themes_active then
+					-- We only use the theme drawer it `edge_etched' is used which is the default.
+					-- The other styles have no equivalent representation in themes and must simply be
+					-- drawn as before.
+				theme_drawer.draw_theme_background (open_theme, memory_dc, bp_groupbox, drawstate, r, Void, bk_brush)
+			else
+				draw_edge (memory_dc, r, wel_style, Bf_rect)
+				
+				if (wel_style & Bdr_raisedouter) = Bdr_raisedouter then
+						--| This is to work around a bug where the 3D highlight
+						--| does not seem to appear.
+					pen := highlight_pen
+					memory_dc.select_pen (pen)
+					memory_dc.line (
+						0,         text_height // 2, 
+						cur_width, text_height // 2
+						)
+					memory_dc.line (
+						0, text_height // 2, 
+						0, cur_height - 1
+						)
+					memory_dc.unselect_pen
+					pen.delete
+				end
 			end
+			
+			r.set_rect (text_pos, 0, text_pos + text_width, text_height)
+			theme_drawer.draw_widget_background (Current, memory_dc, r, bk_brush)
 
 			bk_brush.delete
-
-			if (wel_style & Bdr_raisedouter) = Bdr_raisedouter then
-					--| This is to work around a bug where the 3D highlight
-					--| does not seem to appear.
-				pen := highlight_pen
-				paint_dc.select_pen (pen)
-				paint_dc.line (
-					0,         text_height // 2, 
-					cur_width, text_height // 2
-					)
-				paint_dc.line (
-					0, text_height // 2, 
-					0, cur_height - 1
-					)
-				paint_dc.unselect_pen
-				pen.delete
-			end
 
 			if not text.is_empty then
 				if private_font /= Void then
@@ -421,25 +421,33 @@ feature {NONE} -- WEL Implementation
 					check
 						font_not_void: font_imp /= Void
 					end
-					paint_dc.select_font (font_imp.wel_font)
+					memory_dc.select_font (font_imp.wel_font)
 				else
-					paint_dc.select_font (private_wel_font)
+					memory_dc.select_font (private_wel_font)
 				end
-				paint_dc.set_text_color (wel_foreground_color)
-				paint_dc.set_background_color (wel_background_color)
-				if is_sensitive then
-					paint_dc.text_out (text_pos, 0, " " + wel_text + " ")
-				else
-					draw_insensitive_text (
-						paint_dc,
-						" " + wel_text + " ", 
-						text_pos, 
-						0
-						)
-				end
+				memory_dc.set_text_color (wel_foreground_color)
+				memory_dc.set_background_color (wel_background_color)
+				
+				create text_rect.make (text_pos, 0, text_pos + text_width, text_height)
+				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_normal, text, dt_center, is_sensitive, text_rect, foreground_color)
 			end
-			paint_dc.unselect_all
+			paint_dc.bit_blt (invalid_rect.left, invalid_rect.top, invalid_rect.width, invalid_rect.height, memory_dc, invalid_rect.left, invalid_rect.top, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			memory_dc.unselect_all
+			memory_dc.delete
+			disable_default_processing
 		end
+		
+	on_wm_theme_changed is
+			-- `Wm_themechanged' message received by Windows so update current theming.
+		do
+			application_imp.theme_drawer.close_theme_data (open_theme)
+			application_imp.update_theme_drawer
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
+		end
+		
+	open_theme: POINTER
+		-- Theme currently open for `Current'. May be Void while running on Windows versions that
+		-- do no support theming.
 
 feature {EV_ANY_I} -- Implementation
 

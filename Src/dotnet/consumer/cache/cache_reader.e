@@ -278,13 +278,18 @@ feature {CACHE_WRITER, EMITTER, CACHE_PATH} -- Implementation
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
-			create des
-			des.deserialize (Absolute_info_path)
-			if des.successful then
-				Result ?= des.deserialized_object
+			if not is_initialized then
+				create Result.make;
+				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, Absolute_info_path)
+			else
+				create des
+				des.deserialize (Absolute_info_path)
+				if des.successful then
+					Result ?= des.deserialized_object
+				end
 			end
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
-		end		
+		end
 
 end -- class CACHE_READER

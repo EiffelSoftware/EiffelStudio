@@ -33,7 +33,7 @@ feature -- Access
 			add_creation
 
 		ensure then
-			non_void_eiffel_writer: eiffel_writer /= Void
+			non_void_eiffel_writer: not shared_wizard_environment.new_eiffel_project implies eiffel_writer /= Void
 		end
 
 feature {NONE} -- Implementation

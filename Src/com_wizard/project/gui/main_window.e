@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 			create generated_code_type_dialog.make (Current)
 			create definition_file_dialog.make (Current)
 			create eiffel_project_file_dialog.make (Current)
+			create eiffel_destination_folder_dialog.make (Current)
 			create idl_dialog.make (Current)
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
@@ -159,6 +160,9 @@ feature -- GUI Elements
 
 	eiffel_project_file_dialog: WIZARD_EIFFEL_PROJECT_FILE_DIALOG
 			-- Wizard Eiffel project dialog
+
+	eiffel_destination_folder_dialog: WIZARD_DESTINATION_FOLDER_FILE_DIALOG
+			-- Wizard destination folder dialog
 
 	idl_dialog: WIZARD_IDL_DIALOG
 			-- Wizard IDL dialog
@@ -298,7 +302,7 @@ feature -- Output
 
 feature {NONE} -- State management
 
-	First_state, Introduction_state, Initial_state, Initial_eiffel_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
+	First_state, Introduction_state, Initial_state, Initial_eiffel_state, Destination_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
 			-- Possible states
 
 	state: INTEGER
@@ -320,6 +324,8 @@ feature {NONE} -- State management
 				Result := Definition_file_dialog
 			when Initial_eiffel_state then
 				Result := eiffel_project_file_dialog
+			when Destination_state then
+				Result := eiffel_destination_folder_dialog
 			when Idl_state then
 				Result := Idl_dialog
 			when Ps_state then
@@ -380,6 +386,8 @@ feature {NONE} -- State management
 						state := Ps_state
 					end
 				when Initial_eiffel_state then
+					state := Destination_state
+				when Destination_state then
 					state := Idl_state
 				when Idl_state, Ps_state then
 					state := Final_state
@@ -505,6 +513,9 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				tool_bar.disable_button (Save_string_constant)
 				tool_bar.disable_button (Generate_string_constant)
+				shared_wizard_environment.set_new_project (True)
+				first_choice_dialog.activate
+
 			when About_string_constant then
 				about_dialog.activate
 			when Help_string_constant then
@@ -583,18 +594,22 @@ invariant
 	
 	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
 				state = Final_state or state = Finished_state or state = Abort_state or state = First_state or
-				state = Initial_eiffel_state
+				state = Initial_eiffel_state or state = Destination_state
 
 end -- class MAIN_WINDOW
 
---|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
 --|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
---| Telephone 805-685-1006
---| Fax 805-685-6869
---| Information e-mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---|-------------------------------------------------------------------------
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

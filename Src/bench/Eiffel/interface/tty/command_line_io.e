@@ -207,6 +207,15 @@ feature -- Input/output
 			end
 		end;
 
+	get_profiler is
+		do
+			if not more_arguments then
+				io.putstring ("--> Used profiler (default: `eiffel'): ");
+				get_name
+			end;
+			get_last_input
+		end;
+
 	reset_abort is
 		do
 			abort := False

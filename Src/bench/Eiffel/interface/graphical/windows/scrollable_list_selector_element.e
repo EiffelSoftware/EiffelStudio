@@ -20,32 +20,63 @@ creation
 
 feature -- Initialization
 
-	make (c_w:CLASS_W) is
+	make (t_w:TOOL_W) is
 		do
-			tool:= c_w
+			tool:= t_w
 			!! tag.make(0)
 		end
 
 feature {SELECTOR_W} -- Attribute
 
-	tool: CLASS_W
+	tool: TOOL_W
 
 	tag: STRING
 
 feature -- Access
 
 	set_read_only is
+		local
+			c_w : CLASS_W
 		do
-			tag := "-"
+			tag := " [READ-ONLY]"
+			c_w ?= tool
+			if c_w /= Void then
+				c_w.set_read_only
+			end
 		end
 
 	value: STRING is
 			-- String to appear in scrollable list box
+		local
+			t: STRING
+			c_w:CLASS_W
+			r_w:ROUTINE_W
 		do
-			Result := tool.class_text_field.text
+			c_w ?= tool
+			r_w ?= tool
+
+			if c_w /= Void then
+--				t := clone (tool.title)
+				t := clone (tool.eb_shell.icon_name)
+			elseif r_w /= Void then
+				t := clone (tool.title)
+				if not t.empty then
+					t.replace_substring_all ("Feature: ","+ ")
+					t.replace_substring_all ("Class:","from:")
+				end
+			else
+				t := clone ("? Unknown Tool")
+			end
+
+			if t.empty then
+				t.append ("<<>> EL WHAT ??")
+			else
+				t.append (tag)
+			end
+			Result := t
 		end
 
-end -- class SCROLLABLE_LIST_SELECTOR
+end -- class SCROLLABLE_LIST_SELECTOR_ELEMENT
 
 
 --|----------------------------------------------------------------

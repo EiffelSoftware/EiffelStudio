@@ -634,7 +634,12 @@ feature -- Transformation
 		do
 			if token = line.eol_token then
 				update_x_in_pixels
-				create new_line.make_empty_line
+				if associated_window.editor_preferences.smart_identation then
+					whole_text.lexer.execute (line.identation)
+					create new_line.make_from_lexer (whole_text.lexer)
+				else
+					create new_line.make_empty_line
+				end
 				line.add_right (new_line)
 			else
 				t_image := token.image
@@ -649,6 +654,9 @@ feature -- Transformation
 				end
 				check
 					s_non_empty: not (s.empty)
+				end
+				if associated_window.editor_preferences.smart_identation then
+					s.prepend (line.identation)
 				end
 				delete_after_cursor
 				whole_text.lexer.execute (s)

@@ -13,8 +13,7 @@ deferred class
 	
 inherit
 
-	EV_TEXT_CONTAINER_I
-
+	EV_ITEM_I
 
 feature {NONE} -- Initialization
 	
@@ -22,20 +21,24 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-feature -- Event - command association
-	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is	
-		deferred
-		end
-	
-feature -- Implementation
+feature -- Status report
 
-	destroyed: BOOLEAN is
+	insensitive: BOOLEAN is
+			-- Is current widget insensitive?
+		require
+			exists: not destroyed
 		deferred
 		end
-	
-end
+
+feature -- Status setting
+
+	set_insensitive (flag: BOOLEAN) is
+   			-- Set current item in insensitive mode if
+   			-- `flag'. 
+   		deferred
+   		end
+
+end -- class EV_MENU_ITEM_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

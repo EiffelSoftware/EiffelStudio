@@ -263,6 +263,12 @@ feature -- Basic operations
 		do
 		end
 
+	default_create is
+			-- Process instances of classes with no creation clause.
+			-- (Default: do nothing.)
+		do
+		end
+
 	frozen do_nothing is
 			-- Execute a null action.
 		do

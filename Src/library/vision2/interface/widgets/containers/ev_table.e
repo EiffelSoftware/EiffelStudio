@@ -75,7 +75,52 @@ feature -- Access
 			valid_column: (1 <= a_column) and (a_column <= columns)
 		do
 			Result := array_item ((a_row - 1) * columns + a_column)
-		end;
+		end
+		
+		
+	item_column_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is column coordinate of `widget'.
+		require
+			not_destroyed: not is_destroyed
+			widget_contained: item_list.has (widget)
+		do
+			Result := implementation.item_column_position (widget)
+		ensure
+			Result_valid: Result > 0 and Result <= columns - item_column_span (widget) + 1
+		end
+		
+	item_row_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is row coordinate of `widget'.
+		require
+			not_destroyed: not is_destroyed
+			widget_contained: item_list.has (widget)
+		do
+			Result := implementation.item_row_position (widget)
+		ensure
+			Result_valid: Result > 0 and Result <= rows - item_row_span (widget) + 1
+		end
+		
+	item_column_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of columns taken by `widget'.
+		require
+			not_destroyed: not is_destroyed
+			widget_contained: item_list.has (widget)
+		do
+			Result := implementation.item_column_span (widget)
+		ensure
+			Result_valid: Result > 0 and Result <= columns - item_column_position (widget) + 1
+		end
+	
+	item_row_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of rows taken by `widget'.
+		require
+			not_destroyed: not is_destroyed
+			widget_contained: item_list.has (widget)
+		do
+			Result := implementation.item_row_span (widget)
+		ensure
+			Result_valid: Result > 0 and Result <= rows - item_row_position (widget) + 1
+		end
 
 	item_list: ARRAYED_LIST [EV_WIDGET] is
 			-- List of items in `Current'.
@@ -193,6 +238,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.widget_count
+		ensure
+			Result_non_negative: Result >= 0
 		end
 
 	row_spacing: INTEGER is
@@ -201,6 +248,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.row_spacing
+		ensure
+			Result_non_negative: Result >= 0
 		end
 
 	column_spacing: INTEGER is
@@ -209,6 +258,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.column_spacing
+		ensure
+			Result_non_negative: Result >= 0
 		end
 
 	border_width: INTEGER is
@@ -218,6 +269,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.border_width
+		ensure
+			Result_non_negative: Result >= 0
 		end
 		
 	is_homogeneous: BOOLEAN is
@@ -256,6 +309,39 @@ feature -- Status report
 				a_row_ctr := a_row_ctr + 1
 			end
 		end
+		
+	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
+			-- Are the cells represented by parameters free of widgets? Excludes cells
+			-- filled by `v'.
+		require
+			not_destroyed: not is_destroyed
+			table_wide_enough: a_column + (column_span - 1) <= columns
+			table_tall_enough: a_row + (row_span - 1) <= rows
+		local
+			a_col_ctr, a_row_ctr: INTEGER
+		do
+			if a_column = 2 and a_row = 2 and column_span =3 and row_span = 2 then
+				do_nothing
+			end
+			Result := True
+			from
+				a_row_ctr := a_row
+			until
+				not Result or else (a_row_ctr = a_row + row_span)
+			loop
+				from
+					a_col_ctr := a_column
+				until
+					not Result or else (a_col_ctr = a_column + column_span)
+				loop
+					if item (a_col_ctr, a_row_ctr) /= v then
+						Result := item (a_col_ctr, a_row_ctr) = Void	
+					end
+					a_col_ctr := a_col_ctr + 1
+				end
+				a_row_ctr := a_row_ctr + 1
+			end
+		end	
 
 	Readable: BOOLEAN is True
 		-- `Current' is always readable.
@@ -275,6 +361,8 @@ feature -- Status settings
 			not_destroyed: not is_destroyed
 		do
 			implementation.enable_homogeneous
+		ensure
+			is_homogeneous: is_homogeneous
 		end
 
 	disable_homogeneous is
@@ -283,6 +371,8 @@ feature -- Status settings
 			not_destroyed: not is_destroyed
 		do
 			implementation.disable_homogeneous
+		ensure
+			is_not_homogeneous: not is_homogeneous
 		end
 	
 	set_row_spacing (a_value: INTEGER) is
@@ -292,6 +382,8 @@ feature -- Status settings
 			positive_value: a_value >= 0
 		do
 			implementation.set_row_spacing (a_value)
+		ensure
+			row_spacing_set: row_spacing = a_value
 		end
 
 	set_column_spacing (a_value: INTEGER) is
@@ -301,6 +393,8 @@ feature -- Status settings
 			positive_value: a_value >= 0
 		do
 			implementation.set_column_spacing (a_value)
+		ensure
+			column_spacing_set: column_spacing = a_value
 		end
 
 	set_border_width (a_value: INTEGER) is
@@ -310,6 +404,8 @@ feature -- Status settings
 			positive_value: a_value >= 0
 		do
 			implementation.set_border_width (a_value)
+		ensure
+			border_width_set: border_width = a_value
 		end
 
 	resize (a_column, a_row: INTEGER) is
@@ -357,6 +453,146 @@ feature -- Status settings
 			upper_updated: upper = rows * columns
 			items_untouched: item_list.is_equal (old item_list)
 		end
+		
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+			-- Move `v' to position `a_column', `a_row'.
+		require
+			not_destroyed: not is_destroyed
+			v_contained: has (v)
+			a_column_positive: a_column >= 1
+			a_row_positive: a_row >= 1
+			table_wide_enough: a_column + (item_column_span (v) - 1) <= columns
+			table_tall_enough: a_row + (item_row_span (v) - 1) <= rows
+			table_area_clear:
+				area_clear_excluding_widget (v, a_column, a_row, item_column_span (v), item_row_span (v))
+		local
+			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+			original_item_row_span, original_item_column_span: INTEGER
+		do
+			original_item_row_span := item_row_span (v)
+			original_item_column_span := item_column_span (v)
+			from
+				a_cell_index := 1
+			until
+				a_cell_index > count
+			loop
+				if array_item (a_cell_index) = v then
+					array_put (Void, a_cell_index)
+				end
+				a_cell_index := a_cell_index + 1						
+			end
+			from
+				a_row_ctr := a_row
+			until
+				a_row_ctr = a_row + original_item_row_span
+			loop
+				from
+					a_col_ctr := a_column
+				until
+					a_col_ctr = a_column + original_item_column_span
+				loop
+					a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
+					array_put (v, a_cell_index)
+					a_col_ctr := a_col_ctr + 1
+				end
+				a_row_ctr := a_row_ctr + 1
+			end
+			implementation.set_item_position (v, a_column, a_row)
+		end
+		
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
+		require
+			not_destroyed: not is_destroyed
+			v_contained: has (v)
+			column_span_positive: column_span >= 1
+			row_span_positive: row_span >= 1
+			table_wide_enough: item_column_position (v) + column_span - 1 <= columns
+			table_tall_enough: item_row_position (v) + row_span - 1 <= rows
+			table_area_clear:
+				area_clear_excluding_widget (v, item_column_position (v), item_row_position (v), column_span, row_span)
+			local
+				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+				original_item_row_position, original_item_column_position: INTEGER
+			do
+				original_item_row_position := item_row_position (v)
+				original_item_column_position := item_column_position (v)
+				from
+					a_cell_index := 1
+				until
+					a_cell_index > count
+				loop
+					if array_item (a_cell_index) = v then
+						array_put (Void, a_cell_index)
+					end
+					a_cell_index := a_cell_index + 1						
+				end
+				from
+					a_row_ctr := original_item_row_position
+				until
+					a_row_ctr = original_item_row_position + row_span
+				loop
+					from
+						a_col_ctr := original_item_column_position
+					until
+						a_col_ctr = original_item_column_position + column_span
+					loop
+						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
+						array_put (v, a_cell_index)
+						a_col_ctr := a_col_ctr + 1
+					end
+					a_row_ctr := a_row_ctr + 1
+				end
+				implementation.set_item_span (v, column_span, row_span)
+			end
+		
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
+		require
+			not_destroyed: not is_destroyed
+			v_not_void: v /= Void
+			v_current: v /= Current
+			v_contained: has (v)
+			a_column_positive: a_column >= 1
+			a_row_positive: a_row >= 1
+			column_span_positive: column_span >= 1
+			row_span_positive: row_span >= 1
+			table_wide_enough: a_column + (column_span - 1) <= columns
+			table_tall_enough: a_row + (row_span - 1) <= rows
+			table_area_clear:
+				area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
+			local
+				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+			do
+				from
+					a_cell_index := 1
+				until
+					a_cell_index > count
+				loop
+					if array_item (a_cell_index) = v then
+						array_put (Void, a_cell_index)
+					end
+					a_cell_index := a_cell_index + 1						
+				end
+				from
+					a_row_ctr := a_row
+				until
+					a_row_ctr = a_row + row_span
+				loop
+					from
+						a_col_ctr := a_column
+					until
+						a_col_ctr = a_column + column_span
+					loop
+						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
+						array_put (v, a_cell_index)
+						a_col_ctr := a_col_ctr + 1
+					end
+					a_row_ctr := a_row_ctr + 1
+				end
+				implementation.set_item_position (v, a_column, a_row)
+				implementation.set_item_span (v, column_span, row_span)
+			end
 
 feature -- Element change
 
@@ -441,6 +677,12 @@ feature -- Element change
 			-- Remove first occurrence of `v' if any.
 		do
 			remove (v)
+		ensure
+			not_has_v: not has (v)
+			had_item_implies_parent_void:
+				old has (v) implies v.parent = Void
+			had_item_implies_count_decreased:
+				old has (v) implies widget_count = old widget_count - 1
 		end
 
 feature -- Conversion
@@ -506,8 +748,7 @@ feature {NONE} -- Contract support
 				row_spacing = 0 and
 				column_spacing = 0 and
 				rows = 1 and
-				columns = 1
-			)
+				columns = 1)
 		end
 
 		

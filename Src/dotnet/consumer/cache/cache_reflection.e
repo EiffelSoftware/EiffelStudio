@@ -22,7 +22,7 @@ feature -- Redefined
 		local
 			i: INTEGER
 		do
-			i := t.get_hash_code
+			i := t.full_name.get_hash_code
 			Types_cache.search (i)
 			if types_cache.found then
 				Result := types_cache.found_item
@@ -34,6 +34,40 @@ feature -- Redefined
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
+		end
+
+feature -- Initialization
+
+	initialize_cache (a_path: STRING) is
+			-- initialize cache with a binary file containing
+			-- specifics consumed types.
+		require
+			non_void_path: a_path /= Void
+			not_empty_path: not a_path.is_empty
+		local
+			l_raw_file: RAW_FILE
+			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
+			l_index: INTEGER
+		do
+			if feature {SYSTEM_FILE}.exists (a_path.to_cil) then
+				create l_raw_file.make (a_path)
+				l_raw_file.open_read
+				l_consumed_types ?= l_raw_file.retrieved
+				if l_consumed_types /= Void then
+					from
+						l_consumed_types.start
+					until
+						l_consumed_types.after
+					loop
+						l_index := l_consumed_types.item.dotnet_name.to_cil.get_hash_code
+						Types_cache.search (l_index)
+						if not Types_cache.found then
+							Types_cache.put (l_consumed_types.item, l_index)
+						end
+						l_consumed_types.forth
+					end
+				end
+			end
 		end
 
 feature -- Access
@@ -270,7 +304,7 @@ feature -- Access
 						Result := entities_list.item
 					end
 				end
-				
+
 				entities_list.forth
 			end
 		end
@@ -294,9 +328,9 @@ feature -- Access
 		do
 			create Result.make
 
-			i := t.get_hash_code
-			types_cache.search (i)
-			if types_cache.found then
+			i := t.full_name.get_hash_code
+			Types_cache.search (i)
+			if Types_cache.found then
 				ct := types_cache.found_item
 			else
 				ct := consumed_type (t)
@@ -366,15 +400,17 @@ feature -- Access
 			non_void_feature_names: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
-	Constructor_name: STRING is ".ctor"
-
-	types_cache: CACHE [CONSUMED_TYPE, INTEGER] is
+	Types_cache: CACHE [CONSUMED_TYPE, INTEGER] is
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
 		end
+
+feature {NONE} -- Implementation
+
+	Constructor_name: STRING is ".ctor"
 
 	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING] is
 			-- Cache for assemblies ids mappings
@@ -382,7 +418,7 @@ feature {NONE} -- Implementation
 			create Result.make (Max_cache_items)
 		end
 
-	Max_cache_items: INTEGER is 20
+	Max_cache_items: INTEGER is 40
 			-- Maximum number of types stored in local cache
 
 end -- class CACHE_REFLECTION

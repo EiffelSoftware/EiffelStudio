@@ -304,6 +304,31 @@ feature -- Externals
 			"C signature (GtkTextIter*): GtkTextIter* use <gtk/gtk.h>"
 		end
 
+	gtk_image_set_from_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER) is
+		external
+			"C signature (GtkImage*, GdkPixmap*, GdkBitmap*) use <gtk/gtk.h>"
+		end
+		
+	gtk_image_get_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER) is
+		external
+			"C signature (GtkImage*, GdkPixmap**, GdkBitmaps**) use <gtk/gtk.h>"
+		end
+		
+	gtk_image_new_from_pixmap (a_pixmap: POINTER; a_mask: POINTER): POINTER is
+		external
+			"C signature (GdkPixmap*, GdkBitmap*): GtkImage* use <gtk/gtk.h>"
+		end
+
+	gtk_image_new: POINTER is
+		external
+			"C signature (): GtkImage* use <gtk/gtk.h>"
+		end
+		
+	gtk_dialog_new: POINTER is
+		external	
+			"C signature (): GtkWidget* use <gtk/gtk.h>"
+		end
+		
 
 end
 

@@ -45,19 +45,20 @@ feature -- Access
 			wel_font: WEL_FONT
 			imp: EV_FONT_IMP
 		do
-			!! wel_log_font.make (height, face_name)
-			!! wel_font.make_indirect (wel_log_font)
-			!! imp.make_by_wel (wel_font)
-			!! Result.make
+			create wel_log_font.make (height, face_name)
+			create wel_font.make_indirect (wel_log_font)
+			create imp.make_by_wel (wel_font)
+			create Result.make
 			Result.set_implementation (imp)
 		end
+	
 
 	color: EV_COLOR is
 			-- Color of the current format
 		local
 			imp: EV_COLOR_IMP
 		do
-			!! Result.make_rgb (text_color.red, text_color.green, text_color.blue)
+			create Result.make_rgb (text_color.red, text_color.green, text_color.blue)
 		end
 
 feature -- Status report
@@ -133,27 +134,18 @@ feature -- Element change
 		do
 			imp ?= value.implementation
 			set_face_name (imp.wel_log_font.face_name)
-		--	set_height (imp.wel_log_font.height)
-		--	set_styles (imp.wel_log_font.style)
-		--	set_pitch (imp.wel_log_font.pitch)
-		--	set_family (imp.wel_log_font.family)
+			set_height (imp.wel_log_font.height)
 			set_char_set (imp.wel_log_font.char_set)
-		--	set_orientation (imp.wel_log_font.orientation)
-		--	set_escapement (imp.wel_log_font.escapement)
-		--	set_width (imp.wel_log_font.width)
-		--	set_quality (imp.wel_log_font.quality)
-		--	set_clip_precision (imp.wel_log_font.clip_precision)
-		--	set_out_precision (imp.wel_log_font.out_precision)
 		end
+
 
 	set_color (value: EV_COLOR) is
 			-- Make `value' the new color.
 		local
 			wel: WEL_COLOR_REF
 		do
-			!! wel.make_rgb (value.red, value.green, value.blue)
+			create wel.make_rgb (value.red, value.green, value.blue)
 			set_text_color (wel)
-			wel := text_color
 		end
 
 end -- class EV_CHARACTER_FORMAT_IMP

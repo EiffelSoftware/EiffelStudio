@@ -7,14 +7,6 @@ deferred class
 	COMPLETION_ENTRY
 
 inherit
-	IEIFFEL_COMPLETION_ENTRY_IMPL_STUB
-		undefine
-			name,
-			signature,
-			is_feature,
-			is_equal
-		end
-
 	COMPARABLE
 
 feature -- Access

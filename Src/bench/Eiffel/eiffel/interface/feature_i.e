@@ -57,8 +57,6 @@ inherit
 			hash_code as feature_name_id
 		end
 
-	PART_COMPARABLE
-
 	COMPILER_EXPORTER
 
 	SHARED_NAMES_HEAP
@@ -193,13 +191,6 @@ feature -- Debugger access
 			-- (inherited assertions are not taken into account)
 		do
 			Result := body.number_of_postcondition_slots
-		end
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := feature_name < other.feature_name
 		end
 
 feature -- Status
@@ -446,7 +437,7 @@ end
 			-- Has `other' the same resulting type than Current ?
 		require
 			good_argument: other /= Void
-			same_names: other.feature_name.is_equal (feature_name)
+			same_names: other.feature_name_id = feature_name_id
 		do
 			Result := type.same_as (other.type)
 		end
@@ -456,7 +447,7 @@ end
 			-- [Semnatic for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void
-			same_names: other.feature_name.is_equal (feature_name)
+			same_names: other.feature_name_id = feature_name_id
 --			export_statuses_exist: not (export_status = Void
 --										or else	other.export_status = Void)
 		do
@@ -1478,7 +1469,7 @@ end
 			-- Has `other' the same signature than Current ?
 		require
 			good_argument: other /= Void
-			same_feature_names: feature_name.is_equal (other.feature_name)
+			same_feature_names: feature_name_id = other.feature_name_id
 		local
 			i, nb: INTEGER
 		do
@@ -1539,7 +1530,7 @@ feature -- Undefinition
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_is_frozen (is_frozen)
-			Result.set_feature_name (feature_name)
+			Result.set_feature_name_id (feature_name_id)
 			Result.set_feature_id (feature_id)
 			Result.set_pattern_id (pattern_id)
 			Result.set_is_require_else (is_require_else)
@@ -1623,7 +1614,7 @@ feature -- Replication
 			other.set_body_index (body_index)
 			other.set_export_status (export_status)
 			other.set_feature_id (feature_id)
-			other.set_feature_name (feature_name)
+			other.set_feature_name_id (feature_name_id)
 			other.set_is_frozen (is_frozen)
 			other.set_is_infix (is_infix)
 			other.set_is_prefix (is_prefix)

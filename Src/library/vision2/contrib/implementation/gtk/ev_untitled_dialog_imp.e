@@ -10,7 +10,6 @@ class
 inherit
 	EV_DIALOG_IMP
 		redefine
-			make,
 			interface,
 			set_size,
 			has_wm_decorations,
@@ -21,14 +20,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-	make (an_interface: like interface) is
-			-- Create empty dialog box.
-		do
-			base_make (an_interface)
-			set_c_object (create_gtk_dialog)
-				-- Cannot use popup window as Window manager cannot give focus to it.
-		end
 		
 		initialize is
 				-- Initialize `Current'
@@ -44,9 +35,7 @@ feature -- Status setting
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
-			update_request_size
-			default_width := a_width
-			default_height := a_height
+			Precursor {EV_DIALOG_IMP} (a_width, a_height)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 

@@ -1,94 +1,90 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_PRINT_DIALOG Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_PRINT_DIALOG</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/stddlgs/wel_print_dialog_chart.html">WEL_PRINT_DIALOG</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/stddlgs/wel_print_dialog_chart.html">WEL_PRINT_DIALOG</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.stddlgs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Standard dialog box to specify the properties of a particular print job."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/stddlgs/index.html">wel.stddlgs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Standard dialog box to specify the properties of a particular print job."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_pd_constants_chart.html">WEL_PD_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/stddlgs/wel_standard_dialog_chart.html">WEL_STANDARD_DIALOG</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_pd_constants_chart.html">WEL_PD_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/stddlgs/wel_standard_dialog_chart.html">WEL_STANDARD_DIALOG</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_all_pages_selected">all_pages_selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_collate_checked">collate_checked</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_copies">copies</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_dc">dc</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_printer_dc_chart.html">WEL_PRINTER_DC</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_flags">flags</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_from_page">from_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_has_flag">has_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_maximum_page">maximum_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_minimum_page">minimum_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_page_numbers_enabled">page_numbers_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_page_numbers_selected">page_numbers_selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_print_setup_enabled">print_setup_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_print_to_file_checked">print_to_file_checked</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_print_to_file_enabled">print_to_file_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_print_to_file_shown">print_to_file_shown</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_standard_dialog_flatshort.html#f_selected">selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_selection_enabled">selection_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_selection_selected">selection_selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_structure_size">Structure_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_to_page">to_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_warning_enabled">warning_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`all_pages_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_all_pages_selected">all_pages_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`collate_checked' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_collate_checked">collate_checked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`copies' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_copies">copies</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dc' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_dc">dc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_printer_dc_chart.html">WEL_PRINTER_DC</A></SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_flags">flags</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`from_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_from_page">from_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`has_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_has_flag">has_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`maximum_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_maximum_page">maximum_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`minimum_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_minimum_page">minimum_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`page_numbers_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_page_numbers_enabled">page_numbers_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`page_numbers_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_page_numbers_selected">page_numbers_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`print_setup_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_print_setup_enabled">print_setup_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`print_to_file_checked' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_print_to_file_checked">print_to_file_checked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`print_to_file_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_print_to_file_enabled">print_to_file_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`print_to_file_shown' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_print_to_file_shown">print_to_file_shown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`selected' was declared in WEL_STANDARD_DIALOG"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_standard_dialog.html#f_selected">selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`selection_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_selection_enabled">selection_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`selection_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_selection_selected">selection_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`to_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_to_page">to_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`warning_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_warning_enabled">warning_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_activate">activate</a> <span class="symbol">(</span><span class="local">a_parent</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_add_flag">add_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_check_collate">check_collate</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_check_print_to_file">check_print_to_file</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_disable_page_numbers">disable_page_numbers</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_disable_print_setup">disable_print_setup</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_disable_print_to_file">disable_print_to_file</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_disable_selection">disable_selection</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_disable_warning">disable_warning</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_enable_page_numbers">enable_page_numbers</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_enable_print_setup">enable_print_setup</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_enable_print_to_file">enable_print_to_file</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_enable_selection">enable_selection</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_enable_warning">enable_warning</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_hide_print_to_file">hide_print_to_file</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize_with_character">initialize_with_character</a> <span class="symbol">(</span><span class="local">a_character</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_chart.html">CHARACTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_memory_copy">memory_copy</a> <span class="symbol">(</span><span class="local">source_pointer</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">;</span> <span class="local">length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_remove_flag">remove_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_select_all_pages">select_all_pages</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_select_page_numbers">select_page_numbers</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_select_selection">select_selection</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_copies">set_copies</a> <span class="symbol">(</span><span class="local">number</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_flags">set_flags</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_from_page">set_from_page</a> <span class="symbol">(</span><span class="local">page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_maximum_page">set_maximum_page</a> <span class="symbol">(</span><span class="local">page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_minimum_page">set_minimum_page</a> <span class="symbol">(</span><span class="local">page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_set_to_page">set_to_page</a> <span class="symbol">(</span><span class="local">page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_show_print_to_file">show_print_to_file</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize">structure_initialize</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_uncheck_collate">uncheck_collate</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_print_dialog_flatshort.html#f_uncheck_print_to_file">uncheck_print_to_file</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`activate' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_activate">activate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`add_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_add_flag">add_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`check_collate' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_check_collate">check_collate</A></SPAN>
-	<SPAN TITLE="`check_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_check_print_to_file">check_print_to_file</A></SPAN>
-	<SPAN TITLE="`disable_page_numbers' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_disable_page_numbers">disable_page_numbers</A></SPAN>
-	<SPAN TITLE="`disable_print_setup' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_disable_print_setup">disable_print_setup</A></SPAN>
-	<SPAN TITLE="`disable_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_disable_print_to_file">disable_print_to_file</A></SPAN>
-	<SPAN TITLE="`disable_selection' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_disable_selection">disable_selection</A></SPAN>
-	<SPAN TITLE="`disable_warning' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_disable_warning">disable_warning</A></SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`enable_page_numbers' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_enable_page_numbers">enable_page_numbers</A></SPAN>
-	<SPAN TITLE="`enable_print_setup' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_enable_print_setup">enable_print_setup</A></SPAN>
-	<SPAN TITLE="`enable_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_enable_print_to_file">enable_print_to_file</A></SPAN>
-	<SPAN TITLE="`enable_selection' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_enable_selection">enable_selection</A></SPAN>
-	<SPAN TITLE="`enable_warning' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_enable_warning">enable_warning</A></SPAN>
-	<SPAN TITLE="`hide_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_hide_print_to_file">hide_print_to_file</A></SPAN>
-	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`remove_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_remove_flag">remove_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`select_all_pages' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_select_all_pages">select_all_pages</A></SPAN>
-	<SPAN TITLE="`select_page_numbers' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_select_page_numbers">select_page_numbers</A></SPAN>
-	<SPAN TITLE="`select_selection' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_select_selection">select_selection</A></SPAN>
-	<SPAN TITLE="`set_copies' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_copies">set_copies</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_flags">set_flags</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_from_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_from_page">set_from_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_maximum_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_maximum_page">set_maximum_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_minimum_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_minimum_page">set_minimum_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_to_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_set_to_page">set_to_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
-	<SPAN TITLE="`show_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_show_print_to_file">show_print_to_file</A></SPAN>
-	<SPAN TITLE="`structure_initialize' was declared in WEL_STRUCTURE as `initialize'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">structure_initialize</A></SPAN>
-	<SPAN TITLE="`uncheck_collate' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_uncheck_collate">uncheck_collate</A></SPAN>
-	<SPAN TITLE="`uncheck_print_to_file' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_print_dialog.html#f_uncheck_print_to_file">uncheck_print_to_file</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

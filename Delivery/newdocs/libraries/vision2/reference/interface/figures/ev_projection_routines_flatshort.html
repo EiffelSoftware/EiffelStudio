@@ -1,0 +1,124 @@
+<html>
+	<head>	
+		<title>EV_PROJECTION_ROUTINES</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Abstract class for figure projection routines."</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class"</span>
+	<span class="itag">keywords</span><span class="symbol">:</span> <span class="string">"projector, events, routines"</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">deferred</span> <span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\vision2/reference/interface/figures/ev_projection_routines_flatshort.html">EV_PROJECTION_ROUTINES</a>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Basic operations</span>
+
+	<a name="f_is_projecting"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_projection_routines_flatshort.html#f_is_projecting">is_projecting</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is a project currently being performed?</span>
+			<span class="comment">--</span><span class="comment"> Then, do not start a new one.</span>
+
+	<a name="f_project"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_projection_routines_flatshort.html#f_project">project</a>
+			<span class="comment">--</span><span class="comment"> Make standard projection of world on device.</span>
+
+	<a name="f_register_figure"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_projection_routines_flatshort.html#f_register_figure">register_figure</a> <span class="symbol">(</span><span class="local">a_figure</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_flatshort.html">EV_FIGURE</a><span class="symbol">;</span> <span class="local">a_routine</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/procedure_flatshort.html">PROCEDURE</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_flatshort.html">TUPLE</a> <span class="symbol">[</span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_flatshort.html">EV_FIGURE</a><span class="symbol">]</span><span class="symbol">]</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Assign </span><span class="quoted">a_routine</span><span class="comment"> for drawing of </span><span class="quoted">a_figure</span><span class="comment">.</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Figure drawing</span>
+
+	<a name="f_draw_figure_arc"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_arc">draw_figure_arc</a> <span class="symbol">(</span><span class="local">arc</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_arc_flatshort.html">EV_FIGURE_ARC</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">arc</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">arc_not_void</span><span class="symbol">:</span> <span class="local">arc</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_dot"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_dot">draw_figure_dot</a> <span class="symbol">(</span><span class="local">dot</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_dot_flatshort.html">EV_FIGURE_DOT</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">dot</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">dot_not_void</span><span class="symbol">:</span> <span class="local">dot</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_ellipse"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_ellipse">draw_figure_ellipse</a> <span class="symbol">(</span><span class="local">ellipse</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_ellipse_flatshort.html">EV_FIGURE_ELLIPSE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">ellipse</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">ellipse_not_void</span><span class="symbol">:</span> <span class="local">ellipse</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_equilateral"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_equilateral">draw_figure_equilateral</a> <span class="symbol">(</span><span class="local">eql</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_equilateral_flatshort.html">EV_FIGURE_EQUILATERAL</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">eql</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">eql_not_void</span><span class="symbol">:</span> <span class="local">eql</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_line"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_line">draw_figure_line</a> <span class="symbol">(</span><span class="local">line</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_line_flatshort.html">EV_FIGURE_LINE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw a standard representation of </span><span class="quoted">line</span><span class="comment"> to the canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">line_not_void</span><span class="symbol">:</span> <span class="local">line</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_picture"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_picture">draw_figure_picture</a> <span class="symbol">(</span><span class="local">picture</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_picture_flatshort.html">EV_FIGURE_PICTURE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">picture</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">picture_not_void</span><span class="symbol">:</span> <span class="local">picture</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_pie_slice"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_pie_slice">draw_figure_pie_slice</a> <span class="symbol">(</span><span class="local">slice</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_pie_slice_flatshort.html">EV_FIGURE_PIE_SLICE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">slice</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">slice_not_void</span><span class="symbol">:</span> <span class="local">slice</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_polygon"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_polygon">draw_figure_polygon</a> <span class="symbol">(</span><span class="local">polygon</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_polygon_flatshort.html">EV_FIGURE_POLYGON</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">polygon</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">polygon_not_void</span><span class="symbol">:</span> <span class="local">polygon</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_polyline"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_polyline">draw_figure_polyline</a> <span class="symbol">(</span><span class="local">line</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_polyline_flatshort.html">EV_FIGURE_POLYLINE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">polyline</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">line_not_void</span><span class="symbol">:</span> <span class="local">line</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_rectangle"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_rectangle">draw_figure_rectangle</a> <span class="symbol">(</span><span class="local">rectangle</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_rectangle_flatshort.html">EV_FIGURE_RECTANGLE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">rectangle</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">rectangle_not_void</span><span class="symbol">:</span> <span class="local">rectangle</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_rounded_rectangle"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_rounded_rectangle">draw_figure_rounded_rectangle</a> <span class="symbol">(</span><span class="local">f</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_rounded_rectangle_flatshort.html">EV_FIGURE_ROUNDED_RECTANGLE</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">f</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">f_not_void</span><span class="symbol">:</span> <span class="local">f</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_star"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_star">draw_figure_star</a> <span class="symbol">(</span><span class="local">star</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_star_flatshort.html">EV_FIGURE_STAR</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">star</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">star_not_void</span><span class="symbol">:</span> <span class="local">star</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_draw_figure_text"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html#f_draw_figure_text">draw_figure_text</a> <span class="symbol">(</span><span class="local">text_figure</span><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_text_flatshort.html">EV_FIGURE_TEXT</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Draw standard representation of </span><span class="quoted">text_figure</span><span class="comment"> to canvas.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\vision2/reference/interface/figures/ev_figure_drawing_routines_flatshort.html">EV_FIGURE_DRAWING_ROUTINES</a>
+			<span class="tag">text_figure_not_void</span><span class="symbol">:</span> <span class="local">text_figure</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>EV_PROJECTION_ROUTINES
+		</pre>
+	</body>
+</html>

@@ -1,39 +1,35 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_CLIPBOARD Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_CLIPBOARD</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_clipboard_chart.html">WEL_CLIPBOARD</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_clipboard_chart.html">WEL_CLIPBOARD</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Class that handles Windows Clipboard operations"</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Class that handles Windows Clipboard operations"</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_clipboard_constants_chart.html">WEL_CLIPBOARD_CONSTANTS</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_clipboard_open">clipboard_open</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_is_clipboard_format_available">is_clipboard_format_available</a> <span class="symbol">(</span><span class="local">format</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_last_string">last_string</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`clipboard_open' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_clipboard_open">clipboard_open</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_clipboard_format_available' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_is_clipboard_format_available">is_clipboard_format_available</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">format</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`last_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_close_clipboard">close_clipboard</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_empty_clipboard">empty_clipboard</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_open_clipboard">open_clipboard</a> <span class="symbol">(</span><span class="local">window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_window_chart.html">WEL_WINDOW</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_retrieve_clipboard_text">retrieve_clipboard_text</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_clipboard_flatshort.html#f_set_clipboard_text">set_clipboard_text</a> <span class="symbol">(</span><span class="local">a_text</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`close_clipboard' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_close_clipboard">close_clipboard</A></SPAN>
-	<SPAN TITLE="`empty_clipboard' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_empty_clipboard">empty_clipboard</A></SPAN>
-	<SPAN TITLE="`open_clipboard' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_open_clipboard">open_clipboard</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`retrieve_clipboard_text' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_retrieve_clipboard_text">retrieve_clipboard_text</A></SPAN>
-	<SPAN TITLE="`set_clipboard_text' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_clipboard.html#f_set_clipboard_text">set_clipboard_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

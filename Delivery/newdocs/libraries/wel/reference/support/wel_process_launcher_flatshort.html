@@ -1,0 +1,88 @@
+<html>
+	<head>	
+		<title>WEL_PROCESS_LAUNCHER</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"[</span>
+<span class="string">					Launch processes and redirect output:</span>
+<span class="string">					  - Use `</span><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_spawn">spawn</a><span class="string">' to launch a process asynchronously.</span>
+<span class="string">					  		Note: you cannot retrieve the ouput from a</span>
+<span class="string">					  		process that was spawned</span>
+<span class="string">					  - Use `</span><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_launch">launch</a><span class="string">' to launch a process synchronously</span>
+<span class="string">					  		and process its output if needed.</span>
+	<span class="string">]"</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class"</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html">WEL_PROCESS_LAUNCHER</a>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_hidden"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_hidden">hidden</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Should process be hidden?</span>
+
+	<a name="f_last_launch_successful"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_last_launch_successful">last_launch_successful</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Was last call to </span><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_launch">launch</a><span class="comment"> successful (i.e. was process started)?</span>
+
+	<a name="f_last_process_result"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_last_process_result">last_process_result</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Last launched process return value</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Basic Operations</span>
+
+	<a name="f_launch"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_launch">launch</a> <span class="symbol">(</span><span class="local">a_command_line</span><span class="symbol">,</span> <span class="local">a_working_directory</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">;</span> <span class="local">a_output_handler</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/routine_flatshort.html">ROUTINE</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_flatshort.html">TUPLE</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">]</span><span class="symbol">]</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Launch process described in </span><span class="quoted">a_command_line</span><span class="comment"> from </span><span class="quoted">a_working_directory</span><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> Wait for end of process and send output to </span><span class="quoted">a_output_handler</span><span class="comment"> if not void.</span>
+		<span class="keyword">require</span>
+			<span class="tag">non_void_command_line</span><span class="symbol">:</span> <span class="local">a_command_line</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">valid_command_line</span><span class="symbol">:</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">not</a> <span class="local">a_command_line</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/structures/storage/finite_flatshort.html#f_is_empty">is_empty</a>
+			<span class="tag">non_void_working_directory</span><span class="symbol">:</span> <span class="local">a_working_directory</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_launch_and_refresh"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_launch_and_refresh">launch_and_refresh</a> <span class="symbol">(</span><span class="local">a_command_line</span><span class="symbol">,</span> <span class="local">a_working_directory</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">;</span> <span class="local">a_refresh_handler</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/routine_flatshort.html">ROUTINE</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_flatshort.html">TUPLE</a><span class="symbol">]</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Launch process described in </span><span class="quoted">a_command_line</span><span class="comment"> from </span><span class="quoted">a_working_directory</span><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> Calls </span><span class="quoted">a_refresh_handler</span><span class="comment"> regularly while waiting for end of process.</span>
+		<span class="keyword">require</span>
+			<span class="tag">non_void_command_line</span><span class="symbol">:</span> <span class="local">a_command_line</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">valid_command_line</span><span class="symbol">:</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">not</a> <span class="local">a_command_line</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/structures/storage/finite_flatshort.html#f_is_empty">is_empty</a>
+			<span class="tag">non_void_working_directory</span><span class="symbol">:</span> <span class="local">a_working_directory</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_spawn"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_spawn">spawn</a> <span class="symbol">(</span><span class="local">a_command_line</span><span class="symbol">,</span> <span class="local">a_working_directory</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Spawn asynchronously process described in </span><span class="quoted">a_command_line</span><span class="comment"> from </span><span class="quoted">a_working_directory</span><span class="comment">.</span>
+		<span class="keyword">require</span>
+			<span class="tag">non_void_command_line</span><span class="symbol">:</span> <span class="local">a_command_line</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">valid_command_line</span><span class="symbol">:</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">not</a> <span class="local">a_command_line</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/structures/storage/finite_flatshort.html#f_is_empty">is_empty</a>
+			<span class="tag">non_void_working_directory</span><span class="symbol">:</span> <span class="local">a_working_directory</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Element settings</span>
+
+	<a name="f_run_hidden"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_run_hidden">run_hidden</a>
+			<span class="comment">--</span><span class="comment"> Should process be run hidden?</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">hidden</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_hidden">hidden</a>
+
+	<a name="f_set_block_size"><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_set_block_size">set_block_size</a> <span class="symbol">(</span><span class="local">a_size</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_block_size">block_size</a><span class="comment"> woth </span><span class="quoted">a_size</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_size</span><span class="symbol">:</span> <span class="local">a_size</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;&quot;">&gt;</a> <span class="number">0</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">size_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_process_launcher_flatshort.html#f_block_size">block_size</a> <span class="symbol">=</span> <span class="local">a_size</span>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_PROCESS_LAUNCHER
+		</pre>
+	</body>
+</html>

@@ -1,40 +1,36 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_ACCELERATORS Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_ACCELERATORS</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Keyboard accelerators that generates a WM_COMMAND message."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_resource_flatshort.html#f_make_by_name">make_by_name</a><span class="symbol">,</span> <a class="feature" href="\libraries\wel/reference/support/wel_resource_flatshort.html#f_make_by_id">make_by_id</a><span class="symbol">,</span> <a class="feature" href="\libraries\wel/reference/support/wel_accelerators_flatshort.html#f_make_with_array">make_with_array</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Keyboard accelerators that generates a WM_COMMAND message."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_resource.html#f_make_by_name">make_by_name</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_resource.html#f_make_by_id">make_by_id</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_accelerators.html#f_make_with_array">make_with_array</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_resource_chart.html">WEL_RESOURCE</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_resource_chart.html">WEL_RESOURCE</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

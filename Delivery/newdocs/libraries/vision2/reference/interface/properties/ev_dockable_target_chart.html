@@ -1,0 +1,54 @@
+<html>
+	<head>	
+		<title>EV_DOCKABLE_TARGET</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">deferred</span> <span class="keyword">class</span>
+	<a class="class" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_chart.html">EV_DOCKABLE_TARGET</a>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">vision2.interface.properties</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Objects that allow dockable sources to be inserted as part of the</span>
+		<span class="string">dockable mechanism. Use `</span><span class="quoted">enable_docking</span><span class="string">' to permit sources to be dropped,</span>
+		<span class="string">and `</span><span class="quoted">veto_dock_function</span><span class="string">' to restrict which sources will be accepted. If a source</span>
+		<span class="string">is rejected by the veto function, then the parent structure will be explored until</span>
+		<span class="string">there are no more parents, or the source being transported is accepted.</span>
+		<span class="string"></span>
+		<span class="string">`</span><span class="quoted">docked_actions</span><span class="string">' is fired after the source of transport has been parented in `</span><span class="quoted">Current</span><span class="string">'."</span>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</a>
+	<a class="class" href="\libraries\vision2/reference/interface/events/ev_dockable_target_action_sequences_chart.html">EV_DOCKABLE_TARGET_ACTION_SEQUENCES</a>
+	<a class="class" href="\libraries\base/reference/support/classic/identified_chart.html">IDENTIFIED</a>
+
+<span class="keyword">Action sequences</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/events/ev_dockable_target_action_sequences_flatshort.html#f_docked_actions">docked_actions</a><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/events/ev_dockable_source_action_sequence_chart.html">EV_DOCKABLE_SOURCE_ACTION_SEQUENCE</a>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/identified_flatshort.html#f_id_freed">id_freed</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/identified_flatshort.html#f_id_object">id_object</a> <span class="symbol">(</span><span class="local">an_id</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/support/classic/identified_chart.html">IDENTIFIED</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_is_destroyed">is_destroyed</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_flatshort.html#f_is_docking_enabled">is_docking_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/identified_flatshort.html#f_object_id">object_id</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_flatshort.html#f_veto_dock_function">veto_dock_function</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/function_chart.html">FUNCTION</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_chart.html">TUPLE</a> <span class="symbol">[</span><a class="class" href="\libraries\vision2/reference/interface/properties/ev_dockable_source_chart.html">EV_DOCKABLE_SOURCE</a><span class="symbol">]</span><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a><span class="symbol">]</span>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_copy">copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_chart.html">EV_DOCKABLE_TARGET</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_default_create">default_create</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_destroy">destroy</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_flatshort.html#f_disable_docking">disable_docking</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_flatshort.html#f_enable_docking">enable_docking</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/identified_flatshort.html#f_free_id">free_id</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_set_data">set_data</a> <span class="symbol">(</span><span class="local">some_data</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/properties/ev_dockable_target_flatshort.html#f_set_veto_dock_function">set_veto_dock_function</a> <span class="symbol">(</span><span class="local">a_function</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/function_chart.html">FUNCTION</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_chart.html">TUPLE</a> <span class="symbol">[</span><a class="class" href="\libraries\vision2/reference/interface/properties/ev_dockable_source_chart.html">EV_DOCKABLE_SOURCE</a><span class="symbol">]</span><span class="symbol">,</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a><span class="symbol">]</span><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

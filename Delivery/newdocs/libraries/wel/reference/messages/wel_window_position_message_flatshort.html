@@ -1,0 +1,78 @@
+<html>
+	<head>	
+		<title>WEL_WINDOW_POSITION_MESSAGE</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Information about message Wm_windowposchanged, Wm_windowposchanging. These messages are sent to a window whose size, position, or place in the Z order has changed."</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/messages/wel_window_position_message_flatshort.html">WEL_WINDOW_POSITION_MESSAGE</a>
+
+<span class="keyword">create</span> 
+
+	<a name="f_make"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a><span class="symbol">;</span> <span class="local">a_message</span><span class="symbol">,</span> <span class="local">a_w_param</span><span class="symbol">,</span> <span class="local">a_l_param</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_window">window</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_w_param">w_param</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_l_param">l_param</a><span class="comment"> with</span>
+			<span class="comment">--</span><span class="comment"> </span><span class="quoted">a_window</span><span class="comment">, </span><span class="quoted">a_message</span><span class="comment">, </span><span class="quoted">a_w_param</span><span class="comment">, </span><span class="quoted">a_l_param</span><span class="comment"></span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a>
+			<span class="tag">window_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_window">window</a> <span class="symbol">=</span> <span class="local">a_window</span>
+			<span class="tag">message_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a> <span class="symbol">=</span> <span class="local">a_message</span>
+			<span class="tag">w_param_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_w_param">w_param</a> <span class="symbol">=</span> <span class="local">a_w_param</span>
+			<span class="tag">l_param_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_l_param">l_param</a> <span class="symbol">=</span> <span class="local">a_l_param</span>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Initialization</span>
+
+	<a name="f_make"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a><span class="symbol">;</span> <span class="local">a_message</span><span class="symbol">,</span> <span class="local">a_w_param</span><span class="symbol">,</span> <span class="local">a_l_param</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_window">window</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_w_param">w_param</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_l_param">l_param</a><span class="comment"> with</span>
+			<span class="comment">--</span><span class="comment"> </span><span class="quoted">a_window</span><span class="comment">, </span><span class="quoted">a_message</span><span class="comment">, </span><span class="quoted">a_w_param</span><span class="comment">, </span><span class="quoted">a_l_param</span><span class="comment"></span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a>
+			<span class="tag">window_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_window">window</a> <span class="symbol">=</span> <span class="local">a_window</span>
+			<span class="tag">message_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a> <span class="symbol">=</span> <span class="local">a_message</span>
+			<span class="tag">w_param_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_w_param">w_param</a> <span class="symbol">=</span> <span class="local">a_w_param</span>
+			<span class="tag">l_param_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_l_param">l_param</a> <span class="symbol">=</span> <span class="local">a_l_param</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_l_param"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_l_param">l_param</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Additional information about </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">. The exact</span>
+			<span class="comment">--</span><span class="comment"> meaning depends on the value of </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+
+	<a name="f_message"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Message number. See class </span><a class="class" href="\libraries\wel/reference/consts/wel_wm_constants_flatshort.html">WEL_WM_CONSTANTS</a><span class="comment"> for</span>
+			<span class="comment">--</span><span class="comment"> different values.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+
+	<a name="f_position"><a class="feature" href="\libraries\wel/reference/messages/wel_window_position_message_flatshort.html#f_position">position</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_window_pos_flatshort.html">WEL_WINDOW_POS</a>
+
+	<a name="f_w_param"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_w_param">w_param</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Additional information about </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">. The exact</span>
+			<span class="comment">--</span><span class="comment"> meaning depends on the value of </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+
+	<a name="f_window"><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_window">window</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a>
+			<span class="comment">--</span><span class="comment"> Window which receives </span><a class="feature" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html#f_message">message</a><span class="comment"></span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/messages/wel_message_information_flatshort.html">WEL_MESSAGE_INFORMATION</a><span class="comment">)</span>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_WINDOW_POSITION_MESSAGE
+		</pre>
+	</body>
+</html>

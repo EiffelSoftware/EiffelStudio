@@ -1,40 +1,36 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_DISK_SPACE Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_DISK_SPACE</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_disk_space_chart.html">WEL_DISK_SPACE</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_disk_space_chart.html">WEL_DISK_SPACE</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Object used to retrieve total and free disk space on anylocal hard drive. Remote drive are not yet supported"</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default_create">default_create</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Object used to retrieve total and free disk space on anylocal hard drive. Remote drive are not yet supported"</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_create">default_create</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_free_space">last_free_space</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_free_space_in_bytes">last_free_space_in_bytes</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_free_space_in_string">last_free_space_in_string</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_query_success">last_query_success</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_total_space">last_total_space</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_total_space_in_bytes">last_total_space_in_bytes</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_last_total_space_in_string">last_total_space_in_string</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`last_free_space' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_free_space">last_free_space</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`last_free_space_in_bytes' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_free_space_in_bytes">last_free_space_in_bytes</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`last_free_space_in_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_free_space_in_string">last_free_space_in_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`last_query_success' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_query_success">last_query_success</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`last_total_space' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_total_space">last_total_space</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`last_total_space_in_bytes' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_total_space_in_bytes">last_total_space_in_bytes</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`last_total_space_in_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_last_total_space_in_string">last_total_space_in_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_disk_space_flatshort.html#f_query_local_drive">query_local_drive</a> <span class="symbol">(</span><span class="local">drive_letter</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_chart.html">CHARACTER</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`query_local_drive' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_disk_space.html#f_query_local_drive">query_local_drive</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">drive_letter</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

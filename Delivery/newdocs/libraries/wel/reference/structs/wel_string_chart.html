@@ -1,53 +1,48 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_STRING Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_STRING</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/structs/wel_string_chart.html">WEL_STRING</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_string_chart.html">WEL_STRING</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.structs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"A low-level string class to solve some garbage collector problems (object move). The end-user must not use this class. Use class </span><a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="string"> instead."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make_by_pointer">make_by_pointer</a><span class="symbol">,</span> <a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make_empty">make_empty</a><span class="symbol">,</span> <a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A low-level string class to solve some garbage collector problems (object move). The end-user must not use this class. Use class </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="estring"> instead."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_make_empty">make_empty</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/support/c_string_chart.html">C_STRING</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_capacity">capacity</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_count">count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_exists">Exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_length">length</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_null_separated_strings">null_separated_strings</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_space_separated_strings">space_separated_strings</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_string">string</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_substring">substring</a> <span class="symbol">(</span><span class="local">start_pos</span><span class="symbol">,</span> <span class="local">end_pos</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`capacity' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_capacity">capacity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`length' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_length">length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`null_separated_strings' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_null_separated_strings">null_separated_strings</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`space_separated_strings' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_space_separated_strings">space_separated_strings</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
-	<SPAN TITLE="`string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_string">string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_fill_blank">fill_blank</a>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_fill_value">fill_value</a> <span class="symbol">(</span><span class="local">a_value</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_8_chart.html">INTEGER_8</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_string</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make_by_pointer">make_by_pointer</a> <span class="symbol">(</span><span class="local">a_ptr</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make_by_pointer_and_count">make_by_pointer_and_count</a> <span class="symbol">(</span><span class="local">a_ptr</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">;</span> <span class="local">a_length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_make_empty">make_empty</a> <span class="symbol">(</span><span class="local">a_length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_set_count">set_count</a> <span class="symbol">(</span><span class="local">a_count</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_set_null_character">set_null_character</a> <span class="symbol">(</span><span class="local">offset</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_string_flatshort.html#f_set_size_in_string">set_size_in_string</a> <span class="symbol">(</span><span class="local">n</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/c_string_flatshort.html#f_set_string">set_string</a> <span class="symbol">(</span><span class="local">a_string</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
-	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_null_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_set_null_character">set_null_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">offset</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_size_in_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_set_size_in_string">set_size_in_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_string.html#f_set_string">set_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

@@ -1,71 +1,67 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_SCROLLER Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_SCROLLER</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_scroller_chart.html">WEL_SCROLLER</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_scroller_chart.html">WEL_SCROLLER</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"This class processes the scroll messages associated to a window."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_make_with_options">make_with_options</a><span class="symbol">,</span> <a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"This class processes the scroll messages associated to a window."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_make_with_options">make_with_options</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/consts/wel_sb_constants_chart.html">WEL_SB_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/consts/new_consts/wel_scroll_bar_constants_chart.html">WEL_SCROLL_BAR_CONSTANTS</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_sb_constants_chart.html">WEL_SB_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_scroll_bar_constants_chart.html">WEL_SCROLL_BAR_CONSTANTS</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_horizontal_line">horizontal_line</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_horizontal_page">horizontal_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_horizontal_position">horizontal_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_maximal_horizontal_position">maximal_horizontal_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_maximal_vertical_position">maximal_vertical_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_minimal_horizontal_position">minimal_horizontal_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_minimal_vertical_position">minimal_vertical_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_vertical_line">vertical_line</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_vertical_page">vertical_page</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_vertical_position">vertical_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_window">window</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`horizontal_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_horizontal_line">horizontal_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`horizontal_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_horizontal_page">horizontal_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`horizontal_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_horizontal_position">horizontal_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`maximal_horizontal_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_maximal_horizontal_position">maximal_horizontal_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`maximal_vertical_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_maximal_vertical_position">maximal_vertical_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`minimal_horizontal_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_minimal_horizontal_position">minimal_horizontal_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`minimal_vertical_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_minimal_vertical_position">minimal_vertical_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`vertical_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_vertical_line">vertical_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`vertical_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_vertical_page">vertical_page</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`vertical_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_vertical_position">vertical_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`window' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_window">window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_horizontal_update">horizontal_update</a> <span class="symbol">(</span><span class="local">inc</span><span class="symbol">,</span> <span class="local">position</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a><span class="symbol">;</span> <span class="local">horizontal_size</span><span class="symbol">,</span> <span class="local">vertical_size</span><span class="symbol">,</span> <span class="local">line</span><span class="symbol">,</span> <span class="local">page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_make_with_options">make_with_options</a> <span class="symbol">(</span><span class="local">a_window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a><span class="symbol">;</span> <span class="local">a_minimal_horizontal_position</span><span class="symbol">,</span> <span class="local">a_maximal_horizontal_position</span><span class="symbol">,</span> <span class="local">a_minimal_vertical_position</span><span class="symbol">,</span> <span class="local">a_maximal_vertical_position</span><span class="symbol">,</span> <span class="local">a_horizontal_line</span><span class="symbol">,</span> <span class="local">a_horizontal_page</span><span class="symbol">,</span> <span class="local">a_vertical_line</span><span class="symbol">,</span> <span class="local">a_vertical_page</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_on_horizontal_scroll">on_horizontal_scroll</a> <span class="symbol">(</span><span class="local">scroll_code</span><span class="symbol">,</span> <span class="local">pos</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_on_vertical_scroll">on_vertical_scroll</a> <span class="symbol">(</span><span class="local">scroll_code</span><span class="symbol">,</span> <span class="local">pos</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_horizontal_line">set_horizontal_line</a> <span class="symbol">(</span><span class="local">unit</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_horizontal_page">set_horizontal_page</a> <span class="symbol">(</span><span class="local">page_magnitude</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_horizontal_position">set_horizontal_position</a> <span class="symbol">(</span><span class="local">position</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_horizontal_range">set_horizontal_range</a> <span class="symbol">(</span><span class="local">minimum</span><span class="symbol">,</span> <span class="local">maximum</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_vertical_line">set_vertical_line</a> <span class="symbol">(</span><span class="local">unit</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_vertical_page">set_vertical_page</a> <span class="symbol">(</span><span class="local">page_magnitude</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_vertical_position">set_vertical_position</a> <span class="symbol">(</span><span class="local">position</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_set_vertical_range">set_vertical_range</a> <span class="symbol">(</span><span class="local">minimum</span><span class="symbol">,</span> <span class="local">maximum</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_scroller_flatshort.html#f_vertical_update">vertical_update</a> <span class="symbol">(</span><span class="local">inc</span><span class="symbol">,</span> <span class="local">position</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`horizontal_update' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_horizontal_update">horizontal_update</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">inc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">horizontal_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">vertical_size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`make_with_options' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_make_with_options">make_with_options</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_minimal_horizontal_position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_maximal_horizontal_position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_minimal_vertical_position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_maximal_vertical_position</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_horizontal_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_horizontal_page</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_vertical_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_vertical_page</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`on_horizontal_scroll' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_on_horizontal_scroll">on_horizontal_scroll</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">scroll_code</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`on_vertical_scroll' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_on_vertical_scroll">on_vertical_scroll</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">scroll_code</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_horizontal_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_horizontal_line">set_horizontal_line</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">unit</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_horizontal_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_horizontal_page">set_horizontal_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page_magnitude</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_horizontal_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_horizontal_position">set_horizontal_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_horizontal_range' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_horizontal_range">set_horizontal_range</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">minimum</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">maximum</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_vertical_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_vertical_line">set_vertical_line</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">unit</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_vertical_page' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_vertical_page">set_vertical_page</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">page_magnitude</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_vertical_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_vertical_position">set_vertical_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_vertical_range' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_set_vertical_range">set_vertical_range</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">minimum</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">maximum</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`vertical_update' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_scroller.html#f_vertical_update">vertical_update</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">inc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+<span class="keyword">Constraints</span>
+	<span class="tag">window not void</span>
+	<span class="tag">horizontal position small enough</span>
+	<span class="tag">horizontal position large enough</span>
+	<span class="tag">vertical position small enough</span>
+	<span class="tag">vertical position large enough</span>
+	<span class="tag">consistent horizontal range</span>
+	<span class="tag">consistent vertical range</span>
+	<span class="tag">positive horizontal line</span>
+	<span class="tag">positive vertical line</span>
+	<span class="tag">positive horizontal page</span>
+	<span class="tag">positive vertical page</span>
 
-<SPAN CLASS="ekeyword">Constraints</SPAN>
-	<SPAN CLASS="etag">window not void</SPAN>
-	<SPAN CLASS="etag">horizontal position small enough</SPAN>
-	<SPAN CLASS="etag">horizontal position large enough</SPAN>
-	<SPAN CLASS="etag">vertical position small enough</SPAN>
-	<SPAN CLASS="etag">vertical position large enough</SPAN>
-	<SPAN CLASS="etag">consistent horizontal range</SPAN>
-	<SPAN CLASS="etag">consistent vertical range</SPAN>
-	<SPAN CLASS="etag">positive horizontal line</SPAN>
-	<SPAN CLASS="etag">positive vertical line</SPAN>
-	<SPAN CLASS="etag">positive horizontal page</SPAN>
-	<SPAN CLASS="etag">positive vertical page</SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

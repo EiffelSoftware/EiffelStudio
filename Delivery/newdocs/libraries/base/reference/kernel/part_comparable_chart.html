@@ -1,33 +1,29 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>PART_COMPARABLE Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>PART_COMPARABLE</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">deferred</span> <span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.kernel</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Objects that may be compared according to a partial order relation"</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that may be compared according to a partial order relation"</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A>
+<span class="keyword">Queries</span>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="symbol" href="\libraries\base/reference/kernel/part_comparable_flatshort.html#f_infix &quot;&lt;&quot;">&lt;</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="symbol" href="\libraries\base/reference/kernel/part_comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="symbol" href="\libraries\base/reference/kernel/part_comparable_flatshort.html#f_infix &quot;&gt;&quot;">&gt;</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="symbol" href="\libraries\base/reference/kernel/part_comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`_infix_ge' is declared in `Current'"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../base/reference/kernel/part_comparable.html#f__infix_ge">&gt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`_infix_gt' is declared in `Current'"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../base/reference/kernel/part_comparable.html#f__infix_gt">&gt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`_infix_le' is declared in `Current'"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../base/reference/kernel/part_comparable.html#f__infix_le">&lt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`_infix_lt' is declared in `Current'"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../base/reference/kernel/part_comparable.html#f__infix_lt">&lt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

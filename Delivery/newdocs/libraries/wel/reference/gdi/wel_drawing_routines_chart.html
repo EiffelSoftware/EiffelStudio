@@ -1,52 +1,48 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_DRAWING_ROUTINES Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_DRAWING_ROUTINES</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/gdi/wel_drawing_routines_chart.html">WEL_DRAWING_ROUTINES</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_drawing_routines_chart.html">WEL_DRAWING_ROUTINES</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.gdi</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Basic windows routines to draw controls like owner-draw-buttons."</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/gdi/index.html">wel.gdi</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Basic windows routines to draw controls like owner-draw-buttons."</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/consts/wel_dib_colors_constants_chart.html">WEL_DIB_COLORS_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_drawing_routines_constants_chart.html">WEL_DRAWING_ROUTINES_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_dt_constants_chart.html">WEL_DT_CONSTANTS</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_dib_colors_constants_chart.html">WEL_DIB_COLORS_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_drawing_routines_constants_chart.html">WEL_DRAWING_ROUTINES_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_dt_constants_chart.html">WEL_DT_CONSTANTS</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_bottom">Dt_bottom</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_calcrect">Dt_calcrect</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_center">Dt_center</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_expandtabs">Dt_expandtabs</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_externalleading">Dt_externalleading</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_internal">Dt_internal</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_left">Dt_left</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_noclip">Dt_noclip</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_noprefix">Dt_noprefix</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_right">Dt_right</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_singleline">Dt_singleline</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_tabstop">Dt_tabstop</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_top">Dt_top</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_vcenter">Dt_vcenter</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_dt_constants_flatshort.html#f_dt_wordbreak">Dt_wordbreak</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`dt_bottom' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_bottom">Dt_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_calcrect' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_calcrect">Dt_calcrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_center' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_center">Dt_center</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_expandtabs' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_expandtabs">Dt_expandtabs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_externalleading' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_externalleading">Dt_externalleading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_internal' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_internal">Dt_internal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_left' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_left">Dt_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_noclip' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_noclip">Dt_noclip</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_noprefix' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_noprefix">Dt_noprefix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_right' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_right">Dt_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_singleline' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_singleline">Dt_singleline</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_tabstop' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_tabstop">Dt_tabstop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_top' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_top">Dt_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_vcenter' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_vcenter">Dt_vcenter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`dt_wordbreak' was declared in WEL_DT_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_dt_constants.html#f_dt_wordbreak">Dt_wordbreak</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/gdi/wel_drawing_routines_flatshort.html#f_draw_edge">draw_edge</a> <span class="symbol">(</span><span class="local">dc</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_dc_chart.html">WEL_DC</a><span class="symbol">;</span> <span class="local">rect</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_rect_chart.html">WEL_RECT</a><span class="symbol">;</span> <span class="local">type</span><span class="symbol">,</span> <span class="local">border</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/gdi/wel_drawing_routines_flatshort.html#f_draw_focus_rect">draw_focus_rect</a> <span class="symbol">(</span><span class="local">dc</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_dc_chart.html">WEL_DC</a><span class="symbol">;</span> <span class="local">rect</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_rect_chart.html">WEL_RECT</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/gdi/wel_drawing_routines_flatshort.html#f_draw_insensitive_bitmap">draw_insensitive_bitmap</a> <span class="symbol">(</span><span class="local">dc</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_dc_chart.html">WEL_DC</a><span class="symbol">;</span> <span class="local">bitmap</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">;</span> <span class="local">x</span><span class="symbol">,</span> <span class="local">y</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/gdi/wel_drawing_routines_flatshort.html#f_draw_insensitive_text">draw_insensitive_text</a> <span class="symbol">(</span><span class="local">dc</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_dc_chart.html">WEL_DC</a><span class="symbol">;</span> <span class="local">txt</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">;</span> <span class="local">x</span><span class="symbol">,</span> <span class="local">y</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`draw_edge' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_drawing_routines.html#f_draw_edge">draw_edge</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">border</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`draw_focus_rect' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_drawing_routines.html#f_draw_focus_rect">draw_focus_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`draw_insensitive_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_drawing_routines.html#f_draw_insensitive_bitmap">draw_insensitive_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`draw_insensitive_text' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_drawing_routines.html#f_draw_insensitive_text">draw_insensitive_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">txt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

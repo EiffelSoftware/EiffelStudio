@@ -1,0 +1,42 @@
+<html>
+	<head>	
+		<title>BOOL_STRING</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.support.classic</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Packed boolean strings"</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_make">make</a>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/to_special_chart.html">TO_SPECIAL</a> <span class="symbol">[</span><span class="generic">T</span><span class="symbol">]</span>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_count">count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="symbol" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_infix &quot;@&quot;">@</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">i</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="keyword" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_feature">and</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a><span class="symbol">)</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="keyword" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_feature">or</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a><span class="symbol">)</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<span class="keyword">infix</span> <span class="symbol">"</span><a class="keyword" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_feature">xor</a><span class="symbol">"</span> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a><span class="symbol">)</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_item">item</a> <span class="symbol">(</span><span class="local">i</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_left_shifted">left_shifted</a> <span class="symbol">(</span><span class="local">n</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<span class="keyword">prefix</span> <span class="symbol">"</span><a class="keyword" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_feature">not</a><span class="symbol">"</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_right_shifted">right_shifted</a> <span class="symbol">(</span><span class="local">n</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/support/classic/bool_string_chart.html">BOOL_STRING</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_valid_index">valid_index</a> <span class="symbol">(</span><span class="local">i</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_all_false">all_false</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_all_true">all_true</a>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">n</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_put">put</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\base/reference/support/classic/bool_string_flatshort.html#f_item">item</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a><span class="symbol">;</span> <span class="local">i</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+	<head>	
+		<title>WEL_WINDOW_ENUMERATOR</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Enumerate all child windows of a </span><a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a><span class="string">."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/support/classic/wel_window_enumerator_flatshort.html">WEL_WINDOW_ENUMERATOR</a>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_enumerate"><a class="feature" href="\libraries\wel/reference/support/classic/wel_window_enumerator_flatshort.html#f_enumerate">enumerate</a> <span class="symbol">(</span><span class="local">a_window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/list/list_flatshort.html">LIST</a> <span class="symbol">[</span><a class="class" href="\libraries\wel/reference/windows/wel_window_flatshort.html">WEL_WINDOW</a><span class="symbol">]</span>
+			<span class="comment">--</span><span class="comment"> Construct a linear representation with all children of </span><span class="quoted">a_window</span><span class="comment">.</span>
+		<span class="keyword">require</span>
+			<span class="tag">a_window_not_void</span><span class="symbol">:</span> <span class="local">a_window</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">a_window_exists</span><span class="symbol">:</span> <span class="local">a_window</span><span class="dot">.</span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a>
+		<span class="keyword">ensure</span>
+			<span class="tag">result_not_void</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_WINDOW_ENUMERATOR
+		</pre>
+	</body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+	<head>	
+		<title>WEL_COLOR_REF</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Color defined by intensity of the red, green, blue color."</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html">WEL_COLOR_REF</a>
+
+<span class="keyword">create</span> 
+
+	<a name="f_make"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_make">make</a>
+			<span class="comment">--</span><span class="comment"> Make a black color</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">red_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <span class="symbol">=</span> <span class="number">0</span>
+			<span class="tag">green_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <span class="symbol">=</span> <span class="number">0</span>
+			<span class="tag">blue_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <span class="symbol">=</span> <span class="number">0</span>
+
+	<a name="f_make_rgb"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_make_rgb">make_rgb</a> <span class="symbol">(</span><span class="local">a_red</span><span class="symbol">,</span> <span class="local">a_green</span><span class="symbol">,</span> <span class="local">a_blue</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a><span class="comment"> with</span>
+			<span class="comment">--</span><span class="comment"> </span><span class="quoted">a_red</span><span class="comment">, </span><span class="quoted">a_green</span><span class="comment">, </span><span class="quoted">a_blue</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_red_inf</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_red_sup</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+			<span class="tag">valid_green_inf</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_green_sup</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+			<span class="tag">valid_blue_inf</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_blue_sup</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">red_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <span class="symbol">=</span> <span class="local">a_red</span>
+			<span class="tag">green_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <span class="symbol">=</span> <span class="local">a_green</span>
+			<span class="tag">blue_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <span class="symbol">=</span> <span class="local">a_blue</span>
+
+	<a name="f_make_system"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_make_system">make_system</a> <span class="symbol">(</span><span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Make a system color identified by </span><span class="quoted">index</span><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> See </span><a class="class" href="\libraries\wel/reference/consts/wel_color_constants_flatshort.html">WEL_COLOR_CONSTANTS</a><span class="comment"> for </span><span class="quoted">index</span><span class="comment"> values.</span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_color_constant</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/consts/wel_color_constants_flatshort.html#f_valid_color_constant">valid_color_constant</a> <span class="symbol">(</span><span class="local">index</span><span class="symbol">)</span>
+
+	<a name="f_make_by_color"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_make_by_color">make_by_color</a> <span class="symbol">(</span><span class="local">color</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_item">item</a><span class="comment"> with </span><span class="quoted">color</span><span class="comment">.</span>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_blue"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Intensity value for the blue component</span>
+
+	<a name="f_green"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Intensity value for the green component</span>
+
+	<a name="f_item"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> The Current color.</span>
+
+	<a name="f_red"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Intensity value for the red component</span>
+	
+<span class="keyword">feature</span>  <span class="comment">--</span><span class="comment"> Comparison</span>
+
+	<a name="f_is_equal"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is </span><span class="quoted">other</span><span class="comment"> attached to an object considered</span>
+			<span class="comment">--</span><span class="comment"> equal to current object?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">symmetric</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="local">other</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+			<span class="tag">consistent</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="reserved">Result</span>
+	
+<span class="keyword">feature</span>  <span class="comment">--</span><span class="comment"> Status report</span>
+
+	<a name="f_valid_color_constant"><a class="feature" href="\libraries\wel/reference/consts/wel_color_constants_flatshort.html#f_valid_color_constant">valid_color_constant</a> <span class="symbol">(</span><span class="local">c</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is </span><span class="quoted">c</span><span class="comment"> a valid color constant?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/consts/wel_color_constants_flatshort.html">WEL_COLOR_CONSTANTS</a><span class="comment">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Element change</span>
+
+	<a name="f_set_blue"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_set_blue">set_blue</a> <span class="symbol">(</span><span class="local">a_blue</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a><span class="comment"> with </span><span class="quoted">a_blue</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_blue_inf</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_blue_sup</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">blue_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <span class="symbol">=</span> <span class="local">a_blue</span>
+
+	<a name="f_set_color"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_set_color">set_color</a> <span class="symbol">(</span><span class="local">color</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_item">item</a><span class="comment"> with </span><span class="quoted">color</span><span class="comment">.</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">color_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_item">item</a> <span class="symbol">=</span> <span class="local">color</span>
+
+	<a name="f_set_green"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_set_green">set_green</a> <span class="symbol">(</span><span class="local">a_green</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a><span class="comment"> with </span><span class="quoted">a_green</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_green_inf</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_green_sup</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">green_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <span class="symbol">=</span> <span class="local">a_green</span>
+
+	<a name="f_set_red"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_set_red">set_red</a> <span class="symbol">(</span><span class="local">a_red</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a><span class="comment"> with </span><span class="quoted">a_red</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_red_inf</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_red_sup</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">red_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <span class="symbol">=</span> <span class="local">a_red</span>
+
+	<a name="f_set_rgb"><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_set_rgb">set_rgb</a> <span class="symbol">(</span><span class="local">a_red</span><span class="symbol">,</span> <span class="local">a_green</span><span class="symbol">,</span> <span class="local">a_blue</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a><span class="comment">, </span><a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a><span class="comment"> with</span>
+			<span class="comment">--</span><span class="comment"> </span><span class="quoted">a_red</span><span class="comment">, </span><span class="quoted">a_green</span><span class="comment">, </span><span class="quoted">a_blue</span><span class="comment"></span>
+		<span class="keyword">require</span>
+			<span class="tag">valid_red_inf</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_red_sup</span><span class="symbol">:</span> <span class="local">a_red</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+			<span class="tag">valid_green_inf</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_green_sup</span><span class="symbol">:</span> <span class="local">a_green</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+			<span class="tag">valid_blue_inf</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+			<span class="tag">valid_blue_sup</span><span class="symbol">:</span> <span class="local">a_blue</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">red_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <span class="symbol">=</span> <span class="local">a_red</span>
+			<span class="tag">green_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <span class="symbol">=</span> <span class="local">a_green</span>
+			<span class="tag">blue_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <span class="symbol">=</span> <span class="local">a_blue</span>
+	
+<span class="keyword">invariant</span>
+
+	<span class="tag">valid_red_inf</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+	<span class="tag">valid_red_sup</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_red">red</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+	<span class="tag">valid_green_inf</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+	<span class="tag">valid_green_sup</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_green">green</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+	<span class="tag">valid_blue_inf</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;=&quot;">&gt;=</a> <span class="number">0</span>
+	<span class="tag">valid_blue_sup</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/gdi/wel_color_ref_flatshort.html#f_blue">blue</a> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <span class="number">255</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_COLOR_REF
+		</pre>
+	</body>
+</html>

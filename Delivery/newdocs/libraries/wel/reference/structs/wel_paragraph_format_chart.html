@@ -1,71 +1,67 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_PARAGRAPH_FORMAT Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_PARAGRAPH_FORMAT</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/structs/wel_paragraph_format_chart.html">WEL_PARAGRAPH_FORMAT</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_paragraph_format_chart.html">WEL_PARAGRAPH_FORMAT</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.structs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Contains information about paragraph formating attributes in a rich edit control."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_make_by_pointer">make_by_pointer</a><span class="symbol">,</span> <a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Contains information about paragraph formating attributes in a rich edit control."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_pfa_constants_chart.html">WEL_PFA_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_pfm_constants_chart.html">WEL_PFM_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_pfa_constants_chart.html">WEL_PFA_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_pfm_constants_chart.html">WEL_PFM_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_alignment">alignment</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_has_mask">has_mask</a> <span class="symbol">(</span><span class="local">a_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_mask">mask</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_max_tab_stops">max_tab_stops</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_numbering">numbering</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_offset">offset</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_right_indent">right_indent</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_start_indent">start_indent</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_structure_size">Structure_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_tabulations">tabulations</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/array_chart.html">ARRAY</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`alignment' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_alignment">alignment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`has_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_has_mask">has_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`max_tab_stops' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_max_tab_stops">max_tab_stops</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`numbering' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_numbering">numbering</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`offset' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_offset">offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`right_indent' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_right_indent">right_indent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`start_indent' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_start_indent">start_indent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`tabulations' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_tabulations">tabulations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_add_mask">add_mask</a> <span class="symbol">(</span><span class="local">a_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_bullet_numbering">bullet_numbering</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize">initialize</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize_with_character">initialize_with_character</a> <span class="symbol">(</span><span class="local">a_character</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_chart.html">CHARACTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_memory_copy">memory_copy</a> <span class="symbol">(</span><span class="local">source_pointer</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">;</span> <span class="local">length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_no_numbering">no_numbering</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_remove_mask">remove_mask</a> <span class="symbol">(</span><span class="local">a_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_alignment">set_alignment</a> <span class="symbol">(</span><span class="local">an_alignment</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_center_alignment">set_center_alignment</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_default_tabulation">set_default_tabulation</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_left_alignment">set_left_alignment</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_mask">set_mask</a> <span class="symbol">(</span><span class="local">a_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_offset">set_offset</a> <span class="symbol">(</span><span class="local">an_offset</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_right_alignment">set_right_alignment</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_right_indent">set_right_indent</a> <span class="symbol">(</span><span class="local">a_right_indent</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_start_indent">set_start_indent</a> <span class="symbol">(</span><span class="local">a_start_indent</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_tabulation">set_tabulation</a> <span class="symbol">(</span><span class="local">tab</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_paragraph_format_flatshort.html#f_set_tabulations">set_tabulations</a> <span class="symbol">(</span><span class="local">tabs</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/array_chart.html">ARRAY</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">]</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`add_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_add_mask">add_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`bullet_numbering' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_bullet_numbering">bullet_numbering</A></SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
-	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`no_numbering' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_no_numbering">no_numbering</A></SPAN>
-	<SPAN TITLE="`remove_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_remove_mask">remove_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_alignment' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_alignment">set_alignment</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_alignment</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_center_alignment' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_center_alignment">set_center_alignment</A></SPAN>
-	<SPAN TITLE="`set_default_tabulation' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_default_tabulation">set_default_tabulation</A></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_left_alignment' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_left_alignment">set_left_alignment</A></SPAN>
-	<SPAN TITLE="`set_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_mask">set_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_offset' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_offset">set_offset</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_offset</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_right_alignment' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_right_alignment">set_right_alignment</A></SPAN>
-	<SPAN TITLE="`set_right_indent' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_right_indent">set_right_indent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_right_indent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_start_indent' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_start_indent">set_start_indent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_start_indent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_tabulation' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_tabulation">set_tabulation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">tab</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_tabulations' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_paragraph_format.html#f_set_tabulations">set_tabulations</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">tabs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

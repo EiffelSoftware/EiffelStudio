@@ -59,19 +59,18 @@ feature -- Comparison
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			normal_feature: like Current;
-			infix_feature: INFIX_PREFIX_AS;
+			normal_feature: like Current
+			infix_feature: INFIX_PREFIX_AS
 		do
-			normal_feature ?= other;
-			infix_feature ?= other;
-
+			normal_feature ?= other
+			infix_feature ?= other
 			check
-				void_normal_feature: normal_feature = void implies infix_feature /= Void
-				void_infix_feature: infix_feature = void implies normal_feature /= Void
+				Void_normal_feature: normal_feature = Void implies infix_feature /= Void
+				Void_infix_feature: infix_feature = Void implies normal_feature /= Void
 			end
-			
-			if infix_feature /= void then
-				Result := true
+
+			if infix_feature /= Void then
+				Result := True
 			elseif feature_name = Void then
 				Result := False
 			elseif normal_feature.feature_name = Void then
@@ -80,7 +79,7 @@ feature -- Comparison
 				Result := feature_name < normal_feature.feature_name
 			end
 		end
-		
+
 feature {COMPILER_EXPORTER}
 
 	set_name (s: STRING) is

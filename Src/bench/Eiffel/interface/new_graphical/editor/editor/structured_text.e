@@ -97,28 +97,28 @@ feature -- Basic Operations
 
 feature {NONE} -- Private feature
 
-	prepare_line (line: like first_displayed_line) is
-			-- Prepare the line to be added in our
-			-- structure.
-		local
-			current_position: INTEGER
-			current_token	: EDITOR_TOKEN
-		do
-			from
-				line.start
-				current_position := 0
-			until
-				line.after
-			loop
-					-- Compute the position of each token.
-				current_token := line.item
-				current_token.set_position (current_position)
-				current_position := current_position + current_token.length
-
-					-- prepare next iteration
-				line.forth
-			end
-		end
+-- 	prepare_line (line: like first_displayed_line) is
+-- 			-- Prepare the line to be added in our
+-- 			-- structure.
+-- 		local
+-- 			current_position: INTEGER
+-- 			current_token	: EDITOR_TOKEN
+-- 		do
+-- 			from
+-- 				line.start
+-- 				current_position := 0
+-- 			until
+-- 				line.after
+-- 			loop
+-- 					-- Compute the position of each token.
+-- 				current_token := line.item
+-- 				current_token.set_position (current_position)
+-- 				current_position := current_position + current_token.length
+-- 
+-- 					-- prepare next iteration
+-- 				line.forth
+-- 			end
+-- 		end
 
 feature {NONE} -- Implementation
 

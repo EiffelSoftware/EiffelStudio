@@ -162,6 +162,7 @@ feature {NONE} -- Implementation
 					break := scan_for_class_name (a_file)
 				end
 			end
+			a_file.close
 		end
 
 	scan_for_class_name (a_file: PLAIN_TEXT_FILE): BOOLEAN is

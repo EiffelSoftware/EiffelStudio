@@ -210,7 +210,6 @@ feature -- Element change
 		local
 			region: WEL_REGION
 		do
-			remove_clip_area
 			clip_area := clone (an_area)
 			create region.make_rect (clip_area.x, clip_area.y,
 				clip_area.width + clip_area.x,
@@ -223,15 +222,11 @@ feature -- Element change
 
 	remove_clip_area is
 			-- Do not apply any clipping.
-		local
-			region: WEL_REGION
 		do
 			clip_area := Void
-			create region.make_rect (0, 0, width, height)
 			get_dc
 			dc.remove_clip_region
 			release_dc
-			region.delete
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is

@@ -25,8 +25,8 @@ inherit
 		undefine
 			parent,
 			set_pixmap,
-			remove_pixmap,
-			set_pointer_style
+			remove_pixmap--,
+			--set_pointer_style
 		redefine
 			parent_imp,
 			interface,
@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			is_initialized := True
 		end
@@ -66,7 +67,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
+			-- Is `Current' selected?
 		do
 			Result := parent_imp.internal_is_selected (Current)
 		end
@@ -74,15 +75,13 @@ feature -- Status report
 feature -- Status setting
 
 	enable_select is
-			-- Select Current.
-			-- Must be in a multi column list.
+			-- Select `Current'.
 		do
 			parent_imp.internal_select (Current)
 		end
 
 	disable_select is
 			-- Deselect Current.
-			-- Must be in a multi column list.
 		do
 			parent_imp.internal_deselect (Current)
 		end
@@ -90,12 +89,13 @@ feature -- Status setting
 feature {EV_ANY_I} -- Access
 
 	index: INTEGER is
-			-- Index of the current item.
+			-- Index of `Current' in `Parent_imp'.
 		do
 			Result := parent_imp.internal_get_index (Current)
 		end
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+		-- The parent of `Current'.
 
 	on_parented is
 			-- `Current' just parented.
@@ -105,49 +105,14 @@ feature {EV_ANY_I} -- Access
 		end
 
 	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
+			-- Assign `par' to `parent_imp'.
+			--| Make `par' the new parent of `Current'.
 		do
 			if par /= Void then
 				parent_imp ?= par.implementation
 			else
 				parent_imp := Void
 			end
-		end
-
-feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
-
-	set_pointer_style (c: EV_CURSOR) is
-		--| FIXME Still under progress 
-		do
-			if parent_imp /= Void then
-				parent_imp.set_pointer_style (c)
-			end
-		end
-
-feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
-
-	set_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_capture
-		end
-
-	release_capture is
-			-- Release user input.
-		do
-			parent_imp.release_capture
-		end
-
-	set_heavy_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_heavy_capture
-		end
-
-	release_heavy_capture is
-			-- Release user input.
-		do
-			parent_imp.release_heavy_capture
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -177,6 +142,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/21 21:59:17  rogers
+--| Various comments improved. Removed set_capture, release_capture,
+--| set_heavy_capture, release_heavy_capture and set_pointer_style.
+--|
 --| Revision 1.40  2000/04/21 18:50:33  rogers
 --| Removed relative_position. Relative_y is now used within the
 --| parent, instead of the call to relative_position.

@@ -593,7 +593,8 @@ feature -- BreakPoints
 				l_line := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
 
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)			
-				l_class_token := l_class_type.last_implementation_type_token
+				l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
+		
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
 				eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (l_module_name, l_class_token, l_feature_token, l_line)
 
@@ -641,8 +642,7 @@ feature -- BreakPoints
 				l_class_type := l_class_type_list.item
 				l_line := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)
-				
-				l_class_token := l_class_type.last_implementation_type_token
+				l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
 				eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (l_module_name, l_class_token, l_feature_token, l_line)
 
@@ -667,6 +667,7 @@ feature {NONE} -- Implementation
 			l_class_type: CLASS_TYPE
 
 			l_class_token: INTEGER
+			l_module_name: STRING
 		do
 			l_str := "----%N"
 			l_str.append_string ("%TFeature :: ")
@@ -688,7 +689,8 @@ feature {NONE} -- Implementation
 						l_types.after
 					loop
 						l_class_type := l_types.item
-						l_class_token := l_class_type.last_implementation_type_token
+						l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)
+						l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
 						l_str.append_string ("%T" + l_class_token.out)
 						l_str.append_string (" ~ 0x" + l_class_token.to_hex_string)
 						l_types.forth
@@ -696,7 +698,8 @@ feature {NONE} -- Implementation
 				else
 					l_types := l_class_c.types
 					l_class_type := l_types.first
-					l_class_token := l_class_type.last_implementation_type_token
+					l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)
+					l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
 
 					l_str.append_string (":" + l_class_token.out)
 					l_str.append_string (" ~ 0x" + l_class_token.to_hex_string)

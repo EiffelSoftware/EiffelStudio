@@ -45,6 +45,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_rw_lock.h"
 #include "rt_traverse.h"
 #include "rt_object_id.h"
+#include "rt_cecil.h"
 
 #include <string.h>
 
@@ -71,6 +72,7 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER);
 rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 
 rt_private rt_global_context_t *eif_new_context (void);
+rt_private void eif_free_context (rt_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 	/* To update GC with thread specific data */
@@ -164,6 +166,8 @@ rt_public void eif_thr_init_global_mutexes (void)
 	EIF_LW_MUTEX_CREATE(eif_eo_store_mutex, -1, "Couldn't create EO_STORE mutex");
 	EIF_LW_MUTEX_CREATE(eif_global_once_set_mutex, 4000, "Couldn't create global once set mutex");
 	EIF_LW_MUTEX_CREATE(eif_object_id_stack_mutex, 4000, "Couldn't create object_id set mutex");
+	EIF_LW_MUTEX_CREATE(eif_gen_mutex, 100, "Cannot create mutex for eif_gen_conf\n");
+	EIF_LW_MUTEX_CREATE(eif_cecil_mutex, -1, "Couldn't create cecil lock");
 }
 
 rt_public void eif_thr_init_root(void) 
@@ -217,6 +221,8 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_eo_store_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_global_once_set_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_object_id_stack_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
+	EIF_LW_MUTEX_DESTROY(eif_cecil_mutex, "Couldn't destroy cecil mutex");
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
 	EIF_TSD_DESTROY(rt_global_key, "Could not free key");
@@ -248,10 +254,8 @@ rt_public void eif_thr_register(void)
 		if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 			enomem();
 		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * REFSIZ);
-	} else 
-	{
+	} else {
 		not_root_thread = 1;
-		eif_cecil_init ();				/* Initialize ressources for cecil. */
 		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
 	}
 }
@@ -360,6 +364,36 @@ rt_private rt_global_context_t *eif_new_context (void)
 	return rt_globals;
 }
 
+/*
+doc:	<routine name="eif_free_context" export="private">
+doc:		<summary>To cleanup per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+
+rt_private void eif_free_context (rt_global_context_t *rt_globals)
+{
+		/* gen_conf.c */
+	eif_gen_conf_thread_cleanup ();
+
+		/* WEL data if any */
+	if (rt_globals->eif_globals->wel_per_thread_data) {
+		eif_free (rt_globals->eif_globals->wel_per_thread_data);
+	}
+
+		/* Context data if any */
+	if (eif_thr_context) {
+		eif_free (eif_thr_context->tid); /* Free id of the current thread */
+		eif_free (eif_thr_context);		/* Thread context passed by parent */
+	}
+
+		/* Free public per thread data */
+	eif_free (rt_globals->eif_globals);
+
+		/* Free private per thread data */
+	eif_free (rt_globals);
+}
 
 rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
 {
@@ -602,32 +636,22 @@ rt_public void eif_thr_exit(void)
 	}
 	EIF_EXIT_C;
 
-		/* Clean GC of non-used data that were used to hold objects */
-		/* gen_conf.c */
-	eif_gen_conf_thread_cleanup ();
 #ifdef ISE_GC
+		/* Destroy GC data associated with the current thread. */
 	eif_synchronize_gc (rt_globals);
 	eif_destroy_gc_stacks (rt_globals);
 	eif_unsynchronize_gc (rt_globals);
 #endif
 
-	if (eif_thr_is_root ())	{	/* Is this the root thread */
-		eif_cecil_reclaim ();
-		eif_free (rt_globals);			
-		eif_free (eif_globals);			
-						/* Global variables specific to the current thread */
-		CHECK("Is root", !eif_thr_context);
+		/* Clean per thread data. */
+	eif_free_context (rt_globals);
+
 #ifdef LMALLOC_CHECK
+	if (eif_thr_is_root ())	{	/* Is this the root thread */
 		eif_lm_display ();
 		eif_lm_free ();
-#endif	/* LMALLOC_CHECK */
-	} else {
-		eif_free (eif_thr_context->tid); /* Free id of the current thread */
-		eif_free (eif_thr_context);		/* Thread context passed by parent */
-		eif_free (rt_globals);			
-		eif_free (eif_globals);			
-						/* Global variables specific to the current thread */
 	}
+#endif	/* LMALLOC_CHECK */
 
 #ifdef VXWORKS
 	/* The TSD is managed in a different way under VxWorks: each thread

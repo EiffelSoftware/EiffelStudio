@@ -72,8 +72,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			background_color_assigned: 
-				interface.background_color.is_equal (a_color)
+--			background_color_assigned: 
+--				interface.background_color.is_equal (a_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -82,8 +82,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_assigned: 
-				interface.foreground_color.is_equal (a_color)
+--			foreground_color_assigned: 
+--				interface.foreground_color.is_equal (a_color)
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -92,8 +92,8 @@ feature -- Element change
 			a_width_positive_or_zero: a_width >= 0
 		deferred
 		ensure
-			line_width_assigned: 
-				interface.line_width = a_width
+--			line_width_assigned: 
+--				interface.line_width = a_width
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
@@ -102,8 +102,8 @@ feature -- Element change
 			a_mode_valid: valid_drawing_mode (a_mode)
 		deferred
 		ensure
-			drawing_mode_assigned: 
-				interface.drawing_mode = a_mode
+--			drawing_mode_assigned: 
+--				interface.drawing_mode = a_mode
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE) is
@@ -112,16 +112,16 @@ feature -- Element change
 			an_area_not_void: an_area /= Void
 		deferred
 		ensure
-			clip_area_assigned: 
-				interface.clip_area.is_equal (an_area)
+--			clip_area_assigned: 
+--				interface.clip_area.is_equal (an_area)
 		end
 
 	remove_clip_area is
 			-- Do not apply any clipping.
 		deferred
 		ensure
-			clip_area_void: 
-				interface.clip_area = Void
+--			clip_area_void: 
+--				interface.clip_area = Void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -131,32 +131,32 @@ feature -- Element change
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		ensure
-			tile_assigned: 
-				interface.tile /= Void
+--			tile_assigned: 
+--				interface.tile /= Void
 		end
 
 	remove_tile is
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
-			tile_void: 
-				interface.tile = Void
+--			tile_void: 
+--				interface.tile = Void
 		end
 
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		deferred
 		ensure
-			dashed_line_style_enabled: 
-				interface.dashed_line_style
+--			dashed_line_style_enabled: 
+--				interface.dashed_line_style
 		end
 
 	disable_dashed_line_style is
 			-- Draw lines solid.
 		deferred
 		ensure
-			dashed_line_style_disabled: 
-				not interface.dashed_line_style
+--			dashed_line_style_disabled: 
+--				not interface.dashed_line_style
 		end
 
 	set_font (a_font: EV_FONT) is
@@ -165,8 +165,8 @@ feature -- Element change
 			a_font_not_void: a_font /= Void
 		deferred
 		ensure
-			assigned: 
-				interface.font.is_equal (a_font)
+--			assigned: 
+--				interface.font.is_equal (a_font)
 		end
 
 feature -- Clearing and drawing operations
@@ -177,7 +177,7 @@ feature -- Clearing and drawing operations
 		end
 
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+		-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
 		deferred
 		end
 
@@ -201,7 +201,7 @@ feature -- Drawing operations
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
+		-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
 		deferred
 		end
 
@@ -212,10 +212,11 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_start_angle, an_aperture: REAL) is
 			-- Draw a part of an ellipse centered on (`x', 'y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
 		require
 			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
@@ -250,10 +251,11 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	a_start_angle, an_aperture: REAL) is
 			-- Draw a part of an ellipse centered on (`x', 'y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', 'y').
 			-- Angles are measured in radians.
 		require
@@ -291,10 +293,11 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	a_start_angle, an_aperture: REAL) is
 			-- Draw a part of an ellipse centered on (`x', 'y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+		-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', 'y').
 			-- Angles are measured in radians. Fill with `background_color'.
 		require
@@ -330,6 +333,10 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/11 21:53:23  oconnor
+--| Commented out PCs causing seg fault.
+--| Will put back in ASAP.
+--|
 --| Revision 1.18  2000/04/11 19:27:07  pichery
 --| Changed postcondition from xxx to interface.xxx in order to be able to
 --| delegate some feature to another class.
@@ -434,7 +441,6 @@ end -- class EV_DRAWABLE_I
 --|
 --| Revision 1.11.2.2  1999/11/02 17:20:05  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

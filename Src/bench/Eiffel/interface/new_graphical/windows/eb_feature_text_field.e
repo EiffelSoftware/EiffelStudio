@@ -75,7 +75,7 @@ feature {EB_FEATURE_CLASS_TEXT_FIELD} -- Implementation
 			feat_names: SORTED_TWO_WAY_LIST [STRING]
 --			mp: MOUSE_PTR
 			pattern: STRING_PATTERN
-			choice: EB_CHOICE_WINDOW
+			choice: EB_CHOICE_DIALOG
 			wd: EV_WARNING_DIALOG
 		do
 --			create mp.set_watch_cursor
@@ -141,7 +141,7 @@ feature {EB_FEATURE_CLASS_TEXT_FIELD} -- Implementation
 
 
 feature {NONE} -- Execution
-	execute (arg: EV_ARGUMENT1 [EB_CHOICE_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]; data: EV_EVENT_DATA) is
 			-- Execute the command.
 		local
 			stone: CLASSC_STONE

@@ -26,7 +26,7 @@ feature -- Measurement
 			-- Proposed number of additional items
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
-			Result := Minimal_increase.max (capacity * Growth_percentage // 100)
+			Result := (capacity * Growth_percentage // 100).max (Minimal_increase)
 		ensure
 			At_least_one: Result >= 1
 		end;

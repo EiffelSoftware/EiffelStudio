@@ -38,11 +38,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it appears in menus.
 		do
-			if builder_window.is_show_requested then
-				Result := "Hide builder window"
-			else
-				Result := "Show builder window"
-			end
+			Result := Show_hide_builder_window_menu_text
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -9,7 +9,7 @@ default
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\brushes"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\unicode"
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"
@@ -26,7 +26,7 @@ cluster
 		end
 
 external
-	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include -D_UNICODE -DUNICODE"
+	object: 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- brushes_demo

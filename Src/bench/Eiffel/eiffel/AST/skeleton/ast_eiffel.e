@@ -74,7 +74,7 @@ feature -- Comparison
 			if o1 = Void then
 				Result := o2 = Void
 			else
-				Result := o2 /= Void and then c_same_type ($o1, $o2) and then
+				Result := o2 /= Void and then o2.same_type (o1) and then
 					o1.is_equivalent (o2)
 			end
 		end

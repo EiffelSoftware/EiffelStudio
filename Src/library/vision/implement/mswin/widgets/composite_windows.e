@@ -154,7 +154,6 @@ feature {WIDGET_WINDOWS} -- Implementation
 			Result := children_list
 		end
 
-
 	children_list: ARRAYED_LIST [WIDGET_WINDOWS] is
 			-- List of children
 		local
@@ -257,7 +256,7 @@ feature {NONE} -- Implementation
 		local
 			c: ARRAYED_LIST [WIDGET_WINDOWS]
 			i, maxxw, maxyh, tmp, w, h: INTEGER
-			current_item: WIDGET_WINDOWS			
+			current_item: WIDGET_WINDOWS
 		do
 			from 
 				c := children_list

@@ -89,13 +89,16 @@ feature {NONE} -- Initialization
 	initialize  is
 			-- Creation of the widget.
 		local
-			win: EV_TITLED_WINDOW_IMP
+			win: EV_WINDOW_IMP
 		do
 			initialize_sizeable
 			set_default_colors
 			set_default_minimum_size
 			win ?= Current
-			if win /= Void then
+			if win = Void then
+				-- If `Current' is not a window.
+				--| All widgets are shown as default except
+				--| EV_WINDOW AND EV_TITLED_WINDOW.
 				show
 			end
 			is_initialized := True
@@ -924,6 +927,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/03 17:52:25  rogers
+--| Fixed initialize so windows are no longer shown as default.
+--|
 --| Revision 1.64  2000/03/29 01:18:30  brendel
 --| Improved `parent'.
 --|

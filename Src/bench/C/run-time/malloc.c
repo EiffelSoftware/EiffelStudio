@@ -397,8 +397,6 @@ long nbitems;		/* New number of items wanted */
 			zone->ov_size = ref - object;	/* For GC */
 			zone->ov_flags = dtype;			/* Expanded type */
 			(init)(ref);					/* Call initialization routine */
-/* FIXME:  should have two arguments ... Xavier*/
-
 		}
 		zone = HEADER(object);				/* Restore malloc info zone */
 	}

@@ -94,7 +94,9 @@ feature -- Basic operations
 						i > snapshot.count
 						or is_aborted_stack.item
 					loop
-						snapshot.i_th (i).call (event_data)
+						if snapshot.i_th (i) /= Void then
+							snapshot.i_th (i).call (event_data)							
+						end
 						i := i + 1
 					end
 					is_aborted_stack.remove
@@ -269,7 +271,9 @@ feature {NONE} -- Implementation
 			until
 				i > snapshot.count
 			loop
-				snapshot.i_th (i).call ([])
+				if snapshot.i_th (i) /= Void then
+					snapshot.i_th (i).call ([])
+				end
 				i := i + 1
 			end
 		end
@@ -323,7 +327,6 @@ feature -- Obsolete
 invariant
 	is_aborted_stack_not_void: is_aborted_stack /= Void
 	call_buffer_not_void: call_buffer /= Void
-	not_has_void: not has (Void)
 	valid_state:
 		state = Normal_state or state = Paused_state or state = Blocked_state
 	call_buffer_consistent: state = Normal_state implies call_buffer.is_empty

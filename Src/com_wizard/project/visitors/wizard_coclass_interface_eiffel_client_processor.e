@@ -19,11 +19,13 @@ feature -- Basic operations
 			-- Generate source interface features.
 		local
 			eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
-			implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			source_generator: WIZARD_SOURCE_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
-			create eiffel_server_visitor
-			create implemented_interface.make_from_interface (an_interface)
-			eiffel_server_visitor.visit (implemented_interface)
+			if need_source_generation (an_interface.implemented_interface) then
+				create eiffel_server_visitor
+				eiffel_server_visitor.visit (an_interface.implemented_interface)
+			end
+			create source_generator.generate (an_interface, coclass, eiffel_writer)
 		end
 
 	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;

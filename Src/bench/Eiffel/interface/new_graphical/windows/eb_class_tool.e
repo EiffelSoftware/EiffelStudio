@@ -21,7 +21,7 @@ inherit
 			set_mode_for_editing,
 			has_editable_text,
 --			able_to_edit,
---			history_window_title,
+			history_dialog_title,
 			format_list, set_default_format,
 			build_file_menu,
 			build_special_menu,
@@ -76,11 +76,13 @@ feature {NONE} -- Initialization
 			Precursor
 			create open_cmd.make (Current)
 			create save_cmd.make (Current)
+			create version_cmd.make (Current)
 			create shell_cmd.make (Current)
 			create filter_cmd.make (Current)
 			create super_melt_cmd.make (Current)
 
 			create current_target_cmd.make (Current)
+			create show_history_cmd.make (Current)
 			create next_target_cmd.make (Current)
 			create previous_target_cmd.make (Current)
 			
@@ -88,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
---	version_cmd: CLASS_VERSIONS
+	version_cmd: EB_SHOW_CLASS_VERSIONS
 
 	format_bar_is_used: BOOLEAN is True
 			-- Do the tool need an effective format_bar?
@@ -130,8 +132,8 @@ feature -- Access
 			end
 		end
 
-	history_window_title: STRING is
-			-- Title of the history window
+	history_dialog_title: STRING is
+			-- Title of the history dialog
 		do
 			Result := Interface_names.t_Select_class
 		end
@@ -149,18 +151,20 @@ feature -- Status setting
 	set_stone (s: like stone) is
 			-- make `s' the new value of stone.
 		local
-			c: CLASSC_STONE
-			ci: CLASSI_STONE
+			c: CLASS_STONE
 		do
-			Precursor (s)
+			if not s.same_as (stone) then
+				Precursor (s)
+--				execute_last_format (s)
+				synchronize
+			end
+--| FIXME
+--| Christophe, 3 nov 1999
+--| Currently overriding `process_class'/`process_classi'.
+--| This mechanism has to be clarified.
 			c ?= stone
 			if c /= Void then
-				update_class_name (clone (c.e_class.name))
-			else
-				ci ?= stone
-				if ci /= Void then
-					update_class_name (clone (ci.class_i.name))
-				end
+				update_class_name (clone (c.class_name))
 			end
 		end
 
@@ -221,14 +225,11 @@ feature -- Status setting
  
 feature -- Stone process
  
-	process_classi (s: CLASSI_STONE) is
-			-- Process uncompiled class stone
-		do
-			execute_last_format (s)
-		end
- 
-	process_class (s: CLASSC_STONE) is
-			-- Process compiled class stone
+	process_class (s: CLASS_STONE) is
+			-- Process class stone
+		obsolete
+			"Not really obsolete but its role must %
+			%be reviewed"
 		do
 			execute_last_format (s)
 		end
@@ -249,7 +250,7 @@ feature -- Stone process
 				process_class (cl_stone)
 				text_area.search_stone (s)
 			else
-				format_list.text_format.format (cl_stone)
+--				format_list.text_format.format (cl_stone)
 				add_to_history (stone)
 				text_area.deselect_all
 				pos := s.error_position
@@ -282,13 +283,16 @@ feature -- Stone process
 				process_class (cl_stone)
 				text_area.search_stone (s)
 			else
-				format_list.text_format.format (cl_stone)
+--				format_list.text_format.format (cl_stone)
 				add_to_history (stone)
 				text_area.deselect_all
 				text_area.set_position (s.start_position)
 				text_area.highlight_selected (s.start_position, s.end_position)
 			end
 		end
+--| FIXME
+--| Christophe, 5 nov 1999
+--| features to be remade.
  
 	process_class_syntax (s: CL_SYNTAX_STONE) is
 			-- Process class syntax.
@@ -296,7 +300,7 @@ feature -- Stone process
 			cl_stone: CLASSC_STONE
 		do
 			create cl_stone.make (s.associated_class)
-			format_list.text_format.format (cl_stone)
+			set_stone (cl_stone)
 			text_area.deselect_all
 			text_area.set_position (s.start_position)
 			text_area.highlight_selected (s.start_position, s.end_position)
@@ -552,6 +556,8 @@ feature {NONE} -- Commands
 
 	current_target_cmd: EB_CURRENT_CLASS_CMD
 
+	show_history_cmd: EB_SHOW_HISTORY_CMD
+
 	previous_target_cmd: EB_PREVIOUS_TARGET_CMD
 
 	next_target_cmd: EB_NEXT_TARGET_CMD
@@ -650,6 +656,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		local
 			i: EV_MENU_ITEM
 		do
+			create i.make_with_text (a_menu, Interface_names.m_Version)
+			i.add_select_command (version_cmd, Void)
+
 			create i.make_with_text (a_menu, Interface_names.m_Shell)
 			i.add_select_command (shell_cmd, Void)
 
@@ -658,6 +667,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Stoppable)
 			i.add_select_command (super_melt_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Current)
+			i.add_select_command (show_history_cmd, Void)
 
 			create i.make_with_text (a_menu, Interface_names.m_Current)
 			i.add_select_command (current_target_cmd, Void)

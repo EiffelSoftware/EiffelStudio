@@ -39,6 +39,7 @@ feature
 	clear is
 			-- Clear current editor.
 		do
+			instance_hole.set_empty_symbol;
 			set_title (Widget_names.cmd_instance_editor)
 			set_icon_name (Widget_names.cmd_instance_editor);
 			save_previous_instance;
@@ -56,8 +57,9 @@ feature {NONE}
 
 	save_previous_instance is
 		do
-			if not (command_instance = Void) then
+			if command_instance /= Void then
 				command_instance.save_arguments;
+				command_instance.reset;
 				command_instance := Void
 			end
 		end;
@@ -71,6 +73,7 @@ feature
 			c_not_being_edited: not c.edited;
 			not_void_c: c /= Void
 		do
+			instance_hole.set_full_symbol;
 			save_previous_instance;
 			command_instance := c;
 			arguments.set (command_instance.arguments);
@@ -91,12 +94,6 @@ feature
 			set_icon_name (tmp);
 		end;
 
-	update is
-		do
-			arguments.set (command_instance.arguments);
-			command_instance.set_arguments (arguments)
-		end;
-
 feature {NONE}
 
 	arguments: ARG_INST_BOX;
@@ -106,12 +103,15 @@ feature {NONE}
 	instance_hole: INST_EDIT_HOLE;
 			-- Hole used to accept command instances
 
+	trash_hole: CUT_HOLE
+
 feature 
 
 	focus_label: FOCUS_LABEL
 
 	destroy is
 		do
+			trash_hole.unregister;
 			instance_hole.unregister;
 			command_hole.unregister;
 			arguments.unregister_holes;
@@ -137,8 +137,9 @@ feature
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form, form);
 			!! focus_label.make (top_form);
-			!! instance_hole.make (Current, top_form);
 			!! command_hole.make (Current, top_form);
+			!! instance_hole.make (Current, top_form);
+			!! trash_hole.make (top_form, focus_label);
 			!! close_b.make (Current, top_form, focus_label);
 			!! argument_sw.make (Widget_names.scroll2, form);
 			!! arguments.make (Widget_names.icon_box1, argument_sw);
@@ -147,6 +148,7 @@ feature
 				-- Perform attachments 
 				-- *******************
 			top_form.attach_top (instance_hole, 0);
+			top_form.attach_top (trash_hole, 0);
 			top_form.attach_top (command_hole, 0);
 			top_form.attach_top (close_b, 0);
 			top_form.attach_top (focus_label, 0);
@@ -154,9 +156,11 @@ feature
 			top_form.attach_bottom (close_b, 0);
 			top_form.attach_bottom (instance_hole, 0);
 			top_form.attach_bottom (command_hole, 0);
+			top_form.attach_bottom (trash_hole, 0);
 			top_form.attach_left (instance_hole, 0);
 			top_form.attach_left_widget (instance_hole, command_hole, 0);
-			top_form.attach_left_widget (command_hole, focus_label, 0);
+			top_form.attach_left_widget (command_hole, trash_hole, 0);
+			top_form.attach_left_widget (trash_hole, focus_label, 0);
 			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
 

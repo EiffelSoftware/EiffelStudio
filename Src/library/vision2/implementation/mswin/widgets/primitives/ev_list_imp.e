@@ -254,6 +254,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			litem.set_text (item_imp.text)
 			litem.set_iitem (an_index - 1)
 			wel_insert_item (litem)
+			set_column_width (-1, 0) -- Autosize
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -263,6 +264,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 		do
 			an_index := ev_children.index_of (item_imp, 1) - 1
 			delete_item (an_index)
+			set_column_width (-1, 0) -- Autosize
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
@@ -384,8 +386,6 @@ feature {EV_ANY_I} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- List resized.
 		do
-			set_column_width (-1, 0) -- Autosize
-
 				-- Resize the first and only column.
 			Precursor (size_type, a_width, a_height)
 			interface.resize_actions.call ([screen_x, screen_y, a_width,
@@ -514,8 +514,8 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.70  2000/04/19 01:29:41  pichery
---| Cached `selected_items' for better perfs.
+--| Revision 1.71  2000/04/19 02:03:57  pichery
+--| Fixed a small display bug
 --|
 --| Revision 1.69  2000/04/18 21:22:45  pichery
 --| MAJOR CHANGE:

@@ -358,15 +358,17 @@ feature {NONE} -- Implementation
 		require
 			valid_message: a_message /= Void
 		do
-			progress_bar.reset_percentage;
-			degree_l.set_label_as_string (a_message);
-			current_degree_l.set_label_as_string (Empty_string);
-			entity_l.set_label_as_string (Empty_string);
-			nbr_to_go_l.set_label_as_string (Empty_string);
-			current_nbr_to_go_l.set_label_as_string (Empty_string);
-			current_entity_l.set_label_as_string (Empty_string);
-			percentage_l.set_label_as_string (Zero_percent);
-			process_events
+			if not is_destroyed then
+				progress_bar.reset_percentage;
+				degree_l.set_label_as_string (a_message);
+				current_degree_l.set_label_as_string (Empty_string);
+				entity_l.set_label_as_string (Empty_string);
+				nbr_to_go_l.set_label_as_string (Empty_string);
+				current_nbr_to_go_l.set_label_as_string (Empty_string);
+				current_entity_l.set_label_as_string (Empty_string);
+				percentage_l.set_label_as_string (Zero_percent);
+				process_events
+			end
 		end;
 
 feature {NONE} -- Implementation

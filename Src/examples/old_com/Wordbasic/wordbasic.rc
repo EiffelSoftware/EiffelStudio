@@ -23,7 +23,6 @@ BEGIN
     BEGIN
         MENUITEM "&New",                        CMD_NEW
         MENUITEM "&Save",                       CMD_SAVE
-	MENUITEM "&Open",			CMD_OPEN
         MENUITEM SEPARATOR
         MENUITEM "&Exit",                       CMD_EXIT
     END

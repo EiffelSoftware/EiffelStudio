@@ -6,7 +6,6 @@
 #define ID_MAIN_MENU            1
 #define CMD_NEW                    1001
 #define CMD_SAVE                   1003
-#define CMD_OPEN		   1005
 #define CMD_EXIT                   1004
 #define CMD_INSERT_TEXT                 2001
 #define CMD_CENTER     3001

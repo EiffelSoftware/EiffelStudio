@@ -19,30 +19,48 @@ inherit
 
 feature -- Access
 
+	pnd_original_parent: EV_ITEM_LIST_IMP [EV_ITEM]
+		-- Parent of `Current' when PND starts.
+		--| This is required as the item's parent may change during
+		--| exection of the actions, while we still need to access it
+		--| after the actions have been called.
+
+	set_pnd_original_parent is
+			-- Assign `parent_imp' to `pnd_original_parent'.
+			--| This is done as a feature rather than just an assignment
+			--| within pnd_press as EV_TREE_ITEM_IMP needs to store
+			--| top_parent_imp. This allows a simply redefinition of
+			--| this feature rather than pnd_press which would lead
+			--| to unecessary code duplication. 
+		do
+			pnd_original_parent := parent_imp
+		end
+		
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 		deferred
 		end
-	
+
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				parent_not_void: parent_imp /= Void
 			end
 			if press_action = Ev_pnd_start_transport then
+				set_pnd_original_parent
 				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
 					a_screen_y)
-				parent_imp.set_parent_source_true
-				parent_imp.set_item_source (Current)
-				parent_imp.set_item_source_true
+				pnd_original_parent.set_parent_source_true
+				pnd_original_parent.set_item_source (Current)
+				pnd_original_parent.set_item_source_true
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button)
-				parent_imp.set_parent_source_false
-				parent_imp.set_item_source (Void)
-				parent_imp.set_item_source_false
+				pnd_original_parent.set_parent_source_false
+				pnd_original_parent.set_item_source (Void)
+				pnd_original_parent.set_item_source_false
 			else
-				parent_imp.set_parent_source_false
-				parent_imp.set_item_source (Void)
-				parent_imp.set_item_source_false
+				pnd_original_parent.set_parent_source_false
+				pnd_original_parent.set_item_source (Void)
+				pnd_original_parent.set_item_source_false
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -80,6 +98,9 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/14 23:30:13  rogers
+--| Added pnd_original_parent and set_pnd_original_parent.
+--|
 --| Revision 1.3  2000/04/14 21:48:01  brendel
 --| Released.
 --|

@@ -59,7 +59,7 @@ feature -- Access
 			l_value: STRING
 		do
 			l_value := text_setting (a_name)
-			if l_value /= Void then
+			if not l_value.is_empty then
 				Result := decoded_list (l_value)
 			end
 		end

@@ -8,9 +8,11 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
+	arguments ("D:\Eiffel52\build\build_project.bpr")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %%%%%%%"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%%%%%%%" Project1 2624124")
+	arguments ("D:\Eiffel52\build\envision_build_project.bpr")
+	arguments ("D:\Eiffel52\build\build_test.bpr")
 	arguments (" ")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %%%"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%%%" Project1 458978")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %%%"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%%%" Project1 3211650")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -27,7 +29,6 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (no)
 	console_application (no)
@@ -42,12 +43,12 @@ default
 -- Same for EV_PIXMAPABLE.
 
 cluster
-	all build2:				"$EIFFEL_SRC\build2"
+	all build2:		"$EIFFEL_SRC\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"; "base"; "test"; "CVS"
+			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; 
 		end
 
-	all wel:			"$EIFFEL_SRC\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"wel_modeless_dialog.e"; 
 		end
@@ -56,19 +57,20 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; 
 		end
 
-	all base:				"$EIFFEL_SRC\library\base"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; 
 		end
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
-			"unix"; "wizard_window.e"; "wizard_project_manager.e"; 
+			"unix"; "wizard_window.e"; "wizard_project_manager.e"; "wizard_shared.e"; 
 		end
 
+assembly
 external
 
 	include_path:

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision geometrical. A geometrical object on which%
 				% geometric operations can be applied (rotation, translation...)."
@@ -259,3 +261,25 @@ end -- class EV_GEOMETRICAL
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:46  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.4.3.2.2  2000/01/27 19:30:34  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.4.3.2.1  1999/11/24 17:30:38  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

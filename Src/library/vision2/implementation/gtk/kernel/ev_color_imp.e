@@ -1,6 +1,10 @@
 indexing
-
-	description: "Eiffel Vision color. Gtk implementation";
+	description:
+		"Eiffel Vision color. Gtk implementation%N%
+		%Both REAL and 16 bit INTEGER values are stored%N%
+		%as attributes and kept up to date."
+	status: "See notice at end of file.";
+	keywords: "color, pixel, rgb, 8, 16, 24"
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -9,99 +13,205 @@ class
 
 inherit
 	EV_COLOR_I
+		redefine
+			interface
+		end
 
 create
-	make,
-	make_rgb
+	make
+
+--| NOTE: This class does lots of bit shuffling. Because Eiffel does not
+--| currently support hexidecimal INTEGER literals, integers are duplicated
+--| in comments using hexidecimal numbers for clarity.
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a color. 
-		do			
-		end
-
-	make_rgb (a_red, a_green, a_blue: INTEGER) is
-			-- Create the color corresponding to the given name.
+	make (an_interface: like interface) is
+			-- Create zero intensity color. 
 		do
-			set_rgb (a_red, a_green, a_blue)
+			base_make (an_interface)
+			name := clone (Default_name)
+		end
+	
+	initialize is
+			-- Do nothing.
+		do
+			is_initialized := True
 		end
 
 feature -- Access
 
-	red: INTEGER is
-			-- Intensity value for the red component
-		do
-			Result := rval
-		end
+	red: REAL
+			-- Intensity of red component.
+			-- Range: [0,1]
 
-	green: INTEGER is
-			-- Intensity value for the green component
-		do
-			Result := gval
-		end
+	green: REAL
+			-- Intensity of green component.
+			-- Range: [0,1]
 
-	blue: INTEGER is
-			-- Intensity value for the blue component
-		do
-			Result := bval
-		end
+	blue: REAL
+			-- Intensity of blue component.
+			-- Range: [0,1]
 
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is Current object destroyed?  
-		do
-			Result := False
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy actual object.
-		do
-		end
-
+	name: STRING
+			-- A textual description.
+	
 feature -- Element change
 
-	set_rgb (a_red, a_green, a_blue: INTEGER) is
-			-- Make `a_red', `a_green' and `a_blue' the new
-			-- `red', `green' and `blue' value.
+	set_red (a_red: REAL) is
+			-- Assign `a_red' to `red'.
 		do
-			rval := a_red
-			gval := a_green
-			bval := a_blue
+			red := a_red
+			-- red_16_bit := (a_red * 0xFFFF)
+			red_16_bit := (a_red * 65535).rounded
 		end
 
-	set_red (value: INTEGER) is
-			-- Make `value' the new `red' value.
+	set_green (a_green: REAL) is
+			-- Assign `a_green' to `green'.
 		do
-			rval := value
+			green := a_green
+			-- green_16_bit := (a_green * 0xFFFF)
+			green_16_bit := (a_green * 65535).rounded
 		end
 
-	set_green (value: INTEGER) is
-			-- Make `value' the new `green' value.
+	set_blue (a_blue: REAL) is
+			-- Assign `a_blue' to `blue'.
 		do
-			gval := value
+			blue := a_blue
+			-- blue_16_bit := (a_blue * 0xFFFF)
+			blue_16_bit := (a_blue * 65535).rounded
 		end
 
-	set_blue (value: INTEGER) is
-			-- Make `value' the new `blue' value.
+	set_name (a_name: STRING) is
+			-- Assign `a_name' to `name'.
 		do
-			bval := value
+			name.copy (a_name)
 		end
 
-feature -- Implementation
+feature -- Conversion
 
-	rval: INTEGER
+	rgb_24_bit: INTEGER is
+			-- `red', `green' and `blue' intensities packed into 24 bits
+			-- with 8 bits per colour and blue in the least significant 8 bits.
+		do
+		--| Result := (red_8_bit * 0x10000) + (green_8_bit * 0x100) + blue_8_bit
+			Result := (red_8_bit * 65536) + (green_8_bit * 256) + blue_8_bit
+		end
+
+	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
+			-- Set intensities from `a_24_bit_rgb' value
+			-- with red in the most significant bits and blue in the least.
+		do
+			--| set_red_16_bit ((a_24_bit_rgb // 0x10000) * 0x101)
+			set_red_with_16_bit ((a_24_bit_rgb // 65536) * 257)
+			--| set_green_16_bit (((a_24_bit_rgb // 0x100) \\ 0xFF00) * 0x101)
+			set_green_with_16_bit (((a_24_bit_rgb // 256) \\ 65280) * 257)
+			--| set_blue ((a_24_bit_rgb \\ 0xFFFF00) * 0x101)
+			set_blue_with_16_bit ((a_24_bit_rgb \\ 16776960) * 257)
+		end
+
+	red_8_bit: INTEGER is
+			-- Intensity of `red' component
+			-- as an 8 bit unsigned integer.
+			-- Range [0,255]
+		do
+			--| Result := red * 0xFF
+			Result := (red * 255).rounded
+		end
+
+	green_8_bit: INTEGER is
+			-- Intensity of `green' component
+			-- as an 8 bit unsigned integer.
+			-- Range [0,255]
+		do
+			--| Result := green * 0xFF
+			Result := (green * 255).rounded
+		end
+
+	blue_8_bit: INTEGER is
+			-- Intensity of `blue' component
+			-- as an 8 bit unsigned integer.
+			-- Range [0,255]
+		do
+			--| Result := blue * 0xFF
+			Result := (blue * 255).rounded
+		end
 	
-	gval: INTEGER
+	set_red_with_8_bit (an_8_bit_red: INTEGER) is
+			-- Set `red' from `an_8_bit_red' intinsity.
+		do
+			--| set_red_16_bit (an_8_bit_red * 0x101)
+			set_red_with_16_bit (an_8_bit_red * 257)
+		end
 	
-	bval: INTEGER
+	set_green_with_8_bit (an_8_bit_green: INTEGER) is
+			-- Set `green' from `an_8_bit_green' intinsity.
+		do
+			--| set_green_16_bit (an_8_bit_green * 0x101)
+			set_green_with_16_bit (an_8_bit_green * 257)
+		end
+	
+	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
+		do
+			--| set_blue_16_bit (an_8_bit_blue * 0x101)
+			set_blue_with_16_bit (an_8_bit_blue * 257)
+		end
+
+	red_16_bit: INTEGER 
+			-- Intensity of red component
+			-- as a 16 bit unsigned integer.
+			-- Range [0,65535]
+
+	green_16_bit: INTEGER
+			-- Intensity of green component
+			-- as a 16 bit unsigned integer.
+			-- Range [0,65535]
+
+	blue_16_bit: INTEGER
+			-- Intensity of blue component
+			-- as a 16 bit unsigned integer.
+			-- Range [0,65535]
+
+	set_red_with_16_bit (a_16_bit_red: INTEGER) is
+			-- Set `red' from `a_8_bit_red' intinsity.
+		do
+			red_16_bit := a_16_bit_red
+			--| red := a_16_bit_red / 0xFFFF
+			red := a_16_bit_red / 65535
+		end
+	
+	set_green_with_16_bit (a_16_bit_green: INTEGER) is
+			-- Set `green' from `a_16_bit_green' intinsity.
+		do
+			green_16_bit := a_16_bit_green
+			--| green := a_16_bit_green / 0xFFFF
+			green := a_16_bit_green / 65535
+		end
+
+	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
+			-- Set `blue' from `a_16_bit_blue' intinsity.
+		do
+			blue_16_bit := a_16_bit_blue
+			--| blue := a_16_bit_blue / 0xFFFF
+			blue := a_16_bit_blue / 65535
+		end
+
+feature {EV_ANY_I} -- Command
+
+	destroy is
+          		-- Render `Current' unusable.
+		do
+			is_destroyed := True
+			destroy_just_called := True
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_COLOR
 
 end -- class EV_COLOR_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -115,4 +225,65 @@ end -- class EV_COLOR_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.14  2000/02/04 04:20:42  oconnor
+--| released
+--|
+--| Revision 1.3.6.13  2000/01/27 19:29:27  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.12  1999/12/23 01:41:48  king
+--| Indented comment for destroy
+--|
+--| Revision 1.3.6.11  1999/12/17 23:14:09  oconnor
+--| update for new names from _I
+--|
+--| Revision 1.3.6.10  1999/12/15 04:46:49  oconnor
+--| formatting
+--|
+--| Revision 1.3.6.9  1999/12/07 04:08:58  oconnor
+--| compute 8 bit values from REALs to avoid rounding problems
+--|
+--| Revision 1.3.6.8  1999/12/06 18:45:49  oconnor
+--| trying to fix off by one error in 8 bit conversion
+--|
+--| Revision 1.3.6.7  1999/12/05 03:06:00  oconnor
+--| fixed rounding error
+--|
+--| Revision 1.3.6.6  1999/12/05 00:36:11  oconnor
+--| dont inherit EV_ANY_IMP
+--|
+--| Revision 1.3.6.5  1999/12/04 18:34:32  oconnor
+--| inhrit EV_ANY_IMP
+--|
+--| Revision 1.3.6.4  1999/12/03 04:06:49  brendel
+--| Added is_initialized := True is initialize.
+--|
+--| Revision 1.3.6.3  1999/11/30 22:56:11  oconnor
+--| off by one error in 16_bit conversion
+--|
+--| Revision 1.3.6.2  1999/11/26 19:48:03  oconnor
+--| improved comments
+--|
+--| Revision 1.3.6.1  1999/11/24 17:29:45  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.4  1999/11/04 23:08:51  oconnor
+--| reimplemented
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

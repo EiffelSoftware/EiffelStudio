@@ -1,9 +1,7 @@
 indexing	
-	description: 
-		"EiffelVision menu item. Item that must be put in an %
-		% EV_MENU_ITEM_HOLDER."
+	description: "Eiffel Vision menu item."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "menu, item, dropdown, popup"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,160 +12,62 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
-			make_with_index,
-			make_with_all,
-			parent
-		end
-	
-	EV_MENU_ITEM_HOLDER
-		redefine
-			implementation
+			create_implementation,
+			create_action_sequences
 		end
 
 create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
+	default_create,
+	make_with_text
 
-feature {NONE} -- Initialization
+feature -- Events
 
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_MENU_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_MENU_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
-
-	make_with_index (par: like parent; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			create {EV_MENU_ITEM_IMP} implementation.make
-			{EV_SIMPLE_ITEM} Precursor (par, value)
-		end
-
-	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		do
-			create {EV_MENU_ITEM_IMP} implementation.make_with_text (txt)
-			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
-		end
-
-feature -- Access
-
-	parent: EV_MENU_ITEM_HOLDER is
-			-- Parent of the current item.
-		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
-		end
-
-	top_parent: EV_MENU_ITEM_HOLDER is
-			-- Top item holder that contains the current item.
-		require
-			exists: not destroyed
-		do
-			if implementation.top_parent_imp = Void then
-				Result := Void
-			else
-				Result ?= implementation.top_parent_imp.interface
-			end
-		end
+	press_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when user clicked on menu item.
 
 feature -- Status report
 
-	is_insensitive: BOOLEAN is
-			-- Is current item insensitive to
-			-- user actions? 
-		require
-			exists: not destroyed
+	is_sensitive: BOOLEAN is
+			-- Is `Current' sensitive to user actions?
 		do
-			Result := implementation.is_insensitive
-		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
-			-- False otherwise.
-			-- we use it only when the grand parent is an option button.
-  		require
-			exists: not destroyed
-			valid_grand_parent: grand_parent_is_option_button
-		do
-			Result := implementation.is_selected
+			Result := implementation.is_sensitive
 		end
 
 feature -- Status setting
 
-	set_insensitive (flag: BOOLEAN) is
-   			-- Set current item in insensitive mode if
-   			-- `flag'. 
-   		require
-   			exists: not destroyed
+	enable_sensitive is
+   			-- Set current item sensitive.
    		do
- 			implementation.set_insensitive (flag)
+ 			implementation.enable_sensitive
  		ensure
-   			state_set: is_insensitive = flag
+   			is_sensitive: is_sensitive
    		end
 
-	set_selected (flag: BOOLEAN) is
-   			-- Set current item as the selected one.
-			-- we use it only when the grand parent is an option button.
-   		require
-			exists: not destroyed
-			parent_is_an_option_button: grand_parent_is_option_button
+	disable_sensitive is
+   			-- Set current item insensitive.
    		do
- 			implementation.set_selected (flag)
+ 			implementation.disable_sensitive
  		ensure
-   			state_set: is_selected = flag
+   			not_is_sensitive: not is_sensitive
    		end
 
-feature -- Assertion
+feature {EV_ANY_I} -- Implementation
 
-	grand_parent_is_option_button: BOOLEAN is
-			-- True if the grand parent is an option button.
-			-- False otherwise.
+	implementation: EV_MENU_ITEM_I	
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create implementation of menu.
 		do
-			Result := implementation.grand_parent_is_option_button
+			create {EV_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+	create_action_sequences is
 		do
-			implementation.add_select_command (cmd, arg)
+			Precursor
+			create press_actions
 		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_select_commands			
-		end
-
-feature -- Implementation
-
-	implementation: EV_MENU_ITEM_I
-			-- Platform dependent access.
 
 end -- class EV_MENU_ITEM
 
@@ -186,3 +86,44 @@ end -- class EV_MENU_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.30  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.29.6.7  2000/02/05 01:42:11  brendel
+--| Changed export status of Implementation.
+--|
+--| Revision 1.29.6.6  2000/02/03 23:32:01  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.29.6.5  2000/02/02 00:06:45  oconnor
+--| hacking menus
+--|
+--| Revision 1.29.6.4  2000/01/28 22:24:20  oconnor
+--| released
+--|
+--| Revision 1.29.6.3  2000/01/27 19:30:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.29.6.2  1999/12/17 21:15:39  rogers
+--| Advanced make procedures hav been removed, ready for re-implementation.
+--|
+--| Revision 1.29.6.1  1999/11/24 17:30:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.29.2.3  1999/11/04 23:10:48  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.29.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,11 +1,7 @@
 indexing
 	description: 
-		"EiffelVision text container, gtk implementation.%
-		% For every textable widget, we create a gtk box to put %
-		% in the widget. The pixmap and the label will then be put%
-		% in this box."
+		"Eiffel Vision textable. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -14,60 +10,23 @@ deferred class
 	
 inherit
 	EV_TEXTABLE_I
-	
-	EV_FONTABLE_IMP
-	
-	EV_GTK_CONTAINERS_EXTERNALS
-	EV_GTK_EXTERNALS
-	EV_GTK_WIDGETS_EXTERNALS
-	EV_GTK_TYPES_EXTERNALS
+		redefine
+			interface
+		end
+
+	EV_ANY_IMP
+		redefine
+			interface
+		end
 	
 feature {NONE} -- Initialization
-
-	make is
-			-- feature `make'.
-		deferred
-		end
 	
-	initialize is
-			-- create of the `box', where the label and the pixmap
-			-- will be put in.
-			-- Common initialization for textable widgets,
-			-- except for status bar and radio buttons.
-
+	textable_imp_initialize is
+			-- Create a GtkLabel to display the text.
 		do
-			-- create of an gtk_box.
-			box := gtk_hbox_new (False, 5)
-			gtk_widget_show (box)
-
-			-- Adding the box in the widget.
-			gtk_container_add (GTK_CONTAINER (widget), box)
-		end
-
-	create_text_label (txt: STRING) is
-			-- Create the label for the text and
-			-- put it in `box'.
-		require
-			call_only_once: label_widget = default_pointer
-			box_already_created: box /= default_pointer
-		local
-                        a: ANY
-		do
-			a := txt.to_c
-			
-			set_label_widget (gtk_label_new ($a))
-			gtk_widget_show (label_widget)
-			gtk_box_pack_end (GTK_BOX (box), label_widget, True, True, 0)
-
-			-- We left-align and vertical_center-position the text.
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
-		end			
-
-	make_with_text (txt: STRING) is
-			-- Create an item with `txt' as label.
-		do
-			make
-			set_text (txt)
+			text_label := C.gtk_label_new (eiffel_to_c (""))
+			C.gtk_widget_show (text_label)
+			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
 
 feature -- Access
@@ -76,81 +35,72 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			create Result.make (0)
-			if label_widget /= Default_pointer then
-				gtk_label_get (label_widget, $p)
-				Result.from_c (p)
+			p := text_label
+			C.gtk_label_get (text_label, $p)
+			if p /= Void then
+				create Result.make_from_c (p)
+				if Result.empty then
+					Result := Void
+				end
 			end
 		end
 	
 feature -- Status setting
 
-        set_center_alignment is
-                        -- Set text alignment of current label to center.
-                do
-			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
-			end 
+	align_text_center is
+			-- Display `text' centered.
+		do
+			C.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+			C.gtk_label_set_justify (text_label, C.Gtk_justify_center_enum)
 		end
 
-        set_right_alignment is
-                -- Set text alignment of current label to right.
-                do
-			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 1, 0.5)
-			end 
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			C.gtk_misc_set_alignment (text_label, 0, 0.5)
+			C.gtk_label_set_justify (text_label, C.Gtk_justify_left_enum)
 		end
 
-        set_left_alignment is
-                        -- Set text alignment of current label to left.
-                do
-			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0, 0.5)
-			end 
-                end
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			C.gtk_misc_set_alignment (text_label, 1, 0.5)
+			C.gtk_label_set_justify (text_label, C.Gtk_justify_right_enum)
+		end
 	
 feature -- Element change	
 	
-	set_text (txt: STRING) is
-			-- Set current button text to `txt'.
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
 		local
-			a: ANY
+			p: POINTER
 		do
-			if label_widget = Default_pointer then
-				create_text_label (txt)	
-			else
-				a := txt.to_c
-				gtk_label_set_text (label_widget, $a)
-			end
-		end
-	
-feature {EV_ANY_I} -- Implementation
-	
-	widget: POINTER is
-		deferred
+			C.gtk_widget_show (text_label)
+			C.gtk_label_set_text (text_label, eiffel_to_c (a_text))
 		end
 
-feature {EV_PIXMAPABLE_IMP} -- Implementation
+	remove_text is
+			-- Assign `Void' to `text'.
+		do
+			C.gtk_label_set_text (text_label, Default_pointer)
+			C.gtk_widget_hide (text_label)
+		end
 	
-	box: POINTER
-			-- Box inside the text container
-
 feature {NONE} -- Implementation
 	
-	set_label_widget (new_label_widget: POINTER) is
-			-- new pointer for label_widget 
-		deferred
-		end
-	
-	label_widget: POINTER is
-			-- This has to be defined to be the actual 
-			-- label widget
-		deferred
-		end
+	text_label: POINTER
+				-- GtkLabel containing `text'.
 
-end
+feature {EV_ANY_I} -- Implementation
 
---!----------------------------------------------------------------
+	interface: EV_TEXTABLE
+
+invariant
+	text_label_not_void: is_useable implies text_label /= Void
+
+end -- class EV_TEXTABLE_IMP
+
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -164,4 +114,90 @@ end
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.20  2000/02/14 11:40:28  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.19.6.20  2000/02/04 21:23:40  king
+--| Now showing and hiding text label on set/remove text
+--|
+--| Revision 1.19.6.19  2000/02/04 06:31:50  oconnor
+--| fixed allignment
+--|
+--| Revision 1.19.6.18  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.19.6.17  2000/01/28 19:00:16  king
+--| Altered name of initialize to deal with problems of precursor in descendants
+--|
+--| Revision 1.19.6.16  2000/01/27 19:29:32  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.19.6.15  2000/01/19 08:06:52  oconnor
+--| added is_initialized := True to initialize
+--|
+--| Revision 1.19.6.14  2000/01/18 23:42:19  oconnor
+--| use GtkLabel directly instead of packing it in a box
+--|
+--| Revision 1.19.6.13  2000/01/18 19:33:29  oconnor
+--| Removed inheritance of fontable,
+--| ont all texables are actualy fontable as well,
+--| those that are should now inherit fontable explicitly.
+--|
+--| Revision 1.19.6.12  2000/01/14 23:36:35  king
+--| Removed text_box_parented invariant as this conflicts with ev_label_imp
+--|
+--| Revision 1.19.6.11  2000/01/10 21:45:13  king
+--| Set initialized to true in initialize
+--|
+--| Revision 1.19.6.10  2000/01/07 23:30:53  king
+--| Changed ev_textable_imp_initialize back to initialize
+--|
+--| Revision 1.19.6.9  2000/01/07 22:48:42  king
+--| Corrected text function, changed text_label so it uses local variable for
+--| pointer
+--|
+--| Revision 1.19.6.8  2000/01/07 16:50:54  oconnor
+--| cleaned up to match new _I
+--|
+--| Revision 1.19.6.7  1999/12/04 18:59:13  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.19.6.6  1999/11/30 22:57:02  oconnor
+--| removed STRING.to_c style, use eiffel_to_c instead
+--|
+--| Revision 1.19.6.5  1999/11/30 22:08:00  brendel
+--| Changed back the initialize stuuf, but renamed initialize_text_box as
+--| ev_textable_imp_initialize.
+--|
+--| Revision 1.19.6.4  1999/11/30 17:27:04  brendel
+--| "renamed" initialize_text_box to initialize. Declared old one obsolete.
+--|
+--| Revision 1.19.6.3  1999/11/29 17:24:48  brendel
+--| Undone changes to previous version. Uncommented statements with `box' in
+--| them.
+--|
+--| Revision 1.19.6.2  1999/11/24 22:48:06  brendel
+--| Just managed to compile figure cluster example.
+--|
+--| Revision 1.19.6.1  1999/11/24 17:29:47  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.19.2.4  1999/11/17 01:53:01  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.19.2.3  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.19.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

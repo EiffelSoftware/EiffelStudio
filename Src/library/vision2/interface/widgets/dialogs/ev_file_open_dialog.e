@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision file open dialog."
+	description: "Eiffel Vision file open dialog."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,18 +14,14 @@ inherit
 		end
 
 create
-	make
+	default_create
 
-feature {NONE} -- Initialization
+feature {NONE} -- Implementation
 
-	make (par: EV_CONTAINER) is
-			-- Create a window with a parent.
+	create_implementation is
 		do
-			!EV_FILE_OPEN_DIALOG_IMP! implementation.make (par)
-			implementation.set_interface (Current)
+			create {EV_FILE_OPEN_DIALOG_IMP} implementation.make (Current)
 		end
-
-feature -- Implementation
 
 	implementation: EV_FILE_OPEN_DIALOG_I
 
@@ -46,3 +42,35 @@ end -- class EV_FILE_OPEN_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.5  2000/01/28 22:24:22  oconnor
+--| released
+--|
+--| Revision 1.7.6.4  2000/01/27 19:30:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.3  2000/01/27 02:43:25  brendel
+--| Fixed small bug in creation sequence.
+--|
+--| Revision 1.7.6.2  2000/01/27 02:41:26  brendel
+--| Revised. GTK platform makes no difference in save/open so little to
+--| implement.
+--|
+--| Revision 1.7.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

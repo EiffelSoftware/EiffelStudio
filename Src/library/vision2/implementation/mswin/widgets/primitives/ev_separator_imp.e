@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision horizontal separator,%
 			% windows implementation."
@@ -10,10 +12,15 @@ deferred class
 
 inherit
 	EV_SEPARATOR_I
+		select
+			interface
+		end
 
 	EV_PRIMITIVE_IMP
+		rename
+			interface as ev_primitive_imp_interface
 		undefine
-			set_default_options
+			set_default_minimum_size
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -23,8 +30,13 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
-			destroy as wel_destroy
+			shown as is_displayed,
+			destroy as wel_destroy,
+			width as wel_width,
+			height as wel_height,
+			enabled as is_sensitive,
+			item as wel_item,
+			move as move_to
 		undefine
 			window_process_message,
 			set_width,
@@ -53,9 +65,10 @@ inherit
 
 feature {NONE} -- Initialization
 
- 	make is
+ 	make (an_interface: like interface) is
  			-- Make a separator
 		do
+			base_make (an_interface)
 			wel_make (default_parent, "EV_SEPARATOR")
  		end
 
@@ -142,3 +155,28 @@ end -- class EV_SEPARATOR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.10.3  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.10.2  2000/01/11 20:03:34  rogers
+--| Modified to comply with the major Vision2 changes. See diff for redefinitions, make now takes an interface.
+--|
+--| Revision 1.12.10.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

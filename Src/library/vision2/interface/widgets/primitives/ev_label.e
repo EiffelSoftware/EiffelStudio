@@ -1,8 +1,8 @@
 indexing
 	description: 
-		"EiffelVision label"
+		"Eiffel Vision label. Displays a textual label."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "label, text"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +12,6 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			make,
 			implementation
 		end
 
@@ -20,41 +19,26 @@ inherit
 		redefine
 			implementation
 		end
-
-	EV_FONTABLE
-		redefine
-			implementation
-		end
 		
 create
-	make,
+	default_create,
 	make_with_text
 
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Label with 'par' as parent.
-		do
-			!EV_LABEL_IMP!implementation.make
-			widget_make (par)
-		end
-
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Label with 'par' as parent and 'txt' as 
-			-- text label.
-		do
-			!EV_LABEL_IMP!implementation.make_with_text (txt)
-			widget_make (par)
-		end
-	
 feature {NONE} -- Implementation
 
 	implementation: EV_LABEL_I
-			-- Implementation of label
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create implementation of label.
+		do
+			create {EV_LABEL_IMP} implementation.make (Current)
+		end
 	
 end -- class EV_LABEL
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -68,4 +52,53 @@ end -- class EV_LABEL
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:52  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.6.11  2000/02/05 05:49:56  oconnor
+--| removed make_with_text
+--|
+--| Revision 1.15.6.10  2000/01/28 20:00:20  oconnor
+--| released
+--|
+--| Revision 1.15.6.9  2000/01/27 19:30:55  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.6.8  2000/01/18 07:11:46  oconnor
+--| removed redefine of create_action_sequences
+--|
+--| Revision 1.15.6.7  2000/01/17 02:48:04  oconnor
+--| added keywords
+--|
+--| Revision 1.15.6.6  2000/01/17 02:33:47  oconnor
+--| removed action sequence. Added comments.
+--|
+--| Revision 1.15.6.5  2000/01/15 02:25:24  oconnor
+--| formatting
+--|
+--| Revision 1.15.6.4  2000/01/14 23:38:37  king
+--| Made label inherit from textable
+--|
+--| Revision 1.15.6.3  2000/01/11 23:30:33  rogers
+--| Undefined create_action_sequences.
+--|
+--| Revision 1.15.6.2  1999/12/17 19:41:35  rogers
+--| Modified make_with_text, and added create_action_sequences and
+--| create_implementation.
+--|
+--| Revision 1.15.6.1  1999/11/24 17:30:54  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.15.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,12 +1,8 @@
 indexing
-	description: "EiffelVision drawing area. A drawing area%
-			% is a primitive on which the user can draw%
-			% pixmaps or his own figures."
-	note: "A drawing area as a (0, 0) minimum_size by default%
-			% and a (10, 10) size. A non nul size because then,%
-			% the user doesn't wonder why nothing appear."
+	description:
+		"EiffelVision drawing area. Widgets that can be drawn on."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "drawable, expose, repaint, primitives, figures"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,97 +12,81 @@ class
 inherit
 	EV_DRAWABLE
 		undefine
-			background_color,
-			foreground_color,
-			set_background_color,
-			set_foreground_color
+			create_action_sequences
 		redefine
-			implementation
+			--set_background_color,
+			--set_foreground_color,
+			--background_color,
+			--foreground_color,
+			implementation,
+			is_in_default_state
 		end
 
 	EV_PRIMITIVE
+		undefine
+			set_background_color,
+			background_color,
+			set_foreground_color,
+			foreground_color
 		redefine
-			implementation
-		end
-
-	EV_PIXMAPABLE
-		redefine
-			implementation
+			implementation,
+			create_action_sequences,
+			is_in_default_state
 		end
 
 create
-	make,
-	make_with_pixmap
+	default_create
 
-feature {NONE} -- Initialization
+feature -- Basic operations
 
-	make (par: EV_CONTAINER) is
-			-- Create an empty drawing area.
+	redraw is
+			-- Clear the window and call `expose_actions'.
 		do
-			!EV_DRAWING_AREA_IMP! implementation.make
-			widget_make (par)
+			implementation.clear
+			expose_actions.call ([0, 0, width, height])
 		end
 
-	make_with_pixmap (par: EV_CONTAINER; pix: EV_PIXMAP) is
-			-- Create a drawing area with a pixmap attached to
-			-- it.
+feature -- Events
+
+	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
+			-- Actions to be performed on expose.
+
+feature {EV_DRAWING_AREA_IMP} -- Implementation
+
+	create_implementation is
+			-- Create implementation of drawing area.
 		do
-			!EV_DRAWING_AREA_IMP! implementation.make
-			widget_make (par)
-			set_pixmap (pix)
+			create {EV_DRAWING_AREA_IMP} implementation.make (Current)
 		end
 
-feature -- Event - command association
-
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of action to be executed when
-			-- current area is resized.
-			-- `arg' will be passed to `cmd' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+	create_action_sequences is
+			-- Create action sequences.
 		do
-			implementation.add_resize_command (cmd, arg)
+			{EV_PRIMITIVE} Precursor
+			create expose_actions
 		end
 
-	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget has to be redrawn.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+feature {EV_DRAWING_AREA_I} -- Implementation
+
+	implementation: EV_DRAWING_AREA_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
 		do
-			implementation.add_paint_command (cmd, arg)
+			Result := {EV_PRIMITIVE} Precursor and then
+				{EV_DRAWABLE} Precursor
 		end
 
-feature -- Event - command removal
-
-	remove_resize_commands is
-			-- Remove the list of commands to be executed when
-			-- current area is resized.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_resize_commands
-		end
-
-	remove_paint_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget has to be redrawn.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_paint_commands
-		end
-
-feature -- Implementation
-
-	implementation: EV_DRAWING_AREA_IMP
+invariant
+	expose_actions_not_void: expose_actions /= Void
 
 end -- class EV_DRAWING_AREA
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -120,4 +100,111 @@ end -- class EV_DRAWING_AREA
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:52  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.6.28  2000/01/28 20:00:19  oconnor
+--| released
+--|
+--| Revision 1.10.6.27  2000/01/27 19:30:54  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.6.26  2000/01/21 22:32:02  brendel
+--| Rearranged inheritance of color features.
+--|
+--| Revision 1.10.6.25  2000/01/21 21:34:18  oconnor
+--| formatting, comments
+--|
+--| Revision 1.10.6.24  2000/01/20 23:02:31  brendel
+--| Added function redraw.
+--|
+--| Revision 1.10.6.23  2000/01/19 17:44:36  brendel
+--| Added undefine for color features from EV_WIDGET.
+--|
+--| Revision 1.10.6.22  2000/01/18 18:11:30  brendel
+--| Changed `is_in_default_state'.
+--|
+--| Revision 1.10.6.21  2000/01/18 17:43:19  brendel
+--| Added redefine of is_in_default_state.
+--|
+--| Revision 1.10.6.20  2000/01/18 17:31:06  king
+--| Added `is_in_default_state'.
+--|
+--| Revision 1.10.6.19  2000/01/18 01:32:13  king
+--| Removed conditional checking `is_drawable' in color setting routines.
+--|
+--| Revision 1.10.6.18  2000/01/17 22:28:09  brendel
+--| Formatting.
+--|
+--| Revision 1.10.6.17  2000/01/17 01:20:23  oconnor
+--| renamed EV_EXPOSE_ACTION_SEQUENCE -> EV_GEOMETRY_ACTION_SEQUENCE
+--|
+--| Revision 1.10.6.16  2000/01/17 00:44:05  oconnor
+--| changed calls to is_drawable to implementation.is_drawable
+--|
+--| Revision 1.10.6.15  2000/01/15 02:12:36  oconnor
+--| formatting
+--|
+--| Revision 1.10.6.14  2000/01/11 01:01:04  king
+--| Spelling.
+--|
+--| Revision 1.10.6.13  1999/12/17 19:43:19  rogers
+--| Altered passed parameter types.
+--|
+--| Revision 1.10.6.12  1999/12/16 03:50:59  oconnor
+--| mutiple inheritance of creation_action_sequences tweaked
+--|
+--| Revision 1.10.6.11  1999/12/09 23:19:00  brendel
+--| Fixed bug with infinite loop in color setting.
+--|
+--| Revision 1.10.6.10  1999/12/08 17:07:51  brendel
+--| Added redefine of color setting routines. Every routine now sets both
+--| background/fill color or foreground/line color.
+--| This is the final version of EV_DRAWING_AREA.
+--|
+--| Revision 1.10.6.9  1999/12/07 18:09:36  brendel
+--| Removed rename of color related features.
+--|
+--| Revision 1.10.6.8  1999/12/04 22:46:55  brendel
+--| Removed commented lines. Removed create_action_sequences redefinition
+--| from drawable since it is now deferred in ev_any.
+--|
+--| Revision 1.10.6.7  1999/12/03 04:10:32  brendel
+--| Did some stuff with colors. Will be changed back soon.
+--|
+--| Revision 1.10.6.6  1999/12/03 00:33:21  brendel
+--| Added expose_event action sequence.
+--|
+--| Revision 1.10.6.5  1999/12/01 21:48:29  brendel
+--| Removed action sequences from here since they are defined in widget.
+--|
+--| Revision 1.10.6.4  1999/12/01 01:02:34  brendel
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied
+--| on specific things like return value BOOLEAN instead of INTEGER.
+--|
+--| Revision 1.10.6.3  1999/11/29 17:55:02  brendel
+--| Ignore previous log message. Changed creation order according to new
+--| creation sequence standard.
+--|
+--| Revision 1.10.6.2  1999/11/24 22:48:07  brendel
+--| Just managed to compile figure cluster example.
+--|
+--| Revision 1.10.6.1  1999/11/24 17:30:53  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

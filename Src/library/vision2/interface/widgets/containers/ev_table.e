@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -37,7 +39,6 @@ feature -- Status report
 	rows: INTEGER is
 			-- Number of rows
 		require
-			exists: not destroyed
 		do
 			Result := implementation.rows
 		end
@@ -45,7 +46,6 @@ feature -- Status report
 	columns: INTEGER is
 			-- Number of columns
 		require
-			exists: not destroyed
 		do
 			Result := implementation.columns
 		end
@@ -53,7 +53,6 @@ feature -- Status report
 	row_spacing: INTEGER is
 			-- Spacing between two rows
 		require
-			exists: not destroyed
 		do
 			Result := implementation.row_spacing
 		end
@@ -61,7 +60,6 @@ feature -- Status report
 	column_spacing: INTEGER is
 			-- Spacing between two columns
 		require
-			exists: not destroyed
 		do
 			Result := implementation.column_spacing
 		end
@@ -72,7 +70,6 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		require
-			exist: not destroyed
 		do
 			implementation.set_homogeneous (flag)
 		end
@@ -80,7 +77,6 @@ feature -- Status settings
 	set_row_spacing (value: INTEGER) is
 			-- Spacing between two rows of the table
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_row_spacing (value)
@@ -89,7 +85,6 @@ feature -- Status settings
 	set_column_spacing (value: INTEGER) is
 			-- Spacing between two columns of the table
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_column_spacing (value)
@@ -111,7 +106,6 @@ feature -- Status settings
 			-- the child, otherwise, the child won't appear in
 			-- the table.
 		require
-			exists: not destroyed
 			the_child_not_void: the_child /= Void
 			bottom_larger_than_top: bottom > top
 			right_larger_than_left: right > left
@@ -141,3 +135,28 @@ end -- class EV_TABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.2  2000/01/27 19:30:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:52  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision text, implementation interface."
 	status: "See notice at end of class"
@@ -26,19 +28,18 @@ inherit
 
 feature -- Initialization
 
-	make_with_properties (txt: STRING; hscroll: BOOLEAN) is
-			-- Create a rich text area with `par' as parent and
-			-- `txt' as text. Vertically scrollable and if `hscroll'
-			-- then horizontally scrollable.
-		deferred
-		end
+--	make_with_properties (txt: STRING; hscroll: BOOLEAN) is
+--			-- Create a rich text area with `par' as parent and
+--			-- `txt' as text. Vertically scrollable and if `hscroll'
+--			-- then horizontally scrollable.
+--		deferred
+--		end
 
 feature -- Access
 
 	character_format: EV_CHARACTER_FORMAT is
 			-- Current character format.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -47,7 +48,6 @@ feature -- Status setting
 	apply_format (format: EV_TEXT_FORMAT) is
 			-- Apply the given format to the text.
 		require
-			exists: not destroyed
 			valid_format: format /= Void
 		deferred
 		end
@@ -56,7 +56,6 @@ feature -- Status setting
 			-- Set the format of the text between `first_pos' and `last_pos' to
 			-- `format'. May or may not change the cursor position.
 		require
-			exists: not destroyed
 			valid_positions: valid_position (first_pos) and valid_position (last_pos)
 			format_not_void: format /= Void
 		deferred
@@ -68,7 +67,6 @@ feature -- Status report
 			-- Retrieves the line number from a character position
 			-- Line numbers start at 1.
 		require
-			exists: not destroyed
 			index_large_enough: a_pos >= 0
 			index_small_enough: a_pos <= text_length + 2
 		deferred
@@ -82,7 +80,6 @@ feature -- Element change
 			-- Apply `format' to the selection and make it the
 			-- current character format.
 		require
-			exists: not destroyed
 			valid_format: format /= Void
 		deferred
 --		ensure
@@ -92,7 +89,6 @@ feature -- Element change
 	remove_text (start_pos, end_pos: INTEGER) is
 			-- Remove the text between `start_pos' and `end_pos'.
 		require
-			exists: not destroyed
 			valid_positions: valid_position (start_pos) and valid_position (end_pos)
 		deferred
 		end
@@ -110,7 +106,6 @@ feature -- Basic operation
 			-- to the upper-left corner of the client area of the
 			-- control.
 		require
-			exists: not destroyed
 			x_large_enough: value_x >= 0
 			y_large_enough: value_y >= 0
 		deferred
@@ -126,7 +121,6 @@ feature -- Basic operation
 			-- are in screen units relative to the upper-left
 			-- corner of the client area of the control.
 		require
-			exists: not destroyed
 			index_large_enough: value >= 0
 			index_small_enough: value <= text_length + 2
 		deferred
@@ -140,7 +134,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user inputs a text.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -149,7 +142,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user deletes a text.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -159,7 +151,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to delete the right character.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -169,7 +160,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to undo a command.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -178,7 +168,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to redo a command.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -189,7 +178,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs a text.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -197,7 +185,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user deletes a text.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -205,7 +192,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to delete the left character.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -213,7 +199,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to undo a command.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -221,7 +206,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to redo a command.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -245,3 +229,31 @@ end -- class EV_RICH_TEXT_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.12  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.2.2.2.3  2000/01/27 19:30:05  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.2.2.2.2  1999/12/09 03:15:06  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.9.2.2.2.1  1999/11/24 17:30:13  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.8.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

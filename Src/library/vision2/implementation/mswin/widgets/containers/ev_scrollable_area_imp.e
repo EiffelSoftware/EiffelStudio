@@ -1,6 +1,6 @@
+--| FIXME Not for release
 indexing
-	description:
-		"EiffelVision scrollable area, mswindows implementation"
+	description: "Eiffel Vision scrollable area, Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,171 +10,153 @@ class
 
 inherit
 	EV_SCROLLABLE_AREA_I
+		redefine
+			interface
+		end
 
-	EV_SINGLE_CHILD_CONTAINER_IMP
+	EV_VIEWPORT_IMP
+		redefine
+			interface,	
+			default_ex_style,
+			move_and_resize,
+			top_level_window_imp,
+			make
+		select
+			move_to
+		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
+		rename
+			make as ev_wel_control_container_make
 		redefine
-			make,
 			default_ex_style,
 			move_and_resize,
 			top_level_window_imp
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a scrollable area container.
+	make (an_interface: like interface) is
+			-- Initialize. 
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
-			set_text ("Scrollable Area")
-			!! scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
+			base_make (an_interface)
+
+			check
+				to_be_implemented: False
+			end
+
+			--{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
+			--set_text ("Scrollable Area")
+			--!! scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
 		end
 
 feature -- Access
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
-			-- Top level window that contains the current widget.
-
 	horizontal_step: INTEGER is
-			-- Step of the horizontal scrolling
-			-- ie : the user clicks on a horizontal arrow
+			-- Number of pixels scrolled up or down when user clicks
+			-- an arrow on the horizontal scrollbar.
 		do
-			Result := scroller.horizontal_line
-		end
-
-	horizontal_leap: INTEGER is
-			-- Leap of the horizontal scrolling
-			-- ie : the user clicks on the horizontal scroll bar
-		do
-			Result := scroller.horizontal_page
+			check
+				to_be_implemented: False
+			end
+			--Result := scroller.horizontal_line
 		end
 
 	vertical_step: INTEGER is
-			-- Step of the vertical scrolling
-			-- ie : the user clicks on a vertical arrow
+			-- Number of pixels scrolled left or right when user clicks
+			-- an arrow on the vertical scrollbar.
 		do
-			Result := scroller.vertical_line
-		end
-
-	vertical_leap: INTEGER is
-			-- Leap of the vertical scrolling
-			-- ie : the user clicks on the vertical scroll bar
-		do
-			Result := scroller.vertical_page
-		end
-
-	horizontal_value: INTEGER is
-			-- Current position of the horizontal scroll bar
-		do
-			if horizontal_bar_shown then
-				if minimal_horizontal_position /= 0 then
-					Result := 100 * horizontal_position // (maximal_horizontal_position - minimal_horizontal_position)
-				else
-					Result := 100 * horizontal_position // maximal_horizontal_position
-				end
+			check
+				to_be_implemented: False
 			end
+			--Result := scroller.vertical_line
 		end
 
-	vertical_value: INTEGER is
-			-- Current position of the vertical scroll bar
+	is_horizontal_scrollbar_visible: BOOLEAN is
+			-- Should horizontal scrollbar be displayed?
 		do
-			if vertical_bar_shown then
-				if minimal_vertical_position /= 0 then
-					Result := 100 * vertical_position // (maximal_vertical_position - minimal_vertical_position)
-				else
-					Result := 100 * vertical_position // maximal_vertical_position
-				end
+			check
+				to_be_implemented: False
 			end
+			--Result := minimal_horizontal_position /= maximal_horizontal_position
 		end
 
-	horizontal_minimum: INTEGER is
-			-- Minimal position on the horizontal scroll bar
+	is_vertical_scrollbar_visible: BOOLEAN is
+			-- Should vertical scrollbar be displayed?
 		do
-			Result := minimal_horizontal_position
-		end
-
-	vertical_minimum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		do
-			Result := minimal_vertical_position
-		end
-
-	horizontal_maximum: INTEGER is
-			-- Maximal position on the horizontal scroll bar
-		do
-			Result := maximal_horizontal_position
-		end
-
-	vertical_maximum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		do
-			Result := maximal_vertical_position
-		end
-
-feature -- Status report
-
-	horizontal_bar_shown: BOOLEAN is
-			-- Is the horizontal scrool-bar shown?
-		do
-			Result := minimal_horizontal_position /= maximal_horizontal_position
-		end
-
-	vertical_bar_shown: BOOLEAN is
-			-- Is the vertical scrool-bar shown?
-		do
-			Result := minimal_vertical_position /= maximal_vertical_position
+			check
+				to_be_implemented: False
+			end
+			--Result := minimal_vertical_position /= maximal_vertical_position
 		end
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
-			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+	set_horizontal_step (a_step: INTEGER) is
+			-- Set `horizontal_step' to `a_step'.
 		do
-			top_level_window_imp := a_window
-			if child /= Void then
-				child.set_top_level_window_imp (a_window)
+			check
+				to_be_implemented: False
+			end
+			--scroller.set_horizontal_line (a_step)
+		end
+
+	set_vertical_step (a_step: INTEGER) is
+			-- Set `vertical_step' to `a_step'.
+		do
+			check
+				to_be_implemented: False
+			end
+			--scroller.set_vertical_line (a_step)
+		end
+
+	show_horizontal_scrollbar is
+			-- Display horizontal scrollbar.
+		do
+			check
+				to_be_implemented: False
 			end
 		end
 
-	set_horizontal_step (value: INTEGER) is
-			-- Make `value' the new horizontal step.
+	hide_horizontal_scrollbar is
+			-- Do not display horizontal scrollbar.
 		do
-			scroller.set_horizontal_line (value)
+			check
+				to_be_implemented: False
+			end
 		end
 
-	set_vertical_step (value: INTEGER) is
-			-- Make `value' the new vertical step.
-		do 
-			scroller.set_vertical_line (value)
+	show_vertical_scrollbar is
+			-- Display vertical scrollbar.
+		do
+			check
+				to_be_implemented: False
+			end
 		end
 
-	set_horizontal_leap (value: INTEGER) is
-			-- Make `value' the new horizontal leap.
+	hide_vertical_scrollbar is
+			-- Do not display vertical scrollbar.
 		do
-			scroller.set_horizontal_page (value)
+			check
+				to_be_implemented: False
+			end
 		end
 
-	set_vertical_leap (value: INTEGER) is
-			-- Make `value' the new vertical leap.
-		do
-			scroller.set_vertical_page (value)
-		end
+feature -- Obsolete
 
 	set_horizontal_value (value: INTEGER) is
 			-- Make `value' the new horizontal value where `value' is given in percentage.
 		local
 			step: INTEGER
 		do
-			if horizontal_bar_shown then
-				step := (maximal_horizontal_position - minimal_horizontal_position) * value // 100
-				step := step + minimal_horizontal_position
-				horizontal_update (horizontal_position - step, step)
-			end
+		--	if horizontal_bar_shown then
+		--		step := (maximal_horizontal_position - minimal_horizontal_position) * value // 100
+		--		step := step + minimal_horizontal_position
+		--		horizontal_update (horizontal_position - step, step)
+		--	end
 		end
 
 	set_vertical_value (value: INTEGER) is
@@ -182,14 +164,12 @@ feature -- Element change
 		local
 			step: INTEGER
 		do
-			if vertical_bar_shown then
-				step := (maximal_vertical_position - minimal_vertical_position) * value // 100
-				step := step + minimal_vertical_position
-				vertical_update (vertical_position - step, step)
-			end
+		--	if vertical_bar_shown then
+		--		step := (maximal_vertical_position - minimal_vertical_position) * value // 100
+		--		step := step + minimal_vertical_position
+		--		vertical_update (vertical_position - step, step)
+		--	end
 		end
-
-feature {NONE} -- Implementation
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
@@ -280,13 +260,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- WEL Implementation
-
 	default_ex_style: INTEGER is
 			-- The default ex-style of the window.
 		do
 			Result := {EV_WEL_CONTROL_CONTAINER_IMP} Precursor + Ws_ex_clientedge
 		end
+
+feature {NONE} -- Implementation
+
+	interface: EV_VIEWPORT
+
+	top_level_window_imp: EV_WINDOW_IMP
 
 end -- class EV_SCROLLABLE_AREA_IMP
 
@@ -305,3 +289,28 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:43  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.10.3  2000/01/29 01:02:48  brendel
+--| Implemented in compliance with new interface.
+--|
+--| Revision 1.15.10.2  2000/01/27 19:30:22  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.10.1  1999/11/24 17:30:28  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.15.6.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,7 +1,16 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision push button.%
 		% Mswindows implementation."
 	status: "See notice at end of class"
+--| FIXME
+note:
+	"On windows, you can only display a text or a pixmap.%N%
+	%if you set both the pixmap and the text, only the%N%
+	%pixmap will be displayed. On gtk, everything works%N%
+	%like it is suppose to be, you have both text and%N%
+	%pixmap visible."
 	date: "$$"
 	revision: "$$"
 
@@ -10,32 +19,41 @@ class
 
 inherit
 	EV_BUTTON_I
+		redefine
+			interface
+		select
+			interface
+		end
 
 	EV_PRIMITIVE_IMP
 		undefine
 			set_default_minimum_size
 		redefine
-			widget_make,
-			on_key_down
+			on_key_down,
+			initialize,
+			interface
 		end
    
 	EV_TEXTABLE_IMP
 		redefine
 			set_default_minimum_size,
-			set_center_alignment,
-			set_left_alignment,
-			set_right_alignment
+			align_text_center,
+			align_text_left,
+			align_text_right,
+			interface
 		end
 
 	EV_PIXMAPABLE_IMP
-		undefine
-			pixmap_size_ok
 		redefine
 			set_pixmap,
-			unset_pixmap
+			remove_pixmap,
+			interface
 		end
 
 	EV_FONTABLE_IMP
+		rename
+			interface as ev_fontable_interface
+		end
 
 	WEL_BS_CONSTANTS
 		export
@@ -53,9 +71,15 @@ inherit
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
-			shown as displayed,
+			shown as is_displayed,
 			set_font as wel_set_font,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive,
+			width as wel_width,
+			height as wel_height,
+			text as wel_text
 		undefine
 			window_process_message,
 			remove_command,
@@ -82,40 +106,42 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create the label with an empty label.
+	make (an_interface: like interface) is
+			-- Create the button.
 		do
-			make_with_text ("")
-		end
-
-	make_with_text (txt: STRING) is
-			-- Create the label with `txt' as label.
-		do
-			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
+			base_make (an_interface)
+			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 10
 		end
 
-	widget_make (an_interface: EV_WIDGET) is
-			-- Creation of the widget.
+	initialize is
+			-- Initialize button.
 		do
+			{EV_PRIMITIVE_IMP} Precursor 
 			set_font (font)
-			{EV_PRIMITIVE_IMP} Precursor (an_interface)
 		end
 
 feature -- Access
 
-	extra_width: INTEGER
-			-- Extra width on the size
+	text: STRING is
+			-- Return text of button, Void if button has no text.
+		do
+			Result := wel_text
+			if Result.count = 0  then
+				Result := Void
+			end
+		end
 
+	extra_width: INTEGER
+			-- Extra width on the size.
 feature -- Status setting
 
 	set_default_minimum_size is
-		-- Resize to a default size.
+		-- Reset the button to its default minimum size.
 		local
 			fw: EV_FONT_IMP
 			w,h: INTEGER
@@ -139,21 +165,22 @@ feature -- Status setting
 			internal_set_minimum_size (w, h)
 		end
 
-	set_left_alignment is
-			-- Set the text of the button to left alignment.
+	align_text_left is
+			-- Set button `text' to be left aligned.
 		do
 			set_style (default_style + Bs_left)
 			invalidate
 		end
 
-	set_right_alignment is
-			-- Set the text of the button to right alignment.
+	align_text_right is
+			-- Set button `text' to be right aligned.
 		do
 			set_style(default_style + Bs_right)
 			invalidate
 		end
-	set_center_alignment is
-			-- Set the text of the button to center alignment.
+
+	align_text_center is
+			-- Set button `text' to be centered.
 		do
 			set_style(default_style + Bs_center)
 			invalidate
@@ -162,15 +189,15 @@ feature -- Status setting
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the widget.
+			-- Make `pix' the pixmap of the button.
 		do
 			{EV_PIXMAPABLE_IMP} Precursor (pix)
 			set_bitmap (pixmap_imp.bitmap)
 			set_default_minimum_size
 		end
 
-	unset_pixmap is
-			-- Remove the pixmap from the container
+	remove_pixmap is
+			-- Remove the buttons `pixmap'.
 		do
 			{EV_PIXMAPABLE_IMP} Precursor
 			unset_bitmap
@@ -178,7 +205,7 @@ feature -- Element change
 		end
 
 	set_text (txt: STRING) is
-			-- Set the window text
+			-- Set the button `text' to `txt'
 		do
 			{WEL_BITMAP_BUTTON} Precursor (txt)
 			set_default_minimum_size
@@ -213,7 +240,7 @@ feature {NONE} -- WEL Implementation
 	on_bn_clicked is
 			-- When the button is pressed
 		do
-			execute_command (Cmd_click, Void)
+			interface.press_actions.call ([])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -226,17 +253,13 @@ feature {NONE} -- WEL Implementation
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
+			-- Encapsulation of the SDK GetNextDlgTabItem
 		do
 			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
+			-- Encapsulation of the SDK GetNextDlgGroupItem.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
@@ -244,7 +267,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_x (lparam)
@@ -252,8 +275,8 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 	mouse_message_y (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- WEL_WINDOW. Normally, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
@@ -261,12 +284,16 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- WEL_WINDOW. Normally, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			cwin_show_window (hwnd, cmd_show)
 		end
+
+feature {EV_ANY_I}
+
+	interface: EV_BUTTON
 
 end -- class EV_BUTTON_IMP
 
@@ -285,3 +312,55 @@ end -- class EV_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.36  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.35.10.12  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.35.10.11  2000/01/27 19:30:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.35.10.10  2000/01/19 23:54:49  rogers
+--| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface, and selected interface from EV_BUTTON_I.
+--|
+--| Revision 1.35.10.9  2000/01/19 21:46:09  king
+--| Tidied up comments, removed untabbed spacing
+--|
+--| Revision 1.35.10.8  2000/01/18 23:03:32  rogers
+--| Redefined text from WEL_BITMAP_BUTTON to wel_text, and re-implemented text.
+--|
+--| Revision 1.35.10.7  2000/01/14 18:09:46  oconnor
+--| added comment
+--|
+--| Revision 1.35.10.6  2000/01/10 19:21:44  king
+--| Changed set_*_alignment to align_text_*.
+--|
+--| Revision 1.35.10.5  1999/12/30 18:42:13  king
+--| Commented out pixmap-size related functions.
+--|
+--| Revision 1.35.10.4  1999/12/22 18:56:41  rogers
+--| pixmap_size_ok has been removed, maximium_pixmap_width and maximum_pixmap_height have been implemented. unset_pixmap has been renamed to remove_pixmap.
+--|
+--| Revision 1.35.10.3  1999/12/22 17:51:56  rogers
+--| Removed the old command call when a button is clicked.
+--|
+--| Revision 1.35.10.2  1999/12/17 00:43:04  rogers
+--| Altered to fit in with the review branch. Some redefinitions required, make now takes an interface.
+--|
+--| Revision 1.35.10.1  1999/11/24 17:30:31  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.35.6.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

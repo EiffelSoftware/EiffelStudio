@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		" EiffelVision dynamic table. Invisible container that allows%
@@ -48,7 +50,6 @@ feature -- Status report
 			-- Are children laid out in rows?
 			-- False by default
 		require
-			exists: not destroyed
 		do
 			Result := implementation.is_row_layout
 		end
@@ -58,7 +59,6 @@ feature -- Status report
 			-- layout, or a number of row if column
 			-- layout
 		require
-			exists: not destroyed
 		do
 			Result := implementation.finite_dimension
 		ensure
@@ -72,7 +72,6 @@ feature -- Status setting
 			-- layout, or number of row if column
 			-- layout.
 		require
-			exists: not destroyed
 			positive_number: a_number > 0
 		do
 			implementation.set_finite_dimension (a_number)
@@ -81,7 +80,6 @@ feature -- Status setting
 	set_row_layout is
 			-- Lay the children out in rows.
 		require
-			exists: not destroyed
 		do
 			implementation.set_row_layout (True)
 		ensure
@@ -91,7 +89,6 @@ feature -- Status setting
 	set_column_layout is
 			-- Lay the children out in columns.
 		require
-			exists: not destroyed
 		do
 			implementation.set_row_layout (False)
 		ensure
@@ -104,7 +101,6 @@ feature -- Status setting
 			-- horizontal layout mode only height is set to be the same
 			-- as the tallest one.
 --		require
---			exists: not destroyed
 --		do
 --			implementation.set_free_size
 --		end
@@ -113,7 +109,6 @@ feature -- Status setting
 --			-- Set width of items to be the same as the widest one
 --			-- and height as the tallest one.
 --		require
---			exists: not destroyed
 --		do
 --			implementation.set_same_size
 --		end 
@@ -125,7 +120,6 @@ feature -- Measurement
 --			-- of row column and the first item in each column, and the
 --			-- bottom edge of row column and the last item in each column
 --		require
----			exists: not destroyed
 --		do
 --			Result:= implementation.margin_height
 ---		ensure
@@ -137,7 +131,6 @@ feature -- Measurement
 --			-- of row column and the first item in each row , and the
 --			-- right edge of row column and the last item in each row
 ---		require
---			exists: not destroyed
 --		do
 --			Result:= implementation.margin_width
 --		ensure
@@ -147,7 +140,6 @@ feature -- Measurement
 --	spacing: INTEGER is
 --			-- Spacing between items
 --		require
---			exists: not destroyed
 ---		do
 ---			Result:= implementation.spacing
 --		ensure
@@ -161,7 +153,6 @@ feature -- Resizing
 --			-- of row column and the first item in each column, and the
 --			-- bottom edge of row column and the last item in each column.
 --		require
---			exists: not destroyed
 --			not_negative_margin_height: new_margin_height >= 0
 --		do
 --			implementation.set_margin_height (new_margin_height)
@@ -174,7 +165,6 @@ feature -- Resizing
 --			-- of row column and the first item in each row , and the
 --			-- right edge of row column and the last item in each row.
 --		require
---			exists: not destroyed
 --			not_negative_margin_width: new_margin_width >= 0
 --		do
 --			implementation.set_margin_width (new_margin_width)
@@ -185,7 +175,6 @@ feature -- Resizing
 --	set_spacing (new_spacing: INTEGER) is
 --			-- Set spacing between items to `new_spacing'.
 --		require
---			exists: not destroyed
 --			Not_spacing_negative: new_spacing >= 0
 --		do
 --			implementation.set_spacing (new_spacing)
@@ -224,3 +213,28 @@ end -- class EV_DYNAMIC_TABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.2  2000/01/27 19:30:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.1  1999/11/24 17:30:51  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

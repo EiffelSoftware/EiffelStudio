@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision tool-bar radio button. An exclusive%
@@ -13,51 +15,34 @@ inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON
 		redefine
 			implementation,
-			make_with_text,
-			make
+			create_implementation
 		end
 
 create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all,
-	make_with_pixmap,
-	make_with_pixmap_and_all
-
-feature {NONE} -- Initialization
-
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_TOOL_BAR_RADIO_BUTTON_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_TOOL_BAR_RADIO_BUTTON_IMP! implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
+	default_create,
+	make_with_text
 
 feature -- Status Setting
 
 	set_peer (peer: EV_TOOL_BAR_RADIO_BUTTON) is
 			-- Put in same group as peer
 		require
-			exists: not destroyed
 		do
 			implementation.set_peer (peer)
 		ensure
 			implementation.is_peer (peer)
 		end
 
-feature -- Implementation
+
+feature {EV_ANY_I} -- Implementation
+
+	create_implementation is
+			-- Create implementation of tool bar radio button.
+		do
+			create {EV_TOOL_BAR_RADIO_BUTTON_IMP} implementation.make (Current)
+		end
+
+feature {EV_ANY_I, EV_RADIO}-- Implementation
 
 	implementation: EV_TOOL_BAR_RADIO_BUTTON_I
 			-- Platform dependent access.
@@ -79,3 +64,34 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.4.4  2000/02/01 20:15:01  king
+--| Removed interface clutter, changed export clause of implementation so it can be used by radio group
+--|
+--| Revision 1.4.4.3  2000/01/27 19:30:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.4.2  2000/01/26 19:26:54  rogers
+--| Altered to comply with the major vision2 changes. removed make and make_with_text as they are both inherited from ev_tool_bar_button. Added create implementation.
+--|
+--| Revision 1.4.4.1  1999/11/24 17:30:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/04 23:10:52  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

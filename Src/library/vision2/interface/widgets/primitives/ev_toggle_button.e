@@ -1,12 +1,9 @@
 indexing
 	description: 
-		"EiffelVision toggle button. It looks and acts like%
-		% a button, but is always in one of two states,%
-		%alternated by a click. Toggle button may be%
-		%depressed, and when clicked again, it will pop back%
-		%up. Click again, and it will pop back down."
+		"Eiffel Vision toggle button. Button that toggles between one of two%N%
+		%states (raised and depressed) each time it is pressed."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "toggle, buttonm"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -16,132 +13,67 @@ class
 inherit
 	EV_BUTTON
 		redefine
-			make, make_with_text, implementation
+			implementation,
+			create_implementation
 		end
 	
 create
-	make,
-	make_with_text
+	default_create,
+	make_with_text,
+	make_with_text_and_action
 	
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-		-- Empty button
-		do
-			!EV_TOGGLE_BUTTON_IMP!implementation.make
-			widget_make (par)
-		end	
-	
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Button with 'par' as parent and 'txt' as 
-			-- text label
-		do
-			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (txt)
-			widget_make (par)
-		end			
-		
 feature -- Status report
 	
-	state: BOOLEAN is
-			-- Is toggle pressed.
+	is_selected: BOOLEAN is
+			-- Is button depressed? :)
 		require
-			exists: not destroyed
 		do
 			Result := implementation.state
+		ensure
+			bridge_ok: Result = implementation.state
 		end 
 	
 feature -- Status setting
 
-	set_state (flag: BOOLEAN) is
-			-- Set Current toggle on and set
-			-- pressed to True.
-		require
-			exists: not destroyed
+	enable_select is
+			-- Set `is_selected' `True'.
 		do
-			implementation.set_state (flag)
+			implementation.set_state (True)
 		ensure
-			correct_state: state = flag
+			is_selected: is_selected
+		end
+
+	disable_select is
+			-- Set `is_selected' `False'.
+		do
+			implementation.set_state (False)
+		ensure
+			not_is_selected: not is_selected
 		end
 
 	toggle is
-			-- Change the state of the toggel button to
-			-- opposite
-		require
-			exists: not destroyed
+			-- Change `is_selected'.
 		do
 			implementation.toggle
 		ensure
-			state_is_true: state = not old state
+			is_selected_changed: is_selected /= old is_selected
 		end
 	
-feature -- Event - command association
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the button is unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_unselect_command (cmd, arg)
-		end
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the button is selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_select_command (cmd, arg)
-		end
-	
-	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the button is toggled.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_toggle_command (cmd, arg)
-		end	
-
-feature -- Event -- removing command association
-	
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when the button is unselected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_unselect_commands
-		end
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when the button is selected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_select_commands
-		end
-
-	remove_toggle_commands is	
-			-- Empty the list of commands to be executed
-			-- when the button is toggled.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_toggle_commands
-		end	
-
 feature {NONE} -- Implementation
 
 	implementation: EV_TOGGLE_BUTTON_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create the implementation for the toggle button.
+		do
+			Create {EV_TOGGLE_BUTTON_IMP} implementation.make (Current)
+		end
 	
 end -- class EV_TOGGLE_BUTTON
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -155,4 +87,51 @@ end -- class EV_TOGGLE_BUTTON
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.4.8  2000/01/28 20:00:21  oconnor
+--| released
+--|
+--| Revision 1.17.4.7  2000/01/27 19:30:57  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.4.6  2000/01/20 18:49:50  oconnor
+--| added make_with_text_and_action to create clause
+--|
+--| Revision 1.17.4.5  2000/01/19 08:35:26  oconnor
+--| renamed select -> enable_selected
+--| renamed deselect -> disable_selected
+--| because of confict with reserved word select
+--|
+--| Revision 1.17.4.4  2000/01/19 08:31:45  oconnor
+--| renamed state -> is_selected
+--| added select and deselect.
+--| reformatted.
+--| added comments.
+--|
+--| Revision 1.17.4.3  2000/01/06 18:44:24  king
+--| Reverted toggle_actions to press_actions
+--|
+--| Revision 1.17.4.2  1999/12/23 01:39:34  king
+--| Implemented to fit in with new structure
+--|
+--| Revision 1.17.4.1  1999/11/24 17:30:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.15.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.15.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

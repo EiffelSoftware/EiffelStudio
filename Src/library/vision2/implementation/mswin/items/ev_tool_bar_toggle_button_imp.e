@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision toogle tool bar, mswindows implementation."
@@ -12,9 +14,13 @@ inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 		redefine
 			parent_imp
+		select
+			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
+		rename
+			interface as ev_tool_bar_button_imp_interface
 		redefine
 			type,
 			on_activate,
@@ -97,9 +103,10 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Is called by the menu when the item is activated.
 		do
 			if is_selected then
-				execute_command (Cmd_item_activate, Void)
+				--|FIXME Need to use the new events.
+				--execute_command (Cmd_item_activate, Void)
 			else
-				execute_command (Cmd_item_deactivate, Void)
+				--execute_command (Cmd_item_deactivate, Void)
 			end
 		end
 
@@ -120,3 +127,31 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.4.4  2000/01/27 19:30:09  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.4.3  2000/01/27 01:08:17  rogers
+--| Commented out the old event execution and added a FIXME.
+--|
+--| Revision 1.5.4.2  2000/01/21 20:28:07  rogers
+--| selected interface from EV_TOOL_BAR_TOGGLE_BUTTON_I and renamed interface from EV_TOOL_BAR_BUTTON_IMP to ev_tool_bar_button_imp_interface.
+--|
+--| Revision 1.5.4.1  1999/11/24 17:30:17  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -55,7 +55,7 @@ sub update_string
 	$a = $_[0];
 	$a =~ s/EiffelVision:/EiffelVision2:/;
 	$a =~ s/1986-1998/1986-1999/;
-	$a =~ s/--\|/--!/;
+#	$a =~ s/--\|/--!/;
 	$a =~ s/!!/create /;
 	$a =~ s/create  /create /;
 	$a =~ s/Windows Eiffel Library/EiffelVision2/;

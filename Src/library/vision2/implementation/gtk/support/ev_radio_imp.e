@@ -9,11 +9,11 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_RADIO_IMP [G -> EV_ANY]
+	EV_RADIO [G -> EV_ITEM]
 
 feature -- Access
 
-	group: EV_RADIO_GROUP_IMP
+	group: EV_RADIO_GROUP
 			-- Current group of the item
 
 feature -- Status report
@@ -59,7 +59,7 @@ feature -- Element change
 	set_peer (peer: G) is
 			-- Put in same group as peer.
 		local
-			grp: EV_RADIO_GROUP_IMP
+			grp: EV_RADIO_GROUP
 			peer_imp: like Current
 		do
 			peer_imp ?= peer.implementation
@@ -69,7 +69,7 @@ feature -- Element change
 			if peer_imp.group /= Void then
 				set_group (peer_imp.group)
 			else
-				!! grp.make
+				create grp.make
 				set_group (grp)
 				peer_imp.set_group (grp)
 			end
@@ -79,9 +79,9 @@ feature -- Element change
 		deferred
 		end
 
-feature {EV_RADIO_GROUP_IMP} -- Implementation
+feature {EV_RADIO_GROUP} -- Implementation
 
-	on_unselect (an_item: EV_RADIO_IMP [EV_ANY]) is
+	on_unselect (an_item: EV_RADIO [G]) is
 			-- Sets button state to flag when the item is selected.
 		deferred
 		end

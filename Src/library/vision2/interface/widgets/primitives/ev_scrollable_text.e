@@ -1,3 +1,4 @@
+--| FIXME Not for release
 indexing
 	description: 
 	"EiffelVision scrollable text area. To query multiple lines of text from the user."

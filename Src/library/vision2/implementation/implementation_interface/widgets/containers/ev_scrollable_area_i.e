@@ -1,9 +1,6 @@
 indexing
-
-	description: 
-		"EiffelVision scrollable area, implementation interface."
+	description: "EiffelVision scrollable area. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -11,154 +8,78 @@ deferred class
 	EV_SCROLLABLE_AREA_I
 	
 inherit
-	EV_CONTAINER_I
+	EV_VIEWPORT_I
 
 feature -- Access
 
 	horizontal_step: INTEGER is
-			-- Step of the horizontal scrolling
-			-- ie : the user clicks on a horizontal arrow
-		require
-			exists: not destroyed
+			-- Number of pixels scrolled up or down when user clicks
+			-- an arrow on the horizontal scrollbar.
 		deferred
-		ensure
-			positive_result: Result >= 0
-		end
-
-	horizontal_leap: INTEGER is
-			-- Leap of the horizontal scrolling
-			-- ie : the user clicks on the horizontal scroll bar
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			positive_result: Result >= 0
 		end
 
 	vertical_step: INTEGER is
-			-- Step of the vertical scrolling
-			-- ie : the user clicks on a vertical arrow
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			positive_result: Result >= 0
-		end
-
-	vertical_leap: INTEGER is
-			-- Leap of the vertical scrolling
-			-- ie : the user clicks on the vertical scroll bar
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			positive_result: Result >= 0
-		end
-
-	horizontal_value: INTEGER is
-			-- Current position of the horizontal scroll bar
-		require
-			exists: not destroyed
+			-- Number of pixels scrolled left or right when user clicks
+			-- an arrow on the vertical scrollbar.
 		deferred
 		end
 
-	vertical_value: INTEGER is
-			-- Current position of the vertical scroll bar
-		require
-			exists: not destroyed
+	is_horizontal_scrollbar_visible: BOOLEAN is
+			-- Should horizontal scrollbar be displayed?
 		deferred
 		end
 
-	horizontal_minimum: INTEGER is
-			-- Minimal position on the horizontal scroll bar
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	vertical_minimum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	horizontal_maximum: INTEGER is
-			-- Maximal position on the horizontal scroll bar
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	vertical_maximum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		require
-			exists: not destroyed
+	is_vertical_scrollbar_visible: BOOLEAN is
+			-- Should vertical scrollbar be displayed?
 		deferred
 		end
 
 feature -- Element change
 
-	set_horizontal_step (value: INTEGER) is
-			-- Make `value' the new horizontal step.
+	set_horizontal_step (a_step: INTEGER) is
+			-- Set `horizontal_step' to `a_step'.
 		require
-			exists: not destroyed
-			positive_value: value >= 0
+			a_step_positive: a_step > 0
 		deferred
 		ensure
-			value_set: horizontal_step = value
+			assigned: horizontal_step = a_step
 		end
 
-	set_vertical_step (value: INTEGER) is
-			-- Make `value' the new vertical step.
+	set_vertical_step (a_step: INTEGER) is
+			-- Set `vertical_step' to `a_step'.
 		require
-			exists: not destroyed
-			positive_value: value >= 0
+			a_step_positive: a_step > 0
 		deferred
 		ensure
-			value_set: vertical_step = value
+			assigned: vertical_step = a_step
 		end
 
-	set_horizontal_leap (value: INTEGER) is
-			-- Make `value' the new horizontal leap.
-		require
-			exists: not destroyed
-			positive_value: value >= 0
+	show_horizontal_scrollbar is
+			-- Display horizontal scrollbar.
 		deferred
 		ensure
-			value_set: horizontal_leap = value
+			shown: is_horizontal_scrollbar_visible
 		end
 
-	set_vertical_leap (value: INTEGER) is
-			-- Make `value' the new vertical leap.
-		require
-			exists: not destroyed
-			positive_value: value >= 0
+	hide_horizontal_scrollbar is
+			-- Do not display horizontal scrollbar.
 		deferred
 		ensure
-			value_set: vertical_leap = value
+			hidden: not is_horizontal_scrollbar_visible
 		end
 
-	set_horizontal_value (value: INTEGER) is
-			-- Make `value' the new horizontal value where `value' is given in percentage.
-			-- As this feature use and integer approximation, the post-condition is not
-			-- always verified.
-		require
-			exists: not destroyed
+	show_vertical_scrollbar is
+			-- Display vertical scrollbar.
 		deferred
 		ensure
---			value_set: horizontal_value = value
+			shown: is_vertical_scrollbar_visible
 		end
 
-	set_vertical_value (value: INTEGER) is
-			-- Make `value' the new vertical value where `value' is given in percentage.
-			-- As this feature use and integer approximation, the post-condition is not
-			-- always verified.
-		require
-			exists: not destroyed
+	hide_vertical_scrollbar is
+			-- Do not display vertical scrollbar.
 		deferred
 		ensure
---			value_set: vertical_value = value
+			hidden: not is_vertical_scrollbar_visible
 		end
 
 end -- class EV_SCROLLABLE_AREA_I
@@ -178,3 +99,38 @@ end -- class EV_SCROLLABLE_AREA_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.5  2000/02/04 04:09:08  oconnor
+--| released
+--|
+--| Revision 1.4.6.4  2000/01/29 01:05:01  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.4.6.3  2000/01/28 19:30:14  brendel
+--| Revision.
+--| Now inherits from EV_VIEWPORT and adds the scrollbars to the viewable area.
+--|
+--| Revision 1.4.6.2  2000/01/27 19:30:02  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:30:10  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.3  1999/11/04 23:10:42  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

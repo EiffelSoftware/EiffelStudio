@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision split area. Mswindows implementation."
 	status: "See notice at end of class"
@@ -100,7 +102,7 @@ feature -- Access
 	is_splitting: BOOLEAN
 			-- Is the user currently moving the split ?
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
 	minimum_position: INTEGER is
@@ -195,7 +197,7 @@ feature -- Element change
 			notify_change (2 + 1)
 		end
 
-	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do
@@ -325,7 +327,7 @@ feature {NONE} -- WEL Implementation
 				-- Then, we create the brush
 			!! log.make (2, 2, 2, 1, 1, $c)
 			!! bitmap.make_indirect (log)
-			!! Result.make_by_pattern (bitmap)
+			!! Result.make_with_pattern (bitmap)
 		end
 
 	on_wm_erase_background (wparam: INTEGER) is
@@ -385,3 +387,25 @@ end -- class EV_SPLIT_AREA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.25  2000/02/14 11:40:43  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.24.10.2  2000/01/27 19:30:22  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.24.10.1  1999/11/24 17:30:28  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.24.6.4  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

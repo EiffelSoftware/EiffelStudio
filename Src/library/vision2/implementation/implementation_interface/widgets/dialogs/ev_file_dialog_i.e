@@ -8,129 +8,64 @@ deferred class
 	EV_FILE_DIALOG_I
 
 inherit
-	EV_SELECTION_DIALOG_I
+	EV_STANDARD_DIALOG_I
 
 feature -- Access
 
-	title: STRING is
-			-- Title of the current dialog
-		require
-			exists: not destroyed
+	file_name: STRING is
+			-- Full name of currently selected file including path.
 		deferred
 		end
 
-	file: STRING is
-			-- Path and name of the currently selected file
-			-- (including path).
-		require
-			exists: not destroyed
+	filter: STRING is
+			-- Filter currently applied to file list.
+		deferred
+		end
+
+	start_directory: STRING is
+			-- Base directory where browsing will start.
 		deferred
 		end
 
 feature -- Status report
 
-	file_name: STRING is
-			-- Name of the currently selected file
-			-- (without path).
-		require
-			exists: not destroyed
+	file_title: STRING is
+			-- `file_name' without its path.
 		deferred
 		end
 
-	directory: STRING is
-			-- Path of the current selected file
-		require
-			exists: not destroyed
+	file_path: STRING is
+			-- Path of `file_name'.
 		deferred
-		end
-
-	selected_filter: STRING is
-			-- Currently selected filter
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	selected_filter_name: STRING is
-			-- Name of the currently selected filter
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Status setting
-
-	select_filter (filter: STRING) is
-			-- Select `filter' in the list of filter.
-		require
---			valid_filter: filters.hae (filter)
-		deferred
-		ensure
---			filter_index_set: filter_index = index
-		end
-
-	select_filter_by_name (name: STRING) is
-			-- Select the filter called `name'.
-		require
---			valid_filter: filters.hae (filter)
-		deferred
-		ensure
---			filter_index_set: filter_index = index
 		end
 
 feature -- Element change
 
-	set_title (a_title: STRING) is
-			-- Make `a_title' the new title of the current dialog.
+	set_filter (a_filter: STRING) is
+			-- Set `a_filter' as new filter.
 		require
-			exists: not destroyed
-			valid_title: a_title /= Void
+			a_filter_not_void: a_filter /= Void
 		deferred
+		ensure
+			assigned: filter.is_equal (a_filter)
 		end
 
-	set_file (name: STRING) is
-			-- Make the file named `name' the new selected file.
+	set_file_name (a_name: STRING) is
+			-- Make `a_name' the selected file.
 		require
-			exists: not destroyed
-			valid_name: name /= Void
+			a_name_not_void: a_name /= Void
 		deferred
+		ensure
+			assigned: file_name.is_equal (a_name)
 		end
 
-	set_base_directory (path: STRING) is
-			-- Make `path' the base directory in detrmining files
-			-- to be displayed.
+	set_start_directory (a_path: STRING) is
+			-- Make `a_path' the base directory.
 		require
-			exists: not destroyed
-			valid_path: path /= Void
+			a_path_not_void: a_path /= Void
 		deferred
-		end
-
-	set_default_extension (extension: STRING) is
-			-- Make `extension' the new default extension if no
-			-- filter is selected.
-			-- This extension will be automatically added to the
-			-- file name if the user fails to type an extension.
-		require
-			exists: not destroyed
-			valid_extension: extension /= Void
-		deferred
-		end
-
-	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
-			-- Set the file type combo box.
-			-- `filter_names' is an array of string containing
-			-- the filter names and `filter_patterns' is an
-			-- array of string containing the filter patterns.
-			-- Example:
-			--	filter_names = <<"Text file", "All file">>
-			--	filter_patterns = <<"*.txt", "*.*">>
-		require
-			filter_names_not_void: filter_names /= Void
-			filter_patterns_not_void: filter_patterns /= Void
-			same_count: filter_names.count = filter_patterns.count
-			no_void_name: not filter_names.has (Void)
-			no_void_pattern: not filter_patterns.has (Void)
-		deferred
+		ensure
+			assigned: start_directory.is_equal (a_path)
 		end
 
 end -- class EV_FILE_DIALOG_I
@@ -150,3 +85,40 @@ end -- class EV_FILE_DIALOG_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:36  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.5  2000/02/04 04:07:01  oconnor
+--| released
+--|
+--| Revision 1.5.6.4  2000/01/27 22:03:11  brendel
+--| Improved contracts.
+--| Removed feature default_extension.
+--| Added features file_path and file_title.
+--|
+--| Revision 1.5.6.3  2000/01/27 19:29:59  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.2  2000/01/27 02:40:11  brendel
+--| Revised. Now has attributes: file_name, start_directory, default_extension,
+--| filter.
+--|
+--| Revision 1.5.6.1  1999/11/24 17:30:08  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/04 23:10:39  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

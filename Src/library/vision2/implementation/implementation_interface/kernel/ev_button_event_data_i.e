@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision button event data. Implementation interface";
 	status: "See notice at end of class";
@@ -18,8 +20,8 @@ inherit
 
 feature -- Access	
 
-	widget: EV_WIDGET
-			-- The mouse pointer was over this widget 
+	source: EV_PICK_AND_DROPABLE
+			-- The mouse pointer was over this event-source 
 			-- when event happened
 
 	x: INTEGER
@@ -76,11 +78,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_all (wid: EV_WIDGET; a_x, a_y, a_button: INTEGER;
+	set_all (src: EV_PICK_AND_DROPABLE; a_x, a_y, a_button: INTEGER;
 			shift, control, first, second, third: BOOLEAN) is
 				-- Set all the parameters of the data.
 		do
-			set_widget (wid)
+			set_source (src)
 			set_x (a_x)
 			set_y (a_y)
 			set_button (a_button)
@@ -91,10 +93,10 @@ feature -- Element change
 			set_third_button (third)
 		end
 
-	set_widget (wid: EV_WIDGET) is
+	set_source (src: EV_PICK_AND_DROPABLE) is
 			-- Make `wid' the new widget.
 		do
-			widget := wid
+			source := src
 		end
 
 	set_x (value: INTEGER) is
@@ -173,3 +175,31 @@ end -- class EV_BUTTON_EVENT_DATA_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.4  2000/01/27 19:29:54  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.3  1999/12/17 18:52:32  rogers
+--| EV_PICK_AND_DROPABLE replaces EV_PND_SOURCE.
+--|
+--| Revision 1.6.6.2  1999/12/09 01:26:24  oconnor
+--| king: changed widget: EV_WIDGET to source: EV_PND_SOURCE
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:04  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

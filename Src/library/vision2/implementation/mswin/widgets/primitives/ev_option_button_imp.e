@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision option button, implementation interface";
@@ -9,8 +11,10 @@ class
 
 inherit
 	EV_OPTION_BUTTON_I
-		select
-			set_text
+		redefine
+			interface
+--		select
+--			set_text
 		end
 
 	EV_MENU_HOLDER_IMP
@@ -18,21 +22,23 @@ inherit
 			add_menu_ok
 		redefine
 			add_menu,
-			remove_menu
+			remove_menu,
+			interface
 		end
 
 	EV_BUTTON_IMP
 		rename
-			set_text as internal_set_text,
+--			set_text as internal_set_text,
 			add_click_command as add_popup_command
-		undefine
-			set_right_alignment,
-			set_left_alignment,
-			set_center_alignment
+--		undefine
+--			align_text_center,
+--			align_text_left,
+--			align_text_right
 		redefine
 			on_bn_clicked,
 			default_style,
-			make
+			make,
+			interface
 		end
 
 	WEL_RASTER_OPERATIONS_CONSTANTS
@@ -67,17 +73,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the option button with `par' as parent.
 		do
-			{EV_BUTTON_IMP} Precursor
+			{EV_BUTTON_IMP} Precursor (an_interface)
 			!! menu_container.make_track
 			extra_width := 40
 		end
 
 feature -- Access
 
-	menu: EV_MENU_IMP 
+	menu: EV_MENU
 		-- The menu contained in the option button.
 
 feature -- Status report
@@ -95,7 +101,7 @@ feature -- Status setting
 		local
 			m: WEL_MENU
 		do
-			internal_set_text (menu.text)
+			set_text (menu.text)
 				-- Assign `menu.text' back to menu.
 			selected_item := Void
 				-- No item selected.
@@ -106,7 +112,7 @@ feature -- Event association
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
 		do
-			internal_set_text (sitem.text)
+			set_text (sitem.text)
 			if sitem.pixmap_imp /= Void then
 				set_pixmap (sitem.pixmap)
 			end
@@ -172,18 +178,18 @@ feature {NONE} -- Implementation
 			!! inrect.make (5, 5, width - 5, height - 6)
 
 			-- If sensitive, we draw everything normaly.
-			if not insensitive then
+			if is_sensitive then
 				-- We draw a little rectangle
 				!! inrect.make (width - 25, height // 2 - 5, width - 10, height // 2 + 5)
 				routine_draw_edge (dc, inrect, Edge_raised, Bf_rect + Bf_soft)
 				-- We draw the rest of the button
 				inrect.set_rect (5, 5, width - 30, height - 6)
 				if pixmap_imp /= Void and text /= "" then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				end
@@ -197,13 +203,13 @@ feature {NONE} -- Implementation
 				-- We draw the rest
 				if pixmap_imp /= Void and text /= "" then
 					!! inrect.make (5, 5, width - 30, height - 6)
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					tx := inrect.left 
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2) 
 					draw_insensitive_text (dc, text, tx, ty)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					tx := inrect.left
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2)
@@ -217,7 +223,7 @@ feature {NONE} -- Implementation
 	menu_container: WEL_MENU
 			-- Actual WEL container for the menu
 
-	add_menu (menu_imp: EV_MENU_IMP) is
+	add_menu (menu_imp: EV_MENU) is
 			-- Add `a_menu' into container.
 		local
 			t: STRING
@@ -227,16 +233,18 @@ feature {NONE} -- Implementation
 				menu_imp.set_text ("")
 			end
 			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
-			internal_set_text (menu_imp.text)
+			set_text (menu_imp.text)
 			menu := menu_imp
 		end 
 
-	remove_menu (menu_imp: EV_MENU_IMP) is
+	remove_menu (menu_imp: EV_MENU) is
 			-- Remove the menu from the option button.
 		do
 			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
-			internal_set_text ("")
+			remove_text
 		end
+
+	interface: EV_OPTION_BUTTON
 
 feature {NONE} -- WEL implementation
 
@@ -255,7 +263,7 @@ feature {NONE} -- WEL implementation
 		do
 			composite ?= parent_imp
 			menu_container.show_track (absolute_x, absolute_y + height // 2 - 10, composite)
-			execute_command (Cmd_click, Void)
+			--| FIXME execute_command (Cmd_click, Void)
 		end
 
 end -- class EV_OPTION_BUTTON_IMP
@@ -275,3 +283,44 @@ end -- class EV_OPTION_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.6.8  2000/02/04 19:06:38  rogers
+--| Replaced all occurances of pixmap_imp.internal_dc with pixmap_imp.dc.
+--|
+--| Revision 1.17.6.7  2000/02/03 17:21:37  brendel
+--| Small changes since internal_* features have been renamed.
+--|
+--| Revision 1.17.6.6  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.17.6.5  2000/01/27 19:30:28  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.6.4  2000/01/25 17:37:53  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.17.6.3  2000/01/10 19:21:44  king
+--| Changed set_*_alignment to align_text_*.
+--|
+--| Revision 1.17.6.2  1999/12/17 00:36:18  rogers
+--| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc. Make now takes an interface.
+--|
+--| Revision 1.17.6.1  1999/11/24 17:30:33  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.2.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

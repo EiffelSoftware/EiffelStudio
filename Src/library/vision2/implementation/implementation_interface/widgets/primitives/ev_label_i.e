@@ -1,9 +1,7 @@
 indexing
-
 	description: 
-		"EiffelVision label, implementation interface."
+		"Eiffel Vision label. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -12,23 +10,24 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
+		redefine
+			interface
+		end
 	
 	EV_TEXTABLE_I
+		redefine
+			interface
+		end
 
-	EV_FONTABLE_I
+feature {EV_ANY_I} -- implementation
 
-feature {NONE} -- Initialization
-
- 	make_with_text (txt: STRING) is
-			-- Create a widget with `txt' as text.
-		require
-			valid_string: txt /= Void
-		deferred
-        end	
+	interface: EV_LABEL	
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 	
 end --class EV_LABEL_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -42,4 +41,41 @@ end --class EV_LABEL_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.7  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.13.6.6  2000/01/27 19:30:04  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.5  2000/01/18 19:38:19  oconnor
+--| removed inheritance of fontable
+--|
+--| Revision 1.13.6.4  2000/01/18 07:30:36  oconnor
+--| formatting and labels
+--|
+--| Revision 1.13.6.3  1999/12/17 18:10:31  rogers
+--| Redefined interface to be of more refined type. make_with_text is no longer
+--| required.
+--|
+--| Revision 1.13.6.2  1999/12/09 03:15:06  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.13.6.1  1999/11/24 17:30:12  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

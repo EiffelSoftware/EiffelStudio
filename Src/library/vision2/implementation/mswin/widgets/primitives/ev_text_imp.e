@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision text area. %
 				  %Mswindows implementation."
@@ -10,10 +12,17 @@ class
 
 inherit
 	EV_TEXT_I
+		rename
+			interface as ev_text_i_interface
+		undefine
+			set_default_minimum_size
+		end
 		
 	EV_TEXT_COMPONENT_IMP
-		undefine
-			set_default_options
+		rename
+			interface as ev_text_component_imp_interface
+		select
+			ev_text_component_imp_interface
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -26,7 +35,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
-			shown as displayed,
+			shown as is_displayed,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
 			unselect as deselect_all,
@@ -34,7 +43,14 @@ inherit
 			selection_end as wel_selection_end,
 			line as wel_line,
 			line_index as wel_line_index,
-			current_line_number as wel_current_line_number
+			current_line_number as wel_current_line_number,
+			width as wel_width,
+			height as wel_height,
+			item as wel_item,
+			move as move_to,
+			caret_position as internal_caret_position,
+			set_caret_position as internal_set_caret_position,
+			enabled as is_sensitive
 		undefine
 			window_process_message,
 			remove_command,
@@ -66,21 +82,15 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create an empty text area.
 		do
-			make_with_text ("")
-		end
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `txt' as label.
-		do
-			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
+			base_make (an_interface)
+			wel_make (default_parent, "", 0, 0, 0, 0,0)
 		end
 
 feature -- Access
@@ -156,7 +166,7 @@ feature -- Basic operation
 	put_new_line is
 			-- Go to the beginning of the following line.
 		do
-			if position = text.count+1 then
+			if caret_position = text.count+1 then
 				append_text ("%R%N")
 			else
 				insert_text ("%R%N")
@@ -279,7 +289,7 @@ feature {NONE} -- WEL Implementation
 			default_colors: EV_DEFAULT_COLORS
 		do
 			!! default_colors
-			cwin_enable_window (item, True)
+			cwin_enable_window (wel_item, True)
 			set_background_color (default_colors.Color_read_write)
 		end
 
@@ -289,7 +299,7 @@ feature {NONE} -- WEL Implementation
 			default_colors: EV_DEFAULT_COLORS
 		do
 			!! default_colors
-			cwin_enable_window (item, False)
+			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
 		end
 
@@ -342,6 +352,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE} -- interface
+
+	interface: EV_TEXT
+
 end -- class EV_TEXT_IMP
 
 --|----------------------------------------------------------------
@@ -359,3 +373,28 @@ end -- class EV_TEXT_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.32  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.31.4.3  2000/01/27 19:30:30  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.31.4.2  1999/12/30 02:01:16  rogers
+--| Changes to fit in with the new work.
+--|
+--| Revision 1.31.4.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.30.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

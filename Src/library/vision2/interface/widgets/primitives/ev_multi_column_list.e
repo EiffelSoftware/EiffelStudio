@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list. Contains a list of items%
@@ -15,45 +17,20 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation,
-			make
+			implementation
 		end
 
-	EV_ITEM_HOLDER
+	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		undefine
+			create_action_sequences
 		redefine
-			implementation,
-			item_type
+			implementation
 		end
 
 create
-	make_with_size,
-	make_with_text
+	default_create
 
 feature {NONE} -- Initialization
-
-	make_with_size (par: EV_CONTAINER; col_nb: INTEGER) is         
-			-- Create a list widget with `par' as
-			-- parent and `col_nb' columns.
-			-- By default, a list allow only one selection.
-		require
-			valid_parent: parent_needed implies par /= Void
-			valid_nb: col_nb > 0
-		do
-			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_size (col_nb)
-			widget_make (par)
-		end
-
-	make_with_text (par: EV_CONTAINER; txt: ARRAY [STRING]) is         
-			-- Create a list widget with `par' as parent,
-			-- and as many columns as the number of titles
-			-- given.
-		require
-			valid_parent: parent_needed implies par /= Void
-			valid_text: txt /= Void
-		do
-			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_text (txt)
-			widget_make (par)
-		end
 
 feature -- Access
 
@@ -68,7 +45,6 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the list.
 		require
-			exists: not destroyed
 		do
 			Result := implementation.columns
 		end
@@ -77,7 +53,6 @@ feature -- Access
 			-- Item which is currently selected in a single
 			-- selection mode.
 		require
-			exists: not destroyed
 			single_selection: not is_multiple_selection
 		do
 			Result := implementation.selected_item
@@ -90,7 +65,6 @@ feature -- Access
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
 		require
-			exists: not destroyed
 		do
 			Result := implementation.selected_items
 		end
@@ -100,7 +74,6 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.selected
 		end
@@ -109,7 +82,6 @@ feature -- Status report
 			-- True if the user can choose several items
 			-- False otherwise
 		require
-			exist: not destroyed
 		do
 			Result := implementation.is_multiple_selection
 		end
@@ -118,7 +90,6 @@ feature -- Status report
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		require
-			exist: not destroyed
 		do
 			Result := implementation.title_shown
 		end
@@ -126,7 +97,6 @@ feature -- Status report
 	get_column_width (column: INTEGER): INTEGER is
 			-- Width of column `column' in pixel.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		do
 			Result := implementation.get_column_width (column)
@@ -134,30 +104,27 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (index: INTEGER) is
+	select_item (index_to_select: INTEGER) is
 			-- Select an item at the one-based `index' the list.
 		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_large_enough: index_to_select > 0
+			index_small_enough: index_to_select <= count
 		do
-			implementation.select_item (index)
+			implementation.select_item (index_to_select)
 		end
 
-	deselect_item (index: INTEGER) is
+	deselect_item (index_to_deselect: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_large_enough: index_to_deselect > 0
+			index_small_enough: index_to_deselect <= count
 		do
-			implementation.deselect_item (index)
+			implementation.deselect_item (index_to_deselect)
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		require
-			exists: not destroyed
 		do
 			implementation.clear_selection
 		end
@@ -166,7 +133,6 @@ feature -- Status setting
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		require
-			exists: not destroyed
 		do
 			implementation.set_multiple_selection	
 		end
@@ -175,7 +141,6 @@ feature -- Status setting
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
 		require
-			exists: not destroyed
 		do
 			implementation.set_single_selection
 		end
@@ -183,7 +148,6 @@ feature -- Status setting
 	show_title_row is
 			-- Show the row of the titles.
 		require
-			exists: not destroyed
 		do
 			implementation.show_title_row
 		end
@@ -191,7 +155,6 @@ feature -- Status setting
 	hide_title_row is
 			-- Hide the row of the titles.
 		require
-			exists: not destroyed
 		do
 			implementation.hide_title_row
 		end
@@ -201,7 +164,6 @@ feature -- Status setting
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
 		require
-			exists: not destroyed
 			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (0, column)
@@ -212,7 +174,6 @@ feature -- Status setting
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
 		require
-			exists: not destroyed
 			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (2, column)
@@ -223,7 +184,6 @@ feature -- Status setting
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
 		require
-			exists: not destroyed
 			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (1, column)
@@ -234,7 +194,6 @@ feature -- Element change
 	set_column_title (txt: STRING; column: INTEGER) is
 			-- Make `txt' the title of the one-based `column'.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		do
 			implementation.set_column_title (txt, column)
@@ -243,7 +202,6 @@ feature -- Element change
 	set_columns_title (txt: ARRAY [STRING]) is         
 			-- Make `txt' the new titles of the columns.
 		require
-			exists: not destroyed
 			text_not_void: txt /= Void
 			valid_text_length: txt.count <= columns
 		do
@@ -253,7 +211,6 @@ feature -- Element change
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		do
 			implementation.set_column_width (value, column)
@@ -262,7 +219,6 @@ feature -- Element change
 	set_columns_width (value: ARRAY [INTEGER]) is         
 			-- Make `value' the new values of the columns width.
 		require
-			exists: not destroyed
 			value_not_void: value /= Void
 			valid_value_length: value.count <= columns
 		do
@@ -272,70 +228,8 @@ feature -- Element change
 	set_rows_height (value: INTEGER) is
 			-- Make`value' the new height of all the rows.
 		require
-			exists: not destroyed
 		do
 			implementation.set_rows_height (value)
-		end
-
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_select_command (cmd, arg)
-		end
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_unselect_command (cmd, arg)
-		end
-
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a column is clicked.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_column_click_command (cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been selected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_select_commands
-		end
-
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been unselected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_unselect_commands
-		end
-
-	remove_column_click_commands is
-			-- Empty the list of commands to be executed
-			-- when a column is clicked.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_column_click_commands
 		end
 
 feature -- Implementation
@@ -353,9 +247,9 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	item_type: EV_MULTI_COLUMN_LIST_ROW is
-			-- Gives a type.
+	create_implementation is
 		do
+			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
 		end
 
 end -- class EV_MULTI_COLUMN_LIST
@@ -375,3 +269,44 @@ end -- class EV_MULTI_COLUMN_LIST
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.24  2000/02/14 11:40:52  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.23.6.7  2000/02/03 17:15:36  brendel
+--| Removed old event features.
+--| Corrected error in create_implementation.
+--|
+--| Revision 1.23.6.6  2000/02/02 23:53:34  king
+--| Removed redundant initialization routines
+--|
+--| Revision 1.23.6.5  2000/01/29 01:05:04  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.23.6.4  2000/01/27 19:30:55  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.23.6.3  1999/12/17 19:36:51  rogers
+--| redefined implementation to be a a more refined type. Changed index wherever it appeared as a parameter.
+--|
+--| Revision 1.23.6.2  1999/12/01 19:10:02  rogers
+--| Changed inheritance structure from EV_ITEM_HOLDER to EV_ITEM_LIST
+--|
+--| Revision 1.23.6.1  1999/11/24 17:30:54  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.23.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.23.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision selection dialog, implementation interface."
 	author: ""
@@ -17,7 +19,6 @@ feature -- Event - command association
 			-- the "OK" button is pressed.
 			-- If there is no "OK" button, the event never occurs.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -27,7 +28,6 @@ feature -- Event - command association
 			-- the "Cancel" button is pressed.
 			-- If there is no "Cancel" button, the event never occurs.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
@@ -38,7 +38,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "OK" button is pressed.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -46,7 +45,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "Cancel" button is pressed.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -67,3 +65,28 @@ end -- class EV_SELECTION_DIALOG_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:00  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:09  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.3  1999/11/04 23:10:40  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

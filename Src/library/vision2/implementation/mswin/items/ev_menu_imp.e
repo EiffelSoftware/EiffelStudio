@@ -1,8 +1,7 @@
+--| FIXME Not for release
 indexing
-	description: 
-		"EiffelVision menu box. Mswindows implementation."
+	description: "EiffelVision menu. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,113 +10,46 @@ class
 	
 inherit
 	EV_MENU_I
-
-	EV_MENU_ITEM_HOLDER_IMP
-
-	WEL_MENU
-		rename
-			insert_separator as wel_insert_separator
+		redefine
+			interface
 		end
 
-creation
-	make,
-	make_with_text
+	EV_MENU_ITEM_IMP
+		undefine
+			destroy
+		redefine
+			interface,
+			make,
+			initialize
+		end
+
+	EV_MENU_ITEM_LIST_IMP
+		redefine
+			interface,
+			initialize
+		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_text (label: STRING) is
-			-- Create an empty menu with `label' as label. 
+	make (an_interface: like interface) is
 		do
-			make
-			set_text (label)
-		end	
-
-feature -- Access
-
-	text: STRING
-			-- Label of the current menu
-
-	parent_imp: EV_MENU_HOLDER_IMP
-			-- EV parent of the current menu
-
-	index: INTEGER is
-			-- Index of the current item.
-		do
-			Result := parent_imp.internal_get_index (Current)
+			Precursor (an_interface)
+			wel_make
+			make_id
 		end
 
-	menu: WEL_MENU is
-			-- Wel menu used when the item is a sub-menu.
+	initialize is
 		do
-			Result := Current
+			{EV_MENU_ITEM_IMP} Precursor
+			{EV_MENU_ITEM_LIST_IMP} Precursor
 		end
 
-	item_handler: EV_MENU_ITEM_HANDLER_IMP is
-			-- The handler of the item.
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.item_handler
-			else
-				Result := Void
-			end
-		end
+feature {EV_ANY_I} -- Implementation
 
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is Current object destroyed?  
-		do
-			Result := not exists
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy actual object.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_menu (Current)
-				parent_imp := Void
-			end
-			interface.remove_implementation
-			interface := Void
-			remove_children
-			text := Void
-			-- After, it will be collected
-		end
-
-feature -- Element change
-
-	set_text (str:STRING) is
-			-- Set `text' to `str'
-		do
-			text := str
-			if item_handler /= Void then
-				item_handler.update_menu
-			end
-		end
-
-	set_parent (par: EV_MENU_HOLDER) is
-			-- Make `par' the new parent of the item.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_menu (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_menu (Current)
-			end
-		end
-
-feature -- Event association
-
-	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
-			-- `sitem' has been selected'
-			-- Called only when it has a parent.
-		do
-			parent_imp.on_selection_changed (sitem)
-		end
+	interface: EV_MENU	
 
 end -- class EV_MENU_IMP
 
@@ -136,3 +68,39 @@ end -- class EV_MENU_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.10.6  2000/02/05 02:26:29  brendel
+--| Revised.
+--| Implemented using EV_MENU_ITEM and EV_MENU_ITEM_LIST.
+--|
+--| Revision 1.13.10.5  2000/02/04 01:05:41  brendel
+--| Rearranged inheritance structure in compliance with revised interface.
+--| Nothing has been implemented yet!
+--|
+--| Revision 1.13.10.4  2000/02/03 17:16:59  brendel
+--| Commented out old vision related implementation. Needs implementing.
+--|
+--| Revision 1.13.10.3  2000/01/27 19:30:31  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.10.2  1999/12/17 00:21:00  rogers
+--| Altered to fit in with the review branch. Make now takes an interface.
+--|
+--| Revision 1.13.10.1  1999/11/24 17:30:36  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

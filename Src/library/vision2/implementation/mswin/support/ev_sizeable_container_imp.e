@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" A class for MS-Windows to simulate the resizing of%
@@ -22,17 +24,24 @@ inherit
 
 feature -- Access
 
+	in_minimum_width: BOOLEAN
+	in_minimum_height: BOOLEAN
+
 	minimum_width: INTEGER is
 			-- Minimum width of the window.
 			-- We recompute it if necessary.
 		do
+			if not in_minimum_width then
+			in_minimum_width := True
 			if is_minwidth_recomputation_needed then
+				set_minwidth_recomputation_needed (False)
 				if is_minheight_recomputation_needed then
-					compute_minimum_size
 					set_minheight_recomputation_needed (False)
+					compute_minimum_size
 					compute_minimum_width
 				end
-				set_minwidth_recomputation_needed (False)
+			end
+			in_minimum_width := False
 			end
 			Result := internal_minimum_width
 		end
@@ -41,6 +50,8 @@ feature -- Access
 			-- Minimum height of the window.
 			-- We recompute it if necessary.
 		do
+			if not in_minimum_height then
+			in_minimum_height := True
 			if is_minheight_recomputation_needed then
 				if is_minwidth_recomputation_needed then
 					compute_minimum_size
@@ -49,6 +60,8 @@ feature -- Access
 					compute_minimum_height
 				end
 				set_minheight_recomputation_needed (False)
+			end
+			in_minimum_height := False
 			end
 			Result := internal_minimum_height
 		end
@@ -69,14 +82,14 @@ feature -- Basic operations
 					if managed then
 						if changed then 
 							parent_imp.notify_change (Nc_minwidth)
-						elseif displayed then
+						elseif is_displayed then
 							move_and_resize (x, y, width, height, True)
 						end
 					else
 						move_and_resize (x, y, width.max (value), height, True)
 					end
 				end
-			elseif displayed then
+			elseif is_displayed then
 				move_and_resize (x, y, width, height, True)
 			end
 		end
@@ -95,14 +108,14 @@ feature -- Basic operations
 					if managed then
 						if changed then 
 							parent_imp.notify_change (Nc_minheight)
-						elseif displayed then
+						elseif is_displayed then
 							move_and_resize (x, y, width, height, True)
 						end
 					else
 						move_and_resize (x, y, width, height.max (value), True)
 					end
 				end
-			elseif displayed then
+			elseif is_displayed then
 				move_and_resize (x, y, width, height, True)
 			end
 		end
@@ -143,7 +156,7 @@ feature -- Basic operations
 							parent_imp.notify_change (Nc_minwidth)
 						elseif h_cd then
 							parent_imp.notify_change (Nc_minheight)
-						elseif displayed then
+						elseif is_displayed then
 							move_and_resize (x, y, width, height, True)
 						end
 					else
@@ -159,7 +172,7 @@ feature -- Basic operations
 					if managed then
 						if w_cd then
 							parent_imp.notify_change (Nc_minwidth)
-						elseif displayed then
+						elseif is_displayed then
 							move_and_resize (x, y, width, height, True)
 						end
 					else
@@ -175,7 +188,7 @@ feature -- Basic operations
 					if managed then
 						if h_cd then
 								parent_imp.notify_change (Nc_minheight)
-						elseif displayed then
+						elseif is_displayed then
 							move_and_resize (x, y, width, height, True)
 						end
 					else
@@ -184,7 +197,7 @@ feature -- Basic operations
 				end
 
 			-- The user did set everything already.
- 			elseif displayed then
+ 			elseif is_displayed then
  				move_and_resize (x, y, width, height, True)
  			end
 		end
@@ -204,9 +217,10 @@ feature -- Basic operations
 			when Nc_minwidth then
 				if not is_minwidth_recomputation_needed then
 					set_minwidth_recomputation_needed (True)
-					if displayed then
+					if is_show_requested then
 						compute_minimum_width
 						set_minwidth_recomputation_needed (False)
+					--|FIXME was like this before.
 					else
 						if parent_imp /= Void then
 							parent_imp.notify_change (Nc_minwidth)
@@ -216,7 +230,7 @@ feature -- Basic operations
 			when Nc_minheight then
 				if not is_minheight_recomputation_needed then
 					set_minheight_recomputation_needed (True)
-					if displayed then
+					if is_show_requested then
 						compute_minimum_height
 						set_minheight_recomputation_needed (False)
 					else
@@ -232,7 +246,7 @@ feature -- Basic operations
 				if mw_not_needed and mh_not_needed then
 					set_minwidth_recomputation_needed (True)
 					set_minheight_recomputation_needed (True)
-					if displayed then
+					if is_show_requested then
 						compute_minimum_size
 						set_minwidth_recomputation_needed (False)
 						set_minheight_recomputation_needed (False)
@@ -243,7 +257,7 @@ feature -- Basic operations
 					end
 				elseif mw_not_needed then
 					set_minwidth_recomputation_needed (True)
-					if displayed then
+					if is_displayed then
 						compute_minimum_width
 						set_minwidth_recomputation_needed (False)
 					else
@@ -253,7 +267,7 @@ feature -- Basic operations
 					end
 				elseif mh_not_needed then
 					set_minheight_recomputation_needed (True)
-					if displayed then
+					if is_displayed then
 						compute_minimum_height
 						set_minheight_recomputation_needed (False)
 					else
@@ -289,17 +303,9 @@ feature -- Basic operations
 			-- Recompute the minimum_width of the object.
 			-- Should call only set_internal_minimum_width.
 		do
-			if displayed then
+			if is_displayed then
 				move_and_resize (x, y, width, height, True)
 			end
-		end
-
-feature -- Deferred
-
-	displayed: BOOLEAN is
-			-- Is the window displayed on the screen?
-			-- ie : is parent and current widget shown.
-		deferred
 		end
 
 end -- class EV_CONTAINER_SIZEABLE_IMP
@@ -319,3 +325,34 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.10.5  2000/02/07 18:27:04  rogers
+--| Replaced all calls to displayed by is_displayed.
+--|
+--| Revision 1.9.10.4  2000/01/27 19:30:16  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.10.3  2000/01/26 22:35:06  rogers
+--| Altered minimum_width and minimum_height so they will not be called recursively.
+--|
+--| Revision 1.9.10.2  1999/12/17 01:07:45  rogers
+--| Altered to fit in with the review branch. Shown replaced with is_show_requested.
+--|
+--| Revision 1.9.10.1  1999/11/24 17:30:22  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

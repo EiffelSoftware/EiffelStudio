@@ -1,7 +1,5 @@
 indexing
-	description:
-		" EiffelVision scrollbarbar. A gauge usely used to %
-		% scrollbar an area. Gtk implementation."
+	description: "Eiffel Vision scrollbar. GTK+ implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,105 +9,64 @@ deferred class
 
 inherit
 	EV_SCROLL_BAR_I
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
 		redefine
-			adjustment_widget
+			interface,
+			maximum,
+			set_maximum,
+			set_range,
+			reset_with_range
 		end
 
 feature -- Access
 
-	value: INTEGER is
-			-- Current value of the gauge
-		do
-			Result := c_gtk_scrollbar_value (widget)
-		end
-
-	step: INTEGER is
-			-- Step of the scrollbar
-			-- ie : the user clicks on an arrow
-		do
-			Result := c_gtk_range_step (widget)
-		end
-
-	minimum: INTEGER is
-			-- Minimum value
-		do
-			Result := c_gtk_range_minimum (widget)
-		end
-
 	maximum: INTEGER is
-			-- Maximum value
+			-- Highest value of the scroll bar.
+			--| Internally, maximum is set higher for Windows compatibility,
+			--| because on windows, scrollbars can reach maximum by
+			--| dragging the bar and on GTK it is maximum - leap.
 		do
-			Result := c_gtk_range_maximum (widget)
+			Result := Precursor - leap
 		end
 
-	leap: INTEGER is
-			-- Leap of the scrollbar.
-			-- ie : the user clicks on the scrollbar bar
+	set_maximum (a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum'.
+			--| We cannot call precursor because it has wrong postconditions.
 		do
-			Result := c_gtk_range_leap (widget)
+			if maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-	adjustment_widget: POINTER is
-			-- Pointer to the widgets asjustment struct
+	set_range (a_minimum, a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
 		do
-			Result := gtk_range_get_adjustment (widget)
+			if minimum /= a_minimum or else maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
+	reset_with_range (a_minimum, a_maximum: INTEGER) is
+			-- Re-initialize with `a_maximum' and `a_minimum'.
+			-- Set `value' to `a_minimum'.
 		do
-			set_value (value + step)
+			if minimum /= a_minimum or else maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-	leap_backward is
-			-- Decrease the current value of one leap.
-		do
-			set_value (value - step)
-		end
+feature {EV_ANY_I} -- Implementation
 
-feature -- Element change
-
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
-		do
-			c_gtk_scrollbar_set_value (widget, val)
-		end
-
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			c_gtk_range_set_step (widget, val)
-		end
-
-	set_minimum (val: INTEGER) is
-			-- Make `val' the new minimum.
-		do
-			c_gtk_range_set_minimum (widget, val)
-		end
-
-	set_maximum (val: INTEGER) is
-			-- Make `val' the new maximum.
-		do
-			c_gtk_range_set_maximum (widget, val)
-		end
-
-	set_leap (val: INTEGER) is
-			-- Make `val' the new leap.
-		do
-			c_gtk_range_set_leap (widget, val)
-		end
-
-	set_page_size (val: INTEGER) is
-			-- Set the size of a page.
-			-- To be done on Windows before it can be available
-			-- to the user.
-		do
-			c_gtk_scrollbar_set_page_size (widget, value)
-		end
+	interface: EV_SCROLL_BAR
 
 end -- class EV_SCROLL_BAR_IMP
 
@@ -128,3 +85,38 @@ end -- class EV_SCROLL_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.6  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.4.6.5  2000/02/02 01:03:20  brendel
+--| Fixed small bug in maximum, where the widget could only reach maximum - leap,
+--| where it now can reach maximum.
+--|
+--| Revision 1.4.6.4  2000/01/31 21:35:58  brendel
+--| Implemented in compliance with revised EV_GAUGE.
+--|
+--| Revision 1.4.6.3  2000/01/27 19:29:48  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.2  2000/01/15 01:25:36  king
+--| Implemented to fit in with new structure
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:58  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

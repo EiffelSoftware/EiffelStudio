@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" This class gives the attributes and the features needed to handle%
@@ -15,15 +17,7 @@ feature {NONE} -- Initialization
 			-- Create the `command_list' and the `arguments_list' with a length
 			-- of command_count.
 		do
-			!! command_list.make (1, command_count)
 		end
-
-feature {NONE} -- Access
-
-	command_list: ARRAY [LINKED_LIST [EV_INTERNAL_COMMAND]]
-			-- The list of the commands asociated with the widget
-			-- The command are sort by event_id. For this ids,
-			-- See the class EV_EVENT_CONSTANTS
 
 feature {NONE} -- Status report
 
@@ -31,11 +25,6 @@ feature {NONE} -- Status report
 			-- Does the object has at least one command on the 
 			-- event given by `event_id'.
 		do
-			if command_list = Void then
-				Result := False
-			else
-				Result := (command_list @ event_id) /= Void
-			end
 		end
 
 feature {EV_PND_SOURCE_IMP} -- Element change
@@ -47,26 +36,7 @@ feature {EV_PND_SOURCE_IMP} -- Element change
 		require
 			valid_command: cmd /= Void
 			valid_id: event_id >= 1 and event_id <= command_count
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			com: EV_INTERNAL_COMMAND
 		do
-			-- First, we create the lists if they don't exists.
-			if command_list = Void then
-				initialize_list
-			end
-
-			-- Then, we create the list linked to the given
-			-- `event_id' if it doesn't exists already. 
-			if (command_list @ event_id) = Void then
-				!! list.make
-				command_list.force (list, event_id)
-			end
-
-			-- Finally, we add the command and the argument
-			-- to the list.
-			!! com.make (cmd, arg)
-			(command_list @ event_id).extend (com)
 		end
 
 	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
@@ -75,25 +45,7 @@ feature {EV_PND_SOURCE_IMP} -- Element change
 		require
 			valid_command: cmd /= Void
 			valid_id: event_id >= 1 and event_id <= command_count
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
 		do
-			if command_list /= Void then
-				list := command_list @ event_id
-				if list /= Void and then not list.empty then
-					from
-						list.start
-					until
-						list.after
-					loop
-						if list.item.command = cmd then
-							list.remove
-						else
-							list.forth
-						end
-					end
-				end
-			end
 		end
 
 	remove_command (event_id: INTEGER) is
@@ -103,38 +55,6 @@ feature {EV_PND_SOURCE_IMP} -- Element change
 		require
 			valid_id: event_id >= 1 and event_id <= command_count
 		do
-			if command_list /= Void then
-				if (command_list @ event_id) /= Void then
-					command_list.force (Void, event_id)
-				end
-				if command_list.all_cleared then
-					command_list := Void
-				end
-			end
-		end
-
-feature -- Basic operation
-
-	execute_command (event_id: INTEGER; data: EV_EVENT_DATA) is
-			-- Execute the command that correspond to the event
-			-- `event_id'.
-		require
-			valid_id: event_id >= 1 and event_id <= command_count
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			i: INTEGER
-		do
-			if command_list /= Void and then (command_list @ event_id) /= Void then
-				list := (command_list @ event_id)
-				from
-					i := 1
-				until
-					i > list.count
-				loop
-					(list @ i).execute (data)
-					i := i + 1
-				end
-			end
 		end
 
 feature -- Deferred features
@@ -161,3 +81,29 @@ end -- class EV_EVENT_HANDLER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.17  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.16.10.3  2000/01/27 19:30:14  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.16.10.2  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.16.10.1  1999/11/24 17:30:20  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.16.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

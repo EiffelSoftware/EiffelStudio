@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "List of default colors used by the system.%
 		% Gtk implementation."
@@ -8,7 +9,11 @@ class
 	EV_DEFAULT_COLORS_IMP
 
 inherit
-	EV_GTK_EXTERNALS
+	C_GTK_WIDGET
+
+	C_GTK_STYLE_STRUCT
+
+	C_GDK_COLOR_STRUCT
 
 feature -- Access
 
@@ -16,18 +21,28 @@ feature -- Access
 			-- Color usely used for the background of dialogs
 		local
 			r, g, b: INTEGER
-		do			
-			c_gtk_style_default_bg_color ($r, $g, $b)
-			create Result.make_rgb (r, g, b)
+			color: POINTER
+		do
+			color := gtk_style_struct_bg (gtk_widget_get_default_style)
+			r := gdk_color_struct_red (color)
+			g := gdk_color_struct_green (color)
+			b := gdk_color_struct_blue (color)
+			create Result
+			Result.set_rgb_with_16_bit (r, g, b)
 		end
 
 	Color_dialog_fg: EV_COLOR is
 			-- Color usely used for the foreground of dialogs
 		local
 			r, g, b: INTEGER
+			color: POINTER
 		do
-			c_gtk_style_default_fg_color ($r, $g, $b)
-			create Result.make_rgb (r, g, b)
+			color := gtk_style_struct_fg (gtk_widget_get_default_style)
+			r := gdk_color_struct_red (color)
+			g := gdk_color_struct_green (color)
+			b := gdk_color_struct_blue (color)
+			create Result
+			Result.set_rgb_with_16_bit (r, g, b)
 		end
 
 	Color_read_only: EV_COLOR is
@@ -77,3 +92,40 @@ end -- class EV_DEFAULT_COLORS_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.6  2000/02/04 04:53:00  oconnor
+--| released
+--|
+--| Revision 1.7.6.5  2000/01/27 19:29:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.4  1999/12/17 23:16:58  oconnor
+--| update for new names from EV_COLOR
+--|
+--| Revision 1.7.6.3  1999/12/08 17:42:27  oconnor
+--| removed more inherited externals
+--|
+--| Revision 1.7.6.2  1999/12/01 17:37:11  oconnor
+--| migrating to new externals
+--|
+--| Revision 1.7.6.1  1999/11/24 17:29:47  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.3  1999/11/04 23:10:27  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision untitled window. Window without the overlapped title."
 	status: "See notice at end of class"
@@ -6,136 +7,107 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_UNTITLED_WINDOW_IMP
+	EV_WINDOW_IMP
 
 inherit
-	EV_UNTITLED_WINDOW_I
+	EV_WINDOW_I
+		redefine
+			interface
+		end
 
 	EV_CONTAINER_IMP
 		undefine
 			set_default_colors,
-			x,
-			y,
-			add_child_ok,
-			add_child,
---			child_packing_changed,
-			is_child,
-			child_added,
-			remove_child,
-			set_parent,
-			show
+			x_position,
+			y_position,
+			replace
 		redefine
-			destroy_signal_callback
+			minimum_width,
+			minimum_height,
+			set_minimum_width,
+			set_minimum_height,
+			interface,
+			initialize,
+			destroy,
+			make
 		end
 
 create
-	make,
-	make_root,
-	make_with_owner,
-	make_with_position,
-	make_root_with_position,
-	make_with_owner_and_position
+	make
 
 feature -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- create the untitled window.
+			-- FIXME better comment
 		do
-			widget := gtk_window_new (GTK_WINDOW_POPUP)
+			base_make (an_interface)
+
+			set_c_object (C.gtk_window_new (C.Gtk_window_popup_enum))
 
 			-- set the events to be handled by the window
-			c_gtk_widget_set_all_events (widget)
+			C.c_gtk_widget_set_all_events (c_object)
 
 			-- Make it appear where the mouse is.
-			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_CENTER)
-
-			initialize
+			-- FIXME Why? This is a decision for the window manager not us!
+			-- gtk_window_set_position (GTK_WINDOW (c_object), WINDOW_POSITION_CENTER)
 			set_title ("")
 			-- set title also realizes the window.
 		end
 
-	make_with_owner (par: EV_UNTITLED_WINDOW) is
-			-- Create a window with `par' as parent.
-			-- The life of the window will depend on
-			-- the one of `par'.
-		local
-			par_imp: EV_UNTITLED_WINDOW_IMP
-		do
-			par_imp ?= par.implementation
-
-			make
-
-			-- Attach the window to `par'.
-			gtk_window_set_transient_for (widget, par_imp.widget)
-
-		end
-
-	make_with_position (pos: INTEGER) is
-			-- create the untitled window with `pos'
-			-- as the first position.
-			-- choices are:
-			--	- WINDOW_POSITION_NONE
-			--	- WINDOW_POSITION_CENTER
-			--	- WINDOW_POSITION_MOUSE (by default).
-		do
-			make
-			gtk_window_set_position (GTK_WINDOW (widget), pos)
-		end
-
-	make_with_owner_and_position (par: EV_UNTITLED_WINDOW; pos: INTEGER) is
-			-- create the untitled window with `pos'
-			-- as the first position.
-			-- choices are:
-			--	- WINDOW_POSITION_NONE
-			--	- WINDOW_POSITION_CENTER
-			--	- WINDOW_POSITION_MOUSE (by default).
-		do
-			make_with_owner (par)
-			gtk_window_set_position (GTK_WINDOW (widget), pos)
-
-		end
-
-	make_root_with_position (pos: INTEGER) is
-			-- create the untitled window with `pos'
-			-- as the first position.
-			-- choices are:
-			--	- WINDOW_POSITION_NONE
-			--	- WINDOW_POSITION_CENTER
-			--	- WINDOW_POSITION_MOUSE (by default).
-		do
-			make_root
-			gtk_window_set_position (GTK_WINDOW (widget), pos)
-		end
-
 feature  -- Access
 
-	x: INTEGER is
+	item: EV_WIDGET is
+			-- Current item
+		local
+			p: POINTER
+			o: EV_ANY_IMP
+		do
+			p := C.gtk_container_children (hbox)
+			if p/= Default_pointer then
+				p := C.g_list_nth_data (p, 0)
+				if p /= Default_pointer then
+					o := eif_object_from_c (p)
+					Result ?= o.interface
+				end
+			end
+		end
+
+	x_position: INTEGER is
 			-- Horizontal position relative to parent
 		do
-			Result := c_gtk_window_x (widget) 
+			Result := C.c_gtk_window_x (c_object) 
 		end
 
-	y: INTEGER is
+	y_position: INTEGER is
 			-- Vertical position relative to parent
 		do
-			Result := c_gtk_window_y (widget) 
+			Result := C.c_gtk_window_y (c_object) 
 		end	
 
- 	maximum_width: INTEGER is
+ 	maximum_width: INTEGER --is
 			-- Maximum width that application wishes widget
 			-- instance to have
-		do
-			Result := c_gtk_window_maximum_width (widget) 
-		end	
+		--do
+		--	Result := C.c_gtk_window_maximum_width (c_object)
+		--	if Result = -1 then
+		--		Result := minimum_width
+		--	end 
+		--end
+
+	minimum_width: INTEGER	
 	
-	maximum_height: INTEGER is
+	maximum_height: INTEGER --is
 			-- Maximum height that application wishes widget
 			-- instance to have
-		do
-			Result := c_gtk_window_maximum_height (widget)
-			io.putint (Result)
-			io.new_line
-		end
+		--do
+		--	Result := C.c_gtk_window_maximum_height (c_object)
+		--	if Result = -1 then
+		--		Result := minimum_height
+		--	end
+		--end
+
+	minimum_height: INTEGER
 
 	title: STRING is
 			-- Application name to be displayed by
@@ -143,9 +115,12 @@ feature  -- Access
 		local
 			p : POINTER
 		do
-			p := c_gtk_window_title(widget)
-			create Result.make (0)
-			Result.from_c (p)
+			p := C.c_gtk_window_title (c_object)
+			if p /= Default_pointer then
+				create Result.make_from_c (p)
+			else
+				create Result.make (0)
+			end
 		end
 
         widget_group: EV_WIDGET is
@@ -158,243 +133,254 @@ feature  -- Access
 			check
 					not_yet_implemented: False
 			end
-		end 
+		end
+
+	menu_bar: EV_MENU_BAR
+			-- Horizontal bar at top of client area that contains menu's.
+	
+	status_bar: EV_STATUS_BAR
+			-- Horizontal bar at bottom of client area used for showing messages
+			-- to the user.
+
+	is_modal: BOOLEAN 
+			-- Must the window be closed before application continues?
+
+	blocking_window: EV_WINDOW
+			-- Window that `Current' is a transient for.
 
 feature -- Status setting
+
+	block is
+			-- Wait until window is closed by the user.
+		local
+			app: EV_APPLICATION
+		do
+			app := (create {EV_ENVIRONMENT}).application
+			from until not is_show_requested loop
+				app.sleep (100)
+				app.process_events
+			end
+		end
+
+	enable_modal is
+			-- Set `is_modal' to `True'.
+		do
+			is_modal := True
+			C.gtk_window_set_modal (c_object, True)
+		end
+
+	disable_modal is
+			-- Set `is_modal' to `False'.
+		do
+			is_modal := False
+			C.gtk_window_set_modal (c_object, False)
+		end
+
+	set_blocking_window (a_window: EV_WINDOW) is
+			-- Set as transient for `a_window'.
+		local
+			win_imp: EV_WINDOW_IMP
+		do
+			blocking_window := a_window
+			win_imp ?= a_window.implementation
+			C.gtk_window_set_transient_for (c_object, win_imp.c_object)
+		end
+
+
+	set_x_position (a_x: INTEGER) is
+			-- Set horizontal offset to parent to `a_x'.
+		do
+			set_position (a_x, y_position)
+		end
+
+	set_y_position (a_y: INTEGER) is
+			-- Set vertical offset to parent to `a_y'.
+		do
+			set_position (x_position, a_y)
+		end
+
+	set_position (a_x, a_y: INTEGER) is
+			-- Set horizontal offset to parent to `a_x'.
+			-- Set vertical offset to parent to `a_y'.
+		do
+			C.gtk_widget_set_uposition (c_object, a_x, a_y)
+		end
+
+	set_width (a_width: INTEGER) is
+			-- Set the horizontal size to `a_width'.
+		do
+			set_size (a_width, height)
+		end
+
+	set_height (a_height: INTEGER) is
+			-- Set the vertical size to `a_height'.
+		do
+			set_size (width, a_height)
+		end
+
+	set_size (a_width, a_height: INTEGER) is
+			-- Set the horizontal size to `a_width'.
+			-- Set the vertical size to `a_height'.
+		do
+			set_bounds (x_position, y_position, a_width, a_height)
+		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
-			gtk_window_set_policy (widget, False, False,False)
+			C.gtk_window_set_policy (c_object, 0, 0, 0)
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
 		do
-			gtk_window_set_policy (widget, True, True, False)
+			C.gtk_window_set_policy (c_object, 1, 1, 0)
 		end
 
-	set_modal (flag: BOOLEAN) is
-			-- Make the window modal if `True' or
-			-- non-modal if `False'.
+	destroy is
+			-- Render `Current' unuseable.
 		do
---			c_gtk_window_set_modal(widget, flag)
-			gtk_window_set_modal (widget, flag)
-		end
-
-	show is
-			-- Make widget visible on the screen. (default)
-			-- redefined because a window can have no parent
-		require else
-			exists: not destroyed
-		do
-			gtk_widget_show (widget)
-		end
-
-	destroy_signal_callback is
-			-- Called when the gtk widget is destroyed
-			-- Remove reference to destroyed widget
-		local
-			a: ANY
-			s: STRING
-		do
-			if (has_close_command = True) then
-				s := "destroy"
-				a := s.to_c
-				gtk_signal_emit_stop_by_name (widget, $a)
-			else
-				widget := default_pointer
-				interface.remove_implementation
-			end
+			Precursor
+	-- FIXME		if (has_close_command = True) then
+	--			s := "destroy"
+	--			a := s.to_c
+	--			gtk_signal_emit_stop_by_name (c_object, $a)
+	--		else
+	--			widget := default_pointer
+	--		end
 		end
 
 feature -- Element change
+
+	replace (v: like item) is
+			-- Replace `item' with `v'.
+		local
+			w: EV_WIDGET_IMP
+			i: EV_WIDGET
+		do
+			i := item
+			if i /= Void then
+				w ?= i.implementation
+				check
+					item_has_implementation: w /= Void
+				end
+				C.gtk_container_remove (hbox, w.c_object)
+			end
+			if v /= Void then
+				w ?= v.implementation
+				C.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
+			end
+		end
 
 	set_maximum_width (max_width: INTEGER) is
 			-- Set `maximum_width' to `max_width'.
 		do
 			-- to be tested
-			gdk_window_set_hints(c_gdk_window_from_gtk_widget (widget), x, y, 0, 0, max_width, maximum_height, True)
+			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, minimum_height, max_width, maximum_height, 1)
+			maximum_width := max_width
 		end 
+
+	set_minimum_width (min_width: INTEGER) is
+			-- Set `minimum_width' to `min_width'.
+		do
+			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, min_width, minimum_height, maximum_width, maximum_height, 1)
+			minimum_width := min_width
+		end
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
 		do
 			-- to be tested
-			gdk_window_set_hints(c_gdk_window_from_gtk_widget (widget), x, y, 0, 0, maximum_width, max_height, True)
+			C.gdk_window_set_hints (C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, minimum_height, maximum_width, max_height, 1)
+			maximum_height := max_height
+		end
+
+	set_minimum_height (min_height: INTEGER) is
+			-- Set `minimum_height' to `min_height'.
+		do
+			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, min_height, maximum_width, maximum_height, 1)
+			minimum_height := min_height	
 		end
 
 	set_title (new_title: STRING) is
 			-- Set `title' to `new_title'.
-                local
-                        a: ANY
 		do
-			a := new_title.to_c	
-			gtk_window_set_title (widget, $a)
+			C.gtk_window_set_title (c_object, eiffel_to_c (new_title))
 
 			-- Give the gtk window a corresponding gdk window
-			gtk_widget_realize (widget)
-                end
+			C.gtk_widget_realize (c_object)
+		end
 
 	set_widget_group (group_widget: EV_WIDGET) is
 			-- Set `widget_group' to `group_widget'.
 		do
 			check
 				not_yet_implemented: False
-            		end
+			end
+		end
+
+	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
+			-- Set `menu_bar' to `a_menu_bar'.
+		local
+			mb_imp: EV_MENU_BAR_IMP
+		do
+			menu_bar := a_menu_bar
+			mb_imp ?= menu_bar.implementation
+			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
+			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
+		end
+
+	remove_menu_bar is
+			-- Set `menu_bar' to `Void'.
+		local
+			mb_imp: EV_MENU_BAR_IMP
+		do
+			if menu_bar /= Void then
+				mb_imp ?= menu_bar.implementation
+				C.gtk_container_remove (vbox, mb_imp.list_widget)
+			end
+			menu_bar := Void
+		end
+
+	set_status_bar (a_bar: EV_STATUS_BAR) is
+			-- Make `a_bar' the new `status_bar'.
+		local
+			sbar_imp: EV_STATUS_BAR_IMP
+		do
+			status_bar := a_bar
+			sbar_imp ?= a_bar.implementation
+			C.gtk_box_pack_end (vbox, sbar_imp.c_object, False, True, 0)
+		end
+
+	remove_status_bar is
+			-- Set `status_bar' to `Void'.
+		local
+			sbar_imp: EV_STATUS_BAR_IMP
+		do
+			if status_bar /= Void then
+				sbar_imp ?= status_bar.implementation
+				C.gtk_container_remove (vbox, sbar_imp.c_object)
+			end
+			status_bar := Void
 		end
 
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add `child_imp' in the window.
-		local
-			vbox_wid: POINTER
-		do
-			-- Create `vbox_widget' and `hbox_widget' if they are not yet created.
-			add_child_packing (child_imp)
-
-			-- Put the `vbox' into the current container. 
-			gtk_box_pack_end (hbox, child_imp.vbox_widget, True, True, 0)
-
-			-- Sets the resizing options.
-			child_packing_changed (child_imp) 
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove `child_imp' from the window.
-		do
-			gtk_container_remove (hbox, child_imp.vbox_widget)
-		end
-
-	set_parent (par: EV_WINDOW) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-
-				-- Attach the window to `par'.
-				gtk_window_set_transient_for (widget, parent_imp.widget)
-			end
-		end
-
-feature -- Assertion test
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to the window by testing if its hbox has
-			-- not child
-		do
-			Result := c_gtk_container_nb_children (hbox)= 0
-		end
-
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the window?
-			-- by testing if a_child is a child of its
-			-- hbox
-		do
-			if a_child.vbox_widget /= default_pointer then
-				Result := c_gtk_container_has_child (hbox, a_child.vbox_widget)
-			else
-				Result := c_gtk_container_has_child (hbox, a_child.widget)
-			end
-		end
-
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			if a_child.vbox_widget /= default_pointer then
-				Result := c_gtk_container_has_child (hbox, a_child.vbox_widget)
-			else
-				Result := c_gtk_container_has_child (hbox, a_child.widget)
-			end
-		end
-
-feature -- Event - command association
-
-	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-		local
-			ev_data: EV_EVENT_DATA		
-		do
-			!EV_EVENT_DATA!ev_data.make-- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "delete_event", cmd, arg, ev_data, 0, False, default_pointer)
-			has_close_command := True
-		end
-
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when the
-			-- widget is resized.
-		local
-			ev_data: EV_EVENT_DATA		
-		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 2, False, default_pointer)
-		end
-
-	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when the
-			-- widget is moved.
-		local
-			ev_data: EV_EVENT_DATA		
-		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 1, False, default_pointer)
-		end
-
-feature -- Event -- removing command association
-
-	remove_close_commands is
-			-- Empty the list of commands to be executed
-			-- when the window is closed.
-		do
-			has_close_command := False
-			remove_commands (widget, close_event_id)
-		end
-
-	remove_resize_commands is
-			-- Empty the list of commands to be executed
-			-- when the window is resized.
-		do
-			remove_commands (widget, resize_event_id)
-		end
-
-	remove_move_commands is
-			-- Empty the list of commands to be executed
-			-- when the widget is resized.
-		do
-			remove_commands (widget, move_event_id)
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-	
-	connect_to_application (exit_function, the_application, the_untitled_window: POINTER) is
-		local
-			i: INTEGER
-			a: ANY
-			s: string
-		do
-			-- connect delete and destroy events to exit signals
-			-- Temporary XXX!
-			create s.make (0)
-			s := "destroy"
-			a := s.to_c
-					
-			-- Connect the signal
-			i := c_gtk_signal_connect (widget, $a, exit_function, 
-						   the_application, the_untitled_window, 
-						   Default_pointer, Default_pointer,
-						   Default_pointer, 0, False, Default_pointer)
-			
---			-- What about delete signal?
---			s := "delete"
---			a ?= s.to_c
---			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
-		end
+--| FIXME we may need a set_transient_for feature
+--	set_parent (par: EV_TITLED_WINDOW) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		do
+--			if parent_imp /= Void then
+--				parent_imp := Void
+--			end
+--			if par /= Void then
+--				parent_imp ?= par.implementation
+--
+--				-- Attach the window to `par'.
+--				gtk_window_set_transient_for (c_object, parent_imp.c_object)
+--			end
+--		end
 
 feature {NONE} -- Implementation
 
@@ -404,14 +390,21 @@ feature {NONE} -- Implementation
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
+		local
+			scr: EV_SCREEN
 		do
-			vbox := gtk_vbox_new (False, 0)
-			gtk_widget_show (vbox)
-			gtk_container_add (GTK_CONTAINER (widget), vbox)
-			hbox := gtk_hbox_new (False, 0)
-			gtk_widget_show (hbox)
-			gtk_box_pack_end (vbox, hbox, True, True, 0)
+			Precursor
+			vbox := C.gtk_vbox_new (False, 0)
+			C.gtk_widget_show (vbox)
+			C.gtk_container_add (c_object, vbox)
+			hbox := C.gtk_hbox_new (False, 0)
+			C.gtk_widget_show (hbox)
+			C.gtk_box_pack_start (vbox, hbox, True, True, 0)
+			enable_motion_notify (c_object)
 
+			create scr
+			set_maximum_width (scr.width)
+			set_maximum_height (scr.height)
 		end
 
 	vbox: POINTER
@@ -421,41 +414,18 @@ feature {NONE} -- Implementation
 	hbox: POINTER
 			-- Horizontal box for the child
 
-feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
-
-	add_static_menu (menu: EV_STATIC_MENU_BAR_IMP) is
-			-- Add a static menu bar at the top of the window.
-		do
-			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
-		end
-
-feature {EV_STATUS_BAR_IMP} -- Implementation
-
-	add_status_bar (status_bar: EV_STATUS_BAR_IMP) is
-			-- Add a status bar at the bottom of the window.
-		do
-			gtk_object_ref (hbox)
-			gtk_container_remove (vbox, hbox)
-			gtk_box_pack_end (vbox, status_bar.widget, False, True, 0)
-			gtk_box_pack_end (vbox, hbox, True, True, 0)
-			gtk_object_unref (hbox)
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	has_close_command: BOOLEAN
 			-- Did the user add a close command to the window?
 
-feature -- External
+feature {EV_ANY_I} -- Implementation
 
-	--c_gtk_window_set_hints (window: POINTER; wx, wy, minwid, minhght, maxwid, maxhght: INTEGER; flag: BOOLEAN) is
-	--	external
-	--		"C (GtkWidget *, gint, gint, gint, gint, gint, gint, gint) | %"gtk_eiffel.h%""
-	--	end
+	interface: EV_WINDOW
 
-end -- class EV_UNTITLED_WINDOW_IMP
+end -- class EV_WINDOW_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -469,4 +439,121 @@ end -- class EV_UNTITLED_WINDOW_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.4.2.2.28  2000/02/08 09:32:23  oconnor
+--| replaced put with replace
+--|
+--| Revision 1.12.4.2.2.27  2000/02/08 01:00:12  king
+--| Moved modality features from dialog to window
+--|
+--| Revision 1.12.4.2.2.26  2000/02/07 23:42:05  oconnor
+--| fixed ordering bug in set_menu_bar
+--|
+--| Revision 1.12.4.2.2.25  2000/02/04 21:24:54  king
+--| Added status bar features, removed old features add_static_menu and
+--| add_status_bar
+--|
+--| Revision 1.12.4.2.2.24  2000/02/04 04:48:03  oconnor
+--| released
+--|
+--| Revision 1.12.4.2.2.23  2000/02/03 22:57:17  brendel
+--| Added and implemented *menu_bar features.
+--|
+--| Revision 1.12.4.2.2.22  2000/01/28 17:41:21  oconnor
+--| removed obsolete features
+--|
+--| Revision 1.12.4.2.2.21  2000/01/27 19:29:44  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.4.2.2.20  2000/01/26 18:13:10  brendel
+--| Removed modal-related features.
+--|
+--| Revision 1.12.4.2.2.19  2000/01/25 00:19:44  oconnor
+--| removed old command stuff, use action sequences
+--|
+--| Revision 1.12.4.2.2.18  2000/01/22 01:34:51  oconnor
+--| added assignement attemt checks and null pointer checks
+--|
+--| Revision 1.12.4.2.2.17  2000/01/18 01:08:20  king
+--| Altered setting of max and min dimensions, needs redoing/omitting as hints
+--| are not definite
+--|
+--| Revision 1.12.4.2.2.16  1999/12/17 23:19:54  oconnor
+--| removed obsolete features from redefine
+--|
+--| Revision 1.12.4.2.2.15  1999/12/16 09:18:28  oconnor
+--| removed connect_to_application, added is_modal
+--|
+--| Revision 1.12.4.2.2.14  1999/12/15 23:48:09  oconnor
+--| redefine put to correctly put child inside hbox
+--|
+--| Revision 1.12.4.2.2.13  1999/12/13 20:01:49  oconnor
+--| commented out old command stuff
+--|
+--| Revision 1.12.4.2.2.12  1999/12/09 18:13:19  oconnor
+--| rename widget -> c_object
+--|
+--| Revision 1.12.4.2.2.11  1999/12/09 02:33:16  oconnor
+--| king: added enable_motion_notify call to initiailize
+--|
+--| Revision 1.12.4.2.2.10  1999/12/08 17:42:31  oconnor
+--| removed more inherited externals
+--|
+--| Revision 1.12.4.2.2.9  1999/12/07 19:16:04  brendel
+--| Ignore previous log message.
+--| Changed implementation of set_size to use set_bounds.
+--|
+--| Revision 1.12.4.2.2.8  1999/12/07 18:56:16  brendel
+--| Changed implementation of width and height to make it more compact.
+--| Improved contracts on set_bounds.
+--|
+--| Revision 1.12.4.2.2.7  1999/12/04 18:59:18  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.12.4.2.2.6  1999/12/03 00:51:12  brendel
+--| Changed c_gtk_widget_set_uposition to gtk_widget_set_uposition.
+--|
+--| Revision 1.12.4.2.2.5  1999/12/02 22:24:01  brendel
+--| Commented out features that are redefined in EV_WINDOW_IMP.
+--|
+--| Revision 1.12.4.2.2.4  1999/12/01 20:28:39  oconnor
+--| x is now x_position
+--|
+--| Revision 1.12.4.2.2.3  1999/12/01 01:02:33  brendel
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied
+--| on specific things like return value BOOLEAN instead of INTEGER.
+--|
+--| Revision 1.12.4.2.2.2  1999/11/30 23:15:34  oconnor
+--| commented out set_parent, parent is now done through GTK introspection
+--|
+--| Revision 1.12.4.2.2.1  1999/11/24 17:29:54  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.7  1999/11/23 22:58:31  oconnor
+--| added _enum suffix
+--|
+--| Revision 1.12.2.6  1999/11/17 01:53:04  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.12.2.5  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.12.2.4  1999/11/04 23:10:30  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.12.2.3  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

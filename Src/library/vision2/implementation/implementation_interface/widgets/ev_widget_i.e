@@ -1,6 +1,9 @@
 indexing
-	description: "EiffelVision widget, implementation interface."
+	description:
+		"Eiffel Vision widget, implementation interface.%N%
+		%See bridge pattern notes in ev_any.e"
 	status: "See notice at end of class"
+	keywords: "widget, component, control"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,181 +11,107 @@ deferred class
 	EV_WIDGET_I 
 
 inherit
-	EV_PND_SOURCE_I
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
 
-	EV_PND_TARGET_I
+feature -- Access
 
-feature {NONE} -- Initialization
-
-	make is
-			-- Create the widget.
+	parent: EV_CONTAINER is
+			-- Container widget that contains `Current'.
+			-- (Void if `Current' is not in a container)
 		deferred
 		end
 
-feature {EV_WIDGET} -- Initialization
-
-	widget_make (an_interface: EV_WIDGET) is
-			-- Initialization of the widget.
-		require
-			valid_interface: an_interface /= Void
-		deferred
-		end
-
- feature -- Access
-
-	parent_imp: EV_CONTAINER_IMP is
-			-- Parent container implementation of this widget.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	cursor: EV_CURSOR is
-			-- Cursor used currently on the widget.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	background_color: EV_COLOR is
-			-- Color used for the background of the widget
-		require
-			exists: not destroyed
+	pointer_position: EV_COORDINATES is
+            -- Position of the screen pointer relative to `Current'.
+        deferred
+        end
+		
+	pointer_style: EV_CURSOR is
+			-- Cursor displayed when screen pointer is over current widget.
 		deferred
 		end
 
 	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget,
-			-- usually the text.
-		require
-			exists: not destroyed
+			-- Color of foreground features like text.
 		deferred
 		end
 
-	application: CELL [EV_APPLICATION_IMP] is
-			-- The current application. Needed for the
-			-- accelerators
-		once
-			create Result.put (Void)
+	background_color: EV_COLOR is
+			-- Color displayed behind foreground features.
+		deferred
+		end
+
+	tooltip: STRING is
+			-- Text displayed when user moves mouse over widget.
+		deferred
 		end
 
 feature -- Status Report
 
-	insensitive: BOOLEAN is
-			-- Is current widget insensitive?
-		require
-			exists: not destroyed
+	is_sensitive: BOOLEAN is
+			-- Does `Current' respond to user input events.
 		deferred
 		end
 
-	managed: BOOLEAN is
-			-- Is the current widget managed ?
-		local
-			wid: EV_WIDGET
-		do
-			wid ?= interface
-			if wid = Void then
-				Result := False
-			else
-				Result := wid.managed
-			end
-		end
-
-	shown: BOOLEAN is
-			-- Is current widget visible in the parent?
-		require
-			exists: not destroyed
+	is_show_requested: BOOLEAN is
+			-- Will `Current' be displayed when its parent is?
+			-- See also `is_displayed'.
 		deferred
 		end
 
-	displayed: BOOLEAN is
-			-- Is the current widget visible on the screen?
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	horizontal_resizable: BOOLEAN is
-			-- Does the widget change its width when the parent
-			-- want to resize the widget
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	vertical_resizable: BOOLEAN is
-			-- Does the widget change its width when the parent
-			-- want to resize the widget
-		require
-			exists: not destroyed
+	is_displayed: BOOLEAN is
+			-- Is `Current' visible on the screen?
+			-- False if `Current' is entirely obscured by another window.
 		deferred
 		end
 
 	has_focus: BOOLEAN is
-			-- Does the Current widget has the focus.
-		require
-			exists: not destroyed
+			-- Does widget have the keyboard focus?
 		deferred
 		end
 
 feature -- Status setting
 
 	hide is
-		 	-- Make widget invisible in his parent.
-		require
-			exists: not destroyed
+			-- Request that `Current' not be displayed when its parent is.
 		deferred
 		ensure
-			not_shown: not shown
+			not_is_show_requested: not is_show_requested
 		end
 	
 	show is
-		 	-- Make widget visible in his parent.
-		require
-			exist: not destroyed
+			-- Request that `Current' be displayed when its parent is.
 		deferred
 		ensure
-			shown: shown		
+			is_show_requested: is_show_requested
 		end
 
 	set_focus is
-			-- Set focus to Current
-		require
-			exists: not destroyed
+			-- Grab keyboard focus.
 		deferred
 		ensure
 			has_focus: has_focus
 		end
 
-	set_insensitive (flag: BOOLEAN) is
-			-- Set current widget in insensitive mode if
-			-- `flag'. This means that any events with an
-			-- event type of KeyPress, KeyRelease,
-			-- ButtonPress, ButtonRelease, MotionNotify,
-			-- EnterNotify, LeaveNotify, FocusIn or
-			-- FocusOut will not be dispatched to current
-			-- widget and to all its children.  Set it to
-			-- sensitive mode otherwise.
-		require
-			exists: not destroyed
+	enable_sensitive is
+			-- Enable sensitivity to user input events.
 		deferred
 		ensure
-			state_set: flag = insensitive
+			is_sensitive: is_sensitive
 		end
 
-	set_default_options is
-			-- Initialize the options of the widget.
-		require
-			exists: not destroyed
-		do
-			set_vertical_resize (True)
-			set_horizontal_resize (True)
+	disable_sensitive is
+			-- Disable sensitivity to user input events.
+		deferred
+		ensure
+			not_is_sensitive: not is_sensitive
 		end
 
 	set_default_colors is
 			-- Initialize the colors of the widget
-		require
-			exists: not destroyed
 		local
 			default_colors: EV_DEFAULT_COLORS
 		do
@@ -190,234 +119,150 @@ feature -- Status setting
 			set_background_color (default_colors.default_background_color)
 			set_foreground_color (default_colors.default_foreground_color)
 		end
-
-	set_default_minimum_size is
-			-- Initialize the size of the widget.
-			-- Redefine by some widgets.
-		require
-			exists: not destroyed
-		deferred
-		end
-	
-	set_horizontal_resize (flag: BOOLEAN) is
-			-- Make `flag' the new horizontal_resizable status.
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			horizontal_resize_set: horizontal_resizable = flag
-		end
-
-	set_vertical_resize (flag: BOOLEAN) is
-			-- Make `flag' the new vertical_resizable status.
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			vertical_resize_set: vertical_resizable = flag
-		end
+			--| Descendants of EV_WIDGET_I may dedefine this to use different
+			--| colors so there is no postcondition.
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
+	set_pointer_style (a_cursor: like pointer_style) is
+			-- Assign `a_cursor' to `pointer_style'.
 		require
-			exists: not destroyed
+			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			parent_set: parent_set (par)
+			pointer_style_assigned: pointer_style.is_equal (a_cursor)
 		end
 
-	set_cursor (cur: EV_CURSOR) is
-			-- Make `value' the new cursor of the widget
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'.
 		require
-			exists: not destroyed
-		deferred
-		end
-
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		require
-			exists: not destroyed
-			valid_color: is_valid (color)
+			a_color_not_void: a_color /= Void
 		deferred
 		ensure
---			background_color_set: background_color.equal_color(color)
--- FIXME: AlexB. 09101999. commented because, gtk change the value that we pass to the color. see why.
-
+			background_color_assigned: background_color.is_equal (a_color)
 		end
 
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'
 		require
-			exists: not destroyed
-			valid_color: is_valid (color)
+			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_set: foreground_color.equal_color(color)
+			foreground_color_assigned: foreground_color.is_equal (a_color)
+		end
+
+	set_minimum_width (a_minimum_width: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
+		require
+			a_minimum_width_positive: a_minimum_width > 0
+		deferred
+		ensure
+			minimum_width_assigned: minimum_width = a_minimum_width
+		end
+
+	set_minimum_height (a_minimum_height: INTEGER) is
+			-- Set the minimum vertical size to `a_minimum_height' in pixels.
+		require
+			a_minimum_height_positive: a_minimum_height > 0
+		deferred
+		ensure
+			minimum_height_assigned: minimum_height = a_minimum_height
+		end
+
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
+			-- Set the minimum vertical size to `a_minimum_height' in pixels.
+		require
+			a_minimum_width_positive: a_minimum_width > 0
+			a_minimum_height_positive: a_minimum_height > 0
+		deferred
+		ensure
+			minimum_width_assigned: minimum_width = a_minimum_width
+			minimum_height_assigned: minimum_height = a_minimum_height
+		end
+
+	set_tooltip (a_text: STRING) is
+			-- Set `tooltip' to `a_text'.
+	        deferred
+		end
+
+	remove_tooltip is
+			-- Set `tooltip' to `Void'.
+	        deferred
 		end
 
 feature -- Measurement
 	
-	x: INTEGER is
-			-- Horizontal position relative to parent
-		require
-			exists: not destroyed		
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		deferred
+		end
+	
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
 		deferred
 		end
 
-	y: INTEGER is
-			-- Vertical position relative to parent
-		require
-			exists: not destroyed
-		deferred
-		end	
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		local
+			wind: EV_WINDOW_IMP
+		do
+			wind ?= Current
+			if wind /= Void then
+				Result := x_position
+			elseif parent /= Void then
+				Result := x_position + parent.screen_x
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		local
+			wind: EV_WINDOW_IMP
+		do
+			wind ?= Current
+			if wind /= Void then
+				Result := y_position
+			elseif parent /= Void then
+				Result := y_position + parent.screen_y
+			end
+		end
 
 	width: INTEGER is
-			-- Width of widget
-		require
-			exists: not destroyed
+			-- Horizontal size in pixels.
 		deferred
-		ensure
-			Positive_width: Result >= 0
 		end
 
 	height: INTEGER is
-			-- Height of widget
-		require
-			exists: not destroyed
+			-- Vertical size in pixels.
 		deferred
-		ensure
-			Positive_height: Result >= 0
 		end
 	
 	minimum_width: INTEGER is
-			-- Minimum width of widget
-		require
-			exists: not destroyed
+			-- Minimum horizontal size in pixels.
 		deferred
-		ensure
-			Positive_width: Result >= 0
 		end
 
 	minimum_height: INTEGER is
-			-- Minimum height of widget
-		require
-			exists: not destroyed
+			-- Minimum vertical size in pixels.
 		deferred
-		ensure
-			Positive_height: Result >= 0
 		end
 
-feature -- Resizing
+feature {EV_ANY_I} -- Implementation
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
-			-- Make `new_width' the new `width'
-			-- and `new_height' the new `height'.
-		require
-			exists: not destroyed
---			Unmanaged: not managed
-			Positive_width: new_width >= 0
-			Positive_height_: new_height >= 0
-		deferred
-		ensure
-			dimensions_set: dimensions_set (new_width, new_height)		
-		end
+	interface: EV_WIDGET
+		-- Provides a common user interface to platform dependent functionality
+		-- implemented by `Current'.
+		-- (See bridge pattern notes in ev_any.e)
 
-	set_width (value :INTEGER) is
-			-- Make `value' the new width.
-		require
-			exists: not destroyed
---			Unmanaged: not managed
-			Positive_width: value >= 0
-		deferred
-		ensure
-			dimensions_set: dimensions_set (value, height)
-		end
-	
-	set_height (value: INTEGER) is
-			-- Make `value' the new.
-		require
-			exists: not destroyed
---			Unmanaged: not managed
-			Positive_height: value >= 0
-		deferred
-		ensure					
-			dimensions_set: dimensions_set (width, value)
-		end
-
-	set_minimum_size (min_width, min_height: INTEGER) is
-			-- Make `min_width' the new `minimum_width'
-			-- and `min_height' the new `minimum_height'.
-		 require
-			exists: not destroyed
-			a_min_large_enough: min_width >= 0
-			height_large_enough: min_height >= 0
-		deferred
-		ensure
-			minimum_dimension_set: minimum_dimensions_set (min_width, min_height)
-		end  
-        
-	set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width'.
-		require
-			exists: not destroyed
-			a_min_large_enough: value >= 0
-		deferred
-		ensure
-			minimum_width_set: minimum_width_set (value)
-		end  
-	
-	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum_height' .
-		require
-			exists: not destroyed
-			height_large_enough: value >= 0
-		deferred
-		ensure
-			minimum_height_set: minimum_height_set (value)
-		end
-
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y' relative to parent.
-		require
-			exists: not destroyed
-			Unmanaged: not managed
-		deferred
-		ensure
-			x_y_set: position_set (new_x, new_y)
-		end
-
-	set_x (value: INTEGER) is
-			-- Put at horizontal position `value' relative
-			-- to parent.
-		require
-			exists: not destroyed
-			Unmanaged: not managed
-		deferred
-		ensure
-			x_set: x_set (value)
-		end
-
-	set_y (value: INTEGER) is
-			-- Put at vertical position `value' relative
-			-- to parent.
-		require
-			exists: not destroyed
-			Unmanaged: not managed
-		deferred
-		ensure
-			y_set: y_set (value)		
-		end
-
-feature -- Assertions
+feature -- Obsolete
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 
 		-- for that widget.
+		obsolete "don't use it"
 		deferred
 		end		
 
@@ -426,17 +271,20 @@ feature -- Assertions
 		-- the values given or the minimum values possible 
 		-- for that widget.
 		-- When the widget is not shown, the result is 0
+		obsolete "don't use it"
 		deferred
 		end		
 
 	minimum_width_set (value: INTEGER): BOOLEAN is
 			-- Send -1 not to test the height
+		obsolete "don't use it"
 		do
 			Result := minimum_dimensions_set (value, -1)
 		end
 
 	minimum_height_set (value: INTEGER): BOOLEAN is
 			-- Send -1 not to test width.
+		obsolete "don't use it"
 		do
 			Result := minimum_dimensions_set (-1, value)
 		end
@@ -446,223 +294,100 @@ feature -- Assertions
 		-- the values given or the minimum values possible 
 		-- for that widget.
 		-- When the widget is not shown, the result is -1
+		obsolete "don't use it"
 		deferred
 		end
 
 	x_set (value: INTEGER): BOOLEAN is
+		obsolete "don't use it"
 		do
 			Result := position_set (value, -1)
 		end
 
 	y_set (value: INTEGER): BOOLEAN is
+		obsolete "don't use it"
 		do
 			Result := position_set (-1, value)
 		end
 
 	has_parent: BOOLEAN is
 			-- True if the widget has a parent, False otherwise
+		obsolete "use parent /= Void"
 		do
-			Result := parent_imp /= void
+			Result := parent.implementation /= void
 		end
 
 	parent_set (par: EV_CONTAINER): BOOLEAN is
+		obsolete "don't use it"
 		local
 			wid_imp: EV_CONTAINER_I
 		do
-			if parent_imp /= Void then
-				wid_imp := par.implementation
-				Result := wid_imp = parent_imp
-			else
-				Result := par = Void
-			end
+		--	if parent_imp /= Void then
+		--		wid_imp := par.implementation
+		--		Result := wid_imp = parent_imp
+		--	else
+		--		Result := par = Void
+		--	end
+			check false end
 		end
 
-feature -- Accelerators - command association
 
-	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when `acc' is completed by the user.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
+	--|FIXME I believe this is no longer required.
+	--|Will be removed completely when reviewing. Julian
+	--managed: BOOLEAN is
+	--		-- Is the current widget managed ?
+	--	obsolete "needs more work"
+	--	local
+	--		wid: EV_WIDGET
+	--	do
+		--	wid ?= interface
+		--	if wid = Void then
+		--		Result := False
+		--	else
+		--		Result := wid.managed
+		--	end
+	--	end
+
+	application: CELL [EV_APPLICATION_IMP] is
+			-- The current application.
+			--| Needed for the accelerators.
+		obsolete
+			"see EV_ENVIRONMENT"
+		once
+			--| FIXME Why Void?
+			create Result.put (Void)
 		end
 
-	remove_accelerator_commands (acc: EV_ACCELERATOR) is
-			-- Empty the list of commands to be executed when
-			-- `acc' is completed by the user.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Event - command association
-
-	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no `mouse_button' is double clicked.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when mouse move.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget is destroyed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a key is pressed on the keyboard while the
-			-- widget has the focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a key is released on the keyboard while the
-			-- widget has the focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the cursor of the mouse enter the widget.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the cursor of the mouse leave the widget.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget get the focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget loose the focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_double_click_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is double clicked.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_motion_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the mouse move.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_destroy_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget is destroyed.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_key_press_commands is
-			-- Empty the list of commands to be executed when
-			-- a key is pressed on the keyboard while the widget has the
-			-- focus.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_key_release_commands is
-			-- Empty the list of commands to be executed when
-			-- a key is released on the keyboard while the widget has the
-			-- focus.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_enter_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the cursor of the mouse enter the widget.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_leave_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the cursor of the mouse leave the widget.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_get_focus_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget get the focus.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_lose_focus_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget lose the focus.
-		require
-			exists: not destroyed
-		deferred
-		end
-		
 invariant
+	pointer_position_not_void: is_useable implies pointer_position /= Void
+	background_color_not_void: is_useable implies background_color /= void
+	foreground_color_not_void: is_useable implies foreground_color /= void
 
---	backgound_color_not_void: background_color /= Void
---	foreground_color_not_void: foreground_color /= Void
---	good_resize_type: resize_type >= 0 and resize_type <= 3
-	
+	--| FIXME IEK The minimum dimension size should be greater than 0
+	--| This does not hold for containers though
+	minimum_width_positive_or_zero: is_useable implies minimum_width >= 0
+	minimum_height_positive_or_zero: is_useable implies minimum_height >= 0
+
+
+	--|FIXME These two assertions have been commented out due to problems with
+	--|The windows implementation. The problem is due to the fact that until the widgets
+	--| have been re-sized then the width, which is returned by wel will by 0. However,
+	--| the minimum width of the widget will be greater than 0.
+	--| This violates these pre-conditions and needs to be fixed.
+	--|width_not_less_than_minimum_width:
+	--|	 is_useable implies width >= minimum_width
+	--|height_not_less_than_minimum_height:
+	--|	 is_useable implies height >= minimum_height
+
+	is_displayed_implies_show_requested:
+		is_useable and is_displayed implies is_show_requested
+
+
+	--| FIXME IEK Not applicable for items that inherit from widget
+	--| only on the implementation side such as T.B. Button
+	--parent_contains_current:
+		--is_useable and parent /= Void implies parent.has (interface)
+
 end -- class EV_WIDGET_I
 
 --!----------------------------------------------------------------
@@ -681,3 +406,127 @@ end -- class EV_WIDGET_I
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.58  2000/02/14 11:40:36  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.57.6.33  2000/02/04 04:05:05  oconnor
+--| released
+--|
+--| Revision 1.57.6.32  2000/02/02 00:50:26  king
+--| Commented parent_contains_current invariant as it does not hold for items that are widgets only on the implementation side such as tool bar buttons
+--|
+--| Revision 1.57.6.31  2000/01/29 00:59:03  brendel
+--| Removed set_default_minimum_size.
+--|
+--| Revision 1.57.6.30  2000/01/28 21:18:25  brendel
+--| Added `tooltip', `set_tooltip', `remove_tooltip'.
+--|
+--| Revision 1.57.6.29  2000/01/27 19:29:58  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.57.6.28  2000/01/26 19:17:01  rogers
+--| width_not_less_than_minimum_width and height_not_less_than_minimum_height have been commented out with a FIXME and a detailed description of why.
+--|
+--| Revision 1.57.6.27  2000/01/25 17:12:47  king
+--| Added absolute coord functions, can be optimized with platform dependancy
+--|
+--| Revision 1.57.6.26  2000/01/22 02:28:30  oconnor
+--| changed >= 1 to > 0
+--|
+--| Revision 1.57.6.25  2000/01/21 19:13:34  king
+--| Changed min hgt/wid invariants back to zero as they didn't hold for an empty container
+--|
+--| Revision 1.57.6.24  2000/01/20 23:50:41  king
+--| Changed minimum size assertions to be >= 1 instead of 0
+--|
+--| Revision 1.57.6.23  2000/01/19 00:22:51  rogers
+--| Removed managed. This is now only required for windows and is implemented in EV_WIDGET_IMP.
+--|
+--| Revision 1.57.6.22  1999/12/17 18:16:10  rogers
+--| Removed set_parent.
+--|
+--| Revision 1.57.6.21  1999/12/16 09:20:51  oconnor
+--| add is_useable to invariant
+--|
+--| Revision 1.57.6.20  1999/12/14 18:57:25  oconnor
+--| rename POINT->COORDINATES for pointer_position
+--|
+--| Revision 1.57.6.19  1999/12/14 18:07:45  oconnor
+--| implemented feature pointer_position
+--|
+--| Revision 1.57.6.18  1999/12/14 16:52:56  oconnor
+--| renamed EV_PND_SOURCE -> EV_PICK_AND_DROPABLE
+--|
+--| Revision 1.57.6.17  1999/12/07 18:29:58  oconnor
+--| added obsolete tags
+--|
+--| Revision 1.57.6.16  1999/12/07 18:22:45  oconnor
+--| tweaked comments
+--|
+--| Revision 1.57.6.15  1999/12/06 17:27:16  oconnor
+--| fixed invariants to use is_useable implies
+--|
+--| Revision 1.57.6.14  1999/12/05 00:38:57  oconnor
+--| removed postcondition on set_default_colors
+--|
+--| Revision 1.57.6.13  1999/12/04 18:43:24  oconnor
+--| fixed void call in invariant
+--|
+--| Revision 1.57.6.12  1999/12/03 04:57:36  oconnor
+--| added obsolete to application feature
+--|
+--| Revision 1.57.6.11  1999/12/03 04:11:20  brendel
+--| Added is_initialized implies to invariants of bg & fg color.
+--|
+--| Revision 1.57.6.10  1999/12/03 00:52:43  brendel
+--| Commented out a managed function.
+--|
+--| Revision 1.57.6.9  1999/12/02 22:55:31  oconnor
+--| reformatted indexing clause (added keywords)
+--| added invariants
+--| removed postconditions that are part of invariant
+--|
+--| Revision 1.57.6.8  1999/12/02 20:11:35  brendel
+--| Removed `not_managed' from preconditions.
+--|
+--| Revision 1.57.6.7  1999/12/02 19:52:41  brendel
+--| Changed comments and pre/postconsitions to the ones in EV_WIDGET.
+--| Moved features to Obsolete clause.
+--|
+--| Revision 1.57.6.6  1999/12/01 22:06:52  oconnor
+--| x|y is now x|y_position
+--|
+--| Revision 1.57.6.5  1999/12/01 21:51:23  brendel
+--| Added set_pointer_style for compatibility with ev_widget.
+--|
+--| Revision 1.57.6.4  1999/12/01 20:49:46  brendel
+--| Fixed some mistakes.
+--|
+--| Revision 1.57.6.3  1999/12/01 20:23:23  oconnor
+--| x is now x_position
+--|
+--| Revision 1.57.6.2  1999/11/30 22:44:32  oconnor
+--| redefine interface to be of type  EV_WIDGET
+--|
+--| Revision 1.57.6.1  1999/11/24 17:30:07  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.57.2.4  1999/11/09 16:53:16  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.57.2.3  1999/11/04 23:10:36  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.57.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
+--| FIXME Not for release
 indexing
-	description: "EiffelVision drawable area. Mswindows implementation."
+	description: "EiffelVision drawable. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +10,11 @@ deferred class
 
 inherit
 	EV_DRAWABLE_I
+		redefine
+			interface
+		end
+
+	EV_DRAWABLE_CONSTANTS
 
 	WEL_DIB_COLORS_CONSTANTS
 		export
@@ -56,11 +61,6 @@ inherit
 			{NONE} all
 		end
 
-	DOUBLE_MATH
-		export
-			{NONE} all
-		end
-
 	EXCEPTIONS
 		rename
 			raise as exception_raise,
@@ -72,784 +72,532 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Set some default values.
 		do
+			create font
+			create foreground_color.make_with_rgb (0, 0, 0)
+			create background_color.make_with_rgb (1, 1, 1)
 			dc.set_background_opaque
-			set_logical_mode (3)
-			dc.select_brush (background_brush)
-			dc.select_pen (background_pen)
+			dc.set_background_transparent
+			dc.set_text_alignment (Ta_baseline)
+
+			set_drawing_mode (Ev_drawing_mode_copy)
 			set_line_width (1)
-			set_line_style (ps_solid)
+			reset_pen
+			reset_brush
+			is_initialized := True
+		end
+
+feature --{EV_ANY_I} -- Implementation
+
+	dc: WEL_DC is
+			-- Device context applied to the primitives.
+		deferred
+		ensure
+			not_void: dc /= Void
+			exists: dc.exists
 		end
 
 feature -- Access
 
-	dc: WEL_DC is
-			-- DC for drawing
-		deferred
-		end
+	background_color: EV_COLOR
+			-- Color used to fill figures.
 
-	foreground_color: EV_COLOR is
-			-- Current foreground color
-		do
-			if foreground_color_imp /= Void then
-				Result ?= foreground_color_imp.interface
-			else
-				Result := Void
-			end
-		end
-
-	background_color: EV_COLOR is
-			-- Current background color
-		local
-			wel: WEL_COLOR_REF
-		do
-			wel := dc.background_color
-			if wel /= Void then
-				!! Result.make_rgb (wel.red, wel.green, wel.blue)
-			else
-				Result := Void
-			end
-		end
+	foreground_color: EV_COLOR
+			-- Color used for lines and text.
 
 	line_width: INTEGER 
-			-- Width of line for device.
+			-- Line thickness.
 
-	logical_mode: INTEGER
-			-- Drawing mode
+	drawing_mode: INTEGER is
+			-- Logical operation on pixels when drawing.
+		do
+			if wel_drawing_mode = R2_copypen then
+				Result := Ev_drawing_mode_copy
+			elseif wel_drawing_mode = R2_xorpen then
+				Result := Ev_drawing_mode_xor
+			elseif wel_drawing_mode = R2_notcopypen then
+				Result := Ev_drawing_mode_invert
+			elseif wel_drawing_mode = R2_maskpen then
+				Result := Ev_drawing_mode_and
+			elseif wel_drawing_mode = R2_mergepen then
+				Result := Ev_drawing_mode_or
+			end
+		end
 
-feature -- Measurement
+	clip_area: EV_RECTANGLE
+			-- Clip area used to clip drawing.
+			-- If set to Void, no clipping is applied.
+
+	tile: EV_PIXMAP
+			-- Pixmap that is used to instead of background_color.
+			-- If set to Void, `background_color' is used to fill.
+
+	dashed_line_style: BOOLEAN
+			-- Are lines drawn dashed?
+
+	font: EV_FONT
+			-- Character appearance.
+
+feature {NONE} -- Implementation
 
 	width: INTEGER is
-			-- Width of the widget
+			-- Width of the widget.
+			--| Used in `draw_straight_line'.
 		deferred
 		end
 
 	height: INTEGER is
 			-- Height of the widget
+			--| Used in `draw_straight_line'.
 		deferred
-		end
-
-feature -- Status report
-
-	is_drawable: BOOLEAN is
-			-- Is the device drawable?
-		do
-			Result := dc /= Void and then dc.exists
 		end
 
 feature -- Element change
 
-	set_background_color (color: EV_COLOR) is
-			-- Set background value of GC.
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'.
+		do
+			background_color.copy (a_color)
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'
+		do
+			foreground_color.copy (a_color)
+			dc.set_text_color (wel_fg_color)
+			reset_pen
+			reset_brush
+		end
+
+	set_line_width (a_width: INTEGER) is
+			-- Assign `a_width' to `line_width'.
+		do
+			line_width := a_width
+			reset_pen
+		end
+
+	set_drawing_mode (a_mode: INTEGER) is
+			-- Set drawing mode to `a_mode'.
+		do
+			inspect a_mode
+			when Ev_drawing_mode_copy then
+				wel_drawing_mode := R2_copypen
+			when Ev_drawing_mode_xor then
+				wel_drawing_mode := R2_xorpen
+			when Ev_drawing_mode_invert then
+				wel_drawing_mode := R2_notcopypen
+			when Ev_drawing_mode_and then
+				wel_drawing_mode := R2_maskpen
+			when Ev_drawing_mode_or then
+				wel_drawing_mode := R2_mergepen
+			else
+				check
+					drawing_mode_existent: False
+				end
+			end
+			dc.set_rop2 (wel_drawing_mode)
+		end
+
+	set_clip_area (an_area: EV_RECTANGLE) is
+			-- Set an area to clip to.
+			-- Set to Void when no clipping should be applied.
 		local
-			color_imp: EV_COLOR_IMP
+			region: WEL_REGION
 		do
-			color_imp ?= color.implementation
-			check
-				valid_cast: color_imp /= Void
-			end
-			if is_drawable then
-				update_dc
-				dc.set_background_color (color_imp)
-			end
+			remove_clip_area
+			clip_area := clone (an_area)
+			create region.make_rect (clip_area.x, clip_area.y,
+				clip_area.width + clip_area.x,
+				clip_area.height + clip_area.y)
+			dc.select_clip_region (region)
 		end
 
-	set_foreground_color (color: EV_COLOR) is
-			-- Set foreground value of GC.
+	remove_clip_area is
+			-- Do not apply any clipping.
+		local
+			region: WEL_REGION
 		do
-			foreground_color_imp ?= color.implementation
-			check
-				valid_cast: foreground_color_imp /= Void
-			end
-			if is_drawable then
-				update_pen
-				update_brush
-			end
+			clip_area := Void
+			create region.make_rect (0, 0, width, height)
+			dc.select_clip_region (region)
 		end
 
-	set_line_width (value: INTEGER) is
-			-- Set line to be displayed with width of `value'.
+	set_tile (a_pixmap: EV_PIXMAP) is
+			-- Set tile used to fill figures.
+			-- Set to Void to use `background_color' to fill.
 		do
-			line_width := value
-			if is_drawable then
-				update_pen
-			end
+			--| FIXME DO net set reference but copy.
+			tile := a_pixmap
+			reset_brush
 		end
 
-	set_logical_mode (value: INTEGER) is
-			-- Set drawing logical function to `value'.
+	remove_tile is
+			-- Do not apply a tile when filling.
 		do
-			logical_mode := value
-			if is_drawable then
-				update_dc
-			end
+			tile := Void
+			reset_brush
+		end
+
+	enable_dashed_line_style is
+			-- Draw lines dashed.
+		do
+			dashed_line_style := True
+			reset_pen
+		end
+
+	disable_dashed_line_style is
+			-- Draw lines solid.
+		do
+			dashed_line_style := False
+			reset_pen
 		end
 
 	set_font (a_font: EV_FONT) is
-			-- Set a font.
+			-- Set `font' to `a_font'.
+		local
+			font_imp: EV_FONT_IMP
 		do
-			font := a_font
-			if is_drawable then
-				update_font
-			end
+			font.copy (a_font)
+			font_imp ?= font.implementation
+			dc.select_font (font_imp.wel_font)
 		end
 
 feature -- Clearing operations
 
 	clear is
-			-- Clear the entire area.
+			-- Erase `Current' with `background_color'.
 		do
-			clear_rect (0, 0, width, height)
+			clear_rect (0, 0, width + 1, height + 1)
 		end
 
-	clear_rect (left, top, right, bottom: INTEGER) is
-			-- Clear the rectangular area defined by
-			-- `a_left', `a_top', `a_right', `a_bottom'.
-		local
-			old_brush: WEL_BRUSH
-			old_rop2: INTEGER
-			old_pen: WEL_PEN
-			ldc: WEL_DC
+	clear_rect (x1, y1, x2, y2: INTEGER) is
+			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
 		do
-			ldc := dc
-
-			-- We store the old values.
-			old_rop2 := ldc.rop2
-			old_brush := ldc.brush
-			old_pen := ldc.pen
-
-			-- We set the new values
-			ldc.set_rop2 (r2_copypen)
-			ldc.select_brush (background_brush)
-			ldc.select_pen (background_pen)
-
-			-- We clear the area.
-			ldc.rectangle (left, top, right, bottom)
-
-			-- We reset the old values
-			ldc.set_rop2 (old_rop2)
-			if old_brush /= Void then
-				ldc.select_brush (old_brush)
-			end
-			if old_pen /= Void then
-				ldc.select_pen (old_pen)
-			end
+			remove_pen
+			set_background_brush
+			dc.rectangle (x1, y1, x2, y2)
+			reset_brush
+			reset_pen
 		end
 
 feature -- Drawing operations
 
-	draw_point (pt: EV_COORDINATES) is
-			-- Draw `a_point'.
+	draw_point (x, y: INTEGER) is
+			-- Draw point at (`x', `y').
 		do
-			dc.set_pixel (pt.x, pt.y, foreground_color_imp)
+			dc.set_pixel (x, y, wel_fg_color)
 		end
 
-	draw_text (pt: EV_COORDINATES; text: STRING) is
-			-- Draw text
+	draw_text (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' at (`x', `y') using `font'.
+		do
+			dc.text_out (x, y, a_text)
+		end
+
+	draw_segment (x1, y1, x2, y2: INTEGER) is
+			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
+		do
+			dc.move_to (x1, y1)
+			dc.line_to (x2, y2)
+		end
+
+	draw_straight_line (x1, y1, x2, y2: INTEGER) is
+			-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
 		local
-			ldc: WEL_DC
+			ax1, ax2, ay1, ay2, dx, dy: INTEGER
 		do
-			ldc := dc
-			ldc.set_text_color (foreground_color_imp)
-			ldc.set_background_transparent
-			ldc.set_text_alignment (ta_baseline)
-			ldc.text_out (pt.x, pt.y, text)
-		end
-
-	draw_segment (pt1, pt2: EV_COORDINATES) is
-			-- Draw a segment between `pt1' and `pt2'.
-		do
-			dc.move_to (pt1.x, pt1.y)
-			dc.line_to (pt2.x, pt2.y)
-		end
-
-	draw_straight_line (point1, point2: EV_COORDINATES) is
-			-- Draw an infinite line traversing `point1' and `point2'.
-			-- Do not work
-		local
-			x1, x2, y1, y2, dx, dy: INTEGER
-		do
-			dx := (point2.x - point1.x)
-			dy := (point2.y - point1.y)
-			if point1.y /= point2.y then
-				x1 := point1.x - ((dx / dy) * point1.y).rounded
-				x2 := point1.x - ((dx / dy) * (point1.y - height)).rounded
-				y1 := 0
-				y2 := height
+			--| VB: Should work now. Draws lines that are too big.
+			--| Catch worst cases like when `dy' approaches zero.
+			--| This implementation is the same for GTK.
+			dx := (x2 - x1)
+			dy := (y2 - y1)
+			if dy /= 0 then
+				ax1 := x1 - ((dx / dy) * y2).rounded
+				ax2 := x1 - ((dx / dy) * (y1 - height)).rounded
+				ay1 := 0
+				ay2 := height
 			else
-				y1 := point1.y - ((dy / dx) * point1.x).rounded
-				y2 := point1.y - ((dy / dx) * (point1.x - width)).rounded
-				x1 := 0
-				x2 := width
+				ay1 := y1
+				ay2 := y2
+				ax1 := 0
+				ax2 := width
 			end
-			dc.line (x1, y1, x2, y2)
+			draw_segment (ax1, ay1, ax2, ay2)			
 		end
 
-	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
-			-- Draw a polyline, close it automatically if `is_closed'.
+	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians.
+		local
+			left, top, right, bottom: INTEGER
+			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+		do
+			left := x - a_horizontal_radius
+			right := x + a_horizontal_radius
+			top := y - a_vertical_radius
+			bottom := y + a_vertical_radius
+			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			dc.arc (left, top, right, bottom, x_start_arc,
+				y_start_arc, x_end_arc, y_end_arc)
+		end
+
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
+		local
+			pix_imp: EV_PIXMAP_IMP
+		do
+			pix_imp ?= a_pixmap.implementation
+			dc.bit_blt (x, y, pix_imp.width, pix_imp.height, 
+				pix_imp.bitmap_dc, 0, 0, Srccopy)
+		end
+
+	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'.
+		do
+			remove_brush
+			dc.rectangle (x, y, x + a_width, y + a_height)
+			reset_brush
+		end
+
+	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Draw an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+		do
+			remove_brush
+			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
+				x + a_vertical_radius, y + a_vertical_radius)
+			reset_brush
+		end
+
+	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
 		local
 			flat_points: ARRAY [INTEGER]
 			flat_index: INTEGER
 			i: INTEGER
 		do
 			if is_closed then
-				!! flat_points.make (1, 2 * pts.count + 2)
+				create flat_points.make (1, 2 * points.count + 2)
 			else
-				!! flat_points.make (1, 2 * pts.count)
+				!! flat_points.make (1, 2 * points.count)
 			end
 			flat_index := 1
 			from
-				i := pts.lower
+				i := points.lower
 			until
-				i > pts.upper
+				i > points.upper
 			loop
-				flat_points.put ((pts.item (i)).x, flat_index)
+				flat_points.put ((points.item (i)).x, flat_index)
 				flat_index := flat_index + 1
-				flat_points.put ((pts.item (i)).y, flat_index)
+				flat_points.put ((points.item (i)).y, flat_index)
 				i := i + 1
 				flat_index := flat_index + 1
 			end
 			if is_closed then
-				i := pts.lower
-				flat_points.put ((pts.item (i)).x, flat_index)
+				i := points.lower
+				flat_points.put ((points.item (i)).x, flat_index)
 				flat_index := flat_index + 1
-				flat_points.put ((pts.item (i)).y, flat_index)
+				flat_points.put ((points.item (i)).y, flat_index)
 			end
 			dc.polyline (flat_points)
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
-			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
-			-- and that has the orientation `orientation'.
-		do
-			draw_any_rectangle (pt, w, h, orientation, false)
-		end
-
-	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
-			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
-			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
-			-- and with an orientation of `orientation' using the style `style'.
-			-- The meaning of the style is the following :
-			--   -1 : no link between the first and the last point
-			--    0 : the first point is linked to the last point
-			--    1 : the first and the last point are linked to the center `pt'
-		do
-			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, false)
-		end
-
-	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
-			-- Copy `pix' into the drawable at the point `pt'.
+	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			left, top, right, bottom: INTEGER
+			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			null_brush: WEL_NULL_BRUSH
 		do
-			-- We retrieve the implementation of the pixmap
-			pix_imp ?= pix.implementation
-			check
-				valid_cast: pix_imp /= Void
-			end
-
-			-- We copy the pixmap
-			if pix_imp.internal_dc = Void then
-				dc.draw_bitmap (pix_imp.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
-			else
-				dc.bit_blt (pt.x, pt.y, pix_imp.width, pix_imp.height, pix_imp.internal_dc, 0, 0, srccopy)
-			end
+			left := x - a_horizontal_radius
+			right := x + a_horizontal_radius
+			top := y - a_vertical_radius
+			bottom := y + a_vertical_radius
+			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			remove_brush
+			dc.pie (left, top, right, bottom, x_start_arc,
+				y_start_arc, x_end_arc, y_end_arc)
+			reset_brush
 		end
 
 feature -- Filling operations
 
-	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
-			 -- Fill a polygon.
+	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'. Fill with `background_color'.
+		do
+			remove_pen
+			dc.rectangle (x, y, x + a_width, y + a_height)
+			reset_pen
+		end 
+
+	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Draw an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Fill with `background_color'.
+		do
+			remove_pen
+			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
+				x + a_vertical_radius, y + a_vertical_radius)
+			reset_pen
+		end
+
+	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+			-- Draw line segments between subsequent points in `points'.
+			-- Fill all enclosed area's with `background_color'.
 		local
 			flat_points: ARRAY [INTEGER]
 			i, flat_i: INTEGER
 		do
-			!! flat_points.make (1, 2 * pts.count)
+			!! flat_points.make (1, 2 * points.count)
 			flat_i := 1
 			from
-				i := pts.lower
+				i := points.lower
 			until
-				i > pts.upper
+				i > points.upper
 			loop
-				flat_points.put ((pts.item (i)).x, flat_i)
+				flat_points.put ((points.item (i)).x, flat_i)
 				flat_i := flat_i + 1
-				flat_points.put ((pts.item (i)).y, flat_i)
+				flat_points.put ((points.item (i)).y, flat_i)
 				flat_i := flat_i + 1
 				i := i + 1
 			end
+			remove_pen
 			dc.polygon (flat_points)
+			reset_pen
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
-			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
-			-- with an orientation `orientation'.
+	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians.
+		local
+			left, top, right, bottom: INTEGER
+			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 		do
-			draw_any_rectangle (pt, w, h, orientation, true)
-		end 
-
-	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
-			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
-			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
-			-- and with an orientation of `orientation' using the style `style'.
-			-- The meaning of the style is the following :
-			--   -1 : no link between the first and the last point
-			--    0 : the first point is linked to the last point
-			--    1 : the first and the last point are linked to the center `pt'
-		do
-			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, true)
+			left := x - a_horizontal_radius
+			right := x + a_horizontal_radius
+			top := y - a_vertical_radius
+			bottom := y + a_vertical_radius
+			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			remove_pen
+			dc.pie (left, top, right, bottom, x_start_arc,
+				y_start_arc, x_end_arc, y_end_arc)
+			reset_pen
 		end
-
-feature {NONE} -- Implementation access
-
-	brush: WEL_BRUSH
-			-- Brush details
-
-	font: EV_FONT
-			-- Font used for drawing
-
-	line_style: INTEGER
-			-- Style of a line
-
-	fill_style: INTEGER
-			-- Style to fill figures
-
-	clip_list: LINKED_LIST [POINTER]
-			-- List of clipping areas
-
-	foreground_color_imp: EV_COLOR_IMP
-			-- Color used for the foreground of the drawable,
-			-- used for the text and the drawings.
 
 feature {NONE} -- Implementation
 
-	background_brush: WEL_BRUSH is
-			-- Brush used to paint the background.
-			-- Need to be redefine to appear white.
+	wel_drawing_mode: INTEGER
+			-- The WEL equivalent for the Ev_drawing_mode_* selected.
+
+	wel_bg_color: WEL_COLOR_REF is
 		do
-			if dc /= Void then
-				!! Result.make_solid (dc.background_color)
-			else
-				Result := Void
+			Result ?= background_color.implementation
+		ensure
+			not_void: Result /= Void
+		end
+
+	wel_fg_color: WEL_COLOR_REF is
+		do
+			Result ?= foreground_color.implementation
+		ensure
+			not_void: Result /= Void
+		end
+
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+		do
+			if background_color /= Void then
+				create Result.make_solid (wel_bg_color)
 			end
 		end
 
-	background_pen: WEL_PEN is
-			-- Pen used to paint the background.
+	set_background_brush is
+			-- Set background-brush. For clear-operations.
 		do
-			!! Result.make (ps_solid, 1, dc.background_color)
+			dc.select_brush (background_brush)
 		end
 
-	update_brush is
-			-- Update the `dc' due to brush details changing
-		require
-			drawable: is_drawable
+	reset_brush is
+			-- Restore brush to tile or color.
+		local
+			brush: WEL_BRUSH
+			pix_imp: EV_PIXMAP_IMP
 		do
-			inspect fill_style
-				when 0 then
-					!! brush.make_solid (foreground_color_imp)
-				when 1 then
-				when 2 then
-					dc.set_text_color (foreground_color_imp)
-				when 3 then
-					dc.set_text_color (foreground_color_imp)
-				end
+			if tile /= Void then
+				pix_imp ?= tile.implementation
+				create brush.make_by_pattern (pix_imp.bitmap)
+			else
+				create brush.make_solid (wel_fg_color)
+			end				
 			dc.select_brush (brush)
 		end
 
-	update_dc is
-			-- Update the `dc' due to dc details changing
-		require
-			drawable: is_drawable
-		do
-			debug ("RASTER OPERATIONS")
-				print ("update_dc")
-				print (logical_mode)
-				print ("%N")
-			end
-				inspect
-				logical_mode
-			when 0 then
-				dc.set_rop2 (r2_black)
-			when 1 then
-				dc.set_rop2 (r2_maskpen)
-			when 2 then
-				dc.set_rop2 (r2_maskpennot)
-			when 3 then
-				dc.set_rop2 (r2_copypen)
-			when 4 then
-				dc.set_rop2 (r2_masknotpen)
-			when 5 then
-				dc.set_rop2 (r2_nop)
-			when 6 then
-				dc.set_rop2 (r2_xorpen)
-			when 7 then
-				dc.set_rop2 (r2_mergepen)
-			when 8 then
-				dc.set_rop2 (r2_notmergepen)
-			when 9 then
-				dc.set_rop2 (r2_notxorpen)
-			when 10 then
-				dc.set_rop2 (r2_not)
-			when 11 then
-				dc.set_rop2 (r2_mergepennot)
-			when 12 then
-				dc.set_rop2 (r2_notcopypen)
-			when 13 then
-				dc.set_rop2 (r2_mergenotpen)
-			when 14 then
-				dc.set_rop2 (r2_notmaskpen)
-			when 15 then
-				dc.set_rop2 (r2_white)
-			end
-		end
-
-	update_font is
-			-- Update the `dc' due to font details changing
-		require
-			drawable: is_drawable
-			font: font /= Void
-		local
-			fw: EV_FONT_IMP
-		do
-			fw ?= font.implementation
-			dc.select_font (fw.wel_font)
-		end
-
-	update_pen is
-			-- Update the `dc' due to pen details changing
-		require
-			drawable: is_drawable
+	reset_pen is
+			-- Restore pen to correct line width and color
 		local
 			pen: WEL_PEN
+			dmode: INTEGER
 		do
-			!! pen.make (line_style, line_width, foreground_color_imp)
-			if dc.pen /= Void then
-				dc.unselect_pen
+			if line_width = 0 then
+				remove_pen
+			else
+				if dashed_line_style then
+					dmode := Ps_dot
+				else
+					dmode := Ps_solid
+				end
+				create pen.make (dmode, line_width, wel_fg_color)
+				dc.select_pen (pen)
 			end
+		end
+
+	remove_pen is
+			-- Draw without outline.
+		local
+			pen: WEL_PEN
+			log_pen: WEL_LOG_PEN
+		do
+			create log_pen.make (Ps_null, 1, wel_fg_color)
+			create pen.make_indirect (log_pen)
 			dc.select_pen (pen)
 		end
 
---	set_dc (dc: like dc) is
---			-- Set `dc' as necessary
---		require
---			no_dc: dc = Void or not dc.exists
---		do
---			dc := dc
---			update_dc
---			update_brush
---			if font /= Void then
---				update_font
---			end
---			update_pen
---		end
-
---	unset_dc is
---			-- Return `dc' to original state
---		require
---			dc_exists: dc /= Void and dc.exists
---		do
---			dc.unselect_all
---			dc := Void	
---		end
-
-feature {NONE} -- Basic operations
-
-	draw_any_rectangle (center: EV_COORDINATES; rw, rh: INTEGER; an_orientation: EV_ANGLE; filled: BOOLEAN) is
-			-- Draw a rectangle whose center is `center' and
-			-- whose size is `rwidth' and `rheight', it may be `filled'.
-		require
-			center_exists: center /= Void
-			width_positive: rw >= 0;
-			height_positive: rh >= 0;
-			dc_not_void: dc /= Void
-			dc_exists: dc.exists
+	remove_brush is
+			-- Draw without filling.
 		local
-			x, y, offset: INTEGER
-			cos, sin: REAL
-			points: ARRAY [INTEGER]
-			null_brush: WEL_NULL_BRUSH
-			dan_orientation: DOUBLE
+			brush: WEL_BRUSH
+			log_brush: WEL_LOG_BRUSH
 		do
-			if not filled then
-				if dc.brush /= Void then
-					dc.unselect_brush
-				end
-				!! null_brush.make
-				dc.select_brush (null_brush)
-			else
-				offset := 1
-			end
-			dan_orientation := an_orientation.degrees
-			if dan_orientation = 0.0 or dan_orientation = 180.0 then
-				dc.rectangle (center.x - (rw // 2), center.y + (rh // 2),
-					center.x + (rw // 2) + offset, center.y - (rh // 2) + offset)
-			else
-				!! points.make (1, 10)
-				sin := sine (dan_orientation * deg_to_rad)
-				cos := cosine (dan_orientation * deg_to_rad)
-				x := ((rh * sin + rw * cos) / 2).rounded
-				y := ((rh * cos - rw * sin) / 2).rounded
-				points.put (center.x + x, 1)
-				points.put (center.y + y, 2)
-				points.put (center.x - x, 5)
-				points.put (center.y - y, 6)
-				points.put (center.x + x, 9)
-				points.put (center.y + y, 10)
-				x := ((rh * sin - rw * cos) / 2).rounded
-				y := ((rh * cos + rw * sin) / 2).rounded
-				points.put (center.x + x, 3)
-				points.put (center.y + y, 4)
-				points.put (center.x - x, 7)
-				points.put (center.y - y, 8)
-				dc.polygon (points)
-			end
-			if not filled and brush /= Void then
-				dc.select_brush (brush)
-			end
+			create log_brush.make (Bs_null, wel_fg_color, Hs_horizontal)
+			create brush.make_indirect (log_brush)
+			dc.select_brush (brush)
 		end
 
-	draw_any_arc (center: EV_COORDINATES; radius1, radius2: INTEGER; angle1, angle2, orientation: EV_ANGLE; arc_style: INTEGER; filled: BOOLEAN) is
-			-- Draw an arc centered in (`x', `y') with a great radius of
-			-- `radius1' and a small radius of `radius2'
-			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
-			-- and with an orientation of `orientation'.
-		require
-			center_exists: center /= Void
-			positive_radius1: radius1 >= 0;
-			positive_radius2: radius2 >= 0;
-			valid_arc_style: arc_style >= -1 and arc_style <= 1
-			dc_not_void: dc /= Void
-			dc_exists: dc.exists
-		local
-			left, top, right, bottom, x_start_arc, y_start_arc,
-			x_end_arc, y_end_arc: INTEGER
-			null_brush: WEL_NULL_BRUSH
-			local_arc_points: ARRAY [INTEGER]
-			ang1, ang2, orient: DOUBLE
-		do
-			ang1 := angle1.radians
-			ang2 := angle2.radians
-			orient := orientation.radians
-			if orient = 0.0 then
-				--| FIXME
-				--| If orientation is 0.0 then the drawing does not start from the same
-				--| place as if not.
-				--| Julan Rogers 09301999
-				
-				left := center.x - radius1
-				right := center.x + radius1
-				top := center.y - radius2
-				bottom := center.y + radius2
-				x_start_arc := center.x + (radius1 * cosine (ang1)).rounded
-				y_start_arc := center.y - (radius2 * sine (ang1)).rounded
-				x_end_arc := center.x + (radius1 * cosine ((ang1 + ang2))).rounded
-				y_end_arc := center.y - (radius2 * sine ((ang1 + ang2))).rounded
-				if not filled then
-					dc.arc (left, top, right, bottom, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
-				else
-					if arc_style = 0 then
-						dc.chord (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
-					elseif arc_style = 1 then
-						dc.pie (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
-					end
-				end
-			else
-				local_arc_points := arc_points (center, radius1, radius2, angle1, angle2, orientation);
-				if arc_style = 0 then
-					local_arc_points.force (local_arc_points @ 1, local_arc_points.upper  + 1)
-					local_arc_points.force (local_arc_points @ 2, local_arc_points.upper + 1)
-				elseif arc_style = 1 then
-					local_arc_points.force (center.x, local_arc_points.upper + 1)
-					local_arc_points.force (center.y, local_arc_points.upper + 1)
-					local_arc_points.force (local_arc_points @ 1, local_arc_points.upper + 1)
-					local_arc_points.force (local_arc_points @ 2, local_arc_points.upper + 1)
-				end;
-				dc.polyline (local_arc_points)
-			end
-		end
+feature {EV_ANY_I} -- Implementation
 
-	arc_points (center: EV_COORDINATES; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: EV_ANGLE): ARRAY [INTEGER] is
-			-- Returns the list of an arbitrary number of ordonated points composing the arc
-		local
-			nb_fracs, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE
-			segment_count, i, center_x, center_y: INTEGER
-		do
-			coso := cosine (orientation.radians)
-			sino := sine (orientation.radians)
-			center_x := center.x
-			center_y := center.y
-			nb_fracs := 4 * radius1.max(radius2) * angle2.radians
-			segment_count := nb_fracs.rounded
-			angle_inc := angle2.radians / segment_count
-			loop_angle := angle1.degrees
-			!!Result.make (1, 2 * (segment_count + 1))
-			from
-				i := 0
-			until
-				i > segment_count
-			loop
-				ell_x := radius1 * cosine (loop_angle)
-				ell_y := radius2 * sine (loop_angle)
-				rot_x := center_x + ell_x * coso + ell_y * sino
-				rot_y := center_y - ell_x * sino + ell_y * coso
-				Result.put (rot_x.rounded, 2 * i + 1)
-				Result.put (rot_y.rounded, 2 * i + 2)
-				loop_angle := loop_angle + angle_inc
-				i := i + 1
-			end
-		end
-
-	deg_to_rad: DOUBLE is
-			-- degrees into radians conversion constant
-		once
-			Result := Pi / 180
-		end
-
-feature -- To check -- Temp
-
-	set_no_clip is
-			-- Remove all clip area.
-		local
-			c: CURSOR
-		do
-			if clip_list /= Void then
-				from
-					c:= clip_list.cursor
-					clip_list.start
-				variant
-					clip_list.count - clip_list.index
-				until
-					clip_list.after
-				loop
-					clip_list.forth
-				end
-				clip_list.go_to (c)
-			end
-		end
-
--- 	set_text_alignment is
- --			-- Set the default text alignment.
- --		require
- --			dc_not_void: dc /= Void
- --		do
- --			dc.set_text_alignment (ta_baseline)
- --		end
-
-	set_clip (a_clip: EV_CLIP) is
-			-- Set a clip area.
-		local
-			x1, y1, x2, y2: INTEGER
-		do
-			if clip_list = Void then
-				!! clip_list.make
-			end
-			x1 := a_clip.upper_left.x
-			y1 := a_clip.upper_left.y
-			x2 := a_clip.width - a_clip.upper_left.x
-			y2 := a_clip.height - a_clip.upper_left.y
-		end
-
-	set_fill_style (a_fill_style: INTEGER) is
-			-- Set the style of fill.
-		do
-			fill_style := a_fill_style
-			if is_drawable then
-				update_brush
-			end
-		end
-
-	set_line_style (a_line_style: INTEGER) is
-			-- Set line style.
-			-- Only 0 and 2 (1 = 2)
-		do
-			if a_line_style = 0 then -- Solid
-				line_style := 0
-			else
-				line_style := 2
-				-- Windows does not permit a dashed line
-				-- when width > 1
-				if line_width > 1 then
-					line_width := 1
-				end
-			end
-			if dc /= Void then
-				update_pen
-			end
-		end
-
-	set_stipple (a_stipple: EV_PIXMAP) is
-			-- Set stipple used to fill figures
-		local
-			pw: EV_PIXMAP_IMP
-			dib: WEL_DIB
---			bitmap: WEL_BITMAP
-		do
---			pw ?= a_stipple.implementation
---			check 
---				pixmap_windows_exists: pw /= Void
---			end
---			!! brush.make_by_pattern (pw.bitmap)
---			if dc /= Void then
---				update_brush
---			end
----			dib := pw.dib
---			if dib /= Void then
---				!! bitmap.make_by_dib (dc, dib, dib_rgb_colors)
---				!! brush.make_by_pattern (bitmap)
---				if dc /= Void then
---					update_brush
---				end
---			end
-		end
-
-	set_tile (a_tile: EV_PIXMAP) is
-			-- Set tile used to fill figures
-		local
-			a_color: WEL_COLOR_REF
-		do
-			set_stipple (a_tile)
-		end
-
-	copy_pixmap (a_point: EV_COORDINATES; a_pixmap: EV_PIXMAP) is
-			-- Copy `a_pixmap' to the drawing at `a_point'.
-			-- If there is not enough space to create auxiliery bitmap (DDB) 
-			-- exception will be raised
-		require else
-			dc_not_void: dc /= Void
-			dc_exists: dc.exists
-		local
---			pw: EV_PIXMAP_IMP
---			bitmap: WEL_BITMAP
---			dib: WEL_DIB
---			icon: WEL_ICON
-		do
---			pw ?= a_pixmap.implementation
---			check
---				pixmap_windows: pw /= Void
---			end
---			if pw.bitmap.item = pw.bitmap.item.default then
----				-- windows function "CreateDIBitmap" failed
---				exception_raise("Can not create windows bitmap");
---			end
---			dc.draw_bitmap (pw.bitmap, a_point.x, a_point.y, pw.width, pw.height)
----			pw.destroy
-
-----			dib := pw.dib
-----			if dib /= Void then
-----				!! bitmap.make_by_dib (dc, dib, dib_rgb_colors)
-----				if bitmap.item = bitmap.item.default then
-----					-- windows function "CreateDIBitmap" failed
-----					exception_raise("Can not create windows bitmap");
-----				end
-----				dc.draw_bitmap (bitmap, a_point.x, a_point.y, bitmap.width, bitmap.height)
-----				bitmap.delete
-----			else
-----				icon := pw.icon
-----				if icon /= Void then
-----					dc.draw_icon (icon, a_point.x, a_point.y)
-----				end
-----			end
-		end
+	interface: EV_DRAWABLE
 
 end -- class EV_DRAWABLE_IMP
 
@@ -868,3 +616,106 @@ end -- class EV_DRAWABLE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.15  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.14.6.24  2000/01/27 19:30:12  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.14.6.23  2000/01/25 23:32:07  brendel
+--| Removed _enum from drawing mode constants.
+--|
+--| Revision 1.14.6.22  2000/01/24 23:54:20  oconnor
+--| renamed EV_CLIP -> EV_RECTANGLE
+--|
+--| Revision 1.14.6.21  2000/01/21 23:16:01  brendel
+--| Clean-up.
+--|
+--| Revision 1.14.6.20  2000/01/21 00:44:39  brendel
+--| Fixed bug in `clear'.
+--|
+--| Revision 1.14.6.19  2000/01/20 23:26:53  brendel
+--| Fixed bug in set_clip_area.
+--|
+--| Revision 1.14.6.18  2000/01/20 22:25:54  brendel
+--| Implemented remove_tile.
+--| Clean-up.
+--|
+--| Revision 1.14.6.17  2000/01/20 21:48:44  brendel
+--| Added remove_tile and remove_clip_area.
+--| Implemented remove_clip_area.
+--|
+--| Revision 1.14.6.16  2000/01/20 21:27:09  brendel
+--| Implemented set_tile.
+--|
+--| Revision 1.14.6.15  2000/01/20 19:00:14  brendel
+--| Implemented clip_area.
+--|
+--| Revision 1.14.6.14  2000/01/20 17:49:20  king
+--| Added features update_brush and update_pen.
+--|
+--| Revision 1.14.6.13  2000/01/20 01:51:43  king
+--| Removed useless features.
+--| Implemented dashed line.
+--|
+--| Revision 1.14.6.12  2000/01/19 17:56:28  king
+--| Changed to comply with EV_DRAWABLE.
+--|
+--| Revision 1.14.6.11  2000/01/19 01:46:00  king
+--| Fixed bug in ellipse.
+--| Improved implementation.
+--| No outline for filled figures.
+--|
+--| Revision 1.14.6.10  2000/01/18 01:30:33  king
+--| Removed a lot of commented out stuff.
+--| Changed color imp.
+--|
+--| Revision 1.14.6.9  2000/01/11 00:51:31  king
+--| Added and fixed font feature.
+--| Changed all occ of 'y' with `y'.
+--|
+--| Revision 1.14.6.8  1999/12/30 18:38:34  king
+--| Corrected insufficiently copied/pasted code for pie-slice.
+--|
+--| Revision 1.14.6.7  1999/12/17 17:19:44  rogers
+--| Altered to fit in with the review branch. Previous commital would not compile at all, so this work attemopts to fix it.
+--|
+--| Revision 1.14.6.6  1999/12/09 18:16:34  brendel
+--| Improved `draw_straight_line'.
+--| Accidentally messed up draw_any_arc. Not needed anymore anyway.
+--| Changed drawing-mode interaction. Internally uses `wel_drawing_mode' now.
+--|
+--| Revision 1.14.6.5  1999/12/09 16:50:26  brendel
+--| Applied changes to EV_DRAWABLE. introduced `wel_drawing_mode' that is
+--| set and read by (set_)drawing_mode.
+--|
+--| Revision 1.14.6.4  1999/12/08 19:51:07  brendel
+--| Changed to comply with new EV_DRAWABLE_I.
+--| features are not yet implemented.
+--|
+--| Revision 1.14.6.3  1999/12/08 01:20:44  brendel
+--| Changed to comply with new EV_DRAWABLE_I.
+--| Simplified , so more efficient drawing primitives.
+--| draw_any_rectangle and draw_any_arc are not used at this point, but
+--| might be useful in the future.
+--| Now inherits from EV_FONTABLE_IMP, so that needs taking a look at.
+--|
+--| Revision 1.14.6.2  1999/12/07 23:40:33  rogers
+--| Alerations to fit in with the new ii.
+--|
+--| Revision 1.14.6.1  1999/11/24 17:30:19  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.14.2.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

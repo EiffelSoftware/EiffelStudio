@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
 		" EiffelVision text. A text area that contains%
@@ -30,16 +32,13 @@ inherit
 			implementation
 		end
 
-
 creation
 	make,
 	make_with_text,
 	make_horizontally_scrollable,
 	make_horizontally_scrollable_with_text
 
-
 feature {NONE} -- Initialization
-
 
 	make (par: EV_CONTAINER) is
 			-- Create an empty rich text area with `par' as parent.
@@ -70,13 +69,11 @@ feature {NONE} -- Initialization
 			create {EV_RICH_TEXT_IMP} implementation.make_with_properties (txt, True)
 			widget_make (par)
 		end
-
 feature -- Access
 
 	character_format: EV_CHARACTER_FORMAT is
 			-- Current character format.
 		require
-			exists: not destroyed
 		do
 			Result := implementation.character_format
 		end
@@ -87,7 +84,6 @@ feature -- Status report
 			-- Retrieves the line number from a character position.
 			-- Line numbers start at 1.
 		require
-			exists: not destroyed
 			index_large_enough: a_pos >= 0
 			index_small_enough: a_pos <= text_length + 2
 		do
@@ -101,7 +97,6 @@ feature -- Status setting
 	apply_format (format: EV_TEXT_FORMAT) is
 			-- Apply the given format to the text.
 		require
-			exists: not destroyed
 			valid_format: format /= Void
 		do
 			implementation.apply_format (format)
@@ -113,7 +108,6 @@ feature -- Element change
 			-- Apply `format' to the selection and make it the
 			-- current character format.
 		require
-			exists: not destroyed
 			valid_format: format /= Void
 		do
 			implementation.set_character_format (format)
@@ -125,7 +119,6 @@ feature -- Element change
 			-- Set the format of the text between `first_pos' and `last_pos' to
 			-- `format'. May or may not change the cursor position.
 		require
-			exists: not destroyed
 			valid_positions: valid_position (first_pos) and valid_position (last_pos)
 			format_not_void: format /= Void
 		do
@@ -137,7 +130,6 @@ feature -- Element change
 			-- Remove the character at the position `pos'
 			-- Moves the cursor backwards
 		require
-			exists: not destroyed
 			valid_pos: valid_position (pos)
 		do
 			remove_text (pos, pos)
@@ -146,7 +138,6 @@ feature -- Element change
 	remove_text (start_pos, end_pos: INTEGER) is
 			-- remove the text between `start_pos' and `end_pos'.
 		require
-			exists: not destroyed
 			valid_start_pos: valid_position (start_pos)
 			valid_end_pos: valid_position (end_pos)
 		do
@@ -166,7 +157,6 @@ feature -- Basic operation
 			-- to the upper-left corner of the client area of the
 			-- control.
 		require
-			exists: not destroyed
 			x_large_enough: value_x >= 0
 			y_large_enough: value_y >= 0
 		do
@@ -183,7 +173,6 @@ feature -- Basic operation
 			-- are in screen units relative to the upper-left
 			-- corner of the client area of the control.
 		require
-			exists: not destroyed
 			index_large_enough: value >= 0
 			index_small_enough: value <= text_length + 2
 		do
@@ -199,7 +188,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user inputs a text.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_insert_text_command (cmd, arg)
@@ -209,7 +197,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to delete a text.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_delete_text_command (cmd, arg)
@@ -220,7 +207,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to delete the right character.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_delete_right_character_command (cmd, arg)
@@ -231,7 +217,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to undo a command.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_undo_command (cmd, arg)
@@ -241,7 +226,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to redo a command.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_redo_command (cmd, arg)
@@ -253,7 +237,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user inputs a text.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_insert_text_commands
 		end
@@ -262,7 +245,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to delete a text.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_delete_text_commands
 		end
@@ -271,7 +253,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to delete the left character.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_delete_right_character_commands
 		end
@@ -280,7 +261,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to undo a command.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_undo_commands
 		end
@@ -289,7 +269,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- when the user wants to redo a command.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_undo_commands
 		end
@@ -315,3 +294,28 @@ end -- class EV_RICH_TEXT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.2.3.2.2  2000/01/27 19:30:56  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.2.3.2.1  1999/11/24 17:30:55  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.12.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

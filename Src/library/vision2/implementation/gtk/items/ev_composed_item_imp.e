@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision composed item, gtk implementation."
@@ -10,8 +12,14 @@ deferred class
 
 inherit
 	EV_COMPOSED_ITEM_I
+		redefine
+			interface
+		end
 
 	EV_ITEM_IMP
+		redefine
+			interface
+		end
 
 feature -- Access
 
@@ -76,6 +84,8 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
+	interface: EV_COMPOSED_ITEM
+
 	internal_pixmaps: ARRAYED_LIST [EV_PIXMAP_IMP]
 		-- Pixmaps in the cells.
 		-- They have to be stored in the right order.
@@ -102,3 +112,28 @@ end -- class EV_COMPOSED_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.3  2000/02/02 23:40:29  king
+--| Defined interface
+--|
+--| Revision 1.3.6.2  2000/01/27 19:29:24  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.1  1999/11/24 17:29:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 indexing
 	description: "EiffelVision scrollable text area. %
 				  %Mswindows implementation."
@@ -23,16 +24,17 @@ creation
 	make_with_properties
 
 feature -- Initialization
-
 	
 	make_with_properties (txt: STRING; hscroll, vscroll: BOOLEAN) is
 			-- Create a scrollable text area with `text' as text.
 			-- If `hscroll' then horizontally scrollable.
 			-- If `vscroll' then vertically scrollable.
 		do
-			make_with_text ("")
+			has_horizontal_scrolling := hscroll
+			has_vertical_scrolling := vscroll
+			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 		end
-	
+		
 feature -- Status Report
 	
 	horizontal_scroll_bar_visible: BOOLEAN is

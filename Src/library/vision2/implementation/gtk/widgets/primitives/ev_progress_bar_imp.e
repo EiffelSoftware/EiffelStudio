@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision Progress bar."
+	description: "Eiffel Vision Progress bar. GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,119 +9,73 @@ deferred class
 
 inherit
 	EV_PROGRESS_BAR_I
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
-
-	EV_PRIMITIVE_IMP
+		redefine
+			interface
+		end
 
 feature {NONE} -- Implementation
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the progress bar.
 		do
-			widget := gtk_progress_bar_new
-			gtk_object_ref (widget)
-		end
-
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a gauge with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment.
-			widget := c_gtk_progress_bar_new_with_adjustment (min, min, max, 1, 5)
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			set_c_object (C.gtk_event_box_new)		
+			gtk_progress_bar := C.gtk_progress_bar_new_with_adjustment (adjustment)
+			C.gtk_widget_show (gtk_progress_bar)
+			C.gtk_container_add (c_object, gtk_progress_bar)
 		end
 
 feature -- Access
 
-	value: INTEGER is
-			-- Current value of the gauge.
+	proportion: REAL is
+			-- Proportion of bar filled. Range: [0,1].
 		do
-			Result := gtk_progress_get_value (widget).rounded
-		end
-
-	step: INTEGER is
-			-- Step of the scrolling
-			-- ie : the user clicks on an arrow
-		do
-			Result := c_gtk_progressbar_get_step (widget).rounded
-		end
-
-	minimum: INTEGER is
-			-- Minimum value
-		do
-			Result := c_gtk_progressbar_get_minimum (widget).rounded
-		end
-
-	maximum: INTEGER is
-			-- Maximum value
-		do
-			Result := c_gtk_progressbar_get_maximum (widget).rounded
+			--Result := (value - minimum) / (maximum - minimum)
+			if not is_destroyed then
+				Result := C.gtk_progress_get_current_percentage (gtk_progress_bar)
+			end
 		end
 
 feature -- Status report
 
 	is_segmented: BOOLEAN is
-			-- Is the mode in segmented mode?
-		local
-			mode: INTEGER
+			-- Is display segmented?
 		do
-			mode := c_gtk_progress_bar_style (widget)
-
-			if (mode = 0) then
-				Result := False
-			else
-				Result := True
-			end
+			Result := C.gtk_progress_bar_struct_bar_style (gtk_progress_bar) =
+				C.Gtk_progress_discrete_enum
 		end
 
 feature -- Status setting
 
-	set_percentage (val: INTEGER) is
-			-- Make `value' the new percentage filled by the
-			-- progress bar.
+	enable_segmentation is
+			-- Display bar divided into segments.
 		do
-			gtk_progress_bar_update (widget, val/100)
+			C.gtk_progress_bar_set_bar_style (gtk_progress_bar, C.Gtk_progress_discrete_enum)
 		end
 
-	set_segmented (flag: BOOLEAN) is
-			-- Set the progress bar mode in
-			-- segmented if `flag' is true, in
-			-- continuous otherwise.
+	disable_segmentation is
+			-- Display bar without segments.
 		do
-			if flag then
-				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_DISCRETE)
-			else
-				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_CONTINUOUS)
-			end
+			C.gtk_progress_bar_set_bar_style (gtk_progress_bar, C.Gtk_progress_continuous_enum)
 		end
 
-feature -- Element change
-
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
+	set_proportion (a_proportion: REAL) is
+			-- Display bar with `a_proportion' filled.
 		do
-			gtk_progress_set_value (widget, val.out.to_real)
+			C.gtk_progress_set_percentage (gtk_progress_bar, a_proportion)
 		end
 
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			c_gtk_progressbar_set_step (widget, val.out.to_real)
-		end
+feature {EV_ANY_I} -- Implementation
 
-	set_minimum (val: INTEGER) is
-			-- Make `val' the new minimum.
-		do
-			c_gtk_progressbar_set_minimum (widget, val.out.to_real)
-		end
+	gtk_progress_bar: POINTER
 
-	set_maximum (val: INTEGER) is
-			-- Make `val' the new maximum.
-		do
-			c_gtk_progressbar_set_maximum (widget, val.out.to_real)
-		end
+	interface: EV_PROGRESS_BAR
 
 end -- class EV_PROGRESS_BAR_IMP
 
@@ -140,3 +94,43 @@ end -- class EV_PROGRESS_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.6.7  2000/02/14 11:04:08  oconnor
+--| wrapped in event box
+--|
+--| Revision 1.10.6.6  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.10.6.5  2000/01/31 21:34:52  brendel
+--| Revised.
+--|
+--| Revision 1.10.6.4  2000/01/27 19:29:47  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.6.3  2000/01/17 19:08:01  oconnor
+--| changed percentage to proportion
+--|
+--| Revision 1.10.6.2  2000/01/14 21:47:31  king
+--| Reduced the number of calls to external user c-functions, converted to new structure
+--|
+--| Revision 1.10.6.1  1999/11/24 17:29:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.3  1999/11/17 01:53:05  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

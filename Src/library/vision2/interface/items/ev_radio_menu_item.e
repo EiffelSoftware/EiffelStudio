@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"EiffelVision radio menu item. Item that must be put in%
@@ -60,7 +62,6 @@ feature -- Status Setting
 	set_peer (peer: like Current) is
 			-- Put in same group as peer
 		require
-			exists: not destroyed
 		do
 			implementation.set_peer (peer)
 		ensure
@@ -89,3 +90,28 @@ end -- class EV_RADIO_MENU_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.2  2000/01/27 19:30:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.3  1999/11/04 23:10:51  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,15 +1,18 @@
+--| FIXME Not for release
 indexing
-	description: "EiffelVision font, mswindow implementation."
-	note: "This class represents a WEL_LOG_FONT";
-	status: "See notice at end of class";
-	date: "$Date$";
+	description: "Eiffel Vision font. Mswindows implementation."
+	status: "See notice at end of class"
+	keywords: "character, face, height, family, weight, shape, bold, italic"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EV_FONT_IMP
-	
+
 inherit
-	EV_FONT_I 
+	EV_FONT_I
+
+	EV_FONT_CONSTANTS
 
 	WEL_CAPABILITIES_CONSTANTS
 		rename
@@ -18,435 +21,298 @@ inherit
 		export
 			{NONE} all
 		end
-	
-creation
-	make,
-	make_by_name,
-	make_by_system_name,
-	make_by_wel
+
+create
+	make
 
 feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
-	make is
-			-- Create a font
+	--| Note on implementation. VB 10 jan 2000
+	--| All information is stored in wel_log_font, although
+	--| wel_font is the actual font object. Every time there is
+	--| is an update on wel_log_font, the wel_font has to be created
+	--| again by: wel_font.set_indirect (wel_log_font). In the creation
+	--| procedure, first the wel_font is created, because wel_log_font
+	--| cannot be instantiated without arguments.
+
+	make (an_interface: like interface) is
+			-- Create a font.
 		do
+			base_make (an_interface)
 			create {WEL_SYSTEM_FONT} wel_font.make
 			create wel_log_font.make_by_font (wel_font)
+			create wel_font.make_indirect (wel_log_font)
+			wel_log_font.set_width (0)
+			set_family (Ev_font_family_sans)
+			set_weight (Ev_font_weight_regular)
+			set_shape (Ev_font_shape_regular)
+			set_height (8)
 		end
 
-	make_by_name (str: STRING) is
-			-- Create a font from the given face name
-		require
-			valid_name: str /= Void and not str.empty
-			face_name_only: str.occurrences (',') = 0
+	initialize is
 		do
-			create wel_log_font.make (0, str)
-			allocate
-		end
-
-
-	make_by_system_name (str: STRING) is
-			-- Create the font corresponding to the given system
-			-- name.
-			-- The font is directly readed on a file.
-		require
-			valid_arguments_count: str.occurrences (',') = 12
-			valid_name: str /= Void and not str.empty
-		do
-			make
-			parse_font_string (str)
-		end
-
-	make_by_wel (a_wel_font: WEL_FONT) is
-			-- Create a font given `a_wel_font'
-		require
-			a_wel_font_exists: a_wel_font /= Void
-		do
-			wel_font := a_wel_font
-			create wel_log_font.make_by_font (wel_font)
+			is_initialized := True
 		end
 
 feature -- Access
 
-	name:STRING is
-			-- Face name.
+	family: INTEGER
+			-- Preferred font category.
+
+	weight: INTEGER
+			-- Preferred font thickness.
+
+	shape: INTEGER
+			-- Preferred font slant.
+
+	height: INTEGER is
+			-- Preferred font height measured in screen pixels.
+		do
+			Result := wel_log_font.height
+		end
+
+	preferred_face: STRING
+			-- Preferred user font.
+			-- `family' will be ignored when not Void.
+
+feature -- Element change
+
+	set_family (a_family: INTEGER) is
+			-- Set `a_family' as preferred font category.
+		do
+			family := a_family
+			update_font_face
+		end
+
+	set_weight (a_weight: INTEGER) is
+			-- Set `a_weight' as preferred font thickness.
+		do
+			weight := a_weight
+			inspect weight
+			when Ev_font_weight_thin then
+				wel_log_font.set_weight (100)
+			when Ev_font_weight_regular then
+				wel_log_font.set_weight (400)
+			when Ev_font_weight_bold then
+				wel_log_font.set_weight (700)
+			when Ev_font_weight_black then
+				wel_log_font.set_weight (1000)
+			else
+				check impossible: False end
+			end
+			wel_font.set_indirect (wel_log_font)
+		end
+
+	set_shape (a_shape: INTEGER) is
+			-- Set `a_shape' as preferred font slant.
+		do
+			shape := a_shape
+			inspect shape
+			when Ev_font_shape_regular then
+				wel_log_font.set_not_italic
+			when Ev_font_shape_italic then
+				wel_log_font.set_italic
+			else
+				check impossible: False end
+			end
+			wel_font.set_indirect (wel_log_font)
+		end
+
+	set_height (a_height: INTEGER) is
+			-- Set `a_height' as preferred font size.
+		do
+			wel_log_font.set_height (a_height)
+			wel_font.set_indirect (wel_log_font)
+		end
+
+	set_preferred_face (a_preferred_face: STRING) is
+			-- Set `a_preferred_face' as preferred font face.
+		do
+			preferred_face := a_preferred_face
+			update_font_face
+		end
+
+	remove_preferred_face is
+			-- Set `a_preferred_face' to Void.
+		do
+			preferred_face := Void
+			update_font_face
+		end
+
+feature -- Status report
+
+	name: STRING is
+			-- Face name chosen by toolkit.
 		do
 			Result := wel_log_font.face_name
 		end
 
-	system_name: STRING is
-			-- String form of font details
-		local
-			size_in_point: INTEGER
-			screen_dc: WEL_SCREEN_DC
-		do
-			create Result.make (60)
-				-- face name
-			Result.append (wel_log_font.face_name)
-			Result.extend (',')
-				-- point size
-			size_in_point := -wel_log_font.height
-			create screen_dc
-			screen_dc.get
-			size_in_point := mul_div (size_in_point, 72,
-								get_device_caps (screen_dc.item, logical_pixels_y))
-			screen_dc.release
-
-			Result.append_integer (size_in_point)
-			Result.extend (',')
-				-- weight
-			Result.append_integer (wel_log_font.weight)
-			Result.extend (',')
-				-- styles
-			if wel_log_font.italic then
-				Result.extend ('i')
-			end
-			if wel_log_font.strike_out then
-				Result.extend ('s')
-			end
-			if wel_log_font.underlined then
-				Result.extend ('u')
-			end
-			Result.extend (',')
-				-- pitch
-			if wel_log_font.has_fixed_pitch then
-				Result.append ("fixed")
-			elseif wel_log_font.has_variable_pitch then
-				Result.append ("variable")
-			else
-				Result.append ("default")
-			end
-			Result.extend (',')
-				-- Family
-			if wel_log_font.is_decorative_family then
-				Result.append ("decorative")
-			elseif wel_log_font.is_modern_family then
-				Result.append ("modern")
-			elseif wel_log_font.is_script_family then
-				Result.append ("script")
-			elseif wel_log_font.is_swiss_family then
-				Result.append ("swiss")
-			elseif wel_log_font.is_roman_family then
-				Result.append ("roman")
-			else
-				Result.append ("dontcare")
-			end
-			Result.extend (',')
-				-- charset
-			if wel_log_font.has_ansi_character_set then
-				Result.append ("ansi")
-			elseif wel_log_font.has_oem_character_set then
-				Result.append ("oem")
-			elseif wel_log_font.has_symbol_character_set then
-				Result.append ("symbol")
-			else
-				Result.append ("default")
-			end
-			Result.extend (',')
-				-- orientation
-			Result.append_integer (wel_log_font.orientation)
-			Result.extend (',')
-				-- escapement
-			Result.append_integer (wel_log_font.escapement)
-			Result.extend (',')
-				-- width
-			Result.append_integer (wel_log_font.width)
-			Result.extend (',')
-				-- quality
-			if wel_log_font.has_proof_quality then
-				Result.append ("proof")
-			elseif wel_log_font.has_draft_quality then
-				Result.append ("draft")
-			else
-				Result.append ("default")
-			end
-			Result.extend (',')
-				-- clip_precision
-			if wel_log_font.has_character_clipping_precision then
-				Result.append ("character")
-			elseif wel_log_font.has_stroke_clipping_precision then
-				Result.append ("stroke")
-			else
-				Result.append ("default")
-			end
-			Result.extend (',')
-				-- out_precision
-			if wel_log_font.has_character_output_precision then
-				Result.append ("character")
-			elseif wel_log_font.has_string_output_precision then
-				Result.append ("string")
-			elseif wel_log_font.has_stroke_output_precision then
-				Result.append ("stroke")
-			else
-				Result.append ("default")
-			end
-		end
-
 	ascent: INTEGER is
-			-- Ascent value in pixel of the font loaded.
+			-- Vertical distance from the origin of the drawing
+			-- operation to the top of the drawn character. 
 		do
 			Result := text_metrics.ascent
 		end
 
 	descent: INTEGER is
-			-- Descent value in pixel of the font loaded.
+			-- Vertical distance from the origin of the drawing
+			-- operation to the bottom of the drawn character. 
 		do
 			Result := text_metrics.descent
 		end
 
-feature -- Measurement
-
-	height: INTEGER is
-			-- Height of the font
-			-- Result in points
+	width: INTEGER is
+			-- Character width of current fixed-width font.
 		do
-			Result := wel_log_font.height
+			Result := string_width ("x")
 		end
 
-	width: INTEGER is
-			-- Average width of the current font
+	minimum_width: INTEGER is
+			-- Width of the smallest character in the font.
 		do
-			Result := wel_log_font.width
+			Result := string_width ("l")
 		end
 
 	maximum_width: INTEGER is
-			-- Width of the widest character in the font
+			-- Width of the biggest character in the font.
 		do
-			Result := text_metrics.maximum_character_width
+			Result := string_width ("w")
 		end
 
-	string_width (str: STRING): INTEGER is
+	string_width (a_string: STRING): INTEGER is
+			-- Width in pixels of `a_string' in the current font.
 		local
 			screen_dc: WEL_SCREEN_DC
 			ww: WEL_WINDOW
 			number_of_lines: INTEGER
 		do
-			if not str.empty then
+			if a_string /= Void and then not a_string.empty then
 				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (wel_font)
-				number_of_lines := str.occurrences ('%N') + 1
+				number_of_lines := a_string.occurrences ('%N') + 1
 				if number_of_lines > 1 then
-					Result := maximum_line_width (screen_dc, str, number_of_lines)
+					Result := maximum_line_width (screen_dc, a_string, number_of_lines)
 				else
-					Result := screen_dc.string_width (str)
+					Result := screen_dc.string_width (a_string)
 				end
 				screen_dc.unselect_font
 				screen_dc.release
 			end
 		end
 
-	horizontal_resolution: INTEGER
-			-- Horizontal resolution of screen for which
-			-- the font is designed
-
-	vertical_resolution: INTEGER
-			-- Vertical resolution of screen for which the font is designed
-
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is Current object destroyed?  
+	horizontal_resolution: INTEGER is
+			-- Horizontal resolution of screen for which the font is designed.
 		do
-			Result := not wel_font.exists
-		end
-
-	is_proportional: BOOLEAN
-			-- Is the font proportional ?
-
-	is_standard: BOOLEAN is True
-			-- Is the font standard and information available?
-
-	weight: STRING is
-			-- Weight of font (Bold, Medium...)
-		do
-			Result := "*" 
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy actual object.
-		do
-			wel_font.delete
-			wel_font := Void
-			wel_log_font := Void
-		end
-
-feature -- Element change
-
-	set_name (str: STRING) is
-			-- sets the name of the current font
-		local
-			h: INTEGER
-		do
-			if not allocated then
-				h := height
-				create wel_log_font.make (h, str)
-				allocate
-			else
-				wel_log_font.set_face_name (str)
-				re_allocate
+			check
+				to_be_implemented: False
 			end
+			Result := 1
 		end
 
-	parse_font_string (str: STRING) is
-			-- parses the `str' and calls the other set routines
-		require
-			valid_name: str /= Void and not str.empty
-			valid_arguments_count: str.occurrences (',') = 12
-		local
-			pos, new_pos: INTEGER
-			number: INTEGER
-			parsed: ARRAY [STRING]
+	vertical_resolution: INTEGER is
+			-- Vertical resolution of screen for which the font is designed.
 		do
-			from
-				create parsed.make (1, 13)
-				number :=1
-			until
-				number > 13
-			loop
-				parsed.put ("", number)
-				number := number + 1
+			check
+				to_be_implemented: False
 			end
-			from
-				pos := 0
-				new_pos := 1
-				number := 1
-			variant
-				str.count - pos + 1
-			until
-				(pos > str.count) or (number = 13) or (new_pos = 0)
-			loop
-				new_pos := str.index_of (',', pos + 1)
-				if pos < new_pos-1 then
-					parsed.put (str.substring (pos+1, new_pos-1), number)
-					parsed.item (number).left_adjust
-					parsed.item (number).right_adjust
-					if number > 1 then
-						parsed.item (number).to_lower
-					end
-				end
-				number := number+1
-				pos := new_pos
-			end
-			if not (parsed @ 1).empty then
-				wel_log_font.set_face_name (parsed @ 1)
-			end
-			set_height (to_integer (parsed @ 2))
-			set_weight (to_integer (parsed @ 3))
-			set_styles (parsed @ 4)
-			set_pitch (parsed @ 5)
-			set_family (parsed @ 6)
-			set_charset (parsed @ 7)
-			set_orientation (parsed @ 8)
-			set_escapement (parsed @ 9)
-			set_width (to_integer (parsed @ 10))
-			set_quality (parsed @ 11)
-			set_clip_precision (parsed @ 12)
-			set_out_precision (parsed @ 13)
-			allocate
+			Result := 1
 		end
 
-	set_width (value: INTEGER) is
-			-- Make `value' the new width.
+	is_proportional: BOOLEAN is
+			-- Can characters in the font have different sizes?
 		do
-			wel_log_font.set_width (value)
-		end
-
-	set_height (value: INTEGER) is
-			-- Make `value' the new height.
-			-- height is in points.
-		local
-			screen_dc: WEL_SCREEN_DC
-			real_size: INTEGER
-		do
-			if value > 0 then
-					-- Compute the real size of the font which depends of the
-					-- specified size `a_height' and from the screen resolution:
-					-- (height in point * Number of pixels per logical inch
-					-- along the display height) / 72 pixels per inch
-			--	create screen_dc
-			--	screen_dc.get
-			--	real_size :=   mul_div (value,
-			--					get_device_caps (screen_dc.item, logical_pixels_y), 72)
-			--	screen_dc.release
-
-					-- Set the computed font height.
-				wel_log_font.set_height (value)
-			else
-					-- Set the default height to the current font.
-				wel_log_font.set_height (0)
+			check
+				to_be_implemented: False
 			end
-			re_allocate
+			Result := True
 		end
+ 
+feature -- Obsolete
 
-	set_weight (value: INTEGER) is
-			-- Make `value' the new weight.
+	system_name: STRING is
+			-- Platform dependent font name.
 		do
-			wel_log_font.set_weight (value)
+			Result := "Obsolete"
 		end
 
-feature -- Implementation
+ 	is_standard: BOOLEAN is True
+ 			-- Is the font standard and informations available (except for name) ?
+
+feature {EV_ANY_I} -- Access
 
 	wel_font: WEL_FONT
-			-- WEL font
+			-- Basic WEL font.
 
 	wel_log_font: WEL_LOG_FONT
-			-- WEL_LOG_FONT to hold details
+			-- More detail added to WEL font.
+
+feature {EV_FONTABLE_IMP} -- Access
+
+	set_by_wel_font (wf: WEL_FONT) is
+			-- Set state by passing an already created WEL_FONT.
+		obsolete
+			"This is not the way we do things in vision2."
+		do
+			wel_font := wf
+			create wel_log_font.make_by_font (wel_font)
+			family := 0
+			weight := 0
+			shape := 0
+			preferred_face := Void
+		end
 
 feature {NONE} -- Implementation
 
-	text_metrics: WEL_TEXT_METRIC is
-		local
-			sdc: WEL_SCREEN_DC
+	destroy is
+			-- Destroy WEL font.
 		do
-			create sdc
-			sdc.get
-			sdc.select_font (wel_font)
-			create Result.make (sdc)
-			sdc.unselect_font
-			sdc.release
-		ensure
-			result_exists: Result /= Void
+			wel_font.delete
 		end
 
-feature {NONE} -- Bizarre
-
-	allocated: BOOLEAN
-			-- Has a new font been allocated?
-
-	maximum_character_width: INTEGER is
-			-- Width of the widest character in the font
+	update_font_face is
+			-- Find a font face based on properties
+			-- `preferred_face' and `family'.
 		do
-			Result := text_metrics.maximum_character_width
+			--| FIXME NOTE
+			--| There seems to be a bug in WEL:
+			--| postcondition violation in set_family.
+
+			if preferred_face /= Void then
+				set_name (preferred_face)
+			else
+				inspect family
+				when Ev_font_family_screen then
+					set_name ("System")
+				when Ev_font_family_roman then
+					set_name ("Times New Roman")
+				when Ev_font_family_sans then
+					set_name ("MS Sans Serif")
+				when Ev_font_family_typewriter then
+					set_name ("Courier New")
+				when Ev_font_family_modern then
+					set_name ("Modern")
+				else
+					check impossible: False end
+				end
+			end
 		end
 
-	--XX Are the three following features usefull ?
-	--XX And anyway, what does it do ?
-
-	character_set: STRING is
-			-- (iso8859-1, ...)
+	set_name (str: STRING) is
+			-- sets the name of the current font
 		do
-			Result := "*-*" 
+			wel_log_font.set_face_name (str)
+			wel_font.set_indirect (wel_log_font)
 		end
 
-	family: STRING is
-			-- Family name (courier, Helvetica...)
+	remove_name is
+			-- Set face name on WEL font to NULL.
+			-- Let toolkit find the best matching name.
 		do
-			Result := "*" 
+			--| FIXME VB
+			--| WEL-expert? Please check this code:
+			--cwel_log_font_set_facename (wel_log_font.item, Default_pointer)
 		end
-
-	foundry: STRING is
-			-- Foundry name (Adobe...)
-		do
-			Result := "*" 
-		end
-
-	--XX
-
-	is_specified: BOOLEAN is True
-			-- Is the font specified ?
 
 	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER): INTEGER is
 			-- Calculate the width of the longest %N delimited string in
@@ -478,29 +344,23 @@ feature {NONE} -- Bizarre
 			end
 		end
 
-	point: INTEGER
-			-- Size of font in tenth of points (1 point = 1/72 of an inch)
-
--- XX is this usefull ?
-	slant: CHARACTER is
-			-- Slant of font (o, r, i...)
+	text_metrics: WEL_TEXT_METRIC is
+			-- Text metric object for current WEL font.
+			--| Used to get `ascent' and `descent'.
+		local
+			sdc: WEL_SCREEN_DC
 		do
-			Result := '*' 
+			create sdc
+			sdc.get
+			sdc.select_font (wel_font)
+			create Result.make (sdc)
+			sdc.unselect_font
+			sdc.release
+		ensure
+			result_exists: Result /= Void
 		end
 
-	allocate is
-			-- Allocate the WEL_FONT
-		do
-			create wel_font.make_indirect (wel_log_font)
-			allocated := True
-		end
-
-	re_allocate is
-			-- Re-allocate the WEL_FONT (doesn't make new object)
-		do
-			wel_font.set_indirect (wel_log_font)
-			allocated := True
-		end
+feature {NONE} -- Not used
 
 	set_charset (a_charset: STRING) is
 			-- Set the charset to a value based on `a_charset'
@@ -540,7 +400,7 @@ feature {NONE} -- Bizarre
 			end
 		end
 
-	set_family (a_family: STRING) is
+	OLD_set_family (a_family: STRING) is
 			-- Set family based on a value in `a_family'
 		do
 			if a_family.is_equal ("decorative") then
@@ -625,34 +485,6 @@ feature {NONE} -- Bizarre
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	to_integer (s: STRING): INTEGER is
-			-- Convert `s' to its integer representation.
-			-- 0 if `s' is not an integer.
-		do
-			if s /= Void and then s.is_integer then
-				Result := s.to_integer
-			end
-		end
-
-	mul_div (i,j,k: INTEGER): INTEGER is
-			-- Does `i * j / k' but in a safe manner where the 64 bits integer
-			-- obtained by `i * j' is not truncated.
-		external
-			"C [macro <windows.h>] (int, int, int): EIF_INTEGER"
-		alias
-			"MulDiv"
-		end
-
-	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
-			-- Retrieves device-specific information about a specified device.
-		external
-			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
-		alias
-			"GetDeviceCaps"
-		end
-
 invariant
 	wel_log_font_exists: wel_log_font /= Void
 	wel_font_exists: wel_font /= Void
@@ -675,3 +507,64 @@ end -- class EV_FONT_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.17  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.16.6.13  2000/01/27 19:30:10  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.16.6.12  2000/01/21 23:13:45  brendel
+--| Changed moment at which default values are set.
+--|
+--| Revision 1.16.6.11  2000/01/19 23:42:09  rogers
+--| In make, changed wel_log_font.make_with_font to wel_log_font.make_by_font.
+--|
+--| Revision 1.16.6.10  2000/01/19 22:15:05  king
+--| Changed export status of set_by_wel_font.
+--|
+--| Revision 1.16.6.9  2000/01/19 22:00:27  king
+--| Added function `set_by_wel_font'.
+--| This does not set the variables of EV_FONT!
+--|
+--| Revision 1.16.6.8  2000/01/12 00:34:36  king
+--| Nicer default font.
+--|
+--| Revision 1.16.6.7  2000/01/11 01:23:42  king
+--| Fixed minor bug regarding widths of fonts.
+--|
+--| Revision 1.16.6.6  2000/01/11 00:50:35  king
+--| Changed behaviour of set_family, so that it has a nice
+--| default value.
+--| Fixed minor bug in set_weight.
+--|
+--| Revision 1.16.6.5  2000/01/10 20:20:48  rogers
+--| Stengthend  pre-condition on string_width.
+--|
+--| Revision 1.16.6.4  2000/01/10 19:14:06  king
+--| Changed interface.
+--| Improved comments.
+--| Improved contracts.
+--| set_name is now obsolete.
+--|
+--| Revision 1.16.6.3  2000/01/10 17:11:58  rogers
+--| strngthened pre-condition on string width.
+--|
+--| Revision 1.16.6.2  1999/12/17 17:24:32  rogers
+--| Altered to fit in with the review branch.Make procedures have been changed temporarily, not final.
+--|
+--| Revision 1.16.6.1  1999/11/24 17:30:18  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.16.2.3  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,9 +1,6 @@
 indexing
-
-	description: 
-		"EiffelVision menu item, gtk implementation."
+	description: "Eiffel Vision menu item. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -13,181 +10,63 @@ class
 inherit
 	EV_MENU_ITEM_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_SIMPLE_ITEM_IMP
-		undefine
-			pixmap_size_ok,
-			parent
 		redefine
-			parent_imp
+			interface,
+			initialize
 		end
-
-	EV_MENU_ITEM_HOLDER_IMP
-		rename
-			parent_imp as widget_parent_imp,
-			parent_set as widget_parent_set
-		undefine
-			has_parent,
-			set_foreground_color
-		end
-
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create an item with an empty name.
+	make (an_interface: like interface) is
+			-- Create a menu.
 		do
-			-- Create the gtk object.
-			widget := gtk_menu_item_new
-			gtk_object_ref (widget)
-
-			-- Create the `box'.
-			initialize
-
-			-- Create the array where the items will be listed.
-			create ev_children.make (0)
-
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+			base_make (an_interface)
+			set_c_object (C.gtk_menu_item_new)
+			connect_signal_to_actions ("activate", interface.press_actions)
 		end
-
-feature -- Access
-
-	index: INTEGER is
-			-- Index of the current item.
+	
+	initialize is
+			-- Call to both precursors.
 		do
-			check
-				To_be_implemented: False
-			end
+			textable_imp_initialize
+			pixmapable_imp_initialize
+			initialize_menu_item_box
+			--set_pixmap (create {EV_PIXMAP}.make_with_size (16, 16))
+			{EV_SIMPLE_ITEM_IMP} Precursor
 		end
 
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-
-feature -- Status report
-
-	is_insensitive: BOOLEAN is
-			-- Is current widget insensitive?
-   		do
-                        Result := not c_gtk_widget_sensitive (widget)
-		end
-
-feature -- Status setting
-
-	set_selected (flag: BOOLEAN) is
-   			-- Set current item as the selected one.
-			-- We use this function only when the parent
-			-- of the parent (the menu) is an option button.
+	initialize_menu_item_box is
+			-- Create and initialize menu item box.
 		local
-			pos: INTEGER
-   		do
-			if (flag) then
-				pos := c_gtk_option_button_index_of_menu_item (parent_imp.parent_imp.widget, widget)
-				gtk_option_menu_set_history (parent_imp.parent_imp.widget, pos)
-			end  
- 		end
-
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item in the
-			-- list.
+			box: POINTER
 		do
-			check
-				To_be_implemented: False
-			end
+			box := C.gtk_hbox_new (False, 0)
+			C.gtk_container_add (c_object, box)
+			C.gtk_widget_show (box)
+
+			C.gtk_box_pack_start (box, pixmap_box, False, True, 0)
+			C.gtk_widget_hide (pixmap_box)
+			C.gtk_box_pack_start (box, text_label, True, True, 0)
+			C.gtk_widget_show (text_label)
+		ensure
+			menu_item_box /= default_pointer
+		end
+	
+feature {EV_ANY_I} -- Implementation
+
+	menu_item_box: POINTER is
+		do
+			Result := C.gtk_container_children (c_object)
+			Result := C.g_list_nth_data (Result, 0)
 		end
 
-	clear_items is
-			-- Clear all the items of the list.
-			-- (Remove them from the menu and destroy them).
-		do
-			-- clear the EiffelVision objects.
-			clear_ev_children
-
-			-- clear the gtk objects.
-			c_gtk_menu_remove_all_items (C_GTK_MENU_ITEM_SUBMENU (widget))
-		end
-
-feature -- Assertion
-
-	grand_parent_is_option_button: BOOLEAN is
-			-- Is true if the grand parent is an option button.
-			-- False otherwise.
-		local
-			gd_par: EV_OPTION_BUTTON
-		do
-			gd_par ?= parent_imp.parent_imp.interface
-			Result := (gd_par /= Void)
-		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
-			-- False otherwise.
-			-- Works only when the parent is an option button.
-		local
-			selected_item_p: POINTER
-		do
-			-- Pointer to the menu_item which is currently selected:
-			selected_item_p := c_gtk_option_button_selected_menu_item (parent_imp.parent_imp.widget)
-			if widget = selected_item_p then
-				Result := True
-			else
-				Result := False
-			end
-		end
-
-feature -- Event : command association
-
-	add_select_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
-			-- The toggle event doesn't work on gtk, then
-			-- we add both event command.
-		do
-			add_command (widget, "activate", command, arguments, default_pointer)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is activated.
-		do
-			remove_commands (widget, activate_id)
-		end	
-
-feature {NONE} -- Implementation
-
-	add_item (item_imp: EV_MENU_ITEM_IMP) is
-			-- Add an item to the current item. The current
-			-- item become then a sub-menu
-		local
-			submenu: POINTER
-		do
-			if C_GTK_MENU_ITEM_SUBMENU(widget) = default_pointer then
-				submenu := gtk_menu_new () 
-				gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenu)
-			end
-			gtk_menu_append (C_GTK_MENU_ITEM_SUBMENU(widget), item_imp.widget)
-
-			-- Update the array `ev_children'.
-			ev_children.extend (item_imp)			
-		end		
-
-	remove_item (item_imp: EV_MENU_ITEM_IMP) is
-			-- Remove `item_imp' from the list.
-		do
-			gtk_container_remove (GTK_CONTAINER (C_GTK_MENU_ITEM_SUBMENU(widget)), item_imp.widget)
-
-			-- Update the array `ev_children'.
-			ev_children.prune_all (item_imp)
-		end
+	interface: EV_MENU_ITEM
 
 end -- class EV_MENU_ITEM_IMP
 
@@ -206,3 +85,47 @@ end -- class EV_MENU_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.37  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.36.6.8  2000/02/05 01:37:14  brendel
+--| Cleanup.
+--|
+--| Revision 1.36.6.7  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.36.6.6  2000/02/04 01:15:02  brendel
+--| Added connect to activate signal in creation.
+--|
+--| Revision 1.36.6.5  2000/02/03 23:31:59  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.36.6.4  2000/02/02 00:06:44  oconnor
+--| hacking menus
+--|
+--| Revision 1.36.6.3  2000/01/27 19:29:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.36.6.2  1999/11/30 17:25:13  brendel
+--| Added redefine of initialize because of change in EV_TEXTABLE_IMP.
+--|
+--| Revision 1.36.6.1  1999/11/24 17:29:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.36.2.3  1999/11/09 16:53:14  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.36.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

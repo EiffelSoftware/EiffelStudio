@@ -1,153 +1,161 @@
 indexing
-        description: 
-                "EiffelVision push button, gtk implementation.";
-        status: "See notice at end of class";
-        id: "$Id$";
-        date: "$Date$";
-        revision: "$Revision$"
+	description:
+		"Eiffel Vision button. GTK implementation."
+	status: "See notice at end of class"
+	keywords: "press, push, label, pixmap"
+	date: "$Date$"
+	revision: "$Revision$"
         
 class
-        EV_BUTTON_IMP
+	EV_BUTTON_IMP
         
 inherit
-        EV_BUTTON_I
+	EV_BUTTON_I
+		redefine
+			interface
+		end
         
 	EV_PRIMITIVE_IMP
-		undefine
-			set_foreground_color,
-			set_background_color
+		redefine
+			interface,
+			initialize,
+			make
 		end
-	
-	EV_BAR_ITEM_IMP
-        
+ 
+	EV_PIXMAPABLE_IMP
+		redefine
+			set_pixmap,
+			remove_pixmap,
+			interface,
+			initialize
+		end
+     
 	EV_TEXTABLE_IMP
 		redefine
-			set_text
+			set_text,
+			remove_text,
+			interface,
+			initialize
 		end
 
-	EV_PIXMAPABLE_IMP
-		undefine
-			pixmap_size_ok
-		redefine
-			set_foreground_color,
-			set_background_color,
-			create_pixmap_place
-		end
-        
-	EV_GTK_BUTTONS_EXTERNALS
+--FIXME	EV_BAR_ITEM_IMP
 
 create
-        make,
-	make_with_text
+        make
 
 feature {NONE} -- Initialization
 	
-	make is
+	make (an_interface: like interface) is
+			-- Connect interface and initialize `c_object'.
 		do
-			-- Create the gtk object.
-			widget := gtk_button_new
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			set_c_object (C.gtk_button_new)
+		end
 
-			-- Create the `box'.
-			initialize
-		end	
-		
-	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
-			-- prepare the place for the pixmap in the `box'.
-			-- For that, we add a pixmap with a default gdk pixmap
-			-- in the `box'.
-			-- Redefined because, we want the pixmap to be in the middle of the button.
+	initialize is
+			-- Set up action sequence connection and `Precursor' initialization,
+			-- create button box to hold label and pixmap.
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			pixmapable_imp_initialize
+			textable_imp_initialize
+			initialize_button_box
+			connect_signal_to_actions ("clicked", interface.press_actions)
+			is_initialized := True
+			align_text_center
+		end
+
+	initialize_button_box is
+			-- Create and initialize button box.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			box: POINTER
 		do
-			-- create the pixmap with a default xpm.
-			-- We use the pixmap's `create_window' to create the new pixmap
-			-- as we need a GdkWindow.
-			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
-
-			-- Set the pixmap in the `box'.
-			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, True, True, 0)
-
-			-- show the pixmap now that it has a parent.
-			gtk_widget_show (pixmap_widget)
-
-			-- If there is a text,
-			If label_widget /= default_pointer then
-				-- We right-align and vertical_center-position the pixmap.
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
-
-				-- We left-align and vertical_center-position the text
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
-			end
-		end					
-
+			box := C.gtk_hbox_new (False, 0)
+			C.gtk_container_add (c_object, box)
+			C.gtk_widget_show (box)
+			C.gtk_box_pack_start (box, text_label, True, True, padding)
+			C.gtk_widget_hide (text_label)
+			C.gtk_box_pack_end (box, pixmap_box, True, False, padding)
+			C.gtk_widget_hide (pixmap_box)
+		ensure
+			button_box /= default_pointer
+		end
+	
 feature -- Element change
 
-	set_text (txt: STRING) is
-			-- Set current button text to `txt'.
-			-- Redefined because we want the text to be:
-			-- 	- middle-aligned if there is no pixmap
-			-- 	- left-aligned if there is a pixmap
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+			--| Redefined because we want the text to be:
+			--| 	- middle-aligned if there is no pixmap
+			--| 	- left-aligned if there is a pixmap
 		do
-			{EV_TEXTABLE_IMP} Precursor (txt)
-
-			-- Is there a pixmap?
-			if pixmap_widget /= default_pointer then
-				-- Yes, there is a pixmap:
-				-- We right-align and vertical_center-position the pixmap.
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 1.0, 0.5)
-				-- We left-align and vertical_center-position the text
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
-			else
-				-- No, there is no pixmap:
-				-- We center and vertical_center-position the text
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
-			end				
-		end
-	
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'.
-			-- Redefined because the text is in a gtk_label.
-		do
-			{EV_PIXMAPABLE_IMP} Precursor (color)
-
-			if box /= default_pointer then
-				c_gtk_widget_set_fg_color (box, color.red, color.green, color.blue)
+			if text = Void then
+				C.gtk_box_set_child_packing (
+					button_box,
+					pixmap_box,
+					False,      -- Don't expand box.
+					False,
+					padding,
+					C.Gtk_pack_end_enum
+				)
 			end
+			{EV_TEXTABLE_IMP} Precursor(a_text)
 		end
 
-	set_background_color (color: EV_COLOR) is
-			-- Assign `color' as new `foreground_color'.
-			-- Redefined because the text is in a gtk_label.
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Assign `a_pixmap' to `pixmap'.
 		do
-			{EV_PIXMAPABLE_IMP} Precursor (color)
-
-			if box /= default_pointer then
-				c_gtk_widget_set_bg_color (box, color.red, color.green, color.blue)
-			end
+			align_text_left
+			{EV_PIXMAPABLE_IMP} Precursor (a_pixmap)
 		end
 
-feature -- Event - command association
-	
-	add_click_command (com: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'com' to the list of commands to be
-			-- executed when the button is pressed
+	remove_text is
+			-- Assign `Void' to text.
 		do
-			add_command (widget, "clicked", com, arg, default_pointer)
+			{EV_TEXTABLE_IMP} Precursor
+			C.gtk_box_set_child_packing (
+				button_box,
+				pixmap_box,
+				True,       -- Expand pixmap box.
+				False,
+				padding,
+				C.Gtk_pack_end_enum
+			)
 		end
-	
-feature -- Event -- removing command association
 
-	remove_click_commands is	
-			-- Empty the list of commands to be executed when
-			-- the button is pressed.
+	remove_pixmap is
+			-- Assign Void to `pixmap'.
 		do
-			remove_commands (widget, clicked_id)
+			{EV_PIXMAPABLE_IMP} Precursor
+			C.gtk_widget_hide (pixmap_box)
+			align_text_center
 		end
 	
+feature {NONE} -- implementation
+
+	padding: INTEGER is 3
+			-- Number of pixels of extra space arround text and pixmap.
+
+	button_box: POINTER is
+			-- GtkHBox in button.
+			-- Holds label and pixmap.
+		do
+			Result := C.gtk_container_children (c_object)
+			Result := C.g_list_nth_data (Result, 0)
+		end
+
+feature {EV_ANY_I} -- implementation
+
+	interface: EV_BUTTON
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
+
+invariant
+	button_box_not_void: is_useable implies button_box /= Void
+
 end -- class EV_BUTTON_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -161,4 +169,117 @@ end -- class EV_BUTTON_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.27  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.26.6.27  2000/02/04 21:26:03  king
+--| Removed hiding and showing of pix/text boxes as this is done in pix/textable_imp
+--|
+--| Revision 1.26.6.26  2000/02/04 04:25:38  oconnor
+--| released
+--|
+--| Revision 1.26.6.25  2000/02/02 18:52:42  oconnor
+--| fixed text allignment bug
+--|
+--| Revision 1.26.6.24  2000/01/28 19:04:39  king
+--| Changed to deal with initialize renaming in pixmapable and textable
+--|
+--| Revision 1.26.6.23  2000/01/27 19:29:45  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.26.6.22  2000/01/27 19:03:40  oconnor
+--| use clicked signal instead of pressed for press_actions
+--|
+--| Revision 1.26.6.21  2000/01/18 23:43:13  oconnor
+--| update for new EV_TEXTABLE_IMP that uses GtkLable directly
+--|
+--| Revision 1.26.6.20  2000/01/18 07:11:16  oconnor
+--| comments
+--|
+--| Revision 1.26.6.19  2000/01/13 22:26:51  king
+--| Removed setting of is_initialized to false
+--|
+--| Revision 1.26.6.18  2000/01/10 21:47:31  king
+--| Removed label widget, set_pixmap and remove pixmap
+--|
+--| Revision 1.26.6.17  2000/01/07 23:32:00  king
+--| Altered initialize to account for name change of ev_textable_imp_initialize
+--|
+--| Revision 1.26.6.16  2000/01/07 22:54:01  king
+--| Changed implementation so button has its own hbox to hold label and pixmap
+--|
+--| Revision 1.26.6.15  1999/12/22 20:53:14  king
+--| Tidied up code by removing create_pixmap_place
+--| Removed references to foreground and background color
+--| Correctly implemented pixmap routines
+--|
+--| Revision 1.26.6.14  1999/12/15 16:46:34  oconnor
+--| formatting
+--|
+--| Revision 1.26.6.13  1999/12/13 20:02:20  oconnor
+--| commented out broken inheritances
+--|
+--| Revision 1.26.6.12  1999/12/10 00:51:25  brendel
+--| Cosmetics.
+--|
+--| Revision 1.26.6.11  1999/12/04 18:59:20  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.26.6.10  1999/12/03 18:59:32  oconnor
+--| use new real_set_*_color features from EV_WIDGET_IMP
+--|
+--| Revision 1.26.6.9  1999/12/03 00:51:44  brendel
+--| Added pressed_actions.
+--|
+--| Revision 1.26.6.8  1999/12/02 21:03:59  oconnor
+--| use new connect_signal_to_actions from EV_ANY
+--|
+--| Revision 1.26.6.7  1999/12/02 08:02:18  oconnor
+--| Changed set color features to pass 16 bit values to C externals.
+--| Was wrongly passing 8 bit values.
+--|
+--| Revision 1.26.6.6  1999/12/01 01:02:33  brendel
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--|
+--| Revision 1.26.6.5  1999/11/30 23:14:20  oconnor
+--| rename widget to c_object
+--| redefine interface to be of mreo refined type
+--|
+--| Revision 1.26.6.4  1999/11/30 17:25:57  brendel
+--| Added redefine of initialize from EV_TEXTABLE_IMP.
+--|
+--| Revision 1.26.6.3  1999/11/29 17:32:03  brendel
+--| Uncommented event connection in `initialize'.
+--|
+--| Revision 1.26.6.2  1999/11/24 22:48:06  brendel
+--| Just managed to compile figure cluster example.
+--|
+--| Revision 1.26.6.1  1999/11/24 00:01:28  oconnor
+--| merged from REVIEW_BRANCH
+--|
+--| Revision 1.26.2.6  1999/11/23 22:59:25  oconnor
+--| rearranged init sequence, see frozen default create in EV_ANY
+--|
+--| Revision 1.26.2.5  1999/11/18 03:40:42  oconnor
+--| rewrote press command handling to use action sequence
+--|
+--| Revision 1.26.2.4  1999/11/17 01:53:04  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.26.2.3  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.26.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

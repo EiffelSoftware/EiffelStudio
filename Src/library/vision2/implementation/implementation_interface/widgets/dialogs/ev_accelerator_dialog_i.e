@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision accelerator selection dialog, implementation interface."
@@ -29,42 +31,42 @@ feature {NONE} -- Initialization
 			position_composants
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create a message dialog with `par' as parent.
-		do
-			make (par)
-			set_title (txt)
-		end
+--	make_with_text (par: EV_CONTAINER; txt: STRING) is
+--			-- Create a message dialog with `par' as parent.
+--		do
+--			make (par)
+--			set_title (txt)
+--		end
 
-	make_with_actions (par: EV_CONTAINER; actions: LINKED_LIST [STRING]) is
-			-- Create a message_dialog with `par' as parent and
-			-- `actions' as action to fill with an accelerator.
-		require
-			valid_parent: is_valid (par)
-			valid_actions: actions /= Void
-			actions_not_empty: not actions.empty
-		do
-			make (par)
-			create_actions (actions)
-		end
+--	make_with_actions (par: EV_CONTAINER; actions: LINKED_LIST [STRING]) is
+--			-- Create a message_dialog with `par' as parent and
+--			-- `actions' as action to fill with an accelerator.
+--		require
+--			valid_parent: is_valid (par)
+--			valid_actions: actions /= Void
+--			actions_not_empty: not actions.empty
+--		do
+--			make (par)
+--			create_actions (actions)
+--		end
 
-	make_with_all (par: EV_CONTAINER; txt: STRING; actions: LINKED_LIST [STRING]) is
-			-- Create a message_dialog with `par' as parent, 
-			-- `txt' as title and `actions' as list item.
-		require
-			valid_parent: is_valid (par)
-			valid_text: txt /= Void
-			valid_actions: actions /= Void
-			actions_not_empty: not actions.empty
-		do
-			make (par)
-			set_title (txt)
-			create_actions (actions)
-		end
+--	make_with_all (par: EV_CONTAINER; txt: STRING; actions: LINKED_LIST [STRING]) is
+--			-- Create a message_dialog with `par' as parent, 
+--			-- `txt' as title and `actions' as list item.
+--		require
+--			valid_parent: is_valid (par)
+--			valid_text: txt /= Void
+--			valid_actions: actions /= Void
+--			actions_not_empty: not actions.empty
+--		do
+--			make (par)
+--			set_title (txt)
+--			create_actions (actions)
+--		end
 
 feature -- Access
 
-	window: EV_WINDOW
+	window: EV_TITLED_WINDOW
 			-- Current dialog
 
 	OK, Cancel: EV_BUTTON
@@ -136,7 +138,6 @@ feature -- Basic operations
 			-- Initialize the `acc.count' first actions of the
 			-- dialogs.
 		require
-			exists: not destroyed
 			valid_accelerators: acc /= Void
 		local
 			stop: INTEGER
@@ -608,3 +609,31 @@ end -- class EV_ACCELERATOR_DIALOG_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:36  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.3  2000/01/27 19:29:58  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.2  1999/12/09 03:15:05  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.13.6.1  1999/11/24 17:30:08  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.4  1999/11/04 23:10:39  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.13.2.3  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -18,6 +18,11 @@ all: $(OBJ)
 install: gtk_eiffel.o
 	install -D gtk_eiffel.o $(INSTALL)/gtk_eiffel.o
 
+gtk_eiffel.o: gtk_eiffel.c
+gtk_eiffel.o: ev_any_imp.c ev_any_imp.h
+gtk_eiffel.o: ev_gtk_callback_marshal.c ev_gtk_callback_marshal.h
+gtk_eiffel.o: ev_c_util.c ev_c_util.h
+
 depend:
 	makedepend $(INCLUDE) *.c
 

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "A class for MS-Windows to simulate resizing by children";
 	status: "See notice at end of class"; 
@@ -93,7 +95,7 @@ feature -- Status setting
 			-- Make `flag' the new horizontal_resizable status.
 		do
 			internal_changes := set_bit (internal_changes, 16, flag)
-			if displayed then
+			if is_displayed then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -102,7 +104,7 @@ feature -- Status setting
 			-- Make `flag' the new vertical_resizable status.
 		do
 			internal_changes := set_bit (internal_changes, 32, flag)
-			if displayed then
+			if is_displayed then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -186,11 +188,11 @@ feature -- Resizing
 
 feature -- Position
 
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+	set_x_y, set_position (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		do
-			move (new_x, new_y)
+			move_to (new_x, new_y)
 		end
 
 feature -- Assertion features
@@ -434,7 +436,7 @@ feature {EV_ANY_I} -- deferred feature
 		deferred
 		end
 
-	move (a_x, a_y: INTEGER) is
+	move_to (a_x, a_y: INTEGER) is
 			-- Move the window to `a_x', `a_y'.
 			-- Use move for a basic wel moving.
 			-- Implemented by wel.
@@ -457,22 +459,26 @@ feature {EV_ANY_I} -- deferred feature
 		deferred
 		end
 
-	shown: BOOLEAN is
+	is_show_requested: BOOLEAN is
 			-- Is the widget shown?
 			-- Implemented by wel.
 		deferred
 		end
+
+	--shown: BOOLEAN is obsolete "is_show_requested" do Result := is_show_requested end
 
 	managed: BOOLEAN is
 			-- Is the current widget managed?
 		deferred
 		end
 
-	displayed: BOOLEAN is
+	is_displayed: BOOLEAN is
 			-- Is the window displayed on the screen?
 			-- ie : both the parent and the widget are shown.
 		deferred
 		end
+
+	displayed: BOOLEAN is obsolete "is_displayed" do Result := is_displayed end
 
 end -- EV_SIZEABLE_IMP
  
@@ -492,3 +498,31 @@ end -- EV_SIZEABLE_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.17  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.16.10.4  2000/02/07 18:26:40  rogers
+--| Replaced all calls to displayed by is_displayed.
+--|
+--| Revision 1.16.10.3  2000/01/27 19:30:16  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.16.10.2  1999/12/17 01:06:58  rogers
+--| Altered to fit in with the review branch. Shown replaced with is_show_requested.
+--|
+--| Revision 1.16.10.1  1999/11/24 17:30:22  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.16.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

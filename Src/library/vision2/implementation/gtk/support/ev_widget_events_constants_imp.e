@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "This class is used by EV_WIDGET_IMP. It gives%
 				% the identifications of the different events%
@@ -199,3 +200,28 @@ feature -- Upper constants value
 			-- Number of different events
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.4.3  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.9.4.2  2000/01/27 19:29:38  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.4.1  1999/11/24 17:29:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

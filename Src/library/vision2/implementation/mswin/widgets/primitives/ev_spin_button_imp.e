@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision spin button, mswindows implementation."
@@ -10,15 +12,22 @@ class
 
 inherit
 	EV_SPIN_BUTTON_I
+		undefine
+			set_default_colors
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
 		undefine
 			set_default_colors,
-			set_default_options,
 			set_default_minimum_size,
 			destroy
 		redefine
-			on_key_down
+			on_key_down,
+			interface,
+			set_range,
+			set_value
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -27,10 +36,11 @@ inherit
 			wel_set_parent,
 			move_and_resize,
 			resize,
-			move,
+			--move,
 			destroy,
 			on_key_down,
-			on_char
+			on_char,
+			interface
 		end
 
 	WEL_UDS_CONSTANTS
@@ -39,28 +49,21 @@ inherit
 		end
 
 create
-	make,
-	make_with_range
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a spin-button with 0 as minimum,
+	make (an_interface: like interface) is
+			-- Create a spin-button with 1 as minimum,
 			-- 100 as maximum and `par' as parent.
 		do
-			create container.make (default_parent, "EV_SPIN_BUTTON")
-			wel_make (container, "", 0, 0, 0, 0, 0)
-			create up_down.make (container, 0, 0, 20, 0, 0)
-			up_down.set_buddy_window (Current)
-			up_down.set_range (0, 100)
-		end
-
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a spin-button with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		do
-			make
-			up_down.set_range (min, max)
+			base_make (an_interface)
+			--create container.make (default_parent, "EV_SPIN_BUTTON")
+			--wel_make (container, "", 0, 0, 0, 0, 0)
+			--create up_down.make (container, 0, 0, 20, 0, 0)
+			--up_down.set_buddy_window (Current)
+			--up_down.set_range (0, 100)
+			wel_make (Default_parent, "", 0, 0, 0, 0, 0)
 		end
 
 feature -- Access
@@ -148,16 +151,6 @@ feature -- Basic operation
 			end
 		end
 
-feature {NONE} -- Inapplicable
-
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
 feature {NONE} -- WEL Implementation
 
 	on_scroll (scroll_code, pos: INTEGER) is
@@ -173,10 +166,14 @@ feature {NONE} -- WEL Implementation
 			if virtual_key = Vk_return then
 				set_caret_position (0)
 				translate_text
-				execute_command (Cmd_activate, Void)
-				if exists then
-					execute_command (Cmd_gauge, Void)
-				end
+
+				interface.change_actions.call ([])
+
+				--| This was the old imp.
+				--execute_command (Cmd_activate, Void)
+				--if exists then
+				--	execute_command (Cmd_gauge, Void)
+				--end
 			end
 		end	
 
@@ -227,6 +224,10 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_SPIN_BUTTON
+
 end -- class EV_SPIN_BUTTON_IMP
 
 --|----------------------------------------------------------------
@@ -244,3 +245,32 @@ end -- class EV_SPIN_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.4  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.3.10.3  2000/02/01 03:37:22  brendel
+--| Revised. Still needs implementing.
+--|
+--| Revision 1.3.10.2  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by widgets.";
@@ -7,54 +8,7 @@ indexing
 class
 	EV_GTK_WIDGETS_EXTERNALS
 
-
-feature {NONE} -- GTK C functions for widgets
-
-	gtk_widget_show (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_hide (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-	
-	gtk_widget_realize (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end	
-	
-	gtk_widget_unrealize (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end	
-	
-	gtk_widget_set_uposition (w: POINTER; x,y: INTEGER) is
-		external
-			"C | <gtk/gtk.h>"
-		end	
-
-	gtk_widget_set_usize (w: POINTER; width, height: INTEGER) is
-		external
-			"C | <gtk/gtk.h>"
-		end	
-
-	gtk_widget_set_sensitive (w: POINTER; sensitive: BOOLEAN) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_grab_default (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	c_gtk_widget_grab_focus (w: POINTER) is
-		external
---			"C | <gtk/gtk.h>"
-			"C (GtkWidget *)| %"gtk_eiffel.h%""
-		end
+feature
 
 	c_gtk_widget_has_focus (w: POINTER): BOOLEAN is
 		external 
@@ -70,121 +24,11 @@ feature {NONE} -- GTK C functions for widgets
 			"GTK_WIDGET_CAN_FOCUS"
 		end
 
-	gtk_widget_destroy (w: POINTER) is
+	gtk_is_widget (w: POINTER): BOOLEAN is
 		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_reparent (w: POINTER; p: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_set_parent (w: POINTER; p:POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_widget_unparent (w: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- code in the glue library
-
-	c_gtk_widget_destroyed (widget: POINTER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_set_flags (w: POINTER; flags: INTEGER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_realized (w: POINTER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end	
-	
-	c_gtk_widget_displayed (w: POINTER): BOOLEAN is
-		external
-			"C (GtkWidget *): EIF_BOOLEAN | %"gtk_eiffel.h%""
-		end	
-
-	c_gtk_widget_visible (w: POINTER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_height (w: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-	
-	c_gtk_widget_width (w: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_widget_x (w:POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-	
-	c_gtk_widget_y (w: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_set_size (w: POINTER; width, height: INTEGER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_widget_minimum_width (w: POINTER): INTEGER is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_minimum_height (w: POINTER): INTEGER is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_position_set (widget: POINTER; x, y: INTEGER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_minimum_size_set (widget: POINTER; width, height: INTEGER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_set_bg_color (widget: POINTER; r, g, b: INTEGER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_get_bg_color (widget: POINTER; r, g, b: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_set_fg_color (widget: POINTER; r, g, b: INTEGER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_get_fg_color (widget: POINTER; r, g, b: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_IS_WIDGET"
 		end
 
 end -- class EV_GTK_WIDGETS_EXTERNALS
@@ -204,3 +48,43 @@ end -- class EV_GTK_WIDGETS_EXTERNALS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.6.7  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.12.6.6  2000/01/27 19:29:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.6.5  1999/12/04 18:59:16  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.12.6.4  1999/12/03 07:47:43  oconnor
+--| removed obsolete manualy created externals
+--|
+--| Revision 1.12.6.3  1999/12/03 05:03:45  oconnor
+--| added gtk_is_widget
+--|
+--| Revision 1.12.6.2  1999/11/30 22:59:56  oconnor
+--| trimming externals
+--|
+--| Revision 1.12.6.1  1999/11/24 17:29:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.3  1999/11/04 23:10:27  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.12.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

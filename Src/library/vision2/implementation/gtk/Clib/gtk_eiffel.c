@@ -10,6 +10,54 @@
 
 #include "gtk_eiffel.h"
 #include "gdk_eiffel.h"
+#include "ev_any_imp.c"
+#include "ev_c_util.c"
+#include "ev_gtk_callback_marshal.c"
+
+#include <X11/Xlib.h>
+#include <gdk/gdkprivate.h>
+
+/*********************************
+ *
+ * Function: `c_match_font_name'
+ * 
+ * Author:   Vincent Brendel
+ * Date:     12 jan 2000
+ *
+ * Note:     Cannot be moved to Eiffel, because it returns a char **
+ *
+ * Uses XListFonts to match `pattern' to a final font name.
+ * Returns NULL string if no match is found.
+ * As maximum, we pass 1 because we want only the first match.
+ *
+ *********************************/
+
+char * c_match_font_name (char * pattern)
+{
+	char ** match_list; // array of null-term. strings.
+	int list_size; // return var for XListFonts.
+
+	match_list = XListFonts (gdk_display, pattern, 1, &list_size);
+
+	// list empty means no match found.
+	if (list_size == 0) return NULL;
+
+	// return first (and only) string in list.
+	return match_list [0];
+}
+
+/*********************************
+ * Function `generize'
+ *
+ * Compiler hack to return a generic type G
+ * from type ANY, used in the Eiffel function
+ * item in EV_ITEM_LIST_IMP.
+ ********************************/
+
+EIF_REFERENCE generize (EIF_OBJECT g_item)
+{
+	return eif_access (g_item);
+}
 
 /*==============================================================================
  Some functions signatures
@@ -21,6 +69,12 @@
 
 rt_public void c_gtk_widget_set_bg_color (GtkWidget * widget, int r, int g, int b);
 rt_public EIF_POINTER c_gtk_widget_top_window (GtkWidget *);
+
+
+void c_gdk_window_minimize (GdkWindow *wind)
+{
+	gdk_window_set_functions (wind, GDK_FUNC_MINIMIZE);
+}
 
 /*********************************
  *
@@ -106,18 +160,15 @@ void mclist_click_column_callback(GtkWidget *clist,
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
-gboolean mouse_enter_set_cursor (GtkWidget *widget, GdkEventCrossing *event, gpointer cursor)
+
+
+void c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor)
 {
+	if (! c_gtk_widget_realized (widget)) 
+			gtk_widget_realize (widget);
+
 	gdk_window_set_cursor (widget->window, cursor);
-	return TRUE;
-}
 
-gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor)
-{
-	if (c_gtk_widget_displayed (widget)) {gdk_window_set_cursor (widget->window, cursor);}
-
-	return gtk_signal_connect (GTK_OBJECT (widget), "enter-notify-event",
-	GTK_SIGNAL_FUNC (mouse_enter_set_cursor), cursor);
 }
 
 
@@ -450,6 +501,16 @@ void c_gtk_signal_destroy_data (gpointer data)
  *
  *********************************/
 
+void enable_motion_notify (GtkWidget *widg)
+{
+	gint event_flags;
+
+	event_flags = gtk_widget_get_events(GTK_WIDGET(widg));
+	event_flags &= GDK_POINTER_MOTION_MASK;
+	if (event_flags != GDK_POINTER_MOTION_MASK)
+		gtk_widget_add_events (GTK_WIDGET(widg), GDK_POINTER_MOTION_MASK);
+}
+
 gint c_gtk_signal_connect_general (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
@@ -466,7 +527,7 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     callback_data_t *pcbd;
     int name_len;
 	int event = 0;
-	gint event_flags;
+	g_assert (FALSE);
 
     /* Deallocation of this block is done when the */
     /* the signal is destroyed (see c_gtk_signal_destroy_data) */
@@ -501,15 +562,9 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 
     /* Make sure the widget has motion event enabled */
 	if (strcmp(name, "motion_notify_event") == 0) {
-
-		// Check if the widget has motion notify enabled, if not enable it
-		event_flags = gtk_widget_get_events(GTK_WIDGET(widget));
-		event_flags &= GDK_POINTER_MOTION_MASK;
-		if (event_flags != GDK_POINTER_MOTION_MASK)
-			gtk_widget_add_events (GTK_WIDGET(widget), GDK_POINTER_MOTION_MASK);
+		// Enable motion notify in widget event mask
+		enable_motion_notify (GTK_WIDGET(widget));
 	}
-	
-
 	
 		
 	if(after) {
@@ -640,6 +695,7 @@ gint c_gtk_signal_connect (GtkObject *widget,
 	gchar tmp_name[40]; /* The name of the signals must be smaller than 40 characters otherwise
 						   we need to allocate bigger space. */
 	
+	g_assert (FALSE);
 	strcpy (tmp_name, name);
 	
 	return c_gtk_signal_connect_general (widget, tmp_name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0, extra_data);
@@ -826,6 +882,51 @@ void c_gtk_widget_grab_focus (GtkWidget *widget)
 
 	gtk_widget_grab_focus (widget);	
 }
+
+void c_gtk_widget_set_pnd_grab (GtkWidget *widget, GdkCursor *curs)
+{
+	g_assert (FALSE);
+	gtk_grab_add (widget);
+
+	gdk_pointer_grab (widget->window, TRUE,
+						GDK_BUTTON_RELEASE_MASK |
+						GDK_BUTTON_PRESS_MASK |
+						GDK_BUTTON_MOTION_MASK |
+						GDK_POINTER_MOTION_HINT_MASK |
+						GDK_POINTER_MOTION_MASK,
+						NULL, curs, 0);
+}
+
+void c_gtk_widget_remove_pnd_grab (GtkWidget *widget)
+{
+	g_assert (FALSE);
+	gtk_grab_remove (widget);
+	gdk_pointer_ungrab (0);
+}
+
+EIF_BOOLEAN c_is_mouse_over_widget (GtkWidget *widget)
+{
+	GdkWindow *gdkwin;
+	GdkWindow *mseparwind;
+	gint x, y;
+
+	gdkwin = gdk_window_at_pointer (&x, &y);
+
+	if (gdkwin != NULL)
+	mseparwind = gdk_window_get_parent (gdkwin);
+
+	if ((widget->window) == mseparwind || (widget->window) == gdkwin)
+	{
+		return TRUE;
+	}
+	else 
+	{
+	//printf ("MseW=%d WidW=%d MseParw =%d WidParw =%d\n", gdkwin, widget->window, mseparwind, widparwind);
+		return FALSE;
+	}
+}
+
+
 
 /*********************************
  *
@@ -1065,9 +1166,41 @@ gchar* c_gtk_window_title (GtkWindow *w)
 	return w->title;
 }
 
-void c_gtk_window_set_icon (GtkWidget *window, GtkWidget *gdkwin, GdkPixmap *pix, GdkBitmap *mask)
+void c_gtk_window_set_icon (GtkWidget *window, GtkPixmap *pixmap, GtkWidget *icon_window, GtkPixmap *usermask)
 {
-		gdk_window_set_icon (window->window, gdkwin->window, pix, mask);
+	GdkBitmap *mask, *custommask;
+	GList *child;
+
+	if (usermask != NULL)
+	{
+		gtk_pixmap_get (usermask, NULL, &custommask);
+		gtk_widget_shape_combine_mask (icon_window, custommask, 0, 0);
+	}
+	else 
+	{
+		gtk_pixmap_get (pixmap, NULL, &mask);
+		gtk_widget_shape_combine_mask (icon_window, mask, 0, 0);
+	}
+	
+	// Check to see if pixmap has already been set in the icon window
+	child = gtk_container_children (GTK_CONTAINER (icon_window));
+	child = g_list_find (child, (gpointer) pixmap);
+
+	//If not already set, add pixmap to icon window
+	if (!child)
+	{
+		gtk_widget_show (GTK_WIDGET (pixmap));
+		gtk_container_add (GTK_CONTAINER (icon_window), GTK_WIDGET (pixmap));
+	}
+
+	// --| FIXME IEK The icon shows momentarily on the screen.
+	//Move icon window to left corner of screen
+	gtk_widget_set_uposition (icon_window, 0, 0);
+	gtk_widget_show (icon_window);
+	gdk_window_move (icon_window->window, -500, -500);
+	// The window then gets set as the icon window displacing it from (-500, -500)
+
+	gdk_window_set_icon (window->window, icon_window->window, NULL, NULL);
 }
 
 void c_gtk_window_set_icon_name (GtkWindow *wind, gchar *name)
@@ -1406,7 +1539,7 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *widget)
 /*********************************
  *
  * Function : `c_gtk_get_text_length'
- *            `c_gtk_get_text_max_lenght'
+ *            `c_gtk_get_text_max_length'
  *
  * Note : The length of the string in text widget.
  *        The maximum length of string in text widget.
@@ -1422,6 +1555,7 @@ int c_gtk_get_text_max_length (GtkWidget* text)
 {
     return GTK_ENTRY (text)->text_max_length;
 }
+
 
 /*********************************
  *
@@ -1621,35 +1755,18 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
     return (gtk_pixmap_new (pixmap, mask));
 }
 
-GdkCursor *c_gtk_create_cursor_with_pixmap (char *fname, gint X, gint Y)
+GdkCursor *c_gtk_create_cursor_with_pixmap (GtkPixmap *gtkpix, gint X, gint Y)
 {
 
-	GtkWidget *create_window;
-	GdkCursor *cursor;
-	GdkBitmap *pixmap;
+	//GdkBitmap *pixmap;
 	GdkBitmap *mask;
-	//GdkColor fg = { 0, 0, 0, 0 }; /* Red. */
-	//GdkColor bg = { 0, 65535, 65535, 65535 }; /* Blue. */
-	int  this_function_needs_implementing;
+	GdkColor fg = { 0, 0, 0, 0 }; /* Black. */
+	GdkColor bg = { 0, 65535, 65535, 65535 }; /* White. */
 
-	create_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_widget_realize (create_window);
+	gtk_pixmap_get (gtkpix, NULL, &mask);
 
-  	pixmap = gdk_pixmap_create_from_xpm (create_window->window,
-					&mask,
-					&create_window->style->bg[GTK_STATE_NORMAL],
-					fname);
+	return (gdk_cursor_new_from_pixmap (mask, mask, &fg, &bg, X, Y));
 
-	//cursor = gdk_cursor_new_from_pixmap (pixmap, mask, &fg, &bg, X, Y);
-	//This line of code is incorrect
-
-	cursor = gdk_cursor_new (54);
-	
-
-	//gdk_pixmap_unref (pixmap);
-	//gdk_pixmap_unref (mask);
-
-	return cursor;
 }
 
 
@@ -1746,6 +1863,36 @@ void c_gtk_pixmap_set_from_pixmap	 (GtkWidget  *pixmapDest, GtkWidget *pixmapSou
 
 /*********************************
  *
+ * Function : `c_gdk_get_gc_values'
+ *            
+ * Creates a new GdkGCValues struct, gets the values for it from `gc' and returns it.
+ * Needed because we cannot create a C struct in Eiffel.
+ *
+ * Remember to free the memory when not needed anymore, using `c_gdk_free_gc_values'.
+ * 
+ * Author : Vincent
+ *
+ *********************************/
+
+GdkGCValues * c_gdk_get_gc_values (GdkGC * gc)
+{
+	GdkGCValues * gc_values;
+
+	g_assert (FALSE);
+	gc_values = malloc (sizeof (GdkGCValues));
+
+	gdk_gc_get_values (gc, gc_values);
+
+	return gc_values;
+}
+
+void c_gdk_free_gc_values (GdkGCValues * gc_values)
+{
+	free (gc_values);
+}
+
+/*********************************
+ *
  * Function : `c_gtk_list_item_select'   	(1)
  *            `c_gtk_list_item_unselect' 	(2)
  *            `c_gtk_list_item_is_selected' (3)
@@ -1823,6 +1970,7 @@ void c_gtk_list_insert_item (GtkWidget *list, GtkWidget *item, gint position)
 {
   GList *item_list;
  
+	g_assert (FALSE);
   item_list = (GList *) malloc (sizeof (GList *));
   
   item_list->data = item;
@@ -1832,6 +1980,7 @@ void c_gtk_list_insert_item (GtkWidget *list, GtkWidget *item, gint position)
 void c_gtk_list_remove_item (GtkWidget *list, GtkWidget *item)
 {
   GList *item_list;
+	g_assert (FALSE);
  
   item_list = (GList *) malloc (sizeof (GList *));
   
@@ -2396,54 +2545,6 @@ void c_gtk_statusbar_item_set_bg_color (GtkWidget *statusbar, int r, int g, int 
   c_gtk_widget_set_bg_color (statusbar_frame, r, g, b);
 }
 
-/*********************************
- *
- * Function : `c_gtk_pixmap_width'		(1)
- * 			  `c_gtk_pixmap_height'		(2)
- * 			  `c_gtk_pixmap_gdk_unref'	(3)
- *
- * Note : (1) Pixmap width.
- * 		  (2) Pixmap height.
- * 		  (3) Unref the gdk pixmap and the gdk bitmap (mask) to destroy them.
- *
- * Author : Alex
- *
- *********************************/
-
-EIF_INTEGER c_gtk_pixmap_width (GtkWidget *pixmap)
-{
-	  gint width;
-	  gint height;
-	  
-	  gdk_window_get_size (GTK_PIXMAP (pixmap)->pixmap, &width, &height);
-	  
-	  return (EIF_INTEGER) width;
-}
-
-EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap)
-{
-	  gint width;
-	  gint height;
-	  
-	  gdk_window_get_size (GTK_PIXMAP (pixmap)->pixmap, &width, &height);
-	  
-	  return (EIF_INTEGER) height;
-}
-
-void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
-{
-  GdkPixmap *gdkPixmap;
-  GdkBitmap *mask;
-
-  gdkPixmap = ((GtkPixmap *) pixmap)->pixmap;
-  mask = ((GtkPixmap *) pixmap)->mask;
-
-  /* Unref */
-  gdk_pixmap_unref (gdkPixmap);
-  if (mask != NULL)
-	gdk_bitmap_unref (mask); 
-}
-
 /*==============================================================================
  gtk_toolbar functions
 ==============================================================================*/
@@ -2959,6 +3060,7 @@ void c_gtk_tooltips_set_bg_color (GtkTooltips* tooltips, int r, int g, int b)
   
   r *= 257; g *= 257; b *= 257;
   
+	g_assert (FALSE);
   if (tooltips->background != NULL) 
     bg_color->pixel = tooltips->foreground->pixel;
   else
@@ -2974,6 +3076,7 @@ void c_gtk_tooltips_set_bg_color (GtkTooltips* tooltips, int r, int g, int b)
 void c_gtk_tooltips_set_fg_color (GtkTooltips* tooltips, int r, int g, int b)
 {
   GdkColor *fg_color;
+	g_assert (FALSE);
   
   fg_color = (GdkColor *) malloc (sizeof (GdkColor));
  
@@ -3082,27 +3185,10 @@ void c_gtk_color_selection_set_color (GtkWidget *color_dialog, EIF_INTEGER r, EI
  *********************************/
 
 
-/*
-EIF_REFERENCE ev_color_make_rgb (int r, int g, int b)
-{
-		EIF_REFERENCE ev_color;
-		EIF_TYPE_ID ev_color_type;
-		EIF_PROC set_rgb;
-		EIF_INTEGER er = r;
-		EIF_INTEGER eg = g;
-		EIF_INTEGER eb = b;
-
-		ev_color_type = eif_type_id("EV_COLOR");
-		ev_color = eif_access(eif_create(ev_color_type));
-		set_rgb = eif_proc("make_rgb", ev_color_type);
-		(set_rgb)(ev_color, er, eg, eb);
-		return ev_color;
-}
-*/
-
 void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
 {
 		GtkStyle* style;
+	g_assert (FALSE);
 
 		style = gtk_widget_get_default_style();
 		*r = style->bg[GTK_STATE_NORMAL].red;
@@ -3115,6 +3201,7 @@ void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 void c_gtk_style_default_fg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
 {
 		GtkStyle* style;
+	g_assert (FALSE);
 
 		style = gtk_widget_get_default_style();
 		*r = style->fg[GTK_STATE_NORMAL].red;
@@ -3253,6 +3340,7 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int nr, int ng, int nb)
   int or, og, ob; // old colors
   int i;
 
+	g_assert (FALSE);
   nr *= 257; ng *= 257; nb *= 257;
   
   //  style = gtk_widget_get_style(GTK_WIDGET(widget));
@@ -3288,6 +3376,7 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
 		
+	g_assert (FALSE);
 		*r = style->bg[GTK_STATE_NORMAL].red;
 		*g = style->bg[GTK_STATE_NORMAL].green;
 		*b = style->bg[GTK_STATE_NORMAL].blue;
@@ -3302,6 +3391,7 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int nr, int ng, int nb)
   int or, og, ob; // old colors
   int i;
 
+	g_assert (FALSE);
   nr *= 257; ng *= 257; nb *= 257;
   
   //  style = gtk_widget_get_style(GTK_WIDGET(widget));
@@ -3337,6 +3427,7 @@ void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* 
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
 		
+	g_assert (FALSE);
 		*r = style->fg[GTK_STATE_NORMAL].red;
 		*g = style->fg[GTK_STATE_NORMAL].green;
 		*b = style->fg[GTK_STATE_NORMAL].blue;
@@ -3417,3 +3508,4 @@ void c_gtk_widget_get_color_info (GtkWidget* widget,
 		*whiter /= 257; *whiteg /= 257; *whiteb /= 257; *whitepix /= 257;
 
 }
+

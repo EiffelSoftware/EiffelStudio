@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Maintains the pick and drop mechanism %
 				%and terminates it when the data is dropped."
@@ -66,9 +68,9 @@ feature {NONE} -- Implementation
 			widget: EV_WIDGET
 			data_imp : EV_BUTTON_EVENT_DATA_IMP
 			current_widget: EV_WIDGET
-			w: EV_UNTITLED_WINDOW_IMP
+			w: EV_WINDOW_IMP
 			sx, sy: INTEGER
-			widget_imp: EV_UNTITLED_WINDOW
+			widget_imp: EV_WINDOW
 			tool_bar_button: EV_TOOL_BAR_BUTTON
 			tool_bar_button_imp: EV_TOOL_BAR_BUTTON_IMP
 			tool_bar_imp: EV_TOOL_BAR_IMP
@@ -132,11 +134,11 @@ feature {NONE} -- Implementation
 				until
 					widget_imp /= Void
 				loop
-					sx := sx + current_widget.x
+					sx := sx + current_widget.x_position
 					if tool_bar_button = Void then
 						-- For a tool bar, sy is not relative to the parent, i.e. absolute.
 						-- For all others, sy is relative to the parent.
-						sy := sy + current_widget.y
+						sy := sy + current_widget.y_position
 					end
 					current_widget ?= current_widget.parent
 					widget_imp ?= current_widget
@@ -230,3 +232,29 @@ end -- class EV_PND_TRANSPORTER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.8.3.2.3  2000/01/27 19:30:12  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.8.3.2.2  1999/12/17 21:38:10  rogers
+--| Any references to EV_UNTITLED_WINDOW_IMP have been replaced with EV_WINDOW_IMP as it has been renamed accordingly.
+--|
+--| Revision 1.8.8.3.2.1  1999/11/24 17:30:19  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.6.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

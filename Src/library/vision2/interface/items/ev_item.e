@@ -1,10 +1,8 @@
 indexing
 	description:
-		" EiffelVision base item. Base class of all the items.%
-		% Each base item fits in a specific control. For example,%
-		% an EV_LIST_ITEM will go into an EV_LIST and an%
-		% EV_MULTI_COLUMN_LIST_ITEM into a EV_MULTI_COLUMN_LIST."
+		"Eiffel Vision item. Base class for all other items."
 	status: "See notice at end of class."
+	keywords: "item"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,118 +12,57 @@ deferred class
 inherit
 	EV_ANY
 		redefine
-			implementation
-		end
-
-feature {NONE} -- Initialization
-
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		deferred
-		end
-
-	make_with_index (par: like parent; pos: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		require
-			valid_parent: par /= Void
-			valid_index: pos >= 0 and pos <= par.count
-		do
-			-- create {?} implementation.make
-			check
-				valid_implementation: implementation /= Void
-			end
-			implementation.set_interface (Current)
-			set_parent_with_index (par, pos)
-		ensure
-			parent_set: parent.is_equal (par)
-			index_set: index = pos
+			implementation,
+			create_action_sequences
 		end
 
 feature -- Access
 
-	parent: EV_ITEM_HOLDER is
-			-- The parent of the Current widget
-			-- Can be void.
-		require
-			exists: not destroyed
+	parent: EV_ITEM_LIST [EV_ITEM] is
+			-- Item list containing `Current'.
 		do
 			Result := implementation.parent
+		ensure
+			bridge_ok: Result = implementation.parent
 		end
 
 	data: ANY
-			-- A data kept by the item
-			-- May be redefine
-
-	index: INTEGER is
-			-- One based index of the current item
-			-- in its parent.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			Result := implementation.index
-		ensure
-			valid_index: index >= 1 and index <= parent.count
-		end
+			-- Arbitrary user data may be stored here.
 
 feature -- Element change
 
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-			-- Can be used only if the item has no children
-		require
-			exists: not destroyed
+	set_data (some_data: like data) is
+			-- Assign `some_data' to `data'.
 		do
-			implementation.set_parent (par)
+			data := some_data
 		ensure
-			parent_set: parent = par
+			data_assigned: data = some_data
 		end
 
-	set_parent_with_index (par: like parent; pos: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `pos'.
-		require
-			exists: not destroyed
-			valid_index: pos >= 1 and pos <= par.count + 1
-		do
-			implementation.set_parent_with_index (par, pos)
-		ensure
-			parent_set: parent = par
-			index_set: index = pos
-		end
+feature -- Event handling
 
-	set_data (a: like data) is
-			-- Make `a' the new data of the item.
-		require
-			exists: not destroyed
-		do
-			data := a
-		ensure
-			data_set: (data /= Void) implies (data.is_equal (a))
-				and (data = Void) implies (a = Void)
-		end
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
+			-- Actions to be performed when screen pointer moves.
 
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-			valid_index: pos >= 1 and pos <= parent.count + 1
-		do
-			implementation.set_index (pos)
-		ensure
-			index_set: index = pos
-		end
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+			-- Actions to be performed when screen pointer button is pressed.
 
-feature -- Implementation
+feature {EV_ITEM, EV_ANY_I, EV_RADIO} -- Implementation
+
+	create_action_sequences is
+			-- Create empty action sequences, not yet connected to events.
+		do
+			create pointer_button_press_actions
+			create pointer_motion_actions
+		end
 
 	implementation: EV_ITEM_I
-		-- Platform dependent access.
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 end -- class EV_ITEM
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision : library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -139,4 +76,54 @@ end -- class EV_ITEM
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.10  2000/02/01 20:13:10  king
+--| Changed export clause of implementation so it includes ev_radio_group
+--|
+--| Revision 1.7.6.9  2000/01/28 20:00:08  oconnor
+--| released
+--|
+--| Revision 1.7.6.8  2000/01/28 18:56:28  king
+--| Changed to generic structure of items
+--|
+--| Revision 1.7.6.7  2000/01/27 19:30:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.6  2000/01/18 23:22:23  rogers
+--| The interface is now exported to EV_ANY_I instead of EV_ITEM_I.
+--|
+--| Revision 1.7.6.5  2000/01/14 21:43:02  oconnor
+--| removed empty require clause
+--|
+--| Revision 1.7.6.4  2000/01/14 21:12:59  oconnor
+--| improved comments
+--|
+--| Revision 1.7.6.3  1999/12/17 21:16:48  rogers
+--| index has been removed as it is now inherted. set_parent,
+--| set_parent_with_index and set_index have been removed as they are now no
+--| longer required.
+--|
+--| Revision 1.7.6.2  1999/11/30 22:42:07  oconnor
+--| added create_action_sequences
+--|
+--| Revision 1.7.6.1  1999/11/24 17:30:41  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.3  1999/11/04 23:10:46  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

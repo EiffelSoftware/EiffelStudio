@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision expose event data. Gtk implementation";
 	status: "See notice at end of class";
@@ -23,7 +25,7 @@ feature -- Initialization
 			-- fields according to C pointer 'p'
 		local
 			c: EV_COORDINATES
-			rec: EV_CLIP
+			rec: EV_RECTANGLE
 		do
 			Precursor (p)			
 			
@@ -56,3 +58,28 @@ end -- class EV_EXPOSE_EVENT_DATA_IMP
 
 			
 	
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:28  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.3  2000/01/27 19:29:28  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.2  2000/01/24 23:54:19  oconnor
+--| renamed EV_CLIP -> EV_RECTANGLE
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:45  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

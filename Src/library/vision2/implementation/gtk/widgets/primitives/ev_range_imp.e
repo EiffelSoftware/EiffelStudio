@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision scale. Gtk implementation."
+	description: "Eiffel Vision range. GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,97 +9,61 @@ deferred class
 
 inherit
 	EV_RANGE_I
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
 		redefine
-			adjustment_widget
+			interface,
+			maximum,
+			set_maximum,
+			set_range,
+			reset_with_range
 		end
 
 feature -- Access
 
-	adjustment_widget: POINTER is
-			-- Pointer th the widget adjustment struct
-		do
-			Result := gtk_range_get_adjustment (widget)
-		end
-
-	value: INTEGER is
-			-- Current value of the gauge
-		do
-			Result := c_gtk_scale_value (widget)
-		end
-
-	step: INTEGER is
-			-- Step of the scrolling
-			-- ie : the user clicks on an arrow
-		do
-			Result := c_gtk_range_step (widget)
-		end
-
-	minimum: INTEGER is
-			-- Minimum value
-		do
-			Result := c_gtk_range_minimum (widget)
-		end
-
 	maximum: INTEGER is
-			-- Maximum value
+			-- Highest value of the scroll bar.
 		do
-			Result := c_gtk_range_maximum (widget)
+			Result := Precursor - leap
 		end
 
-	leap: INTEGER is
-			-- Leap of the scrolling
-			-- ie : the user clicks on the scroll bar
+	set_maximum (a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum'.
+			--| We cannot call precursor because it has wrong postconditions.
 		do
-			Result := c_gtk_range_leap (widget)
+			if maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
+	set_range (a_minimum, a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
 		do
-			set_value (value + step)
+			if minimum /= a_minimum or else maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-	leap_backward is
-			-- Decrease the current value of one leap.
+	reset_with_range (a_minimum, a_maximum: INTEGER) is
+			-- Re-initialize with `a_maximum' and `a_minimum'.
+			-- Set `value' to `a_minimum'.
 		do
-			set_value (value - step)
+			if minimum /= a_minimum or else maximum /= a_maximum then
+				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+				C.gtk_adjustment_changed (adjustment)
+			end
 		end
 
-feature -- Element change
+feature {EV_ANY_I} -- Implementation
 
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
-		do
-			gtk_scale_set_value_pos (widget, val)
-		end
-
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			c_gtk_range_set_step (widget, val)
-		end
-
-	set_minimum (val: INTEGER) is
-			-- Make `val' the new minimum.
-		do
-			c_gtk_range_set_minimum (widget, val)
-		end
-
-	set_maximum (val: INTEGER) is
-			-- Make `val' the new maximum.
-		do
-			c_gtk_range_set_maximum (widget, val)
-		end
-
-	set_leap (val: INTEGER) is
-			-- Make `val' the new leap.
-		do
-			c_gtk_range_set_leap (widget, val)
-		end
+	interface: EV_RANGE
 
 end -- class EV_RANGE_IMP
 
@@ -118,3 +82,32 @@ end -- class EV_RANGE_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.4  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.4.6.3  2000/02/02 01:03:20  brendel
+--| Fixed small bug in maximum, where the widget could only reach maximum - leap,
+--| where it now can reach maximum.
+--|
+--| Revision 1.4.6.2  2000/01/27 19:29:48  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision list item. Mswindows implementation."
 	status: "See notice at end of class"
@@ -11,7 +13,8 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 	EV_SIMPLE_ITEM_IMP
@@ -19,7 +22,8 @@ inherit
 			parent
 		redefine
 			set_text,
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -28,21 +32,20 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the widget with `par' as parent.
 		do
-			set_text ("")
+			base_make (an_interface)
+		--	set_text ("")
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create a row with text in it.
+	initialize is
 		do
-			set_text (txt)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -53,16 +56,27 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	parent_imp: EV_LIST_ITEM_HOLDER_IMP
+	parent_imp: EV_LIST_IMP
+	
+	set_parent (par: like parent) is
+                      -- Make `par' the new parent of the widget.
+                      -- `par' can be Void then the parent is the screen.
+              do
+				if par /= Void then
+					parent_imp ?= par.implementation
+				else
+					parent_imp := Void
+				end
+              end
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	--destroyed: BOOLEAN is
 			-- Is current object destroyed ?
 			-- Yes if the item doesn't exist in the parent.
-		do
-			Result := False
-		end
+	--	do
+	--		Result := False
+	--	end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
@@ -83,20 +97,6 @@ feature -- Status report
 		end
 	
 feature -- Status setting
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
-		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
@@ -122,7 +122,7 @@ feature -- Element change
 		do
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
-				parent_imp.internal_set_text (Current, txt)
+				parent_imp.internal_set_text (Current.interface, txt)
 			end
 		end
 
@@ -172,6 +172,10 @@ feature -- Event -- removing command association
 			remove_command (Cmd_item_dblclk)
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_LIST_ITEM
+
 end -- class EV_LIST_ITEM_IMP
 
 --|----------------------------------------------------------------
@@ -189,3 +193,37 @@ end -- class EV_LIST_ITEM_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.25  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.24.6.6  2000/02/07 19:04:15  king
+--| Commented out useless destroy feature
+--|
+--| Revision 1.24.6.5  2000/02/02 21:08:45  rogers
+--| Removed commented make_with_text references. changed the type of parent_imp from EV_LIST_ITEM_HOLDER_IMP to EV_LIST_IMP.
+--|
+--| Revision 1.24.6.4  2000/01/27 19:30:07  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.24.6.3  2000/01/18 23:39:01  rogers
+--| The body of set_text had been commented out. It has been uncommented as it is required.
+--|
+--| Revision 1.24.6.2  1999/12/17 17:35:07  rogers
+--| Altered to fit in with the review branch. Make takes an interface.
+--|
+--| Revision 1.24.6.1  1999/11/24 17:30:15  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.24.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

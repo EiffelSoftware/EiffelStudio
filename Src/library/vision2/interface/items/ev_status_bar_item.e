@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision status bar item."
 	status: "See notice at end of class."
@@ -11,50 +12,8 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
-			make_with_index,
-			make_with_all,
+			create_implementation,
 			parent
-		end
-
-create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
-
-feature {NONE} -- Initialization
-
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_STATUS_BAR_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_STATUS_BAR_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
-
-	make_with_index (par: like parent; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			create {EV_STATUS_BAR_ITEM_IMP} implementation.make
-			{EV_SIMPLE_ITEM} Precursor (par, value)
-		end
-
-	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		do
-			create {EV_STATUS_BAR_ITEM_IMP} implementation.make_with_text (txt)
-			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access
@@ -70,7 +29,6 @@ feature -- Measurement
 	width: INTEGER is
 			-- The width of the item in the status bar.
 		require
-			exists: not destroyed
 		do
 			Result := implementation.width
 		end
@@ -82,9 +40,9 @@ feature -- Status setting
 			-- If -1, then the item reach the right of the status
 			-- bar.
 		require
-			exists: not destroyed
+			has_parent: parent /= Void
 			valid_value: value >= -1
-			maximise_ok: value = -1 implies (parent.count = index)
+			maximise_ok: value = -1 implies (parent.i_th (parent.count) = Current)
 		do
 			implementation.set_width (value)
 		ensure
@@ -95,6 +53,12 @@ feature {NONE} -- Implementation
 
 	implementation: EV_STATUS_BAR_ITEM_I
 			-- platform dependent access.
+
+	create_implementation is
+			-- Create implementation of status bar item.
+		do
+			create {EV_STATUS_BAR_ITEM_IMP} implementation.make (Current)
+		end
 
 end -- class EV_STATUS_BAR_ITEM
 
@@ -113,3 +77,40 @@ end -- class EV_STATUS_BAR_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.12  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.11.4.6  2000/02/07 20:17:12  king
+--| Removed invalid creation procedure declarations
+--|
+--| Revision 1.11.4.5  2000/02/05 02:47:46  oconnor
+--| released
+--|
+--| Revision 1.11.4.4  2000/02/04 21:15:45  king
+--| Added has_parent precond to set-width
+--|
+--| Revision 1.11.4.3  2000/01/27 19:30:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.11.4.2  1999/12/17 21:12:19  rogers
+--| Advanced make procedures hav been removed, ready for re-implementation.
+--|
+--| Revision 1.11.4.1  1999/11/24 17:30:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.3  1999/11/04 23:10:52  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
+
 	description: 
 		"EiffelVision text area, gtk implementation."
 	status: "See notice at end of class"
@@ -11,33 +14,28 @@ class
 	
 inherit
 	EV_TEXT_I
+		redefine
+			interface
+		end
 
 	EV_TEXT_COMPONENT_IMP
-		undefine
-			set_default_options
+--		undefine
+--			set_default_options
+		redefine
+			interface
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a gtk label.
 		do
-			widget := gtk_text_new (Default_pointer, 
-				Default_pointer)
-			gtk_object_ref (widget)
-			gtk_text_set_editable (widget, True)
-		end
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		do
-			make
-			set_text (txt)
+			base_make (an_interface)
+			set_c_object (C.gtk_text_new (Default_pointer, Default_pointer))
+			C.gtk_text_set_editable (c_object, True)
 		end
 
 feature -- Access
@@ -46,7 +44,7 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := gtk_editable_get_chars (GTK_EDITABLE(widget), 0, -1)
+			p := C.gtk_editable_get_chars (c_object, 0, -1)
 			create Result.make (0)
 			Result.from_c (p)
 		end
@@ -81,7 +79,7 @@ feature -- Access
 				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
 			end
 
-			p := gtk_editable_get_chars (widget, line_begin_pos - 1, line_end_pos - 1)
+			p := C.gtk_editable_get_chars (c_object, line_begin_pos - 1, line_end_pos - 1)
 
 			create Result.make (0)
 			Result.from_c (p)
@@ -98,33 +96,18 @@ feature -- Status report
 			end
 		end
 
+	caret_position: INTEGER is
+			-- Current position of the caret.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
 	line_count: INTEGER is
 			-- Number of lines in widget.
-			-- Based on the number of '%N' in the text.
-			-- Should be replaced by a Gtk function as soon
-			-- as it exists.
-		local
-			count: INTEGER
-			pos: INTEGER
 		do
-			count := 1
-			if (text /= Void) and then (not text.empty) then
-				from
-					pos := 1
-				until
-					(pos > text.count) or (pos = 0)
-				loop
-					-- Look for 'Return' in the string.
-					-- Return is symbolized by '%N'
-					pos := text.index_of ('%N', pos)
-					if pos > 0 then
-						count := count + 1
-						-- increment the position of research of 1
-						pos := pos + 1
-					end
-				end
-			end
-			Result := count		
+			Result := text.occurrences ('%N') + 1
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
@@ -193,13 +176,21 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_caret_position (pos: INTEGER) is
+			-- Set the position of the caret to `pos'.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
 	
 	insert_text (txt: STRING) is
 		local
 			a: ANY
 		do
 			a := txt.to_c
-			c_gtk_text_insert (widget, $a)
+			C.c_gtk_text_insert (c_object, $a)
 		end
 	
 	set_text (txt: STRING) is
@@ -213,23 +204,26 @@ feature -- Status setting
 	
 	append_text (txt: STRING) is
 		do
-			gtk_text_set_point (widget, text_length)
+			C.gtk_text_set_point (c_object, text_length)
 			insert_text (txt)
 		end
 	
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' to text
 		do
-			gtk_text_set_point (widget, 0)
+			C.gtk_text_set_point (c_object, 0)
 			insert_text (txt)
 		end
 	
 	delete_text (start, finish: INTEGER) is
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
+		local	
+			i: INTEGER
 		do
 			set_position (start)
-			gtk_text_forward_delete (widget, finish - start)
+			i := C.gtk_text_forward_delete (c_object, finish - start)
+			-- FIXME return value?
 		end
 
 	freeze is
@@ -240,13 +234,13 @@ feature -- Status setting
 			-- Note: Only one window can be frozen at a time.
 			-- This is because of a limitation on Windows.
 		do
-			gtk_text_freeze (widget)
+			C.gtk_text_freeze (c_object)
 		end
 
 	thaw is
 			-- Thaw a frozen widget.
 		do
-			gtk_text_thaw (widget)
+			C.gtk_text_thaw (c_object)
 		end
 
 feature -- Basic operation
@@ -272,17 +266,9 @@ feature -- Assertions
 			Result := not ((text @ text.count) = '%N')
 		end
 
-feature -- Externals
-	
-	gtk_text_freeze (text_wid: POINTER) is
-		external
-			"C (GtkText *)| <gtk/gtk.h>"
-		end
+feature {EV_ANY_I} -- Implementation
 
-	gtk_text_thaw (text_wid: POINTER) is
-		external
-			"C (GtkText *)| <gtk/gtk.h>"
-		end
+	interface: EV_TEXT
 
 end -- class EV_TEXT_IMP
 
@@ -301,3 +287,46 @@ end -- class EV_TEXT_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.14.2.1.2.8  2000/02/04 05:14:06  oconnor
+--| unreleased
+--|
+--| Revision 1.14.2.1.2.7  2000/02/04 05:01:15  oconnor
+--| released
+--|
+--| Revision 1.14.2.1.2.6  2000/02/01 01:44:16  brendel
+--| Simplified implementation of line_count.
+--|
+--| Revision 1.14.2.1.2.5  2000/01/27 19:29:48  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.14.2.1.2.4  2000/01/06 18:43:03  king
+--| Added unimplemented caret_position and set_caret_position
+--|
+--| Revision 1.14.2.1.2.3  1999/12/23 01:34:13  king
+--| Removed unneeded externals
+--|
+--| Revision 1.14.2.1.2.2  1999/12/09 18:12:40  oconnor
+--| use new C externals
+--|
+--| Revision 1.14.2.1.2.1  1999/11/24 17:29:58  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.3  1999/11/17 01:53:06  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.12.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

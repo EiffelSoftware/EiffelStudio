@@ -1,5 +1,15 @@
 indexing
-	description: "Standard projection of a figure world onto a drawable device."
+	description:
+		"Eiffel Vision standard projection. %N%
+		%Projectors that display figure worlds on a EV_DRAWING_AREA. %N%
+		%From the moment you create the projector, appropriate events %N%
+		%will be sent to the figures in the world. The actions supported %N%
+		%are: pointer_motion, pointer_button_press/release, pointer_leave/ %N%
+		%enter, proximity_in/out. %N%
+		%The projector ignores any figure objects it does not know %N%
+		%If you create new figures, modify the projector so that it now %N%
+		%displays your figures."
+	keywords: "figures, project, pointer, drawing, points"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +18,8 @@ class
 
 inherit
 	EV_PROJECTION
-		redefine
-			make
+		rename
+			make as projection_make
 		end
 
 	SINGLE_MATH
@@ -19,38 +29,33 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_world: EV_FIGURE_WORLD; a_device: EV_DRAWING_AREA) is
+	make (a_world: EV_FIGURE_WORLD; a_device: EV_DRAWABLE) is
 			-- Create projection with `a_world' and `a_device'.
+		require
+			a_world_not_void: a_world /= Void
+			a_device_not_void: a_device /= Void
 		local
-			cmd: EV_ROUTINE_COMMAND
+			prim: EV_WIDGET
 		do
-			Precursor (a_world, a_device)
-
-			--| FIXME This is to comply with the old event system.
-			--| Change this as soon as the new system is introduced.
-
-			create cmd.make (~on_device_button_press)
-			a_device.add_button_press_command (1, cmd, Void)
-			a_device.add_button_press_command (2, cmd, Void)
-			a_device.add_button_press_command (3, cmd, Void)
-			create cmd.make (~on_device_button_release)
-			a_device.add_button_release_command (1, cmd, Void)
-			a_device.add_button_release_command (2, cmd, Void)
-			a_device.add_button_release_command (3, cmd, Void)
-			create cmd.make (~on_device_pointer_leave)
-			a_device.add_leave_notify_command (cmd, Void)
-			create cmd.make (~on_device_pointer_motion)
-			a_device.add_motion_notify_command (cmd, Void)
-
-			--| It should look like this:
-
-		--|	a_device.pointer_motion_actions.extend (~mouse_move)
-		--|	a_device.pointer_button_press_actions.extend (~button_press)
-		--|	a_device.pointer_button_release_actions.extend (~button_release)
-		--|	a_device.pointer_leave_actions (~pointer_leave)
-		--|	a_device.proximity_in_actions.extend (~proximity_in)
-		--|	a_device.proximity_out_actions.extend (~proximity_out)
+			projection_make (a_world)
+			create device.make_with_drawable (a_device)
+			prim ?= a_device
+			if prim /= Void then
+				--| If the drawable is a widget, events can
+				--| be connected to them.
+				prim.pointer_motion_actions.extend (~mouse_move)
+				prim.pointer_button_press_actions.extend (~button_press)
+				prim.pointer_button_release_actions.extend (~button_release)
+				prim.pointer_leave_actions.extend (~pointer_leave)
+				prim.proximity_in_actions.extend (~proximity_in)
+				prim.proximity_out_actions.extend (~proximity_out)
+			end
 		end
+
+feature -- Access
+
+	device: EV_FIGURE_DRAWER
+			-- The device to draw to.
 
 feature -- Basic operations
 
@@ -59,8 +64,8 @@ feature -- Basic operations
 		do
 			clear_device
 			world.invalidate_absolute_position
-			-- now the position of the mouse is the same,
-			-- but the world has changed. Do leave/enter commands
+			-- Now the position of the mouse is the same,
+			-- but the world has changed. Do leave/enter commands!
 			project_figure_group (world)
 			if has_mouse then
 				change_current (figure_on_position (world, last_pointer_x, last_pointer_y))
@@ -74,11 +79,11 @@ feature -- Basic operations
 			-- Put a pixel on (`x', `y').
 			--| Used to test on_mouse_over event.
 		do
-			device.set_foreground_color (create {EV_COLOR}.make_rgb (255, 0, 0))
-			device.draw_point (create {EV_COORDINATES}.set (x, y))
+			device.drawable.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
+			device.drawable.draw_point (x, y)
 		end
 
-feature {NONE} -- Events
+feature {NONE} -- Event implementation
 
 	current_figure: EV_FIGURE
 			-- Figure the mouse is currently on.
@@ -111,7 +116,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	button_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: REAL) is
+	button_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Pointer button down happened.
 		local
 			event_fig: EV_FIGURE
@@ -121,12 +126,14 @@ feature {NONE} -- Events
 			until
 				event_fig = Void
 			loop
-				event_fig.pointer_button_press_actions.call ([x, y, button, x_tilt, y_tilt, pressure])
+				event_fig.pointer_button_press_actions.call (
+					[x, y, button, x_tilt, y_tilt, pressure,
+					screen_x, screen_y])
 				event_fig := event_fig.group
 			end
 		end
 
-	button_release (x, y, button: INTEGER; x_tilt, y_tilt, pressure: REAL) is
+	button_release (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Pointer button up happened.
 		local
 			event_fig: EV_FIGURE
@@ -136,7 +143,9 @@ feature {NONE} -- Events
 			until
 				event_fig = Void
 			loop
-				event_fig.pointer_button_release_actions.call ([x, y, button, x_tilt, y_tilt, pressure])
+				event_fig.pointer_button_release_actions.call (
+					[x, y, button, x_tilt, y_tilt, pressure,
+					screen_x, screen_y])
 				event_fig := event_fig.group
 			end
 		end
@@ -165,7 +174,7 @@ feature {NONE} -- Events
 			current_figure_assigned: current_figure = new_current_figure
 		end
 
-	mouse_move (x, y: INTEGER; x_tilt, y_tilt, pressure: REAL) is
+	mouse_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Fire events that belong to mouse movement.
 			--| i.e. leave, enter, motion.
 		local
@@ -180,7 +189,9 @@ feature {NONE} -- Events
 			until
 				event_fig = Void
 			loop
-				event_fig.pointer_motion_actions.call ([x, y, x_tilt, y_tilt, pressure])
+				event_fig.pointer_motion_actions.call (
+					[x, y, x_tilt, y_tilt, pressure,
+					screen_x, screen_y])
 				event_fig := event_fig.group
 			end
 		end
@@ -202,7 +213,7 @@ feature {NONE} -- Events
 		end
 
 	proximity_out (x, y: INTEGER) is
-			-- Pointer put down on the pad.
+			-- Pointer lifted from the pad.
 		local
 			event_fig: EV_FIGURE
 		do
@@ -216,61 +227,14 @@ feature {NONE} -- Events
 				event_fig := event_fig.group
 			end
 		end
-
-	--| FIXME These are event handlers from the old event mechanism.
-	--| All of the figures work with the new event system. (action sequence)
-	--| If new system is introduced, these functions can be removed.
-
-	on_device_button_press (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Button down happened on the device.
-		local
-			button_data: EV_BUTTON_EVENT_DATA
-		do
-			button_data ?= data
-			check
-				button_data /= Void
-			end
-			button_press (button_data.x, button_data.y, button_data.button, 0.5, 0.5, 1.0)
-		end
-
-	on_device_button_release (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Button up happened on the device.
-		local
-			button_data: EV_BUTTON_EVENT_DATA
-		do
-			button_data ?= data
-			check
-				button_data /= Void
-			end
-			button_release (button_data.x, button_data.y, button_data.button, 0.5, 0.5, 1.0)
-		end
-
-	on_device_pointer_leave (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Mouse left the device. Send leave to `current_figure'.
-		do
-			pointer_leave
-		end
-
-	on_device_pointer_motion (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Mouse moved on drawing device.
-		local
-			motion_data: EV_MOTION_EVENT_DATA
-			event_fig: EV_FIGURE
-			x, y: INTEGER
-		do
-			motion_data ?= data
-			check
-				motion_data /= Void
-			end
-			mouse_move (motion_data.x, motion_data.y, 0.5, 0.5, 1.0)
-		end
 	
 feature {NONE} -- Implementation
 
 	clear_device is
 			-- Do smart erasing of the canvas.
 		do
-			device.clear --| FIXME Smart!!!
+			device.drawable.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
+			device.drawable.clear
 		end
 
 	project_figure_group (group: EV_FIGURE_GROUP) is
@@ -300,53 +264,77 @@ feature {NONE} -- Implementation
 	project_figure (figure: EV_ATOMIC_FIGURE) is
 			-- Determine the figure and apply it to the device.
 		local
-			line: EV_FIGURE_LINE
+			arc: EV_FIGURE_ARC
 			dot: EV_FIGURE_DOT
 			ellipse: EV_FIGURE_ELLIPSE
-			rectangle: EV_FIGURE_RECTANGLE
-			arc: EV_FIGURE_ARC
+			equilateral: EV_FIGURE_EQUILATERAL
+			line: EV_FIGURE_LINE
+			picture: EV_FIGURE_PICTURE
+			pie_slice: EV_FIGURE_PIE_SLICE
+			polygon: EV_FIGURE_POLYGON
 			polyline: EV_FIGURE_POLYLINE
+			rectangle: EV_FIGURE_RECTANGLE
 			text: EV_FIGURE_TEXT
-			arrow: EV_FIGURE_ARROW
+			triangle: EV_FIGURE_TRIANGLE
 		do
+			arc ?= figure
+			if arc /= Void then
+				device.draw_figure_arc (arc)
+			end
+
+			dot ?= figure
+			if dot /= Void then
+				device.draw_figure_dot (dot)
+			end
+
+			ellipse ?= figure
+			if ellipse /= Void then
+				device.draw_figure_ellipse (ellipse)
+			end
+
+			equilateral ?= figure
+			if equilateral /= Void then
+				device.draw_figure_equilateral (equilateral)
+			end
+
 			line ?= figure
 			if line /= Void then
 				device.draw_figure_line (line)
-			else
-				dot ?= figure
-				if dot /= Void then
-					device.draw_figure_dot (dot)
-				else
-					ellipse ?= figure
-					if ellipse /= Void then
-						device.draw_figure_ellipse (ellipse)
-					else
-						rectangle ?= figure
-						if rectangle /= Void then
-							device.draw_figure_rectangle (rectangle)
-						else
-							arc ?= figure
-							if arc /= Void then
-								device.draw_figure_arc (arc)
-							else
-								polyline ?= figure
-								if polyline /= Void then
-									device.draw_figure_polyline (polyline)
-								else
-									text ?= figure
-									if text /= Void then
-										device.draw_figure_text (text)
-									else
-										arrow ?= figure
-										if arrow /= Void then
-											device.draw_figure_arrow (arrow)
-										end
-									end
-								end
-							end
-						end
-					end
-				end
+			end
+
+			picture ?= figure
+			if picture /= Void then
+				device.draw_figure_picture (picture)
+			end
+
+			pie_slice ?= figure
+			if pie_slice /= Void then
+				device.draw_figure_pie_slice (pie_slice)
+			end
+
+			polygon ?= figure
+			if polygon /= Void then
+				device.draw_figure_polygon (polygon)
+			end
+
+			polyline ?= figure
+			if polyline /= Void then
+				device.draw_figure_polyline (polyline)
+			end
+
+			rectangle ?= figure
+			if rectangle /= Void then
+				device.draw_figure_rectangle (rectangle)
+			end
+
+			text ?= figure
+			if text /= Void then
+				device.draw_figure_text (text)
+			end
+
+			triangle ?= figure
+			if triangle /= Void then
+				device.draw_figure_triangle (triangle)
 			end
 		end
 
@@ -361,22 +349,16 @@ feature {NONE} -- Implementation
 			dx := (sine (point.angle_abs) * axle_length).rounded
 			dy := (cosine (point.angle_abs) * axle_length).rounded
 			if point.origin /= Void then
-				device.set_foreground_color (create {EV_COLOR}.make_rgb (0, 0, 255))
-				device.draw_segment (
-					create {EV_COORDINATES}.set (point.x_abs, point.y_abs),
-					create {EV_COORDINATES}.set (point.origin.x_abs, point.origin.y_abs))
+				device.drawable.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+				device.drawable.draw_segment (point.x_abs, point.y_abs, point.origin.x_abs, point.origin.y_abs)
 			end
-			device.set_foreground_color (create {EV_COLOR}.make_rgb (0, 255, 0))
-			device.draw_segment ( -- Y-axle.
-				create {EV_COORDINATES}.set (point.x_abs, point.y_abs),
-				create {EV_COORDINATES}.set (
+			device.drawable.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+			device.drawable.draw_segment (point.x_abs, point.y_abs,
 					point.x_abs - (sine (point.angle_abs) * axle_length * point.scale_y_abs).rounded,
-					point.y_abs + (cosine (point.angle_abs) * axle_length * point.scale_y_abs).rounded))
-			device.draw_segment ( -- X-axle.
-				create {EV_COORDINATES}.set (point.x_abs, point.y_abs),
-				create {EV_COORDINATES}.set (
+					point.y_abs + (cosine (point.angle_abs) * axle_length * point.scale_y_abs).rounded)
+			device.drawable.draw_segment (point.x_abs, point.y_abs,
 					point.x_abs + (cosine (point.angle_abs) * axle_length * point.scale_x_abs).rounded,
-					point.y_abs + (sine (point.angle_abs) * axle_length * point.scale_x_abs).rounded))
+					point.y_abs + (sine (point.angle_abs) * axle_length * point.scale_x_abs).rounded)
 			from
 				point.notify_list.start
 			until
@@ -386,5 +368,37 @@ feature {NONE} -- Implementation
 				point.notify_list.forth
 			end
 		end
+
+feature
+
+	ray_trace (fig: EV_FIGURE) is
+			-- Test the event mask/calculation.
+		local
+			xc, yc: INTEGER
+		do
+			from
+				xc := 0
+			until
+				xc > 200
+			loop
+				from
+					yc := 0
+				until
+					yc > 200
+				loop
+					if fig.position_on_figure (xc, yc) then
+						device.drawable.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
+					else
+						device.drawable.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+					end
+					device.drawable.draw_point (xc, yc)
+					yc := yc + 1
+				end
+				xc := xc + 1
+			end
+		end
+
+invariant
+	device_not_void: device /= Void
 
 end -- class EV_STANDARD_PROJECTION

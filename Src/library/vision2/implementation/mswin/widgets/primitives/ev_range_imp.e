@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision range, mswindows implementation."
@@ -10,21 +12,35 @@ deferred class
 
 inherit
 	EV_RANGE_I
+		rename
+			interface as ev_range_i_interface
+		select
+			ev_range_i_interface
+		end
 
 	EV_GAUGE_IMP
+		rename
+			interface as ev_gauge
+		end
 
 	WEL_TRACK_BAR
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
-			shown as displayed,
+			shown as is_displayed,
 			position as value,
-			set_position as set_value,
+			set_position as wel_set_value,
 			line as step,
 			page as leap,
-			set_line as set_step,
-			set_page as set_leap
+			set_line as wel_set_step,
+			set_page as set_leap,
+			width as wel_width,
+			height as wel_height,
+			move as move_to,
+			enabled as is_sensitive,
+			item as wel_item,
+			set_range as wel_set_range
 		undefine
 			window_process_message,
 			remove_command,
@@ -46,20 +62,6 @@ inherit
 			hide
 		redefine
 			default_style
-		end
-
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
-		do
-			set_value (maximum.min (value + leap))
-		end
-
-	leap_backward is
-			-- Decrease the current value of one leap.
-		do
-			set_value (minimum.max (value - leap))
 		end
 
 feature {NONE} -- WEL Implementation
@@ -123,6 +125,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {EV_ANY_I} -- Interface
+
+	interface: EV_RANGE
+
 end -- class EV_RANGE_IMP
 
 --|----------------------------------------------------------------
@@ -140,3 +146,35 @@ end -- class EV_RANGE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.5  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.3.10.4  2000/02/03 17:22:55  brendel
+--| Removed leap_* since they are now defined in EV_GAUGE.
+--|
+--| Revision 1.3.10.3  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.2  2000/01/06 20:37:19  rogers
+--| Now works with the major changes in Vision2. The interface has been added. A lot of renaming has been done from ancestors, to fit in with changes. See the diff.
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:33  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

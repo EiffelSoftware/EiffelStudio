@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: "EV_GTK_CONSTANTS - copied from C include files"
@@ -84,3 +85,28 @@ feature
 	GTK_SELECTION_EXTENDED: INTEGER is 3
 
 end
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.10.3  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.5.10.2  2000/01/27 19:29:34  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.10.1  1999/11/24 17:29:48  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.6.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

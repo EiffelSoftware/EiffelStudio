@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision message dialog. Implementation interface."
 	status: "See notice at end of class"
@@ -22,7 +24,7 @@ feature {NONE} -- Initialization
 		local
 			dbox: EV_VERTICAL_BOX
 			container_interface: EV_DIALOG
-			parent: EV_WINDOW
+			parent: EV_TITLED_WINDOW
 
 			color: EV_COLOR
 		do
@@ -173,127 +175,127 @@ feature -- Status settings
 
 feature -- Event - command association
 
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the OK button is pressed.
-			-- If there is no OK button, the event never occurs.
-		do
-			add_user_command ("OK", cmd, arg)
-		end
+--	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the OK button is pressed.
+--			-- If there is no OK button, the event never occurs.
+--		do
+--			add_user_command ("OK", cmd, arg)
+--		end
 
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Cancel button is pressed.
-			-- If there is no Cancel button, the event never occurs.
-		do
-			add_user_command ("Cancel", cmd, arg)
-		end
+--	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Cancel button is pressed.
+--			-- If there is no Cancel button, the event never occurs.
+--		do
+--			add_user_command ("Cancel", cmd, arg)
+--		end
 
-	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Yes button is pressed.
-		do
-			add_user_command ("Yes", cmd, arg)
-		end
+--	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Yes button is pressed.
+--		do
+--			add_user_command ("Yes", cmd, arg)
+--		end
 
-	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the No button is pressed.
-			-- If there is no No button, the event never occurs.
-		do
-			add_user_command ("No", cmd, arg)
-		end
+--	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the No button is pressed.
+--			-- If there is no No button, the event never occurs.
+--		do
+--			add_user_command ("No", cmd, arg)
+--		end
 
-	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Abort button is pressed.
-			-- If there is no Abort button, the event never occurs.
-		do
-			add_user_command ("Abort", cmd, arg)
-		end
+--	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Abort button is pressed.
+--			-- If there is no Abort button, the event never occurs.
+--		do
+--			add_user_command ("Abort", cmd, arg)
+--		end
 
-	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Retry button is pressed.
-			-- If there is no Retry button, the event never occurs.
-		do
-			add_user_command ("Retry", cmd, arg)
-		end
+--	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Retry button is pressed.
+--			-- If there is no Retry button, the event never occurs.
+--		do
+--			add_user_command ("Retry", cmd, arg)
+--		end
 
-	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Ignore button is pressed.
-			-- If there is no Ignore button, the event never occurs.
-		do
-			add_user_command ("Ignore", cmd, arg)
-		end
+--	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Ignore button is pressed.
+--			-- If there is no Ignore button, the event never occurs.
+--		do
+--			add_user_command ("Ignore", cmd, arg)
+--		end
 
-	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Help button is pressed.
-			-- If there is no Help button, the event never occurs.
-		do
-			help_button.add_click_command(cmd, arg)
-		end
+--	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the Help button is pressed.
+--			-- If there is no Help button, the event never occurs.
+--		do
+--			help_button.add_click_command(cmd, arg)
+--		end
 
 feature -- Event -- removing command association
 
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		do
-			remove_user_commands ("OK")
-		end
+--	remove_ok_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "OK" button is pressed.
+--		do
+--			remove_user_commands ("OK")
+--		end
 
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		do
-			remove_user_commands ("Cancel")
-		end
+--	remove_cancel_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Cancel" button is pressed.
+--		do
+--			remove_user_commands ("Cancel")
+--		end
 
-	remove_yes_commands is
-			-- Empty the list of commands to be executed when
-			-- "Yes" button is pressed.
-		do
-			remove_user_commands ("Yes")
-		end
+--	remove_yes_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Yes" button is pressed.
+--		do
+--			remove_user_commands ("Yes")
+--		end
 
-	remove_no_commands is
-			-- Empty the list of commands to be executed when
-			-- "No" button is pressed.
-		do
-			remove_user_commands ("No")
-		end
+--	remove_no_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "No" button is pressed.
+--		do
+--			remove_user_commands ("No")
+--		end
 
-	remove_abort_commands is
-			-- Empty the list of commands to be executed when
-			-- "Abort" button is pressed.
-		do
-			remove_user_commands ("Abort")
-		end
+--	remove_abort_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Abort" button is pressed.
+--		do
+--			remove_user_commands ("Abort")
+--		end
 
-	remove_retry_commands is
-			-- Empty the list of commands to be executed when
-			-- "Retry" button is pressed.
-		do
-			remove_user_commands ("Retry")
-			check False end
-		end
+--	remove_retry_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Retry" button is pressed.
+--		do
+--			remove_user_commands ("Retry")
+--			check False end
+--		end
 
-	remove_ignore_commands is
-			-- Empty the list of commands to be executed when
-			-- "Ignore" button is pressed.
-		do
-			remove_user_commands ("Ignore")
-		end
+--	remove_ignore_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Ignore" button is pressed.
+--		do
+--			remove_user_commands ("Ignore")
+--		end
 
-	remove_help_commands is
-			-- Empty the list of commands to be executed when
-			-- "Help" button is pressed.
-		do
-			remove_user_commands ("Help")
-		end
+--	remove_help_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Help" button is pressed.
+--		do
+--			remove_user_commands ("Help")
+--		end
 
 feature {NONE} -- Basic operation
 
@@ -352,45 +354,45 @@ feature {NONE} -- Basic operation
  			end
 		end
 
-	add_dialog_close_command (button: EV_BUTTON) is
-			-- Add a close command to the button if it doesn't
-			-- has it already
-		local
-			cmd: EV_ROUTINE_COMMAND
-			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
-		do
---			if button.get_click_commands /= Void then
-				create cmd.make (~execute)
-				create arg.make (Current)
-				button.add_click_command(cmd, arg)
+--	add_dialog_close_command (button: EV_BUTTON) is
+--			-- Add a close command to the button if it doesn't
+--			-- has it already
+--		local
+--			cmd: EV_ROUTINE_COMMAND
+--			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
+--		do
+----			if button.get_click_commands /= Void then
+--				create cmd.make (~execute)
+--				create arg.make (Current)
+--				button.add_click_command(cmd, arg)
+----			end
+--		end
+
+--	add_user_command (name: STRING; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add the given `cmd' and `arg' to the button called
+--			-- `name'.
+--		do
+--			if first_button /= Void and then first_button.text.is_equal (name) then
+--				first_button.add_click_command (cmd, arg)
+--			elseif second_button /= Void and then second_button.text.is_equal (name) then
+--				second_button.add_click_command (cmd, arg)
+--			elseif third_button /= Void and then third_button.text.is_equal (name) then
+--				third_button.add_click_command (cmd, arg)
 --			end
-		end
+--		end
 
-	add_user_command (name: STRING; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add the given `cmd' and `arg' to the button called
-			-- `name'.
-		do
-			if first_button /= Void and then first_button.text.is_equal (name) then
-				first_button.add_click_command (cmd, arg)
-			elseif second_button /= Void and then second_button.text.is_equal (name) then
-				second_button.add_click_command (cmd, arg)
-			elseif third_button /= Void and then third_button.text.is_equal (name) then
-				third_button.add_click_command (cmd, arg)
-			end
-		end
-
-	remove_user_commands (name: STRING) is
-			-- remove all commands associated to the button called
-			-- `name'.
-		do
-			if first_button /= Void and then first_button.text.is_equal (name) then
-				first_button.remove_click_commands
-			elseif second_button /= Void and then second_button.text.is_equal (name) then
-				second_button.remove_click_commands
-			elseif third_button /= Void and then third_button.text.is_equal (name) then
-				third_button.remove_click_commands
-			end
-		end
+--	remove_user_commands (name: STRING) is
+--			-- remove all commands associated to the button called
+--			-- `name'.
+--		do
+--			if first_button /= Void and then first_button.text.is_equal (name) then
+--				first_button.remove_click_commands
+--			elseif second_button /= Void and then second_button.text.is_equal (name) then
+--				second_button.remove_click_commands
+--			elseif third_button /= Void and then third_button.text.is_equal (name) then
+--				third_button.remove_click_commands
+--			end
+--		end
 
 feature {NONE} -- Implementation
 
@@ -459,3 +461,37 @@ end -- class EV_MESSAGE_DIALOG_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:31  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.6  2000/02/04 21:35:43  oconnor
+--| unreleased
+--|
+--| Revision 1.9.6.5  2000/02/04 07:50:57  oconnor
+--| removed old command features
+--|
+--| Revision 1.9.6.4  2000/02/04 07:49:06  oconnor
+--| removed old command features
+--|
+--| Revision 1.9.6.3  2000/02/04 04:25:37  oconnor
+--| released
+--|
+--| Revision 1.9.6.2  2000/01/27 19:29:41  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.1  1999/11/24 17:29:52  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.3  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

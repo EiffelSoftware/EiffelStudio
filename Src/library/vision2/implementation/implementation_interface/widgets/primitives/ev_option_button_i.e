@@ -1,5 +1,5 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description:
 		"EiffelVision option button, implementation interface";
 	date: "$Date$";
@@ -11,17 +11,19 @@ deferred class
 inherit
 	EV_MENU_HOLDER_I
 		redefine
-			add_menu_ok
+			add_menu_ok,
+			interface
 		end
 
 	EV_BUTTON_I
 		rename
-			add_click_command as add_popup_command
+	--		add_click_command as add_popup_command
 		redefine
-			set_center_alignment,
-			set_left_alignment,
-			set_right_alignment,
-			set_text
+			align_text_center,
+			align_text_left,
+			align_text_right,
+			set_text,
+			interface
 		end
 
 feature -- Status setting
@@ -40,39 +42,9 @@ feature {EV_OPTION_BUTTON} -- Status report
 		deferred
 		end
 
-	menu: EV_MENU_IMP is
+	menu: EV_MENU is
 			-- The menu contained in the option button.
 		deferred
-		end
-
-feature {NONE} -- Inapplicable
-
-	set_center_alignment is
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	set_left_alignment is
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	set_right_alignment is
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	set_text (txt: STRING) is
-		do
-			check
-				Inapplicable: False
-			end
 		end
 
 feature {EV_OPTION_BUTTON, EV_MENU_IMP} -- Implementation
@@ -90,9 +62,11 @@ feature -- Implementation
 			Result := (menu = Void)
 		end
 
+	interface: EV_OPTION_BUTTON
+
 end -- class EV_OPTION_BUTTON_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision : library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -106,4 +80,41 @@ end -- class EV_OPTION_BUTTON_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.6  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.9.6.5  2000/02/02 00:05:40  oconnor
+--| modifed for new menu classes
+--|
+--| Revision 1.9.6.4  2000/01/27 19:30:04  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.3  2000/01/10 19:21:44  king
+--| Changed set_*_alignment to align_text_*.
+--|
+--| Revision 1.9.6.2  1999/12/17 18:03:19  rogers
+--| Redefined interface to be of more refined type. menu is now ot type
+--| EV_MENU (was EV_MENU_IMP).
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:12  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.3  1999/11/18 03:41:14  oconnor
+--| rewrote press command handling to use action sequence
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

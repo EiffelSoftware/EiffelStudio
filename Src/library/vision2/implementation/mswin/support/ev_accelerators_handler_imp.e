@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" This class gives the attributes and the features needed to handle%
@@ -9,21 +11,16 @@ indexing
 deferred class
 	EV_ACCELERATOR_HANDLER_IMP
 
+obsolete
+	"Remove me?"
+
 feature {NONE} -- Initialization
 
 	initialize_accel_list is
 			-- Initialize the list of accelerator_list added to
 			-- the window.
 		do
-			create accelerator_list.make (1)
 		end
-
-feature {NONE} -- Access
-
-	accelerator_list: HASH_TABLE [LINKED_LIST [EV_INTERNAL_COMMAND], INTEGER]
-			-- Hash-table that keep the commands according to the
-			-- accelerator they are linked with. The accelerators
-			-- are represented by an integer.
 
 feature {EV_APPLICATION_IMP} -- Access
 
@@ -40,11 +37,6 @@ feature {NONE} -- Status report
 			-- Does the object has at least one command on the
 			-- acceleraor given by `id'.
 		do
-			if accelerator_list = Void then
-				Result := False
-			else
-				Result := accelerator_list.item (id) /= Void
-			end
 		end
 
 feature {NONE} -- Element change
@@ -53,68 +45,12 @@ feature {NONE} -- Element change
 			-- Add `acc' to the list of accelerator_list.
 		require
 			valid_command: cmd /= Void
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			com: EV_INTERNAL_COMMAND
-			id: INTEGER
 		do
-			-- First, we create the lists if they don't exists.
-			if accelerator_list = Void then
-				initialize_accel_list
-			end
-
-			-- Then, we create the list linked to the given
-			-- accelerator if it doesn't exists already.
-			id := acc.id
-			if accelerator_list.has (id) then
-				list := accelerator_list.item (id)
-			else
-				!! list.make
-				accelerator_list.put (list, id)
-			end
-			!! com.make (cmd, arg)
-			list.extend (com)
-			accelerator_table.add (acc)	
 		end
 
 	remove_accel_commands (acc: EV_ACCELERATOR) is
 			-- Remove an accelerator from the table.
-		local
-			id: INTEGER
 		do
-			if accelerator_list /= Void then
-				id := acc.id
-				accelerator_list.remove (id)
-				accelerator_table.remove (acc)
-			end
-		end
-
-feature {EV_ACCELERATOR_HANDLER_IMP} -- Basic operation
-
-	execute_accel_command (id: INTEGER; data: EV_EVENT_DATA) is
-			-- Execute the command that correspond to the accelerator
-			-- represented by id.
-			-- If there are no command, it calls the execution of the
-			-- parent.
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			i: INTEGER
-		do
-			if accelerator_list /= Void and then accelerator_list.has (id) then
-				list := (accelerator_list @ id)
-				from
-					i := 1
-				until
-					i > list.count
-				loop
-					(list @ i).execute (data)
-					i := i + 1
-				end
-			elseif parent_imp /= Void then
-				parent_imp.execute_accel_command (id, data)
-			else
-				application.item.execute_accel_command (id, data)
-			end
 		end
 
 feature {NONE} -- WEL Implementation
@@ -122,7 +58,6 @@ feature {NONE} -- WEL Implementation
 	on_accelerator_command (id: INTEGER) is
 			-- The `acelerator_id' has been activated.
 		do
-			focus_on_widget.item.execute_accel_command (id, Void)
 		end
 
 feature {NONE} -- Deferred feature
@@ -160,3 +95,29 @@ end -- class EV_ACCELERATOR_HANDLER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.3  2000/01/27 19:30:13  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.2  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:20  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

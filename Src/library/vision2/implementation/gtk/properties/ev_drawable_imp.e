@@ -1,8 +1,7 @@
-
 indexing
-	description: "EiffelVision drawable area. Implementation interface."
+	description: "EiffelVision drawable. GTK implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "figures, primitives, drawing, line, point, ellipse" 
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,159 +9,543 @@ deferred class
 	EV_DRAWABLE_IMP
 
 inherit
-	EV_GTK_DRAWABLE_EXTERNALS
+	EV_DRAWABLE_I
+		redefine
+			interface
+		end
+
+	EV_DRAWABLE_CONSTANTS
+
+	EV_C_UTIL
+
+feature {NONE} -- Initialization
+
+	init_default_values is
+			-- Set default values. Call during initialization.
+		do
+			create background_color
+			create foreground_color
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
+			set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+			line_style := C.Gdk_line_solid_enum
+			set_drawing_mode (Ev_drawing_mode_copy)
+			set_line_width (1)
+			create font
+		end
+
+feature {EV_DRAWABLE_IMP} -- Implementation
+
+	gc: POINTER
+			-- Pointer to GdkGC struct.
+			-- The graphics context applied to the primitives.
+			-- Line style, width, colors, etc. are defined in here.
+
+	gcvalues: POINTER
+			-- Pointer to GdkGCValues struct.
+			-- Is allocated during creation but has to be updated
+			-- every time it is accessed.
+
+	drawable: POINTER is
+			-- Pointer to the GdkWindow of `c_object'.
+		deferred
+		end
+
+	line_style: INTEGER
+			-- Dash-style used when drawing lines.
+
+	cap_style: INTEGER is
+			-- Style used for drawing end of lines.
+		do
+			Result := C.Gdk_cap_butt_enum
+		end
+
+	join_style: INTEGER is
+			-- Way in which lines are joined together.				
+		do
+			Result := C.Gdk_join_bevel_enum
+		end
+
+	gc_clip_area: EV_RECTANGLE
+			-- Clip area currently used by `gc'.
+
+	height: INTEGER is
+			-- Needed by `draw_straight_line'.
+		deferred
+		end
+
+	width: INTEGER is
+			-- Needed by `draw_straight_line'.
+		deferred
+		end
 
 feature -- Access
 
-	background_color: EV_COLOR is
-			-- Color used for the background of the widget
-		do
-		end
-		
-	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the drawable,
-			-- used for the text and the drawings.
-		do
-		end
+	font: EV_FONT
+			-- Font used for drawing text.
 
+	foreground_color: EV_COLOR
+			-- Color used to draw primitives.
+		
+	background_color: EV_COLOR
+			-- Color used for erasing of canvas.
+			-- Default: white.
 
 	line_width: INTEGER is
-			-- Width of line for device.
+			-- Line thickness.
 		do
+			C.gdk_gc_get_values (gc, gcvalues)
+			Result := C.gdk_gcvalues_struct_line_width (gcvalues)
 		end
 
-	logical_mode: INTEGER is
-			-- Drawing mode
+	drawing_mode: INTEGER is
+			-- Logical operation on pixels when drawing.
+		local
+			gdk_drawing_mode: INTEGER
 		do
+			C.gdk_gc_get_values (gc, gcvalues)
+			gdk_drawing_mode := C.gdk_gcvalues_struct_function (gcvalues)
+
+			if gdk_drawing_mode = C.Gdk_copy_enum then
+				Result := Ev_drawing_mode_copy
+			elseif gdk_drawing_mode = C.Gdk_xor_enum then
+				Result := Ev_drawing_mode_xor
+			elseif gdk_drawing_mode = C.Gdk_invert_enum then
+				Result := Ev_drawing_mode_invert
+			elseif gdk_drawing_mode = C.Gdk_and_enum then
+				Result := Ev_drawing_mode_and
+			elseif gdk_drawing_mode = C.Gdk_or_enum then
+				Result := Ev_drawing_mode_or
+			else
+				check
+					drawing_mode_existent: False
+				end
+			end
 		end
 
+	clip_area: EV_RECTANGLE is
+			-- Clip area used to clip drawing.
+			-- If set to Void, no clipping is applied.
+		do
+			Result := clone (gc_clip_area)
+		end
+
+	tile: EV_PIXMAP
+			-- Pixmap that is used to fill instead of background_color.
+			-- If set to Void, `background_color' is used to fill.
+
+	dashed_line_style: BOOLEAN is
+			-- Are lines drawn dashed?
+		local
+			style: INTEGER
+		do
+			C.gdk_gc_get_values (gc, gcvalues)
+			style := C.gdk_gcvalues_struct_line_style (gcvalues)
+			Result := style = C.Gdk_line_on_off_dash_enum
+		end
 
 feature -- Status report
 
 	is_drawable: BOOLEAN is
 			-- Is the device drawable?
 		do
+			Result := drawable /= Default_pointer
 		end
 
 feature -- Element change
 
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
+	set_font (a_font: EV_FONT) is
+			-- Set `font' to `a_font'.
 		do
-			--| FIXME IEK 19101999 Needs implementing
+			create font
+			font.copy (a_font)
 		end
 
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'.
 		do
-		
+			background_color.copy (a_color)
 		end
 
-	set_line_width (value: INTEGER) is
-			-- Set line to be displayed with width of `value'.
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'
+		local
+			color_struct: POINTER
+			tempbool: BOOLEAN
 		do
-
+			foreground_color.copy (a_color)
+			color_struct := C.c_gdk_color_struct_allocate
+			C.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+			C.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+			C.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+			tempbool := C.gdk_colormap_alloc_color (system_colormap, color_struct, False, True)
+			check
+				color_has_been_allocated: tempbool = True
+			end
+			C.gdk_gc_set_foreground (gc, color_struct)
+			C.c_gdk_color_struct_free (color_struct)
 		end
 
-	set_logical_mode (value: INTEGER) is
-			-- Set drawing logical function to `value'.
+	set_line_width (a_width: INTEGER) is
+			-- Assign `a_width' to `line_width'.
 		do
-
+			C.gdk_gc_set_line_attributes (gc, a_width,
+				line_style, cap_style, join_style)				
 		end
 
-	set_font (ft: EV_FONT) is
-			-- Set a font.
+	set_drawing_mode (a_mode: INTEGER) is
+			-- Set drawing mode to `a_mode'.
 		do
-			--| FIXME IEK 19101999 Needs implementing
+			check valid_drawing_mode (a_mode) end
+			inspect a_mode
+			when Ev_drawing_mode_copy then
+				C.gdk_gc_set_function (gc, C.Gdk_copy_enum)
+			when Ev_drawing_mode_xor then
+				C.gdk_gc_set_function (gc, C.Gdk_xor_enum)
+			when Ev_drawing_mode_invert then
+				C.gdk_gc_set_function (gc, C.Gdk_invert_enum)
+			when Ev_drawing_mode_and then
+				C.gdk_gc_set_function (gc, C.Gdk_and_enum)
+			when Ev_drawing_mode_or then
+				C.gdk_gc_set_function (gc, C.Gdk_or_enum)
+			else
+				check
+					drawing_mode_existent: False
+				end
+			end
+		end
+
+	set_clip_area (an_area: EV_RECTANGLE) is
+			-- Set an area to clip to.
+			-- Set to Void when no clipping should be applied.
+		local
+			rectangle_struct: POINTER
+		do
+			gc_clip_area := clone (an_area)
+			rectangle_struct := C.c_gdk_rectangle_struct_allocate
+			C.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
+			C.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
+			C.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
+			C.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
+			C.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
+			C.c_gdk_rectangle_struct_free (rectangle_struct)
+		end
+
+	remove_clip_area is
+			-- Do not apply any clipping.
+		do
+			gc_clip_area := Void
+			C.gdk_gc_set_clip_rectangle (gc, Default_pointer)
+		end
+
+	set_tile (a_pixmap: EV_PIXMAP) is
+			-- Set tile used to fill figures.
+			-- Set to Void to use `background_color' to fill.
+		local
+			tile_imp: EV_PIXMAP_IMP
+		do
+			--| FIXME copy the pixmap not set the reference.
+			tile := a_pixmap
+			tile_imp ?= tile.implementation
+			C.gdk_gc_set_tile (gc, tile_imp.drawable)
+		end
+
+	remove_tile is
+			-- Do not apply a tile when filling.
+		do
+			tile := Void
+		end
+
+	enable_dashed_line_style is
+			-- Draw lines dashed.
+		do
+			line_style := C.Gdk_line_on_off_dash_enum
+			C.gdk_gc_set_line_attributes (gc, line_width,
+				line_style, cap_style, join_style)
+		end
+
+	disable_dashed_line_style is
+			-- Draw lines solid.
+		do
+			line_style := C.Gdk_line_solid_enum
+			C.gdk_gc_set_line_attributes (gc, line_width,
+				line_style, cap_style, join_style)
 		end
 
 feature -- Clearing operations
 
 	clear is
-			-- Clear the entire area.
+			-- Erase `Current' with `background_color'.
 		do
+			clear_rect (0, 0, width, height)
 		end
 
-	clear_rect (left, top, right, bottom: INTEGER) is
-			-- Clear the rectangular area defined by
-			-- `left', `top', `right', `bottom'.
+	clear_rect (x1, y1, x2, y2: INTEGER) is
+			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+		local
+			tmp_fg_color: EV_COLOR
 		do
+			create tmp_fg_color
+			tmp_fg_color.copy (foreground_color)
+			set_foreground_color (background_color)
+			C.gdk_draw_rectangle (drawable, gc, 1,
+				x1.min (x2),
+				y1.min (y2),
+				(x1 - x2).abs,
+				(y1 - y2).abs)
+			set_foreground_color (tmp_fg_color)
 		end
 
 feature -- Drawing operations
 
-	draw_point (pt: EV_COORDINATES) is
-			-- Draw a point at the position `pt'.
+	draw_point (x, y: INTEGER) is
+			-- Draw point at (`x', `y').
 		do
+			if drawable /= Default_pointer then
+	 			C.gdk_draw_point (drawable, gc, x, y)
+			end
 		end
 
-	draw_text (pt: EV_COORDINATES; text: STRING) is
-			-- Draw `text' at the position `pt'
+	draw_text (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' at (`x', `y') using `font'.
+		local
+			font_imp: EV_FONT_IMP
 		do
+			if drawable /= Default_pointer then
+				font_imp ?= font.implementation
+				C.gdk_draw_string (drawable, font_imp.c_object, gc, x, y, eiffel_to_c (a_text))
+			end
 		end
 
-	draw_segment (pt1, pt2: EV_COORDINATES) is
-			-- Draw a segment between `pt1' and `pt2'.
+	draw_segment (x1, y1, x2, y2: INTEGER) is
+			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
+			if drawable /= Default_pointer then
+				C.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
+			end
 		end
 
-	draw_straight_line (pt1, pt2: EV_COORDINATES) is
-			-- Draw an infinite line traversing `point1' and `point2'.
+	draw_straight_line (x1, y1, x2, y2: INTEGER) is
+			-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
+		local
+			ax1, ax2, ay1, ay2, dx, dy: INTEGER
 		do
+			--| VB: Should work now. Draws lines that are too big.
+			--| Catch worst cases like when `dy' approaches zero.
+			--| This implementation is the same for Mswindows.
+			dx := (x2 - x1)
+			dy := (y2 - y1)
+			if dy /= 0 then
+				ax1 := x1 - ((dx / dy) * y2).rounded
+				ax2 := x1 - ((dx / dy) * (y1 - height)).rounded
+				ay1 := 0
+				ay2 := height
+			else
+				ay1 := y1
+				ay2 := y2
+				ax1 := 0
+				ax2 := width
+			end
+			draw_segment (ax1, ay1, ax2, ay2)
 		end
 
-	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
-			-- Draw a polyline, close it automatically if `is_closed'.
+	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians.
 		do
+			if drawable /= Default_pointer then
+				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
+					y - a_vertical_radius, a_horizontal_radius * 2,
+					a_vertical_radius * 2, radians_to_gdk (a_start_angle),
+					radians_to_gdk (an_aperture))
+			end
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
-			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
-			-- and that has the orientation `orientation'.
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
+			if drawable /= Default_pointer then
+				pixmap_imp ?= a_pixmap.implementation
+				C.gdk_draw_pixmap (drawable, gc,
+					pixmap_imp.drawable,
+					0, 0, x, y, a_pixmap.width, a_pixmap.height)
+			end
 		end
 
-	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
-			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
-			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
-			-- and with an orientation of `orientation' using the style `style'.
-			-- The meaning of the style is the following :
-			--   -1 : no link between the first and the last point
-			--    0 : the first point is linked to the last point
-			--    1 : the first and the last point are linked to the center `pt'
+	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'.
 		do
+			if drawable /= Default_pointer then
+				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width, a_height)
+			end
 		end
 
-	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
-			-- Copy `pix' into the drawable at the point `pt'.
-			-- If there is not enough space to create auxiliery bitmap (DDB) 
-			-- exception will be raised
+	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Draw an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
+			if drawable /= Default_pointer then
+				C.gdk_draw_arc (drawable, gc, 0, x - a_horizontal_radius,
+					y - a_vertical_radius, a_horizontal_radius * 2,
+					a_vertical_radius * 2, 0, 360 * 64)
+			end
+		end
+
+	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
+		local
+			tmp: SPECIAL [INTEGER]
+		do
+			if drawable /= Default_pointer then
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if is_closed then
+					C.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
+				else
+					C.gdk_draw_lines (drawable, gc, $tmp, points.count)
+				end
+			end
+		end
+
+	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians
+		local
+			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+		do
+			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			draw_arc (x, y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+			draw_segment (x, y, x_start_arc, y_start_arc)
+			draw_segment (x, y, x_end_arc, y_end_arc)
 		end
 
 feature -- filling operations
 
-	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
-			 -- Fill a polygon.
+	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
+			if drawable /= Default_pointer then
+				if tile /= Void then
+					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+				end
+				C.gdk_draw_rectangle (drawable, gc, 1, x, y, a_width, a_height)
+				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+			end
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
-			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
-			-- with an orientation `orientation'.
+	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+			-- Draw an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Fill with `background_color'.
 		do
+			if drawable /= Default_pointer then
+				if tile /= Void then
+					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+				end
+				C.gdk_draw_arc (drawable, gc, 1, x - a_horizontal_radius,
+					y - a_vertical_radius, a_horizontal_radius * 2,
+					a_vertical_radius * 2, 0, 360 * 64)
+				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+			end
 		end
 
-	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
-			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
-			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
-			-- and with an orientation of `orientation' using the style `style'.
-			-- The meaning of the style is the following :
-			--   -1 : no link between the first and the last point
-			--    0 : the first point is linked to the last point
-			--    1 : the first and the last point are linked to the center `pt'
+	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+			-- Draw line segments between subsequent points in `points'.
+			-- Fill all enclosed area's with `background_color'.
+		local
+			tmp: SPECIAL [INTEGER]
 		do
+			if drawable /= Default_pointer then
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if tile /= Void then
+					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+				end
+				C.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
+				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+			end
 		end
+
+	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+			-- Draw a part of an ellipse centered on (`x', `y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians.
+		do
+			if drawable /= Default_pointer then
+				if tile /= Void then
+					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+				end
+				C.gdk_draw_arc (drawable, gc, 1, x - a_horizontal_radius,
+					y - a_vertical_radius, a_horizontal_radius * 2,
+					a_vertical_radius * 2, radians_to_gdk (a_start_angle),
+					radians_to_gdk (an_aperture))
+				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+			end
+		end
+
+feature {NONE} -- Implemention
+
+	coord_array_to_gdkpoint_array (pts: ARRAY [EV_COORDINATES]): ARRAY [INTEGER] is
+			-- Low-level conversion.
+		require
+			pts_exists: pts /= Void
+			equal_size: C.c_gdk_point_struct_size = integer_bits // 8
+		local
+			i, x, y: INTEGER
+		do
+			from
+				create Result.make (0, pts.count - 1)
+				i := 0
+			until
+				i >= pts.count
+			loop
+				x := pts.item (i + pts.lower).x \\ 32767
+				y := pts.item (i + pts.lower).y \\ 32767
+				Result.force (y * 65536 + x, i)				
+				i := i + 1
+			end
+		ensure
+			Result_exists: Result /= Void
+			same_size: pts.count = Result.count
+		end
+
+	radians_to_gdk (ang: REAL): INTEGER is
+			-- Converts `ang' (radians) to degrees * 64.
+		do
+			Result := ((ang / Pi) * 180 * 64).rounded
+		end
+
+feature {NONE} -- Implementation
+
+	C: EV_C_EXTERNALS is
+		once
+			create Result
+		end
+
+	interface: EV_DRAWABLE
+
+	system_colormap: POINTER is
+			-- Default system color map used for allocating colors.
+		once
+			Result := C.gdk_colormap_get_system
+		end
+
+invariant
+	gc_not_void: gc /= Default_pointer
+	gcvalues_not_void: gcvalues /= Default_pointer
 
 end -- class EV_DRAWABLE_IMP
 
@@ -181,3 +564,180 @@ end -- class EV_DRAWABLE_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:28  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.2.1.2.43  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.7.2.1.2.42  2000/01/27 19:29:31  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.2.1.2.41  2000/01/25 22:19:42  brendel
+--| Removed _enum from drawing mode constants.
+--|
+--| Revision 1.7.2.1.2.40  2000/01/25 20:29:25  brendel
+--| Fixed bug in drawing mode features.
+--|
+--| Revision 1.7.2.1.2.39  2000/01/24 23:54:19  oconnor
+--| renamed EV_CLIP -> EV_RECTANGLE
+--|
+--| Revision 1.7.2.1.2.38  2000/01/22 00:59:08  brendel
+--| Fixed bug in clear.
+--| foreground_color is now an attribute.
+--|
+--| Revision 1.7.2.1.2.37  2000/01/21 20:12:12  brendel
+--| Fixed bug in clear/clear_rect.
+--| Fixed bug in set_font.
+--|
+--| Revision 1.7.2.1.2.36  2000/01/20 23:04:17  brendel
+--| Fixed bug in non-filled features.
+--| Formatting.
+--|
+--| Revision 1.7.2.1.2.35  2000/01/20 22:18:28  brendel
+--| Implemented remove_tile and remove_clip_area.
+--|
+--| Revision 1.7.2.1.2.34  2000/01/20 21:38:44  brendel
+--| Added features remove_tile and remove_clip_area.
+--|
+--| Revision 1.7.2.1.2.33  2000/01/20 00:13:03  brendel
+--| Fixed bug in clear and clear_rect.
+--|
+--| Revision 1.7.2.1.2.32  2000/01/19 17:42:10  brendel
+--| Restored color setting in filled figures.
+--| Renamed fill_color to background_color.
+--| Renamed line_color to foreground_color.
+--|
+--| Revision 1.7.2.1.2.31  2000/01/19 01:46:35  brendel
+--| Fixed bug with color of filled figures.
+--|
+--| Revision 1.7.2.1.2.30  2000/01/18 18:08:45  brendel
+--| Changed default values.
+--|
+--| Revision 1.7.2.1.2.29  2000/01/18 01:06:32  king
+--| Undeferred feature C
+--|
+--| Revision 1.7.2.1.2.28  2000/01/17 23:33:58  brendel
+--| Modified implementation so that nothing bad will happen, since
+--| precondition `is_drawable' is removed from all features.
+--|
+--| Revision 1.7.2.1.2.27  2000/01/17 19:52:45  brendel
+--| Removed useless put_string in draw_text.
+--|
+--| Revision 1.7.2.1.2.26  2000/01/17 17:42:13  brendel
+--| Removed inheritance from EV_ANY_IMP.
+--|
+--| Revision 1.7.2.1.2.25  2000/01/17 17:36:49  brendel
+--| Removed CVS conflict.
+--|
+--| Revision 1.7.2.1.2.24  2000/01/17 17:10:11  brendel
+--| Moved signals to realize and unrealize from drawable to drawing area.
+--|
+--| Revision 1.7.2.1.2.23  2000/01/17 00:41:53  oconnor
+--| Previous log message in error.
+--| Added inheritance on EV_ANY_IMP.
+--| reinstated maping agents.
+--|
+--| Revision 1.7.2.1.2.22  2000/01/17 00:25:44  oconnor
+--| comments and formattinginterface/widgets/ev_widget.e
+--|
+--| Revision 1.7.2.1.2.21  2000/01/13 01:18:37  brendel
+--| Changed 'y' with `y'.
+--|
+--| Revision 1.7.2.1.2.20  2000/01/11 19:24:54  king
+--| Removed inheritence from ev_fontable_imp
+--|
+--| Revision 1.7.2.1.2.19  1999/12/22 20:18:07  king
+--| Corrected assignment attempt to implementation
+--|
+--| Revision 1.7.2.1.2.18  1999/12/18 02:15:26  king
+--| Implemented draw_text routine
+--|
+--| Revision 1.7.2.1.2.17  1999/12/17 23:15:00  oconnor
+--| update for new names from EV_COLOR
+--|
+--| Revision 1.7.2.1.2.16  1999/12/15 19:23:28  king
+--| Commented out realize_agents (not applicable with ev_screen)
+--| Corrected set_fill/line color so they now allocate color from colormap
+--|
+--| Revision 1.7.2.1.2.15  1999/12/15 00:24:35  oconnor
+--| c_gdk_color_struct_malloc is now c_gdk_rectangle_struct_allocate
+--|
+--| Revision 1.7.2.1.2.14  1999/12/13 19:48:48  oconnor
+--| hack, commented out refs to height/width to compile
+--|
+--| Revision 1.7.2.1.2.13  1999/12/09 23:20:42  brendel
+--| Added deferred features `width' and `height' needed by `draw_straight_line'.
+--|
+--| Revision 1.7.2.1.2.12  1999/12/09 19:05:00  oconnor
+--| commented error regarding clip_area
+--|
+--| Revision 1.7.2.1.2.11  1999/12/09 18:23:57  brendel
+--| Implemented `draw_stright_line' and `draw_pie_slice'.
+--|
+--| Revision 1.7.2.1.2.9  1999/12/09 00:16:08  brendel
+--| Removed inheritance of GTK_ENUMS. We decided that no class inherits
+--| anything from GEL.
+--|
+--| Revision 1.7.2.1.2.8  1999/12/08 19:44:12  brendel
+--| Changed and implemented features to comply with EV_DRAWABLE_I.
+--|
+--| Revision 1.7.2.1.2.7  1999/12/08 01:29:04  brendel
+--| Improved comments.
+--|
+--| Revision 1.7.2.1.2.6  1999/12/07 23:17:34  brendel
+--| Changed EV_COORDINATES arg to x, y.
+--| Changes EV_ANGLE to REAL (in radians).
+--| Added draw_pie_slice and fill_pie_slice.
+--| Removed `style' from *_arc.
+--| Removed orientation from draw/fill_rectangle and draw/fill_ellipse.
+--| Remaining to be implemented:
+--|  - draw_figure_picture
+--|  - draw_figure_picture
+--|
+--| in EV_DRAWABLE_IMP (GTK):
+--|  - draw_text (because of font)
+--|  - draw_straight_line
+--|  - draw_pie_slice
+--|
+--| Revision 1.7.2.1.2.5  1999/12/07 18:32:26  brendel
+--| Improved contracts on on_realize and on_unrealize.
+--| Changed background_color to background_color.
+--| Changed foreground_color to foreground_color.
+--|
+--| Revision 1.7.2.1.2.4  1999/12/06 17:53:56  brendel
+--| Inherits from EV_FONTABLE_IMP.
+--| Added realize and unrealize agents to control `gc'.
+--| Modified creation sequence.
+--|
+--| Revision 1.7.2.1.2.3  1999/12/04 18:59:13  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.7.2.1.2.2  1999/12/03 23:54:58  brendel
+--| Changed signatures and comments to those in EV_DRAWABLE_I.
+--| Started implementing some functions. Remaining to be implemented:
+--|  - font
+--|  - set_font
+--|  - draw_text
+--|  - draw_straight_line
+--|  - draw_rectangle
+--|  - draw_arc
+--|  - fill_rectangle
+--|  - fill_arc
+--|
+--| Revision 1.7.2.1.2.1  1999/11/24 17:29:46  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by buttons.";
@@ -8,81 +9,7 @@ class
 	EV_GTK_BUTTONS_EXTERNALS
 
 
-feature {NONE} -- GTK C functions for buttons
 
-	gtk_button_new_with_label (label: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_button_new: POINTER is
-		external
-			"C (): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- GTK C functions for toggle buttons
-
-
-	gtk_toggle_button_new_with_label (label: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_toggle_button_set_active (button: POINTER; state: BOOLEAN) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-	
-	gtk_toggle_button_toggled (button: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_toggle_button_new: POINTER is
-		external
-			"C (): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- GTK C functions for check buttons
-
-	gtk_check_button_new_with_label (label: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_check_button_new: POINTER is
-		external
-			"C (): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- GTK C functions for radio buttons
-
-	gtk_radio_button_new (gp: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_radio_button_new_with_label (gp: POINTER; label: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_radio_button_group (gp: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_radio_button_set_group (but, gp: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- code in the glue library
-
-	c_gtk_toggle_button_active (button: POINTER): BOOLEAN is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
 
 end -- class EV_GTK_BUTTONS_EXTERNALS
 
@@ -101,3 +28,34 @@ end -- class EV_GTK_BUTTONS_EXTERNALS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.5  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.6.6.4  2000/01/27 19:29:34  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.3  1999/12/04 18:59:14  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.6.6.2  1999/11/30 22:59:56  oconnor
+--| trimming externals
+--|
+--| Revision 1.6.6.1  1999/11/24 17:29:48  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

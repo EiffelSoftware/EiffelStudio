@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision multi-column list row, mswindows implementation"
 	status: "See notice at end of class"
@@ -10,7 +12,8 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
 		redefine
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 	EV_COMPOSED_ITEM_IMP
@@ -22,14 +25,17 @@ inherit
 		redefine
 			destroy,
 			set_cell_text,
-			parent_imp
+			parent_imp,
+			interface
 		end
 
-	EV_PND_SOURCE_IMP
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature -- Access
 
@@ -42,12 +48,6 @@ feature -- Access
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
 feature -- Status report
-	
-	destroyed: BOOLEAN is
-			-- Is Current row destroyed?  
-		do
-			Result := (internal_text = Void) or else (internal_text.empty)
-		end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
@@ -178,11 +178,21 @@ feature -- Event -- removing command association
 
 feature {NONE} -- Implementation
 
-	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
+	set_capture is
+			-- Grab user input.
 		do
-			Result := parent_imp
+			parent_imp.set_capture
 		end
+
+	release_capture is
+			-- Release user input.
+		do
+			parent_imp.release_capture
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MULTI_COLUMN_LIST_ROW
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 
@@ -201,3 +211,31 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.6.4  2000/02/05 02:10:50  brendel
+--| Removed feature `destroyed'.
+--|
+--| Revision 1.15.6.3  2000/01/27 19:30:08  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.6.2  1999/12/17 17:33:10  rogers
+--| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_DROPABLE_IMP.
+--|
+--| Revision 1.15.6.1  1999/11/24 17:30:16  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.15.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

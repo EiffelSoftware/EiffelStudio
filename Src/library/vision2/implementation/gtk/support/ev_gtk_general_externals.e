@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by all the widgets.";
@@ -6,111 +7,6 @@ indexing
 
 class
 	EV_GTK_GENERAL_EXTERNALS
-
-
-feature {NONE} -- general GTK C functions 
-
-	gtk_set_locale is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_rc_parse (f: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_main is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_main_quit is
-		external
-			"C | <gtk/gtk.h>"
-		end
-	
-	gtk_exit (n: INTEGER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_signal_handlers_destroy (widget: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_signal_disconnect (widget: POINTER; id: INTEGER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- Event queue manager
-
-	c_gtk_events_process_events_queue is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-feature {NONE} -- code in the glue library
-
-	c_gtk_init_toolkit is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-	
-	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
-			      routine: POINTER; object: POINTER; 
-			      arguments: POINTER; event_data: POINTER; event_data_imp: POINTER; 
-			      set_event_data_rtn: POINTER;
-			      mouse_button: INTEGER; 
-			      double_click: BOOLEAN;
-			      extra_data: POINTER): INTEGER is
-		external
-			"C ( GtkObject *, gchar *, EIF_PROC, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_PROC, char, char, gpointer): EIF_INTEGER | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_signal_connect_after (widget: POINTER; event: POINTER; 
-			      routine: POINTER; object: POINTER; 
-			      arguments: POINTER; event_data: POINTER; event_data_imp: POINTER; 
-			      set_event_data_rtn: POINTER;
-			      mouse_button: INTEGER; 
-			      double_click: BOOLEAN): INTEGER is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	gtk_signal_emit_stop_by_name (widget: POINTER; signal_name: POINTER) is
-		external
-			"C (GtkObject *, const gchar *) | <gtk/gtk.h>"
-		end
-
-	gtk_signal_lookup (signal_name: POINTER; object_type: INTEGER): BOOLEAN is
-		external
-			"C (const gchar *, GtkType): EIF_BOOLEAN | <gtk/gtk.h>"
-		end
-
-	c_free_call_back_block (p: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_object_class_user_signal_new (widget: POINTER; name: POINTER): INTEGER is 
-		external
-			"C (GtkObject *, const gchar*): EIF_INTEGER | %"gtk_eiffel.h%""
-		end
-
-feature {NONE} -- Accelerators features.
-
-	gtk_accel_group_new: POINTER is
-		external
-			"C (): EIF_POINTER | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_widget_add_accelerator (widget, signal_name: POINTER; keycode: INTEGER; shift_mask, control_mask, alt_mask: BOOLEAN) is
-		external
-			"C (GtkWidget *, const gchar *, guint, gboolean, gboolean, gboolean) | %"gtk_eiffel.h%""
-		end
 
 feature {NONE} -- Cast features
 
@@ -141,3 +37,34 @@ end -- class EV_GTK_GENERAL_EXTERNALS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.6.5  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.10.6.4  2000/01/27 19:29:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.6.3  1999/12/03 07:47:43  oconnor
+--| removed obsolete manualy created externals
+--|
+--| Revision 1.10.6.2  1999/12/01 16:08:40  oconnor
+--| rip manualy created externals
+--|
+--| Revision 1.10.6.1  1999/11/24 17:29:49  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

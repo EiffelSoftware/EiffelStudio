@@ -1,9 +1,9 @@
 indexing
-	description: "Objects that ..."
+	description: "Eiffel Vision timeout. GTK+ implementation."
 		" EiffelVision timeout, implementation."
 	status: "See notice at end of class"
-	date: "$$"
-	revision: "$$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_TIMEOUT_IMP
@@ -11,111 +11,79 @@ class
 inherit
 	EV_TIMEOUT_I
 
-	EV_GTK_GENERAL_EXTERNALS
-
 create
 	make
 
 feature -- Initialization
 
-	make (delay: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Create a timeout that call that launch `cmd' with `arg' every `delay'
-			-- milliseconds.
-		local
-			ev_str: ANY
-			temp_str: STRING
-			ev_cmd: EV_ROUTINE_COMMAND
+	make (an_interface: like interface) is
+			-- Call base make only.
 		do
-			temp_str := "timeout"
-			ev_str := temp_str.to_c
-
-			-- Set all internal attributes of timeout
-			period := delay
-			command := cmd
-
-			create ev_cmd.make(~ev_timeout_callback)
-			
-				-- The main C function for connecting callbacks to signals
-				-- is being used to prevent duplicated C-code regarding
-				-- memory allocation of the `callback data' C `structure'
-
-			timeout_tag := c_gtk_signal_connect
-				(
-					default_pointer,
-					$ev_str,
-					ev_cmd.execute_address,
-					$ev_cmd,
-					$arg,
-					Default_pointer,
-					Default_pointer,
-					Default_pointer,
-					0,
-					False,
-					c_gtk_integer_to_pointer (delay)
-				)
-
-			destroyed := False
+			base_make (an_interface)
 		end
 
-feature -- Implementation
-
-	timeout_tag: INTEGER
-		-- Value returned by GTk used as a reference to destroy the timeout
-
-	ev_timeout_callback (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Callback used as an intermediate to update callback count
-			-- and to call user-defined callback.
-		do
-			count := count + 1
-			command.execute (arg, data)
+	initialize is 
+		do 
+			is_initialized := True
 		end
 
 feature -- Access
 
-	period: INTEGER 
-			-- Period of the timeout in milli-seconds.
+	interval: INTEGER 
+			-- Time between calls to `timeout_actions' in milliseconds.
+			-- Zero when disabled.
 
-	command: EV_COMMAND 
-			-- Command associated with the timeout.
-
-	argument: EV_ARGUMENT 
-			-- Argument associated with the timeout.
-
-	count: INTEGER
-			-- Number of times the callback has been called.
-
-feature -- Status report
-
-	destroyed: BOOLEAN
-			-- Is Current object destroyed?
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy timeout object.
+	set_interval (an_interval: INTEGER) is
+			-- Assign `an_interval' in milliseconds to `interval'.
+			-- Zero disables.  
 		do
-			destroyed := True
+			if timeout_connection_id > 0 then
+				C.gtk_timeout_remove (timeout_connection_id)
+				timeout_connection_id := 0
+			end
 
-			--Destroy timeout in GTK
-			gtk_timeout_remove (timeout_tag)
-
-			--Reset all attributes
-			command := Void
-			period := 0
-			argument := Void
-			count := 0
+			if an_interval > 0 then
+				timeout_connection_id :=
+					c_ev_gtk_callback_marshal_timeout_connect (
+						an_interval, ~on_timeout
+					)
+			end
+			interval := an_interval
 		end
 
-feature -- External
+feature {NONE} -- Implementation
 
-	gtk_timeout_remove (tag: INTEGER) is
+	timeout_connection_id: INTEGER
+		-- GTK handle on timeout connection.
+
+	C: EV_C_EXTERNALS is
+			-- Access to external C functions.
+		once
+			create Result
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	destroy is 
+			-- Render `Current' unusable.
+		do 
+			set_interval (0)
+			is_destroyed := True
+			destroy_just_called := True
+		end
+
+feature -- External implementation
+
+	c_ev_gtk_callback_marshal_timeout_connect
+		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+			-- Call `an_agent' after `a_delay'.
 		external
-			"C (gint) | <gtk/gtk.h>"
+			"C (gint, EIF_OBJECT): EIF_INTEGER | %"gtk_eiffel.h%""
 		end
 
 end -- class EV_TIMEOUT_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -129,4 +97,37 @@ end -- class EV_TIMEOUT_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:28  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.4.6  2000/02/04 04:20:42  oconnor
+--| released
+--|
+--| Revision 1.4.4.5  2000/01/27 19:29:30  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.4.4  2000/01/19 07:55:32  oconnor
+--| added default state checking, reorganised count, added resent_count.
+--|
+--| Revision 1.4.4.3  2000/01/18 19:28:28  king
+--| Altered count to only reset on reset of timeout
+--|
+--| Revision 1.4.4.2  2000/01/18 01:04:06  king
+--| Implemented timeout to use action_sequence
+--|
+--| Revision 1.4.4.1  1999/11/24 17:29:46  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

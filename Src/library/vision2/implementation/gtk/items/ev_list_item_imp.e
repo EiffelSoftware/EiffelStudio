@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: ""
 	status: "See notice at end of class"
@@ -10,62 +11,60 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			parent
 		redefine
+			interface,
+			initialize,
 			has_parent,
-			parent_imp,
-			set_text
+			set_text,
+			make
 		end
 
 create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a list item with an empty name.
 		do
-			-- Create the gtk object.
-			widget := gtk_list_item_new
-			gtk_object_ref (widget)
-
-			-- Create the `box'.	
-			initialize
-
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+			base_make (an_interface)
+			set_c_object (C.gtk_list_item_new)	
 		end
-	
-	make_with_index (par: EV_LIST; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
+
+	initialize is
+			-- Set up action sequence connection and `Precursor' initialization,
+			-- create list item box to hold label and pixmap.
 		local
-			par_imp: EV_LIST_IMP
+			item_box: POINTER
 		do
-			par_imp ?= par.implementation
-			make
+			{EV_SIMPLE_ITEM_IMP} Precursor
+			textable_imp_initialize
+			pixmapable_imp_initialize
+			
+			item_box := C.gtk_hbox_new (False, 0)
+			C.gtk_container_add (c_object, item_box)
+			C.gtk_widget_show (item_box)
+			
+				-- Add the pixmap box to the item but hide it so it
+				-- takes up no space in the item.
 
-			-- set `par' as parent and put the item at the given position.
-			set_parent (par)
-			set_index (value)
-		end
+			--| FIXME  IEK 01/07/2000  What spacing size should be used.
+			C.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
+				-- Padding of 2 pixels used for pixmap
+			C.gtk_box_pack_start (item_box, text_label, True, True, 0)
+			
 
-	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
-		do
-			make_with_index (par, value)
-			set_text (txt)
+			C.gtk_widget_hide (pixmap_box)
+			
+			connect_signal_to_actions ("select", interface.select_actions)
+			connect_signal_to_actions ("deselect", interface.deselect_actions)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -73,29 +72,27 @@ feature -- Access
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := gtk_list_child_position(parent_imp.list_widget, Current.widget) + 1 
+			Result := C.gtk_list_child_position(parent_imp.list_widget, Current.c_object) + 1 
 		end
-
-	parent_imp: EV_LIST_ITEM_HOLDER_IMP
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := c_gtk_list_item_is_selected (parent_imp.list_widget, widget)
+			Result := C.c_gtk_list_item_is_selected (parent_imp.list_widget, c_object) = 1
 		end
 
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		do
-			Result := ( gtk_list_child_position (parent_imp.list_widget, Current.widget) + 1 = 1 )
+			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 = 1
 		end
 
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := ( gtk_list_child_position (parent_imp.list_widget, Current.widget) + 1 = c_gtk_list_rows (parent_imp.list_widget) )
+			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 = C.c_gtk_list_rows (parent_imp.list_widget)
 		end
 
 feature -- Status setting
@@ -104,9 +101,9 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				c_gtk_list_item_select (widget)
+				C.c_gtk_list_item_select (c_object)
 			else
-				c_gtk_list_item_unselect (widget)
+				C.c_gtk_list_item_unselect (c_object)
 			end
 		end
 
@@ -120,30 +117,19 @@ feature -- Status setting
 	set_index (value: INTEGER) is
 			-- Make `value' the new index of the item in the
 			-- list.
-		local
-			local_array: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
 			-- Reference the widget otherwise it will be destroyed
 			-- when removed from the list.
-			gtk_object_ref (widget)
-
+			C.gtk_object_ref (c_object)
+			--FIXME is this ref wrapper needed
 			-- Remove the item from the list.
-			c_gtk_list_remove_item (parent_imp.list_widget, widget)
+			C.c_gtk_list_remove_item (parent_imp.list_widget, c_object)
 
 			-- Add the item at the given index.
-			c_gtk_list_insert_item (parent_imp.list_widget, widget, value - 1)
+			C.c_gtk_list_insert_item (parent_imp.list_widget, c_object, value - 1)
 
 			-- Unreference the widget which has an extra reference.
-			gtk_object_unref (widget)
-
-			-- updating the parent `ev_children' array
-			local_array := parent_imp.ev_children
-			local_array.search (Current)
-			local_array.remove
-
-			local_array.go_i_th (value)
-			local_array.put_left (Current)
-			
+			C.gtk_object_unref (c_object)
 		end
 
 feature -- element change
@@ -151,16 +137,15 @@ feature -- element change
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
 		local
-			a: ANY
-			combo_par: EV_COMBO_BOX_IMP
+			--FIXME combo_par: EV_COMBO_BOX_IMP
 		do
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 
 			-- the gtk part if the parent is a combo_box
-			combo_par ?= parent_imp
-			if (combo_par /= Void) then
-				gtk_combo_set_item_string (parent_imp.widget, widget, $a)
-			end
+			--FIXME combo_par ?= parent_imp
+			--FIXME if (combo_par /= Void) then
+			--FIXME 	C.gtk_combo_set_item_string (combo_par.c_object, c_object, eiffel_to_c (txt))
+			--FIXME end
 		end
 
 feature -- Assertion
@@ -173,53 +158,9 @@ feature -- Assertion
 			Result := parent_imp /= void
 		end
 
-feature -- Event : command association
+feature {EV_LIST_ITEM_IMP, EV_LIST_I} -- Implementation
 
-	add_select_command (command: EV_COMMAND; arguments: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is selected
-			-- The toggle event doesn't work on gtk, then
-			-- we add both event command.
-		do
-			add_command (widget, "select", command, arguments, default_pointer)
-		end
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is
-			-- unselected.
-		do
-			add_command (widget, "deselect", cmd, arg, default_pointer)
-		end	
-
-	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be
-			-- executed when the item is double clicked
-		do
-			old_add_dblclk (1, cmd, arg)
-		end	
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		do
-			remove_commands (widget, select_id)
-		end	
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		do	
-			remove_commands (widget, deselect_id)
-		end
-
-	remove_double_click_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is double-clicked.
-		do
-			old_remove_dblclk (1)
-		end
+	interface: EV_LIST_ITEM
 
 end -- class EV_LIST_ITEM_IMP
 
@@ -238,3 +179,76 @@ end -- class EV_LIST_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.24  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.23.6.19  2000/02/11 01:28:46  king
+--| Changed packing of pixmap box to non-expand
+--|
+--| Revision 1.23.6.18  2000/02/04 07:39:21  oconnor
+--| tweaked for release without combo box
+--|
+--| Revision 1.23.6.17  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.23.6.16  2000/02/02 23:41:00  king
+--| Removed redefinition of parent_imp
+--|
+--| Revision 1.23.6.15  2000/01/28 18:52:32  king
+--| Altered to deal with initialize name changes in textable and pixmapable
+--|
+--| Revision 1.23.6.14  2000/01/27 19:29:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.23.6.13  2000/01/19 17:46:28  oconnor
+--| renamed text_box to text_label
+--|
+--| Revision 1.23.6.12  2000/01/18 23:16:05  king
+--| Set is_initialized to true
+--|
+--| Revision 1.23.6.11  2000/01/11 19:26:21  king
+--| Removed command association commands
+--|
+--| Revision 1.23.6.10  2000/01/10 20:09:18  king
+--| Added container initialization for label and pixmap
+--|
+--| Revision 1.23.6.9  2000/01/07 23:27:51  king
+--| Removed calling of ev_textable_imp_initialize
+--|
+--| Revision 1.23.6.8  1999/12/13 19:45:17  oconnor
+--| commented out old command stuff
+--|
+--| Revision 1.23.6.7  1999/12/08 17:42:27  oconnor
+--| removed more inherited externals
+--|
+--| Revision 1.23.6.6  1999/12/04 18:59:12  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.23.6.5  1999/12/03 07:49:57  oconnor
+--| removed old command stuff
+--|
+--| Revision 1.23.6.4  1999/12/01 19:24:13  oconnor
+--| removed ev_children stuff and renamed initialize_text_box to ev_textable_imp_initialize
+--|
+--| Revision 1.23.6.3  1999/12/01 17:37:10  oconnor
+--| migrating to new externals
+--|
+--| Revision 1.23.6.2  1999/11/30 22:55:17  oconnor
+--| rename widget -> c_object
+--|
+--| Revision 1.23.6.1  1999/11/24 17:29:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.23.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -8,150 +8,104 @@ deferred class
 	EV_FILE_DIALOG
 
 inherit
-	EV_SELECTION_DIALOG
+	EV_STANDARD_DIALOG
 		redefine
 			implementation
 		end
 
 feature -- Access
 
-	title: STRING is
-			-- Title of the current dialog
-		require
-			exists: not destroyed
+	file_name: STRING is
+			-- Full name of currently selected file including path.
+			-- `Void' if user did not click "OK".
 		do
-			Result := implementation.title
+			Result := implementation.file_name
+		ensure
+			bridge_ok: Result /= Void implies
+				Result.is_equal (implementation.file_name)
 		end
 
-	file: STRING is
-			-- Path and name of the currently selected file
-			-- (including path).
-		require
-			exists: not destroyed
+	filter: STRING is
+			-- Filter currently applied to file list.
 		do
-			Result := implementation.file
+			Result := implementation.filter
+		ensure
+			bridge_ok: Result.is_equal (implementation.filter)
+		end
+
+	start_directory: STRING is
+			-- Base directory where browsing will start.
+		do
+			Result := implementation.start_directory
+		ensure
+			bridge_ok: Result.is_equal (implementation.start_directory)
 		end
 
 feature -- Status report
 
-	file_name: STRING is
-			-- Name of the currently selected file
-			-- (without path).
-		require
-			exists: not destroyed
+	file_title: STRING is
+			-- `file_name' without its path.
+			-- `Void' if user did not click "OK".
 		do
-			Result := implementation.file_name
-		end
-
-	directory: STRING is
-			-- Path of the current selected file
-		require
-			exists: not destroyed
-		do
-			Result := implementation.directory
-		end
-
-	selected_filter: STRING is
-			-- Currently selected filter
-		require
-			exists: not destroyed
-		do
-			Result := implementation.selected_filter
-		end
-
-	selected_filter_name: STRING is
-			-- Name of the currently selected filter
-		require
-			exists: not destroyed
-		do
-			Result := implementation.selected_filter_name
-		end
-
-feature -- Status setting
-
-	select_filter (filter: STRING) is
-			-- Select `filter' in the list of filter.
-		require
---			valid_filter: filters.hae (filter)
-		do
-			implementation.select_filter (filter)
+			Result := implementation.file_title
 		ensure
---			filter_index_set: filter_index = index
+			bridge_ok: Result /= Void implies
+				Result.is_equal (implementation.file_title)
 		end
 
-	select_filter_by_name (name: STRING) is
-			-- Select the filter called `name'.
-		require
---			valid_filter: filters.hae (filter)
+	file_path: STRING is
+			-- Path of `file_name'.
+			-- `Void' if user did not click "OK".
 		do
-			implementation.select_filter_by_name (name)
+			Result := implementation.file_path
 		ensure
---			filter_index_set: filter_index = index
+			bridge_ok: Result /= Void implies
+				Result.is_equal (implementation.file_path)
 		end
 
 feature -- Element change
 
-	set_title (a_title: STRING) is
-			-- Make `a_title' the new title of the current dialog.
+	set_filter (a_filter: STRING) is
+			-- Set `a_filter' as new filter.
 		require
-			exists: not destroyed
-			valid_title: a_title /= Void
+			a_filter_not_void: a_filter /= Void
 		do
-			implementation.set_title (a_title)
+			implementation.set_filter (a_filter)
+		ensure
+			assigned: filter.is_equal (a_filter)
 		end
 
-	set_file (name: STRING) is
-			-- Make the file named `name' the new selected file.
+	set_file_name (a_name: STRING) is
+			-- Make `a_name' the selected file.
 		require
-			exists: not destroyed
-			valid_name: name /= Void
+			a_name_not_void: a_name /= Void
 		do
-			implementation.set_file (name)
+			implementation.set_file_name (a_name)
+		ensure
+			assigned: file_name.is_equal (a_name)
 		end
 
-	set_base_directory (path: STRING) is
-			-- Make `path' the base directory in detrmining files
-			-- to be displayed.
+	set_start_directory (a_path: STRING) is
+			-- Make `a_path' the base directory.
 		require
-			exists: not destroyed
-			valid_path: path /= Void
+			a_path_not_void: a_path /= Void
 		do
-			implementation.set_base_directory (path)
-		end
-
-	set_default_extension (extension: STRING) is
-			-- Make `extension' the new default extension if no
-			-- filter is selected.
-			-- This extension will be automatically added to the
-			-- file name if the user fails to type an extension.
-		require
-			exists: not destroyed
-			valid_extension: extension /= Void
-		do
-			implementation.set_default_extension (extension)
-		end
-
-	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
-			-- Set the file type combo box.
-			-- `filter_names' is an array of string containing
-			-- the filter names and `filter_patterns' is an
-			-- array of string containing the filter patterns.
-			-- Example:
-			--	filter_names = <<"Text file", "All file">>
-			--	filter_patterns = <<"*.txt", "*.*">>
-		require
-			filter_names_not_void: filter_names /= Void
-			filter_patterns_not_void: filter_patterns /= Void
-			same_count: filter_names.count = filter_patterns.count
-			no_void_name: not filter_names.has (Void)
-			no_void_pattern: not filter_patterns.has (Void)
-		do
-			implementation.set_filter (filter_names, filter_patterns)
+			implementation.set_start_directory (a_path)
+		ensure
+			assigned: start_directory.is_equal (a_path)
 		end
 
 feature {NONE} -- implementation
 
 	implementation: EV_FILE_DIALOG_I
+
+invariant
+	filter_not_void: filter /= Void
+	start_directory_not_void: start_directory /= Void
+	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
+		implies (file_title /= Void and then file_path /= Void)
+	path_plus_title_equals_name: file_name /= Void implies
+		file_name.is_equal (file_path + file_title)
 
 end -- class EV_FILE_DIALOG
 
@@ -170,3 +124,46 @@ end -- class EV_FILE_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.7  2000/01/28 22:24:22  oconnor
+--| released
+--|
+--| Revision 1.7.6.6  2000/01/27 23:45:26  brendel
+--| Improved contracts.
+--|
+--| Revision 1.7.6.5  2000/01/27 22:03:11  brendel
+--| Improved contracts.
+--| Removed feature default_extension.
+--| Added features file_path and file_title.
+--|
+--| Revision 1.7.6.4  2000/01/27 19:30:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.3  2000/01/27 18:54:55  brendel
+--| Fixed bug in postconditions.
+--|
+--| Revision 1.7.6.2  2000/01/27 02:40:11  brendel
+--| Revised. Now has attributes: file_name, start_directory, default_extension,
+--| filter.
+--|
+--| Revision 1.7.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

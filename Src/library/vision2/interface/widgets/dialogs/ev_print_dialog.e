@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision print dialog."
 	status: "See notice at end of class"
@@ -29,7 +31,6 @@ feature -- Access
 	from_page: INTEGER is
 			-- Value for the starting page edit control
 		require
-			exist: not destroyed
 		do
 			Result := implementation.from_page
 		ensure
@@ -39,7 +40,6 @@ feature -- Access
 	to_page: INTEGER is
 			-- Value for the ending page edit control
 		require
-			exist: not destroyed
 		do
 			Result := implementation.to_page
 		ensure
@@ -49,7 +49,6 @@ feature -- Access
 	copies: INTEGER is
 			-- Number of copies for the Copies edit control
 		require
-			exist: not destroyed
 		do
 			Result := implementation.copies
 		ensure
@@ -61,7 +60,6 @@ feature -- Access
 			-- in the From and To page edit controls.
 			-- 1 by default.
 		require
-			exist: not destroyed
 		do
 			Result := implementation.maximum_range
 		ensure
@@ -73,7 +71,6 @@ feature -- Status report
 	all_pages_selected: BOOLEAN is
 			-- Is the "All pages" radio button selected?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.all_pages_selected
 		end
@@ -81,7 +78,6 @@ feature -- Status report
 	page_numbers_selected: BOOLEAN is
 			-- Is the "Page" radio button selected?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.page_numbers_selected
 		end
@@ -89,7 +85,6 @@ feature -- Status report
 	selection_selected: BOOLEAN is
 			-- Is the "Selection" radio button selected?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.selection_selected
 		end
@@ -97,7 +92,6 @@ feature -- Status report
 	print_to_file_checked: BOOLEAN is
 			-- Is the "Print to file" check box checked?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.print_to_file_checked
 		end
@@ -105,7 +99,6 @@ feature -- Status report
 	collate_checked: BOOLEAN is
 			-- Is the "Collate" check box checked?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.collate_checked
 		end
@@ -116,7 +109,6 @@ feature -- Status setting
 			-- Select the "Page numbers" radio button.
 			-- By default, the "All pages" button is selected.
 		require
-			exists: not destroyed
 		do
 			implementation.select_page_numbers
 		end
@@ -125,7 +117,6 @@ feature -- Status setting
 			-- Select the "Selection" radio button.
 			-- By default, the "All pages" button is selected.
 		require
-			exists: not destroyed
 		do
 			implementation.select_selection
 		end
@@ -133,7 +124,6 @@ feature -- Status setting
 	check_print_to_file is
 			-- Check the "Print to file" check box.
 		require
-			exists: not destroyed
 		do
 			implementation.check_print_to_file
 		ensure
@@ -143,7 +133,6 @@ feature -- Status setting
 	check_collate is
 			-- Check the "Collate" check box.
 		require
-			exists: not destroyed
 		do
 			implementation.check_collate
 		ensure
@@ -153,7 +142,6 @@ feature -- Status setting
 	disable_page_numbers is
 			-- Disable the "Page numbers" radio button.
 		require
-			exists: not destroyed
 		do
 			implementation.disable_page_numbers
 		end
@@ -161,7 +149,6 @@ feature -- Status setting
 	disable_selection is
 			-- Disable the "Selection" radio button.
 		require
-			exists: not destroyed
 		do
 			implementation.disable_selection
 		end
@@ -169,7 +156,6 @@ feature -- Status setting
 	disable_print_to_file is
 			-- Disable the "Print to file" check box.
 		require
-			exists: not destroyed
 		do
 			implementation.disable_print_to_file
 		end
@@ -177,7 +163,6 @@ feature -- Status setting
 	hide_print_to_file is
 			-- Hide the "Print to file" check box.
 		require
-			exists: not destroyed
 		do
 			implementation.hide_print_to_file
 		end
@@ -187,7 +172,6 @@ feature -- Element change
 	set_from_page (value: INTEGER) is
 			-- Make `value' the new `from_page' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_from_page (value)
@@ -198,7 +182,6 @@ feature -- Element change
 	set_to_page (value: INTEGER) is
 			-- Make `value' the new `to_page' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_to_page (value)
@@ -209,7 +192,6 @@ feature -- Element change
 	set_copies (value: INTEGER) is
 			-- Make `value' the new `copies' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_copies (value)
@@ -220,7 +202,6 @@ feature -- Element change
 	set_maximum_range (value: INTEGER) is
 			-- Make `value' the new maximum_range.
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_maximum_range (value)
@@ -249,3 +230,28 @@ end -- class EV_PRINT_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.2  2000/01/27 19:30:50  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

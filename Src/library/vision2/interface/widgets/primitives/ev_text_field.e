@@ -1,8 +1,8 @@
 indexing
 	description: 
-	"EiffelVision text field. To query single line of text from the user"
+		"Eiffel Vision text field. Input fields for single lines of text."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "input, text, field, query"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,113 +12,74 @@ class
 inherit
 	EV_TEXT_COMPONENT
 		redefine
-			make,
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 create
-	make,
+	default_create,
 	make_with_text
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a text field with, `par' as
-			-- parent
+	make_with_text (a_text: STRING) is
+			-- Create with `a_text'.
+		require
+			a_text_not_void: a_text /= Void
 		do
-			!EV_TEXT_FIELD_IMP!implementation.make
-			widget_make (par)
+			default_create
+			set_text (a_text)
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		require
-			valid_parent: parent_needed implies par /= Void
+feature -- Access
+
+	capacity: INTEGER is
+			-- Maximum number of characters field can hold.
 		do
-			!EV_TEXT_FIELD_IMP!implementation.make_with_text (txt)
-			widget_make (par)
+			Result := implementation.capacity
 		end
 
-feature -- Status setting
+feature -- Element change
 
-	set_maximum_text_length (value: INTEGER) is
-			-- Make `value' the new maximal lenght of the text
-			-- in character number.
+	set_capacity (a_capacity: INTEGER) is
+			-- Assign `a_capacity' to `capacity'.
 		require
-			exist: not destroyed
-			valid_length: value >= 0
+			a_capacity_not_negative: a_capacity >= 0
 		do
-			implementation.set_maximum_text_length (value)
+			implementation.set_capacity (a_capacity)
 		end
 
-	get_maximum_text_length: INTEGER is
-			-- Return the maximum number of characters
-			-- that the user may enter into the text field.
-		require
-			exist: not destroyed
-		do
-			Result := implementation.get_maximum_text_length
-		end
+feature -- Events
 
-feature -- Event - command association
-
-	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_return_command (cmd, arg)
-		end	
-
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		obsolete
-			"Use add_return command instead."
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_return_command (cmd, arg)
-		end	
-
-feature -- Event -- removing command association
-
-	remove_return_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_return_commands
-		end
-
-	remove_activate_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		obsolete
-			"Use remove_return_command instead."
-		require
-			exists: not destroyed
-		do
-			implementation.remove_return_commands
-		end
+	return_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when return key is pressed.
 
 feature {NONE} -- Implementation
 
 	implementation: EV_TEXT_FIELD_I
-			-- Implementation 
-			
-end -- class EV_TEXT_AREA
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
---!----------------------------------------------------------------
+	create_implementation is
+			-- Create implementation of text field.
+		do
+			create {EV_TEXT_FIELD_IMP} implementation.make (Current)
+		end
+			
+	create_action_sequences is
+			-- Create action sequence objects.
+		do
+			{EV_TEXT_COMPONENT} Precursor
+			create return_actions
+		end
+
+invariant
+	capacity_not_negative: capacity >= 0
+	return_actions_not_void: return_actions /= Void
+
+end -- class EV_TEXT_FIELD
+
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -132,5 +93,42 @@ end -- class EV_TEXT_AREA
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.19  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.18.6.6  2000/02/01 01:32:04  brendel
+--| Improved comments.
+--|
+--| Revision 1.18.6.5  2000/01/28 20:00:20  oconnor
+--| released
+--|
+--| Revision 1.18.6.4  2000/01/27 19:30:57  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.18.6.3  2000/01/18 07:08:07  oconnor
+--| Replaced commands with action sequences.
+--| Formatting, comments.
+--| renames maximum_length -> capacity
+--|
+--| Revision 1.18.6.2  1999/11/30 22:38:18  oconnor
+--| removed make, added create_implementation
+--|
+--| Revision 1.18.6.1  1999/11/24 17:30:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.18.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.18.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

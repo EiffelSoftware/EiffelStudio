@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision tool-bar separator, mswindows implemenatation."
@@ -14,6 +16,8 @@ inherit
 			parent_imp as tb_parent_imp
 		undefine
 			parent
+		select
+			interface
 		end
 
 	EV_SEPARATOR_ITEM_IMP
@@ -24,6 +28,8 @@ inherit
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
+		rename
+			interface as ev_tool_bar_button_interface
 		redefine
 			type
 		select
@@ -60,3 +66,28 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.3  2000/01/27 19:30:09  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.2  2000/01/21 18:09:01  rogers
+--| Renamed interface inherited from ev_tool_bar_button_imp as ev_tool_bar_button_imp_interface. Selected interface inherited from EV_TOOL_BAR_SEPARATOR_I.
+--|
+--| Revision 1.5.6.1  1999/11/24 17:30:17  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

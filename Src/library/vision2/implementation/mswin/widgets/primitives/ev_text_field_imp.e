@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision text field. Mswindows implementation."
@@ -11,10 +13,14 @@ class
 
 inherit
 	EV_TEXT_FIELD_I
+		redefine
+			interface
+		end
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			on_key_down
+			on_key_down,
+			interface
 		end
 
 	WEL_SINGLE_LINE_EDIT
@@ -27,12 +33,19 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
-			shown as displayed,
+			shown as is_displayed,
 			clip_cut as cut_selection,
 			clip_copy as copy_selection,
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
-			selection_end as wel_selection_end
+			selection_end as wel_selection_end,
+			width as wel_width,
+			height as wel_height,
+			set_caret_position as internal_set_caret_position,
+			caret_position as internal_caret_position,
+			enabled as is_sensitive,
+			item as wel_item,
+			move as move_to
 		undefine
 			window_process_message,
 			remove_command,
@@ -63,21 +76,15 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create an empty text field.
 		do
-			make_with_text ("")
-		end
-
-	make_with_text (txt: STRING) is
-			-- Create a text field with `txt' as label.
-		do
-			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
+			base_make (an_interface)
+			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
 feature -- Event - command association
@@ -118,8 +125,9 @@ feature {NONE} -- WEL Implementation
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
 			if virtual_key = Vk_return then
-				set_caret_position (0)
-				execute_command (Cmd_activate, Void)
+				set_caret_position (1)
+				--|FIXME Now need to use the new events.
+				--execute_command (Cmd_activate, Void)
 			end
 		end	
 
@@ -137,7 +145,8 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			execute_command (Cmd_change, Void)
+			--|FIXME Now need to use the new events.
+			--execute_command (Cmd_change, Void)
 		end
 
 	enable is
@@ -146,7 +155,7 @@ feature {NONE} -- WEL Implementation
 			default_colors: EV_DEFAULT_COLORS
 		do
 			!! default_colors
-			cwin_enable_window (item, True)
+			cwin_enable_window (wel_item, True)
 			set_background_color (default_colors.Color_read_write)
 		end
 
@@ -156,7 +165,7 @@ feature {NONE} -- WEL Implementation
 			default_colors: EV_DEFAULT_COLORS
 		do
 			!! default_colors
-			cwin_enable_window (item, False)
+			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
 		end
 
@@ -205,6 +214,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE} -- Implementation
+
+	interface: EV_TEXT_FIELD
+
 end -- class EV_TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------
@@ -222,3 +235,34 @@ end -- class EV_TEXT_FIELD_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.28  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.27.10.5  2000/02/01 03:40:54  brendel
+--| Removed undefine of set_default_minimum_size.
+--|
+--| Revision 1.27.10.4  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.27.10.3  2000/01/27 00:37:51  rogers
+--| Commented out previous command executions. Need to implement using the new event system.
+--|
+--| Revision 1.27.10.2  2000/01/04 18:51:37  rogers
+--| Fitted in with the development branch. on_key_down, now goes to position one when return is pressed, instead of 0. Redefined interface.
+--|
+--| Revision 1.27.10.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.27.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

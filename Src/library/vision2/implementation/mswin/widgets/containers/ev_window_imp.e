@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision untitled window, mswindows implementation."
 	note: " In the implementation of the window, we use internal_changes to know%
@@ -10,10 +12,16 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_UNTITLED_WINDOW_IMP
+	EV_WINDOW_IMP
 
 inherit
-	EV_UNTITLED_WINDOW_I
+	EV_WINDOW_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
+		redefine
+			interface
+		end
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
@@ -39,17 +47,25 @@ inherit
 			internal_set_minimum_height,
 			internal_set_minimum_size,
 			on_destroy,
-			notebook_parent
+			notebook_parent,
+			interface
 		end
 
 	WEL_FRAME_WINDOW
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
+			shown as is_displayed,
 			destroy as wel_destroy,
 			set_width as wel_set_width,
-			set_height as wel_set_height
+			set_height as wel_set_height,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive,
+			set_x as set_x_position,
+			set_y as set_y_position,
+			width as wel_width,
+			height as wel_height
 		undefine
 			remove_command,
 			on_left_button_down,
@@ -76,7 +92,6 @@ inherit
 		redefine
 			default_ex_style,
 			default_style,
-			set_menu,
 			on_size,
 			on_get_min_max_info,
 			on_destroy,
@@ -98,30 +113,16 @@ inherit
 		end
 
 creation
-	make,
-	make_with_owner,
-	make_root
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a window. Window does not have any
 			-- parents
 		do
+			base_make (an_interface)
 			make_top ("")
-		end
-
-	make_with_owner (par: EV_UNTITLED_WINDOW) is
-			-- Create a window with a parent.
-			-- For a window, we cannot set the parent after or it does a 
-		local
-			ww: WEL_FRAME_WINDOW
-		do
-			ww ?= par.implementation
-			check
-				valid_owner: ww /= Void
-			end
-			make_child (ww, "")
 		end
 
 feature -- Access
@@ -167,8 +168,11 @@ feature -- Access
 		do
 			Result := Current
 		end
+    
+	menu_bar: EV_MENU_BAR
+			-- Horizontal bar at top of client area that contains menu's.
 
-	status_bar: EV_STATUS_BAR_IMP
+	status_bar: EV_STATUS_BAR
 			-- Status bar of the window.
 
 	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
@@ -178,15 +182,21 @@ feature -- Access
 			Result := Void
 		end
 
+	blocking_window: EV_WINDOW
+			-- Window this dialog is a transient for.
+
+	is_modal: BOOLEAN
+			-- Must the window be closed before application continues?
+
 feature -- Status setting
 
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
-			application.item.remove_root_window (Current)
+			application.item.remove_root_window (interface)
 			if parent_imp /= Void then
-				parent_imp.set_insensitive (False)
+				parent_imp.disable_sensitive
 			end
 			wel_destroy
 		end
@@ -235,7 +245,7 @@ feature -- Status setting
 			new_style := clear_flag (new_style, Ws_minimizebox)
 			new_style := clear_flag (new_style, Ws_sizebox)
 			set_style (new_style)
-			if shown then
+			if is_show_requested then
 				hide
 				show
 			end
@@ -251,24 +261,16 @@ feature -- Status setting
 			new_style := set_flag (new_style, Ws_minimizebox)
 			new_style := set_flag (new_style, Ws_sizebox)
 			set_style (new_style)
-			if shown then
+			if is_show_requested then
 				hide
 				show
 			end
 		end
 
-	set_modal (flag: BOOLEAN) is
-			-- Make the window modal
-		do
-			if flag then
-				set_capture
-			else
-				release_capture
-			end
-		end
-
 feature -- Element change
 
+	--|FIXME This should no longer be required.
+	--|Julian Rogers  12021999
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
@@ -319,7 +321,26 @@ feature -- Element change
 			end
 		end
 
-	set_status_bar (a_bar: EV_STATUS_BAR_IMP) is
+	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
+			-- Set `menu_bar' to `a_menu_bar'.
+		local
+			mb_imp: WEL_MENU
+		do
+			menu_bar := a_menu_bar
+			mb_imp ?= menu_bar.implementation
+			set_menu (mb_imp)
+			compute_minimum_height
+		end
+
+	remove_menu_bar is
+			-- Set `menu_bar' to `Void'.
+		do
+			menu_bar := Void
+			unset_menu
+			compute_minimum_height
+		end
+
+	set_status_bar (a_bar: EV_STATUS_BAR) is
 			-- Make `a_bar' the new status bar of the window.
 		do
 			status_bar := a_bar
@@ -330,6 +351,27 @@ feature -- Element change
 			-- Remove the current status bar of the window.
 		do
 			status_bar := Void
+			compute_minimum_height
+		end
+
+	enable_modal is
+			-- Set `is_modal' to `True'.
+		do
+			is_modal := True
+			enable_capture
+		end
+
+	disable_modal is
+			-- Set `is_modal' to `False'.
+		do
+			is_modal := False
+			disable_capture
+		end
+
+	set_blocking_window (a_window: EV_WINDOW) is
+			-- Set as transient for `a_window'.
+		do
+			blocking_window := a_window
 		end
 
 feature -- Resizing
@@ -338,7 +380,7 @@ feature -- Resizing
 			-- Resize the widget when it is not managed.
 			-- We don't redefine it because of the post-conditions.
 		do
-			if shown then
+			if is_show_requested then
 				resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 			else
 				internal_changes := set_bit (internal_changes, 64, True)
@@ -351,7 +393,7 @@ feature -- Resizing
 			-- Make `value' the new width of the widget when
 			-- it is not managed.
 		do
-			if shown then
+			if is_show_requested then
 				wel_set_width (value.max (minimum_width).min (maximum_width))
 			else
 				internal_changes := set_bit (internal_changes, 64, True)
@@ -363,7 +405,7 @@ feature -- Resizing
 			-- Make `value' the new height of the widget when
 			-- it is not managed.
 		do
-			if shown then
+			if is_show_requested then
 				wel_set_height (value.max (minimum_height).min (maximum_height))
 			else
 				internal_changes := set_bit (internal_changes, 128, True)
@@ -428,15 +470,6 @@ feature -- Assertion features
 		do
 			Result := (width = new_width or else width = minimum_width.max (window_minimum_width) or else width = maximum_width) and then
 				  (height = new_height or else height = minimum_height.max (window_minimum_height)or else height = maximum_height)
-		end
-
-feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
-
-	set_menu (a_menu: WEL_MENU) is
-			-- Set `menu' with `a_menu'.
-		do
-			{WEL_FRAME_WINDOW} Precursor (a_menu)
-			compute_minimum_height
 		end
 
 feature {NONE} -- Implementation
@@ -554,7 +587,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_TITLED_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do
@@ -632,15 +665,20 @@ feature {NONE} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
+		local
+			sb_imp: EV_STATUS_BAR_IMP
 		do
 			if size_type /= size_minimized then
 				if child /= Void then
 					child.parent_ask_resize (client_width, client_height)
 				end
 				if status_bar /= Void then
-					status_bar.reposition
+					sb_imp ?= status_bar.implementation
+					if sb_imp /= Void then
+						sb_imp.reposition
+					end
 				end
-				execute_command (Cmd_size, Void)
+				interface.resize_actions.call ([x, y, a_width, a_height])
 			end
 		end
 
@@ -652,21 +690,21 @@ feature {NONE} -- Implementation
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
-			execute_command (Cmd_move, Void)
  		end
 
 	closeable: BOOLEAN is
 			-- Can the user close the window?
 			-- Yes by default.
 		do
-			if (command_list = Void) or else 
-					(command_list @ Cmd_close) = Void then
-				Result := True
-				interface.remove_implementation
-			else
-				execute_command (Cmd_close, Void)
-				Result := False
-			end
+			--|FIXME is this a command or a query, seperate?
+			--if (command_list = Void) or else 
+			--		(command_list @ Cmd_close) = Void then
+			--	Result := True
+			--	interface.remove_implementation
+			--else
+			--	execute_command (Cmd_close, Void)
+			--	Result := False
+			--end
 		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
@@ -698,8 +736,8 @@ feature {NONE} -- Implementation
 			-- Set the parent sensitive if it exists.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
-			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
-				parent_imp.set_insensitive (False)
+			if parent_imp /= Void and not parent_imp.destroyed and then not parent_imp.is_sensitive then
+				parent_imp.disable_sensitive
 			end
 		end
 
@@ -804,7 +842,11 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-end -- class EV_UNTITLED_WINDOW_IMP
+feature --
+
+	interface: EV_WINDOW
+
+end -- class EV_WINDOW_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -822,3 +864,64 @@ end -- class EV_UNTITLED_WINDOW_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.19  2000/02/14 11:40:43  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.4.1.2.14  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.17.4.1.2.13  2000/02/07 20:00:13  rogers
+--| On_size now uses the new event system. Commented out implementation of closeable temporarily until fixed.
+--|
+--| Revision 1.17.4.1.2.12  2000/02/05 02:18:00  brendel
+--| Changed type of feature `status_bar' to be of type EV_STATUS_BAR.
+--|
+--| Revision 1.17.4.1.2.11  2000/02/04 19:22:58  brendel
+--| Implemented set_menu_bar and remove_menu_bar.
+--|
+--| Revision 1.17.4.1.2.10  2000/02/04 19:08:29  rogers
+--| Removed make_with_owner.
+--|
+--| Revision 1.17.4.1.2.9  2000/02/04 01:00:43  brendel
+--| Added *menu_bar features. Not yet implemented.
+--|
+--| Revision 1.17.4.1.2.8  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.17.4.1.2.7  2000/01/27 19:30:23  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.4.1.2.6  2000/01/26 18:35:09  brendel
+--| Removed all modal-related features.
+--|
+--| Revision 1.17.4.1.2.5  2000/01/25 17:37:52  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.17.4.1.2.4  2000/01/21 23:18:46  brendel
+--| Renamed set_capture to enable_capture.
+--| Renamed release_capture to disable_capture.
+--|
+--| Revision 1.17.4.1.2.3  2000/01/18 00:25:47  rogers
+--| Undefined propagatae_foreground_color and propagate_background_color from EV_WINDOW_I. Re-implemented closeable.
+--|
+--| Revision 1.17.4.1.2.2  1999/12/17 00:48:45  rogers
+--| Altered to fit in with the review branch. Some redefinitions required. is_show_requested replaces shown. Make now takes an interface.
+--|
+--| Revision 1.17.4.1.2.1  1999/11/24 17:30:29  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.2.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

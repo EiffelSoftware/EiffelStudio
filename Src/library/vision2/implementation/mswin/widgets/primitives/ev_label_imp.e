@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision label widget. Displays a text on%
 				  % only one line. Mswindows implementation";
@@ -10,21 +12,34 @@ class
 
 inherit
 	EV_LABEL_I
+		redefine
+			interface
+		select
+			interface
+		end
 
 	EV_PRIMITIVE_IMP
 		redefine
-			set_default_minimum_size
+			set_default_minimum_size,
+			interface,
+			initialize
 		end
 
 	EV_TEXTABLE_IMP
+		undefine
+			set_default_minimum_size
 		redefine
 			set_default_minimum_size,
-			set_center_alignment,
-			set_right_alignment,
-			set_left_alignment
+			align_text_center,
+			align_text_left,
+			align_text_right,
+			interface
 		end
 
 	EV_FONTABLE_IMP
+		rename
+			interface as ev_fontable_imp_interface
+		end
 
 	WEL_STATIC
 		rename
@@ -34,9 +49,14 @@ inherit
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			font as wel_font,
-			shown as displayed,
+			shown as is_displayed,
 			set_font as wel_set_font,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			width as wel_width,
+			height as wel_height,
+			enabled as is_sensitive,
+			item as wel_item,
+			move as move_to
 		undefine
 			window_process_message,
 			remove_command,
@@ -64,41 +84,42 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create an empty label.
 		do
-			make_with_text ("")
+			base_make (an_interface)
+			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create the label with `txt' as label.
+	
+	initialize is
+			-- Initialize label.
 		do
-			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
+			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
 		end
 
 feature -- Status setting
 
-	set_center_alignment is
+	align_text_center is
 			-- Set text alignment of current label to center.
 		do
 			set_style (basic_style + Ss_center)
 			invalidate
 		end
 
-	set_right_alignment is
+	align_text_right is
 			-- Set text alignment of current label to right.
 		do
 			set_style (basic_style + Ss_right)
 			invalidate
 		end
 
-	set_left_alignment is
+	align_text_left is
 			-- Set text alignment of current label to left.
 		do
 			set_style (basic_style + Ss_left)
@@ -199,6 +220,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {EV_ANY_I}
+
+	interface: EV_LABEL
+
 end -- class EV_LABEL_IMP
 
 --|----------------------------------------------------------------
@@ -216,3 +241,37 @@ end -- class EV_LABEL_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.29  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.28.6.6  2000/02/01 03:34:57  brendel
+--| Removed undefine of set_default_minimum_size.
+--|
+--| Revision 1.28.6.5  2000/01/27 19:30:27  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.28.6.4  2000/01/19 23:55:54  rogers
+--| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface, and selected interface from EV_LABEL_I.
+--|
+--| Revision 1.28.6.3  2000/01/11 23:33:48  rogers
+--| Modified to comply with the major Vision2 changes. See diff for re-definitions. renamed set_******_alignment to align_text_******.
+--|
+--| Revision 1.28.6.2  1999/12/17 00:39:19  rogers
+--| Altered to fit in with the review branch. Basic alterations, make now takes an interface.
+--|
+--| Revision 1.28.6.1  1999/11/24 17:30:32  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.28.2.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
 		" EiffelVision vertical scroll bar, mswindows implementation."
@@ -10,43 +12,47 @@ class
 
 inherit
 	EV_VERTICAL_SCROLL_BAR_I
-
-	EV_SCROLL_BAR_IMP
-		undefine
-			set_default_options
 		redefine
-			set_default_minimum_size
+			interface
 		end
 
+	EV_SCROLL_BAR_IMP
+		redefine
+			interface,
+			set_default_minimum_size,
+			initialize
+		end
 create
-	make,
-	make_with_range
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a scroll-bar with 0 as minimum,
 			-- 100 as maximum and `par' as parent.
 		do
+			base_make (an_interface)
 			make_vertical (default_parent, 0, 0, 0, 0, 0)
-			set_range (0, 100)
 		end
 
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a scroll-bar with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
+	initialize is
+			-- Initalize scroll bar.
 		do
-			make_vertical (default_parent, 0, 0, 0, 0, 0)
-			set_range (min, max)
+			{EV_SCROLL_BAR_IMP} Precursor
+			set_range (1, 100)
 		end
 
 feature -- Status setting
 
    	set_default_minimum_size is
-   			-- Plateform dependant initializations.
+   			-- Platform dependant initializations.
    		do
 			internal_set_minimum_width (15)
  		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_VERTICAL_SCROLL_BAR
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP
 
@@ -65,3 +71,31 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.10.4  2000/02/01 03:41:16  brendel
+--| Rearranged inheritance clause.
+--|
+--| Revision 1.2.10.3  2000/01/27 19:30:31  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.10.2  2000/01/06 20:35:02  rogers
+--| Fixed to fit in with major new vision2 changes. make now takes an interface. make_with_range no longer takes a parent. Initialize is redefined from ev_scroll_bar_imp and set the standard range as 1-100.
+--|
+--| Revision 1.2.10.1  1999/11/24 17:30:35  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

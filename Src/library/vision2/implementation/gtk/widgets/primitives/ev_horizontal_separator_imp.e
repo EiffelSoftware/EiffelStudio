@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision horizontal separator, gtk implementation";
@@ -11,10 +12,13 @@ class
 inherit
 
 	EV_HORIZONTAL_SEPARATOR_I
+		redefine
+			interface
+		end
 
 	EV_SEPARATOR_IMP
-		undefine
-			set_default_options
+		redefine
+			interface
 		end
 
 create
@@ -22,12 +26,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-                        -- Create a gtk seperator
+	make (an_interface: like interface) is
+                        -- Create a horizontal gtk seperator
+		local
+			p: POINTER
                 do
-                        widget := gtk_hseparator_new
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			set_c_object (C.gtk_event_box_new)
+			p := C.gtk_hseparator_new
+			C.gtk_widget_show (p)
+			C.gtk_container_add (c_object, p)
                 end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_HORIZONTAL_SEPARATOR
 
 end -- class EV_HORIZONTAL_SEPARATOR_IMP
 
@@ -46,3 +59,37 @@ end -- class EV_HORIZONTAL_SEPARATOR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.5  2000/02/04 04:25:38  oconnor
+--| released
+--|
+--| Revision 1.3.6.4  2000/01/27 19:29:46  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.3  2000/01/21 22:30:46  king
+--| Changed c_object to event box
+--|
+--| Revision 1.3.6.2  2000/01/15 01:25:36  king
+--| Implemented to fit in with new structure
+--|
+--| Revision 1.3.6.1  1999/11/24 17:29:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/17 01:53:05  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

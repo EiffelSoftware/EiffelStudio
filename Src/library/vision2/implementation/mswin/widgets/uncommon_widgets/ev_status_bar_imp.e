@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision status bar."
 	status: "See notice at end of class"
@@ -9,18 +11,20 @@ class
 
 inherit
 	EV_STATUS_BAR_I
-
-	EV_PRIMITIVE_IMP
-		rename
-			make as wrong_make
 		redefine
-			parent_imp,
-			set_parent
+			interface
 		end
 
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
+	EV_PRIMITIVE_IMP
 		redefine
-			move_item
+			parent_imp,
+			set_parent,
+			interface
+		end
+
+	EV_ITEM_LIST_IMP [EV_STATUS_BAR_ITEM]
+		redefine
+			interface
 		end
 
 	WEL_STATUS_WINDOW
@@ -28,11 +32,16 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
+			shown as is_displayed,
 			destroy as wel_destroy,
 			set_minimum_height as wel_set_minimum_height,
 			text as wel_text,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive, 
+			width as wel_width,
+			height as wel_height
 		undefine
 			window_process_message,
 			remove_command,
@@ -63,12 +72,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
+	make (an_interface: like interface) is
 			-- Create a status bar with one part.
 		do 
+			base_make (an_interface)
 			wel_make (default_parent, 0)
 			!! ev_children.make (0)
-			set_parent (par)
 		end
 
 feature -- Access
@@ -76,7 +85,7 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			-- List of the children
 
-	parent_imp: EV_WINDOW_IMP is
+	parent_imp: EV_TITLED_WINDOW_IMP is
 			-- It is a window
 		do
 			Result ?= {EV_PRIMITIVE_IMP} Precursor
@@ -88,14 +97,21 @@ feature -- Access
 			Result := ev_children.count
 		end
 
+	--FIXME Should no longer be required as is now in item_list.
+	--item: EV_STATUS_BAR_ITEM is
+	--	do
+	--	end
+
 feature -- Element change
 
-	set_parent (par: EV_WINDOW) is
+
+	
+	set_parent (par: EV_TITLED_WINDOW) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		local
-			par_imp: EV_WINDOW_IMP
+			par_imp: EV_TITLED_WINDOW_IMP
 			ww: WEL_WINDOW
 		do
 			if par /= Void then
@@ -109,27 +125,27 @@ feature -- Element change
 					parent_not_void: par_imp /= Void
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
-				par_imp.set_status_bar (Current)
+				--| FIXME par_imp.set_status_bar (Current)
 			elseif parent_imp /= Void then
 				parent_imp.remove_status_bar
 				wel_set_parent (default_parent)
 			end
 		end
 
-	insert_item (item_imp: EV_STATUS_BAR_ITEM_IMP; index: INTEGER) is
-			-- Insert an item at `index' position
+	insert_item (item_imp: EV_STATUS_BAR_ITEM_IMP; an_index: INTEGER) is
+			-- Insert an item at `an_index' position
 		do
-			ev_children.go_i_th (index)
+			ev_children.go_i_th (an_index)
 			ev_children.put_left (item_imp)
 			update_edges
 			update_texts
 		end
 
-	move_item (item_imp: like item_type; index: INTEGER) is
-			-- Move `item_imp' to the `index' position.
+	move_item (item_imp: like item_type; an_index: INTEGER) is
+			-- Move `item_imp' to the `an_index' position.
 		do
 			ev_children.prune_all (item_imp)
-			ev_children.go_i_th (index)
+			ev_children.go_i_th (an_index)
 			ev_children.put_left (item_imp)
 			update_edges
 			update_texts
@@ -302,7 +318,7 @@ feature {EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation
 			current_item := ev_children @ item_id
 			if current_item.pixmap /= Void then
 				pixmap ?= current_item.pixmap.implementation
-				bitmap := pixmap.internal_bitmap
+				bitmap := pixmap.bitmap
 				dc.draw_bitmap (bitmap, rect.left + 1, rect.top + 1, bitmap.width, bitmap.height)
 					-- Draw `bitmap'
 				create rect2.make (bitmap.width + rect.left + 2, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
@@ -373,6 +389,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE}
+
+	interface: EV_STATUS_BAR
+
 end -- class EV_STATUS_BAR_IMP
 
 --|----------------------------------------------------------------
@@ -390,3 +410,40 @@ end -- class EV_STATUS_BAR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.20  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.19.4.7  2000/02/05 02:27:24  brendel
+--| Commented out one line of code.
+--|
+--| Revision 1.19.4.6  2000/01/29 01:05:04  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.19.4.5  2000/01/27 19:30:32  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.19.4.4  2000/01/20 18:31:47  king
+--| Changed internal_bitmap to bitmap.
+--|
+--| Revision 1.19.4.3  2000/01/19 22:33:50  rogers
+--| Removed item as it is noy inherited from EV_ITEM_LIT_IMP.
+--|
+--| Revision 1.19.4.2  1999/12/17 00:17:16  rogers
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. make now takes an interface.
+--|
+--| Revision 1.19.4.1  1999/11/24 17:30:36  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.14.2.3  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

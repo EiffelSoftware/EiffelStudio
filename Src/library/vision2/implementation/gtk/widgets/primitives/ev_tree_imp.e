@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision Tree, gtk implementation";
@@ -35,7 +37,6 @@ feature {NONE} -- Initialization
 
 			-- Creating the gtk scrolled window, pointed by `widget':
 			widget := gtk_scrolled_window_new (Default_pointer, Default_pointer)
-			gtk_object_ref (widget)
 			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), gtk_policy_automatic, gtk_policy_automatic)
 
 			-- Creating the gtk_tree, pointed by `tree_widget':
@@ -283,3 +284,28 @@ end -- class EV_TREE_IMP
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
  
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.6.2  2000/01/27 19:29:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.6.1  1999/11/24 17:29:59  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.2.3  1999/11/17 01:53:06  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.17.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

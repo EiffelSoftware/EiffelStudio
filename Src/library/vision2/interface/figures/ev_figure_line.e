@@ -8,9 +8,6 @@ class
 
 inherit
 	EV_ATOMIC_FIGURE
-		redefine
-			default_create
-		end
 
 create
 	default_create,
@@ -18,12 +15,6 @@ create
 	make_with_positions
 
 feature -- Initialization
-
-	default_create is
-			-- Default situation: pa and pb are both (0, 0).
-		do
-			Precursor
-		end
 
 	make_with_points (p1, p2: EV_RELATIVE_POINT) is
 			-- Create with points `p1' and `p2'.

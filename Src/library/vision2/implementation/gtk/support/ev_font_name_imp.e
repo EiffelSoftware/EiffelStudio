@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" Objects that represent the name of a font%
@@ -12,8 +13,8 @@ class
 create
 	make_empty,
 	make_default,
-	make_by_name,
-	make_by_system_name
+	make_with_name,
+	make_with_system_name
 
 feature -- Initialization
 
@@ -40,7 +41,7 @@ feature -- Initialization
 			charset := "*"
 		end
 
-	make_by_name (str: STRING) is
+	make_with_name (str: STRING) is
 			-- Create the default font with name
 		do
 			foundry := "*"
@@ -58,7 +59,7 @@ feature -- Initialization
 			charset := "*"
 		end
 
-	make_by_system_name (str: STRING) is
+	make_with_system_name (str: STRING) is
 			-- Create the object with empty attributes.
 		do	
 			parse_name (str)
@@ -343,3 +344,28 @@ end -- class EV_FONT_NAME_IMP
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.3  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.4.6.2  2000/01/27 19:29:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:48  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.3  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

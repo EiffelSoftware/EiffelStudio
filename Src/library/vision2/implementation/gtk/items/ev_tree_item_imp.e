@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision tree-item, gtk implementation"
@@ -776,7 +778,8 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 	set_widget (p: POINTER) is
 			-- Sets `widget' to the new pointer `p'.
 		do
-			set_shared
+			-- FIXME
+			--set_shared
 				-- We do this because as the GtkCTreeRow is just
 				-- a GList, we let Gtk destroy it (we can not do use
 				-- gtk_object_destroy).
@@ -822,3 +825,28 @@ end -- class EV_TREE_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.29  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.28.6.2  2000/01/27 19:29:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.28.6.1  1999/11/24 17:29:44  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.28.2.3  1999/11/09 16:53:14  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.28.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

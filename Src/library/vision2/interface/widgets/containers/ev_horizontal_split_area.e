@@ -1,9 +1,8 @@
 indexing
-
 	description: 
-		"EiffelVision horizontal split."
+		"Eiffel Vision horizontal split area. Displays `first_item' on the%N%
+		%left of a separator and `second_item' on the right."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -13,29 +12,27 @@ class
 inherit
 	EV_SPLIT_AREA
 		redefine
-			make,			
 			implementation
 		end
 	
 create
-	make
-	
-feature {NONE} -- Initialization
+	default_create
 
-        make (par: EV_CONTAINER) is
-                        -- Create a widget with, `par' as parent
-		do
-			!EV_HORIZONTAL_SPLIT_AREA_IMP!implementation.make
-			widget_make (par)
-		end	
-	
-feature {NONE} -- Implementation
-	
+feature {EV_ANY_I} -- Implementation
+
 	implementation: EV_HORIZONTAL_SPLIT_AREA_I
-			
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create implementation of horizontal split area.
+		do
+			create implementation.make (Current)
+		end
+	
 end -- class EV_HORIZONTAL_SPLIT_AREA
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -49,5 +46,37 @@ end -- class EV_HORIZONTAL_SPLIT_AREA
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.6  2000/01/28 20:00:13  oconnor
+--| released
+--|
+--| Revision 1.4.6.5  2000/01/27 19:30:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.4  2000/01/20 18:59:47  oconnor
+--| formatting, comments
+--|
+--| Revision 1.4.6.3  2000/01/20 18:49:09  oconnor
+--| reimplemented in line with new EV_SPLIT_AREA
+--|
+--| Revision 1.4.6.2  2000/01/19 22:16:12  king
+--| First foundation of platform independent split area
+--|
+--| Revision 1.4.6.1  1999/11/24 17:30:51  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision text area, implementation interface."
@@ -11,17 +13,6 @@ deferred class
 	
 inherit
 	EV_TEXT_COMPONENT_I
-		redefine
-			set_default_options
-		end	
-
-feature {NONE} -- Initialization
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		deferred
-		end
 
 feature -- Access
 
@@ -42,7 +33,6 @@ feature -- Status report
 			-- Returns the number of the line the cursor currently
 			-- is on.
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			valid_line_index: valid_line_index (Result)
@@ -51,7 +41,6 @@ feature -- Status report
 	line_count: INTEGER is
 			-- Number of lines in widget
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			result_greater_zero: Result > 0
@@ -60,23 +49,21 @@ feature -- Status report
 	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		require
-			exist: not destroyed
 			valid_line: valid_line_index (i) and then
 				(i = line_count implies last_line_not_empty)
 		deferred
 		ensure
-			valid_position: valid_position (i)
+			valid_caret_position: valid_caret_position (i)
 		end
 
 	last_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
 		require
-			exist: not destroyed
 			valid_line: valid_line_index (i) and then
 				(i = line_count implies last_line_not_empty)
 		deferred
 		ensure
-			valid_position: valid_position (i)
+			valid_caret_position: valid_caret_position (i)
 		end
 
 	has_system_frozen_widget: BOOLEAN is
@@ -85,7 +72,6 @@ feature -- Status report
 			-- will not be shown until the widget is
 			-- thawn again.
 		require
-			exist: not destroyed
 		deferred
 		end
 
@@ -99,7 +85,6 @@ feature -- Status settings
 			-- Note: Only one window can be frozen at a time.
 			-- This is because of a limitation on Windows.
 		require
-			exist: not destroyed
 			not_widget_is_frozen: not has_system_frozen_widget
 		deferred
 		ensure
@@ -109,7 +94,6 @@ feature -- Status settings
 	thaw is
 			-- Thaw a frozen widget.
 		require
-			exist: not destroyed
 			is_frozen: has_system_frozen_widget
 		deferred
 		ensure
@@ -120,8 +104,8 @@ feature -- Status settings
 			-- Initialize the options of the widget.
 		do
 --			set_expand (True)
-			set_vertical_resize (True)
-			set_horizontal_resize (True)
+--			set_vertical_resize (True)
+--			set_horizontal_resize (True)
 		end
 
 feature -- Basic operation
@@ -129,7 +113,6 @@ feature -- Basic operation
 	put_new_line is
 			-- Go to the beginning of the following line.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -137,7 +120,6 @@ feature -- Basic operation
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
-			exists: not destroyed
 			valid_string: str /= Void
 		deferred
 		end
@@ -147,7 +129,6 @@ feature -- Assertions
 	valid_line_index (i: INTEGER): BOOLEAN is
 			-- Is `i' a valid line index?
 		require
-			exist: not destroyed
 		do
 			Result := i > 0 and i <= line_count
 		end
@@ -155,7 +136,6 @@ feature -- Assertions
 	last_line_not_empty: BOOLEAN is
 			-- Has the last line at least one character?
 		require
-			exist: not destroyed
 		deferred
 		end
 
@@ -176,3 +156,43 @@ end -- class EV_TEXT_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.6.7  2000/02/04 05:14:06  oconnor
+--| unreleased
+--|
+--| Revision 1.12.6.6  2000/02/04 05:06:35  oconnor
+--| released
+--|
+--| Revision 1.12.6.5  2000/01/27 19:30:05  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.6.4  1999/12/30 01:57:49  rogers
+--| changed valid_position to valid_caret_position.
+--|
+--| Revision 1.12.6.3  1999/12/09 19:04:10  oconnor
+--| commented out set_vertical_resize, set_horizontal_resize
+--|
+--| Revision 1.12.6.2  1999/12/09 03:15:06  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.12.6.1  1999/11/24 17:30:14  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.12.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

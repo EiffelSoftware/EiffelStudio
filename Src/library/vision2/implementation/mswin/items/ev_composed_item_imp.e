@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		" EiffelVision composed item, mswindows implementation."
@@ -17,23 +19,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface)is
 			-- Create the row with one column by default.
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
 		do
+			base_make (an_interface)
 			create internal_text.make (1)
 			internal_text.extend ("")
 			create internal_pixmap.make (1)
 			internal_pixmap.extend (Void)
 		end
 
-	make_with_text (txt: ARRAY [STRING]) is
-			-- Create the row with the given text that also
-			-- set the length of the row.
+	initialize is
 		do
-			internal_text ?= txt.linear_representation
-			create internal_pixmap.make_filled (txt.count)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -93,23 +93,18 @@ feature -- Access
 			end
 		end
 
+               set_parent (par: like parent) is
+                       -- Make `par' the new parent of the widget.
+                       -- `par' can be Void then the parent is the screen.
+               do
+				if par /= Void then
+				--	parent_imp ?= par.implementation
+				else
+				--	parent_imp := Void
+				end
+               end
+
 feature -- Element change
-
-
-		set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
-		end
-
 
 	set_count (value: INTEGER) is
 			-- Make `value' the new count.
@@ -162,7 +157,7 @@ feature -- Element change
 --			-- To implement.
 --		end
 
-feature {EV_ITEM_HOLDER_IMP} -- Implementation
+feature {EV_ITEM_LIST_IMP} -- Implementation
 
 	internal_text: ARRAYED_LIST [STRING]
 			-- List of strings of the item.
@@ -191,3 +186,34 @@ end -- class EV_COMPOSED_ITEM_I
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.5  2000/02/03 17:18:10  brendel
+--| Commented out two lines where parent is treated as a variable.
+--|
+--| Revision 1.4.6.4  2000/01/27 19:30:07  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.3  2000/01/12 18:05:43  rogers
+--| Base make is now called correctly with `an_interface', and `is_initialized' is set to True in initialize.
+--|
+--| Revision 1.4.6.2  1999/12/17 17:36:29  rogers
+--| Altered to fit in with the review branch. Make now takes an interface.
+--|
+--| Revision 1.4.6.1  1999/11/24 17:30:15  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

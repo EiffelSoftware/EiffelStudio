@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision Combo-box. Implementation interface"
 	note: "We cannot chAnge the feature `set_style' of wel_window%
@@ -12,8 +14,16 @@ class
 
 inherit
 	EV_COMBO_BOX_I
+		undefine
+			set_default_minimum_size
+		redefine
+			interface
+		end
 
 	EV_LIST_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
 
 	EV_TEXT_COMPONENT_IMP
 		export {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
@@ -32,13 +42,16 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor
+		undefine
+			height
 		redefine
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
 			move_and_resize,
 			set_editable,
-			on_key_down--,
+			on_key_down,
 --			on_key_up
+			interface
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -49,13 +62,17 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
-			shown as displayed,
+			shown as is_displayed,
 			select_item as wel_select_item,
 			selected_item as wel_selected_item,
 			height as wel_height,
+			width as wel_width,
 			insert_item as wel_insert_item,
 			set_limit_text as set_text_limit,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			move as move_to,
+			item as wel_item,
+			enabled as is_sensitive
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -97,14 +114,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a combo-box.
 		do
+			base_make (an_interface)
 			internal_window_make (default_parent, Void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
-			create text_field.make_from_combo (Current)
-			create combo.make_from_combo (Current)
+			create text_field.make_with_combo (Current)
+			create combo.make_with_combo (Current)
 			create ev_children.make (2)
 		end
 
@@ -164,7 +182,7 @@ feature -- Status report
 				Em_getsel, 0, 0))
 		end
 
-	caret_position: INTEGER is
+	internal_caret_position: INTEGER is
 			-- Caret position
 		do
 			Result := cwin_hi_word (cwin_send_message_result (edit_item,
@@ -186,31 +204,31 @@ feature -- Status setting
 			internal_set_minimum_size (30, 22)
 		end
 
-	select_item (index: INTEGER) is
-			-- Select an item of the `index'-th item of the list.
+	select_item (an_index: INTEGER) is
+			-- Select an item of the `an_index'-th item of the list.
 			-- We cannot redefine this feature because then a
 			-- postcondition is violated because of the change
 			-- of index.
 		do
-			if (not selected) or (selected and then not equal (wel_selected_item, index - 1)) then
+			if (not selected) or (selected and then not equal (wel_selected_item, an_index - 1)) then
 					-- Only select an item if it is not already selected.
 				if selected then
 					execute_command (Cmd_unselect, Void)
 				end
-				wel_select_item (index - 1)
+				wel_select_item (an_index - 1)
 				old_selected_item := ev_children @ (index)
 					-- Now send `Cbn_selchange' message to Current control
 					-- so that we know that a change occured and to handle
 					-- it as specified by user.
 					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
-					cwel_pointer_to_integer (item))
+					cwel_pointer_to_integer (wel_item))
 				execute_command (Cmd_select, Void)
 				-- Must now manually inform the combo box that a selection is taking place.
 			end
 		end
 
-	deselect_item (index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `an_index'.
 		do
 			unselect
 			old_selected_item := Void
@@ -240,7 +258,7 @@ feature -- Status setting
 			resize (width, value)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	internal_set_caret_position (pos: INTEGER) is
 			-- Set the caret position with `position'.
 		do
 			cwin_send_message (edit_item, Em_setsel, pos, pos)
@@ -350,13 +368,13 @@ feature -- Event -- removing command association
 
 feature {NONE} -- Implementation
 
-	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
-			-- Insert `item_imp' at the `index' position of the 
+	graphical_insert_item (item_imp: EV_LIST_ITEM; an_index: INTEGER) is
+			-- Insert `item_imp' at the `an_index' position of the 
 			-- graphical object.
 		local
 			citem: WEL_COMBO_BOX_EX_ITEM
 		do
-			!! citem.make_with_index (index)
+			!! citem.make_with_index (an_index)
 			citem.set_text (item_imp.text)
 			wel_insert_item (citem)
 		end
@@ -380,8 +398,9 @@ feature {NONE} -- Implementation
   				internal_window_make (par_imp, Void, default_style + Cbs_dropdownlist,
 					a, b, c, 90, 0, default_pointer)
  	 			id := 0
-				create combo.make_from_combo (Current)
+				create combo.make_with_combo (Current)
 				--set_text (s)
+				--| FIXME huh?
 				internal_copy_list
 			end
 		end
@@ -405,7 +424,7 @@ feature {NONE} -- Implementation
   				internal_window_make (par_imp, Void, default_style + Cbs_dropdown,
 					a, b, c, 90, 0, default_pointer)
  	 			id := 0
-				create text_field.make_from_combo (Current)
+				create text_field.make_with_combo (Current)
 				internal_copy_list
 			end
 		end
@@ -447,7 +466,8 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					counter := counter + 1
 				end
 			else
-				if selected and equal (text, selected_item.text) and (virtual_key /= 9) then
+				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
+					(virtual_key /= 40) and (virtual_key /= 38) then
 					clear_selection
 					execute_command (Cmd_unselect, Void)
 				end
@@ -485,14 +505,16 @@ feature {NONE} -- WEL Implementation
 			if selected and then wel_selected_item /= Void then
 				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					if old_selected_item /= Void then
-						old_selected_item.execute_command (Cmd_item_deactivate, Void)
+						--|FIXME The events have changed
+						--old_selected_item.execute_command (Cmd_item_deactivate, Void)
 						execute_command (Cmd_unselect, Void)
 					end
 	
 						-- Only performed if an item is selected and the new selection is not equal to
 						-- the current selection.
 					old_selected_item := ev_children.i_th (wel_selected_item + 1)
-					old_selected_item.execute_command (Cmd_item_activate, Void)
+					--|FIXME The events have changed
+					--old_selected_item.execute_command (Cmd_item_activate, Void)
 					execute_command (Cmd_select, Void)
 						-- Must now manually inform combo box that a selection is taking place
 				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
@@ -505,7 +527,8 @@ feature {NONE} -- WEL Implementation
 			-- The user double-clicks a string in the list box.
 		do
 			if selected then
-				(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_dblclk, Void)
+				--|FIXME Events have changed
+				--(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_dblclk, Void)
 			end
 		end
 
@@ -524,7 +547,7 @@ feature {NONE} -- WEL Implementation
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
    			-- We must not resize the height of the combo-box.
    		do
-  			cwin_move_window (item, a_x, a_y, a_width, height, repaint)
+  			cwin_move_window (wel_item, a_x, a_y, a_width, height, repaint)
   		end
 
 	set_selection (start_pos, end_pos: INTEGER) is
@@ -532,7 +555,7 @@ feature {NONE} -- WEL Implementation
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		do
-			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
+			cwin_send_message (wel_item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
 		end
 
 	wel_selection_start: INTEGER is
@@ -603,6 +626,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE} -- Interface
+
+	interface: EV_COMBO_BOX
+
 end -- class EV_COMBO_BOX_IMP
 
 --|----------------------------------------------------------------
@@ -620,3 +647,28 @@ end -- class EV_COMBO_BOX_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.51  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.50.2.1.2.3  2000/01/29 02:19:55  rogers
+--| Modified to comply with the major vision2 changes. It is not currently working.
+--|
+--| Revision 1.50.2.1.2.2  2000/01/27 19:30:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.50.2.1.2.1  1999/11/24 17:30:31  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.47.2.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

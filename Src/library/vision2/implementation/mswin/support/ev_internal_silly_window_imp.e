@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" A silly window that doesn't do anything. Used%
@@ -15,7 +17,7 @@ indexing
 class
 	EV_INTERNAL_SILLY_WINDOW_IMP
 
-inherit
+inherit 
 	WEL_FRAME_WINDOW
 		redefine
 			on_wm_vscroll,
@@ -62,7 +64,7 @@ feature {NONE} -- Implementation
 	 						check
  							gauge_exists: gauge.exists
  						end
- 						gauge.execute_command (gauge.Cmd_gauge, Void)
+ 						--| FIXME gauge.execute_command (gauge.Cmd_gauge, Void)
  					end
  				else
  					-- The message comes from a window scroll bar
@@ -89,7 +91,7 @@ feature {NONE} -- Implementation
 	 					check
 	 						gauge_exists: gauge.exists
 	 					end
-	 					gauge.execute_command (gauge.Cmd_gauge, Void)
+	 					--| FIXME gauge.execute_command (gauge.Cmd_gauge, Void)
 	 				end
 				else
  					-- The message comes from a window scroll bar
@@ -166,3 +168,35 @@ end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.4.5  2000/01/27 19:30:15  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.4.4  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.6.4.3  1999/12/17 17:11:04  rogers
+--| Altered to fit in with the review branch.
+--|
+--| Revision 1.6.4.2  1999/12/17 17:07:14  rogers
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--|
+--| Revision 1.6.4.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.6.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,5 +1,7 @@
+--| FIXME Not for release
 indexing 
-	description: "EiffelVision file open dialog."
+	description:
+		"Eiffel Vision file open dialog. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,11 +18,15 @@ inherit
 		rename
 			make as wel_make,
 			file_name as wel_file_name,
+			set_file_name as wel_set_file_name,
 			set_filter as wel_set_filter,
-			set_parent as wel_set_parent
+			set_filter_index as wel_set_filter_index,
+			set_initial_directory as wel_set_initial_directory,
+			file_title as wel_file_title,
+			dispose as destroy
 		end
 
-creation
+create
 	make
 
 end -- class EV_FILE_OPEN_DIALOG_IMP
@@ -40,3 +46,32 @@ end -- class EV_FILE_OPEN_DIALOG_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.4  2000/01/27 23:53:33  brendel
+--| Now uses own file_title.
+--| Removed default_extension.
+--|
+--| Revision 1.3.10.3  2000/01/27 19:30:18  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.2  2000/01/27 18:09:21  brendel
+--| Implemented in compliance with new interface.
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:24  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C routines for accessing gtk.%
 		% Those are used fot casting types.";
@@ -24,13 +25,6 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_MISC"
 		end
 	
-	gtk_is_widget (widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_BOOLEAN"
-		alias
-			"GTK_IS_WIDGET"
-		end
-
 	gtk_object_type  (widget: POINTER): INTEGER is
 		external
 			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_INTEGER"
@@ -146,3 +140,31 @@ end -- class EV_GTK_TYPES_EXTERNALS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.4  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.7.6.3  2000/01/27 19:29:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.2  1999/12/04 18:59:16  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.7.6.1  1999/11/24 17:29:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

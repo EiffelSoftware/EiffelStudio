@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by drawables.";
@@ -22,42 +23,6 @@ feature {NONE} -- GTK C functions for general drawables
 --	gdk_draw_segments
 --	gdk_draw_point (drawable: POINTER, 
 
-feature {NONE} -- GTK C functions for pixmaps
-
-	gtk_pixmap_new (pixmap, mask: POINTER): POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end 
-
-feature {NONE} -- GTK C functions for drawing area
-
-	gtk_drawing_area_new : POINTER is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-	gtk_drawing_area_size (drawable: POINTER; w, h: INTEGER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
-feature {NONE} -- code in the glue library
-
-	c_gtk_pixmap_create_from_xpm (parent: POINTER; file_name: POINTER): POINTER is
-		external
-			"C | %"gtk_eiffel.h%""
-        end
-
-	c_gtk_pixmap_read_from_xpm (widget, parent: POINTER; file_name: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_pixmap_create_with_size (window_parent: POINTER; width, height: INTEGER): POINTER is
-		external
-			"C (GtkWidget *, gint, gint): EIF_POINTER | %"gtk_eiffel.h%""
-		end
-
 end -- class EV_GTK_DRAWABLE_EXTERNALS
 
 --!----------------------------------------------------------------
@@ -75,3 +40,31 @@ end -- class EV_GTK_DRAWABLE_EXTERNALS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.4  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.6.6.3  2000/01/27 19:29:34  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.2  1999/12/04 18:59:15  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.6.6.1  1999/11/24 17:29:49  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_CLOSED_FIGURE
-		redefine
-			default_create
-		end
 
 create
 	default_create,
@@ -20,13 +17,7 @@ create
 	make_with_point_and_dimensions,
 	make_with_position_and_dimensions
 
-feature -- Initialization
-
-	default_create is
-			-- Create in (0, 0) with dimensions 0.
-		do
-			Precursor
-		end
+feature {NONE} -- Initialization
 
 	make_with_points (p1, p2: EV_RELATIVE_POINT) is
 			-- Create with position `p1' and `p2'.
@@ -109,14 +100,52 @@ feature -- Status setting
 
 feature -- Events
 
+	polygon_array: ARRAY [EV_COORDINATES] is
+			-- Return an array with the four absolute corner points.
+		local
+			sin_a, cos_a: REAL
+			w, h: REAL
+			c: EV_COORDINATES
+		do
+			sin_a := sine (point_a.angle_abs)
+			cos_a := cosine (point_a.angle_abs)
+
+			if point_b.relative_to (point_a) then
+				w := point_b.x_rel_to (point_a)
+			else
+				w := (point_a.x_abs - point_b.x_abs)
+			end
+
+			if point_b.relative_to (point_a) then
+				h := point_b.y_rel_to (point_a)
+			else
+				h := (point_a.y_abs - point_b.y_abs)
+			end
+
+			create Result.make (1, 4)
+			create c.set (point_a.x_abs, point_a.y_abs)
+			Result.force (c, 1)
+			create c.set (point_a.x_abs + (cos_a * w).rounded,
+				point_a.y_abs + (sin_a * w).rounded)
+			Result.force (c, 2)
+			create c.set (point_b.x_abs, point_b.y_abs)
+			Result.force (c, 3)
+			create c.set (point_a.x_abs - (sin_a * h).rounded,
+				point_a.y_abs + (cos_a * h).rounded)
+			Result.force (c, 4)
+		end
+
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
 		do
-			--| FIXME Rotation?
-			--| FIXME Not filled?
-			Result := point_on_rectangle (x, y,
-				point_a.x_abs, point_a.y_abs,
-				point_b.x_abs, point_b.y_abs)
+			--| FIXME Always filled? No!
+			if point_a.angle_abs = 0.0 then
+				Result := point_on_rectangle (x, y,
+					point_a.x_abs, point_a.y_abs,
+					point_b.x_abs, point_b.y_abs)
+			else
+				Result := point_on_polygon (x, y, polygon_array)
+			end
 		end
 
 feature -- Status report

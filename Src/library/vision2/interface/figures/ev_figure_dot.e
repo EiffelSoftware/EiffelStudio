@@ -14,7 +14,7 @@ inherit
 
 create
 	default_create,
-	make
+	make_with_point
 
 feature -- Initialization
 
@@ -24,7 +24,7 @@ feature -- Initialization
 			Precursor
 		end
 
-	make (pos: EV_RELATIVE_POINT) is
+	make_with_point (pos: EV_RELATIVE_POINT) is
 			-- Create with position `pos'.
 		require
 			pos_exists: pos /= Void

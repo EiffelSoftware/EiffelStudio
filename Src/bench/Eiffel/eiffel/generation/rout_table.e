@@ -175,20 +175,28 @@ feature -- Code generation
 		local
 			l_rout_id: INTEGER
 			l_min_used: INTEGER
+			l_table_name: STRING
 		do	
 			if max_position = 0 then
+				l_table_name := Encoder.table_name (real_rout_id)
 				buffer.putstring ("char *(*");
-				buffer.putstring (Encoder.table_name (real_rout_id));
+				buffer.putstring (l_table_name);
 				buffer.putstring ("[")
 				buffer.putint (system.type_id_counter.value)
 				buffer.putstring ("])();");
+				buffer.new_line
+				buffer.putstring ("void ")
+				buffer.putstring (l_table_name)
+				buffer.putstring ("_init () {}")
 				buffer.new_line
 			else
 				l_rout_id := rout_id
 				rout_id := real_rout_id
 				l_min_used := min_used
 				goto_used (l_min_used)
-				internal_generate (buffer, l_min_used, system.type_id_counter.value,
+					-- We do `l_min_used - 1' for the offset because in compiler
+					-- IDs starts at 1, but at runtime they start at 0.
+				internal_generate (buffer, l_min_used - 1, system.type_id_counter.value,
 					l_min_used, max_used)
 				rout_id := l_rout_id
 			end

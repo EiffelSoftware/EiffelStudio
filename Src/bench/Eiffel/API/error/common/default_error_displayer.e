@@ -10,7 +10,7 @@ class DEFAULT_ERROR_DISPLAYER
 inherit
 
 	ERROR_DISPLAYER;
-	SHARED_RESOURCES;
+	SHARED_CONFIGURE_RESOURCES;
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -66,7 +66,7 @@ feature -- Output
 			output_window.process_text (st);
 			output_window.display
 		rescue
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				retried := True;
 				retry;
 			end;
@@ -82,21 +82,6 @@ feature -- Output
 		do
 			if not retried then
 				!! st.make;
-				display_separation_line (st);	
-				degree_nbr := Degree_output.current_degree;
-				st.add_string ("Degree: ");
-				st.add_string (degree_nbr.out);
-				st.add_new_line;
-				st.add_string ("Processed: ")
-				st.add_string (Degree_output.processed.out);
-				st.add_new_line;
-				st.add_string ("To go: ")
-				to_go := Degree_output.total_number - Degree_output.processed;
-				st.add_string (to_go.out);
-				st.add_new_line;
-				st.add_string ("Total: ")
-				st.add_string (Degree_output.total_number.out);
-				st.add_new_line;
 				error_list := handler.error_list;
 				from
 					error_list.start
@@ -109,16 +94,28 @@ feature -- Output
 					st.add_new_line;
 					error_list.forth;
 				end;
-				if not error_list.empty then
-					display_separation_line (st)
-				end;
+				--if not error_list.empty then
+					--display_separation_line (st)
+				--end;
+				display_separation_line (st);	
+				degree_nbr := Degree_output.current_degree;
+				st.add_string ("Degree: ");
+				st.add_string (degree_nbr.out);
+				st.add_string (" Processed: ")
+				st.add_string (Degree_output.processed.out);
+				st.add_string (" To go: ")
+				to_go := Degree_output.total_number - Degree_output.processed;
+				st.add_string (to_go.out);
+				st.add_string (" Total: ")
+				st.add_string (Degree_output.total_number.out);
+				st.add_new_line;
 			else
 				retried := False;
 				display_error_error (st)
 			end;
 			output_window.process_text (st);
 		rescue
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				retried := True;
 				retry;
 			end;

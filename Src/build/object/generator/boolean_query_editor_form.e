@@ -303,12 +303,12 @@ feature {NONE} -- Heuristic
 		do
 			if not query.possible_commands.empty then
 				from 
-					query.possible_commands.start
+					query.possible_commands.finish
 				until
-					query.possible_commands.after
+					query.possible_commands.before
 				loop
 					!! menu_entry.make (query.possible_commands.item, procedure_opt_pull)
-					query.possible_commands.forth
+					query.possible_commands.back
 				end
 				procedure_opt_pull.set_selected_button (menu_entry)
 			else
@@ -320,13 +320,13 @@ feature {NONE} -- Heuristic
 
 			if not query.possible_routines.empty then
 				from 
-					query.possible_routines.start
+					query.possible_routines.finish
 				until
-					query.possible_routines.after
+					query.possible_routines.before
 				loop
 					!! menu_entry.make (query.possible_routines.item, true_opt_pull)
 					!! menu_entry_bis.make (query.possible_routines.item, false_opt_pull)
-					query.possible_routines.forth
+					query.possible_routines.back
 				end
 				true_opt_pull.set_selected_button (menu_entry)
 				false_opt_pull.set_selected_button (menu_entry_bis)

@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			cf: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			confirmed := False
-			create cf.make_initialized (2, "generate_homonymns", Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
+			create cf.make_initialized (2, "generate_homonyms", Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
 			cf.set_ok_action (~confirm_generate)
 			cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			if confirmed then

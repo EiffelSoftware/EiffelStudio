@@ -25,6 +25,8 @@ feature -- Access
 	build_window__y_position: STRING is "build_window__y_position"
 	
 	main_split__position: STRING is "main_split__position"
+	
+	tool_order: STRING is "tool_order"
 			
 feature -- Basic operations
 

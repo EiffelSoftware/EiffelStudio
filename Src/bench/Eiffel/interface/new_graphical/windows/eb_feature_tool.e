@@ -11,17 +11,20 @@ inherit
 			edit_bar as feature_toolbar
 --			Routine_type as stone_type
 		redefine
---			make, hole, empty_tool_name, close_windows,
+			make,
+-- hole,
+ empty_tool_name,
+-- close_windows,
 			build_interface, reset,
---			stone, set_stone, synchronize, process_feature,
+			stone, set_stone, synchronize,
+-- process_feature,
 --			process_class, process_breakable, compatible,
 --			update_boolean_resource, create_toolbar, build_toolbar_menu,
 			set_mode_for_editing, parse_file, raise,
---			history_window_title, has_editable_text, help_index, icon_id
-			format_list,
-
-make, empty_tool_name, synchronize, build_edit_bar,stone,set_stone,
-history_window_title, has_editable_text, icon_id
+			history_window_title, has_editable_text,
+-- help_index,
+ icon_id,
+			format_list, build_edit_bar
 
 		end
 	EB_FEATURE_TOOL_DATA
@@ -37,7 +40,6 @@ feature -- Initialization
 	make (man: EB_TOOL_MANAGER) is
 			-- Create a feature tool.
 		do
- 			is_in_project_tool := False
 			has_double_line_toolbar := resources.double_line_toolbar.actual_value
  			Precursor (man)
 		end
@@ -171,37 +173,38 @@ feature -- Update
 			-- Parse the file if possible.
 			-- (By default, do nothing).
 		local
---			syn_error: SYNTAX_ERROR
---			e_class: CLASS_C
---			txt, msg: STRING
+			syn_error: SYNTAX_ERROR
+			e_class: CLASS_C
+			txt, msg: STRING
+			wd: EV_WARNING_DIALOG
 		do
---			e_class := stone.e_class
---			e_class.parse_ast
---			syn_error := e_class.last_syntax_error
---			if syn_error /= Void then
---				txt := "Class has syntax error "
---				msg := syn_error.syntax_message
---				if not msg.empty then
---					txt.extend ('(')
---					txt.append (msg)
---					txt.extend (')')
---				end
---					-- syntax error occurred
---				text_window.highlight_selected (syn_error.start_position,
---									syn_error.end_position)
---				text_window.set_cursor_position (syn_error.start_position)
---				e_class.clear_syntax_error
---				warner (popup_parent).gotcha_call (txt)
---			else
---				text_window.update_clickable_from_stone (stone)
---				Result := true
---			end
+			e_class := stone.e_class
+			e_class.parse_ast
+			syn_error := e_class.last_syntax_error
+			if syn_error /= Void then
+				txt := "Class has syntax error "
+				msg := syn_error.syntax_message
+				if not msg.empty then
+					txt.extend ('(')
+					txt.append (msg)
+					txt.extend (')')
+				end
+					-- syntax error occurred
+				text_window.highlight_selected (syn_error.start_position,
+									syn_error.end_position)
+				text_window.set_position (syn_error.start_position)
+				e_class.clear_syntax_error
+				create wd.make_default (parent, Interface_names.t_Warning, txt)
+			else
+				text_window.update_clickable_from_stone (stone)
+				Result := true
+			end
 		end
 
 	set_mode_for_editing is
 			-- Set the text mode to be editable.
 		do
-			text_window.set_editable (False)
+			text_window.set_editable (True)
 		end
  
 	close_windows is
@@ -217,9 +220,9 @@ feature -- Update
 		require
 			positive_index: index >= 1
 		do
---			if in_debug_format then
---				text_window.highlight_breakable (stone.e_feature, index)
---			end
+			if in_debug_format then
+				text_window.highlight_breakable (stone.e_feature, index)
+			end
 		end
 
 	resynchronize_debugger (feat: E_FEATURE) is
@@ -227,32 +230,33 @@ feature -- Update
 			-- If `feat' resynchronize feature window.
 		local
 --			cur: CURSOR
---			old_do_format: BOOLEAN
---			f: FORMATTER
+			cur: INTEGER
+			old_do_format: BOOLEAN
+			f: EB_FORMATTER
 		do
---			if (in_debug_format and then stone /= Void and then
---				stone.e_feature /= Void) and then
---			 	(feat = Void or else 
---				feat.body_id.is_equal (stone.e_feature.body_id))
---			then
---				cur := text_window.cursor
---				f := showstop_frmt_holder.associated_command
---				old_do_format := f.do_format
---				f.set_do_format (true)
+			if (in_debug_format and then stone /= Void and then
+				stone.e_feature /= Void) and then
+			 	(feat = Void or else 
+				feat.body_id.is_equal (stone.e_feature.body_id))
+			then
+				cur := text_window.position
+				f := format_list.stop_points_format
+				old_do_format := f.do_format
+				f.set_do_format (true)
 --				f.execute (stone)
---				f.set_do_format (old_do_format)
---				text_window.go_to (cur)
---			end
+				f.set_do_format (old_do_format)
+				text_window.go_to (cur)
+			end
 		end
 
 	set_debug_format is 
 			-- Set the current format to be in `debug_format'.		
 		do
---			set_read_only_text
---			set_last_format (showstop_frmt_holder)
---			synchronize
+			text_window.set_editable (False)
+			set_last_format (format_list.stop_points_format)
+			synchronize
 		ensure
---			set: showstop_frmt_holder = last_format
+			set: format_list.stop_points_format = last_format
 		end
 
 	show_stoppoint (f: E_FEATURE index: INTEGER) is
@@ -260,21 +264,21 @@ feature -- Update
 			-- mode then redisplay the sign of the `index'-th breakable point.
 			-- Otherwize, update the title of feature tool (to print `stop').
 		require
---			valid_feature: f /= Void and then f.body_id /= Void
---			positive_index: index >= 1
+			valid_feature: f /= Void and then f.body_id /= Void
+			positive_index: index >= 1
 		do
---			if stone /= Void and then
---				stone.e_feature /= Void and then
---				f.body_id.is_equal (stone.e_feature.body_id)
---			then
---				if in_debug_format then
---					text_window.redisplay_breakable_mark (stone.e_feature, index)
---				elseif last_format = showtext_frmt_holder then
---					-- Update the title bar of the feature tool.
---					-- "(stop)" if the feature has a stop point set.
---					showtext_frmt_holder.associated_command.display_header (stone)
---				end
---			end
+			if stone /= Void and then
+				stone.e_feature /= Void and then
+				f.body_id.is_equal (stone.e_feature.body_id)
+			then
+				if in_debug_format then
+					text_window.redisplay_breakable_mark (stone.e_feature, index)
+				elseif last_format = format_list.text_format then
+					-- Update the title bar of the feature tool.
+					-- "(stop)" if the feature has a stop point set.
+					format_list.text_format.display_header (stone)
+				end
+			end
 		end
 
 feature -- Status setting
@@ -420,7 +424,11 @@ feature -- Commands
 
 	showstop_frmt_holder: FORMAT_HOLDER
 
-	shell: COMMAND_HOLDER
+	shell_cmd: EB_OPEN_SHELL_CMD
+
+	filter_cmd: EB_FILTER_CMD
+
+	super_melt_cmd: EB_SUPER_MELT_CMD
 
 	current_target_cmd_holder: COMMAND_HOLDER
 
@@ -709,11 +717,27 @@ feature {NONE} -- Implementation Graphical Interface
 --			end
 		end
 
+feature {EB_TOOL_MANAGER} -- Menus Implementation
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+		do
+			create shell_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Shell)
+			i.add_select_command (shell_cmd, Void)
+
+			create filter_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Filter)
+			i.add_select_command (filter_cmd, Void)
+
+			create super_melt_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Stoppable)
+			i.add_select_command (super_melt_cmd, Void)
+		end
+
 feature {NONE} -- Properties
 
-	is_in_project_tool: BOOLEAN
-			-- Is the current feature tool in the project tool
-	
 	has_double_line_toolbar: BOOLEAN
 			-- Are we displaying two lines in the toolbar?
 

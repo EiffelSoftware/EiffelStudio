@@ -144,8 +144,8 @@ feature -- Colors
 			Result.set_family (font_constants.Family_screen)
 			Result.set_weight (font_constants.Weight_bold)
 			Result.set_shape (font_constants.Shape_regular)
-			Result.preferred_families.extend ("Verdana")
-			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Tahoma")
+--			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (16)
 		end
@@ -161,7 +161,7 @@ feature -- Colors
 			Result.set_weight (font_constants.Weight_bold)
 			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
-			Result.preferred_families.extend ("Arial")
+--			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
@@ -177,7 +177,7 @@ feature -- Colors
 			Result.set_weight (font_constants.Weight_regular)
 			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
-			Result.preferred_families.extend ("Arial")
+--			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end

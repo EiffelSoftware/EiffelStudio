@@ -58,12 +58,6 @@ library emitter
         HRESULT assembly_info_from_assembly(
                         [in] BSTR apath,
                         [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
-        [id(0x60020008)]
-        HRESULT impl([out, retval] IUnknown** pRetVal);
-        [id(0x60020009)]
-        HRESULT _set_impl([in] IUnknown* p1);
-        [id(0x6002000a)]
-        HRESULT _emitter_type_2752([out, retval] void** pRetVal);
     };
 
     [
@@ -72,9 +66,7 @@ library emitter
         custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.Impl.COM_ISE_CACHE_MANAGER")
     ]
     coclass ISE_Cache_Impl_COM_ISE_CACHE_MANAGER {
-        interface _Object;
         [default] interface ISE_Cache_COM_ISE_CACHE_MANAGER;
-        interface EIFFEL_TYPE_INFO;
     };
 
     [
@@ -95,6 +87,8 @@ library emitter
         HRESULT version([out, retval] BSTR* pRetVal);
         [id(0x60020003)]
         HRESULT culture([out, retval] BSTR* pRetVal);
+        [id(0x60020004)]
+        HRESULT public_key_token([out, retval] BSTR* pRetVal);
     };
 
     [
@@ -103,8 +97,6 @@ library emitter
         custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.Impl.COM_ASSEMBLY_INFORMATION")
     ]
     coclass ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION {
-        interface _Object;
         [default] interface ISE_Cache_COM_ASSEMBLY_INFORMATION;
-        interface EIFFEL_TYPE_INFO;
     };
 };

@@ -27,12 +27,11 @@ feature -- Status setting
 			end
 		end
 
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
+	set_parent (a_parent: like parent) is
+			-- Make `a_parent' the parent of the menu-item.
 		deferred
 		ensure
-			parent_set: parent_set (par)
+			assigned: parent = a_parent
 		end
 
 	align_text_center is
@@ -55,16 +54,6 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-
-	parent_set (par: like parent): BOOLEAN is
-			-- Is the parent set
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface = par
-			else
-				Result := par = Void
-			end
-		end
 
 	invalidate is
 			-- Should invalidate the top parent.
@@ -94,6 +83,10 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/24 01:43:55  brendel
+--| Changed postcondition on `set_parent' to be exactly the same, but without
+--| using the function `parent_set'.
+--|
 --| Revision 1.11  2000/02/23 02:13:59  brendel
 --| Changed spaces with tabs.
 --|

@@ -138,7 +138,7 @@ feature -- from ENTRY
 			end;
 		end;
 
-	generated_static_feature_type_id (f: INDENT_FILE) is
+	generated_static_feature_type_id (buffer: GENERATION_BUFFER) is
 			-- Textual representation of type id of the Result type
 		local
 			class_type: CL_TYPE_I
@@ -149,9 +149,9 @@ feature -- from ENTRY
 				--or else-class_type.is_expanded
 				)
 			then
-				class_type.associated_class_type.id.generated_id (f)
+				class_type.associated_class_type.id.generated_id (buffer)
 			else
-				f.putint (-1)
+				buffer.putint (-1)
 			end
 		end;
 
@@ -179,13 +179,13 @@ feature -- from ENTRY
 			Result := (gtype /= Void)
 		end;
 
-	generate_cid (f : INDENT_FILE; final_mode: BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate list of type id's of generic type
 			-- separated by commas.
 		require
 			is_generic : is_generic
 		do
-			type.generate_cid (f, final_mode, False)
+			type.generate_cid (buffer, final_mode, False)
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is

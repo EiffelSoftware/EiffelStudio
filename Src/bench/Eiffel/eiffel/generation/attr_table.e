@@ -105,8 +105,8 @@ feature
 			position := old_position
 		end;
 
-	generate (file: INDENT_FILE) is
-			-- Generation of the attribute table in file "eattr*.x".
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generation of the attribute table in buffer "eattr*.x".
 		local
 			class_type: CLASS_TYPE;
 			i, nb, index: INTEGER;
@@ -115,9 +115,9 @@ feature
 		do
 			from
 					-- Private table
-				file.putstring ("long ");
-				file.putstring (rout_id.table_name);
-				file.putstring ("[] = {%N");
+				buffer.putstring ("long ");
+				buffer.putstring (rout_id.table_name);
+				buffer.putstring ("[] = {%N");
 				local_copy := Current
 				i := min_type_id;
 				nb := max_type_id;
@@ -132,16 +132,16 @@ feature
 						--| In this instruction, we put `True' as second
 						--| arguments. This means we will generate something if there is nothing
 						--| to generate (ie `0'). Remember that `False' is used in all other case
-					class_type.skeleton.generate_offset (file, attr_entry.feature_id, True);
-					file.putchar (',');
-					file.new_line;
+					class_type.skeleton.generate_offset (buffer, attr_entry.feature_id, True);
+					buffer.putchar (',');
+					buffer.new_line;
 					index := index + 1;
 				else
-					file.putstring ("0,%N");
+					buffer.putstring ("0,%N");
 				end;
 				i := i + 1;
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	workbench_c_type: STRING is "long";

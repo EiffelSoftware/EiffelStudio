@@ -6,9 +6,9 @@
 deferred class TABLE_GENERATOR 
 
 inherit
-
 	SHARED_CODE_FILES;
 	SHARED_BYTE_CONTEXT;
+	SHARED_GENERATION
 	
 feature
 
@@ -18,8 +18,8 @@ feature
 	file_counter: INTEGER;
 			-- Count of generated files
 
-	current_file: INDENT_FILE;
-			-- Current generate file
+	current_buffer: GENERATION_BUFFER;
+			-- Current buffer
 
 	infix_file_name: STRING is
 			-- Infix string for file names
@@ -31,17 +31,15 @@ feature
 		deferred
 		end;
 
-	size_limit: INTEGER is
+	Size_limit: INTEGER is 30000;
 			-- Limit of size for each generated file
-		deferred
-		end;
 
-	init is
+	init (buffer: GENERATION_BUFFER) is
 			-- Initialization
 		do
-			file_counter := 0;
-			current_file := new_file;
-			current_file.open_write;
+			file_counter := 1;
+			current_buffer := buffer
+			current_buffer.clear_all
 			init_file;
 		end;
 
@@ -50,10 +48,10 @@ feature
 		local
 			temp: STRING
 		do
-			file_counter := file_counter + 1;
 			temp := clone (infix_file_name);
 			temp.append_integer (file_counter);
-			!!Result.make (final_file_name (temp, postfix_file_name))
+			!! Result.make_open_write (final_file_name (temp, postfix_file_name))
+			file_counter := file_counter + 1;
 		end;
 
 	init_file is
@@ -64,27 +62,25 @@ feature
 	generate (table: POLY_TABLE [ENTRY]) is
 			-- Generation of `table'.
 		require
-			current_file_exists: current_file /= Void;
-			is_open: current_file.is_open_write;
+			current_buffer_exists: current_buffer /= Void;
 			good_argument: table /= Void;
 		do
 			update;
 			size := size + table.final_table_size;
-			table.generate (current_file);
+			table.generate (current_buffer);
 		end;
 
 	generate_type_table (table: POLY_TABLE [ENTRY]) is
 			-- Generation of associated type table of `table'
 			-- in final mode.
 		require
-			current_file_exists: current_file /= Void;
-			is_open: current_file.is_open_write;
+			current_buffer_exists: current_buffer /= Void;
 			good_argument: table /= Void;
 			has_type_table: table.has_type_table;
 		do
 			update;
 			size := size + table.final_table_size;
-			table.generate_type_table (current_file);
+			table.generate_type_table (current_buffer);
 		end;
 
 	update is
@@ -92,28 +88,29 @@ feature
 		do
 			if size > Size_limit then
 				size := 0;
-				current_file.close;
-				finish_file;
-				current_file := new_file;
-				current_file.open_write;
+				finish
 				init_file;
 			end;
 		end;
 
 	finish is
-			-- Close `current_file'.
+			-- Close `current_buffer'.
 		require
-			current_file_exists: current_file /= Void;
-			is_open: current_file.is_open_write;
+			current_buffer_exists: current_buffer /= Void;
+		local
+			file: INDENT_FILE
 		do
-			current_file.close;
+			file := new_file
+			file.put_string (current_buffer)
+			file.close
 			finish_file;
 		end;
 
 	finish_file is
-			-- finish generation of `current_file'.
+			-- finish generation of `current_buffer'.
 		do
-			-- Do nothing
+				-- Clear buffer for Current generation
+			current_buffer.clear_all
 		end;
 
 end

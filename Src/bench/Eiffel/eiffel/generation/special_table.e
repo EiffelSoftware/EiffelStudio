@@ -19,8 +19,8 @@ feature
 			Result := System.type_id_counter.value;
 		end;
 
-	generate (file: INDENT_FILE) is
-			-- Generation of the routine table in file "erout*.c".
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generation of the routine table in buffer "erout*.c".
 		local
 			entry: ROUT_ENTRY;
 			i, nb, index: INTEGER;
@@ -34,13 +34,13 @@ feature
 			function_ptr_cast_string := "(char *(*)()) "
 
 			if System.has_separate then
-				file.putstring ("extern void sep_obj_dispose(char *);%N");
+				buffer.putstring ("extern void sep_obj_dispose(char *);%N");
 			end;
 
 			from
-				file.putstring ("char *(*");
-				file.putstring (rout_id.table_name);
-				file.putstring ("[])() = {%N");
+				buffer.putstring ("char *(*");
+				buffer.putstring (rout_id.table_name);
+				buffer.putstring ("[])() = {%N");
 				i := 1;
 				nb := final_table_size;
 				exists := max_position /= 0
@@ -56,25 +56,25 @@ feature
 					entry := local_copy.array_item (index);
 					if (index <= max_position) and then i = entry.type_id then
 						r_name := entry.routine_name;
-						file.putstring (function_ptr_cast_string);
-						file.putstring (r_name);
-						file.putstring (",%N");
+						buffer.putstring (function_ptr_cast_string);
+						buffer.putstring (r_name);
+						buffer.putstring (",%N");
 						index := index + 1;
 							-- Remember external declaration
 						Extern_declarations.add_routine (void_type, clone (r_name));
 					else
-						file.putstring (empty_function_ptr_string);
+						buffer.putstring (empty_function_ptr_string);
 					end;
 				else
-					file.putstring (empty_function_ptr_string);
+					buffer.putstring (empty_function_ptr_string);
 				end
 				i := i + 1;
 			end;
 
 			if System.has_separate then
-				file.putstring ("(char *(*)()) sep_obj_dispose%N");
+				buffer.putstring ("(char *(*)()) sep_obj_dispose%N");
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	generable: BOOLEAN is True

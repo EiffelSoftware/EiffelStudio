@@ -9,7 +9,10 @@ indexing
 
 class LINKED_DFA inherit
 
-	DFA;
+	DFA
+		undefine
+			copy, is_equal
+		end
 
 	LINKED_AUTOMATON [STATE_OF_DFA]
 		rename

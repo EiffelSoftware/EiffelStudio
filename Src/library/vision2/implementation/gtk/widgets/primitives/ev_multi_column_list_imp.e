@@ -159,26 +159,26 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"select_row",
-				agent select_callback,
-				agent gtk_value_int_to_tuple
+				agent gtk_marshal.mcl_event_intermediary (c_object, 1, ?),
+				agent gtk_marshal.gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"unselect_row",
-				agent deselect_callback,
-				agent gtk_value_int_to_tuple
+				agent gtk_marshal.mcl_event_intermediary (c_object, 2, ?),
+				agent gtk_marshal.gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"click_column",
-				agent column_click_callback,
-				agent gtk_value_int_to_tuple
+				agent gtk_marshal.mcl_event_intermediary (c_object, 3, ?),
+				agent gtk_marshal.gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"resize_column",
-				agent column_resize_callback,
-				agent column_resize_callback_translate
+				agent gtk_marshal.mcl_event_intermediary (c_object, 3, ?),
+				agent gtk_marshal.column_resize_callback_translate
 			)				
 			
 			if user_set_row_height > 0 then
@@ -256,6 +256,46 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	initialize is
+		do
+			{EV_ITEM_LIST_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor
+			{EV_MULTI_COLUMN_LIST_I} Precursor
+			connect_button_press_switch
+			disable_multiple_selection
+		end
+
+	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+		local
+			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			a_row_number: INTEGER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
+			if pointer_motion_actions_internal /= Void then
+				pointer_motion_actions_internal.call (t)
+			end
+			if a_y > 0 and a_x <= width then
+				a_row_number := row_from_y_coord (a_y)
+				if a_row_number > 0 and then a_row_number <= count then
+					a_row_imp := ev_children @ a_row_number
+					if a_row_imp.pointer_motion_actions_internal /= Void then
+						a_row_imp.pointer_motion_actions_internal.call (t)
+					end
+				end
+			end
+		end
+		
+	pixmaps_size_changed is
+			-- 
+		do
+			if pixmaps_height > row_height then
+				set_row_height (pixmaps_height)
+			end
+		end
+
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+
 	select_callback (int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF
@@ -297,21 +337,16 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	column_click_callback (int: INTEGER) is
+	column_click_callback (int: TUPLE [INTEGER]) is
+		local
+			temp_int: INTEGER_REF
 		do
+			temp_int ?= int.item (1)
 			if column_title_click_actions_internal /= Void then
-				column_title_click_actions_internal.call ([int + 1])
+				column_title_click_actions_internal.call ([temp_int.item + 1])
 			end
 		end
 
-	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
-		local
-			gtkarg2: POINTER
-		do
-			gtkarg2 := gtk_args_array_i_th (args, 1)
-			Result := [gtk_marshal.gtk_value_int (args) + 1, gtk_marshal.gtk_value_int (gtkarg2)]
-			-- Column is zero based in gtk.
-		end
 
 	column_resize_callback (int: TUPLE [INTEGER]) is
 		local
@@ -322,44 +357,9 @@ feature {NONE} -- Initialization
 			if (temp_col.item) <= column_count and column_widths /= Void then
 				temp_wid ?= int.item (2)
 				update_column_width (temp_wid.item, temp_col.item)
-			end
-		end
-
-	initialize is
-		do
-			{EV_ITEM_LIST_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
-			{EV_MULTI_COLUMN_LIST_I} Precursor
-			connect_button_press_switch
-			disable_multiple_selection
-		end
-
-	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
-		local
-			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
-			a_row_number: INTEGER
-			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
-			if pointer_motion_actions_internal /= Void then
-				pointer_motion_actions_internal.call (t)
-			end
-			if a_y > 0 and a_x <= width then
-				a_row_number := row_from_y_coord (a_y)
-				if a_row_number > 0 and then a_row_number <= count then
-					a_row_imp := ev_children @ a_row_number
-					if a_row_imp.pointer_motion_actions_internal /= Void then
-						a_row_imp.pointer_motion_actions_internal.call (t)
-					end
+				if column_resize_actions_internal /= Void then
+					column_resize_actions_internal.call ([temp_col.item])
 				end
-			end
-		end
-		
-	pixmaps_size_changed is
-			-- 
-		do
-			if pixmaps_height > row_height then
-				set_row_height (pixmaps_height)
 			end
 		end
 
@@ -958,13 +958,6 @@ feature {NONE} -- Implementation
 			"columns"
 		end
 
-	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
-			-- Tuple containing integer value from first of `args'.
-		do
-			gtk_marshal.integer_tuple.put (gtk_marshal.gtk_value_int (args), 1)
-			Result := gtk_marshal.integer_tuple
-		end
-
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
@@ -1159,14 +1152,6 @@ feature {NONE} -- Externals
 			"C [macro <stdio.h>]"
 		alias
 			"sizeof(void*)"
-		end
-		
-	gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
-			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
-			--	return (GtkArg*)(args_array + index);
-			-- }
-		external
-			"C | %"ev_c_util.h%""
 		end
 
 feature {EV_ANY_I} -- Implementation

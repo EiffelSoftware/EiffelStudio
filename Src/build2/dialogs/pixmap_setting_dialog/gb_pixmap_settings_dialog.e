@@ -784,6 +784,11 @@ feature {NONE} -- Implementation
 			-- `Result' is a name based on `a_file_name' but guaranteed to be unique.
 		do
 			Result := pixmap_file_title_to_constant_name (a_file_name)
+				-- As a filename may not be a valid Eiffel feature name, we must update it
+				-- if necessary. For example, names may start with digits which is not permitted.
+			if not valid_class_name (Result) then
+				Result := invalid_pixmap_name_prefix + Result
+			end
 			Result := unique_name_from_hash_table (existing_names, Result)
 		ensure
 			Result_not_void: Result /= Void

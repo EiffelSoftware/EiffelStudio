@@ -302,8 +302,10 @@ feature -- Access
 			end
 
 			Result.append (tab)
-			Result.append (clone (Virtual))
-			Result.append (Space)
+			if not abstract then
+				Result.append (clone (Virtual))
+				Result.append (Space)
+			end
 			Result.append (Tilda)
 			Result.append (name)
 			Result.append (Space)

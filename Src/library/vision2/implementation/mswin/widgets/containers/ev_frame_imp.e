@@ -33,7 +33,8 @@ inherit
 		redefine
 			make,
 			on_paint,
-			top_level_window_imp
+			top_level_window_imp,
+			set_text
 		end
 
 creation
@@ -102,6 +103,13 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Set the window text
+		do
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (txt)
+			invalidate
+		end
 
 	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'

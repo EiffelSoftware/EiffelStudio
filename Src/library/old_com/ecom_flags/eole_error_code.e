@@ -2605,6 +2605,14 @@ feature -- Access
 			"RPC_E_UNEXPECTED"
 		end
 		
+	Selfreg_e_class: INTEGER is
+			-- failed to register/unregister class.
+		external
+			"C [macro <olectl.h>]"
+		alias
+			"SELFREG_E_CLASS"
+		end
+		
 end -- class ERROR_CODE
 
 --|----------------------------------------------------------------

@@ -165,6 +165,8 @@ feature -- C keywords
 
 	Hash_if_def: STRING is "#ifdef"
 
+	Hash_if_ndef: STRING is "#ifndef"
+
 	Hash_else: STRING is "#else"
 
 	Hash_end_if: STRING is "#endif"
@@ -186,6 +188,8 @@ feature -- C keywords
 	Return: STRING is "return"
 
 	Struct: STRING is "struct"
+
+	Union: STRING is "union"
 
 	Enum: STRING is "enum"
 
@@ -232,6 +236,8 @@ feature -- C keywords
 	Memcpy: STRING is "memcpy"
 
 	Eof_word: STRING is "EOF"
+
+	Cplusplus: STRING is "__cplusplus"
 
 feature -- Lace keywords
 

@@ -175,6 +175,7 @@ feature
 			Result.extend (create {EV_PIXMAP}.make_for_test)
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
+			Result.extend (create {EV_COMBO_BOX}.make_for_test)
 		end
 
 	windows: LINKED_LIST [EV_WINDOW] is
@@ -350,6 +351,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/17 17:50:16  brendel
+--| Added EV_COMBO_BOX.
+--|
 --| Revision 1.17  2000/04/14 22:29:08  oconnor
 --| ced out da SPIN thang
 --|

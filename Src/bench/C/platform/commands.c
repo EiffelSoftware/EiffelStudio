@@ -101,7 +101,7 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 
 	if ((char *)dir_search(dirp, "finish_freezing") == (char *)0){
 			/* Actual copy */
-		sprintf(cmd, "cp %s %s", eif_access(freeze_cmd_name), eif_access(c_code_dir));
+		sprintf(cmd, "cp %s %s; ", eif_access(freeze_cmd_name), eif_access(c_code_dir));
 		} else {
 			cmd[0] = '\0';	/* NULL terminated string */
 		}
@@ -109,7 +109,7 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 	(void) closedir (dirp);
 
 		/* Go to the C code directory and start finish_freezing */
-	sprintf(cmd, "%s; cd %s; finish_freezing", cmd, eif_access(c_code_dir));
+	sprintf(cmd, "%scd %s; finish_freezing", cmd, eif_access(c_code_dir));
 
 	(*set_proc)(eif_access(request), RTMS (cmd));
 	(*send_proc)(eif_access(request));

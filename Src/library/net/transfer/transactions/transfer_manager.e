@@ -22,7 +22,7 @@ class TRANSFER_MANAGER inherit
 		export
 			{ANY} valid_index, valid_cursor_index
 			{TRANSFER_MANAGER} area, i_th, cursor, go_to, valid_cursor, upper,
-				subcopy, array_valid_index, lower, subarray
+				subcopy, lower, subarray
 			{NONE} all
 		end
 

@@ -31,7 +31,7 @@ inherit
 		export
 			{ANY} valid_index, valid_cursor_index
 			{MULTIPLE_TRANSACTION} cursor, go_to, area, subcopy, i_th, upper,
-				valid_cursor, array_valid_index, subarray, lower
+				valid_cursor, subarray, lower
 			{NONE} all
 		end
 

@@ -265,11 +265,11 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
 		do
+			set_style (style | bs_ownerdraw)
 			private_pixmap := pix.twin
 			if not text.is_empty then
 				if private_font /= Void then
-
-				font_imp ?= private_font.implementation
+					font_imp ?= private_font.implementation
 					check
 						font_not_void: font_imp /= Void
 					end
@@ -339,7 +339,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'.
 		do
-			Result := ws_visible | ws_child | ws_group | ws_tabstop | Ws_clipchildren | Ws_clipsiblings | Bs_ownerdraw
+			Result := ws_visible | ws_child | ws_group | ws_tabstop | Ws_clipchildren | Ws_clipsiblings
 		end
 
 	on_bn_clicked is

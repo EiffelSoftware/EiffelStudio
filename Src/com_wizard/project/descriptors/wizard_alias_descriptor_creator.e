@@ -56,6 +56,8 @@ feature -- Basic operations
 				name.prepend (tmp_lib_descriptor.name)
 			end
 
+			namespace := namespace_name (tmp_lib_descriptor.name)
+
 			add_c_type
 			create eiffel_class_name.make (50)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))

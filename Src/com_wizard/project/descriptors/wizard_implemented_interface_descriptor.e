@@ -28,6 +28,7 @@ feature -- Initialization
 			interface_descriptor := a_descriptor
 			type_kind := Tkind_coclass
 			name := clone (a_descriptor.name)
+			namespace := clone (a_descriptor.namespace)
 			name.append ("_impl")
 			c_type_name := clone (name)
 			

@@ -40,6 +40,21 @@ feature -- Access
 
 feature -- Basic Operations
 
+	namespace_name (a_name: STRING): STRING is
+			-- Namespace name.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			create Result.make (50)
+			if not a_name.is_equal ("stdole") then
+				Result.append ("ecom_")
+				Result.append (a_name)
+			end
+		ensure
+			non_void_namespace: Result /= Void
+		end
+
 	implemented_coclass_name (a_coclass_name: STRING): STRING is
 			-- Name of heir of coclass `a_coclass_name'
 			-- Implementation class for component server.

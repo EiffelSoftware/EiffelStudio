@@ -69,6 +69,7 @@ feature -- Basic Operations
 			a_descriptor.set_eiffel_class_name (eiffel_class_name)
 			a_descriptor.set_c_header_file_name (c_header_file_name)
 			a_descriptor.set_c_type_name (c_type_name)
+			a_descriptor.set_namespace (namespace)
 			a_descriptor.set_type_kind (type_kind)
 			if guid /= Void then
 				a_descriptor.set_guid (guid)
@@ -93,6 +94,9 @@ feature {NONE} -- Implementation
 
 	c_type_name: STRING
 			-- Name of "C" type
+
+	namespace: STRING
+			-- Namespace 
 
 	type_kind: INTEGER 
 			-- Kind of descriptor

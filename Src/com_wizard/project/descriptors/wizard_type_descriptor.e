@@ -39,6 +39,9 @@ feature -- Access
 	c_type_name: STRING
 			-- Name of "C" type
 
+	namespace: STRING
+			-- Namespace 
+
 	guid: ECOM_GUID
 			-- GUID of type
 
@@ -124,6 +127,17 @@ feature -- Basic Operations
 		ensure
 			valid_c_type_name: c_type_name /= Void
 			valid_c_type_name: c_type_name.is_equal (a_name)
+		end
+
+	set_namespace (a_namespace : STRING) is
+			-- Set `namespace' with `a_namespace'.
+		require
+			non_void_namespace: a_namespace /= Void
+		do
+			namespace  := clone (a_namespace )
+		ensure
+			valid_namespace: namespace  /= Void
+			valid_namespace: namespace .is_equal (a_namespace )
 		end
 
 	set_type_kind (a_kind: INTEGER) is

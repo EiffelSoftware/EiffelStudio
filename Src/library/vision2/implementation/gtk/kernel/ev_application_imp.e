@@ -12,6 +12,8 @@ class
 inherit
 	EV_APPLICATION_I
 
+	EV_C_UTIL
+
 	IDENTIFIED
 		undefine
 			is_equal,
@@ -32,7 +34,8 @@ feature {NONE} -- Initialization
 			(create {EV_C_UTIL}).enable_ev_gtk_log
 			create C
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
-			C.c_gtk_init_toolkit
+			gtk_init
+			C.gtk_rc_parse(eiffel_to_c ("gtkrc"));
 			C.gdk_rgb_init
 			tooltips := C.gtk_tooltips_new
 			set_tooltip_delay (500) --| FIXME Check this.
@@ -369,6 +372,13 @@ feature -- External implementation
 		external
 			"C | <unistd.h>"
 		end
+	
+	gtk_init is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+    		"gtk_init (&eif_argc, &eif_argv)"
+		end
 
 invariant
 	c_externals_object_not_void: C /= Void
@@ -398,6 +408,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/19 23:30:38  oconnor
+--| removed reliance on c_gtk_init_toolkit
+--|
 --| Revision 1.25  2000/04/12 23:28:41  oconnor
 --| fix for marshal calling actions sequences
 --|

@@ -66,8 +66,7 @@ feature -- Conveniences
 	has_signature: BOOLEAN is
 			-- Does the extension define a signature?
 		do
-			Result := return_type /= Void or else
-				argument_types /= Void
+			Result := return_type /= Void or else argument_types /= Void
 		end
 
 feature {EXTERNAL_LANG_AS} -- Implementation

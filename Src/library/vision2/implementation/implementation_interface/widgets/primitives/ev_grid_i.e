@@ -475,11 +475,19 @@ feature -- Removal
 			a_column_less_than_column_count: a_column <= column_count
 		local
 			a_col_i: EV_GRID_COLUMN_I
+			a_physical_index: INTEGER
 		do
-			a_col_i := grid_columns @ a_column
-			if a_col_i /= Void and then a_col_i.is_visible then
+			a_col_i := column_internal (a_column).implementation
+			a_physical_index := a_col_i.physical_index
+			
+			grid_columns.go_i_th (a_column)
+			grid_columns.remove
+			
+			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
+			
+			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
 		ensure
 			column_count_updated: column_count = old column_count - 1
 			old_column_removed: (old column (a_column)).parent = Void
@@ -490,8 +498,20 @@ feature -- Removal
 		require
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
+		local
+			a_row_i: EV_GRID_ROW_I
 		do
-			to_implement ("EV_GRID_I.remove_row")
+				-- Retrieve row from the grid
+			a_row_i := row_internal (a_row).implementation
+			
+			grid_rows.go_i_th (a_row)
+			grid_rows.remove
+			
+			internal_row_data.go_i_th (a_row)
+			internal_row_data.remove
+			
+			
+			to_implement ("EV_GRID_I.remove_row redraw plus subnode removal handling")
 		ensure
 			row_count_updated: row_count = old row_count - 1
 			old_row_removed: (old row (a_row)).parent = Void
@@ -545,7 +565,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 			-- A following call to `insert_new_column (1) will result in a `physical_index' of 1 as this is the second column added
 			-- If both columns were visible this query returns <<0, 1>>, so to draw the data for the appropriate columns to the screen, the indexes 0 and 1 need to be
 			-- used to query the value returned from `row_list' @ i
-			-- (`row_list' @ i) @ (visible_physical_column_indexes @ j) returns the 'j'-th visible column value for the `i'-th row in the grid.
+			-- (`row_list' @ (i - 1)) @ (visible_physical_column_indexes @ (j - 1)) returns the 'j'-th visible column value for the `i'-th row in the grid.
 		local
 			i: INTEGER
 			a_col: EV_GRID_COLUMN

@@ -42,7 +42,7 @@ rt_public void ca_store(char *area, long int siz, FILE *fil)
 		xraise(EN_IO);
 }
 
-rt_public void write_int (FILE *file, long int val)
+rt_public void write_int (FILE *file, EIF_INTEGER_32 val)
 {
-	fwrite(&val, sizeof(long), 1, file);
+	fwrite(&val, sizeof(EIF_INTEGER_32), 1, file);
 }

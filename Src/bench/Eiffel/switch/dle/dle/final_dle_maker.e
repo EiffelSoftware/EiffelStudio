@@ -23,7 +23,7 @@ inherit
 			add_common_objects, system_name,
 			generate_partial_system_objects_dependencies,
 			generate_simple_executable, generate_system_makefile,
-			generate_cecil, add_cecil_objects
+			generate_cecil, add_cecil_objects, run_time
 		redefine
 			init_objects_baskets, add_specific_objects,
 			add_eiffel_objects, make, clear, record_dle_class_type

@@ -25,8 +25,6 @@ inherit
 			interface
 		end
 
-	EV_MENU_ITEM_HANDLER_IMP
-
 	EV_WIDGET_IMP
 		redefine
 			interface,
@@ -138,7 +136,6 @@ feature {NONE} -- WEL Implementation
 			-- been changed and must be drawn. `draw_item' contains
 			-- information about the item to be drawn and the type
 			-- of drawing required.
-		local
 --|FIXME Option button is now platform independant.
 --|FIXME 			pixcon: EV_OPTION_BUTTON_IMP
 		do
@@ -472,6 +469,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/03/21 20:13:21  brendel
+--| Removed inheritance of obsolete class EV_MENU_ITEM_HANDLER.
+--|
 --| Revision 1.45  2000/03/21 17:36:12  oconnor
 --| commented out option button _IMP reference
 --|

@@ -270,6 +270,7 @@ feature -- Settings
 			attribute_builder = ((TypeBuilder) current_class.Builder)
 				.DefineField( att_name, COMPILER.Classes [return_type_id].Builder,
 							  FieldAttributes.Public );
+			((FieldBuilder) attribute_builder).SetCustomAttribute (CA.not_cls_compliant_attr);
 		} else {
 			if (return_type_id == COMPILER.No_value)
 				return_type = COMPILER.VoidType;

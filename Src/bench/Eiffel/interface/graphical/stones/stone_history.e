@@ -9,8 +9,10 @@ class
 
 inherit
 	TWO_WAY_LIST [STONE]
+		rename
+			extend as twl_extend
 		redefine
-			make, extend
+			make
 		end
 
 	EB_CONSTANTS
@@ -78,10 +80,10 @@ feature -- Element change
 					not islast and then
 					(not item.same_as (last) or else not equal (item.stone_signature, last.stone_signature))
 				then
-					{TWO_WAY_LIST} Precursor (item)
+					twl_extend (item)
 				end
 
-				{TWO_WAY_LIST} Precursor (v)
+				twl_extend (v)
 
 				rearrange_history				
 

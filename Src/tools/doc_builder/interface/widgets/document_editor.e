@@ -22,6 +22,53 @@ feature -- Initialization
 		do
 			notebook := widget
 			parent_window := window
+			initialize_accelerators
+		end
+		
+	initialize_accelerators is
+			-- Initialize the accelerators for the system
+		local
+			key: EV_KEY
+			key_constants: EV_KEY_CONSTANTS
+			accelerator: EV_ACCELERATOR
+		once
+			create key_constants
+			
+--				-- Ctrl-A
+--			create key.make_with_code (key_constants.Key_a)
+--			create accelerator.make_with_key_combination (key, True, False, False)
+--			accelerator.actions.extend (agent select_all)
+--			Application_window.accelerators.extend (accelerator)
+--			
+--				-- Ctrl-B
+--			create key.make_with_code (key_constants.Key_b)
+--			create accelerator.make_with_key_combination (key, True, False, False)
+--			accelerator.actions.extend (agent tag_selection ("bold"))
+--			Application_window.accelerators.extend (accelerator)
+--			
+--				-- Ctrl-I
+--			create key.make_with_code (key_constants.Key_i)
+--			create accelerator.make_with_key_combination (key, True, False, False)
+--			accelerator.actions.extend (agent tag_selection ("italic"))
+--			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-C
+			create key.make_with_code (key_constants.Key_c)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent copy_text)
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-X
+			create key.make_with_code (key_constants.Key_x)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent cut_text)
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-V
+			create key.make_with_code (key_constants.Key_v)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent paste_text)
+			Application_window.accelerators.extend (accelerator)			
 		end
 		
 feature -- Editing		

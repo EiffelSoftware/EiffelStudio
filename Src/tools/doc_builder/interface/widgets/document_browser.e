@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 	setup_events is
 			-- Setup interface events for browser interaction
 		do
+			resize_actions.force_extend (agent container_resized)
 			address_bar.key_press_actions.extend (agent address_key_pressed (?))
 			address_bar.select_actions.extend (agent lookup_url (?))
 		end
@@ -105,6 +106,12 @@ feature {NONE} -- Status Setting
 		end		
 	
 feature {NONE} -- Events
+		
+	container_resized is
+			-- Container was resized
+		do
+			browser_container.set_minimum_size (width, height)
+		end		
 		
 	address_key_pressed (key: EV_KEY) is
 			-- A key was pressed in the address bar

@@ -76,6 +76,7 @@ feature {NONE}
 						end; 
 					end;
 					new_file.close;
+					text_window.clear_clickable;
 					text_window.set_changed (false)
 				end
 			end

@@ -296,7 +296,7 @@ copy %EIFFEL_SRC%\examples\vision2\viewport\*.e
 copy ..\\..\\eiffel_project.eifp .\\viewport.eifp
 mkdir debug
 mkdir release
-copy ..\\..\\..\\template_aces\\viewportr_debug.ace .\\debug\\ace.ace
+copy ..\\..\\..\\template_aces\\viewport_debug.ace .\\debug\\ace.ace
 copy ..\\..\\..\\template_aces\\viewport_release.ace .\\release\\ace.ace
 cd ..
 

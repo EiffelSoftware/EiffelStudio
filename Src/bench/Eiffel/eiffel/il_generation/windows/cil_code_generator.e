@@ -906,7 +906,7 @@ feature -- Class info
 				if l_type.base_class.is_basic then
 					l_type := l_type.base_class.actual_type.type_i
 				elseif l_type.base_class.is_expanded then
-					l_type := clone (l_type)
+					l_type := l_type.twin
 					l_type.set_is_true_expanded (True)
 				end
 				external_class_mapping.put (l_type, class_type.full_il_type_name)

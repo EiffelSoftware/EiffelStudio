@@ -12,10 +12,10 @@ inherit
 			make as entity_make
 		redefine
 			dotnet_name,
-			is_static, is_deferred, is_public, is_artificially_added, is_property_or_event,
+			is_static, is_deferred, is_public, is_artificially_added,
+			is_new_slot, is_property_or_event, is_virtual, is_frozen,
 			set_is_public
 		end
-
 
 feature {NONE} -- Initialization
 
@@ -86,6 +86,20 @@ feature -- Status report
 				feature {FEATURE_ATTRIBUTE}.Is_property_or_event
 		end
 		
+	is_new_slot: BOOLEAN is
+			-- Is current marked with `new_slot' flag?
+		do
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_newslot =
+				feature {FEATURE_ATTRIBUTE}.Is_newslot
+		end
+
+	is_virtual: BOOLEAN is
+			-- Is current marked with `new_slot' flag?
+		do
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_virtual =
+				feature {FEATURE_ATTRIBUTE}.Is_virtual
+		end
+			
 feature -- Settings
 
 	set_is_public (pub: like is_public) is

@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make (en, dn: STRING; args: like arguments; ret: like return_type;
-			froz, static, defer, inf, pref, pub, poe: BOOLEAN;
+			froz, static, defer, inf, pref, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
 			-- Initialize consumed method.
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			non_void_return_type: ret /= Void
 			a_type_not_void: a_type /= Void
 		do
-			method_make (en, dn, args, froz, static, defer, pub, poe, a_type)
+			method_make (en, dn, args, froz, static, defer, pub, ns, virt, poe, a_type)
 			return_type := ret
 			if inf then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_infix
@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 			is_infix_set: is_infix = inf
 			is_prefix_set: is_prefix = pref
 			is_public_set: is_public = pub
+			is_new_slot_set: is_new_slot = ns
+			is_virtual_set: is_virtual = virt
+			is_property_or_event_set: is_property_or_event = poe
 			declared_type_set: declared_type = a_type
 		end
 

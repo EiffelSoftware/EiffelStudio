@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; froz, static, defer, pub, poe: BOOLEAN;
+	make (en, dn: STRING; args: like arguments; froz, static, defer, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
 			-- Initialize consumed method.
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			member_make (en, dn, pub, a_type)
 			arguments := args
-			if froz then
+			if froz or not virt then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_frozen
 			end
 			if static then
@@ -40,6 +40,12 @@ feature {NONE} -- Initialization
 			end
 			if defer then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_deferred
+			end
+			if ns then
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_newslot
+			end
+			if virt then
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_virtual
 			end
 			if poe then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_property_or_event				
@@ -52,6 +58,8 @@ feature {NONE} -- Initialization
 			is_static_set: is_static = static
 			is_deferred_set: is_deferred = defer
 			is_public_set: is_public = pub
+			is_new_slot_set: is_new_slot = ns
+			is_virtual_set: is_virtual = virt
 			is_property_or_event_set: is_property_or_event = poe
 			declared_type_set: declared_type = a_type
 		end
@@ -68,7 +76,7 @@ feature -- Status report
 		do
 			Result := arguments /= Void and then arguments.count /= 0
 		end
-	
+		
 invariant
 	non_void_arguments: arguments /= Void
 

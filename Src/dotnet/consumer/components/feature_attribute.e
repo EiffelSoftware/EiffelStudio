@@ -17,6 +17,8 @@ feature -- Access
 	Is_artificially_added: INTEGER is 64
 	Is_property_or_event: INTEGER is 128
 	Is_init_only: INTEGER is 256
+	Is_newslot: INTEGER is 512
+	Is_virtual: INTEGER is 1024
 			-- Possible attributes of a feature.
 
 end -- class FEATURE_ATTRIBUTE

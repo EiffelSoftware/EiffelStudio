@@ -402,8 +402,8 @@ feature {NONE} -- Internal
 			properties_not_void: properties /= Void
 			events_not_void: events /= Void
 		do
-			create Result.make (fields.count + internal_functions.count + internal_procedures.count +
-				events.count + properties.count)
+			create Result.make (fields.count + internal_functions.count +
+				internal_procedures.count + events.count + properties.count)
 			consumed_a_type_entities (fields, a_immediate, Result)
 			consumed_a_type_entities (internal_functions, a_immediate, Result)
 			consumed_a_type_entities (internal_procedures, a_immediate, Result)

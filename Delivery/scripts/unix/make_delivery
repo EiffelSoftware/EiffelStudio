@@ -85,7 +85,7 @@ move Delivery/*.* . >> $INSTALL_LOG
 fullrd Delivery >> $INSTALL_LOG
 
 remtrace Borland files
-fullrf bcc55.tar.gz
+fullrf BCC55.tar.gz
 fullrf *.bat
 
 md docs
@@ -133,7 +133,8 @@ else
 	give_time_to copy executables from the old delivery
 fi
 
-exprt -r $DEFAULT_CVS_TAG -d $INSTALL_DIR/docs Delivery/newdocs
+cd $INSTALL_DIR
+exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
 
 cd $INIT_DIR
 

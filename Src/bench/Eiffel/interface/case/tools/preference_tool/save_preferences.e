@@ -70,11 +70,17 @@ feature -- Execution
 			until
 				table.after or Result 
 			loop
-				s1 := table.key_for_iteration
+				s1 := clone(table.key_for_iteration)
+				s1.prune_all('%R')
+				s1.prune_all('%T')
+				s1.prune_all('%N')
 				i := s.substring_index(s1,1)
 				if i>0 and then i+s1.count<s.count then
 					i := i+s1.count
 					Result := update_value(i,s,table.item_for_iteration)
+				elseif i=0 then
+					-- Preference not found. We do not update it.
+					-- We should add it.
 				else
 					Result := TRUE
 				end
@@ -82,7 +88,7 @@ feature -- Execution
 				s2 := k.out
 				s2.append(" %%")
 				progress_bar.set_text(s2)
-				k := k+1
+				j := j+1
 				table.forth
 			end
 		end

@@ -24,6 +24,9 @@ feature -- Initialization
 			s: STRING
 		do
 			s := clone(res.value.name)
+			s.prune_all('%N')
+			s.prune_all('%T')
+			s.prune_all('%R')	
 			s.replace_substring_all("_"," ")
 			make_with_text(par, <<s, res.value.value>>)	
 			resource := res

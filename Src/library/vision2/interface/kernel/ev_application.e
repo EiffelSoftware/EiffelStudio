@@ -21,7 +21,8 @@ inherit
 	EV_ANY
 		redefine
 			create_action_sequences,
-			implementation
+			implementation,
+			destroy
 		end
 
 feature {NONE} -- Initialization
@@ -94,6 +95,14 @@ feature -- Basic operation
 			msec_non_negative: msec >= 0 
 		do
 			implementation.sleep (msec)
+		end
+
+	destroy is
+			-- Quit the application.
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"exit(0)"
 		end
 
 feature -- Status report
@@ -204,6 +213,10 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/05 01:58:28  brendel
+--| destroy now quits the Eiffel Vision application.
+--| This can be done in a nicer way, though.
+--|
 --| Revision 1.22  2000/03/27 19:10:10  oconnor
 --| spelink mistak
 --|

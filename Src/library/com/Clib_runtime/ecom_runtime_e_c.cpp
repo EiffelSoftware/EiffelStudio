@@ -633,6 +633,173 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, 
 		return date_array;
 };
 //----------------------------------------------------------------------------
+char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old)
+
+// Create C array of char from Eiffel array.
+{
+	EIF_OBJECT e_array;
+
+	EIF_TYPE_ID tid;
+	EIF_INTEGER_FUNCTION f_capacity;
+	EIF_POINTER_FUNCTION to_c;
+
+	char * result;
+	int capacity;
+
+	e_array = eif_protect (a_ref);
+
+	if (dimension > 1)
+	{
+		tid = eif_type_id ("ECOM_ARRAY[CHARACTER]");
+	}
+	else
+	{
+		tid = eif_type_id ("ARRAY[CHARACTER]");
+	}
+	
+	to_c = eif_pointer_function ("to_c", tid);
+	// Allocate memory
+	f_capacity = eif_integer_function ("count", tid);
+
+	capacity = (int)(f_capacity)(eif_access(e_array));
+	if (old != NULL)
+		result = (char *)CoTaskMemAlloc (capacity*(sizeof(char)));
+	else
+		result = old;
+
+	
+	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(char)));
+
+	eif_wean (e_array);
+	return result;
+};
+//----------------------------------------------------------------------------
+
+long * ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, long * old)
+
+// Create C array of long from Eiffel array.
+{
+	EIF_OBJECT e_array;
+
+	EIF_TYPE_ID tid;
+	EIF_INTEGER_FUNCTION f_capacity;
+	EIF_POINTER_FUNCTION to_c;
+
+	long * result;
+	int capacity;
+
+	e_array = eif_protect (a_ref);
+
+	if (dimension > 1)
+	{
+		tid = eif_type_id ("ECOM_ARRAY[INTEGER]");
+	}
+	else
+	{
+		tid = eif_type_id ("ARRAY[INTEGER]");
+	}
+	
+	to_c = eif_pointer_function ("to_c", tid);
+	// Allocate memory
+	f_capacity = eif_integer_function ("count", tid);
+
+	capacity = (int)(f_capacity)(eif_access(e_array));
+	if (old != NULL)
+		result = (long *)CoTaskMemAlloc (capacity*(sizeof(long)));
+	else
+		result = old;
+
+	
+	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(long)));
+
+	eif_wean (e_array);
+	return result;
+};
+//----------------------------------------------------------------------------
+
+float * ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension, float * old)
+
+// Create C array of float from Eiffel array.
+{
+	EIF_OBJECT e_array;
+
+	EIF_TYPE_ID tid;
+	EIF_INTEGER_FUNCTION f_capacity;
+	EIF_POINTER_FUNCTION to_c;
+
+	float * result;
+	int capacity;
+
+	e_array = eif_protect (a_ref);
+
+	if (dimension > 1)
+	{
+		tid = eif_type_id ("ECOM_ARRAY[REAL]");
+	}
+	else
+	{
+		tid = eif_type_id ("ARRAY[REAL]");
+	}
+	
+	to_c = eif_pointer_function ("to_c", tid);
+	// Allocate memory
+	f_capacity = eif_integer_function ("count", tid);
+
+	capacity = (int)(f_capacity)(eif_access(e_array));
+	if (old != NULL)
+		result = (float *)CoTaskMemAlloc (capacity*(sizeof(float)));
+	else
+		result = old;
+
+	
+	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(float)));
+
+	eif_wean (e_array);
+	return result;
+};
+//----------------------------------------------------------------------------
+
+double * ccom_ec_array_double (EIF_REFERENCE a_ref, int dimension, double * old)
+
+// Create C array of double from Eiffel array.
+{
+	EIF_OBJECT e_array;
+
+	EIF_TYPE_ID tid;
+	EIF_INTEGER_FUNCTION f_capacity;
+	EIF_POINTER_FUNCTION to_c;
+
+	double * result;
+	int capacity;
+
+	e_array = eif_protect (a_ref);
+
+	if (dimension > 1)
+	{
+		tid = eif_type_id ("ECOM_ARRAY[DOUBLE]");
+	}
+	else
+	{
+		tid = eif_type_id ("ARRAY[DOUBLE]");
+	}
+	
+	to_c = eif_pointer_function ("to_c", tid);
+	// Allocate memory
+	f_capacity = eif_integer_function ("count", tid);
+
+	capacity = (int)(f_capacity)(eif_access(e_array));
+	if (old != NULL)
+		result = (double *)CoTaskMemAlloc (capacity*(sizeof(double)));
+	else
+		result = old;
+
+	
+	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(double)));
+
+	eif_wean (e_array);
+	return result;
+};
+//----------------------------------------------------------------------------
 
 short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension, short * old)
 

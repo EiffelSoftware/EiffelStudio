@@ -337,7 +337,9 @@ feature {NONE} -- Implementation
 			if widget.x_position /= x_pos then
 				first.set_item_x_position (widget, x_pos)
 				second := objects @ 2
-				second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
+				if second /= Void then
+					second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
+				end
 				must_update_editors := True
 					-- Update project.
 				enable_project_modified
@@ -353,7 +355,9 @@ feature {NONE} -- Implementation
 			if widget.y_position /= y_pos then
 				first.set_item_y_position (widget, y_pos)
 				second := objects @ 2
-				second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
+				if second /= Void then
+					second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
+				end
 				must_update_editors := True
 					-- Update project.
 				enable_project_modified
@@ -369,10 +373,12 @@ feature {NONE} -- Implementation
 			if widget.width /= new_width then
 				first.set_item_width (widget, new_width)
 				second := objects @ 2
-					-- Only set width of second if greater than minimum_width.
-					-- This is because the item in second is displayed larger due to frame.
-				if (second @ first.index_of (widget, 1)).minimum_width < new_width then
-					second.set_item_width (second @ first.index_of (widget, 1), new_width)
+				if second /= Void then
+						-- Only set width of second if greater than minimum_width.
+						-- This is because the item in second is displayed larger due to frame.
+					if (second @ first.index_of (widget, 1)).minimum_width < new_width then
+						second.set_item_width (second @ first.index_of (widget, 1), new_width)
+					end
 				end
 				must_update_editors := True
 					-- Update project.
@@ -393,10 +399,12 @@ feature {NONE} -- Implementation
 			if widget.height /= new_height and combo_box = Void then
 				first.set_item_height (widget, new_height)
 				second := objects @ 2
-					-- Only set height of second if greater than minimum_width.
-					-- This is because the item in second is displayed larger due to frame.
-				if (second @ first.index_of (widget, 1)).minimum_height < new_height then
-					second.set_item_height (second @ first.index_of (widget, 1), new_height)
+				if second /= Void then
+						-- Only set height of second if greater than minimum_width.
+						-- This is because the item in second is displayed larger due to frame.
+					if (second @ first.index_of (widget, 1)).minimum_height < new_height then
+						second.set_item_height (second @ first.index_of (widget, 1), new_height)
+					end
 				end
 				must_update_editors := True
 					-- Update project.

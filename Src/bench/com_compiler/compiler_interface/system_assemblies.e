@@ -61,6 +61,8 @@ feature {NONE} -- Initialization
 				    assemblies_impl.extend (assembly)
 					al.forth
 				end
+			else
+				create assemblies_table.make (13)	
 			end
 		end
 
@@ -113,11 +115,6 @@ feature -- Access
 			end
 
 			ace_accesser.apply
-			
-			-- TODO: store the assemblies when ace file can support
-			
-			-- TODO: set all of the clusters to include the set prefixes
-			-- from the assemblies
 		end
 	
 	add_assembly(a_prefix, a_cluster_name, name, version, culture, public_key:STRING) is

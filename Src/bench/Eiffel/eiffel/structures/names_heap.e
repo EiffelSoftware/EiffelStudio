@@ -97,6 +97,23 @@ feature -- Constants
 	default_rescue_name_id: INTEGER is 15
 	dispose_name_id: INTEGER is 16
 	internal_invariant_name_id: INTEGER is 17
+	void_name_id: INTEGER is 18
+	eif_reference_name_id: INTEGER is 19
+	eif_integer_8_name_id: INTEGER is 20
+	eif_integer_16_name_id: INTEGER is 21
+	eif_integer_32_name_id: INTEGER is 22
+	eif_integer_64_name_id: INTEGER is 23
+	eif_char_name_id: INTEGER is 24
+	eif_wide_char_name_id: INTEGER is 25
+	eif_boolean_name_id: INTEGER is 26
+	eif_pointer_name_id: INTEGER is 27
+	eif_real_name_id: INTEGER is 28
+	eif_double_name_id: INTEGER is 29
+	eif_plug_header_name_id: INTEGER is 30
+	eif_misc_header_name_id: INTEGER is 31
+	eif_out_header_name_id: INTEGER is 32
+	string_header_name_id: INTEGER is 33
+	math_header_name_id: INTEGER is 34
 			-- Predefined name IDs constants
 	
 feature -- Status report
@@ -146,7 +163,30 @@ feature -- Element change
 		ensure
 			elemented_inserted: equal (item (found_item), s)
 		end
-		
+
+feature -- Convenience
+
+	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING] is
+			-- Convert `t' an array of indexes in NAMES_HEAP into an
+			-- array of STRINGs, each string being item of Current associated
+			-- with current value in `t'.
+		local
+			i, nb: INTEGER
+		do
+			if t /= Void then
+				create Result.make (t.lower, t.upper)
+				from
+					i := t.lower
+					nb := t.upper
+				until
+					i > nb
+				loop
+					Result.put (item (t.item (i)), i)
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation: access
 
 	lookup_table: HASH_TABLE [INTEGER, STRING]
@@ -180,6 +220,23 @@ feature {NONE} -- Implementation: access
 			put ("default_rescue") check found_item = default_rescue_name_id end
 			put ("dispose") check found_item = dispose_name_id end
 			put ("_invariant") check found_item = internal_invariant_name_id end
+			put ("void") check found_item = void_name_id end
+			put ("EIF_REFERENCE") check found_item = eif_reference_name_id end
+			put ("EIF_INTEGER_8") check found_item = eif_integer_8_name_id end
+			put ("EIF_INTEGER_16") check found_item = eif_integer_16_name_id end
+			put ("EIF_INTEGER_32") check found_item = eif_integer_32_name_id end
+			put ("EIF_INTEGER_64") check found_item = eif_integer_64_name_id end
+			put ("EIF_CHARACTER") check found_item = eif_char_name_id end
+			put ("EIF_WIDE_CHAR") check found_item = eif_wide_char_name_id end
+			put ("EIF_BOLLEAN") check found_item = eif_boolean_name_id end
+			put ("EIF_POINTER") check found_item = eif_pointer_name_id end
+			put ("EIF_REAL") check found_item = eif_real_name_id end
+			put ("EIF_DOUBLE") check found_item = eif_double_name_id end
+			put ("%"eif_plug.h%"") check found_item = eif_plug_header_name_id end
+			put ("%"eif_misc.h%"") check found_item = eif_misc_header_name_id end
+			put ("%"eif_out.h%"") check found_item = eif_out_header_name_id end
+			put ("<string.h>") check found_item = string_header_name_id end
+			put ("<math.h>") check found_item = math_header_name_id end
 		end
 		
 invariant

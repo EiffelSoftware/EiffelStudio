@@ -212,6 +212,8 @@ cluster
 
 	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
 
+	dotnet_helpers:			"$EIFFEL_SRC\dotnet\helpers"
+
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
 	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"

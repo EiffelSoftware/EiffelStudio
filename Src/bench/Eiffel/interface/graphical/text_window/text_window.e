@@ -44,6 +44,13 @@ feature -- Properties
 			non_void_result: Result /= Void
 		end;
 
+	count: INTEGER is
+			-- Number of characters in `text'
+		deferred
+		ensure 
+			non_void_result: Result /= Void
+		end;
+
 	changed: BOOLEAN is
 			-- Has the text been edited since last display?
 		deferred
@@ -82,6 +89,11 @@ feature -- Access
 	current_line: INTEGER is
 			-- Current line in text
 		deferred
+		end;
+
+	cursor_position: INTEGER is
+			-- Cursor position of text
+		deferred
 		end
 
 feature -- Text operations
@@ -108,8 +120,6 @@ feature -- Text operations
 	set_cursor_position (a_position: INTEGER) is
 			-- Set cursor_position to `a_position' if the new position
 			-- is not out of bounds.
-		require
-			is_editable: is_editable
 		deferred	
 		end;
 
@@ -125,7 +135,14 @@ feature -- Text operations
 			-- Highlight between positions `a' and `b' using reverse video.
 		require
 			first_fewer_than_last: a <= b
-		deferred
+		do
+			if b <= count then
+					-- Does not highlight if `b' is beyond the
+					-- bounds of the text.
+				if b > a then
+					set_selection (a,b)
+				end
+			end
 		end
 
 feature -- Status setting
@@ -170,6 +187,16 @@ feature -- Status setting
 		do
 			clear_window
 		end;
+
+	set_selection (first, last: INTEGER) is
+			-- Select the text between `first' and `last'.
+			-- This text will be physically highlightened on the screen.
+		require
+			first_positive_not_null: first >= 0;
+			last_fewer_than_count: last <= count;
+			first_fewer_than_last: first <= last
+		deferred
+		end
 
 feature -- Update
 
@@ -266,6 +293,12 @@ feature {TOOL_W, OBJECT_W} -- Implementation
 feature {NONE} -- Command arguments
 
 	context_data_useful: BOOLEAN is True;
+
+	matcher: KMP_MATCHER is
+			-- Matcher for strings pattern
+		once
+			!! Result.make_empty
+		end;
 
 	new_tooler_action: ANY is
 			-- Callback value to indicate that a new tool should come up.

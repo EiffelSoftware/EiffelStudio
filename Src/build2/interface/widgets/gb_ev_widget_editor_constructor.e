@@ -68,6 +68,7 @@ feature -- Access
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_width_entry.make_without_label (Current, horizontal_box, minimum_width_string, gb_ev_widget_minimum_width_tooltip,
 				agent set_minimum_width (?), agent valid_minimum_dimension (?))
 			create reset_width_button.make_with_text ("Reset")
@@ -80,6 +81,7 @@ feature -- Access
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_height_entry.make_without_label (Current, horizontal_box, minimum_height_string, gb_ev_widget_minimum_height_tooltip,
 				agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			create reset_height_button.make_with_text ("Reset")

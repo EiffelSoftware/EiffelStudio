@@ -38,6 +38,7 @@ feature -- Access
 			create label.make_with_text (gb_ev_container_radio_groups)
 			label.set_tooltip (gb_ev_container_radio_groups_tooltip)
 			Result.extend (label)
+			label.set_minimum_height (label.minimum_height + Object_editor_padding_width)
 			create merged_list
 			merged_list.set_tooltip (gb_ev_container_radio_groups_tooltip)
 			merged_list.set_minimum_height (100)

@@ -59,6 +59,7 @@ feature -- Access
 				create frame.make_with_text ("Is_item_expanded?")
 				Result.extend (frame)
 				create vertical_box
+				vertical_box.set_border_width (Object_editor_padding_width)
 				frame.extend (vertical_box)
 				from
 					counter := 1

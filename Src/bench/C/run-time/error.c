@@ -21,7 +21,7 @@
 #include <strings.h>
 #endif
 
-public char *error_tag(code)
+rt_public char *error_tag(code)
 {
 	/* Returns a pointer to the English description of the system error whose
 	 * code is stored in errno, or a null pointer if that description is not
@@ -38,7 +38,7 @@ public char *error_tag(code)
 #endif
 }
 
-public void esys()
+rt_public void esys()
 {
 	/* Raise the 'Operating system error' exception, based on the error code
 	 * held in variable errno. The associated tag will be an English description
@@ -57,7 +57,7 @@ public void esys()
 	xraise(EN_SYS);					/* Operating system error */
 }
 
-public void eio()
+rt_public void eio()
 {
 	/* As a special case, an I/O error is raised when a system call which is
 	 * I/O bound fails.
@@ -66,7 +66,7 @@ public void eio()
 	xraise(EN_IO);					/* I/O error */
 }
 
-public int get_errno()
+rt_public int get_errno()
 {
 	/* Return the value of errno to Eiffel (waiting for Eiffel external
 	 * attributes support)--RAM.

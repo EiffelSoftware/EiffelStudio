@@ -33,22 +33,22 @@
 
 
 #ifdef WORKBENCH
-public uint32 dle_level;			/* DLE level */
-public uint32 dle_zeroc;			/* Frozen level in the DC-set */
-public fnptr *dle_frozen;			/* DLE C routine array (frozen routines) */
-public char **dle_melt;				/* Byte code array of DLE melted features */
-public int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */
-public int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
-public long dle_melt_count = 0;		/* Size of `dle_melt' table */
+rt_public uint32 dle_level;			/* DLE level */
+rt_public uint32 dle_zeroc;			/* Frozen level in the DC-set */
+rt_public fnptr *dle_frozen;			/* DLE C routine array (frozen routines) */
+rt_public char **dle_melt;				/* Byte code array of DLE melted features */
+rt_public int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */
+rt_public int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
+rt_public long dle_melt_count = 0;		/* Size of `dle_melt' table */
 #else
-public char *(**dle_make)();		/* `make' of DYNAMIC descendants */
+rt_public char *(**dle_make)();		/* `make' of DYNAMIC descendants */
 #endif
-public int dynamic_dtype;			/* Dynamic type of DYNAMIC */
-private EIF_PROC eif_set_dtype;		/* `set_dynamic_type' eiffel routine */
-private int dle_loaded = 0;			/* Has a DC-Set already been loaded */
-private int old_scount = 0;			/* Old number of dynamic types */
+rt_public int dynamic_dtype;			/* Dynamic type of DYNAMIC */
+rt_private EIF_PROC eif_set_dtype;		/* `set_dynamic_type' eiffel routine */
+rt_private int dle_loaded = 0;			/* Has a DC-Set already been loaded */
+rt_private int old_scount = 0;			/* Old number of dynamic types */
 #ifdef DLFCN
-private void *dle_handle = (void *) 0;		/* C shared library handle */
+rt_private void *dle_handle = (void *) 0;		/* C shared library handle */
 #endif
 #ifdef WORKBENCH
 FILE *fil;							/* melted.eif file */
@@ -60,7 +60,7 @@ FILE *fil;							/* melted.eif file */
 /*#define DEBUG 3		/**/
 
 
-public EIF_INTEGER dle_retrieve(obj, dle_path)
+rt_public EIF_INTEGER dle_retrieve(obj, dle_path)
 EIF_REFERENCE obj, dle_path;
 {
 	/* Load the Dynamic Class Set. */
@@ -507,7 +507,7 @@ if (body_id >= 0)
 #endif
 }
 
-public EIF_REFERENCE dle_instance(dtype, arg)
+rt_public EIF_REFERENCE dle_instance(dtype, arg)
 int dtype;
 EIF_REFERENCE arg;
 {
@@ -553,7 +553,7 @@ EIF_REFERENCE arg;
 #endif
 }
 
-public EIF_INTEGER dle_search(obj, class_name)
+rt_public EIF_INTEGER dle_search(obj, class_name)
 EIF_REFERENCE obj, class_name;
 {
 	/* Search in the system for `class_name' with a dtype 
@@ -573,13 +573,13 @@ EIF_REFERENCE obj, class_name;
 	return (EIF_INTEGER) DLE_NO_CLASS;
 }
 
-public void c_pass_dle_routines(set_dtype_addr)
+rt_public void c_pass_dle_routines(set_dtype_addr)
 EIF_PROC set_dtype_addr;
 {
 	eif_set_dtype = set_dtype_addr;
 }
 
-public void dle_reclaim()
+rt_public void dle_reclaim()
 {
 #ifdef WORKBENCH
 

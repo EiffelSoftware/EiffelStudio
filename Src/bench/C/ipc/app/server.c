@@ -22,11 +22,11 @@
 /* This variable records whether the workbench application was launched via
  * the ised wrapper (i.e. in debug mode) or not.
  */
-public int debug_mode = 0;	/* Assume not in debug mode */
+rt_public int debug_mode = 0;	/* Assume not in debug mode */
 
 extern char *ename;			/* Eiffel executable base name (run-time var) */
 
-shared void dserver()
+rt_shared void dserver()
 {
 	/* This routine is called by the debugger once the program context has
 	 * been saved. The application enters in a server mode, after having
@@ -47,7 +47,7 @@ shared void dserver()
 	/* Exiting from this routine resumes control to the debugger */
 }
 
-shared void dinterrupt()
+rt_shared void dinterrupt()
 {
 	/* Send a request asking the daemon if the application has been
 	 * interrupted by the debugger.
@@ -60,7 +60,7 @@ shared void dinterrupt()
 	wide_listen();			/* Listen on the socket, waiting for the answer */
 }
 
-shared void winit()
+rt_shared void winit()
 {
 	/* Initialize the workbench process, by checking whether it has been
 	 * started under debugger control or not. This routine is called early

@@ -52,36 +52,36 @@
  * reset to its default behaviour (of course, we do this only when the
  * default behaviour is not SIG_IGN).
  */
-public Signal_t (*esig[NSIG])();	/* Array of signal handlers */
+rt_public Signal_t (*esig[NSIG])();	/* Array of signal handlers */
 
 /* Records whether a signal is ignored by default or not. Some of these
  * values where set during the initialization, others were hardwired. We also
  * record the original signal status to know whether by default a signal is
  * ignored or not.
  */
-public char sig_ign[NSIG];			/* Is signal ignored by default? */
-public char osig_ign[NSIG];			/* Original signal default (1 = ignored) */
+rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */
+rt_public char osig_ign[NSIG];			/* Original signal default (1 = ignored) */
 
 /* Global signal handler status. If set to 0, then signal handler is activated
  * an normal processing occurs. Otherwise, signals are queued if they are not
  * ignored, for later processing.
  */
-shared int esigblk = 0;				/* By default, signals are not blocked */
+rt_shared int esigblk = 0;				/* By default, signals are not blocked */
 
 /* The FIFO stack (circular buffer) used to record arrived signals while
  * esigblk was set (for instance, while in the garbage collector).
  */
-shared struct s_stack sig_stk;		/* Initialized by initsig() */
+rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
 
 /* Routine declarations */
-public char *signame();				/* Give English description of a signal */
-private Signal_t ehandlr();			/* Eiffel main signal handler */
-public Signal_t exfpe();			/* Floating point exception handler */
-private int dangerous();			/* Is a given signal dangerous for us? */
-shared void esdpch();				/* Dispatch queued signals */
-shared void initsig();				/* Run-time initialization for trapping */
-private void spush();				/* Queue signal in a FIFO stack */
-private int spop();					/* Extract signals from queued stack */
+rt_public char *signame();				/* Give English description of a signal */
+rt_private Signal_t ehandlr();			/* Eiffel main signal handler */
+rt_public Signal_t exfpe();			/* Floating point exception handler */
+rt_private int dangerous();			/* Is a given signal dangerous for us? */
+rt_shared void esdpch();				/* Dispatch queued signals */
+rt_shared void initsig();				/* Run-time initialization for trapping */
+rt_private void spush();				/* Queue signal in a FIFO stack */
+rt_private int spop();					/* Extract signals from queued stack */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -91,7 +91,7 @@ private int spop();					/* Extract signals from queued stack */
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -99,7 +99,7 @@ private char *rcsid =
  * Signal handler routines.
  */
 
-private Signal_t ehandlr(sig)
+rt_private Signal_t ehandlr(sig)
 register1 int sig;
 {
 	/* Eiffel signal handler -- all the signals that can be caught let the
@@ -155,7 +155,7 @@ register1 int sig;
 	}
 }
 
-public Signal_t exfpe(sig)
+rt_public Signal_t exfpe(sig)
 int sig;
 {
 	/* Raise a floating point exception */
@@ -175,7 +175,7 @@ int sig;
 	xraise(EN_FLOAT);		/* Raise a floating point exception */
 }
 
-shared void trapsig(handler)
+rt_shared void trapsig(handler)
 Signal_t (*handler)();		/* The signal handler provided */
 {
 	/* This routine is usually called only by the main() when something wrong
@@ -201,7 +201,7 @@ Signal_t (*handler)();		/* The signal handler provided */
 #endif
 }
 
-private int dangerous(sig)
+rt_private int dangerous(sig)
 int sig;
 {
 	/* Return true if the signal 'sig' is dangerous, false otherwise. A signal
@@ -231,7 +231,7 @@ int sig;
  * Dispatching queued signals.
  */
 
-shared void esdpch()
+rt_shared void esdpch()
 {
 	/* Dispatches any pending signal in a FIFO manner as if the signal was
 	 * being received now. We knwo the signal was not meant to be ignored,
@@ -263,7 +263,7 @@ shared void esdpch()
  * Kernel signal interface.
  */
 
-public Signal_t (*esignal(sig, func))()
+rt_public Signal_t (*esignal(sig, func))()
 int sig;				/* Signal to handle */
 Signal_t (*func)();		/* Handler to be associated with signal */
 {
@@ -309,7 +309,7 @@ Signal_t (*func)();		/* Handler to be associated with signal */
 
 #ifndef HAS_SIGVEC
 #ifndef HAS_SIGVECTOR
-public int esigvec()
+rt_public int esigvec()
 {
 	/* The sigvec() kernel interface (named sigvector() on HP-UX, thanks HP)
 	 * is missing. This raises an external event exception.
@@ -323,7 +323,7 @@ public int esigvec()
 #endif
 
 #ifdef HAS_SIGVEC
-public int esigvec(sig, vec, ovec)
+rt_public int esigvec(sig, vec, ovec)
 int sig;
 struct sigvec *vec, *ovec;
 {
@@ -382,7 +382,7 @@ struct sigvec *vec, *ovec;
  * Initialization section.
  */
 
-shared void initsig()
+rt_shared void initsig()
 {
 	/* This routine should be called by the main() of the Eiffel program to
 	 * properly initialize signals. This code is thus executed only once
@@ -495,7 +495,7 @@ shared void initsig()
  * Eiffel signal's FIFO stack.
  */
 
-private void spush(sig)
+rt_private void spush(sig)
 int sig;
 {
 	/* Record a signal in the FIFO stack for deferred handling. If the buffer
@@ -548,7 +548,7 @@ int sig;
 #endif
 }
 
-private int spop()
+rt_private int spop()
 {
 	/* Pops off a signal from the FIFO stack and returns its value. If the
 	 * stack is empty, return 0.
@@ -616,7 +616,7 @@ struct sig_desc {			/* Signal description structure */
  * Message limit is 28 char..., sorry (to get a nice execution stack).
  */
 
-private struct sig_desc sig_name[] = {
+rt_private struct sig_desc sig_name[] = {
 #ifdef SIGHUP
 	{ 1, SIGHUP, "Hangup" },
 #endif
@@ -734,7 +734,7 @@ private struct sig_desc sig_name[] = {
 	{ 39, 0, "Unknown signal" }
 };
 
-public char *signame(sig)
+rt_public char *signame(sig)
 int sig;
 {
 	/* Returns a description of a signal given its number. If sys_siglist[]
@@ -758,7 +758,7 @@ int sig;
  * Eiffel interface
  */
 
-public long esigmap(idx)
+rt_public long esigmap(idx)
 long idx;
 {
 	/* C signal code for signal of index `idx' */
@@ -770,7 +770,7 @@ long idx;
 			return (long) (sig_name[i].s_num);
 }
 
-public char *esigname(sig)
+rt_public char *esigname(sig)
 long sig;
 {
 	/* Returns a description of a signal given its number. If sys_siglist[]
@@ -782,14 +782,14 @@ long sig;
 	return (signame((int) sig));
 } 
 
-public long esignum()
+rt_public long esignum()
 {
 	/* Number of last signal */
 
 	return (long) echsig;
 }
 
-public void esigcatch(sig)
+rt_public void esigcatch(sig)
 long sig;
 {
 	/* Catch signal `sig'.
@@ -848,7 +848,7 @@ long sig;
 #endif
 }
 
-public void esigignore(sig)
+rt_public void esigignore(sig)
 long sig;
 {
 	/* Ignore signal `sig'.
@@ -907,7 +907,7 @@ long sig;
 #endif
 }
 
-public char esigiscaught(sig)
+rt_public char esigiscaught(sig)
 long sig;
 {
 	/* Is signal of number `sig' caught?
@@ -920,7 +920,7 @@ long sig;
 		return (char) 0;
 }
 
-public char esigdefined (sig)
+rt_public char esigdefined (sig)
 long sig;
 {
 	/* Id signal of number `sig' defined? */
@@ -1036,7 +1036,7 @@ long sig;
  */
 
 struct eif_except exdata;	/* Exception handling global flags */
-private int bufstate();	/* Print circular buffer state */
+rt_private int bufstate();	/* Print circular buffer state */
 
 Signal_t test_handler(sig)
 int sig;
@@ -1093,7 +1093,7 @@ main()
 	printf("> End of tests.\n");
 }
 
-private int bufstate()
+rt_private int bufstate()
 {
 	/* Give circular buffer state */
 
@@ -1102,20 +1102,20 @@ private int bufstate()
 }
 
 /* Functions not provided here */
-public void panic(s)
+rt_public void panic(s)
 char *s;
 {
 	printf("PANIC: %s\n", s);
 	exit(1);
 }
 
-public void xraise(val)
+rt_public void xraise(val)
 int val;
 {
 	printf("xraise: exception code %d\n", val);
 }
 
-public void exhdlr(handler, sig)
+rt_public void exhdlr(handler, sig)
 Signal_t (*handler)();
 int sig;
 {

@@ -22,26 +22,26 @@
 #define dprintf(n) if (DEBUG & n) printf
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-private struct s_table *table;		/* Search table for deep equal */
+rt_private struct s_table *table;		/* Search table for deep equal */
 
 /*
  * Routines declarations
  */
 
-private int e_field_equal();		/* Field-by-field equality */
-private int e_field_iso();			/* Field-by-field isomorhphism */
-private int rdeepiso();				/* Recursive isomorphism */
-private int rdeepiter();			/* Iteration on normal objects */
+rt_private int e_field_equal();		/* Field-by-field equality */
+rt_private int e_field_iso();			/* Field-by-field isomorhphism */
+rt_private int rdeepiso();				/* Recursive isomorphism */
+rt_private int rdeepiter();			/* Iteration on normal objects */
 
 /*
  * Routine definitions
  */
 
-public int xequal(ref1, ref2)
+rt_public int xequal(ref1, ref2)
 char *ref1;
 char *ref2;
 {
@@ -64,7 +64,7 @@ char *ref2;
 	return 0;
 }
 
-public int eequal(target, source)
+rt_public int eequal(target, source)
 register1 char *source;
 register2 char *target;
 {
@@ -107,7 +107,7 @@ register2 char *target;
 	return FALSE;
 }
 
-public int spequal(target, source)
+rt_public int spequal(target, source)
 register1 char *source;
 register2 char *target;
 {
@@ -139,7 +139,7 @@ register2 char *target;
 	return (char) (!bcmp(source, target, s_size * sizeof(char)));
 }
 	
-public int eiso(target, source)
+rt_public int eiso(target, source)
 char *source;
 char *target;
 {
@@ -180,7 +180,7 @@ char *target;
 	return e_field_iso(target, source, t_flags, s_flags);
 }
 
-public int spiso(target, source)
+rt_public int spiso(target, source)
 register1 char *target;
 register2 char *source;
 {
@@ -283,7 +283,7 @@ register2 char *source;
 	return TRUE;
 }
 
-public int ediso(target, source)
+rt_public int ediso(target, source)
 char *source;
 char *target;
 {
@@ -305,7 +305,7 @@ char *target;
 	return result;
 }
 
-private int rdeepiso(target, source)
+rt_private int rdeepiso(target, source)
 char *source;
 char *target;
 {
@@ -396,7 +396,7 @@ char *target;
 	/* NOTREACHED */
 }
 
-private int rdeepiter(target, source)
+rt_private int rdeepiter(target, source)
 register1 char *target;
 register2 char *source;
 {
@@ -435,7 +435,7 @@ register2 char *source;
 	return TRUE;
 }
 
-private int e_field_equal(target, source, t_flags, s_flags)
+rt_private int e_field_equal(target, source, t_flags, s_flags)
 register2 char *source;
 register1 char *target;
 uint32 t_flags;
@@ -559,7 +559,7 @@ uint32 s_flags;
 	return TRUE;
 }
 
-private int e_field_iso(target, source, t_flags, s_flags)
+rt_private int e_field_iso(target, source, t_flags, s_flags)
 register2 char *source;
 register1 char *target;
 uint32 t_flags;

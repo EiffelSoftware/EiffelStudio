@@ -23,7 +23,7 @@
  * The C may obtain the true address of the object by dereferencing this
  * indirection pointer through eif_access.
  */
-public struct stack hec_stack = {			/* Indirection table "hector" */
+rt_public struct stack hec_stack = {			/* Indirection table "hector" */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -36,7 +36,7 @@ public struct stack hec_stack = {			/* Indirection table "hector" */
  * completely appropriate and holes may appear. The 'free_stack' stack records
  * those holes.
  */
-public struct stack hec_saved = {			/* Saved indirection pointers */
+rt_public struct stack hec_saved = {			/* Saved indirection pointers */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -49,7 +49,7 @@ public struct stack hec_saved = {			/* Saved indirection pointers */
  * an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we
  * record free locations in the following stack.
  */
-private struct stack free_stack = {			/* Entries free in hector */
+rt_private struct stack free_stack = {			/* Entries free in hector */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -58,11 +58,11 @@ private struct stack free_stack = {			/* Entries free in hector */
 };
 
 /* Private function declarations */
-private EIF_OBJ hector_addr();		/* Maps an adress to an hector position */
-private char *hpop();				/* Pop a free entry off the free stack */
+rt_private EIF_OBJ hector_addr();		/* Maps an adress to an hector position */
+rt_private char *hpop();				/* Pop a free entry off the free stack */
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -73,7 +73,7 @@ private char *rcsid =
  * meaning anyway).
  */
 
-public char *efreeze(object)
+rt_public char *efreeze(object)
 EIF_OBJ object;
 {
 	/* This is the most costly routine of Hector. Given an object, we want to
@@ -142,7 +142,7 @@ EIF_OBJ object;
 	return root;						/* Freezing succeeded, new location */
 }
 
-public EIF_OBJ eadopt(object)
+rt_public EIF_OBJ eadopt(object)
 EIF_OBJ object;
 {
 	/* The C wants to keep an Eiffel reference. Very well, simply add an entry
@@ -154,7 +154,7 @@ EIF_OBJ object;
 
 }
 
-public EIF_OBJ ewean(object)
+rt_public EIF_OBJ ewean(object)
 EIF_OBJ object;
 {
 	/* The C wants to get rid of a reference which was previously kept. It may
@@ -175,7 +175,7 @@ EIF_OBJ object;
 	return ret;				/* return unprotected address */
 }
 
-public void eufreeze(object)
+rt_public void eufreeze(object)
 char *object;
 {
 	/* The C wants to get rid of a frozen reference which was previously
@@ -203,7 +203,7 @@ char *object;
  * Run-time entries
  */
 
-public EIF_OBJ hrecord(object)
+rt_public EIF_OBJ hrecord(object)
 char *object;
 {
 	/* This routine is called by the generated C code before passing references
@@ -229,7 +229,7 @@ char *object;
  * Low-level routines left visible to enable high wizardry--RAM.
  */
 
-public EIF_OBJ henter(object)
+rt_public EIF_OBJ henter(object)
 char *object;
 {
 	/* Enter 'object' into the hector indirection table and return its
@@ -253,7 +253,7 @@ char *object;
 	return (EIF_OBJ) address;			/* Location in Hector table */
 }
 
-public void hfree(address)
+rt_public void hfree(address)
 EIF_OBJ address;
 {
 	/* This routine frees an hector indirection pointer obtained through henter.
@@ -269,7 +269,7 @@ EIF_OBJ address;
 	}
 }
 
-public char *spfreeze(object)
+rt_public char *spfreeze(object)
 char *object;		/* Physical address */
 {
 	/* Given an special object, we want to release it from GC control and 
@@ -289,7 +289,7 @@ char *object;		/* Physical address */
 	return object;					/* Object's location did not change */
 }
 
-public void spufreeze(object)
+rt_public void spufreeze(object)
 char *object;		/* Physical address */
 {
 	/* We want to put back under GC control a frozen object previously
@@ -303,7 +303,7 @@ char *object;		/* Physical address */
  * Stack handling
  */
 
-private char *hpop()
+rt_private char *hpop()
 {
 	/* Pop an address of the free_stack. If the stack is empty, return a
 	 * null pointer. Otherwise the address points directly to a free entry
@@ -337,7 +337,7 @@ private char *hpop()
 	return *top;
 }
 
-private EIF_OBJ hector_addr(root)
+rt_private EIF_OBJ hector_addr(root)
 char *root;
 {
 	/* Given an object's address, look in the stack and find the hector address

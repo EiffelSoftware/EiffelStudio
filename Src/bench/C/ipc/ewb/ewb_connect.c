@@ -28,14 +28,14 @@
 #include <ctype.h>			/* For isdigit() */
 #include <stdio.h>			/* For error report */
 
-private char *name = "ewb";	/* Eiffel Work Bench -- FIXME */
+rt_private char *name = "ewb";	/* Eiffel Work Bench -- FIXME */
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-public int econnect(host)
+rt_public int econnect(host)
 char *host;			/* The host we wish to connect to */
 {
 	/* This routine requests a connection to the ISE daemon. It
@@ -137,7 +137,7 @@ char *host;			/* The host we wish to connect to */
 }
 
 
-public int deconnect(cs)
+rt_public int deconnect(cs)
 int cs;			/* The connected socket */
 {
 	/* Close the daemon connection. Returns -1 if error, 0 otherwise */

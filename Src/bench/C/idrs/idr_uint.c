@@ -22,7 +22,7 @@
 
 /*
 
-public bool_t idr_u_int(idrs, ip)
+rt_public bool_t idr_u_int(idrs, ip)
 IDR *idrs;
 unsigned int *ip;
 {
@@ -30,7 +30,7 @@ unsigned int *ip;
 }
 */
 
-public bool_t idr_u_int(idrs, ip)
+rt_public bool_t idr_u_int(idrs, ip)
 IDR *idrs;
 unsigned int *ip;
 {

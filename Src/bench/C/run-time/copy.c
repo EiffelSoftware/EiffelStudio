@@ -31,20 +31,20 @@
  * so that we know for instance where we put the clone for object X. It takes
  * a pointer and yields an EIF_OBJ.
  */
-private struct hash hclone;			/* Cloning hash table */
+rt_private struct hash hclone;			/* Cloning hash table */
 
 /* Function declarations */
-private void rdeepclone();			/* Recursive cloning */
-private void expanded_update();		/* Expanded reference update */
-private void efcopy();				/* Copy field by field */
-private char *duplicate();			/* Duplication with aging tests */
+rt_private void rdeepclone();			/* Recursive cloning */
+rt_private void expanded_update();		/* Expanded reference update */
+rt_private void efcopy();				/* Copy field by field */
+rt_private char *duplicate();			/* Duplication with aging tests */
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-public char *eclone(source)
+rt_public char *eclone(source)
 register1 char *source;
 {
 	/* Clone an of Eiffel object `source'. Assumes that source is not a
@@ -54,7 +54,7 @@ register1 char *source;
 	return emalloc(HEADER(source)->ov_flags & EO_TYPE);
 }
 
-public char *spclone(source)
+rt_public char *spclone(source)
 register5 char *source;
 {
 	/* Clone an of Eiffel object `source'. Assumes that source
@@ -86,7 +86,7 @@ register5 char *source;
 	return result;
 }
 
-public char *edclone(source)
+rt_public char *edclone(source)
 char *source;
 {
 	/* Recursive Eiffel clone. This function recursively clones the source
@@ -180,7 +180,7 @@ char *source;
 	return anchor.boot;			/* The cloned object tree */
 }
 
-public char *rtclone(source)
+rt_public char *rtclone(source)
 char *source;
 {
 	/* Clone source, copy the source in the clone and return the clone */
@@ -205,7 +205,7 @@ char *source;
 	return result;					/* Pointer to the cloned object */
 }
 
-private char *duplicate(source, enclosing, offset)
+rt_private char *duplicate(source, enclosing, offset)
 char *source;		/* Object to be duplicated */
 char *enclosing;	/* Object where attachment is made */
 int offset;			/* Offset within enclosing where attachment is made */
@@ -258,7 +258,7 @@ int offset;			/* Offset within enclosing where attachment is made */
 	return clone;
 }
 
-private void rdeepclone (source, enclosing, offset)
+rt_private void rdeepclone (source, enclosing, offset)
 char *source;			/* Source object to be cloned */
 char *enclosing;		/* Object receiving clone */
 int offset;				/* Offset within enclosing where attachment is made */
@@ -332,7 +332,7 @@ int offset;				/* Offset within enclosing where attachment is made */
 		expanded_update(source, clone, DEEP); /* Update intra expanded refs */
 }
 
-public void xcopy(source, target)
+rt_public void xcopy(source, target)
 char *source;
 char *target;
 {
@@ -346,7 +346,7 @@ char *target;
 	ecopy(source, target);
 }
 
-public void ecopy(source, target)
+rt_public void ecopy(source, target)
 register2 char *source;
 register1 char *target;
 {
@@ -417,7 +417,7 @@ register1 char *target;
 
 }
 
-public void spcopy(source, target)
+rt_public void spcopy(source, target)
 register2 char *source;
 register1 char *target;
 {
@@ -450,7 +450,7 @@ register1 char *target;
 		eremb(target);
 }
 
-private void efcopy(source, target, s_flags, t_flags, enclosing)
+rt_private void efcopy(source, target, s_flags, t_flags, enclosing)
 register2 char *source;
 register1 char *target;
 uint32 s_flags;
@@ -574,7 +574,7 @@ char *enclosing;		/* Enclosing target object (may differ from target) */
 	}	
 }
 
-private void expanded_update(source, target, shallow_or_deep)
+rt_private void expanded_update(source, target, shallow_or_deep)
 char *source, *target;
 int shallow_or_deep;
 {

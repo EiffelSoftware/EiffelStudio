@@ -95,22 +95,22 @@
 #define NAME_MAX	10			/* Maximum length for user/group name */
 #endif
 
-public char *file_open_mode();		/* Open file */
-private char *file_fopen();		/* Open file */
-private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
-private char *file_freopen();	/* Reopen file */
-private char *file_binary_fopen();		/* Open file */
-private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */
-private char *file_binary_freopen();	/* Reopen file */
-private void swallow_nl();		/* Swallow next character if new line */
+rt_public char *file_open_mode();		/* Open file */
+rt_private char *file_fopen();		/* Open file */
+rt_private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
+rt_private char *file_freopen();	/* Reopen file */
+rt_private char *file_binary_fopen();		/* Open file */
+rt_private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */
+rt_private char *file_binary_freopen();	/* Reopen file */
+rt_private void swallow_nl();		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
-private int utime();
+rt_private int utime();
 #endif
 
 #ifndef HAS_UNLINK
 #ifndef unlink
-private int unlink();
+rt_private int unlink();
 #endif
 #endif
 
@@ -119,7 +119,7 @@ private int unlink();
  * Opening a file.
  */
 
-public char *file_open_mode (how, mode)
+rt_public char *file_open_mode (how, mode)
 int how;
 char mode;
 {
@@ -147,7 +147,7 @@ char mode;
 	return type;
 }
 
-public EIF_POINTER file_open(name, how)
+rt_public EIF_POINTER file_open(name, how)
 char *name;
 int how;
 {
@@ -163,7 +163,7 @@ int how;
 #endif
 }
 
-public EIF_POINTER file_dopen(fd, how)
+rt_public EIF_POINTER file_dopen(fd, how)
 int fd;
 int how;
 {
@@ -179,7 +179,7 @@ int how;
 #endif
 }
 
-public EIF_POINTER file_reopen(name, how, old)
+rt_public EIF_POINTER file_reopen(name, how, old)
 char *name;
 int how;
 FILE *old;
@@ -199,7 +199,7 @@ FILE *old;
 #endif
 }
 
-public EIF_POINTER file_binary_open(name, how)
+rt_public EIF_POINTER file_binary_open(name, how)
 char *name;
 int how;
 {
@@ -212,7 +212,7 @@ int how;
 #endif
 }
 
-public EIF_POINTER file_binary_dopen(fd, how)
+rt_public EIF_POINTER file_binary_dopen(fd, how)
 int fd;
 int how;
 {
@@ -225,7 +225,7 @@ int how;
 #endif
 }
 
-public EIF_POINTER file_binary_reopen(name, how, old)
+rt_public EIF_POINTER file_binary_reopen(name, how, old)
 char *name;
 int how;
 FILE *old;
@@ -246,7 +246,7 @@ FILE *old;
 #include "windows.h"
 #endif
 
-private char *file_fopen(name, type)
+rt_private char *file_fopen(name, type)
 char *name;
 char *type;
 {
@@ -264,7 +264,7 @@ char *type;
 	return (char *) fp;
 }
 
-private char *file_fdopen(fd, type)
+rt_private char *file_fdopen(fd, type)
 int fd;
 char *type;
 {
@@ -282,7 +282,7 @@ char *type;
 	return (char *) fp;
 }
 
-private char *file_freopen(name, type, stream)
+rt_private char *file_freopen(name, type, stream)
 char *name;
 char *type;
 FILE *stream;
@@ -305,7 +305,7 @@ FILE *stream;
  * Dealing with a file.
  */
 
-public void file_close(fp)
+rt_public void file_close(fp)
 FILE *fp;
 {
 	/* Close the file */
@@ -315,7 +315,7 @@ FILE *fp;
 		esys();				/* Close failed, raise exception */
 }
 
-public void file_flush(fp)
+rt_public void file_flush(fp)
 FILE *fp;
 {
 	/* Flush data held in stdio buffer */
@@ -329,7 +329,7 @@ FILE *fp;
 		esys();				/* Flush failed, raise exception */
 }
 
-public  EIF_INTEGER file_size (fp)
+rt_public  EIF_INTEGER file_size (fp)
 FILE *fp;
 {
 	struct stat buf;
@@ -366,7 +366,7 @@ FILE *fp;
 	return (EIF_INTEGER) buf.st_size;
 }
 
-public EIF_BOOLEAN file_feof(fp)
+rt_public EIF_BOOLEAN file_feof(fp)
 FILE *fp;      
 {
 	return (EIF_BOOLEAN) (feof(fp) != 0);	/* End of file? */
@@ -376,7 +376,7 @@ FILE *fp;
  * I/O routines (output).
  */
 
-public void file_pi(f, number)
+rt_public void file_pi(f, number)
 FILE *f;
 EIF_INTEGER	number;
 {
@@ -387,7 +387,7 @@ EIF_INTEGER	number;
 		eio();
 }
 
-public void file_pr(f, number)
+rt_public void file_pr(f, number)
 FILE *f;
 EIF_REAL number;
 {
@@ -398,7 +398,7 @@ EIF_REAL number;
 		eio();
 }
 
-public void file_pib(f, number)
+rt_public void file_pib(f, number)
 FILE *f;
 EIF_INTEGER	number;
 {
@@ -409,7 +409,7 @@ EIF_INTEGER	number;
 		eio();
 }
 
-public void file_prb(f, number)
+rt_public void file_prb(f, number)
 FILE *f;
 EIF_REAL number;
 {
@@ -420,7 +420,7 @@ EIF_REAL number;
 		eio();
 }
 
-public void file_ps(f, str, len)
+rt_public void file_ps(f, str, len)
 FILE *f;
 char *str;
 EIF_INTEGER len;
@@ -435,7 +435,7 @@ EIF_INTEGER len;
 		eio();
 }
 
-public void file_pt_ps(f, str, len)
+rt_public void file_pt_ps(f, str, len)
 FILE *f;
 char *str;
 EIF_INTEGER len;
@@ -469,7 +469,7 @@ EIF_INTEGER len;
 #endif	
 }
 
-public void file_pc(f, c)
+rt_public void file_pc(f, c)
 FILE *f;
 char c;
 {
@@ -480,7 +480,7 @@ char c;
 		eio();
 }
 
-public void file_pd(f, val)
+rt_public void file_pd(f, val)
 FILE *f;
 EIF_DOUBLE val;
 {
@@ -491,7 +491,7 @@ EIF_DOUBLE val;
 		eio();
 }
 
-public void file_pdb(f, val)
+rt_public void file_pdb(f, val)
 FILE *f;
 EIF_DOUBLE val;
 {
@@ -502,7 +502,7 @@ EIF_DOUBLE val;
 		eio();
 }
 
-public void file_tnwl(f)
+rt_public void file_tnwl(f)
 FILE *f;
 {
 	/* Put new_line onto `f' */
@@ -512,7 +512,7 @@ FILE *f;
 		eio();
 }
 
-public void file_append(f, other, l)
+rt_public void file_append(f, other, l)
 FILE *f;			/* Target file */
 FILE *other;		/* Source file */
 EIF_INTEGER l;		/* Amount of bytes from `other' to be appended */
@@ -546,7 +546,7 @@ EIF_INTEGER l;		/* Amount of bytes from `other' to be appended */
  * I/O routines (input).
  */
 
-private void swallow_nl(f)
+rt_private void swallow_nl(f)
 FILE *f;
 {
 	/* Swallow next character if it is a new line */
@@ -568,7 +568,7 @@ FILE *f;
 	}
 }
 			
-public void file_tnil(f)
+rt_public void file_tnil(f)
 FILE *f;
 {
 	/* Read upto next input line */
@@ -582,7 +582,7 @@ FILE *f;
 		eio();
 }
 
-public EIF_INTEGER file_gi(f) 
+rt_public EIF_INTEGER file_gi(f) 
 FILE *f;     
 {             
 	/* Get an integer from `f' */
@@ -597,7 +597,7 @@ FILE *f;
 	return i;
 }
 
-public EIF_REAL file_gr(f) 
+rt_public EIF_REAL file_gr(f) 
 FILE *f;     
 {             
 	/* Get a real from `f' */
@@ -612,7 +612,7 @@ FILE *f;
 	return r;
 }
 
-public EIF_DOUBLE file_gd(f) 
+rt_public EIF_DOUBLE file_gd(f) 
 FILE *f;     
 {             
 	/* Get a double from `f' */
@@ -626,7 +626,7 @@ FILE *f;
 
 	return d;
 }
-public EIF_INTEGER file_gib(f) 
+rt_public EIF_INTEGER file_gib(f) 
 FILE *f;     
 {             
 	/* Get an integer from `f' */
@@ -640,7 +640,7 @@ FILE *f;
 	return i;
 }
 
-public EIF_REAL file_grb(f) 
+rt_public EIF_REAL file_grb(f) 
 FILE *f;     
 {             
 	/* Get a real from `f' */
@@ -654,7 +654,7 @@ FILE *f;
 	return r;
 }
 
-public EIF_DOUBLE file_gdb(f) 
+rt_public EIF_DOUBLE file_gdb(f) 
 FILE *f;     
 {             
 	/* Get a double from `f' */
@@ -668,7 +668,7 @@ FILE *f;
 	return d;
 }
 
-public EIF_CHARACTER file_gc(f)
+rt_public EIF_CHARACTER file_gc(f)
 FILE *f;
 {
 	/* Get a character from `f' */
@@ -683,7 +683,7 @@ FILE *f;
 	return (EIF_CHARACTER) c;
 }
 
-public EIF_INTEGER file_gs(f, s, bound, start)
+rt_public EIF_INTEGER file_gs(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -733,7 +733,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-public EIF_INTEGER file_gss(f, s, bound)
+rt_public EIF_INTEGER file_gss(f, s, bound)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -758,7 +758,7 @@ EIF_INTEGER bound;		/* Size of the target buffer */
 	return bound - amount - 1;	/* Number of characters read */
 }
 
-public EIF_INTEGER file_gw(f, s, bound, start)
+rt_public EIF_INTEGER file_gw(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -815,7 +815,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-public EIF_CHARACTER file_lh(f)
+rt_public EIF_CHARACTER file_lh(f)
 FILE *f;
 {
 	/* Look ahead one character. If EOF, return 0 */
@@ -837,7 +837,7 @@ FILE *f;
  * Accessing/changing inode.
  */
 
-public void file_chown(name, uid)
+rt_public void file_chown(name, uid)
 char *name;
 int uid;
 {
@@ -865,7 +865,7 @@ int uid;
 #endif
 }
 
-public void file_chgrp(name, gid)
+rt_public void file_chgrp(name, gid)
 char *name;
 int gid;
 {
@@ -893,7 +893,7 @@ int gid;
 #endif
 }
 
-public void file_stat (path, buf)
+rt_public void file_stat (path, buf)
 char *path;				/* Path name */
 struct stat *buf;		/* Structure to fill in */
 {
@@ -927,7 +927,7 @@ struct stat *buf;		/* Structure to fill in */
 	}
 }
 
-public EIF_INTEGER file_info (buf, op)
+rt_public EIF_INTEGER file_info (buf, op)
 struct stat *buf;
 int op;
 {
@@ -987,7 +987,7 @@ int op;
     }
 }
 
-public EIF_BOOLEAN file_eaccess(buf, op)
+rt_public EIF_BOOLEAN file_eaccess(buf, op)
 struct stat *buf;
 int op;
 {
@@ -1100,7 +1100,7 @@ int op;
 	}
 }
 
-public EIF_BOOLEAN file_access(name, op)
+rt_public EIF_BOOLEAN file_access(name, op)
 char *name;
 EIF_INTEGER op;
 {
@@ -1123,7 +1123,7 @@ EIF_INTEGER op;
 	}
 }
 
-public EIF_BOOLEAN file_exists(name)
+rt_public EIF_BOOLEAN file_exists(name)
 char *name;
 {
 	/* Test whether file exists or not by checking the return from the stat()
@@ -1145,7 +1145,7 @@ char *name;
  * Interfacing with file system.
  */
 
-public void file_rename(from, to)
+rt_public void file_rename(from, to)
 char *from;
 char *to;
 {
@@ -1170,7 +1170,7 @@ char *to;
 	}
 }
 
-public void file_link(from, to)
+rt_public void file_link(from, to)
 char *from;
 char *to;
 {
@@ -1193,7 +1193,7 @@ char *to;
 #endif
 }
 
-public void file_mkdir(path)
+rt_public void file_mkdir(path)
 char *path;
 {
 	/* Create directory `path' */
@@ -1232,7 +1232,7 @@ char *path;
 	}
 }
 
-public void file_unlink(name)
+rt_public void file_unlink(name)
 char *name;
 {
 	/* Delete file or directory `name' */
@@ -1258,7 +1258,7 @@ char *name;
 	}
 }
 
-public void file_touch(name)
+rt_public void file_touch(name)
 char *name;
 {
 	/* Touch file `name' by setting both access and modification time to the
@@ -1274,7 +1274,7 @@ char *name;
  * Inode manipulations.
  */
 
-public void file_utime(name, stamp, how)
+rt_public void file_utime(name, stamp, how)
 char *name;		/* File name */
 Time_t stamp;	/* Time stamp */
 int how;		/* How should the time stamp be applied */
@@ -1315,12 +1315,16 @@ int how;		/* How should the time stamp be applied */
 	}
 }
 
-public void file_perm(name, who, what, flag)
+rt_public void file_perm(name, who, what, flag)
 char *name;		/* The file name */
 char *who;		/* User (u), group (g) or other (o) */
 char *what;		/* Which permission to change: rwx, s (for ug) or t (for o) */
 int flag;		/* Add (1) or remove (0) permissions */
 {
+
+/* FIXME: allow several combinations in `who' */
+/* + add `a' ? */
+
 	/* Change permissions of file `name', using an interface like chmod(1).
 	 * The flag is true if permissions are to be added, 0 to remove them.
 	 */
@@ -1414,7 +1418,7 @@ int flag;		/* Add (1) or remove (0) permissions */
     file_chmod(name, fmode);
 }
 
-public void file_chmod(path, mode)
+rt_public void file_chmod(path, mode)
 char *path;
 int mode;
 {
@@ -1439,7 +1443,7 @@ int mode;
  * File cursor management.
  */
 
-public EIF_INTEGER file_tell(f)
+rt_public EIF_INTEGER file_tell(f)
 FILE *f;
 {
 	/* Current position within file */
@@ -1450,7 +1454,7 @@ FILE *f;
 	return (EIF_INTEGER) ftell(f);
 }
 
-public void file_go(f, pos)
+rt_public void file_go(f, pos)
 FILE *f;
 EIF_INTEGER pos;
 {
@@ -1462,7 +1466,7 @@ EIF_INTEGER pos;
 	clearerr(f);						/* Clear error status and EOF */
 }
 
-public void file_recede(f, pos)
+rt_public void file_recede(f, pos)
 FILE *f;
 EIF_INTEGER pos;
 {
@@ -1474,7 +1478,7 @@ EIF_INTEGER pos;
 	clearerr(f);						/* Clear error status and EOF */
 }
 
-public void file_move(f, pos)
+rt_public void file_move(f, pos)
 FILE *f;
 EIF_INTEGER pos;
 {
@@ -1490,7 +1494,7 @@ EIF_INTEGER pos;
  * Miscellaneous routines.
  */
 
-public EIF_INTEGER stat_size()
+rt_public EIF_INTEGER stat_size()
 {
 	/* Size of the stat structure. This is used by the Eiffel side to create
 	 * the area (special object) which will play the role of a stat buffer
@@ -1500,7 +1504,7 @@ public EIF_INTEGER stat_size()
 	return (EIF_INTEGER) sizeof(struct stat);
 }
 
-public EIF_BOOLEAN file_creatable(path)
+rt_public EIF_BOOLEAN file_creatable(path)
 char *path;
 {
 	/* Check whether the file `path' may be created: we need write permissions
@@ -1573,7 +1577,7 @@ char *path;
 #endif	/* vms */
 }
 
-public EIF_INTEGER file_fd(f)
+rt_public EIF_INTEGER file_fd(f)
 FILE *f;
 {
 	/* Return the associated file descriptor */
@@ -1584,7 +1588,7 @@ FILE *f;
 	return (EIF_INTEGER) fileno(f);	/* Might be an int */
 }
 
-public char *file_owner(uid)
+rt_public char *file_owner(uid)
 int uid;
 {
 	/* Return the Eiffel string filled in with the name associated with 'uid'
@@ -1608,7 +1612,7 @@ int uid;
 	return makestr(str, strlen(str));
 }
 
-public char *file_group(gid)
+rt_public char *file_group(gid)
 int gid;
 {
 	/* Return the Eiffel string filled in with the name associated with 'gid'
@@ -1659,7 +1663,7 @@ int gid;
  */
 
 #ifndef HAS_RENAME
-public int rename(from, to)
+rt_public int rename(from, to)
 char *from;		/* Orginal name */
 char *to;		/* Target name */
 {
@@ -1675,7 +1679,7 @@ char *to;		/* Target name */
 #endif
 
 #ifndef HAS_RMDIR
-public int rmdir(path)
+rt_public int rmdir(path)
 char *path;
 {
 #ifdef __VMS
@@ -1699,7 +1703,7 @@ char *path;
 #endif
 
 #ifndef HAS_MKDIR
-public int mkdir(path)
+rt_public int mkdir(path)
 char *path;
 {
 	/* Emulates the mkdir() system call */

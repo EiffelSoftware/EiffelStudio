@@ -21,12 +21,12 @@
 
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
 #ifdef HAS_GETTIMEOFDAY
-public void gettime(stamp)
+rt_public void gettime(stamp)
 Timeval *stamp;
 {
 	struct timezone tzp;
@@ -35,14 +35,14 @@ Timeval *stamp;
 }
 #else
 #ifdef HAS_FTIME
-public void gettime(stamp)
+rt_public void gettime(stamp)
 Timeval *stamp;
 {
 	ftime(stamp);
 }
 #else
 #ifdef HAS_TIME
-public void gettime(stamp)
+rt_public void gettime(stamp)
 Timeval *stamp;
 {
 	(void) time(stamp);
@@ -53,7 +53,7 @@ Timeval *stamp;
 
 
 #ifdef HAS_GETTIMEOFDAY
-public unsigned long elapsed(first, second)
+rt_public unsigned long elapsed(first, second)
 Timeval *first, *second;
 {
 	/* Computes the elapsed time in centiseconds between
@@ -69,7 +69,7 @@ Timeval *first, *second;
 }
 #else
 #ifdef HAS_FTIME
-public unsigned long elapsed(first, second)
+rt_public unsigned long elapsed(first, second)
 Timeval *first, *second;
 {
 	/* Computes the elapsed time in centiseconds between
@@ -85,7 +85,7 @@ Timeval *first, *second;
 }
 #else
 #ifdef HAS_TIME
-public unsigned long elapsed(first, second)
+rt_public unsigned long elapsed(first, second)
 Timeval *first, *second;
 {
 	/* Computes the elapsed time in centiseconds between
@@ -100,7 +100,7 @@ Timeval *first, *second;
 
 
 #ifdef HAS_GETRUSAGE
-public void getcputime(usertime, systime)
+rt_public void getcputime(usertime, systime)
 double *usertime, *systime;
 {
 	struct rusage usage;
@@ -114,7 +114,7 @@ double *usertime, *systime;
 }
 #else
 #ifdef HAS_TIMES
-public void getcputime(usertime, systime)
+rt_public void getcputime(usertime, systime)
 double *usertime, *systime;
 {
 	struct tms time;
@@ -124,7 +124,7 @@ double *usertime, *systime;
 	*systime = (double)time.tms_stime / (double)HZ;
 }
 #else
-public void getcputime(usertime, systime)
+rt_public void getcputime(usertime, systime)
 double *usertime, *systime;
 {
 	*usertime = 0;

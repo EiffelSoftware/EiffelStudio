@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_float(idrs, fp)
+rt_public bool_t idr_float(idrs, fp)
 IDR *idrs;
 float *fp;
 {

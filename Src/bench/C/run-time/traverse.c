@@ -51,29 +51,29 @@ struct mstack {
  * not as an array to avoid fragmentation when resizing (since we do not know
  * how many objects we will traverse)--RAM.
  */
-private struct mstack map_stack;	/* Map table */
+rt_private struct mstack map_stack;	/* Map table */
 
 /* The following panic message is issued whenever an inconsistency is detected
  * in the manipulation of the maping table stack (e.g. when we ask for an
  * object, there must be one and the stack must be empty at the end of the
  * cloning operation).
  */
-private char *botched = "mapping table botched";
+rt_private char *botched = "mapping table botched";
 
-shared long obj_nb;				/* Counter of marked objects */
+rt_shared long obj_nb;				/* Counter of marked objects */
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
 
 #ifdef DEBUG
-shared long nomark();
-private long chknomark();
+rt_shared long nomark();
+rt_private long chknomark();
 #endif
 
-shared void traversal(object, accounting)
+rt_shared void traversal(object, accounting)
 char *object;
 int accounting;
 {
@@ -189,7 +189,7 @@ int accounting;
  * Indirection table handling.
  */
 
-shared void map_start()
+rt_shared void map_start()
 {
 	/* Restart the maping table at the beginning. Note that we are using the
 	 * extra st_bot field which is added after all the fields from the stack
@@ -201,7 +201,7 @@ shared void map_start()
 	map_stack.st_end = map_stack.st_cur->sk_end;
 }
 
-shared EIF_OBJ map_next()
+rt_shared EIF_OBJ map_next()
 {
 	/* Return next object in the map table, via its indirection pointer. Note
 	 * that the stack structure is physically destroyed in the process, being
@@ -242,7 +242,7 @@ shared EIF_OBJ map_next()
 	return *item;
 }
 
-shared void map_reset(emergency)
+rt_shared void map_reset(emergency)
 int emergency;		/* Need to reset due to emergency (exception) */
 {
 	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
@@ -283,7 +283,7 @@ int emergency;		/* Need to reset due to emergency (exception) */
 
 #ifdef DEBUG
 
-shared long nomark(obj)
+rt_shared long nomark(obj)
 char *obj;
 {
 	/* Check if there is no object marked EO_STORE under `obj'. */
@@ -305,7 +305,7 @@ char *obj;
 	return result;
 }
 
-private long chknomark(object,tbl,object_count)
+rt_private long chknomark(object,tbl,object_count)
 char *object;
 struct htable *tbl;
 long object_count;

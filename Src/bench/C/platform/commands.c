@@ -32,8 +32,8 @@
 #include <os2.h>
 #endif
 
-private fnptr set_proc;
-private fnptr send_proc;
+rt_private fnptr set_proc;
+rt_private fnptr send_proc;
 
 extern EIF_INTEGER eif_system();
 

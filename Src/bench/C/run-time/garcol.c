@@ -41,14 +41,14 @@
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).
  */
-shared struct gacinfo g_data = {			/* Global status */
+rt_shared struct gacinfo g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
 	0L,			/* mem_used */
 	0,			/* gc_to */
 	(char) 0,	/* status */
 };
-shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
+rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
 		0L,		/* mem_collect */		 0L,		/* mem_avg */
 		0L,		/* real_avg */			 0L,		/* real_time */
@@ -75,35 +75,35 @@ shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * the garbage collector or the memory management routines.
  */
 
-shared struct stack loc_stack = {			/* Local indirection stack */
+rt_shared struct stack loc_stack = {			/* Local indirection stack */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-public struct stack loc_set = {				/* Local variable stack */
+rt_public struct stack loc_set = {				/* Local variable stack */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-private struct stack rem_set = {			/* Remembered set */
+rt_private struct stack rem_set = {			/* Remembered set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-shared struct stack moved_set = {			/* Moved objects set */
+rt_shared struct stack moved_set = {			/* Moved objects set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-public struct stack once_set = {			/* Once functions */
+rt_public struct stack once_set = {			/* Once functions */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -116,16 +116,16 @@ public struct stack once_set = {			/* Once functions */
  * threshold for the next step (generation collcetion). The size_table array
  * is used by the generation scavenging algorithm.
  */
-private uint32 age_table[TENURE_MAX];		/* Number of objects/age */
-private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
-shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
-public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
-public int gc_running = 0;			/* Is the GC running */
-public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */
-public int gc_ran = 0;				/* Has the GC been running */
+rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */
+rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
+rt_shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
+rt_public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
+rt_public int gc_running = 0;			/* Is the GC running */
+rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */
+rt_public int gc_ran = 0;				/* Has the GC been running */
 
 #if defined __VMS || defined EIF_OS2
-public int r_fides;	/* moved here from retrieve.c */
+rt_public int r_fides;	/* moved here from retrieve.c */
 	/* Was getting a link warning that it couldn't find this symbol.
 	 * Under vms the linker won't include the symbol if at least one
 	 * routine from the module isn't used.
@@ -136,91 +136,91 @@ public int r_fides;	/* moved here from retrieve.c */
  * space more than once: for each spoilt chunk we find, we have to allocate a
  * new 'to' zone at the next partial scavenge.
  */
-private struct s_table *spoilt_tbl = (struct s_table *) 0;
+rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;
 
 /* Zones used for partial scavenging */
-shared struct sc_zone ps_from;		/* From zone */
-shared struct sc_zone ps_to;		/* To zone */
-shared struct chunk *last_from =
+rt_shared struct sc_zone ps_from;		/* From zone */
+rt_shared struct sc_zone ps_to;		/* To zone */
+rt_shared struct chunk *last_from =
 	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */
 
-public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */
-public int gc_monitor = 0;			/* Disable GC time-monitoring by default */
-public char *root_obj = (char *) 0;	/* Address of the 'root' object */
+rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */
+rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */
+rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */
 
 /* Automatic invokations of GC */
-public int acollect();				/* Collection based on threshold */
-public int scollect();				/* Collect with statistics */
+rt_public int acollect();				/* Collection based on threshold */
+rt_public int scollect();				/* Collect with statistics */
 
 /* Stopping/restarting the GC */
-public void gc_stop();				/* Stop the garbage collector */
-public void gc_run();				/* Restart the garbage collector */
+rt_public void gc_stop();				/* Stop the garbage collector */
+rt_public void gc_run();				/* Restart the garbage collector */
 
 /* Mark and sweep */
-public void mksp();					/* The mark and sweep entry point */
-private int mark_and_sweep();		/* Mark and sweep algorithm */
-public void reclaim();				/* Reclaim all the objects */
-private void full_mark();			/* Marks all reachable objects */
-private void full_sweep();			/* Removes all un-marked objects */
-private char *recursive_mark();		/* Recursively mark reachable objects */
-private void run_collector();		/* Wrapper for full collections */
-private void clean_up();			/* After collection, time to clean up */
+rt_public void mksp();					/* The mark and sweep entry point */
+rt_private int mark_and_sweep();		/* Mark and sweep algorithm */
+rt_public void reclaim();				/* Reclaim all the objects */
+rt_private void full_mark();			/* Marks all reachable objects */
+rt_private void full_sweep();			/* Removes all un-marked objects */
+rt_private char *recursive_mark();		/* Recursively mark reachable objects */
+rt_private void run_collector();		/* Wrapper for full collections */
+rt_private void clean_up();			/* After collection, time to clean up */
 
 /* Stack markers */
-private void mark_simple_stack();	/* Marks a collector's stack */
-private void mark_stack();			/* Marks a collector's stack */
-private void update_object_id_stack(); /* Update the object id stack */
+rt_private void mark_simple_stack();	/* Marks a collector's stack */
+rt_private void mark_stack();			/* Marks a collector's stack */
+rt_private void update_object_id_stack(); /* Update the object id stack */
 
 /* Storage compation reclaimer */
-public void plsc();					/* Storage compaction reclaimer entry */
-private int partial_scavenging();	/* The partial scavenging algorithm */
-private void run_plsc();			/* Run the partial scavenging algorithm */
-shared void urgent_plsc();			/* Partial scavenge with given local root */
-private void init_plsc();			/* Initialize the scavenging process */
-private void clean_zones();			/* Clean up scavenge zones */
-private char *scavenge();			/* Scavenge an object */
-private void clean_space();			/* Sweep forwarded objects */
-private void full_update();			/* Update scavenge-related structures */
-private void split_to_block();		/* Keep only needed space in 'to' block */
-private int sweep_from_space();		/* Clean space after the scavenging */
-private int find_scavenge_spaces();	/* Find a pair of scavenging spaces */
-private struct chunk *find_std_chunk();	/* Look for a standard-size chunk */
-private void find_to_space();		/* Find standard-size 'to' chunks */
+rt_public void plsc();					/* Storage compaction reclaimer entry */
+rt_private int partial_scavenging();	/* The partial scavenging algorithm */
+rt_private void run_plsc();			/* Run the partial scavenging algorithm */
+rt_shared void urgent_plsc();			/* Partial scavenge with given local root */
+rt_private void init_plsc();			/* Initialize the scavenging process */
+rt_private void clean_zones();			/* Clean up scavenge zones */
+rt_private char *scavenge();			/* Scavenge an object */
+rt_private void clean_space();			/* Sweep forwarded objects */
+rt_private void full_update();			/* Update scavenge-related structures */
+rt_private void split_to_block();		/* Keep only needed space in 'to' block */
+rt_private int sweep_from_space();		/* Clean space after the scavenging */
+rt_private int find_scavenge_spaces();	/* Find a pair of scavenging spaces */
+rt_private struct chunk *find_std_chunk();	/* Look for a standard-size chunk */
+rt_private void find_to_space();		/* Find standard-size 'to' chunks */
 
 /* Generation based collector */
-public int collect();				/* Generation based collector main entry */
-private int generational_collect();	/* The generational collection algorithm */
-public void eremb();				/* Remember an old object */
-public void erembq();				/* Quick version (no GC call) of eremb */
-private void mark_new_generation();	/* The name says it all, I think--RAM */
-private char *mark_expanded();		/* Marks expanded reference in stack */
-private void update_moved_set();	/* Update the moved set (young objects) */
-private void update_rem_set();		/* Update remembered set */
-shared int refers_new_object();		/* Does an object refers to young ones ? */
-private char *generation_mark();	/* A recursive mark with on-the-fly copy */
-private char *gscavenge();			/* Generation scavenging on an object */
-private void swap_gen_zones();		/* Exchange 'from' and 'to' zones */
-shared char *to_chunk();			/* Address of the chunk holding 'to' */
+rt_public int collect();				/* Generation based collector main entry */
+rt_private int generational_collect();	/* The generational collection algorithm */
+rt_public void eremb();				/* Remember an old object */
+rt_public void erembq();				/* Quick version (no GC call) of eremb */
+rt_private void mark_new_generation();	/* The name says it all, I think--RAM */
+rt_private char *mark_expanded();		/* Marks expanded reference in stack */
+rt_private void update_moved_set();	/* Update the moved set (young objects) */
+rt_private void update_rem_set();		/* Update remembered set */
+rt_shared int refers_new_object();		/* Does an object refers to young ones ? */
+rt_private char *generation_mark();	/* A recursive mark with on-the-fly copy */
+rt_private char *gscavenge();			/* Generation scavenging on an object */
+rt_private void swap_gen_zones();		/* Exchange 'from' and 'to' zones */
+rt_shared char *to_chunk();			/* Address of the chunk holding 'to' */
 
 /* Dealing with dispose routine */
-shared void gfree();				/* Free object, eventually call dispose */
+rt_shared void gfree();				/* Free object, eventually call dispose */
 
 /* Stack handling routines */
-shared int epush();					/* Push value on stack */
-shared char **st_alloc();			/* Creates an empty stack */
-shared void st_truncate();			/* Truncate stack if necessary */
-shared void st_wipe_out();			/* Remove unneeded chunk from stack */
-private int st_extend();			/* Extends size of stack */
-private int reset();				/* Reset stack to its initial state */
+rt_shared int epush();					/* Push value on stack */
+rt_shared char **st_alloc();			/* Creates an empty stack */
+rt_shared void st_truncate();			/* Truncate stack if necessary */
+rt_shared void st_wipe_out();			/* Remove unneeded chunk from stack */
+rt_private int st_extend();			/* Extends size of stack */
+rt_private int reset();				/* Reset stack to its initial state */
 
 #ifdef TEST
-private int cc_for_speed = 1;			/* Priority to speed or memory? */
+rt_private int cc_for_speed = 1;			/* Priority to speed or memory? */
 #endif
 
-private void mark_ex_stack();		/* Marks the exception stacks */
+rt_private void mark_ex_stack();		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
-private void mark_op_stack();		/* Marks operational stack */
+rt_private void mark_op_stack();		/* Marks operational stack */
 
 #define DISP(x,y) call_disp(x,y)
 
@@ -262,7 +262,7 @@ static int fdone = 0;	/* Tracing flag to only get the last full collect */
 
 /* Function(s) used only in DEBUG mode */
 #ifdef DEBUG
-private int nb_items();				/* Number of items held in a stack */
+rt_private int nb_items();				/* Number of items held in a stack */
 #ifndef MEMCHK
 #define memck(x)	;				/* No memory checking compiled */
 #endif
@@ -278,7 +278,7 @@ private int nb_items();				/* Number of items held in a stack */
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -286,7 +286,7 @@ private char *rcsid =
  * Automatic collection and statistics routines.
  */
 
-public int acollect()
+rt_public int acollect()
 {
 	/* This is the main dispatcher for garbage collection. Calls are based on
 	 * a threshold th_alloc. Statistics are gathered while performing
@@ -372,7 +372,7 @@ public int acollect()
 	return status;		/* Collection done, forward status */
 }
 
-public int scollect(gc_func, i)
+rt_public int scollect(gc_func, i)
 int (*gc_func)();		/* The collection function to be called */
 int i;					/* Index in g_stat array where statistics are kept */
 {
@@ -559,7 +559,7 @@ int i;					/* Index in g_stat array where statistics are kept */
  * Garbage collector stop/run
  */
 
-public void gc_stop()
+rt_public void gc_stop()
 {
 	/* Stop the GC -- this should be used in case of emergency only, i.e.
 	 * in an exception handler or in a time-critical routine.
@@ -572,7 +572,7 @@ public void gc_stop()
 		g_data.status |= GC_STOP;		/* Stop GC */
 }
 
-public void gc_run()
+rt_public void gc_run()
 {
 	/* Restart the GC -- the garbage collector should always run excepted in
 	 * some critical operations, which should be rare. Anyway, after having
@@ -591,7 +591,7 @@ public void gc_run()
  * Mark and sweep garbage collector.
  */
 
-public void mksp()
+rt_public void mksp()
 {
 	/* The mark and sweep entry. The scollect routine is called in order to
 	 * maintain statistics on every call.
@@ -624,7 +624,7 @@ public void mksp()
 		}
 }
 
-private int mark_and_sweep()
+rt_private int mark_and_sweep()
 {
 	/* Uses the mark and sweep algorithm to collect garbage in chunk
 	 * space. This is a full-stop algorithm (i.e. non incremental).
@@ -648,7 +648,7 @@ private int mark_and_sweep()
 	return 0;
 }
 
-private void clean_up()
+rt_private void clean_up()
 {
 	/* After a collection cycle, we may restore attempt to release some core,
 	 * then dispatch signals which may have been stacked while in the GC process
@@ -659,7 +659,7 @@ private void clean_up()
 	SIGRESUME;				/* Dispatch any signal which has been queued */
 }
 
-public void reclaim()
+rt_public void reclaim()
 {
 	/* At the end of the process's lifetime, all the objects need to be
 	 * reclaimed, so that all the "dispose" procedures are called to perform
@@ -706,7 +706,7 @@ public void reclaim()
 #endif
 }
 
-private void run_collector()
+rt_private void run_collector()
 {
 	/* Run the mark and sweep collectors, assuming the state is already set.
 	 * Provision is made for generation scavenging, as this zone cannot be
@@ -753,7 +753,7 @@ private void run_collector()
 #endif
 }
 
-private void full_mark()
+rt_private void full_mark()
 {
 	/* Mark phase -- Starting from the root object and the subsidiary
 	 * roots in the local stack, we recursively mark all the reachable
@@ -823,7 +823,7 @@ private void full_mark()
 #endif
 }
 
-private void mark_simple_stack(stk, marker, move)
+rt_private void mark_simple_stack(stk, marker, move)
 register5 struct stack *stk;		/* The stack which is to be marked */
 register4 char *(*marker)();		/* The routine used to mark objects */
 register6 int move;					/* Are the objects expected to move? */
@@ -898,7 +898,7 @@ register6 int move;					/* Are the objects expected to move? */
 	}
 }
 
-private void update_object_id_stack()
+rt_private void update_object_id_stack()
 {
 	/* Loop over the specified stack to update the objects after a move.
 	 * Stack holds direct references to objects.
@@ -971,7 +971,7 @@ private void update_object_id_stack()
 	}
 }
 
-private void mark_stack(stk, marker, move)
+rt_private void mark_stack(stk, marker, move)
 register5 struct stack *stk;		/* The stack which is to be marked */
 register4 char *(*marker)();		/* The routine used to mark objects */
 register6 int move;					/* Are the objects expected to move? */
@@ -1041,7 +1041,7 @@ register6 int move;					/* Are the objects expected to move? */
 	}
 }
 
-private char *mark_expanded(root, marker)
+rt_private char *mark_expanded(root, marker)
 char *root;				/* Expanded reference to be marked */
 char *(*marker)();		/* The routine used to mark objects */
 {
@@ -1081,7 +1081,7 @@ char *(*marker)();		/* The routine used to mark objects */
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-private void mark_op_stack(marker, move)
+rt_private void mark_op_stack(marker, move)
 register4 char *(*marker)();		/* The routine used to mark objects */
 register5 int move;					/* Are the objects expected to move? */
 {
@@ -1233,7 +1233,7 @@ register5 int move;					/* Are the objects expected to move? */
 #endif
 /* End of workbench-specific marking functions */
 
-private void mark_ex_stack(stk, marker, move)
+rt_private void mark_ex_stack(stk, marker, move)
 register5 struct xstack *stk;		/* The stack which is to be marked */
 register4 char *(*marker)();		/* The routine used to mark objects */
 register6 int move;					/* Are the objects expected to move? */
@@ -1295,7 +1295,7 @@ register6 int move;					/* Are the objects expected to move? */
 	}
 }
 
-private char *recursive_mark(root)
+rt_private char *recursive_mark(root)
 char *root;
 {
 	/* Recursively mark all the objects referenced by the root object.
@@ -1494,7 +1494,7 @@ marked:		/* I need this goto label to avoid code duplication */
 	return root;	/* Address of possibly moved object */
 }
 
-private void full_sweep()
+rt_private void full_sweep()
 {
 	/* Sweep phase -- All the reachable objects have been marked, so
 	 * all we have to do is scan all the objects and look for garbage.
@@ -1610,7 +1610,7 @@ private void full_sweep()
 	/* Xavier */
 }
 
-private void full_update()
+rt_private void full_update()
 {
 	/* After a mark and sweep, eventually mixed with scavenging, the data
 	 * structures which are used to describe the generations have to be
@@ -1630,7 +1630,7 @@ private void full_update()
  * This can also be qualified as a storage compaction garbage collector.
  */
 
-public void plsc()
+rt_public void plsc()
 {
 	/* The partial scavenging entry point, which is monitored for statistics
 	 * updating (available to the user via MEMORY).
@@ -1663,7 +1663,7 @@ public void plsc()
 		}
 }
 
-private int partial_scavenging()
+rt_private int partial_scavenging()
 {
 	/* Partial Scavenging -- Implementation of the INRIA algorithm
 	 * Lang-Dupont 1987. The idea is to do a full mark and sweep for
@@ -1682,7 +1682,7 @@ private int partial_scavenging()
 	return 0;
 }
 
-private void run_plsc()
+rt_private void run_plsc()
 {
 	/* This routine actually invokes the partial scavenging and takes care of
 	 * restoring signals at the end and dispatching signals if necessary.
@@ -1693,7 +1693,7 @@ private void run_plsc()
 	clean_up();				/* Dispatch signals, release core, etc... */
 }
 
-shared void urgent_plsc(object)
+rt_shared void urgent_plsc(object)
 char **object;
 {
 	/* Perform an urgent partial scavenging, taking 'object' as a pointer
@@ -1737,7 +1737,7 @@ char **object;
 		}
 }
 
-private void clean_zones()
+rt_private void clean_zones()
 {
 	/* This routine is called after a partial scavenging has been done.
 	 * Run over the 'from' field, coalescing all the Eiffel block we find
@@ -1844,7 +1844,7 @@ private void clean_zones()
 	ps_to.sc_arena = (char *) 0;		/* Signals: no valid 'to' space */
 }
 
-private void init_plsc()
+rt_private void init_plsc()
 {
 	/* Set a correct status for the garbage collector, so that the recursive
 	 * mark process knows about what we are doing. If we are unable to get
@@ -1874,7 +1874,7 @@ private void init_plsc()
 	}
 }
 
-private void split_to_block()
+rt_private void split_to_block()
 {
 	/* The 'to' space may well not be full, and the free part at the end has
 	 * to be returned to the free list.
@@ -1942,7 +1942,7 @@ private void split_to_block()
 #endif
 }
 
-private int sweep_from_space()
+rt_private int sweep_from_space()
 {
 	/* After a scavenging, the 'ps_from' zone has to be cleaned up. If by
 	 * chance the whole zone is free, it will be kept for the next 'to' zone,
@@ -2208,7 +2208,7 @@ private int sweep_from_space()
 	/* NOTREACHED */
 }
 
-private int find_scavenge_spaces()
+rt_private int find_scavenge_spaces()
 {
 	/* Look for a 'from' and a 'to' space for partial scavenging. Usually, the
 	 * Eiffel memory is viewed as a cyclic memory, where the old 'from' becomes
@@ -2333,7 +2333,7 @@ private int find_scavenge_spaces()
 	return 0;		/* Ok, we got a 'to' space */
 }
 
-private struct chunk *find_std_chunk(start)
+rt_private struct chunk *find_std_chunk(start)
 register1 struct chunk *start;
 {
 	/* Find a standard chunk (i.e. one whose size is CHUNK), starting at the
@@ -2371,7 +2371,7 @@ register1 struct chunk *start;
 	return (struct chunk *) 0;		/* No standard size chunk found */
 }
 
-private void find_to_space(to)
+rt_private void find_to_space(to)
 struct sc_zone *to;		/* The zone structure we want to fill in */
 {
 	/* Look for a suitable space which could be used by partial scanvenging
@@ -2440,7 +2440,7 @@ struct sc_zone *to;		/* The zone structure we want to fill in */
 #endif
 }
 
-shared char *to_chunk()
+rt_shared char *to_chunk()
 {
 	/* Return the address of the 'to' chunk used by partial scavenging. The
 	 * structure 'ps_to' is private but malloc needs the address when it
@@ -2454,7 +2454,7 @@ shared char *to_chunk()
 	return ps_to.sc_arena;
 }
 
-private char *scavenge(root, to)
+rt_private char *scavenge(root, to)
 register1 char *root;
 struct sc_zone *to;
 {
@@ -2550,7 +2550,7 @@ struct sc_zone *to;
  * for both generation collection and generation scavenging.
  */
 
-public int collect()
+rt_public int collect()
 {
 	/* The generational collector entry point, with statistics updating. The
 	 * time spent in the algorithm is monitored by scollect and accessible
@@ -2584,7 +2584,7 @@ public int collect()
 	return result;
 }
 
-private int generational_collect()
+rt_private int generational_collect()
 {
 	/* Generation collector -- The new generation is completely collected
 	 * and survival objects are tenured (i.e. promoted to the old generation).
@@ -2693,7 +2693,7 @@ private int generational_collect()
 	return (gen_scavenge & GS_STOP) ? -1 : 0;	/* Signals error if stopped */
 }
 
-private void mark_new_generation()
+rt_private void mark_new_generation()
 {
 	/* Genration mark phase -- All the young objects which are reachable
 	 * from the remembered set are alive. Old objects have reached immortality,
@@ -2778,7 +2778,7 @@ private void mark_new_generation()
 #endif
 }
 
-private char *generation_mark(root)
+rt_private char *generation_mark(root)
 char *root;
 {
 	/* This function is the same as recursive_mark() but slightly different :-).
@@ -2941,7 +2941,7 @@ char *root;
 	return root;	/* Address of possibly moved object */
 }
 
-private char *gscavenge(root)
+rt_private char *gscavenge(root)
 char *root;
 {
 	/* Generation scavenging of 'root', with tenuring done on the fly. The
@@ -3099,7 +3099,7 @@ char *root;
 	/* NOTREACHED */
 }
 
-private void update_moved_set()
+rt_private void update_moved_set()
 {
 	/* Update the moved set. This routine is called to throw away from the moved
 	 * set all the dead objects.
@@ -3223,7 +3223,7 @@ private void update_moved_set()
 	st_truncate(&moved_set);
 }
 
-private void update_rem_set()
+rt_private void update_rem_set()
 {
 	/* Update the remembered set. This is an iterative process: for each item,
 	 * we look for references to new objects. If there are none, the object is
@@ -3365,7 +3365,7 @@ private void update_rem_set()
 	st_truncate(&rem_set);
 }
 
-shared int refers_new_object(object)
+rt_shared int refers_new_object(object)
 register1 char *object;
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
@@ -3421,7 +3421,7 @@ register1 char *object;
 	return 0;		/* Object does not reference any new object */
 }
 
-private void swap_gen_zones()
+rt_private void swap_gen_zones()
 {
 	/* After a generation scavenging, swap the 'from' and 'to' zones. There is
 	 * no need to loop over the old 'from' and dispose dead objects: no objects
@@ -3452,7 +3452,7 @@ private void swap_gen_zones()
 	sc_to.sc_top = sc_to.sc_arena;	/* Make sure 'to' is empty */
 }
 
-public void eremb(obj)
+rt_public void eremb(obj)
 char *obj;
 {
 	/* Remembers the object 'obj' by pushing it in the remembered set.
@@ -3481,7 +3481,7 @@ char *obj;
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark it as remembered */
 }
 
-public void erembq(obj)
+rt_public void erembq(obj)
 char *obj;
 {
 	/* Quick version of eremb(), but without any call to the GC. This is
@@ -3505,7 +3505,7 @@ char *obj;
  * 'dispose' routine--RAM.
  */
 
-shared void gfree(zone)
+rt_shared void gfree(zone)
 register1 union overhead *zone;		/* Pointer on malloc info zone */
 {
 	/* The entry Dispose(type) holds a pointer to the dispose function to
@@ -3565,7 +3565,7 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
  * following to properly record itself.
  */
 
-public void onceset(ptr)
+rt_public void onceset(ptr)
 register4 char **ptr;
 {
 	/* Record result of once functions onto the once_set stack, so that the
@@ -3590,7 +3590,7 @@ register4 char **ptr;
  * structure 'stack' describes the whole data structure completely.
  */
 
-shared int epush(stk, value)
+rt_shared int epush(stk, value)
 register1 struct stack *stk;		/* The stack */
 register2 char *value;				/* Value to be pushed */
 {
@@ -3639,7 +3639,7 @@ register2 char *value;				/* Value to be pushed */
 	return 0;		/* Value was successfully pushed on the stack */
 }
 
-shared char **st_alloc(stk, size)
+rt_shared char **st_alloc(stk, size)
 register1 struct stack *stk;		/* The stack */
 register2 int size;					/* Initial size */
 {
@@ -3668,7 +3668,7 @@ register2 int size;					/* Initial size */
 	return arena;			/* Stack allocated */
 }
 
-private int st_extend(stk, size)
+rt_private int st_extend(stk, size)
 register1 struct stack *stk;		/* The stack */
 register2 int size;					/* Size of new chunk to be added */
 {
@@ -3699,7 +3699,7 @@ register2 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-shared void st_truncate(stk)
+rt_shared void st_truncate(stk)
 register1 struct stack *stk;		/* The stack to be truncated */
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
@@ -3726,7 +3726,7 @@ register1 struct stack *stk;		/* The stack to be truncated */
 	}
 }
 
-shared void st_wipe_out(chunk)
+rt_shared void st_wipe_out(chunk)
 register struct stchunk *chunk;		/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
@@ -3747,7 +3747,7 @@ register struct stchunk *chunk;		/* First chunk to be freed */
 }
 
 #ifdef DEBUG
-private int reset(stk)
+rt_private int reset(stk)
 register1 struct stack *stk;		/* The stack */
 {
 	/* Reset the stack 'stk' to its minimal state and disgard all its
@@ -3766,7 +3766,7 @@ register1 struct stack *stk;		/* The stack */
 	bzero(stk, sizeof(struct stack));	/* Reset to null pointers ? -- RAM */
 }
 
-private int nb_items(stk)
+rt_private int nb_items(stk)
 register1 struct stack *stk;		/* The stack */
 {
 	/* Gives the number of items held in the stack */
@@ -3802,11 +3802,11 @@ register1 struct stack *stk;		/* The stack */
 #include "timer.c"
 
 
-private void run_tests();		/* Run all the garbage collector's tests */
-private void scavenge_trace();	/* Statistics on the scavenge space */
-private void run_gc();			/* Run garbage collector with statistics */
+rt_private void run_tests();		/* Run all the garbage collector's tests */
+rt_private void scavenge_trace();	/* Statistics on the scavenge space */
+rt_private void run_gc();			/* Run garbage collector with statistics */
 
-public main()
+rt_public main()
 {
 	/* Tests for the garbage collector */
 
@@ -3830,7 +3830,7 @@ public main()
 	exit(0);
 }
 
-private void run_tests()
+rt_private void run_tests()
 {
 	/* Run all garbage collector's tests */
 
@@ -3877,7 +3877,7 @@ private void run_tests()
 	scavenge_trace();
 }
 
-private void scavenge_trace()
+rt_private void scavenge_trace()
 {
 	printf(">>> Scavenging flags: ");
 	printf("%s%s%s%s\n",
@@ -3890,7 +3890,7 @@ private void scavenge_trace()
 	printf(">>> Moved set: %d\n", nb_items(&moved_set));
 }
 
-private void run_gc()
+rt_private void run_gc()
 {
 	scollect(mark_and_sweep, GST_PART);
 	printf(">>> GC status:\n");
@@ -3906,7 +3906,7 @@ private void run_gc()
 }
 
 /* Functions not provided here */
-public void eraise(tag, val)
+rt_public void eraise(tag, val)
 char *tag;
 int val;
 {
@@ -3914,12 +3914,12 @@ int val;
 	exit(1);
 }
 
-public void enomem()
+rt_public void enomem()
 {
 	eraise("Out of memory", 0);
 }
 
-public void panic(s)
+rt_public void panic(s)
 char *s;
 {
 	printf("PANIC: %s\n", s);

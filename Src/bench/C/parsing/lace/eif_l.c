@@ -1526,12 +1526,12 @@ void *ptr;
 # line 46 "eif_l.l"
 
 
-public int zzwrap()
+rt_public int zzwrap()
 {
 	return 1;
 }
 
-public int init_lace()
+rt_public int init_lace()
 {
 	/* This function must be called prior any invocation of the lexical
 	 * analyzer. Its purpose is to put the automaton in the known INIT

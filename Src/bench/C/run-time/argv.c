@@ -23,17 +23,17 @@
 #include <strings.h>
 #endif
 
-public int eif_argc;			/* Initial argc value (argument count) */
-public char **eif_argv;			/* Copy of initial argv (argument vector) */
+rt_public int eif_argc;			/* Initial argc value (argument count) */
+rt_public char **eif_argv;			/* Copy of initial argv (argument vector) */
 
-private char *error = "can't set argument vector";
+rt_private char *error = "can't set argument vector";
 
-public int arg_number()
+rt_public int arg_number()
 {
 	return eif_argc;
 }
 
-public void arg_init(eargc, eargv)
+rt_public void arg_init(eargc, eargv)
 int eargc;
 char **eargv;
 {
@@ -59,7 +59,7 @@ char **eargv;
 	eif_argv[eargc] = (char *)0;
 }
 
-public char *arg_option(num)
+rt_public char *arg_option(num)
 int num;
 {
 	/* Build up Eiffel string associated with the corresponding argument which

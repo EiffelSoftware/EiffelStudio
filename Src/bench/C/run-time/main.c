@@ -61,49 +61,49 @@
 #ifdef EIF_WINDOWS
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
-public int cc_for_speed = 0;			/* Fast memory allocation */
+rt_public int cc_for_speed = 0;			/* Fast memory allocation */
 #else
-public int cc_for_speed = 1;			/* Fast memory allocation */
+rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif
 
-public char *ename;						/* Eiffel program's name */
-public int scount;						/* Number of dynamic types */
+rt_public char *ename;						/* Eiffel program's name */
+rt_public int scount;						/* Number of dynamic types */
 
-public int in_assertion = 0;			/* Is an assertion being evaluated ? */
+rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
 #ifdef WORKBENCH
-public int ccount;						/* Number of classes */
-public int fcount;						/* Number of frozen dynamic types */
-public struct cnode *esystem;			/* Updated Eiffel system */
-public struct conform **co_table;		/* Updated Eiffel conformance table */
-public int32 **ecall;					/* Routine id arrays */
-public struct rout_info *eorg_table;	/* Routine origin/offset table */
-public long dcount;						/* Count of `dispatch' */
-public uint32 *dispatch;				/* Update dispatch table */
-public uint32 zeroc;					/* Frozen level */
-public char **melt;						/* Byte code array */
-public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
-public struct eif_opt *eoption;			/* Option table */
-public struct p_interface *pattern;		/* Pattern table */
+rt_public int ccount;						/* Number of classes */
+rt_public int fcount;						/* Number of frozen dynamic types */
+rt_public struct cnode *esystem;			/* Updated Eiffel system */
+rt_public struct conform **co_table;		/* Updated Eiffel conformance table */
+rt_public int32 **ecall;					/* Routine id arrays */
+rt_public struct rout_info *eorg_table;	/* Routine origin/offset table */
+rt_public long dcount;						/* Count of `dispatch' */
+rt_public uint32 *dispatch;				/* Update dispatch table */
+rt_public uint32 zeroc;					/* Frozen level */
+rt_public char **melt;						/* Byte code array */
+rt_public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
+rt_public struct eif_opt *eoption;			/* Option table */
+rt_public struct p_interface *pattern;		/* Pattern table */
 
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
-public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
-public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
-public long *esize;						/* Size of objects (updated by DLE) */
-public long *nbref;						/* Gives # of references (updated by DLE) */
+rt_public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
+rt_public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
+rt_public long *esize;						/* Size of objects (updated by DLE) */
+rt_public long *nbref;						/* Gives # of references (updated by DLE) */
 
 /*#define exvec() exft()					/* No stack dump in final mode */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
-public void failure();					/* The Eiffel exectution failed */
-private Signal_t emergency();			/* Emergency exit */
+rt_public void failure();					/* The Eiffel exectution failed */
+rt_private Signal_t emergency();			/* Emergency exit */
 
 #ifndef EIF_WIN_31
-public unsigned TIMEOUT;     /* Time out for interprocess communications */
+rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 #endif
 
-public void eif_rtinit(argc, argv, envp)
+rt_public void eif_rtinit(argc, argv, envp)
 int argc;
 char **argv;
 char **envp;
@@ -250,7 +250,7 @@ char **envp;
 #endif
 }
 
-public void failure()
+rt_public void failure()
 {
 	/* A fatal Eiffel exception has occurred. The stack of exceptions is dumped
 	 * and the memory is cleaned up, if possible.
@@ -269,7 +269,7 @@ public void failure()
 	/* NOTREACHED */
 }
 
-private Signal_t emergency(sig)
+rt_private Signal_t emergency(sig)
 int sig;
 {
 	/* A signal has been trapped while we were failing peacefully. The memory
@@ -295,11 +295,11 @@ int sig;
  * archive. However, we need to define dummy dserver() and dinterrupt() entries.
  */
 
-public void dserver() {}
-public void dinterrupt() {}
+rt_public void dserver() {}
+rt_public void dinterrupt() {}
 #endif
 
-public void dexit(code)
+rt_public void dexit(code)
 {
 	/* This routine is called by functions from libipc.a to raise immediate
 	 * termination with a chance to trap the action and perform some clean-up.

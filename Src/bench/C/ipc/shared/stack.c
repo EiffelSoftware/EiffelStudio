@@ -35,13 +35,13 @@
 /* Record a stack context, while performing dumps, and restore it afterwards.
  * We have a provision here for all the possible stack we may inspect.
  */
-private struct xstack xstk_context;		/* Saved exception stack context */
-private struct dbstack dstk_context;	/* Saved calling stack context */
-private struct opstack istk_context;	/* Operational stack (interpreter) */
-private struct stack ostk_context;		/* Once stack */
+rt_private struct xstack xstk_context;		/* Saved exception stack context */
+rt_private struct dbstack dstk_context;	/* Saved calling stack context */
+rt_private struct opstack istk_context;	/* Operational stack (interpreter) */
+rt_private struct stack ostk_context;		/* Once stack */
 
-private int dump_mode;	/* Mode of the active dump we are currently using */
-private int is_first;	/* First item dumped? (matters for pending exception) */
+rt_private int dump_mode;	/* Mode of the active dump we are currently using */
+rt_private int is_first;	/* First item dumped? (matters for pending exception) */
 
 /* Every stack has its own way of being dumped. During the initialization
  * process, this pointer is set to the correct function to be called. It may
@@ -49,22 +49,22 @@ private int is_first;	/* First item dumped? (matters for pending exception) */
  * variables inside a routine, while in fact dumping the whole stack at a
  * higher level).
  */
-private struct dump *(*stk_next)();		/* Function used to perform dump */
+rt_private struct dump *(*stk_next)();		/* Function used to perform dump */
 
 /* Routine declarations */
-private void send_dump();			/* Send XDR'ed dumped item to ewb */
-private void stk_start();			/* Initialize automaton */
-private void stk_end();				/* Reset saved stack contexts */
-private struct dump *pending();		/* List pending exceptions */
-private struct dump *execution();	/* List execution stack */
-private struct dcall *safe_dtop();	/* Perform a safe dtop() without panic */
-private void init_var_dump();		/* Initialize register context */
-private struct dump *variable();	/* Dump variables */
-private struct dump *local();		/* Return local by number */
-private struct dump *argument();	/* Return argument by number */
-private struct dump *once();		/* Dump once stack */
+rt_private void send_dump();			/* Send XDR'ed dumped item to ewb */
+rt_private void stk_start();			/* Initialize automaton */
+rt_private void stk_end();				/* Reset saved stack contexts */
+rt_private struct dump *pending();		/* List pending exceptions */
+rt_private struct dump *execution();	/* List execution stack */
+rt_private struct dcall *safe_dtop();	/* Perform a safe dtop() without panic */
+rt_private void init_var_dump();		/* Initialize register context */
+rt_private struct dump *variable();	/* Dump variables */
+rt_private struct dump *local();		/* Return local by number */
+rt_private struct dump *argument();	/* Return argument by number */
+rt_private struct dump *once();		/* Dump once stack */
 
-public void send_stack(s, what)
+rt_public void send_stack(s, what)
 int s;			/* The connected socket */
 int what;		/* Which stack should be sent */
 {
@@ -84,7 +84,7 @@ int what;		/* Which stack should be sent */
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
-private void send_dump(s, dp)
+rt_private void send_dump(s, dp)
 int s;				/* The connected socket */
 struct dump *dp;	/* Item to send */
 {
@@ -100,7 +100,7 @@ struct dump *dp;	/* Item to send */
  * Iterator initialization and final clean up.
  */
 
-private void stk_start(what)
+rt_private void stk_start(what)
 int what;		/* Dumping status wanted */
 {
 	/* Initialize the dumping procedure. This whole package is nothing more
@@ -144,7 +144,7 @@ int what;		/* Dumping status wanted */
 	}
 }
 
-private void stk_end(what)
+rt_private void stk_end(what)
  	int what;
 {
 	/* Restore context of all the stack we had to modify/inspect */
@@ -173,7 +173,7 @@ private void stk_end(what)
  * Dumping the pending exceptions.
  */
 
-private struct dump *pending()
+rt_private struct dump *pending()
 {
 	/* Get the next pending exception record from the exception stack.
 	 * The stack is read from the bottom. A special case is made for the
@@ -215,7 +215,7 @@ private struct dump *pending()
  * Dumping of the execution stack.
  */
 
-private struct dump *execution()
+rt_private struct dump *execution()
 {
 	/* Get the next execution vector from the top of eif_stack. Whenever a
 	 * vector associated with a melted routine is reached, we also send
@@ -330,7 +330,7 @@ private struct dump *execution()
 	return &dumped;			/* Pointer to static data */
 }
 
-private struct dcall *safe_dtop()
+rt_private struct dcall *safe_dtop()
 {
 	/* This is a wrapper to the dtop() feature, which tests whether the stack
 	 * is empty before calling it: the dtop() routine will raise a panic if
@@ -347,7 +347,7 @@ private struct dcall *safe_dtop()
  * Dumping arguments and/or locals.
  */
 
-private void init_var_dump(call)
+rt_private void init_var_dump(call)
 struct dcall *call;		/* Calling context for "active" feature */
 {
 	/* Initializes the interpreter registers for dumping variables from feature
@@ -361,7 +361,7 @@ struct dcall *call;		/* Calling context for "active" feature */
 	sync_registers(call->dc_cur, call->dc_top);
 }
 
-private struct dump *variable()
+rt_private struct dump *variable()
 {
 	/* Dump the variables from the current routine, according to the global
 	 * status flag. The interpreter registers are supposed to be correctly
@@ -406,7 +406,7 @@ private struct dump *variable()
 	return dp;			/* Pointer to static data or null */
 }
 
-private struct dump *local(n)
+rt_private struct dump *local(n)
 int n;
 {
 	/* Return the nth local, or a void pointer if we reached the end of the
@@ -438,7 +438,7 @@ int n;
 	return &dumped;			/* Pointer to static data */
 }
 
-private struct dump *argument(n)
+rt_private struct dump *argument(n)
 int n;
 {
 	/* Return the nth argument, or a void pointer if we reached the end of the
@@ -472,7 +472,7 @@ int n;
  * Dumping of the once stack.
  */
 
-private struct dump *once()
+rt_private struct dump *once()
 {
 	/* Dumping of the once stack */
 
@@ -501,7 +501,7 @@ private struct dump *once()
  * Dumping result of an already called once function
  */
 
-public void send_once_result(s, body_id, arg_num)
+rt_public void send_once_result(s, body_id, arg_num)
 int s;				/* The connected socket */
 uint32 body_id;		/* body id of the once function */
 int arg_num;		/* Number of arguments */

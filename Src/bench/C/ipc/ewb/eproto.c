@@ -29,7 +29,7 @@
  * Protocol specific routines
  */
 
-public int shell(cmd)
+rt_public int shell(cmd)
 char *cmd;
 {
 	/* Run specified shell command synchronously and return its execution
@@ -54,7 +54,7 @@ char *cmd;
 	return AK_OK == rqst.rq_ack.ak_type ? 0 : 1;
 }
 
-public int background(cmd)
+rt_public int background(cmd)
 char *cmd;
 {
 	/* Run specified shell command asynchronously, and return the job number
@@ -81,7 +81,7 @@ char *cmd;
 	return rqst.rq_opaque.op_first;		/* The command's job number */
 }
 
-public int app_start(cmd)
+rt_public int app_start(cmd)
 char *cmd;			/* The command string (without i/o redirection) */
 {
 	/* Start application under ised control and establish communication link

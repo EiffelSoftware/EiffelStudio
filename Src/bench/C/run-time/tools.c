@@ -14,11 +14,11 @@
 #include "tools.h"
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-public long hashcode(s, count)
+rt_public long hashcode(s, count)
 register3 char *s;
 register4 long count;
 {
@@ -35,7 +35,7 @@ register4 long count;
 	return (long) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
 }
 
-public uint32 nprime(n)
+rt_public uint32 nprime(n)
 register1 uint32 n;
 {
 	/* Return the closest prime number greater than `n' */
@@ -46,7 +46,7 @@ register1 uint32 n;
 	return n;
 }
 
-public int prime(n)
+rt_public int prime(n)
 register2 uint32 n;
 {
 	/* Return 1 if `n' is a prime number */

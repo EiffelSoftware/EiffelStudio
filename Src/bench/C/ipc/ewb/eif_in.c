@@ -112,7 +112,7 @@ EIF_OBJ request_dispatch (rqst)
 	request handlers (RQST_HANDLER classes).
 */
 
-public void send_byte_code (real_body_index, real_body_id, byte_array, size)
+rt_public void send_byte_code (real_body_index, real_body_id, byte_array, size)
 EIF_INTEGER real_body_index, real_body_id;
 char *byte_array;
 EIF_INTEGER size;
@@ -144,7 +144,7 @@ EIF_INTEGER size;
 
 }
 
-public int send_breakpoint (real_body_id, offset, opcode)
+rt_public int send_breakpoint (real_body_id, offset, opcode)
 long real_body_id;
 long offset;
 EIF_BOOLEAN opcode;
@@ -170,7 +170,7 @@ EIF_BOOLEAN opcode;
 */
 }
 
-public void send_ack_end ()
+rt_public void send_ack_end ()
 {
 /*
 	STREAM *sp = stream_by_fd [EWBOUT];

@@ -20,7 +20,7 @@
 
 extern int ised;		/* Socket used to chat with the daemon */
 
-public void wide_listen()
+rt_public void wide_listen()
 {
 	/* Listen on all the file descriptors opened for reading until the
 	 * connected socket is broken.

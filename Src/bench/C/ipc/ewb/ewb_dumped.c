@@ -31,7 +31,7 @@ EIF_PROC set_error;
 EIF_PROC set_void;
 
 
-public c_recv_rout_info (target)
+rt_public c_recv_rout_info (target)
 	EIF_OBJ	target;
 /*
  * 	Wait for a request. If the request is of type DUMPED, DMP_VECT or DMP_MELTED
@@ -98,7 +98,7 @@ public c_recv_rout_info (target)
 }
 
 
-public c_recv_value (target)
+rt_public c_recv_value (target)
 	EIF_OBJ	target;
 /*
  *	wait for a request. If it is a dumped item, send it to the RECV_VALUE 
@@ -166,7 +166,7 @@ public c_recv_value (target)
 }
 
 
-public c_pass_recv_routines (d_int, d_bool, d_char, d_real,
+rt_public c_pass_recv_routines (d_int, d_bool, d_char, d_real,
 			d_double, d_ref, d_point, d_bits, d_error, d_void)
 EIF_PROC d_int, d_bool, d_char, d_real, d_double, d_ref;
 EIF_PROC d_point, d_bits, d_error, d_void;
@@ -186,7 +186,7 @@ EIF_PROC d_point, d_bits, d_error, d_void;
 	set_void = d_void;
 }
 		
-public c_pass_set_rout (d_rout)
+rt_public c_pass_set_rout (d_rout)
 EIF_PROC d_rout;
 /*
  *	Register the routine to communicate with a CALL_INFO

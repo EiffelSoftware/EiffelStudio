@@ -14,8 +14,8 @@
 #define _eproto_h_
 
 /* Command spawning via ised */
-public int shell();				/* Run shell command synchronously */
-public int background();		/* Run shell command asynchronously */
-public int app_start();			/* Start application in debugging mode */
+rt_public int shell();				/* Run shell command synchronously */
+rt_public int background();		/* Run shell command asynchronously */
+rt_public int app_start();			/* Start application in debugging mode */
 
 #endif

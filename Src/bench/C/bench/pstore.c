@@ -23,11 +23,11 @@
 #include <io.h>
 #endif
 
-private fnptr make_index;	/* Index building routine */
-private char *server;		/* Current server used */
-private long pst_store();	/* Recursive store */
+rt_private fnptr make_index;	/* Index building routine */
+rt_private char *server;		/* Current server used */
+rt_private long pst_store();	/* Recursive store */
 
-private void partial_store_write();
+rt_private void partial_store_write();
 
 extern void esys();			/* raise op sys error */
 extern void eio();
@@ -113,7 +113,7 @@ char *s;
 	return result;
 }
 
-private long pst_store(object, object_count)
+rt_private long pst_store(object, object_count)
 char *object;
 long object_count;
 {
@@ -206,7 +206,7 @@ EIF_INTEGER file_desc;
 	return result;
 }
 
-private void partial_store_write()
+rt_private void partial_store_write()
 {
 	register char * ptr = general_buffer;
 	register int number_left = current_position;

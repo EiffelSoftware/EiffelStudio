@@ -30,18 +30,18 @@
 #endif
 
 /* Bit shifting */
-private char *b_left_shift();		/* Shift bit field to the left */
-private char *b_right_shift();		/* Shift bit field to the right */
+rt_private char *b_left_shift();		/* Shift bit field to the left */
+rt_private char *b_right_shift();		/* Shift bit field to the right */
 
 /* Bit rotating */
-private char *b_left_rotate();		/* Rotate bit field to the left */
-private char *b_right_rotate();		/* Rotate bit field to the right */
+rt_private char *b_left_rotate();		/* Rotate bit field to the left */
+rt_private char *b_right_rotate();		/* Rotate bit field to the right */
 
 /*
  * Public declarations for bits manipulations
  */
 
-public char *b_eout(bit)
+rt_public char *b_eout(bit)
 char *bit;
 {
 	/* Eiffel string for out representation of a bit */
@@ -54,7 +54,7 @@ char *bit;
 	return result;
 }
 	
-public char *b_out(bit)
+rt_public char *b_out(bit)
 char *bit;
 {
 	/* String value for bit attribute `bit' */
@@ -84,13 +84,13 @@ char *bit;
 	return result;
 }
 
-public long b_count(bit)
+rt_public long b_count(bit)
 char *bit;
 {
 	return ((struct bit *) bit)->b_length;		/* Size of a BIT object */
 }
 
-public char *bmalloc(size)
+rt_public char *bmalloc(size)
 long size;
 {
 	/* Memory allocation for an Eiffel bit structure. It either succeeds
@@ -160,7 +160,7 @@ long bit_count;
 	return result;
 }
 
-public int b_equal(a, b)
+rt_public int b_equal(a, b)
 char *a;
 char *b;
 {
@@ -222,7 +222,7 @@ char *b;
 	return ((*addr_a & len_b) == (*addr_b & len_b)) ? TRUE : FALSE;
 }
 
-public void b_copy(a, b)
+rt_public void b_copy(a, b)
 char *a;
 char *b;
 {
@@ -277,7 +277,7 @@ char *b;
 		bzero((char *) (arena2 + nb_pack1), gap * BIT_PACKSIZE);
 }
 
-public char *b_clone(bit)
+rt_public char *b_clone(bit)
 char *bit;
 {
 	/* Return a clone of the bit field 'bit' given as argument. Beware: there is
@@ -295,7 +295,7 @@ char *bit;
 	return new;			/* Freshly allocated bit field object */
 }
 
-public void b_put(bit, value, at)
+rt_public void b_put(bit, value, at)
 char *bit;				/* The Eiffel bit object */
 int at;					/* The position in the bit field (starting at 1) */
 char value;				/* The boolean value to be set */
@@ -327,7 +327,7 @@ char value;				/* The boolean value to be set */
 		addr[idx] &= ~(1 << mask);
 }
 
-public char b_item(bit, at)
+rt_public char b_item(bit, at)
 char *bit;
 long at;
 {
@@ -356,7 +356,7 @@ long at;
 	return (addr[idx] & (1 << mask)) >> mask;
 }
 
-public char *b_shift(bit, s)
+rt_public char *b_shift(bit, s)
 char *bit;
 long s;
 {
@@ -373,7 +373,7 @@ long s;
 		return b_left_shift(bit, -s);
 }
 
-private char *b_right_shift(bit, s)
+rt_private char *b_right_shift(bit, s)
 char *bit;
 long s;
 {
@@ -432,7 +432,7 @@ long s;
 	return new;
 }
 
-private char *b_left_shift(bit, s)
+rt_private char *b_left_shift(bit, s)
 char *bit;
 long s;
 {
@@ -500,7 +500,7 @@ long s;
 	return new;
 }
 
-public char *b_rotate(bit, s)
+rt_public char *b_rotate(bit, s)
 char *bit;
 long s;
 {
@@ -517,7 +517,7 @@ long s;
 		return b_left_rotate(bit, -s);
 }
 
-private char *b_right_rotate(bit, s)
+rt_private char *b_right_rotate(bit, s)
 char *bit;
 long s;
 {
@@ -624,7 +624,7 @@ long s;
 	return new;
 }
 
-private char *b_left_rotate(bit, s)
+rt_private char *b_left_rotate(bit, s)
 char *bit;
 long s;
 {
@@ -730,7 +730,7 @@ long s;
 	return new;
 }
 
-public char *b_and (a, b)
+rt_public char *b_and (a, b)
 char *a, *b;
 {
 	/* Performs the logical AND operation between `a' and `b' into `a'. The
@@ -784,7 +784,7 @@ char *a, *b;
 	return a;
 }
 
-public char *b_implies(a, b)
+rt_public char *b_implies(a, b)
 char *a, *b;
 {
 	/* Performs the logical '=>' operation between `a' and `b' into `a'. The
@@ -838,7 +838,7 @@ char *a, *b;
 	return a;
 }
 
-public char *b_or(a, b)
+rt_public char *b_or(a, b)
 char *a, *b;
 {
 	/* Performs the logical OR operation between `a' and `b' into `a'. The
@@ -888,7 +888,7 @@ char *a, *b;
 	return a;
 }
 
-public char *b_xor(a, b)
+rt_public char *b_xor(a, b)
 char *a, *b;
 {
 	/* Performs the logical XOR operation between `a' and `b' into `a'. The
@@ -938,7 +938,7 @@ char *a, *b;
 	return a;
 }
 
-public char *b_not(a)
+rt_public char *b_not(a)
 char *a;
 {
 	/* Performs the logical NOT operation on `a' */
@@ -958,7 +958,7 @@ char *a;
 	return a;
 }
 
-public char *b_mirror(a)
+rt_public char *b_mirror(a)
 char *a;
 {
 	/* Mirror the bits, 110b -> 011b. This is done the slow way. I leave the
@@ -989,15 +989,15 @@ char *a;
  * To run this, compile the file with -DTEST.
  */
 
-public int epush() {}
-public void epop() {}
-public char *xmalloc() {}
-public void eraise() {}
-public char *eif_set() {}
-public int bit_dtype;
-public struct stack loc_stack;
+rt_public int epush() {}
+rt_public void epop() {}
+rt_public char *xmalloc() {}
+rt_public void eraise() {}
+rt_public char *eif_set() {}
+rt_public int bit_dtype;
+rt_public struct stack loc_stack;
 
-private void dump_bit(bit)
+rt_private void dump_bit(bit)
 char *bit;
 {
 	int l = LENGTH(bit);
@@ -1011,7 +1011,7 @@ char *bit;
 	printf("\n");
 }
 
-public char *bmalloc(size)
+rt_public char *bmalloc(size)
 int size;
 {
 	struct bit *new;
@@ -1025,7 +1025,7 @@ int size;
 	return (char *) new;
 }
 
-public void main()
+rt_public void main()
 {
 	char *b1, *b2;
 

@@ -20,11 +20,11 @@
 #include "stream.h"
 #include <stdio.h>				/* To get BUFSIZ */
 
-private STREAM *sp;				/* Stream used for communications */
+rt_private STREAM *sp;				/* Stream used for communications */
 
 extern Malloc_t malloc();		/* Memory allocation */
 
-public void tpipe(stream)
+rt_public void tpipe(stream)
 STREAM *stream;
 {
 	/* Initialize the file descriptor to be used in data exchanges with the
@@ -42,7 +42,7 @@ STREAM *stream;
 #endif
 }
 
-public char *tread(size)
+rt_public char *tread(size)
 int *size;		/* Filled in with size of read string */
 {
 	/* Read bytes from the "pipe" and put them into a new allocated buffer.
@@ -102,7 +102,7 @@ int *size;		/* Filled in with size of read string */
 	return buffer;
 }
 
-public int twrite(buffer, size)
+rt_public int twrite(buffer, size)
 char *buffer;
 int size;
 {
@@ -133,7 +133,7 @@ int size;
 	return net_send(writefd(sp), buffer, size);
 }
 
-public void swallow(fd, size)
+rt_public void swallow(fd, size)
 int fd;
 int size;
 {

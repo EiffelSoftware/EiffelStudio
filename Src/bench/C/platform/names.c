@@ -5,7 +5,7 @@
 
 #include "eiffel.h"
 
-public EIF_REFERENCE eif_dot_e ()
+rt_public EIF_REFERENCE eif_dot_e ()
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".E");
@@ -14,7 +14,7 @@ public EIF_REFERENCE eif_dot_e ()
 #endif
 }
 
-public EIF_REFERENCE eif_dot_o ()
+rt_public EIF_REFERENCE eif_dot_o ()
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".obj");
@@ -23,7 +23,7 @@ public EIF_REFERENCE eif_dot_o ()
 #endif
 }
 
-public EIF_REFERENCE eif_driver ()
+rt_public EIF_REFERENCE eif_driver ()
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS ("driver.exe");
@@ -32,7 +32,7 @@ public EIF_REFERENCE eif_driver ()
 #endif
 }
 
-public EIF_REFERENCE eif_exec_suffix ()
+rt_public EIF_REFERENCE eif_exec_suffix ()
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".exe");
@@ -41,7 +41,7 @@ public EIF_REFERENCE eif_exec_suffix ()
 #endif
 }
 
-public EIF_REFERENCE eif_finish_freezing ()
+rt_public EIF_REFERENCE eif_finish_freezing ()
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("es3sh");
@@ -50,7 +50,7 @@ public EIF_REFERENCE eif_finish_freezing ()
 #endif
 }
 
-public EIF_REFERENCE eif_preobj ()
+rt_public EIF_REFERENCE eif_preobj ()
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("preobj.obj");
@@ -61,7 +61,7 @@ public EIF_REFERENCE eif_preobj ()
 #endif
 }
 
-public EIF_REFERENCE eif_copy_cmd ()
+rt_public EIF_REFERENCE eif_copy_cmd ()
 {
 #ifdef EIF_WINDOWS
 	return RTMS ("\\command.com /c copy");
@@ -74,7 +74,7 @@ public EIF_REFERENCE eif_copy_cmd ()
 #endif
 }
 
-public EIF_BOOLEAN eif_valid_class_file_extension (c)
+rt_public EIF_BOOLEAN eif_valid_class_file_extension (c)
 EIF_CHARACTER c;
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -86,7 +86,7 @@ EIF_CHARACTER c;
 #endif
 }
 
-public EIF_REFERENCE eif_timeout_msg ()
+rt_public EIF_REFERENCE eif_timeout_msg ()
 {
 	/* Message displayed when ebench is unable to launch
 	 * the system (because of a timeout).

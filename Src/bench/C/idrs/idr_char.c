@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_char(idrs, cp)
+rt_public bool_t idr_char(idrs, cp)
 IDR *idrs;
 char *cp;
 {

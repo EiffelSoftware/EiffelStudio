@@ -44,17 +44,17 @@ struct sockaddr_un {			/* Definition of UNIX IPC domain */
 };
 #endif
 	
-public int ised;				/* Socket used to talk with the ISE daemon */
+rt_public int ised;				/* Socket used to talk with the ISE daemon */
 
-private struct sockaddr_un myaddr_un;	/* For local socket address */
-private struct sockaddr_un peeraddr_un;	/* For peer socket address */
+rt_private struct sockaddr_un myaddr_un;	/* For local socket address */
+rt_private struct sockaddr_un peeraddr_un;	/* For peer socket address */
 
-private char spath[MAXPATH];	/* The named socket location */
+rt_private char spath[MAXPATH];	/* The named socket location */
 
 extern int errno;
 extern char *getenv();
 
-private void compute_sock_name()
+rt_private void compute_sock_name()
 {
 	char *name;
 
@@ -66,7 +66,7 @@ private void compute_sock_name()
 	strncpy(spath, name, MAXPATH - 1);
 }
 
-public void connect_daemon()
+rt_public void connect_daemon()
 {
 	/* Connect to daemon */
 

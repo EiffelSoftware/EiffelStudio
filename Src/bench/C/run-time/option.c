@@ -31,11 +31,14 @@
 #endif
 #endif
  
-public int trace_call_level = 0;	/* call level for E-TRACE
+ 
+
+
+rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
 					 */
 
-public struct stack *prof_stack;
+rt_public struct stack *prof_stack;
 
 /* INTERNAL TRACE VARIABLES */
 
@@ -62,7 +65,7 @@ struct prof_info {
 											/* Needed for recursives */
 };
 
-public struct stack *profile_stack;
+rt_public struct stack *profile_stack;
 
 /* Structure for H table of features.
  * 'hcode' is meant to be the H key of the class
@@ -94,7 +97,7 @@ struct prof_info* prof_stack_pop();		/* Pop top off stack */
 
 #ifdef WORKBENCH
 
-public int is_debug(st_type, key)
+rt_public int is_debug(st_type, key)
 int st_type;
 char *key;
 {

@@ -35,17 +35,17 @@ extern unsigned TIMEOUT;		/* Time out on reads */
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-private jmp_buf env;		/* Environment saving for longjmp() */
-private Signal_t broken();	/* Signal handler for SIGPIPE */
-private Signal_t timeout();	/* Signal handler for read timeouts */
+rt_private jmp_buf env;		/* Environment saving for longjmp() */
+rt_private Signal_t broken();	/* Signal handler for SIGPIPE */
+rt_private Signal_t timeout();	/* Signal handler for read timeouts */
 
 extern int errno;
 
-public int net_recv(cs, buf, size)
+rt_public int net_recv(cs, buf, size)
 int cs;				/* The connected socket descriptor */
 char *buf;			/* Where data are to be stored */
 int size;			/* Amount of data to be read */
@@ -104,7 +104,7 @@ closed:
 }
 
 
-public int net_send(cs, buf, size)
+rt_public int net_send(cs, buf, size)
 int cs;				/* The connected socket descriptor */
 char *buf;			/* Where data are stored */
 int size;			/* Amount of data to be sent */
@@ -145,13 +145,13 @@ int size;			/* Amount of data to be sent */
 	return 0;
 }
 
-private Signal_t broken()
+rt_private Signal_t broken()
 {
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
 
-private Signal_t timeout()
+rt_private Signal_t timeout()
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */

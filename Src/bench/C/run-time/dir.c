@@ -86,7 +86,7 @@ typedef struct tagEIF_OS2_DIRENT {
  * Opening and closing a directory.
  */
 
-public EIF_POINTER dir_open(name)
+rt_public EIF_POINTER dir_open(name)
 char *name;
 {
 	/* Open directory `name' for reading (can't do much else on UNIX) */
@@ -126,7 +126,7 @@ char *name;
 }
 
 #ifdef EIF_WIN32
-public void dir_close(dirp)
+rt_public void dir_close(dirp)
 EIF_WIN_DIRENT *dirp;
 {
 	if (dirp->handle != NULL)
@@ -135,7 +135,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-public void dir_close(dirp)
+rt_public void dir_close(dirp)
 EIF_OS2_DIRENT *dirp;
 {
 	APIRET rc = NO_ERROR;
@@ -144,7 +144,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-public void dir_close(dirp)
+rt_public void dir_close(dirp)
 DIR *dirp;
 {
 	(void) closedir(dirp);
@@ -156,7 +156,7 @@ DIR *dirp;
  */
 
 #ifdef EIF_WIN32
-public void dir_rewind(dirp)
+rt_public void dir_rewind(dirp)
 EIF_WIN_DIRENT *dirp;
 {
 	if (dirp->handle != NULL)
@@ -165,7 +165,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-public void dir_rewind(dirp)
+rt_public void dir_rewind(dirp)
 EIF_OS2_DIRENT *dirp;
 {
 	APIRET rc = NO_ERROR;
@@ -175,7 +175,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-public void dir_rewind(dirp)
+rt_public void dir_rewind(dirp)
 DIR *dirp;
 {
 #ifdef HAS_REWINDDIR
@@ -189,7 +189,7 @@ DIR *dirp;
  */
 
 #ifdef EIF_WIN32
-public char *dir_search(dirp, name)
+rt_public char *dir_search(dirp, name)
 EIF_WIN_DIRENT *dirp;
 char *name;
 {
@@ -217,7 +217,7 @@ char *name;
 }
 
 #elif defined EIF_OS2
-public char *dir_search(dirp, name)
+rt_public char *dir_search(dirp, name)
 EIF_OS2_DIRENT *dirp;
 char *name;
 {
@@ -252,7 +252,7 @@ char *name;
 }
 
 #else
-public char *dir_search(dirp, name)
+rt_public char *dir_search(dirp, name)
 DIR *dirp;		/* Directory where search is made */
 char *name;		/* Entry we are looking for */
 {
@@ -285,7 +285,7 @@ char *name;		/* Entry we are looking for */
 #endif
 
 #ifdef EIF_WIN32
-public char *dir_next(dirp)
+rt_public char *dir_next(dirp)
 EIF_WIN_DIRENT *dirp;
 {
 	HANDLE h;
@@ -325,7 +325,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-public char *dir_next(dirp)
+rt_public char *dir_next(dirp)
 EIF_OS2_DIRENT *dirp;
 {
 	HDIR h;
@@ -378,7 +378,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-public char *dir_next(dirp)
+rt_public char *dir_next(dirp)
 DIR *dirp;
 {
 	/* Return the Eiffel string corresponding to the next entry name, or a
@@ -398,7 +398,7 @@ DIR *dirp;
 }
 #endif
 
-public EIF_OBJ dir_current()
+rt_public EIF_OBJ dir_current()
 {
 	/* Return the Eiffel string corresponding to the current working
 	 * directory.  Note this always returns a new string.
@@ -413,7 +413,7 @@ public EIF_OBJ dir_current()
 	return ((EIF_OBJ)cwd_string);
 }
 
-public EIF_CHARACTER eif_dir_separator ()
+rt_public EIF_CHARACTER eif_dir_separator ()
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return '\\';
@@ -426,7 +426,7 @@ public EIF_CHARACTER eif_dir_separator ()
 #endif
 }
 
-public EIF_INTEGER eif_chdir (path)
+rt_public EIF_INTEGER eif_chdir (path)
 EIF_OBJ path;
 {
 	/* Set current dir to `path'
@@ -435,7 +435,7 @@ EIF_OBJ path;
 	return chdir (eif_access(path));
 }
 
-public EIF_BOOLEAN eif_dir_exists(name)
+rt_public EIF_BOOLEAN eif_dir_exists(name)
 char *name;
 {
 #ifdef __VMS
@@ -541,7 +541,7 @@ char *name;
 #endif	/* else not vms */
 }
 
-public EIF_BOOLEAN eif_dir_is_readable(name)
+rt_public EIF_BOOLEAN eif_dir_is_readable(name)
 char *name;
 {
 	/* Is directory readable */
@@ -606,7 +606,7 @@ char *name;
 #endif	/* not vms */
 }
 
-public EIF_BOOLEAN eif_dir_is_writable(name)
+rt_public EIF_BOOLEAN eif_dir_is_writable(name)
 char *name;
 {
 	/* Is directory writable */
@@ -667,7 +667,7 @@ char *name;
 #endif	/* not vms */
 }
 
-public EIF_BOOLEAN eif_dir_is_executable(name)
+rt_public EIF_BOOLEAN eif_dir_is_executable(name)
 char *name;
 {
 	/* Is directory executable */
@@ -726,7 +726,7 @@ char *name;
 #endif	/* not vms */
 }
 
-public void eif_dir_delete(name)
+rt_public void eif_dir_delete(name)
 char *name;
 {
 		/* Delete directory `name' */

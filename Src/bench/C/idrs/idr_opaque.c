@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_opaque(idrs, p, len)
+rt_public bool_t idr_opaque(idrs, p, len)
 IDR *idrs;		/* The serializing stream */
 char *p;		/* Start of opaque data */
 int len;		/* Length of opaque data */

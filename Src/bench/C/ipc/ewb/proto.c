@@ -19,15 +19,15 @@
 #include "rqst_idrs.h"
 #include "proto.h"
 
-public int rqstcnt = 0;		/* Request count, must match with daemon's one */
+rt_public int rqstcnt = 0;		/* Request count, must match with daemon's one */
 
-private IDRF idrf;			/* IDR filter for serializations */
+rt_private IDRF idrf;			/* IDR filter for serializations */
 
 /*
  * IDR protocol initialization.
  */
 
-public void prt_init()
+rt_public void prt_init()
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
@@ -37,7 +37,7 @@ public void prt_init()
  * Sending requests - Receiving answers
  */
 
-public void send_packet(s, rqst)
+rt_public void send_packet(s, rqst)
 int s;				/* The connected socket */
 Request *rqst;		/* The request to be sent */
 {
@@ -67,7 +67,7 @@ Request *rqst;		/* The request to be sent */
 #endif
 }
 
-public int recv_packet(s, dans)
+rt_public int recv_packet(s, dans)
 int s;				/* The connected socket */
 Request *dans;		/* The daemon's answer */
 {

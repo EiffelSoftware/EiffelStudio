@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public int idr_size(idrs, lp, maxlength)
+rt_public int idr_size(idrs, lp, maxlength)
 IDR *idrs;				/* The serializing stream */
 int *lp;				/* Where actual size of the array is stored */
 int maxlength;			/* Maximum length (hint to know size of lp) */

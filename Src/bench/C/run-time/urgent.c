@@ -26,12 +26,12 @@
  * This index is decreased each time the run-time requests a chunk, and it
  * reaches -1 when the array has no more chunks in stock.
  */
-private char *urgent_mem[URGENT_NBR];		/* Array holding urgent chunks */
-private int urgent_index = -1;				/* Last index with free chunk */
+rt_private char *urgent_mem[URGENT_NBR];		/* Array holding urgent chunks */
+rt_private int urgent_index = -1;				/* Last index with free chunk */
 
 /* Getting and releasing chunks */
-shared void ufill();			/* Get as many chunks as possible */
-shared char *uchunk();			/* Urgent allocation of a stack chunk */
+rt_shared void ufill();			/* Get as many chunks as possible */
+rt_shared char *uchunk();			/* Urgent allocation of a stack chunk */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -41,11 +41,11 @@ shared char *uchunk();			/* Urgent allocation of a stack chunk */
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
-shared void ufill()
+rt_shared void ufill()
 {
 	/* Fill in the urgent chunk array as far as possible. At the time this
 	 * routine is called, it is safe to call the GC if we get short in memory,
@@ -65,7 +65,7 @@ shared void ufill()
 	urgent_index = i - 1;				/* Points on last available chunk */
 }
 
-shared char *uchunk()
+rt_shared char *uchunk()
 {
 	/* Get an urgent chunk for stack growing. It would not be sane to allocate
 	 * memory for an Eiffel object from this urgent stock, so be it--RAM.

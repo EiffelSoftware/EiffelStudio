@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_setpos(idrs, pos)
+rt_public bool_t idr_setpos(idrs, pos)
 IDR *idrs;
 int pos;
 {

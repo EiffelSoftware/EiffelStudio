@@ -70,7 +70,7 @@
  * multiple exceptions occurred and we entered different rescue clauses, we
  * have to store the exception levels along with the unsolved exceptions.
  */
-public struct xstack eif_stack = {		/* Calling stack */
+rt_public struct xstack eif_stack = {		/* Calling stack */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
 	(struct stxchunk *) 0,				/* st_cur */
@@ -78,7 +78,7 @@ public struct xstack eif_stack = {		/* Calling stack */
 	(struct ex_vect *) 0,				/* st_end */
 	(struct ex_vect *) 0,				/* st_bot */
 };
-public struct xstack eif_trace = {		/* Exception trace */
+rt_public struct xstack eif_trace = {		/* Exception trace */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
 	(struct stxchunk *) 0,				/* st_cur */
@@ -93,12 +93,12 @@ public struct xstack eif_trace = {		/* Exception trace */
  * memory to ensure a correct Eiffel execution. The EN_FATAL exception is a
  * run-time fatal error which cannot be caught nor ignored.
  */
-public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */
+rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 
 /* Stack of current exception flags. This is used to control the assertion
  * checking (e.g. disable it when already in assertion checking).
  */
-public struct eif_except exdata = {
+rt_public struct eif_except exdata = {
 	1,				/* ex_chk */
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -116,67 +116,67 @@ public struct eif_except exdata = {
 /* Array of ignored exceptions, from the debugger's point of view. Normally
  * an exception stops the program to allow user inspection of the objects.
  */
-public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
+rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
 
 /* Structure used to store routine information during exception stack dumps
  * (gathered thanks to stack look-ahead).
  */
-private struct exprint except;		/* Where exception has been raised */
+rt_private struct exprint except;		/* Where exception has been raised */
 
 /* Exception handling mechanism */
-public void enomem();			/* A critical "No more memory" exception */
-public struct ex_vect *exret();	/* Retries execution of routine */
-public void exinv();			/* Invariant record */
-public void exasrt();			/* Assertion record */
-public void eraise();			/* Raises an Eiffel exception */
-public void eviol();			/* Signals assertion violation */
-public void exfail();			/* Signals: reached end of a rescue clause */
-public void panic();			/* Run-time raised panic */
-public void fatal_error();			/* Run-time raised fatal errors */
-shared void xraise();			/* Raises an exception with no tag */
-public struct ex_vect *exset();	/* Set execution stack on routine entrance */
+rt_public void enomem();			/* A critical "No more memory" exception */
+rt_public struct ex_vect *exret();	/* Retries execution of routine */
+rt_public void exinv();			/* Invariant record */
+rt_public void exasrt();			/* Assertion record */
+rt_public void eraise();			/* Raises an Eiffel exception */
+rt_public void eviol();			/* Signals assertion violation */
+rt_public void exfail();			/* Signals: reached end of a rescue clause */
+rt_public void panic();			/* Run-time raised panic */
+rt_public void fatal_error();			/* Run-time raised fatal errors */
+rt_shared void xraise();			/* Raises an exception with no tag */
+rt_public struct ex_vect *exset();	/* Set execution stack on routine entrance */
 #ifndef WORKBENCH
-public struct ex_vect *exft();	/* Entry in feature with rescue clause */
+rt_public struct ex_vect *exft();	/* Entry in feature with rescue clause */
 #endif
 
 /* Exception recovery mechanism */
-public void exok();				/* Resumption has been successful */
-private char *backtrack();		/* Backtrack in the calling stack */
-private void excur();			/* Current exception code in previous level */
-private void exorig();			/* Original exception code in previous level */
-private char *extag();			/* Recompute exception tag */
-private void exception();		/* Debugger hook */
-private print_history_table = ~0;   /* Enable/disable printing of hist. table */
+rt_public void exok();				/* Resumption has been successful */
+rt_private char *backtrack();		/* Backtrack in the calling stack */
+rt_private void excur();			/* Current exception code in previous level */
+rt_private void exorig();			/* Original exception code in previous level */
+rt_private char *extag();			/* Recompute exception tag */
+rt_private void exception();		/* Debugger hook */
+rt_private print_history_table = ~0;   /* Enable/disable printing of hist. table */
 
 /* Eiffel interface */
-private char eedefined();          /* Is exception code valid? */
+rt_private char eedefined();          /* Is exception code valid? */
 
 /* Stack handling routines */
-public void expop();				/* Pops an execution vector off */
-private void stack_truncate();		/* Truncate stack if necessary */
-private void wipe_out();			/* Remove unneeded chunk from stack */
-shared struct ex_vect *exget();		/* Get a new vector on stack */
-private int stack_extend();			/* Extends size of stack */
-private struct ex_vect *stack_allocate();	/* Creates an empty stack */
-shared struct ex_vect *extop();		/* Top of Eiffel stack */
-shared struct ex_vect *exnext();	/* Next item at bottom of trace stack */
-private int exend();				/* True if end of trace stack reached */
+rt_public void expop();				/* Pops an execution vector off */
+rt_private void stack_truncate();		/* Truncate stack if necessary */
+rt_private void wipe_out();			/* Remove unneeded chunk from stack */
+rt_shared struct ex_vect *exget();		/* Get a new vector on stack */
+rt_private int stack_extend();			/* Extends size of stack */
+rt_private struct ex_vect *stack_allocate();	/* Creates an empty stack */
+rt_shared struct ex_vect *extop();		/* Top of Eiffel stack */
+rt_shared struct ex_vect *exnext();	/* Next item at bottom of trace stack */
+rt_private int exend();				/* True if end of trace stack reached */
 
 /* User-level dumps */
-public void esfail();				/* Eiffel system failure */
-private void dump_core();			/* Dumps a core for debugging infos */
-private char *exception_string();	/* Name of an exception */
-private void dump_trace_stack();	/* Dumps the Eiffel trace stack */
-private void find_call();			/* Find enclosing call ID */
-private void recursive_dump();		/* Dump the stack at a given level */
-private void print_top();			/* Prints top value of the stack */
+rt_public void esfail();				/* Eiffel system failure */
+rt_private void dump_core();			/* Dumps a core for debugging infos */
+rt_private char *exception_string();	/* Name of an exception */
+rt_private void dump_trace_stack();	/* Dumps the Eiffel trace stack */
+rt_private void find_call();			/* Find enclosing call ID */
+rt_private void recursive_dump();		/* Dump the stack at a given level */
+rt_private void print_top();			/* Prints top value of the stack */
 
 /* Pre-defined exception tags (29 chars max please, otherwise truncated).
  * A final point is added at the end. Here is a 29 chars string template:
  *	"It is a 29 characters string."
  */
-private char *ex_tag[] = {
+rt_private char *ex_tag[] = {
 	(char *) 0,							/* Nothing */
 	"Applied to void reference.",		/* EN_VOID */
 	"No more memory.",					/* EN_MEM */
@@ -211,7 +211,7 @@ private char *ex_tag[] = {
 /* Converts a vector's type in the stack to an exception code, i.e. given a
  * vector in the stack, which exception has to be raised?
  */
-private int ex_tagc[] = {
+rt_private int ex_tagc[] = {
 	EN_FAIL,		/* EX_CALL */
 	EN_PRE,			/* EX_PRE */
 	EN_POST,		/* EX_POST */
@@ -233,18 +233,18 @@ char *exception_trace_string = NULL;
 
 
 /* Strings used as separator for Eiffel stack dumps */
-private char *retried =
+rt_private char *retried =
 "===============================================================================";
-private char *failed =
+rt_private char *failed =
 "-------------------------------------------------------------------------------";
-private char *branch_enter =
+rt_private char *branch_enter =
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-private char *branch_exit =
+rt_private char *branch_exit =
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 /* Commonly used error messages */
-private char *botched = "Eiffel stack botched";
-private char *vanished = "main entry point vanished";
+rt_private char *botched = "Eiffel stack botched";
+rt_private char *vanished = "main entry point vanished";
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -270,11 +270,11 @@ struct test {
 #endif
 
 #ifdef DEBUG
-private void dump_vector();			/* Dump an execution vector on stdout */
+rt_private void dump_vector();			/* Dump an execution vector on stdout */
 #endif
 
 #ifndef lint
-private char *rcsid =
+rt_private char *rcsid =
 	"$Id$";
 #endif
 
@@ -287,7 +287,7 @@ private char *rcsid =
  * during the critical section.
  */
 
-public void enomem()
+rt_public void enomem()
 {
 	/* Raises the "Out of memory" exception. Due to the special nature of this
 	 * exception, we may not have been able to push everything we wanted on the
@@ -301,7 +301,7 @@ public void enomem()
 	xraise(EN_OMEM);		/* The "Out of memory" stuff */
 }
 
-public struct ex_vect *exset(name, origin, object)
+rt_public struct ex_vect *exset(name, origin, object)
 char *name;				/* The routine name */
 int origin;				/* The origin of the routine */
 char *object;			/* The object on which the routine is applied */
@@ -340,7 +340,7 @@ char *object;			/* The object on which the routine is applied */
 }
 
 #ifndef WORKBENCH
-public struct ex_vect *exft()
+rt_public struct ex_vect *exft()
 {
 	/* Get an execution vector, in final mode. We don't bother setting the
 	 * feature name or the object ID as there is no stack dump in final mode.
@@ -377,7 +377,7 @@ public struct ex_vect *exft()
 }
 #endif
 
-public struct ex_vect *exret(rout_vect)
+rt_public struct ex_vect *exret(rout_vect)
 register1 struct ex_vect *rout_vect;	/* Exec. vector of enclosing routine */
 {
 	/* An exception was caught in the enclosing routine and transferred the
@@ -447,7 +447,7 @@ register1 struct ex_vect *rout_vect;	/* Exec. vector of enclosing routine */
 	return last_item;	/* Execution vector for new routine invokation */
 }
 
-public void exinv(tag, object)
+rt_public void exinv(tag, object)
 register2 char *tag;		/* Assertion tag */
 register3 char *object;		/* The object on which invariant is checked */
 {
@@ -473,7 +473,7 @@ register3 char *object;		/* The object on which invariant is checked */
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
 
-public void exasrt(tag, type)
+rt_public void exasrt(tag, type)
 char *tag;								/* Assertion's tag */
 int type;								/* Type of assertion */
 {
@@ -509,7 +509,7 @@ int type;								/* Type of assertion */
  * exceptions and perform some cleanup (e.g. in a retrieve operation).
  */
 
-public void excatch(jmp)
+rt_public void excatch(jmp)
 char *jmp;		/* The jump buffer used to catch exception */
 {
 	/* Push a pseudo EX_OSTK execution vector on the exception stack. Whenever
@@ -539,7 +539,7 @@ char *jmp;		/* The jump buffer used to catch exception */
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
 
-public void exhdlr(handler, sig)
+rt_public void exhdlr(handler, sig)
 Signal_t (*handler)();			/* The signal handler to be called */
 int sig;						/* Caught signal */
 {
@@ -621,7 +621,7 @@ int sig;						/* Caught signal */
 	expop(&eif_stack);				/* And EX_HDLR vector */
 }
 
-public void exfail()
+rt_public void exfail()
 {
 	/* The routine whose execution vector is 'exvect' has reached the end
 	 * of its rescue clause. So it will fail. Set the ex_rescue flag in case
@@ -686,7 +686,7 @@ public void exfail()
 	/* NOTREACHED */
 }
 
-public void exresc(rout_vect)
+rt_public void exresc(rout_vect)
 register2 struct ex_vect *rout_vect;
 {
 	/* Signals entry in rescue clause. As we may enter a new exception level
@@ -744,7 +744,7 @@ register2 struct ex_vect *rout_vect;
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
 
-public void xraise(code)
+rt_public void xraise(code)
 int code;
 {
 	/* Raises an Eiffel exception of the given code with no associated tag */
@@ -752,7 +752,7 @@ int code;
 	eraise((char *) 0, (long) code);
 }
 
-public void eraise(tag, num)
+rt_public void eraise(tag, num)
 char *tag;
 long num;			/* May be called from Eiffel, and INTEGER is long */
 {
@@ -891,7 +891,7 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 	/* NOTREACHED */
 }
 
-public void eviol()
+rt_public void eviol()
 {
 	/* An assertion violation occurred, or the routine reached the end of its
 	 * rescue clause with no 'retry'. Set the exception code matching the
@@ -975,7 +975,7 @@ public void eviol()
 	/* NOTREACHED */
 }
 
-public void ereturn()
+rt_public void ereturn()
 {
 	/* Return to the first setjmp buffer stored in the exception stack. The
 	 * bottom of the stack (created by the main routine) always has a valid
@@ -1009,7 +1009,7 @@ public void ereturn()
 	/* NOTREACHED */
 }
 
-private char *backtrack()
+rt_private char *backtrack()
 {
 	/* Assuming an exception has occurred, start the backtracking process in
 	 * order to find a valid branching point (routine with a rescue clause). If
@@ -1199,7 +1199,7 @@ private char *backtrack()
 	return (char *) 0;	/* No setjmp buffer found */
 }
 
-public void exok()
+rt_public void exok()
 {
 	/* Signals that the call recorded at the top of the stack has finished
 	 * normally (eventually via resumption). Pop off the values on the
@@ -1264,7 +1264,7 @@ public void exok()
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
 
-private void excur()
+rt_private void excur()
 {
 	/* Compute the value of the current exception which was pushed on the
 	 * exception trace stack, at the previous execution level. The run-time
@@ -1303,7 +1303,7 @@ private void excur()
 #endif
 }
 
-private void exorig()
+rt_private void exorig()
 {
 	/* Compute the value of the original exception which started to fill in
 	 * the exception trace stack, at the previous execution level. The run-time
@@ -1413,7 +1413,7 @@ private void exorig()
 #endif
 }
 
-private char *extag(trace)
+rt_private char *extag(trace)
 struct ex_vect *trace;		/* Faulty vector on trace stack */
 {
 	/* Recompute the exception tag associated with vector on stack. This burden
@@ -1439,7 +1439,7 @@ struct ex_vect *trace;		/* Faulty vector on trace stack */
     return echtg;
 }
 
-public void esfail()
+rt_public void esfail()
 {
 	/* Produces immediate failure of the Eiffel system followed by an exception
 	 * trace dump. No exit is performed. However, before returning we have to
@@ -1498,7 +1498,7 @@ public void esfail()
 
 #ifdef WORKBENCH
 
-private void exception(how)
+rt_private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
 	/* This is a debugger hook in workbench mode. If an exception is raised,
@@ -1524,7 +1524,7 @@ int how;		/* Implicit or explicit exception? */
 	dbreak(how);			/* Stop execution */
 }
 #else
-private void exception(how)
+rt_private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
 	/* This is a no-operation call in final mode (no debugger). If an exception
@@ -1534,7 +1534,7 @@ int how;		/* Implicit or explicit exception? */
 }
 #endif
 
-public void panic(msg)
+rt_public void panic(msg)
 char *msg;
 {
 	/* In case of run-time panic, print the final message 'msg' and dumps
@@ -1583,7 +1583,7 @@ char *msg;
 	/* NOTREACHED */
 }
 
-public void fatal_error(msg)
+rt_public void fatal_error(msg)
 char *msg;
 {
 	/* In case of run-time fatal error, print the final message 'msg' and dumps
@@ -1636,7 +1636,7 @@ char *msg;
 	/* NOTREACHED */
 }
 
-private void dump_core()
+rt_private void dump_core()
 {
 	/* Dumps a core to generate debugging information. In case the SIGABRT
 	 * signal would be caught or ignored, we first reset it to the default
@@ -1655,7 +1655,7 @@ private void dump_core()
 	exit(1);					/* Bede Bede Bede, That's all Folks ! */
 }
 
-public void esdie(code)
+rt_public void esdie(code)
 int code;
 {
 	/* This routine provokes the termination of the current Eiffel program,
@@ -1669,7 +1669,7 @@ int code;
 	/* NOTREACHED */
 }
 
-private void find_call()
+rt_private void find_call()
 {
 	/* The Eiffel exception trace stack was built upside-down. So we have to
 	 * walk forward through the stack to find the enclosing call record (an
@@ -1769,7 +1769,7 @@ private void find_call()
 #endif
 }
 
-private void dump_trace_stack()
+rt_private void dump_trace_stack()
 {
 	/* Dump the Eiffel exception trace stack once a system failure has occurred.
 	 * Due to the upside-down nature of this stack, we need to use the 'st_bot'
@@ -1798,7 +1798,7 @@ private void dump_trace_stack()
 	recursive_dump(0);			/* Recursive dump, starting at level 0 */
 }
 
-private void recursive_dump(level)
+rt_private void recursive_dump(level)
 register1 int level;
 {
 	/* Prints the stack trace of a given level. Whenever a new level is reached,
@@ -1871,7 +1871,7 @@ register1 int level;
 	}
 }
 
-private void print_top()
+rt_private void print_top()
 {
 	/* Prints the exception trace described by the top frame of the exception
 	 * stack and the exception context built.
@@ -2023,7 +2023,7 @@ private void print_top()
  * (char *) elements, we now store (struct ex_vect) ones.
  */
 
-shared struct ex_vect *exget(stk)
+rt_shared struct ex_vect *exget(stk)
 register2 struct xstack *stk;
 {
 	/* Get a new execution vector at the top of the stack. If the chunk is
@@ -2064,7 +2064,7 @@ register2 struct xstack *stk;
 	return top - 1;			/* Address of new available execution vector */
 }
 
-private struct ex_vect *stack_allocate(stk, size)
+rt_private struct ex_vect *stack_allocate(stk, size)
 register2 struct xstack *stk;		/* The stack */
 register1 int size;					/* Initial size */
 {
@@ -2093,7 +2093,7 @@ register1 int size;					/* Initial size */
 	return arena;			/* Stack allocated */
 }
 
-private int stack_extend(stk, size)
+rt_private int stack_extend(stk, size)
 register2 struct xstack *stk;		/* The stack */
 register1 int size;					/* Size of new chunk to be added */
 {
@@ -2130,7 +2130,7 @@ register1 int size;					/* Size of new chunk to be added */
 	return 0;			/* Everything is ok */
 }
 
-private void stack_truncate(stk)
+rt_private void stack_truncate(stk)
 register1 struct xstack *stk;		/* The stack to be truncated */
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
@@ -2154,7 +2154,7 @@ register1 struct xstack *stk;		/* The stack to be truncated */
 	}
 }
 
-private void wipe_out(chunk)
+rt_private void wipe_out(chunk)
 register struct stxchunk *chunk;	/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
@@ -2174,7 +2174,7 @@ register struct stxchunk *chunk;	/* First chunk to be freed */
 		xfree((char *) chunk);
 }
 
-public void expop(stk)
+rt_public void expop(stk)
 register1 struct xstack *stk;		/* The stack */
 {
 	/* Removes one item from the Eiffel stack */
@@ -2220,7 +2220,7 @@ register1 struct xstack *stk;		/* The stack */
 #endif
 }
 
-shared struct ex_vect *extop(stk)
+rt_shared struct ex_vect *extop(stk)
 register1 struct xstack *stk;		/* The stack */
 {
 	/* Returns the value at the top of the Eiffel stack or a NULL pointer if
@@ -2247,7 +2247,7 @@ register1 struct xstack *stk;		/* The stack */
 	return last_item;
 }
 
-shared struct ex_vect *exnext()
+rt_shared struct ex_vect *exnext()
 {
 	/* This function is only used when dumping the execution stack (i.e. after
 	 * a system failure has occurred). As that stack has been built upside-down,
@@ -2284,7 +2284,7 @@ shared struct ex_vect *exnext()
 	return first_item;
 }
 
-private int exend()
+rt_private int exend()
 {
 	/* Returns true if the end of the Eiffel trace stack has been reached */
 
@@ -2303,7 +2303,7 @@ private int exend()
  * to a static string giving a "human readable" description of the event.
  */
 
-private char *exception_string(code)
+rt_private char *exception_string(code)
 int code;
 {
 	/* Returns a pointer to a static string describing the exception whose
@@ -2320,7 +2320,7 @@ int code;
 }
 
 #ifdef DEBUG
-private void dump_vector(msg, vector)
+rt_private void dump_vector(msg, vector)
 char *msg;				/* Message to print before dumping */
 struct ex_vect *vector;	/* The vector to be dumped */
 {
@@ -2369,14 +2369,14 @@ struct ex_vect *vector;	/* The vector to be dumped */
  * Eiffel interface
  */
 
-public long eeocode()
+rt_public long eeocode()
 {
 	/* Return the code of the first exception at this nesting level */
 
 	return (long) echorg;	/* Original exception code */
 }
 
-public char *eeotag()
+rt_public char *eeotag()
 {
 	/* Return the tag of the first exception at this nesting level */
 
@@ -2389,7 +2389,7 @@ public char *eeotag()
 	return (char *) 0;
 }
 
-public char *eeorout()
+rt_public char *eeorout()
 {
     /* Return the routine of the first exception at this nesting level */
 
@@ -2402,7 +2402,7 @@ public char *eeorout()
     return (char *) 0;
 }
 
-public char *eeoclass()
+rt_public char *eeoclass()
 {
     /* Return the class of the first exception at this nesting level */
 
@@ -2419,12 +2419,12 @@ public char *eeoclass()
     return (char *) 0;
 }
 
-public long eelcode()
+rt_public long eelcode()
 {
 	return (long) echval;	/* Last exception code */
 }
 
-public char *eeltag()
+rt_public char *eeltag()
 {
 	if (echval == 0)		/* No current exception */
 		return (char *) 0;
@@ -2435,7 +2435,7 @@ public char *eeltag()
 	return (char *) 0;
 }
 
-public char *eelrout()
+rt_public char *eelrout()
 {
     /* Return the routine of the last exception */
 
@@ -2448,7 +2448,7 @@ public char *eelrout()
     return (char *) 0;
 }
 
-public char *eelclass()
+rt_public char *eelclass()
 {
     /* Return the class of the last exception */
 
@@ -2465,7 +2465,7 @@ public char *eelclass()
     return (char *) 0;
 }
 
-public void eetrace(b)
+rt_public void eetrace(b)
 char b;
 {
     /* Enable/diable printing of the history table */
@@ -2476,7 +2476,7 @@ char b;
         print_history_table = 0;
 }
 
-public char *eename(ex) 
+rt_public char *eename(ex) 
 long ex;
 {
     /* Return the english description for exeception `ex' */
@@ -2489,7 +2489,7 @@ long ex;
     }
 }
 
-public void eecatch(ex)
+rt_public void eecatch(ex)
 long ex;
 {
     /* Catch exception `ex' */
@@ -2502,7 +2502,7 @@ long ex;
 
 }
 
-public void eeignore(ex)
+rt_public void eeignore(ex)
 long ex;
 {
     /* Ignore exception `ex' */
@@ -2513,7 +2513,7 @@ long ex;
     }
 }
 
-private char eedefined(ex)
+rt_private char eedefined(ex)
 long ex;
 {
     /* Is exception `ex' defined? */
@@ -2549,12 +2549,12 @@ long ex;
 #include "timer.c"
 #include "urgent.c"
 
-private struct stack hec_stack;
-private char *(**ecreate)();
+rt_private struct stack hec_stack;
+rt_private char *(**ecreate)();
 
 #include "macros.h"
 
-private int cc_for_speed = 1;	/* Optimized for speed */
+rt_private int cc_for_speed = 1;	/* Optimized for speed */
 
 /* Classes held in the pseudo-test system (these have to be statically allocated
  * strings as the dumping of the exception stack does address comparaison).
@@ -2569,7 +2569,7 @@ char c5[] = "FIFTH";
 /* Array used to fake a real system (with class names, routine names and
  * origins for each routine.
  */
-private struct test test_system[] = {
+rt_private struct test test_system[] = {
 	{ c0, "root", c0 },					/* 0 */
 	{ c1, "first_routine", c1 },		/* 1 */
 	{ c2, "second_routine", c1 },		/* 2 */
@@ -2583,18 +2583,18 @@ private struct test test_system[] = {
 };
 
 /* Routines used to simulate the Eiffel system */
-private void t_root();
-private void t_first_routine();
-private void t_second_routine();
-private void t_third_routine();
-private void t_fourth_routine();
+rt_private void t_root();
+rt_private void t_first_routine();
+rt_private void t_second_routine();
+rt_private void t_third_routine();
+rt_private void t_fourth_routine();
 /*
-private void t_fifth_routine();
+rt_private void t_fifth_routine();
 */
-private void t_called_by_check();
-private Signal_t emergency();
+rt_private void t_called_by_check();
+rt_private Signal_t emergency();
 
-public main()
+rt_public main()
 {
 	/* Tests for the exception mechanism */
 
@@ -2609,7 +2609,7 @@ public main()
 	exit(0);
 }
 
-private void t_root()
+rt_private void t_root()
 {
 	RTEX; RTED;
 
@@ -2628,7 +2628,7 @@ rescue:
 	printf("> End of tests.\n");
 }
 
-private void t_first_routine()
+rt_private void t_first_routine()
 {
 	RTEX;
 
@@ -2646,7 +2646,7 @@ private void t_first_routine()
 	RTEE;
 }
 
-private void t_second_routine()
+rt_private void t_second_routine()
 {
 	RTEX; RTED;
 	int time = 1;
@@ -2684,7 +2684,7 @@ rescue:
 	RTEF;
 }
 
-private void t_third_routine()
+rt_private void t_third_routine()
 {
 	RTEX;
 
@@ -2699,7 +2699,7 @@ private void t_third_routine()
 	RTEE;
 }
 
-private void t_fourth_routine()
+rt_private void t_fourth_routine()
 {
 	RTEX;
 
@@ -2713,7 +2713,7 @@ private void t_fourth_routine()
 	RTEE;
 }
 
-private Signal_t emergency(sig)
+rt_private Signal_t emergency(sig)
 int sig;
 {
 	printf("Caught signal #%d (%s) -- Giving up...\n", sig, signame(sig));
@@ -2729,16 +2729,16 @@ int sig;
 /*                                             */
 /*---------------------------------------------*/
 #ifdef CONCURRENT_EIFFEL
-private void cur_print_top();		/* Prints top value of the stack for Concurrency*/
+rt_private void cur_print_top();		/* Prints top value of the stack for Concurrency*/
 
 /* Strings used as separator for Eiffel stack dumps */
-private char *cur_retried =
+rt_private char *cur_retried =
 "\n===============================================================================";
-private char *cur_failed =
+rt_private char *cur_failed =
 "\n-------------------------------------------------------------------------------";
-private char *cur_branch_enter =
+rt_private char *cur_branch_enter =
 "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-private char *cur_branch_exit =
+rt_private char *cur_branch_exit =
 "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 void get_call_stack() {
@@ -2866,7 +2866,7 @@ register1 int level;
     }
 }
 
-private void cur_print_top()
+rt_private void cur_print_top()
 {
     /* Prints the exception trace described by the top frame of the exception
      * stack and the exception context built.

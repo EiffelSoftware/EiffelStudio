@@ -30,7 +30,7 @@
 extern Malloc_t malloc();	/* Memory allocation */
 
 /* VARARGS2 */
-public void send_bye(s, code)
+rt_public void send_bye(s, code)
 int s;		/* The socket descriptor */
 int code;	/* The acknowledgment code */
 {
@@ -44,7 +44,7 @@ int code;	/* The acknowledgment code */
 }
 
 /* VARARGS2 */
-public void send_ack(s, code)
+rt_public void send_ack(s, code)
 int s;		/* The socket descriptor */
 int code;	/* The acknowledgment code */
 {
@@ -65,7 +65,7 @@ int code;	/* The acknowledgment code */
 	send_packet(s, &pack);
 }
 
-public void send_info(s, code)
+rt_public void send_info(s, code)
 int s;		/* The socket descriptor */
 int code;		/* The information code */
 {
@@ -78,7 +78,7 @@ int code;		/* The information code */
 	send_packet(s, &rqst);
 }
 
-public int send_str(sp, buffer)
+rt_public int send_str(sp, buffer)
 STREAM *sp;		/* The stream descriptor */
 char *buffer;	/* Where the string is held */
 {
@@ -143,7 +143,7 @@ char *buffer;	/* Where the string is held */
 	return 0;		/* Ok, string was sent */
 }
 
-public char *recv_str(sp, sizeptr)
+rt_public char *recv_str(sp, sizeptr)
 STREAM *sp;		/* The STREAM pointer */
 int *sizeptr;	/* Set to the size of the string if non null pointer */
 {
@@ -191,7 +191,7 @@ int *sizeptr;	/* Set to the size of the string if non null pointer */
 }
 
 #ifdef DEBUG
-public void trace_request(status, rqst)
+rt_public void trace_request(status, rqst)
 char *status;
 Request *rqst;
 {

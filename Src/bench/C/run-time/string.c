@@ -25,7 +25,7 @@
 
 #define MAX_NUM_LEN		256			/* Maximum length for an ASCII number */
 
-private char *make_string(s, length)
+rt_private char *make_string(s, length)
 char *s;
 int length;
 {
@@ -56,7 +56,7 @@ int length;
  * Stripping space characters.
  */
 
-public int str_left(str, length)
+rt_public int str_left(str, length)
 register1 char *str;
 int length;
 {
@@ -84,7 +84,7 @@ int length;
  * Justifying strings
  */
 
-public void str_ljustify(str, length, capacity)
+rt_public void str_ljustify(str, length, capacity)
 register1 char *str;
 int length, capacity;
 {
@@ -110,7 +110,7 @@ int length, capacity;
 		*s++ = ' ';
 }
 
-public void str_rjustify(str, length, capacity)
+rt_public void str_rjustify(str, length, capacity)
 register1 char *str;
 int length, capacity;
 {
@@ -131,7 +131,7 @@ int length, capacity;
 		*r-- = ' ';
 }
 
-public void str_cjustify(str, length, capacity)
+rt_public void str_cjustify(str, length, capacity)
 register1 char *str;
 int length, capacity;
 {
@@ -160,7 +160,7 @@ int length, capacity;
 }
 
 
-public int str_right(str, length)
+rt_public int str_right(str, length)
 register1 char *str;
 int length;
 {
@@ -182,7 +182,7 @@ int length;
  * Search and replace.
  */
 
-public int str_search(str, c, start, len)
+rt_public int str_search(str, c, start, len)
 char *str;		/* The string */
 char c;			/* Character to look at */
 int start;		/* Index in string where search starts */
@@ -206,7 +206,7 @@ int len;		/* Length of the string */
 	return i < len ? ++i : 0;
 }
 
-public void str_replace(str, new, string_length, new_len, start, end)
+rt_public void str_replace(str, new, string_length, new_len, start, end)
 char *str;			/* The original string */
 char *new;			/* The new string for substring replacement */
 int string_length;	/* Length of the original string */
@@ -253,7 +253,7 @@ int end;			/* Index within string where replacement stops */
 	bcopy(new, str + (start - 1), new_len);
 }
 
-public void str_insert(str, new, string_length, new_len, idx)
+rt_public void str_insert(str, new, string_length, new_len, idx)
 char *str;			/* The original string */
 char *new;			/* The new string to be inserted */
 int string_length;		/* Length of the original string */
@@ -289,14 +289,14 @@ int idx;			/* Index within string where insertion begins */
  * General routines.
  */
 
-public EIF_INTEGER str_code(str, i)
+rt_public EIF_INTEGER str_code(str, i)
 EIF_CHARACTER *str;
 EIF_INTEGER i;
 {
 	return (EIF_INTEGER) str[i-1]; /* Numeric code of 'i'-th character in 'str' */
 }
 
-public void str_blank(str, n)
+rt_public void str_blank(str, n)
 char *str;
 int n;
 {
@@ -308,7 +308,7 @@ int n;
 		*str++ = ' ';
 }
 
-public void str_fill(str, n, c)
+rt_public void str_fill(str, n, c)
 char *str;
 int n;
 char c;
@@ -321,7 +321,7 @@ char c;
 		*str++ = c;
 }
 
-public void str_tail(str, n, l)
+rt_public void str_tail(str, n, l)
 register3 char *str;	/* The string */
 register1 int n;		/* Number of characters to keep at the tail */
 int l;					/* Length of the string */
@@ -334,7 +334,7 @@ int l;					/* Length of the string */
 		*str++ = *f++;
 }
 
-public void str_take(str, new, start, end)
+rt_public void str_take(str, new, start, end)
 char *str;			/* The original string */
 char *new;			/* The to-be-filled substring */
 long start;			/* First char index in string 'str' to be copied */
@@ -349,7 +349,7 @@ long end;			/* Last char index in string 'str' to be copied */
  * String case conversions.
  */
 
-public void str_lower(str, l)
+rt_public void str_lower(str, l)
 register1 char *str;
 int l;
 {
@@ -364,7 +364,7 @@ int l;
 	}
 }
 
-public void str_upper(str, l)
+rt_public void str_upper(str, l)
 register1 char *str;
 int l;
 {
@@ -383,7 +383,7 @@ int l;
  * Comparaison and copy.
  */
 
-public int str_cmp(str1, str2, l1, l2)
+rt_public int str_cmp(str1, str2, l1, l2)
 register1 char *str1;
 register2 char *str2;
 int l1;
@@ -406,7 +406,7 @@ int l2;
 	return (l1 + l2) == 0 ? 0 : (l1 > l2 ? 1 : -1);
 }
 
-public void str_cpy(to, from, len)
+rt_public void str_cpy(to, from, len)
 char *to;
 char *from;
 int len;
@@ -420,7 +420,7 @@ int len;
  * Prepending a character, appending a string.
  */
 
-public void str_cprepend(str, c, l)
+rt_public void str_cprepend(str, c, l)
 char *str;		/* The string */
 char c;			/* The character to prepend */
 int l;			/* And Her Majesty, the Length */
@@ -436,7 +436,7 @@ int l;			/* And Her Majesty, the Length */
 	*str = c;
 }
 
-public void str_append(str, new, string_length, new_len)
+rt_public void str_append(str, new, string_length, new_len)
 char *str;			/* The original string */
 char *new;			/* The new string to be appended */
 int string_length;		/* Length of the original string */
@@ -451,7 +451,7 @@ int new_len;		/* Length of the appended substring */
  * Removing characters.
  */
 
-public void str_rmchar(str, l, i)
+rt_public void str_rmchar(str, l, i)
 char *str;		/* The string */
 int l;			/* String length */
 int i;			/* Index of character to be removed */
@@ -471,7 +471,7 @@ int i;			/* Index of character to be removed */
 		*t++ = *f++;
 }
 
-public int str_rmall(str, c, l)
+rt_public int str_rmall(str, c, l)
 char *str;		/* The string */
 char c;			/* Character to be removed */
 int l;			/* Length of string */
@@ -500,7 +500,7 @@ int l;			/* Length of string */
  * String reversing.
  */
 
-public void str_mirror(str, new, len)
+rt_public void str_mirror(str, new, len)
 register1 char *str;	/* The string to reverse */
 register2 char *new;	/* Where the reversed string goes */
 register3 int len;		/* Length of the string to be reversed */
@@ -515,7 +515,7 @@ register3 int len;		/* Length of the string to be reversed */
 		*new++ = *str--;
 }
 
-public void str_reverse(str, len)
+rt_public void str_reverse(str, len)
 register1 char *str;	/* The string to reverese */
 int len;				/* Length of the string to be reversed */
 {
@@ -537,7 +537,7 @@ int len;				/* Length of the string to be reversed */
  * Conversions from ASCII to numeric values.
  */
 
-public long str_atoi(str, length)
+rt_public long str_atoi(str, length)
 char *str;
 int length;
 {
@@ -550,7 +550,7 @@ int length;
 	return val;
 }
 
-public float str_ator(str, length)
+rt_public float str_ator(str, length)
 char *str;
 int length;
 {
@@ -563,7 +563,7 @@ int length;
 	return val;
 }
 
-public double str_atod(str, length)
+rt_public double str_atod(str, length)
 char *str;
 int length;
 {
@@ -580,7 +580,7 @@ int length;
  * Test for numeric values.
  */
 
-public EIF_BOOLEAN str_isi(str, length)
+rt_public EIF_BOOLEAN str_isi(str, length)
 char *str;
 EIF_INTEGER length;
 {
@@ -592,7 +592,7 @@ EIF_INTEGER length;
 	return (sscanf(s, "%ld %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
 }
 
-public EIF_BOOLEAN str_isr(str, length)
+rt_public EIF_BOOLEAN str_isr(str, length)
 char *str;
 EIF_INTEGER length;
 {
@@ -605,7 +605,7 @@ EIF_INTEGER length;
 	return (sscanf(s, "%f %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
 }
 
-public EIF_BOOLEAN str_isd(str, length)
+rt_public EIF_BOOLEAN str_isd(str, length)
 char *str;
 EIF_INTEGER length;
 {
@@ -622,7 +622,7 @@ EIF_INTEGER length;
  * To avoid redeclaration conflicts...
  */
 
-public long str_len(str)
+rt_public long str_len(str)
 char *str;
 {
 	return strlen(str);

@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-public bool_t idr_vector(idrs, array, size, elemsize, idr_elem)
+rt_public bool_t idr_vector(idrs, array, size, elemsize, idr_elem)
 IDR *idrs;				/* The serializing stream */
 char *array;			/* Pointer on the base of the array */
 int size;				/* Fixed size of the array */

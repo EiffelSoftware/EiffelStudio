@@ -32,6 +32,25 @@ feature -- Access
 	compiler_kernel: PROJECT_MANAGER
 			-- Implementation.
 
+
+	project_file_name: STRING is
+			-- Full path to .epr file.
+		do
+			-- Put Implementation here.
+		end
+
+	ace_file_name: STRING is
+			-- Full path to Ace file.
+		do
+			-- Put Implementation here.
+		end
+
+	project_directory: STRING is
+			-- Project directory.
+		do
+			-- Put Implementation here.
+		end
+		
 	valid_project: BOOLEAN is
 			-- Is project valid?
 		do
@@ -62,6 +81,12 @@ feature -- Access
 			Result := compiler_kernel.system_browser
 		end
 
+	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
+			-- Project Properties.
+		do
+			--| FIXME to be implemented.
+		end
+
 feature -- Basic Operations
 
 	create_item is
@@ -70,19 +95,19 @@ feature -- Basic Operations
 			item := ccom_create_item (Current)
 		end
 
-	retrieve_project (project_file_name: STRING) is
+	retrieve_project (project_file_name1: STRING) is
 			-- Retrieve project.
-			-- `project_file_name' [in].  
+			-- `project_file_name1' [in].  
 		do
-			compiler_kernel.retrieve_project (project_file_name)
+			compiler_kernel.retrieve_project (project_file_name1)
 		end
 
-	create_project (ace_file_name: STRING; project_directory_path: STRING) is
+	create_project (ace_file_name1: STRING; project_directory_path: STRING) is
 			-- Create new project.
-			-- `ace_file_name' [in].  
+			-- `ace_file_name1' [in].  
 			-- `project_directory_path' [in].  
 		do
-			compiler_kernel.create_project (ace_file_name, project_directory_path)
+			compiler_kernel.create_project (ace_file_name1, project_directory_path)
 		end
 
 feature {NONE}  -- Externals

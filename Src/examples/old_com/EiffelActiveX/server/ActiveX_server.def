@@ -1,0 +1,8 @@
+
+-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY 
+
+-- CLASS [EOLE_ACTIVEX_SERVER]
+EOLE_ACTIVEX_SERVER (make) : dllgetclassobject		alias	DllGetClassObject
+EOLE_ACTIVEX_SERVER (make) : dllregisterserver		alias	DllRegisterServer
+EOLE_ACTIVEX_SERVER (make) : dllunregisterserver	alias	DllUnregisterServer
+EOLE_ACTIVEX_SERVER (make) : dllcanunloadnow		alias	DllCanUnloadNow

@@ -1,0 +1,115 @@
+system
+	ActiveX_client
+
+root
+	ROOT_CLASS (root_cluster): "make"
+
+default
+	assertion (all)
+	debug  (yes)
+	
+
+
+cluster
+	
+	root_cluster: "c:\dll_ex~1\client";
+
+		-- EiffelBase
+	base:						"$EIFFEL4\library\base"
+	structures(base):			"$\structures"
+	
+	kernel(base):				"$\kernel"
+	support(base):				"$\support"
+	access(structures):			"$\access"
+	cursors(structures):		"$\cursors"
+	cursor_tree(structures):	"$\cursor_tree"
+	dispenser(structures):		"$\dispenser"
+	iteration(structures):		"$\iteration"
+	list(structures):			"$\list"
+	set(structures):			"$\set"
+	sort(structures):			"$\sort"
+	storage(structures):		"$\storage"
+	table(structures):			"$\table"
+	traversing(structures):		"$\traversing"
+	tree(structures):			"$\tree"
+
+	thread:						"$EIFFEL4\library\thread"
+
+		-- Wel
+	wel:						"$EIFFEL4\library\wel"
+	wel_constants:				"$EIFFEL4\library\wel\consts";
+	wel_controls:				"$EIFFEL4\library\wel\controls";
+	wel_gdi:					"$EIFFEL4\library\wel\gdi";
+	wel_gdi_stocks: 			"$EIFFEL4\library\wel\gdistock";
+	wel_messages:				"$EIFFEL4\library\wel\messages";
+	wel_standard_dialogs:		"$EIFFEL4\library\wel\stddlgs";
+	wel_structures: 			"$EIFFEL4\library\wel\structs";
+	wel_support:				"$EIFFEL4\library\wel\support"
+		visible
+			WEL_REGISTRY;
+		end;
+	wel_windows:				"$EIFFEL4\library\wel\windows";
+
+		-- EiffelCom
+	com:						"$EIFFEL4\library\old_com"
+	ecom_auto(com):				"$\ecom_automation"
+		visible
+			EOLE_DISPATCH;
+			EOLE_PICTURE_DISP;
+			EOLE_FONT_DISP;
+			EOLE_PICTURE_DISP;
+			EOLE_FONT_DISP;
+		end;
+	ecom_basic(com):			"$\ecom_basic"
+		visible
+			EOLE_CALL_DISPATCHER;
+			EOLE_UNKNOWN;
+			EOLE_PICTURE;
+			EOLE_FONT;
+			EOLE_CLASS_FACTORY;
+			EOLE_CONNPT_CONTAINER;
+			EOLE_CONNECTION_POINT;
+			EOLE_PERSIST;
+			EOLE_PROVIDE_CLASS_INFO;
+		end;
+	ecom_enum(com):				"$\ecom_enumerators"
+		visible
+			EOLE_ENUM_UNKNOWN;
+			EOLE_ENUM_CONNECTIONS;
+			EOLE_ENUM_CONNECTION_POINTS;
+		end;
+	ecom_flags(com):			"$\ecom_flags";
+	ecom_storage(com):			"$\ecom_storage"
+		visible
+			EOLE_STREAM;
+			EOLE_STORAGE;
+		end;
+	ecom_structure(com):	"$\ecom_structures"
+		visible
+			EOLE_BSTR;
+			EOLE_CONNECTDATA;
+			EOLE_CURRENCY;
+			EOLE_DISPPARAMS;
+			EOLE_DLL_ENTRY;
+			EOLE_DOCUMENTATION;
+			EOLE_EXCEPINFO;
+			EOLE_FILE_TIME;
+			EOLE_REFERENCE;
+			EOLE_SAFEARRAY;
+			EOLE_SAFEARRAY_BOUNDS;
+			EOLE_SELECT_PICTURE;
+			EOLE_SIZE;
+			EOLE_TEXTMETRIC;
+			EOLE_TYPE_LIB_RESULT;
+		end;
+
+external
+
+	include_path:	"$EIFFEL4\library\old_com\spec\windows\include",
+					"$EIFFEL4\library\old_com\private_clib",
+					"$EIFFEL4\library\wel\spec\windows\include";
+
+	object:		"$EIFFEL4\library\old_com\spec\$(COMPILER)\lib\eifole.lib",
+				"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib";
+
+end

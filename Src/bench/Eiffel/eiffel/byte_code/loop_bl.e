@@ -89,9 +89,11 @@ feature -- Access
 				from_part.generate
 			end
 			
-				-- Record the place where we will generate
-				-- the hook for the invariant
-			invariant_breakpoint_slot := get_current_frozen_debugger_hook
+			if workbench_mode or else system.exception_stack_managed then
+					-- Record the place where we will generate
+					-- the hook for the invariant
+				invariant_breakpoint_slot := get_current_frozen_debugger_hook
+			end
 
 				-- Generate the "invariant" part
 			if generate_invariant then
@@ -158,11 +160,13 @@ feature -- Access
 				compound.generate
 			end
 
-				-- Save the hook number
-			body_breakpoint_slot := get_current_frozen_debugger_hook
-				-- Restore the hook number to the one recorded when
-				-- first generating the invariant clause.
-			set_current_frozen_debugger_hook (invariant_breakpoint_slot)
+			if workbench_mode or else system.exception_stack_managed then
+					-- Save the hook number
+				body_breakpoint_slot := get_current_frozen_debugger_hook
+					-- Restore the hook number to the one recorded when
+					-- first generating the invariant clause.
+				set_current_frozen_debugger_hook (invariant_breakpoint_slot)
+			end
 
 				-- Regenerate the invariant clause	
 			if generate_invariant then
@@ -200,8 +204,10 @@ feature -- Access
 			generate_frozen_debugger_hook
 			stop.generate
 
-				-- Restore the hook number
-			set_current_frozen_debugger_hook (body_breakpoint_slot)
+			if workbench_mode or else system.exception_stack_managed then
+					-- Restore the hook number
+				set_current_frozen_debugger_hook (body_breakpoint_slot)
+			end
 
 			buf.put_character (';')
 			buf.put_new_line

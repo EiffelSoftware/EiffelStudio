@@ -22,43 +22,48 @@ feature -- Basic operations
 			data_member: WIZARD_WRITER_C_MEMBER
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
-			-- Add  import header files
-			coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
-			coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
-
-			create data_member.make
-			data_member.set_comment (Interface_pointer_comment)
-
-			create a_variable_name.make (100)
-			a_variable_name.append (Interface_variable_prepend)
-			a_variable_name.append (an_interface.c_type_name)
-			data_member.set_name (a_variable_name)
-
-			-- Variable type
-			create a_variable_type.make (100)
-			if an_interface.namespace /= Void and then not an_interface.namespace.empty then
-				a_variable_type.append (an_interface.namespace)
-				a_variable_type.append ("::")
-			end
-			a_variable_type.append (an_interface.c_type_name)
-			a_variable_type.append (Space)
-			a_variable_type.append (Asterisk)
-			data_member.set_result_type (a_variable_type)
-
-			coclass_generator.cpp_class_writer.add_member (data_member, Private)
-
-			-- Find all features and properties
-			a_name := an_interface.c_type_name
-			coclass_generator.interface_names.extend (a_name)
-
-			if 
-				an_interface.dispinterface or 
-				an_interface.dual 
+			if
+				not an_interface.c_type_name.is_equal (Idispatch_type) and
+				not an_interface.c_type_name.is_equal (Iunknown_type)
 			then
-				dispatch_interface := True
+				-- Add  import header files
+				coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
+				coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
+
+				create data_member.make
+				data_member.set_comment (Interface_pointer_comment)
+
+				create a_variable_name.make (100)
+				a_variable_name.append (Interface_variable_prepend)
+				a_variable_name.append (an_interface.c_type_name)
+				data_member.set_name (a_variable_name)
+
+				-- Variable type
+				create a_variable_type.make (100)
+				if an_interface.namespace /= Void and then not an_interface.namespace.empty then
+					a_variable_type.append (an_interface.namespace)
+					a_variable_type.append ("::")
+				end
+				a_variable_type.append (an_interface.c_type_name)
+				a_variable_type.append (Space)
+				a_variable_type.append (Asterisk)
+				data_member.set_result_type (a_variable_type)
+
+				coclass_generator.cpp_class_writer.add_member (data_member, Private)
+
+				-- Find all features and properties
+				a_name := an_interface.c_type_name
+				coclass_generator.interface_names.extend (a_name)
+
+				if 
+					an_interface.dispinterface or 
+					an_interface.dual 
+				then
+					dispatch_interface := True
+				end
+				create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
+				interface_generator.generate_functions_and_properties (an_interface)
 			end
-			create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
-			interface_generator.generate_functions_and_properties (an_interface)
 		end
 
 	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is

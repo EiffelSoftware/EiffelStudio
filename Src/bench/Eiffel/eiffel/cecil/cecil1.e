@@ -1,65 +1,59 @@
--- Visible routine table to generate
+indexing
+	description: "Hash table of visible routines."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CECIL1 
+class CECIL_ROUTINE_TABLE 
 
 inherit
-
-	CECIL_TABLE [FEATURE_I];
+	CECIL_TABLE [FEATURE_I]
+	
 	SHARED_DECLARATIONS
 		undefine
 			copy, is_equal
-		end;
+		end
 
 create
-	wipe_out
+	init
 
-feature 
+feature -- C code generation
 
-	generate_final (buffer: GENERATION_BUFFER; type_id: INTEGER) is
+	generate_final (buffer: GENERATION_BUFFER; a_class_type: CLASS_TYPE) is
 			-- Generation of the hash table
 		local
-			i: INTEGER;
+			i, nb: INTEGER;
 			routine_name: STRING;
 			feat: FEATURE_I;
 			c_type: TYPE_C;
 			written_class: CLASS_C;
-			class_type, written_type: CLASS_TYPE;
+			written_type: CLASS_TYPE;
 			actual_type: TYPE_A;
 			formal_type: FORMAL_A
 			gen_type_a: GEN_TYPE_A
-			local_values: like values
+			l_values: like values
 		do
 			buffer.putstring ("static char *(*cr");
-			buffer.putint (type_id);
+			buffer.putint (a_class_type.type_id);
 			buffer.putstring ("[])() = {%N");
 			from
 				i := 0;
-				local_values := values
+				nb := capacity - 1
+				l_values := values
 			until
-				i > upper
+				i > nb
 			loop
-				feat := local_values.item (i);
-				if 
-					(feat = Void) or else 
-					feat.is_external or else
-					feat.is_deferred
-				then
+				feat := l_values.item (i);
+				if (feat = Void) or else feat.is_external or else feat.is_deferred then
 					buffer.putstring ("(char *(*)()) 0");
 				else
-					class_type := System.class_type_of_id (type_id);
 					if feat.is_constant and then not feat.is_once then
 							-- A non-string constant has always its feature generated in
 							-- visible class.
-						written_class := System.class_of_id (class_type.associated_class.class_id)
+						written_class := System.class_of_id (a_class_type.associated_class.class_id)
 					else
 						written_class := System.class_of_id (feat.written_in);
 					end
-					if (written_class.generics = Void) then
-						written_type := written_class.types.first
-					else
-						written_type := written_class.meta_type 
-											(class_type.type).associated_class_type;
-					end;
+					written_type := written_class.meta_type (a_class_type.type).associated_class_type
 					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
 debug ("CECIL")
     io.putstring ("Generating entry for feature: ");
@@ -82,7 +76,7 @@ end;
 							-- current class declaration is a generic class and therefore
 							-- `gen_type_a' cannot be Void (enforced by a check statement).
 						formal_type ?= actual_type
-						gen_type_a ?= class_type.type.type_a
+						gen_type_a ?= a_class_type.type.type_a
 						check
 							gen_type_a_exists: gen_type_a /= Void
 						end
@@ -100,20 +94,21 @@ end;
 	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
 			-- Generate workbench feature id array
 		local
-			i: INTEGER;
+			i, nb: INTEGER;
 			feat: FEATURE_I;
-			local_values: like values
+			l_values: like values
 		do
 			buffer.putstring ("uint32 cr");
 			buffer.putint (class_id);
 			buffer.putstring ("[] = {%N");
 			from
-				local_values := values
+				l_values := values
 				i := 0
+				nb := capacity - 1
 			until
-				i > upper
+				i > nb
 			loop
-				feat := local_values.item (i);
+				feat := l_values.item (i);
 				buffer.putstring ("(uint32) ");
 				if feat = Void then
 					buffer.putchar ('0');
@@ -130,20 +125,21 @@ end;
 			-- Generate workbench routine id array.
 			-- (Used when the class is precompiled.)
 		local
-			i: INTEGER;
+			i, nb: INTEGER;
 			feat: FEATURE_I;
-			local_values: like values
+			l_values: like values
 		do
 			buffer.putstring ("uint32 cr");
 			buffer.putint (class_id);
 			buffer.putstring ("[] = {%N");
 			from
-				local_values := values
+				l_values := values
 				i := 0
+				nb := capacity - 1
 			until
-				i > upper
+				i > nb
 			loop
-				feat := local_values.item (i);
+				feat := l_values.item (i);
 				buffer.putstring ("(uint32) ");
 				if feat = Void then
 					buffer.putchar ('0');
@@ -161,18 +157,21 @@ end;
 		require
 			good_argument: buffer /= Void;
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			str: STRING
+			l_keys: like keys
 		do
 			buffer.putstring ("char *cl")
 			buffer.putint (id)
 			buffer.putstring (" [] = {%N")
 			from
 				i := 0
+				nb := capacity - 1
+				l_keys := keys
 			until
-				i > upper
+				i > nb
 			loop
-				str := array_item (i)
+				str := l_keys.item (i)
 				if str = Void then
 					buffer.putstring ("(char *) 0")
 				else
@@ -186,25 +185,28 @@ end;
 			buffer.putstring ("};%N%N")
 		end
 
+feature -- Byte code generation
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Produce byte code for current cecil table.
 		require
 			good_argument: ba /= Void;
 		local
-			i: INTEGER;
+			i, nb: INTEGER;
 			feat: FEATURE_I;
-			local_values: like values
+			l_values: like values
 		do
-			ba.append_integer (upper + 1);
-			local_values := values
+			ba.append_integer (capacity);
+			l_values := values
 
 				-- First names array
 			from
 				i := 0
+				nb := capacity - 1
 			until
-				i > upper
+				i > nb
 			loop
-				feat := local_values.item (i);
+				feat := l_values.item (i);
 				if feat = Void then
 					ba.append_short_integer (0);
 				else
@@ -216,9 +218,9 @@ end;
 			from
 				i := 0
 			until
-				i > upper
+				i > nb
 			loop
-				feat := local_values.item (i);
+				feat := l_values.item (i);
 				if feat = Void then
 					ba.append_uint32_integer (0);
 				else

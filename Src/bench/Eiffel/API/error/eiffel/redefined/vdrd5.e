@@ -42,7 +42,13 @@ feature
 			r_class := redeclaration.written_class;
 			p_class := precursor.written_class;
 			put_string ("Redefined feature: ");
-			redeclaration.append_clickable_signature (error_window, r_class);
+			if r_class = class_c then
+					-- The redeclaration is written in the current class
+					-- The clickable information is NOT in the servers!!!
+				put_string (redeclaration.signature);
+			else
+				redeclaration.append_clickable_signature (error_window, r_class);
+			end;
 			put_string (" From: ");
 			r_class.append_clickable_name (error_window);
 			put_string ("%NPrecursor: ");

@@ -5,9 +5,7 @@
 #include "eif_portable.h"
 #include <stdio.h>
 #include "eif_file.h"
-#ifdef EIF_WIN32
-#include "eif_econsole.h"
-#endif
+#include "rt_main.h"
 #include "eif_console.h"
 #include "rt_assert.h"
 

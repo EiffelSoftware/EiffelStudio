@@ -486,15 +486,16 @@ feature -- Update
 						Degree_output.put_resynchronizing_breakpoints_message
 						Application.resynchronize_breakpoints
 					end
+					if
+						not manager.is_project_loaded and then
+						workbench.has_compilation_started
+					then
+						manager.on_project_loaded
+					end		
 				elseif exit_on_error and then exit_agent /= Void then
 					exit_agent.call (Void)
 				end
-				if
-					not manager.is_project_loaded and then
-					Workbench.last_reached_degree < 3
-				then
-					manager.on_project_loaded
-				end
+
 				Compilation_modes.reset_modes
 				is_compiling_ref.set_item (False)
 			else

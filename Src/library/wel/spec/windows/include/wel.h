@@ -40,6 +40,15 @@ extern "C" {
 
 #define cwel_menu_item_not_found 0xFFFFFFFF
 
+
+#ifndef BIF_EDITBOX
+#define BIF_EDITBOX				0x0010
+#endif
+
+#ifndef BIF_VALIDATE
+#define BIF_VALIDATE			0x0020
+#endif
+
 #ifdef EIF_BORLAND
 /* Shoulde be defined in <commctrl.h> */
 #define RBS_TOOLTIPS	0x0100
@@ -329,8 +338,6 @@ typedef struct tagLVHITTESTINFO
 #endif
 
 /* Should be defined in <shlobj.h> */
-#define BIF_EDITBOX				0x0010
-#define BIF_VALIDATE			0x0020
 #define BIF_BROWSEINCLUDEFILES	0x4000
 
 #define ICC_LISTVIEW_CLASSES	0x00000001

@@ -139,7 +139,7 @@ feature -- Initialization
 				sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 			body := method_writer.new_method_body (my_meth2)
-			body.exception_block.set_start_position (body.size)
+			body.exception_block.set_start_position (body.count)
 
 			label_id := body.define_label
 			
@@ -147,7 +147,7 @@ feature -- Initialization
 			body.put_opcode (feature {MD_OPCODES}.pop)
 			body.put_opcode_label (feature {MD_OPCODES}.Leave, label_id)
 
-			body.exception_block.set_catch_position (body.size)
+			body.exception_block.set_catch_position (body.count)
 			body.exception_block.set_type_token (system_exception_token)
 
 			body.put_opcode (feature {MD_OPCODES}.pop)
@@ -156,7 +156,7 @@ feature -- Initialization
 			body.put_opcode (feature {MD_OPCODES}.pop)
 			body.put_opcode_label (feature {MD_OPCODES}.Leave, label_id)
 
-			body.exception_block.set_end_position (body.size)			
+			body.exception_block.set_end_position (body.count)			
 
 			body.mark_label (label_id)
 			body.put_opcode (feature {MD_OPCODES}.Ret)

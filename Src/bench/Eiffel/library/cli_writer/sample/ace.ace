@@ -28,8 +28,6 @@ default
 	inlining (no)
 
 cluster
-	root_cluster:		"."
-
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "CVS"; 

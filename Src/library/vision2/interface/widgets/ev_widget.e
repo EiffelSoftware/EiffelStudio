@@ -492,6 +492,7 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			valid_command_type: -- is_type_button (cmd)
 		do
 			implementation.add_button_release_command (mouse_button, cmd, arg)
 		end
@@ -528,18 +529,7 @@ feature -- Event - command association
 			implementation.add_destroy_command (cmd, arg)
 		end	
 
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget has to be redrawn because it was
-			-- exposed from behind another widget.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_expose_command (cmd, arg)
-		end	
-
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is			-- Add `cmd' to the list of commands to be executed when 
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a key is pressed on the keyboard while the
 			-- widget has the focus.
@@ -591,14 +581,14 @@ feature -- Event - command association
 			implementation.add_get_focus_command (cmd, arg)
 		end
 
-	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget loose the focus.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_loose_focus_command (cmd, arg)
+			implementation.add_lose_focus_command (cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -646,16 +636,6 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_destroy_commands
-		end
-
-	remove_expose_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget has to be redrawn because it was exposed from
-			-- behind another widget.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_expose_commands
 		end
 
 	remove_key_press_commands is

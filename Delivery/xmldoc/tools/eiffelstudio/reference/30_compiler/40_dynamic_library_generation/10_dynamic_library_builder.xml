@@ -12,7 +12,7 @@
 			<link>
 				<url>20_definition_file_syntax.xml</url>
 				<label>syntactic rules</label>
-			</link> of the definition files are available, but they are not necessary to know to make a standard use of the dynamic library generation in EiffelStudio.
+			</link> of the definition files are available, but their knowledge is not necessary to use the generation of dynamic libraries in EiffelStudio.
 		</paragraph>
 		<paragraph>The wizard is accessible in the 
 			<bold>Tools</bold>/ 
@@ -35,7 +35,7 @@
 					<url>/images/eiffelstudio/icons/icon_add_exported_feature_color.gif</url>
 				</image> in the 
 				<bold>Edit</bold>/ 
-				<bold>Add</bold> menu. This pops up a dialog where it is possible to enter manually all parameters for the exportedfeature.
+				<bold>Add</bold> menu. This pops up a dialog where it is possible to enter manually all parameters for the exported feature.
 			</item>
 		</list>
 		<paragraph>

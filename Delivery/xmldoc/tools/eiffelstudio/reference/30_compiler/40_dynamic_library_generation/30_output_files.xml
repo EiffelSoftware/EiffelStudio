@@ -16,68 +16,52 @@
 		<div>
 			<list ordered="false">
 				<item>
-					<bold>EIFGEN/W_code/</bold> (or F_code)
+					EIFGEN/W_code/<bold>system.def</bold> (or F_code)
 				</item>
 				<item>
-					<bold>EIFGEN/W_code/</bold> (or F_code)
+					EIFGEN/W_code/<bold>edynlib.c</bold> (or F_code)
 				</item>
 				<item>
-					<bold>$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/</bold>
+					$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/<bold>egc_dynlib.template</bold>
 					<line_break/>this file will be copied during the compilation into the EIFGEN/W_code/E1 directory as 
 					<bold>egc_dynlib.c</bold>
 				</item>
 				<item>
-					<bold>$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/</bold>
+					$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/<bold>egc_dynlib.h</bold>
 				</item>
 				<item>and the Makefile</item>
 			</list>
 		</div>
 		<paragraph>The 
-			<italic>system.def</italic> is only used on windows, itis the definition file used to generate a DLL when linking.
-			<table>
-				<row>
-					<cell>LIBRARY demo.dll
-						<line_break/>DESCRIPTION DEMO.DLL
-						<line_break/>
-						<line_break/>EXPORTS
-						<line_break/>;System
-						<line_break/>init_rt
-						<line_break/>reclaim_rt
-						<line_break/>
-						<line_break/>; CLASS [BAR]
-						<line_break/>get_string
-						<line_break/>print_bar
-						<line_break/>
-						<line_break/>; CLASS [ROOT_CLASS]
-						<line_break/>make
-						<line_break/>foo
-						<line_break/>test_bar
-						<line_break/>
-					</cell>
-					<cell>- Information about the DLL
-						<line_break/>- ...
-						<line_break/>-
-						<line_break/>- The following are EXPORTed functions.
-						<line_break/>-
-						<line_break/>- This part concerns the RunTime.
-						<line_break/>-initialize the RT.
-						<line_break/>-reclaim the Eiffel object.
-						<line_break/>-
-						<line_break/>- The exported for the CLASS BAR
-						<line_break/>-get_string
-						<line_break/>-print_bar
-						<line_break/>-
-						<line_break/>- The exported for the CLASS BAR
-						<line_break/>-make
-						<line_break/>-foo
-						<line_break/>-test_bar
-						<line_break/>
-					</cell>
-				</row>
-			</table>
+			<italic>system.def</italic> is only used on windows, it is the definition file used to generate a DLL when linking.<line_break/>
+Information about the DLL
+<code_block>LIBRARY demo.dll
+DESCRIPTION DEMO.DLL</code_block>
+
+The following are EXPORTed functions.
+<code_block>EXPORTS</code_block>
+
+This part concerns the run-time. It initializes the run-time and reclaim Eiffel objects.
+<code_block>
+;System
+	init_rt
+	reclaim_rt
+</code_block>
+
+The exported for the BAR class:
+<code_block>; CLASS [BAR]
+	get_string
+	print_bar
+</code_block>
+
+The exported for the ROOT_CLASS class:
+<code_block>; CLASS [ROOT_CLASS]
+	make
+	foo
+	test_bar</code_block>
 		</paragraph>
 		<paragraph>The 
-			<italic>edynlib.c</italic> file is the "interface" between the Eiffel system, and the C code, basically it contains the declaration and the implementation of the function used to directly call the eiffel feature with its real name.
+			<italic>edynlib.c</italic> file is the interface between the Eiffel system and the C code. It contains the declaration and the implementation of the function used to directly call the eiffel feature with its real name.
 		</paragraph>
 		<paragraph>The 
 			<span>
@@ -85,6 +69,6 @@
 			</span> and 
 			<span>
 				<italic>egc_dynlib.h</italic>
-			</span> files are used for operations performed by the Run Time.
+			</span> files are used for operations performed by the run-time.
 		</paragraph>
 	</paragraph></document>

@@ -63,11 +63,7 @@
 			<size>3</size>Example
 		</heading>
 		<paragraph>
-			<table>
-				<row>
-					<cell>ROOT_CLASS (make): foo @ 4 Alias my_foo call_type __stdcall</cell>
-				</row>
-			</table>
+			<code_block>ROOT_CLASS (make): foo @ 4 Alias my_foo call_type __stdcall</code_block>
 		</paragraph>
 		<heading>
 			<size>3</size>Constraint
@@ -108,32 +104,21 @@
 				<size>3</size>A definition file
 			</heading>
 			<paragraph>
-				<table>
-					<row>
-						<cell>-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY
-							<line_break/>-- SYSTEM : demo
-							<line_break/>
-							<line_break/>-- CLASS [BAR]
-							<line_break/>BAR (make_b) : get_string
-							<line_break/>BAR (make_a) : print_bar
-							<line_break/>
-							<line_break/>-- CLASS [ROOT_CLASS]
-							<line_break/>ROOT_CLASS : make
-							<line_break/>ROOT_CLASS (make) : foo
-							<line_break/>ROOT_CLASS (make) : test_bar
-						</cell>
-						<cell>--Name of the Eiffel system
-							<line_break/>-
-							<line_break/>-Class BAR
-							<line_break/>-here get_string uses make_b as creation
-							<line_break/>-here print_bar uses make_a as creation
-							<line_break/>-
-							<line_break/>-
-							<line_break/>-here the feature is also a creation-
-							<line_break/>-
-						</cell>
-					</row>
-				</table>
+				<code_block>
+-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY
+-- SYSTEM : demo
+
+-- CLASS [BAR]
+-- Here get_string uses make_b as creation
+BAR (make_b) : get_string
+-- Here print_bar uses make_a as creation
+BAR (make_a) : print_bar
+
+-- CLASS [ROOT_CLASS]
+-- Here the feature is also a creation
+ROOT_CLASS : make
+ROOT_CLASS (make) : foo
+ROOT_CLASS (make) : test_bar</code_block>
 			</paragraph>
 		</div>
 	</paragraph></document>

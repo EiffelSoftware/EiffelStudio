@@ -209,12 +209,12 @@ feature -- File
 		require
 			name_not_void: a_name /= Void
 		do
-			Result := a_name.substring (a_name.last_index_of ('\', a_name.count) + 1, a_name.count)
-			if Result.is_empty then
+			if a_name.last_index_of ('\', a_name.count) > 0 then
+				Result := a_name.substring (a_name.last_index_of ('\', a_name.count) + 1, a_name.count)
+			elseif a_name.last_index_of ('/', a_name.count) > 0 then
 				Result := a_name.substring (a_name.last_index_of ('/', a_name.count) + 1, a_name.count)
-				if Result.is_empty then
-					Result := a_name
-				end
+			else
+				Result := a_name
 			end
 		ensure
 			has_result: Result /= Void

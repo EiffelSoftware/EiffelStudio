@@ -1,5 +1,5 @@
 --!----------------------------------------------------------------
---! EiffelVision2-application Ace-file for the GTK platform.
+--! EiffelVision2-application Ace-file for the Mswindows platform.
 --!
 --! See notice at end of file.
 --! date: "$Date$
@@ -9,35 +9,34 @@ system
 	fig -- Your executable.
 
 root
-	FIGURE_TEST (new_fig): "make_and_launch"
+	FIGURE_TEST (root_cluster): "make_and_launch"
 
 default
 	assertion (all)
 
 cluster
 
-	new_fig: "."
-	devel:					"/home/brendel/local"
-	all base (devel):			"$/bbase/base"
+	root_cluster:			"."
+	devel:					"c:\work"
+	all base (devel):		"$\base"
 		exclude
 			"table_eiffel3"
 		end
 
-	all gel (devel):			"$/gel_remote"
-	new_event (devel):			"$/event"
+	all wel (devel):		"$\wel"
+	event (devel):			"$\event"
 
-	all vision2 (new_fig):			"$/vision2"
+	all vision2 (devel):	"$\vision2"
 		exclude 
-			"mswin"
+			"gtk"
+			"EIFGEN"
 		end
 
 external
-	include_path:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib",
-		"`gtk-config --cflags`";
-	object:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-		"`gtk-config --libs`"
+        include_path:
+			"c:\work\wel\spec\windows\include"
+        object:
+			"c:\work\wel\spec\$(COMPILER)\lib\wel.lib"
 
 end
 

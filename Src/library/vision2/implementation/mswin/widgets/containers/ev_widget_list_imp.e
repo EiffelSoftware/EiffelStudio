@@ -72,7 +72,36 @@ feature {NONE} -- Implementation
 				v_parent_imp_not_void: v_parent_imp /= Void
 			end
 			v_parent_imp.notify_change (2 + 1)
+
+				-- Unlink the widget from its parent and
+				-- signal it.
+			v_imp.set_parent (Void)
 			v_imp.on_orphaned
+		end
+
+feature {EV_ANY_I} -- WEL Implementation
+
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+			-- Is the control of handle `hwnd_control'
+			-- located inside the current window?
+		local	
+			loc_cursor: CURSOR
+		do
+			if hwnd_control = wel_item then
+				Result := True
+			else
+				loc_cursor := ev_children.cursor
+				from
+					ev_children.start
+				until
+					Result or ev_children.after
+				loop
+					Result := ev_children.item.
+						is_control_in_window (hwnd_control)
+					ev_children.forth
+				end
+				ev_children.go_to (loc_cursor)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -102,6 +131,11 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/05/01 19:36:41  pichery
+--| Added feature `is_control_in_window' used
+--| to determine if a certain control is contained
+--| inside the current window.
+--|
 --| Revision 1.21  2000/04/28 23:40:44  brendel
 --| Improved remove_i_th and insert_i_th.
 --|

@@ -158,6 +158,13 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRIMITIVE
 
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+			-- Is the control of handle `hwnd_control'
+			-- located inside the current window?
+		do
+			Result := (hwnd_control = wel_item)
+		end
+
 end -- class EV_PRIMITIVE_IMP
 
 --|-----------------------------------------------------------------------------
@@ -181,6 +188,11 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/05/01 19:36:59  pichery
+--| Added feature `is_control_in_window' used
+--| to determine if a certain control is contained
+--| inside the current window.
+--|
 --| Revision 1.27  2000/04/29 03:35:36  pichery
 --| Remove Constants from Inheritance
 --|

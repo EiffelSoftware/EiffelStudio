@@ -51,6 +51,7 @@ feature -- Type check, byte code and dead code removal
 			local_b: LOCAL_B;
 			attribute_b: ATTRIBUTE_B;
 			creators: EXTEND_TABLE [EXPORT_I, STRING];
+			depend_unit: DEPEND_UNIT;
 			vgcc1: VGCC1;
 			vgcc2: VGCC2;
 			vgcc3: VGCC3;
@@ -187,6 +188,12 @@ feature -- Type check, byte code and dead code removal
 						context.init_error (vgcc4);
 						vgcc4.set_type (creation_type);
 						Error_handler.insert_error (vgcc4);
+					else
+							-- Insert the creation without creation routine
+							-- (feature id = -1) in the dependance of the
+							-- current feature
+						!!depend_unit.make (creation_class.id, -1);
+						context.supplier_ids.add (depend_unit);
 					end;
 				end;
 			end;

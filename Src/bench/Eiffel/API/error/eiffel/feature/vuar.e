@@ -26,7 +26,9 @@ feature
 			call_written_in := i;
 		end;
 
-	code: STRING is "VUAR";
+	code: STRING is
 			-- Error code
-
+		do
+			Result := "VUAR"
+		end
 end

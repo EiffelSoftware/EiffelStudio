@@ -41,7 +41,7 @@ feature
 		end;
 
 	update (pass2_control: PASS2_CONTROL) is
-			-- Update with a seond pass controler
+			-- Update with a second pass controler
 		require
 			good_argument: pass2_control /= Void
 		do

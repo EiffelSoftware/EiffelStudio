@@ -217,6 +217,8 @@ end;
 	update_table is
 			-- Check if the references to the supplier classes
 			-- are still valid and remove the entry otherwise
+-- FIX ME
+-- this should be modified to improve the incrementality
 		local
 			type_a: TYPE_A;
 			used_keys: ARRAY [STRING];

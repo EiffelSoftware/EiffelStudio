@@ -40,6 +40,7 @@ feature
 				io.error.putchar ('%T');
 -- FIXME:
 --				error_list.item.build_explain;
+				error_list.item.trace;
 				error_list.forth;
 			end;
 		end;

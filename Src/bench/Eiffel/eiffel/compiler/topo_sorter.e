@@ -88,7 +88,7 @@ feature -- Initialization
 				until
 					local_cursor = Void
 				loop
-					succ_id := local_cursor.item.id;
+					succ_id := local_cursor.item.topological_id;
 					k := precursor_count.item (succ_id);
 					precursor_count.put (k + 1, succ_id);
 					local_cursor := local_cursor.right;
@@ -128,13 +128,13 @@ feature -- Initialization
 				next := next + 1;
 				order.put (item, next);
 				from
-					succ := successors.item (item.id);
+					succ := successors.item (item.topological_id);
 					local_cursor := succ.first_element;
 				until
 					local_cursor = Void
 				loop
 					succ_item := local_cursor.item;
-					succ_id := succ_item.id;
+					succ_id := succ_item.topological_id;
 					k := precursor_count.item (succ_id);
 					if k = 0 then
 						-- Nothing

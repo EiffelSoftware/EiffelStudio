@@ -286,12 +286,13 @@ feature -- Creation feature
 					clients.after
 				loop
 						-- recompile the client
-						-- to be changed (the parsing of the file is not needed
-						-- unless the client has been changed)
-					Workbench.change_class (clients.item.lace_class);`
+					Workbench.add_class_to_recompile (clients.item.lace_class);`
 					clients.forth;
 				end;
 
+io.error.putstring ("CLUSTER_I remove class from system: ");
+io.error.putstring (class_c.class_name);
+io.error.new_line;
 					-- remove class_c from the system
 				System.remove_class (class_c);
 			end;
@@ -307,7 +308,7 @@ feature -- Creation feature
 				classes.offright
 			loop
 					-- make on CLASS_I reset the default options
-				classes.item_for_iteration.make;
+				classes.item_for_iteration.reset_options;
 				classes.forth
 			end;
 		end;

@@ -98,18 +98,18 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 
 	interface: EV_WIDGET
 
-feature {EV_ITEM_I} -- Status report
+feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
 
-	pnd_item_source: EV_ITEM_IMP
+	pnd_item_source: EV_PICK_AND_DROPABLE_ITEM_IMP
 			-- PND source if PND started in an item.
 
 	item_is_pnd_source: BOOLEAN
 		-- PND started in an item. 
 
-	set_item_source (source: EV_ITEM_IMP) is
+	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP) is
 			-- Assign `source' to `pnd_item_source'
 		do
 			pnd_item_source := source

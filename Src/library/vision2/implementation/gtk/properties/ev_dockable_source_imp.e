@@ -24,35 +24,24 @@ feature -- Status setting
 			-- 
 		local
 			a_x, a_y: INTEGER
-			gdkwin: POINTER
+			gdkwin, gtkwid: POINTER
 			cur: CURSOR
 			src: EV_DOCKABLE_TARGET
 			trg: EV_WIDGET_IMP
 			drag_trgs: ARRAYED_LIST [INTEGER]
 			x1, y1, x2, y2: INTEGER
 		do
-			gdkwin := C.gdk_window_get_pointer (NULL, $a_x, $a_y, NULL)
-			from
-				drag_trgs := global_drag_targets
-				cur := global_drag_targets.cursor
-				Global_drag_targets.start
-			until
-				Global_drag_targets.after or Result /= Void
-			loop
-				src ?= id_object (Global_drag_targets.item)
-				trg ?= src.implementation
-				if trg /= Void or else not trg.is_destroyed then
-					x1 := trg.screen_x
-					y1 := trg.screen_y
-					x2 := x1 + trg.width
-					y2 := y1 + trg.height
-					if (a_x >= x1 and a_x <= x2) and (a_y >= y1 and a_y <= y2) then
-						Result := trg
-					end
+			gdkwin := C.gdk_window_at_pointer ($a_x, $a_y)
+			if gdkwin /= NULL then				
+				from
+					C.gdk_window_get_user_data (gdkwin, $gtkwid)
+				until
+					Result /= Void or else gtkwid = NULL
+				loop
+					Result ?= eif_object_from_c (gtkwid)
+					gtkwid := C.gtk_widget_struct_parent (gtkwid)
 				end
-				Global_drag_targets.forth
 			end
-			Global_drag_targets.go_to (cur)
 		end
 
 	start_dragable_filter (
@@ -64,8 +53,9 @@ feature -- Status setting
 				-- Filter out double click events.
 			do
 				if a_type = C.Gdk_button_press_enum then
-					if a_button = 1 then
-						if not is_dock_executing then
+					if a_button = 1 and not dawaiting_movement and not App_implementation.is_in_docking then
+							enable_capture
+							App_implementation.enable_is_in_docking
 							original_x_offset := a_x
 							original_y_offset := a_y
 							original_screen_x := a_screen_x
@@ -87,8 +77,7 @@ feature -- Status setting
 								a_pressure,
 								a_screen_x,
 								a_screen_y
-							)							
-						end
+							)
 					end
 				end
 			end
@@ -104,7 +93,8 @@ feature -- Status setting
 			if dawaiting_movement then
 				if (original_screen_x - a_screen_x).abs > drag_and_drop_starting_movement or
 					(original_screen_y - a_screen_y).abs > drag_and_drop_starting_movement
-					then real_start_dragging (original_x_offset, original_y_offset, 1,
+					then 
+					real_start_dragging (original_x_offset, original_y_offset, 1,
 						0.0, 0.0, 0.0,
 						a_screen_x + (original_x_offset - a_x), a_screen_y +
 						(original_y_offset - a_y))
@@ -146,12 +136,11 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick/drag and drop mechanism.
 		do
-			io.putstring ("start_dragable%N")
 			--call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 
 			--pointer_motion_actions_internal.block
 			initialize_transport (a_screen_x, a_screen_y, interface)
-			enable_capture
+			
 			real_signal_connect (
 				c_object,
 				"button-release-event",
@@ -168,7 +157,6 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.
 		do
-			io.putstring ("real_start_draggging%N")
 			if not is_dock_executing then
 			end
 		end
@@ -179,7 +167,6 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		do
-			io.putstring ("end_dragable%N")
 			disable_capture
 --			if orig_cursor /= Void then
 --					-- Restore the cursor style of `Current' if necessary.
@@ -193,16 +180,7 @@ feature {NONE} -- Implementation
 --				end
 --			end
 --			--set_pointer_style (orig_cursor)
-			if not dawaiting_movement then
-				complete_dock
-				original_x_offset := -1
-				original_y_offset := -1
-				dawaiting_movement := False
-			elseif dawaiting_movement then
-				dawaiting_movement := False
-			end
-			
-				-- Return capture type to capture_normal.
+
 			if drag_button_release_connection_id > 0 then
 				signal_disconnect (drag_button_release_connection_id)
 				drag_button_release_connection_id := 0
@@ -211,7 +189,15 @@ feature {NONE} -- Implementation
 				signal_disconnect (drag_motion_notify_connection_id)
 				drag_motion_notify_connection_id := 0
 			end
-			source_being_docked := Void
+			if not dawaiting_movement then
+				complete_dock
+				original_x_offset := -1
+				original_y_offset := -1
+				dawaiting_movement := False
+			elseif dawaiting_movement then
+				dawaiting_movement := False
+			end
+			App_implementation.disable_is_in_docking
 		end
 		
 	enable_capture is

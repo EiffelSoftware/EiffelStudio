@@ -1,8 +1,7 @@
 indexing
-	description	: "Warning for unreferenced local variable within a feature."
-	date		: "$Date$";
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	description: "Warning for unreferenced local variable within a feature."
+	date: "$Date$";
+	revision: "$Revision$"
 
 class UNUSED_LOCAL_WARNING
 
@@ -10,6 +9,11 @@ inherit
 	WARNING
 		redefine
 			build_explain
+		end
+	
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
 
 feature -- Properties
@@ -71,12 +75,12 @@ feature {COMPILER_EXPORTER}
 			associated_feature := f.api_feature (f.written_in)
 		end
 
-	set_associated_local (s: STRING) is
+	set_associated_local (s_id: INTEGER) is
 			-- Set `associated_local' to `s'
 		require
-			valid_s: s /= Void
+			valid_s_id: s_id >= 0
 		do
-			associated_local := s
+			associated_local := Names_heap.item (s_id)
 		end
 
 end -- class UNUSED_LOCAL_WARNING

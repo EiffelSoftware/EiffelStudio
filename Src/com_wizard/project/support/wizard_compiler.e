@@ -12,8 +12,6 @@ inherit
 		end
 
 	WIZARD_PROCESS_LAUNCHER
-		rename
-			message_output as process_launcher_message_output
 		export
 			{NONE} all
 		end
@@ -33,11 +31,17 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
+	WIZARD_SHARED_FILE_NAMES
+		export
+			{NONE} all
+		end
+
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
 
 feature -- Access
-
 
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
@@ -58,7 +62,7 @@ feature -- Basic Operations
 		local
 			a_local_folder: STRING
 		do
-			a_local_folder := Shared_wizard_environment.destination_folder.twin
+			a_local_folder := environment.destination_folder.twin
 			a_local_folder.append (a_folder)
 			-- The ".epr" file is in the Eifgen folder for a precompiled system
 			Result := has_directory_epr (a_local_folder)
@@ -118,27 +122,27 @@ feature -- Basic Operations
 
 	compile_idl is
 			-- Compile idl file pointed by `idl_file_name'.
-			-- Set `shared_wizard_environment.type_library_file_name' with
+			-- Set `environment.type_library_file_name' with
 			-- resulting type library file name.
 		local
-			a_string: STRING
+			l_text: STRING
 		do
-			a_string := Idl_compiler.twin
-			a_string.append (Space)
-			a_string.append (Idl_compiler_command_line)
-			message_output.add_message (Current, a_string)
+			l_text := Idl_compiler.twin
+			l_text.append (" ")
+			l_text.append (Idl_compiler_command_line)
+			message_output.add_message (Current, l_text)
 
-			a_string := Shared_wizard_environment.destination_folder.twin
-			a_string.append (shared_wizard_environment.project_name)
-			a_string.append (".tlb")
-			shared_wizard_environment.set_type_library_file_name (a_string)
+			l_text := environment.destination_folder.twin
+			l_text.append (environment.project_name)
+			l_text.append (".tlb")
+			environment.set_type_library_file_name (l_text)
 
-			execution_environment.change_working_directory (Shared_wizard_environment.destination_folder)
+			Env.change_working_directory (environment.destination_folder)
 			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
-			a_string := Idl_compiler.twin
-			a_string.append (Space.twin)
-			a_string.append (last_make_command)
-			launch (a_string, Shared_wizard_environment.destination_folder)
+			l_text := Idl_compiler.twin
+			l_text.append (" ")
+			l_text.append (last_make_command)
+			launch (l_text, environment.destination_folder)
 			check_return_code
 		end
 
@@ -174,9 +178,9 @@ feature -- Basic Operations
 			a_string := Linker.twin
 			a_string.append (Space)
 			a_string.append (last_make_command)
-			launch (a_string, shared_wizard_environment.destination_folder)
+			launch (a_string, environment.destination_folder)
 			check_return_code
-			shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_name)
+			environment.set_proxy_stub_file_name (proxy_stub_file_name)
 		end
 
 	component_empty (a_folder: STRING): BOOLEAN is
@@ -205,58 +209,38 @@ feature -- Basic Operations
 			ace_file_generated: ace_file_generated
 			resource_file_generated: resource_file_generated			
 		local
-			displayed: BOOLEAN
-			a_directory: DIRECTORY
-			a_local_folder: STRING
-			a_project_file, a_dest_file: STRING
+			l_displayed: BOOLEAN
+			l_directory: DIRECTORY
+			l_local_folder: STRING
 		do
 			-- Delete EIFGEN directory if exists.
-			a_local_folder := a_folder.twin
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (Eifgen)
-			create a_directory.make (a_local_folder)
-			if a_directory.exists then
-				a_directory.recursive_delete
+			l_local_folder := a_folder.twin
+			l_local_folder.append_character (Directory_separator)
+			l_local_folder.append (Eifgen)
+			create l_directory.make (l_local_folder)
+			if l_directory.exists then
+				l_directory.recursive_delete
 			end
 
-			displayed := displayed_while_running
+			l_displayed := displayed_while_running
 			set_displayed_while_running (True)
-			if 
-				a_folder.is_equal (Client) or
-				component_empty (a_folder)
-			then
+			if a_folder.is_equal (Client) or component_empty (a_folder) then
 				launch (precompile_command, a_folder)
 			else
 				launch (eiffel_compile_command, a_folder)
 			end
 			if eiffel_compilation_successful (a_folder) then
-				a_local_folder := a_folder.twin
-				a_local_folder.append_character (Directory_separator)
-				a_local_folder.append (Eifgen)
-				a_local_folder.append_character (Directory_separator)
-				a_local_folder.append (W_code)
-				launch (finish_freezing_command, a_local_folder)
+				l_local_folder := a_folder.twin
+				l_local_folder.append_character (Directory_separator)
+				l_local_folder.append (Eifgen)
+				l_local_folder.append_character (Directory_separator)
+				l_local_folder.append (W_code)
+				launch (finish_freezing_command, l_local_folder)
 				check_finish_freezing_status (a_folder)
-				if 
-					not Shared_wizard_environment.abort and
-					not Shared_wizard_environment.not_spawn_ebench
-				then
-					if a_folder.is_equal (Client) then
-						a_dest_file := a_folder.twin
-						a_dest_file.append_character (Directory_separator)
-						a_project_file := a_dest_file.twin
-						a_dest_file.append (Precompile_name)
-						a_project_file.append (Eifgen)
-						a_project_file.append_character (Directory_separator)
-						a_project_file.append (Precompile_name)
-						file_copy (a_project_file, a_dest_file)
-					end
-					spawn (eiffel_bench_command (a_folder), a_local_folder)
-				end
 			else
-				shared_wizard_environment.set_abort (Eiffel_compilation_error)
+				environment.set_abort (Eiffel_compilation_error)
 			end		
-			set_displayed_while_running (displayed)				
+			set_displayed_while_running (l_displayed)				
 		end
 
 	check_finish_freezing_status (a_folder: STRING) is
@@ -265,77 +249,77 @@ feature -- Basic Operations
 			non_void_folder: a_folder /= Void
 			valid_folder: not a_folder.is_empty
 		local
-			a_directory: DIRECTORY
-			a_local_folder: STRING
-			a_file_list: LIST [STRING]
-			found: BOOLEAN
+			l_directory: DIRECTORY
+			l_local_folder, l_file: STRING
+			l_file_list: LIST [STRING]
+			l_found: BOOLEAN
+			l_count: INTEGER
 		do
-			a_local_folder := a_folder.twin
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (Eifgen)
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (W_code)
-			if 
-				a_folder.is_equal (Client) or
-				component_empty (a_folder)
-			then
-				a_local_folder.append_character (Directory_separator)
-				a_local_folder.append (Ise_c_compiler_value)
+			l_local_folder := a_folder.twin
+			l_local_folder.append_character (Directory_separator)
+			l_local_folder.append (Eifgen)
+			l_local_folder.append_character (Directory_separator)
+			l_local_folder.append (W_code)
+			if a_folder.is_equal (Client) or component_empty (a_folder) then
+				l_local_folder.append_character (Directory_separator)
+				l_local_folder.append (Ise_c_compiler_value)
 			end
-			create a_directory.make (a_local_folder)
-			if a_directory.exists then
+			create l_directory.make (l_local_folder)
+			if l_directory.exists then
 				from
-					a_file_list := a_directory.linear_representation
-					a_file_list.start
+					l_file_list := l_directory.linear_representation
+					l_file_list.start
 				until
-					a_file_list.after or found
+					l_file_list.after or l_found
 				loop
-					found := (a_file_list.item.substring (a_file_list.item.count + 1 - Executable_extension.count, a_file_list.item.count)).is_equal (Executable_extension)
-					a_file_list.forth
+					l_file := l_file_list.item
+					l_count := l_file.count
+					l_found := l_count > 3 and then l_file.substring_index (".exe", l_count - 3) = l_count - 3
+					l_file_list.forth
 				end
 			end
-			if not found then
-				Shared_wizard_environment.set_abort (Eiffel_compilation_error)
+			if not l_found then
+				environment.set_abort (Eiffel_compilation_error)
 			end
 		end
 
 	register_ps is
 			-- Register generated proxy stub.
 		local
-			a_string: STRING
+			l_string: STRING
 		do
-			a_string := "regsvr32 /s "
-			a_string.append (Shared_wizard_environment.proxy_stub_file_name)
-			launch (a_string, Shared_wizard_environment.destination_folder)
+			l_string := "regsvr32 /s "
+			l_string.append (environment.proxy_stub_file_name)
+			launch (l_string, environment.destination_folder)
 		end
-
+		
 feature {NONE} -- Implementation
 
 	proxy_stub_file_name: STRING is
 			-- Proxy/Stub fil name
 		once
-			Result := shared_wizard_environment.destination_folder.twin
+			Result := environment.destination_folder.twin
 			Result.append_character (Directory_separator)
-			Result.append (shared_wizard_environment.project_name)
+			Result.append (environment.project_name)
 			Result.append ("_ps.dll")
 		end
 
 	generate_def_file is
 			-- Generate standard COM def file in current folder.
 		local
-			a_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
-			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
-			create a_file.make (Def_file_name)
-			if not a_file.exists then
-				a_file.make_create_read_write (Def_file_name)
-				a_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
-				a_file.put_string ("EXPORTS%N")
-				a_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
-				a_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
-				a_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
-				a_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
-				a_file.close
+			Env.change_working_directory (environment.destination_folder)
+			create l_file.make (Def_file_name)
+			if not l_file.exists then
+				l_file.make_create_read_write (Def_file_name)
+				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
+				l_file.put_string ("EXPORTS%N")
+				l_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
+				l_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
+				l_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
+				l_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
+				l_file.close
 			end
 		end
 
@@ -344,7 +328,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Common_idl_compiler_options.twin
 			Result.append ("  /out %"")
-			Result.append (shared_wizard_environment.destination_folder.twin)
+			Result.append (environment.destination_folder.twin)
 			Result.append_character (Directory_separator)
 			Result.append ("%" /h %"")
 			Result.append (Generated_header_file_name)
@@ -355,52 +339,39 @@ feature {NONE} -- Implementation
 			Result.append ("%" /proxy %"")
 			Result.append (Generated_ps_file_name)
 			Result.append ("%" /tlb %"")
-			Result.append (shared_wizard_environment.project_name.twin)
-			Result.append (".tlb%" ")
-			if Shared_wizard_environment.output_level = message_output.Output_none then
-				Result.append (" /nologo ")
-			end
-			
-			Result.append (Double_quote)
-			Result.append (shared_wizard_environment.idl_file_name)
-			Result.append (Double_quote)
+			Result.append (environment.project_name.twin)
+			Result.append (".tlb%" /nologo %"")
+			Result.append (environment.idl_file_name)
+			Result.append ("%"")
 		end
 
 	Linker_command_line: STRING is
 			-- Link command line
 		local
-			a_string: STRING
+			l_string: STRING
 		do
 			Result := Common_linker_options.twin
-			if Shared_wizard_environment.output_level = message_output.Output_none then
-				Result.append (" /nologo ")
-			end
-			Result.append (" /out:")
-			Result.append ("%"")
+			Result.append (" /nologo ")
+			Result.append (" /out:%"")
 			Result.append (Proxy_stub_file_name)
-			Result.append ("%"")
-			Result.append (" /def:")
-			Result.append ("%"")
+			Result.append ("%" /def:%"")
 			Result.append (Def_file_name.twin)
 			Result.append ("%"")
-			a_string := shared_wizard_environment.destination_folder.twin
-			a_string.append (c_to_obj (Generated_iid_file_name))
-			Result.append (" ")
+			l_string := environment.destination_folder.twin
+			l_string.append (c_to_obj (Generated_iid_file_name))
+			Result.append (" %"")
+			Result.append (l_string)
 			Result.append ("%"")
-			Result.append (a_string)
+			l_string := environment.destination_folder.twin
+			l_string.append_character (Directory_separator)
+			l_string.append (c_to_obj (Generated_ps_file_name))
+			Result.append (" %"")
+			Result.append (l_string)
 			Result.append ("%"")
-			a_string := shared_wizard_environment.destination_folder.twin
-			a_string.append_character (Directory_separator)
-			a_string.append (c_to_obj (Generated_ps_file_name))
-			Result.append (" ")
-			Result.append ("%"")
-			Result.append (a_string)
-			Result.append ("%"")
-			a_string := shared_wizard_environment.destination_folder.twin
-			a_string.append (c_to_obj (Generated_dlldata_file_name))
-			Result.append (" ")
-			Result.append ("%"")
-			Result.append (a_string)
+			l_string := environment.destination_folder.twin
+			l_string.append (c_to_obj (Generated_dlldata_file_name))
+			Result.append (" %"")
+			Result.append (l_string)
 			Result.append ("%" ")
 			Result.append (Rpc_library)
 		end
@@ -422,44 +393,11 @@ feature {NONE} -- Implementation
 			Result.append (" -batch -ace ")
 			Result.append (Ace_file_name)
 		end
-
-	eiffel_bench_command (a_folder: STRING): STRING is
-			-- Launch EiffelBench with first project in `a_folder'
-		require
-			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.is_empty
-			--contains_eiffel_project: a_folder has one and only one '.epr' file.
-		local
-			a_directory: DIRECTORY
-			a_file_list: LIST [STRING]
-			found: BOOLEAN
-		do
-			create Result.make (100)
-			Result.append (Eiffel4_location + "\bench\spec\windows\bin\ebench ")
-			Result.append (Shared_wizard_environment.destination_folder)
-			Result.append (a_folder)
-			Result.append_character (Directory_separator)
-			create a_directory.make (a_folder)
-			if a_directory.exists then
-				from
-					a_file_list := a_directory.linear_representation
-					a_file_list.start
-				until
-					a_file_list.after or found
-				loop
-					found := a_file_list.item.substring (a_file_list.item.count + 1 - Eiffel_project_extension.count, a_file_list.item.count).is_equal (Eiffel_project_extension)
-					if found then
-						Result.append (a_file_list.item)
-					end
-					a_file_list.forth
-				end
-			end
-		end
 			
 	user_def_file_name: STRING is
 			-- ".def" file name used for DLL compilation
 		do
-			Result := Shared_wizard_environment.project_name.twin
+			Result := environment.project_name.twin
 			Result.append (Def_file_extension)
 		end
 	
@@ -482,7 +420,7 @@ feature {NONE} -- Implementation
 			-- Finish freezing command line
 		do
 			create Result.make (100)
-			Result.append (Eiffel4_location + "\studio\spec\windows\bin\finish_freezing -silent")
+			Result.append (Eiffel_installation_dir_name + "\studio\spec\windows\bin\finish_freezing -silent")
 		end
 
 	Eifgen: STRING is "EIFGEN"

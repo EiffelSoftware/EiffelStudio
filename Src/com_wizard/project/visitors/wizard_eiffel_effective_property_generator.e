@@ -22,7 +22,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			access_feature_exist: access_feature /= Void
-			setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (setting_feature /= Void)
+			setting_feature_exist: not a_descriptor.is_read_only implies setting_feature /= Void
 		end
 
 

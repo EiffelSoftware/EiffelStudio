@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Space)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append (Double_quote)
-			tmp_body.append (shared_wizard_environment.project_name)
+			tmp_body.append (environment.project_name)
 			tmp_body.append (Double_quote)
 			tmp_body.append (Close_parenthesis)
 

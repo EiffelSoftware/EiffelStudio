@@ -13,8 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	process (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR;
-				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Process Automation Data Type
 		require
 			non_void_descriptor: an_automation_descriptor /= Void
@@ -148,10 +147,8 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_lpwstr")
 				can_free := True
 				writable := True
-
 			else
-				message_output.add_warning (Current, message_output.not_supported_data_type)
-
+				message_output.add_warning (Current, "Data type is not supported")
 			end
 
 			create c_definition_header_file_name.make (0)

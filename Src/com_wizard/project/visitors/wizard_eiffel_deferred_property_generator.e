@@ -14,11 +14,6 @@ inherit
 
 	WIZARD_EIFFEL_DEFERRED_FEATURE_GENERATOR
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
-
 create
 	generate
 
@@ -53,7 +48,7 @@ feature -- Basic operations
 			set_precondition_feature_writer (precondition_access_feature_writer, an_access_name)
 
 			-- Setting feature name
-			if not is_varflag_freadonly (a_descriptor.var_flags) then
+			if a_descriptor.is_read_only then
 				create setting_feature.make
 				create precondition_set_feature_writer.make
 

@@ -23,22 +23,17 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGES
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
 		end
 
-	WIZARD_LOGGER
+	WIZARD_FILE_SYSTEM_MANAGEMENT
 		export
 			{NONE} all
 		end
 
-	WIZARD_FILE_SYSTEM_MANAGEMENT
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end
@@ -74,46 +69,40 @@ feature {NONE} -- Implementation
 		require
 			can_generate: can_generate
 		local
-			a_file: PLAIN_TEXT_FILE
-			retried: BOOLEAN
-			a_string: STRING
+			l_file: PLAIN_TEXT_FILE
+			l_retried: BOOLEAN
+			l_string: STRING
 		do
 			a_file_name.to_lower
-			generated_files_file.put_string (a_file_name)
-			generated_files_file.put_string (New_line)
 			a_file_name.to_lower
-			if not retried then
-				create a_file.make (a_file_name)
-				if a_file.exists then
-					if is_overwritable (a_file_name) then
-						a_string := message_output.File_already_exists.twin
-						a_string.append (Colon)
-						a_string.append (Space)
-						a_string.append (a_file_name)
-						a_string.append (New_line)
-						a_string.append (message_output.File_backed_up)
-						message_output.add_warning (Current, a_string)
+			if not l_retried then
+				create l_file.make (a_file_name)
+				if l_file.exists then
+					if environment.backup then
+						l_string := "File already exists: "
+						l_string.append (a_file_name)
+						l_string.append ("%N")
+						l_string.append ("File backed up with extension %".bac%"")
+						message_output.add_warning (Current, l_string)
 						file_delete (backup_file_name (a_file_name))
 						file_copy (a_file_name, backup_file_name (a_file_name))
-						a_file.make_open_write (a_file_name)
-						a_file.put_string (a_content)
-						a_file.close
 					end
+					l_file.make_open_write (a_file_name)
+					l_file.put_string (a_content)
+					l_file.close
 				else
-					a_file.make_open_write (a_file_name)
-					a_file.put_string (a_content)
-					a_file.close
+					l_file.make_open_write (a_file_name)
+					l_file.put_string (a_content)
+					l_file.close
 				end
 			else
-				a_string := message_output.Could_not_write_file.twin
-				a_string.append (Colon)
-				a_string.append (Space)
-				a_string.append (a_file_name)
-				message_output.add_error (Current, a_string)
+				l_string.append ("Cannot write file: ")
+				l_string.append (a_file_name)
+				message_output.add_error (Current, l_string)
 			end
 		rescue
 			if not failed_on_rescue then
-				retried := True
+				l_retried := True
 				retry
 			end
 		end

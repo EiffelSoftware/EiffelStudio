@@ -23,7 +23,7 @@ feature -- Basic operations
 			create l_generator.generate (component, a_property, interface.name, interface.lcid)
 			cpp_class_writer.add_function (l_generator.c_access_feature, Public)
 
-			if not is_varflag_freadonly (a_property.var_flags) then
+			if not a_property.is_read_only then
 				cpp_class_writer.add_function (l_generator.c_setting_feature, Public)
 			end
 		end
@@ -36,7 +36,7 @@ feature -- Basic operations
 			l_header_files: LIST [STRING]
 		do
 			if not a_function.is_renaming_clause then
-				if a_function.func_kind = func_dispatch then
+				if a_function.func_kind = func_dispatch and not a_function.dual then
 					create l_disp_generator
 					l_disp_generator.generate (component, interface.name, interface.guid.to_string, interface.lcid, a_function)
 					cpp_class_writer.add_function (l_disp_generator.ccom_feature_writer, Public)

@@ -15,11 +15,6 @@ inherit
 			{NONE} all
 		end
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
-
 create 
 	generate
 
@@ -44,12 +39,12 @@ feature {NONE} -- Basic operations
 			create_access_feature (a_component, interface_name, lcid, a_property, visitor)
 
 				-- Setting function
-			if not is_varflag_freadonly (a_property.var_flags) then
+			if not a_property.is_read_only then
 				create_set_feature (a_component, interface_name, lcid, a_property, visitor)
 			end
 		ensure then
 			c_access_feature_exist: c_access_feature /= Void
-			c_setting_feature_exist: not is_varflag_freadonly (a_property.var_flags) implies (c_setting_feature /= Void)
+			c_setting_feature_exist: not a_property.is_read_only implies c_setting_feature /= Void
 		end
 
 feature {NONE} -- Implementation

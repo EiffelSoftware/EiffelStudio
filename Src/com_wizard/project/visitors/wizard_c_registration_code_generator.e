@@ -75,7 +75,6 @@ feature -- Basic operations
 
 					create l_body.make (100)
 					l_body.append ("DWORD dwRegister_")
-					l_body.append (Class_object_registration_token)
 					l_body.append (l_coclasses.item.c_type_name)
 					l_body.append (";%N")
 
@@ -118,7 +117,7 @@ feature -- Basic operations
 			c_writer.add_function (unregister_feature)
 			c_writer.add_function (register_feature)
 
-			if shared_wizard_environment.in_process_server then
+			if environment.is_in_process then
 				c_writer.add_function (dll_get_class_object_feature)
 				c_writer.add_function (dll_register_server_feature)
 				c_writer.add_function (dll_unregister_server_feature)
@@ -515,7 +514,7 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 			create l_body.make (10000)
 			l_body.append ("%T")
 			l_body.append (libid_definition (system_descriptor.name, system_descriptor.type_lib_guid))
-			l_body.append ("%TN%THRESULT hr = UnRegisterTypeLib (")
+			l_body.append ("%N%THRESULT hr = UnRegisterTypeLib (")
 			l_body.append (libid_name (system_descriptor.name))
 			l_body.append (", 1, 0, 0, SYS_WIN32);")
 			l_body.append ("%N%TBOOL bSuccess = SUCCEEDED (hr);")
@@ -622,7 +621,7 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 
 			create l_string_one.make (500)
 			l_string_one.append ("AppID\\")
-			l_string_one.append (Shared_wizard_environment.project_name)
+			l_string_one.append (environment.project_name)
 
 			Result.append (struct_creator (tchar_creator (l_string_one), tchar_creator ("AppID"), tchar_creator (coclass_guid), "TRUE"))
  			Result.append (",%N%T")
@@ -688,7 +687,7 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 					Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (l_string_two), "TRUE"))
 					Result.append (",%N%T")
 
-					if shared_wizard_environment.in_process_server then
+					if environment.is_in_process then
 						Result.append (dll_specific_registry_entries)
 					else
 						Result.append (application_specific_registry_entries)
@@ -830,9 +829,9 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 		require
 			non_void_descriptor: coclass_descriptor /= Void
 		local
-			l_string_one, l_string_two, l_file_name: STRING
+			l_one, l_two, l_file_name: STRING
 			l_new_guid: ECOM_GUID
-			i: INTEGER
+			i, l_count: INTEGER
 			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
 			create Result.make (10000)
@@ -842,7 +841,7 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 			from
 				l_descriptors.start
 			until
-				l_descriptors.off
+				l_descriptors.after
 			loop
 				Result.append (standard_marshaling_interface_registration_code (l_descriptors.item))
 				l_descriptors.forth
@@ -852,35 +851,35 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 			create l_new_guid.make
 			l_new_guid.generate
 
-			create l_string_one.make (1000)
-			l_string_one.append ("CLSID\\")
-			l_string_one.append (l_new_guid.to_string)
+			create l_one.make (1000)
+			l_one.append ("CLSID\\")
+			l_one.append (l_new_guid.to_string)
 
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator ("Proxy/Stub "), "TRUE"))
+			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator ("Proxy/Stub "), "TRUE"))
 
-			l_string_one.append ("\\InprocServer32")
+			l_one.append ("\\InprocServer32")
 
-			l_file_name := shared_wizard_environment.proxy_stub_file_name
-			create l_string_two.make (10000)
+			l_file_name := environment.proxy_stub_file_name
+			create l_two.make (10000)
 			from
 				i := 1
+				l_count := l_file_name.count
 			until
-				i > l_file_name.count
+				i > l_count
 			loop
 				if l_file_name.item (i).is_equal ('\') then
-					l_string_two.append ("\\")
+					l_two.append ("\\")
 				else
-					l_string_two.append_character (l_file_name.item (i))
+					l_two.append_character (l_file_name.item (i))
 				end
 				i := i + 1
 			end
 
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (l_string_two), "TRUE"))
-
+			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator (l_two), "TRUE"))
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_one), tchar_creator ("ThreadingModel"), tchar_creator ("Both"), "TRUE"))
+			Result.append (struct_creator (tchar_creator (l_one), tchar_creator ("ThreadingModel"), tchar_creator ("Both"), "TRUE"))
 		end
 
 	standard_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING is
@@ -888,48 +887,47 @@ GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
 		require
 			non_void_descriptor: interface_descriptor /= Void
 		local
-			l_guid, l_string_one, l_string_two: STRING
-			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_guid, l_one, l_two: STRING
 		do
 			l_guid := interface_descriptor.guid.to_string.twin
 
-			create l_string_one.make (1000)
-			l_string_one.append ("Interface\\")
-			l_string_one.append (l_guid)
+			create l_one.make (1000)
+			l_one.append ("Interface\\")
+			l_one.append (l_guid)
 
 			create Result.make (10000)
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (interface_descriptor.c_type_name), "TRUE"))
+			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator (interface_descriptor.c_type_name), "TRUE"))
 
-			l_string_one.append ("\\")
+			l_one.append ("\\")
 
-			create l_string_two.make (1000)
-			l_string_two.append (l_string_one)
-			l_string_two.append ("ProxyStubClsid32")
-
-			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (l_guid), "TRUE"))
-
-			create l_string_two.make (1000)
-			l_string_two.append (l_string_one)
-			l_string_two.append ("TypeLib")
+			create l_two.make (1000)
+			l_two.append (l_one)
+			l_two.append ("ProxyStubClsid32")
 
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (type_library_guid), "TRUE"))
+			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (l_guid), "TRUE"))
 
-			create l_string_two.make (1000)
-			l_string_two.append (l_string_one)
-			l_string_two.append ("NumMethods")
+			create l_two.make (1000)
+			l_two.append (l_one)
+			l_two.append ("TypeLib")
 
 			Result.append (",%N%T")
-			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (interface_descriptor.functions_count.out), "TRUE"))
+			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (type_library_guid), "TRUE"))
 
-			l_interface := interface_descriptor.inherited_interface
-			if not l_interface.is_iunknown and not l_interface.is_idispatch then
-				Result.append (standard_marshaling_interface_registration_code (l_interface))
+			create l_two.make (1000)
+			l_two.append (l_one)
+			l_two.append ("NumMethods")
+
+			Result.append (",%N%T")
+			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (interface_descriptor.functions_count.out), "TRUE"))
+
+			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
+					not interface_descriptor.inherited_interface.c_type_name.is_equal (Idispatch_type) then
+				Result.append (standard_marshaling_interface_registration_code (interface_descriptor.inherited_interface))
 			end
 		end
-
+	
 	struct_creator (first_field, second_field, third_field, forth_field: STRING): STRING is
 			-- Reg data struct creator
 		do
@@ -962,7 +960,7 @@ struct REG_DATA
 			-- Set up hInstance
 		"[
 #ifdef __cplusplus
-extern %"C%" {
+extern "C" {
 #endif
 
 RT_LNK HINSTANCE eif_hInstance;

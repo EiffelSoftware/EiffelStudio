@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Eiffel class interface generator"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,13 +9,6 @@ class
 
 inherit
 	WIZARD_EIFFEL_WRITER_GENERATOR
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
-
 
 feature -- Basic operations
 
@@ -35,7 +28,7 @@ feature -- Basic operations
 			eiffel_writer.add_inherit_clause (inherit_clause_writer)
 			
 			create inherit_clause_writer.make
-			inherit_clause_writer.set_name (shared_wizard_environment.eiffel_class_name)
+			inherit_clause_writer.set_name (environment.eiffel_class_name)
 			create {ARRAYED_LIST [STRING]} feature_list.make (20)
 			feature_list.force ("all")
 			inherit_clause_writer.add_export (feature_list, "NONE")
@@ -57,7 +50,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR; inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE) is
-			-- Process functions
+			-- Add undefine clauses
 		require
 			non_void_descriptor: a_descriptor /= Void
 			not_empty_list: not a_descriptor.functions_empty
@@ -65,6 +58,7 @@ feature {NONE} -- Implementation
 		local
 			l_list: LIST [STRING]
 			l_function: WIZARD_FUNCTION_DESCRIPTOR
+			l_name: STRING
 		do
 			create {ARRAYED_LIST [STRING]} l_list.make (20)
 			from
@@ -74,8 +68,9 @@ feature {NONE} -- Implementation
 			loop
 				l_function := a_descriptor.functions_item
 				if not l_function.is_renaming_clause then
-					l_list.force (l_function.name)
-					inherit_clause_writer.add_undefine (l_function.name)
+					l_name := l_function.name
+					l_list.force (l_name)
+					inherit_clause_writer.add_undefine (l_name)
 				end
 				a_descriptor.functions_forth
 			end

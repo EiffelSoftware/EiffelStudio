@@ -19,12 +19,6 @@ inherit
 			{NONE} all
 		end
 
-	ECOM_VAR_FLAGS
-		export 
-			{NONE} all
-		end
-
-
 feature -- Access
 
 	dispatch_interface: BOOLEAN
@@ -55,7 +49,7 @@ feature -- Basic Operations
 			cpp_class_writer.set_definition_header_file_name (a_component.c_definition_header_file_name)
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
 
-			if shared_wizard_environment.server and not system_descriptor.coclasses.is_empty then
+			if not environment.is_client and not system_descriptor.coclasses.is_empty then
 				cpp_class_writer.add_import ("server_registration.h")
 			end
 
@@ -176,7 +170,7 @@ feature -- Basic Operations
 	ref_count = 0;
 	eiffel_object = eif_create (type_id);
 	EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure (%"make_from_pointer%", type_id);
+	eiffel_procedure = eif_procedure ("make_from_pointer", type_id);
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
 	]")
@@ -198,7 +192,7 @@ feature -- Basic Operations
 			-- "LockModule ();" line
 		do
 			create Result.make (0)
-			if shared_wizard_environment.server and shared_wizard_environment.out_of_process_server and not system_descriptor.coclasses.is_empty then
+			if not environment.is_client and environment.is_out_of_process and not system_descriptor.coclasses.is_empty then
 				Result.append ("%TLockModule ();%N")
 			end
 		ensure
@@ -231,11 +225,7 @@ feature -- Basic Operations
 			-- "UnlockModule ();" line.
 		do
 			create Result.make (0)
-			if 
-				shared_wizard_environment.server and
-				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.is_empty
-			then
+			if not environment.is_client and environment.is_out_of_process and not system_descriptor.coclasses.is_empty then
 				Result.append (tab)
 				Result.append ("UnlockModule ();")
 				Result.append (New_line)
@@ -595,126 +585,50 @@ feature -- Basic Operations
 		require
 			non_void_property_descriptor: prop_desc /= Void
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (1000)
-			Result.append (New_line_tab_tab_tab)
-
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append ("wFlags")
-			Result.append (Ampersand)
-			Result.append (" (DISPATCH_PROPERTYGET | DISPATCH_METHOD)")
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
-
-			visitor := prop_desc.data_type.visitor
-
-			Result.append ("VariantClear (pVarResult);")
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Tab)
-			
-			Result.append ("pVarResult")
-			Result.append (Struct_selection_operator)
-			Result.append ("vt")
-			Result.append (Space_equal_space)
-			Result.append_integer (visitor.vt_type)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
-
-			Result.append (visitor.c_type)
-			Result.append (Space)
-			Result.append (C_result)
-			if not visitor.is_structure then
-				Result.append (Space_equal_space)
-				Result.append (Zero)
+			l_visitor := prop_desc.data_type.visitor
+			Result.append ("%N%T%T%Tif (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))%N%T%T%T{%N%T%T%T%T")
+			Result.append ("VariantClear (pVarResult);%N%T%T%T%TpVarResult->vt = ")
+			Result.append_integer (l_visitor.vt_type)
+			Result.append (";%N%T%T%T%T")
+			Result.append (l_visitor.c_type)
+			Result.append (" result")
+			if not l_visitor.is_structure then
+				Result.append (" = 0")
 			end
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Tab)
-			
-			Result.append ("hr = ")
-			Result.append (Get_clause)
+			Result.append (";%N%T%T%T%T")
+			Result.append ("hr = get_")
 			Result.append (prop_desc.name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Ampersand)
-			Result.append (C_result)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
+			Result.append (" (&result);%N%T%T%T%T")
 
 			Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
-			Result.append (New_line_tab_tab_tab)
-			Result.append (tab)
+			Result.append ("%N%T%T%T%T")
 
-			if visitor.is_structure then
-				Result.append (memcpy)
-				Result.append (Space_open_parenthesis)
-				Result.append (Ampersand)
-				Result.append (Open_parenthesis)
-				Result.append ("pVarResult")
-				Result.append (Struct_selection_operator)
-				Result.append (vartype_namer.variant_field_name (visitor))
-				Result.append (Close_parenthesis)
-				Result.append (Comma_space)
-				Result.append (Ampersand)
-				Result.append (C_result)
-				Result.append (Comma_space)
-				Result.append (Sizeof)
-				Result.append (Space_open_parenthesis)
-				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
+			if l_visitor.is_structure then
+				Result.append ("memcpy (&(pVarResult->")
+				Result.append (vartype_namer.variant_field_name (l_visitor))
+				Result.append ("), &result, sizeof (")
+				Result.append (l_visitor.c_type)
+				Result.append ("))")
 			else
-				Result.append ("pVarResult")
-				Result.append (Struct_selection_operator)
-				Result.append (vartype_namer.variant_field_name (visitor))
-				Result.append (Space_equal_space)
-				Result.append (C_result)
+				Result.append ("pVarResult->")
+				Result.append (vartype_namer.variant_field_name (l_visitor))
+				Result.append (" = result")
 			end
-			Result.append (Semicolon)
-			
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab_tab_tab)
-			
+			Result.append (";%N%T%T%T}%N%T%T%T")
 
-			if not is_varflag_freadonly (prop_desc.var_flags) then
-				
-				Result.append (If_keyword)
-				Result.append (Space_open_parenthesis)
-				Result.append ("wFlags")
-				Result.append (Ampersand)
-				Result.append (" (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF)")
-				Result.append (Close_parenthesis)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Open_curly_brace)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (tab)
-
-				visitor := prop_desc.data_type.visitor
-
-				Result.append (New_line_tab_tab_tab)
-				Result.append (tab)
-
+			if not prop_desc.is_read_only then
+				Result.append ("if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))%N%T%T%T{%N%T%T%T%T")
+				l_visitor := prop_desc.data_type.visitor
+				Result.append (";%N%T%T%T%T")
 				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "(&(pDispParams->rgvarg [0]))", 0, 0))
-				Result.append ("hr = ")
-				Result.append (Set_clause)
+				Result.append ("hr = set_")
 				Result.append (prop_desc.name)
-				Result.append (Space_open_parenthesis)
-				Result.append ("arg")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (tab)
+				Result.append (" (arg);%N%T%T%T%T")
 				Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Close_curly_brace)
+				Result.append ("%N%T%T%T}")
 			end
 		end
 

@@ -14,6 +14,11 @@ inherit
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 
+	ECOM_INVOKE_KIND
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
@@ -56,7 +61,7 @@ feature -- Basic operations
 			if (result_type_visitor.vt_type = Vt_variant) then
 				result_type_visitor.set_ce_function_name ("ccom_ce_pointed_variant")
 			end
-			ccom_feature_writer.set_body (feature_body (interface_name, guid, lcid, result_type_visitor))
+			ccom_feature_writer.set_body (feature_body (interface_name, guid, lcid, result_type_visitor, a_descriptor.invoke_kind))
 		ensure
 			function_descriptor_set: func_desc /= Void
 		end
@@ -75,158 +80,108 @@ feature {NONE} -- Implementation
 			ccom_feature_writer.set_signature (cecil_signature (func_desc))
 		end
 
-	feature_body (interface_name, guid: STRING; lcid: INTEGER; result_type_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	feature_body (interface_name, guid: STRING; lcid: INTEGER; result_type_visitor: WIZARD_DATA_TYPE_VISITOR; a_invoke_kind: INTEGER): STRING is
 			-- Ccom client feature body for dispatch interface
 		require
 			non_void_string: interface_name /= Void and guid /= Void
 		local
-			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
-			return_value: STRING
-			counter, flag: INTEGER
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			out_variable: BOOLEAN
-			a_type: INTEGER
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_return_value, l_invoke_flag: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_is_out: BOOLEAN
+			l_counter, l_type_id: INTEGER
+			l_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			create {ARRAYED_LIST [STRING]} free_arguments.make (20)
-			create return_value.make (10000)
-
-			Result := check_interface_pointer (interface_name)
-			Result.append (New_line_tab)
-
-			Result.append ("DISPID disp = (DISPID) ")
+			create l_return_value.make (10000)
+			create Result.make (10000)
+			
+			Result.append (check_interface_pointer (interface_name))
+			Result.append ("%N%TDISPID disp = (DISPID) ")
 			Result.append_integer (func_desc.member_id)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			Result.append ("LCID lcid = (LCID) ")
+			Result.append (";%N%TLCID lcid = (LCID) ")
 			Result.append_integer (lcid)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			Result.append (Empty_dispparams)
-			Result.append (New_line_tab)
-
-			Result.append (Return_variant_variable)
-			Result.append (New_line_tab)
-			Result.append (New_line)
-
+			Result.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%T%N")
 			Result.append (initialize_excepinfo)
-			Result.append (New_line_tab)
-
-			Result.append ("unsigned int nArgErr")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append ("%N%Tunsigned int nArgErr;%N%T")
 
 			-- Set up arguments
 			if (func_desc.argument_count > 0) then
-				Result.append ("args.cArgs")
-				Result.append (Space_equal_space)
+				Result.append ("args.cArgs = ")
 				Result.append_integer (func_desc.argument_count)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				Result.append (Variantarg)
-				Result.append (Space)
-				Result.append (Asterisk)
-				Result.append (Arguments_name)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				free_arguments.put_front (Arguments_name)
-
-				Result.append (Arguments_name)
-				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
-				Result.append (Variantarg)
-				Result.append (Space)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
-				Result.append (Co_task_mem_alloc)
-				Result.append (Space_open_parenthesis)
+				Result.append (";%N%TVARIANTARG *arguments;%N%T")
+				free_arguments.put_front ("arguments")
+				Result.append ("arguments = (VARIANTARG *)CoTaskMemAlloc (")
 				Result.append_integer (func_desc.argument_count)
-				Result.append (Asterisk)
-				Result.append (Sizeof)
-				Result.append (Space_open_parenthesis)
-				Result.append (Variantarg)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
+				Result.append (" * sizeof (VARIANTARG));%N%T")
 
-				arguments := func_desc.arguments
+				l_arguments := func_desc.arguments
 				from
-					arguments.start
-					counter := func_desc.argument_count - 1
+					l_arguments.start
+					l_counter := func_desc.argument_count - 1
 				until
-					arguments.off or else counter = -1
+					l_arguments.after or else l_counter = -1
 				loop
-					flag := arguments.item.flags
-					visitor := arguments.item.type.visitor
+					l_type := l_arguments.item.type
+					l_visitor := l_type.visitor
 					
 					-- Since VARIANT is treated as VARIANT *,
 					-- we need to check what it was originally,
 					-- to find out whether if [in] or [in, out] parameter.
-					if is_variant (arguments.item.type.type) then
-						a_type := arguments.item.type.type
+					if is_variant (l_type.type) then
+						l_type_id := l_type.type
 					else
-						a_type := arguments.item.type.visitor.vt_type
-					end
-					
-					if 
-						is_byref (a_type) 
-					then
-						out_variable := True  
-						if is_paramflag_fin (arguments.item.flags) then
-							Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))
+						l_type_id := l_visitor.vt_type
+					end			
+					if is_byref (l_type_id) then
+						l_is_out := True  
+						if is_paramflag_fin (l_arguments.item.flags) then
+							Result.append (inout_parameter_set_up (l_arguments.item.name, l_counter, l_visitor))
 						else
-							Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
+							Result.append (out_parameter_set_up (l_arguments.item.name, l_counter, l_visitor))
 						end
-						if not visitor.is_array_basic_type and not visitor.is_structure_pointer and not
-						 		visitor.is_interface_pointer and not visitor.is_coclass_pointer then
-							return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))
+						if not l_visitor.is_array_basic_type and not l_visitor.is_structure_pointer and not
+						 		l_visitor.is_interface_pointer and not l_visitor.is_coclass_pointer then
+							l_return_value.append (out_return_value_set_up (l_arguments.item.name, l_counter,  l_visitor))
 						end
 					else
-						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
+						Result.append (in_parameter_set_up (l_arguments.item.name, l_counter, l_visitor))
 					end
-
-					visitor := Void
-
-					arguments.forth
-					counter := counter - 1			
+					l_visitor := Void
+					l_arguments.forth
+					l_counter := l_counter - 1			
 				end
 
-				Result.append (New_line_tab)
-				Result.append ("args.rgvarg")
-				Result.append (Space_equal_space)
-				Result.append (Arguments_name)
-				Result.append (Semicolon)
+				Result.append ("%N%Targs.rgvarg = arguments;")
 			end
 
-			Result.append (New_line)
-			Result.append (New_line_tab)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Interface_variable_prepend)
+			Result.append ("%N%N%Thr = p_")
 			Result.append (interface_name)
-			Result.append (Struct_selection_operator)
-			Result.append (Invoke)
-			Result.append (Space_open_parenthesis)
-			Result.append ("disp, IID_NULL, lcid, DISPATCH_METHOD, &args, &")
-			Result.append (Return_variant_variable_name)
-			Result.append (Comma_space)
-			Result.append (Excepinfo_variable_name)
-			Result.append (Comma_space)
-			Result.append ("&nArgErr);")
-			Result.append (New_line_tab)
+			if a_invoke_kind = invoke_func then
+				l_invoke_flag := "DISPATCH_METHOD"
+			elseif a_invoke_kind = invoke_propertyget then
+				l_invoke_flag := "DISPATCH_PROPERTYGET"
+			elseif a_invoke_kind = invoke_propertyput then
+				l_invoke_flag := "DISPATCH_PROPERTYPUT"
+			elseif a_invoke_kind = invoke_propertyputref then
+				l_invoke_flag := "DISPATCH_PROPERTYPUTREF"
+			else
+				check
+					should_not_be_here: False
+				end
+			end
+			Result.append ("->Invoke (disp, IID_NULL, lcid, ")
+			Result.append (l_invoke_flag)
+			Result.append (", &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
-			Result.append (examine_parameter_error (Hresult_variable_name))
-			Result.append (New_line)
-			Result.append (examine_hresult_with_pointer (Hresult_variable_name, free_arguments))
+			Result.append (examine_parameter_error ("hr"))
+			Result.append ("%N")
+			Result.append (examine_hresult_with_pointer ("hr", free_arguments))
 
-			if out_variable then
-				Result.append (New_line_tab)
-				Result.append (return_value)
+			if l_is_out then
+				Result.append ("%N%T")
+				Result.append (l_return_value)
 			end
 
 			if not free_arguments.is_empty then
@@ -235,20 +190,14 @@ feature {NONE} -- Implementation
 				until
 					free_arguments.off
 				loop
-					Result.append (New_line_tab)
-					Result.append (Co_task_mem_free)
-					Result.append (Space_open_parenthesis)
-					Result.append (Open_parenthesis)
-					Result.append (C_void_pointer)
-					Result.append (Close_parenthesis)
+					Result.append ("%N%TCoTaskMemFree ((void *)")
 					Result.append (free_arguments.item)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
+					Result.append (");")
 					free_arguments.forth
 				end
 			end
 
-			Result.append (New_line_tab)
+			Result.append ("%N%T")
 			Result.append (retval_return_value_set_up (result_type_visitor))
 		end
 
@@ -265,17 +214,17 @@ feature {NONE} -- Implementation
 			type := visitor.vt_type
 			create Result.make (1000)
 
-			Result.append (New_line_tab)
+			Result.append ("%N%T")
 			if not visitor.is_basic_type and not visitor.is_enumeration then
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
 					Result.append (Ce_mapper)
 				end
-				Result.append (Dot)
+				Result.append (".")
 				Result.append (visitor.ce_function_name)
 			end
-			Result.append (Space_open_parenthesis)
+			Result.append (" (")
 
 			if is_unsigned_long (type) then
 				Result.append ("(long *)")
@@ -285,19 +234,16 @@ feature {NONE} -- Implementation
 				Result.append ("(short *)")
 			elseif is_unsigned_char (type) then
 				Result.append ("(char *)")
-	--		elseif 
 			else
-				Result.append (Open_parenthesis)
+				Result.append ("(")
 				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
+				Result.append (")")
 			end
 
 			Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
-			Result.append (Comma_space)
+			Result.append (", ")
 			Result.append (name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
+			Result.append (");")
 		end
 
 	out_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -307,45 +253,34 @@ feature {NONE} -- Implementation
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
 		local
-			tmp_string: STRING
-			type: INTEGER
+			l_string: STRING
+			l_type: INTEGER
 		do
-			type := visitor.vt_type
-			
+			l_type := visitor.vt_type
 			create Result.make (10000)
-			
-			
-			if 
-				visitor.is_basic_type or 
-				visitor.is_enumeration 
-			then
-				create tmp_string.make (200)
-				tmp_string.append (name)
-				Result.append (New_line_tab)
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))
+			if visitor.is_basic_type or visitor.is_enumeration then
+				create l_string.make (200)
+				l_string.append (name)
+				Result.append ("%N%T")
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), l_string, visitor))
 
 			else
-				Result.append (New_line_tab)
-				Result.append (argument_type_set_up (position, type))
+				Result.append ("%N%T")
+				Result.append (argument_type_set_up (position, l_type))
 
-				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer
-						or visitor.is_coclass_pointer then
+				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer or visitor.is_coclass_pointer then
 					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))	
 				else
 					Result.append (visitor.c_type)
 					Result.remove (Result.count)
-					Result.append (Tmp_clause)
+					Result.append ("tmp_")
 					Result.append (name)
-					Result.append (Space_equal_space)
-					Result.append (Zero)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
+					Result.append (" = 0;%N%T")
 
-					create tmp_string.make (100)
-					tmp_string.append (Ampersand)
-					tmp_string.append (Tmp_clause)
-					tmp_string.append (name)
-					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
+					create l_string.make (100)
+					l_string.append ("&tmp_")
+					l_string.append (name)
+					Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), l_string, visitor))	
 				end
 			end
 		end

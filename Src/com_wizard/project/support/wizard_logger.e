@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_FILE_NAMES
+		export
+			{NONE} all
+		end
+
 	WIZARD_SHARED_DATA
 		export
 			{NONE} all
@@ -35,12 +40,6 @@ feature -- Access
 		do
 			Result := Shared_log_file_cell.item
 		end
-
-	generated_files_file: PLAIN_TEXT_FILE is
-			-- Generation log file
-		do
-			Result := Shared_generated_files_file_cell.item
-		end
  
 	log_file_exists: BOOLEAN is
 			-- Was log file correctly initialized?
@@ -60,11 +59,11 @@ feature -- Basic operations
 			a_path: STRING
 		do
 			if not retried then
-				a_path := Shared_wizard_environment.destination_folder.twin
-				a_path.append (Shared_wizard_environment.project_name)
+				a_path := environment.destination_folder.twin
+				a_path.append (environment.project_name)
 				a_path.append (Log_file_extension)
 				Shared_log_file_cell.replace (create {PLAIN_TEXT_FILE}.make_open_write (a_path))
-				a_path := Shared_wizard_environment.destination_folder.twin
+				a_path := environment.destination_folder.twin
 				a_path.append (Generated_files_file_name)
 				Shared_generated_files_file_cell.replace (create {PLAIN_TEXT_FILE}.make_open_write (a_path))
 			end

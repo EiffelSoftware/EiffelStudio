@@ -10,11 +10,6 @@ class
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
@@ -62,7 +57,7 @@ feature -- Basic operations
 			cpp_class_writer.set_header (l_header)
 
 			-- Import/include header file
-			cpp_class_writer.add_import (coclass_descriptor.c_declaration_header_file_name)
+			cpp_class_writer.add_import (coclass_descriptor.c_definition_header_file_name)
 
 			-- Parent
 			cpp_class_writer.add_parent (Class_factory, Void, Public)
@@ -180,6 +175,7 @@ feature {NONE} -- Implementations
 	*ppv = 0;
 	if (pIunknown)
 		return CLASS_E_NOAGGREGATION;
+
 		]")
 	
 			if coclass_descriptor.namespace /= Void and then not coclass_descriptor.namespace.is_empty then
@@ -196,7 +192,7 @@ feature {NONE} -- Implementations
 			l_body.append ("[
  (type_id);
  	if (!pUnknown)
- 		return E_OUTOFMEMORY);
+ 		return E_OUTOFMEMORY;
  	pUnknown->AddRef ();
  	HRESULT tmp_hr = pUnknown->QueryInterface (riid, ppv);
 	pUnknown->Release ();
@@ -237,7 +233,7 @@ feature {NONE} -- Implementations
 			Result.set_result_type ("STDMETHODIMP_(ULONG)")
 			create l_body.make (10000)
 			l_body.append ("%T")
-			if shared_wizard_environment.in_process_server then
+			if environment.is_in_process then
 				l_body.append ("UnlockModule ();%N%T")
 			end
 			l_body.append ("return 1;")
@@ -255,7 +251,7 @@ feature {NONE} -- Implementations
 			Result.set_result_type ("STDMETHODIMP_(ULONG)")
 			create l_body.make (10000)
 			l_body.append ("%T")
-			if shared_wizard_environment.in_process_server then
+			if environment.is_in_process then
 				l_body.append ("LockModule ();%N%T")
 			end
 			l_body.append ("return 2;")

@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_FILE_NAMES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Partial_ace_file: STRING is
@@ -86,44 +91,45 @@ feature -- Access
 			-- Clusters code from project Ace file
 		local
 			input_file: PLAIN_TEXT_FILE
-			retried: BOOLEAN
+			l_retried: BOOLEAN
 			str_buffer: STRING
+			l_clusters: LIST [STRING]
+			l_cluster: STRING
 		do
-			if retried then
+			if l_retried then
 				Result := ""
 			else
 				create original_cluster_info.make
 				create Result.make (10000)
 
-				create input_file.make_open_read (shared_wizard_environment.ace_file_name)
+				create input_file.make_open_read (environment.ace_file_name)
 
 				original_cluster_info.input_from_file (input_file)
 
 				insert_visible_class
 
-				if not original_cluster_info.clusters.is_empty then
-					from
-						original_cluster_info.clusters.start
-					until
-						original_cluster_info.clusters.after
-					loop
-						if original_cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
-							str_buffer := shared_wizard_environment.eiffel_project_name.twin
-							str_buffer.keep_head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
-							str_buffer.prepend ("%"")
-							str_buffer.append ("%"")
-							original_cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
-						end
-						Result.append (original_cluster_info.clusters.item)
-
-						Result.append (New_line)
-						Result.append (Tab_tab)
-						original_cluster_info.clusters.forth
+				l_clusters := original_cluster_info.clusters
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					l_cluster := l_clusters.item
+					if l_cluster.substring_index ("%".%"", 1) > 0 then
+						str_buffer := environment.eiffel_project_name.twin
+						str_buffer.keep_head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
+						str_buffer.prepend ("%"")
+						str_buffer.append ("%"")
+						l_cluster.replace_substring_all ("%".%"", str_buffer)		
 					end
+					Result.append (l_cluster)
+
+					Result.append ("%N%T%T")
+					l_clusters.forth
 				end
 			end
 		rescue
-			retried := True
+			l_retried := True
 			retry
 		end
 
@@ -218,7 +224,7 @@ feature -- Access
 			-- ".def" file name used for DLL compilation
 		do
 			create Result.make (100)
-			Result.append (Shared_wizard_environment.project_name)
+			Result.append (environment.project_name)
 			Result.append (Def_file_extension)
 		end
 	
@@ -244,14 +250,6 @@ feature -- Basic operations
 				a_string.append (client_generated_ace_file)
 			end
 			
-			if Eiffel4_defined then
-				a_string.replace_substring_all ("ISE_EIFFEL", "EIFFEL4")
-				a_string.replace_substring_all ("ISE_C_COMPILER", "COMPILER")
-			elseif Eiffel5_defined then
-				a_string.replace_substring_all ("ISE_EIFFEL", "EIFFEL5")
-				a_string.replace_substring_all ("ISE_C_COMPILER", "COMPILER")
-			end
-
 			a_string.append (ecom_lib_location (Client))
 			a_string.append (ecom_lib_location (Server))
 			a_string.remove (a_string.count)
@@ -260,7 +258,7 @@ feature -- Basic operations
 			a_string.append (End_keyword)
 
 			create a_file_name.make (100)
-			a_file_name.append (shared_wizard_environment.destination_folder)
+			a_file_name.append (environment.destination_folder)
 			a_file_name.append (a_folder)
 			a_file_name.append_character (Directory_separator)
 			a_file_name.append (Ace_file_name)
@@ -281,7 +279,7 @@ feature -- Basic operations
 			if not is_empty_clib_folder (a_folder) then
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Double_quote)
-				Result.append (Shared_wizard_environment.destination_folder)
+				Result.append (environment.destination_folder)
 				Result.append (a_folder)
 				Result.append_character (Directory_separator)
 				Result.append (Clib)
@@ -304,7 +302,7 @@ feature -- Basic operations
 			a_directory: DIRECTORY
 			a_working_directory: STRING
 		do
-			a_working_directory := shared_wizard_environment.destination_folder.twin
+			a_working_directory := environment.destination_folder.twin
 			a_working_directory.append (a_folder)
 			a_working_directory.append_character (Directory_separator)
 			a_working_directory.append (Clib)
@@ -316,187 +314,142 @@ feature -- Basic operations
 	server_generated_ace_file: STRING is
 			-- Beginning of server generated Ace file
 		local
-			tmp_string: STRING
+			l_string: STRING
+			l_index: INTEGER
 		do
-			Result := client_generated_ace_file
-			
-			create tmp_string.make (1000)
-			tmp_string.append (Registration_class_name)
-			tmp_string.append (Colon)
-			tmp_string.append (Space)
-			tmp_string.append (double_quote)
-			tmp_string.append (Registration_class_creation_routine)
-			tmp_string.append (Double_quote)
-
+			Result := client_generated_ace_file			
+			create l_string.make (1000)
+			l_string.append (Registration_class_name)
+			l_string.append (": %"make%"")
 			if not system_descriptor.coclasses.is_empty then
-				Result.replace_substring_all (Any_type, tmp_string)
-				if Shared_wizard_environment.in_process_server then
-					Result.replace_substring_all (Default_keyword, Shared_library_option)
+				l_index := Result.substring_index ("ANY", 1)
+				check
+					has_any: l_index > 0
+				end
+				Result.replace_substring (l_string, l_index, l_index + 2)
+				if environment.is_in_process then
+					l_index := Result.substring_index ("default", 1)
+					check
+						has_default: l_index > 0
+					end
+					Result.replace_substring (Shared_library_option, l_index, l_index + 6)
 				end
 			end
 		end
 
 	client_generated_ace_file: STRING is
 			-- Common part in Ace file for both server and client.
+		local
+			l_classes: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+			l_path: LIST [STRING]
 		do
 			create Result.make (10000)
-			Result.append (System_keyword)
-			Result.append (New_line_tab)
-			Result.append_character ('%"')
-			Result.append (Shared_wizard_environment.project_name)
-			if Shared_wizard_environment.client then
+			Result.append ("system%N%T%"")
+			Result.append (environment.project_name)
+			if environment.is_client then
 				Result.append ("_client")
 			end
-			Result.append_character ('%"')
-			Result.append (New_line)
+			Result.append ("%"%N")
 			Result.append (Partial_ace_file)
-			Result.append (Shared_wizard_environment.destination_folder)
-			Result.append (Client)
-			Result.append (Double_quote)
-			Result.append (New_line_tab_tab)
-			Result.append (Visible)
-			Result.append (New_line)
+			Result.append (environment.destination_folder)
+			Result.append ("Client%"%N%T%Tvisible%N")
 
+			l_classes := system_descriptor.visible_classes_client
 			from
-				system_descriptor.visible_classes_client.start
+				l_classes.start
 			until
-				system_descriptor.visible_classes_client.after
+				l_classes.after
 			loop
-				Result.append (system_descriptor.visible_classes_client.item.generated_code)
-				system_descriptor.visible_classes_client.forth
+				Result.append (l_classes.item.generated_code)
+				l_classes.forth
 			end
-			Result.append (New_line_tab_tab)
-			Result.append (End_keyword)
+			Result.append ("%N%T%Tend%N%Tall server: %"")
+			Result.append (environment.destination_folder)
+			Result.append ("Server%"%N%T%Tvisible%N%T%T%T")
 
-			Result.append (New_line)
-			Result.append (Partial_ace_file_addition)
-			Result.append (Shared_wizard_environment.destination_folder)
-			Result.append (Server)
-			Result.append (Double_quote)
-			Result.append (New_line_tab_tab)
-			Result.append (Visible)
-			Result.append (New_line_tab_tab_tab)
-
-			if 
-				Shared_wizard_environment.server  and
-				not system_descriptor.coclasses.is_empty
-			then
+			if not environment.is_client and not system_descriptor.coclasses.is_empty then
 				Result.append (Registration_class_name)
-				Result.append (Semicolon)
-				Result.append (New_line)
+				Result.append (";%N")
 			end
+			
+			l_classes := system_descriptor.visible_classes_server
 			from
-				system_descriptor.visible_classes_server.start
+				l_classes.start
 			until
-				system_descriptor.visible_classes_server.after
+				l_classes.after
 			loop
-				Result.append (system_descriptor.visible_classes_server.item.generated_code)
-				system_descriptor.visible_classes_server.forth
+				Result.append (l_classes.item.generated_code)
+				l_classes.forth
 			end
-			Result.append (New_line_tab_tab)
-			Result.append (End_keyword)
+			Result.append ("%N%T%Tend")
 
-			if shared_wizard_environment.new_eiffel_project then
-				Result.append (New_line)
-				Result.append (New_line_tab)
+			if environment.is_eiffel_interface then
+				Result.append ("%N%N%T")
 				Result.append (clusters_from_project)
 			end
 			
-			Result.append (New_line)
-			Result.append (New_line_tab)
-			Result.append (Common_cluster)
-			Result.append (Colon)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Double_quote)
-			Result.append (Shared_wizard_environment.destination_folder)
-			Result.append (Common)
-			Result.append (Double_quote)
-			Result.append (New_line_tab_tab)
-			Result.append (Visible)
-			Result.append (New_line_tab_tab_tab)
+			Result.append ("%N%N%Tall common:%T%T%T%T%T%T%"")
+			Result.append (environment.destination_folder)
+			Result.append ("Common%"%N%T%Tvisible%N%T%T%T")
 
+			l_classes := system_descriptor.visible_classes_common
 			from
-				system_descriptor.visible_classes_common.start
+				l_classes.start
 			until
-				system_descriptor.visible_classes_common.after
+				l_classes.after
 			loop
-				Result.append (system_descriptor.visible_classes_common.item.generated_code)
-				system_descriptor.visible_classes_common.forth
+				Result.append (l_classes.item.generated_code)
+				l_classes.forth
 			end
-			Result.append (New_line_tab_tab)
-			Result.append (End_keyword)
-			Result.append (New_line)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%T%Tend%N%N%N")
 			Result.append (Partial_ace_file_part_two)
-			Result.append (Tab_tab_tab)
+			Result.append ("%T%T%T")
 
-			if original_cluster_info /= Void and not original_cluster_info.include_path.is_empty then
+			if original_cluster_info /= Void then
+				l_path := original_cluster_info.include_path
 				from
-					original_cluster_info.include_path.start
+					l_path.start
 				until
-					original_cluster_info.include_path.after
+					l_path.after
 				loop
-					if not original_cluster_info.include_path.item.is_empty then
-						Result.append (original_cluster_info.include_path.item)
-						Result.append (New_line_tab_tab_tab)
+					if not l_path.item.is_empty then
+						Result.append (l_path.item)
+						Result.append ("%N%T%T%T")
 					end
-
-					original_cluster_info.include_path.forth
+					l_path.forth
 				end
 			end
 
-			Result.append (Double_quote)
-			Result.append (Shared_wizard_environment.destination_folder.twin)
-			Result.append (Client)
+			Result.append ("%"")
+			Result.append (environment.destination_folder)
+			Result.append ("Client")
 			Result.append_character (Directory_separator)
-			Result.append (Include)
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (New_line_tab_tab)
-			Result.append (Tab)
-
-			Result.append (Double_quote)
-			Result.append (Shared_wizard_environment.destination_folder.twin)
-			Result.append (Server)
+			Result.append ("Include%",%N%T%T%T%"")
+			Result.append (environment.destination_folder)
+			Result.append ("Server")
 			Result.append_character (Directory_separator)
-			Result.append (Include)
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (New_line_tab_tab)
-			Result.append (Tab)
-
-			Result.append (Double_quote)
-			Result.append (Shared_wizard_environment.destination_folder.twin)
-			Result.append (Common)
+			Result.append ("Include%",%N%T%T%T%"")
+			Result.append (environment.destination_folder)
+			Result.append ("Common")
 			Result.append_character (Directory_separator)
-			Result.append (Include)
-			Result.append (Double_quote)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("Include%";%N%N")
 			Result.append (End_ace_file)
 
-			if original_cluster_info /= Void and not original_cluster_info.objects.is_empty then
+			if original_cluster_info /= Void then
+				l_path := original_cluster_info.objects
 				from
-					original_cluster_info.objects.start
+					l_path.start
 				until
-					original_cluster_info.objects.after
+					l_path.after
 				loop
-					if not original_cluster_info.objects.item.is_empty then
-						Result.append (New_line_tab_tab_tab)
-						Result.append (original_cluster_info.objects.item)
+					if not l_path.item.is_empty then
+						Result.append ("%N%T%T%T")
+						Result.append (l_path.item)
 					end
-
 					original_cluster_info.objects.forth
 				end
 			end
-			Result.append (New_line)
+			Result.append ("%N")
 		end
 
 	if_class_cluster_insert_visible (a_cluster: STRING) is
@@ -506,25 +459,22 @@ feature -- Basic operations
 			non_void_cluster: a_cluster /= Void
 			valid_cluster: not a_cluster.is_empty
 		local
-			a_cluster_name_index, a_colon_index, a_class_index, a_class_index_before, a_class_index_after: INTEGER
+			l_cluster_name_index, l_colon_index, l_class_index, l_class_index_before, l_class_index_after: INTEGER
 		do
-			a_cluster_name_index := a_cluster.substring_index (shared_wizard_environment.class_cluster_name, 1)
-			a_colon_index := a_cluster.index_of (':', 1)
-			if  (a_cluster_name_index> 0) and (a_cluster_name_index < a_colon_index) then
+			l_cluster_name_index := a_cluster.substring_index (environment.class_cluster_name, 1)
+			l_colon_index := a_cluster.index_of (':', 1)
+			if  (l_cluster_name_index> 0) and (l_cluster_name_index < l_colon_index) then
 				if (a_cluster.substring_index ("visible", 1) > 0) then
-					a_class_index := a_cluster.substring_index (shared_wizard_environment.eiffel_class_name, 1)
-					a_class_index_before := a_class_index - 1
-					a_class_index_after := a_class_index + shared_wizard_environment.eiffel_class_name.count
-					if 
-						(a_class_index = 0) or else not
-						(((a_cluster.item (a_class_index_before) = ' ' ) or 
-						(a_cluster.item (a_class_index_before) = '%T')) and
-						((a_cluster.item (a_class_index_after) = ' ') or 
-						(a_cluster.item (a_class_index_after) = ';') or
-						(a_cluster.item (a_class_index_after) = '%N')))
-					then
-						a_cluster.insert_string (
-							"%N%T%T%T" + shared_wizard_environment.eiffel_class_name+ ";",
+					l_class_index := a_cluster.substring_index (environment.eiffel_class_name, 1)
+					l_class_index_before := l_class_index - 1
+					l_class_index_after := l_class_index + environment.eiffel_class_name.count
+					if (l_class_index = 0) or else not
+							(((a_cluster.item (l_class_index_before) = ' ' ) or 
+							(a_cluster.item (l_class_index_before) = '%T')) and
+							((a_cluster.item (l_class_index_after) = ' ') or 
+							(a_cluster.item (l_class_index_after) = ';') or
+							(a_cluster.item (l_class_index_after) = '%N'))) then
+						a_cluster.insert_string ("%N%T%T%T" + environment.eiffel_class_name+ ";",
 							a_cluster.substring_index ("visible", 1) + 7)
 					end
 				else
@@ -534,7 +484,7 @@ feature -- Basic operations
 					end
 					a_cluster.append (
 						"%N%T%Tvisible%N%
-						%%T%T%T" + shared_wizard_environment.eiffel_class_name + ";%N%
+						%%T%T%T" + environment.eiffel_class_name + ";%N%
 						%%T%Tend")
 				end
 			end

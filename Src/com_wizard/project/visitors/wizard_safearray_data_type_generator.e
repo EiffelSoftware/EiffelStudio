@@ -265,11 +265,9 @@ feature -- Basic operations
 
 			else
 				create tmp_string.make (100)
+				tmp_string.append ("Unknown type of SAFEARRAY element: ")
 				tmp_string.append (element_visitor.c_type)
-				tmp_string.append (Space)
-				tmp_string.append (message_output.Unknown_type_of_safearray_element)
 				message_output.add_warning (Current, tmp_string)
-
 			end
 			set_visitor_atributes (a_visitor)
 		end

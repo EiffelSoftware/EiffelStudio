@@ -30,21 +30,6 @@ inherit
 
 	WIZARD_EXECUTION_ENVIRONMENT
 
-creation
-	make
-	
-feature {NONE} -- Initialization
-
-	make (a_message_output: like message_output) is
-			-- Set `message_output' with `a_message_output'.
-		require
-			non_void_message_output: a_message_output /= Void
-		do
-			message_output := a_message_output
-		ensure
-			message_output_set: message_output = a_message_output
-		end
-
 feature -- Access
 
 	displayed_while_running: BOOLEAN
@@ -104,21 +89,20 @@ feature -- Basic Operations
 				output_pipe.read_stream (Block_size)
 				create a_output.make (10000)
 			until
-				not output_pipe.last_read_successful or Shared_wizard_environment.abort
+				not output_pipe.last_read_successful or environment.abort
 			loop
 				if displayed_while_running then
-					message_output.add_continuous_message (Current, output_pipe.last_string)
+					message_output.add_text (Current, output_pipe.last_string)
 				else
 					a_output.append (output_pipe.last_string)
-					message_output.refresh
 				end
 				output_pipe.read_stream (Block_size)
 			end
 			if not displayed_while_running then
 				a_output.replace_substring_all ("%R%N", "%N")
-				message_output.add_message (Current, a_output)
+				message_output.add_text (Current, a_output)
 			end
-			if not Shared_wizard_environment.abort then
+			if not environment.abort then
 				an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
 				check
 					valid_external_call_1: an_integer = cwin_wait_object_0
@@ -136,9 +120,6 @@ feature -- Basic Operations
 		end
 		
 feature -- Access
-
-	message_output: WIZARD_MESSAGE_OUTPUT
-			-- Output processor
 
 	last_launch_successful: BOOLEAN
 			-- Was last call to `launch' successful (i.e. was process started)?
@@ -176,7 +157,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (50)
 			Result.append ("%"")
-			Result.append (Eiffel4_location)
+			Result.append (Eiffel_installation_dir_name)
 			Result.append ( "\wizards\com\conspawn.exe")
 			Result.append ("%"")			
 		end

@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
@@ -37,7 +32,7 @@ feature -- Basic Operations
 		do
 			create definition_file_writer.make
 			-- Set system name
-			definition_file_writer.set_system_name (shared_wizard_environment.project_name)
+			definition_file_writer.set_system_name (environment.project_name)
 
 			-- Export features
 			-- DllRegisterServer

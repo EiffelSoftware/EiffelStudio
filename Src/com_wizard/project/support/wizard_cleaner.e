@@ -5,6 +5,11 @@ class
 	WIZARD_CLEANER
 
 inherit
+	WIZARD_SHARED_FILE_NAMES
+		export
+			{NONE} all
+		end
+
 	WIZARD_SHARED_DATA
 		export
 			{NONE} all
@@ -43,23 +48,23 @@ feature -- Basic Operations
 			delete_file (c_to_obj (Generated_ps_file_name))
 			delete_file (Temporary_input_file_name)
 			delete_file (Def_file_name)
-			a_directory_name := Shared_wizard_environment.destination_folder.twin
+			a_directory_name := environment.destination_folder.twin
 			a_directory_name.append (Client)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
-			a_directory_name := Shared_wizard_environment.destination_folder.twin
+			a_directory_name := environment.destination_folder.twin
 			a_directory_name.append (Server)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
-			a_directory_name := Shared_wizard_environment.destination_folder.twin
+			a_directory_name := environment.destination_folder.twin
 			a_directory_name.append (Common)
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
 
-			a_directory_name := Shared_wizard_environment.destination_folder.twin
+			a_directory_name := environment.destination_folder.twin
 			a_directory_name.append ("idl")
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append ("e2idl.output")
@@ -79,8 +84,8 @@ feature -- Basic Operations
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
-				a_working_directory := execution_environment.current_working_directory
-				execution_environment.change_working_directory (a_directory_name)
+				a_working_directory := Env.current_working_directory
+				Env.change_working_directory (a_directory_name)
 				a_file_list := a_directory.linear_representation
 				from
 					a_file_list.start
@@ -104,7 +109,7 @@ feature -- Basic Operations
 					end
 					a_file_list.forth
 				end
-				execution_environment.change_working_directory (a_working_directory)
+				Env.change_working_directory (a_working_directory)
 				check
 					directory_empty: a_directory.is_empty
 				end
@@ -123,8 +128,8 @@ feature -- Basic Operations
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
-				a_working_directory := execution_environment.current_working_directory
-				execution_environment.change_working_directory (a_directory_name)
+				a_working_directory := Env.current_working_directory
+				Env.change_working_directory (a_directory_name)
 				a_file_list := a_directory.linear_representation
 				from
 					a_file_list.start
@@ -139,7 +144,7 @@ feature -- Basic Operations
 					end
 					a_file_list.forth
 				end
-				execution_environment.change_working_directory (a_working_directory)
+				Env.change_working_directory (a_working_directory)
 			end
 		end
 

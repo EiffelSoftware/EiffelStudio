@@ -31,6 +31,18 @@ feature -- Access
 	Eiffel4_not_set: STRING is "Environment variable ISE_EIFFEL or EIFFEL4 is not set correctly."
 			-- Environment variable EIFFEL4 is not set correctly.
 
+	Standard_abort_value: INTEGER is -100
+			-- Standard abort value
+
+	Eiffel_compilation_error: INTEGER is -101
+			-- Eiffel compilation error
+
+	Idl_generation_error: INTEGER is -102
+			-- Eiffel generation error
+
+	Exception_raised: INTEGER is -103
+			-- An exception was raised
+
 end -- class WIZARD_ERRORS
 
 --|----------------------------------------------------------------

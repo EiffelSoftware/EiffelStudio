@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			Result.set_result_type ("POINTER")
 
 			create feature_body.make (100)
-			feature_body.append ("%T%T%T%"C++ %(new ")
+			feature_body.append ("%T%T%T%"C++ [new ")
 			if a_interface.namespace /= Void and then not a_interface.namespace.is_empty then
 				feature_body.append (a_interface.namespace)
 				feature_body.append ("::")

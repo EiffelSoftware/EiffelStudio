@@ -11,6 +11,8 @@ inherit
 		rename
 			path_label as text_label,
 			path_combo as text_combo
+		export
+			{NONE} all
 		redefine
 			enable_sensitive,
 			disable_sensitive
@@ -36,7 +38,7 @@ feature -- Initialization
 			non_void_file_extensions: a_file_extensions /= Void
 			non_void_title: a_title /= Void
 		do
-			text_box_setup (a_label, a_key, a_path_validator)
+			text_box_setup (a_label, a_key, a_path_validator, Void)
 			file_extensions := a_file_extensions
 			title := a_title
 			auto_save := True

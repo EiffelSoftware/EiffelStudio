@@ -42,7 +42,7 @@ feature -- Basic operations
 			a_file: RAW_FILE
 		do
 			create a_string.make (500)
-			a_string.append (shared_wizard_environment.destination_folder)
+			a_string.append (environment.destination_folder)
 			a_string.append (a_folder)
 			a_string.append_character (Directory_separator)
 			a_string.append (Resource_file_name)
@@ -60,7 +60,7 @@ feature -- Basic operations
 			Result.append ("1 typelib ")
 			Result.append (Double_quote)
 			
-			str_buffer := Shared_wizard_environment.type_library_file_name.twin
+			str_buffer := environment.type_library_file_name.twin
 			str_buffer.replace_substring_all ("%H", "%H%H")
 
 			Result.append (str_buffer)
@@ -71,7 +71,7 @@ feature -- Basic operations
 			-- Resource file name
 		do
 			create Result.make (100)
-			Result.append (Shared_wizard_environment.project_name)
+			Result.append (environment.project_name)
 			Result.append (Resource_file_extension)
 		end
 

@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 feature -- Miscellaneous
 
 	makefile_macros_msc: STRING is
@@ -76,8 +81,7 @@ feature -- Miscellaneous
 			valid_obj_list: not obj_list.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("# ecom.lib - Makefile for Microsoft C%N%N")
-			Result.append ("MV = copy%N")
+			Result.append ("# ecom.lib - Makefile for Microsoft C%N%NMV = copy%N")
 			if c_compiler.is_equal ("msc") then
 				Result.append (makefile_macros_msc)
 			else
@@ -92,22 +96,22 @@ feature -- Miscellaneous
 			else
 				Result.append (bcb_compiler_flags)
 			end
-			Result.append (c_compiler_flags +
-					"%N%NOBJ = " + obj_list + "%N%N%
-					%WOBJ = " + wobj_list + "%N%N%
-					%all:: " + a_library_name + ".lib " + a_library_name + "_final.lib" + "%N%N" +
-					lib_generation (a_library_name, "WOBJ", c_compiler) +
-					lib_generation (a_library_name + "_final", "OBJ", c_compiler) +
-					".cpp.obj:%N%
-					%	$(CC) $(CFLAGS) ")
-			if 
-				Shared_wizard_environment.output_level = message_output.Output_none and
-				c_compiler.is_equal ("msc")
-			then
+			Result.append (c_compiler_flags)
+			Result.append ("%N%NOBJ = " + obj_list + "%N%NWOBJ = ")
+			Result.append (wobj_list)
+			Result.append ("%N%Nall:: ")
+			Result.append (a_library_name)
+			Result.append (".lib ")
+			Result.append (a_library_name)
+			Result.append ("_final.lib%N%N")
+			Result.append (lib_generation (a_library_name, "WOBJ", c_compiler))
+			Result.append (lib_generation (a_library_name + "_final", "OBJ", c_compiler))
+			Result.append (".cpp.obj:%N	$(CC) $(CFLAGS) ")
+			if c_compiler.is_equal ("msc") then
 				Result.append (" /nologo ")
 			end
-			Result.append ("$<%N")
-			Result.append ("%N" + wobj_generation)
+			Result.append ("$<%N%N")
+			Result.append (wobj_generation)
 		ensure
 			non_void_make_file: Result /= Void
 			valid_make_file: not Result.is_empty
@@ -127,17 +131,17 @@ feature -- Basic operations
 			obj_list: STRING
 			wobj_list, wobj_generation: STRING
 		do
-			a_working_directory := execution_environment.current_working_directory.twin
+			a_working_directory := Env.current_working_directory.twin
 			create a_directory.make_open_read (a_folder_name)
 			a_file_list := a_directory.linear_representation
-			execution_environment.change_working_directory (a_folder_name)
+			Env.change_working_directory (a_folder_name)
 			from
 				a_file_list.start
 				create obj_list.make (100)
 				create wobj_list.make (100)
 				create wobj_generation.make (1000)
 			until
-				a_file_list.after or Shared_wizard_environment.abort
+				a_file_list.after or environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
 					obj_list.append (c_to_obj (a_file_list.item) + Space + "\%N")
@@ -147,22 +151,12 @@ feature -- Basic operations
 				a_file_list.forth
 			end
 			if not obj_list.is_empty then
-				save_file (make_file (obj_list, 
-									wobj_list, 
-									a_library_name, 
-									wobj_generation, 
-									"msc"), "Makefile.msc")
-				save_file (make_file (obj_list, 
-									wobj_list, 
-									a_library_name, 
-									wobj_generation, 
-									"bcb"), "Makefile.bcb")
-				save_file ("set ISE_EIFFEL=" + Eiffel4_location + 
-							"%Nnmake /f Makefile.msc", "make_msc.bat")
-				save_file ("set ISE_EIFFEL=" + Eiffel4_location + 
-							"%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcb", "make_bcb.bat")
+				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "msc"), "Makefile.msc")
+				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "bcb"), "Makefile.bcb")
+				save_file ("set ISE_EIFFEL=" + Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc", "make_msc.bat")
+				save_file ("set ISE_EIFFEL=" + Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcb", "make_bcb.bat")
 			end
-			execution_environment.change_working_directory (a_working_directory)
+			Env.change_working_directory (a_working_directory)
 		end
 
 	wobj_string (c_file_name: STRING): STRING is
@@ -176,10 +170,7 @@ feature -- Basic operations
 			Result.append ("w" + c_to_obj (c_file_name) +
 							": " + c_file_name + "%N%
 							%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if 
-				Shared_wizard_environment.output_level = message_output.Output_none and
-				Ise_c_compiler_value.is_equal ("msc")
-			then
+			if Ise_c_compiler_value.is_equal ("msc") then
 				Result.append (" -nologo ")
 			end
 			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")
@@ -197,14 +188,14 @@ feature -- Basic operations
 			a_string: STRING
 		do
 			if not retried then
-				a_string := execution_environment.current_working_directory.twin
+				a_string := Env.current_working_directory.twin
 				a_string.append_character (Directory_separator)
 				a_string.append (a_file_name)
 				create a_file.make_open_write (a_string)
 				a_file.put_string (content)
 				a_file.close
 			else
-				message_output.add_error (Current, message_output.Could_not_write_makefile)
+				message_output.add_error (Current, "Could not write makefile")
 			end
 		rescue
 			if not failed_on_rescue then

@@ -242,9 +242,9 @@ feature {NONE} -- Implementation
 			Result.append (clsid_name (a_coclass_descriptor.name))
 			Result.append (", NULL, ")
 
-			if shared_wizard_environment.in_process_server then
+			if environment.is_in_process then
 				Result.append ("CLSCTX_INPROC_SERVER")
-			elseif shared_wizard_environment.out_of_process_server then	
+			elseif environment.is_out_of_process then	
 				Result.append ("CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER")
 			end
 

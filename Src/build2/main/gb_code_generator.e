@@ -511,13 +511,7 @@ feature {NONE} -- Implementation
 			-- With information in `element', generate code which will
 			-- parent all objects.
 		local
-			current_element: XML_ELEMENT
-			current_name: STRING
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			current_type: STRING
 			new_object : GB_OBJECT
-			found_name: STRING
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			generated_info: GB_GENERATED_INFO
 		do

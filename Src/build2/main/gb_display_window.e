@@ -42,8 +42,6 @@ feature -- Initialization
 
 	initialize is
 			-- Initalize `Current'.
-		local
-			button: EV_BUTTON
 		do
 			Precursor {EV_DIALOG}
 			set_title (gb_display_window_title)

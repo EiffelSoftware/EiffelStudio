@@ -1636,10 +1636,6 @@ feature {NONE} -- Externals
 			"C [macro <disptchr.h>]"
 		end
 
-invariant
-
-	valid_text_count: exists implies text_length = text.count
-
 end -- class WEL_WINDOW
 
 --|-------------------------------------------------------------------------

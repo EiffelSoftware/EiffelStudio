@@ -28,7 +28,11 @@
 #include "macros.h"
 #include "eif_globals.h"
 
-#define IGNORE	-1	/*	We do not want this item sent, but there are still
+#ifdef EIF_WIN32
+#include "stream.h"
+#endif
+
+#define EIF_IGNORE	-1	/*	We do not want this item sent, but there are still
 					 *	items to send. Useful for getting rid of EX_OSTK
 					 *	pseudo exception vector -- Didier
 					 */
@@ -53,7 +57,12 @@ rt_private int is_first;	/* First item dumped? (matters for pending exception) *
 rt_private struct dump *(*stk_next)();		/* Function used to perform dump */
 
 /* Routine declarations */
+#ifdef EIF_WIN32
+rt_private void send_dump(STREAM *s, struct dump *dp);			/* Send XDR'ed dumped item to ewb */
+#else
 rt_private void send_dump(int s, struct dump *dp);			/* Send XDR'ed dumped item to ewb */
+#endif
+
 rt_private void stk_start(int what);			/* Initialize automaton */
 rt_private void stk_end(int what);				/* Reset saved stack contexts */
 rt_private struct dump *pending(void);		/* List pending exceptions */
@@ -65,7 +74,14 @@ rt_private struct dump *local(int n);		/* Return local by number */
 rt_private struct dump *argument(int n);	/* Return argument by number */
 rt_private struct dump *once(void);		/* Dump once stack */
 
+rt_private void show_dumped (struct dump d);
+rt_private void show_vector(struct ex_vect *dump);
+
+#ifdef EIF_WIN32
+rt_public void send_stack(STREAM *s, int what)
+#else
 rt_public void send_stack(int s, int what)
+#endif
       			/* The connected socket */
          		/* Which stack should be sent */
 {
@@ -78,14 +94,18 @@ rt_public void send_stack(int s, int what)
 
 	stk_start(what);			/* Initialize processing */
 	while (dp = (stk_next)()){	/* While still some data to send */
-		if ((int) dp != IGNORE)
+		if ((int) dp != EIF_IGNORE)
 			send_dump(s, dp);
 	}
 	stk_end (what);
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
+#ifdef EIF_WIN32
+rt_private void send_dump(STREAM *s, struct dump *dp)
+#else
 rt_private void send_dump(int s, struct dump *dp)
+#endif
       				/* The connected socket */
                 	/* Item to send */
 {
@@ -115,7 +135,7 @@ rt_private void stk_start(EIF_CONTEXT int what)
 	/* Save the appropriate stack context, depending on the operations to
 	 * be performed...
 	 */
-	
+
 	switch (what) {
 	case ST_PENDING:
 		bcopy(&eif_trace, &xstk_context, sizeof(struct xstack));
@@ -284,23 +304,21 @@ rt_private struct dump *execution(void)
 
 	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 	expop (&eif_stack);
-	
-	
+
 	if ( !(
 			(top->ex_type == EX_CALL ||		/* A feature call (1st call) */
 			 top->ex_type == EX_RETY ||		/* A retried feature call */
 			 top->ex_type == EX_RESC) &&	/* A rescue clause */
 			 top->exu.exur.exur_id != 0)
 	)
-		return (struct dump *) IGNORE;		/* This vector should not be sent */
-		
+		return (struct dump *) EIF_IGNORE;		/* This vector should not be sent */
 
 	/* Now check whether by chance the vector associated with the callling
 	 * context on top of the debugger's stack is precisely the one we've just
 	 * popped. That would mean we reached a melted feature...
 	 */
 	dc = safe_dtop();				/* Returns null pointer if empty */
-	if (dc != (struct dcall *) 0){	/* Stack not empty */ 
+	if (dc != (struct dcall *) 0){	/* Stack not empty */
 		if (dc->dc_exec == top) {	/* We've reached a melted feature */
 			last_melted = 1;		/* Calling context will be popped later */
 			arg_done = 0;
@@ -314,18 +332,17 @@ rt_private struct dump *execution(void)
 	 * will dump the arguments and possibluy the local variables.
 	 */
 
-	dumped.dmp_type = last_melted ? DMP_MELTED : DMP_VECT;		
-									/* Structure contains vector */
-	copy = *top;	
+	dumped.dmp_type = last_melted ? DMP_MELTED : DMP_VECT;	/* Structure contains vector */
+	copy = *top;
 	dumped.dmp_vect = &copy; /* static variable  -- Didier */
 
 	/* Temporary hack:
-	 * With the time constraints we had it was not an option to change the 
+	 * With the time constraints we had it was not an option to change the
 	 * protocol in order to send the origin type and the dynamic type
 	 * sowe use the same integer to send bith values with a 16 bit shift
 	 */
 
-	if (dumped.dmp_vect -> ex_type){ 
+	if (dumped.dmp_vect -> ex_type){
 		hack = dumped.dmp_vect -> exu.exur.exur_orig;
 		hack <<= 16;
 		hack += Dtype(dumped.dmp_vect -> exu.exur.exur_id);
@@ -357,7 +374,7 @@ rt_private struct dcall *safe_dtop(void)
  */
 
 rt_private void init_var_dump(struct dcall *call)
-                   		/* Calling context for "active" feature */
+		/* Calling context for "active" feature */
 {
 	/* Initializes the interpreter registers for dumping variables from feature
 	 * associated with calling context. This has to be done before ivalue()
@@ -382,7 +399,7 @@ rt_private struct dump *variable(void)
 	static int arg_done = 0;			/* True when arguments processed */
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */
-	
+
 	EIF_GET_CONTEXT
 	if (d_cxt.pg_active == (struct dcall *) 0)
 		return (struct dump *) 0;		/* No active routine */
@@ -424,7 +441,7 @@ rt_private struct dump *local(int n)
 	 * variable, then n+1 is the Result, provided the routine is not a
 	 * procedure.
 	 */
-	
+
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
@@ -432,7 +449,7 @@ rt_private struct dump *local(int n)
 	ip = ivalue(MTC IV_LOCAL, n);
 	if (ip == (struct item *) 0)
 		return (struct dump *) 0;
-	
+
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
 
@@ -453,7 +470,7 @@ rt_private struct dump *argument(int n)
 	/* Return the nth argument, or a void pointer if we reached the end of the
 	 * argument list.
 	 */
-	
+
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
@@ -461,7 +478,7 @@ rt_private struct dump *argument(int n)
 	ip = ivalue(MTC IV_ARG, n);
 	if (ip == (struct item *) 0)
 		return (struct dump *) 0;
-	
+
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
 
@@ -490,10 +507,10 @@ rt_private struct dump *once(void)
 
 	if (once_set.st_top == (char **) 0)	/* Stack not created yet */
 		return (struct dump *) 0;
-		
+
 	if (once_set.st_top == once_set.st_hd->sk_arena)
 		return (struct dump *) 0;			/* Stack is empty */
-	
+
 	epop(&once_set, 1);						/* Remove item logically */
 	obj = *once_set.st_top;					/* Get it through indirection */
 
@@ -511,7 +528,11 @@ rt_private struct dump *once(void)
  * Dumping result of an already called once function
  */
 
+#ifdef EIF_WIN32
+rt_public void send_once_result(STREAM *s, uint32 body_id, int arg_num)
+#else
 rt_public void send_once_result(int s, uint32 body_id, int arg_num)
+#endif
       				/* The connected socket */
                		/* body id of the once function */
             		/* Number of arguments */
@@ -541,7 +562,7 @@ rt_public void send_once_result(int s, uint32 body_id, int arg_num)
 }
 
 
-show_dumped (struct dump d)
+rt_private void show_dumped (struct dump d)
 {
 	struct ex_vect *dmpu;
 	switch (d.dmp_type) {
@@ -556,18 +577,12 @@ show_dumped (struct dump d)
 	}
 }
 
-
-
-show_vector (struct ex_vect *dmpu)
+rt_private void show_vector (struct ex_vect *dmpu)
 {
 		printf ("VECTOR %lx\n", (char *) dmpu);
-		printf ("type = %i; retry = %i; rescue = %i\n", dmpu -> ex_type, 
+		printf ("type = %i; retry = %i; rescue = %i\n", dmpu -> ex_type,
 			dmpu -> ex_retry, dmpu -> ex_rescue);
 		printf ("obj_id = %i, rout_name = %s orig = %i\n",
-			dmpu -> exu.exur.exur_id, dmpu -> exu.exur.exur_rout, 
+			dmpu -> exu.exur.exur_id, dmpu -> exu.exur.exur_rout,
 			dmpu -> exu.exur.exur_orig);
 }
-
-
-
-

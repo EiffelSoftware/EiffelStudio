@@ -38,7 +38,7 @@ default
 cluster
 	all build2:		"$WS/build2"
 		exclude
-			"object_editor"; "EIFGEN"; 
+			"object_editor"; "EIFGEN"; "Windows";
 		end
 
 	dev:		"$EIFFEL_SRC/library"

@@ -13,8 +13,8 @@ verbose
 open mosis.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.tgz Eiffel52_solaris.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.iso Eiffel52_enterprise_solaris.iso
+get local/TEST_DELIV/PorterPackage/Eiffel53_enterprise.tgz Eiffel53_solaris.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel53_enterprise.iso Eiffel53_enterprise_solaris.iso
 close 
 EOF
 

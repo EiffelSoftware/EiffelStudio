@@ -11,8 +11,4 @@ default
 cluster 
 	root_cluster:	"$EIFFEL4\examples\wel\brushes"
 
-external
-	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include"
-	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
-
 end -- brushes_demo

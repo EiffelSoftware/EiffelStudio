@@ -54,6 +54,16 @@ feature {EV_ANY_I}
 			not_void: Result /= Void
 		end
 
+	line_count: INTEGER is
+			-- Number of lines `text' uses.
+		do
+			if text /= Void then
+				Result := text.occurrences ('%N') + 1
+			end
+		ensure
+			non_negative: Result >= 0
+		end
+
 feature -- Inapplicable
 
 	set_default_minimum_size is
@@ -84,6 +94,10 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/03 00:55:10  brendel
+--| Added feature `line_count'.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.15  2000/02/25 18:03:26  brendel
 --| Added feature `safe_text' that never returns a Void string.
 --|
@@ -97,7 +111,8 @@ end -- class EV_TEXTABLE_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.12.6.2  2000/01/10 17:15:32  rogers
---| The three alignment functions names have been changed to the format set_*****_algnment. Remove text has been implemented.
+--| The three alignment functions names have been changed to the format
+--| set_*****_algnment. Remove text has been implemented.
 --|
 --| Revision 1.12.6.1  1999/11/24 17:30:20  oconnor
 --| merged with DEVEL branch

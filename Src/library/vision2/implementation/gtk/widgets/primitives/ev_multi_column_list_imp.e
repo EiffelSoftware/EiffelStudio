@@ -295,6 +295,7 @@ feature {NONE} -- Initialization
 	pixmaps_size_changed is
 			-- 
 		do
+			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			if pixmaps_height > C.gtk_clist_struct_row_height (list_widget) then
 				set_row_height (pixmaps_height)
 			end

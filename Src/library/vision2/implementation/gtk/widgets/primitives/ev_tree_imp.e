@@ -838,6 +838,16 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	list_widget: POINTER
 			-- Pointer to the gtktree widget.
 			
+feature {NONE} -- Implementation
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			--| FIXME IEK Add pixmap scaling code with gtk+ 2
+			--| For now, do nothing.
+		end
+			
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE

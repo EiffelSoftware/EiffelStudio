@@ -17,8 +17,7 @@ feature -- Initialization
 	make is
 			-- Initialization.
 		do
-			create Xml_members.make (10000)
-			create current_xml_member.make
+			create xml_members.make (10000)
 			create current_tag.make (10)
 		ensure then
 			non_void_xml_members: xml_members /= Void
@@ -39,6 +38,9 @@ feature {NONE} -- Access
 	current_tag: ARRAYED_STACK [STRING]
 			-- List of opened XML tags.
 
+	tag_started: BOOLEAN
+			-- Was a new tag started?
+
 feature -- Tag
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
@@ -49,6 +51,8 @@ feature -- Tag
 		do
 			current_tag.extend (a_local_part)
 			if a_local_part.is_equal ("member") then
+				create current_xml_member.make
+				tag_started := True
 				l_position ?= parser.position
 				check
 					non_void_position: l_position /= Void
@@ -63,13 +67,14 @@ feature -- Tag
 		local
 			l_name: STRING
 		do
-			if current_tag.item.is_equal ("member") then
+			if tag_started and current_tag.item.is_equal ("member") then
 				check
 					name_attribute: a_local_part.is_equal ("name")
 				end
 				create l_name.make_from_string (a_value)
 				l_name.keep_tail (l_name.count - 2)
 				current_xml_member.set_name (l_name)
+				tag_started := False
 			end
 			Precursor {XM_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part, a_value)
 		end
@@ -87,9 +92,9 @@ feature -- Tag
 					check
 						non_void_position: l_position /= Void
 					end
-					l_number_of_char := l_position.byte_index - current_xml_member.pos_in_file --+ ("/member>").count
+					l_number_of_char := l_position.byte_index - current_xml_member.pos_in_file
 					current_xml_member.set_number_of_char (l_number_of_char)
-					xml_members.put (deep_clone (current_xml_member), clone (current_xml_member.name))
+					xml_members.put (current_xml_member, current_xml_member.name)
 				end
 			end
 			current_tag.remove

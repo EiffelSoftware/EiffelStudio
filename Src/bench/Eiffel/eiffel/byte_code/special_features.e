@@ -85,6 +85,10 @@ feature -- Byte code special generation
 			when to_integer_64_type then
 				ba.append (Bc_cast_long)
 				ba.append_integer (64)
+			when to_double_type then
+				ba.append (Bc_cast_double)
+			when to_real_type then
+				ba.append (Bc_cast_float)
 			when max_type then
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_max)
@@ -95,8 +99,12 @@ feature -- Byte code special generation
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_generator)
 			when offset_type then
-				ba.append (Bc_basic_operations)
-				ba.append (Bc_offset)
+				if type_of (basic_type) = pointer_type then
+					ba.append (Bc_basic_operations)
+					ba.append (Bc_offset)
+				else
+					ba.append (Bc_plus)
+				end
 			when zero_type then
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_zero)
@@ -104,6 +112,10 @@ feature -- Byte code special generation
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_one)
 			when default_type then
+					-- We do not need target, so let's get rid of
+					-- it for now.
+				ba.append (bc_pop)
+				ba.append_uint32_integer (1)
 				basic_type.make_default_byte_code (ba)
 			when bit_and_type..bit_test_type then
 				check integer_type: type_of (basic_type) = integer_type end
@@ -145,6 +157,12 @@ feature -- C special code generation
 				target.print_register
 			when to_integer_64_type then
 				buffer.putstring ("(EIF_INTEGER_64) ")
+				target.print_register
+			when to_double_type then
+				buffer.putstring ("(EIF_DOUBLE) ")
+				target.print_register
+			when to_real_type then
+				buffer.putstring ("(EIF_REAL) ")
 				target.print_register
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
@@ -208,6 +226,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_double_type, feature {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
 			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
@@ -269,6 +289,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_double_type, feature {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -309,7 +331,9 @@ feature {NONE} -- Fast access to feature name
 	lower_type: INTEGER is 32
 	is_digit_type: INTEGER is 33
 	memory_calloc: INTEGER is 34
-	max_type_id: INTEGER is 34
+	to_double_type: INTEGER is 35
+	to_real_type: INTEGER is 36
+	max_type_id: INTEGER is 36
 
 feature {NONE} -- Byte code generation
 
@@ -420,6 +444,12 @@ feature {NONE} -- C code generation
 				end
 				target.print_register
 				buffer.putstring (") + ")
+				parameter.print_register
+				buffer.putchar (')')
+			else
+				buffer.putchar ('(')
+				target.print_register
+				buffer.putstring (" + ")
 				parameter.print_register
 				buffer.putchar (')')
 			end

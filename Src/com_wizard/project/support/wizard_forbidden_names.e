@@ -189,6 +189,7 @@ feature -- Access
 			Result.force ("meaning", "meaning")
 			Result.force ("raise", "raise")
 			Result.force ("set_item", "set_item")
+			Result.force ("create_item", "create_item")
 			Result.force ("a_stub", "a_stub")
 			Result.force ("assertion_violation", "assertion_violation")
 			Result.force ("is_developer_exception", "is_developer_exception")

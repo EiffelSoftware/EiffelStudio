@@ -76,7 +76,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 	set_associated_local (s_id: INTEGER) is
-			-- Set `associated_local' to `s'
+			-- Set `associated_local' to with name extracted from name ID `s_id'
 		require
 			valid_s_id: s_id >= 1
 		do

@@ -16,7 +16,19 @@ inherit
 
 creation
 	make
+	
+feature {NONE} -- Initialization
 
+	make (f: FEATURE_I) is
+			-- Creation
+		require
+			valid_argument: f /= Void
+		do
+			feature_id := f.feature_id
+			feature_name_id := f.feature_name_id
+			class_id := System.current_class.class_id
+		end
+		
 feature -- Properties
 
 	feature_name_id: INTEGER
@@ -37,16 +49,6 @@ feature {COMPILER_EXPORTER}
 
 	feature_id: INTEGER
 			-- Feature ID of the anchor
-
-	make (f: FEATURE_I) is
-			-- Creation
-		require
-			valid_argument: f /= Void
-		do
-			feature_id := f.feature_id
-			feature_name_id := f.feature_name_id
-			class_id := System.current_class.class_id
-		end
 
 feature -- Access
 

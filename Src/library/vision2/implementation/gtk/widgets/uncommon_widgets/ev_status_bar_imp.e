@@ -58,18 +58,6 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 		-- list of status bar contained in the horizontal box
 
---	count: INTEGER is
---		do
---			Result := ev_children.count
---		end
-
---	get_item (index: INTEGER): EV_ITEM is
---			-- Give the item of the list at the zero-base
---			-- `index'.
---		do
---			Result ?= (ev_children.i_th (index)).interface
---		end
-
 feature -- Element change
 
 	add_status_bar_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
@@ -144,9 +132,8 @@ feature -- Element change
 	clear_items is
 			-- Clear all the items of the list.
 		do
-			check
-				To_be_implemented: False
-			end
+			clear_ev_children
+			c_gtk_container_remove_all_children (widget)
 		end
 
 end -- class EV_STATUS_BAR_IMP

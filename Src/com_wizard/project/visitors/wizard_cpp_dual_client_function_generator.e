@@ -149,7 +149,9 @@ feature {NONE} -- Implementation
 		local
 			visitor : WIZARD_DATA_TYPE_VISITOR
 		do
-			Precursor {WIZARD_CPP_CLIENT_FUNCTION_GENERATOR}
+			if func_desc.arguments /= Void and not func_desc.arguments.empty then
+				ccom_feature_writer.set_signature (set_result_type_and_signature)
+			end
 
 			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
 				create visitor
@@ -157,7 +159,7 @@ feature {NONE} -- Implementation
 
 				if visitor.is_basic_type or visitor.is_enumeration then
 					ccom_feature_writer.set_result_type (visitor.cecil_type)
-				elseif is_boolean (visitor.vt_type) and then not visitor.is_pointed then
+				elseif (visitor.vt_type = Vt_bool) then
 					ccom_feature_writer.set_result_type (Eif_boolean)
 				else
 					ccom_feature_writer.set_result_type (Eif_reference)

@@ -107,6 +107,7 @@ feature {NONE} -- GUI building
 			button.select_actions.extend (~add_item_in (list, text_field))
 			button.disable_sensitive
 			text_field.change_actions.extend (~disable_non_applicable_buttons (text_field, button))
+			text_field.return_actions.extend (~add_item_in (list, text_field))
 			button.set_minimum_width (80)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
@@ -156,7 +157,7 @@ feature {NONE} -- Action
 			txt: STRING
 		do
 			txt := text.text
-			if txt /= Void then
+			if not txt.is_empty then
 				create list_item.make_with_text (txt)
 				list_item.select_actions.extend (text~set_text (txt))
 				l.extend (list_item)
@@ -170,7 +171,7 @@ feature {NONE} -- Action
 		require
 			a_button_not_void: a_button /= Void
 		do
-			if text.text /= Void then
+			if not text.text.is_empty then
 				a_button.enable_sensitive
 			else
 				a_button.disable_sensitive
@@ -206,7 +207,7 @@ feature {NONE} -- Action
 		do
 			txt := text.text
 			list_item := l.selected_item
-			if txt /= Void and then list_item /= Void then
+			if not txt.is_empty and then list_item /= Void then
 				list_item.set_text (txt)
 				list_item.select_actions.wipe_out
 				list_item.select_actions.extend (text~set_text (txt))

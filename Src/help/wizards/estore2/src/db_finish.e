@@ -73,7 +73,7 @@ feature -- basic Operations
 			choice_box.set_background_color (white_color)
 			progress.set_background_color (white_color)
 			progress_text.set_background_color (white_color)
-
+			choice_box.show
 		end
 
 	launch_operations is
@@ -100,7 +100,7 @@ feature -- basic Operations
 
 			li := wizard_information.table_list
 				-- 2 classes are generated for a db table.
-			total := 2 * li.count
+			total := li.count
 			if wizard_information.new_project then	
 				total := total + 8
 				if is_oracle then
@@ -822,4 +822,30 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 		
+	copy_file (name, extension, destination: STRING) is
+			-- Copy resource class whose name is `name' and `extension'
+			-- to `destination'.
+		require
+			name_exists: name /= Void
+		local
+			f1, f_name: FILE_NAME
+			fi: RAW_FILE
+			s: STRING
+		do
+			create f1.make_from_string (wizard_resources_path)
+			f_name := clone (f1)
+			f_name.extend (name)
+			f_name.add_extension (extension)
+			create fi.make_open_read (f_name)
+			fi.read_stream (fi.count)
+			s := fi.last_string
+			fi.close
+			create f_name.make_from_string (destination)
+			f_name.extend (name)
+			f_name.add_extension (extension)
+			create fi.make_open_write (f_name)
+			fi.put_string (s)
+			fi.close
+		end
+
 end -- class DB_FINISH

@@ -163,12 +163,11 @@ feature {NONE}
 
 	free_resources is
 			-- Free all resources.
-		
 		do
 			from
 				start
 			until
-				off
+				after
 			loop
 				if item.is_allocated then
 					x_free_font (item.screen.screen_object, item.identifier);
@@ -401,7 +400,7 @@ feature
 		require else
 			a_name_exists: not (a_name = Void)
 		local
-			widgets_to_update: LIST [FONTABLE_X]
+			widgets_to_update: LINKED_LIST [FONTABLE_X]
 		do
 			free_resources;
 			n_ame := clone (a_name);
@@ -411,7 +410,7 @@ feature
 				widgets_to_update := objects;
 				widgets_to_update.start
 			until
-				widgets_to_update.off
+				widgets_to_update.after
 			loop
 				widgets_to_update.item.update_font;
 				widgets_to_update.forth

@@ -292,14 +292,14 @@ feature -- Status settings
 		end
 
 	put, set_position_by_widget
-		(the_child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
-			--	Add a child to `Current' at cell position `a_x', `a_y',
+		(child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
+			--	Add `child' to `Current' at cell position `a_x', `a_y',
 			-- with size `a_width', `a_height' in cells.
 		local
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 		do
-			child_imp ?= the_child.implementation
+			child_imp ?= child.implementation
 			check
 				valid_child: child_imp /= Void
 			end
@@ -317,6 +317,7 @@ feature -- Status settings
 			-- We show the child and resize the container
 			child_imp.show
 			notify_change (1 + 2, Current)
+			new_item_actions.call ([child])
 		end
 
 	resize (a_column, a_row: INTEGER) is

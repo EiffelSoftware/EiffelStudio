@@ -271,11 +271,7 @@
 			</code>, all different, and <italic>inst0</italic>, <italic>inst1</italic>, <italic>inst2</italic>,  ... are sequences of zero or more instructions. In the integer case, it is often convenient to use 
 			<code>
 				<keyword>unique</keyword>
-			</code> values (
-			<link>
-				<url>tutorial-11.xml</url><anchor_name>94304</anchor_name>
-				<label>"Constant and unique attributes", page 83</label>
-			</link>) for the <italic>vi</italic>
+			</code> values for the <italic>vi</italic>
 		</paragraph>
 		<paragraph>The effect of such a multi-branch instruction, if the value of 
 			<code>
@@ -480,10 +476,10 @@
 			<size>2</size>
 			<content>Creation variants</content>
 		</heading>
-		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (
+		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (see 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>59651</anchor_name>
-				<label>"Creating and initializing objects", page 20</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>):
 		</paragraph>
 <code_block>

@@ -216,7 +216,7 @@ feature {NONE} -- Private Access
 				    "-p,--cleanup#Cleanup destination folder prior to generation.",
 				    "-n,--nologo#Do not display copyright information.",
 				    "(-c|-s|-e)",
-				    "(-p|-b)>>
+				    "(-p|-b)">>
 		end
 	
 	exe_name: STRING

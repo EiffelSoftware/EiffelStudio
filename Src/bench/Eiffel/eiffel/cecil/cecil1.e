@@ -109,6 +109,34 @@ end;
 			file.putstring ("};%N%N");
 		end;
 
+	generate_precomp_workbench (file: INDENT_FILE; class_id: CLASS_ID) is
+			-- Generate workbench routine id array.
+			-- (Used when the class is precompiled.)
+		local
+			i: INTEGER;
+			feat: FEATURE_I;
+		do
+			file.putstring ("uint32 cr");
+			file.putint (class_id.id);
+			file.putstring ("[] = {%N");
+			from
+				i := 0
+			until
+				i > upper
+			loop
+				feat := values.item (i);
+				file.putstring ("(uint32) ");
+				if feat = Void then
+					file.putchar ('0');
+				else
+					file.putint (feat.rout_id_set.first.id);
+				end;
+				file.putstring (",%N");
+				i := i + 1
+			end;
+			file.putstring ("};%N%N");
+		end;
+
 	generate_name_table (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate name table in file `file'.
 		require

@@ -120,7 +120,7 @@ feature {GB_XML_STORE, GB_XML_LOAD}
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (name_string)
 			name :=  element_info.data
-			layout_item.set_text (name + ": " + layout_item.text)
+			layout_item.set_text (name + ": " + short_type)
 		end
 		
 	xml_storage_required: BOOLEAN is

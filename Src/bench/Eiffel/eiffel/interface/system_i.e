@@ -3316,28 +3316,16 @@ feature -- Plug and Makefile file
 			end;
 
 				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*eif_strmake)(%N%
-					%#ifdef __STDC__%N%
-					%EIF_REFERENCE, EIF_INTEGER%N%
-					%#endif%N%
-					%) = ");
+			Plug_file.putstring ("void (*eif_strmake)(EIF_REFERENCE, EIF_INTEGER) = ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring (";%N");
 				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*eif_arrmake)(%N%
-					%#ifdef __STDC__%N%
-					%EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER%N%
-					%#endif%N%
-					%) = ");
+			Plug_file.putstring ("void (*eif_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER) = ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring (";%N");
 
 				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*eif_strset)(%N%
-					%#ifdef __STDC__%N%
-					%EIF_REFERENCE, EIF_INTEGER%N%
-					%#endif%N%
-					%) = ");
+			Plug_file.putstring ("void (*eif_strset)(EIF_REFERENCE, EIF_INTEGER) = ");
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring (";%N");
 
@@ -3457,24 +3445,24 @@ feature -- Main file generation
 
 			Main_file.putstring ("%N%
 				%#include %"macros.h%"%N%
-				%#include %"sig.h%"%N");
+				%#include %"sig.h%"%N%N");
 
-			Main_file.generate_extern_declaration ("void", "emain", <<"int", "char **">>);
+			Main_file.generate_extern_declaration
+				("void", "emain", <<"int", "char **">>);
 
 			if has_separate then
 				Main_file.putstring ("#include %"curextern.h%"%N");
 			end
 
-			Main_file.generate_function_signature ("void", "main", True, Main_file,
+			Main_file.generate_function_signature
+				("int", "main", True, Main_file,
 						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>);
 
-			Main_file.move (-6) -- ss MT: 5 = len("GTCX%N") in INDENT_FILE
-			Main_file.putstring ("%N#ifdef EIF_THREADS%N")
-
-			Main_file.putstring ("%Teif_thr_init_root();%N")
-			Main_file.putstring ("#endif%N{%N%TGTCX%N")
-
+			Main_file.move (-7) -- ss MT: 7 = len("%TGTCX%N") in INDENT_FILE
 			Main_file.putstring ("%
+				%%N#ifdef EIF_THREADS%N%
+				%%Teif_thr_init_root();%N%
+				%#endif%N{%N%TGTCX%N%
 				%%Tstruct ex_vect *exvect;%N%
 				%%Tjmp_buf exenv;%N%N%
 				%%Tinitsig();%N%
@@ -3493,7 +3481,9 @@ feature -- Main file generation
 				%%Tif (prof_enabled) initprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
-				%%Texit(0);%N%TEDCX%N}%N}%N"); -- ss MT
+				%%Texit(0);%N%
+				%%TEDCX%N%
+				%}%N}%N");
 
 			Main_file.close_c;
 		end;
@@ -3608,16 +3598,19 @@ feature -- Main file generation
 				Initialization_file.putstring ("%Tif (argc < 2) {%N%
 					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
 					%%T%Tdefault_rescue();%N%
-					%%T}%N%
+					%%T}%N");
+				Initialization_file.putstring ("%
 					%%Tif (strcmp(argv[1], constant_init_flag) && strcmp(argv[1], constant_creation_flag)) {%N%
 					%%T%Tsprintf(crash_info, CURERR8);%N%
 					%%T%Tdefault_rescue();%N%
-					%%T}%N%
+					%%T}%N");
+				Initialization_file.putstring ("%
 					%%Tif (!memcmp(argv[1], constant_init_flag, strlen(argv[1]))) {%N%
 					%%T%Tchar **root_argv;%N%
 					%%T%Tint i;%N%
 					%%T%Troot_argv = (char **)malloc(argc*sizeof(char *));%N%
-					%%T%Tvalid_memory(root_argv);%N%
+					%%T%Tvalid_memory(root_argv);%N");
+				Initialization_file.putstring ("%
 					%%T%Troot_argv[0] = argv[0];%N%
 					%%T%Tfor(i=2; i<argc; i++)%N%
 					%%T%T%Troot_argv[i-1] = argv[i];%N%
@@ -3689,7 +3682,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("%Tserver_execute();%N");
 			end
 
-			Initialization_file.putstring ("%TEDCX%N}%N"); -- ss MT
+			Initialization_file.putstring ("%TEDCX%N}%N");
 
 			-- Generation of einit() and tabinit(). Only for workbench
 			-- mode.
@@ -3705,12 +3698,13 @@ feature -- Main file generation
 				loop
 					cl_type := class_types.item (i);
 					if cl_type /= Void then
-						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, <<>>)
+						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, <<"void">>)
 					end
 					i := i + 1
 				end
 
-				Initialization_file.putstring ("%Nvoid tabinit()%N{%N");
+
+				Initialization_file.putstring ("%Nvoid tabinit(void)%N{%N");
 				from
 					i := 1;
 					nb := type_id_counter.value
@@ -3731,7 +3725,7 @@ feature -- Main file generation
 				end;
 				Initialization_file.putstring ("}%N%N");
 
-				Initialization_file.generate_function_signature ("void", "einit", True, Initialization_file, <<>>, <<>>);
+				Initialization_file.generate_function_signature ("void", "einit", True, Initialization_file, <<"">>, <<"void">>);
 
 					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ");
@@ -3753,6 +3747,52 @@ feature -- Main file generation
 				Initialization_file.putint (dle_frozen_level);
 				Initialization_file.putstring (";%N%TEDCX%N}%N"); -- MT
 			end;
+
+			-- Module initialization routine 'system_mod_init'
+
+			-- Declarations
+
+
+
+			from
+				i  := 1;
+				nb := type_id_counter.value
+			until
+				i > nb
+			loop
+				cl_type := class_types.item (i);
+
+				if cl_type /= Void then
+					Initialization_file.generate_extern_declaration (
+									"void", cl_type.id.module_init_name, <<"void">>
+																	)
+				end
+				i := i + 1
+			end
+
+
+
+			-- Module initialization
+			Initialization_file.generate_function_signature (
+				"void", "system_mod_init", True, Initialization_file, <<"">>, <<"void">>
+															);
+			from
+				i := 1;
+				nb := type_id_counter.value
+			until
+				i > nb
+			loop
+				cl_type := class_types.item (i);
+
+				if cl_type /= Void then
+					Initialization_file.putstring ("%T");
+					Initialization_file.putstring (cl_type.id.module_init_name);
+					Initialization_file.putstring ("();%N")
+				end;
+				i := i + 1
+			end;
+
+			Initialization_file.putstring ("%TEDCX}%N%N");
 
 			Initialization_file.close_c;
 		end;

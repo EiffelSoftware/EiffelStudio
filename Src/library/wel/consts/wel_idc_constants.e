@@ -9,72 +9,93 @@ class
 
 feature -- Access
 
+	Idc_appstarting: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"IDC_APPSTARTING"
+		end
+
 	Idc_arrow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_ARROW"
 		end
 
+	Idc_help: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"IDC_HELP"
+		end
+
 	Idc_ibeam: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_IBEAM"
 		end
 
+	Idc_no: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"IDC_NO"
+		end
+
 	Idc_wait: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_WAIT"
 		end
 
 	Idc_cross: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_CROSS"
 		end
 
 	Idc_uparrow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_UPARROW"
 		end
 
 	Idc_sizeall: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_SIZEALL"
 		end
 
 	Idc_sizenwse: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_SIZENWSE"
 		end
 
 	Idc_sizenesw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_SIZENESW"
 		end
 
 	Idc_sizewe: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_SIZEWE"
 		end
 
 	Idc_sizens: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDC_SIZENS"
 		end

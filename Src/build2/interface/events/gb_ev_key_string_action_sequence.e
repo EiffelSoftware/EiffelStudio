@@ -46,7 +46,12 @@ feature {NONE} -- Implementation
 			-- Display all other arguments of `Current' on `textable', prepended
 			-- with `name' fired.
 		do
-			textable.set_text (name + " fired.%Nkeystring : " + a_keystring.out)
+				-- You are not allowed to add a return character to a text field.
+			if a_keystring /= "%R" then
+				textable.set_text (name + " fired.%Nkeystring : " + a_keystring.out)
+			else
+				textable.set_text (name + " fired.")
+			end
 		end
 
 end -- class GB_EV_KEY_STRING_ACTION_SEQUENCE

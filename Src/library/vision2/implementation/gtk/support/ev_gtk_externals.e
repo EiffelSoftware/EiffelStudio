@@ -716,7 +716,12 @@ feature {NONE} -- GTK C functions for progress bar
 
 	gtk_progress_bar_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C : EIF_POINTER | <gtk/gtk.h>"
+		end
+
+	c_gtk_progress_bar_new_with_adjustment (val: INTEGER; min: INTEGER; max: INTEGER; step_increment: INTEGER; page_increment: INTEGER): POINTER is
+		external
+			"C (gfloat, gfloat, gfloat, gfloat, gfloat): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_progress_bar_set_bar_style (progressbar: POINTER; style: INTEGER) is
@@ -737,6 +742,11 @@ feature {NONE} -- GTK C functions for progress bar
 	c_gtk_progress_bar_style (progressbar: POINTER): INTEGER is
 		external
 			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_progress_bar_adjustment (progressbar: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkProgressBar *): EIF_POINTER"
 		end
 
 feature {NONE} -- GTK C functions for file and directory selection

@@ -221,31 +221,19 @@ feature -- Basic operation
 			end
 			children := clone (old_object.children)
 
-			if new_object.id /= old_object.id then
-					-- Now remove all children from the old object, as if the
-					-- ID's are not identical, it means that we are not resetting an object
-				old_children := old_object.children
-				old_children.wipe_out	
-			end
-			
 			from
 				children.start
 			until
 				children.off
 			loop
 				child_object := children.item
-					if in_type_change then
-						child_object.unparent_during_type_change
-					else
-					--child_object.unparent
-						old_object.remove_child (child_object)
-					end
-				
-					if cell_object /= Void then
-						cell_object.add_child_object (child_object, 1)	
-					else
-						container_object.add_child_object (child_object, container_object.object.count + 1)
-					end
+				old_object.remove_child (child_object)
+			
+				if cell_object /= Void then
+					cell_object.add_child_object (child_object, 1)	
+				else
+					container_object.add_child_object (child_object, container_object.object.count + 1)
+				end
 				children.forth
 			end
 		end
@@ -267,6 +255,7 @@ feature -- Basic operation
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			table_object: GB_TABLE_OBJECT
 			assertion_result: BOOLEAN
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 				-- Retreive the parent of `an_object'
 				-- we must do this before calling `remove_object_from_parent'.
@@ -280,19 +269,14 @@ feature -- Basic operation
 				--| Need to get original position.
 			original_position := layout_parent_item.index_of (an_object.layout_item, 1)			
 			
-			parent_object ?= layout_parent_item.object
+			parent_object ?= an_object.parent_object
 			check
 				parent_object_not_void: parent_object /= Void
 			end	
 			assertion_result := (create {ISE_RUNTIME}).check_assert (False)
-						
-				-- Remove `an_object' from its parent.
-			an_object.unparent_during_type_change
 			
-			new_object.set_layout_item (old_layout_item)
-			new_object.layout_item.set_text (new_object.short_type)
+			parent_object.remove_child (an_object)
 
-			parent_object.remove_child_from_children (an_object)
 				-- Add new object to parent of old object.
 			add_object (parent_object, new_object, original_position)
 			

@@ -654,7 +654,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- If there is a creation constraint we are facing two different cases:
 				-- * case 1: the declaration is using a real type `to_check', we check that
 				--           the creation procedures listed in the constraint are indeed
-				--           creation procedures of `to_check'
+				--           creation procedures of `to_check'.
 				-- * case 2: the declaration is using a formal type. Let's take an example and
 				--           I will explain what we need to do:
 				--           we have:
@@ -697,6 +697,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 	
 						crc_list.forth
 					end
+				else
+						-- May be we are handling a case where the constraint only specfies
+						-- `default_create', so let's check that the constraint defines
+						-- `default_create' as creation procedure.
+					matched := crc_list.count = 1 and then formal_dec_as.has_default_create
 				end
 	
 				if not matched then

@@ -13,7 +13,6 @@ inherit
 		end
 	SHARED_LICENSE;
 	SHARED_RESCUE_STATUS;
-	EXCEPTIONS;
 	SHARED_RESOURCES
 
 feature -- Licence managment

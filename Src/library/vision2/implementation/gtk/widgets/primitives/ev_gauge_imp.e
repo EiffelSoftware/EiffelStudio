@@ -115,9 +115,7 @@ feature -- Element change
 	set_value (a_value: INTEGER) is
 			-- Set `value' to `a_value'.
 		do
-			if value /= a_value then
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value)
-			end
+			internal_set_value (a_value)
 		ensure then
 			step_same: step = old step
 			leap_same: leap = old leap
@@ -165,7 +163,7 @@ feature -- Element change
 				value_range.upper + page_size
 			)
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
-			set_value (temp_value)
+			internal_set_value (temp_value)
 		ensure
 			value_range_upper_consistent: value_range.upper =
 				feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (adjustment).rounded - page_size
@@ -182,6 +180,14 @@ feature {NONE} -- Implementation
 
 	old_value: INTEGER
 			-- Value of `value' when last "value-changed" signal occurred.
+			
+	internal_set_value (a_value: INTEGER) is
+			-- Set `value' to `a_value'.
+		do
+			if value /= a_value then
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value)
+			end
+		end
 			
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

@@ -16,12 +16,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	CACHE_PATH
 		export
 			{NONE} all
 		end
-		
+	
 creation
 	make
 

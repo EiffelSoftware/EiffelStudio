@@ -31,7 +31,7 @@ inherit
 
 	INTERNAL
 
-feature {EV_ANY_I, EV_PND_TRANSPORTER_IMP} -- Access
+feature {EV_ANY_I} -- Access
 
 	c_object: POINTER
 			-- C pointer to an object conforming to GtkWidget.
@@ -73,7 +73,11 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			i, l: INTEGER
 		do
 			l := signal_ids.count
-			from i := 1 until i > l loop
+			from
+				i := 1
+			until
+				i > l
+			loop
 				C.gtk_signal_disconnect (c_object, signal_ids.i_th (i))
 				i := i + 1
 			end
@@ -101,7 +105,11 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				NULL,
 				NULL
 			)
-			C.gtk_object_destroy (c_object)
+			if C.gtk_is_window (c_object) then
+				C.gtk_object_destroy (c_object)
+			else
+				C.gtk_object_unref (c_object)
+			end
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
@@ -160,17 +168,20 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
+		local
+			a_sig_temp: ANY
 		do
+			a_sig_temp := a_signal_name.to_c
 			if translate /= Void then
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					eiffel_to_c (a_signal_name),
+					$a_sig_temp,
 					agent gtk_marshal.translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					eiffel_to_c (a_signal_name),
+					$a_sig_temp,
 					an_agent
 				)
 			end
@@ -361,7 +372,7 @@ feature {NONE} -- Implementation
 		end
 		
 	default_window: EV_WINDOW is
-			-- Default Window used for creation of agents.
+			-- Default Window used for creation of agents and holder of clipboard widget.
 		once
 			create Result
 		end
@@ -456,6 +467,8 @@ feature {NONE} -- External implementation
         	external
             		"C (GtkObject*, gpointer) | <gtk/gtk.h>"
         	end
+
+feature {EV_GTK_CALLBACK_MARSHAL}
 
 	C: EV_C_EXTERNALS is
 			-- Access to external C functions.

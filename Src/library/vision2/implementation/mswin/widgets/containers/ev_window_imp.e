@@ -38,7 +38,8 @@ inherit
 			internal_set_minimum_width,
 			internal_set_minimum_height,
 			internal_set_minimum_size,
-			on_destroy
+			on_destroy,
+			notebook_parent
 		end
 
 	WEL_FRAME_WINDOW
@@ -169,6 +170,13 @@ feature -- Access
 
 	status_bar: EV_STATUS_BAR_IMP
 			-- Status bar of the window.
+
+	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
+			-- By default all windows are not notebooks.
+			-- Redefined in EV_NOTEBOOK.
+		do
+			Result := Void
+		end
 
 feature -- Status setting
 

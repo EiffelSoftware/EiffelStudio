@@ -139,6 +139,22 @@ feature -- Access
 			Result.append ("%"")
 			Result.append (header_file_name)
 			Result.append ("%"")
+
+			Result.append (New_line)
+			Result.append (New_line)
+
+			from
+				others_source.start
+			until
+				others_source.after
+			loop
+				Result.append (others_source.item)
+				others_source.forth
+				Result.append (New_line)
+				Result.append (New_line)
+			end
+
+
 			from
 				functions.start
 			until

@@ -51,6 +51,11 @@ feature -- Basic operations
 			-- Header
 			c_writer.set_header ("Class object registration code")
 
+			-- Libid 
+			c_writer.add_other (libid_declaration (a_descriptor.type_library_descriptor.name));
+			c_writer.add_other_source (libid_definition (a_descriptor.type_library_descriptor.name, a_descriptor.type_library_descriptor.guid));
+
+
 			-- Import/include header file
 			-- Coclass header file
 			c_writer.add_import (a_descriptor.c_header_file_name)
@@ -82,6 +87,7 @@ feature -- Basic operations
 			member_writer.set_name (Class_object_variable_name)
 
 			tmp_string := clone (coclass_descriptor.c_type_name)
+			tmp_string.append (Underscore)
 			tmp_string.append (Factory)
 			member_writer.set_result_type (tmp_string)
 			member_writer.set_comment ("Class object")
@@ -113,7 +119,7 @@ feature -- Basic operations
 				member_writer.set_comment ("Locks counter")
 				c_writer.add_global_variable (member_writer)
 			else
-				c_writer.add_other ("DWORD threadID = GetCurrentThreadID ();")
+				c_writer.add_other ("DWORD threadID = GetCurrentThreadId ();")
 				c_writer.add_function (exe_lock_module_feature)
 				c_writer.add_function (exe_unlock_module_feature)
 				c_writer.add_function (ccom_embedding_feature)
@@ -152,6 +158,59 @@ feature {NONE} -- Access
 			-- Type library's guid
 
 feature {NONE} -- Implementation
+
+	libid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
+			-- Definition of LIBID in source file.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			create Result.make (0)
+			Result.append (Const)
+			Result.append (Space)
+			Result.append (Iid_type)
+			Result.append (Space)
+			Result.append (Libid_type)
+			Result.append (Underscore)
+			Result.append (a_name)
+			Result.append (Space)
+			Result.append (Equal_sign)
+			Result.append (Space)
+			Result.append (a_guid.to_definition_string)
+			Result.append (Semicolon)
+		ensure
+			non_void_definition: Result /= Void
+			valid_definition: not Result.empty
+		end
+
+
+	libid_declaration (a_name: STRING): STRING is
+			-- Declaration of LIBID in header file.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			-- extern "C" IID LIBID_`a_name';
+
+			create Result.make (0)
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Const)
+			Result.append (Space)
+			Result.append (Iid_type)
+			Result.append (Space)
+			Result.append (Libid_type)
+			Result.append (Underscore)
+			Result.append (a_name)
+			Result.append (Semicolon)
+		ensure
+			non_void_declaration: Result /= Void
+			valid_declaration: not Result.empty
+		end
 
 	ccom_embedding_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Administration function to register or unregister server
@@ -686,7 +745,9 @@ feature {NONE} -- Implementation
 			tmp_string.append (New_line_tab_tab)
 
 			-- if (rgEntries[i].bDeleteOnUnregister)
-			tmp_string.append ("if (rgEntries[i].bDeleteOnUnregister)")
+			tmp_string.append ("if (rgEntries[i].")
+			tmp_string.append (Delete_on_unregister)
+			tmp_string.append (Close_parenthesis)
 			tmp_string.append (New_line_tab_tab)
 			tmp_string.append (Open_curly_brace)
 			tmp_string.append (New_line_tab_tab_tab)
@@ -761,6 +822,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (Struct_value)
 			tmp_string.append (Close_parenthesis)
 			tmp_string.append (New_line_tab_tab_tab)
+			tmp_string.append (Tab)
 			tmp_string.append ("err = RegSetValueEx (hkey, pEntry->")
 			tmp_string.append (Key_name)
 			tmp_string.append (", 0, REG_SZ, (const BYTE*)pEntry->")

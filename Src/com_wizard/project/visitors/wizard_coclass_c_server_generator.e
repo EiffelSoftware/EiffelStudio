@@ -112,7 +112,7 @@ feature -- Basic operations
 			-- Generate server registration code
 			create a_registration_code_gen
 			a_registration_code_gen.initialize
-			a_registration_code_gen.generate (tmp_coclass_descriptor)
+			a_registration_code_gen.generate (coclass_descriptor)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

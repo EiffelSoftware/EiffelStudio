@@ -9,22 +9,22 @@ class ARRAY_PREF_RES
 
 inherit
 	STRING_PREF_RES
+		rename
+			init as string_init
 		redefine
-			make, associated_resource, validate
+			associated_resource, validate, text,
+			modified_resource, reset, save_value
+		end
+	STRING_PREF_RES
+		redefine
+			associated_resource, validate, text, init,
+			modified_resource, reset, save_value
+		select
+			init
 		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_resource: ARRAY_RESOURCE; new_parent: COMPOSITE) is
-			-- Initialize Current with `a_resource' as `associated_resource'
-			-- and `new_parent' as `a_parent'.
-		do
-			associated_resource := a_resource;
-			a_parent := new_parent
-		end
 
 feature -- Validation
 
@@ -39,9 +39,93 @@ feature -- Validation
 			end
 		end
 
+feature -- Element change
+
+	reset is
+		do
+			text.set_text (associated_resource.value);
+		end;
+
+feature -- Output
+
+    save_value (file: PLAIN_TEXT_FILE) is
+            -- Save Current.
+        local
+            ar: like associated_resource;
+			txt: STRING
+        do
+            ar := associated_resource
+            if text = Void or else equal (ar.value, (text.text)) then
+                    --| text /= Void means text has been displayed
+                    --| and thus the user could have changed the value.
+                if ar.value = Void or else ar.value.empty then
+                    file.putstring ("%"%"");
+                else
+                    if ar.value @ 1 /= '%"' then
+                        file.putchar ('%"')
+                    end
+					txt := clone (ar.value);
+					txt.replace_substring_all ("%N", "");
+                    file.putstring (txt)
+                    if ar.value @ ar.value.count /= '%"' then
+                        file.putchar ('%"')
+                    end
+                end
+            elseif text.text.empty then
+                file.putstring ("%"%"")
+            else
+                if text.text @ 1 /= '%"' then
+                    file.putchar ('%"')
+                end
+				txt := text.text;
+				txt.replace_substring_all ("%N", "");
+				if text.text @ text.text.count /= '%"' then
+					file.putchar ('%"')
+				end
+			end
+		end
+
+feature -- Access
+
+	modified_resource: CELL2 [RESOURCE, RESOURCE] is
+			-- Modified resource
+		local
+			new_res: like associated_resource
+		do
+			!! new_res.make_with_values (associated_resource.name, array_from_text);
+			!! Result.make (associated_resource, new_res)
+		end;
+
+feature {PREFRENCE_CATEGORY} -- Output
+
+	init (a_parent: COMPOSITE) is
+			-- Display Current
+		do
+			string_init (a_parent);
+			text.set_rows (6);
+			text.set_width (150);
+		end
+
 feature {NONE} -- Properties
+
+	text: TEXT;
 
 	associated_resource: ARRAY_RESOURCE
 			-- Resource Current represents
+
+	array_from_text: ARRAY [STRING] is
+			-- Array from the text field
+		require
+			valid_text: text /= Void
+		local
+			rt: RESOURCE_TABLE ;
+			txt: STRING
+		do
+			!! rt.make (0);
+			txt := text.text;
+			txt.replace_substring_all ("%N", "");
+			rt.put (txt, "dummy");
+			Result := rt.get_array ("dummy", <<>>)
+		end;
 
 end -- class ARRAY_PREF_RES

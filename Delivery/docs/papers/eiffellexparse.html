@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>New Page 1</title>
+<title>EiffelLex/EiffelParse</title>
 <link rel="stylesheet" href="../styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
 </head>
@@ -13,18 +13,18 @@
   <tr>
     <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
       Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelLex/EiffelParse</font></b></td>
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="center">
+<p align="center"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
 <hr>
 
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
 
-<h1><br>
+<h1>
 <a name="Introduction">Introduction</a></h1>
 <p>In this documentation we will explain you how to use EiffelLex and
 EiffelParse in you Projects:</p>
@@ -56,13 +56,14 @@ these libraries.</p>
 <h1><a name="How to configure your Ace file">How to configure your Ace file</a></h1>
 <p>In order to use EiffelLex and EiffelParse in an Eiffel Project, you have to include in your
 project, the right clusters and the right external files. Thus, you need to
-configure your Ace file.<br>
+configure your Ace file.</p>
+<p>
 You can get all the information about Ace files <a href="lace.html">here</a>.</p>
 <p>To include the EiffelLex cluster you just need to include in your ace file :</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>	lex:&nbsp;&nbsp;&nbsp;&nbsp;
 &quot;$EIFFEL4\library\lex&quot;;</b></p>
 <p>To include the EiffelParse cluster you just need to include in your ace file:</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>parse:				"$EIFFEL4/library/parse";</b></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>parse: &quot;$EIFFEL4\library</b>\<b>parse&quot;;</b></p>
 <p>You can check the <a href="#Some working examples">examples</a> to see a
 working Ace file.</p>
 <h1><a name="Some working examples">Some working examples</a></h1>
@@ -86,8 +87,7 @@ Example of a lexical analyzer for Eiffel.<br>
 If not previously built and stored, a stored lexical analyzer object is created according to regular expressions described by the
 file `<b>eiffel_regular</b>' and stored in `eiffel_lex' for doing lexical analysis of Eiffel code.  (This may take a few moments.)<br>
 <br>
-This object is then used to analyze the file named by the argument.<br>
-Once the analyzer has been built, subsequent calls will be much faster.<br>
+This object is then used to analyze the file named by the argument. Once the analyzer has been built, subsequent calls will be much faster.<br>
 <br>
 See the "Introduction to the Lexical Library" chapter of EIFFEL: THE LIBRARIES for more information.</p>
 <ul>
@@ -121,8 +121,6 @@ variables, and evaluates the polynomial.<br>
 <br>
 See the "Introduction to the Parsing Library" chapter of EIFFEL: THE LIBRARIES for more information.</p>
 <p>&nbsp;</p>
-&nbsp;
-
-<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

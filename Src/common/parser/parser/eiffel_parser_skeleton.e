@@ -83,6 +83,15 @@ feature {NONE} -- Initialization
 			indexing_parser: indexing_parser
 		end
 
+	make_entity_declaration_parser is
+			-- Create a new Eiffel entity decalration parser.
+		do
+			entity_declaration_parser := True
+			make
+		ensure
+			entity_declaration_parser: entity_declaration_parser
+		end
+
 feature -- Initialization
 
 	reset is
@@ -113,6 +122,9 @@ feature -- Status report
 			
 	indexing_parser: BOOLEAN
 			-- Is current Eiffel parser an indexing clause parser ?
+	
+	entity_declaration_parser: BOOLEAN
+			-- Is current Eiffel parser a entity declaration parser ?
 			
 	has_externals: BOOLEAN
 			-- Did last parse find external declarations?
@@ -167,6 +179,9 @@ feature -- Access: result nodes
 
 	indexing_node: INDEXING_CLAUSE_AS
 			-- Indexing clause node of AST
+
+	entity_declaration_node: EIFFEL_LIST [TYPE_DEC_AS]
+			-- Local clause node of AST
 
 feature -- Access
 
@@ -223,11 +238,13 @@ feature -- Removal
 			type_node := Void
 			expression_node := Void
 			indexing_node := Void
+			entity_declaration_node := Void
 		ensure
 			root_node_void: root_node = Void
 			type_node_void: type_node = Void
 			expression_node_void: expression_node = Void
 			indexing_node_void: indexing_node = Void
+			local_node_void: entity_declaration_node = Void
 		end
 
 	wipe_out is
@@ -239,7 +256,7 @@ feature -- Removal
 			root_node_void: root_node = Void
 			type_node_void: type_node = Void
 			expression_node_void: expression_node = Void
-			indexing_node_void: indexing_node = Void
+			entity_declaration_node_void: entity_declaration_node = Void
 		end
 
 	clear_all is

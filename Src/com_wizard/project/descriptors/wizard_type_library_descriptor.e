@@ -371,7 +371,7 @@ feature -- Basic operations
 									aliased_descriptor.set_c_type_name (descriptors.item (i).name)
 									aliased_descriptor.set_eiffel_class_name 
 										(name_for_class (descriptors.item (i).name, aliased_descriptor.type_kind, False))
-									aliased_descriptor.set_c_header_file_name (descriptors.item (i).c_header_file_name)
+									aliased_descriptor.set_c_header_file_name (header_name (aliased_descriptor.c_type_name))
 								end
 									
 								from

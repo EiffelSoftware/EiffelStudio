@@ -38,7 +38,7 @@
 #endif
 
 #ifndef max
-#define max(a, b)  (((a) > (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
 /* File format detected */
@@ -72,30 +72,31 @@ struct TBufferedFile {
 		unsigned char *pBuffer;
 		FILE *pFile;
 };
-typedef struct TBufferedFile  BufferedFile;
+typedef struct TBufferedFile BufferedFile;
 
+/* Typedef on Eiffel callback feature */
+typedef void
+#ifndef EIF_IL_DLL
+	(* load_pixmap_ftn)
+#else
+	(__stdcall* load_pixmap_ftn)
+#endif
+	(
+#ifndef EIF_IL_DLL
+		void*, 
+#endif
+		unsigned int, unsigned int, unsigned int, unsigned int, void*, void*
+	);
 
 /* Bufferred File definition */
 struct TLoadPixmapCtx {
 		void *pCurrObject;		/* Current Eiffel Object executed */
 		char *pszFileName;		/* File name */
 		FILE *pFile;			/* File Pointer */
-#ifndef EIF_IL_DLL
-		void (* LoadPixmapUpdateObject)(
-				void*, 
-#else
-		void (__stdcall* LoadPixmapUpdateObject)(
-#endif
-				unsigned int, 
-				unsigned int, 
-				unsigned int, 
-				unsigned int, 
-				void*, 
-				void*
-			);
+		load_pixmap_ftn LoadPixmapUpdateObject;	/* Callback to Eiffel */
 };
 
-typedef struct TLoadPixmapCtx  LoadPixmapCtx;
+typedef struct TLoadPixmapCtx LoadPixmapCtx;
 
 /* Fonctions declaration */
 void c_ev_load_pixmap(
@@ -113,17 +114,10 @@ unsigned char	c_ev_is_jpeg_file(BufferedFile *pBufFile);
 unsigned char	c_ev_is_png_file(BufferedFile *pBufFile);
 unsigned char	c_ev_is_ppm_file(BufferedFile *pBufFile);
 unsigned char	c_ev_read_n_bytes(unsigned long, BufferedFile *);
-void			c_ev_set_bit(
-					unsigned char bit, 
-					unsigned char *pData, 
-					long iData
-				);
+void			c_ev_set_bit( unsigned char bit, unsigned char *pData, long iData);
 void 			c_ev_load_png_file(LoadPixmapCtx *pCtx);
 #ifdef EIF_WIN32
-void 			c_ev_load_windows_file(
-					unsigned int nWindowsType, 
-					LoadPixmapCtx *pCtx
-				);
+void 			c_ev_load_windows_file( unsigned int nWindowsType, LoadPixmapCtx *pCtx);
 #endif
 
 
@@ -497,85 +491,75 @@ unsigned char default_vision2_icon_for_windows[4710] = {
 void c_ev_save_png (char image[], char *path, int array_width, int array_height, int a_width, int a_height, int colormode)
 {
 	FILE *fp;
-    png_structp png_ptr;
-    png_infop info_ptr;
-    //png_colorp palette;
-    png_uint_32 k;
-	//png_bytep row_pointers[32];
+	png_structp png_ptr;
+	png_infop info_ptr;
+	/* png_colorp palette; */
+	png_uint_32 k;
+	/* png_bytep row_pointers[32]; */
 	png_bytep *row_pointers;
 	int pic_depth = 8;
 
-    // Create a new file handle
+	/* Create a new file handle */
 
-    fp = fopen (path, "wb");
-    if (fp == NULL)
-    {
-        //Raise Eiffel exception
-        printf ("File could not be created\n");
-        //return (0);
-    }
+	fp = fopen (path, "wb");
+	if (fp == NULL) {
+		/* Raise Eiffel exception */
+		printf ("File could not be created\n");
+	}
 
-    png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
-    if (png_ptr == NULL)
-    {
-        // Raise eiffel exception
-        printf ("Png Write struct could not be created\n");
-        fclose (fp);
-        //return (0);
-    }
+	if (png_ptr == NULL) {
+		/* Raise eiffel exception */
+		printf ("Png Write struct could not be created\n");
+		fclose (fp);
+	}
 
-    info_ptr = png_create_info_struct (png_ptr);
-    if (info_ptr == NULL)
-    {
-        printf ("Png info struct could not be created\n");
-        fclose (fp);
-        png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
-        //return (0);
-    }
+	info_ptr = png_create_info_struct (png_ptr);
+	if (info_ptr == NULL) {
+		printf ("Png info struct could not be created\n");
+		fclose (fp);
+		png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
+	}
 
-    if (setjmp (png_ptr->jmpbuf))
-    {
-        //Eiffel exception, file could not be read
-        fclose (fp);
-        png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
-        //return (0);
-    }
+	if (setjmp (png_ptr->jmpbuf)) {
+		/* Eiffel exception, file could not be read */
+		fclose (fp);
+		png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
+	}
 
-   // Set up output control using c streams
-    png_init_io (png_ptr, fp);
+		/* Set up output control using c streams */
+	png_init_io (png_ptr, fp);
 
-    //Set up PNG header info
-    png_set_IHDR (
-        png_ptr,
-        info_ptr,
-        a_width,
-        a_height,
-        pic_depth,
-        PNG_COLOR_TYPE_RGB_ALPHA,
-        PNG_INTERLACE_NONE,
-        PNG_COMPRESSION_TYPE_BASE,
-        PNG_FILTER_TYPE_BASE
-    );
+	/* Set up PNG header info */
+	png_set_IHDR (
+		png_ptr,
+		info_ptr,
+		a_width,
+		a_height,
+		pic_depth,
+		PNG_COLOR_TYPE_RGB_ALPHA,
+		PNG_INTERLACE_NONE,
+		PNG_COMPRESSION_TYPE_BASE,
+		PNG_FILTER_TYPE_BASE
+	);
 	
-    png_write_info (png_ptr, info_ptr);
+	png_write_info (png_ptr, info_ptr);
 	row_pointers = malloc (array_height*sizeof (png_bytep));
-    for (k = 0; k < array_height; k++){
-	row_pointers[k] = (png_bytep) ((png_byte *)image +k* (array_width * 4));
-      //printf ("Pointer value is %p\n", row_pointers[k]);
-    }
+	for (k = 0; k < array_height; k++){
+		row_pointers[k] = (png_bytep) ((png_byte *)image +k* (array_width * 4));
+		/* printf ("Pointer value is %p\n", row_pointers[k]); */
+	}
 
-//png_write_rows (png_ptr, (png_bytepp) &image, array_height);
+	/* png_write_rows (png_ptr, (png_bytepp) &image, array_height); */
 
 	png_write_image (png_ptr, row_pointers);
-    png_write_end (png_ptr, info_ptr);
+	png_write_end (png_ptr, info_ptr);
 
-    //memory deallocation
-    fclose (fp);
-    png_destroy_write_struct (&png_ptr, &info_ptr);
+	/* memory deallocation */
+	fclose (fp);
+	png_destroy_write_struct (&png_ptr, &info_ptr);
 	free (row_pointers);
-  //  return (0);
-
 }
 
 
@@ -591,21 +575,9 @@ void c_ev_load_pixmap(
 		char *pszFileName, 
 		void *fnptr
 		)
-	{
+{
 	FILE *pFile;
-#ifndef EIF_IL_DLL
-	void (* LoadPixmapUpdateObject)(
-			void*,
-#else
-	void (__stdcall* LoadPixmapUpdateObject)(
-#endif
-			unsigned int,
-			unsigned int,
-			unsigned int,
-			unsigned int,
-			void*,
-			void*
-		);
+	load_pixmap_ftn LoadPixmapUpdateObject;
 	unsigned char*	pBuffer;
 	BufferedFile	stBufFile;
 	unsigned char	nFileFormat; /* File format found: one of FILEFORMAT_XXXX */
@@ -613,64 +585,45 @@ void c_ev_load_pixmap(
 	unsigned char	bFileToBeDeleted = FALSE;
 	int				bFreeFileName = FALSE;
 	
-#ifndef EIF_IL_DLL
-	LoadPixmapUpdateObject = (void (*) (
-			void*,
-#else
-	LoadPixmapUpdateObject = (void (__stdcall *) (
-#endif
-			unsigned int,
-			unsigned int,
-			unsigned int,
-			unsigned int,
-			void*,
-			void*
-		)) fnptr;
+	LoadPixmapUpdateObject = (load_pixmap_ftn) fnptr;
 
-	if (pszFileName == NULL)
-		{
-		/* Load the default Vision2 icon */
+	if (pszFileName == NULL) {
+			/* Load the default Vision2 icon */
 #ifdef EIF_WIN32
 		char szTempDir[TEMP_PATH_MAX_LENGTH];
 		char szPrefix[TEMP_PATH_MAX_LENGTH];
-		if (GetTempPath(TEMP_PATH_MAX_LENGTH, szTempDir) == 0)
-			{
-			/* Function failed, Set szTempDir to Current directory. */
+		if (GetTempPath(TEMP_PATH_MAX_LENGTH, szTempDir) == 0) {
+				/* Function failed, Set szTempDir to Current directory. */
 			strcpy (szTempDir, ".");
-			}
-		/* We got the path, now get the filename */
+		}
+			/* We got the path, now get the filename */
 		strcpy (szPrefix, "vision2_");
 		pszFileName = (char *) malloc (MAX_PATH);
 		bFreeFileName = TRUE;
-		if (GetTempFileName(szTempDir, szPrefix, 0, pszFileName)==0)
-			{
+		if (GetTempFileName(szTempDir, szPrefix, 0, pszFileName)==0) {
 			free(pszFileName);
 			bFreeFileName = FALSE;
 
-			/* Function failed, use "tmpnam" instead */
+				/* Function failed, use "tmpnam" instead */
 			pszFileName = tmpnam(NULL);
-			}
+		}
 		
 		/* Open the temporary file */
 		pFile = fopen ((const char *)pszFileName, "w+b");
-		if (pFile==NULL && bFreeFileName==TRUE)
-			{
-			/* Unable to open temporary file created with GetTempFileName,
-			 * try "tmpnam"
-			 */
+		if (pFile==NULL && bFreeFileName==TRUE) {
+				/* Unable to open temporary file created with GetTempFileName, try "tmpnam" */
 			free(pszFileName);
 			bFreeFileName = FALSE;
 
-			/* Function failed, use "tmpnam" instead */
+				/* Function failed, use "tmpnam" instead */
 			pszFileName = tmpnam(NULL);
 
-			/* Open the temporary file */
+				/* Open the temporary file */
 			pFile = fopen ((const char *)pszFileName, "w+b");
-			}
+		}
 
-		if (pFile == NULL)
-			{
-			/* Unable to create the file, return NULL */
+		if (pFile == NULL) {
+				/* Unable to create the file, return NULL */
 			LoadPixmapUpdateObject(
 #ifndef EIF_IL_DLL
 				pCurrObject,
@@ -682,22 +635,20 @@ void c_ev_load_pixmap(
 				NULL,
 				NULL);
 			return;
-			}
+		}
 		bFileToBeDeleted = TRUE;
-		fwrite (default_vision2_icon_for_windows, 1, sizeof (default_vision2_icon_for_windows), pFile);
+		fwrite (default_vision2_icon_for_windows, 1, sizeof (default_vision2_icon_for_windows),
+			pFile);
 #else
 		pFile = tmpfile(); /* create a temporary file */
 		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile);
 #endif /* EIF_WIN32 */
 		fseek (pFile, 0, SEEK_SET);
-		}
-	else
-		{
-		/* Open the file */
+	} else {
+			/* Open the file */
 		pFile = fopen ((const char *)pszFileName, "rb");
-		if (pFile == NULL)
-			{
-			/* Unable to open the file, return NULL */
+		if (pFile == NULL) {
+				/* Unable to open the file, return NULL */
 			LoadPixmapUpdateObject(
 #ifndef EIF_IL_DLL
 				pCurrObject,
@@ -708,16 +659,15 @@ void c_ev_load_pixmap(
 				0,
 				NULL,
 				NULL
-				);
+			);
 			return;
-			}
 		}
+	}
 
 	/* Setup the buffered file */
-	pBuffer = malloc(BUFFER_SIZE*sizeof(unsigned char));
-	if (pBuffer == NULL)
-		{
-		/* Out of memory */
+	pBuffer = malloc (BUFFER_SIZE * sizeof(unsigned char));
+	if (pBuffer == NULL) {
+			/* Out of memory */
 		LoadPixmapUpdateObject(
 #ifndef EIF_IL_DLL
 			pCurrObject,
@@ -729,23 +679,22 @@ void c_ev_load_pixmap(
 			NULL,
 			NULL);
 		return;
-		}
+	}
 	stBufFile.nCurrBufferSize = 0;
 	stBufFile.nBufferMaxSize = BUFFER_SIZE;
 	stBufFile.pBuffer = pBuffer;
 	stBufFile.pFile = pFile;
 
-	/* First determine the file format of the file */
+		/* First determine the file format of the file */
 	nFileFormat = c_ev_find_file_format(&stBufFile);
 
-	/* Free allocated memory */
+		/* Free allocated memory */
 	free(pBuffer);
 
-	switch(nFileFormat)
-		{
-		/* Windows ICO file format */
+	switch(nFileFormat) {
 		case FILEFORMAT_ICO:
-			/* close the graphical file or the temporary file */
+				/* Windows ICO file format */
+				/* close the graphical file or the temporary file */
 			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
@@ -774,9 +723,9 @@ void c_ev_load_pixmap(
 				free(pszFileName);
 			return;
 
-		/* Windows BMP file format */
 		case FILEFORMAT_BMP:
-			/* close the graphical file or the temporary file */
+				/* Windows BMP file format */
+				/* close the graphical file or the temporary file */
 			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
@@ -806,6 +755,7 @@ void c_ev_load_pixmap(
 			return;
 
 		case FILEFORMAT_PNG:
+					/* PNG file format */
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
 #ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
@@ -813,7 +763,8 @@ void c_ev_load_pixmap(
 			stCtx.pszFileName = pszFileName;
 			stCtx.pFile = pFile;
 			c_ev_load_png_file(&stCtx);
-			/* close the graphical file or the temporary file */
+
+				/* close the graphical file or the temporary file */
 			fclose (pFile);
 			if (bFileToBeDeleted)
 				unlink(pszFileName);
@@ -822,7 +773,7 @@ void c_ev_load_pixmap(
 			return;
 
 		default:
-			/* Bad file format */
+				/* Bad file format */
 			LoadPixmapUpdateObject(
 #ifndef EIF_IL_DLL
 				pCurrObject,
@@ -841,9 +792,8 @@ void c_ev_load_pixmap(
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
-		}
-	
 	}
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -852,16 +802,12 @@ void c_ev_load_pixmap(
 /* Retrun TRUE if the requested size has been flushed into the buffer,       */
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
-unsigned char c_ev_read_n_bytes(
-		unsigned long nRequestedBufferSize, 
-		BufferedFile *pBufFile
-		)
-	{
+unsigned char c_ev_read_n_bytes( unsigned long nRequestedBufferSize, BufferedFile *pBufFile)
+{
 	unsigned long nBytesRead = 0;
 	unsigned long nBytesToRead = 0;
 
-	if (nRequestedBufferSize > pBufFile->nBufferMaxSize)
-		{
+	if (nRequestedBufferSize > pBufFile->nBufferMaxSize) {
 #ifdef DEBUG
 		printf("Require Assertion violated in c_ev_read_n_bytes\n");
 		printf("nRequestedBufferSize > pBufFile->nBufferMaxSize\n\n");
@@ -869,29 +815,28 @@ unsigned char c_ev_read_n_bytes(
 #else
 		return FALSE;
 #endif
-		}
+	}
 
-	/* If the job is already done, exit */
-	if (pBufFile->nCurrBufferSize >= nRequestedBufferSize)
+		/* If the job is already done, exit */
+	if (pBufFile->nCurrBufferSize >= nRequestedBufferSize) {
 		return TRUE;
+	}
 
-	nBytesToRead = max(
-		nRequestedBufferSize - pBufFile->nCurrBufferSize,
-		MINIMUM_BYTES_TO_READ_PER_ACCESS
-		);
+	nBytesToRead = max(nRequestedBufferSize - pBufFile->nCurrBufferSize,
+		MINIMUM_BYTES_TO_READ_PER_ACCESS);
 
 	nBytesRead = fread(pBufFile->pBuffer + pBufFile->nCurrBufferSize, 1, 
-				       (size_t) nBytesToRead, pBufFile->pFile);
+		(size_t) nBytesToRead, pBufFile->pFile);
 	
-	/* Compute the new buffer size */
+		/* Compute the new buffer size */
 	pBufFile->nCurrBufferSize += nBytesRead;
 
-	/* Everything went ok if the RequestedSize is loaded. */
+		/* Everything went ok if the RequestedSize is loaded. */
 	if (pBufFile->nCurrBufferSize >= nRequestedBufferSize)
 		return TRUE;
 	else
 		return FALSE;
-	}
+}
 
 
 #ifdef EIF_WIN32
@@ -905,117 +850,112 @@ unsigned char c_ev_read_n_bytes(
 /* for the mask.                                                             */
 /*---------------------------------------------------------------------------*/
 void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
-		{
-		HGDIOBJ handle;
-		EIF_INTEGER	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
+{
+	HGDIOBJ handle;
+	EIF_INTEGER	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
-		handle = (void *) LoadImage(
-			NULL,				/* handle to instance */
-			pCtx->pszFileName,	/* name or identifier of the image  */
-			nWindowsType,		/* image type */
-			0,					/* desired width */
-			0,					/* desired height */
-			LR_LOADFROMFILE		/* load options */
-		);
-		if (handle==NULL)
-			{
-			DWORD nErrNum = GetLastError();
-			switch (nErrNum)
-				{
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 15:
-				case 30:
-				case 32: 
-					nErrorCode = LOADPIXMAP_ERROR_UNABLE_OPEN_FILE;
-					break;
-				case 8:
-				case 14:
-					nErrorCode = LOADPIXMAP_ERROR_OUTOFMEMORY;
-					break;
-				case 11:
-					nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_FILEFORMAT;
-					break;
-				default:
-					nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
-				}
-			(pCtx->LoadPixmapUpdateObject)(
-#ifndef EIF_IL_DLL
-				pCtx->pCurrObject,
-#endif
-				nErrorCode,
-				LOADPIXMAP_HBITMAP,
-				0, 
-				0,
-				handle,
-				NULL
-			);
-			return;
-			}
-
-		if (nWindowsType == IMAGE_ICON)
-			{
-			(pCtx->LoadPixmapUpdateObject)(
-#ifndef EIF_IL_DLL
-				pCtx->pCurrObject,
-#endif
-				nErrorCode,
-				LOADPIXMAP_HICON,
-				0,
-				0,
-				handle,
-				NULL
-			);
-			}
-		else
-			{
-			HBITMAP hbmMask = NULL;	/* Handle on the bitmap mask. */
-			BITMAP	bmInfo;
-			void *pBits;
-			long nLineSize; /* size of a line in bytes
-							 * (a line should be WORD aligned)
-							 */
-			long nBitmapSize; /* Size in bytes of the bits of the 
-							   * monochrome bitmap.
-							   */
-
-			if (GetObject (handle, sizeof(BITMAP), &bmInfo) != 0)
-				{
-				nLineSize = ((bmInfo.bmWidth / 16) + 1) * 2;
-				nBitmapSize = nLineSize * bmInfo.bmHeight;
-				pBits = malloc(nBitmapSize);/* Allocate space for the mask */
-				memset(pBits, 0, nBitmapSize);/* Set the mask to be empty */
-				hbmMask = CreateBitmap (
-							bmInfo.bmWidth,	/* Same width as the bitmap */
-							bmInfo.bmHeight,/* Same height as the bitmap */
-							1, 				/* number of color planes */
-							1,				/* number of bits/pixel */
-							pBits			/* color data array. */
-						);
-				free (pBits);
-				if (hbmMask==NULL)
-					nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
-				}
-			else
+	handle = (void *) LoadImage(
+		NULL,				/* handle to instance */
+		pCtx->pszFileName,	/* name or identifier of the image */
+		nWindowsType,		/* image type */
+		0,					/* desired width */
+		0,					/* desired height */
+		LR_LOADFROMFILE		/* load options */
+	);
+	if (handle==NULL) {
+		DWORD nErrNum = GetLastError();
+		switch (nErrNum) {
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 15:
+			case 30:
+			case 32: 
+				nErrorCode = LOADPIXMAP_ERROR_UNABLE_OPEN_FILE;
+				break;
+			case 8:
+			case 14:
+				nErrorCode = LOADPIXMAP_ERROR_OUTOFMEMORY;
+				break;
+			case 11:
+				nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_FILEFORMAT;
+				break;
+			default:
 				nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
-	
-			/* Call the Eiffel routine back. */
-			(pCtx->LoadPixmapUpdateObject)(
-#ifndef EIF_IL_DLL
-				pCtx->pCurrObject,
-#endif
-				nErrorCode,
-				LOADPIXMAP_HBITMAP,
-				0,
-				0,
-				handle,
-				hbmMask
-			);
-			}
-		return;
 		}
+		(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
+			pCtx->pCurrObject,
+#endif
+			nErrorCode,
+			LOADPIXMAP_HBITMAP,
+			0, 
+			0,
+			handle,
+			NULL
+		);
+		return;
+	}
+
+	if (nWindowsType == IMAGE_ICON) {
+		(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
+			pCtx->pCurrObject,
+#endif
+			nErrorCode,
+			LOADPIXMAP_HICON,
+			0,
+			0,
+			handle,
+			NULL
+		);
+	} else {
+		HBITMAP hbmMask = NULL;	/* Handle on the bitmap mask. */
+		BITMAP	bmInfo;
+		void *pBits;
+		long nLineSize; /* size of a line in bytes
+						 * (a line should be WORD aligned)
+						 */
+		long nBitmapSize;	/* Size in bytes of the bits of the 
+							 * monochrome bitmap.
+							 */
+
+		if (GetObject (handle, sizeof(BITMAP), &bmInfo) != 0) {
+			nLineSize = ((bmInfo.bmWidth / 16) + 1) * 2;
+			nBitmapSize = nLineSize * bmInfo.bmHeight;
+			pBits = malloc(nBitmapSize);/* Allocate space for the mask */
+			memset(pBits, 0, nBitmapSize);/* Set the mask to be empty */
+			hbmMask = CreateBitmap (
+				bmInfo.bmWidth,	/* Same width as the bitmap */
+				bmInfo.bmHeight,/* Same height as the bitmap */
+				1, 				/* number of color planes */
+				1,				/* number of bits/pixel */
+				pBits			/* color data array. */
+			);
+			free (pBits);
+			if (hbmMask==NULL) {
+				nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
+			}
+		} else {
+			nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
+		}
+
+			/* Call the Eiffel routine back. */
+		(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
+			pCtx->pCurrObject,
+#endif
+			nErrorCode,
+			LOADPIXMAP_HBITMAP,
+			0,
+			0,
+			handle,
+			hbmMask
+		);
+	}
+	return;
+}
 #endif
 
 
@@ -1027,20 +967,22 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 /* see the constants FILEFORMAT_XXXX for the possible returned values        */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_find_file_format(BufferedFile *pBufFile)
-	{
-	/* Does the current format match against the ICO format */
+{
+		/* Does the current format match against the ICO format */
 	if (c_ev_is_ico_file(pBufFile))
 		return FILEFORMAT_ICO;
 	
+		/* Does the current format match against the BMP format */
 	if (c_ev_is_bmp_file(pBufFile))
 		return FILEFORMAT_BMP;
 	
+		/* Does the current format match against the PNG format */
 	if (c_ev_is_png_file(pBufFile))
 		return FILEFORMAT_PNG;
 	
-	/* Unknown Format */
+		/* Unknown Format */
 	return FILEFORMAT_UNKNOWN;
-	}
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -1050,69 +992,67 @@ unsigned char c_ev_find_file_format(BufferedFile *pBufFile)
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_is_ico_file(BufferedFile *pBufFile)
-	{
+{
 	int				nEntries	= 0;	/* Number of icons in the file */
 	int				nCurrEntry	= 0;
 	int				iCurr		= 0;
 	unsigned long	iFileOffset = 0;
 	unsigned char	*pBuffer = pBufFile->pBuffer;
 
-	/* Ensure that at leat 6 bytes are available in the buffer */
+		/* Ensure that at leat 6 bytes are available in the buffer */
 	if (!c_ev_read_n_bytes(ICON_HEADER_SIZE, pBufFile))
 		return FALSE;
 
-	/* Check for the static header */
+		/* Check for the static header */
 	if (!(pBuffer[0]==0 && pBuffer[1]==0 && pBuffer[2]==1 && pBuffer[3]==0))
 		return FALSE;
 	
-	/* Check for the header of all picture inside the icon. */
+		/* Check for the header of all picture inside the icon. */
 	nEntries = pBuffer[4] + (pBuffer[5] << 8); /* Big endian storage */
 	
-	/* Ensure we have enough bytes in our buffer to check the header
-	 * of each icon */
-	if (!c_ev_read_n_bytes(ICON_HEADER_SIZE + nEntries * ICON_ENTRY_SIZE, 
-		                   pBufFile))
+		/* Ensure we have enough bytes in our buffer to check the header
+		 * of each icon */
+	if (!c_ev_read_n_bytes(ICON_HEADER_SIZE + nEntries * ICON_ENTRY_SIZE, pBufFile)) {
 		return FALSE;
+	}
 
 	nCurrEntry = 0;
 	iCurr = ICON_HEADER_SIZE;
-	while (nCurrEntry < nEntries)
-		{
-		/* Get the position of the InfoHeader */
+	while (nCurrEntry < nEntries) {
+			/* Get the position of the InfoHeader */
 		iFileOffset = pBuffer[iCurr+12] + 
-					  (pBuffer[iCurr+13] << 8) +
-					  (pBuffer[iCurr+14] << 16) +
-					  (pBuffer[iCurr+15] << 24);
+					 (pBuffer[iCurr+13] << 8) +
+					 (pBuffer[iCurr+14] << 16) +
+					 (pBuffer[iCurr+15] << 24);
 
-		if (iFileOffset <= pBufFile->nBufferMaxSize)
-			{
+		if (iFileOffset <= pBufFile->nBufferMaxSize) {
 			/* Read the file enough to be able to reach the 
 			 * location of the InfoHeader Structure
 			 */
-			if (!c_ev_read_n_bytes(iFileOffset+4, pBufFile))
-				return FALSE;
-
-			if (!(pBuffer[iFileOffset]==ICON_INFOHEADER_SIZE && 
-				  pBuffer[iFileOffset+1]==0 &&
-				  pBuffer[iFileOffset+2]==0 &&
-				  pBuffer[iFileOffset+3]==0))
+			if (!c_ev_read_n_bytes(iFileOffset+4, pBufFile)) {
 				return FALSE;
 			}
-		else
+
+			if (!(pBuffer[iFileOffset]==ICON_INFOHEADER_SIZE && 
+				 pBuffer[iFileOffset+1]==0 &&
+				 pBuffer[iFileOffset+2]==0 &&
+				 pBuffer[iFileOffset+3]==0))
 			{
+				return FALSE;
+			}
+		} else {
 			/* iFileOffset is too big to be tested. So we give up
 			 * and ignore the previous test.
 			 */
-			}
+		}
 
 		nCurrEntry++;
 		iCurr += ICON_ENTRY_SIZE;
-		}
-
-	/* All tests were successfully. This is a valid ICO file */
-	return TRUE;
 	}
 
+		/* All tests were successfully. This is a valid ICO file */
+	return TRUE;
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: c_ev_is_bmp_file                                                    */
@@ -1121,30 +1061,31 @@ unsigned char c_ev_is_ico_file(BufferedFile *pBufFile)
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_is_bmp_file(BufferedFile *pBufFile)
-	{
+{
 	unsigned char	*pBuffer = pBufFile->pBuffer;
 
-	/* Ensure that at leat 6 bytes are available in the buffer */
-	if (!c_ev_read_n_bytes(
-			BITMAP_HEADER_SIZE + BITMAP_INFOHEADER_SIZE,
-			pBufFile)
-		)
+		/* Ensure that at leat 6 bytes are available in the buffer */
+	if (!c_ev_read_n_bytes( BITMAP_HEADER_SIZE + BITMAP_INFOHEADER_SIZE, pBufFile)) {
 		return FALSE;
-
-	/* Check for the static header */
-	if (!(pBuffer[0]=='B' && pBuffer[1]=='M'))
-		return FALSE;
-	
-	/* Check for the validity of the InfoHeader */
-	if (!(pBuffer[BITMAP_HEADER_SIZE]==BITMAP_INFOHEADER_SIZE && 
-		  pBuffer[BITMAP_HEADER_SIZE+1]==0 &&
-		  pBuffer[BITMAP_HEADER_SIZE+2]==0 &&
-		  pBuffer[BITMAP_HEADER_SIZE+3]==0))
-		return FALSE;
-
-	/* All tests were successfully. This is a valid BMP file */
-	return TRUE;
 	}
+
+		/* Check for the static header */
+	if (!(pBuffer[0]=='B' && pBuffer[1]=='M')) {
+		return FALSE;
+	}
+	
+		/* Check for the validity of the InfoHeader */
+	if (!(pBuffer[BITMAP_HEADER_SIZE]==BITMAP_INFOHEADER_SIZE && 
+		 pBuffer[BITMAP_HEADER_SIZE+1]==0 &&
+		 pBuffer[BITMAP_HEADER_SIZE+2]==0 &&
+		 pBuffer[BITMAP_HEADER_SIZE+3]==0))
+	{
+		return FALSE;
+	}
+
+		/* All tests were successfully. This is a valid BMP file */
+	return TRUE;
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: c_ev_is_jpeg_file                                                   */
@@ -1153,28 +1094,27 @@ unsigned char c_ev_is_bmp_file(BufferedFile *pBufFile)
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_is_jpeg_file(BufferedFile *pBufFile)
-	{
+{
 	unsigned char	*pBuffer = pBufFile->pBuffer;
 
-	/* Ensure that at leat 6 bytes are available in the buffer */
-	if (!c_ev_read_n_bytes(JPEG_HEADER_SIZE, pBufFile))
+		/* Ensure that at leat 6 bytes are available in the buffer */
+	if (!c_ev_read_n_bytes(JPEG_HEADER_SIZE, pBufFile)) {
 		return FALSE;
-
-	/* Check for the static header (header part) */
-	if (!(pBuffer[0]==0xFF && pBuffer[1]==0xD8 && 
-		  pBuffer[2]==0xFF && pBuffer[3]==0xE0 ))
-		return FALSE;
-	
-	/* Check for the static header (string part) */
-	if (!(pBuffer[6]=='J' && 
-		  pBuffer[7]=='F' && 
-		  pBuffer[8]=='I' && 
-		  pBuffer[9]=='F' ))
-		return FALSE;
-
-	/* All tests were successfully. This is a valid JPEG file */
-	return TRUE;
 	}
+
+		/* Check for the static header (header part) */
+	if (!(pBuffer[0]==0xFF && pBuffer[1]==0xD8 && pBuffer[2]==0xFF && pBuffer[3]==0xE0 )) {
+		return FALSE;
+	}
+	
+		/* Check for the static header (string part) */
+	if (!(pBuffer[6]=='J' && pBuffer[7]=='F' && pBuffer[8]=='I' && pBuffer[9]=='F' )) {
+		return FALSE;
+	}
+
+		/* All tests were successfully. This is a valid JPEG file */
+	return TRUE;
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -1184,27 +1124,23 @@ unsigned char c_ev_is_jpeg_file(BufferedFile *pBufFile)
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_is_png_file(BufferedFile *pBufFile)
-	{
+{
 	unsigned char	*pBuffer = pBufFile->pBuffer;
 
-	/* Ensure that at leat 6 bytes are available in the buffer */
+		/* Ensure that at leat 6 bytes are available in the buffer */
 	if (!c_ev_read_n_bytes(PNG_HEADER_SIZE, pBufFile))
 		return FALSE;
 
-	/* Check for the static header */
-	if (!(pBuffer[0]==137 && 
-		  pBuffer[1]==80 && 
-		  pBuffer[2]==78 && 
-		  pBuffer[3]==71 &&
-		  pBuffer[4]==13 &&
-		  pBuffer[5]==10 &&
-		  pBuffer[6]==26 &&
-		  pBuffer[7]==10 ))
+		/* Check for the static header */
+	if (!(pBuffer[0]==137 && pBuffer[1]==80 && pBuffer[2]==78 && pBuffer[3]==71 &&
+		 pBuffer[4]==13 && pBuffer[5]==10 && pBuffer[6]==26 && pBuffer[7]==10 ))
+	{
 		return FALSE;
-
-	/* All tests were successfully. This is a valid PNG file */
-	return TRUE;
 	}
+
+		/* All tests were successfully. This is a valid PNG file */
+	return TRUE;
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -1214,24 +1150,27 @@ unsigned char c_ev_is_png_file(BufferedFile *pBufFile)
 /* FALSE otherwise.                                                          */
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
-	{
+{
 	unsigned char	*pBuffer = pBufFile->pBuffer;
 
-	/* Ensure that at leat 6 bytes are available in the buffer */
-	if (!c_ev_read_n_bytes(PPM_HEADER_SIZE, pBufFile))
+		/* Ensure that at leat 6 bytes are available in the buffer */
+	if (!c_ev_read_n_bytes(PPM_HEADER_SIZE, pBufFile)) {
 		return FALSE;
-
-	/* Check for the static header */
-	if (pBuffer[0]!='P')
-		return FALSE;
-
-	/* Correct headers are 'P1'...'P6' */
-	if (pBuffer[1]<'1' || pBuffer[1]>'6')
-		return FALSE;
-
-	/* All tests were successfully. This is a valid PGM/PBM/PPM file */
-	return TRUE;
 	}
+
+		/* Check for the static header */
+	if (pBuffer[0]!='P') {
+		return FALSE;
+	}
+
+		/* Correct headers are 'P1'...'P6' */
+	if (pBuffer[1]<'1' || pBuffer[1]>'6') {
+		return FALSE;
+	}
+
+		/* All tests were successfully. This is a valid PGM/PBM/PPM file */
+	return TRUE;
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -1241,7 +1180,7 @@ unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
 /* index in BITS.                                                            */
 /*---------------------------------------------------------------------------*/
 void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
-	{
+{
 	long iOff = iData / 8;	/* Offset of the bit in byte */
 #ifdef EIF_WIN32
 	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
@@ -1252,14 +1191,15 @@ void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 
 	bitValue = (unsigned char)(1 << iBitPos);
 #ifdef EIF_WIN32
-	if (bit == 0)
+	if (bit == 0) {
 #else
-	if (bit == 1)
+	if (bit == 1) {
 #endif
 		pData[iOff] = (unsigned char) (pData[iOff] & (~bitValue));
-	else
+	} else {
 		pData[iOff] = (unsigned char) (pData[iOff] | bitValue);
 	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: c_ev_load_png_file                                                  */
@@ -1272,8 +1212,8 @@ void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 /*                                                                           */
 /* On Unix, Not yet implemented                                              */
 /*---------------------------------------------------------------------------*/
-void c_ev_load_png_file(LoadPixmapCtx *pCtx)  
-	{
+void c_ev_load_png_file(LoadPixmapCtx *pCtx)
+{
 	png_structp		png_ptr;
 	png_infop		info_ptr;
 	png_uint_32 	width;
@@ -1296,109 +1236,111 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned long 	row;			/* Current scan line */
 	volatile unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
-	/* Retrieve File Stream */
+		/* Retrieve File Stream */
 	fp = pCtx->pFile;
-	if (fp == NULL)
+	if (fp == NULL) {
 		return;
-	/* reset the file pointer */
+	}
+
+		/* reset the file pointer */
 	fseek (fp, 0, SEEK_SET);
 
-	/* Create and initialize the png_struct with the desired error handler
-	 * functions.  If you want to use the default stderr and longjump method,
-	 * you can supply NULL for the last three parameters.  We also supply the
-	 * the compiler header file version, so that we know if the application
-	 * was compiled with a compatible version of the library.  REQUIRED
-	 */
+		/* Create and initialize the png_struct with the desired error handler
+		 * functions. If you want to use the default stderr and longjump method,
+		 * you can supply NULL for the last three parameters. We also supply the
+		 * the compiler header file version, so that we know if the application
+		 * was compiled with a compatible version of the library. REQUIRED
+		 */
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	if (png_ptr == NULL)
-		{
+	if (png_ptr == NULL) {
 		return;
-		}
+	}
 
-	/* Allocate/initialize the memory for image information.  REQUIRED. */
+		/* Allocate/initialize the memory for image information. REQUIRED. */
 	info_ptr = png_create_info_struct(png_ptr);
-	if (info_ptr == NULL)
-		{
+	if (info_ptr == NULL) {
 		png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
 		return;
-		}
+	}
 
-	/* Set error handling if you are using the setjmp/longjmp method (this is
-	 * the normal method of doing things with libpng).  REQUIRED unless you
-	 * set up your own error handlers in the png_create_read_struct() earlier.
-	 */
-	if (setjmp(png_ptr->jmpbuf))
-		{
-		/* Free all of the memory associated with the png_ptr and info_ptr */
+		/* Set error handling if you are using the setjmp/longjmp method (this is
+		 * the normal method of doing things with libpng). REQUIRED unless you
+		 * set up your own error handlers in the png_create_read_struct() earlier.
+		 */
+	if (setjmp(png_ptr->jmpbuf)) {
+			/* Free all of the memory associated with the png_ptr and info_ptr */
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 
-		/* If we get here, we had a problem reading the file */
+			/* If we get here, we had a problem reading the file */
 		return;
-		}
+	}
 
-	/* One of the following I/O initialization methods is REQUIRED */
-	/* Set up the input control if you are using standard C streams */
+		/* One of the following I/O initialization methods is REQUIRED */
+		/* Set up the input control if you are using standard C streams */
 	png_init_io(png_ptr, fp);
 
-	/* The call to png_read_info() gives us all of the information from the
-	 * PNG file before the first IDAT (image data chunk).  REQUIRED
-	 */
+		/* The call to png_read_info() gives us all of the information from the
+		 * PNG file before the first IDAT (image data chunk). REQUIRED
+		 */
 	png_read_info(png_ptr, info_ptr);
 
 	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
 		&interlace_type, NULL, NULL);
 
-	/* Set up the data transformations you want.  Note that these are all */
-	/* optional.  Only call them if you want/need them.  Many of the      */
-	/* transformations only work on specific types of images, and many    */
-	/* are mutually exclusive.                                            */
+		/* Set up the data transformations you want. Note that these are all
+		 * optional. Only call them if you want/need them. Many of the
+		 * transformations only work on specific types of images, and many
+		 * are mutually exclusive.
+		 */
 
-	/* Extract multiple pixels with bit depths of 1, 2, and 4 from a single
-	 * byte into separate bytes (useful for paletted and grayscale images).
-	 */
+		/* Extract multiple pixels with bit depths of 1, 2, and 4 from a single
+		 * byte into separate bytes (useful for paletted and grayscale images).
+		 */
 	png_set_packing(png_ptr);
 
-	/* Expand paletted colors into true RGB triplets */
-	if (color_type == PNG_COLOR_TYPE_PALETTE)
+		/* Expand paletted colors into true RGB triplets */
+	if (color_type == PNG_COLOR_TYPE_PALETTE) {
 		png_set_expand(png_ptr);
+	}
 
-	/* Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel */
-	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+		/* Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel */
+	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
 		png_set_expand(png_ptr);
+	}
 
-	/* Expand paletted or RGB images with transparency to full alpha channels
-	 * so the data will be available as RGBA quartets.
-	 */
-	if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+		/* Expand paletted or RGB images with transparency to full alpha channels
+		 * so the data will be available as RGBA quartets.
+		 */
+	if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
 		png_set_expand(png_ptr);
+	}
 
-	/* invert monocrome files to have 0 as white and 1 as black */
+		/* invert monocrome files to have 0 as white and 1 as black */
 	png_set_invert_mono(png_ptr);
 
-	/* Add filler (or alpha) byte (before/after each RGB triplet) */
+		/* Add filler (or alpha) byte (before/after each RGB triplet) */
 	png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
 
-	/* Optional call to gamma correct and add the background to the palette
-	* and update info structure.  REQUIRED if you are expecting libpng to
-	* update the palette for you (ie you selected such a transform above).
-	*/
+		/* Optional call to gamma correct and add the background to the palette
+		* and update info structure. REQUIRED if you are expecting libpng to
+		* update the palette for you (ie you selected such a transform above).
+		*/
 	png_read_update_info(png_ptr, info_ptr);
 
-	/* Allocate the memory to hold the image using the fields of info_ptr. */
+		/* Allocate the memory to hold the image using the fields of info_ptr. */
 	ppImage = (unsigned char **) malloc(height * sizeof(unsigned char *));
-	for (row = 0; row < height; row++)
-		{
+	for (row = 0; row < height; row++) {
 		sRowSize = png_get_rowbytes(png_ptr, info_ptr);
 		ppImage[row] = (unsigned char *)malloc(sRowSize);
-		}
+	}
 
-	/* Now it's time to read the image.  One of these methods is REQUIRED */
+		/* Now it's time to read the image. One of these methods is REQUIRED */
 	png_read_image(png_ptr, ppImage);
 
-	/* read rest of file, and get additional chunks in info_ptr - REQUIRED */
+		/* read rest of file, and get additional chunks in info_ptr - REQUIRED */
 	png_read_end(png_ptr, info_ptr);
 
-	/* clean up after the read, and free any memory allocated - REQUIRED */
+		/* clean up after the read, and free any memory allocated - REQUIRED */
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
 #ifdef EIF_WIN32
@@ -1441,50 +1383,45 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;	/* Index 1 (white) */
 
 
-	for (row = height; row > 0; row--)
-		{
+	for (row = height; row > 0; row--) {
 		unsigned char *pSrc = ppImage[row-1];
 		unsigned long nAlign;
 		unsigned long iAlign;
 		unsigned long column;
 
-		for (column = 0; column < width; column++)
-			{
+		for (column = 0; column < width; column++) {
 			/* Copy the RGB data */
 			*(pData + iData + 0) = *(pSrc + 2);	/* B */
 			*(pData + iData + 1) = *(pSrc + 1);	/* G */
 			*(pData + iData + 2) = *(pSrc + 0);	/* R */
 
 			/* Copy the alpha channel */
-			if (*(pSrc + 3) > 0x7F)
+			if (*(pSrc + 3) > 0x7F) {
 				c_ev_set_bit(0, pAlphaData, iAlphaData);
-			else
-				{
+			} else {
 				c_ev_set_bit(1, pAlphaData, iAlphaData);
 				bAlphaImage = TRUE;
-				}
+			}
 
 			iData += 3;
 			pSrc += 4;
 			iAlphaData++;
-			}
+		}
 		
-		/* Align line to WORD padding - Alpha data */
+			/* Align line to WORD padding - Alpha data */
 		nAlign = (16 - width%16) % 16;
-		for (iAlign = 0; iAlign < nAlign; iAlign++)
-			{
+		for (iAlign = 0; iAlign < nAlign; iAlign++) {
 			c_ev_set_bit(0, pAlphaData, iAlphaData);
 			iAlphaData++;
-			}
+		}
 
-		/* Align RGB data as well */
+			/* Align RGB data as well */
 		nAlign = width % 4; /* small hack to go faster */
-		for (iAlign = 0; iAlign < nAlign; iAlign++)
-			{
+		for (iAlign = 0; iAlign < nAlign; iAlign++) {
 			*(pData + iData) = 0;
 			iData++;
-			}
 		}
+	}
 #else
 	pImage = (unsigned char *) malloc(width * height * 3);
 	pData = pImage;
@@ -1492,58 +1429,52 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	pAlphaImage = (unsigned char *) malloc(height * (1 + (width >> 3)));
 	pAlphaData = pAlphaImage;
 
-	for (row = 0; row < height; row++)
-		{
+	for (row = 0; row < height; row++) {
 		unsigned char *pSrc = ppImage[row];
 		unsigned long column;
 		unsigned long nAlign;
 		unsigned long iAlign;
 
-		for (column = 0; column < width; column++)
-			{
-			/* Copy the RGB data */
+		for (column = 0; column < width; column++) {
+				/* Copy the RGB data */
 			memcpy(pData, pSrc, 3);
 			pData += 3;
 
-			/* Copy the alpha channel */
-			if (*(pSrc + 3) > 0x7F)
+				/* Copy the alpha channel */
+			if (*(pSrc + 3) > 0x7F) {
 				c_ev_set_bit(0, pAlphaData, iAlphaData);
-			else
-				{
+			} else {
 				c_ev_set_bit(1, pAlphaData, iAlphaData);
 				bAlphaImage = TRUE;
-				}
+			}
 
 			pSrc += 4;
 			iAlphaData++;
-			}
+		}
 
-		/* Align line to BYTE padding - Alpha data */
+			/* Align line to BYTE padding - Alpha data */
 		nAlign = (8 - width%8) % 8;
-		for (iAlign = 0; iAlign < nAlign; iAlign++)
-			{
+		for (iAlign = 0; iAlign < nAlign; iAlign++) {
 			c_ev_set_bit(0, pAlphaData, iAlphaData);
 			iAlphaData++;
-			}
 		}
+	}
 
 #endif /* EIF_WIN32 */
 
-	/* The mast is empty, remove it */
-	if (bAlphaImage == FALSE)
-		{
+		/* The mast is empty, remove it */
+	if (bAlphaImage == FALSE) {
 		free (pAlphaImage);
 		pAlphaImage = NULL;
-		}
+	}
 	
-	/* Free the memory */
-	for (row = 0; row < height; row++)
-		{
+		/* Free the memory */
+	for (row = 0; row < height; row++) {
 		free(ppImage[row]);
-		}
+	}
 	free(ppImage);
 
-	/* Call the Eiffel routine back */
+		/* Call the Eiffel routine back */
 	(pCtx->LoadPixmapUpdateObject)(
 #ifndef EIF_IL_DLL
 		pCtx->pCurrObject,
@@ -1556,16 +1487,18 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		pAlphaImage
 	);
 
-	/* Free the image occupied by the image & the mask. */
-	if (pImage != NULL)
+		/* Free the image occupied by the image & the mask. */
+	if (pImage != NULL) {
 		free(pImage);
-	
-	if (pAlphaImage != NULL)
-		free(pAlphaImage);
-
-	/* that's it */
-	return;
 	}
+	
+	if (pAlphaImage != NULL) {
+		free(pAlphaImage);
+	}
+
+		/* that's it */
+	return;
+}
 
 /*<HACK>*/
 /*FIXME this puts milliseconds into 32 bit, it doesn't last long.*/

@@ -37,10 +37,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.Gtk_window_toplevel_enum))
-			-- `set_title' causes the window to be realized.
-			set_title("")
-			accel_group := C.gtk_accel_group_new
-			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
 		
 feature {NONE} -- Accelerators
@@ -51,7 +47,7 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			acc_imp.set_accel_group (accel_group)
+			acc_imp.add_accel (accel_group)
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -60,7 +56,7 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			acc_imp.set_accel_group (NULL)
+			acc_imp.remove_accel (accel_group)
 		end
 
 feature -- Access
@@ -181,7 +177,7 @@ feature -- Element change
 			C.gdk_window_set_icon_name (
 				C.gtk_widget_struct_window (c_object),
 					eiffel_to_c (an_icon_name))
-			icon_name_holder := an_icon_name
+			icon_name_holder := clone (an_icon_name)
 		end
 
 	set_icon_pixmap (an_icon: EV_PIXMAP) is

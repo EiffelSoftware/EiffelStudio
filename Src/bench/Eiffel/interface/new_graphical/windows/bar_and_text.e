@@ -267,7 +267,7 @@ feature -- Window Implementation
 	fill_menus is
 			-- Adds entries to the `Window' menu.
 		local
-			show_pref_cmd: EB_SHOW_PREFERENCE_TOOL
+			show_pref_cmd: EB_LAUNCHER1
 			show_pref_menu_entry: EB_MENU_ENTRY
 			menu_entry: EB_MENU_ENTRY
 			raise_tool_cmd: RAISE_TOOL_CMD

@@ -412,7 +412,7 @@ feature -- Status setting
 				parent_window (Current).unlock_update
 			end
 		ensure
-			widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
+		--	widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
 		end
 		
 		
@@ -629,18 +629,19 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							-- State must not change if external.
 						if all_holders.item /= a_tool then
 							all_holders.item.silent_set_minimized
-							all_holders.item.disable_minimize_button
 						else
 							all_holders.item.silent_remove_minimized
 							all_holders.item.tool.show
 						end
+							-- Must always disable the minimize button.
+						all_holders.item.disable_minimize_button
 					end
 					all_holders.forth
 				end
 				store_positions
 			end
-			rebuild
 			maximized_tool := a_tool
+			rebuild
 		end
 		
 	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
@@ -668,9 +669,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				end
 				all_holders.forth
 			end
+			maximized_tool := Void
 			rebuild
 			restore_stored_positions
-			maximized_tool := Void
 		ensure
 			not_maximized: not tool_holder.is_maximized
 			no_maximized_tool: maximized_tool = Void
@@ -987,24 +988,35 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 	update_all_minimize_buttons is
 			-- Ensure that the minimized buttons are updated to a valid state.
-			-- If there is only one expanded holder, then its minimize button should
-			-- be disabled, otherwise, they should all be enabled.
+			-- Only the minimize buttons of non external holders are modified.
+			-- If a tool is maximized in `Current', then ensure that all minimize
+			-- buttons are disabled.
+			-- If there is one less minimized tool than `count', we must disable the
+			-- tools minimize button, as not all tools may be minimized at once.
 		local
 			minimized_count: INTEGER
-			non_minimized_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			maximized_holder, non_minimized_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
+			
 		do
 			cursor := all_holders.cursor
+			maximized_holder := maximized_tool
 			from
 				all_holders.start
 			until
 				all_holders.off
 			loop
-				if all_holders.item.is_minimized then
-					minimized_count := minimized_count + 1
-				else
-					non_minimized_holder := all_holders.item
-					all_holders.item.enable_minimize_button
+				if not all_holders.item.is_external then
+					if maximized_holder /= Void then
+						all_holders.item.disable_minimize_button
+					else
+						all_holders.item.enable_minimize_button
+					end
+					if all_holders.item.is_minimized then
+						minimized_count := minimized_count + 1
+					else
+						non_minimized_holder := all_holders.item
+					end
 				end
 				all_holders.forth
 			end

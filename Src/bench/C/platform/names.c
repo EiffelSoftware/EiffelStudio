@@ -33,7 +33,7 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 		strcat(s, "current value ");
 		strcat(s, eif_timeout);
 	} else {
-		strcat(s, "the default 120");
+		strcat(s, "the default 15");
 	}
 	strcat(s, " seconds.\n");
 	return RTMS (s);

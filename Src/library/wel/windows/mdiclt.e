@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_MDI_TILE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -93,12 +98,22 @@ feature -- Basic operations
 			cwin_send_message (item, Wm_mdicascade, 0, 0)
 		end
 
-	tile_children is
-			-- Tile the child windows.
+	tile_children_horizontal is
+			-- Horizontally tile the child windows.
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_mditile, 0, 0)
+			cwin_send_message (item, Wm_mditile,
+				Mditile_horizontal, 0)
+		end
+
+	tile_children_vertical is
+			-- Vertically tile the child windows.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Wm_mditile,
+				Mditile_vertical, 0)
 		end
 
 	destroy_window (child: WEL_MDI_CHILD_WINDOW) is

@@ -2632,19 +2632,19 @@ feature -- Dead code removal
 			l_class := real_64_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_8'
+				-- Protection of feature `set_item' of `reference NATURAL_8'
 			l_class := natural_8_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_16'
+				-- Protection of feature `set_item' of `reference NATURAL_16'
 			l_class := natural_16_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_32'
+				-- Protection of feature `set_item' of `reference NATURAL_32'
 			l_class := natural_32_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_64'
+				-- Protection of feature `set_item' of `reference NATURAL_64'
 			l_class := natural_64_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 

@@ -1,4 +1,4 @@
-class STARTER creation
+class STARTER create
 
 	make
 
@@ -30,7 +30,7 @@ feature
 	make_a_list (first, second, third: REAL) is
 			-- Create  `my_list' with the three values given.
 		do
-			!! my_list.make;
+			create my_list.make;
 			my_list.extend (first);
 			my_list.extend (second);
 			my_list.extend (third)
@@ -51,7 +51,7 @@ feature
 			do
 				size := 1000;
 				from
-					!! my_array.make (1, size); i := 1
+					create my_array.make (1, size); i := 1
 				until
 					i = 1000
 				loop

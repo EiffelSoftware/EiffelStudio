@@ -308,8 +308,6 @@ feature {NONE} -- Implementation
 			-- (export status {NONE})
 		local
 			v_imp: EV_ITEM_IMP
-			temp_sig_id: INTEGER
-			temp_string: ANY
 		do
 			v_imp ?= v.implementation
 			check

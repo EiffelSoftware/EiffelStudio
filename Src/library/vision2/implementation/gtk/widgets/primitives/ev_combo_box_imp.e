@@ -105,8 +105,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Connect action sequences to signals.
-		local
-			temp_sig_id: INTEGER
 		do
 			initialize_pixmaps
 			{EV_LIST_ITEM_LIST_IMP} Precursor
@@ -210,8 +208,7 @@ feature {NONE} -- Implementation
 			-- Add `v' to container.
 		local
 			imp: EV_LIST_ITEM_IMP
-			temp_sig_id: INTEGER
-			temp_string, temp_string2: ANY
+			temp_string: ANY
 		do
 			imp ?= v.implementation
 			temp_string := (imp.text).to_c

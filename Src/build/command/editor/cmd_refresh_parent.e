@@ -14,11 +14,6 @@ feature {NONE}
 			Result := edited_command.labels;
 		end;
 
-	label_exist (l: STRING): BOOLEAN is
-		do
-			Result := edited_command.label_exist (l);
-		end;
-
 	arguments: LINKED_LIST [ARG] is
 		do
 			Result := edited_command.arguments;
@@ -83,17 +78,8 @@ feature {NONE}
 				oll.after
 			loop
 				new_label := clone (oll.item.label);
-				if label_exist (new_label) then
-					new_label.prepend ("_");
-					new_label.prepend (c.eiffel_type);
-					new_label.to_lower;
-					!!l.make (new_label);
-					l.set_parent (c);
-					l.set_renamed;
-				else
-					!!l.make (oll.item.label);
-					l.set_parent (c);
-				end;
+				!!l.make (oll.item.label);
+				l.set_parent (c);
 				labels.extend (l);
 				oll.forth;
 			end;

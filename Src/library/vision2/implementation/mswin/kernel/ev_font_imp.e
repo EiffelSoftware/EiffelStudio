@@ -11,10 +11,12 @@ class
 inherit
 	EV_FONT_I
 		redefine
-			string_size
+			string_size,
+			copy_font
 		end
 
 	EV_FONT_CONSTANTS
+
 
 	WEL_SHARED_FONTS
 		export
@@ -30,8 +32,8 @@ inherit
 		export
 			{NONE} all
 		end
-
-	WEL_CAPABILITIES_CONSTANTS
+		
+	WEL_UNIT_CONVERSION
 		rename
 			vertical_resolution as sceeen_vertical_resolution,
 			horizontal_resolution as screen_horizontal_resolution
@@ -97,6 +99,12 @@ feature -- Access
 			-- Preferred font height measured in screen pixels.
 		do
 			Result := wel_font.height
+		end
+		
+	height_in_points: INTEGER is
+			-- Preferred font height measured in points.
+		do
+			Result := wel_font.point.abs
 		end
 
 feature -- Element change
@@ -165,6 +173,35 @@ feature -- Element change
 		do
 			wel_font.set_height (a_height)
 			Wel_log_font.update_by_font (wel_font) 
+		end
+		
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `a_height_in_points' to `a_height'.
+		do
+			wel_font.set_height_in_points (a_height)
+			wel_log_font.update_by_font (wel_font)
+		end
+		
+	copy_font (font: EV_FONT) is
+			-- Update `Current' with all attributes of `other'.
+			-- Redefined on Windows as certain properties of fonts
+			-- cannot be specified completely through the interface of
+			-- EiffelVision2, such as `char_set'. As we use a single once log font
+			-- internally, the previous charset is still used, and preforming this
+			-- redefinition fixes the char_set issue and is also faster.
+		local
+			font_imp: EV_FONT_IMP
+			log_font: WEL_LOG_FONT
+			new_wel_font: WEL_FONT
+		do
+			font_imp ?= font.implementation
+			log_font := font_imp.wel_font.log_font
+			create new_wel_font.make_indirect (log_font)
+			set_by_wel_font (new_wel_font)
+			
+				-- Dispose of `log_font' as it is only required
+				-- temporarily to create the WEL_FONT.
+			log_font.dispose
 		end
 
 feature -- Status report

@@ -640,6 +640,12 @@ feature -- Debugging events
 			stt.add_string ("Application stopped")
 			stt.add_new_line
 			output_manager.process_text (stt)
+			
+			if stopped_actions /= Void then
+				stopped_actions.call (Void)
+				stopped_actions := Void
+			end
+
 			debugging_window.window.raise
 			from
 				observers.start
@@ -760,7 +766,35 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			set_array_resource ("development_window__right_panel_layout_new", normal_right_layout)
 		end
 
+feature -- One time action
+
+	has_stopped_action: BOOLEAN is
+			-- Has `stopped_actions' some actions to be executed?
+		do
+			Result := stopped_actions /= Void and then not stopped_actions.is_empty
+		ensure
+			has_stopped_action_definition:
+				Result = (stopped_actions /= Void and then not stopped_actions.is_empty)
+		end
+		
+	set_on_stopped_action (p: PROCEDURE [ANY, TUPLE]) is
+			-- Add `p' to `stopped_actions' with `p'.
+		require
+			p_not_void: p /= Void
+		do
+			if stopped_actions = Void then
+				create stopped_actions
+			end
+			stopped_actions.extend (p)
+		ensure
+			has_stopped_action: has_stopped_action
+			stopped_action_set: stopped_actions.has (p)
+		end
+
 feature {NONE} -- Implementation
+
+	stopped_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions called only once when application has stopped.
 
 	saved_minimized: BOOLEAN
 			-- Was the editor in the debugging window minimized before the debug session started?

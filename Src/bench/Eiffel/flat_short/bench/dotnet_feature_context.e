@@ -695,48 +695,52 @@ feature {NONE} -- Element Change
 			l_counter: INTEGER
 		do
 			l_properties := a_consumed_type.properties
-			from 
-				l_counter := 1
-			until
-				l_counter > l_properties.count or Result /= Void
-			loop
-				if 	
-					l_properties.item (l_counter).getter /= Void and 
-					l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name) 
-				then
-					Result := l_properties.item (l_counter).getter
-				elseif
-					l_properties.item (l_counter).setter /= Void and 
-					l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name) 
-				then
-					Result := l_properties.item (l_counter).setter
-				end
-				l_counter := l_counter + 1
-			end
-			if Result = Void then
-				from
-					l_events := a_consumed_type.events
+			if l_properties /= Void then
+				from 
 					l_counter := 1
 				until
-					l_counter > l_events.count or Result /= Void
+					l_counter > l_properties.count or Result /= Void
 				loop
-					if
-						l_events.item (l_counter).adder /= Void and
-						l_events.item (l_counter).adder.eiffel_name.is_equal (a_feature.name)
+					if 	
+						l_properties.item (l_counter).getter /= Void and 
+						l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name) 
 					then
-						Result := l_events.item (l_counter).adder
+						Result := l_properties.item (l_counter).getter
 					elseif
-						l_events.item (l_counter).remover /= Void and
-						l_events.item (l_counter).remover.eiffel_name.is_equal (a_feature.name)
+						l_properties.item (l_counter).setter /= Void and 
+						l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name) 
 					then
-						Result := l_events.item (l_counter).remover
-					elseif
-						l_events.item (l_counter).raiser /= Void and
-						l_events.item (l_counter).raiser.eiffel_name.is_equal (a_feature.name)
-					then
-						Result := l_events.item (l_counter).raiser
+						Result := l_properties.item (l_counter).setter
 					end
 					l_counter := l_counter + 1
+				end
+			end
+			if Result = Void then
+				l_events := a_consumed_type.events
+				if l_events /= Void then
+					from
+						l_counter := 1
+					until
+						l_counter > l_events.count or Result /= Void
+					loop
+						if
+							l_events.item (l_counter).adder /= Void and
+							l_events.item (l_counter).adder.eiffel_name.is_equal (a_feature.name)
+						then
+							Result := l_events.item (l_counter).adder
+						elseif
+							l_events.item (l_counter).remover /= Void and
+							l_events.item (l_counter).remover.eiffel_name.is_equal (a_feature.name)
+						then
+							Result := l_events.item (l_counter).remover
+						elseif
+							l_events.item (l_counter).raiser /= Void and
+							l_events.item (l_counter).raiser.eiffel_name.is_equal (a_feature.name)
+						then
+							Result := l_events.item (l_counter).raiser
+						end
+						l_counter := l_counter + 1
+					end
 				end
 			end
 		end

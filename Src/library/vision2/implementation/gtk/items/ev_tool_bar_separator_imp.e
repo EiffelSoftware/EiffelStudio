@@ -50,6 +50,10 @@ feature -- Initialization
 			widget := gtk_vseparator_new
 			gtk_object_ref (widget)
 
+			set_minimum_width(8)
+			set_minimum_height(25)
+
+
 			-- The interface does not call `widget_make' so we need 
 			-- to connect `destroy_signal_callback'
 			-- to `destroy' event.

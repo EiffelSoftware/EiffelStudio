@@ -9,6 +9,11 @@ class
 
 inherit
 	WEL_REGISTRY_KEY_VALUE_TYPE
+	
+	PLATFORM
+		export
+			{NONE} all
+		end
 
 create
 	make,
@@ -64,7 +69,7 @@ feature -- Access
 		require
 			valid_type: type = Reg_dword
 		do
-			($Result).memory_copy (internal_value.item, feature {PLATFORM}.Integer_32_bytes)
+			($Result).memory_copy (internal_value.item, Integer_32_bytes)
 		end
 
 feature -- Element Change

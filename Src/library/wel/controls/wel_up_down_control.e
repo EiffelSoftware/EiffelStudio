@@ -77,7 +77,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result ?= windows.item (cwel_integer_to_pointer (
+			Result := window_of_item (cwel_integer_to_pointer (
 				cwin_send_message_result (item, Udm_getbuddy, 0, 0)))
 		end
 

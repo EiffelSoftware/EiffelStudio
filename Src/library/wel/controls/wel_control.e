@@ -105,7 +105,7 @@ feature -- Basic operations
 			window: WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlgtabitem (a_parent.item, item, after)
-			window := windows.item (hwnd)
+			window := window_of_item (hwnd)
 			window.set_focus
 		end
 
@@ -120,7 +120,7 @@ feature -- Basic operations
 			window: WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlggroupitem (a_parent.item, item, after)
-			window := windows.item (hwnd)
+			window := window_of_item (hwnd)
 			window.set_focus
 		end
 

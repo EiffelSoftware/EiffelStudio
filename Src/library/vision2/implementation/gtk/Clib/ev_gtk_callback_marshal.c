@@ -93,9 +93,11 @@ int gtk_value_int (void* p)
 }
 
 guint c_ev_gtk_callback_marshal_signal_connect (
-    GtkObject* c_object, const gchar* signal, EIF_OBJECT agent
+    GtkObject* c_object,
+    const gchar* signal,
+    EIF_OBJECT agent,
 )
-        // Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
+		// Connect an `agent' to a named `signal' emmited by a GTK `c_object'.
 		// Return connection id.
 {
     // local
@@ -380,6 +382,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2000/04/01 01:10:15  oconnor
+// formatting
+//
 // Revision 1.5  2000/03/27 19:30:31  brendel
 // Commented out precondition.
 //

@@ -44,11 +44,13 @@ feature -- Initialization
 		do
 			mw ?= parent
 			associated_root ?= mw.associated_root
+			realized := True
 			if mw /= Void and then mw.realized then
 				mw.add_a_child (Current)
-				associated_shell.wel_draw_menu
+				if associated_shell.has_menu then
+					associated_shell.wel_draw_menu
+				end
 			end
-			realized := True
 		end
 
 	create is

@@ -91,26 +91,30 @@ feature {NONE}
 
 	build_edit_bar is
 			-- Build top bar: editing commands.
+		local
+			search_command: SEARCH_STRING;
+			change_font_command: CHANGE_FONT;
+			quit_cmd: QUIT_FILE;
 		do
-				!!hole.make (edit_bar, Current);
-				!!type_teller.make (new_name, edit_bar);
-				type_teller.set_center_alignment;
-				!!search_command.make (edit_bar, text_window);
-				!!change_font_command.make (edit_bar, text_window);
-				!!quit_command.make (edit_bar, text_window);
-					edit_bar.attach_left (hole, 0);
-					edit_bar.attach_top (hole, 0);
-					clean_type;
-					edit_bar.attach_left_widget (hole, type_teller, 0);
-					edit_bar.attach_top (type_teller, 0);
-					edit_bar.attach_right_widget (search_command, type_teller, 0);
-					edit_bar.attach_bottom (type_teller, 0);
-					edit_bar.attach_top (search_command, 0);
-					edit_bar.attach_right_widget (change_font_command, search_command, 25);
-					edit_bar.attach_top (change_font_command, 0);
-					edit_bar.attach_right_widget (quit_command, change_font_command, 25);
-					edit_bar.attach_top (quit_command, 0);
-					edit_bar.attach_right (quit_command, 0);
+			!!hole.make (edit_bar, Current);
+			!!type_teller.make (new_name, edit_bar);
+			type_teller.set_center_alignment;
+			!!search_command.make (edit_bar, text_window);
+			!!change_font_command.make (edit_bar, text_window);
+			!!quit_cmd.make (edit_bar, text_window);
+				edit_bar.attach_left (hole, 0);
+				edit_bar.attach_top (hole, 0);
+				clean_type;
+				edit_bar.attach_left_widget (hole, type_teller, 0);
+				edit_bar.attach_top (type_teller, 0);
+				edit_bar.attach_right_widget (search_command, type_teller, 0);
+				edit_bar.attach_bottom (type_teller, 0);
+				edit_bar.attach_top (search_command, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 25);
+				edit_bar.attach_top (change_font_command, 0);
+				edit_bar.attach_right_widget (quit_cmd, change_font_command, 25);
+				edit_bar.attach_top (quit_cmd, 0);
+				edit_bar.attach_right (quit_cmd, 0);
 		end;
 
 	debug_run_command: DEBUG_RUN;

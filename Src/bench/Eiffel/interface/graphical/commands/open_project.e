@@ -40,6 +40,7 @@ feature {NONE}
 				name_chooser.set_directory_selection;
 				name_chooser.hide_file_selection_list;
 				name_chooser.hide_file_selection_label;
+				name_chooser.set_title (l_Select_a_directory)
 				if argument = name_chooser then
 					dir_name := clone (name_chooser.selected_file);
 					last_char := dir_name.item (dir_name.count); 
@@ -49,6 +50,7 @@ feature {NONE}
 					!!project_dir.make (dir_name);
 					make_project (project_dir);
 					name_chooser.set_file_selection;
+					name_chooser.set_title (l_Select_a_file);
 					name_chooser.show_file_selection_list;
 					name_chooser.show_file_selection_label;
 				elseif argument = void then

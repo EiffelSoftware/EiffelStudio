@@ -326,15 +326,16 @@ feature {NONE} -- Filling AST
 			defaults: LACE_LIST [D_OPTION_SD]
 			argument_text, current_text: STRING
 		do
-			argument_text := escape_argument (arguments.text)
-			
-			defaults := root_ast.defaults
 				-- Set command line arguments of current compiled
 				-- project.
 			if Workbench.system_defined then
-				Lace.argument_list.put_front (argument_text)
+				Lace.argument_list.put_front (arguments.text)
 			end
 
+				-- Prepare string for valid arguments storing
+			argument_text := escape_argument (arguments.text)
+			
+			defaults := root_ast.defaults
 				-- Store command line arguments in Ace file.
 			defaults.extend (new_special_option_sd ("arguments", argument_text, True))
 

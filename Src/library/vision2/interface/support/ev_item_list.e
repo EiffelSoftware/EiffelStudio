@@ -30,7 +30,10 @@ inherit
 			default_create,
 			move
 		redefine
-			start
+			start,
+			finish,
+			merge_left,
+			merge_right
 		end
 
 	SET [G]
@@ -106,6 +109,14 @@ feature -- Cursor movement
 			-- Move to first position.
 		do
 			go_i_th (1)
+		end
+
+	finish is
+			-- Move cursor to first position.
+		do
+			go_i_th (count)
+		ensure then
+			empty_implies_before: empty implies before
 		end
 
 	back is
@@ -197,6 +208,43 @@ feature -- Element change
 	 		new_count: count = old count + 1
 	 		same_index: index = old index
 			item_parent_is_current: v.parent = Current
+		end
+
+	merge_left (other: like Current) is
+			-- Merge `other' into current structure before cursor
+			-- position. Do not move cursor. Empty `other'.
+			--| Redefined because our `put_left'
+			--| automatically removes item from `other'.
+		do
+			from
+				other.start
+			until
+				other.empty
+			loop
+				put_left (other.item)
+				check
+					not_other_has_item: not other.has (item)
+				end
+			end
+		end
+
+	merge_right (other: like Current) is
+			-- Merge `other' into current structure after cursor
+			-- position. Do not move cursor. Empty `other'.
+			--| Redefined because our `put_right'
+			--| automatically removes item from `other'.
+		do
+			from
+				other.finish
+			until
+				other.empty
+			loop
+				put_right (other.item)
+				other.back
+				check
+					not_other_has_item: not other.has (item)
+				end
+			end
 		end
 
 feature -- Removal
@@ -382,6 +430,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/14 23:48:45  brendel
+--| Added features `finish', `merge_left', `merge_right'.
+--|
 --| Revision 1.6  2000/03/08 21:44:13  king
 --| Added parent set post-conditions
 --|

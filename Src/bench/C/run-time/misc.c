@@ -35,6 +35,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include "rt_macros.h"
 #include "rt_dir.h"
 #include "rt_threads.h"
+#include "rt_struct.h"
 #include "x2c.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
@@ -318,8 +319,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	union overhead *zone;
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */
-	int dtype;				/* Dynamic type of the first expanded object */
-	int dftype;				/* Full dynamic type of the first expanded object */
+	uint32 exp_dftype;		/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
@@ -373,14 +373,16 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * OVERHEAD bytes in the computation of 'dtype'--RAM.
 	 */
 
-	ref = (new_area + j * elem_size) + OVERHEAD;	/* Needed for stupid gcc */
-	dftype = Dftype(ref);					/* Gcc won't let me expand that!! */
-	dtype = Dtype(ref);					/* Gcc won't let me expand that!! */
+	exp_dftype = eif_gen_param_id (-1, (int16) Dftype(new_area), 1);
 
 		/* Initialize expanded objects from 0 to (j - 1) */
-	new_area = sp_init(new_area, dftype, 0, j - 1);
+	new_area = sp_init(new_area, exp_dftype, 0, j - 1);
 
-		/* Update expanded offsets for k objects starting at j */
+#ifndef WORKBENCH
+	if (References(Deif_bid(exp_dftype)) > 0) {
+#endif
+		/* If there is a header for each expanded in the special, then update expanded
+		 * offsets for k objects starting at j. */
 	for (
 		n = j + k - 1, ref = new_area + (n * elem_size);
 		n >= j;
@@ -388,9 +390,12 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	{
 		((union overhead *) ref)->ov_size = ref - new_area + OVERHEAD;
 	}
+#ifndef WORKBENCH
+	}
+#endif
 	
 		/* Intialize remaining objects from (j + k) to (i - 1) */
-	new_area = sp_init(new_area, dftype, j + k, i - 1);
+	new_area = sp_init(new_area, exp_dftype, j + k, i - 1);
 
 	return new_area;
 }

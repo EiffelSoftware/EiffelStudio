@@ -233,6 +233,7 @@ feature -- Generation
 			final_mode: BOOLEAN;
 			generate_c_code: BOOLEAN;
 			type_list: TYPE_LIST
+			once_count, oidx:INTEGER
 		do
 			final_mode := byte_context.final_mode;
 
@@ -310,6 +311,49 @@ feature -- Generation
 				generate_creation_routine (file, extern_decl_file);
 			end;
 
+			-- Count once routines which must be generated
+			-- in the current class
+
+			from
+				feature_table.start;
+			until
+				feature_table.after
+			loop
+				feature_i := feature_table.item_for_iteration;
+				if feature_i.to_generate_in (current_class) and then
+								feature_i.is_once then
+					once_count := once_count + 1
+				end;
+				feature_table.forth;
+			end;
+
+			-- Create index offset variable, if necessary.
+
+			if once_count > 0 then
+				file.putstring ("static int EIF_oidx_off = 0;")
+				file.new_line
+			end
+
+			-- Create module initialization procedure
+
+			file.generate_function_signature (
+						   "void", id.module_init_name, True, file, <<>>, <<>>
+											 )
+
+
+			if once_count > 0 then
+				file.putstring ("%TEIF_oidx_off = EIF_once_count;")
+				file.new_line
+				file.putstring ("%TEIF_once_count += ")
+				file.putint (once_count)
+				file.putchar (';')
+				file.new_line
+			end
+
+			file.putstring ("%TEDCX%N}")
+			file.new_line
+			file.new_line
+
 			from
 				feature_table.start;
 				byte_context.init (Current);
@@ -318,6 +362,12 @@ feature -- Generation
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.to_generate_in (current_class) then
+
+					if feature_i.is_once then
+						-- If it's a once, give it a key.
+						byte_context.set_once_index (oidx)
+						oidx := oidx + 1
+					end
 					generate_feature (feature_i, file);
 				end;
 				feature_table.forth;

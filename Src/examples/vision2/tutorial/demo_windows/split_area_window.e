@@ -38,7 +38,7 @@ feature -- Access
 	button: EV_BUTTON
 		-- A button for the demo
 
-	texta: EV_TEXT_AREA
+	texta: EV_TEXT
 		-- A text are for the demo
 
 end -- class SPLIT_AREA_WINDOW

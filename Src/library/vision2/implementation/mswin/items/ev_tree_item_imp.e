@@ -229,107 +229,107 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
-		do
-			add_command (Cmd_item_activate, cmd, arg)			
-		end	
+--|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is activated.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_activate, cmd, arg)			
+--|FIXME		end	
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
-		do
-			add_command (Cmd_item_deactivate, cmd, arg)		
-		end
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is unactivated.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
+--|FIXME		end
 
-	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the selection subtree is expanded or collapsed.
-		do
-			add_command (Cmd_item_subtree, cmd, arg)
-		end
+--|FIXME	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the selection subtree is expanded or collapsed.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_subtree, cmd, arg)
+--|FIXME		end
 
-	add_button_press_command (mouse_button: INTEGER; 
-		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is pressed.
-		do
-			inspect mouse_button 
-			when 1 then
-				add_command (Cmd_button_one_press, cmd, arg)
-			when 2 then
-				add_command (Cmd_button_two_press, cmd, arg)
-			when 3 then
-				add_command (Cmd_button_three_press, cmd, arg)
-			end
-		end
+--|FIXME	add_button_press_command (mouse_button: INTEGER; 
+--|FIXME		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when button number 'mouse_button' is pressed.
+--|FIXME		do
+--|FIXME			inspect mouse_button 
+--|FIXME			when 1 then
+--|FIXME				add_command (Cmd_button_one_press, cmd, arg)
+--|FIXME			when 2 then
+--|FIXME				add_command (Cmd_button_two_press, cmd, arg)
+--|FIXME			when 3 then
+--|FIXME				add_command (Cmd_button_three_press, cmd, arg)
+--|FIXME			end
+--|FIXME		end
 
-	add_button_release_command (mouse_button: INTEGER;
-		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is released.
-		do
-			inspect mouse_button
-			when 1 then
-				add_command (Cmd_button_one_release, cmd, arg)
-			when 2 then
-				add_command (Cmd_button_two_release, cmd, arg)
-			when 3 then
-				add_command (Cmd_button_three_release, cmd, arg)
-			end
-		end
+--|FIXME	add_button_release_command (mouse_button: INTEGER;
+--|FIXME		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when button number 'mouse_button' is released.
+--|FIXME		do
+--|FIXME			inspect mouse_button
+--|FIXME			when 1 then
+--|FIXME				add_command (Cmd_button_one_release, cmd, arg)
+--|FIXME			when 2 then
+--|FIXME				add_command (Cmd_button_two_release, cmd, arg)
+--|FIXME			when 3 then
+--|FIXME				add_command (Cmd_button_three_release, cmd, arg)
+--|FIXME			end
+--|FIXME		end
 
 feature -- Event -- removing command association
 
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is activated.
-		do
-			remove_command (Cmd_item_activate)			
-		end	
+--|FIXME	remove_select_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is activated.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_activate)			
+--|FIXME		end	
 
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
-		do
-			remove_command (Cmd_item_deactivate)		
-		end
+--|FIXME	remove_unselect_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is deactivated.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_deactivate)		
+--|FIXME		end
 
-	remove_subtree_commands is
-			-- Empty the list of commands to be executed when
-			-- the selection subtree is expanded or collapsed.
-		do
-			remove_command (Cmd_item_subtree)
-		end
+--|FIXME	remove_subtree_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the selection subtree is expanded or collapsed.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_subtree)
+--|FIXME		end
 
-	remove_button_press_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
-		do
-			inspect mouse_button 
-			when 1 then
-				remove_command (Cmd_button_one_press)
-			when 2 then
-				remove_command (Cmd_button_two_press)
-			when 3 then
-				remove_command (Cmd_button_three_press)
-			end
-		end
+--|FIXME	remove_button_press_commands (mouse_button: INTEGER) is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- button number 'mouse_button' is pressed.
+--|FIXME		do
+--|FIXME			inspect mouse_button 
+--|FIXME			when 1 then
+--|FIXME				remove_command (Cmd_button_one_press)
+--|FIXME			when 2 then
+--|FIXME				remove_command (Cmd_button_two_press)
+--|FIXME			when 3 then
+--|FIXME				remove_command (Cmd_button_three_press)
+--|FIXME			end
+--|FIXME		end
 
-	remove_button_release_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is released.
-		do
-			inspect mouse_button 
-			when 1 then
-				remove_command (Cmd_button_one_release)
-			when 2 then
-				remove_command (Cmd_button_two_release)
-			when 3 then
-				remove_command (Cmd_button_three_release)
-			end
-		end
+--|FIXME	remove_button_release_commands (mouse_button: INTEGER) is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- button number 'mouse_button' is released.
+--|FIXME		do
+--|FIXME			inspect mouse_button 
+--|FIXME			when 1 then
+--|FIXME				remove_command (Cmd_button_one_release)
+--|FIXME			when 2 then
+--|FIXME				remove_command (Cmd_button_two_release)
+--|FIXME			when 3 then
+--|FIXME				remove_command (Cmd_button_three_release)
+--|FIXME			end
+--|FIXME		end
 
 feature {NONE} -- Implementation, pick and drop
 
@@ -422,6 +422,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.26  2000/02/19 05:44:59  oconnor
 --| released
 --|

@@ -75,36 +75,36 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		do
-			add_command (Cmd_item_deactivate, cmd, arg)		
-		end
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is unselected.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
+--|FIXME		end
 
-	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is toggled.
-		do
-			add_command (Cmd_item_toggle, cmd, arg)
-		end
+--|FIXME	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is toggled.
+--|FIXME		do
+--|FIXME			add_command (Cmd_item_toggle, cmd, arg)
+--|FIXME		end
 	
 
 feature -- Event -- removing command association
 
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		do
-			remove_command (Cmd_item_deactivate)		
-		end
+--|FIXME	remove_unselect_commands is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the item is unselected.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_deactivate)		
+--|FIXME		end
 
-	remove_toggle_commands is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is toggled.
-		do
-			remove_command (Cmd_item_toggle)
-		end
+--|FIXME	remove_toggle_commands is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is toggled.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_item_toggle)
+--|FIXME		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
@@ -142,6 +142,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.8  2000/02/19 05:44:59  oconnor
 --| released
 --|

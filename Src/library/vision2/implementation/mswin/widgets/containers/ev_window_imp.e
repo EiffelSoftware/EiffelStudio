@@ -414,49 +414,49 @@ feature -- Resizing
 
 feature -- Event - command association
 
-	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the window is closed.
-		do
-			add_command (Cmd_close, cmd, arg)
-		end
+--|FIXME	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the window is closed.
+--|FIXME		do
+--|FIXME			add_command (Cmd_close, cmd, arg)
+--|FIXME		end
 
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the window is resized.
-		do
-			add_command (Cmd_size, cmd, arg)
-		end
+--|FIXME	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the window is resized.
+--|FIXME		do
+--|FIXME			add_command (Cmd_size, cmd, arg)
+--|FIXME		end
 
-	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget is resized.
-		do
-			add_command (Cmd_move, cmd, arg)
-		end
+--|FIXME	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the widget is resized.
+--|FIXME		do
+--|FIXME			add_command (Cmd_move, cmd, arg)
+--|FIXME		end
 
 feature -- Event -- removing command association
 
-	remove_close_commands is
-			-- Empty the list of commands to be executed
-			-- when the window is closed.
-		do
-			remove_command (Cmd_close)
-		end
+--|FIXME	remove_close_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the window is closed.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_close)
+--|FIXME		end
 
-	remove_resize_commands is
-			-- Empty the list of commands to be executed
-			-- when the window is resized.
-		do
-			remove_command (Cmd_size)
-		end
+--|FIXME	remove_resize_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the window is resized.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_size)
+--|FIXME		end
 
-	remove_move_commands is
-			-- Empty the list of commands to be executed
-			-- when the widget is resized.
-		do
-			remove_command (Cmd_move)
-		end
+--|FIXME	remove_move_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the widget is resized.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_move)
+--|FIXME		end
 
 feature -- Assertion features
 
@@ -869,6 +869,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.20  2000/02/19 05:53:52  oconnor
 --| released
 --|

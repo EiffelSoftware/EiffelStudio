@@ -331,21 +331,21 @@ feature -- Element change
 
 feature -- Event - command association
 	
-	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when a page is switch in the notebook.
-		do
-			add_command (Cmd_switch, cmd, arg)
-		end	
+--|FIXME	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add 'cmd' to the list of commands to be executed
+--|FIXME			-- when a page is switch in the notebook.
+--|FIXME		do
+--|FIXME			add_command (Cmd_switch, cmd, arg)
+--|FIXME		end	
 
 feature -- Event -- removing command association
 
-	remove_switch_commands is
-			-- Empty the list of commands to be executed
-			-- when a page is switch in the notebook.
-		do
-			remove_command (Cmd_switch)
-		end	
+--|FIXME	remove_switch_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when a page is switch in the notebook.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_switch)
+--|FIXME		end	
 
 feature -- Basic operation
 
@@ -1121,6 +1121,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.44  2000/02/19 05:45:00  oconnor
 --| released
 --|

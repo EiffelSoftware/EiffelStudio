@@ -44,7 +44,7 @@ feature -- Access
 	command: EV_COMMAND
 			-- Command associated with the timeout.
 
-	argument: EV_ARGUMENT
+--|FIXME	argument: EV_ARGUMENT
 			-- Argument associated with the timeout.
 			
 	interval: INTEGER
@@ -127,6 +127,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.4  2000/02/19 05:44:59  oconnor
 --| released
 --|

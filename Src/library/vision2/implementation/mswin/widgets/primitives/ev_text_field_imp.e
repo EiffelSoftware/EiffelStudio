@@ -88,23 +88,23 @@ feature {NONE} -- Initialization
 
 feature -- Event - command association
 	
-	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		do
-			add_command (Cmd_activate, cmd, arg)
-		end
+--|FIXME	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add 'cmd' to the list of commands to be executed 
+--|FIXME			-- when the text field is activated, ie when the user
+--|FIXME			-- press the enter key.
+--|FIXME		do
+--|FIXME			add_command (Cmd_activate, cmd, arg)
+--|FIXME		end
 
 feature -- Event -- removing command association
 
-	remove_return_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		do
-			remove_command (Cmd_activate)
-		end
+--|FIXME	remove_return_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the text field is activated, ie when the user
+--|FIXME			-- press the enter key.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_activate)
+--|FIXME		end
 
 feature {NONE} -- WEL Implementation
 
@@ -240,6 +240,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/02/19 06:34:13  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.29  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -1,0 +1,18 @@
+system EiffelParse
+
+root
+
+	ANY
+
+default
+
+	assertion (require);
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/lex")
+
+cluster
+
+-- EiffelParse
+
+		parse:				"$EIFFEL4/library/parse";
+
+end

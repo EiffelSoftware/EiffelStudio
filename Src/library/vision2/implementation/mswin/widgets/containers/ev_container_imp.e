@@ -206,6 +206,7 @@ feature {NONE} -- WEL Implementation
 			then
 					-- Not the default color, we need to do something here
 					-- to apply `background_color' to `control'.
+
 				paint_dc.set_text_color (control.foreground_color)
 				paint_dc.set_background_color (control.background_color)
 				brush := allocated_brushes.get (Void, control.background_color)

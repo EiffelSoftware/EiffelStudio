@@ -46,7 +46,7 @@ feature -- Status Report
 			l_assembly: ASSEMBLY
 		do
 			if feature {SYSTEM_FILE}.exists (a_file_name) then
-				l_assembly := feature {ASSEMBLY}.load_file (a_file_name)
+				l_assembly := feature {ASSEMBLY}.load_from (a_file_name)
 				if l_assembly /= Void then
 					Result := has (l_assembly.get_name)
 				end

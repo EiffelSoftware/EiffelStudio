@@ -186,7 +186,7 @@ feature -- Generation
 					System.line_generation or not is_finalizing)
 
 					-- Split classes into modules
-				prepare_classes (System.classes, is_single_module)
+				prepare_classes (System.classes)
 
 					-- Generate types metadata description and IL code
 				generate_all_types (sorted_classes (System.classes))
@@ -754,7 +754,7 @@ feature {NONE} -- Sort
 	ordered_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
 			-- Classes sorted by their module appartenance.
 
-	prepare_classes (system_classes: CLASS_C_SERVER; is_one_module: BOOLEAN) is
+	prepare_classes (system_classes: CLASS_C_SERVER) is
 			-- Initialize `ordered_classes' so that it is organized by modules
 			-- and for each modules classes are sorted following their topological order.
 		require
@@ -764,11 +764,13 @@ feature {NONE} -- Sort
 			l_list: ARRAYED_LIST [CLASS_C]
 			i, nb, l_packet, l_max_packet: INTEGER
 			l_class: CLASS_C
+			l_is_one_module: BOOLEAN
 		do
 			create l_classes.make (10)
 			from
 				i := 1
 				nb := system_classes.capacity
+				l_is_one_module := is_single_module
 			variant
 				nb - i + 1
 			until
@@ -776,10 +778,10 @@ feature {NONE} -- Sort
 			loop
 				l_class := system_classes.item (i)
 				if l_class /= Void then
-					if is_one_module then
+					if l_is_one_module then
 						l_packet := 1
 					else
-						l_packet := l_class.class_id
+						l_packet := l_class.class_id // System.msil_classes_per_module + 1
 					end
 					l_classes.search (l_packet)
 					if l_classes.found then
@@ -808,10 +810,94 @@ feature {NONE} -- Sort
 				ordered_classes.put (sorted_array_from_list (l_list), l_packet)
 				l_classes.forth
 			end
+			
+			force_recompilation
 		ensure
 			ordered_classes_not_void: ordered_classes /= Void
 		end
 
+	force_recompilation is
+			-- Traverse `ordered_classes' and if a class has to be generated
+			-- then for all classes belonging to the same entry in `ordered_classes'
+			-- should be recompiled.
+		local
+			l_class_c: CLASS_C
+			i, nb: INTEGER
+			types: TYPE_LIST
+			l_added: BOOLEAN
+			l_classes: ARRAY [CLASS_C]
+			l_changed_classes: ARRAYED_LIST [ARRAY [CLASS_C]]
+		do
+			if not is_single_module then
+					-- First pass, we collect all modules in which a class needs
+					-- to be recompiled.
+				from
+					create l_changed_classes.make (ordered_classes.count)
+					ordered_classes.start
+				until
+					ordered_classes.after
+				loop
+					l_classes := ordered_classes.item_for_iteration
+					l_added := False
+					from
+						i := l_classes.lower
+						nb := l_classes.upper
+					until
+						i > nb or l_added
+					loop
+						l_class_c := l_classes.item (i)
+						if l_class_c /= Void then
+							types := l_class_c.types
+							if not types.is_empty then
+								from
+									types.start
+								until
+									types.after or l_added
+								loop
+									if
+										types.item.is_generated and
+										is_class_generated (l_class_c) and not l_added
+									then
+										l_changed_classes.extend (l_classes)
+										l_added := True
+									end
+									types.forth
+								end
+							end
+						end
+						i := i + 1
+					end
+					ordered_classes.forth
+				end
+
+					-- Second pass. For each module containing a modified class, we mark
+					-- the other classes of this module for a compilation.
+				from
+					l_changed_classes.start
+				until
+					l_changed_classes.after
+				loop
+					l_classes := l_changed_classes.item
+					from
+						i := l_classes.lower
+						nb := l_classes.upper
+					until
+						i > nb
+					loop
+						l_class_c := l_classes.item (i)
+						if
+							l_class_c /= Void and then 
+							(not l_class_c.is_external and then not is_class_generated (l_class_c))
+						then
+							System.degree_minus_1.insert_class (l_class_c)
+						end
+						i := i + 1
+					end
+					l_changed_classes.forth
+				end
+			end
+		end
+		
 	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C] is
 			-- Initialize a sorted array of CLASS_C from `a_list'.
 		require

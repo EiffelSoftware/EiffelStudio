@@ -424,6 +424,8 @@ feature {NONE} -- Implementation
 			-- Size of `file'
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_size"
 		end
 
 end -- class SERVER_FILE

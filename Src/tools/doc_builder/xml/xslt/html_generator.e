@@ -69,7 +69,7 @@ feature -- Generation
 			-- Generate HTML file from `a_doc' in `target'.  Resulting file stored in `last_generated_file'
 		require
 			document_not_void: a_doc /= Void
-			target_not_void: target /= Void		
+			target_not_void: target /= Void	
 		do				
 			if file_type (a_doc.name).is_equal ("xml") then
 				generate_from_xml (a_doc, target)
@@ -156,30 +156,45 @@ feature {NONE} -- Generation
 			l_name, l_html: STRING
 			l_filename: FILE_NAME
 			filtered_document: FILTERED_DOCUMENT
+			retried: BOOLEAN
 		do				
-					-- First filter the document according to correct filter
-			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
-				
-					-- Now convert the filtered document to HTML
-			if filtered_document.text.is_empty then
-				l_html := (create {MESSAGE_CONSTANTS}).empty_html_document
-			else
-				l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
-			end					
-
-					-- Copy generated HTML to a file in `target'
-			l_name := target.name
-			create l_filename.make_from_string (l_name)
-			l_filename.extend (file_no_extension (short_name (a_doc.name)))
-			l_filename.add_extension ("html")
-			create last_generated_file.make_create_read_write (l_filename.string)
-			last_generated_file.put_string (l_html)
-			last_generated_file.close
+			if not retried then
+						-- First filter the document according to correct filter
+				filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
+					
+						-- Now convert the filtered document to HTML
+				if filtered_document.text.is_empty then
+					l_html := (create {MESSAGE_CONSTANTS}).empty_html_document
+				else
+					l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
+				end					
 	
-				-- Copy image if this is not full project generation		
-			if not generation_data.is_generating then				
-				copy_images (a_doc)	
+						-- Copy generated HTML to a file in `target'
+				l_name := target.name
+				create l_filename.make_from_string (l_name)
+				l_filename.extend (file_no_extension (short_name (a_doc.name)))
+				l_filename.add_extension ("html")
+				create last_generated_file.make_create_read_write (l_filename.string)
+				last_generated_file.put_string (l_html)
+				last_generated_file.close
+		
+					-- Copy image if this is not full project generation		
+				if not generation_data.is_generating then				
+					copy_images (a_doc)	
+				end
+			else
+				l_html := (create {MESSAGE_CONSTANTS}).empty_html_document
+				l_name := target.name
+				create l_filename.make_from_string (l_name)
+				l_filename.extend (file_no_extension (short_name (a_doc.name)))
+				l_filename.add_extension ("html")
+				create last_generated_file.make_create_read_write (l_filename.string)
+				last_generated_file.put_string (l_html)
+				last_generated_file.close
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	generate_from_html (a_doc: DOCUMENT; target: DIRECTORY) is

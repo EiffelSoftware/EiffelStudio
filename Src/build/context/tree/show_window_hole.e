@@ -29,8 +29,9 @@ feature {NONE}
 				if cont.shown then
 					cont.hide
 				else
+					main_panel.set_interface_toggle;
 					cont.show
-				end
+				end;
 			end
 		end;
 

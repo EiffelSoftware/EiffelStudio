@@ -136,11 +136,11 @@ feature {EIFNET_DEBUGGER} -- Implementation
 	token_Exception_ToString: INTEGER is
 			-- Attribute token of System.Exception::_message
 		once
---			if il_environment.version.is_equal (Il_environment.v1_2) then		
---				Result := token_Exception_ToString_v1_2
---			else
-				Result := token_Exception_ToString_v1_1	
---			end			
+			if il_environment.version.is_equal (Il_environment.v1_1) then		
+				Result := token_Exception_ToString_v1_1
+			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
+				Result := token_Exception_ToString_v1_0
+			end
 		end	
 
 feature {NONE} -- Constants
@@ -157,9 +157,12 @@ feature {NONE} -- Constants
 	token_Exception__message_v1_2: INTEGER is 0x04000063
 			--| v1.2     => System.Exception::_message: string :: 0x04000063 |--	
 
-	token_Exception_ToString_v1_1: INTEGER is 0x06000182
-			--| v1.0/1.1 => System.Exception::_message: string :: 0x06000182 |--	
-
+	token_Exception_ToString_v1_0: INTEGER is 0x06000182
+			--| v1.0 => System.Exception::_message: string :: 0x06000182 |--	
+			
+	token_exception_tostring_v1_1: INTEGER is 0x06000192			
+			--| v1.1 => System.Exception::_message: string :: 0x06000192 |--	
+			
 	token_Exception__className_v1_1: INTEGER is 0x0400001D
 			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
 

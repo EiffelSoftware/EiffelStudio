@@ -50,9 +50,19 @@ inherit
 		end;
 
 creation
-	make
+	make,
+	make_from_tool
 
-feature {NONE}
+feature {NONE} -- Initialization
+
+	make_from_tool (a_name: STRING; a_tool: TOOL_W) is
+			-- Initialize text window with name `a_name', parent `a_parent',
+			-- and tool window `a_tool'.
+		require
+			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
+		do
+			make (a_name, a_tool.global_form);
+		end;
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 		do

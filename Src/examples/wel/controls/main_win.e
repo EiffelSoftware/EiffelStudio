@@ -76,12 +76,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-			-- Default font to draw dialogs.
-		once
-			create Result.make
-		end
-
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_SCROLL_BAR) is
 		do

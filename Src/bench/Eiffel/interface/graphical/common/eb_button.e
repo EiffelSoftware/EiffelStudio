@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			init_button (implementation);
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.tool);
+			set_focus_string (associated_command.name)
 			initialize_focus 
 		end;
 
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 			button_make (button_name, a_parent);
 			init_button (implementation);
 			set_symbol (cmd.symbol);
+			set_focus_string (associated_command.name)
 			initialize_focus 
 		end;
 
@@ -60,11 +62,6 @@ feature -- Access
 		do
 			Result := associated_command.symbol
 		end;
-
-	focus_string: STRING is
-		do
-			Result := associated_command.name
-		end
 
 feature {NONE} -- Properties
 

@@ -21,8 +21,6 @@ inherit
 			interface
 		end
 
---	EXCEPTIONS
-
 feature -- Initialization
 
 	read_from_file (a_file: IO_MEDIUM) is
@@ -59,11 +57,16 @@ feature -- Initialization
 		deferred	
 		end
 
-	stretch, stretch_image (a_x, a_y: INTEGER) is
+	stretch (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		require
 			x_coordinate_valid: a_x > 0
 			y_coordinate_valid: a_y > 0
+		deferred
+		end
+
+	on_parented is
+			-- `Current' has just been added to a container
 		deferred
 		end
 
@@ -100,6 +103,10 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/12 01:26:45  pichery
+--| - removed synonym `stretch_image' for `stretch'
+--| - added on_parented (only used on Windows)
+--|
 --| Revision 1.15  2000/04/12 00:07:30  king
 --| Now inheriting from drawable and primitive
 --|

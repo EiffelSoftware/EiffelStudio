@@ -24,7 +24,8 @@ class ARRAYED_LIST [G] inherit
 			count as array_count,
 			index_set as array_index_set,
 			bag_put as put,
-			valid_index as array_valid_index
+			valid_index as array_valid_index,
+			resize as array_resize
 		export
 			{NONE}
 				all
@@ -428,6 +429,19 @@ feature -- Element change
 			else
 				Precursor {DYNAMIC_LIST} (s)
 			end
+		end
+
+feature -- Resizing
+
+	resize (new_capacity: INTEGER) is
+			-- Resize list so that it can contain
+			-- at least `n' items. Do not lose any item.
+		require
+			new_capacity_large_enough: new_capacity >= capacity
+		do
+			grow (new_capacity)
+		ensure
+			capacity_set: capacity >= new_capacity
 		end
 
 feature -- Removal

@@ -237,61 +237,38 @@ feature -- Status report
 		require
 			valid_index: valid_index (index)
 		local
-			l_b: BOOLEAN
-			l_c: CHARACTER
-			l_d: DOUBLE
-			l_r: REAL
-			l_p: POINTER
-			l_i: INTEGER
-			l_i8: INTEGER_8
-			l_i16: INTEGER_16
-			l_i64: INTEGER_64
-			retried: BOOLEAN
+			l_code, l_item_code: INTEGER_8
 			l_int: INTERNAL
 			l_any: ANY
 			l_child, l_parent: TYPE
 		do
-			if not retried then
-				if v = Void then
-						-- A Void entry is always valid.
-					Result := True
-				else
-					Result := True
-					inspect arg_item_code (index)
-					when boolean_code then l_b ?= v
-					when character_code then l_c ?= v
-					when double_code then l_d ?= v
-					when real_code then l_r ?= v
-					when pointer_code then l_p ?= v
-					when integer_code then l_i ?= v
-					when integer_8_code then l_i8 ?= v
-					when integer_16_code then l_i16 ?= v
-					when integer_64_code then l_i64 ?= v
-					when Reference_code then
-						l_any ?= v
-						if l_any /= Void then
-								-- Let's check that type of `v' conforms to specified type of `index'-th
-								-- arguments of current TUPLE.
-							create l_int
-							Result := l_int.type_conforms_to
-								(l_int.dynamic_type (l_any), l_int.generic_dynamic_type (Current, index))
-						else
-								-- Let's check that type of `v' conforms to specified type of `index'-th
-								-- arguments of current TUPLE, this time we use simple .NET type conformance.
-							l_child := v.get_type
-							l_parent := feature {ISE_RUNTIME}.type_of_generic_parameter (Current, index)
-							Result := l_parent.is_assignable_from (l_child)
-						end
+			if v = Void then
+					-- A Void entry is always valid.
+				Result := True
+			else
+				l_code := arg_item_code (index)
+				l_child := v.get_type
+				l_item_code ?= reverse_lookup.item (l_child)
+				Result := l_code = l_item_code
+				if Result and l_code = reference_code then
+					l_any ?= v
+					if l_any /= Void then
+							-- Let's check that type of `v' conforms to specified type of
+							-- `index'-th arguments of current TUPLE.
+						create l_int
+						Result := l_int.type_conforms_to
+							(l_int.dynamic_type (l_any),
+							l_int.generic_dynamic_type (Current, index))
+					else
+							-- Let's check that type of `v' conforms to specified type of
+							-- `index'-th arguments of current TUPLE, this time we use simple
+							-- .NET type conformance.
+						l_parent :=
+							feature {ISE_RUNTIME}.type_of_generic_parameter (Current, index)
+						Result := l_parent.is_assignable_from (l_child)
 					end
 				end
-			else
-				Result := False
 			end
-		rescue
-				-- It failed most likely because one of the above assignment attempts on basic types failed.
-				-- Therefore it is not valid.
-			retried := True
-			retry
 		end
 
 	count: INTEGER is

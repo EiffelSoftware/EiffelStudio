@@ -175,47 +175,66 @@ feature -- Genericity
 			table_name: STRING;
 			rout_info: ROUT_INFO;
 			gen_type: GEN_TYPE_I;
+			type_set: ROUT_ID_SET
 		do
 			f.putstring ("-13, ")
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id)
-				if table.has_one_type then
-						-- There is a table, but with only one type id
-					gen_type ?= table.first.type
 
-					if gen_type /= Void then
-						f.putstring ("-10, ")
-						gen_type.generate_cid (f, final_mode, True)
-					else
-						f.putint (table.first.feature_type_id - 1)
-						f.putstring (", ")
-					end
+				if table = Void then
+					-- Creation with `like_feature' where feature is
+					-- deferred and has no effective version anywhere.
+					-- Create anything - cannot be called anyway.
+					f.putstring ("-10, -10, ")
 				else
-						-- Attribute is polymorphic
-					table_name := rout_id.type_table_name
+					-- Feature has at least one effective version	
+					if table.has_one_type then
+							-- There is a table, but with only one type id
+						gen_type ?= table.first.type
+	
+						if gen_type /= Void then
+							f.putstring ("-10, ")
+							gen_type.generate_cid (f, final_mode, True)
+						else
+							f.putint (table.first.feature_type_id - 1)
+							f.putstring (", ")
+						end
+					else
+							-- Attribute is polymorphic
+						table_name := rout_id.type_table_name
+	
+						f.putstring ("RTFCID(")
+						f.putint (context.current_type.generated_id (context.final_mode))
+						f.putstring (",(")
+						f.putstring (table_name)
+						f.putstring ("-")
+						f.putint (table.min_type_id - 1)
+						f.putstring ("), (")
+	
+						f.putstring (table_name)
+						f.putstring ("_gen_type")
+						f.putstring ("-")
+						f.putint (table.min_type_id - 1)
+						f.putstring ("), ")
+						f.putstring (context.Current_register.register_name)
+						f.putstring ("), ")
+	
+							-- Side effect. This is not nice but
+							-- unavoidable.
+							-- Mark routine id used
+						Eiffel_table.mark_used (rout_id)
+							-- Remember extern declaration
+						Extern_declarations.add_type_table (clone (table_name))
 
-					f.putstring ("RTFCID(")
-					f.putint (context.current_type.generated_id (context.final_mode))
-					f.putstring (",(")
-					f.putstring (table_name)
-					f.putstring ("-")
-					f.putint (table.min_type_id - 1)
-					f.putstring ("), (")
+							-- Make sure that `rout_id' is in `type_set'
+						type_set := System.type_set
 
-					f.putstring (table_name)
-					f.putstring ("_gen_type")
-					f.putstring ("-")
-					f.putint (table.min_type_id - 1)
-					f.putstring ("), ")
-					f.putstring (context.Current_register.register_name)
-					f.putstring ("), ")
-
-						-- Side effect. This is not nice but
-						-- unavoidable.
-						-- Mark routine id used
-					Eiffel_table.mark_used (rout_id)
-						-- Remember extern declaration
-					Extern_declarations.add_type_table (clone (table_name))
+						if not type_set.has (rout_id) then
+								-- We found a new routine ìd which was not in the
+								-- table before, we need to insert it into `type_set'.
+							type_set.force (rout_id)
+						end
+					end
 				end
 			else
 				if

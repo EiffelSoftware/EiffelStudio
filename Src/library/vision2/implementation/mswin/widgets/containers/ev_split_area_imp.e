@@ -464,8 +464,8 @@ feature {NONE} -- Implementation
 			until
 				i > 16
 			loop	
-				string_bitmap.put ((0xAA).ascii_char, i)
-				string_bitmap.put ((0x55).ascii_char, i + 2)
+				string_bitmap.put ((0xAA).to_character, i)
+				string_bitmap.put ((0x55).to_character, i + 2)
 				i := i + 4
 			end
 

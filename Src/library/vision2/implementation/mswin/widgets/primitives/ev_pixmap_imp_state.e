@@ -94,7 +94,7 @@ feature -- Misc.
 				array_area := Result.area
 				mem_dc_item := mem_dc.item
 				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.ascii_char
+				temp_alpha := temp_alpha_int.to_character
 			until
 				array_offset = array_size
 			loop
@@ -103,9 +103,9 @@ feature -- Misc.
 						(array_offset \\ (a_width) // 4),
 						((array_offset) // a_width)
 				)
-				array_area.put (cwin_get_r_value (col_ref_item).ascii_char, array_offset)
-				array_area.put (cwin_get_g_value (col_ref_item).ascii_char, array_offset + 1)
-				array_area.put (cwin_get_b_value (col_ref_item).ascii_char, array_offset + 2)
+				array_area.put (cwin_get_r_value (col_ref_item).to_character, array_offset)
+				array_area.put (cwin_get_g_value (col_ref_item).to_character, array_offset + 1)
+				array_area.put (cwin_get_b_value (col_ref_item).to_character, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end

@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			from
 				i := 4
 				j := 255
-				c := j.ascii_char
+				c := j.to_character
 			until
 				i > count
 			loop
@@ -168,7 +168,7 @@ feature -- Element Change
 			set_character_from_integer (a_x, a_y, 3,
 				a_color.blue_8_bit.to_character)
 			--set_character_from_integer (a_x, a_y, 4,
-			--	a_color.alpha_8_bit.ascii_char)
+			--	a_color.alpha_8_bit.to_character)
 		end
 
 	set_pixel_red_component (a_x, a_y: INTEGER; a_intensity: CHARACTER) is

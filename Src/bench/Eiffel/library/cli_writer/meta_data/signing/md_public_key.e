@@ -61,7 +61,6 @@ feature {NONE} -- Implementation
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
 			l_file: RAW_FILE
-			l_a: ANY
 			retried: BOOLEAN
 		do
 			if not retried then

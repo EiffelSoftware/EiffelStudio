@@ -1,0 +1,3 @@
+Error: Could not perform compilation because of missing component.
+What to do: Make sure that file `mscorsn.dll' does exist in your Microsoft .NET
+   installation.

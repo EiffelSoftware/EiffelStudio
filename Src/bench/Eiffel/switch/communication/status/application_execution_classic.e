@@ -62,6 +62,7 @@ feature -- Execution
 			-- to see if the debugged information is up to date.
 		local
 			app: STRING
+			l_status: APPLICATION_STATUS
 		do
 			app := Eiffel_system.application_name (True)
 			if args /= Void then
@@ -71,9 +72,10 @@ feature -- Execution
 			run_request.set_application_name (app)
 			run_request.set_working_directory (cwd)
 			run_request.send
-			if status /= Void then
+			l_status := status
+			if l_status /= Void then
 					-- Application was able to be started
-				status.set_is_stopped (False)
+				l_status.set_is_stopped (False)
 			end
 		end
 

@@ -347,26 +347,44 @@ feature -- Bit operations
 
 	infix "&", bit_and (i: like Current): like Current is
 			-- Bitwise and between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item & i.item)
+		ensure
+			bitwise_and_not_void: Result /= Void
 		end
 
 	infix "|", bit_or (i: like Current): like Current is
 			-- Bitwise or between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item | i.item)
+		ensure
+			bitwise_or_not_void: Result /= Void
 		end
 
 	bit_xor (i: like Current): like Current is
 			-- Bitwise xor between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item.bit_xor (i.item))
+		ensure
+			bitwise_xor_not_void: Result /= Void
 		end
 
 	bit_not: like Current is
 			-- One's complement of Current.
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item.bit_not)
+		ensure
+			bit_not_not_void: Result /= Void
 		end
 
 	bit_shift (n: INTEGER): like Current is
@@ -381,6 +399,8 @@ feature -- Bit operations
 			else
 				Result := bit_shift_left (- n)
 			end	
+		ensure
+			bit_shift_not_void: Result /= Void
 		end
 
 	infix "|<<", bit_shift_left (n: INTEGER): like Current is
@@ -389,7 +409,10 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_or_equal_to_32: n <= 32
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item |<< n)
+		ensure
+			bit_shift_left_not_void: Result /= Void
 		end
 
 	infix "|>>", bit_shift_right (n: INTEGER): like Current is
@@ -398,7 +421,10 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_or_equal_to_32: n <= 32
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item |>> n)
+		ensure
+			bit_shift_right_not_void: Result /= Void
 		end
 
 	bit_test (n: INTEGER): BOOLEAN is

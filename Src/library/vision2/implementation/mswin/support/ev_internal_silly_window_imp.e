@@ -141,13 +141,11 @@ feature {NONE} -- Implementation
 	on_draw_item (id: INTEGER; struct: WEL_DRAW_ITEM_STRUCT) is
 			-- If wm_draw is recieved for a status bar then
 			-- Re-draw `bar'.
-		local
-			bar: EV_STATUS_BAR_IMP
 		do
-			bar ?= struct.window_item
-			if bar /= Void then
-				bar.draw_item (id, struct)		
-			end
+	--		bar ?= struct.window_item
+	--		if bar /= Void then
+	--			bar.draw_item (id, struct)		
+	--		end
 		end
 		 		
 end -- class EV_INTERNAL_SILLY_WINDOW_IMP
@@ -173,6 +171,9 @@ end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/28 21:52:43  brendel
+--| Removed reference to EV_STATUS_BAR_IMP.
+--|
 --| Revision 1.8  2000/02/19 05:45:00  oconnor
 --| released
 --|

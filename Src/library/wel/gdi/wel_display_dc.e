@@ -13,25 +13,6 @@ inherit
 
 feature -- Basic operations
 
-	get is
-			-- Get the device context.
-		require else
-			not_exists: not exists
-		deferred
-		ensure then
-			exists: exists
-		end
-
-	release is 
-			-- Release the device context after having
-			-- unselected any selected pen, brush, ...
-		require else
-			exists: exists
-		deferred
-		ensure then
-			not_exists: not exists
-		end
-
 	quick_release is 
 			-- Release the device context without unselecting
 			-- selected item. To Avoid memory leak, the caller

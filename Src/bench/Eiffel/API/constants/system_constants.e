@@ -2,6 +2,10 @@ class SYSTEM_CONSTANTS
 
 feature {NONE}
 
+	Casegen: STRING is "CASEGEN";
+
+	Case_storage: STRING is "Storage";
+
 	Class_suffix: STRING is "C";
 
 	Continuation: CHARACTER is '\'
@@ -17,7 +21,7 @@ feature {NONE}
 		local
 			c: CHARACTER
 		once
-			c := Platform_constants.Directory_separator;
+			c := Directory_separator;
 			!!Result.make (0);
 			Result.extend (c);
 			Result.append ("bench");
@@ -33,7 +37,7 @@ feature {NONE}
 		local
 			c: CHARACTER
 		once
-			c := Platform_constants.Directory_separator;
+			c := Directory_separator;
 			!!Result.make (0);
 			Result.append ("$EIFFEL3");
 			Result.extend (c);
@@ -50,7 +54,7 @@ feature {NONE}
 
 	Directory_separator: CHARACTER is
 		once
-			Result := Platform_constants.Directory_separator
+			Result := Operating_environment.Directory_separator
 		end
 
 	Dot: CHARACTER is '.'

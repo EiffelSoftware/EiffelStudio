@@ -9,7 +9,7 @@ class
 inherit
 	EIFFEL_ENV
 
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 		redefine
 			tool
 		end
@@ -25,7 +25,7 @@ feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
 	process is
 			-- If it comes here this means ok has
-			-- been pressed in the warner window
+			-- been pressed in the warner dialog
 			-- for text modification.
 		do
 			tool.last_format.filter (filter_name)
@@ -33,8 +33,8 @@ feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
 feature -- Properties
 
-	filter_window: EB_FILTER_DIALOG
-			-- Associated popup window
+	filter_dialog: EB_FILTER_DIALOG
+			-- Associated popup dialog
 
 	filter_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
@@ -79,26 +79,28 @@ feature {EB_FILTER_DIALOG} -- Implementation
 
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- If left mouse button was pressed -> execute filter.
-			-- If right mouse button was pressed -> bring up filter window. 
+			-- If right mouse button was pressed -> bring up filter dialog. 
 		local
 			cmd_string: STRING
 			filterable_format: EB_FILTERABLE
 			shell_request: EXTERNAL_COMMAND_EXECUTOR
 			filename, new_text: STRING
 --			mp: MOUSE_PTR
+			ed: EB_EDIT_TOOL
 			wd: EV_WARNING_DIALOG
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if argument = Void then
-					-- Popup filter window
+					-- Popup filter dialog
 --				create mp.set_watch_cursor
-				create filter_window.make_with_command (Current)
+				create filter_dialog.make_with_command (Current)
 --				mp.restore
-				filter_window.call (Current)
+				filter_dialog.call (Current)
 			elseif argument = filter_it then
-					-- Display the filter output in `text_window'
-				if tool.text_window.changed then
-					create csd.make_and_launch (tool, Current)
+					-- Display the filter output in `text_area'
+				ed ?= tool
+				if ed /= Void and then ed.text_area.changed then
+					create csd.make_and_launch (ed, Current)
 				else
 					process
 				end
@@ -114,11 +116,11 @@ feature {EB_FILTER_DIALOG} -- Implementation
 						filterable_format.filtered and
 						equal (filterable_format.filter_name, filter_name) 
 					then
-							-- The filtered text is in `text_window'
+							-- The filtered text is in `text_area'
 						filename := filterable_format.temp_filtered_file_name
 										(tool.stone, filter_name)
-						save_to_file (tool.text_window.text, filename)
-						tool.text_window.set_changed (false)
+						save_to_file (tool.text_area.text, filename)
+						tool.text_area.set_changed (false)
 					else
 						new_text := filterable_format.filtered_text 
 										(tool.stone, filter_name) 
@@ -185,7 +187,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	tool: EB_MULTIFORMAT_EDIT_TOOL
+	tool: EB_MULTIFORMAT_TOOL
 
 --	name: STRING is
 --			-- Name of the command.

@@ -17,9 +17,9 @@ inherit
  
 creation
 	make,
+	make_default,
 	make_from_string,
-	make_with_values,
-	make_from_old
+	make_with_values
 
 feature {NONE} -- Initialization
 
@@ -48,6 +48,15 @@ feature {NONE} -- Initialization
 		do
 			make_from_string (a_name, rt.get_string (a_name, def_value.name))
 			default_value := def_value
+		end
+
+	make_default (a_name: STRING; rt: RESOURCE_TABLE; def_name: STRING) is
+			-- Initialize Current
+		local
+			dv: EV_COLOR
+		do
+			dv := color_from_table (def_name)
+			make (a_name, rt, dv)
 		end
 
 feature -- Access
@@ -101,13 +110,6 @@ feature -- Element Change
 			-- Set `value' to `new_value'.
 		do
 			actual_value := a_color
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: COLOR_RESOURCE) is
-		do
-			make_from_string (old_r.name, old_r.value)
 		end
 
 end -- class EB_COLOR_RESOURCE

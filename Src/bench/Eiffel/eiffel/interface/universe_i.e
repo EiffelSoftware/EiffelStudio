@@ -49,23 +49,25 @@ feature -- Properties
 		do
 			loc_clusters := clusters
 			!! Result.make;
-			Result.force (loc_clusters.first);
-			from
-				loc_clusters.start;
-				loc_clusters.forth
-			until
-				loc_clusters.after
-			loop
+			if not loc_clusters.empty then
+				Result.force (loc_clusters.first);
 				from
-					Result.start
+					loc_clusters.start;
+					loc_clusters.forth
 				until
-					Result.after or else
-					loc_clusters.item.cluster_name < Result.item.cluster_name
+					loc_clusters.after
 				loop
-					Result.forth
-				end;
-				Result.put_left (loc_clusters.item);
-				loc_clusters.forth
+					from
+						Result.start
+					until
+						Result.after or else
+						loc_clusters.item.cluster_name < Result.item.cluster_name
+					loop
+						Result.forth
+					end;
+					Result.put_left (loc_clusters.item);
+					loc_clusters.forth
+				end
 			end
 		end;
 

@@ -39,7 +39,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			default_style,
 			default_ex_style,
@@ -137,7 +138,7 @@ feature {NONE} -- Implementation : WEL features
 	default_style: INTEGER is
 		do
 			Result := {WEL_CONTROL_WINDOW} Precursor + Ws_clipchildren
-					+ Ws_clipsiblings
+					+ Ws_clipsiblings --+ Ws_group + Ws_tabstop
 		end
 
 	default_ex_style: INTEGER is

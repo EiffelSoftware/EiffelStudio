@@ -3316,12 +3316,14 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 			gtype [i - 1] = SK_DTYPE;
 		} else {
 			cecil_id = eifcid (type_string_array [pos + i]);
-			if (((uint32) cecil_id & SK_REF) == 0) {
-				gtype [i - 1] = SK_DTYPE;
-				typearr [pos + i + 1] = RTUD_INV (gen_type_id(cecil_id));
-			} else {
-				gtype [i - 1] = cecil_id;
-				typearr [pos + i + 1] = gen_type_id(cecil_id);
+			switch (cecil_id & SK_HEAD)	{
+				case SK_REF: 
+					gtype [i - 1] = SK_DTYPE;
+					typearr [pos + i + 1] = RTUD_INV (gen_type_id(cecil_id));
+					break;
+				default:
+					gtype [i - 1] = cecil_id & SK_HEAD;
+					typearr [pos + i + 1] = gen_type_id(cecil_id);
 			}
 		}
 	}
@@ -3379,23 +3381,19 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 	free (itype);
 }
 
-rt_private int16 gen_type_id (int cecil_id)
+rt_private int16 gen_type_id (int32 cecil_id)
 {
-	if ((uint32) cecil_id & SK_SIMPLE) {
 			/* We need to find out which basic type it is */
-		switch (cecil_id & SK_HEAD) {
-		  	case SK_CHAR:   return -2;
-			case SK_BOOL:   return -3;
-			case SK_INT:    return -4;
-			case SK_FLOAT:  return -5;
-			case SK_DOUBLE: return -6;
-			case SK_POINTER: return -8;
-			default: eif_panic ("Type not yet implemented");
-		}
+	switch (cecil_id & SK_HEAD) {
+		case SK_REF:	return (int16) ((uint32) cecil_id & SK_DTYPE);
+	  	case SK_CHAR:   return -2;
+		case SK_BOOL:   return -3;
+		case SK_INT:    return -4;
+		case SK_FLOAT:  return -5;
+		case SK_DOUBLE: return -6;
+		case SK_POINTER: return -8;
+		default: eif_panic ("Type not yet implemented");
 	}
-	else
-				/* Return the real reference dynamic type ID */
-			return (int16) ((uint32) cecil_id & SK_DTYPE);
 }
 
 /*------------------------------------------------------------------*/

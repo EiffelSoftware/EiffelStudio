@@ -34,7 +34,10 @@ feature
 					o_body := o.body
 				end
 
-				if u.body = Void or else u.body.is_body_equiv (n.body) then
+				if u.body = Void or else 
+					(u.body.is_body_equiv (n.body) and then
+					(u.body.is_assertion_equiv (n.body)))
+				then
 					merge_result.set_body (n.body)
 				else
 					!! body_merger

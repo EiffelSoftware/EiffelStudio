@@ -29,13 +29,11 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Wizard_idl_dialog_constant)
-			create universal2_radio.make_by_id (Current, Universal2_radio_constant)
-			create standard2_radio.make_by_id (Current, Standard2_radio_constant)
-			create automation2_radio.make_by_id (Current, Automation2_radio_constant)
-			create virtual_table2_radio.make_by_id (Current, Virtual_table2_radio_constant)
+			create universal_radio.make_by_id (Current, Universal_radio_constant)
+			create standard_radio.make_by_id (Current, Standard_radio_constant)
+			create automation_radio.make_by_id (Current, Automation_radio_constant)
+			create virtual_table_radio.make_by_id (Current, Virtual_table_radio_constant)
 			create id_ok.make_by_id (Current, Idok)
-			create marshaling2_static.make_by_id (Current, Marshaling2_static_constant)
-			create type2_static.make_by_id (Current, Type2_static_constant)
 			create id_back.make_by_id (Current, Idback_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
@@ -46,14 +44,14 @@ feature -- Behavior
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 			-- Process `control' control notification.
 		do
-			if control = automation2_radio then
-				universal2_radio.disable
-				standard2_radio.disable
-				universal2_radio.set_checked
-				standard2_radio.set_unchecked
-			elseif control = virtual_table2_radio then
-				universal2_radio.enable
-				standard2_radio.enable
+			if control = automation_radio then
+				universal_radio.disable
+				standard_radio.disable
+				universal_radio.set_checked
+				standard_radio.set_unchecked
+			elseif control = virtual_table_radio then
+				universal_radio.enable
+				standard_radio.enable
 			end
 		end
 	
@@ -62,18 +60,18 @@ feature -- Behavior
 		do
 			uncheck_all
 			if Shared_wizard_environment.automation then
-				automation2_radio.set_checked
-				universal2_radio.set_checked
-				universal2_radio.disable
-				standard2_radio.disable
+				automation_radio.set_checked
+				universal_radio.set_checked
+				universal_radio.disable
+				standard_radio.disable
 			else
-				universal2_radio.enable
-				standard2_radio.enable
-				virtual_table2_radio.set_checked
+				universal_radio.enable
+				standard_radio.enable
+				virtual_table_radio.set_checked
 				if Shared_wizard_environment.use_universal_marshaller then
-					universal2_radio.set_checked
+					universal_radio.set_checked
 				else
-					standard2_radio.set_checked
+					standard_radio.set_checked
 				end
 			end
 		end
@@ -81,40 +79,34 @@ feature -- Behavior
 	on_ok is
 			-- Next button was clicked.
 		do
-			Shared_wizard_environment.set_use_universal_marshaller (universal2_radio.checked)
-			Shared_wizard_environment.set_automation (automation2_radio.checked)
+			Shared_wizard_environment.set_use_universal_marshaller (universal_radio.checked)
+			Shared_wizard_environment.set_automation (automation_radio.checked)
 			Precursor
 		end
 
 feature -- Access
 
-	automation2_radio: WEL_RADIO_BUTTON
+	automation_radio: WEL_RADIO_BUTTON
 			-- Automation server type radio button
 
-	virtual_table2_radio: WEL_RADIO_BUTTON
+	virtual_table_radio: WEL_RADIO_BUTTON
 			-- Virtual table server type radio button
 
-	universal2_radio: WEL_RADIO_BUTTON
+	universal_radio: WEL_RADIO_BUTTON
 			-- Universal marshaling radio button
 	
-	standard2_radio: WEL_RADIO_BUTTON
+	standard_radio: WEL_RADIO_BUTTON
 			-- Standard marshaling radio button
-
-	type2_static: WEL_GROUP_BOX
-			-- Server type group title
-
-	marshaling2_static: WEL_GROUP_BOX
-			-- Marshaling type group title
 
 feature {NONE} -- Implementation
 
 	uncheck_all is
 			-- Uncheck all buttons.
 		do
-			automation2_radio.set_unchecked
-			virtual_table2_radio.set_unchecked
-			universal2_radio.set_unchecked
-			standard2_radio.set_unchecked
+			automation_radio.set_unchecked
+			virtual_table_radio.set_unchecked
+			universal_radio.set_unchecked
+			standard_radio.set_unchecked
 		end
 
 end -- class WIZARD_IDL_DIALOG

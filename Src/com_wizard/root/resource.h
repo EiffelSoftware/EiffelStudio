@@ -17,7 +17,6 @@
 #define Wizard2_Bitmap                  115
 #define Wizard3_Bitmap                  116
 #define Wizard4_Bitmap                  117
-#define Wizard_Icon                     119
 #define Progress_Dialog                 121
 #define Definition_File_Edit            1007
 #define IDL_Static                      1008
@@ -32,18 +31,14 @@
 #define Client_Check                    1019
 #define Server_Check                    1020
 #define Generate_Code_Static            1021
-#define Marshaling2_Static              1022
-#define Type2_Static                    1023
-#define Universal2_Radio                1024
-#define Marshaling_Static               1025
-#define Standard2_Radio                 1025
+#define Marshalling3_Static             1022
 #define Universal_Radio                 1026
-#define Automation2_Radio               1026
 #define Standard_Radio                  1027
-#define Virtual_Table2_Radio            1027
 #define Proxy_Stub_Static               1028
 #define Minimum_Radio                   1029
+#define Automation_Radio                1029
 #define Proxy_Stub_File_Edit            1030
+#define Virtual_Table_Radio             1031
 #define Output_Static                   1032
 #define Output_level_Static             1036
 #define Maximum_Radio                   1037
@@ -59,6 +54,7 @@
 #define Marshalling2_Static             1045
 #define Progress_Bar                    1045
 #define Progress_Static                 1046
+#define Type_Static                     1047
 #define Location_Static                 -1
 
 // Next default values for new objects
@@ -67,7 +63,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        122
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1047
+#define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

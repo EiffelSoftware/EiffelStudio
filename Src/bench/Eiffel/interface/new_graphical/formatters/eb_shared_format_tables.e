@@ -26,7 +26,7 @@ feature -- Properties
 			else
 				!! ctxt
 				ctxt.set_clickable
-				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value)
+	--			ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
 					Result := ctxt.text
@@ -49,7 +49,7 @@ feature -- Properties
 			else
 				!! ctxt
 				ctxt.set_clickable
-				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value)
+--				ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.set_is_short
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
@@ -75,7 +75,7 @@ feature -- Properties
 				ctxt.set_clickable
 				ctxt.set_is_short
 				ctxt.set_one_class_only
-				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value)
+	--			ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
 					Result := ctxt.text
@@ -227,7 +227,7 @@ feature {NONE} -- Attributes
 
 	History_size: INTEGER is
 		do
-			Result := Tool_resources.history_size.actual_value
+			Result := editor_history_size
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
 				Result := 10

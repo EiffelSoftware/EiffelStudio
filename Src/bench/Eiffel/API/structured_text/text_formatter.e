@@ -30,10 +30,18 @@ feature -- Output
 feature {TEXT_ITEM} -- Implementation
 
 	process_basic_text (text: BASIC_TEXT) is
-			-- Process basic text `t'.
+			-- Process default basic text `t'.
 		require
 			text_not_void: text /= Void
 		deferred
+		end;
+
+	process_string_text (text: BASIC_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
 		end;
 
 	process_comment_text (text: COMMENT_TEXT) is

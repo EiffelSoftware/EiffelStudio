@@ -122,14 +122,26 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_string (s: STRING) is
-			-- Put `s' at current position.
+	add_default_string (s: STRING) is
+			-- Put default string `s' at current position.
+			-- Default string is used for formats.
 		require
 			s_not_void: s /= Void
 		local
 			l_item: like item
 		do
 			!BASIC_TEXT! l_item.make (s);
+			add (l_item)
+		end;
+
+	add_string (s: STRING) is
+			-- Put string `s' at current position.
+		require
+			s_not_void: s /= Void
+		local
+			l_item: like item
+		do
+			!STRING_TEXT! l_item.make (s);
 			add (l_item)
 		end;
 

@@ -22,10 +22,13 @@ feature -- Initialization
 	cmi: EV_CHECK_MENU_ITEM
 	rgt: EV_MENU_ITEM
 	vanishing: EV_MENU_SEPARATOR
+	rmi: EV_RADIO_MENU_ITEM
 
 	hsa: EV_VERTICAL_BOX
 
 	pix: EV_PIXMAP
+
+	rb: EV_RADIO_BUTTON
 
 	prepare is
 		do
@@ -53,7 +56,7 @@ feature -- Initialization
 			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Really"))
 			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Nah"))
 
---			file_menu.extend (create {EV_MENU_SEPARATOR})
+			file_menu.extend (create {EV_MENU_SEPARATOR})
 
 			create exit_menu.make_with_text ("Exit")
 			file_menu.extend (exit_menu)
@@ -79,6 +82,8 @@ feature -- Initialization
 			help_menu.extend (create {EV_MENU_SEPARATOR})
 			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("NBC"))
 			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("ABC"))
+			create rmi.make_with_text ("RMI")
+			help_menu.extend (rmi)
 			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("TNT"))
 			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("CNN"))
 			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("FOX"))
@@ -109,9 +114,15 @@ feature -- Initialization
 			first_window.extend (hsa)
 			hsa.extend (create {EV_TOGGLE_BUTTON}.make_with_text ("toggle"))
 			hsa.extend (create {EV_CHECK_BUTTON}.make_with_text ("check"))
-			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio1"))
-			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio2"))
-			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio3"))
+			create rb.make_with_text ("radio1")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsa.extend (rb)
+			create rb.make_with_text ("radio2")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsa.extend (rb)
+			create rb.make_with_text ("radio3")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsa.extend (rb)
 		end
 
 	on_exit is
@@ -126,10 +137,10 @@ feature -- Initialization
 			end
 		end
 
-	on_radio_test is
-		local
-			mi: EV_MENU_ITEM_LIST_IMP
+	on_radio_test (arb: EV_RADIO_BUTTON) is
 		do
+			io.put_string ("Me: " + arb.text + "%N")
+			io.put_string ("Sel: " + arb.selected_peer.text + "%N")
 		end
 
 	annoy is

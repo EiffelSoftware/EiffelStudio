@@ -119,7 +119,7 @@ feature -- Basic operation
 		end
 		
 
-feature {NONE} -- Implementation
+feature {GB_MAIN_WINDOW} -- Implementation
 
 
 	all_commands: ARRAYED_LIST [EB_STANDARD_CMD] is

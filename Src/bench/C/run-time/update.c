@@ -87,7 +87,7 @@ rt_public void update(char ignore_updt)
 	/* Update internal structures before execution */
 
 	long count;								/* New size for `esystem' */
-	long body_id;							/* Last body id */
+	BODY_INDEX body_id;						/* Last body id */
 	unsigned char *bcode;							/* Last byte code */
 	long bsize;								/* Last byte code size */
 	char c;
@@ -249,8 +249,7 @@ rt_public void update(char ignore_updt)
 
 	bonce_idx = 0;
 
-	while ((body_id = wint32()) != -1) {
-		CHECK ("Body positive", body_id >= 0);
+	while ((body_id = wuint32()) != INVALID_ID) {
 		bsize = wint32();
 		pattern_id = wint32();
 		mpatidtab[body_id] = (int) pattern_id;

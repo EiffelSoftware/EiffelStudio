@@ -50,8 +50,8 @@ RT_LNK void rout_obj_free_args (EIF_POINTER);
 RT_LNK void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args);
 
 #ifdef WORKBENCH
-RT_LNK void rout_obj_call_procedure_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNION* args, EIF_REFERENCE types);
-RT_LNK void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res);
+RT_LNK void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types);
+RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res);
 #endif
 
 /* Macros */

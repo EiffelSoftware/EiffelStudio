@@ -119,8 +119,8 @@ doc:	</attribute>
 rt_shared struct id_list once_list = {
 	(struct idlchunk *) 0,		/* idl_hd */
 	(struct idlchunk *) 0,		/* idl_tl */
-	(uint32 *) 0,				/* idl_last */
-	(uint32 *) 0,				/* idl_end */
+	(BODY_INDEX *) 0,				/* idl_last */
+	(BODY_INDEX *) 0,				/* idl_end */
 };
 
 /*
@@ -202,7 +202,7 @@ rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against con
 
 /* Context set up */
 rt_public void dstart(void);				/* Beginning of melted feature execution */
-rt_public void drun(int body_id);			/* Starting execution of debugged feature */
+rt_public void drun(BODY_INDEX body_id);			/* Starting execution of debugged feature */
 rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */ 
 rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
@@ -213,9 +213,9 @@ rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop a
 rt_public void dbreak_create_table(void);
 rt_public void dbreak_free_table(void);
 rt_private void safe_dbreak (int why);
-rt_private void set_breakpoint_in_table(int body_id, uint32 offset);
-rt_private void remove_breakpoint_in_table(int body_id, uint32 offset);
-rt_private int is_dbreak_set(int body_id, uint32 offset);
+rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
+rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
+rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset);
 rt_private int should_be_interrupted(void);
 
 /* Debugging stack handling routines */
@@ -228,8 +228,8 @@ rt_private void npop(register int nb_items);					/* Pop 'n' items */
 rt_private int nb_calls(void);					/* Number of calls registered */
 
 /* Once list handling routines */
-rt_public uint32 *onceadd(uint32 id);				/* Add once body_id to list */
-rt_public uint32 *onceitem(register uint32 id);				/* Item with body_id in list */
+rt_public BODY_INDEX *onceadd(BODY_INDEX id);				/* Add once body_id to list */
+rt_public BODY_INDEX *onceitem(register BODY_INDEX id);				/* Item with body_id in list */
 rt_private uint32 *list_allocate(register int size);		/* Allocate first chunk */
 rt_private int list_extend(register int size);				/* Extend list size */
 
@@ -266,13 +266,13 @@ rt_private int recorded_breakpoint_count = 1;
 
 /* Value used to known where we stopped for the last time - used for nested call only */
 /*
-doc:	<attribute name="previous_bodyid" return_type="int" export="private">
+doc:	<attribute name="previous_bodyid" return_type="BODY_INDEX" export="private">
 doc:		<summary>Record last body_id where debugger stopped last time. Used for nested call only.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>db_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private int previous_bodyid = -1;
+rt_private BODY_INDEX previous_bodyid = (BODY_INDEX) 0xFFFFFFFF;
 
 /*
 doc:	<attribute name="previous_break_index" return_type="uint32" export="private">
@@ -416,7 +416,7 @@ rt_public void dexset(struct ex_vect *exvect)
 	dtop()->dc_exec = exvect;		/* Associate context with Eiffel stack */
 }
 
-rt_public void drun(int body_id)
+rt_public void drun(BODY_INDEX body_id)
             		/* Body ID of the current melted feature */
 {
 	/* The current feature is to be run under debugger control. Set-up the
@@ -531,7 +531,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 		DBGMTX_LOCK;	/* Enter critical section */
 		if (!d_globaldata.db_discard_breakpoints) {
 			int stopped = 0;
-			int bodyid = exvect->ex_bodyid;
+			BODY_INDEX bodyid = exvect->ex_bodyid;
 			
  
 			if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
@@ -589,7 +589,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
 {
-	int bodyid;
+	BODY_INDEX bodyid;
 
 	if (debug_mode) {	
 		EIF_GET_CONTEXT	/* Not declared at the beggining because we only need it here.
@@ -608,7 +608,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 		bodyid = exvect->ex_bodyid;
 			
 		/* test if we are in a middle of a qualified call, if so, ignore stop */
-		if (previous_bodyid==bodyid && previous_break_index==break_index) {
+		if (previous_bodyid == bodyid && previous_break_index==break_index) {
 			DBGMTX_UNLOCK; /* Leave critical section */
 			return;
 		}
@@ -680,7 +680,7 @@ rt_private void safe_dbreak (int why)
 /* (next breakable point will be turned into a breakpoint. 'DT_SET_STACK' */
 /* to put a stack-breakpoint (usefull for stepout & step-by-step)         */
 /**************************************************************************/
-rt_public void dsetbreak(int body_id, uint32 offset, int what)
+rt_public void dsetbreak(BODY_INDEX body_id, uint32 offset, int what)
 	{
 	EIF_GET_CONTEXT
 	/* set a breakpoint according to its nature (what) */
@@ -721,7 +721,7 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
 /* further than the root creation (when eiffel routine are called by the  */
 /* garbage collector                                                      */
 /**************************************************************************/
-rt_private int is_dbreak_set(int body_id, uint32 offset)
+rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset)
 	{
 	struct offset_list 	*curr_offset;
 	struct db_bpinfo 	*curr_bpinfo;
@@ -773,7 +773,7 @@ rt_private int is_dbreak_set(int body_id, uint32 offset)
 /* set a new breakpoint in the breakpoints table. if a breakpoint was     */
 /* already set, it do nothing.                                            */
 /**************************************************************************/
-rt_private void set_breakpoint_in_table(int body_id, uint32 offset)
+rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	{
 	struct offset_list 	*curr_offset;
 	struct db_bpinfo 	*curr_bpinfo;
@@ -851,7 +851,7 @@ rt_private void set_breakpoint_in_table(int body_id, uint32 offset)
 /* remove a breakpoint in the breakpoints table. if a breakpoint doesn't  */
 /* exist, it do nothing.                                                  */
 /**************************************************************************/
-rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
+rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	{
 	struct offset_list 	*curr_offset;
 	struct offset_list 	*old_offset;
@@ -953,7 +953,7 @@ rt_shared void ewhere(struct where *where)
 	 * within a C external function, but most of the time, it will be accurate.
 	 */
 	struct ex_vect 	*ex;		/* Call structure from Eiffel stack */
-	int	 			body_id;  	/* body id of current feature */
+	BODY_INDEX		body_id;  	/* body id of current feature */
 
 	ex = last_call();				/* Last call recorded on execution stack */
 	body_id = ex->ex_bodyid;		/* body_id of current feature */
@@ -1343,14 +1343,14 @@ rt_public void initdb(void)
 	/* Initialize debugger stack and once list */
 
 	struct dcall *top;			/* Arena for first stack chunk */
-	uint32 *list_arena;			/* Arena for first list chunk */
+	BODY_INDEX *list_arena;			/* Arena for first list chunk */
 
 	top = stack_allocate(STACK_CHUNK);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
 
 	list_arena = list_allocate(LIST_CHUNK);		/* Create one */
-	if (list_arena == (uint32 *) 0)		 		/* Could not create list */
+	if (list_arena == (BODY_INDEX *) 0)		 		/* Could not create list */
 		fatal_error("can't create once list");
 }
 
@@ -1500,7 +1500,7 @@ rt_shared char *dview(EIF_OBJECT root)
  * Debuggable byte-code loading.
  */
 
-rt_public void drecord_bc(uint16 old_body_id, uint16 body_id, unsigned char *addr)
+rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned char *addr)
              		/* Body index for byte code */
             		/* ID of byte code (index in melt table) */
            			/* Address where byte code is stored */
@@ -1556,7 +1556,7 @@ rt_public void drecord_bc(uint16 old_body_id, uint16 body_id, unsigned char *add
  * Once list handling.
  */
 
-rt_private uint32 *list_allocate(register int size)
+rt_private BODY_INDEX *list_allocate(register int size)
                    					/* Initial size */
 {
 	/* The once list is created, with size 'size'.
@@ -1564,22 +1564,22 @@ rt_private uint32 *list_allocate(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 uint32 *arena;			/* Address for the arena */
+	register2 BODY_INDEX *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
 	size *= BODY_ID_SZ;
 	size += sizeof(*chunk);
 	chunk = (struct idlchunk *) cmalloc(size);
 	if (chunk == (struct idlchunk *) 0)
-		return (uint32 *) 0;			/* Malloc failed for some reason */
+		return (BODY_INDEX *) 0;			/* Malloc failed for some reason */
 
 	SIGBLOCK;
 	once_list.idl_hd = chunk;			/* New list (head of list) */
 	once_list.idl_tl = chunk;			/* One chunk for now */
-	arena = (uint32 *) (chunk + 1);		/* Header of chunk */
+	arena = (BODY_INDEX *) (chunk + 1);		/* Header of chunk */
 	once_list.idl_last = arena;			/* Empty list */
 	chunk->idl_arena = arena;			/* Base address */
-	once_list.idl_end = chunk->idl_end = (uint32 *)
+	once_list.idl_end = chunk->idl_end = (BODY_INDEX *)
 		((char *) chunk + size);		/* First free location beyond list */
 	chunk->idl_next = (struct idlchunk *) 0;
 	chunk->idl_prev = (struct idlchunk *) 0;
@@ -1588,14 +1588,14 @@ rt_private uint32 *list_allocate(register int size)
 	return arena;			/* List allocated */
 }
 
-rt_public uint32 *onceadd(uint32 id)
+rt_public BODY_INDEX *onceadd(BODY_INDEX id)
 {
 	/* Add body_id 'id' to end of the once list. If it fails, raise
 	 * an "Out of memory" exception.
 	 */
 
 	RT_GET_CONTEXT
-	register1 uint32 *last = once_list.idl_last;/* Last free element of list */
+	register1 BODY_INDEX *last = once_list.idl_last;/* Last free element of list */
 
 	/* List created at initialization time via initdb */
 
@@ -1624,7 +1624,7 @@ rt_private int list_extend(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 uint32 *arena;			/* Address for the arena */
+	register2 BODY_INDEX *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
 	size *= BODY_ID_SZ;
@@ -1634,13 +1634,13 @@ rt_private int list_extend(register int size)
 		return -1;		/* Malloc failed for some reason */
 
 	SIGBLOCK;
-	arena = (uint32 *) (chunk + 1);				/* Header of chunk */
+	arena = (BODY_INDEX *) (chunk + 1);				/* Header of chunk */
 	chunk->idl_next = (struct idlchunk *) 0;	/* Last chunk in list */
 	chunk->idl_prev = once_list.idl_tl;			/* Preceded by the old tail */
 	once_list.idl_tl->idl_next = chunk;			/* Maintain link w/previous */
 	once_list.idl_tl = chunk;					/* New tail */
 	chunk->idl_arena = arena;					/* Where items are stored */
-	chunk->idl_end = (uint32 *)
+	chunk->idl_end = (BODY_INDEX *)
 		((char *) chunk + size);				/* First item beyond chunk */
 	once_list.idl_last = arena;					/* New top */
 	once_list.idl_end = chunk->idl_end;			/* End of current chunk */
@@ -1649,7 +1649,7 @@ rt_private int list_extend(register int size)
 	return 0;			/* Everything is ok */
 }
 
-rt_public uint32 *onceitem(register uint32 id)
+rt_public BODY_INDEX *onceitem(register BODY_INDEX id)
 {
 	/* Returns a pointer to the element of the list with body_id `id'
 	 * or a NULL pointer if that value is not found. I assume that the
@@ -1658,12 +1658,13 @@ rt_public uint32 *onceitem(register uint32 id)
 
 	RT_GET_CONTEXT
 	register2 struct idlchunk *chunk;	/* To walk through the list */
-	register3 uint32 *item;				/* To walk through the chunk */
+	register3 BODY_INDEX *item;				/* To walk through the chunk */
 	register4 int done = 0;				/* Last element of list not reached */
 
 	for (chunk = once_list.idl_hd; chunk && !done; chunk = chunk->idl_next) {
 		if (chunk != once_list.idl_tl)
 			for (item = chunk->idl_arena; item != chunk->idl_end; item++) {
+
 				if (*item == id)
 					return item;
 			}
@@ -1676,10 +1677,10 @@ rt_public uint32 *onceitem(register uint32 id)
 		}
 	}
 
-	return (uint32 *)0;		/* val not found */
+	return (BODY_INDEX *)0;		/* val not found */
 }
 
-rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num) /* %%ss mt last caller */
+rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num) /* %%ss mt last caller */
                          		/* body id of the once function */
                       			/* Number of arguments */
 {

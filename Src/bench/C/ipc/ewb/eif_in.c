@@ -115,7 +115,7 @@ EIF_REFERENCE request_dispatch (Request rqst)
 	request handlers (RQST_HANDLER classes).
 */
 
-rt_public void send_byte_code (EIF_INTEGER real_body_index, EIF_INTEGER real_body_id, char *byte_array, EIF_INTEGER size)
+rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body_id, char *byte_array, EIF_INTEGER size)
 {
 /*
 	STREAM *sp;
@@ -150,7 +150,7 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, EIF_INTEGER real_bod
 */
 }
 
-rt_public void send_breakpoint (long int real_body_id, long int offset, EIF_BOOLEAN opcode)
+rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BOOLEAN opcode)
 {
 /*
 	STREAM *sp;

@@ -248,7 +248,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 #ifdef WORKBENCH
 	int32 *feature_ptr;
 	int32 rout_id;
-	uint16 body_id;
+	BODY_INDEX body_id;
 	int32 *cn_routids;
 #else
 	EIF_REFERENCE_FUNCTION *ref;

@@ -60,7 +60,7 @@ struct ex_vect {
 	unsigned char	ex_rescue;	/* True if function entered its rescue clause */
 	int				ex_linenum;	/* current line number (line number <=> breakpoint slot) */
 #ifdef WORKBENCH
-	int 			ex_bodyid;	/* body id of the feature */
+	BODY_INDEX 		ex_bodyid;	/* body id of the feature */
 	unsigned char	ex_locnum;	/* number of local variables in the function */
 	unsigned char	ex_argnum;	/* number of arguments of the function */
 #endif
@@ -398,6 +398,7 @@ struct s_stack {
 	/*  debug.h  */
 	/*-----------*/
 
+#ifdef WORKBENCH
 /* Call context. Each call to a debuggable byte code is recorded into a calling
  * context, which enable the user to move upwards and downwards and thus fetch
  * the corresponding local variables and parameters. We also record the position
@@ -411,7 +412,7 @@ struct dcall {					/* Debug context call */
 								 * and struct c_item for frozen feature) */
 	struct ex_vect *dc_exec;	/* Execution vector on Eiffel stack */
 	int dc_status;				/* Execution status for this routine */
-	int dc_body_id;				/* Body ID of current feature */
+	BODY_INDEX dc_body_id;		/* Body ID of current feature */
 };
 
 /*
@@ -436,8 +437,8 @@ struct dbstack {
 struct id_list {
 	struct idlchunk *idl_hd;		/* idl_hd */
 	struct idlchunk *idl_tl;		/* idl_tl */
-	uint32 *idl_last;				/* idl_last */
-	uint32 *idl_end;				/* idl_end */
+	BODY_INDEX *idl_last;				/* idl_last */
+	BODY_INDEX *idl_end;				/* idl_end */
 };
 
 /* For fastest reference, the debugging informations for the current routine
@@ -448,14 +449,11 @@ struct id_list {
 struct dbinfo {
 	unsigned char *db_start;			/* Start of current byte code (dcall) */
 	int db_status;						/* Execution status (dcall) */
-#ifdef WORKBENCH
 	uint32 db_callstack_depth;			/* number of routines on the eiffel stack */
 	uint32 db_callstack_depth_stop;		/* depth from which we must stop (step-by-step, stepinto..) */
 	char db_stepinto_mode;				/* is stepinto activated ? */
-#endif /* WORKBENCH */
 };
 
-#ifdef WORKBENCH
 /* List of offset. It tells where the breakpoint inside a feature are */
 struct offset_list { 
 	uint32 offset;
@@ -464,7 +462,7 @@ struct offset_list {
 
 /* Breakpoint table. there is one entry per feature where you can find a breakpoint */
 struct db_bpinfo {
-	int body_id;						/* body_id of the feature where breakpoints are located */
+	BODY_INDEX body_id;					/* body_id of the feature where breakpoints are located */
 	struct offset_list *first_offset;	/* list of all offset where a breakpoint is enabled */
 										/* (ordered from smaller to bigger one) */
 	struct offset_list *last_offset_list;	/* sublist starting at the last visited offset */
@@ -480,7 +478,6 @@ struct dbglobalinfo {
 										/* destroys objects                                         */
 	struct db_bpinfo **db_bpinfo;		/* breakpoints hash table */
 };
-#endif /* WORKBENCH */
 
 /* Program status (saved when breakpoint reached, restored upon continuation). */
 struct pgcontext {				/* Program context */
@@ -494,6 +491,8 @@ struct pgcontext {				/* Program context */
 	int pg_calls;				/* Amount of calling contexts in stack */
 	int pg_index;				/* Index of active routine within stack */
 };
+
+#endif /* WORKBENCH */
 
 #ifdef __cplusplus
 }

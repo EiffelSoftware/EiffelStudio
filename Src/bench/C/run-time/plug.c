@@ -411,7 +411,7 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	}
 #else
 	{
-		uint16 body_id;
+		BODY_INDEX body_id;
 		struct item *last;
 
 		CBodyId(body_id,INVARIANT_ID,dtype);

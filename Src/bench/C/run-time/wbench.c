@@ -50,7 +50,7 @@ rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dy
 	 */
 	EIF_GET_CONTEXT
 	int32 rout_id;
-	uint32 body_id;
+	BODY_INDEX body_id;
 
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
@@ -72,7 +72,7 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type
 	 * Return a function pointer.
 	 */
 	EIF_GET_CONTEXT
-	uint32 body_id;
+	BODY_INDEX body_id;
 
 	nstcall = 0;								/* No invariant check */
 	body_id = desc_tab[origin][dyn_type][offset].info;
@@ -95,7 +95,7 @@ rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, ch
 	EIF_GET_CONTEXT
 	int dyn_type;
 	int32 rout_id;
-	uint32 body_id;
+	BODY_INDEX body_id;
 
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
@@ -126,7 +126,7 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 	 */
 	EIF_GET_CONTEXT
 	int dyn_type;
-	uint32 body_id;
+	BODY_INDEX body_id;
 
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
@@ -156,7 +156,7 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFEREN
 	 */
 	EIF_GET_CONTEXT
 	int32 rout_id;
-	uint32 body_id;
+	BODY_INDEX body_id;
 	unsigned char *OLD_IC;
 
 	nstcall = 0;								/* No invariant check */
@@ -190,7 +190,7 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE obj
 	 */
 
 	EIF_GET_CONTEXT
-	uint32 body_id;
+	BODY_INDEX body_id;
 	unsigned char *OLD_IC;
 
 	nstcall = 0;								/* No invariant check */
@@ -362,7 +362,7 @@ rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)
 	 * Return a function pointer.
 	 */
 	EIF_GET_CONTEXT
-	uint32 body_id;
+	BODY_INDEX body_id;
 
 	nstcall = 0;								/* No invariant check */
 	CBodyId(body_id,egc_disp_rout_id,dyn_type);	/* Get the body index */

@@ -17,19 +17,19 @@ creation
 
 feature -- Creation
 
-	make_first ( par: EV_LIST; a_subquery: STRING ) is
+	make_first (par: EV_LIST; a_subquery: STRING) is
 		do
-			!! subquery.make(0)
+			create subquery.make (0)
 			subquery := a_subquery
-			!! operator.make(0)
+			create operator.make (0)
 			number := 1
 			make_with_text (par, value)
 		end
 
-	make_normal ( par: EV_LIST; an_operator, a_subquery: STRING; i: INTEGER ) is
+	make_normal (par: EV_LIST; an_operator, a_subquery: STRING; i: INTEGER) is
 		do
-			!! subquery.make(0)
-			!! operator.make(0)
+			create subquery.make (0)
+			create operator.make (0)
 			subquery := a_subquery
 			operator := an_operator
 			number := i
@@ -40,12 +40,12 @@ feature -- Access
 
 	value : STRING is
 		do
-			!! Result.make(0)
-			Result.append( operator )
+			create Result.make (0)
+			Result.append (operator)
 			if operator /= "" then
-				Result.extend(' ')
+				Result.extend (' ')
 			end
-			Result.append( subquery )
+			Result.append (subquery)
 		end
 	
 	set_number (idx: INTEGER) is

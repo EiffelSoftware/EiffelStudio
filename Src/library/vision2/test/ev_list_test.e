@@ -56,11 +56,17 @@ feature -- Basic operation
 		--	test_list.extend (["put_i_th", ~test_put_i_th])
 		--	test_list.extend (["force", ~test_force])
 		--	test_list.extend (["put_front", ~test_put_front])
-			test_list.extend (["prune", ~test_prune])
-			test_list.extend (["prune_all", ~test_prune_all])
-			test_list.extend (["remove", ~test_remove])
-			test_list.extend (["remove_left", ~test_remove_left])
-			test_list.extend (["remove_right", ~test_remove_right])
+		--	test_list.extend (["prune", ~test_prune])
+		--	test_list.extend (["prune_all", ~test_prune_all])
+		--	test_list.extend (["remove", ~test_remove])
+		--	test_list.extend (["remove_left", ~test_remove_left])
+		--	test_list.extend (["remove_right", ~test_remove_right])
+
+			test_list.extend (["append", ~test_append])
+			test_list.extend (["fill", ~test_fill])
+		--	test_list.extend (["append", ~test_append])
+		--	test_list.extend (["merge_left", ~test_merge_left])
+		--	test_list.extend (["merge_right", ~test_merge_right])
 
 			description.append ("Initial state... ")
 			append_result
@@ -564,6 +570,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	test_append is
+		local
+			n: INTEGER
+			s: LINKED_LIST [G]
+		do
+			from
+				n := Testsize
+				create s.make
+			until
+				n = 1
+			loop
+				new_item
+				s.extend (last_item)
+				n := n - 1
+			end
+			list.append (s)
+			similar_list.append (s)
+		end
+
+	test_fill is
+		local
+			n: INTEGER
+			s: LINKED_LIST [G]
+		do
+			from
+				n := Testsize
+				create s.make
+			until
+				n = 1
+			loop
+				new_item
+				s.extend (last_item)
+				n := n - 1
+			end
+			list.fill (s)
+			similar_list.fill (s)
+		end
+
 invariant
 	list_not_void: list /= Void
 	description_not_void: description /= Void
@@ -591,6 +635,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/02 17:11:41  brendel
+--| Added tests for `append' and `fill'.
+--|
 --| Revision 1.11  2000/03/02 01:35:27  brendel
 --| Added tests for remove-features.
 --|

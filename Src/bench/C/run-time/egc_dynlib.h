@@ -12,9 +12,8 @@ extern "C" {
 #include "eif_cecil.h"
 #include "eif_eiffel.h"
 	
-	
-	extern void init_rt(void);
-	extern void reclaim_rt(void);
+extern void init_rt(void);
+extern void reclaim_rt(void);
 	
 #define DYNAMIC_LIB_RT_INITIALIZE(x)\
 	char **l ; \

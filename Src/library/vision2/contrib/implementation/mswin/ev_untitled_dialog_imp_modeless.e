@@ -33,6 +33,8 @@ feature {EV_DIALOG_I} -- Implementation
 
 	other_imp: EV_UNTITLED_DIALOG_IMP
 			-- Previous Implementation if any, Void otherwise.
+			
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_UNTITLED_DIALOG
 			-- Interface for `Current'.

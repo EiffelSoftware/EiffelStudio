@@ -14,7 +14,8 @@ inherit
 			update_style,
 			extra_minimum_height,
 			promote_to_modeless_dialog,
-			promote_to_modal_dialog
+			promote_to_modal_dialog,
+			common_dialog_imp
 		end
 
 create
@@ -49,7 +50,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_DIALOG_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_UNTITLED_DIALOG
 			-- Interface for `Current'
@@ -74,6 +75,11 @@ feature {NONE} -- Implementation
 		do
 			create modeless_dialog_imp.make_with_dialog_window (Current)
 			interface.replace_implementation (modeless_dialog_imp)
+		end
+		
+	common_dialog_imp: EV_UNTITLED_DIALOG_IMP_COMMON is
+			-- Dialog implementation type common to all descendents.
+		do
 		end
 
 end -- class EV_UNTITLED_DIALOG_IMP

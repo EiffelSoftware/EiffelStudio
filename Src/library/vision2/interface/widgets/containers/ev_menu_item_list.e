@@ -27,10 +27,12 @@ feature -- Contract support
 			-- Is `Current' present in `a_list' hierarchy?
 		local
 			menu_item_list_parent: EV_MENU_ITEM_LIST
+			l_list: EV_ANY
 		do
 			menu_item_list_parent ?= parent
 			if menu_item_list_parent /= Void then
-				Result := a_list = parent or else
+				l_list := a_list
+				Result := l_list = parent or else
 					(parent /= Void and then menu_item_list_parent.is_parent_recursive (a_list))
 			end
 		end

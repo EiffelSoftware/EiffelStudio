@@ -61,6 +61,13 @@ feature -- Element change
 			-- Make `pixmap' `Void'.
 		deferred
 		end
+		
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	is_sensitive: BOOLEAN is
+			-- Is `Current' sensitive?
+		deferred
+		end
 
 feature {NONE} -- Implementation
 
@@ -71,11 +78,6 @@ feature {NONE} -- Implementation
 
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
-		deferred
-		end
-
-	is_sensitive: BOOLEAN is
-			-- Is `Current' sensitive?
 		deferred
 		end
 

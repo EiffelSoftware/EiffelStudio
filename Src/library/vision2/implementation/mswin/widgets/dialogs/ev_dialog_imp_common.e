@@ -95,7 +95,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_dialog_window (a_other_imp: EV_DIALOG_IMP) is
+	make_with_dialog_window (a_other_imp: like other_imp) is
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: a_other_imp /= Void
@@ -241,9 +241,6 @@ feature {EV_DIALOG_I} -- Implementation
 
 	apply_center_dialog: BOOLEAN
 			-- Should `center_dialog' be called?
-
-	interface: EV_DIALOG
-			-- Interface for `Current'.
 
 	parent_window: EV_WINDOW
 			-- Parent window if any, Void otherwise.
@@ -626,6 +623,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
 
 feature {EV_WIDGET_I} -- Implementation
 
@@ -641,6 +643,11 @@ feature {EV_WIDGET_I} -- Implementation
 				widget_imp.redraw_current_push_button (a_button)
 			end
 		end
+		
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: EV_DIALOG
+			-- Interface for `Current'.
 		
 end -- class EV_DIALOG_IMP_COMMON
 

@@ -15,7 +15,8 @@ inherit
 			update_style
 		redefine
 			interface,
-			other_imp
+			other_imp,
+			common_dialog_imp
 		end
 
 	EV_UNTITLED_DIALOG_IMP_COMMON
@@ -23,7 +24,8 @@ inherit
 			hide, is_modal, setup_dialog
 		redefine
 			interface,
-			other_imp
+			other_imp,
+			common_dialog_imp
 		end
 
 create
@@ -33,6 +35,15 @@ feature {EV_DIALOG_I} -- Implementation
 
 	other_imp: EV_UNTITLED_DIALOG_IMP
 			-- Previous Implementation if any, Void otherwise.
+			
+feature {NONE} -- Implementation
+
+	common_dialog_imp: EV_DIALOG_IMP_MODAL is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
+			
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_UNTITLED_DIALOG
 			-- Interface for `Current'.

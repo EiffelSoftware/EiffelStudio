@@ -802,6 +802,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		local
 			key: EV_KEY
 			common_dialog_imp: EV_DIALOG_IMP_COMMON
+			l_current: EV_WIDGET_IMP
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
@@ -818,7 +819,8 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					-- We also handle the case where `Current' is a dialog, as the escape key is fired
 					-- and we need to ignore it, to avoid the actions being called twice.
 				common_dialog_imp ?= top_level_window_imp
-				if common_dialog_imp /= Void and then common_dialog_imp /= Current then
+				l_current := Current
+				if common_dialog_imp /= Void and then common_dialog_imp /= l_current then
 					common_dialog_imp.key_press_actions.call ([key])
 				end							
 				if key_press_actions_internal /= Void then

@@ -51,7 +51,7 @@ inherit
 			destroy
 		end
 
-	EV_ITEM_LIST_IMP [EV_TREE_NODE]
+	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		rename
 			interface as il_interface
 		undefine
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I}-- Access
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
+	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 			-- Parent implementation.
 
 	top_parent_imp: EV_TREE_IMP is

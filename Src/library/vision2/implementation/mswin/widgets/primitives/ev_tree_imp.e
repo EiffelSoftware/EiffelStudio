@@ -37,7 +37,7 @@ inherit
 			background_color
 		end
 
-	EV_ITEM_LIST_IMP [EV_TREE_NODE]
+	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		undefine
 			item_by_data
 		redefine

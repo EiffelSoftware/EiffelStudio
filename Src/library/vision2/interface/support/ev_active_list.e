@@ -21,6 +21,9 @@ inherit
 create
 	default_create
 	
+create {EV_ACTIVE_LIST}
+	make_filled
+	
 feature {NONE} -- Initialization
 
 	default_create is

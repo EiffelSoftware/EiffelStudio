@@ -115,7 +115,7 @@ feature -- Access
 			Result := index = count + 1
 		end
 
-feature {EV_TABLE, EV_ANY_I} -- Status report
+feature {EV_ANY, EV_ANY_I} -- Status report
 
 	row_spacing: INTEGER is
 			-- Spacing between two consecutive rows.
@@ -262,7 +262,7 @@ feature {EV_TABLE, EV_ANY_I} -- Status report
 			end
 		end	
 
-feature {EV_TABLE, EV_ANY_I} -- Status settings
+feature {EV_ANY, EV_ANY_I} -- Status settings
 
 	enable_homogeneous is
 			-- Set all item's sizes to that of the largest in `Current'.

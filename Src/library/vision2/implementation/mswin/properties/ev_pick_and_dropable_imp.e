@@ -436,7 +436,7 @@ feature {EV_ANY_I} -- Implementation
 			widget_imp_at_cursor_position: EV_WIDGET_IMP
 			wel_window_at_cursor_position: WEL_WINDOW
 			current_target_object_id: INTEGER
-			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
 			item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
 			combo_field: EV_INTERNAL_COMBO_FIELD_IMP

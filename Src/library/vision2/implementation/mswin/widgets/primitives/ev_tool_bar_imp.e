@@ -40,7 +40,7 @@ inherit
 			interface
 		end
 
-	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
+	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM, EV_TOOL_BAR_ITEM_IMP]
 		redefine
 			interface, initialize
 		end

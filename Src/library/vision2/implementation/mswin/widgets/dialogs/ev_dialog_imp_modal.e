@@ -11,7 +11,8 @@ inherit
 	EV_DIALOG_IMP_COMMON
 		redefine
 			hide,
-			is_modal
+			is_modal,
+			common_dialog_imp
 		end
 
 create
@@ -119,6 +120,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	common_dialog_imp: EV_DIALOG_IMP_MODAL is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
+		
 
 feature {NONE} -- Externals
 

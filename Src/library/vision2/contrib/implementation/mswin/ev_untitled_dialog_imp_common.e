@@ -47,9 +47,6 @@ feature {NONE} -- Implementation
 
 feature {EV_DIALOG_I} -- Implementation
 
-	interface: EV_UNTITLED_DIALOG
-			-- Interface for `Current'.
-
 	other_imp: EV_UNTITLED_DIALOG_IMP
 			-- Previous Implementation if any, Void otherwise.
 
@@ -64,6 +61,11 @@ feature {NONE} -- Implementation
 			create dialog_window_imp.make_with_real_dialog (Current)
 			interface.replace_implementation (dialog_window_imp)
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+		
+	interface: EV_UNTITLED_DIALOG
+			-- Interface for `Current'.
 		
 end -- class EV_DIALOG_IMP_COMMON
 

@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_drawable_widget (a_world: EV_FIGURE_WORLD; a_drawable: EV_DRAWABLE; a_widget: EV_WIDGET) is
+	make_with_drawable_widget (a_world: EV_FIGURE_WORLD; a_drawable: EV_DRAWABLE; a_widget: like widget) is
 			-- Create with `a_world' and `a_drawable' (= `a_widget').
 		require
 			a_world_not_void: a_world /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		a_world: EV_FIGURE_WORLD;
 		a_drawable: EV_DRAWABLE;
 		a_buffer: EV_PIXMAP;
-		a_widget: EV_WIDGET) is
+		a_widget: like widget) is
 			-- Create with `a_world', `a_drawable' (= `a_widget') and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void

@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 
-	EV_ITEM_LIST_IMP [EV_MENU_ITEM]
+	EV_ITEM_LIST_IMP [EV_MENU_ITEM, EV_MENU_ITEM_IMP]
 		redefine
 			interface
 		end

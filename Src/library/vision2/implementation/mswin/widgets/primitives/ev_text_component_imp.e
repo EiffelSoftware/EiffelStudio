@@ -53,13 +53,15 @@ feature {NONE} -- Initialization
 		deferred
 		end
 		
-feature {EV_ANY_I} -- Status report
+feature -- Status report
 
 	is_editable: BOOLEAN is
 			-- Is text editable?
 		do
 			Result := not read_only
 		end
+		
+feature {EV_ANY, EV_ANY_I} -- Status report
 
 	caret_position: INTEGER is
 			-- Current position of caret.

@@ -13,6 +13,12 @@ inherit
 		undefine
 			default_create
 		end
+		
+create
+	default_create
+
+create {EV_ACCELERATOR_LIST}
+	make_filled
 
 feature -- Initialization
 

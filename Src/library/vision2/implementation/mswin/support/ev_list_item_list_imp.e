@@ -14,7 +14,7 @@ inherit
 			pixmaps_size_changed
 		end
 
-	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+	EV_ITEM_LIST_IMP [EV_LIST_ITEM, EV_LIST_ITEM_IMP]
 		redefine
 			interface
 		end

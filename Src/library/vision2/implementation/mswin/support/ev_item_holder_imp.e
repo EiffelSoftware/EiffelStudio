@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST_IMP [reference G -> EV_ITEM]
+	EV_ITEM_LIST_IMP [reference G -> EV_ITEM, reference H -> EV_ITEM_IMP]
 
 inherit
 	EV_ITEM_LIST_I [G]
@@ -19,7 +19,7 @@ inherit
 			interface
 		end
 
-	EV_DYNAMIC_LIST_IMP [G, EV_ITEM_IMP]
+	EV_DYNAMIC_LIST_IMP [G, H]
 		redefine
 			insert_i_th,
 			remove_i_th,
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_ITEM_IMP
+			v_imp: H
 		do
 			v_imp ?= v.implementation
 			check
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.
 		local
-			v_imp: EV_ITEM_IMP
+			v_imp: H
 		do
 			v_imp ?= i_th (i).implementation
 			check

@@ -45,7 +45,7 @@ inherit
 			background_color
 		end
 
-	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
+	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW, EV_MULTI_COLUMN_LIST_ROW_IMP]
 		redefine
 			interface,
 			initialize,
@@ -394,7 +394,7 @@ feature -- Status setting
 			end
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	column_count: INTEGER is
 		do	

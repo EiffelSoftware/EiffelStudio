@@ -3,6 +3,10 @@ class WARNER_W
 
 inherit
 
+	CLICK_WINDOW
+		redefine
+			display, clear_window
+		end;
 	COMMAND_W;
 	NAMER;
 	WARNING_D
@@ -39,6 +43,11 @@ feature
 			popup
 		ensure
 			last_caller_recorded: last_caller = a_command
+		end;
+
+	set_last_caller (cmd: COMMAND_W) is
+		do
+			last_caller := cmd
 		end;
 
 	custom_call (a_command: COMMAND_W; a_message: STRING;
@@ -92,5 +101,46 @@ feature {NONE}
 
 	last_caller: COMMAND_W
 			-- Last command which popped up current
+
+feature {NONE} -- Clickable features
+
+	error_message: STRING is
+			-- Message that will be displayed as an error message
+		once
+			!!Result.make (20)
+		end;
+
+	put_string (s: STRING) is
+		do
+			error_message.append (s);
+		end;
+
+	put_clickable_string (a: ANY; s: STRING) is
+		do
+			put_string (s)
+		end;
+
+	new_line is
+		do
+			error_message.append ("%N");
+		end;
+
+	display is 
+		do
+			custom_call (last_caller, error_message, "OK", Void, Void);
+			error_message.wipe_out;
+		end;
+
+	clear_window is
+		do
+			error_message.wipe_out;
+			popdown;
+			set_message ("")
+		end;
+
+	put_char (c: CHARACTER) is
+		do
+			error_message.append_character (c);
+		end;
 
 end

@@ -33,6 +33,7 @@ feature -- Initialization
 			original.resize (1, n);
 			outsides.wipe_out;
 			count := n;
+			clear;
 			fill_original;
 		end;
 

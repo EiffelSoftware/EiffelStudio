@@ -59,14 +59,12 @@ feature
 			if changed_name then
 				-- The name of the class in a file has changed
 				-- which means that a class has been removed
-io.error.putstring ("Changed_name: TRUE%N");
 					-- Reprocess the options
 				Lace.root_ast.process_options;
 
 					-- Check the universe
 				Universe.check_universe;
 
-io.error.putstring ("After check universe%N");
 				changed_name := False;
 			end;
 		end;
@@ -97,7 +95,7 @@ feature {NONE}
 			new_class_name: STRING;
 			lace_class, old_class_i: CLASS_I;
 			cluster: CLUSTER_I;
-			file_name: STRING;
+			file_name, base_name: STRING;
 			dependant: CLASS_C;
 			suppliers: LINKED_LIST [SUPPLIER_CLASS];
 			str: ANY;
@@ -126,6 +124,7 @@ feature {NONE}
 					if new_date /= a_class.date then
 						changed := True;
 						lace_class := a_class.lace_class;
+						base_name := lace_class.base_name;
 						file_name := a_class.file_name;
 						cluster := lace_class.cluster;
 
@@ -157,7 +156,7 @@ feature {NONE}
 				  					-- Update class_name
 								!!lace_class.make;
 								lace_class.set_class_name (new_class_name);
-								lace_class.set_file_name (file_name);
+								lace_class.set_base_name (base_name);
 								lace_class.set_cluster (cluster);
 								cluster.classes.put (lace_class, new_class_name);
 

@@ -133,6 +133,7 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text.
 		do
 			ctxt.begin;
+			ctxt.set_insertion_point;
 			expr.format (ctxt);
 			if not ctxt.last_was_printed then
 				ctxt.rollback
@@ -199,6 +200,8 @@ feature -- Replication
 feature {UNARY_AS}	-- Replication
 
 	set_expr (e: like expr) is
+		require
+			valid_arg: e /= Void
 		do
 			expr := e
 		end;

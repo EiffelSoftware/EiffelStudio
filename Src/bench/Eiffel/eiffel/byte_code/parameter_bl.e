@@ -125,7 +125,7 @@ feature
 		local
 			target_type, source_type: TYPE_I;
 			target_ctype, source_ctype: TYPE_C;
-			expr_may_be_complex: BOOLEAN;
+			cast_generated: BOOLEAN;
 		do
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
@@ -140,17 +140,12 @@ feature
 				target_ctype := target_type.c_type;
 				source_ctype := source_type.c_type;
 				if source_ctype.level /= target_ctype.level then
+					cast_generated := True;
 					target_ctype.generate_cast (generated_file);
-					if
-						expression.register = No_register and
-						not expression.is_simple_expr
-					then
-						expr_may_be_complex := true;
-						generated_file.putchar('(');
-					end;
+					generated_file.putchar('(');
 				end;
 				expression.print_register;
-				if expr_may_be_complex then
+				if cast_generated then
 					generated_file.putchar(')');
 				end;
 			else

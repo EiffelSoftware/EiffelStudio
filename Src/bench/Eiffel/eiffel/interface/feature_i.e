@@ -230,14 +230,22 @@ feature -- Incrementality
 						and then
 						is_frozen = other.is_frozen
 						and then
+						is_deferred = other.is_deferred
+						and then
 						export_status.same_as (other.export_status)
 						and then
 						same_signature (other)
 						and then
-						has_precondition = other.has_precondition 
+						has_precondition = other.has_precondition
 						and then
-						has_postcondition = other.has_postcondition
-
+						has_postcondition = other.has_postcondition;
+			if Result then
+				if assert_id_set /= Void then
+					Result := assert_id_set.same_as (other.assert_id_set);
+				else
+					Result := (other.assert_id_set = Void)
+				end
+			end
 		end;
 
 	select_table_equiv (other: FEATURE_I): BOOLEAN is
@@ -593,6 +601,12 @@ feature -- Export checking
 
 feature -- Check
 
+	check_assertions is
+			-- Raise an error if "require else" or "ensure then" is used
+			-- but the feature has no ancestor
+		do
+		end;
+
 	type_check is
 			-- Third pass on current feature
 		require
@@ -602,16 +616,19 @@ feature -- Check
 				-- Body of the feature
 			bd: INTEGER
 		do
+			check_assertions;
 			record_suppliers (context.supplier_ids);
 				-- Take the body in the body server
 			bd := body_id;
 			if is_code_replicated then
-io.error.putstring ("feature - name: ");
-io.error.putstring (feature_name);
-io.error.new_line;
-io.error.putstring ("type check - body id: ");
-io.error.putint (body_id);
-io.error.new_line;
+debug
+	io.error.putstring ("feature - name: ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+	io.error.putstring ("type check - body id: ");
+	io.error.putint (body_id);
+	io.error.new_line;
+end;
 				body := Rep_feat_server.item (bd);
 			else
 				body := Body_server.item (bd);
@@ -659,6 +676,7 @@ feature -- Byte code computation
 				byte_code.set_old_expressions (byte_context.old_expressions);
 			end;
 			byte_context.clear_old_expressions;
+
 			Tmp_byte_server.put (byte_code);
 		end;
 
@@ -956,21 +974,31 @@ end;
 				Error_handler.insert_error (vffd7);
 			end;
 			solved_type.check_for_obsolete_class (feat_table.associated_class);
+
+			if 
+				is_infix and then 
+				((argument_count /= 1) or else (type = Void_type))
+			then
+					-- Infixed features should have only one argument
+					-- and must have a return type.
+				!!vffd6;
+				vffd6.set_class (written_class);
+				vffd6.set_feature_name (feature_name);
+				Error_handler.insert_error (vffd6);
+			end;
+			if 
+				is_prefix and then 
+				((argument_count /= 0) or else (type = Void_type))
+			then
+					-- Prefixed features shouldn't have any argument
+					-- and must have a return type.
+				!!vffd5;
+				vffd5.set_class (written_class);
+				vffd5.set_feature_name (feature_name);
+				Error_handler.insert_error (vffd5);
+			end;
+
 			if arguments /= Void then
-				if is_infix and then argument_count /= 1 then
-						-- Infixed features should have only one argument
-					!!vffd6;
-					vffd6.set_class (written_class);
-					vffd6.set_feature_name (feature_name);
-					Error_handler.insert_error (vffd6);
-				end;
-				if is_prefix and then argument_count /= 0 then
-						-- Prefixed features shouldn't have any argument
-					!!vffd5;
-					vffd5.set_class (written_class);
-					vffd5.set_feature_name (feature_name);
-					Error_handler.insert_error (vffd5);
-				end;
 					-- Check types of arguments
 				arguments.check_types (feat_table, Current);
 			end;
@@ -1286,7 +1314,9 @@ end;
 			-- Has the current feature an argument named `arg_id" ?
 		do
 			if arguments /= Void then
-				Result := argument_names.has (arg_id);
+				argument_names.start;
+				argument_names.search_equal (arg_id);
+				Result := not argument_names.after
 			end;
 		end;
 
@@ -1672,19 +1702,21 @@ feature -- PS
 			body: FEATURE_AS;
 			bd: INTEGER
 		do
-			bd := body_id;
-			if Tmp_body_server.has (bd) then
-				body := Tmp_body_server.item (bd)
-			elseif Body_server.has (bd) then	
-				body := Body_server.item (bd)
-			elseif Rep_feat_server.has (bd) then
-				body := Rep_feat_server.item (bd)
-			else
-				-- FIXME
-				!!Result.make (Void, c, 0, 0);
+			if body_index /= 0 then
+				bd := body_id;
+				if Tmp_body_server.has (bd) then
+					body := Tmp_body_server.item (bd)
+				elseif Body_server.has (bd) then	
+					body := Body_server.item (bd)
+				elseif Rep_feat_server.has (bd) then
+					body := Rep_feat_server.item (bd)
+				end;
 			end;
 			if body /= Void then
 				!!Result.make (Current, c, body.start_position, body.end_position);
+			else
+				-- FIXME
+				!!Result.make (Void, c, 0, 0);
 			end;
 		end;
 

@@ -49,8 +49,10 @@ feature -- Type check, byte code and dead code removal
 			ctxt.put_keyword("check");
 			if check_list /= void then
 				ctxt.indent_one_more;
+				ctxt.next_line;
 				check_list.format (ctxt);
 				ctxt.indent_one_less;
+				ctxt.next_line;
 			end;
 			ctxt.put_keyword ("end");
 			ctxt.put_breakable;
@@ -70,12 +72,10 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
+			Result := twin;
 			if check_list /= void then
-				REsult := twin;
 				Result.set_check_list(
 					check_list.replicate (ctxt));
-			else
-				Result := Current
 			end
 		end;
 

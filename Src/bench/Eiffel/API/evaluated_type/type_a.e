@@ -33,6 +33,19 @@ feature
 			-- Void
 		end;
 
+	check_const_gen_conformance (target_type: TYPE_A; a_class: CLASS_C) is
+		local
+			vtgg5: VTGG5;
+		do
+			if not conform_to (target_type) then
+				!!vtgg5
+				vtgg5.set_class (a_class);
+				vtgg5.set_actual_type (Current);
+				vtgg5.set_constraint_type (target_type);
+				Error_handler.insert_error (vtgg5);
+			end;
+		end;
+
 	check_conformance (target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
 			-- If not, insert error into Error handler.
@@ -44,6 +57,7 @@ feature
 				context.init_error (vjar);
 				vjar.set_source_type (Current);
 				vjar.set_target_type (target_type);
+				vjar.set_target_name ("");
 				Error_handler.insert_error (vjar);
 			end;
 		end;
@@ -159,6 +173,12 @@ feature
 
 	is_like: BOOLEAN is
 			-- Is the current type an anchored one ?
+		do
+			-- Do nothing
+		end;
+
+	is_multi_type: BOOLEAN is
+			-- Is the current type a manifexst array
 		do
 			-- Do nothing
 		end;

@@ -136,11 +136,15 @@ feature -- Replication
 feature {ASSIGN_AS}	-- Replication
 		
 	set_target (t: like target) is
+		require
+			valid_arg: t /= Void
 		do
 			target := t
 		end;
 
 	set_source (s: like source) is
+		require
+			valid_arg: s /= Void
 		do
 			source := s
 		end;

@@ -53,14 +53,25 @@ feature  -- Replication
 			-- Adapt to Replication
 		do
 			Result := twin;
-			Result.set_type (type.replicate (ctxt));
+			Result.set_type (type.twin);
+			Result.set_id_list (id_list.replicate (ctxt));
 				--| useful for like ... only
 		end;
 
 feature {TYPE_DEC_AS} -- Replication
 
 	set_type (t: like type) is
+		require
+			valid_t: t /= Void
 		do
 			type := t
 		end; 
+
+	set_id_list (id: like id_list) is
+		require
+			valid_t: id /= Void
+		do
+			id_list := id
+		end; 
+
 end

@@ -55,13 +55,14 @@ feature -- Formatting
 				ctxt.no_new_line_between_tokens;
 				clients.format (ctxt);
 			end;
-			ctxt.put_trailing_comment (position);
+			--ctxt.put_trailing_comment (position);
 			ctxt.next_line;
 			ctxt.indent_one_more;
 			ctxt.next_line;
 			ctxt.new_line_between_tokens;
 			ctxt.set_separator (void);
 			features.format (ctxt);
+			ctxt.next_line;
 			ctxt.commit;
 		end;
 

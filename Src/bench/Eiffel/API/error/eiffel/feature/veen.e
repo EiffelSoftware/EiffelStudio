@@ -11,10 +11,10 @@ inherit
 	
 feature 
 
-	identifier: ID_AS;
+	identifier: STRING;
 			-- Undeclared identifier
 
-	set_identifier (i: ID_AS) is
+	set_identifier (i: STRING) is
 			-- Assign `i' to `identifier'.
 		do
 			identifier := i;

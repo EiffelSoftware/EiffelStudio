@@ -93,7 +93,10 @@ feature -- Lace compilation
 
 				-- Initialization
 			Use_properties.clear_all;
-				-- First build the clusters with the files *.e found
+				-- First re-insert the precompiled clusters into the
+				-- universe.
+			build_precompiled;
+				-- Then build the clusters with the files *.e found
 				-- in the clusters
 			build_clusters;
 				-- Second adaptation of Use files
@@ -203,6 +206,30 @@ feature -- Lace compilation
 			end;
 		end;
 
+	build_precompiled is
+			-- Re-insert the precompiled clusters into
+			-- the unverse.
+		local
+			old_clusters: LINKED_LIST [CLUSTER_I];
+			old_cluster, cluster: CLUSTER_I;
+		do
+			from
+				old_clusters := Lace.old_universe.clusters;
+				old_clusters.start
+			until
+				old_clusters.after
+			loop
+				old_cluster := old_clusters.item;
+				if old_cluster.is_precompiled then
+					!!cluster.make (old_cluster.dollar_path);
+					cluster.copy_old_cluster (old_cluster);
+					cluster.set_cluster_name (old_cluster.cluster_name);
+					Universe.insert_cluster (cluster);
+				end;
+				old_clusters.forth
+			end;
+		end;
+
 	adapt_use is
 			-- Check specified Use files
 		do
@@ -288,6 +315,7 @@ feature -- Lace compilation
 			-- ignore and rename clauses
 		local
 			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster: CLUSTER_I
 		do
 			from
 				cluster_list := Universe.clusters;
@@ -295,49 +323,34 @@ feature -- Lace compilation
 			until
 				cluster_list.after
 			loop
-				cluster_list.item.update_cluster;
+				cluster := cluster_list.item;
+				if not cluster.is_precompiled then
+					cluster.update_cluster
+				end;
 				cluster_list.forth;
 			end;
 		end;
 
 	process_removed_clusters is
 			-- Remove the classes from the clusters removed from the system
+			-- Ignore precompiled clusters.
 		local
 			old_clusters: LINKED_LIST [CLUSTER_I];
-			old_cluster, cluster: CLUSTER_I;
-			vd28: VD28;
-			vdcn: VDCN;
-			cluster_of_name, cluster_of_path: CLUSTER_I;
+			old_cluster: CLUSTER_I;
 		do
+
+			old_clusters := Lace.old_universe.clusters;
 			from
-				old_clusters := Lace.old_universe.clusters;
 				old_clusters.start
 			until
 				old_clusters.after
 			loop
 				old_cluster := old_clusters.item;
 				if not Universe.has_cluster_of_name (old_cluster.cluster_name) then
-					if old_cluster.is_precompiled then
-						cluster_of_name := Universe.cluster_of_name (old_cluster.cluster_name);
-						cluster_of_path := Universe.cluster_of_path (old_cluster.path);
-						if cluster_of_path /= Void then
-							!!vd28;
-							vd28.set_cluster (cluster_of_path);
-							vd28.set_second_cluster_name (old_cluster.cluster_name);
-							Error_handler.insert_error (vd28);
-							Error_handler.raise_error;
-						elseif cluster_of_name /= Void then
-							!!vdcn;
-							vdcn.set_cluster (cluster_of_name);
-							Error_handler.insert_error (vdcn);
-							Error_handler.raise_error;
-						else
-							!!cluster.make (old_cluster.path);
-							cluster.copy_old_cluster (old_cluster);
-							Universe.insert_cluster (cluster);
-						end;
-					else
-						cluster.remove_cluster;
+						-- Defensive programming test. The old cluster
+						-- should never be precompiled at this stage. 
+					if not old_cluster.is_precompiled then
+						old_cluster.remove_cluster;
 					end;
 				end;
 				old_clusters.forth

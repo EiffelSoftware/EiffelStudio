@@ -5,14 +5,7 @@ class VWOE1
 inherit
 
 	VWOE
-		rename
-			build_explain as vwoe_build_explain
-		end;
-
-	VWOE
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -40,13 +33,10 @@ feature
             -- Build specific explanation explain for current error
             -- in `error_window'.
         do
-            vwoe_build_explain;
-			put_string ("%T%T");
--- FIXME:
---			actual_type.build_explain;
-			put_string (" doesn't conform to ");
--- FIXME:
---			formal_type.build_explain;
+			put_string ("Formal type: ");
+			formal_type.append_clickable_signature (error_window);
+			put_string ("%NActual type: ");
+			actual_type.append_clickable_signature (error_window);
 			new_line;
 		end;
 

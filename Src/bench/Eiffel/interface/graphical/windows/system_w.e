@@ -69,6 +69,9 @@ feature {NONE}
 			!!showlist_command.make (format_bar, text_window);
 				format_bar.attach_top (showlist_command, 0);
 				format_bar.attach_left_widget (showtext_command, showlist_command, 0);
+			!!shell_command.make (format_bar, text_window);
+				format_bar.attach_top (shell_command, 0);
+				format_bar.attach_right (shell_command, 0);
 		end;
 
 	hole: SYSTEM_HOLE;
@@ -79,6 +82,7 @@ feature {NONE}
 	save_as_command: SAVE_AS_SYSTEM;
 --	check_command: CHECK_SYSTEM;
 	quit_command: QUIT_SYSTEM;
-	showlist_command: SHOW_CLUSTERS
+	showlist_command: SHOW_CLUSTERS;
+	shell_command: SHELL_COMMAND
 
 end

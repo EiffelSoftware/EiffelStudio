@@ -21,4 +21,9 @@ feature
 	feature_name: STRING is "_invariant";
 			-- Feature name for invariant feature
 
+	is_valid (associated_class: CLASS_C): BOOLEAN is
+		do
+			Result := associated_class.has_invariant
+		end;
+
 end

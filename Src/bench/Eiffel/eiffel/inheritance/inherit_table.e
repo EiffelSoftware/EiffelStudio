@@ -112,7 +112,7 @@ feature
 		end;
 
     rep_parent_list: LINKED_LIST [REP_NAME_LIST] is
-            -- List of replicated names (both old an new)
+            -- List of replicated names for each parent clause 
         once
             !!Result.make
         end;
@@ -254,10 +254,19 @@ feature
 			end;
             if rep_parent_list.count > 0 then
                 process_replicated_features (resulting_table);
-            elseif Rep_server.has (a_class.id) then
-                --! Remove it from the server if it
-                --! previously existed
-                Rep_server.remove (a_class.id)
+            else
+				if Rep_server.has (a_class.id) then
+                	--! Remove it from the server if it
+                	--! previously existed
+                	Rep_server.remove (a_class.id)
+				end;
+				if Tmp_rep_info_server.has (a_class.id) then
+					--| An error may have occured during Degree 3
+					--| and there may have been replicated info
+					--| originally and when recompiled 
+					--| these may have been removed.
+					Tmp_rep_info_server.remove (a_class.id)
+				end;
             end;
 
 				-- Pass2 controler evaluation
@@ -361,6 +370,9 @@ feature
 			Tmp_feat_tbl_server.put (resulting_table);
 				-- Update `Tmp_body_server'.
 debug ("HAS_CALLS")
+			resulting_table.trace_replications;
+end;
+debug ("TRACE_TABLE")
 			resulting_table.trace_replications;
 end;
 			update_body_server;
@@ -1331,7 +1343,6 @@ feature -- Replications
 			written_in_cont, body_id: INTEGER;
 			same_features: BOOLEAN;
 			cur: CURSOR;
-			new_list: BOOLEAN;
 			s_rep_name: S_REP_NAME;
 		do
 			from
@@ -1373,7 +1384,6 @@ end;
 								rep_name_list.parent_clause.parent_id);
 							tmp_rep_class_info.put (s_rep_name_list,
 													written_in_cont);
-							new_list := True;
 							rep_name_list.update_new_features (f_table,
 													written_in_cont);
 						end;
@@ -1421,14 +1431,9 @@ end;
 						end;
 					end;
 					if needs_replication then
-						if new_list then
+						if not rep_class_info.has_list (s_rep_name_list) then
 							s_rep_name_list.update (rep_name_list);
-							new_list := False;
-							rep_class_info.put (s_rep_name_list, 	
-												written_in_cont);
-						elseif not rep_class_info.has (written_in_cont) then
-							rep_class_info.put (s_rep_name_list,
-												written_in_cont);
+							rep_class_info.add_front (s_rep_name_list);
 						end;
 						!!s_rep_name;
 						s_rep_name.set_old_feature (rep_name.old_feature);
@@ -1485,11 +1490,12 @@ end;
 				-- A new body id has been computed for `feature_i'.
 			Body_index_table.force (new_body_id, feature_i.body_index);
 			new_body_id := 0;
+			Origins.add_front (feature_i.feature_name);
 		end;
 
 	replicate_feature (feat: FEATURE_I) is
 			-- If we found a feature named `feature_name' in a previous
-			-- feature table, don't change of feature id. If this previous
+			-- feature table, don't change feature id. If this previous
 			-- feature didn't change, keep the body id, otherwise compute
 			-- a new body id.
 		local
@@ -1508,7 +1514,6 @@ end;
 			integer_value: INT_VALUE_I;
 				-- Internal name of the feature
 			external_i: EXTERNAL_I;
-			rep_features: REP_FEATURES;
 		do
 			feature_name := feat.feature_name;
 debug ("REPLICATION")
@@ -1539,6 +1544,15 @@ end;
 				if old_feature_in_class then
 						-- Found a feature of same name and written in the
 						-- same class.
+						-- For now, give the current feature a 0 body_id.
+						-- During process_replication (in CLASS_C) we use
+						-- this value for incrementality (it indicates that
+						-- this feature already existed from the previous
+						-- value, hence we can compare AST).
+						--| A special note: we perform actual replication
+						--| at the end of the whole pass2 phase so that the
+						--| feature_tables of all classes are available 
+						--| when replicating `feature_i'.
 					old_body_id := 0;
 				else
 						-- New body id

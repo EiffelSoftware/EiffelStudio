@@ -21,7 +21,7 @@ feature
 			if edit_command.empty then
 					-- EIF_COMMAND was not set then use 
 					-- use default command (vi editor)
-				Result.append ("xterm -e vi +$line $target")
+				Result.append ("xterm -geometry 80x40 -e vi +$line $target")
 			else
 				Result.append (edit_command);
 			end;
@@ -29,7 +29,7 @@ feature
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
-			!!shell_window.make (c);
+			!!shell_window.make (c, Current);
 			init (c, a_text_window);
 			add_button_press_action (3, Current, Void);
 		end;
@@ -48,7 +48,7 @@ feature {NONE}
 		do
 			if argument = Void then
 					-- 3rd button pressed
-				shell_window.call (Current);
+				shell_window.call 
 			elseif text_window.root_stone /= Void then
 				fs ?= text_window.root_stone;
 				routine_text ?= text_window;

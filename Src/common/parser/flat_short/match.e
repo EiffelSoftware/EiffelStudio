@@ -73,11 +73,6 @@ feature
 			Result := position > text.count;
 		end;
 
-	offright: BOOLEAN is obsolete "Use `after'"
-		do
-			Result := after
-		end;
-
 	go (p: INTEGER) is
 			-- next search begin at position p in text
 		do

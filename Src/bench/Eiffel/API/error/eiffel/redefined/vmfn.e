@@ -39,11 +39,11 @@ feature
 		do
 			put_string ("Feature: ");
 			a_feature.append_clickable_signature (error_window, a_feature.written_class);
-			put_string (" written in: ");
+			put_string (" Version from: ");
 			a_feature.written_class.append_clickable_name (error_window);
 			put_string ("%NFeature: ");
 			other_feature.append_clickable_signature (error_window, other_feature.written_class);
-			put_string (" written in: ");
+			put_string (" Version from: ");
 			other_feature.written_class.append_clickable_name (error_window);
 			new_line;
 		end;

@@ -41,9 +41,9 @@ feature -- Licence managment
  
 	discard_licence is
 		do
-			if licence.licenced then
-				licence.free_licence;
-			end;
+--			if licence.licenced then
+--				licence.free_licence;
+--			end;
 			if licence.registered then
 				licence.unregister
 			end;

@@ -107,6 +107,8 @@ feature -- Replication
 feature {CASE_AS}	-- Replication
 
 	set_interval (i: like interval) is
+		require
+			valid_arg: i /= Void
 		do
 			interval := i
 		end;

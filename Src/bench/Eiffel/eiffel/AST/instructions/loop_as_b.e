@@ -174,7 +174,7 @@ feature -- Replication
 	fill_calls_list (l: CALLS_LIST) is
 			-- find calls to Current
 		local
-			new_list: like l;
+			new_list: CALLS_LIST;
 		do
 			if from_part /= void then
 				from_part.fill_calls_list (l);
@@ -235,6 +235,8 @@ feature {LOOP_AS} -- Replication
 		end;
 
 	set_stop (s: like stop) is
+		require
+			valid_s: s /= Void
 		do
 			stop := s
 		end;

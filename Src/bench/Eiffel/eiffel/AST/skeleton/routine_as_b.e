@@ -253,15 +253,17 @@ feature -- Type check, byte code and dead code removal
 			vtgg3: VTGG3;
 			vreg: VREG;
 			curr_feat: FEATURE_I;
+			vrrr2: VRRR2
 		do
 			context_class := context.a_class;
 			if 
 				(is_deferred or is_external)
 				and then not locals.empty 
 			then
-				io.error.putstring ("VRRR error on class ");
-				io.error.putstring (context_class.class_name);
-				io.error.new_line;
+				!!vrrr2;
+				context.init_error (vrrr2);
+				vrrr2.set_is_deferred (is_deferred);
+				Error_handler.insert_error (vrrr2);
 			else
 				from
 					curr_feat := context.a_feature;
@@ -475,21 +477,14 @@ feature -- Equivalent
 feature -- Formatter
 
 	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
 		do
 			ctxt.begin;
 			if not ctxt.no_internals then
 				ctxt.put_keyword(" is");
 				ctxt.put_breakable; -- record in body_as, should be here
 			end;
-			if ctxt.trailing_comment_exists (position) then
-				ctxt.begin;
-				ctxt.indent_one_more;
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.put_trailing_comment (position);
-				ctxt.commit;
-			end;
+				-- Put feature comments (if there are any)
+			ctxt.put_feature_comments;
 			ctxt.indent_one_more;
 			ctxt.next_line;
 
@@ -586,6 +581,8 @@ feature	{ROUTINE_AS}	-- Replication
 		end;
 
 	set_routine_body (r: like routine_body) is
+		require
+			valid_arg: r /= Void
 		do
 			routine_body := r
 		end;

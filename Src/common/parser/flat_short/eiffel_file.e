@@ -1,9 +1,53 @@
 class EIFFEL_FILE
 
 creation
-	make
+
+	make, make_for_feature_comments
 
 feature
+
+	make_for_feature_comments (f: UNIX_FILE; start_pos, end_pos:INTEGER) is
+			-- Just fill in the comment structures for file between
+			-- `start_pos' and `end_pos'.
+		require
+			good_argument: f /= void;
+			file_not_open: f.is_closed
+		local
+			p_line,comment_line: EIFFEL_LINE;
+			comment: EIFFEL_COMMENTS;	-- a comment
+			p: INTEGER;
+		do
+			from
+				f.open_read;
+				!!lines.make;
+				!!comments.make;
+			until
+				f.end_of_file or else p > end_pos
+			loop
+				p := f.position;
+				f.readline;
+				if p > start_pos then
+					!!p_line.make (p, f.laststring.duplicate);
+					p_line.left_adjust;
+					p_line.right_adjust;
+					comment_line := p_line.comment;
+					if comment_line /= void then
+						p_line.discard_comment;
+						p_line.right_adjust;
+						if comment = void then
+							!!comment.make (comment_line.position);
+						end;
+						comment.add (comment_line.text);
+					else
+						comments.add (comment);
+						comment := void;
+					end;
+				end;
+			end;
+			position_in_line := 1;
+			f.close;
+			clean;
+		end;
 	
 	make (f: UNIX_FILE) is
 			-- analyse file f, retrieve comments
@@ -129,7 +173,7 @@ feature
 			-- find first occurence of pattern between current position
 			-- and stop, checking pattern context if context is true.
 			-- if found, position is the first character of pattern
-			-- else, offright or position > stop
+			-- else, after or position > stop
 		local
 			seeker: MATCH;
 			found: BOOLEAN
@@ -142,7 +186,7 @@ feature
 				lines.after or position > stop or found
 			loop
 				seeker.find_next;
-				found := not seeker.offright;
+				found := not seeker.after;
 				if not found then
 					lines.forth;
 					position_in_line := 1;

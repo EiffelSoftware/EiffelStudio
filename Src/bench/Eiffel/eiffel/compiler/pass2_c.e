@@ -79,7 +79,7 @@ feature
 					-- Update the freeze list for changed hash tables.
 				System.freeze_set2.put (associated_class.id);
 				System.melted_set.put (associated_class.id);
-			else
+			elseif (assert_prop_list /= Void) then
 					-- Propagation of assertion modifications only.
 				propagate_pass2 (False);
 			end;

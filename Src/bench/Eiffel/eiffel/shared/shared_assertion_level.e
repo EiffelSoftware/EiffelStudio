@@ -32,4 +32,9 @@ feature {NONE}
 			!!Result;
 		end
 
+	Default_level: D_ASSERT_I is
+		once
+			!!Result;
+		end
+
 end

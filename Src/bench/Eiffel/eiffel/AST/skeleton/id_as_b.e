@@ -11,6 +11,7 @@ inherit
 			pass_address, is_id,
 			good_integer, good_character,
 			make_integer, make_character,
+			record_dependances,
 			format
 		end;
 	STRING
@@ -56,6 +57,16 @@ feature
 		end;
 
 feature -- Conveniences
+
+	record_dependances is
+		local
+			constant_i: CONSTANT_I;
+			depend_unit: DEPEND_UNIT 
+		do
+			constant_i ?= context.a_class.feature_table.item (Current);
+			!!depend_unit.make (context.a_class.id, constant_i.feature_id);
+			context.supplier_ids.add (depend_unit);
+		end;
 
 	good_integer: BOOLEAN is
 			-- Is the atomic a good integer bound for multi-branch ?

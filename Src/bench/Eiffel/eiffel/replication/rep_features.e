@@ -1,4 +1,4 @@
-class REP_FEATURES
+class REP_FEATURES 
 
 inherit
 

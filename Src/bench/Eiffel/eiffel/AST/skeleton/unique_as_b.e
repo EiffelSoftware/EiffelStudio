@@ -26,9 +26,9 @@ feature -- Initialization
 		end; -- set
 
 	type_check is
-            -- Type check a unique type
-        do
-            context.put (Integer_type);
-        end;
+			-- Type check a unique type
+		do
+			context.put (Integer_type);
+		end;
 
 end

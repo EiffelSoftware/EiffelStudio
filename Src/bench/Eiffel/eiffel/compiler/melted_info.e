@@ -121,4 +121,9 @@ feature
 			Result := feature_name < other.feature_name;
 		end;
 
+	is_valid (associated_class: CLASS_C): BOOLEAN is
+			-- Is the melted info still valid ?
+		deferred
+		end;
+
 end

@@ -29,14 +29,14 @@ feature
 		do
 			put_string ("Feature: ");
 			a_feature.append_clickable_signature (error_window, a_feature.written_class);
-			put_string (" written in: ");
+			put_string (" Version from: ");
 			a_feature.written_class.append_clickable_name (error_window);
 			put_string ("%NFeature: ");
 			inherited_feature.append_clickable_signature (error_window, inherited_feature.written_class);
 			put_string (" inherited from: ");
 			parent.append_clickable_name (error_window);
-			put_string (" written in: ");
-			a_feature.written_class.append_clickable_name (error_window);
+			put_string (" Version from: ");
+			inherited_feature.written_class.append_clickable_name (error_window);
 			new_line;
 		end;
 

@@ -1,3 +1,7 @@
+-- CALLS_LIST has a list of features of unqualified calls
+-- (i.e x or y (i)) or calls before the first dot in a 
+-- qualified call. 
+
 class CALLS_LIST
 
 inherit
@@ -24,6 +28,7 @@ feature
 		end;
 
 	add (v: STRING) is
+			-- Add `v' to Current
 		do
 			if is_new then
 				add_front (v);
@@ -41,7 +46,6 @@ feature
 			set_wipe_out;
 			is_new := True;
 		end;
-
 
 	has_equal (s: STRING): BOOLEAN is
 			-- Does Current have `s' (is_equal test)?

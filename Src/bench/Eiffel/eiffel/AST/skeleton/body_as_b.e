@@ -87,6 +87,13 @@ feature -- New feature description
 			extern_proc: EXTERNAL_I;
 			extern_func: EXTERNAL_FUNC_I;
 			external_body: EXTERNAL_AS;
+				-- Hack Hack Hack
+				-- A litteral numeric value is interpreted as 
+				-- a DOUBLE. In the case of a constant REAL
+				-- declaration that wont do!
+			ras: REAL_TYPE_AS;
+			rvi: REAL_VALUE_I;
+			fvi: FLOAT_VALUE_I
 		do
 			if content = Void then
 					-- It is an attribute
@@ -104,9 +111,16 @@ feature -- New feature description
 						-- feature, since the second pass does it.
 					!UNIQUE_I!const;
 				else
+					ras ?= type;
 					!!const;
 						-- Constant value is processed here.
-					const.set_value (constant.value_i);
+					if (ras = Void) then
+						const.set_value (constant.value_i);
+					else
+						rvi ?= constant.value_i;
+						!!fvi; fvi.set_real_val (rvi.real_val);
+						const.set_value (fvi);
+					end
 				end;
 				check
 					constant_exists: constant /= Void;
@@ -259,6 +273,8 @@ feature -- formatter
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			routine_as: ROUTINE_AS;
 		do
 			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
@@ -277,6 +293,10 @@ feature -- formatter
 			end;
 			if not ctxt.no_internals then
 				ctxt.put_special(";");
+				routine_as ?= content;
+				if routine_as /= Void then
+					ctxt.next_line;
+				end;
 			end;
 			ctxt.commit;
 		end;

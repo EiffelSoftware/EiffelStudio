@@ -36,7 +36,7 @@ feature
 			until
 				involved_classes.after
 			loop
-				if involved_classes.item = involved_classes.first then
+				if involved_classes.item /= involved_classes.first then
 					put_string (", ");
 				end;
 				System.class_of_id (involved_classes.item)

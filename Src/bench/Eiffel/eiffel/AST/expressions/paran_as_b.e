@@ -43,10 +43,10 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.begin;
-			ctxt.put_special(" (");
+			ctxt.put_special("(");
 			expr.format (ctxt);
 			if ctxt.last_was_printed then
-				ctxt.put_special(") ");
+				ctxt.put_special(")");
 				ctxt.commit;
 			else
 				ctxt.rollback;
@@ -71,6 +71,8 @@ feature	-- Replication
 feature {PARAN_AS}	-- Replication
 
 	set_expr (e: like expr) is
+		require
+			valid_arg: e /= Void
 		do
 			expr := e
 		end;

@@ -42,6 +42,9 @@ feature
 			set_icon_name (tool_name)
 		end;
 
+	close_windows is do end;
+
+
 	--tool_name: STRING is do Result := l_Showcustom end;
 	tool_name: STRING is do Result := "Custom" end;
 	text_window: CUSTOM_TEXT;

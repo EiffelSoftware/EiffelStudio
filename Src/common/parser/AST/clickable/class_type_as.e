@@ -143,6 +143,7 @@ feature -- Conveniences
 			vtug: VTUG;
 			error: BOOLEAN;
 			nb_errors: INTEGER;
+			t1, t2: TYPE
 		do
 			if has_like then
 				!!vcfg3;
@@ -182,12 +183,16 @@ feature -- Conveniences
 							generics.after or else error
 						loop
 							nb_errors := Error_handler.nb_errors;
-							generics.item.check_constraint_type (a_class);
+							t1 := generics.item;
+							t1.check_constraint_type (a_class);
 							error := Error_handler.nb_errors /= nb_errors;
 							if not error then
-								generics.item.a_type (cluster).check_conformance
-									(cl_generics.item.constraint.a_type (cluster));
-								error := Error_handler.new_error;
+								t2 := cl_generics.item.constraint;
+								if t2 /= Void then
+									t1.a_type (cluster).check_const_gen_conformance
+										(t2.a_type (cluster), a_class);
+									error := Error_handler.new_error;
+								end;
 							end;
 							generics.forth;
 							cl_generics.forth
@@ -240,9 +245,10 @@ feature -- stoning
 			s: STRING;
 		do
 			ctxt.begin;
-			S := class_name.duplicate;
+			s := class_name.duplicate;
 			s.to_upper;
-			ctxt.put_string (s);
+			ctxt.put_class_name (Universe.class_named (class_name,
+						Inst_context.cluster).compiled_class);
 			if generics /= void then
 				ctxt.put_special (" [");
 				generics.format (ctxt);
@@ -264,8 +270,8 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
+			Result := twin;
 			if generics /= void then
-				Result := twin;
 				Result.set_generics (generics.replicate (ctxt));
 			end;
 		end;

@@ -29,7 +29,7 @@ feature
 			-- Create an object tool.
 		do
 			normal_create (a_screen);
-			text_window.set_read_only
+			text_window.set_read_only;
 		end;
 
 	text_window: OBJECT_TEXT;

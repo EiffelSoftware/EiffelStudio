@@ -195,7 +195,6 @@ feature -- Formatter
 			end;
 		end;
 
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -203,7 +202,6 @@ feature -- Replication
 		do
 			body.fill_calls_list (l);
 		end;
-
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 			  -- Adapt to replication.

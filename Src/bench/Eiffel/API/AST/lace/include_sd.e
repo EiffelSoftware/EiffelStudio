@@ -72,7 +72,7 @@ feature
 						else
 							!!a_class.make;
 							a_class.set_class_name (class_name);
-							a_class.set_file_name (f_name);
+							a_class.set_base_name (path);
 							a_class.set_cluster (cluster);
 							cluster.classes.put (a_class, class_name);
 						end;

@@ -9,6 +9,8 @@ inherit
 			duplicate as twin
 		undefine
 			twin
+		redefine
+			is_multi_type
 		end;
 	ARRAY [TYPE_A]
 		rename
@@ -28,6 +30,11 @@ feature
 			-- Initialization
 		do
 			array_make (1, n);
+		end;
+
+	is_multi_type: BOOLEAN is
+		do
+			Result := True
 		end;
 
 	dump: STRING is
@@ -109,9 +116,19 @@ feature
 			Result := System.array_class.compiled_class;
 		end;
 
+	array_type_a: TYPE_A is
+		once
+			Result := System.instantiator.Array_type_a
+		end;
+
 	type_i: GEN_TYPE_I is
 			-- Compiled type
+		local
+			b: BOOLEAN;
 		do
+			if last_type = Void then
+				b := internal_conform_to (Array_type_a, False);
+			end;
 			check
 				last_type_exists: last_type /= Void
 			end;

@@ -110,12 +110,16 @@ feature -- Replication
 feature {NESTED_AS} -- Replication
 
 	set_target (t: like target) is
+		require
+			valid_arg: t /= Void 
 		do
 			target := t;
 		end;
 
 
 	set_message (m: like message) is
+		require
+			valid_arg: m /= Void 
 		do
 			message := m;
 		end;

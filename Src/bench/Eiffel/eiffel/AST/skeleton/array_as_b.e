@@ -107,6 +107,8 @@ feature	-- Replication
 feature {ARRAY_AS}	-- Replication
 
 	set_expressions (e: like expressions) is
+		require
+			valid_arg: e /= Void
 		do
 			expressions := e
 		end;

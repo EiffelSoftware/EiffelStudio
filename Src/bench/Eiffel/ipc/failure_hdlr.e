@@ -23,9 +23,9 @@ feature
 	execute is
 			-- Announce in error window that the job was finished.
 		do
-			error_window.clear_window;
+		--	error_window.clear_window;
 		--	error_window.put_string ("Failure%N");
-			error_window.display;
+		--	error_window.display;
 			debug_info.restore
 		end
 

@@ -61,7 +61,7 @@ feature -- Type check, byte code and dead code removal
 				id_type_exists: id_type /= Void;
 			end;
 				-- Update the type stack
-			context.change_item (id_type);
+			context.replace (id_type);
 		end;
 
 	is_export_valid (feat: FEATURE_I): BOOLEAN is
@@ -99,6 +99,10 @@ feature -- Type check, byte code and dead code removal
 			vape: VAPE;
 		do
 			last_type := context.item;
+			if last_type.is_multi_type then
+				last_type := System.instantiator.array_type_a;
+				context.replace (last_type);
+			end;
 			last_constrained := context.last_constrained_type;
 
 			if last_constrained.is_void then
@@ -215,20 +219,32 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
 				end;
---				if context.level4 and then context.check_for_vape then
---					-- In precondition and checking for vape
---					context_export := context.a_feature.export_status;
---					feature_export := a_feature.export_status;
---					if 
---						not a_feature.feature_name.is_equal ("void") and then
---						not context_export.is_subset (feature_export) 
---					then
---						!!vape;
---						context.init_error (vape);
---						vape.set_exported_feature (a_feature);
---						Error_handler.insert_error (vape);
---					end;
---				end;
+				--if context.level4 and then context.check_for_vape then
+					-- In precondition and checking for vape
+					--context_export := context.a_feature.export_status;
+					--feature_export := a_feature.export_status;
+					--io.error.putstring ("feature ");
+					--io.error.putstring (context.a_feature.feature_name);
+					--io.error.putstring (" export ");
+					--io.error.new_line;
+					--context_export.trace;
+					--io.error.new_line;
+					--io.error.putstring ("feature ");
+					--io.error.putstring (a_feature.feature_name);
+					--io.error.putstring (" export ");
+					--io.error.new_line;
+					--feature_export.trace;
+					--io.error.new_line;
+					--if 
+						--not a_feature.feature_name.is_equal ("void") and then
+						--not context_export.is_subset (feature_export) 
+					--then
+						--!!vape;
+						--context.init_error (vape);
+						--vape.set_exported_feature (a_feature);
+						--Error_handler.insert_error (vape);
+					--end;
+				--end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);
@@ -344,6 +360,8 @@ end;
 feature -- Replication {ACCESS_FEAT_AS}
 
 	set_feature_name (name: like feature_name) is
+		require
+			valid_arg: name /= Void
 		do
 			feature_name := name;
 		end;

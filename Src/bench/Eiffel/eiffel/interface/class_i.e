@@ -29,8 +29,16 @@ feature
 	cluster: CLUSTER_I;
 			-- Cluster to which the class belongs to
 
-	file_name: STRING;
-			-- File name of the class
+	base_name: STRING;
+			-- Base file name of the class
+
+	file_name: STRING is
+			-- Full file name of the class
+		do
+			Result := cluster.path.duplicate;
+			Result.append ("/");
+			Result.append (base_name)
+		end;
 
 	changed: BOOLEAN;
 			-- Must the class be recompiled ?
@@ -67,7 +75,7 @@ feature
 	reset_options is
 			-- Reset the option values of the class
 		do
-			assertion_level := Require_level;
+			assertion_level := Default_level;
 			trace_level := No_trace;
 			optimize_level := No_optimize;
 			debug_level := No_debug;
@@ -80,10 +88,10 @@ feature
 			class_name := s;
 		end;
 
-	set_file_name (s: STRING) is
+	set_base_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		do
-			file_name := s;	
+			base_name := s;	
 		end;
 
 	set_cluster (c: like cluster) is

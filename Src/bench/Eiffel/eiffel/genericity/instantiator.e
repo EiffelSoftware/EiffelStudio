@@ -174,7 +174,7 @@ feature {NONE}
 			--array_cl.update_types (Array_type);
 		end;
 
-feature {STRIP_B, SYSTEM_I}
+feature
 
 	Array_type_a: GEN_TYPE_A is
 			-- Default array type
@@ -195,6 +195,8 @@ feature {STRIP_B, SYSTEM_I}
 			Result.set_generics (generics);
 			Result.set_is_expanded (False);
 		end;
+
+feature {STRIP_B, SYSTEM_I, MULTI_TYPE_A}
 
 	Array_type: GEN_TYPE_I is
 			-- Default array type

@@ -1,5 +1,7 @@
 -- This only stores the old_feature and new_feature (i.e 
--- the latest feature from feature_table).
+-- the latest feature from feature_table). Used for 
+-- storage purpose (in S_REP_NAME_LIST). It does not
+-- need the "rep_feature" attribute of REP_NAME.
 
 class S_REP_NAME
 

@@ -1,10 +1,12 @@
+-- Actually DOUBLE_VALUE_I
+
 class REAL_VALUE_I 
 
 inherit
 
 	VALUE_I
 		redefine
-			generate, is_real
+			generate, is_double
 		end
 	
 feature 
@@ -18,7 +20,7 @@ feature
 			real_val := i;
 		end;
 
-	is_real: BOOLEAN is
+	is_double: BOOLEAN is
 			-- Is the current constant a real one ?
 		do
 			Result := True;
@@ -33,18 +35,14 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		do
--- FIXME
--- The cast is not always a double
--- a_real: REAL is 3.4 should generate (float) 3.4 and not (double) 3.4
---
-			file.putstring ("(double) ");
+--			file.putstring ("(double) ");
 			file.putstring (real_val);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a real constant value
 		do
-			ba.append (Bc_float);
+			ba.append (Bc_double);
 			ba.append_real (real_val.to_double);
 		end;
 

@@ -1,3 +1,8 @@
+-- List of rep_name. It is sorted for efficiency (for process_replicated
+-- INHERIT_TABLE). This records a list REP_NAME for a given parent clause.
+-- This class updates the new_feature and old_feature attributes of 
+-- REP_NAME. This class also records the dependency between the origin
+-- and the replicated routines.
 class REP_NAME_LIST
 
 inherit
@@ -22,17 +27,6 @@ feature
 			-- Make current with parent `p'.
 		do
 			parent_clause := p
-		end;
-
-	insert (it: REP_NAME) is
-			-- Insert `it' into Current. If Current has_feature_name
-			-- of it new feature then overwrite it.
-		do
-			if has_feature_name (it.old_feature.feature_name) then
-				put (it);
-			else
-				add_front (it);
-			end;
 		end;
 
 	has_feature_name (f_name: STRING): BOOLEAN is
@@ -109,6 +103,8 @@ end;
 						orig_written_in: INTEGER) is
 			-- Update Current list using f_table. (update
 			-- the new feature attribute of rep_name); 
+			-- Record the dependencies between the origin (old_feature)
+			-- and the replicated routine (new_feature).
 		local
 			old_feat, new_feat: FEATURE_I;
 			cur: CURSOR;
@@ -181,9 +177,6 @@ end;
 	update_old_features (f_table: FEATURE_TABLE;
 						orig_written_in: INTEGER) is
 			-- Update old features of Current list.
-			-- Record the dependencies from the origin feature
-			-- in which "conceptual/actual" has been performed
-			-- on.
 		require
 			not_empty: not empty
 		local

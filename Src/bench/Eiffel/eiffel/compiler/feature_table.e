@@ -89,11 +89,6 @@ feature
 			f1, f2: FEATURE_I;
 			depend_unit: DEPEND_UNIT;
 		do
-			if other.count /= count then
-					-- At least the counts should be the same.
-				Result := False
-			end;
-
 			from
 				start;
 				Result := True;
@@ -116,10 +111,12 @@ feature
 					end;
 				end;
 debug ("ACTIVITY")
+	io.error.putstring ("%Tfeature ");
+	io.error.putstring (feature_name);
 	if not Result then
-		io.error.putstring ("%Tfeature ");
-		io.error.putstring (feature_name);
 		io.error.putstring (" is not equiv.%N");
+	else
+		io.error.putstring (" is equiv.%N");
 	end;
 end;
 				forth
@@ -169,6 +166,11 @@ end;
 					-- Old feature
 				old_feature_i := item_for_iteration;
 				feature_name := old_feature_i.feature_name;
+debug ("ACTIVITY")
+	io.error.putstring ("Fill pass2_control: ");
+	io.error.putstring (old_feature_i.feature_name);
+	io.error.new_line;
+end;
 					-- New feature
 				new_feature_i := other.item (feature_name);
 					-- First condition, `other' must have the feature
@@ -182,12 +184,19 @@ end;
 							old_feature_i.export_status.equiv (new_feature_i.export_status)
 							and then
 							old_feature_i.is_deferred = new_feature_i.is_deferred)
-						or else
+--						or else
 							-- We don't want to trigger a third pass
 							-- on a client of the associated class
 							-- changed of interface between two
 							-- recompilations
-						old_feature_i.export_status.is_none)
+-- FIXME
+
+-- In fact, we want to propagate in this case
+-- but only to the descendants
+-- A TEMPORARY solution is to do the propagation anyway
+--   ---------
+--						old_feature_i.export_status.is_none)
+						)
 				then
 					propagate_feature := True;
 				end;
@@ -196,6 +205,11 @@ end;
 					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
 						external_i ?= old_feature_i;
+debug ("ACTIVITY")
+	io.error.putstring ("Remove external: ");
+	io.error.putstring (old_feature_i.feature_name);
+	io.error.new_line;
+end;
 						pass_control.remove_external (external_i.external_name);
 					end;
 					if 	new_feature_i = Void
@@ -633,8 +647,7 @@ file.putstring ("' */");
 				after
 			loop
 				io.error.putchar ('%T');
-				item_for_iteration.trace_signature;
-				io.error.new_line;
+				item_for_iteration.trace;
 				forth;
 			end;
 		end;
@@ -654,9 +667,10 @@ file.putstring ("' */");
 			loop
 				it := item_for_iteration;
 if it.written_class > System.any_class.compiled_class then
-				io.error.putstring ("%Tfeature name: ");
-				io.error.putstring (it.feature_name);
-				io.error.new_line;
+				it.trace;
+				io.error.putstring ("code id: ");
+				io.error.putint (it.code_id);
+				io.error.putstring (" DT: ");
 				io.error.putstring (it.generator);
 				io.error.new_line;
 end;

@@ -98,6 +98,21 @@ feature
 			end;
 		end;
 
+	has_assert (assert: INH_ASSERT_INFO): BOOLEAN is
+			-- Is the `assert' in Current? 
+		local
+			i: INTEGER
+		do
+			from
+				i := 1;
+			until
+				i > count or else Result
+			loop
+				Result := (item (i).same_as (assert));
+				i := i + 1;
+			end;
+		end;
+
 	merge (other: like Current) is
 			-- Put assert body index of `other' not present in Current.
 		require
@@ -128,7 +143,7 @@ feature
 				until
 					i > count or else not Result
 				loop
-					Result := other.item(i).same_as (item (i));
+					Result := other.has_assert (item (i));
 					i := i + 1;
 				end
 			end;

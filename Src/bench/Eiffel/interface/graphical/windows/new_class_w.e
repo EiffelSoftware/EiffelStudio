@@ -30,6 +30,8 @@ feature
 
 	class_text: CLASS_TEXT;
 
+	aok: BOOLEAN;
+
 	make (comp: COMPOSITE; text: CLASS_TEXT) is
 		do
 			class_text := text;
@@ -69,7 +71,7 @@ feature
 
 	call (class_n: STRING; cl: CLUSTER_I) is
 		require
-			valid_args: class_n /= Void and cl /= Void
+			valid_args: class_n /= Void 
 		local
 			str, str2: STRING
 		do
@@ -82,7 +84,11 @@ feature
 			str.append ("Class name: ");
 			str.append (str2);
 			class_l.set_text (str);	
-			cluster_entry.set_text (cluster.cluster_name);
+			if cluster = Void then
+				cluster_entry.set_text ("<cluster name>");
+			else
+				cluster_entry.set_text (cluster.cluster_name);
+			end
 			popup;
 		end;
 
@@ -93,58 +99,74 @@ feature
 			file: UNIX_FILE;
 			stone: CLASSI_STONE;
 			str: STRING;
-			clu: CLUSTER_I; clun: STRING
+			base_name: STRING
 		do
 			if argument = create then
-				!!class_i.make;
-				class_i.set_class_name (class_name);
-				!!fname.make(0);
-				fname.append (cluster.path);
-				fname.append ("/");
-				fname.append (class_name);
-				fname.append (".e");
-				!!file.make (fname);
-				if not file.exists then	
-					class_i.set_cluster (cluster);
-					class_i.set_file_name (fname);
-					if not cluster.classes.has (fname) then
-						cluster.classes.put (class_i, class_name);
-						stone := class_i.stone;
-						file.open_write;
-						file.putstring ("class ");
-						file.putstring (stone.signature);
-						file.putstring ("%N%Nfeature%N%Nend%N");
-						file.close;
-						class_text.receive (stone);
-						popdown
+				change_cluster;
+				if aok then
+					!!class_i.make;
+					class_i.set_class_name (class_name);
+					!!fname.make(0);
+					fname.append (cluster.path);
+					fname.append ("/");
+					fname.append (class_name);
+					fname.append (".e");
+					base_name := class_name.duplicate;
+					base_name.append (".e");
+					!!file.make (fname);
+					if not file.exists then	
+						class_i.set_cluster (cluster);
+						class_i.set_base_name (base_name);
+						if not cluster.classes.has (fname) then
+							cluster.classes.put (class_i, class_name);
+							stone := class_i.stone;
+							file.open_write;
+							file.putstring ("class ");
+							file.putstring (stone.signature);
+							file.putstring ("%N%Nfeature%N%Nend%N");
+							file.close;
+							class_text.receive (stone);
+							popdown
+						else
+							fname.wipe_out;
+							str := class_name.duplicate;
+							str.to_upper;
+							fname.append ("Class ");
+							fname.append (str);
+							fname.append (" already exist in cluster");
+							warner.custom_call (Void, fname, "Continue",
+											Void, Void); 
+						end;
 					else
-						fname.wipe_out;
-						str := class_name.duplicate;
-						str.to_upper;
-						fname.append ("Class ");
-						fname.append (str);
-						fname.append (" already exist in cluster");
+						fname.prepend ("file ");
+						fname.append ("%N already exists");
 						warner.custom_call (Void, fname, "Continue",
-										Void, Void); 
+											Void, Void); 
 					end;
-				else
-					fname.prepend ("file ");
-					fname.append ("%N already exists");
-					warner.custom_call (Void, fname, "Continue",
-										Void, Void); 
 				end;
 			elseif argument = cancel then
 				popdown
 			elseif argument = clust then
-				clun := cluster_entry.text; 
-				clun.to_lower;
-				clu := Universe.cluster_of_name (clun);
-				if clu = Void then
-					warner.custom_call (Void, "Invalid cluster name", "Continue",
-									Void, Void); 
-				else
-					cluster := clu
-				end;
+				change_cluster
+			end;
+		end;
+
+	change_cluster is
+			-- Howdy Howdy
+		local
+			clun: STRING;
+			clu: CLUSTER_I; 
+		do
+			clun := cluster_entry.text; 
+			clun.to_lower;
+			clu := Universe.cluster_of_name (clun);
+			if clu = Void then
+				aok := False;
+				warner.custom_call (Void, "Invalid cluster name", "Continue",
+								Void, Void); 
+			else
+				aok := True;
+				cluster := clu
 			end;
 		end;
 

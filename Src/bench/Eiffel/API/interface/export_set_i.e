@@ -21,11 +21,8 @@ feature
 	valid_for (client: CLASS_C): BOOLEAN is
 			-- Is the export valid for client `client' when the supplier is
 			-- `supplier' ?
-		local
-			pos: INTEGER;
 		do
 			from
-				pos := position;
 				start
 			until
 				after or else Result
@@ -112,37 +109,21 @@ feature
 			else
 				other_set ?= other;
 				Result := True;
-				cur := CURSOR;
 				from
 					start
 				until
 					after or else not Result
 				loop
-					Result := other_set.has_client (item);
+					Result := True;
+io.error.putstring ("in subset: class name: ");
+io.error.putstring (other_set.item.written_class.class_name);
+io.error.new_line;
+					--Result := other_set.valid_for (item.written_class);
 					forth;
 				end;
-				go_to (cur);
 			end;
 		end;
 
-	has_client (client: CLIENT_I): BOOLEAN is
-			-- Does Current have other `client' ?
-			--| Compare written_in.
-		local
-			cur: CURSOR;
-		do
-			cur := cursor;
-			from
-				 start;
-			until
-				 offright or else Result 
-			loop
-				 Result := item.written_in = client.written_in;
-				 forth;
-			end;
-			go_to (cur);
-		end;
- 
 	same_as (other: EXPORT_I): BOOLEAN is
 			-- is `other' the same as Current ?
 		local
@@ -225,8 +206,18 @@ feature
 			end;
 		end;
 	
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			from
+				start;
+			until
+				after
+			loop
+				ctxt.put_string ("{");
+				item.format (ctxt);
+				ctxt.put_string ("}");
+				forth;
+			end;
+		end;
 			
-			
-		
-
 end

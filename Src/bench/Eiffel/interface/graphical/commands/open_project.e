@@ -46,11 +46,10 @@ feature {NONE}
 						dir_name.remove (dir_name.count)
 					end;
 					!!project_dir.make (dir_name);
-					if project_dir.valid then
+					warner.set_last_caller (Current);
+					project_dir.check_directory (warner);
+					if project_dir.is_valid then
 						make_project (project_dir)
-					else
-						warner.custom_call (Current, l_Invalid_directory,
-							"OK", Void, Void);
 					end
 				elseif argument = void then
                 	!!help_window.make(project_tool.screen);
@@ -98,28 +97,36 @@ feature
 					Create_compilation_directory;
 					Create_generation_directory;
 
+					!!workbench_file.make (Project_file_name);
 					!!workb;
-					!!workbench_file.make_open_read (Project_file_name);
-					workb ?= workb.retrieved (workbench_file);
-					!!init_work.make (workb);
-					Workbench.init;
-					if System.uses_precompiled then
-						!!precomp_r;
-						precomp_r.set_precomp_dir;
+					if workbench_file.exists then
+						workbench_file.open_read;
+						workb ?= workb.retrieved (workbench_file);
+						!!init_work.make (workb);
+						Workbench.init;
+						if System.uses_precompiled then
+							!!precomp_r;
+							precomp_r.set_precomp_dir;
+						end;
+						System.server_controler.init;
+						Universe.update_cluster_paths
+					else
+						!!init_work.make (workb);
+						workb.make
 					end;
-					System.server_controler.init;
 				end;
 	
 				project_tool.set_title (project_dir.name);
 				project_tool.set_initialized
 			else
 				io.error.putstring ("EiffelBench: could not retrieve project%N");
+				io.error.putstring (project_dir.name);
 				io.error.putstring ("Restart EiffelBench and try again%N");
 				exit; -- (from GRAPHICS)
 			end;
 		rescue
 			retried := True;
-			retry
+			--retry
 		end;
 
 	symbol: PIXMAP is

@@ -10,7 +10,9 @@ inherit
 		redefine
 			init_project_directory
 		end;
-	SHARED_DIALOG
+	SHARED_DIALOG;
+	BUILD_LIC;
+	WINDOWS
 
 feature -- Initialization
 
@@ -42,7 +44,8 @@ feature -- Initialization
 			project_dir: PROJECT_DIR
 		do
 			!! project_dir.make (project_name); 
-			if project_dir.valid then
+			project_dir.check_directory (error_popup_window);
+			if project_dir.is_valid then
 				init_project_directory := project_dir;
 				project_is_new := project_dir.is_new;
 				if project_dir /= Project_directory then end;
@@ -50,10 +53,9 @@ feature -- Initialization
 				Create_generation_directory;
 			else
 				error_occurred := True;
-				io.error.putstring (project_name);
-				io.error.putstring (" is not a valid project name%N");
 			end;
 		end;
+				
 
 	retrieve_project is
 			-- Retrieve existing project.
@@ -76,6 +78,7 @@ feature -- Initialization
 					precomp_r.set_precomp_dir;
 				end;
 				System.server_controler.init;
+				Universe.update_cluster_paths	
 			else
 				error_occurred := True;
 				io.error.putstring ("Cannot retrieve project%N");
@@ -101,7 +104,8 @@ feature -- Compilation
 	compile is
 			-- Regular compilation
 		local
-			exit: BOOLEAN
+			exit: BOOLEAN;
+			str: STRING
 		do
 			from
 			until
@@ -109,8 +113,19 @@ feature -- Compilation
 			loop
 				Workbench.recompile;
 				if not Workbench.successfull then
-					io.error.putstring ("%NPress <return> to resume compilation%N");
+					io.error.putstring ("%N%
+						%Press <Return> to resume compilation or <Q> to quit%N");
 					wait_for_return;
+					str := io.laststring.duplicate;
+					str.to_lower;
+					if 
+						((str.count >= 1) and then (str.item (1) = 'q')) 
+					then
+						if licence.registered then
+							licence.unregister
+						end;
+						die(0)
+					end;
 				else
 					exit := True
 				end

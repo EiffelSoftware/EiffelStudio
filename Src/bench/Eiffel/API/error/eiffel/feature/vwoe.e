@@ -48,9 +48,7 @@ feature
 			put_string ("%TThere is no feature ");
 			put_string (op_name);
 			put_string (" in class ");
--- FIXME
---			put_clickable_string (other_class, other_class.class_name);
-			put_string (other_class.class_name);
+			other_class.append_clickable_name (error_window);
 			new_line;
 		end
 

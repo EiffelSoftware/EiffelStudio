@@ -77,6 +77,10 @@ feature -- Licence managment
 				licence.open_licence;
 				Result := licence.licenced and then licence_checked;
 			end;
+			if Result then
+				io.error.putstring ("ISE license manager: recognized application%N%
+					%Application now properly licensed%N");
+			end;
 		end;
 
 	licence_checked: BOOLEAN is

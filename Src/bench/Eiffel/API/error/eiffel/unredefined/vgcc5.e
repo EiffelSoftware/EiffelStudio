@@ -29,7 +29,9 @@ feature
 		do
 			print_name;
 			put_string ("Feature name: ");
-			creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
+			if creation_feature /= Void then
+				creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
+			end;
 			new_line;
 		end;
 

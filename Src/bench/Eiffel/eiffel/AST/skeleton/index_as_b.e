@@ -33,8 +33,10 @@ feature -- Initialization
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			tag.format (ctxt);
-			ctxt.put_special(": ");
+			if tag /= Void then
+				tag.format (ctxt);
+				ctxt.put_special(": ");
+			end;
 			ctxt.no_new_line_between_tokens;
 			ctxt.set_separator(", ");
 			ctxt.separator_is_special;

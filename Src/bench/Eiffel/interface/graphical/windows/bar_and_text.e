@@ -84,6 +84,21 @@ feature
 		do
 		end;
 
+	search_command: SEARCH_STRING;
+	change_font_command: CHANGE_FONT;
+	open_command: OPEN_FILE is do end;
+	save_command: SAVE_FILE is do end;
+	save_as_command: SAVE_AS_FILE is do end;
+	quit_command: QUIT_FILE is do end;
+	create_edit_buttons is do end;
+
+	close_windows is
+			-- Close search window
+		do
+			search_command.close;
+			change_font_command.close (text_window)
+		end;
+
 	build_bar is
 		do
 			if editable then
@@ -96,8 +111,6 @@ feature
 	build_basic_bar is
 			-- Build top bar (only the basics).
 		local
-			change_font_command: CHANGE_FONT;
-			search_command: SEARCH_STRING;
 			quit_cmd: QUIT_FILE;
 		do
 			!!hole.make (edit_bar, Current);
@@ -121,17 +134,8 @@ feature
 				edit_bar.attach_right (quit_cmd, 0);
 		end;
 
-	open_command: OPEN_FILE is do end;
-	save_command: SAVE_FILE is do end;
-	save_as_command: SAVE_AS_FILE is do end;
-	quit_command: QUIT_FILE is do end;
-	create_edit_buttons is do end;
-
 	build_edit_bar is
 			-- Build top bar: editing commands.
-		local
-			change_font_command: CHANGE_FONT;
-			search_command: SEARCH_STRING;
 		do
 			!!hole.make (edit_bar, Current);
 			create_edit_buttons;

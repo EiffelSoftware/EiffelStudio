@@ -305,7 +305,7 @@ feature
 	format (ctxt: FORMAT_CONTEXT) is
 			--
 		do
-			ctxt.put_string (associated_class.signature);
+			ctxt.put_class_name (associated_class);
 		end;
 
 end

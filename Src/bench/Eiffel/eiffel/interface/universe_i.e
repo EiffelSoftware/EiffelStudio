@@ -91,6 +91,22 @@ feature
 			end
 		end;
 
+	update_cluster_paths is
+			-- Update the paths of the clusters in the universe.
+			-- (Re-interpret environment variables)
+		local
+			local_cursor: LINKABLE [CLUSTER_I]
+		do
+			from
+				local_cursor := clusters.first_element
+			until
+				local_cursor = Void
+			loop
+				local_cursor.item.update_path;
+				local_cursor := local_cursor.right
+			end
+		end;
+
 	check_universe is
 			-- Check universe
 		require
@@ -367,6 +383,21 @@ feature
 				Result := found and then one_found;
 				one_found := one_found or else found;
 				local_cursor := local_cursor.right;
+			end;
+		end;
+
+feature -- Precompilation
+
+	mark_precompiled is
+			-- Mark all the clusters of the universe as being precompiled.
+		do
+			from
+				clusters.start
+			until
+				clusters.after
+			loop
+				clusters.item.set_is_precompiled;
+				clusters.forth
 			end;
 		end;
 

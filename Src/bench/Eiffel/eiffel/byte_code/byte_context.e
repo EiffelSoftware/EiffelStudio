@@ -188,8 +188,16 @@ feature
 			Result := byte_code.rescue_clause /= Void
 		end;
 
-	has_inherited_assertion: BOOLEAN;
-			-- Does class have inherited assertions?
+	set_origin_has_precondition (b: BOOLEAN) is
+		do
+			origin_has_precondition := b
+		end
+
+	origin_has_precondition: BOOLEAN;
+			-- Is Current feature have origin feature with precondition?
+			-- (This is used for cases where the origin of the
+			-- routine does not have a precondition and thus
+			-- the precondition will always be true)
 
 	has_postcondition: BOOLEAN is
 			-- Do we have to generate any postcondition ?
@@ -308,7 +316,6 @@ feature
 			--else
 				--has_inherited_assertion := False
 			--end;
-			has_inherited_assertion := True;
 		end;
 
 	set_class_type (t: CLASS_TYPE) is

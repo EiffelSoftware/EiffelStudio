@@ -66,8 +66,13 @@ feature {NONE}
 
 	execute (argument: ANY) is
 			-- Serve request from ised.
+		local
+			rqst_hdlr: RQST_HANDLER
 		do
-			request_handler.execute
+			rqst_hdlr := request_handler;
+			if rqst_hdlr /= Void then
+				rqst_hdlr.execute
+			end
 		end;
 
 	db_info_handler: DB_INFO_HDLR;

@@ -59,29 +59,47 @@ feature -- Lace recompilation
 			cluster_of_name := Universe.cluster_of_name (cluster_name);
 			cluster_of_path := Universe.cluster_of_path (path);
 			old_cluster := Lace.old_universe.cluster_of_path (path);
-			if cluster_of_path /= Void then
+			if cluster_of_name /= Void then
+				if cluster_of_name.is_precompiled then
+						-- Precompiled clusters may be moved without
+						-- forcing a precompilation,
+					if 
+						(cluster_of_path /= Void) and then
+						cluster_of_path /= cluster_of_name
+					then
+						!!vd28;
+						vd28.set_cluster (cluster_of_name);
+						vd28.set_second_cluster_name (cluster_of_path.cluster_name);
+						Error_handler.insert_error (vd28);
+						Error_handler.raise_error;
+					else
+						cluster_of_name.set_dollar_path (directory_name);
+						cluster := cluster_of_name;
+					end;
+				else
+					!!vdcn;
+					vdcn.set_cluster (cluster_of_name);
+					Error_handler.insert_error (vdcn);
+					Error_handler.raise_error;
+				end;
+			elseif cluster_of_path /= Void then
 				!!vd28;
 				vd28.set_cluster (cluster_of_path);
 				vd28.set_second_cluster_name (cluster_name);
 				Error_handler.insert_error (vd28);
 				Error_handler.raise_error;
-			elseif cluster_of_name /= Void then
-				!!vdcn;
-				vdcn.set_cluster (cluster_of_name);
-				Error_handler.insert_error (vdcn);
-				Error_handler.raise_error;
 			elseif old_cluster = Void then
 					-- New cluster
-				!!cluster.make (path);
+				!!cluster.make (directory_name);
 				Universe.insert_cluster (cluster);
 				fill_cluster := True;
 			elseif old_cluster.changed then
-				!!cluster.make (path);
+				!!cluster.make (directory_name);
 				cluster.set_old_cluster (old_cluster);
 				Universe.insert_cluster (cluster);
 				fill_cluster := True;
 			else
-				!!cluster.make (path);
+				!!cluster.make (directory_name);
 				cluster.copy_old_cluster (old_cluster);
 				Universe.insert_cluster (cluster);
 			end;

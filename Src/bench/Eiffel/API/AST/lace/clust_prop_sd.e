@@ -103,7 +103,10 @@ feature -- Lace compilation
 				use_file_path.append ("/");
 				use_file_path.append (path);
 				!!use_file.make (use_file_path);
-				if not use_file.exists then
+				if 
+					(not use_file.exists) or else
+					use_file.is_directory
+				then
 					!!vd02;
 					vd02.set_cluster (cluster);
 					vd02.set_use_name (use_file_path);
@@ -207,7 +210,8 @@ feature -- Lace compilation
 	check_system_level_options (l: LACE_LIST [D_OPTION_SD]) is
 		local
 			d: D_OPTION_SD;
-			vd36: VD36
+			vd36: VD36;
+			vd32: VD32
 		do
 			from
 				l.start
@@ -215,12 +219,18 @@ feature -- Lace compilation
 				l.after
 			loop
 				d := l.item;
-				if d.option.is_system_level then
-					!!vd36;
-					vd36.set_cluster (context.current_cluster);
-					vd36.set_option_name (d.option.option_name);
-					Error_handler.insert_error (vd36);
-				end;
+				if d.option.is_valid then
+					if d.option.is_system_level then
+						!!vd36;
+						vd36.set_cluster (context.current_cluster);
+						vd36.set_option_name (d.option.option_name);
+						Error_handler.insert_error (vd36);
+					end;
+				else
+					!!vd32;
+					vd32.set_option_name (d.option.option_name);
+					Error_handler.insert_warning (vd32);
+				end
 				l.forth
 			end;
 		end;

@@ -74,6 +74,8 @@ feature -- Replicate
 feature {VALUE_AS}	-- Replication
 
 	set_terminal (t: like terminal) is
+		require
+			valid_arg: t /= Void
 		do
 			terminal := t
 		end;

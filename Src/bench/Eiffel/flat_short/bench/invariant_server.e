@@ -16,19 +16,19 @@ feature
 		do
 			if not empty then
 				ctxt.begin;
+				ctxt.next_line;
 				ctxt.put_keyword ("invariant");
 				ctxt.indent_one_more;
+				ctxt.next_line;
 				from
 					start
 				until
 					after
 				loop
 					ctxt.begin;
-					if is_not_first then
-						ctxt.put_special (";")
-					end;
-					ctxt.next_line;
 					item.format (ctxt);
+					ctxt.put_special (";")
+					ctxt.next_line;
 					if ctxt.last_was_printed then
 						is_not_first := true;
 						ctxt.commit

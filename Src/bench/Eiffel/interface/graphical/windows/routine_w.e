@@ -16,7 +16,7 @@ inherit
 			make as normal_create
 		redefine
 			hole, build_format_bar, text_window,
-			build_edit_bar, tool_name
+			build_edit_bar, tool_name, close_windows
 		end
 
 creation
@@ -31,10 +31,16 @@ feature
 			-- Create an object tool.
 		do
 			normal_create (a_screen);
-			text_window.set_read_only
 		end;
 
 feature {NONE}
+
+	close_windows is
+		do
+            search_command.close;
+            change_font_command.close (text_window);
+			debug_run_command.close
+        end;
 
 	tool_name: STRING is do Result := l_Routine end;
 
@@ -95,8 +101,6 @@ feature {NONE}
 	build_edit_bar is
 			-- Build top bar: editing commands.
 		local
-			search_command: SEARCH_STRING;
-			change_font_command: CHANGE_FONT;
 			quit_cmd: QUIT_FILE;
 		do
 			!!hole.make (edit_bar, Current);

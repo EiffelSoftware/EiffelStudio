@@ -217,17 +217,19 @@ feature -- Primitives
 		do
 			if base_type = type.base_type then
 				gen_type ?= type;
-				from
-					i := 1;
-					gen_type_generics := gen_type.generics;
-					count := generics.count;
-					Result := count = gen_type_generics.count;
-				until
-					i > count or else not Result
-				loop
-					Result := gen_type_generics.item (i).internal_conform_to
-												(generics.item (i), True);
-					i := i + 1;
+				if gen_type /= Void then
+					from
+						i := 1;
+						gen_type_generics := gen_type.generics;
+						count := generics.count;
+						Result := count = gen_type_generics.count;
+					until
+						i > count or else not Result
+					loop
+						Result := gen_type_generics.item (i).internal_conform_to
+													(generics.item (i), True);
+						i := i + 1;
+					end;
 				end;
 			else
 					-- `type' is a descendant type of Current: so we

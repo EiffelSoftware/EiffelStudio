@@ -19,7 +19,8 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			update_for_pick_and_drop,
-			interface
+			interface,
+			destroy
 		end
 
 	EV_SIZEABLE_PRIMITIVE_IMP
@@ -30,7 +31,8 @@ inherit
 	EV_TOOLTIPABLE_IMP
 		redefine
 			interface,
-			tooltip_window
+			tooltip_window,
+			destroy
 		end
 
 feature -- Access
@@ -159,6 +161,13 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	destroy is
+			-- Destroy `Current'.
+		do
+			Precursor {EV_TOOLTIPABLE_IMP}
+			Precursor {EV_WIDGET_IMP}
+		end
 
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearence of

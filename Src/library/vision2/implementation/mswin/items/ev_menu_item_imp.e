@@ -18,7 +18,11 @@ inherit
 		undefine
 			parent
 		redefine
-			interface
+			interface,
+			set_capture,
+			release_capture,	
+			set_heavy_capture,
+			release_heavy_capture
 		end
 
 	EV_TEXTABLE_IMP
@@ -151,39 +155,60 @@ feature {NONE} -- Implementation
 				      parent_imp.item_exists (id)
 		end
 
-feature {NONE} -- Inapplicable
+feature {EV_ANY_I} -- Pick and Drop
 
 	set_capture is
 			-- Grab user input.
+			-- Works only on current windows thread.
 		do
+			--| To be implemented.
+			--| This may work without redefinition.
+			--| These have been left as re-defined to make sure it is not
+			--| overlooked in the future.
 			check
-				inapplicable: False
+				To_be_implemented: False
 			end
 		end
 
 	release_capture is
-			-- Release grab.
+			-- Release user input.
+			-- Works only on current windows thread.
 		do
+			--| To be implemented.
+			--| This may work without redefinition.
+			--| These have been left as re-defined to make sure it is not
+			--| overlooked in the future.
 			check
-				inapplicable: False
+				To_be_implemented: False
 			end
 		end
 
 	set_heavy_capture is
-			-- Grap user input
+			-- Grab user input.
+			-- Works on all windows threads.
 		do
+			--| To be implemented.
+			--| This may work without redefinition.
+			--| These have been left as re-defined to make sure it is not
+			--| overlooked in the future.
 			check
-				inapplicable: False
+				To_be_implemented: False
 			end
 		end
 
 	release_heavy_capture is
 			-- Release user input
+			-- Works on all windows threads.
 		do
+			--| To be implemented.
+			--| This may work without redefinition.
+			--| These have been left as re-defined to make sure it is not
+			--| overlooked in the future.
 			check
-				inapplicable: False
+				To_be_implemented: False
 			end
 		end
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -222,6 +247,10 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/21 22:07:40  rogers
+--| Redefined set_capture, release_capture, set_heavy_capture,
+--| release_heavy_capture. Improved comments on these features.
+--|
 --| Revision 1.36  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

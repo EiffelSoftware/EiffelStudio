@@ -14,19 +14,7 @@ inherit
 	EV_WIDGET_LIST
 		redefine
 			implementation,
-			is_in_default_state,
-			make_for_test
-		end
-
-feature -- Initialization
-
-	make_for_test is
-		local
-			timer: EV_TIMEOUT
-		do
-			{EV_WIDGET_LIST} Precursor
-			create timer.make_with_interval (1000)
-			timer.actions.extend (~do_test)
+			is_in_default_state
 		end
 
 feature -- Status report
@@ -143,18 +131,6 @@ feature {EV_ANY} -- Contract support
 				padding = 0			
 			)
 		end
-
-	do_test is
-			-- Cycle the first widget into the last position.
-		local
-			w: EV_WIDGET
-		do
-			w := first
-			if w /= Void then
-				prune_all (w)
-				extend (w)
-			end
-		end
 			
 end -- class EV_BOX
 
@@ -179,8 +155,8 @@ end -- class EV_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/03/01 03:12:30  oconnor
---| added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+--| Revision 1.20  2000/03/01 03:24:19  oconnor
+--| reverted last commit which was in error
 --|
 --| Revision 1.18  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting

@@ -355,7 +355,7 @@ end;
 								-- This means that the feature is not redefined.
 							!! temp.make (0);
 							temp.append (renaming.item_for_iteration);
-							!! feature_data.make (temp, classc.id);
+							!! feature_data.make (temp);
 							feature_i := classc.feature_table.item 
 														(renaming.key_for_iteration);
 							if feature_i /= Void then

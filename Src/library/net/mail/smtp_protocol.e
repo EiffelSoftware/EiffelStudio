@@ -193,7 +193,7 @@ feature {NONE} -- Basic operations
 		do
 			if not bcc_mode then
 				a_header:= memory_resource.header (H_to)
-				recipients:= clone (a_header.entries)
+				recipients:= a_header.entries.twin
 				a_header:= memory_resource.header (H_cc)
 				if a_header /= Void then
 					from 
@@ -257,8 +257,8 @@ feature {NONE} -- Basic operations
 	send_all is
 		-- Send the mail considering the correct information.
 		do
-			mail_message:= clone (memory_resource.mail_message)
-			mail_signature:= memory_resource.mail_signature
+			mail_message := memory_resource.mail_message.twin
+			mail_signature := memory_resource.mail_signature
 
 			send_command (Mail_from + "<" + header_from + ">", Ok)
 			if not error then

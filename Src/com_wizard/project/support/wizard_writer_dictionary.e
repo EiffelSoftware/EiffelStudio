@@ -44,6 +44,8 @@ feature -- CECIL function names/ Keywords
 
 	Eif_protect: STRING is "eif_protect"
 
+	Eif_adopt: STRING is "eif_adopt"
+
 	Eif_access: STRING is "eif_access"
 
 	Eif_wean: STRING is "eif_wean"

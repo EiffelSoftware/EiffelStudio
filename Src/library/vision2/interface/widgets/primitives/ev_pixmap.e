@@ -12,6 +12,7 @@ class
 inherit
 	EV_DRAWING_AREA
 		redefine
+			make_for_test,
 			create_implementation,
 			implementation,
 			is_equal,
@@ -142,6 +143,15 @@ feature {EV_ANY_I} -- Implementation
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
 
+feature {NONE} -- Contract support
+
+	make_for_test is
+			-- Create with sample image.
+		do
+			default_create
+			set_with_named_file ("test_pixmap")
+		end
+
 end -- class EV_PIXMAP
 
 --!-----------------------------------------------------------------------------
@@ -165,6 +175,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/03 02:56:54  oconnor
+--| added make_for_test
+--|
 --| Revision 1.23  2000/03/03 01:44:30  oconnor
 --| fixed call on void problem in is_equal
 --|

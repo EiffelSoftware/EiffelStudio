@@ -3,7 +3,6 @@
 class EXPANDED_CHECKER 
 
 inherit
-
 	SHARED_WORKBENCH;
 	SHARED_ERROR_HANDLER;
 	COMPILER_EXPORTER
@@ -65,7 +64,7 @@ feature {NONE}
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
 			stop_recursion: BOOLEAN;
-			old_cursor: CURSOR;
+			position: INTEGER;
 		do
 			current_id := class_type.associated_class.id;
 			stop_recursion := id_set.has (current_id);
@@ -85,7 +84,7 @@ end;
 				if attr_desc.is_expanded = False then
 					finished := True
 				else
-					old_cursor := current_skeleton.cursor;
+					position := current_skeleton.position;
 					expanded_desc ?= attr_desc;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
@@ -109,7 +108,7 @@ end;
 							recursive_check (client_type);
 						end;
 					end;
-					current_skeleton.go_to (old_cursor);
+					current_skeleton.go_to (position);
 				end;
 
 				current_skeleton.forth;

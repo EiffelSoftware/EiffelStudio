@@ -210,6 +210,11 @@ feature {EB_BOX}
 			res: like Resources
 		do
 			res := Resources
+			color := parent.background_color
+			if color /= Void then
+				set_background_color (color)
+				icon_label.set_background_color (color)
+			end	
 			color := res.foreground_color
 			if color /= Void then
 				button.set_foreground_color (color)

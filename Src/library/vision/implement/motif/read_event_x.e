@@ -17,8 +17,8 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	create_context_data (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA is
-			-- Create a context data for the current action.
+	create_context_data_from_event (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA is
+			-- Create a context data from the `event' information
 		require
 			non_void_widget_oui: widget_oui /= Void;
 			non_void_event: event /= Void

@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+	
 feature -- Access
 
 	title: STRING is
@@ -28,7 +33,7 @@ feature -- Access
 			-- Number of steps involved in task
 		deferred
 		ensure
-			valid_count: Result > 0
+			valid_count: Result >= 0
 		end
 
 feature -- Basic Operation
@@ -42,6 +47,7 @@ feature -- Basic Operation
 				internal_execute
 			else
 				environment.set_abort (Exception_raised)
+				environment.set_error_data ("Exception " +  tag_name + " occured in task " + title)
 			end
 		rescue
 			l_retried := True

@@ -1184,7 +1184,9 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		do
-			c_basic_store (descriptor, $object)
+			check
+				not_supported: False
+			end
 		end
  
 	general_store (object: ANY) is
@@ -1196,7 +1198,9 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		do
-			c_general_store (descriptor, $object)
+			check
+				not_supported: False
+			end
 		end
 
 	independent_store (object: ANY) is
@@ -1205,7 +1209,9 @@ feature -- Element change
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		do
-			c_independent_store (descriptor, $object)
+			check
+				not_supported: False
+			end
 		end
 
 feature -- Removal

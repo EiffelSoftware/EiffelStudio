@@ -80,9 +80,9 @@ feature
 	draw is
 			-- Draw the figure. 
 		require else 
-			valid_outer: outer_figure /= Void;
-			valid_inner: inner_figure /= Void;
-			valid_text: text_image /= Void; 
+			a_valid_outer: valid_outer;
+			a_valid_inner: valid_inner;
+			valid_text: valid_text_image; 
 		do
 			outer_figure.draw;
 			inner_figure.draw;
@@ -165,6 +165,17 @@ feature
 		do
 			result := inner_figure /= Void;
 		end;
+
+	valid_outer: BOOLEAN is
+		do
+			result := outer_figure /= Void;
+		end;
+
+	valid_text_image: BOOLEAN is
+		do
+			result := text_image /= Void;
+		end;
+
 
 feature {NONE}
 

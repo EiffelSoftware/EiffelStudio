@@ -83,7 +83,9 @@ feature {NONE}
 
 	process_stone is
 		do
-			page.insert_after (original_stone, stone.original_stone)
+			page.parent.unmanage;
+			page.insert_after (original_stone, stone.original_stone);
+			page.parent.manage;
 		end;
 
 	remove_yourself is

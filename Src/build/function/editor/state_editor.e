@@ -128,6 +128,7 @@ feature {NONE}
 		do
 			!!output_stone.make (Current);
 			output_stone.make_visible (a_parent);
+			button_form.attach_left_widget (page_label, row_label, 5);
 		end;
 
 	create_input_stone (a_parent: COMPOSITE) is

@@ -47,6 +47,7 @@ feature
    			temp_int: INTEGER;
    			temp_int1: INTEGER;
   		do
+			context.remove_window_geometry_action;
    			if context.widget.x /= gold_x or 
 			  context.widget.y /= gold_y 
 			then
@@ -65,6 +66,7 @@ feature
     				gold_height := temp_int1;
     				gold_width := temp_int;
    			end;
+			context.add_window_geometry_action;
     			ed := context_catalog.editor (context, geometry_form_number);
     			if ed /= Void then
      				ed.current_form.reset_form;

@@ -9,7 +9,7 @@ inherit
 			popup as old_popup
 		export
 			{NONE} all;
-			{ANY} popdown
+			{ANY} popdown, is_poped_up
 		undefine
 			init_toolkit
 		end;

@@ -53,6 +53,9 @@ feature
 			if licence.registered then
 				licence.open_licence;
 				Result := licence.licenced and then licence_checked;
+				if not Result then
+					licence.unregister;
+				end;
 			end;
 		end;				
 

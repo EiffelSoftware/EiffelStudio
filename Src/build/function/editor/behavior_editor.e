@@ -89,7 +89,11 @@ feature
 			form.detach_top (button_form);
 			button_form.detach_left (arrow_b1);
 			button_form.detach_left (arrow_b);
+			button_form.set_fraction_base(2);
+			button_form.attach_right_position (page_label, 1);
+			button_form.attach_left_position (row_label, 1);
 			button_form.detach_right (row_label);
+			--button_form.attach_left_widget (page_label, row_label, 1);
 		end;
 
 	

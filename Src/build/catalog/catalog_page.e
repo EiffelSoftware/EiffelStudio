@@ -7,7 +7,7 @@ inherit
 		rename
 			make as cat_create
 		export
-			{CATALOG, CMD_CAT_BUTTON} hide, make_visible, show, shown,
+			{ CAT_COM_IS,CATALOG, CMD_CAT_BUTTON} hide, make_visible, show, shown,
 			manage, unmanage, managed, associated_catalog
 		end;
 	WIDGET_NAMES

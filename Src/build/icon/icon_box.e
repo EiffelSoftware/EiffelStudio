@@ -145,7 +145,7 @@ feature
 		do
 			if not (icons = Void) then
 				icons.go_i_th (index);
-				icons.item.set_original_stone (item)
+				icons.item.set_original_stone (item);
 			end
 		end;
 

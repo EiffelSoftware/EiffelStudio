@@ -47,8 +47,6 @@ feature {NONE}
 
 	initialize (a_name: STRING; a_parent: CONTEXT_EDITOR) is
 			-- Creates the form
-		local
-			top_form: FORM;
 		do
 			editor := a_parent;
 			form_create (a_name, a_parent.top_form);

@@ -143,7 +143,9 @@ feature
 		local
 			add_command: CAT_ADD_COMMAND
 		do
+			page_sw.unmanage;
 			p.extend (c);
+			page_sw.manage;
 			!!add_command;
 			add_command.execute (p);
 		end;
@@ -314,8 +316,10 @@ feature {NONE}
 				p := pages.item;
 				p.start;
 				p.search (c);
-				if not p.after then		
+				if not p.after then	
+					page_sw.unmanage;
 					p.redisplay_current;
+					page_sw.manage;
 					finished := True
 				else
 					pages.forth

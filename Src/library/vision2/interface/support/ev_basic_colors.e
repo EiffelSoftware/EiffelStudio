@@ -153,6 +153,32 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
+feature -- Basic operations
+
+	all_colors: LINKED_LIST [EV_COLOR] is
+			-- A list of all the basic colors.
+		do
+			create Result.make
+			Result.force (white)
+			Result.force (black)
+			Result.force (grey)
+			Result.force (dark_grey)
+			Result.force (blue)
+			Result.force (dark_blue)
+			Result.force (cyan)
+			Result.force (dark_cyan)
+			Result.force (green)
+			Result.force (dark_green)
+			Result.force (yellow)
+			Result.force (dark_yellow)
+			Result.force (red)
+			Result.force (dark_red)
+			Result.force (magenta)
+			Result.force (dark_magenta)
+		ensure
+			good_count: Result.count = 16
+		end
+
 end -- class EV_BASIC_COLORS
 
 --|----------------------------------------------------------------

@@ -101,6 +101,7 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		do
+			arity := 0
 			fl_make (n)
 			replace (v)
 		ensure
@@ -392,7 +393,7 @@ feature {FIXED_TREE} -- Implementation
 	cut_off_node is
 			-- Cut off all links from current node.
 		do
-			make (arity, item)
+			make (capacity, item)
 		end
 
 feature {NONE} -- Implementation

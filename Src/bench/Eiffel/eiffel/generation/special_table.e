@@ -10,6 +10,10 @@ inherit
 			generate, final_table_size, generable
 		end
 
+creation
+
+	make
+
 feature
 
 	final_table_size: INTEGER is

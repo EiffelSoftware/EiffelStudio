@@ -8,7 +8,7 @@ inherit
 		end;
 	TYPE_C
 		undefine
-			is_void
+			is_void, is_bit
 		end;
 	SHARED_C_LEVEL;
 

@@ -106,7 +106,8 @@ feature
 			gen_type: GEN_TYPE_I;
 			gen_param: TYPE_I;
 			dtype, char_dtype, long_dtype,
-			float_dtype, double_dtype, boolean_dtype: INTEGER;
+			float_dtype, double_dtype, 
+			pointer_dtype, boolean_dtype: INTEGER;
 		do
 			from
 				char_dtype := -1;
@@ -114,6 +115,7 @@ feature
 				float_dtype := -1;
 				double_dtype := -1;
 				boolean_dtype := -1;
+				pointer_dtype := -1;
 				types.start
 			until
 				types.offright
@@ -132,6 +134,8 @@ feature
 					double_dtype := dtype;
 				elseif gen_param.is_boolean then
 					boolean_dtype := dtype;
+				elseif gen_param.is_feature_pointer then
+					pointer_dtype := dtype;
 				end;
 				types.forth;
 			end;
@@ -149,6 +153,9 @@ feature
             Plug_file.putstring (";%N");
 			Plug_file.putstring ("int sp_double = ");
             Plug_file.putint (double_dtype);    
+            Plug_file.putstring (";%N");
+			Plug_file.putstring ("int sp_pointer = ");
+            Plug_file.putint (pointer_dtype);    
             Plug_file.putstring (";%N");
 		end;
 

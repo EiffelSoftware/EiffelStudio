@@ -25,6 +25,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_bit: BOOLEAN is
+			-- Is C type a a bit type (Conveniencee)
+		do
+			-- Do nothing
+		end;
+
 	is_void: BOOLEAN is
 			-- Is C type a void type
 		do
@@ -95,6 +101,17 @@ feature
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
 		deferred
+		end;
+
+	generate_initial_value (file: UNIX_FILE) is
+			-- Generate initial value for registers in `file'. 
+			-- (To be redefined in BIT_I).
+		require
+			good_argument: file /= Void;
+			good_context: file.is_open_write or else file.is_open_append;
+		do
+			generate_cast (file);
+			file.putstring ("0");
 		end;
 
 end

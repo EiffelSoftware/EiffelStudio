@@ -14,6 +14,7 @@ inherit
 	SHARED_ARRAY_BYTE;
 	SHARED_EXEC_TABLE;
 	SHARED_DECLARATIONS;
+	SHARED_TABLE;
 
 creation
 
@@ -290,12 +291,66 @@ feature -- Generation
 			Result := not skeleton.offright;
 		end;
 
-	has_dispose: BOOLEAN is
-			-- Does the current class type have a dispose routine ?
-		do
-			-- FIXME
+	memory_dispose_id: INTEGER is
+			-- Memory dispose id (rout_id in final mode)
+			-- of current class type.
+			-- Return 0 if the MEMORY class has not been compiled.
+			--! (Assumed memory must have a dispose routine).
+		require
+			final_mode: byte_context.final_mode
+		local
+			found: BOOLEAN;
+			feature_i: FEATURE_I;
+			class_c: CLASS_C;
+			nbr, i: INTEGER;
+			id_array: ARRAY [CLASS_C]
+		once
+			id_array := System.id_array;
+			from
+				nbr := id_array.count;
+				i := 1
+			until
+				found or i > nbr
+			loop
+				class_c := id_array.item (i);
+				if class_c.class_name.is_equal ("memory") then
+					found := true
+				else
+					i := i + 1;
+				end;
+			end;
+			if found then
+				feature_i :=
+					class_c.feature_table.item ("dispose");
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first;
+				end;
+			end
 		end;
-	
+ 
+	dispose_feature: FEATURE_I is
+			-- Feature for dispose routine; 
+			-- Void if dispose routine does not exist.
+		local
+			feature_table: FEATURE_TABLE;
+			item: FEATURE_I
+		do
+			feature_table := associated_class.feature_table; 
+			if (memory_dispose_id /= 0) then
+				from
+					feature_table.start
+				until
+					feature_table.offright or (Result /= Void) 
+				loop
+					item := feature_table.item_for_iteration;
+					if (item.rout_id_set.first = memory_dispose_id) then
+						Result := item
+					end;
+					feature_table.forth
+				end
+			end
+		end;
+
 	generate_creation_routine (file: INDENT_FILE) is
 			-- Creation routine, if necessary (i.e. if the object is
 			-- composite and has expanded we must initialize, as well
@@ -303,17 +358,17 @@ feature -- Generation
 		require
 			has_creation_routine
 		local
-			skel, sub_skel: SKELETON;
+			sub_skel: SKELETON;
 			i, nb_ref: INTEGER;
 			exp_desc: EXPANDED_DESC;
 			sub_class_type: CLASS_TYPE;
 			saved_pos: INTEGER;
 			c_name: STRING;
+			bits_desc: BITS_DESC
 		do
 			c_name := init_procedure_name;
-			skel := skeleton;
-			nb_ref := skel.nb_reference;
-			skel.go_bits;
+			nb_ref := skeleton.nb_reference;
+			skeleton.go_bits;
 				-- There are some expandeds here...
 				-- Generate a procedure which will be in charge of all the
 				-- initialisation bulk.
@@ -340,8 +395,15 @@ feature -- Generation
 			loop
 					-- Initialize dynamic type of the bit attribute
 				file.putstring ("HEADER(l[0] + ");
-				skel.generate(file);
+				skeleton.generate(file);
 				file.putstring(")->ov_flags = bit_dtype;");
+				file.new_line;
+				file.putstring ("*(uint32 *) (l[0] + ");
+				bits_desc ?= skeleton.item; 	-- Cannot fail
+				skeleton.generate(file);
+				file.putstring(") = ");
+				file.putint (bits_desc.value);
+				file.putchar (';');
 				file.new_line;
 				skeleton.forth
 			end;
@@ -351,7 +413,7 @@ feature -- Generation
 			from
 				i := 0;
 			until
-				skel.offright
+				skeleton.offright
 			loop
 				file.putstring ("*(char **) (l[0] + REFACS(");
 				file.putint (nb_ref + i);
@@ -360,18 +422,18 @@ feature -- Generation
 				file.indent;
 				file.putstring("l[0] + ");
 					-- There is a side effect with generation
-				saved_pos := skel.position;
-				skel.generate(file);
-				skel.go (saved_pos);
+				saved_pos := skeleton.position;
+				skeleton.generate(file);
+				skeleton.go (saved_pos);
 				file.putchar (';');
 				file.new_line;
 				file.exdent;
 
-				exp_desc ?= skel.item;		-- Cannot fail
+				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
 				file.putstring ("HEADER(l[0] + ");
-				skel.generate(file);
-				skel.go (saved_pos);
+				skeleton.generate(file);
+				skeleton.go (saved_pos);
 				file.putstring(")->ov_flags = ");
 				file.putint(exp_desc.type_id - 1);
 				file.putchar (';');
@@ -379,16 +441,16 @@ feature -- Generation
 
 					-- Mark expanded object
 				file.putstring ("HEADER(l[0] + ");
-				skel.generate(file);
-				skel.go (saved_pos);
+				skeleton.generate(file);
+				skeleton.go (saved_pos);
 				file.putstring(")->ov_flags |= EO_EXP;");
 				file.new_line;
 				file.putstring ("HEADER(l[0] + ");
-				skel.generate(file);
-				skel.go (saved_pos);
+				skeleton.generate(file);
+				skeleton.go (saved_pos);
 				file.putstring(")->ov_size = ");
-				skel.generate(file);
-				skel.go (saved_pos);
+				skeleton.generate(file);
+				skeleton.go (saved_pos);
 				file.putstring (" + (l[0] - l[1]);");
 				file.new_line;
 
@@ -401,11 +463,11 @@ feature -- Generation
 					file.putstring (sub_class_type.init_procedure_name);
 					file.putchar ('(');
 					file.putstring("l[0] + ");
-					skel.generate(file);
+					skeleton.generate(file);
 					file.putstring(", l[1]);");
 					file.new_line;
 				end;
-				skel.forth;
+				skeleton.forth;
 				i := i + 1;
 			end;
 			file.putstring ("RTLE;");
@@ -564,12 +626,12 @@ feature -- Skeleton generation
 			Skeleton_file.putint (type_id);
 			Skeleton_file.putstring (",%N");
 			if not skeleton_empty then
-                Skeleton_file.putstring ("types");
-                Skeleton_file.putint (type_id);
-                Skeleton_file.putstring (",%N");
-            else
-                Skeleton_file.putstring ("(uint32 *) 0,%N");
-            end;
+				Skeleton_file.putstring ("types");
+				Skeleton_file.putint (type_id);
+				Skeleton_file.putstring (",%N");
+			else
+				Skeleton_file.putstring ("(uint32 *) 0,%N");
+			end;
 
 			if byte_context.final_mode then
 				if 	a_class.has_invariant
@@ -639,7 +701,7 @@ feature -- Skeleton generation
 
 					-- Generate reference on routine id array
 				Skeleton_file.putstring ("ra");
-                Skeleton_file.putint (associated_class.id);
+				Skeleton_file.putint (associated_class.id);
 				Skeleton_file.putstring (",%N");
 
 					-- Generate cecil structure if any

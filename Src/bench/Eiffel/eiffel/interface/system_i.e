@@ -1648,6 +1648,7 @@ debug ("COUNT")
 	i := id_list.count;
 end;
 				id_list.start
+				open_log_files
 			until
 				id_list.off
 			loop
@@ -1669,6 +1670,7 @@ end;
 
 				id_list.forth
 			end;
+			close_log_files;
 
 			from
 				id_list := freeze_set2;
@@ -1900,6 +1902,7 @@ end;
 			from
 				i := 1;
 				nb := class_counter.value;
+				open_log_files
 			until
 				i > nb
 			loop
@@ -1926,6 +1929,7 @@ end;
 
 				i := i + 1;
 			end;
+			close_log_files;
 
 			generate_table;
 
@@ -2059,6 +2063,18 @@ feature -- In-lining optimization
 	set_inlining_on (b: BOOLEAN) is
 		do
 			inlining_on := b
+		end;
+
+	inlining_size: INTEGER
+
+	set_inlining_size (i: INTEGER) is
+		do
+debug ("INLINING")
+	io.error.putstring ("Inlining size: ");
+	io.error.putint (i)
+	io.error.new_line
+end
+			inlining_size := i
 		end;
 
 feature
@@ -2473,7 +2489,7 @@ end;
 			Cecil_file.open_write;
 			Cecil_file.putstring ("#include %"cecil.h%"%N");
 			if final_mode then
-				Cecil_file.putstring ("#include %"Ececil.h%"%N");
+				Cecil_file.putstring ("#include %"ececil.h%"%N");
 			end;
 			Cecil_file.putstring ("#include %"struct.h%"%N%N");
 
@@ -2499,7 +2515,7 @@ end;
 				if not subdir.exists then
 					subdir.create
 				end;
-				f_name := build_path (f_name, "Ececil.h");
+				f_name := build_path (f_name, "ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");
@@ -3395,9 +3411,11 @@ feature -- Conveniences
 			remover_off := False;
 			array_optimization_on := False;
 			inlining_on := False;
+			inlining_size := 4;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 			Rescue_status.set_fail_on_rescue (False)
+			server_controler.set_chunk_size (10000)
 		end;
 
 	set_id_array (a: like id_array) is
@@ -3472,6 +3490,48 @@ feature -- Precompilation
 		do
 			Result := (server_controler.last_precompiled_id > 0)
 		end;
+
+feature -- Log files
+
+	used_features_log_file: PLAIN_TEXT_FILE;
+		-- File where the names (Eiffel and encoded) of the used features
+		-- are generated
+
+	removed_log_file: PLAIN_TEXT_FILE;
+		-- File where the names of the removed features are generated
+
+	open_log_files is
+		do
+			if in_final_mode then
+					-- removed_log_file is used only in final mode
+				!!removed_log_file.make
+					(build_path (Final_generation_path, Removed_log_file_name));
+
+				!!used_features_log_file.make
+					(build_path (Final_generation_path, Translation_log_file_name));
+
+					-- Files are open using the `write' mode
+				removed_log_file.open_write;
+				used_features_log_file.open_write;
+			else
+				!!used_features_log_file.make
+					(build_path (Workbench_generation_path, Translation_log_file_name));
+
+					-- File is open using the `append' mode
+					-- (refreezing)
+				used_features_log_file.open_append;
+			end
+		end
+
+	close_log_files is
+		do
+			used_features_log_file.close;
+			used_features_log_file := Void
+			if in_final_mode then
+				removed_log_file.close
+				removed_log_file := Void
+			end
+		end
 
 feature -- Debug purpose
 

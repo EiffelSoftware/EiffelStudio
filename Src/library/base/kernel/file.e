@@ -1387,7 +1387,7 @@ feature {NONE} -- Implementation
 	file_link (from_name, to_name: POINTER) is
 			-- Link `to_name' to `from_name'
 		external
-			"C (FILE *, FILE *) | %"eif_file.h%""
+			"C (char *, char *) | %"eif_file.h%""
 		end;
 
 	file_unlink (fname: POINTER) is

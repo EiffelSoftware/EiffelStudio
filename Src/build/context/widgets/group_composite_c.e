@@ -82,7 +82,7 @@ feature
 		do
 			size_modified := True;
 			widget.unmanage;
-			widget.set_height (new_h);
+			--widget.set_height (new_h);
 			if retrieved_node = Void then
 					-- Figure out new children creation
 					-- during session (not for retrieving).
@@ -94,8 +94,8 @@ feature
 					modification := True;
 				end;
 				child_start;
-				new_number := new_h // (child.height + 3);
-				if (new_number > children_number) then
+				new_number := new_h // child.height
+				if new_number > children_number then
 					from
 					until
 						children_number = new_number
@@ -112,8 +112,7 @@ feature
 						children_number = new_number
 					loop
 						previous_child := a_child.left_sibling;
-						!!command;
-						command.execute (a_child);
+						a_child.remove_yourself
 						a_child := previous_child;
 						children_number := children_number - 1 ;
 					end;
@@ -123,6 +122,7 @@ feature
 					tree.display (Current);
 				end;
 			end;
+			widget.set_size (new_w, arity * first_child.height)
 			widget.manage
 		end;
 

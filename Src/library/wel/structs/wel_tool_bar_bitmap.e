@@ -22,6 +22,7 @@ inherit
 
 creation
 	make,
+	make_with_bitmap,
 	make_by_predefined_id
 
 feature {NONE} -- Initialization
@@ -50,6 +51,18 @@ feature {NONE} -- Initialization
 			set_predefined_bitmap_id (a_bitmap_id)
 		ensure
 			bitmap_id_set: bitmap_id = a_bitmap_id
+		end
+
+	make_with_bitmap (a_bitmap: WEL_BITMAP) is
+			-- Create a toolbar bitmap with a common bitmap.
+		require
+			bitmap_not_void: a_bitmap /= Void
+			bitmap_exists: a_bitmap.exists
+		do
+			structure_make
+			cwel_tbaddbitmap_set_nid (item, a_bitmap.to_integer)
+		ensure
+			bitmap_set: bitmap_id = a_bitmap.to_integer
 		end
 
 feature -- Access

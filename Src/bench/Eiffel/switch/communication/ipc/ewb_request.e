@@ -75,11 +75,11 @@ feature -- Update
 				update_breakpoints(bpts)
 				if status /= Void then
 					if status.current_call_stack /= Void then
-						curr_callstack_depth := status.current_call_stack.count
+						curr_callstack_depth := status.current_call_stack.stack_depth
 
 						-- set a stack breakpoint, set on the current stack depth plus one
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we have to add 1 for step by step)
-						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, curr_callstack_depth + 1) -- body_id is useless, so it's set to zero
+						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, +1) -- body_id is useless, so it's set to zero
 					else
 						-- the user has pushed on the step-by-step button to launch the application. let's stop at the begginning
 						send_rqst_3 (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
@@ -92,11 +92,11 @@ feature -- Update
 				update_breakpoints(bpts)
 				if status /= Void then
 					if status.current_call_stack /= Void then
-						curr_callstack_depth := status.current_call_stack.count
+						curr_callstack_depth := status.current_call_stack.stack_depth
 
 						-- set a stack breakpoint, set on the current stack depth
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we dont have to substract 1 for step out)
-						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, curr_callstack_depth) -- body_id is useless, so it's set to zero
+						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, 0 ) -- body_id is useless, so it's set to zero
 					else
 						-- the user has pushed on the step-out button to launch the application. let's stop at the begginning
 						send_rqst_3 (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero

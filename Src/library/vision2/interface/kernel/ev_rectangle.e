@@ -41,10 +41,10 @@ feature -- Access
 			-- Vertical position.
 
 	width: INTEGER
-			-- Width of the clip area
+			-- Width of `Current'.
 
 	height: INTEGER
-			-- Height of the clip area.
+			-- Height of `Current'.
 			
 	left: INTEGER is
 			-- Horizontal position of left side
@@ -73,7 +73,7 @@ feature -- Access
 feature -- Status report
 
 	upper_left: EV_COORDINATE is
-			-- Upper-left corner of the clip area.
+			-- Upper-left corner of `Current'.
 		do
 			create Result.set (left, top)
 		ensure
@@ -82,7 +82,7 @@ feature -- Status report
 		end
 
 	upper_right: EV_COORDINATE is
-			-- Upper-right corner of the clip area.
+			-- Upper-right corner of `Current'.
 		do
 			create Result.set (right, top)
 		ensure
@@ -91,7 +91,7 @@ feature -- Status report
 		end
 
 	lower_left: EV_COORDINATE is
-			-- Lower-left corner of the clip area.
+			-- Lower-left corner of `Current'.
 		do
 			create Result.set (left, bottom)
 		ensure
@@ -100,7 +100,7 @@ feature -- Status report
 		end
 
 	lower_right: EV_COORDINATE is
-			-- Lower-right corner of the clip area.
+			-- Lower-right corner of `Current'.
 		do
 			create Result.set (right, bottom)
 		ensure
@@ -218,7 +218,7 @@ feature -- Element change
 		end
 
 	set_left (i: INTEGER) is
-			-- Set `left' to `i'.
+			-- Assign `i' to `left'.
 		require
 			i <= right
 		do
@@ -230,7 +230,7 @@ feature -- Element change
 		end
 
 	set_right (i: INTEGER) is
-			-- Set `right' to `i'.
+			-- Assign `i' to `right'.
 		require
 			i - x >= 0
 		do
@@ -240,7 +240,7 @@ feature -- Element change
 		end
 
 	set_top (i: INTEGER) is
-			-- Set `top' to `i'.
+			-- Assign `i' to `top'.
 		require
 			i <= bottom
 		do
@@ -252,7 +252,7 @@ feature -- Element change
 		end
 
 	set_bottom (i: INTEGER) is
-			-- Set `bottom' to `i'.
+			-- Assign `i' to `bottom'.
 		require
 			i - y >= 0
 		do
@@ -262,7 +262,7 @@ feature -- Element change
 		end
 
 	set_x (new_x: INTEGER) is
-			-- Set `x' to `new_x'.
+			-- Assign `new_x' to `x'.
 		do
 			x := new_x
 		ensure
@@ -270,7 +270,7 @@ feature -- Element change
 		end
 
 	set_y (new_y: INTEGER) is
-			-- Set `y' to `new_y'.
+			-- Assign `new_y' to `y'.
 		do
 			y := new_y
 		ensure
@@ -278,7 +278,7 @@ feature -- Element change
 		end
 
 	set_width (new_width: INTEGER) is
-			-- Set 'width' to `new_width'.
+			-- Assign `new_width' to 'width'.
 		require
 			new_width_positive: new_width >= 0
 		do
@@ -288,7 +288,7 @@ feature -- Element change
 		end
 
 	set_height (new_height: INTEGER) is
-			-- Set `height' to `new_height'.
+			-- Assign `new_height' to `height'.
 		require
 			new_height_positive: new_height >= 0
 		do

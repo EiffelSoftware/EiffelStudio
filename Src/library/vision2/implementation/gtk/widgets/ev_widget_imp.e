@@ -304,35 +304,45 @@ feature -- Access
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
 
+feature {EV_WIDGET_IMP} -- Position retrieval
+
 	screen_x: INTEGER is
-			-- Horizontal offset relative to screen.
+			-- Horizontal position of the client area on screen, 
 		local
-			wind: EV_WINDOW_IMP
-		do 
-			if parent_imp /= Void then
-				wind ?= parent_imp
-				if wind /= Void then
-					Result := wind.client_screen_x
-				else
-					Result := parent_imp.screen_x
+			a_x: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+		do
+			if is_displayed then
+					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				    	$a_x, NULL)
+					Result := a_x
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
-				Result := Result + x_position
 			end
 		end
-
+		
 	screen_y: INTEGER is
-			-- Vertical offset relative to screen. 
-		local 
-			wind: EV_WINDOW_IMP 
-		do 
-			if parent_imp /= Void then
-				wind ?= parent_imp
-				if wind /= Void then
-					Result := wind.client_screen_y
-				else
-					Result := parent_imp.screen_y
+			-- Vertical position of the client area on screen, 
+		local
+			a_y: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+		do
+			if is_displayed then
+					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				    	NULL, $a_y)
+					Result := a_y
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
-				Result := Result + y_position
 			end
 		end
 	
@@ -639,7 +649,7 @@ feature {EV_ANY_IMP} -- Implementation
 	aux_info_struct: POINTER is
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("gtk-aux-info")
 			Result := feature {EV_GTK_EXTERNALS}.gtk_object_get_data (

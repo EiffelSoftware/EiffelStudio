@@ -49,6 +49,7 @@ feature
 			consistency: feat.feature_name.is_equal ("put");
 		local
 			gen_param: TYPE_I;
+			non_expanded_type: CL_TYPE_I;
 			is_expanded, has_local: BOOLEAN;
 			type_c: TYPE_C;
 			assertion_level: ASSERTION_I;
@@ -63,30 +64,28 @@ feature
 			file.putstring ("%
 				%/*%N%
 				% * put%N%
-				% */%N%
-				%void ");
+				% */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
 
-			file.putstring (encoded_name);
-			file.putstring ("%
-				%(Current, arg1, arg2)%N%
-				%char *Current;%N");
-			type_c.generate (file);
-			file.putstring ("%
-				%arg1;%N%
-				%long arg2;%N%
-				%{%N");
+			file.generate_function_signature ("void", encoded_name, "",
+				Byte_context.extern_declaration_file, <<"Current", "arg1", "arg2">>,
+				<<"EIF_REFERENCE", type_c.c_string, "EIF_INTEGER">>);
+
+			file.putstring ("{%N");
+
+			final_mode := byte_context.final_mode;
 
 			if is_expanded then
+				if not final_mode then
+					file.putstring ("%Tlong elem_size;%N")
+				end
 				file.putstring ("%
-					%%Tlong elem_size;%N%
 					%%Tif (arg1 == (char *) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
 			end;
 
-			final_mode := byte_context.final_mode;
 			if	(not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
 					file.putstring
@@ -118,11 +117,22 @@ feature
 			end;
 
 			if is_expanded then
-				file.putstring ("%
-					%%Telem_size = *(long *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-						% - LNGPAD(2) + sizeof(long));%N%
-					%%Tecopy(arg1, Current + OVERHEAD + arg2 * elem_size);%N");
+				if final_mode then
+						-- Optimization: size is know at compile time
+
+					file.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (Size(");
+					non_expanded_type ?= gen_param;
+					non_expanded_type := clone (non_expanded_type);
+					non_expanded_type.set_is_expanded (False);
+					file.putint (non_expanded_type.type_id - 1);
+					file.putstring (") + OVERHEAD));%N")
+				else
+					file.putstring ("%
+						%%Telem_size = *(long *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+							% - LNGPAD(2) + sizeof(long));%N%
+						%%Tecopy(arg1, Current + OVERHEAD + arg2 * elem_size);%N");
+				end
 			else
 				inspect
 					type_c.level
@@ -164,6 +174,7 @@ feature
 			consistency: feat.feature_name.is_equal ("item");
 		local
 			gen_param: TYPE_I;
+			non_expanded_type: CL_TYPE_I;
 			is_expanded, has_local: BOOLEAN;
 			type_c: TYPE_C;
 			assertion_level: ASSERTION_I;
@@ -179,24 +190,22 @@ feature
 				%/*%N%
 				% * item%N%
 				% */%N");
-			type_c.generate (file);
 
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "item", encoded_name);
 
-			file.putstring (encoded_name);
-			file.putstring ("%
-				%(Current, arg1)%N%
-				%char *Current;%N%
-				%long arg1;%N%
-				%{%N");
+			file.generate_function_signature (type_c.c_string, encoded_name, "",
+				Byte_context.extern_declaration_file,
+				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>);
+			file.putstring ("{%N");
 
-			if is_expanded then
+			final_mode := byte_context.final_mode;
+
+			if is_expanded and not final_mode then
 				file.putstring ("long elem_size;%N");
 			end;
 
-			final_mode := byte_context.final_mode;
 			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
 					file.putstring
@@ -228,11 +237,22 @@ feature
 			end;
 
 			if is_expanded then
-				file.putstring ("%
-					%%Telem_size = *(long *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE) %
-						%- LNGPAD(2) + sizeof(long));%N%
-					%%Treturn Current + OVERHEAD + arg1 * elem_size;%N");
+				if final_mode then
+						-- Optimization: size of expanded is know at compile time
+
+					file.putstring ("%Treturn Current + OVERHEAD + arg1 * (Size(");
+					non_expanded_type ?= gen_param;
+					non_expanded_type := clone (non_expanded_type);
+					non_expanded_type.set_is_expanded (False);
+					file.putint (non_expanded_type.type_id - 1);
+					file.putstring (") + OVERHEAD);%N")
+				else
+					file.putstring ("%
+						%%Telem_size = *(long *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE) %
+							%- LNGPAD(2) + sizeof(long));%N%
+						%%Treturn Current + OVERHEAD + arg1 * elem_size;%N");
+				end
 			else
 				inspect
 					type_c.level

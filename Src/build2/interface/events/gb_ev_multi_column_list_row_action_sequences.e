@@ -37,6 +37,49 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when selected.")
 			Result.extend ("-- Actions to be performed when deselected.")
 		end
+		
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		local
+			multi_column_row_sequence: GB_EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
+			column_action_sequence: GB_EV_COLUMN_ACTION_SEQUENCE
+			multi_column_list: EV_MULTI_COLUMN_LIST
+		do
+			multi_column_list ?= widget
+			check
+				multi_column_list_not_void: multi_column_list /= Void
+			end
+			if action_sequence.is_equal (names @ 1) then
+				if adding then
+					create multi_column_row_sequence
+					multi_column_list.select_actions.extend (multi_column_row_sequence.display_agent (action_sequence, string_handler))
+				else
+					multi_column_list.select_actions.wipe_out
+				end
+			elseif action_sequence.is_equal (names @ 2) then
+				if adding then
+					create multi_column_row_sequence
+					multi_column_list.deselect_actions.extend (multi_column_row_sequence.display_agent (action_sequence, string_handler))
+				else
+					multi_column_list.deselect_actions.wipe_out
+				end
+			elseif action_sequence.is_equal (names @ 3) then
+				if adding then
+					create column_action_sequence
+					multi_column_list.column_title_click_actions.extend (column_action_sequence.display_agent (action_sequence, string_handler))
+				else
+					multi_column_list.column_title_click_actions.wipe_out
+				end
+			elseif action_sequence.is_equal (names @ 4) then
+				if adding then
+					create column_action_sequence
+					multi_column_list.column_resized_actions.extend (column_action_sequence.display_agent (action_sequence, string_handler))
+				else
+					multi_column_list.column_resized_actions.wipe_out
+				end
+			end	
+		end
 
 end -- class GB_EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES
 

@@ -151,8 +151,8 @@ feature -- Status setting
 feature -- Event - command association
 
 	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no 'mouse_button' is pressed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no 'mouse_button' is pressed.
 		do
 			inspect mouse_button 
 			when 1 then
@@ -167,8 +167,8 @@ feature -- Event - command association
 		end
 	
 	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no 'mouse_button' is released.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no 'mouse_button' is released.
 		do
 			inspect mouse_button
 			when 1 then
@@ -183,8 +183,8 @@ feature -- Event - command association
 		end
 
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no `mouse_button' is double clicked.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no `mouse_button' is double clicked.
 		do
 			inspect mouse_button
 			when 1 then
@@ -199,8 +199,8 @@ feature -- Event - command association
 		end
 
 	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when mouse move
-			-- in the widget area.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the mouse move in the widget area.
 			-- Be careful, in this motion-notify, windows considers that
 			-- pushing and releasing a button is a move ???
 			-- Need to be fix, it shouldn't be like this.
@@ -210,15 +210,15 @@ feature -- Event - command association
 		end
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `command' to the list of commands to be executed when 
-			-- the widget is destroyed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is destroyed.
 		do
 			add_command (Cmd_destroy, cmd, arg)
 		end
 
 	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- a key is pressed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is pressed.
 			-- Use the `Wm_keydown' and the `Wm_char' windows event.
 			-- The result will be this givent by `Wm_char', because the 
 			-- other event give only a virtual key number and not
@@ -228,37 +228,163 @@ feature -- Event - command association
 		end
 	
 	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when a key 
-			-- is released.
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is released.
 			-- Use the `Wm_keyup' windows event.
 		do
 			add_command (Cmd_key_release, cmd, arg)
 		end
 
 	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when the mouse 
-			-- enters the widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the mouse enters the widget.
 		do
 			add_command (Cmd_enter_notify, cmd, arg)
 		end
 	
 	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when the mouse 
-			-- leaves the widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the mouse leaves the widget.
 		do
 			add_command (Cmd_leave_notify, cmd, arg)
 		end
 
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when the widget is 
-			-- exposed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is exposed.
 		do
 			add_command (Cmd_expose, cmd, arg)
 		end
 
-	last_command_id: INTEGER
-			-- Id of the last command added by feature
-			-- 'add_command'
+	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget get the focus.
+		do
+			add_command (Cmd_get_focus, cmd, arg)
+		end
+
+	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget loose the focus.
+		do
+			add_command (Cmd_loose_focus, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_button_one_press)
+			when 2 then
+				remove_command (Cmd_button_two_press)
+			when 3 then
+				remove_command (Cmd_button_three_press)
+			else
+				io.putstring ("This button do not exists")
+			end
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_button_one_release)
+			when 2 then
+				remove_command (Cmd_button_two_release)
+			when 3 then
+				remove_command (Cmd_button_three_release)
+			else
+				io.putstring ("This button do not exists")
+			end
+		end
+
+	remove_double_click_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is double clicked.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_button_one_dblclk)
+			when 2 then
+				remove_command (Cmd_button_two_dblclk)
+			when 3 then
+				remove_command (Cmd_button_three_dblclk)
+			else
+				io.putstring ("This button do not exists")
+			end
+		end
+
+	remove_motion_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the mouse move.
+		do
+			remove_command (Cmd_motion_notify)
+		end
+
+	remove_destroy_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget is destroyed.
+		do
+			remove_command (Cmd_destroy)
+		end
+
+	remove_expose_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn because it was exposed from
+			-- behind another widget.
+		do
+			remove_command (Cmd_expose)
+		end
+
+	remove_key_press_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is pressed on the keyboard while the widget has the
+			-- focus.
+		do
+			remove_command (Cmd_key_press)
+		end
+
+	remove_key_release_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is released on the keyboard while the widget has the
+			-- focus.
+		do
+			remove_command (Cmd_key_release)
+		end
+
+	remove_enter_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse enter the widget.
+		do
+			remove_command (Cmd_enter_notify)
+		end
+
+	remove_leave_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse leave the widget.
+		do
+			remove_command (Cmd_leave_notify)
+		end
+
+	remove_get_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget get the focus.
+		do
+			remove_command (Cmd_get_focus)
+		end
+
+	remove_loose_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget loose the focus.
+		do
+			remove_command (Cmd_loose_focus)
+		end
 
 feature -- Implementation
 
@@ -429,6 +555,20 @@ feature {NONE} -- Implementation, key events
 			!! data.make
 			data.set_keyval (key_data)
 			execute_command (Cmd_key_release, data)
+		end
+
+feature {NONE} -- Implementation, focus event
+
+	on_set_focus is
+			-- Wm_setfocus message
+		do
+			execute_command (Cmd_get_focus, Void)
+		end
+
+	on_kill_focus is
+			-- Wm_killfocus message
+		do
+			execute_command (Cmd_loose_focus, Void)
 		end
 
 feature {EV_WIDGET_IMP} -- WEL Implementation

@@ -447,47 +447,46 @@ feature -- Post-conditions
 		end
 
 feature -- Event - command association
-	
+
 	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no 'mouse_button' is pressed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no 'mouse_button' is pressed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
-	
-	
+
 	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no 'mouse_button' is released.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no 'mouse_button' is released.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
-	
+
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button no `mouse_button' is double clicked.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button no `mouse_button' is double clicked.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
-			
+
 	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- mouse move.
+			-- Add `cmd' to the list of commands to be executed
+			-- when mouse move.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
-	
+
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the widget is destroyed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is destroyed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -495,68 +494,168 @@ feature -- Event - command association
 		end
 
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the widget has to be redrawn because it was exposed from
-			-- behind another widget.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-	
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- a key is pressed on the keyboard while the widget has the
-			-- focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-	
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- a key is released on the keyboard while the widget has the
-			-- focus.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-	
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the cursor of the mouse enter the widget.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-	
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the cursor of the mouse leave the widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn because it was
+			-- exposed from behind another widget.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
 
-	remove_command (id: INTEGER) is
-			-- Remove the command associated with
-			-- `id' from the list of actions for
-			-- this context. If there is no command
-			-- associated with `command_id', nothing
-			-- happens.
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is pressed on the keyboard while the
+			-- widget has the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is released on the keyboard while the
+			-- widget has the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the cursor of the mouse enter the widget.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the cursor of the mouse leave the widget.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget get the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget loose the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+feature -- Event -- removing command association
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
 		require
 			exists: not destroyed
 		deferred
 		end
-	
-	last_command_id: INTEGER is
-			-- Id of the last command added by feature
-			-- `add_command'
-		require		
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_double_click_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is double clicked.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_motion_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the mouse move.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_destroy_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget is destroyed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_expose_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn because it was exposed from
+			-- behind another widget.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_key_press_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is pressed on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_key_release_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is released on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_enter_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse enter the widget.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_leave_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse leave the widget.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_get_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget get the focus.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_loose_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget loose the focus.
+		require
 			exists: not destroyed
 		deferred
 		end

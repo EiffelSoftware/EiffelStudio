@@ -397,6 +397,7 @@ feature {NONE} -- Implementation
 			-- Eiffel attribute from `info'.
 		require
 			non_void_field_info: info /= Void
+			is_consumed_field: is_consumed_field (info)
 		local
 			dotnet_name: STRING
 			l_type: TYPE
@@ -420,7 +421,7 @@ feature {NONE} -- Implementation
 					info.is_static,
 					info.is_public,
 					literal_field_value (l_value),
-					referenced_type_from_type (l_type))
+					referenced_type_from_type (l_type))	
 			else
 				create Result.make (
 					unique_feature_name (dotnet_name),
@@ -1177,28 +1178,26 @@ feature {NONE} -- Added features for ENUM types.
 
 	literal_field_value (val: SYSTEM_OBJECT): STRING is
 			-- Convert `val' into a STRING representation.
+		require
+			val_not_void: val /= Void
 		local
 			d: DOUBLE
 			r: REAL
 		do
-			if val /= Void then
-				if val.get_type.equals_type (Double_type) then
-					d ?= val
-					check
-						is_double: d /= Void
-					end
-					Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
-				elseif val.get_type.equals_type (Real_type) then
-					r ?= val
-					check
-						is_real: r /= Void
-					end
-					Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
-				else
-					create Result.make_from_cil (val.to_string)
+			if val.get_type.equals_type (Double_type) then
+				d ?= val
+				check
+					is_double: d /= Void
 				end
+				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
+			elseif val.get_type.equals_type (Real_type) then
+				r ?= val
+				check
+					is_real: r /= Void
+				end
+				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
 			else
-				Result := "Void"
+				create Result.make_from_cil (val.to_string)
 			end
 		end
 

@@ -181,7 +181,7 @@ feature -- Settings
 		end
 
 	brush: WEL_BRUSH is
-			--
+			-- Windows Brush corresponding to this color.
 		do
 			if allocated_brush = Void then
 				!! allocated_brush.make_solid (Current)

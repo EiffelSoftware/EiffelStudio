@@ -290,7 +290,7 @@ feature -- Status setting
 			-- Realize separator.
 		local
 			local_menu: WEL_MENU
-			wc:WEL_COMPOSITE_WINDOW
+			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not in_menu then
 				if not realized then

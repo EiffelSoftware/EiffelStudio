@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Update `resources'.
 		do
 			!! regular_button.make (associated_category.regular_button);
+			!! close_button.make (associated_category.close_button)
 			!! acrobat_reader.make (associated_category.acrobat_reader);
 			!! text_mode.make (associated_category.text_mode);
 			!! tab_step.make (associated_category.tab_step);
@@ -49,6 +50,7 @@ feature {NONE} -- Initialization
 			end
 
 			resources.extend (regular_button);
+			resources.extend (close_button);
 			resources.extend (acrobat_reader);
 			resources.extend (text_mode)
 			resources.extend (tab_step);
@@ -111,7 +113,8 @@ feature {NONE} -- Resources
 	print_shell_command: STRING_PREF_RES;
 	filter_name: STRING_PREF_RES;
 	filter_command: STRING_PREF_RES;
-	regular_button, browsing_facilities, default_window_position: BOOLEAN_PREF_RES;
+	regular_button, browsing_facilities,
+	close_button, default_window_position: BOOLEAN_PREF_RES;
 	history_size: INTEGER_PREF_RES;
 	window_free_list_number: INTEGER_PREF_RES;
 	color_list: ARRAY_PREF_RES

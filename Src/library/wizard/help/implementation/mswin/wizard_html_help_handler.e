@@ -6,6 +6,8 @@ class
 
 inherit
 	WEL_SW_CONSTANTS
+	
+	WIZARD_SHARED
 
 feature -- Access
 
@@ -35,10 +37,21 @@ feature -- Basic Operations
 		local
 			returned_value: INTEGER
 		do	
-			returned_value := cwin_shell_execute (cwin_desktop_window, (create {WEL_STRING}.make ("open")).item, (create {WEL_STRING}.make ("F:\Eiffel50\bench\wizards\new_projects\dotnet\wizard.chm")).item, default_pointer, default_pointer, sw_shownormal)
+			returned_value := cwin_shell_execute (cwin_desktop_window, (create {WEL_STRING}.make ("open")).item, (create {WEL_STRING}.make (Chm_url)).item, default_pointer, default_pointer, sw_shownormal)
 			--help_window_handle := cwin_html_help (cwin_desktop_window, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, 0)
 		end
-		
+
+feature {NONE} -- Implementation
+
+	Chm_url: STRING is 
+			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
+		once
+			Result := wizard_source + "\wizard.chm"
+		ensure
+			non_void_path: Result /= Void
+			not_empty_path: not Result.is_empty
+		end
+
 feature {NONE} -- Externals
 
 	cwin_desktop_window: POINTER is

@@ -3,13 +3,16 @@
 deferred class ATTR_DESC 
 
 inherit
-
 	COMPARABLE
 		undefine
 			is_equal
-		end;
-	SHARED_LEVEL;
-	SK_CONST;
+		end
+
+	SHARED_LEVEL
+
+	SK_CONST
+
+	COMPILER_EXPORTER
 	
 feature 
 
@@ -50,7 +53,7 @@ feature
 		deferred
 		end;
 
-	real_sk_value : INTEGER is
+	real_sk_value: INTEGER is
 			-- sk_value including the type_id
 		do
 			Result := sk_value
@@ -60,7 +63,7 @@ feature
 			-- Is `other' greater then Current ?
 		do
 			Result := level < other.level
-				or else (level = other.level and then feature_id < other.feature_id)
+				or else (level = other.level and then rout_id.id < other.rout_id.id)
 		end;
 
 	is_reference: BOOLEAN is

@@ -22,8 +22,6 @@ inherit
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
-
-	DIALOG_M
 		
 creation
 

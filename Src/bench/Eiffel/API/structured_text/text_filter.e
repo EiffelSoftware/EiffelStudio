@@ -603,7 +603,7 @@ feature {NONE} -- Text processing
 			item: COMMENT_TEXT
 		do
 			print_escaped_text (" ");
-			process_basic_text (ti_Dashdash);
+			process_comment_text (ti_dashdash)
 			print_escaped_text (" ");
 			create item.make ("class ");
 			process_comment_text (item);

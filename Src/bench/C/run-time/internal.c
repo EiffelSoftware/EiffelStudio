@@ -47,7 +47,7 @@ rt_public char *ei_field (long i, char *object)
 	obj_desc = &System(dtype);
 	field_type = obj_desc->cn_types[i];
 #ifndef WORKBENCH
-	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
+	o_ref = object + obj_desc->cn_offsets[i];
 #else
 	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
 	o_ref = object + offset;
@@ -235,7 +235,7 @@ rt_private char *ei_oref(long i, char *object)
 
 	obj_desc = &System(dtype);
 #ifndef WORKBENCH
-	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
+	o_ref = object + obj_desc->cn_offsets[i];
 #else
 	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
 	o_ref = object + offset;

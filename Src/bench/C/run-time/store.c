@@ -694,7 +694,7 @@ rt_public void ist_write(char *object)
 rt_public long get_offset(uint32 o_type, uint32 attrib_num)
 {
 #ifndef WORKBENCH
-	return ((System(o_type).cn_offsets[attrib_num])[o_type]);
+	return (System(o_type).cn_offsets[attrib_num]);
 #else
 	int32 rout_id;				/* Attribute routine id */
 	long offset;
@@ -723,7 +723,7 @@ rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 		alpha_attrib_num = attr_types[attrib_num];
 	}
 #ifndef WORKBENCH
-	return ((System(o_type).cn_offsets[alpha_attrib_num])[o_type]);
+	return (System(o_type).cn_offsets[alpha_attrib_num]);
 #else
 	rout_id = System(o_type).cn_attr[alpha_attrib_num];
 	CAttrOffs(offset,rout_id,o_type);

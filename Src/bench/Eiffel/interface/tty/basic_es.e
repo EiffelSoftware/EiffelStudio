@@ -191,6 +191,7 @@ feature -- Properties
 			Result.put (implementers_help, implementers_cmd_name);
 			Result.put (loop_help, loop_cmd_name);
 			Result.put (project_help, project_cmd_name);
+			Result.put (quick_melt_help, quick_melt_cmd_name);
 			Result.put (short_help, short_cmd_name);
 			Result.put (stop_help, stop_cmd_name);
 			Result.put (suppliers_help, suppliers_cmd_name);
@@ -258,7 +259,7 @@ feature -- Output
 			io.putstring (" [-help | ");
 			add_usage_special_cmds;
 			io.putstring ("%
-				%-loop | -clients [-filter filtername] class |%N%
+				%-loop | -quick_melt | -clients [-filter filtername] class |%N%
 				%%T-suppliers [-filter filtername] class |%N%
 				%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
 				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
@@ -368,6 +369,8 @@ feature -- Update
 				else
 					command := loop_cmd
 				end;
+			elseif option.is_equal ("-quick_melt") then
+				!EWB_QUICK_MELT! command 
 			elseif option.is_equal ("-implementers") then
 				if current_option < argument_count then
 					if command /= Void then

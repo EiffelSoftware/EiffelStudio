@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
-			interface
+			interface		
 		end
 
 	EV_PRIMITIVE_IMP
@@ -200,8 +200,13 @@ feature -- Basic operation
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) text between 
 			-- 'start_pos' and 'end_pos'
+		local
+			new_lines_to_start: INTEGER
+			new_lines_to_end: INTEGER
 		do
-			set_selection (start_pos - 1, end_pos)
+			new_lines_to_start := text.substring (1, start_pos).occurrences ('%N')
+			new_lines_to_end := text.substring (start_pos + 1, end_pos).occurrences ('%N')
+			set_selection (start_pos - 1 + new_lines_to_start, end_pos + new_lines_to_start + new_lines_to_end)
 		end
 
 	paste (index: INTEGER) is

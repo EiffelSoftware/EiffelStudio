@@ -54,6 +54,7 @@ feature -- Access
 
 	indentation: STRING is
 			-- Create a string containing the same indentation as `ref_line'.
+			-- New instance created at each call.
 		local
 			t_blank: EDITOR_TOKEN_BLANK
 		do
@@ -71,6 +72,8 @@ feature -- Access
 					t_blank ?= t_blank.next
 				end
 			end
+		ensure
+			indentation_not_void: Result /= Void
 		end
 
 feature -- Status Report

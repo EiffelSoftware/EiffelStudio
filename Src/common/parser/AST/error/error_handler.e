@@ -16,7 +16,18 @@ feature {NONE} -- Initialization
 		do
 		end
 
-feature {EIFFEL_PARSER} -- Error handling primitives
+feature -- Error handling primitives
+
+	insert_error (e: SYNTAX_ERROR) is
+			-- Insert `e' in `error_list'.
+		require
+			good_argument: e /= Void
+		do
+		end
+
+	raise_error is
+		do
+		end
 
 	insert_warning (w: SYNTAX_WARNING) is
 			-- Insert `w' in `warning_list'.

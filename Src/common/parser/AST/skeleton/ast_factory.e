@@ -597,18 +597,6 @@ feature -- Access
 			clients_set: Result.clients = c
 		end
 
-	new_constant_as (v: EXPR_AS): CONSTANT_AS is
-			-- New CONSTANT AST node
-		require
-			v_not_void: v /= Void
-		do
-			create Result
-			Result.initialize (v)
-		ensure
-			constant_as_not_void: Result /= Void
-			value_set: Result.value = v
-		end
-
 	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		require
@@ -1217,32 +1205,6 @@ feature -- Access
 			location_set: Result.location.is_equal (l)
 		end
 
-	new_integer_as (is_negative: BOOLEAN; buffer: STRING): INTEGER_CONSTANT is
-			-- New INTEGER AST node
-		do
-			create Result.make_default
-			Result.initialize (is_negative, buffer)
-		ensure
-			integer_as_not_void: Result /= Void
-			-- value_set: Make sure we translated `buffer'
-			-- correctly into correct integer value.
-		end
-
-	new_integer_as_from_hexa (sign: CHARACTER; buffer: STRING): INTEGER_CONSTANT is
-			-- New INTEGER AST node
-		require
-			valid_sign: ("%U+-").has (sign)
-			buffer_not_void: buffer /= Void
-			buffer_not_empty: not buffer.is_empty
-		do
-			create Result.make_default
-			Result.initialize_from_hexa (sign, buffer)
-		ensure
-			integer_as_not_void: Result /= Void
-			-- value_set: Make sure we translated `s'
-			-- correctly into correct integer value.
-		end
-
 	new_interval_as (l, u: ATOMIC_AS): INTERVAL_AS is
 			-- New INTERVAL AST node
 		require
@@ -1447,19 +1409,6 @@ feature -- Access
 			operator_set: Result.visual_name = op.value
 			operator_is_prefix: Result.is_prefix
 			is_frozen_set: Result.is_frozen = b
-		end
-
-	new_real_as (r: STRING): REAL_AS is
-			-- New REAL AST node with `r' containing the
-			-- textual representation of the real value
-		require
-			r_not_void: r /= Void
-		do
-			create Result
-			Result.initialize (r)
-		ensure
-			real_as_not_void: Result /= Void
-			value_set: Result.value = r
 		end
 
 	new_rename_as (o, n: FEATURE_NAME): RENAME_AS is

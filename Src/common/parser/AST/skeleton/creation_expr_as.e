@@ -21,10 +21,11 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
+			l_not_void: l /= Void
 		do
 			type := t
 			call := c
-			location := clone (l)
+			location := l.twin
 		ensure
 			type_set: type = t
 			call_set: call = c

@@ -13,16 +13,19 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	make
+	
+feature {NONE} -- Initialization
 
-	initialize (r: STRING) is
+	make (l_type: TYPE_A; r: STRING) is
 			-- Create a new REAL AST node with `r'
 			-- containing the textual representation
 			-- of the real value.
 		require
 			r_not_void: r /= Void
 		do
-			value := r
+			value := r.string
 		ensure
 			value_set: value = r
 		end
@@ -58,7 +61,7 @@ feature -- Comparison
 
 	string_value: STRING is
 		do
-			Result := clone (value)
+			Result := value.twin
 		end
 
 end -- class REAL_AS

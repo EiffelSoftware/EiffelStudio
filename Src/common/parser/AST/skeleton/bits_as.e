@@ -55,7 +55,7 @@ feature -- Output
 		do
 			create Result.make (10)
 			Result.append ("BIT ")
-			Result.append_integer (bits_value.value)
+			Result.append (bits_value.string_value)
 		end
 
 end -- class BITS_AS

@@ -317,9 +317,8 @@ feature
 				-- pass
 			Tmp_ast_server.clear_index;
 
-				-- Clear `filters' because new filters will be re-processed
-			   -- for the class by the shared instance of INSTANTIATOR
-			filters.wipe_out;
+				-- Clean the filters, i.e. remove all the obsolete types
+			filters.clean;
 			end;
 		ensure
 			No_error: not Error_handler.has_error;
@@ -458,15 +457,8 @@ feature -- Third pass: byte code production and type check
 																(f_suppliers));
 
 						if not feature_changed then
-							from
-								f_suppliers.start
-							until
-								f_suppliers.offright or else feature_changed
-							loop
-								if System.class_of_id (f_suppliers.item.id) = Void then
-									feature_changed := True
-								end;
-								f_suppliers.forth
+							if f_suppliers.has_removed_id then
+								feature_changed := True;
 							end;
 						end;
 
@@ -488,68 +480,84 @@ feature -- Third pass: byte code production and type check
 	
 					ast_context.set_a_feature (feature_i);
 
-					if feature_i.in_pass3 and then
+					if feature_i.in_pass3 then
+						if
 							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
-						(	feature_changed
+							(feature_changed
 							or else
 							not (	f_suppliers = Void
 									or else
 									(propagators.empty_intersection (f_suppliers)
 									and then
 									propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-								)
-						)
-					then
-							-- Type check
+								))
+						then
+								-- Type check
 debug ("ACTIVITY")
 	io.error.putstring ("%Ttype check ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-						if feature_changed and then f_suppliers /= Void
-						then
-								-- Dependances update: remove old
-								-- dependances for `feature_name'.
-							new_suppliers.remove_occurence (f_suppliers);
-							dependances.remove (feature_name);
-						end;
+							if feature_changed and then f_suppliers /= Void
+							then
+									-- Dependances update: remove old
+									-- dependances for `feature_name'.
+								new_suppliers.remove_occurence (f_suppliers);
+								dependances.remove (feature_name);
+							end;
 
-						Error_handler.mark;
-						feature_i.type_check;
-						type_check_error := Error_handler.new_error;
+							Error_handler.mark;
+debug ("ACTIVITY");
+	if f_suppliers /= Void then
+	io.error.putstring ("Feature_suppliers%N");
+	f_suppliers.trace;
+	io.error.new_line;
+	end;
+end;
+							feature_i.type_check;
+							type_check_error := Error_handler.new_error;
 
-						if 	feature_changed
-							and then
-							not type_check_error
-						then
-								-- Dependances update: add new
-								-- dependances for `feature_name'.
-							f_suppliers := ast_context.supplier_ids.twin;
-							dependances.put (f_suppliers, feature_name);
-							new_suppliers.add_occurence (f_suppliers);
+							if 	feature_changed
+								and then
+								not type_check_error
+							then
+									-- Dependances update: add new
+									-- dependances for `feature_name'.
+								f_suppliers := ast_context.supplier_ids.twin;
+								dependances.put (f_suppliers, feature_name);
+								new_suppliers.add_occurence (f_suppliers);
 		
-								-- Byte code processing
---							if feature_i.is_deferred then
---									-- No byte code and melted info for
---									-- deferred features
---								feature_changed := False;
---							else
+									-- Byte code processing
+--								if feature_i.is_deferred then
+--										-- No byte code and melted info for
+--										-- deferred features
+--									feature_changed := False;
+--								else
 debug ("ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-								feature_i.compute_byte_code;
---							end;
+									feature_i.compute_byte_code;
+--								end;
 
-						end;
-					else
+							end;
+						else
 							-- Check the conflicts between local variable names
 							-- and feature names
 -- FIX ME
 -- ONLY needed when new features are inserted in the feature table
-						feature_i.check_local_names
+							feature_i.check_local_names
+						end;
+					else
+							-- in_pass3 = False
+						if dependances.has (feature_name) then
+							dependances.remove (feature_name);
+						end;
+						!!f_suppliers.make;
+						feature_i.record_suppliers (f_suppliers);
+						dependances.put (f_suppliers, feature_name);
 					end;
 
 					ast_context.clear2;
@@ -1247,9 +1255,19 @@ feature -- Class initialization
 				Workbench.change_class (class_i);
 			end;
 
-			if old_parents /= Void and then not changed then
-					-- If the class is not changed, it is marked `changed2'
-				changed2 := True
+			if old_parents /= Void then
+				if not same_parents (old_parents) then
+						-- Conformance tables incrementality
+					set_changed (True);
+					System.set_update_sort (True);
+				end;
+				if not changed then
+						-- If the class is not changed, it is marked `changed2'
+					changed2 := True
+				end;
+			else
+				-- First compilation of the class
+				System.set_update_sort (True)
 			end;
 
 				-- Conformance tables incrementality
@@ -2044,12 +2062,25 @@ feature -- Actual class type
 			consistency: data.base_class = Current;
 		local
 			filter: GEN_TYPE_I;
-			i: INTEGER;
 			new_class_type: CLASS_TYPE;
+			base_c: CLASS_C;
+			base_id: INTEGER;
 			local_cursor: LINKABLE [GEN_TYPE_I]
 		do
+			if not derivations.has_derivation (id, data) then
+					-- The recursive update is done only once
+				derivations.insert_derivation (id, data);
+				
+debug ("GENERICITY")
+	io.error.putstring ("Update_types%N");
+	io.error.putstring (class_name);
+	data.dump (io.error);
+end;
 			if not types.has_type (data) then
 					-- Found a new type for the class
+debug ("GENERICITY")
+	io.error.putstring ("new type%N");
+end;
 				new_class_type := new_type (data);
 					-- If class is TO_SPECIAL or else SPECIAL
 					-- then freeze system.
@@ -2069,18 +2100,31 @@ feature -- Actual class type
 						-- the new class type
 					melt_all;
 				end;
-					-- Propagation along the filters since we have a new type
-				from
-					local_cursor := filters.first_element
-				until
-					local_cursor = Void
-				loop
-						-- Instantiation of the filter with `data'
-					filter := local_cursor.item.instantiation_in (data);
-					filter.base_class.update_types (filter);
-					local_cursor := local_cursor.right
-				end;
 			end;
+					-- Propagation along the filters since we have a new type
+			from
+				local_cursor := filters.first_element
+			until
+				local_cursor = Void
+			loop
+					-- Instantiation of the filter with `data'
+				filter := local_cursor.item.instantiation_in (data);
+				base_c := filter.base_class;
+				base_id := base_c.id;
+debug ("GENERICITY")
+	io.error.putstring ("propagation to ");
+	io.error.putstring (base_c.class_name);
+	io.error.new_line;
+end;
+				base_c.update_types (filter);
+				local_cursor := local_cursor.right
+			end;
+			end;
+		end;
+
+	derivations: DERIVATIONS is
+		once
+			Result := instantiator.derivations
 		end;
 
 	new_type (data: CL_TYPE_I): CLASS_TYPE is

@@ -13,6 +13,7 @@ inherit
 		select
 			make, wipe_out
 		end;
+	SHARED_WORKBENCH
 
 creation
 
@@ -43,10 +44,48 @@ feature
 			suppliers.wipe_out;
 		end;
 
+feature -- Incrementality
+
+	has_removed_id: BOOLEAN is
+			-- One of thesuppliers has been removed from the system?
+		do
+			from
+				suppliers.start
+			until
+				suppliers.offright or else Result
+			loop
+				if System.class_of_id (suppliers.item) = Void then
+					Result := True
+				end;
+				suppliers.forth
+			end;
+			from
+				start
+			until
+				offright or else Result
+			loop
+				if System.class_of_id (item.id) = Void then
+					Result := True
+				end;
+				forth
+			end;
+		end;
+
 feature -- Debug
 
 	trace is
 		do
+			io.error.putstring("Suppliers%N");
+			from
+				suppliers.start
+			until
+				suppliers.after
+			loop
+				io.error.putstring ("Supplier id: ");
+				io.error.putint (suppliers.item);
+				io.error.new_line;
+				suppliers.forth
+			end;
 			from
 				start
 			until

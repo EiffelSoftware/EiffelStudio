@@ -6,7 +6,7 @@ inherit
 		rename
 			is_void as cl_type_is_void
 		redefine
-			is_basic, is_reference, c_type, base_class
+			is_basic, is_reference, c_type, base_class, is_valid
 		end;
 	TYPE_C
 		undefine
@@ -27,6 +27,11 @@ feature
 
 	is_basic: BOOLEAN is
 			-- Type is a basic type.
+		do
+			Result := True;
+		end;
+
+	is_valid: BOOLEAN is
 		do
 			Result := True;
 		end;

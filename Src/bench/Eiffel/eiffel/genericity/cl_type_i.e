@@ -8,6 +8,7 @@ inherit
 		redefine
 			is_reference,
 			is_expanded,
+			is_valid,
 			same_as,
 			c_type,
 			instantiation_in
@@ -43,6 +44,12 @@ feature
 			-- Base class associated to the class type
 		do
 			Result := System.class_of_id (base_id);
+		end;
+
+	is_valid: BOOLEAN is
+			-- Is the base class still in the system ?
+		do
+			Result := base_class /= Void;
 		end;
 
 	is_reference: BOOLEAN is

@@ -8,6 +8,7 @@ inherit
 		redefine
 			meta_generic,
 			same_as,
+			is_valid,
 			has_formal,
 			instantiation_in,
 			dump
@@ -37,6 +38,12 @@ feature
 							and then
 							meta_generic.same_as (gen_type_i.meta_generic);
 			end;
+		end;
+
+	is_valid: BOOLEAN is
+			-- Are all the base classes still in the system ?
+		do
+			Result := base_class /= Void and then meta_generic.is_valid;
 		end;
 
 	duplicate: like Current is
@@ -91,6 +98,7 @@ feature
 				if is_expanded then
 					file.putstring ("expanded ");
 				end;
+				file.putint (base_id);
 				file.putstring (base_class.class_name);
 				file.putstring (" {");
 				i := 1;

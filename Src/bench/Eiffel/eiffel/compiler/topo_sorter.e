@@ -53,8 +53,6 @@ feature -- Initialization
 
 	sort is
 			-- Perform topological sort
-		require
-			good_context: count > 0
 		do
 				-- Fill the structures
 			fill;

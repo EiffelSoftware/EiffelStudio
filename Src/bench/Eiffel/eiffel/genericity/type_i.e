@@ -29,6 +29,12 @@ feature
 		do
 		end;
 
+	is_valid: BOOLEAN is
+			-- Is the associated class still in the system ?
+		do
+			Result := True;
+		end;
+
 	is_void: BOOLEAN is
 			-- Is the type a void one (i.e expression has NO type) ?
 		do

@@ -13,7 +13,7 @@ inherit
 
 	BAR_AND_TEXT
 		rename
-			_make as normal_create
+			make as normal_create
 		redefine
 			text_window, build_format_bar, hole
 		end

@@ -8,7 +8,7 @@ inherit
 	
 feature 
 
-	code: STRING is "VEEN";
+	code: STRING is "VEEN2A";
 			-- Error code
 
 end

@@ -30,4 +30,20 @@ feature
 			end;
 		end;
 
+	clean is
+			-- Clean the list of all the removed classes
+		do
+			from
+				start
+			until
+				after
+			loop
+				if not item.is_valid then
+					remove;
+				else
+					forth
+				end;
+			end;
+		end;
+
 end

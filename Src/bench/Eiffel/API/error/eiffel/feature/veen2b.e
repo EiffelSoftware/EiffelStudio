@@ -17,7 +17,7 @@ feature
 			local_name := s;
 		end;
 
-	code: STRING is "VEEN";
+	code: STRING is "VEEN2B";
 			-- Error code
 
 end

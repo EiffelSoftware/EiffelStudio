@@ -21,8 +21,9 @@ feature
 					end
 				end;
 				if not error_occurred then
+					System.set_freeze (True);
 					compile;
-					System.freeze_system;
+					--System.freeze_system;
 					terminate_project;
 					print_tail;
 				end;

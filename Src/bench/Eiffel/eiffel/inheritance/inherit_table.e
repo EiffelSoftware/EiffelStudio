@@ -868,6 +868,10 @@ end;
 					body_table.put (read_info, new_body_id);	
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
+debug ("ACTIVITY")
+	io.error.putstring (feature_name);
+	io.error.putstring (" inserted in changed_features%N");
+end;
 					changed_features.start;
 					changed_features.put_right (feature_name);
 				else
@@ -891,6 +895,10 @@ end;
 				body_table.put (read_info, new_body_id);
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
+debug ("ACTIVITY")
+	io.error.putstring (feature_name);
+	io.error.putstring (" inserted in changed_features%N");
+end;
 				changed_features.start;
 				changed_features.put_right (feature_name);
 			end;

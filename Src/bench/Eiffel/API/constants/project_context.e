@@ -116,11 +116,11 @@ feature {NONE} -- Directory creation
 			Create_eiffel_gen_directory;
 			!!d.make (Final_generation_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 			!!d.make (Workbench_generation_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 		end
 
@@ -130,11 +130,11 @@ feature {NONE} -- Directory creation
 		do
 			!!d.make (Case_gen_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 			!!d.make (Case_storage_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 		end
 
@@ -144,7 +144,7 @@ feature {NONE} -- Directory creation
 		once
 			!!d.make (Eiffel_gen_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 		end;
 
@@ -156,7 +156,7 @@ feature {NONE} -- Directory creation
 			Create_eiffel_gen_directory;
 			!!d.make (compilation_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end
 		end;
 
@@ -167,7 +167,7 @@ feature {NONE} -- Directory creation
 		once
 			!! d.make (Profiler_path);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end
 		end
 

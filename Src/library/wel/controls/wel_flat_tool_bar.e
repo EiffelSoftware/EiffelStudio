@@ -187,7 +187,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_icon (a_icon: WEL_ICON) is
+	add_icon (a_icon: WEL_GRAPHICAL_RESOURCE) is
 			-- Add an icon to the list of currently used images.
 			--
 			-- Note: The function will work with Comctrl32.dll version less
@@ -220,7 +220,7 @@ feature -- Element change
 			end
 		end
 
-	add_disabled_icon(an_icon: WEL_ICON) is
+	add_disabled_icon(an_icon: WEL_GRAPHICAL_RESOURCE) is
 			-- Add an icon to the disabled image list.
 			--
 			-- The feature is only supported under Windows95+IE3
@@ -243,7 +243,7 @@ feature -- Element change
 			end
 		end
 
-	add_hot_icon(an_icon: WEL_ICON) is
+	add_hot_icon(an_icon: WEL_GRAPHICAL_RESOURCE) is
 			-- Add an icon to the hot image list.
 			--
 			-- The feature is only supported under Windows95+IE3

@@ -152,16 +152,9 @@ feature {NONE} -- Implementation
 
 			-- Result := `a_macro_accesser_name' (item)
 
-			body.append (tab_tab_tab)
-			body.append (Result_keyword)
-			body.append (Space)
-			body.append (Assignment)
-			body.append (Space)
+			body.append ("%T%T%TResult := ")
 			body.append (a_macro_accesser_name)
-			body.append (Space)
-			body.append (Open_parenthesis)
-			body.append ("item")
-			body.append (Close_parenthesis)
+			body.append (" (item)")
 
 			Result.set_body (body)
 

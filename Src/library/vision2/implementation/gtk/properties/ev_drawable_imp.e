@@ -97,8 +97,10 @@ feature -- Access
 	line_width: INTEGER is
 			-- Line thickness.
 		do
+			gcvalues := C.c_gdk_gcvalues_struct_allocate
 			C.gdk_gc_get_values (gc, gcvalues)
 			Result := C.gdk_gcvalues_struct_line_width (gcvalues)
+			c_free (gcvalues)
 		end
 
 	drawing_mode: INTEGER is
@@ -106,8 +108,10 @@ feature -- Access
 		local
 			gdk_drawing_mode: INTEGER
 		do
+			gcvalues := C.c_gdk_gcvalues_struct_allocate
 			C.gdk_gc_get_values (gc, gcvalues)
 			gdk_drawing_mode := C.gdk_gcvalues_struct_function (gcvalues)
+			c_free (gcvalues)
 
 			if gdk_drawing_mode = C.Gdk_copy_enum then
 				Result := drawing_mode_copy
@@ -142,8 +146,10 @@ feature -- Access
 		local
 			style: INTEGER
 		do
+			gcvalues := C.c_gdk_gcvalues_struct_allocate
 			C.gdk_gc_get_values (gc, gcvalues)
 			style := C.gdk_gcvalues_struct_line_style (gcvalues)
+			c_free (gcvalues)
 			Result := style = C.Gdk_line_on_off_dash_enum
 		end
 
@@ -315,30 +321,36 @@ feature -- Drawing operations
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+		local
+			temp_string: ANY
 		do
 			if drawable /= NULL then
+				temp_string := a_text.to_c
 				C.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y,
-					eiffel_to_c (a_text)
+					$temp_string
 				)
 			end
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+		local
+			temp_string: ANY
 		do
 			if drawable /= NULL then
+				temp_string := a_text.to_c
 				C.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y + internal_font_ascent,
-					eiffel_to_c (a_text)
+					$temp_string
 				)
 			end
 		end
@@ -630,12 +642,7 @@ feature {NONE} -- Implementation
 	internal_font_ascent: INTEGER
 
 	internal_font_imp: EV_FONT_IMP
-
-	C: EV_C_EXTERNALS is
-		once
-			create Result
-		end
-
+	
 	interface: EV_DRAWABLE
 	
 	math: EV_FIGURE_MATH is
@@ -651,7 +658,6 @@ feature {NONE} -- Implementation
 
 invariant
 	gc_not_void: gc /= NULL
-	gcvalues_not_void: gcvalues /= NULL
 
 end -- class EV_DRAWABLE_IMP
 

@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			resize (600, 400)
 			set_z_order (Hwnd_top)
 			show
-			first_choice_dialog.activate
+			start
 		end
 
 feature -- GUI Elements
@@ -303,7 +303,17 @@ feature -- Output
 
 feature {NONE} -- State management
 
-	First_state, Introduction_state, Initial_state, Initial_eiffel_state, Destination_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
+	First_state,  		-- First_choice_dialog
+	Introduction_state, 		-- Generated_code_type_dialog
+	Initial_state, 		-- Definition_file_dialog
+	Initial_eiffel_state, 	-- Eiffel_project_file_dialog
+	Destination_state, 		-- Eiffel_destination_folder_dialog
+	Idl_state, 			-- Idl_dialog
+	Ps_state, 			-- Ps_dialog
+	Final_state, 			-- Final_dialog
+	Finished_state, 		-- No more dialogs
+	Abort_state,			-- Abort
+	Open_state: INTEGER is unique
 			-- Possible states
 
 	state: INTEGER
@@ -341,20 +351,26 @@ feature {NONE} -- State management
 			-- Start state machine.
 		do
 			clear
+			set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
+			set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
+
 			from
 				previous_states.extend (Abort_state)
-				previous_states.extend (First_state)
-				state := Introduction_state
+				state := First_state
 				shared_wizard_environment.set_no_abort
 			until
-				state = Finished_state or state = Abort_state
+				state = Finished_state or 
+				state = Abort_state or
+				state = Open_state
 			loop
 				current_dialog.activate
 				if state /= Abort_state then
 					change_state (current_dialog.ok_pushed)
 				end
 			end
-			if not (state = Abort_state) then
+			if state = Open_state then
+				on_menu_command (Open_string_constant)
+			elseif state = Finished_state then
 				create wizard_manager
 				wizard_manager.run
 			end
@@ -371,6 +387,14 @@ feature {NONE} -- State management
 				previous_states.extend (state)
 				inspect
 					state	
+					
+				when First_state then
+					if shared_wizard_environment.new_project then
+						state := Introduction_state
+					else
+						state := Open_state
+					end
+					
 				when Introduction_state then
 					if shared_wizard_environment.new_eiffel_project then
 						state := Initial_eiffel_state
@@ -386,12 +410,16 @@ feature {NONE} -- State management
 					else
 						state := Ps_state
 					end
+					
 				when Initial_eiffel_state then
 					state := Destination_state
+					
 				when Destination_state then
 					state := Idl_state
+					
 				when Idl_state, Ps_state then
 					state := Final_state
+					
 				when Final_state then
 					state := Finished_state
 				else
@@ -480,8 +508,6 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			inspect
 				menu_id
 			when Launch_string_constant then
-				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
-				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				start
 			when Generate_string_constant then
 				clear
@@ -510,12 +536,10 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				safe_browse_directory_from_dialog (save_file_dialog)
 			When New_string_constant then
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
-				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
-				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				tool_bar.disable_button (Save_string_constant)
 				tool_bar.disable_button (Generate_string_constant)
 				shared_wizard_environment.set_new_project (True)
-				first_choice_dialog.activate
+				start
 
 			when About_string_constant then
 				about_dialog.activate
@@ -530,7 +554,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 		local
 			tmp_help_path: STRING			
 		do
-			tmp_help_path := clone (execution_environment.get ("EIFFEL4"))
+			tmp_help_path := clone (Eiffel4_location)
 			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
 			win_help (tmp_help_path, Help_finder, 0)
 		end
@@ -595,7 +619,7 @@ invariant
 	
 	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
 				state = Final_state or state = Finished_state or state = Abort_state or state = First_state or
-				state = Initial_eiffel_state or state = Destination_state
+				state = Initial_eiffel_state or state = Destination_state or state = Open_state
 
 end -- class MAIN_WINDOW
 

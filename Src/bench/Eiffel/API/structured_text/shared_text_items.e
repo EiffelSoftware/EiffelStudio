@@ -241,12 +241,6 @@ feature {NONE} -- Keywords
 			!!Result.make ("class")
 		end
 
-	ti_Creation_keyword: KEYWORD_TEXT is
-			-- "creation" keyword
-		once
-			!!Result.make ("creation")
-		end
-
 	ti_Create_keyword: KEYWORD_TEXT is
 			-- "create" keyword
 		once
@@ -547,12 +541,6 @@ feature {NONE} -- Symbol names
 			-- "->" characters
 		once
 			!!Result.make ("->")
-		end
-
-	ti_Creation_mark: SYMBOL_TEXT is
-			-- "!!" characters
-		once
-			!!Result.make ("!!")
 		end
 
 	ti_Dashdash: SYMBOL_TEXT is

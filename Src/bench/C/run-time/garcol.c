@@ -1069,7 +1069,6 @@ rt_private void run_collector(void)
 		full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	}
 	full_sweep();			/* Sweep phase */
-	full_sweep();			/* Sweep phase */
 
 	/* After a full collection (this routine is only called for a full mark
 	 * and sweep or a partial scavenging), give generation scavenging a try

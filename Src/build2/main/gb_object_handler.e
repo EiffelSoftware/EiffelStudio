@@ -666,6 +666,19 @@ feature -- Basic operation
 			end
 		end
 		
+	valid_constant_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid name for a constant?
+		require
+			name_valid: a_name /= Void
+		do
+			string_is_feature_name_result := False
+			string_is_object_name_result := False
+			objects.do_all (agent check_object_name (a_name, Void, True,  ?))
+			objects.do_all (agent check_feature_name (a_name, Void, ?))
+			Result := not (string_is_feature_name_result or string_is_object_name_result)
+		end
+		
+		
 	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 			-- Is `object_name' a valid name for `an_object'? Must check
 			-- all other object names in the current scope (window) as `an_object',
@@ -804,7 +817,7 @@ feature -- Basic operation
 			t: TUPLE [GB_OBJECT]
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			create t.make
+			create t
 			t.put (an_object, 1)
 			action.call (t)
 			layout_item := an_object.layout_item

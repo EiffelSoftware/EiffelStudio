@@ -101,12 +101,12 @@ feature -- Status report
 		local
 			temp_text: STRING
 		do
-				Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
-				temp_text := text
-				if temp_text /= Void then
-					Result := Result.max (temp_text.occurrences ('%N') + 1)
-					-- This is in case scroll bar has not been set
-				end
+			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
+			temp_text := text
+			if temp_text /= Void then
+				Result := Result.max (temp_text.occurrences ('%N') + 1)
+				-- This is in case scroll bar has not been set
+			end
 		end
 
 	current_line_number: INTEGER is

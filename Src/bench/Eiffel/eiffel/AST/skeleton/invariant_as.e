@@ -56,13 +56,13 @@ feature -- Type check and byte code
 			-- Type check invariant clause
 		do
 			if assertion_list /= Void then
-					-- Set the access id analysis level to `level2': only
+					-- Set the access id analysis level to `is_checking_invariant': only
 				   -- features are taken into account.
 				context.begin_expression
-				context.set_level2 (True)
+				context.set_is_checking_invariant (True)
 				assertion_list.type_check
 					-- Reset the level
-				context.set_level2 (False)
+				context.set_is_checking_invariant (False)
 				context.pop (1)
 			end
 		end

@@ -7,6 +7,16 @@ indexing
 
 class EV_GTK_EXTERNALS
 
+feature {NONE} -- GTK C functions for objects
+
+	gtk_object_ref (w: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_object_unref (w: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for separators
 
 	gtk_hseparator_new: POINTER is
@@ -89,6 +99,14 @@ feature {NONE} -- GTK C functions for toolbars
 	
 feature {NONE} -- GTK C functions for gtkeditable
 
+	gtk_editable_set_editable (edit: POINTER; flag: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_editable_set_position (edit: POINTER; pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_editable_insert_text (widget, text: POINTER; text_length, position: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -100,7 +118,48 @@ feature {NONE} -- GTK C functions for gtkeditable
 	gtk_editable_get_chars (widget: POINTER; start_pos, end_pos: INTEGER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
-	
+
+	gtk_editable_select_region (edit: POINTER; start_pos, end_pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_editable_delete_selection (edit: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_editable_cut_clipboard (edit: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_editable_copy_clipboard (edit: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_editable_paste_clipboard (edit: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_editable_position (widget: POINTER): INTEGER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_editable_selection_start (widget: POINTER): INTEGER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_editable_selection_end (widget: POINTER): INTEGER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_editable_has_selection (widget: POINTER): BOOLEAN is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_editable_editable (widget: POINTER): BOOLEAN is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+
 feature {NONE} -- GTK C functions for text_component
 
 	gtk_entry_new: POINTER is
@@ -178,11 +237,11 @@ feature {NONE} -- GTK C functions for gtk_combo
 		end
 
 	c_gtk_combo_entry (combo: POINTER): POINTER  is
-		external "C [macro <gtk_eiffel.h>]"
+		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
 	c_gtk_combo_list (combo: POINTER): POINTER  is
-		external "C [macro <gtk_eiffel.h>]"
+		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
 feature {NONE} -- GTK C functions for gtktext
@@ -253,6 +312,10 @@ feature {NONE} -- GTK C functions for option buttons
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_option_menu_remove_menu (widget: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for list
 
 	gtk_list_new: POINTER is
@@ -271,14 +334,21 @@ feature {NONE} -- GTK C functions for list
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
+	gtk_list_unselect_item (list: POINTER; item: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
---	c_gtk_list_add_item (list: POINTER; item: POINTER) is
---		external
---			"C | %"gtk_eiffel.h%""
---		end
+	gtk_list_select_all (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_unselect_all (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
 
 	c_gtk_list_rows (list: POINTER): INTEGER is
 		external
@@ -385,6 +455,10 @@ feature {NONE} -- GTK C functions for tree
 		end
 
 	gtk_tree_append (tree: POINTER; item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_tree_remove_item (tree: POINTER; item: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 

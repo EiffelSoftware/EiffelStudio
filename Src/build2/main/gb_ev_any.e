@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			element_not_void: element /= Void
 			name_not_void: name /= Void
 		do	
-			if object.constants.item (type + name) /= Void then
+			if uses_constant (name) then
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				add_element_containing_integer (element, name, current_value)
@@ -384,13 +384,21 @@ feature {NONE} -- Implementation
 			element_not_void: element /= Void
 			name_not_void: name /= Void
 		do	
-			if object.constants.item (type + name) /= Void then
+			if uses_constant (name) then
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				add_element_containing_string (element, name, current_value)
 			end
 		end
 		
+	uses_constant (an_attribute: STRING): BOOLEAN is
+			-- Does attribute named `an_attribute' use a constant?
+		require
+			an_attribute_not_void: an_attribute /= Void
+		do
+			Result := object.constants.item (type + an_attribute) /= Void
+		end
+
 	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 		-- Result of last call to `get_unique_full_info'.
 

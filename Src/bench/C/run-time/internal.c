@@ -275,6 +275,7 @@ EIF_INTEGER i;
 EIF_POINTER object;
 EIF_POINTER value;
 {
+	RTAR(value,object);
 	*(EIF_POINTER *) ei_oref(i,object) = value;
 }
 

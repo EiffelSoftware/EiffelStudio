@@ -16,18 +16,15 @@ feature -- Access
 		-- Number of characters represented by the token.
 
 	width: INTEGER
-		-- Width in pixel of last display.
+		-- Width in pixel (computed at the last display).
 
-feature -- Element Change
+feature -- Linkable functions
 
-	set_position(new_position: INTEGER) is
-		require
-			position_positive: position > 0
-		do
-			position := new_position
-		ensure
-			position_set: position = new_position
-		end
+	previous: EDITOR_TOKEN
+		-- Previous token in the line. Void if none
+
+	next: EDITOR_TOKEN
+		-- Next token in the line. Void if none.
 
 feature -- Miscellaneous
 
@@ -36,6 +33,31 @@ feature -- Miscellaneous
 			-- displayed text.
 		deferred
 		end
+
+	get_substring_width(n: INTEGER) is
+			-- Conpute the width in pixels of the first
+			-- `n' characters of the current string.
+		do
+			dc.select_font(font)
+			Result := dc.string_width(image.substring(1,n))
+			dc.unselect_font
+		end
+
+feature {NONE} -- Properties used to display the token
+
+	text_color: WEL_COLOR_REF is
+		deferred
+		end
+
+	background_color: WEL_COLOR_REF is
+		deferred
+		end
+
+	font: WEL_FONT is
+		deferred
+		end
+
+	device_context: WEL_DC
 
 invariant
 	image_not_void: image /= Void

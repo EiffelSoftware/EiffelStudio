@@ -37,7 +37,19 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := caret_position
+			Result := caret_position + 1
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			Result := wel_selection_start + 1
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			Result := wel_selection_end + 1
 		end
 
 feature -- Status setting
@@ -61,7 +73,7 @@ feature -- Status setting
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			set_caret_position (pos)
+			set_caret_position (pos - 1)
 		end
 
 	set_maximum_text_length (value: INTEGER) is
@@ -85,12 +97,9 @@ feature -- element change
 
 	append_text (txt:STRING) is
 			-- append 'txt' into component
-		local
-			temp_text: STRING
 		do
-			temp_text := text
-			temp_text.append_string (txt)
-			set_text (temp_text)
+			set_position (text.count + 1)
+			insert_text (txt)
 		end
 
 	prepend_text (txt: STRING) is
@@ -115,7 +124,7 @@ feature -- Basic operation
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
 		do
-			set_selection (start_pos, end_pos)
+			set_selection (start_pos - 1, end_pos - 1)
 		end
 
 	paste (index: INTEGER) is
@@ -127,7 +136,7 @@ feature -- Basic operation
 			pos: INTEGER
 		do
 			pos := caret_position
-			set_caret_position (index)
+			set_caret_position (index - 1)
 			clip_paste
 			set_caret_position (pos)
 		end
@@ -196,6 +205,14 @@ feature {NONE} -- Deferred features
 
 	wel_font: WEL_FONT is
 			-- Current font of the control
+		deferred
+		end
+
+	wel_selection_start: INTEGER is
+		deferred
+		end
+
+	wel_selection_end: INTEGER is
 		deferred
 		end
 

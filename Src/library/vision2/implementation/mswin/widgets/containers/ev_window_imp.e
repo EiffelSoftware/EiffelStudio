@@ -137,14 +137,11 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 			user_can_resize := True
 			init_bars
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.add_root_window (Current)
+			application_imp.add_root_window (Current)
 			is_initialized := True
 		end	
 
@@ -778,16 +775,9 @@ feature {EV_ANY_I} -- Implementation
 			-- `Current' has been activated thanks to the click of a window.
 		local
 			msg: INTEGER
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 			source: EV_PICK_AND_DROPABLE_IMP
 		do
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_not_void: app_imp /= Void
-			end
-			app_imp.clear_override_from_mouse_activate
+			application_imp.clear_override_from_mouse_activate
 			msg := cwin_hi_word (lparam)
 				--| We need to pass the mouse_button to `source_at_pointer_position'.
 				--| This enables it to only call `pebble_function' if really necessary,
@@ -809,22 +799,22 @@ feature {EV_ANY_I} -- Implementation
 					--| to be raised was over a widget that has either pick or drag and drop. 
 				if (msg = Wm_rbuttondown and widget_has_pick (source))
 				or (msg = Wm_lbuttondown and widget_has_drag (source)) or
-				app_imp.pick_and_drop_source /= Void then
+				application_imp.pick_and_drop_source /= Void then
 						--| If we have reached here, then we do not want to raise the window, as
 						--| the click is either going to start a drag/pick and drop or there is
-						--| one currently executing (quered on `app_imp').
+						--| one currently executing (quered on `application_imp').
 					set_message_return_value (Wel_input_constants.Ma_noactivate)
 					disable_default_processing
 					override_movement := True
 					if not has_focus and not widget_has_drag (source) then
-						app_imp.set_override_from_mouse_activate
+						application_imp.set_override_from_mouse_activate
 					end
 				else
 						--| If we have reached here, then if there is no pick/drag and drop
 						--| executing, so we explicitly call `move_to_foreground' to ensure
 						--| `Current' is raised. If we do not call `move_to_foreground', in some
 						--| cases, on_window_pos_changing may not be called.
-					if app_imp.pick_and_drop_source = Void then
+					if application_imp.pick_and_drop_source = Void then
 						move_to_foreground
 					end
 				end
@@ -832,7 +822,7 @@ feature {EV_ANY_I} -- Implementation
 					--| We reach here if the mouse click that caused the wm_mouseactivate message
 					--| was over a widget that does not have pick/drag and drop. Clicking on the
 					--| non client area of a window will also cause us to be here.
-				if app_imp.pick_and_drop_source = Void then
+				if application_imp.pick_and_drop_source = Void then
 						--| We are here if there is no drag/pick and drop currently executing.
 						--| So we must raise `Current'.
 					move_to_foreground
@@ -843,7 +833,7 @@ feature {EV_ANY_I} -- Implementation
 					disable_default_processing
 					override_movement := True
 					if not has_focus then
-						app_imp.set_override_from_mouse_activate
+						application_imp.set_override_from_mouse_activate
 					end
 				end
 			end
@@ -1193,17 +1183,9 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	destroy is
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
-		local
-			app_i: EV_APPLICATION_I
-			app_imp: EV_APPLICATION_IMP
 		do
 			if not is_destroyed then
-				app_i := (create {EV_ENVIRONMENT}).application.implementation
-				app_imp ?= app_i
-				check
-					implementation_not_void: app_imp /= Void
-				end
-				app_imp.remove_root_window (Current)
+				application_imp.remove_root_window (Current)
 	
 					-- Remove parent/children relationship
 				interface.wipe_out

@@ -185,9 +185,8 @@ enum
     DISPID_EiffelComCompiler_TargetClasses,
     DISPID_EiffelComCompiler_TargetFeatures,
     DISPID_EiffelComCompiler_TargetFeature,
-    DISPID_EiffelComCompiler_ParseSourceForExpr,
-    DISPID_EiffelComCompiler_FindDefinition,
-    DISPID_EiffelComCompiler_FindInheritedDefinition,
+    DISPID_EiffelComCompiler_FindClassDefinition,
+    DISPID_EiffelComCompiler_FindFeatureDefinition,
     DISPID_EiffelComCompiler_FlushCompletionFeatures,
     DISPID_EiffelComCompiler_InitializeFeature,
     DISPID_EiffelComCompiler_SetupRenameTables,
@@ -505,8 +504,8 @@ enum
 };
 
 //|--------------------------------------------------------------------
-//| Eiffel ENViSioN!: A Visual Studio .NET plugin from Eiffel Software.
-//| Copyright (C) 2001-2003 Eiffel Software
+//| EiffelEnvision: A Visual Studio .NET plugin from Eiffel Software.
+//| Copyright (C) 2001-2005 Eiffel Software
 //| Eiffel Software Confidential
 //| All rights reserved. Duplication and distribution prohibited.
 //|

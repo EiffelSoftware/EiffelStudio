@@ -6,7 +6,7 @@ indexing
 			is destroyed, it will be restored back to its original position before the
 			transport began.
 		]"
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

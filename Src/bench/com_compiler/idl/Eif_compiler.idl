@@ -14,6 +14,16 @@ interface IEiffelSystemBrowser;
 interface IEiffelClusterDescriptor;
 interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
+interface IEiffelProjectProperties;
+interface IEiffelClusterProperties;
+
+typedef enum __EIF_COMPILATON_TYPES
+{
+	is_application,
+	is_library,
+	is_precompilation
+	
+} EIF_COMPILATON_TYPES;
 
 [
   oleautomation,
@@ -42,6 +52,10 @@ interface IEiffelProject: IUnknown
   
   [helpstring ("System Browser.")]
   HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
+  
+  [helpstring ("Project Properties.")]
+  HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
+  
 };
 
 [
@@ -302,6 +316,199 @@ interface IEiffelFeatureDescriptor: IUnknown
 
   [helpstring ("Does feature have postcondition?")]
   HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
+};
+
+[
+  dual, object,
+  uuid (C212FAAB-FAA8-48b9-9D4E-2D0CA4EB3354),
+  helpstring ("Eiffel Project Properties.")
+]
+interface IEiffelProjectProperties: IDispatch
+{
+  [id (101), propget, helpstring ("Open Ace file.")]
+  HRESULT open_ace_file ([in] BSTR ace_file_name);
+  
+  [id (DISPID_VALUE), propget, helpstring ("System name.")]
+  HRESULT system_name ([out, retval] BSTR * return_value);
+
+  [id (DISPID_VALUE), propput, helpstring ("System name.")]
+  HRESULT system_name ([in] BSTR a_name);
+
+  [id (103), propget, helpstring ("Root class name.")]
+  HRESULT root_class_name ([out, retval] BSTR * return_value);
+
+  [id (103), propput, helpstring ("Root class name.")]
+  HRESULT root_class_name ([in] BSTR a_name);
+  
+  [id (104), propget, helpstring ("Creation routine name.")]
+  HRESULT creation_routine ([out, retval] BSTR * return_value);
+  
+  [id (104), propput, helpstring ("Creation routine name.")]
+  HRESULT creation_routine ([in] BSTR a_routine);
+  
+  [id (121), propget, helpstring ("Compilation type.")]
+  HRESULT compilation_type ([out, retval] EIF_COMPILATON_TYPES * return_value);
+  
+  [id (121), propput, helpstring ("Compilation type.")]
+  HRESULT compilation_type ([in] EIF_COMPILATON_TYPES new_value);  
+  
+  [id (122), propget, helpstring ("Is console application?")]
+  HRESULT console_application ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (122), propput, helpstring ("Is console application?")]
+  HRESULT console_application ([in] VARIANT_BOOL new_value);  
+  
+  [id (105), propget, helpstring ("Should preconditions be evaluated?")]
+  HRESULT evaluate_require ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (105), propput, helpstring ("Should preconditions be evaluated?")]
+  HRESULT evaluate_require ([in] VARIANT_BOOL new_value);
+  
+  [id (106), propget, helpstring ("Should postconditions be evaluated?")]
+  HRESULT evaluate_ensure ([out, retval] VARIANT_BOOL * return_value);
+    
+  [id (106), propput, helpstring ("Should postconditions be evaluated?")]
+  HRESULT evaluate_ensure ([in] VARIANT_BOOL new_value);
+  
+  [id (107), propget, helpstring ("Should check assertions be evaluated?")]
+  HRESULT evaluate_check ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (107), propput, helpstring ("Should check assertions be evaluated?")]
+  HRESULT evaluate_check ([in] VARIANT_BOOL new_value);
+  
+  [id (108), propget, helpstring ("Should loop assertions be evaluated?")]
+  HRESULT evaluate_loop ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (108), propput, helpstring ("Should loop assertions be evaluated?")]
+  HRESULT evaluate_loop ([in] VARIANT_BOOL new_value);
+  
+  [id (109), propget, helpstring ("Should class invariants be evaluated?")]
+  HRESULT evaluate_invariant ([out, retval] VARIANT_BOOL *return_value);
+  
+  [id (109), propput, helpstring ("Should class invariants be evaluated?")]
+  HRESULT evaluate_invariant ([in] VARIANT_BOOL new_value);
+  
+  [id (120), propget, helpstring ("Working directory.")]
+  HRESULT working_directory ([out, retval] BSTR * return_value);
+  
+  [id (120), propput, helpstring ("Working directory.")]
+  HRESULT working_directory ([in] BSTR new_directory); 
+  
+  [id (110), propget, helpstring ("Program arguments.")]
+  HRESULT arguments ([out, retval] BSTR * return_value);
+  
+  [id (110), propput, helpstring ("Program arguments.")]
+  HRESULT arguments ([in] BSTR new_arguments); 
+
+  [id (111), propget, helpstring ("Generate debug info?")]
+  HRESULT debug_info ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (111), propput, helpstring ("Generate debug info?")]
+  HRESULT debug_info ([in] VARIANT_BOOL new_value);
+  
+  [id (112), propget, helpstring ("List of clusters in current project (list of IEiffelClusterProperties*).")]
+  HRESULT clusters ([out, retval] VARIANT * return_value);
+
+  [id (113), helpstring ("Add a cluster to the project.")]
+  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR cluster_path);
+  
+  [id (114), helpstring ("Remove a cluster from the project.")]
+  HRESULT remove_cluster ([in] BSTR cluster_name);
+
+  [id (115), helpstring ("Cluster properties.")]
+  HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
+  
+  [id (116), propget, helpstring ("Imported assemblies.")]
+  HRESULT assemblies ([out, retval] SAFEARRAY (BSTR) * return_value);
+  
+  [id (117), helpstring ("Add an assembly to the project.")]
+  HRESULT add_assembly ([in] BSTR assembly_path);
+  
+  [id (118), helpstring ("Remove an assembly from the project.")]
+  HRESULT remove_assembly ([in] BSTR assembly_path);  
+};
+
+[
+  dual, object,
+  uuid (5D0B0013-F831-4ff6-A443-7B30882A5EB8),
+  helpstring ("Eiffel Cluster Properties (for Ace file).")
+]
+interface IEiffelClusterProperties: IDispatch
+{
+  [id (DISPID_VALUE), propget, helpstring ("Cluster name.")]
+  HRESULT name ([out, retval] BSTR * return_value);
+
+  [id (DISPID_VALUE), propput, helpstring ("Cluster name.")]
+  HRESULT name ([in] BSTR a_name);
+
+  [id (200), propget, helpstring ("Full path to cluster.")]
+  HRESULT cluster_path ([out, retval] BSTR * path);
+
+  [id (200), propput, helpstring ("Full path to cluster.")]
+  HRESULT cluster_path ([in] BSTR path);
+  
+  [id (201), propget, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  HRESULT override ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (201), propput, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  HRESULT override ([in] VARIANT_BOOL a_bool);
+  
+  [id (202), propget, helpstring ("Should this cluster be treated as library?")]
+  HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (202), propput, helpstring ("Should this cluster be treated as library?")]
+  HRESULT is_library ([in] VARIANT_BOOL a_bool);
+  
+  [id (203), propget, helpstring ("Should all subclusters be included?")]
+  HRESULT all ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (203), propput, helpstring ("Should all subclusters be included?")]
+  HRESULT all ([in] VARIANT_BOOL return_value);
+  
+  [id (204), propget, helpstring ("Should use system default?")]
+  HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (204), propput, helpstring ("Should use system default?")]
+  HRESULT use_system_default ([in] VARIANT_BOOL new_value);  
+
+  [id (205), propget, helpstring ("Should preconditions be evaluated by default?")]
+  HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (205), propput, helpstring ("Should preconditions be evaluated by default?")]
+  HRESULT evaluate_require_by_default ([in] VARIANT_BOOL new_value);
+  
+  [id (206), propget, helpstring ("Should postconditions be evaluated by default?")]
+  HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
+    
+  [id (206), propput, helpstring ("Should postconditions be evaluated by default?")]
+  HRESULT evaluate_ensure_by_default ([in] VARIANT_BOOL new_value);
+  
+  [id (207), propget, helpstring ("Should check assertions be evaluated by default?")]
+  HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (207), propput, helpstring ("Should check assertions be evaluated by default?")]
+  HRESULT evaluate_check_by_default ([in] VARIANT_BOOL new_value);
+  
+  [id (208), propget, helpstring ("Should loop assertions be evaluated by default?")]
+  HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (208), propput, helpstring ("Should loop assertions be evaluated by default?")]
+  HRESULT evaluate_loop_by_default ([in] VARIANT_BOOL new_value);
+  
+  [id (209), propget, helpstring ("Should class invariants be evaluated by default?")]
+  HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
+  
+  [id (209), propput, helpstring ("Should class invariants be evaluated by default?")]
+  HRESULT evaluate_invariant_by_default ([in] VARIANT_BOOL new_value);
+  
+  [helpstring ("List of excluded directories.")]
+  HRESULT excluded ([out, retval] SAFEARRAY (BSTR) * return_value);
+  
+  [helpstring ("Add a directory to exclude.")]
+  HRESULT add_exclude ([in] BSTR dir_name);
+  
+  [helpstring ("Remove a directory to exclude.")]
+  HRESULT remove_exclude ([in] BSTR dir_name);  
 };
 
 [

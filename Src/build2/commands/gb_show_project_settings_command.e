@@ -52,7 +52,18 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			do
+					-- Disable all other floating windows.
+				all_floating_tools.do_all (agent {EV_DIALOG}.disable_sensitive)
+					-- We must modify the icon displayed in `project_settings_window' dependent on
+					-- whether other tools are all displayed 
+				if system_status.tools_always_on_top then
+					project_settings_window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
+				else
+					project_settings_window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_system_window)
+				end
 				project_settings_window.show_modal_to_window (main_window)
+				all_floating_tools.do_all (agent {EV_DIALOG}.enable_sensitive)
+					-- Enable all other floating windows.
 				command_handler.update
 			end
 

@@ -4,6 +4,7 @@
 /* Used to monitor mouse messages for the pick and drop mechanism under      */
 /* Windows                                                                   */
 /*****************************************************************************/
+#include "eif_eiffel.h"
 #include <windows.h>
 
 /*---------------------------------------------------------------------------*/

@@ -10,11 +10,6 @@ deferred class
 inherit
 	WEL_ANY
 
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	make is
@@ -23,7 +18,7 @@ feature {NONE} -- Initialization
 			item := c_calloc (1, structure_size)
 			if item = default_pointer then
 				-- Memory allocation problem
-				raise ("No more memory")
+				c_enomem
 			end
 			shared := False
 		ensure
@@ -33,6 +28,10 @@ feature {NONE} -- Initialization
 feature -- Basic operations
 
 	memory_copy (source_pointer: POINTER; length: INTEGER) is
+			-- Copy `length' bytes from `source_pointer' to `item'.
+		require
+			length_small_enough: length <= structure_size
+			length_large_enough: length > 0
 		do
 			check
 				source_pointer_exists: source_pointer /= default_pointer
@@ -40,7 +39,7 @@ feature -- Basic operations
 			c_memcpy (item, source_pointer, length)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)
@@ -82,6 +81,15 @@ feature {NONE} -- Externals
 			"C [macro <memory.h>] (void *, void *, size_t)"
 		alias
 			"memcpy"
+		end
+
+	c_enomem is
+			-- Eiffel run-time function to raise an
+			-- "Out of memory" exception.
+		external
+			"C"
+		alias
+			"enomem"
 		end
 
 invariant

@@ -577,7 +577,7 @@ feature {NONE} -- Sorting
 						if is_code_document (l_doc) then
 							a_node.set_title (a_node.title)
 						else
-							if l_doc.is_valid_xml then
+							if l_doc.is_valid_xml (l_doc.text) then
 								l_filtered_doc := Manager.Shared_project.filter_manager.filtered_document (l_doc)								
 								l_title := l_filtered_doc.title
 								a_node.set_title (l_title)
@@ -797,7 +797,7 @@ feature {NONE} -- Sorting
 									-- Try for pseudo name
 							create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_node.url))
 							if l_doc /= Void then
-								if l_doc.is_valid_xml then
+								if l_doc.is_valid_xml (l_doc.text) then
 									l_filtered_doc := Manager.Shared_project.filter_manager.filtered_document (l_doc)
 									l_name := l_filtered_doc.pseudo_name
 								end																															

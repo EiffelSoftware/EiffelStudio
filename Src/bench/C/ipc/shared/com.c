@@ -29,8 +29,6 @@
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */
 #define MAX_STRING	512	/* Maximum string length for log messages */
 
-extern Malloc_t malloc(register unsigned int nbytes);	/* Memory allocation */
-
 /* VARARGS2 */
 #ifdef EIF_WIN32
 rt_public void send_bye(STREAM *s, int code)

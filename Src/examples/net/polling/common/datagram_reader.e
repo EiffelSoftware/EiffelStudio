@@ -17,7 +17,7 @@ inherit
 			active_medium
 		end
 
-creation
+create
 
 	make
 

@@ -13,7 +13,7 @@ inherit
 
 	SOCKET_RESOURCES
 
-creation
+create
 
 	make
 
@@ -29,7 +29,7 @@ feature
                                 io.error.putstring (argv.item (0))
                                 io.error.putstring (" hostname portnumber%N")
                         else
-				!!soc1.make_client_by_port (argv.item (2).to_integer, argv.item (1))
+				create soc1.make_client_by_port (argv.item (2).to_integer, argv.item (1))
 				soc1.connect
 				process -- See below
 				soc1.cleanup
@@ -45,7 +45,7 @@ feature
 			our_list, our_new_list: OUR_MESSAGE
 			i: INTEGER
 		do
-			!!our_list.make
+			create our_list.make
 			our_list.extend ("This ")
 			our_list.extend ("is ")
 			our_list.extend ("our ")

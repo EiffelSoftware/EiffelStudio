@@ -16,7 +16,7 @@ inherit
 			received
 		end
 
-creation
+create
 
 	make_client
 
@@ -48,7 +48,7 @@ feature
 	build_list is
 			-- Build list of strings `our_list' for transmission to server.
 		do
-			!!our_list.make
+			create our_list.make
 			our_list.extend ("This ")
 			our_list.extend ("is ")
 			our_list.extend ("our ")

@@ -25,21 +25,10 @@ cluster
 	local_client_server (net):	"$/local/client_server";
 
 		-- EiffelBase
-	base:			"$EIFFEL4/library/base";
-	kernel (base):		"$/kernel";
-	support (base):		"$/support";
-	access (base):		"$/structures/access";
-	cursors (base):		"$/structures/cursors";
-	cursor_tree (base):	"$/structures/cursor_tree";
-	dispenser (base):	"$/structures/dispenser";
-	iteration (base):	"$/structures/iteration";
-	list (base):		"$/structures/list";
-	set (base):		"$/structures/set";
-	sort (base):		"$/structures/sort";
-	storage (base):		"$/structures/storage";
-	table (base):		"$/structures/table";
-	traversing (base):	"$/structures/traversing";
-	tree (base):		"$/structures/tree";
+	all base:			"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
 
 external
 	-- External EiffelNet library 

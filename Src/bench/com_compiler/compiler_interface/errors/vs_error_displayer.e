@@ -159,14 +159,20 @@ feature {NONE} -- Implementation
 			sf: STRING_FORMATTER
 			st: STRUCTURED_TEXT
 		do
-			if warn.error_string.is_empty then
+			if not is_valid_error_string (warn.error_string) then
+				create st.make
+				warn.print_short_help (st)
+				create sf.make
+				sf.process_text (st)
+				full_error := clone (sf.output)
+				
 				create st.make
 				warn.build_explain (st)
 				create sf.make
 				sf.process_text (st)
-				full_error := sf.output
+				full_error.append (sf.output)
 			else
-				full_error := warn.error_string
+				full_error := clone (warn.error_string)
 			end
 
 			unused_warn ?= warn
@@ -199,11 +205,12 @@ feature {NONE} -- Implementation
 							file_name := syn_warn.file_name
 							line_pos := syn_warn.line_number
 							short_error := "Warning: " + syn_warn.warning_message
-						else
-							short_error := "Warning: " + clone (full_error)
 						end
 					end
 				end
+			end
+			if short_error = Void then
+				short_error := clone (full_error)				
 			end
 			check
 				non_void_full_error: full_error /= Void
@@ -229,20 +236,19 @@ feature {NONE} -- Implementation
 			line_pos: INTEGER
 			sf: STRING_FORMATTER
 			st: STRUCTURED_TEXT
-		do
-			load_error_help_file (err)
-			if last_help_file_text /= Void then
-				full_error := last_help_file_text
-			else
-				create full_error.make_empty
-			end
-				
-			if err.error_string.is_empty or err.error_string.is_equal ("Error") then
+		do			
+			if not is_valid_error_string (err.error_string) then
 				-- load help file and add text to begining of error definition			
 				special_err ?= err
 				if special_err /= Void then
-					full_error.append (special_err.error_case)
+					full_error := clone (special_err.error_case)
 				else
+					create st.make
+					err.print_short_help (st)
+					create sf.make
+					sf.process_text (st)
+					full_error := clone (sf.output)
+					
 					create st.make
 					err.build_explain (st)
 					create sf.make
@@ -250,7 +256,7 @@ feature {NONE} -- Implementation
 					full_error.append (sf.output)
 				end
 			else
-				full_error.append (err.error_string)
+				full_error := clone (err.error_string)
 			end
 			
 			eif_err ?= err
@@ -260,12 +266,11 @@ feature {NONE} -- Implementation
 					-- Feature error
 					file_name := feat_err.e_feature.written_class.file_name
 					line_pos := feat_Err.line_number
-					if not feat_err.error_string.is_empty then
+					if is_valid_error_string (feat_err.error_string) then
 						short_error := "Error: " + feat_err.error_string
 					end
 				else
 					file_name := eif_err.class_c.file_name
-					short_error := clone (full_error)
 				end
 			else
 				interrupt_err ?= err
@@ -277,11 +282,14 @@ feature {NONE} -- Implementation
 						-- Syntax error
 						file_name := syn_err.file_name
 						line_pos := syn_err.line_number
-						short_error := "Error: " + syn_err.error_message
-					else
-						short_error := "Error: " + clone (full_error)
+						if is_valid_error_string (syn_err.error_string) then
+							short_error := "Error: " + syn_err.error_message
+						end
 					end
 				end
+			end
+			if short_error = Void then
+				short_error := clone (full_error)				
 			end
 			check
 				non_void_full_error: full_error /= Void
@@ -289,45 +297,12 @@ feature {NONE} -- Implementation
 			end
 			compiler_coclass.event_output_error (full_error, short_error, err.code, file_name, line_pos, 0)
 		end
-		
-	load_error_help_file (err: ERROR) is
-			-- loads error help file assoicated with `err' and sets `last_help_file_text'.
-		require
-			non_void_error: err /= Void
-		local
-			file_name: STRING
-			help_file: PLAIN_TEXT_FILE
-			eiffel_env: EIFFEL_ENV
+
+	is_valid_error_string (err_string: STRING): BOOLEAN is
+			-- is `err_string' a valid error string
 		do
-			last_help_file_text := Void
-			
-			check
-				non_void_help_file_name: err.help_file_name /= Void
-				valid_help_file_name: not err.help_file_name.is_empty
-			end
-			
-			create eiffel_env
-			file_name := eiffel_env.help_path.out
-			file_name.append ("\short\" + err.help_file_name)
-			
-			create help_file.make (file_name)
-			if help_file.exists then
-				help_file.open_read
-				from
-					create last_help_file_text.make_empty
-				until
-					help_file.end_of_file
-				loop
-					help_file.read_line
-					if not help_file.end_of_file then
-						last_help_file_text.append (help_file.last_string + "%N")
-					end
-				end
-			end
+			Result := err_string /= Void and (not err_string.is_empty) and (not err_string.is_equal ("Error")) and (not err_string.is_equal ("Warning"))
 		end
-		
-	last_help_file_text: STRING
-			-- text of last read help file
 		
 		
 end -- class VS_ERROR_DISPLAYER

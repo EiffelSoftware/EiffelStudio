@@ -180,15 +180,36 @@ feature -- Status setting
 					expressions.forth
 				end
 			end
-			real_update
+			update
 		end
 
 	update is
 			-- Refresh `Current's display.
+		local
+			l_status: APPLICATION_STATUS
 		do
-			ev_application.idle_actions.prune_all (update_agent)
-			ev_application.idle_actions.extend (update_agent)
+			cancel_process_real_update_on_idle
+			l_status := application.status
+			if l_status /= Void then
+				process_real_update_on_idle (l_status.is_stopped)
+			end
 		end
+	
+	update_agent_call_on_stopped_state: BOOLEAN
+	
+	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
+			-- Call `real_update' on idle action
+		do
+			update_agent_call_on_stopped_state := a_dbg_stopped
+			ev_application.idle_actions.extend (update_agent)			
+		end
+	
+	cancel_process_real_update_on_idle is
+			-- cancel any calls to `real_update' on idle action	
+		do
+			update_agent_call_on_stopped_state := False
+			ev_application.idle_actions.prune_all (update_agent)			
+		end		
 
 	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
 			-- Change the window and explorer bar `Current' is in.

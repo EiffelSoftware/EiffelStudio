@@ -133,8 +133,11 @@ feature -- Status report
 		
 	has_selection: BOOLEAN is
 			-- Has a current selection?
+		local
+			a_selection: WEL_CHARACTER_RANGE
 		do
-			Result := selection.minimum /= selection.maximum
+			a_selection := selection
+			Result := a_selection.minimum /= a_selection.maximum
 		end
 
 	default_character_format: WEL_CHARACTER_FORMAT is
@@ -310,6 +313,8 @@ feature -- Status setting
 	set_selection (start_position, end_position: INTEGER) is
 			-- Set the selection between `start_position'
 			-- and `end_position'.
+		require else
+			selection_in_upper_bound: start_position <= text_length and end_position <= text_length + 1
 		local
 			range: WEL_CHARACTER_RANGE
 		do
@@ -448,11 +453,10 @@ feature -- Status setting
 			exists: exists
 		do
 			set_event_mask (
-				Enm_change + Enm_update + Enm_scroll +
-				Enm_keyevents + Enm_mouseevents + Enm_requestresize +
-				Enm_selchange + Enm_dropfiles + Enm_protected +
-				Enm_correcttext + Enm_imechange
-								)
+				Enm_change | Enm_update | Enm_scroll |
+				Enm_keyevents | Enm_mouseevents | Enm_requestresize |
+				Enm_selchange | Enm_dropfiles | Enm_protected |
+				Enm_correcttext | Enm_imechange)
 		end
 
 	disable_notifications is

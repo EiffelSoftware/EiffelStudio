@@ -178,6 +178,7 @@ feature -- Commands
 			degree_6_done: BOOLEAN
 		do
 			is_compiling := True
+			Eiffel_project.Manager.on_project_compiles
 				-- We perform a degree 6 only when it is the first the compilation or
 				-- when there was an error during the compilation concerning a missing
 				-- class and that no degree 6 has been done before.
@@ -193,6 +194,7 @@ feature -- Commands
 					backup_counter := backup_counter + 1
 					create_backup_directory
 				end
+				
 
 				if missing_class_error then
 					Lace.set_need_directory_lookup (True)
@@ -203,7 +205,7 @@ feature -- Commands
 				if
 					not system_defined or else not Lace.not_first_parsing or else
 					Lace.date_has_changed or else missing_class_error or else
-					not Lace.successful
+					not Lace.successful or else forbid_degree_6
 				then
 					degree_6_done := True
 				end
@@ -211,7 +213,9 @@ feature -- Commands
 				if missing_class_error then
 					Lace.force_recompile
 				else
-					Lace.recompile
+					if not forbid_degree_6 then
+						Lace.recompile
+					end
 				end
 
 				if Lace.successful then
@@ -253,6 +257,7 @@ feature -- Commands
 				save_backup_info
 			end
 
+			Eiffel_project.Manager.on_project_recompiled
 			is_compiling := False
 		ensure
 			increment_compilation_counter:
@@ -303,7 +308,18 @@ feature -- Commands
 				retry
 			else
 				is_compiling := False
+				Eiffel_project.Manager.on_project_recompiled
 			end
+		end
+
+	recompile_no_degree_6 is
+			-- Perform an incremental recompilation without performing a degree 6.
+		do
+			forbid_degree_6 := True
+			recompile
+			forbid_degree_6 := False
+		rescue
+			forbid_degree_6 := False
 		end
 
 	save_project (was_precompiling: BOOLEAN) is
@@ -528,7 +544,10 @@ feature -- Automatic backup
 feature {NONE} -- Automatic Backup
 
 	new_session: BOOLEAN
-		-- Is it the first compilation in the session?
+			-- Is it the first compilation in the session?
+
+	forbid_degree_6: BOOLEAN
+			-- Should the next compilation avoid to perform a degree 6?
 
 feature {NONE} -- Externals
 

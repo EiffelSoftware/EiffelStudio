@@ -383,6 +383,20 @@ rt_public char *strdup (char *s)
 }
 #endif	/* HAS_STRDUP */
 
+#ifdef EIF_ASSERTIONS
+rt_shared int ise_printf (char *StrFmt, ...)
+	/* To put a breakpoint when an assertion violation occurs. */
+{
+	va_list ap;
+	int r;
+
+	va_start (ap, StrFmt);
+	r = vprintf (StrFmt, ap);
+	va_end (ap);
+
+	return r;
+}
+#endif
 
 #ifdef EIF_WIN32
 

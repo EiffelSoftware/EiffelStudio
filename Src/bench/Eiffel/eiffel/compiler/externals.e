@@ -103,7 +103,7 @@ feature -- Freeze externals.
 			until
 				after
 			loop
-				l_other.put (clone (item_for_iteration), key_for_iteration)
+				l_other.put (item_for_iteration.twin, key_for_iteration)
 				forth
 			end
 			old_externals := l_other

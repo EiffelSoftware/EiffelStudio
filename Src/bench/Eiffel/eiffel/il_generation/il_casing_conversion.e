@@ -30,7 +30,7 @@ feature -- Naming convention
 		do
 			Result := name
 			if is_dotnet_name then
-				Result := clone (Result)
+				Result := Result.twin
 				from
 					i := 2
 					nb := Result.count
@@ -73,7 +73,7 @@ feature -- Naming convention
 		do
 			Result := name
 			if is_dotnet_name then
-				Result := clone (Result)
+				Result := Result.twin
 				from
 					i := 2
 					nb := Result.count
@@ -118,7 +118,7 @@ feature -- Naming convention
 		do
 			Result := name
 			if is_dotnet_name then
-				Result := clone (Result)
+				Result := Result.twin
 				from
 					i := 2
 					nb := Result.count

@@ -310,7 +310,7 @@ feature -- Routines
 					loop
 						s := invariants.item.tag
 						if s /= Void and then not s.is_empty then
-							s := clone (s)
+							s := s.twin
 							s.replace_substring_all ("_", " ")
 							text.add_indent
 							text.add (create {ASSERTION_TAG_TEXT}.make (s))
@@ -452,8 +452,9 @@ feature {NONE} -- Implementation
 				ci.compiled_class.append_signature (text)
 				text.add_new_line
 				if desc then
-					s := clone (indexing_item_as_string (class_list.item, "description"))
+					s := indexing_item_as_string (class_list.item, "description")
 					if s /= Void then
+						s := s.twin
 						s.remove (1)
 						s.remove (s.count)
 						s.replace_substring_all ("%%T", "")
@@ -597,7 +598,7 @@ feature {NONE} -- Indexing clauses
 			loop
 				t := ic.key_for_iteration
 				if not exc.has (t) then
-					content := clone (ic.item_for_iteration)
+					content := ic.item_for_iteration.twin
 					content.replace_substring_all ("%%N", " ")
 					content.prune_all ('%%')
 					content.prune_all ('"')

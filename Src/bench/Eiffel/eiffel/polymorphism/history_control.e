@@ -85,7 +85,7 @@ feature -- Settings
 				until
 					types.after
 				loop
-					modified_entry := clone (entry)
+					modified_entry := entry.twin
 					modified_entry.update (types.item)
 					poly_table.extend (modified_entry)
 					types.forth
@@ -112,7 +112,7 @@ feature -- Settings
 				until
 					types.after
 				loop
-					modified_entry := clone (entry)
+					modified_entry := entry.twin
 					modified_entry.update (types.item)
 					poly_table.extend (modified_entry)
 					types.forth

@@ -240,7 +240,7 @@ feature
 			check_validity2;
 			
 				-- Computes a good size for the feature table
-			resulting_table := clone (inherited_features);
+			resulting_table := inherited_features.twin
 			
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
@@ -797,7 +797,7 @@ end;
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info = Void then
 						-- Implicit or explicit redefinition
-					new_rout_id_set := clone (inherit_feat.rout_id_set);
+					new_rout_id_set := inherit_feat.rout_id_set.twin
 						-- This is not an origin.
 					feature_i.set_is_origin (False);
 					if
@@ -1011,7 +1011,7 @@ end;
 						-- keep the fact the old feature from a previous
 						-- is an origin or not.
 					Result.set_is_origin (feature_i.is_origin);
-					Result.set_rout_id_set (clone (feature_i.rout_id_set));
+					Result.set_rout_id_set (feature_i.rout_id_set.twin)
 					Result.set_is_selected (feature_i.is_selected);
 				end;
 				if
@@ -1260,7 +1260,7 @@ end;
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature, inherit_feat);
 							-- Insertion in the origin table
-						inherited_info := clone (deferred_info);
+						inherited_info := deferred_info.twin
 						inherited_info.set_a_feature (inherited_feature);
 						Origin_table.insert (inherited_info);
 						if inherit_feat.nb_deferred > 1 then
@@ -1298,7 +1298,7 @@ end;
 
 				--  Check the routine table ids
 			rout_ids := inherit_feat.rout_id_set;
-			f.set_rout_id_set (clone (rout_ids));
+			f.set_rout_id_set (rout_ids.twin);
 				-- Process feature id
 			feature_name_id := f.feature_name_id;
 			old_feature := feature_table.item_id (feature_name_id);

@@ -59,7 +59,7 @@ feature -- Access
 			temp: STRING
 			n, packet_number: INTEGER
 		do
-			temp := clone (Epoly);
+			temp := Epoly.twin
 			n := file_counter
 			temp.append_integer (n);
 			packet_number := n // System.makefile_generator.System_packet_number + 2

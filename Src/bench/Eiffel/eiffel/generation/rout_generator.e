@@ -44,7 +44,7 @@ feature
 			Extern_declarations.generate (current_buffer);
 			Extern_declarations.wipe_out;
 
-			temp := clone (Epoly);
+			temp := Epoly.twin
 			n := file_counter
 			temp.append_integer (n);
 

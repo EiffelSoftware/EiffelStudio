@@ -61,7 +61,7 @@ feature -- Access
 	copy (other: like Current) is
 		do
 			Precursor {TWO_WAY_SORTED_SET} (other)
-			set_suppliers (clone (suppliers))
+			set_suppliers (suppliers.twin)
 		end
 
 	set_suppliers (new_suppliers: like suppliers) is

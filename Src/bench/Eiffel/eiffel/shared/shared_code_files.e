@@ -86,7 +86,7 @@ feature -- C code generation
 				subdir.create_dir
 			end
 			create file_name.make_from_string (dir_name)
-			temp := clone (base_name)
+			temp := base_name.twin
 			temp.append (extension)
 			file_name.set_file_name (temp)
 			Result := file_name
@@ -126,7 +126,7 @@ feature -- C code generation
 				subdir.create_dir
 			end
 			create file_name.make_from_string (dir_name)
-			temp := clone (base_name)
+			temp := base_name.twin
 			temp.append (Dot_c)
 			file_name.set_file_name (temp)
 			Result := file_name

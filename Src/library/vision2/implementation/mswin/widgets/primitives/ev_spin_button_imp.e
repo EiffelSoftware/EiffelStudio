@@ -122,7 +122,6 @@ feature {EV_SPIN_BUTTON_I}-- Status setting
 			internal_arrows_control.set_position (i)
 				-- We must now store the value
 			last_value := i
-			manually_updating := True
 		end
 
 	wel_set_range (i, j: INTEGER) is
@@ -178,9 +177,9 @@ feature {NONE} -- WEL Implementation
 			--| is greater than One and not manually updating then adjust
 			--| `value' by remaining step.
 		do
-		if step > 1 then
 		if not manually_updating then
 			manually_updating := True
+			if step > 1 then
 			if last_value < value then
 				if value + step - 1 <= maximum then
 					set_value (value + step - 1)
@@ -195,9 +194,9 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 			last_value := value
+			end
 		else
 			manually_updating := False
-		end
 		end
 		end
 
@@ -206,7 +205,6 @@ feature {NONE} -- WEL Implementation
 
 	manually_updating: BOOLEAN
 		-- Are we updating the control to move the rest of the step?
-	
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- We check if the enter key is pressed
@@ -300,6 +298,9 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/20 00:17:09  rogers
+--| modifications to on_en_change.
+--|
 --| Revision 1.10  2000/04/19 19:06:47  rogers
 --| Manually updating is now set to true in wel_set_value. Fixes
 --| bug where setting the value would set the value to step - 1

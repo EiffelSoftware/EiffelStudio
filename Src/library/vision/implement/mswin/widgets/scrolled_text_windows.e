@@ -192,11 +192,8 @@ feature {NONE} -- Implementation
 		local
 			options: INTEGER
 		do
-			options := Eco_autowordselection + Eco_autovscroll +
-				Eco_nohidesel + Eco_selectionbar + eco_savesel
-			if is_word_wrap_mode then
-				options := options + Eco_autohscroll
-			end
+			options := Eco_autowordselection + Eco_nohidesel +
+				eco_savesel
 			set_options (Ecoop_set, options)
 		end
 
@@ -205,7 +202,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_border +
 				Es_disablenoscroll + Es_multiline + Es_left +
-				Es_autohscroll + Es_autovscroll
+				Es_autovscroll
 			if is_read_only then
 				Result := Result + Es_readonly
 			end
@@ -214,6 +211,9 @@ feature {NONE} -- Implementation
 			end
 			if is_vertical_scrollbar then
 				Result := Result + Ws_vscroll
+			end
+			if not is_word_wrap_mode then
+				Result := Result + Es_autohscroll
 			end
 		end
 

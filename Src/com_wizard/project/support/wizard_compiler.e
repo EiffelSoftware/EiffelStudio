@@ -82,6 +82,7 @@ feature -- Basic Operations
 		local
 			a_directory: DIRECTORY
 			a_file_list: LIST [STRING]
+			list_item: STRING
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
@@ -91,7 +92,10 @@ feature -- Basic Operations
 				until
 					a_file_list.after or Result
 				loop
-					Result := (a_file_list.item.substring (a_file_list.item.count + 1 - Eiffel_project_extension.count, a_file_list.item.count)).is_equal (Eiffel_project_extension)
+					list_item := a_file_list.item
+					Result := (list_item.substring 
+							(list_item.count - Eiffel_project_extension.count + 1, 
+							list_item.count)).is_equal (Eiffel_project_extension)
 					a_file_list.forth
 				end
 			end
@@ -279,7 +283,7 @@ feature -- Basic Operations
 				component_empty (a_folder)
 			then
 				a_local_folder.append_character (Directory_separator)
-				a_local_folder.append (Msc)
+				a_local_folder.append (Ise_c_compiler_value)
 			end
 			create a_directory.make (a_local_folder)
 			if a_directory.exists then
@@ -433,7 +437,8 @@ feature {NONE} -- Implementation
 			a_file_list: LIST [STRING]
 			found: BOOLEAN
 		do
-			Result := "ebench "
+			create Result.make (100)
+			Result.append (Eiffel4_location + "\bench\spec\windows\bin\ebench ")
 			Result.append (Shared_wizard_environment.destination_folder)
 			Result.append (a_folder)
 			Result.append_character (Directory_separator)
@@ -476,17 +481,18 @@ feature {NONE} -- Implementation
 	Precompile_name: STRING is "precomp.epr"
 			-- Precompilation project name
 
-	Finish_freezing_command: STRING is "finish_freezing -silent"
+	Finish_freezing_command: STRING is 
 			-- Finish freezing command line
+		do
+			create Result.make (100)
+			Result.append (Eiffel4_location + "\bench\spec\windows\bin\finish_freezing -silent")
+		end
 
 	Eifgen: STRING is "EIFGEN"
 			-- Eifgen folder name
 
 	W_code: STRING is "W_code"
 			-- W_code folder name
-
-	Msc: STRING is "msc"
-			-- precompilation driver.exe folder name
 
 	Driver_executable: STRING is "driver.exe"
 			-- Precompilation driver executable

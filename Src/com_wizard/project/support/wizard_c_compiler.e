@@ -55,8 +55,15 @@ feature -- Basic Operations
 			displayed := displayed_while_running
 			set_displayed_while_running (True)
 			create a_directory.make_open_read (a_folder_name)
-			if a_directory.has_entry ("Makefile") then
-				a_string := "nmake"
+			if a_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
+				if Ise_c_compiler_value.is_equal ("msc") then
+					a_string := "make_msc.bat"
+				else
+					check
+						Ise_c_compiler_value.is_equal ("bcb")
+					end
+					a_string := "make_bcb.bat"
+				end
 				launch (a_string, a_folder_name)
 				check_return_code
 			end

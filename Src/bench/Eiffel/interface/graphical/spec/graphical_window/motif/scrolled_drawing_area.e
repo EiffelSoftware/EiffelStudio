@@ -186,6 +186,9 @@ feature -- Status setting
 				a_height = vsize)
 			then
 				if vsize <= vertical_scrollbar.maximum then
+					if vertical_scrollbar.value > a_height - vsize then
+						vertical_scrollbar.set_value (a_height - vsize)
+					end;
 					vertical_scrollbar.set_slider_size (vsize);
 					vertical_scrollbar.set_maximum (a_height);
 				else
@@ -466,6 +469,9 @@ feature {NONE} -- Implementation
 					sb.set_slider_size (new_size);
 					sb.set_maximum (new_max);
 				else
+					if sb.value > new_max - new_size then
+						sb.set_value (new_max - new_size)
+					end;
 					sb.set_maximum (new_max);
 					sb.set_slider_size (new_size);
 				end;
@@ -518,7 +524,6 @@ feature {NONE} -- Selection implementation
 			-- Process the mouse event action.
 		local
 			button_event: MEL_BUTTON_EVENT;
-			button_data: BUTTON_DATA;
 			curr_x, curr_y: INTEGER
 		do
 			button_event ?= last_callback_struct.event;
@@ -543,11 +548,9 @@ feature {NONE} -- Selection implementation
 			clear_selection;
 			inspect nbr_of_clicks
 				when 2 then
-					button_data ?= context_data;
-					select_word (button_data.relative_x, button_data.relative_y);
+					select_word (curr_x, curr_y);
 				when 3 then
-					button_data ?= context_data;
-					select_line (button_data.relative_y);
+					select_line (curr_y);
 				when 4 then
 					select_all;
 				else
@@ -559,7 +562,8 @@ feature {NONE} -- Selection implementation
 			prev_y := curr_y;
 			prev_motion_y := curr_y;
 			if nbr_of_clicks = 1 then
-				start_highlight_pos := character_position (prev_x, prev_y)
+				start_highlight_pos := 
+					character_position (prev_x, prev_y)
 			end
 		end;
 		

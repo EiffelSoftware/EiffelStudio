@@ -448,36 +448,43 @@ feature -- Detection of safe/unsafe features
 			body_table: BODY_INDEX_TABLE;
 			other_body_id: INTEGER
 		do
-			rout_id_val := f.rout_id_set.first;
-
-			if Tmp_poly_server.has (rout_id_val) then
-				written_class := f.written_class;
-				table ?= Tmp_poly_server.item (rout_id_val);
-				from
-					Result := True;
-					body_table := System.body_index_table;
-					table.start
-				until
-					table.after or else not Result
-				loop
-					unit := table.item;
-					descendant_class := System.class_of_id (unit.id);
-					if descendant_class.conform_to (written_class) then
-						other_body_id := body_table.item (unit.body_index);
-						Result := not unsafe_body_ids.has (other_body_id);
-					end
-					table.forth
-				end
+			if f.is_external then
+				Result := False
 			else
-				Result := not unsafe_body_ids.has (f.body_id)
-			end
+				rout_id_val := f.rout_id_set.first;
 
+				if Tmp_poly_server.has (rout_id_val) then
+					written_class := f.written_class;
+					table ?= Tmp_poly_server.item (rout_id_val);
+					from
+						Result := True;
+						body_table := System.body_index_table;
+						table.start
+					until
+						table.after or else not Result
+					loop
+						unit := table.item;
+						descendant_class := System.class_of_id (unit.id);
+						if descendant_class.conform_to (written_class) then
+							other_body_id := body_table.item (unit.body_index);
+							Result := not unsafe_body_ids.has (other_body_id);
+						end
+						table.forth
+					end
+				else
+					Result := not unsafe_body_ids.has (f.body_id)
+				end
+			end
 debug ("OPTIMIZATION")
 	io.error.putstring ("ARRAY_OPTIMIZER: ")
     io.error.putstring (f.written_class.class_name);
     io.error.putstring (" ");
     io.error.putstring (f.feature_name);
-    io.error.putstring (" is safe%N");
+    if Result then
+		io.error.putstring (" is safe%N");
+	else
+    	io.error.putstring (" is NOT safe%N");
+	end
 end
 		end
 

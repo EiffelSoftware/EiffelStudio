@@ -72,6 +72,12 @@ feature
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
+	separate_get_macro: STRING is "CURGSO"
+			-- String generated to access the argument to a separate call
+
+	separate_send_macro: STRING is "CURSQRSO"
+			-- String generated to return the result of a separate call
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do

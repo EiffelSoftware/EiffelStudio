@@ -54,6 +54,18 @@ feature
 			Result := "EIF_CHARACTER"
 		end
 
+	separate_get_macro: STRING is
+			-- String generated to access the argument to a separate call
+		do
+			Result := "CURGC"
+		end
+
+	separate_send_macro: STRING is
+			-- String generated to return the result of a separate call
+		do
+			Result := "CURSQRC"
+		end
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do

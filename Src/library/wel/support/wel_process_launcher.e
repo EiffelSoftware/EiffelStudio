@@ -84,18 +84,24 @@ feature -- Basic Operations
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
 			non_void_working_directory: a_working_directory /= Void
+		local
+			l_block_size: INTEGER
+			l_tuple: TUPLE [STRING]
 		do
+			create l_tuple
 			spawn (a_command_line, a_working_directory)
 			output_pipe.close_input
+			l_block_size := Block_size
 			from
-				output_pipe.read_stream (Block_size)
+				output_pipe.read_stream (l_block_size)
 			until
 				not output_pipe.last_read_successful
 			loop
 				if a_output_handler /= Void then
-					a_output_handler.call ([output_pipe.last_string])
+					l_tuple.put (output_pipe.last_string, 1)
+					a_output_handler.call (l_tuple)
 				end
-				output_pipe.read_stream (Block_size)
+				output_pipe.read_stream (l_block_size)
 			end
 			last_launch_successful := cwin_wait_for_single_object (process_info.process_handle,
 				cwin_infinite) = cwin_wait_object_0
@@ -191,10 +197,11 @@ feature {NONE} -- Implementation
 	Block_size: INTEGER is
 			-- Read block size
 		do
-			if internal_block_size = 0 then
-				internal_block_size := Default_block_size
-			end
 			Result := internal_block_size
+			if Result = 0 then
+				Result := Default_block_size
+				internal_block_size := Result
+			end
 		end
 
 	internal_block_size: INTEGER

@@ -21,8 +21,8 @@ feature {NONE} -- Initalization
 			info_path := (create {CACHE_READER}.make (a_clr_version)).Absolute_info_path
 			create di.make (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
 			di.create_
-			create assemblies.make (1, 0)
-			assemblies.compare_objects
+			create internal_assemblies.make (1, 0)
+			internal_assemblies.compare_objects
 			clr_version := a_clr_version
 		ensure
 			non_void_assemblies: assemblies /= Void
@@ -31,24 +31,52 @@ feature {NONE} -- Initalization
 		
 feature -- Access
 
-	assemblies: ARRAY [CONSUMED_ASSEMBLY]
+	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
 			-- Array of assemblies in EAC
+		do
+			Result := internal_assemblies
+			if Result = Void then
+				create Result.make (1, 0)
+				internal_assemblies := Result
+			end
+		ensure
+			assemblies_not_void: Result /= Void
+		end
 			
 	clr_version: STRING
 			-- Runtime version.
-			
+
+feature -- Status report
+
 	is_dirty: BOOLEAN
 			-- Is info ditry?
 
+	has_assembly (ass: CONSUMED_ASSEMBLY): BOOLEAN is
+			-- Does `assemblies' contain `ass'?
+		do
+			if ass = Void then
+				Result := False
+			else
+				if internal_assemblies = Void then
+					Result := False
+				else
+					Result := internal_assemblies.has (ass)
+				end
+			end
+		end
+		
 feature {CACHE_WRITER} -- Element Settings
 	
 	add_assembly (ass: CONSUMED_ASSEMBLY) is
 			-- Add `ass' to `assemblies'.
 		require
 			non_void_assembly: ass /= Void
-			valid_assembly: not assemblies.has (ass)
+			valid_assembly: not has_assembly (ass)
 		do
-			assemblies.force (ass, assemblies.count + 1)
+			if internal_assemblies = Void then
+				create internal_assemblies.make (1, 1)
+			end
+			internal_assemblies.force (ass, internal_assemblies.count + 1)
 			set_is_dirty (True)
 		end
 		
@@ -56,24 +84,26 @@ feature {CACHE_WRITER} -- Element Settings
 			-- Updates `a_assembly' in `assemblies'
 		require
 			non_void_assembly: a_assembly /= Void
-			valid_assembly: assemblies.has (a_assembly)
+			valid_assembly: has_assembly (a_assembly)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			l_done: BOOLEAN
+			l_assemblies: like internal_assemblies
 		do
+			l_assemblies := internal_assemblies
 			from 
 				i := 1
+				nb := l_assemblies.count
 			until
-				l_done or i > assemblies.count
+				l_done or i > nb
 			loop
-				if assemblies.item (i).is_equal (a_assembly) then
-					assemblies.put (a_assembly, i)
+				if l_assemblies.item (i).is_equal (a_assembly) then
+					l_assemblies.put (a_assembly, i)
 					set_is_dirty (True)
 					l_done := True
 				else
 					i := i + 1
 				end
-				
 			end
 		end
 
@@ -81,33 +111,36 @@ feature {CACHE_WRITER} -- Element Settings
 			-- Remove `ass' from `assemblies'.
 		require
 			non_void_assembly: ass /= Void
-			--valid_assembly: assemblies.has (ass)
+			valid_assembly: assemblies.has (ass)
 		local
-			i, j: INTEGER
+			i, nb, j: INTEGER
 			new: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: like internal_assemblies
 		do
-			create new.make (1, assemblies.count - 1)
-			if assemblies.object_comparison then
+			l_assemblies := internal_assemblies
+			create new.make (1, l_assemblies.count - 1)
+			if l_assemblies.object_comparison then
 				new.compare_objects
 			end
 			from
 				i := 1
 				j := 1
+				nb := l_assemblies.count
 			until
-				i > assemblies.count
+				i > nb
 			loop
-				if not assemblies.item (i).is_equal (ass) then
-					new.put (assemblies.item (i), j)
+				if not l_assemblies.item (i).is_equal (ass) then
+					new.put (l_assemblies.item (i), j)
 					set_is_dirty (True)
 					j := j + 1
 				end
 				i := i + 1
 			end
-			assemblies := new
+			internal_assemblies := new
 		ensure
-			removed: not assemblies.has (ass)
+			removed: not has_assembly (ass)
 		end
-		
+
 	set_is_dirty (a_dirty: BOOLEAN) is
 			-- Sets `is_dirty' with `a_dirty'
 		do
@@ -116,6 +149,11 @@ feature {CACHE_WRITER} -- Element Settings
 			is_dirty_set: is_dirty = a_dirty
 		end
 		
+feature {NONE} -- Implementation
+
+	internal_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			-- Storage for assemblies.
+
 invariant
 	non_void_assemblies: assemblies /= Void
 	

@@ -87,6 +87,7 @@ feature
 
 	add_cecil_objects is
 		do
+			cecil_rt_basket.extend ("console.o");
 			cecil_rt_basket.extend ("math.o");
 			cecil_rt_basket.extend ("malloc.o");
 			cecil_rt_basket.extend ("garcol.o");
@@ -123,7 +124,8 @@ feature
 			cecil_rt_basket.extend ("search.o");
 			cecil_rt_basket.extend ("main.o");
 			cecil_rt_basket.extend ("run_idr.o");
-			cecil_rt_basket.extend ("console.o");
+			cecil_rt_basket.extend ("path_name.o");
+			cecil_rt_basket.extend ("object_id.o");
 		end;
 
 	add_eiffel_objects is

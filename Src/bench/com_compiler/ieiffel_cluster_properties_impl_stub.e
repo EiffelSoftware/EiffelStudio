@@ -194,13 +194,6 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_parent_name (return_value: STRING) is
-			-- Name of the parent cluster.
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
 	set_cluster_namespace (a_namespace: STRING) is
 			-- Cluster namespace.
 			-- `a_namespace' [in].  

@@ -233,13 +233,6 @@ feature -- Basic Operations
 			ccom_remove_exclude (initializer, dir_name)
 		end
 
-	set_parent_name (return_value: STRING) is
-			-- Name of the parent cluster.
-			-- `return_value' [in].  
-		do
-			ccom_set_parent_name (initializer, return_value)
-		end
-
 	set_cluster_namespace (a_namespace: STRING) is
 			-- Cluster namespace.
 			-- `a_namespace' [in].  
@@ -381,12 +374,6 @@ feature {NONE}  -- Externals
 			-- Name of the parent cluster.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_set_parent_name (cpp_obj: POINTER; return_value: STRING) is
-			-- Name of the parent cluster.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_has_parent (cpp_obj: POINTER): BOOLEAN is

@@ -37,60 +37,111 @@ feature
 			-- the maximum entry id ?
 		local
 			first_body_id: BODY_ID;
-			second_type_id: INTEGER;
-			entry: ROUT_ENTRY;
+			first_type_id, second_type_id: INTEGER;
+			entry, first_entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
 			local_copy: ROUT_TABLE
+			save_value: BOOLEAN
+			system_i: SYSTEM_I
 		do
 			old_position := position
+			system_i := System
 
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
-			if not System.poofter_finalization then
+			if not system_i.poofter_finalization then
 					-- Go to the entry of type id greater or equal than `type_id':
 					-- note than deferred feature have no entries in the tables
 				goto_used (type_id);
 				i := position
-			else
-				i := lower
-			end;
 
-			nb := upper
-
-			from
 				local_copy := Current
-				is_deferred := True;
-				cl_type := System.class_type_of_id (type_id);
-				first_class := cl_type.associated_class;
-			until
-				Result or else i > nb
-			loop
-				entry := local_copy.array_item (i);
-				second_type_id := entry.type_id;
-				if second_type_id = type_id then
-					is_deferred := False
-				end;
-				cl_type := System.class_type_of_id (second_type_id);
-				if cl_type.associated_class.conform_to (first_class) then
-					if entry.used then
-						if found then
-							Result := not equal (entry.body_id, first_body_id)
-						else
-							found := True;
-							first_body_id := entry.body_id;
+				first_entry := local_copy.array_item (i)
+				first_type_id := first_entry.type_id
+				if first_type_id = type_id and then first_entry.is_set then
+						-- If current feature corresponding to `type_id' is
+						-- not deferred, we can retrieve the previously computed
+						-- value.
+					Result := first_entry.is_polymorphic
+				else
+						-- We never compute the value for this entry, so we need to do it
+					from
+						nb := upper
+						is_deferred := True;
+						cl_type := system_i.class_type_of_id (type_id);
+						first_class := cl_type.associated_class;
+					until
+						Result or else i > nb
+					loop
+						entry := local_copy.array_item (i);
+						second_type_id := entry.type_id;
+						if second_type_id = type_id then
+							is_deferred := False
+						end;
+						cl_type := system_i.class_type_of_id (second_type_id);
+						if cl_type.associated_class.simple_conform_to (first_class) then
+							if entry.used then
+								if found then
+									Result := not equal (entry.body_id, first_body_id)
+								else
+									found := True;
+									first_body_id := entry.body_id;
+								end;
+							end;
+						end;
+						i := i + 1
+					end;
+	
+					if not Result then
+						Result := is_deferred and then found
+					end;
+
+						-- Memorize the value in `first_entry' if it is not a deferred
+						-- feature, since this kind of call needs to be recomputed each
+						-- time (it depends from where we are calling it).
+					if first_type_id = type_id then
+						first_entry.set_polymorphic (Result)
+					end
+				end
+			else
+					-- Not a Poofter finalization (still use the old mechanism)
+				from
+					i := lower
+					nb := upper
+					local_copy := Current
+					is_deferred := True;
+					cl_type := system_i.class_type_of_id (type_id);
+					first_class := cl_type.associated_class;
+				until
+					Result or else i > nb
+				loop
+					entry := local_copy.array_item (i);
+					second_type_id := entry.type_id;
+					if second_type_id = type_id then
+						is_deferred := False
+					end;
+					cl_type := system_i.class_type_of_id (second_type_id);
+					if cl_type.associated_class.simple_conform_to (first_class) then
+						if entry.used then
+							if found then
+								Result := not equal (entry.body_id, first_body_id)
+							else
+								found := True;
+								first_body_id := entry.body_id;
+							end;
 						end;
 					end;
+					i := i + 1
 				end;
-				i := i + 1
-			end;
-
-			if not Result then
-				Result := is_deferred and then found
-			end;
+	
+				if not Result then
+					Result := is_deferred and then found
+				end;
+			end
 
 			position := old_position
 		end;

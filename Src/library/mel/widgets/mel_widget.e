@@ -394,50 +394,7 @@ feature {NONE} -- Implementation
 			Result := display.handle
 		end
 
-	xt_translation_string (translation_string: STRING): STRING is
-			-- Translation string to be passed out
-			-- to XtOverrideTranslations that will execute
-			-- the callback with arguments
-		do
-			!! Result.make (0)
-			Result.append (translation_string);
-			Result.append (": ");
-			Result.append (external_translation_routine_name);
-			Result.extend ('(');
-			Result.append_integer (translation_string.hash_code)
-			Result.append (")%N");
-		end;
-
-	xt_translation_null_string (translation_string: STRING): STRING is
-			-- An Translation string to be passed out
-			-- to XtOverrideTranslations that will execute
-			-- the callback with no arguments
-		do
-			!! Result.make (0);
-			Result.append (translation_string)
-			Result.append (": ");
-			Result.append (external_translation_routine_name);
-			Result.extend ('(');
-			Result.append (")%N");
-		end;
-
-	external_translation_routine_name: STRING is
-			-- External routine name for handling
-			-- translations
-		once
-			!! Result.make (0);
-			Result.from_c (c_trans_name)
-		end;
-
 feature {NONE} -- External features
-
-	c_trans_name: POINTER is
-			-- Adopt object `obj'
-		external
-			"C [macro %"mel.h%"]"
-		alias
-			"c_trans_routine"
-		end;
 
 	c_set_override_translations (scr_obj: POINTER; a_trans: POINTER) is
 		external

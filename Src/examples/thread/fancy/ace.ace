@@ -31,7 +31,7 @@ default
 	multithreaded(yes)
 
 cluster
-	root_cluster:		"."
+	root_cluster:		"$ISE_EIFFEL\examples\thread\fancy"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

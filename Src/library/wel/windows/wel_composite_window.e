@@ -46,7 +46,7 @@ feature -- Access
 			until
 				hwnd = default_pointer
 			loop
-				win ?= windows.item (hwnd)
+				win := window_of_item (hwnd)
 				if win /= Void then
 					Result.finish
 					Result.put_right (win)
@@ -649,7 +649,7 @@ feature {NONE} -- Implementation
 			if hwnd_control /= default_pointer then
 				-- Message comes from a control
 				on_wm_control_id_command (control_id)
-				control ?= windows.item (hwnd_control)
+				control ?= window_of_item (hwnd_control)
 				if control /= Void then
 					if exists and then control.exists then
 						on_control_command (control)
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 			if p /= default_pointer then
 				-- The message comes from a scroll bar control
-				a_bar ?= windows.item (p)
+				a_bar ?= window_of_item (p)
 				if a_bar /= Void then
 					check
 						a_bar_exists: a_bar.exists
@@ -768,7 +768,7 @@ feature {NONE} -- Implementation
 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 			if p /= default_pointer then
 				-- The message comes from a scroll bar control
-				a_bar ?= windows.item (p)
+				a_bar ?= window_of_item (p)
 				if a_bar /= Void then
 					check
 						a_bar_exists: a_bar.exists
@@ -840,7 +840,7 @@ feature {NONE} -- Implementation
 		do
 			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
 			if hwnd_control /= default_pointer then
-				control ?= windows.item (hwnd_control)
+				control ?= window_of_item (hwnd_control)
 				if control /= Void and then control.exists then
 					!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
 					on_color_control (control, paint_dc)
@@ -918,10 +918,10 @@ feature {WEL_DISPATCHER}
 			when Wm_windowposchanging then
 				on_wm_window_pos_changing (lparam)
 			when Wm_paletteischanging then
-				on_palette_is_changing (windows.item (
+				on_palette_is_changing (window_of_item (
 					cwel_integer_to_pointer (wparam)))
 			when Wm_palettechanged then
-				on_palette_changed (windows.item (
+				on_palette_changed (window_of_item (
 					cwel_integer_to_pointer (wparam)))
 			when Wm_querynewpalette then
 				on_query_new_palette

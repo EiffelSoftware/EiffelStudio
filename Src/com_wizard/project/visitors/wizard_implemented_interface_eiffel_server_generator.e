@@ -14,8 +14,6 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
-
-
 feature -- Basic operations
 
 	generate (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -26,14 +24,14 @@ feature -- Basic operations
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
+			a_class_name := an_interface.impl_eiffel_class_name (False)
+
 			create a_visible.make
 			an_interface.set_impl_names (False)
 			a_visible.set_name (an_interface.eiffel_class_name)
 			system_descriptor.add_visible_class_server (a_visible)
 
 			create eiffel_writer.make
-
-			a_class_name := an_interface.impl_eiffel_class_name (False)
 
 			dispatch_interface := (an_interface.interface_descriptor.dispinterface or 
 					an_interface.interface_descriptor.dual)
@@ -71,16 +69,12 @@ feature {NONE} -- Implementation
 	add_creation is
 			-- Add creation routines.
 		do
-			eiffel_writer.add_creation_routine (Make_word)
-			eiffel_writer.add_creation_routine ("make_from_pointer")
 		end
 
 	add_default_features (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		do
-			eiffel_writer.add_feature (make_feature, Initialization)
-			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			eiffel_writer.add_feature (create_item_feature, Basic_operations)
 			eiffel_writer.add_feature (ccom_create_item_feature (an_interface), Externals)
 		end

@@ -136,7 +136,6 @@ feature -- Command
 		do
 				-- Removes selection windows as well if still displayed.
 			clear
-
 			Precursor {EV_TITLED_WINDOW}
 		end
 
@@ -219,6 +218,8 @@ feature {NONE} -- Execution
 				else
 					right_list.set_column_width ((list_width - column1_width - 2).max (1), 2)
 				end
+				clear
+				right_list.remove_selection
 				resize_actions.resume
 				inside_on_resize_right_list_column := False
 			end

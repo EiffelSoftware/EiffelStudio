@@ -11,21 +11,11 @@ inherit
 
 	EIFFEL_ENV
 
-feature {NONE} -- Properties
-
-	cur_watch: SCREEN_CURSOR is
-			-- Cursor to be used when waiting for the end of an execution
-		local
-			ct: CURSOR_TYPE;
-		once
-			!! ct;
-			!! Result.make;
-			Result.set_type (ct.watch)
-		end;
+feature {NONE} -- Accepting cursor shapes
 
 	cur_Class: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("classcur.bm");
+			Result := cursor_file_content ("clsscur.bm");
 		end;
 
 	cur_Object: SCREEN_CURSOR is
@@ -50,7 +40,39 @@ feature {NONE} -- Properties
 
 	cur_Feature: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("entitcur.bm");
+			Result := cursor_file_content ("featcur.bm");
+		end;
+
+feature {NONE} -- Non-Accepting cursor shapes
+
+	cur_X_class: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xclsscur.bm");
+		end;
+
+	cur_X_object: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xobjcur.bm");
+		end;
+
+	cur_X_explain: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xexplcur.bm");
+		end;
+
+	cur_X_system: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xsystcur.bm");
+		end;
+
+	cur_X_setstop: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xstopcur.bm");
+		end; 
+
+	cur_X_feature: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("xfeatcur.bm");
 		end;
 
 feature {NONE} 
@@ -60,7 +82,7 @@ feature {NONE}
 			full_path: FILE_NAME;
 			a_pix: PIXMAP
 		do
-			!! full_path.make_from_string (Bitmap_path);
+			!! full_path.make_from_string (Cursor_path);
 			full_path.set_file_name (fn);
 			!! a_pix.make;
 			a_pix.read_from_file (full_path);

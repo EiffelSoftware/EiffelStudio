@@ -4,7 +4,8 @@ class INHERIT_INFO
 
 inherit
 
-	COMPARABLE
+	COMPARABLE;
+	SHARED_WORKBENCH
 	
 feature 
 
@@ -18,6 +19,7 @@ feature
 			-- Assign `f' to `a_feature'.
 		do
 			a_feature := f;
+--trace;
 		end;
 
 	set_parent (p: like parent) is
@@ -53,19 +55,15 @@ feature
 			end;
 		end;
 
-feature -- Debug
-
 	trace is
 		do
-			io.error.putstring ("INHERIT_INFO ");
-			if a_feature /= Void then
-				a_feature.trace;
-			end;
-			if parent /= Void then
-				parent.trace;
-			end;
-			io.error.new_line;	
-		end;
-
+if a_feature.written_class > System.any_class.compiled_class then
+io.error.putstring ("set a feature in inherit info%N");
+			a_feature.trace;
+io.error.putstring (a_feature.generator);
+			io.new_line;
+end;
+		end
+			
 end
 			

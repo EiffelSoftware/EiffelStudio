@@ -33,12 +33,21 @@ feature
 			-- is a definition, there is no merging of assertions.
 		local
 			deferred_features, features: LINKED_LIST [INHERIT_INFO];
+			new_feat: FEATURE_I;
 		do
 				-- The signature of the new feature in the context of
 				-- `feat_tbl' has been already evaluated by feature
 				-- `check_types' of FEATURE_TABLE (See class INHERIT_TABLE).
+			new_feat := feat_tbl.item (new_feature.feature_name);
 			check
-				feat_tbl.has (new_feature.feature_name)
+				new_feat /= Void
+			end;
+			if new_feat /= new_feature then
+				--| If it does not have the same reference then
+				--| replication of new_feature has occurred.
+				--! Hence, we need to update the new_feature
+				--| so it is reference correctly.
+				new_feature := new_feat;
 			end;
 			deferred_features := old_features.deferred_features;
 			if not deferred_features.empty then

@@ -18,6 +18,8 @@ feature
 
 	final_table_size: INTEGER is
 			-- Table size
+		require else
+			True
 		do
 			Result := System.type_id_counter.value;
 		end;

@@ -98,7 +98,15 @@ feature
 			a_class := feat_table.associated_class;
 			if creators = Void then
 				-- Do nothing
-			elseif not a_class.is_deferred then
+			elseif a_class.is_deferred then
+				!!vgcp1;
+				vgcp1.set_class_id (a_class.id);
+				Error_handler.insert_error (vgcp1);
+			elseif creators.i_th (1).feature_list = Void then
+					--| no creation routines (i.e. not allowed
+					--| to create instances of `a_class').
+				!!Result.make (0);
+			else
 				from
 					!!Result.make (creators.count);
 					creators.start;
@@ -158,10 +166,6 @@ feature
 					end;
 					creators.forth;
 				end;
-			else
-				!!vgcp1;
-				vgcp1.set_class_id (a_class.id);
-				Error_handler.insert_error (vgcp1);
 			end;
 		end;
 

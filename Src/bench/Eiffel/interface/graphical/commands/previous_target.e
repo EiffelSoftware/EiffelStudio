@@ -50,12 +50,9 @@ feature {NONE}
 			history: STONE_HISTORY
 		do
 			history := text_window.history;
-			if history.empty then
+			if history.empty or else (history.isfirst or history.before) then
 				warner.set_window (text_window);
-				warner.gotcha_call ("End of history")
-			elseif history.isfirst or history.before then
-				warner.set_window (text_window);
-				warner.gotcha_call ("End of history")
+				warner.gotcha_call ("Beginning of history")
 			else
 				history.back;
 				text_window.last_format.execute (history.item)

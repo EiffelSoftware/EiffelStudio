@@ -675,6 +675,15 @@ feature {NONE} -- Implementation
 	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN is
 		deferred
 		end
+		
+	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
+			-- Is current `enabled as dockable?
+			-- Redefined in descendents such as EV_TOOL_BAR_IMP to
+			-- handle items.
+		do
+			Result := is_dockable
+		end
+		
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
@@ -705,7 +714,9 @@ feature {NONE} -- Implementation
 				track_mouse.dispose
 			end
 			t := translate_coordinates (x_pos, y_pos)
-			if (awaiting_movement or is_dock_executing) and interface.is_dockable then
+			if (awaiting_movement and is_dockable_source (x_pos, y_pos)) or
+			application_imp.dockable_source /= Void
+			then
 				dragable_motion (
 					t.integer_item (1),
 					t.integer_item (2),
@@ -714,6 +725,8 @@ feature {NONE} -- Implementation
 				)
 			elseif (is_transport_enabled and mode_is_drag_and_drop) or
 				(mode_is_pick_and_drop and is_pnd_in_transport) then
+					-- Only start a pick and drop if a dock is not currently executing.
+					-- It may have been started by the previous call to `dragable_motion'.
 				pnd_motion (
 					t.integer_item (1),
 					t.integer_item (2),

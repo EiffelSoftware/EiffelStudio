@@ -10,7 +10,7 @@ inherit
 		rename
 			position as text_position
 		undefine
-			pass_address, copy, setup, consistent, is_equal
+			pass_address, copy, is_equal
 		redefine
 			byte_node, type_check,
 			find_breakable, format,

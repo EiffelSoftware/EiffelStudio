@@ -8,7 +8,7 @@ class ID_AS
 inherit
 	ATOMIC_AS
 		undefine
-			copy, out, is_equal, setup, consistent
+			copy, out, is_equal
 		redefine
 			pass_address, is_id,
 			good_integer, good_character,

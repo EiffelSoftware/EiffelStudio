@@ -8,7 +8,7 @@ inherit
 	--	end;
 	--DATA
 	--	undefine
-	--		is_equal, out, copy, consistent, setup
+	--		is_equal, out, copy
 	--	end
 
 	NAME_DATA

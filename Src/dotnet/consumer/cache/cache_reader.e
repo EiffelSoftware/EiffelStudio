@@ -101,9 +101,18 @@ feature -- Access
 			non_void_referenced_type: a_crt /= Void
 		local
 			l_ca_mapping: CONSUMED_ASSEMBLY_MAPPING
+			l_name: STRING
 		do
 			l_ca_mapping := assembly_mapping_from_consumed_assembly (a_assembly)
-			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, a_crt.name)
+			
+			if a_crt.is_by_ref then
+				l_name := a_crt.name.twin
+				l_name.keep_head (l_name.count - 1)
+			else
+				l_name := a_crt.name
+			end
+			
+			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
 		ensure
 			non_void_info: Result /= Void
 		end

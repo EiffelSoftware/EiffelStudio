@@ -191,6 +191,16 @@ feature -- Drawing operations
 		deferred
 		end
 
+	copy_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+			-- Copy `pix' into the drawable at the point `pt'.
+			-- If there is not enough space to create auxiliery bitmap (DDB) 
+			-- exception will be raised
+		require
+			valid_point: pt /= Void
+			valid_pixmap: is_valid (pix)
+		deferred
+		end
+
 feature -- filling operations
 
 	fill_polygon (pts: ARRAY [EV_POINT]) is

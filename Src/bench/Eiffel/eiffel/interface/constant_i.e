@@ -102,6 +102,7 @@ feature -- C code generation
 			cl_type_i: CL_TYPE_I
 			internal_name: STRING
 			local_byte_context: BYTE_CONTEXT
+			class_id: INTEGER
 		do
 			local_byte_context := byte_context
 			if
@@ -139,13 +140,18 @@ feature -- C code generation
 					-- Function's body
 					-- If constant is a string, it is the semantic of a once
 				if is_once then
+					class_id := byte_context.original_class_type.id.id
 					buffer.putstring ("%TEIF_REFERENCE *PResult;%N%
-						%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off + ")
+						%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off")
+					buffer.putint (class_id)
+					buffer.putstring (" + ")
 					buffer.putint (local_byte_context.once_index)
 					buffer.putstring ("),PResult)) return *PResult;")
 					buffer.putstring (";%N%
 						%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
-						%%TMTOS(*(EIF_once_values + EIF_oidx_off + ")
+						%%TMTOS(*(EIF_once_values + EIF_oidx_off")
+					buffer.putint (class_id)
+					buffer.putstring (" + ")
 					buffer.putint (local_byte_context.once_index)
 					buffer.putstring ("),PResult);%N%
 						%%T*PResult = ")

@@ -1,0 +1,8 @@
+RELEASE NOTE FOR SGI-6.2/SGI-6.3 VERSION.
+
+Please your PLATFORM environment variable to sgi if you
+are running on sgi-6.3 or sgi 6.2. This release is not compatible
+with sgi-5.x.
+
+Note about the profiler:
+The percentage output is not working on sgi 6.2 and 6.3.

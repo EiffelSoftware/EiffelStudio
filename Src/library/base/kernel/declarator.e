@@ -3,8 +3,8 @@ indexing
 	WARNING: "[
 		If you are precompiling a subset of EiffelBase, it is 
 		preferable NOT to remove this class from the subset. 
-		If you remove it you may see EiffelBench perform 
-		apparently unnecessary recompilations after changes.
+		If you remove it you may see unnecessary recompilations
+		after changes.
 		]"
 
 	description: "[

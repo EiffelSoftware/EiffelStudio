@@ -118,15 +118,6 @@ feature {NONE} -- Implementation
 			create {EV_BUTTON_IMP} implementation.make (Current)
 		end
 
-feature -- Obsolete
-
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		obsolete
-			"use select_actions"
-		do
-			Result := select_actions
-		end
-
 invariant
 	select_actions_not_void: select_actions /= Void
  

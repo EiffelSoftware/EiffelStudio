@@ -106,7 +106,7 @@ feature -- C code generation
 
 			if is_expanded then
 				if not final_mode then
-					buffer.putstring ("%Tlong elem_size;%N")
+					buffer.putstring ("%TEIF_INTEGER elem_size;%N")
 				end
 				buffer.putstring ("%
 					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
@@ -136,13 +136,13 @@ feature -- C code generation
 				else
 					buffer.putstring ("%
 						%%Tif (arg2 < 0) {%N%
-						%%T%Teraise (%"index_large_enough%", EN_PRE);%N%T}%N");
+						%%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}%N");
 
 					buffer.putstring ("%
 						%%Tif (arg2 >= *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 							% - LNGPAD(2))) {%N%
-						%%T%Teraise (%"index_small_enough%", EN_PRE);%N%T}%N");
+						%%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}%N");
 				end
 			end;
 
@@ -232,7 +232,7 @@ feature -- C code generation
 			final_mode := byte_context.final_mode;
 
 			if is_expanded and not final_mode then
-				buffer.putstring ("long elem_size;%N");
+				buffer.putstring ("%TEIF_INTEGER elem_size;%N");
 			end;
 
 			if (not final_mode) or else assertion_level.check_precond then
@@ -259,13 +259,13 @@ feature -- C code generation
 				else
 					buffer.putstring ("%
 						%%Tif (arg1 < 0) {%N%
-						%%T%Teraise (%"index_large_enough%", EN_PRE);%N%T}%N");
+						%%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}%N");
 
 					buffer.putstring ("%
 						%%Tif (arg1 >= *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 							% - LNGPAD(2))) {%N%
-						%%T%Teraise (%"index_small_enough%", EN_PRE);%N%T}%N");
+						%%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}%N");
 				end
 			end;
 

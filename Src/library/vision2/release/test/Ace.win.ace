@@ -8,28 +8,28 @@ default
 	assertion (all)
 
 cluster
-	library:				"$EIFFEL4\library"
+	ws:                   "$VISION_PRERELEASE"
 
-	all wel (library):			"$\wel"
+	all wel (ws):         "$\wel"
 
-	all vision2 (library):			"$\vision2"
+	all vision2 (ws):     "$\vision2"
 		exclude
 			"gtk"
 			"obsolete"
 		end
 
-	all base (library):			"$\base"
+	all base (ws):        "$\base"
 		exclude
 			"table_eiffel3"
 		end
 
 external
-        include_path:
-			"$EIFFEL4\library\wel\spec\windows\include",
-			"$EIFFEL4\library\vision2\spec\include"
-        object:
-			"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib",
-			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
-			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib"
+	include_path:
+		"$VISION_PRERELEASE\library\wel\spec\windows\include",
+		"$VISION_PRERELEASE\library\vision2\spec\include"
+	object:
+		"$VISION_PRERELEASE\library\wel\spec\$(COMPILER)\lib\wel.lib",
+		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\vision2.lib"
 end

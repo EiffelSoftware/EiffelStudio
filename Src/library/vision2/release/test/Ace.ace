@@ -11,7 +11,7 @@ default
 	--debug("EV_GTK_DEBUG")
 cluster
 
-dev:						"$WS"
+dev:						"$VISION_PRERELEASE"
 
 gel(dev):					"$/gel"
 
@@ -30,9 +30,10 @@ all base(dev):					"$/base"
 external
 
 	include_path:
-		"$WS/vision2/implementation/gtk/Clib `gtk-config --cflags`";
+	"$VISION_PRERELEASE/vision2/implementation/gtk/Clib `gtk-config --cflags`";
+
 	object:
-		"$(WS)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-		"`gtk-config --libs`"
+	"$(VISION_PRERELEASE)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+	"`gtk-config --libs`"
 
 end

@@ -10,17 +10,17 @@ inherit
 			is_deep_equal
 		end;
 
-creation
+creation 
 
 	make
 
-feature
-
-	rout_id: INTEGER;
+feature 
 
 	feature_name: STRING;
 
 	class_id: INTEGER;
+
+	rout_id: INTEGER;
 
 	make (f: FEATURE_I) is
 		do

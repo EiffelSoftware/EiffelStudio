@@ -13,7 +13,21 @@ inherit
 			good_generics, is_valid, error_generics
 		end
 
-feature
+feature -- Access
+
+	is_basic: BOOLEAN is
+			-- Is the current actual type a basic one ?
+		do
+			Result := True;
+		end;
+
+	is_valid: BOOLEAN is
+			-- The associated class is still in the system
+		do
+			Result := True;
+		end;
+
+feature 
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
@@ -60,18 +74,6 @@ feature
 			-- Associated meta type
 		do
 			Result := type_i;
-		end;
-
-	is_basic: BOOLEAN is
-			-- Is the current actual type a basic one ?
-		do
-			Result := True;
-		end;
-
-	is_valid: BOOLEAN is
-			-- The associated class is still in the system
-		do
-			Result := True;
 		end;
 
 	good_generics: BOOLEAN is

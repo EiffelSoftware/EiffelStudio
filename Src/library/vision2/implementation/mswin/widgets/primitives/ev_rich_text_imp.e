@@ -1468,6 +1468,7 @@ feature {NONE} -- Implementation
 			-- Destroy `Current'.
 		do
 			wel_destroy
+			is_destroyed := True
 		end
 
 	class_name: STRING is

@@ -21,14 +21,14 @@ feature -- Access
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
-			Result := c_generator ($Current)
+			Result := feature {ISE_RUNTIME}.c_generator ($Current)
 		end
 
  	generating_type: STRING is
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
  		do
- 			Result := c_generating_type ($Current)
+ 			Result := feature {ISE_RUNTIME}.c_generating_type ($Current)
  		end
 
 feature -- Status report
@@ -39,7 +39,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := c_conforms_to ($other, $Current)
+			Result := feature {ISE_RUNTIME}.c_conforms_to ($other, $Current)
 		end
 
 	same_type (other: ANY): BOOLEAN is
@@ -47,7 +47,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := c_same_type ($other, $Current)
+			Result := feature {ISE_RUNTIME}.c_same_type ($other, $Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
@@ -69,7 +69,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := c_standard_is_equal ($Current, $other)
+			Result := feature {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
 		ensure
 			symmetric: Result implies other.is_equal (Current)
 			consistent: standard_is_equal (other) implies Result
@@ -81,7 +81,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := c_standard_is_equal ($Current, $other)
+			Result := feature {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
 		ensure
 			same_type: Result implies same_type (other)
 			symmetric: Result implies other.standard_is_equal (Current)
@@ -128,7 +128,7 @@ feature -- Comparison
 				Result := other = Void
 			else
 				Result := other /= Void and then
-							c_deep_equal ($some, $other)
+							feature {ISE_RUNTIME}.c_deep_equal ($some, $other)
 			end
 		ensure
 			shallow_implies_deep: standard_equal (some, other) implies Result
@@ -146,7 +146,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			c_standard_copy ($other, $Current)
+			feature {ISE_RUNTIME}.c_standard_copy ($other, $Current)
 		ensure
 			is_equal: is_equal (other)
 		end
@@ -158,7 +158,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			c_standard_copy ($other, $Current)
+			feature {ISE_RUNTIME}.c_standard_copy ($other, $Current)
 		ensure
 			is_standard_equal: standard_is_equal (other)
 		end
@@ -173,10 +173,10 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			if other /= Void then
-				temp := c_check_assert (False)
-				Result := c_standard_clone ($other)
+				temp := feature {ISE_RUNTIME}.c_check_assert (False)
+				Result := feature {ISE_RUNTIME}.c_standard_clone ($other)
 				Result.copy (other)
-				temp := c_check_assert (temp)
+				temp := feature {ISE_RUNTIME}.c_check_assert (temp)
 			end
 		ensure
 			equal: equal (Result, other)
@@ -190,10 +190,10 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			if other /= Void then
-				temp := c_check_assert (False)
-				Result := c_standard_clone ($other)
+				temp := feature {ISE_RUNTIME}.c_check_assert (False)
+				Result := feature {ISE_RUNTIME}.c_standard_clone ($other)
 				Result.standard_copy (other)
-				temp := c_check_assert (temp)
+				temp := feature {ISE_RUNTIME}.c_check_assert (temp)
 			end
 		ensure
 			equal: standard_equal (Result, other)
@@ -204,7 +204,7 @@ feature -- Duplication
 			-- recursively duplicated from the one attached to `other'
 		do
 			if other /= Void then
-				Result := c_deep_clone ($other)
+				Result := feature {ISE_RUNTIME}.c_deep_clone ($other)
 			end
 		ensure
 			deep_equal: deep_equal (other, Result)
@@ -248,7 +248,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := c_tagged_out (Current)
+			Result := feature {ISE_RUNTIME}.c_tagged_out (Current)
 		end
 
 	print (some: ANY) is
@@ -303,92 +303,6 @@ feature -- Basic operations
 
 	frozen Void: NONE
 			-- Void reference
-
-feature {NONE} -- Implementation
-
-	frozen c_standard_clone (other: POINTER): ANY is
-			-- New object of same dynamic type as `other'
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"eclone"
-		end
-
-	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN is
-			-- Does dynamic type of object attached to `obj1' conform to
-			-- dynamic type of object attached to `obj2'?
-		external
-			"C [macro %"eif_plug.h%"]"
-		alias
-			"econfg"
-		end
-
-	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN is
-			-- Are dynamic type of object attached to `obj1' and
-			-- dynamic type of object attached to `obj2' the same?
-		external
-			"C [macro %"eif_plug.h%"]"
-		alias
-			"estypeg"
-		end
-
-	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
-			-- C external performing standard equality
-		external
-			"C | %"eif_equal.h%""
-		alias
-			"eequal"
-		end
-
-	frozen c_standard_copy (source, target: POINTER) is
-			-- C external performing standard copy
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"ecopy"
-		end
-
-	frozen c_deep_clone (other: POINTER): ANY is
-			-- New object structure recursively duplicated from the one
-			-- attached to `other'
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"edclone"
-		end
-
-	frozen c_deep_equal (some: POINTER; other: like some): BOOLEAN is
-			-- Are `some' and `other' attached to recursively isomorphic
-			-- object structures?
-		external
-			"C | %"eif_equal.h%""
-		alias
-			"ediso"
-		end
-
-	frozen c_tagged_out (some: ANY): STRING is
-			-- Printable representation of current object
-		external
-			"C | %"eif_out.h%""
-		end
-
-	frozen c_generator (some: POINTER): STRING is
-			-- Name of the generating class of current object
-		external
-			"C | %"eif_out.h%""
-		end
-
-	frozen c_check_assert (b: BOOLEAN): BOOLEAN is
-		external
-			"C | %"eif_copy.h%""
-		end
-
- 	frozen c_generating_type (obj: POINTER): STRING is
- 		external
- 			"C | %"eif_gen_conf.h%""
- 		alias
- 			"eif_gen_typename"
- 		end
 
 invariant
 

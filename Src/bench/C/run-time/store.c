@@ -15,7 +15,7 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 */
 
 #include "eif_portable.h"
-#include "eif_project.h" /* for egc_ce_gtype */
+#include "eif_project.h" /* for egc_ce_type */
 #include "rt_macros.h"
 #include "rt_malloc.h"
 #include "rt_except.h"
@@ -1217,30 +1217,30 @@ rt_private void gen_object_write(char *object)
 			} else {
 				char *vis_name;
 				uint32 dgen;
-				int16 *gt_type;
-				int32 *gt_gen;
+				int16 *dynamic_types;
+				int32 *patterns;
 				int nb_gen;
-				struct gt_info *info;
+				struct cecil_info *info;
 
 				vis_name = System(o_type).cn_generator;
 
-
-				info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-				CHECK ("Must be a generic type", info != (struct gt_info *) 0);
+					/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
+				info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
 				 *	"dtype visible_name size nb_generics {meta_type}+"
 				 */
-				gt_type = info->gt_type;
-				nb_gen = info->gt_param;
+				dynamic_types = info->dynamic_types;
+				nb_gen = info->nb_param;
 
 				for (;;) {
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					if ((*dynamic_types++ & SK_DTYPE) == (int16) o_type)
 						break;
 				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+				dynamic_types--;
+				patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
+				dgen = *patterns;
 
 	
 				if (!(flags & EO_REF)) {		/* Special of simple types */
@@ -1426,31 +1426,32 @@ rt_private void object_write(char *object)
 			} else {
 				char *vis_name;
 				uint32 dgen, dgen_typ;
-				int16 *gt_type;
-				int32 *gt_gen;
+				int16 *dynamic_types;
+				int32 *patterns;
 				int nb_gen;
 
 
-				struct gt_info *info;
+				struct cecil_info *info;
 				vis_name = System(o_type).cn_generator;
 
-				info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-				CHECK ("Must be a generic type", info != (struct gt_info *) 0);
+					/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
+				info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
 				 *	"dtype visible_name size nb_generics {meta_type}+"
 				 */
-				gt_type = info->gt_type;
-				nb_gen = info->gt_param;
+				dynamic_types = info->dynamic_types;
+				nb_gen = info->nb_param;
 
 				for (;;) {
-					CHECK("Not invalid", *gt_type != SK_INVALID);
-					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+					CHECK("Not invalid", *dynamic_types != SK_INVALID);
+					if ((*dynamic_types++ & SK_DTYPE) == (int16) o_type)
 						break;
 				}
-				gt_type--;
-				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-				dgen = *gt_gen;
+				dynamic_types--;
+				patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
+				dgen = *patterns;
 		
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
@@ -1517,7 +1518,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	char *s_buffer = NULL;
-	struct gt_info *info;
+	struct cecil_info *info;
 	volatile int nb_line = 0;
 	volatile size_t bsize = 80;
 	jmp_buf exenv;
@@ -1566,14 +1567,18 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+		if (EIF_IS_EXPANDED_TYPE(System(i))) {
+			info = (struct cecil_info *) ct_value(&egc_ce_exp_type, vis_name);
+		} else {
+			info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+		}
+		if ((info != NULL) && (info->nb_param > 0)) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-			int16 *gt_type = info->gt_type;
-			int32 *gt_gen;
-			int nb_gen = info->gt_param;
+			int16 *dynamic_types = info->dynamic_types;
+			int32 *patterns;
+			int nb_gen = info->nb_param;
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, EIF_Size(i), nb_gen)) {
@@ -1584,18 +1589,18 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 
 			for (;;) {
 #if DEBUG &1
-				if (*gt_type == SK_INVALID)
+				if (*dynamic_types == SK_INVALID)
 					eif_panic("corrupted cecil table");
 #endif
-				if ((*gt_type++ & SK_DTYPE) == (int16) i)
+				if ((*dynamic_types++ & SK_DTYPE) == (int16) i)
 					break;
 			}
-			gt_type--;
-			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dynamic_types--;
+			patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
 			for (j=0; j<nb_gen; j++) {
 				long dgen;
 
-				dgen = (long) *(gt_gen++);
+				dgen = (long) *(patterns++);
 				if (0 > sprintf(s_buffer, " %lu", dgen)) {
 					eise_io("General store: unable to write the generic type description.");
 				}
@@ -1694,7 +1699,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	char *s_buffer = NULL;
-	struct gt_info *info;
+	struct cecil_info *info;
 	volatile int nb_line = 0;
 	volatile size_t bsize = 600;
 	uint32 num_attrib;
@@ -1744,14 +1749,18 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+		if (EIF_IS_EXPANDED_TYPE(System(i))) {
+			info = (struct cecil_info *) ct_value(&egc_ce_exp_type, vis_name);
+		} else {
+			info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+		}
+		if ((info != NULL) && (info->nb_param > 0)) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-			int16 *gt_type = info->gt_type;
-			int32 *gt_gen;
-			int nb_gen = info->gt_param;
+			int16 *dynamic_types = info->dynamic_types;
+			int32 *patterns;
+			int nb_gen = info->nb_param;
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %d", i, vis_name, nb_gen)) {
@@ -1762,18 +1771,18 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 
 			for (;;) {
 #if DEBUG &1
-				if (*gt_type == SK_INVALID)
+				if (*dynamic_types == SK_INVALID)
 					eif_panic("Corrupted cecil table");
 #endif
-				if ((*gt_type++ & SK_DTYPE) == (int16) i)
+				if ((*dynamic_types++ & SK_DTYPE) == (int16) i)
 					break;
 			}
-			gt_type--;
-			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			dynamic_types--;
+			patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
 			for (j=0; j<nb_gen; j++) {
 				long dgen;
 
-				dgen = (long) *(gt_gen++);
+				dgen = (long) *(patterns++);
 				if (0 > sprintf(s_buffer, " %lu", dgen)) {
 					eise_io("Independent store: unable to write the generic type description.");
 				}
@@ -1884,39 +1893,42 @@ rt_private void widr_type_attributes (int16 dtype)
 		widr_type_attribute (dtype, i);
 }
 
-rt_private void widr_type_generics (int16 dtype)
+rt_private void widr_type_generics (int16 dtype, int is_expanded, char *class_name)
 {
-	/* Write generic information: "nb_generics {meta_type}*"
-	 */
-	struct gt_info *info = (struct gt_info*)
-			ct_value (&egc_ce_gtype, System (dtype).cn_generator);
-	if (info == NULL) {
-		/* Non-generic case */
+	/* Write generic information: "nb_generics {meta_type}*" */
+	struct cecil_info *info;
+	
+	if (is_expanded) {
+		info = (struct cecil_info*) ct_value (&egc_ce_exp_type, class_name);
+	} else {
+		info = (struct cecil_info*) ct_value (&egc_ce_type, class_name);
+	}
+	if ((info == NULL) || (info->nb_param == 0)) {
+			/* Non-generic case */
 		int16 zero = 0;
 		widr_multi_int16 (&zero, 1);
-	}
-	else {
-		/* Generic case */
-		int16 *gt_type = info->gt_type;
-		int32 *gt_gen;
-		int16 nb_gen = info->gt_param;
-		uint32 i;
+	} else {
+			/* Generic case */
+		int16 *dynamic_types = info->dynamic_types;
+		int32 *patterns;
+		int16 nb_gen = info->nb_param;
+		int32 i;
 
 		widr_multi_int16 (&nb_gen, 1);
-		for (i=0; (unsigned int) gt_type[i] != SK_INVALID; i++) {
-			if ((gt_type[i] & SK_DTYPE) == dtype)
-				break;
-		}
-		CHECK ("Generic type found", (gt_type[i] & SK_DTYPE) == dtype);
-		gt_gen = info->gt_gen + (i * nb_gen);
+		for (i = 0 ;; i++) {
+			if (info->dynamic_types[i] == dtype) {
+				patterns = info->patterns + (i * nb_gen);
 #ifdef RECOVERABLE_DEBUG
-		{
-		rt_shared void print_generic_names (struct gt_info *info, int type);
-		printf (" ");
-		print_generic_names (info, info->gt_type[i]);
-		}
+				{
+					rt_shared void print_generic_names (struct cecil_info *info, int type);
+					printf (" ");
+					print_generic_names (info, info->dynamic_types[i]);
+				}
 #endif
-		widr_multi_int32 (gt_gen, nb_gen);
+				widr_multi_int32 (patterns, nb_gen);
+				break;	// Jump out of loop
+			}
+		}
 	}
 }
 
@@ -1924,16 +1936,33 @@ rt_private void widr_type (int16 dtype)
 {
 	char *class_name = System (dtype).cn_generator;
 	int16 name_length = strlen (class_name);
+	int32 flags = (int32) System(dtype).cn_flags;
 
 #ifdef RECOVERABLE_DEBUG
 	printf ("Type %d %s", dtype, class_name);
 #endif
-	/* Write type information: "name_length name dynamic_type" */
-	widr_multi_int16 (&name_length, 1);
-	widr_multi_char ((EIF_CHARACTER *) class_name, strlen (class_name));
+	/* Write type information: "name_length name flags dynamic_type" */
+
+		/* Add `expanded' or `reference' when needed. */
+	if (EIF_NEEDS_EXPANDED_KEYWORD(System (dtype))) {
+		name_length = name_length + 9;
+		widr_multi_int16 (&name_length, 1);
+		widr_multi_char ((EIF_CHARACTER *) "expanded ", 9);
+		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
+	} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dtype))) {
+		name_length = name_length + 10;
+		widr_multi_int16 (&name_length, 1);
+		widr_multi_char ((EIF_CHARACTER *) "reference ", 10);
+		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
+	} else {
+		widr_multi_int16 (&name_length, 1);
+		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
+	}
+
+	widr_multi_int32 (&flags, 1);
 	widr_multi_int16 (&dtype, 1);
 
-	widr_type_generics (dtype);
+	widr_type_generics (dtype, flags & EIF_IS_EXPANDED_FLAG, class_name);
 #ifdef RECOVERABLE_DEBUG
 	printf ("\n");
 #endif

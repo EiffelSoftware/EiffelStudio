@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_DIALOG
-		redefine
-			initialize
-		end
 
 	EB_CONSTANTS
 		export
@@ -28,15 +25,18 @@ inherit
 			default_create, copy
 		end
 
+create
+	make
+	
 feature {NONE} -- Initialization
 
-	initialize is
+	make is
 			-- Create wizard.
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 		do
-			Precursor
+			default_create
 			set_title ("Create feature")
 			create vb
 			vb.set_padding (layout_constants.small_padding_size)

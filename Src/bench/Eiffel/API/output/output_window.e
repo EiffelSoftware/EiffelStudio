@@ -38,6 +38,12 @@ feature {TEXT_ITEM} -- Text processing
 			put_quoted_comment (text.image)
 		end;
 
+	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
+			-- Process class name text `t'.
+		do
+			put_string (text.image)
+		end;
+
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 			-- Process class name text `t'.
 		local

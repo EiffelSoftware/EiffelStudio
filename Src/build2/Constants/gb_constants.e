@@ -4,8 +4,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_CONSTANTS
+	
+inherit
+	ANY	
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature -- Access
 
@@ -190,6 +196,12 @@ feature -- Dialogs
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
 feature -- Warning Dialogs
+
+	Duplicate_name_warning_part1: STRING is "An object exists with the name '"
+		-- First part of warning used when a name that already exists is entered.
+		
+	Duplicate_name_warning_part2: STRING is "'. Object names must be unique.%N%NSelecting 'Modify' will allow editing of current invalid name%NSelecting 'Cancel' will restore old name."
+		-- Second part of warning used when a name that already exists is entered.
 
 	Delete_component_warning: STRING is "Are you sure you wish to delete the component from the system?"
 

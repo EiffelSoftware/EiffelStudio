@@ -1,14 +1,12 @@
 -- Manages register allocation for a given C type
 
-class REGISTER_MANAGER 
-
+class REGISTER_MANAGER
 
 creation
 
 	make
 
-	
-feature 
+feature
 
 	make (b: BOOLEAN) is
 			-- `b' is false if creation comes from `duplicate'
@@ -28,7 +26,7 @@ feature
 			-- Registers already used for a given C type (corresponding
 			-- item is true if register is currently used, false otherwise).
 
-	
+
 	set_registers (r: like registers) is
 			-- Assign `r' to `registers'
 		do
@@ -38,7 +36,7 @@ feature
 	needed_registers: INTEGER;
 			-- Maximum register number used
 
-	
+
 	set_needed_registers (n: INTEGER) is
 			-- Assign `n' to `needed_registers'
 		do
@@ -52,7 +50,7 @@ feature
 			Result.set_registers (clone (registers))
 			Result.set_needed_registers (needed_registers);
 		end;
-			
+
 	clear_all is
 			-- Reset data structure
 		do
@@ -82,7 +80,7 @@ feature
 			register_used: registers.item (Result);
 			max_updated: Result <= needed_registers;
 		end;
-	
+
 	free_register (n: INTEGER) is
 			-- Free register number `n'
 		require

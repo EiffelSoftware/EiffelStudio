@@ -37,6 +37,12 @@ feature -- Status report
 			-- Since there is only one associated class type, which is
 			-- the type for BIT_REF, we are always sure to find it.
 
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			create Result.make (system.bit_class.compiled_class.class_id)
+		end
+
 feature
 
 	level: INTEGER is

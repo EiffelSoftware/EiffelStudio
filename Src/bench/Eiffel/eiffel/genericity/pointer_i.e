@@ -33,7 +33,13 @@ feature -- Status report
 		do
 			Result := feature {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
 		end
-	
+
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			create Result.make (system.pointer_ref_class.compiled_class.class_id)
+		end
+
 feature
 
 	level: INTEGER is

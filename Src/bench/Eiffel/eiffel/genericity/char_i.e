@@ -60,6 +60,16 @@ feature -- Property
 				Result := feature {SHARED_GEN_CONF_LEVEL}.character_tuple_code
 			end
 		end
+
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			if is_wide then
+				create Result.make (system.wide_char_ref_class.compiled_class.class_id)
+			else
+				create Result.make (system.character_ref_class.compiled_class.class_id)
+			end
+		end
 		
 feature -- Access
 

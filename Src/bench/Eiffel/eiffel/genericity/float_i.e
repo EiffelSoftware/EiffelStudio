@@ -84,6 +84,12 @@ feature -- Access
 			Result := C_float
 		end
 
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			create Result.make (system.real_ref_class.compiled_class.class_id)
+		end
+
 feature -- Status report
 
 	is_float: BOOLEAN is True

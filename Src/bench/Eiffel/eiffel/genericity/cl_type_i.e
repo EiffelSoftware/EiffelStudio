@@ -170,23 +170,6 @@ feature -- Access
 			Result := Reference_c_type
 		end
 
-	reference_type: CL_TYPE_I is
-			-- Associated reference type of Current
-		do
-			if not is_expanded then
-				Result := Current
-			else
-				Result := twin
-				Result.set_is_expanded (False)
-			end
-		end
-
-	associated_reference_class_type: CLASS_TYPE is
-			-- Reference class type of Current
-		do
-			Result := reference_type.associated_class_type
-		end
-		
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		require
@@ -499,8 +482,6 @@ feature {NONE} -- Implementation
 			l_base_class := base_class
 			if is_expanded and not l_base_class.is_expanded then
 				Result.append ("expanded ")
-			elseif not is_expanded and l_base_class.is_expanded then
-				Result.append ("reference ")
 			elseif is_separate then
 				Result.append ("separate ")
 			end

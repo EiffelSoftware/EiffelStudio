@@ -79,6 +79,18 @@ feature -- Status report
 			end
 		end
 
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			inspect
+				size
+			when 8 then create Result.make (system.integer_8_ref_class.compiled_class.class_id)
+			when 16 then create Result.make (system.integer_16_ref_class.compiled_class.class_id)
+			when 32 then create Result.make (system.integer_32_ref_class.compiled_class.class_id)
+			when 64 then create Result.make (system.integer_64_ref_class.compiled_class.class_id)
+			end
+		end
+
 feature -- Access
 
 	size: INTEGER_8

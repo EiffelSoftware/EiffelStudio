@@ -79,7 +79,6 @@ feature -- Settings
 			-- Insert `s' at `current_position' using PackedLen encoding and
 			-- UTF-8.
 		local
-			l_pos: INTEGER
 			l_count: INTEGER
 			i: INTEGER
 		do

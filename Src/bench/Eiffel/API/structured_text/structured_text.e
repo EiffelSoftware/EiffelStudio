@@ -299,8 +299,7 @@ feature -- Element change
 		local
 			s: STRING
 		do
-			s := clone (class_i.name)
-			s.to_upper
+			s := class_i.name_in_upper
 			add (create {CLASS_NAME_TEXT}.make (s, class_i))
 		end
 
@@ -490,10 +489,10 @@ feature {NONE} -- Implementation
 				token := tokens.word_item
 
 				if token.is_email_address then
-					link := clone (token)
+					link := token.twin
 					link.prepend ("mailto:")
 				elseif token.is_url then
-					link := clone (token)
+					link := token.twin
 				else
 					link := Void
 				end
@@ -511,18 +510,18 @@ feature {NONE} -- Implementation
 				if link /= Void then
 					reset_phrase (phrase, for_comment)
 					if for_comment then
-						create com_url.make (clone (token))
+						create com_url.make (token.twin)
 						com_url.set_link (link)
 						add (com_url)
 					else
-						create str_url.make (clone (token))
+						create str_url.make (token.twin)
 						str_url.set_link (link)
 						add (str_url)
 					end
 					last_class := Void
 				elseif is_quoted then
 					reset_phrase (phrase, for_comment)
-					add_quoted_text (clone (token))
+					add_quoted_text (token.twin)
 					last_class := Void
 				elseif token.is_class_name then
 					last_class := class_by_name (token)
@@ -578,13 +577,12 @@ feature {NONE} -- Implementation
 					last_cluster := (create {SHARED_EIFFEL_PROJECT}).Eiffel_universe.cluster_of_name (token)
 					if last_cluster /= Void then
 						reset_phrase (phrase, for_comment)
-						add_cluster (last_cluster, clone (token))
+						add_cluster (last_cluster, token.twin)
 					else
 						phrase.append (token)
 					end
 				else
-					create fn.make_from_string (clone (token))
-					fn.to_lower
+					fn := token.as_lower
 					last_was_cluster := fn.is_equal ("cluster")
 					phrase.append (token)
 					last_class := Void
@@ -599,11 +597,13 @@ feature {NONE} -- Implementation
 
 	reset_phrase (p: STRING; for_comment: BOOLEAN) is
 			-- Add comment `p' and wipe out `p'.
+		require
+			p_not_void: p /= Void
 		do
 			if for_comment then
-				add (create {COMMENT_TEXT}.make (clone (p)))
+				add (create {COMMENT_TEXT}.make (p.twin))
 			else
-				add (create {STRING_TEXT}.make (clone (p)))
+				add (create {STRING_TEXT}.make (p.twin))
 			end
 			p.wipe_out
 		end

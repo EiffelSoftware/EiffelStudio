@@ -753,6 +753,12 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			key: EV_KEY
 			common_dialog_imp: EV_DIALOG_IMP_COMMON
 		do
+				-- If escape or tab has been pressed then end pick and drop.
+				--| This is to stop the user from ever using Alt + tab
+				--| to switch between applications while in PND.
+			if virtual_key = vk_menu or virtual_key = vk_escape then
+				escape_pnd
+			end
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 				
@@ -763,12 +769,6 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 				if common_dialog_imp /= Void then
 					common_dialog_imp.key_press_actions.call ([key])
 				end							
-				-- If escape or tab has been pressed then end pick and drop.
-				--| This is to stop the user from ever using Alt + tab
-				--| to switch between applications while in PND.
-				if key.code = key.key_escape or virtual_key = vk_menu then
-					escape_pnd
-				end
 				if key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([key])
 				end
@@ -1073,6 +1073,12 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.80  2001/06/14 00:41:07  rogers
+--| Fixed process_standard_key_press so that when a user attempts to switch
+--| between applications using alt-tab while a pick and drop is executing,
+--| the pick and drop will be ended. This had been fixed, but a change to keys
+--| caused the old code to break.
+--|
 --| Revision 1.79  2001/06/11 22:14:37  pichery
 --| Cosmetics
 --|

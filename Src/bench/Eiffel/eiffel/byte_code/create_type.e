@@ -39,7 +39,7 @@ feature -- C code generation
 			gen_file := context.generated_file;
 			if context.workbench_mode then
 				gen_file.putstring ("RTUD(");
-				gen_file.putint (cl_type_i.associated_class_type.id.id - 1);
+				gen_file.putstring (cl_type_i.associated_class_type.id.generated_id);
 				gen_file.putchar (')');
 			else
 				gen_file.putint (cl_type_i.type_id - 1);

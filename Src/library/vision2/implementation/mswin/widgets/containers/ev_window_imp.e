@@ -249,10 +249,14 @@ feature -- Status setting
 			end
 		end
 
-	set_modal is
+	set_modal (flag: BOOLEAN) is
 			-- Make the window modal
 		do
-			set_capture
+			if flag then
+				set_capture
+			else
+				release_capture
+			end
 		end
 
 feature -- Element change
@@ -270,13 +274,6 @@ feature -- Element change
 				wel_set_parent (Void)
 			end
 		end
-
---	set_size (new_width:INTEGER; new_height: INTEGER) is
---			-- Resize the widget and don't notify the parent.
---		do
---			resize (maximum_width.min (minimum_width.max(new_width)),
---				maximum_height.min (minimum_height.max (new_height)))
---		end
 
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
@@ -318,7 +315,7 @@ feature -- Element change
 			-- Make `a_bar' the new status bar of the window.
 		do
 			status_bar := a_bar
-			update_minimum_size
+			compute_minimum_height
 		end
 
 	remove_status_bar is
@@ -431,35 +428,10 @@ feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 			-- Set `menu' with `a_menu'.
 		do
 			{WEL_FRAME_WINDOW} Precursor (a_menu)
-			update_minimum_size
+			compute_minimum_height
 		end
 
 feature {NONE} -- Implementation
-
-	update_minimum_size is
-			-- Update the minimum_size of the window according
-			-- to the component inside the window.
-		local
-			mw, mh: INTEGER
-		do
-			-- We calculate the values first
-			mw := 2 * window_frame_width
-			mh := 2 * window_frame_height
-
-			if child /= Void then
-				mw := mw + child.minimum_width
-				mh := mh + child.minimum_height
-			end
-			if has_menu then
-				mh := mh + menu_bar_height
-			end
-			if status_bar /= Void then
-				mh := mh + status_bar.height
-			end
-
-			-- Finaly, we set the value
-			internal_set_minimum_size (mw, mh)
-		end
 
 	internal_set_minimum_width (value: INTEGER) is
 			-- Make `value' the new `minimum_width'.
@@ -500,10 +472,66 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_width, compute_minimum_height, compute_minimum_size is
-			-- Recompute the minimum size of the object.
+	compute_minimum_width is
+			-- Recompute the minimum width of the object.
+		local
+			mw: INTEGER
 		do
-			update_minimum_size
+			-- We calculate the values first
+			mw := 2 * window_frame_width
+
+			if child /= Void then
+				mw := mw + child.minimum_width
+			end
+
+			-- Finaly, we set the value
+			internal_set_minimum_width (mw)
+		end
+
+	compute_minimum_height is
+			-- Recompute the minimum height of the object.
+		local
+			mh: INTEGER
+		do
+			-- We calculate the values first
+			mh := 2 * window_frame_height
+
+			if child /= Void then
+				mh := mh + child.minimum_height
+			end
+			if has_menu then
+				mh := mh + menu_bar_height
+			end
+			if status_bar /= Void then
+				mh := mh + status_bar.height
+			end
+
+			-- Finaly, we set the value
+			internal_set_minimum_height (mh)
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of the object.
+		local
+			mw, mh: INTEGER
+		do
+			-- We calculate the values first
+			mw := 2 * window_frame_width
+			mh := 2 * window_frame_height
+
+			if child /= Void then
+				mw := mw + child.minimum_width
+				mh := mh + child.minimum_height
+			end
+			if has_menu then
+				mh := mh + menu_bar_height
+			end
+			if status_bar /= Void then
+				mh := mh + status_bar.height
+			end
+
+			-- Finaly, we set the value
+			internal_set_minimum_size (mw, mh)
 		end
 
 feature {NONE} -- Inapplicable

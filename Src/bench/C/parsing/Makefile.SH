@@ -162,7 +162,7 @@ Makefiles::
 	echo "Making "Makefiles" in $(DIR)$$i..."; \
 	(cd $$i || exit 1; \
 	if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \
-	$(MAKE) $(MFLAGS) Makefiles) \
+	$(MAKE) $(MFLAGS) Makefiles); \
 	done
 
 Makefiles.SH:: Makefile.SH

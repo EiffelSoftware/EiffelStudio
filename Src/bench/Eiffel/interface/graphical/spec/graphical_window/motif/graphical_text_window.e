@@ -229,7 +229,11 @@ feature -- Output
 					w := 10
 				end;
 				set_size (w, h);
-				drawing.clear_area (0, 0, 0, 0, True)
+				if shown_called then
+					shown_called := False
+				else
+					drawing.clear_area (0, 0, 0, 0, True)
+				end
 			end
 debug ("DRAWING")
 	io.error.putstring ("total number of lines: ");

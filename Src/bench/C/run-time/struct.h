@@ -165,8 +165,8 @@ struct interface {
 
 extern int scount;				/* Number of dynamic types */
 extern int ccount;				/* Number of classes */
-extern long dcount;		/* Size of `fdispatch' */
-extern long mcount;		/* Size of `melt' table */
+extern long dcount;				/* Size of `fdispatch' */
+extern long melt_count;			/* Size of `melt' table */
 
 /*
  * Dispatch table: array of body ids indexed by body indexes

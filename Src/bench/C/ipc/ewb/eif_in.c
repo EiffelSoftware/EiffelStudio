@@ -100,7 +100,7 @@ EIF_OBJ request_dispatch (rqst)
 				stop_info = rqst.rqu.rqu_stop;
 				strcpy (ptr, stop_info.st_where.wh_name);
 				ptr += strlen (ptr) + 1; /* one char farther than terminating NULL */
-				sprintf (ptr, "%lx", stop_info.st_where.wh_obj);
+				sprintf (ptr, "0x%lX", stop_info.st_where.wh_obj);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_origin);
 				ptr += strlen (ptr) + 1;

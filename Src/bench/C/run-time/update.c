@@ -35,7 +35,7 @@ private void root_class_updt();		/* Update the root class info */
 private void routinfo_updt();		/* Update the rout info table */
 private void desc_updt();			/* Update the descriptors */
 
-public long mcount;					/* Size of melting table */
+public long melt_count;				/* Size of melting table */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
@@ -178,16 +178,16 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	}
 
 	/* Updating of the melting table */
-	mcount = wlong();		/* Read the size of the byte code array */
+	melt_count = wlong();		/* Read the size of the byte code array */
 #ifdef DEBUG
-	dprintf(1)("=== Size of melted table: %ld ===\n", mcount);
+	dprintf(1)("=== Size of melted table: %ld ===\n", melt_count);
 #endif
 	/* Allocation of the variable `melt' */
-	melt = (char **) cmalloc(mcount * sizeof(char *));
+	melt = (char **) cmalloc(melt_count * sizeof(char *));
 	if (melt == (char **) 0)
 		enomem();
 	/* Allocation of the variable `mpatidtab' */
-	mpatidtab = (int *) cmalloc(mcount * sizeof(int));
+	mpatidtab = (int *) cmalloc(melt_count * sizeof(int));
 	if (mpatidtab == (int *) 0)
 		enomem();
 

@@ -139,3 +139,21 @@ public EIF_OBJ dir_current()
 	return ((EIF_OBJ)cwd_string);
 }
 
+public EIF_CHARACTER eif_dir_separator ()
+{
+#ifdef __WATCOMC__
+	return '\\';
+#else
+	return '/';
+#endif
+}
+
+public EIF_INTEGER eif_chdir (path)
+EIF_OBJ path;
+{
+	/* Set current dir to `path'
+	 * Returns the error status
+	 */
+	return chdir (eif_access(path));
+}
+

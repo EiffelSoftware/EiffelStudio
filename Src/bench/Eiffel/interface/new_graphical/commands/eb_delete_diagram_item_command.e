@@ -34,6 +34,7 @@ inherit
 			mini_pixmap,
 			description,
 			tooltip,
+			tooltext,
 			pixmap
 		redefine
 			drop_class,
@@ -151,8 +152,6 @@ feature -- Initialization
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text, use_gray_icons)
-			Result.select_actions.wipe_out
-			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_inherit_stone)
 			Result.drop_actions.extend (agent execute_with_client_stone)
 			Result.drop_actions.extend (agent drop_class)

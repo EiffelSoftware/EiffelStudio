@@ -31,11 +31,12 @@ create
 	
 feature
 	
-	make (a_module_key: STRING; a_class, a_feature: INTEGER; a_line: INTEGER_64) is
+	make (a_bp: BREAKPOINT; a_module_key: STRING; a_class, a_feature: INTEGER; a_line: INTEGER_64) is
 			-- Initialize BP item data
 		require
 			module_key_lower_case: is_lower_case (a_module_key)
 		do
+			breakpoint := a_bp
 			module_key := a_module_key
 			class_token := a_class
 			feature_token := a_feature
@@ -45,6 +46,7 @@ feature
 feature -- Hashable interface
 
 	hash_code: INTEGER is
+			-- Hash code used for HASH_TABLE
 		do
 			Result := ([module_key, class_token, feature_token, break_index]).hash_code
 			--| if overflow
@@ -72,6 +74,8 @@ feature -- comparison
 feature -- Access assertion
 
 	is_lower_case (a_string: STRING): BOOLEAN is
+			-- is `a_string' in lower case
+			-- used in assertion
 		require
 			not_void: a_string /= Void
 		do
@@ -80,19 +84,29 @@ feature -- Access assertion
 		
 feature -- access
 
+	breakpoint: BREAKPOINT
+			-- Corresponding eStudio BREAKPOINT
+	
 	module_key: STRING
+			-- modulename view as key
+			-- this means in our case, lowered
 
 	class_token: INTEGER
+			-- class token
 	
 	feature_token: INTEGER
+			-- feature token
 	
 	break_index: INTEGER_64
+			-- il line index (il offset)
 	
 feature -- dotnet properties
 
 	icor_breakpoint: ICOR_DEBUG_BREAKPOINT
+			-- Corresponding ICorDebugBreakpoint
 	
 	set_icor_breakpoint (a_val: like icor_breakpoint) is
+			-- Set `icor_breakpoint' to `a_val'.
 		do
 			icor_breakpoint := a_val
 			icor_breakpoint.add_ref
@@ -101,31 +115,33 @@ feature -- dotnet properties
 feature -- status
 	
 	is_active: BOOLEAN
+			-- Is Current an active Breakpoint ?
 	
 	enabled: BOOLEAN
+			-- Is Current enabled ?
 	
 feature -- change
 
 	enable is
-			-- 
+			-- Enable the Current breakpoint.
 		do
 			enabled := True
 		end
 		
 	disable is
-			-- 
+			-- Disable the Current breakpoint.
 		do
 			enabled := False
 		end
 
 	activate is
-			-- 
+			-- Activate the Current breakpoint.
 		do
 			is_active := True				
 		end
 		
 	unactivate is
-			-- 
+			-- UnActivate the Current breakpoint.
 		do
 			is_active := False				
 		end		
@@ -133,7 +149,8 @@ feature -- change
 feature -- debug output
 
 	debug_output: STRING is
-			-- 
+			-- Debug output value
+			-- debug purpose only
 		do
 			Result := "BP: "
 						+ "Class  [" + class_token.out + "] " 

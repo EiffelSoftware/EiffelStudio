@@ -16,7 +16,18 @@ inherit
 
 feature -- Access
 
-	request_breakpoint_add (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	eifnet_breakpoint (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64): EIFNET_BREAKPOINT is
+		-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
+		local
+			l_bp: EIFNET_BREAKPOINT
+		do
+			create l_bp.make (Void, module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			if breakpoints.has (l_bp) then
+				Result := breakpoints.item (l_bp)
+			end			
+		end		
+
+	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 			-- request a new breakpoint addition
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -29,7 +40,7 @@ feature -- Access
 				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				print ("%N")
 			end
-			create l_bp.make (module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp, module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			l_bp.activate
 
 			register_bp_for_addition (l_bp)
@@ -39,8 +50,8 @@ feature -- Access
 			end			
 		end
 
-	request_breakpoint_remove (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
-			-- request a new breakpoint addition
+	request_breakpoint_remove (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+			-- request a breakpoint removal
 		local
 			l_bp: EIFNET_BREAKPOINT
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
@@ -52,7 +63,7 @@ feature -- Access
 				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				print ("%N")
 			end
-			create l_bp.make (module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp, module_key (a_module_name), a_class_token, a_feature_token, a_line)
 
 			if is_bp_waiting_for_addition (l_bp) then
 				--| The breakpoint has not yet been enabled on the dotnet side
@@ -83,7 +94,7 @@ feature -- Access
 feature {NONE} -- Initialization
 
 	init is
-			-- 	
+			-- Init the Current data containers.
 		do
 			create breakpoints_for_addition_by_module.make (10)
 			breakpoints_for_addition_by_module.compare_objects
@@ -93,7 +104,7 @@ feature {NONE} -- Initialization
 		end
 		
 	reset is
-			-- 
+			-- Reset the Current data containers.
 		do
 			breakpoints_for_addition_by_module.wipe_out
 			breakpoints.wipe_out
@@ -102,6 +113,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- List operation
 
 	is_module_waiting_for_addition (a_module: STRING): BOOLEAN is
+			-- Is `a_module' on the waiting queue for breakpoints addition ?
 		require
 			a_module /= Void and then not a_module.is_empty
 		do
@@ -109,6 +121,7 @@ feature {NONE} -- List operation
 		end
 
 	is_bp_waiting_for_addition (a_bp: EIFNET_BREAKPOINT): BOOLEAN is
+			-- Is `a_bp' waiting for being added ?
 		require
 			a_bp /= Void
 		local
@@ -125,6 +138,7 @@ feature {NONE} -- List operation
 		end
 
 	register_bp_for_addition (a_bp: EIFNET_BREAKPOINT) is
+			-- Register `a_bp' to be added.
 		require
 			a_bp /= Void
 		local
@@ -144,6 +158,7 @@ feature {NONE} -- List operation
 		end
 
 	unregister_bp_for_addition (a_bp: EIFNET_BREAKPOINT) is
+			-- Remove `a_bp' from the breakpoints to be added.
 		require
 			a_bp /= Void
 		local
@@ -162,6 +177,7 @@ feature {NONE} -- List operation
 		end
 
 	register_bp_as_active (a_bp: EIFNET_BREAKPOINT) is
+			-- Register `a_bp' as active.
 		require
 			a_bp /= Void
 		do
@@ -169,7 +185,7 @@ feature {NONE} -- List operation
 		end
 
 	move_bp_to_active_breakpoints (a_bp: EIFNET_BREAKPOINT) is
-			-- 
+			-- Move `a_bp' to active breakpoints group.
 		do
 			register_bp_as_active (a_bp)
 			unregister_bp_for_addition (a_bp)
@@ -221,12 +237,14 @@ feature {NONE} -- Notification
 feature -- module utils
 
 	module_key (a_module_name: STRING): STRING is
+			-- Key for module_name
 		deferred
 		end
 		
 feature {NONE} -- Implementation
 
 	process_breakpoint_addition (a_bp: EIFNET_BREAKPOINT): BOOLEAN is
+			-- Addition of `a_bp' successful ?
 		require
 			a_bp /= Void
 		local
@@ -244,7 +262,7 @@ feature {NONE} -- Implementation
 			l_feat_token := a_bp.feature_token
 			l_module_key_name := a_bp.module_key
 
-			--| Get CLASS or MODULE info to manage the BreakPoint
+				--| Get CLASS or MODULE info to manage the BreakPoint
 			if loaded_modules.has (l_module_key_name) then
 				l_icd_module := loaded_modules.item (l_module_key_name)
 				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
@@ -254,7 +272,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-			--| Let set the BP now we have all the information access we need
+				--| Let set the BP now we have all the information access we need
 			if l_icd_module /= Void then
 				l_icd_func := l_icd_module.get_function_from_token (l_feat_token)
 				if l_icd_func /= Void  and then l_icd_module.last_call_succeed then
@@ -295,18 +313,22 @@ feature {NONE} -- Implementation
 feature {NONE} -- Classes informations
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING] is
+			-- ICorDebugModule loaded so far.
 		deferred 
 		end
 
 feature {NONE} -- Breakpoints informations
 
-	breakpoints_for_addition_by_module: HASH_TABLE [ ARRAYED_LIST [EIFNET_BREAKPOINT] , STRING ]
+	breakpoints_for_addition_by_module: HASH_TABLE [ARRAYED_LIST [EIFNET_BREAKPOINT], STRING]
+			-- Container for Breakpoint waiting to be added
 
 	breakpoints: HASH_TABLE [EIFNET_BREAKPOINT, EIFNET_BREAKPOINT]
+			-- Container for concrete Breakpoint
 
-feature -- debug
+feature -- debug purpose only
 
 	display_bp_list_status is
+			-- Display list of BP showing their status.
 		local
 			l_output: STRING
 			l_bp: EIFNET_BREAKPOINT

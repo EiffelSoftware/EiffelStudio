@@ -42,6 +42,18 @@ feature -- Constants fo `draw_edge' feature
 			"EDGE_SUNKEN"
 		end
 
+	Bdr_raisedouter: INTEGER is 1
+			-- Raised outer edge.
+
+	Bdr_sunkenouter: INTEGER is 2
+			-- Sunken outer edge.
+
+	Bdr_raisedinner: INTEGER is 4
+			-- Raised inner edge.
+
+	Bdr_sunkeninner: INTEGER is 8
+			-- Sunken inner edge.
+
 	Bf_rect: INTEGER is
 			-- Entire border rectangle
 		external

@@ -75,7 +75,7 @@ feature -- IL Generation
 				define_runtime_features (class_type)
 
 					-- Generate default constructor.
-				current_module.define_default_constructor (class_type, False)
+				define_default_constructor (class_type, False)
 			end
 
 				-- First generate anchored features as they might be needed by current class

@@ -876,6 +876,14 @@ feature -- Class info
 			end
 		end
 
+	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
+			-- Define default constructor for implementation of `class_type'
+		require
+			class_type_not_void: class_type /= Void
+		do
+			current_module.define_default_constructor (class_type, is_reference)
+		end
+
 	define_runtime_features (class_type: CLASS_TYPE) is
 			-- Define all features needed by ISE .NET runtime. It generates
 			-- `____class_name', `$$____type', `____set_type' and `____type'.

@@ -402,11 +402,6 @@ feature -- Action
 				file.is_readable
 			end
 
-			file.open_read
-			check
-				file.is_open_read
-			end
-
 				-- Save the source class in a Backup directory
 			if save_copy and Workbench.automatic_backup then
 				!! f_name.make_from_string (cluster.backup_directory)
@@ -416,6 +411,11 @@ feature -- Action
 			end
 
 			has_unique := False
+
+			file.open_read
+			check
+				file.is_open_read
+			end
 
 				-- Call Eiffel parser
 			parser := Eiffel_parser

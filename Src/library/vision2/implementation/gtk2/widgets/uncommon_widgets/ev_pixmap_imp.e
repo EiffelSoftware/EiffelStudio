@@ -133,7 +133,6 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
-			pixbuf: POINTER
 		do
 			pixmap_filename := file_name.twin
 			a_cs := file_name
@@ -143,7 +142,6 @@ feature -- Element change
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			else
 				set_pixmap_from_pixbuf (filepixbuf)
-				--feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pixbuf)
 			end
 		end
 

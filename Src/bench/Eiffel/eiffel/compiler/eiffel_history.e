@@ -157,6 +157,7 @@ feature
 	wipe_out is
 			-- Wipe out the structure
 		do
+			used.wipe_out
 		end;
 
 feature -- Implementation

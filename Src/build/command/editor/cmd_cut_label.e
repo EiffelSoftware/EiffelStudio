@@ -5,17 +5,17 @@ inherit
 
 	CMD_CUT
 		redefine
-			element, undo
+			element, undo, update
 		end
 	
 feature {NONE}
 
 	element: CMD_LABEL;
 
-    c_name: STRING is
-        do
-            Result := Command_names.cmd_cut_label_cmd_name
-        end;
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_cut_label_cmd_name
+		end;
 
 	list: EB_LINKED_LIST [CMD_LABEL] is
 		do
@@ -39,6 +39,13 @@ feature {NONE}
 					list.put_right (element);
 				end;
 			end;
-			edited_command.update_text
+			update
 		end; -- undo
+
+	update is
+		do
+			edited_command.update_text;
+			App_editor.update_transitions_list (edited_command)
+		end;
+
 end

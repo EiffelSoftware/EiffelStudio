@@ -14,7 +14,7 @@ class PRIMES inherit
 		rename
 			has as is_prime
 		redefine
-			is_prime, i_th
+			is_prime
 		end
 
 feature -- Access

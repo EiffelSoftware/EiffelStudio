@@ -33,39 +33,16 @@ Formatter::~Formatter()
 {
 }
 
-EIF_OBJ Formatter::ccom_format_message( EIF_INTEGER Code )
-{
-	LPVOID szErrorMessage;
-	char hresult [12];
-	sprintf (hresult, "0x%.8x", Code);
-	
-	if( FormatMessage(
-					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-					NULL,
-					( DWORD )Code,
-					MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), // Default language
-					( LPTSTR )&szErrorMessage,
-					0,
-					NULL ) == 0)
-		strcpy (string_buffer, "No help available" );
-	else
-	{
-		strncpy (string_buffer, ( char* )szErrorMessage, 469);
-		string_buffer [469] = '\0';
-		LocalFree(szErrorMessage);
-	}
-	
-	strcat (string_buffer, " HRESULT = ");
-	strcat (string_buffer, hresult);
-	
-	return makestr( ( char* )string_buffer, strlen( (char *)szErrorMessage ));
+EIF_REFERENCE Formatter::ccom_format_message( EIF_INTEGER Code )
+{	
+	return makestr( ( char* )c_format_message ((long) Code), strlen( (char *)string_buffer ));
 }
 
 char* Formatter::c_format_message( long Code )
 {
 	LPVOID szErrorMessage;
-	char hresult [12];
-	sprintf (hresult, "0x%.8x", Code);
+	
+	sprintf (string_buffer, "0x%.8x  ", Code);
 	
 	if( FormatMessage(
 					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
@@ -74,18 +51,28 @@ char* Formatter::c_format_message( long Code )
 					MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), // Default language
 					( LPTSTR )&szErrorMessage,
 					0,
-					NULL ) == 0)
-		strcpy (string_buffer, "No help available" );
-	else
+					NULL ) != 0)
 	{
-		strncpy (string_buffer, ( char* )szErrorMessage, 469);
-		string_buffer [469] = '\0';
+		strcat (string_buffer,( char* )szErrorMessage);
+		string_buffer [499] = '\0';
+		
 		LocalFree(szErrorMessage);
 	}
 	
-	strcat (string_buffer, " HRESULT = ");
-	strcat (string_buffer, hresult);
 	
 	return ( char* )string_buffer;
 }
 	
+	EIF_INTEGER Formatter::ccom_hresult (char * exception_code_name) 
+	{
+		char *stopstring;
+		long result, high_bits, low_bits;
+		char high_str [7];
+		strncpy (high_str, exception_code_name, 6);
+		high_str [6] = '\0';
+
+		high_bits = strtol (high_str, &stopstring, 16);
+		low_bits = strtol (exception_code_name + 6, &stopstring, 16);
+		result = (high_bits << 16) + low_bits;
+		return (EIF_INTEGER)result;
+	};

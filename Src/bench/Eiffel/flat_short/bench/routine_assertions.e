@@ -34,6 +34,7 @@ feature
 		do
 			ctxt.begin;
 			ctxt.set_source_context (origin);
+			ctxt.set_source_class (origin.written_class);
 			precondition.format (ctxt);
 			ctxt.commit
 		end;
@@ -42,6 +43,7 @@ feature
 		do
 			ctxt.begin;
 			ctxt.set_source_context (origin);
+			ctxt.set_source_class (origin.written_class);
 			postcondition.format (ctxt);
 			ctxt.commit;
 		end;

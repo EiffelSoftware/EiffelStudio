@@ -5,6 +5,9 @@ class SHOW_EXTERNALS
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -21,6 +24,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showexternals 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showexternals 
 		end;
  
 	

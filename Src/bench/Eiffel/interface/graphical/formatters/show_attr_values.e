@@ -6,7 +6,10 @@ class
 
 inherit
 
-	FORMATTER;
+	FORMATTER
+		redefine
+			dark_symbol
+		end;
 	SHARED_DEBUG
 
 creation
@@ -24,6 +27,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showattributes 
+		end;
+	
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showattributes 
 		end;
 	
 feature {NONE}

@@ -6,6 +6,9 @@ class SHOW_ATTRIBUTES
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -21,6 +24,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showattributes 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showattributes 
 		end;
  
 	

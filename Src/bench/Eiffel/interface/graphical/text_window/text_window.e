@@ -54,8 +54,14 @@ feature
 
 	set_last_format (f: like last_format) is
 			-- Assign `f' to `last_format'.
+		require	
+			format_exists: f /= Void
 		do
-			last_format := f
+			if last_format /= Void then
+				last_format.darken (False)
+			end;
+			last_format := f;
+			last_format.darken (True)
 		ensure
 			last_format = f
 		end;

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "All resources"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7,8 +7,10 @@ indexing
 deferred class
 	EMAIL_RESOURCE
 
+inherit
+	EMAIL_CONSTANTS
 
-feature -- Access
+feature -- Status report.
 
 	can_receive: BOOLEAN is
 			-- Can resource receive?
@@ -49,5 +51,12 @@ feature -- Basic operations
 
 	resource_to_transfer: EMAIL_RESOURCE
 			-- Ressource to be transferred.
+
+feature -- Setting
+
+	enable_transfer_error is
+		do
+			transfer_error:= True
+		end
 
 end -- class EMAIL_RESOURCE

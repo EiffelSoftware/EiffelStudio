@@ -11,6 +11,13 @@ class
 inherit
 	EMAIL_PROTOCOL
 
+feature -- Basic operations.
+
+	send_mail is
+		-- Send resource.
+		deferred
+		end
+
 feature -- Implemantation (EMAIL_RESOURCE)
 
 	can_send: BOOLEAN is True

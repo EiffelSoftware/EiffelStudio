@@ -18,7 +18,7 @@ feature -- Access
 	to_resource: EMAIL_RESOURCE
 		-- Resource that will receive.
 
-feature -- Error handling.
+feature -- Status report
 
 	transfer_error: BOOLEAN
 		-- Has the transfer failed?
@@ -29,6 +29,7 @@ feature -- Error handling.
 feature -- Settings
 
 	set_from_resource (resource: EMAIL_RESOURCE) is
+			-- Set 'resource' to from_resource.
 		require
 			resource_exists: resource /= Void
 			valid_from_resource: resource.can_be_sent
@@ -37,6 +38,7 @@ feature -- Settings
 		end
 
 	set_to_resource (resource: EMAIL_RESOURCE) is
+			-- Set 'resource' to to_resource.
 		require
 			resource_exists: resource /= Void
 			valid_to_resource: resource.can_receive

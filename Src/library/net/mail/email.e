@@ -11,95 +11,67 @@ inherit
 	MEMORY_RESOURCE
 
 create
-	make_with_one_recipient, make_with_recipients
+	make_with_header, make_with_recipients
 
 feature -- Initialization.
 
-	make_with_one_recipient (a_sender: STRING; a_recipient: STRING; a_subject: STRING; a_message: STRING) is
+	make_with_header (header_from: STRING; header_to: STRING; header_subject: STRING; m_message: STRING) is
 			-- Create an email for one recipient.
 		require
-			needed_info: a_sender /= Void
-						 and then a_recipient /= Void 
-						 and then a_subject /= Void
-						 and then a_message /= Void
+			needed_info: header_from /= Void
+						 and then header_to /= Void 
+						 and then header_subject /= Void
+						 and then m_message /= Void
 		do
-			set_mail_from (a_sender)
-			create mail_to.make
-			add_mail_to (a_recipient)
-			set_subject (a_subject)
-			set_signature ("")
-			set_message (a_message)
+			create headers.make (3)
+			headers.put (header_from, H_from)
+			headers.put (header_to, H_to)
+			headers.put (header_subject, H_subject)
+			mail_message:= m_message
 		end
 
 	make_with_recipients (a_sender: STRING; some_recipients: LINKED_LIST [STRING]; a_message: STRING) is
 			-- Create an email for multiple recipients.
 		do
-			set_mail_from (a_sender)
-			set_mail_to (some_recipients)
-			set_signature ("")
-			set_message (a_message)
+--			set_mail_from (a_sender)
+--			set_mail_to (some_recipients)
+--			set_signature ("")
+--			set_message (a_message)
 		end
 
 feature -- Access
 
-	subject: STRING
+--	subject: STRING
 		-- Email subject
 
-	mail_from: STRING
+--	mail_from: STRING
 		-- From (sender)
 
-	mail_to: LINKED_LIST [STRING]
+--	mail_to: LINKED_LIST [STRING]
 		-- To (recipients)
 
-	mail_cc: LINKED_LIST [STRING]
+--	mail_cc: LINKED_LIST [STRING]
 		-- Cc (recipients)
 
-	mail_bcc: LINKED_LIST [STRING]
+--	mail_bcc: LINKED_LIST [STRING]
 		-- Bcc (recipients)
 
-	message: STRING
-		-- Email message
 
 	signature: STRING
 		-- Email signature
 
 feature -- Settings
 
-	set_mail_from (s: STRING) is
+	set_headers (head: STRING; value: STRING) is
+		require
+			header_exists: valid_header (head)
 		do
-			mail_from:= s
-		end
-
-	set_mail_to (l: LINKED_LIST [STRING]) is
-		do
-			mail_to:= l
-		end
-
-	set_mail_cc (l: LINKED_LIST [STRING]) is
-		do
-			mail_cc:= l
-		end
-
-	set_mail_bcc (l: LINKED_LIST [STRING]) is
-		do
-			mail_bcc:= l
-		end
-
-	set_subject (s: STRING) is
-		do
-			subject:= s
-		end
-
-	set_message (s: STRING) is
-			-- Set the email message 's' and end it with a . at the end of the line
-		do
-			message:= s
-			message.append (signature)
+			headers.put (value, head)
 		end
 
 	set_signature (s: STRING) is
 		do
-			signature:= s
+			mail_signature:= s
 		end
 
 feature {NONE} -- Basic operations.
@@ -110,12 +82,18 @@ feature {NONE} -- Basic operations.
 			
 		end
 
-feature -- Basic operations.
+feature -- Basic operations
 
-	add_mail_to (new_to: STRING) is
-			-- Add a new recipient to the email.
+	send is
+			-- Send email.
 		do
-			mail_to.extend (new_to)
+
+		end
+
+	receive is
+			-- Receive email.
+		do
+
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
@@ -126,6 +104,12 @@ feature -- Implementation (EMAIL_RESOURCE)
 	can_be_sent: BOOLEAN is True
 		-- An email can be send.
 
+	valid_header (head: STRING): BOOLEAN is
+		do
+			Result:= (head.is_equal (H_to) or else head.is_equal (H_from) or else
+						head.is_equal (H_cc) or else head.is_equal (H_bcc) or else
+						head.is_equal (H_subject))
+		end
 
 
 end -- class EMAIL

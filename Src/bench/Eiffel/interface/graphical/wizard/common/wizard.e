@@ -70,9 +70,6 @@ feature -- Action Iteration
 					associated_dialog.popdown;
 				end;
 			end;
-			if not associated_dialog.destroyed then
-				associated_dialog.destroy
-			end
 		end;
 
 feature {NONE} -- Properties

@@ -3,7 +3,7 @@ class REP_CLASS_DEPEND
 inherit
 
 	EXTEND_TABLE [REP_FEATURE_DEPEND, STRING];
-	COMPILER_IDABLE
+	IDABLE
 		undefine
 			copy, is_equal
 		end;

@@ -5,7 +5,7 @@ class MELTED_ROUTID_ARRAY
 inherit
 
 	CHARACTER_ARRAY;
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id

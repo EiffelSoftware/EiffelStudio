@@ -12,6 +12,8 @@ inherit
 
 	SHARED_GENERATOR
 
+	SHARED_EIFFEL_PROJECT
+
 	COMPILER_EXPORTER
 
 feature -- Attributes
@@ -202,7 +204,7 @@ feature -- Cecil
 -- SHARED_CECIL
 			make_file.putstring ("SHARED_CECIL= lib")
 			make_file.putstring (system_name)
-			make_file.putstring (".so %N")
+			make_file.putstring ("$shared_suffix %N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
 			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EIFLIB) E1/emain.o $precompilelibs %N")
 			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
@@ -226,10 +228,7 @@ feature -- Generate Dynamic Library
 			egc_dynlib_file := "egc_dynlib.template"
 
 			-- Generate SYSTEM_IN_DYNAMIC_LIB...
-			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB= ")
-			make_file.putstring (system_name)
-			make_file.putstring (".so %N")
-			make_file.putstring ("dynlib: $(SYSTEM_IN_DYNAMIC_LIB) ")
+			make_file.putstring ("%Ndynlib: $(SYSTEM_IN_DYNAMIC_LIB) ")
 
 			-- Generate "E1/egc_dynlib.o"
 			make_file.putstring ("%N")
@@ -552,6 +551,10 @@ feature -- Generation, Header
 			make_file.putstring ("END_TEST = $end_test %N")
 			make_file.putstring ("CREATE_TEST = $create_test %N")
 
+			make_file.putstring ("SYSTEM_IN_DYNAMIC_LIB = ")
+			make_file.putstring (system_name)
+			make_file.putstring ("$shared_suffix %N")
+
 			make_file.putstring ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
@@ -674,6 +677,10 @@ feature -- Generation (Linking rules)
 		do
 			make_file.putstring ("all: ")
 			make_file.putstring (system_name)
+			if Eiffel_dynamic_lib /= Void then
+				make_file.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")
+			end
+
 			make_file.new_line
 			make_file.new_line
 			generate_partial_objects_dependencies

@@ -8,7 +8,7 @@ class NATIVE_ARRAY_B
 inherit
 	CLASS_C
 		redefine
-			check_validity, new_type, is_native_array
+			check_validity, new_type, is_native_array, partial_actual_type
 		end
 
 	SPECIAL_CONST
@@ -116,6 +116,25 @@ feature -- Generic derivation
 			end
 		end
 
+feature {CLASS_TYPE_AS} -- Actual class type
+
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_ref: BOOLEAN; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
+			-- Actual type of `current depending on the context in which it is declared
+			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
+			-- be a generic class. Or it could be a reference even though it is an
+			-- expanded class. It simplifies creation of `CL_TYPE_A' instances in
+			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
+			-- rather than if statements.
+		do
+			if gen /= Void then
+				create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, gen)
+			else
+				create Result.make (class_id)
+			end
+				-- Note that NATIVE_ARRAY is not expanded by default
+			Result.set_is_expanded (is_exp or (not is_ref and is_expanded))
+		end
+		
 feature -- Status report
 
 	is_native_array: BOOLEAN is True

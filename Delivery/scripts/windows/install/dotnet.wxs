@@ -5,7 +5,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="registry" Guid="1E275E79-401F-4B47-A0DE-E1B839C1D8F0">
         <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel55\EiffelSoftware.MetadataConsumer" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
-        <Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll2]" Id="registry2" />
+        <Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll]" Id="registry2" />
       </Component>
 	  <Directory Id="Application" Name=".">
         <Directory Id="dotnet" Name="dotnet">
@@ -25,11 +25,8 @@
             <Directory Id="windows" Name="windows">
               <Directory Id="bin" Name="bin">
                 <Component Id="EiffelSoftware.Runtime.dll" Guid="747074F4-6EFD-48E9-88AC-E0AC1264C461">
-					<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" Assembly=".net" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll">
+					<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll">
 					</File>
-				</Component>
-				<Component Id="EiffelSoftware.Runtime.dll2" Guid="12B3E0B2-0646-4dd5-9DC5-D7EAE23A4A7E">
-					<File Id="EiffelSoftware.Runtime.dll2" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll"/>
 				</Component>
 				<Component Id="EiffelSoftware.MetadataConsumer.dll" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
 					<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll">

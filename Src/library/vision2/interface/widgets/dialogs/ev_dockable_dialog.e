@@ -16,7 +16,7 @@ class
 inherit
 	EV_DIALOG
 		export
-			{EV_DOCKABLE_SOURCE_I} close_request_actions
+			{ANY} close_request_actions
 		end
 
 feature -- Access

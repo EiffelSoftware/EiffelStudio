@@ -78,6 +78,15 @@ feature -- Setting
 				not_supported: False
 			end
 		end
+		
+	set_new_recoverable_format (v: BOOLEAN) is
+			-- If `v' it will use ISE Eiffel 5.3 storable format for
+			-- storing with ability to recover when there is a type mismatch.
+		do
+			check
+				not_supported: False
+			end
+		end
 
 feature -- Element change
 

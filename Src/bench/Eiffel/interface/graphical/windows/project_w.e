@@ -2052,11 +2052,11 @@ feature -- Information
 		do
 			!! Result.make
 			Result.add_new_line
-			Result.add_comment_text ("To start using EiffelBench choose either")
+			Result.add_comment_text ("To create or open a project using")
 			Result.add_new_line
-			Result.add_comment_text ("%"New Project...%" or %"Open Project...%"")
+			Result.add_comment_text ("EiffelBench: On the File menu,")
 			Result.add_new_line
-			Result.add_comment_text ("from the File menu.")
+			Result.add_comment_text ("click %"New...%" or %"Open...%".")
 			Result.add_new_line
 		ensure
 			Result_not_void: Result /= Void

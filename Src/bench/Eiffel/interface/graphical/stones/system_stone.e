@@ -59,17 +59,9 @@ feature
 			end
 		end;
 
-	icon_name: STRING is
-		do
-			!!Result.make (0);
-			Result.append ("Ace");
-		end;
+	icon_name: STRING is "Ace";
 
-	header: STRING is
-		do
-			!!Result.make (0);
-			Result.append ("Ace");
-		end;
+	header: STRING is "Ace";
  
 	stone_type: INTEGER is do Result := System_type end;
  

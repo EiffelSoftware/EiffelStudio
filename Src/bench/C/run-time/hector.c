@@ -18,6 +18,11 @@
 #include "eif_cecil.h"
 #include "eif_hector.h"
 
+#ifdef DEBUG2
+int stck_nb_items (const struct stack stk);
+int stck_nb_items_free_stack ();
+#endif
+
 #ifndef EIF_THREADS
 /* The following stack records the addresses of objects which were given to
  * the C at some time. When Eiffel gives C an indirection pointer, it is an
@@ -51,7 +56,7 @@ rt_public struct stack hec_saved = {			/* Saved indirection pointers */
  * an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we
  * record free locations in the following stack.
  */
-rt_private struct stack free_stack = {			/* Entries free in hector */
+rt_private  struct stack free_stack = {			/* Entries free in hector */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -99,6 +104,10 @@ rt_public char *efreeze(EIF_OBJ object)
 	 * explicitely clears that bit. But more importantly, it might need some
 	 * reallocation and that could force moving its location...
 	 */
+
+#ifdef DEBUG2
+		printf ("DEBUG2:-> eif_freeze called on %x\n", object);
+#endif
 
 	if (HEADER(eif_access(object))->ov_flags & EO_SPEC)
 		return (char *) 0;
@@ -190,6 +199,9 @@ rt_public void eufreeze(char *object)
 	EIF_OBJ address;					/* Address in hector's stack */
 	char *unprotected_ref;
 
+#ifdef DEBUG2
+	printf ("DEBUG2:<- eif_unfreeze called on %x\n", object);
+#endif
 	address = hector_addr(object);		/* Fetch associated address */
 	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
 		plsc();										/* Run GC cycle */
@@ -207,6 +219,37 @@ rt_public void eufreeze(char *object)
  * Run-time entries
  */
 
+#ifdef DEBUG2
+
+rt_shared int stck_nb_items_free_stack ()
+{
+	return stck_nb_items (free_stack);
+}
+rt_shared int stck_nb_items (const struct stack stk) 
+{
+
+	EIF_GET_CONTEXT
+	register1 struct stchunk *s;
+	register2 char **arena;
+	int done = 0;
+	int nb_items = 0;
+
+for (s = stk.st_hd; s && !done; s = s->sk_next) {
+        arena = s->sk_arena;                /* Start of stack */
+        if (s != stk.st_cur)          /* Before current position? */
+            nb_items += s->sk_end - arena;   /* Take the whole chunk */
+        else {
+            nb_items += stk.st_top - arena;    /* Stop at the top */
+            done = 1;                               /* Reached end of stack */
+        }
+    }
+	EIF_END_GET_CONTEXT	
+	return nb_items;
+}
+
+#endif
+		
+		
 rt_public EIF_OBJ hrecord(char *object)
 {
 	/* This routine is called by the generated C code before passing references
@@ -288,6 +331,9 @@ rt_public char *spfreeze(char *object)
 
 	union overhead *zone;			/* Malloc information zone */
 
+#ifdef DEBUG2
+	printf ("->DEBUG2: EIF_SPFREEZE called on %x\n", object);
+#endif
 	zone = HEADER(object);			/* Point to object's header */
 	zone->ov_size |= B_C;			/* Make it be a C block */
 	return object;					/* Object's location did not change */
@@ -300,6 +346,9 @@ rt_public void spufreeze(char *object)
 	 * obtain through spfreeze(). The B_C bit on the object is cleared.
 	 */
 
+#ifdef DEBUG2
+	printf ("<-DEBUG2: EIF_UNSPFREEZE called on %x\n", object);
+#endif
 	HEADER(object)->ov_size &= ~B_C;	/* Back to the Eiffel world */
 }
 

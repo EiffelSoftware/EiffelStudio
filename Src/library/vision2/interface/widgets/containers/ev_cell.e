@@ -29,8 +29,7 @@ inherit
 		undefine
 			is_in_default_state
 		redefine
-			implementation,
-			is_in_default_state
+			implementation
 		end
 
 create

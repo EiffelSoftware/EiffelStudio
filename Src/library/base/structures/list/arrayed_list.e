@@ -50,7 +50,8 @@ class ARRAYED_LIST [G] inherit
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
 			put_left, merge_left,
-			merge_right, duplicate, prune_all, has, search
+			merge_right, duplicate, prune_all, has, search,
+			append
 		select
 			count, index_set
 		end
@@ -399,6 +400,24 @@ feature -- Element change
 				subcopy (other, 1, other.count, index + 1) 
 				set_count (count + other.count)
 				other.wipe_out
+			end
+		end
+
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'.
+		local
+			al: ARRAYED_LIST [G]
+			c, new_count: INTEGER
+		do
+			al ?= s
+			if al /= Void then -- Optimization for arrayed lists
+				c := al.count
+				new_count := count + c
+				resize (1, new_count)
+				subcopy (al, 1, c, count + 1)
+				set_count (new_count)
+			else
+				Precursor {DYNAMIC_LIST} (s)
 			end
 		end
 

@@ -10,6 +10,8 @@ feature -- Access
 
 	last_string_value_length: INTEGER
 
+	current_icor_debug_frame: ICOR_DEBUG_FRAME
+
 	string_value_from_string_class_object_value	(icd_string_instance: ICOR_DEBUG_OBJECT_VALUE; min,max: INTEGER): STRING is
 		do
 		end

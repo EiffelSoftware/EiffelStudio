@@ -85,7 +85,6 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-
 feature -- Implementation
 
 	initialize_components is
@@ -109,22 +108,22 @@ feature -- Implementation
 			create error_max.make
 			create dtp_max_date.make
 			create chk_show_up_down.make
-			
+
 			set_text (("DateTimePicker").to_cil)
 			set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
 			set_client_size (create {DRAWING_SIZE}.make_from_width_and_height (504, 293))
-			
+
 			tool_tip.set_active (True)
-			
+
 			label_3.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 80))
 			label_3.set_text (("set_format:").to_cil)
 			label_3.set_size (create {DRAWING_SIZE}.make_from_width_and_height (64, 16))
 			label_3.set_tab_index (0)
-			
+
 			error_min.set_data_member (("").to_cil)
 			error_min.set_data_source (Void)
 			error_min.set_container_control (Void)
-			
+
 				-- Init `cmd_format'.
 			cmb_format.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 72))
 			cmb_format.set_size (create {DRAWING_SIZE}.make_from_width_and_height (104, 21))
@@ -136,7 +135,7 @@ feature -- Implementation
 									feature {WINFORMS_ANCHOR_STYLES}.right )
 			cmb_format.items.add_range (format_choisse_array)
 			cmb_format.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $on_cmb_format_selected_index_changed))
-			
+
 				-- Init `dtp_min_date'.
 			dtp_min_date.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 24))
 			dtp_min_date.set_size (create {DRAWING_SIZE}.make_from_width_and_height (104, 20))
@@ -151,13 +150,13 @@ feature -- Implementation
 										feature {WINFORMS_ANCHOR_STYLES}.Right )
 			dtp_min_date.set_back_color (feature {DRAWING_SYSTEM_COLORS}.window)
 			dtp_min_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $on_dtp_min_date_value_changed))
-			
+
 				-- Init `label_2'.
 			label_2.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 56))
 			label_2.set_text (("MaxDate:").to_cil)
 			label_2.set_size (create {DRAWING_SIZE}.make_from_width_and_height (96, 16))
 			label_2.set_tab_index (1)
-			
+
 				-- Init `my_group_box'.
 			my_group_box.set_location (create {DRAWING_POINT}.make_from_x_and_y (248, 16))
 			my_group_box.set_ime_mode (feature {WINFORMS_IME_MODE}.disable)
@@ -168,13 +167,13 @@ feature -- Implementation
 			my_group_box.set_tab_stop (False)
 			my_group_box.set_text (("DateTimePicker").to_cil)
 			my_group_box.set_size (create {DRAWING_SIZE}.make_from_width_and_height (248, 264))
-			
+
 				-- Init `label_1'.
 			label_1.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 32))
 			label_1.set_text (("MinDate:").to_cil)
 			label_1.set_size (create {DRAWING_SIZE}.make_from_width_and_height (80, 16))
 			label_1.set_tab_index (3)
-			
+
 				-- Init `btn_change_font'.
 			btn_change_font.set_flat_style (feature {WINFORMS_FLAT_STYLE}.Flat)
 			btn_change_font.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 216))
@@ -184,7 +183,7 @@ feature -- Implementation
 			btn_change_font.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 								  		 feature {WINFORMS_ANCHOR_STYLES}.Right )
 			btn_change_font.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_change_font_click))
-			
+
 				-- Init `date_time_picker'.
 			date_time_picker.set_location (create {DRAWING_POINT}.make_from_x_and_y (24, 24))
 			date_time_picker.set_size (create {DRAWING_SIZE}.make_from_width_and_height (200, 20))
@@ -209,11 +208,11 @@ feature -- Implementation
 			btn_change_color.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 										feature {WINFORMS_ANCHOR_STYLES}.Right )
 			btn_change_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_change_color_click))
-			
+
 			error_max.set_data_member (("").to_cil)
 			error_max.set_data_source (Void)
 			error_max.set_container_control (Void)
-			
+
 				-- Init `dtp_max_date'.
 			dtp_max_date.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 48))
 			dtp_max_date.set_size (create {DRAWING_SIZE}.make_from_width_and_height (104, 20))
@@ -228,7 +227,7 @@ feature -- Implementation
 									feature {WINFORMS_ANCHOR_STYLES}.Right)
 			dtp_max_date.set_back_color ( feature {DRAWING_SYSTEM_COLORS}.window)
 			dtp_max_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $on_dtp_max_date_value_changed))
-			
+
 				-- Init `chk_show_up_down'.
 			chk_show_up_down.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 104))
 			chk_show_up_down.set_text (("ShowUpDown:").to_cil)
@@ -237,7 +236,7 @@ feature -- Implementation
 			chk_show_up_down.set_accessible_role (feature {WINFORMS_ACCESSIBLE_ROLE}.check_button)
 			chk_show_up_down.set_tab_index (8)
 			chk_show_up_down.add_click (create {EVENT_HANDLER}.make (Current, $on_chk_show_up_down_click))
-			
+
 			my_group_box.controls.add (chk_show_up_down)
 			my_group_box.controls.add (btn_change_font)
 			my_group_box.controls.add (btn_change_color)
@@ -247,7 +246,7 @@ feature -- Implementation
 			my_group_box.controls.add (label_2)
 			my_group_box.controls.add (label_1)
 			my_group_box.controls.add (cmb_format)
-			
+
 			controls.add (date_time_picker)
 			controls.add (my_group_box)
 		ensure
@@ -268,7 +267,6 @@ feature -- Implementation
 			non_void_dtp_max_date: dtp_max_date /= Void
 			non_void_chk_show_up_down: chk_show_up_down /= Void
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -332,7 +330,7 @@ feature {NONE} -- Implementation
 				error_min.set_error (dtp_min_date, ("Min Date must be lower than Max Date").to_cil)
 			end
 		end
-		
+
 	on_dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_max_date_value' is changed.
 		require

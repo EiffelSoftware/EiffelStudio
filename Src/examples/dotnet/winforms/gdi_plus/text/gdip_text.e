@@ -127,7 +127,6 @@ feature -- Access
 	serif_font_family: DRAWING_FONT_FAMILY
 		-- Serif font family.
 
-
 feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
@@ -244,7 +243,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 invariant
 	non_void_background_brush: background_brush /= Void
 	non_void_text_texture_brush: text_texture_brush /= Void

@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			grp_tree_view.controls.add (label_1)
 			grp_tree_view.controls.add (image_list_combo_box)
 			grp_tree_view.controls.add (check_box_1)
-			
+
 			controls.add (grp_tree_view)
 			controls.add (directory_tree)
 		ensure

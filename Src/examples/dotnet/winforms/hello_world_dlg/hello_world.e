@@ -1,11 +1,11 @@
 indexing
 	description: "Display a dialog box containing the %"Hello world%" message."
-	
+
 class
 	HELLO_WORLD
 
 inherit
-	
+
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -14,7 +14,7 @@ inherit
 		redefine
 			dispose_boolean
 		end
-	
+
 	ANY
 
 create
@@ -34,10 +34,10 @@ feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
-	
+
 	my_button: WINFORMS_BUTTON			
 			-- System.Windows.Forms.Button
-	
+
 	my_text_box: WINFORMS_TEXT_BOX		
 			-- System.Windows.Forms.TextBox 
 
@@ -49,7 +49,7 @@ feature -- Implementation
 			create components.make
 			create my_button.make
 			create my_text_box.make
-			
+
 				-- Initialize window.
 			set_text (("Hello world").to_cil)
 			set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
@@ -58,7 +58,7 @@ feature -- Implementation
 			set_accept_button (my_button)
 			set_accessible_description (("Simple Form that demonstrates accessibility").to_cil)
 			set_client_size (create {DRAWING_SIZE}.make_from_width_and_height (392, 117))
-			
+
 				-- Initialize my_button.
 			my_button.set_accessible_description (("Once you've entered some text push this my_button").to_cil)
 			my_button.set_size (create {DRAWING_SIZE}.make_from_width_and_height (120, 40))
@@ -68,7 +68,7 @@ feature -- Implementation
 			my_button.set_text (("Click Me!").to_cil)
 			my_button.set_accessible_name (("DefaultAction").to_cil)
 			my_button.add_click (create {EVENT_HANDLER}.make (Current, $on_my_button_clicked))
-			
+
 				-- Initialize my_text_box.
 			my_text_box.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 24))
 			my_text_box.set_text (("Hello WinForms World").to_cil)
@@ -76,7 +76,7 @@ feature -- Implementation
 			my_text_box.set_tab_index (0)
 			my_text_box.set_accessible_description (("Please enter some text in the box").to_cil)
 			my_text_box.set_size (create {DRAWING_SIZE}.make_from_width_and_height (360, 20))
-			
+
 			controls.add (my_button)
 			controls.add (my_text_box)
 		ensure
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			retried := true
 			retry
 		end
-	
+
 	on_my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when my_button is clicked.
 		local

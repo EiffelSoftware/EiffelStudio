@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 			create mmi_sans_serif.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name),
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
-			mmi_sans_serif.set_checked (True) 
-			mmi_sans_serif.set_default_item (True) 
+			mmi_sans_serif.set_checked (True)
+			mmi_sans_serif.set_default_item (True)
 			create mmi_serif.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name),
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
@@ -108,7 +108,6 @@ feature {NONE} -- Initialization
 			non_void_mmi_large: mmi_large /= Void
 		end
 
-
 feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
@@ -134,7 +133,6 @@ feature -- Access
 			
 	current_font_family, mono_space_font_family, sans_serif_font_family, serif_font_family: DRAWING_FONT_FAMILY
 			-- System.Windows.Forms.FontFamily.
-
 
 feature {NONE} -- Implementation
 
@@ -165,9 +163,9 @@ feature {NONE} -- Implementation
 			label_1.set_size (l_size)
 			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)
 			label_1.set_context_menu (label_1_context_menu)
-		
+
 			font_size := font_sizes ("Medium")
-			
+
 			controls.add (label_1)
 		ensure
 			non_void_components: components /= Void
@@ -175,7 +173,6 @@ feature {NONE} -- Implementation
 			non_void_label_1: label_1 /= Void
 			non_void_label_1_context_menu: label_1_context_menu /= Void
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -208,7 +205,6 @@ feature {NONE} -- Implementation
 			dummy := feature {WINFORMS_MESSAGE_BOX}.show (("And why would this open a file?").to_cil)
 		end
 
-
 	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Font Menu item handler
 		local
@@ -238,7 +234,6 @@ feature {NONE} -- Implementation
 
 			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
-
 
 	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Size Menu item handler

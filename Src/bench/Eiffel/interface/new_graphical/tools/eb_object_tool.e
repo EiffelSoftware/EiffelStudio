@@ -197,10 +197,12 @@ feature -- Status setting
 			if not exists then
 				tree_item := a_stone.tree_item
 				if Application.is_dotnet then
-					abstract_value ?= tree_item.data
-					if abstract_value /= Void then
-						Application.imp_dotnet.keep_object (abstract_value)					
-						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
+					if tree_item /= Void then
+						abstract_value ?= tree_item.data
+						if abstract_value /= Void then
+							Application.imp_dotnet.keep_object (abstract_value)					
+							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
+						end
 					end
 					if n_obj = Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
@@ -311,15 +313,27 @@ feature -- Status setting
 						end
 
 						cse := current_stack_element
+
+						if current_object /= Void then
+							display_first := current_object.display
+							display_first_attributes := current_object.display_attributes
+							display_first_special := current_object.display_special
+							display_first_onces := current_object.display_onces
+						end
+
 						if Application.is_dotnet then
 							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} obj.make (cse.dynamic_class, cse.object_address)
-							obj.set_front (True)
-							obj.to_tree_item (object_tree)
 						else
 							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} obj.make (cse.dynamic_class, cse.object_address)
-							obj.set_front (True)
-							obj.to_tree_item (object_tree)
 						end
+						obj.set_front (True)
+						obj.set_display (display_first)
+						obj.set_display_attributes (display_first_attributes)
+						obj.set_display_onces (display_first_onces)
+						obj.set_display_special (display_first_special)
+						obj.to_tree_item (object_tree)
+						
+						current_object := obj
 					end
 				end
 			end
@@ -609,7 +623,7 @@ feature {NONE} -- Implementation
 			local_tree.wipe_out
 
 			if Application.call_stack_is_empty and then Application.is_dotnet then
-						build_exception_info (local_tree)
+				build_exception_info (local_tree)
 			else
 				cse := current_stack_element
 
@@ -961,7 +975,7 @@ feature {NONE} -- Implementation
 		end
 
 	current_object: EB_OBJECT_DISPLAY_PARAMETERS
-			-- The display parameters for the current object.
+			-- The display parameters for the current object (for the current stack)
 			-- It is recreated at each execution step.
 
 	display_first, display_first_attributes, display_first_onces, display_first_special: BOOLEAN

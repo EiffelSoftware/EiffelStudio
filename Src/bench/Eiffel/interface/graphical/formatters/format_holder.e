@@ -56,24 +56,4 @@ feature -- Status setting
 			end;
 		end;
 
-	set_sensitve (is_sens: BOOLEAN) is
-			-- Set both the `associated_button' and `associated_menu_entry'
-			-- to `is_sens'.
-		do
-			if associated_button /= Void then
-				if is_sens then
-					associated_button.show
-				else
-					associated_button.hide
-				end
-			end;
-			if associated_menu_entry /= Void then
-				if is_sens then
-					associated_menu_entry.set_sensitive
-				else
-					associated_menu_entry.set_insensitive
-				end
-			end;
-		end;
-
 end -- class FORMAT_HOLDER

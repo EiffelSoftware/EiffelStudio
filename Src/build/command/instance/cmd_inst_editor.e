@@ -122,7 +122,7 @@ feature
 		local
 			del_com: DELETE_WINDOW
 			close_b: CLOSE_WINDOW_BUTTON;
-			form: FORM;
+			top_form, form: FORM;
 			argument_sw: SCROLLED_W;
 		do
 				-- **************
@@ -135,29 +135,34 @@ feature
 				set_icon_pixmap (Pixmaps.command_instance_pixmap);
 			end;
 			!! form.make (Widget_names.form, Current);
-			!! focus_label.make (form);
-			!! instance_hole.make (Current, form);
-			!! command_hole.make (Current, form);
-			!! close_b.make (Current, form, focus_label);
+			!! top_form.make (Widget_names.form, form);
+			!! focus_label.make (top_form);
+			!! instance_hole.make (Current, top_form);
+			!! command_hole.make (Current, top_form);
+			!! close_b.make (Current, top_form, focus_label);
 			!! argument_sw.make (Widget_names.scroll2, form);
 			!! arguments.make (Widget_names.icon_box1, argument_sw);
 			initialize_window_attributes;
 				-- *******************
 				-- Perform attachments 
 				-- *******************
-			form.attach_top (instance_hole, 0);
-			form.attach_top (command_hole, 0);
-			form.attach_top (close_b, 0);
-			form.attach_top (focus_label, 5);
-			form.attach_top_widget (focus_label, argument_sw, 0);
-			form.attach_top_widget (close_b, argument_sw, 2);
-			form.attach_top_widget (instance_hole, argument_sw, 2);
-			form.attach_top_widget (command_hole, argument_sw, 2);
-			form.attach_left (instance_hole, 0);
-			form.attach_left_widget (instance_hole, command_hole, 0);
-			form.attach_left_widget (command_hole, focus_label, 0);
-			form.attach_right_widget (close_b, focus_label, 0);
-			form.attach_right (close_b, 0);
+			top_form.attach_top (instance_hole, 0);
+			top_form.attach_top (command_hole, 0);
+			top_form.attach_top (close_b, 0);
+			top_form.attach_top (focus_label, 0);
+			top_form.attach_bottom (focus_label, 0);
+			top_form.attach_bottom (close_b, 0);
+			top_form.attach_bottom (instance_hole, 0);
+			top_form.attach_bottom (command_hole, 0);
+			top_form.attach_left (instance_hole, 0);
+			top_form.attach_left_widget (instance_hole, command_hole, 0);
+			top_form.attach_left_widget (command_hole, focus_label, 0);
+			top_form.attach_right_widget (close_b, focus_label, 0);
+			top_form.attach_right (close_b, 0);
+
+			form.attach_left (top_form, 0);
+			form.attach_right (top_form, 0);
+			form.attach_top_widget (top_form, argument_sw, 2);
 			form.attach_left (argument_sw, 0);
 			form.attach_right (argument_sw, 0);
 			form.attach_bottom (argument_sw, 0);

@@ -50,5 +50,7 @@ external
 	object:
 			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-			"-lpng -lz -lXtst"
+			"$(ISE_EIFFEL)/C_library/libpng/libpng.a",
+			"$(ISE_EIFFEL)/C_library/zlib/libz.a",
+			"-L/usr/X11R6/lib -lXtst"
 end

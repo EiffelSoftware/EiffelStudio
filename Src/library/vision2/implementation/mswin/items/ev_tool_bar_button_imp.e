@@ -151,6 +151,36 @@ feature -- Event : command association
 			add_command (Cmd_item_activate, cmd, arg)			
 		end	
 
+	add_button_press_command (mouse_button: INTEGER; 
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
+		do
+			inspect mouse_button 
+			when 1 then
+				add_command (Cmd_item_button_one_press, cmd, arg)
+			when 2 then
+				add_command (Cmd_item_button_two_press, cmd, arg)
+			when 3 then
+				add_command (Cmd_item_button_three_press, cmd, arg)
+			end
+		end
+
+	add_button_release_command (mouse_button: INTEGER;
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
+		do
+			inspect mouse_button
+			when 1 then
+				add_command (Cmd_item_button_one_release, cmd, arg)
+			when 2 then
+				add_command (Cmd_item_button_two_release, cmd, arg)
+			when 3 then
+				add_command (Cmd_item_button_three_release, cmd, arg)
+			end
+		end
+
 feature -- Event -- removing command association
 
 	remove_select_commands is
@@ -159,6 +189,34 @@ feature -- Event -- removing command association
 		do
 			remove_command (Cmd_item_activate)			
 		end	
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_item_button_one_press)
+			when 2 then
+				remove_command (Cmd_item_button_two_press)
+			when 3 then
+				remove_command (Cmd_item_button_three_press)
+			end
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_item_button_one_release)
+			when 2 then
+				remove_command (Cmd_item_button_two_release)
+			when 3 then
+				remove_command (Cmd_item_button_three_release)
+			end
+		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 

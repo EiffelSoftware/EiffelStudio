@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
 			-- Node text
 		local
-			l_url, l_name: STRING
+			l_url, l_name, l_anchor: STRING
 			is_dir_url: BOOLEAN
 			l_util: UTILITY_FUNCTIONS
 		do
@@ -54,8 +54,15 @@ feature {NONE} -- Implementation
 				Result.append ("%N<param name=%"Local%" value=%"")	
 				if l_url /= Void then					
 					create l_name.make_from_string (l_util.toc_friendly_url (l_url))
+					if l_name.has ('#') then
+							-- Contains anchor
+						l_anchor := l_name.substring (l_name.last_index_of ('#', l_name.count), l_name.count)
+					end
 					l_name := l_util.file_no_extension (l_name)
 					l_name.append (".html")
+					if l_anchor /= Void then
+						l_name.append (l_anchor)
+					end
 				else
 					create l_name.make_empty
 				end									

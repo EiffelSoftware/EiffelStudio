@@ -173,8 +173,7 @@ feature -- Commands
 			if order_alphabetically then
 				sort_node_alphabetically (Current)
 			end
-			remove_duplicate_nodes (Current)
-			remove_duplicate_nodes (Current)
+			remove_duplicate_nodes (Current)			
 		end		
 
 	reset is
@@ -368,7 +367,8 @@ feature {NONE} -- Initialization
 			l_file: PLAIN_TEXT_FILE
 			l_sub_dir: DIRECTORY
 			l_path,
-			l_curr_name: STRING
+			l_curr_name,
+			l_node_title: STRING
 			l_dir_name: FILE_NAME
 			l_cnt,
 			l_dir_count: INTEGER
@@ -398,7 +398,12 @@ feature {NONE} -- Initialization
 							create l_file.make (l_dir_name.string)
 							if l_file.exists then
 									-- Set parent node with index details
-								a_parent.set_title (short_name (l_path))
+								l_node_title := short_name (l_path)
+								l_node_title.to_lower
+								if l_node_title.is_equal ("reference") then
+									l_node_title.replace_substring (l_node_title.item (1).as_upper.out, 1, 1)									
+								end
+								a_parent.set_title (l_node_title)
 								a_parent.set_url (l_dir_name.string)
 								create l_class_processor.make (a_parent.parent, l_file)
 							end
@@ -561,11 +566,11 @@ feature {NONE} -- Sorting
 						-- First determine if node needs filterng out
 					l_url := a_node.url
 					
-					l_doc := manager.shared_document_manager.document_by_name (l_url)
-					if l_doc = Void then
+--					l_doc := manager.shared_document_manager.document_by_name (l_url)
+--					if l_doc = Void then
 						create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_url))
-						manager.shared_document_manager.add_document (l_doc)
-					end
+--						manager.shared_document_manager.add_document (l_doc)
+--					end
 					
 					if is_code_document (l_doc) then
 						Result := not is_required_library_document (l_url)
@@ -796,7 +801,7 @@ feature {NONE} -- Sorting
 					if l_node.url /= Void then
 						if Pseudo_overrides then
 									-- Try for pseudo name
-							l_doc := Manager.Shared_document_manager.document_by_name (l_node.url)
+							create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_node.url))
 							if l_doc /= Void then
 								if l_doc.is_valid_xml then
 									l_filtered_doc := Manager.Shared_project.filter_manager.filtered_document (l_doc)
@@ -928,9 +933,9 @@ feature {NONE} -- Sorting
 					
 					if l_ids.has (a_node.children.item.id) then
 						if l_removable = Void then
-							create l_removable.make (1)
-							l_removable.extend (a_node.children.item.id)
-						end						
+							create l_removable.make (1)							
+						end
+						l_removable.extend (a_node.children.item.id)
 					else
 						l_ids.extend (a_node.children.item.id)
 					end					

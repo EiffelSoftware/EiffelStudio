@@ -95,8 +95,8 @@ feature -- Generation
 		do		
 			l_constants := Shared_constants.Help_constants
 			create l_project_file_path.make_from_string (project.project_file.name)
-					-- Change to executable directory			
-					
+			
+					-- Change to executable directory								
 			old_path := current_working_directory
 			create l_dir.make (l_constants.help_compiler_location.string)
 			if l_dir.exists then				
@@ -106,6 +106,7 @@ feature -- Generation
 			l_command.append (" %"")
 			l_command.append (l_project_file_path)
 			l_command.append ("%"")
+			
 					-- Execute HTML Help compiler
 			system (l_command)
 			if return_code /= 0 then

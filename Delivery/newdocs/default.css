@@ -1,0 +1,138 @@
+BODY {
+	BACKGROUND: #EEEEDD;
+	FONT-FAMILY: Verdana, Lucida, Arial, Times, Times New Roman, Arial, Helvetica, sans-serif; 
+	FONT-SIZE: 8pt; 
+}
+
+TD, SPAN, DIV, DD, DT, DL, UL, LI {
+	FONT-FAMILY: Verdana, Lucida, Arial, Helvetica, Sans-serif;
+	FONT-SIZE: 8pt;
+	PADDING-BOTTOM: 0.4mm; 
+}
+
+H3 {
+	COLOR: #990000;
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	FONT-SIZE: 10pt; 
+	FONT-WEIGHT: bold; 
+	TEXT-DECORATION: none
+}
+H2 {
+	COLOR: #990000;
+	BACKGROUND: #FFCC00;
+	FONT-SIZE: 12pt; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	FONT-WEIGHT: bold; 
+	PADDING-BOTTOM: 0.4mm; 
+	PADDING-LEFT: 1mm; 
+	PADDING-RIGHT: 1mm; 
+	PADDING-TOP: 0.4mm;
+	WIDTH: 90%;
+}
+H1 {
+	COLOR: #990000;
+	FONT-SIZE: 14pt; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	FONT-WEIGHT: bold; 
+	PADDING-BOTTOM: 0.4mm; 
+	PADDING-RIGHT: 2mm; 
+	PADDING-TOP: 0.4mm;
+}
+
+A {
+	FONT-FAMILY: Verdana, Lucida, Arial, Helvetica, sans-serif;
+	COLOR: #003399;
+	TEXT-DECORATION: none;
+}
+
+A:hover {
+	COLOR: #006633;
+	TEXT-DECORATION: underline;
+}
+
+.eclass {
+    COLOR: #0000AA;
+    FONT-WEIGHT: bold;
+}
+
+.neclass {
+    COLOR: black;
+}
+
+.ekeyword {
+    COLOR: navy;
+}
+
+.esymbol {
+    COLOR: navy;
+}
+
+.eitag {
+    COLOR: sienna;
+}
+
+.estring {
+    COLOR: indigo;
+}
+
+.echar {
+    COLOR: indigo;
+}
+
+.enumber {
+    COLOR: indigo;
+}
+
+.etag {
+    COLOR: sienna;
+}
+
+.efeature {
+    COLOR: darkgreen;
+}
+
+.nefeature {
+    COLOR: black;
+}
+
+.ecomment {
+    COLOR: #990000;
+}
+
+.elocal, .equoted {
+    COLOR: darkred;
+    FONT-STYLE: italic;
+}
+
+.ereserved {
+    COLOR: darkgreen;
+}
+
+.egeneric {
+    COLOR: dodgerblue;
+}
+
+.ecluster {
+    COLOR: maroon;
+    FONT-VARIANT: small-caps;
+}
+
+.necluster {
+    COLOR: black;
+    FONT-VARIANT: small-caps;
+}
+
+.link1 {
+	BACKGROUND-COLOR: #006633;
+	COLOR: white;
+}
+
+.link2 {
+	BACKGROUND-COLOR: #330066;
+	COLOR: white;
+}
+
+.nolink1, .nolink2 {
+	BACKGROUND-COLOR: #FFCC00;
+	COLOR: #330066;
+}

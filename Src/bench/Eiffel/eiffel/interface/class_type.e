@@ -566,8 +566,8 @@ feature -- Generation
 					-- which will enable us to know wether or not a C++ call has been
 					-- generated
 				byte_context.set_has_cpp_externals_calls (False)
-					-- Then we reset `global_onces'.
-				byte_context.reset_global_onces
+					-- Clear class type data.
+				byte_context.clear_class_type_data
 
 				if final_mode then
 					tmp := headers
@@ -638,6 +638,17 @@ feature -- Generation
 					feature_table.forth
 				end
 
+				if
+					current_class.has_invariant and then
+					((not final_mode) or else
+					current_class.assertion_level.check_invariant)
+				then
+					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
+					byte_context.set_byte_code (create {STD_BYTE_CODE})
+					inv_byte_code.generate_invariant_routine
+					byte_context.clear_feature_data
+				end
+
 					-- Create module initialization procedure
 				buffer.generate_function_signature ("void", Encoder.module_init_name
 					(static_type_id), True, header_buffer, <<>>, <<>>)
@@ -651,35 +662,27 @@ feature -- Generation
 					buffer.put_string ("EIF_once_count += ")
 					buffer.put_integer (once_count)
 					buffer.put_character (';')
+					buffer.put_new_line
 					l_globals := byte_context.global_onces
 					from
 						l_globals.start
 					until
 						l_globals.after
 					loop
-						buffer.put_new_line
 						buffer.put_string (encoder.feature_name (static_type_id, l_globals.item))
 						buffer.put_string ("_mutex = eif_thr_mutex_create ();")
+						buffer.put_new_line
 						l_globals.forth
 					end
 					buffer.exdent
 				end
 
-				buffer.put_new_line
+					-- Initialize once manifest strings
+				byte_context.generate_once_manifest_string_initialization
+
 				buffer.put_character ('}')
 				buffer.put_new_line
 				buffer.put_new_line
-
-				if
-					current_class.has_invariant and then
-					((not final_mode) or else
-					current_class.assertion_level.check_invariant)
-				then
-					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
-					byte_context.set_byte_code (create {STD_BYTE_CODE})
-					inv_byte_code.generate_invariant_routine
-					byte_context.clear_all
-				end
 
 				if final_mode then
 					Extern_declarations.generate (header_buffer)

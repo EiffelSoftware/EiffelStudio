@@ -439,13 +439,13 @@ feature -- Basic operations
 			new_month: INTEGER
 			days_in_new_month: INTEGER
 		do
-			set_year (year + div ((month + m - 1), Months_in_year))
 			new_month := mod ((month + m - 1), Months_in_year) + 1
 			days_in_new_month := days_in_i_th_month (new_month, year)
 			if day > days_in_new_month then
 				set_day (days_in_new_month)
 			end
 			set_month (new_month)
+			set_year (year + div ((month + m - 1), Months_in_year))
 		end;
 
 	year_forth is

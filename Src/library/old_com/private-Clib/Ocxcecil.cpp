@@ -824,6 +824,7 @@ extern "C" char* GuidToCString( REFGUID refguid )
 
    res = StringFromCLSID (refguid, &poleStr);
    Ole2CString (poleStr, &result);
+   CoTaskMemFree (poleStr);
    return result;
 }
 

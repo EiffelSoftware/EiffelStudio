@@ -105,6 +105,7 @@ feature -- Miscellaneous
 			interval_gauge.change_actions.extend (
 				~on_value_change (interval_gauge))
 			create hb
+			vb.extend (hb)
 			create reset_button.make_with_text ("Reset count")
 			reset_button.select_actions.extend (~reset_count)
 			hb.extend (reset_button)
@@ -185,8 +186,8 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.7  2000/05/01 18:38:20  brendel
---| Added test_widget.
+--| Revision 1.8  2000/05/01 18:50:57  brendel
+--| Put hb in vb.
 --|
 --| Revision 1.6  2000/03/16 01:18:48  oconnor
 --| formatting

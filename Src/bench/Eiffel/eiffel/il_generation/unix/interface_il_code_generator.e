@@ -311,7 +311,7 @@ feature -- IL Generation
 				generate_feature_standard_twin (feat)
 			else
 				if not is_single_class then
-					if not is_replicated then
+					if not is_replicated or else feat.is_once then
 							-- Generate static definition of `feat'.
 						generate_feature (feat, False, True, False)
 						generate_feature_code (feat)
@@ -343,7 +343,7 @@ feature -- IL Generation
 					end
 
 
-					if not is_replicated then
+					if not is_replicated or else feat.is_once then
 							-- We call locally above generated static feature
 						generate_feature_il (feat,
 							current_class_type.implementation_id,
@@ -404,6 +404,8 @@ feature -- IL Generation
 			l_is_method_impl_generated: BOOLEAN
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
+			implementation_class_id: INTEGER
+			implementation_feature_id: INTEGER
 		do
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
@@ -431,10 +433,16 @@ feature -- IL Generation
 				if feat.rout_id_set.has (standard_twin_rout_id) then
 					generate_feature_standard_twin (feat)
 				else
+					if feat.is_once then
+						implementation_class_id := feat.origin_class_id
+						implementation_feature_id := feat.origin_feature_id
+					else
+						implementation_class_id := feat.written_in
+						implementation_feature_id := feat.written_feature_id
+					end
 					generate_feature_il (feat,
-						implemented_type (feat.written_in,
-							current_class_type.type).implementation_id,
-						feat.written_feature_id)
+						implemented_type (implementation_class_id, current_class_type.type).implementation_id,
+						implementation_feature_id)
 				end
 
 					-- We need a MethodImpl here for mapping

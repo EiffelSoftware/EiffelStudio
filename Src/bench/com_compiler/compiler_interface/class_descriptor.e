@@ -11,6 +11,7 @@ inherit
 		redefine
 			name,
 			description,
+			tool_tip,
 			external_name,
 			feature_names,
 			features,
@@ -28,7 +29,8 @@ inherit
 			class_path,
 			is_deferred,
 			is_external,
-			is_generic
+			is_generic,
+			is_in_system
 		end
 
 	COMPILER_EXPORTER
@@ -42,7 +44,6 @@ feature {NONE} -- Initialization
 			-- Initialize structure with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_compiled: a_class.compiled
 		do
 			compiler_class := a_class
 		end
@@ -68,12 +69,7 @@ feature -- Access
 
 	description: STRING is
 			-- Class description.
-		local
-			indexing_clause: INDEXING_CLAUSE_AS
-			compiled_class: CLASS_C
-			a_description: STRING
 		do
-			compiled_class := compiler_class.compiled_class
 			create Result.make (50)
 			if is_deferred then
 				Result.append ("deferred ")
@@ -88,39 +84,52 @@ feature -- Access
 			if is_external then
 				Result.append (", %Nexternal name: " + external_name)
 			end
-			if compiled_class /= Void then			
-				Result.append ("%N")
-				indexing_clause := compiled_class.ast.top_indexes
-				if indexing_clause /= Void then
-					a_description := indexing_clause.description
-					if 
-						a_description /= Void and then 
-						not a_description.is_empty
-					then
-						Result.append ("Description: ")
-						Result.append (a_description)
-					end
+			if is_in_system then
+				if 
+					tool_tip /= Void and then 
+					not tool_tip.is_empty
+				then
+					Result.append ("%N")
+					Result.append ("Description: ")
+					Result.append (tool_tip)
 				end
 			end
 			Result.prune_all ('%R')
 			Result.prune_all ('%T')
 		end
 
+	tool_tip: STRING is
+			-- Class Tool Tip.
+		local
+			indexing_clause: INDEXING_CLAUSE_AS
+		do
+			if is_in_system then
+				indexing_clause := compiler_class.compiled_class.ast.top_indexes
+				if indexing_clause /= Void then
+					Result := indexing_clause.description
+				end
+			end
+		end
+
+	is_in_system: BOOLEAN is
+			-- Is class in system?
+		do
+			Result := compiler_class.compiled
+		end
+
 	feature_names: ECOM_ARRAY [STRING] is
 			-- List of names of class flat features.
 		local
 			names, res: ARRAY [STRING]
-			compiled_class: CLASS_C
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				names := compiled_class.api_feature_table.current_keys
+			if is_in_system then
+				names := compiler_class.compiled_class.api_feature_table.current_keys
 				create res.make (1, names.count)
 				res.copy (names)
 				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
 			end
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 
 	features: FEATURE_ENUMERATOR is
@@ -129,11 +138,9 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: LIST [E_FEATURE]
 			f: FEATURE_DESCRIPTOR
-			compiled_class: CLASS_C
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				l := compiled_class.written_in_features
+			if is_in_system then
+				l := compiler_class.compiled_class.written_in_features
 				create res.make (l.count)
 				from
 					l.start
@@ -147,17 +154,14 @@ feature -- Access
 				create Result.make (res)
 			end
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 		
 	feature_count: INTEGER is
 			-- Number of class features.
-		local
-			compiled_class: CLASS_C
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.written_in_features.count
+			if is_in_system then
+				Result := compiler_class.compiled_class.written_in_features.count
 			end
 		end
 
@@ -167,11 +171,9 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: ARRAYED_LIST [FEATURE_I]
 			f: FEATURE_DESCRIPTOR
-			compiled_class: CLASS_C
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				l := compiled_class.feature_table.linear_representation
+			if is_in_system then
+				l := compiler_class.compiled_class.feature_table.linear_representation
 				create res.make (l.count)
 				from
 					l.start
@@ -185,17 +187,14 @@ feature -- Access
 				create Result.make (res)
 			end
 		ensure then
-			result_exists: Result /= Void			
+			result_exists: is_in_system implies Result /= Void			
 		end
 
 	flat_feature_count: INTEGER is
 			-- Number of flat class features.
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.feature_table.count
+			if is_in_system then
+				Result := compiler_class.compiled_class.feature_table.count
 			end
 		end
 		
@@ -206,10 +205,8 @@ feature -- Access
 			name_not_void: a_name /= Void
 		local
 			f: FEATURE_I
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
+			if is_in_system then
 				f := compiler_class.compiled_class.feature_table.item (a_name)
 				if f /= Void then
 					create {FEATURE_DESCRIPTOR} Result.make_with_class_i_and_feature_i (compiler_class, f)
@@ -223,11 +220,9 @@ feature -- Access
 			client_list: LINKED_LIST [CLASS_C]
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			client: CLASS_DESCRIPTOR
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				client_list := compiled_class.clients
+			if is_in_system then
+				client_list := compiler_class.compiled_class.clients
 				create res.make (client_list.count)
 				from
 					client_list.start
@@ -240,20 +235,17 @@ feature -- Access
 					end
 					client_list.forth
 				end
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 
 	client_count: INTEGER is
 			-- Number of class clients.
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.clients.count - 1
+			if is_in_system then
+				Result := compiler_class.compiled_class.clients.count - 1
 			end
 		end
 		
@@ -264,32 +256,31 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			supplier: CLASS_DESCRIPTOR
 		do
-			supplier_list := compiler_class.compiled_class.suppliers.classes
-			create res.make (supplier_list.count)
-			from
-				supplier_list.start
-			until
-				supplier_list.after
-			loop
-				if supplier_list.item /= compiler_class.compiled_class then
-					create supplier.make_with_class_i (supplier_list.item.lace_class)
-					res.extend(supplier)
+			if is_in_system then
+				supplier_list := compiler_class.compiled_class.suppliers.classes
+				create res.make (supplier_list.count)
+				from
+					supplier_list.start
+				until
+					supplier_list.after
+				loop
+					if supplier_list.item /= compiler_class.compiled_class then
+						create supplier.make_with_class_i (supplier_list.item.lace_class)
+						res.extend(supplier)
+					end
+					supplier_list.forth
 				end
-				supplier_list.forth
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 
 	supplier_count: INTEGER is
 			-- Number of class suppliers.
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.suppliers.classes.count - 1
+			if is_in_system then
+				Result := compiler_class.compiled_class.suppliers.classes.count - 1
 			end
 		end
 
@@ -300,30 +291,29 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			ancestor: CLASS_DESCRIPTOR
 		do
-			ancestor_list := compiler_class.compiled_class.parents
-			create res.make (ancestor_list.count)
-			from
-				ancestor_list.start
-			until
-				ancestor_list.after
-			loop
-				create ancestor.make_with_class_i (ancestor_list.item.associated_class.lace_class)
-				res.extend (ancestor)
-				ancestor_list.forth
+			if is_in_system then
+				ancestor_list := compiler_class.compiled_class.parents
+				create res.make (ancestor_list.count)
+				from
+					ancestor_list.start
+				until
+					ancestor_list.after
+				loop
+					create ancestor.make_with_class_i (ancestor_list.item.associated_class.lace_class)
+					res.extend (ancestor)
+					ancestor_list.forth
+				end
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 
 	ancestor_count: INTEGER is
 			-- Number of direct ancestors.
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.parents.count
+			if is_in_system then
+				Result := compiler_class.compiled_class.parents.count
 			end
 		end
 		
@@ -334,30 +324,29 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			descendant: CLASS_DESCRIPTOR
 		do
-			descendant_list := compiler_class.compiled_class.descendants
-			create res.make (descendant_list.count)
-			from
-				descendant_list.start
-			until
-				descendant_list.after
-			loop
-				create descendant.make_with_class_i (descendant_list.item.lace_class)
-				res.extend (descendant)
-				descendant_list.forth
+			if is_in_system then
+				descendant_list := compiler_class.compiled_class.descendants
+				create res.make (descendant_list.count)
+				from
+					descendant_list.start
+				until
+					descendant_list.after
+				loop
+					create descendant.make_with_class_i (descendant_list.item.lace_class)
+					res.extend (descendant)
+					descendant_list.forth
+				end
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
-			result_exists: Result /= Void
+			result_exists: is_in_system implies Result /= Void
 		end
 		
 	descendant_count: INTEGER is
 			-- Number of direct descendants.
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.descendants.count
+			if is_in_system then
+				Result := compiler_class.compiled_class.descendants.count
 			end
 		end
 		
@@ -371,34 +360,25 @@ feature -- Access
 
 	is_deferred: BOOLEAN is
 			-- Is class deferred?
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.is_deferred
+			if is_in_system then
+				Result := compiler_class.compiled_class.is_deferred
 			end
 		end
 
 	is_external: BOOLEAN is
 			-- Is class external?
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.is_external
+			if is_in_system then
+				Result := compiler_class.compiled_class.is_external
 			end
 		end
 
 	is_generic: BOOLEAN is
 			-- Is class generic?
-		local
-			compiled_class: CLASS_C 
 		do
-			compiled_class := compiler_class.compiled_class
-			if compiled_class /= Void then
-				Result := compiled_class.generics /= Void
+			if is_in_system then
+				Result := compiler_class.compiled_class.generics /= Void
 			end
 		end
 

@@ -41,8 +41,6 @@ inherit
 			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
@@ -99,7 +97,7 @@ feature -- Status setting
 	set_left_alignment is
 			-- Set text alignment of current label to left.
 		do
-			set_Style (basic_style + Ss_left)
+			set_style (basic_style + Ss_left)
 		end
 
 	set_default_minimum_size is

@@ -17,10 +17,10 @@ inherit
 
 	EV_MENU_ITEM_CONTAINER_I
 
---	EV_PIXMAP_CONTAINER_I
---		redefine
---			pixmap_size_ok
---		end
+	EV_PIXMAP_CONTAINER_I
+		redefine
+			pixmap_size_ok
+		end
 
 feature {NONE} -- Initialization
 	

@@ -117,9 +117,9 @@ cluster
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
-		"$(BENCH)/C/parsing/lace/liblace.a";
-		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
+		"$(BENCH)/C/parsing/lace/liblace.a",
+		"$(BENCH)/C/parsing/shared/libparsing.a",
 		"$(BENCH)/C/platform/libplatform.a"
 
 end

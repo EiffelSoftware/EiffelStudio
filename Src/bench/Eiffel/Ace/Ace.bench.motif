@@ -239,6 +239,10 @@ cluster
 	--dle_switch(switch):	"$/dle/no_dle";
 	license_switch(switch): "$/license/license";  	--unix
 	--license_switch(switch): "$/license/no_license";	--win
+	encryption:				"$EIFFEL_SRC/library/encryption"
+		exclude
+			"des_encoder.e"
+		end
 
 		-- Communications
 	communications (switch):		"$/communication";

@@ -1623,7 +1623,7 @@ feature {NONE} -- Implementation: checks
 		end
 			
 	valid_export_parameters (cl: CLASS_C; cr: E_FEATURE; f: E_FEATURE;
-							al: STRING; ind: INTEGER_REF; cc: STRING): BOOLEAN is
+							al: STRING; ind: INTEGER; cc: STRING): BOOLEAN is
 			-- Is the export feature defined by these parameters valid?
 			-- `cl': its class, `cr': the creation routine, `f': the exported feature,
 			-- `ind': the index, `al': an alias name, `cc': the calling convention.

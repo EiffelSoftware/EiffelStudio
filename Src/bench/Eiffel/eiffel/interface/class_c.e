@@ -4306,12 +4306,16 @@ feature -- Implementation
 
 	feature_named (n: STRING): FEATURE_I is
 			-- Feature whose internal name is `n'
+		require
+			n_not_void: n /= Void
 		local
 			ftbl: like feature_table
 		do
-			ftbl := feature_table
-			if ftbl /= Void then
-				Result := ftbl.item (n)
+			if not n.is_empty then
+				ftbl := feature_table
+				if ftbl /= Void then
+					Result := ftbl.item (n)
+				end
 			end
 		end
 

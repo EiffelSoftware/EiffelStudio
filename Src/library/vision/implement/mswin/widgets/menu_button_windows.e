@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			parent ?= oui_parent.implementation
 			mp ?= oui_parent
 			attach_menu (mp)
+			a_menu_b.set_font_imp (Current)
 			managed := man
 		end
 

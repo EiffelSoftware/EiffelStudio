@@ -522,7 +522,7 @@ feature -- Access
 				layout_item.destroy
 			end
 			if window_selector_item /= Void and then window_selector_item.object = Current then
-				window_selector_item.destroy
+				window_selector_item.tree_item.destroy
 			end
 			
 			children.wipe_out
@@ -725,7 +725,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 			id_set: id >= 0
 		end
 
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM} -- Element change
 
 	create_object_from_type is
 			-- Create an object of type `type' and assign
@@ -1059,9 +1059,10 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 			name_and_type: STRING
 		do
 			name_and_type := name_and_type_from_object (Current)
-			layout_item.set_text (name_and_type)
+			layout_item.set_text (name_and_type)			
 			if is_top_level_object then
-				window_selector_item.set_text (name_and_type)
+					-- Update the window selector item name.
+				window_selector_item.update_to_reflect_name_change
 			end
 		end
 

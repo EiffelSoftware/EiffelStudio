@@ -43,24 +43,18 @@ COPY generated\Server\Include Clib
 COPY generated\Common\Include Clib
 
 @REM Rename and copy type library
-IF "%1"=="/dll" GOTO DLLTLB
 
 @ECHO ***************************************
-@ECHO Generating EXE Type Library
+@ECHO Generating Type Library
 @ECHO ***************************************
-RENAME generated\EiffelSoftware.tlb cec.tlb
+RENAME generated\EiffelSoftwareCompiler.tlb cec.tlb
 COPY generated\cec.tlb ace_file\.
 COPY generated\cec.tlb .\
+IF "%1"=="/dll" GOTO DLLTLB
 GOTO TOREPL
 
 :DLLTLB
-@ECHO ***************************************
-@ECHO Generating DLL Type Library
-@ECHO ***************************************
-RENAME generated\EiffelSoftware.tlb EiffelSoftware.Compiler.tlb
-COPY generated\EiffelSoftware.Compiler.tlb ace_file\.
-COPY generated\EiffelSoftware.Compiler.tlb .\
-COPY generated\server\eiffelsoftware.def ace_file\EiffelSoftware.Compiler.def
+COPY generated\server\eiffelsoftwarecompiler.def ace_file\EiffelSoftware.Compiler.def
 
 @REM Replace modified generated files
 :TOREPL
@@ -92,7 +86,6 @@ COPY to_replace\dll\*.cpp Clib
 COPY to_replace\dll\*.c Clib
 COPY to_replace\dll\*.h Clib
 COPY ace_file\cec.rc ace_file\EiffelSoftware.Compiler.rc
-COPY ace_file\cec.ico ace_file\EiffelSoftware.Compiler.ico
 
 @REM Finally, compile C Code
 :CCOMP

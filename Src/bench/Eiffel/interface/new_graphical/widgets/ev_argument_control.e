@@ -531,8 +531,6 @@ feature -- Status Setting
 	
 	update is
 			-- Update all elements after changes.
-		local
-			l_unselect: BOOLEAN
 		do
 			if not argument_check.is_selected then	
 				argument_check.enable_select

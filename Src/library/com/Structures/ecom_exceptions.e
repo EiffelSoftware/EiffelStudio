@@ -27,6 +27,19 @@ inherit
 			dispose
 		end
 
+feature --  Access
+
+	hresult: INTEGER is
+			-- Original HRESULT.
+		require
+			applicable: is_developer_exception
+		local
+			wel_string: WEL_STRING
+		do
+			create wel_string.make (tag_name)
+			Result := ccom_hresult (formatter, wel_string.item)
+		end
+
 feature -- Element Change
 
 	trigger (code: INTEGER) is
@@ -59,7 +72,12 @@ feature {NONE} -- External
 
 	ccom_format_message (a_pointer: POINTER; code: INTEGER): STRING is
 		external
-			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_OBJ"
+			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"
+		end
+
+	ccom_hresult (a_pointer: POINTER; an_exception_code: POINTER ): INTEGER is
+		external
+			"C++ [Formatter %"ecom_exception.h%"] (char *): EIF_INTEGER"
 		end
 		
 	ccom_initialize_formatter: POINTER is

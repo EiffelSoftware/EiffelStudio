@@ -114,30 +114,40 @@ feature -- Access
  			l_descriptions: ECOM_ARRAY [STRING]
 			l_params: ECOM_ARRAY [PARAMETER_ENUMERATOR]
 			l_overloads_count: INTEGER
+			l_retried: BOOLEAN
 		do
-			target.to_lower
-			l_feature := internal_target_feature (target, location_name, file_name, use_overloading, False)
-			if l_feature /= Void then
-				l_overloads_count := l_feature.overloads_count + 1
-				create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
-				create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
-				create l_params.make (1, <<1>>, <<l_overloads_count>>)
-				l_return_types.put (l_feature.return_type, <<1>>)
-				l_descriptions.put (l_feature.description, <<1>>)
-				l_params.put (l_feature.parameters, <<1>>)
-				append_list_to_com_array (l_feature.overloads_return_types, l_return_types, 2)
-				append_list_to_com_array (l_feature.overloads_descriptions, l_descriptions, 2)
-				append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
-				feature_name.put (l_feature.name)
-				return_types.set_string_array (l_return_types)
-				descriptions.set_string_array (l_descriptions)
-				params.set_unknown_array (l_params)
-			else
-				feature_name.put ("")
-                return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
-			end				
+			if not l_retried then
+				target.to_lower
+				l_feature := internal_target_feature (target, location_name, file_name, use_overloading, False)
+				if l_feature /= Void then
+					l_overloads_count := l_feature.overloads_count + 1
+					create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
+					create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
+					create l_params.make (1, <<1>>, <<l_overloads_count>>)
+					l_return_types.put (l_feature.return_type, <<1>>)
+					l_descriptions.put (l_feature.description, <<1>>)
+					l_params.put (l_feature.parameters, <<1>>)
+					append_list_to_com_array (l_feature.overloads_return_types, l_return_types, 2)
+					append_list_to_com_array (l_feature.overloads_descriptions, l_descriptions, 2)
+					append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
+					feature_name.put (l_feature.name)
+					return_types.set_string_array (l_return_types)
+					descriptions.set_string_array (l_descriptions)
+					params.set_unknown_array (l_params)
+				else
+					feature_name.put ("")
+	                return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+	                descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+	                params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
+				end
+			end
+		rescue
+			feature_name.put ("")
+			return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+			descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+			params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
+			l_retried := True
+			retry
 		end
 
     target_features (target, location_name: STRING; location_type: INTEGER; file_name: STRING; use_overloading: BOOLEAN; return_names: ECOM_VARIANT; descriptions: CELL [IEIFFEL_ENUM_STRING_INTERFACE]; return_image_indexes: ECOM_VARIANT) is
@@ -152,40 +162,47 @@ feature -- Access
 			l_lister: FEATURES_LISTER
 			l_entries: ARRAYED_LIST [COMPLETION_ENTRY]
 			l_class_i: CLASS_I
+			l_retried: BOOLEAN
 		do
-			target.to_lower
-			if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
-                l_lister := lister (file_name)
-				if l_lister.is_initialized then
-					l_lister.set_locals (locals)
-					l_lister.set_arguments (arguments)
-					l_lister.set_completion_features (completion_features)
-					l_lister.set_feature_name (location_name)
-					l_lister.reset_renames
-				end
-            else
-				l_class_i := class_from_name (location_name)
-				if l_class_i /= Void then
-					l_lister := lister (l_class_i.file_name)
+			if not l_retried then
+				target.to_lower
+				if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
+	                l_lister := lister (file_name)
 					if l_lister.is_initialized then
-						l_lister.reset_feature_name
-						l_lister.set_renames (rename_sources, rename_targets)
+						l_lister.set_locals (locals)
+						l_lister.set_arguments (arguments)
+						l_lister.set_completion_features (completion_features)
+						l_lister.set_feature_name (location_name)
+						l_lister.reset_renames
+					end
+	            else
+					l_class_i := class_from_name (location_name)
+					if l_class_i /= Void then
+						l_lister := lister (l_class_i.file_name)
+						if l_lister.is_initialized then
+							l_lister.reset_feature_name
+							l_lister.set_renames (rename_sources, rename_targets)
+						end
 					end
 				end
+				if l_lister /= Void and then l_lister.is_initialized then
+					l_lister.find (target, use_overloading, False)
+					if l_lister.found then
+						l_entries := l_lister.found_items
+						extract_variants_from_list (l_entries, return_names, return_image_indexes)
+						descriptions.put (create {DESCRIPTIONS_ENUMERATOR}.make (l_entries))
+					else
+						set_empty_results (return_names, return_image_indexes, descriptions)
+					end
+	            else
+	 				set_empty_results (return_names, return_image_indexes, descriptions)
+	            end
 			end
-			if l_lister /= Void and then l_lister.is_initialized then
-				l_lister.find (target, use_overloading, False)
-				if l_lister.found then
-					l_entries := l_lister.found_items
-					extract_variants_from_list (l_entries, return_names, return_image_indexes)
-					descriptions.put (create {DESCRIPTIONS_ENUMERATOR}.make (l_entries))
-				else
-					set_empty_results (return_names, return_image_indexes, descriptions)
-				end
-            else
- 				set_empty_results (return_names, return_image_indexes, descriptions)
-            end
-        end
+		rescue
+			set_empty_results (return_names, return_image_indexes, descriptions)
+			l_retried := True
+			retry
+ 		end
 
     parse_source_for_expr (source_text: STRING; source_row, source_col: INTEGER; expr, feat: CELL [STRING]; is_class_expr: BOOLEAN_REF) is
             -- Parse `source_text' where caret is at `source_row', `source_col' and find the complete expression text.

@@ -45,6 +45,72 @@ feature -- Externals
 			"XFreeFontNames"
 		end
 
+feature -- Externals (XTEST extension)
+
+	x_test_fake_motion_event (
+		a_display: POINTER;
+		a_scr_num,
+		a_x,
+		a_y,
+		a_delay: INTEGER
+	): BOOLEAN is
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeMotionEvent"
+		end
+
+	x_test_fake_button_event (
+		a_display: POINTER;
+		a_button: INTEGER;
+		a_is_press: BOOLEAN;
+		a_delay: INTEGER
+	): BOOLEAN is
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeButtonEvent"
+		end
+
+	x_test_fake_key_event (
+		a_display: POINTER;
+		a_keycode: INTEGER
+		a_is_press: BOOLEAN
+		a_delay: INTEGER
+	): BOOLEAN is
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestFakeKeyEvent"
+		end
+
+	x_display_name (a_display_name: POINTER): POINTER is
+		external
+			"C: char *| <X11/Xlib.h>"
+		alias
+			"XDisplayName"
+		end
+
+	x_open_display (a_display: POINTER): POINTER is
+		external
+			"C: Display *| <X11/Xlib.h>"
+		alias
+			"XOpenDisplay"
+		end
+
+	x_test_query_extension (
+			a_display,
+			a_event_base,
+			a_error_base,
+			a_major_version,
+			a_minor_version: POINTER): BOOLEAN is
+		external
+			"C: EIF_BOOL| <X11/extensions/XTest.h>"
+		alias
+			"XTestQueryExtension"
+		end
+
+
 feature -- Externals
 
 	c_gdk_window_iconify (a_window: POINTER) is

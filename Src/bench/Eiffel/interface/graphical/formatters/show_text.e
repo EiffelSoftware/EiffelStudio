@@ -80,8 +80,8 @@ feature
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
 			class_text: CLASS_TEXT;
-			modified_class: BOOLEAN;
-			last_cursor_position: INTEGER
+			modified_class, position_saved: BOOLEAN;
+			last_cursor_position, last_top_position: INTEGER
 		do
 			classc_stone ?= stone;
 			if 
@@ -128,18 +128,28 @@ feature
 					end;
 					class_text ?= text_window;
 					if 
-						class_text /= Void and then 
-						class_text.last_format = class_text.tool.showclick_command
+						class_text /= Void and then (
+						class_text.last_format = 
+									class_text.tool.showclick_command or
+						class_text.last_format = 
+									class_text.tool.showtext_command)
 					then
-						last_cursor_position := class_text.cursor_position
+						last_cursor_position := class_text.cursor_position;
+						last_top_position := class_text.top_character_position;
+						position_saved := true
 					end;
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_mode_for_editing;
-					if last_cursor_position <= text_window.size then
-						text_window.set_cursor_position (last_cursor_position)
-					elseif last_cursor_position /= 0 then
-						text_window.set_cursor_position (text_window.size)
+					if position_saved then
+						if last_cursor_position > text_window.size then
+							last_cursor_position := text_window.size
+						end;
+						if last_top_position > text_window.size then
+							last_top_position := text_window.size
+						end;
+						text_window.set_cursor_position (last_cursor_position);
+						text_window.set_top_character_position (last_top_position)
 					end;
 					text_window.set_last_format (Current)
 				end;

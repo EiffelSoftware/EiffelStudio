@@ -22,7 +22,8 @@ inherit
 			reorder_child,
 			i_th,
 			count,
-			list_widget
+			list_widget,
+			initialize
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -67,6 +68,7 @@ feature {NONE} -- Initialization
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
 		do
+			{EV_ITEM_LIST_IMP} Precursor
 			C.gtk_container_add (c_object, pixmap_box)
 			C.gtk_container_add (c_object, text_label)
 			is_initialized := True

@@ -25,6 +25,11 @@ inherit
 			put_feature_error, put_exported_feature_name
 		end
 
+	EB_GRAPHICAL_DATA
+		undefine
+			is_equal, copy
+		end
+
 	NEW_EB_CONSTANTS
 		undefine
 			is_equal, copy

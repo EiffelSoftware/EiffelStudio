@@ -32,10 +32,10 @@ feature -- Access
 	Splash_screen_dialog_constant: INTEGER is 125
 	Wizard_splash_dialog_constant: INTEGER is 125
 	Splash_bitmap_constant: INTEGER is 127
-	Wizard_eiffel_project_dialog_constant: INTEGER is 129
 	Wizard_eiffel_project_file_dialog_constant: INTEGER is 129
 	Idd_dialog1_constant: INTEGER is 130
 	Wizard_about_dialog_constant: INTEGER is 130
+	Wizard_Destination_folder_dialog_constant: INTEGER is 131
 	Definition_file_edit_constant: INTEGER is 1007
 	Definition_file_input_static_constant: INTEGER is 1008
 	Browse_button_constant: INTEGER is 1009
@@ -88,5 +88,5 @@ feature -- Access
 	About_static_constant: INTEGER is 1066
 	Ace_file_edit_constant: INTEGER is 1067
 	Ace_file_browse_button_constant: INTEGER is 1068
-
+	Cluster_Edit_constant: INTEGER is 1069
 end -- class APPLICATION_IDS

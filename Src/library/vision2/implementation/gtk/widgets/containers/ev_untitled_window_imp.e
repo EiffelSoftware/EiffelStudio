@@ -259,6 +259,7 @@ feature -- Element change
 		do
 			i := item
 			if i /= Void then
+				remove_item_actions.call ([i])
 				w ?= i.implementation
 				check
 					item_has_implementation: w /= Void
@@ -268,6 +269,7 @@ feature -- Element change
 			if v /= Void then
 				w ?= v.implementation
 				C.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
+				new_item_actions.call ([v])
 			end
 		end
 
@@ -458,6 +460,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/26 01:29:02  brendel
+--| Added calls to action sequences when adding/removing an item.
+--|
 --| Revision 1.16  2000/02/24 18:50:19  king
 --| Implemented set_minimum_size to avoid post-condition violation
 --|

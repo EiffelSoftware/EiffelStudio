@@ -92,7 +92,7 @@ feature -- Initialization
 
 			set_title ("Preferences")
 			set_size (Layout_constants.Dialog_unit_to_pixels(640), Layout_constants.Dialog_unit_to_pixels(460))
-			split.set_split_position (Layout_constants.Dialog_unit_to_pixels(240))
+			split.set_split_position (Layout_constants.Dialog_unit_to_pixels(250))
 			show
 		end
 
@@ -276,17 +276,22 @@ feature -- Menu
 
 feature -- Fill Lists
 
-	recurse_expand (it: EV_TREE_NODE) is
-			-- Recursively expand `it'
+	recurse_expand (it: EV_TREE_NODE; a_depth: INTEGER) is
+			-- Recursively expand `it'. if `a_depth' is set
+			-- to zero, it only `it' but not its children.
+		require
+			depth_valid: a_depth >= 0
 		do
 			if not it.is_empty then
-				from
-					it.start
-				until
-					it.after
-				loop
-					recurse_expand (it.item)
-					it.forth
+				if a_depth > 0 then
+					from
+						it.start
+					until
+						it.after
+					loop
+						recurse_expand (it.item, a_depth - 1)
+						it.forth
+					end
 				end
 				it.expand
 			end
@@ -313,7 +318,7 @@ feature -- Fill Lists
 				l.forth
 			end
 	
-			recurse_expand (it)
+			recurse_expand (it, 1)
 		end
 
 	folder_item (folder: RESOURCE_FOLDER): EV_TREE_ITEM is

@@ -43,6 +43,7 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_TREE_NODE_LIST</b> - `find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents. Added `retrive_items_recursively_by_data' and `retrieve_item_recursively_by_data' which allow you to specify a comparison criterion, and due to this addition, `find_item_recursively_by_data' has now been made obsolete.</li>
 	<li><b>EV_DYNAMIC_LIST</b> - Added `retrieve_item_by_data' and `retrieve_items_by_data'.</li>
 	<li><b>EV_ITEM_LIST</b> - Made `item_by_data' obsolete, as you should now use `retrieve_item_by_data' added in EV_DYNAMIC_LIST.</li>
+	<li><b>EV_DIALOG</b> - Added `is_relative' and defined `is_modal' in this class, instead of inheriting it from EV_WINDOW.</li>
 </ul>
 <p><b>Bug fixes</b>
 <ul>
@@ -94,7 +95,8 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - `drop_actions' was being fired even when the pick and drop was cancelled.</li>
 	<li><b>EV_PIXMAP</b> - Previously, if you were to add an agent to an action sequence of the pixmap, before it was parented, the agent would be removed during the parenting.</li>
 	<li><b>EV_MENU</b> - Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still contained in the menu would cause occasional crashes. Previously, when adding an EV_MENU_SEPARATOR, followed by multiple EV_RADIO_MENU_ITEMS, all the items were being selected. Fixed bug in `destroy' which was causing postcondition failures.</li>
-	<li><b>EV_TITLED_WINDOW</b> - Fixed a GDI leak, manifesting when a window was destroyed.
+	<li><b>EV_TITLED_WINDOW</b> - Fixed a GDI leak, manifesting when a window was destroyed.</li>
+	<li><b>EV_DIALOG</b> - Fixed `is_modal' which was previously always returned `False'.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

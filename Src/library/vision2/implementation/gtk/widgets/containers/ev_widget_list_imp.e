@@ -57,6 +57,7 @@ feature {NONE} -- Implementation
 			end
 			a_c_object := v_imp.c_object
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, a_c_object)
+
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then

@@ -14,17 +14,17 @@ all:: network.lmb wnetwork.lmb
 .c.obm:
 	$(CC) -Fo$@ -c $(CFLAGS) $<
 
-SMODE = network.c networkr.c
+SMODE = network.c network_r.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
 	network.obm \
-	networkr.obm
+	network_r.obm
 
 WOBJS = \
 	wnetwork.obm \
-	wnetworkr.obm
+	wnetwork_r.obm
 
 wnetwork.c: network.c
 	$(RM) wnetwork.c
@@ -35,11 +35,11 @@ wnetwork.obm: wnetwork.c bitmask.h
 	$(CC) -Fo$@ -c $(CFLAGS) -DWORKBENCH $*.c
 
 
-wnetworkr.c: networkr.c
-	$(RM) wnetworkr.c
-	$(LN) networkr.c wnetworkr.c
+wnetwork_r.c: network_r.c
+	$(RM) wnetwork_r.c
+	$(LN) network_r.c wnetwork_r.c
 
-wnetworkr.obm: wnetworkr.c
+wnetwork_r.obm: wnetwork_r.c
 	$(CC) -Fo$@ -c $(CFLAGS) -DWORKBENCH $*.c
 
 
@@ -52,7 +52,7 @@ local_realclean::
 
 network.lmb: $(OBJS)
 	$(RM) $@
-	$(AR) /OUT:$@ networkr.obm network.obm wsock32.lib
+	$(AR) /OUT:$@ network_r.obm network.obm wsock32.lib
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\w32msc mkdir ..\spec\w32msc
@@ -66,7 +66,7 @@ local_realclean::
 
 wnetwork.lmb: $(WOBJS)
 	$(RM) $@
-	$(AR) /OUT:$@ wnetworkr.obm wnetwork.obm wsock32.lib
+	$(AR) /OUT:$@ wnetwork_r.obm wnetwork.obm wsock32.lib
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\w32msc mkdir ..\spec\w32msc

@@ -18,8 +18,13 @@ inherit
 		end
 
 	GB_EV_COLORIZABLE_EDITOR_CONSTRUCTOR
+		undefine
+			default_create
+		end
 
 	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -30,6 +35,8 @@ inherit
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

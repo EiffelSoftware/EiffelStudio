@@ -33,26 +33,19 @@ feature {NONE} -- Initialization
 	
 	make is
 		do
+			-- Create the gtk object.
 			widget := gtk_button_new
 			gtk_object_ref (widget)
-			initialize
-		end
 
-	make_with_text (txt: STRING) is
-			-- Create 
-		do
-			make
-			create_text_label (txt)
-		end
-	
-	initialize is
-			-- Common initialization for buttons
-		do
-			box := gtk_hbox_new (False, 0)
-			gtk_widget_show (box)
-			gtk_container_add (GTK_CONTAINER (widget), box)
-		end			
-	
+			-- Create the `box'.
+			initialize
+
+			-- Create a gtk label with a text set to ""
+			create_text_label ("")
+
+			-- We center-align and vertical_center-position the text.
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
+		end	
 		
 feature -- Event - command association
 	

@@ -294,18 +294,23 @@ feature {EV_ANY_I} -- Implementation
 			--| We are on an idle action now. At least one item has marked
 			--| itself `update_needed'.
 		local
-			cur: INTEGER
+			cur: CURSOR
+			new_column_count: INTEGER
 		do
-			cur := ev_children.index
+			cur := ev_children.cursor
 			from
 				ev_children.start
 			until
 				ev_children.after
 			loop
 				if ev_children.item.interface.count > column_count then
-					expand_column_count_to (ev_children.item.interface.count)
+					new_column_count := ev_children.item.interface.count
 				end
 				ev_children.forth
+			end
+
+			if new_column_count > column_count then
+				expand_column_count_to (new_column_count)
 			end
 
 			from
@@ -318,7 +323,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 				ev_children.forth
 			end
-			ev_children.go_i_th (index)
+			ev_children.go_to (cur)
 		end
 
 	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
@@ -431,6 +436,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/28 00:34:37  king
+--| Optimized update_children to only expand list once on iteratation of children
+--|
 --| Revision 1.40  2000/03/27 19:32:01  brendel
 --| Removed obsolete preconditions.
 --|

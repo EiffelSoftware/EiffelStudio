@@ -10,11 +10,11 @@ inherit
 	
 feature -- Access
 
---	Alignment: INTEGER is 5
---			-- Alignment in list view
---		indexing
---			external_name: "Alignment"
---		end
+	Alignment: INTEGER is 5
+			-- Alignment in list view
+		indexing
+			external_name: "Alignment"
+		end
 				
 	Close_button_label: STRING is "Close"
 			-- Close button label
@@ -40,10 +40,10 @@ feature -- Access
 			external_name: "TypesLabelText"
 		end
 
---	View: INTEGER is 3
---			-- View property for list view
---		indexing
---			external_name: "View"
---		end
+	View: INTEGER is 3
+			-- View property for list view
+		indexing
+			external_name: "View"
+		end
 	
 end -- class ASSEMBLY_VIEW_DICTIONARY

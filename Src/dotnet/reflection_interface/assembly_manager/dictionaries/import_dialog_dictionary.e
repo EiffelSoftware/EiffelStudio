@@ -75,6 +75,12 @@ feature -- Access
 		indexing
 			external_name: "NeutralCulture"
 		end
+
+	No_path: STRING is "Please select a folder where Eiffel code will be generated."
+		indexing
+			description: "Error message when no path has been selected"
+			external_name: "NoPath"
+		end
 		
 	Ok_button_label: STRING is "OK"
 			-- OK button label

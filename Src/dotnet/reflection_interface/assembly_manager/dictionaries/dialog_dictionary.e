@@ -18,19 +18,19 @@ feature -- Access
 			non_void_assembly_descriptor: a_descriptor /= Void
 			non_void_assembly_name: a_descriptor.name /= Void
 			not_empty_assembly_name: a_descriptor.name.Length > 0
-		once
+		do
 			Result := Name_string
-			Result := Result.concat_string_string_string (Result, Comma_separator, description (a_descriptor))	
+			Result := Result.concat_string_string_string_string (Result, a_descriptor.name, Comma_separator, description (a_descriptor))	
 		ensure
 			text_created: Result /= Void
 			not_empty_text: Result.length > 0
 		end
 		
---	Bold_style: INTEGER is 1
---			-- Bold style
---		indexing
---			external_name: "BoldStyle"
---		end
+	Bold_style: INTEGER is 1
+			-- Bold style
+		indexing
+			external_name: "BoldStyle"
+		end
 
 	Comma_separator: STRING is ", "
 			-- Comma separator

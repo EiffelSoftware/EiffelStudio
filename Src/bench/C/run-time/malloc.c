@@ -1463,8 +1463,16 @@ rt_private EIF_REFERENCE malloc_free_list (unsigned int nbytes, union overhead *
 		 * collector to benefit from the memory compaction, if possible.
 		 */
 	if (gc_flag == GC_ON) {
+#ifdef EIF_THREADS
+		RT_GET_CONTEXT
+		if ((gc_thread_status == EIF_THREAD_GC_RUNNING) || thread_can_launch_gc) {
+			plsc();						/* Call garbage collector */
+			return malloc_free_list (nbytes, hlist, type, GC_OFF);
+		}
+#else
 		plsc();						/* Call garbage collector */
 		return malloc_free_list (nbytes, hlist, type, GC_OFF);
+#endif
 	}
 
 	/* Optimize: do not try to run a full coalescing if there is not
@@ -3275,7 +3283,7 @@ rt_private int full_coalesc_unsafe(int chunk_type)
 
 /*
 doc:	<routine name="trigger_smart_gc_cycle" return_type="int" export="private">
-doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection, otherwise we try a simple generation scavenging. Since it can trigger a GC collection, we disable debugger so that no one can reach a breakpoint located in a dispose routine.</summary>
+doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection, otherwise we try a simple generation scavenging. If we are under the control of a complete synchronization, we do not try to acquire mutex. This is useful for `retrieve' which blocks all threads but if one is blocked in here through a lock on `trigger_gc_mutex' then we end up with a dead lock, where actually we didn't need to hold the `trigger_gc_mutex'.</summary>
 doc:		<return>1 if collection was successful, 0 otherwise.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eiffel_usage_mutex' for getting value of `eiffel_usage'.</synchronization>
@@ -3284,28 +3292,47 @@ doc:	</routine>
 
 rt_private int trigger_smart_gc_cycle (void)
 {
+	RT_GET_CONTEXT
 	int result = 0;
-	long e_usage;
-	EIF_ENTER_C;
-	GC_THREAD_PROTECT(TRIGGER_GC_LOCK);
-	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
-	e_usage = eiffel_usage;
-	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
-	if (e_usage > th_alloc) {	/* Above threshold */
-		if (0 == acollect()) {		/* Perform automatic collection */
+
+#ifdef EIF_THREADS
+	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
+#endif
+		if (eiffel_usage > th_alloc) {
+			if (0 == acollect()) {
+				result = 1;
+			}
+		} else if (0 == collect()) {
 			result = 1;
 		}
-	} else if (0 == collect()) {	/* Simple generation scavenging */
-		result = 1;
+		return result;
+#ifdef EIF_THREADS
+	} else if (thread_can_launch_gc) {
+		long e_usage;
+		EIF_ENTER_C;
+		TRIGGER_GC_LOCK;
+		EIFFEL_USAGE_MUTEX_LOCK;
+		e_usage = eiffel_usage;
+		EIFFEL_USAGE_MUTEX_UNLOCK;
+		if (e_usage > th_alloc) {	/* Above threshold */
+			if (0 == acollect()) {		/* Perform automatic collection */
+				result = 1;
+			}
+		} else if (0 == collect()) {	/* Simple generation scavenging */
+			result = 1;
+		}
+		TRIGGER_GC_UNLOCK;
+		EIF_EXIT_C;
+		return result;
+	} else {
+		return result;
 	}
-	GC_THREAD_PROTECT(TRIGGER_GC_UNLOCK);
-	EIF_EXIT_C;
-	return result;
+#endif
 }
 
 /*
 doc:	<routine name="trigger_gc_cycle" return_type="int" export="private">
-doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection, otherwise we try a simple generation scavenging. Since it can trigger a GC collection, we disable debugger so that no one can reach a breakpoint located in a dispose routine.</summary>
+doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection. If we are under the control of a complete synchronization, we do not try to acquire mutex. This is useful for `retrieve' which blocks all threads but if one is blocked in here through a lock on `trigger_gc_mutex' then we end up with a dead lock, where actually we didn't need to hold the `trigger_gc_mutex'.</summary>
 doc:		<return>1 if collection was successful, 0 otherwise</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eiffel_usage_mutex' for getting value of `eiffel_usage'.</synchronization>
@@ -3314,21 +3341,37 @@ doc:	</routine>
 
 rt_private int trigger_gc_cycle (void)
 {
+	RT_GET_CONTEXT
 	int result = 0;
-	long e_usage;
-	EIF_ENTER_C;
-	GC_THREAD_PROTECT(TRIGGER_GC_LOCK);
-	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
-	e_usage = eiffel_usage;
-	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
-	if (e_usage > th_alloc) {	/* Above threshold */
-		if (0 == acollect()) {		/* Perform automatic collection */
-			result = 1;
+#ifdef EIF_THREADS
+	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
+#endif
+		if (eiffel_usage > th_alloc) {
+			if (0 == acollect()) {
+				result = 1;
+			}
 		}
+		return result;
+#ifdef EIF_THREADS
+	} else if (thread_can_launch_gc) {
+		long e_usage;
+		EIF_ENTER_C;
+		TRIGGER_GC_LOCK;
+		EIFFEL_USAGE_MUTEX_LOCK;
+		e_usage = eiffel_usage;
+		EIFFEL_USAGE_MUTEX_UNLOCK;
+		if (e_usage > th_alloc) {	/* Above threshold */
+			if (0 == acollect()) {		/* Perform automatic collection */
+				result = 1;
+			}
+		}
+		TRIGGER_GC_UNLOCK;
+		EIF_EXIT_C;
+		return result;
+	} else {
+		return 0;
 	}
-	GC_THREAD_PROTECT(TRIGGER_GC_UNLOCK);
-	EIF_EXIT_C;
-	return result;
+#endif
 }
 
 /*

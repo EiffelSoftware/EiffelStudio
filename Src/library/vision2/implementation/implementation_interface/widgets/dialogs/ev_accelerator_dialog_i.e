@@ -5,17 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_ACCELERATOR_SELECTION_DIALOG_I
 
 inherit
-	EV_STANDARD_DIALOG_I
-
-creation
-	make,
-	make_with_text,
-	make_with_actions,
-	make_with_all
+	EV_SELECTION_DIALOG_I
 
 feature {NONE} -- Initialization
 
@@ -31,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a message dialog with `par' as parent.
 		do
 			make (par)
-			set_title ("txt")
+			set_title (txt)
 		end
 
 	make_with_actions (par: EV_CONTAINER; actions: LINKED_LIST [STRING]) is
@@ -466,17 +460,19 @@ feature -- Execution features
 			i: INTEGER
 			acc: EV_ACCELERATOR
 		do
-			list_item_execute (Void, Void)
-			create accelerators.make
-			from
-				i := 1
-			until
-				i > list.count
-			loop
-				acc ?= (list.get_item(i)).data
-				accelerators.extend (acc)
-				i := i + 1
-			end			
+			if (list.count > 0) then
+				list_item_execute (Void, Void)
+				create accelerators.make
+				from
+					i := 1
+				until
+					i > list.count
+				loop
+					acc ?= (list.get_item(i)).data
+					accelerators.extend (acc)
+					i := i + 1
+				end
+			end
 			window.hide
 		end
 
@@ -535,6 +531,34 @@ feature -- Execution features
 
 	changed: BOOLEAN
 			-- Did something changed in the user choice?
+
+--feature -- Event - command association
+--
+--	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the "OK" button is pressed.
+--		do
+---		end
+--
+--	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed when
+--			-- the "Cancel" button is pressed.
+--		do
+--		end
+
+--feature -- Event -- removing command association
+--
+---	remove_ok_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "OK" button is pressed.
+--		do
+--		end
+
+--	remove_cancel_commands is
+--			-- Empty the list of commands to be executed when
+--			-- "Cancel" button is pressed.
+--		do
+--		end
 
 end -- class EV_ACCELERATOR_SELECTION_DIALOG_I
 

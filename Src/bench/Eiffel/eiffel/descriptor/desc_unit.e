@@ -34,7 +34,7 @@ feature -- Creation
 
 feature -- Generation
 
-	C_string: STRING is
+	generate (f: INDENT_FILE) is
 			-- C code of Current descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -42,12 +42,14 @@ feature -- Generation
 			--|incrementality).
 			--|Note2: The offset of an attribute is coded on 16 bits
 			--|which might not be enough.
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 		local
 			i: INTEGER;
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 		do
-			!!Result.make (0);
 			from
 				i := lower
 			until
@@ -60,11 +62,11 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						Result.append ("%T{(uint16) ");
-						Result.append_integer (re.real_body_index.id - 1);
-						Result.append (", (int16) ");
-						Result.append_integer (re.static_feature_type_id - 1);
-						Result.append ("},%N");
+						f.putstring ("%N%T{(uint16) ");
+						f.putint (re.real_body_index.id - 1);
+						f.putstring (", (int16) ");
+						f.putint (re.static_feature_type_id - 1);
+						f.putstring ("},");
 					else
 						ae ?= item (i);
 						if ae /= Void then
@@ -72,25 +74,25 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							Result.append ("%T{(uint16) ");
-							Result.append_integer (ae.workbench_offset);
-							Result.append (", (int16) ");
-							Result.append_integer (ae.static_feature_type_id - 1);
-							Result.append ("},%N");
+							f.putstring ("%N%T{(uint16) ");
+							f.putint (ae.workbench_offset);
+							f.putstring (", (int16) ");
+							f.putint (ae.static_feature_type_id - 1);
+							f.putstring ("},");
 						end
 					end;
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					Result.append ("%T{(uint16) ");
-					Result.append_integer (Invalid_index);
-					Result.append (", (int16) -1},%N")
+					f.putstring ("%N%T{(uint16) ");
+					f.putint (Invalid_index);
+					f.putstring (", (int16) -1},")
 				end;
 				i := i + 1
 			end;
 		end;
 
-	precomp_C_string (start: INTEGER): STRING is
+	generate_precomp (f: INDENT_FILE; start: INTEGER) is
 			-- C code of Current precompiled descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -98,13 +100,15 @@ feature -- Generation
 			--|incrementality).
 			--|Note2: The offset of an attribute is coded on 16 bits
 			--|which might not be enough.
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 		local
 			i: INTEGER;
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			nb: INTEGER
 		do
-			!!Result.make (0);
 			from
 				i := lower
 			until
@@ -118,15 +122,15 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						Result.append ("%Tdesc[");
-						Result.append_integer (nb);
-						Result.append ("].info = (uint16) (");
-						Result.append (re.real_body_index.generated_id);
-						Result.append (");%N%Tdesc[");
-						Result.append_integer (nb);
-						Result.append ("].type = (int16) (");
-						Result.append (re.generated_static_feature_type_id);
-						Result.append (");%N")
+						f.putstring ("%Tdesc[");
+						f.putint (nb);
+						f.putstring ("].info = (uint16) (");
+						f.putstring (re.real_body_index.generated_id);
+						f.putstring (");%N%Tdesc[");
+						f.putint (nb);
+						f.putstring ("].type = (int16) (");
+						f.putstring (re.generated_static_feature_type_id);
+						f.putstring (");%N")
 					else
 						ae ?= item (i);
 						if ae /= Void then
@@ -134,27 +138,27 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							Result.append ("%Tdesc[");
-							Result.append_integer (nb);
-							Result.append ("].info = (uint16) ");
-							Result.append_integer (ae.workbench_offset);
-							Result.append (";%N%Tdesc[");
-							Result.append_integer (nb);
-							Result.append ("].type = (int16) (");
-							Result.append (ae.generated_static_feature_type_id);
-							Result.append (");%N")
+							f.putstring ("%Tdesc[");
+							f.putint (nb);
+							f.putstring ("].info = (uint16) ");
+							f.putint (ae.workbench_offset);
+							f.putstring (";%N%Tdesc[");
+							f.putint (nb);
+							f.putstring ("].type = (int16) (");
+							f.putstring (ae.generated_static_feature_type_id);
+							f.putstring (");%N")
 						end
 					end;
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					Result.append ("%Tdesc[");
-					Result.append_integer (nb);
-					Result.append ("].info = (uint16) ");
-					Result.append_integer (Invalid_index);
-					Result.append (";%N%Tdesc[");
-					Result.append_integer (nb);
-					Result.append ("].type = (int16) -1;%N")
+					f.putstring ("%Tdesc[");
+					f.putint (nb);
+					f.putstring ("].info = (uint16) ");
+					f.putint (Invalid_index);
+					f.putstring (";%N%Tdesc[");
+					f.putint (nb);
+					f.putstring ("].type = (int16) -1;%N")
 				end;
 				i := i + 1
 			end;

@@ -76,6 +76,9 @@ feature -- Input
 					file.open_read
 					file.readstream (2)
 					file.close
+					check
+						two_characters_read: file.last_string.count = 2
+					end
 					if file.laststring.is_equal ("BM") then
 						!! file.make_open_read (a_file_name)
 						!! dib.make_by_file (file)
@@ -94,8 +97,11 @@ feature -- Input
 						width := xbm.width
 						hot_x := xbm.hot_x
 						hot_y := xbm.hot_y
-					elseif file.laststring.is_equal ("%U%U") or file.laststring.is_equal ("RI") then
-						-- Icon, cursor or ANI cursor
+					elseif
+						(file.laststring.item (1) = '%U'
+						and then file.laststring.item (2) = '%U')
+						or file.laststring.is_equal ("RI") then
+							-- Icon, cursor or ANI cursor
 					else
 						!! msg_temp.make (0)
 						msg_temp.append ("Unable to determine type for pixmap is file ")

@@ -5,6 +5,8 @@
 <link rel="StyleSheet" href="../../../../default.css">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
+<style>ul.circle{list-style:circle;}</style>
+<style>ul.square{list-style:square;}</style>
 </head>
 
 <body>
@@ -15,7 +17,7 @@ library listed by the release version of EiffelStudio. All bug fixes and
 modifications are relative to the previously released version.</p>
 <h2>Eiffel Studio 5.2</h2>
 <p><b>Interface modifications</b></p>
-<ul>
+<ul class=circle>
   <li><b>EV_TEXTABLE</b> - `align_text_left', `align_text_right' and `align_text_center'
     have been extracted into a new class, EV_TEXT_ALIGNABLE which inherits
     EV_TEXTABLE. All previous descendents of EV_TEXTABLE now inherit
@@ -28,10 +30,11 @@ modifications are relative to the previously released version.</p>
     EV_MENU_ITEM_LIST as it did not hold for EV_MENU_BAR. The renaming of
     `parent' to `old_parent' in EV_MENU_BAR has now been removed.
   <li><b>EV_VIEWPORT</b> - added `set_item_width', `set_item_height' and `set_item_size'.
-  <li><b>EV_TABLE</b> - redefined `prunable' to `True' and implemented `prune'.
-    Added the following features - `set_item_span', `set_item_position', `set_item_span_and_position',
-    `area_clear_excluding_widget', `item_row_span', `item_column_span', `item_row_position'
-    and `item_column_position'.
+  <li><b>EV_TABLE</b>
+	<ul class=square>
+		<li>redefined `prunable' to `True' and implemented `prune'.</li>
+  	  	<li>Added the following features - `set_item_span', `set_item_position', `set_item_span_and_position', `area_clear_excluding_widget', `item_row_span', `item_column_span', `item_row_position' and `item_column_position'.</li>
+	</ul></li>
   <li><b>EV_WIDGET</b> - Changed type of `focus_in_actions' and `focus_out_actions'
     from EV_FOCUS_ACTION_SEQUENCE to EV_NOTIFY_ACTION_SEQUENCE. `is_parent_recursive' is no longer available. It has been moved to EV_CONTAINER. This was necessary to fix a catcall encountered using vision2 under .NET. The problem manifested with widgets that held items.</li>
   <li><b>EV_FIGURE</b> - `proximity_in_actions' and `proximity_out_actions' are
@@ -40,7 +43,11 @@ modifications are relative to the previously released version.</p>
 	<LI><b>EV_TREE</b> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.</li>
 	<li><b>EV_TEXT</b> - `put_new_line' is now obsolete. Use `set_text ("%N") instead.</li>"
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - Added `cancel_actions', fired when a pick and drop is cancelled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.</li>
-	<li><b>EV_TREE_NODE_LIST</b> - `find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents. Added `retrive_items_recursively_by_data' and `retrieve_item_recursively_by_data' which allow you to specify a comparison criterion, and due to this addition, `find_item_recursively_by_data' has now been made obsolete.</li>
+	<li><b>EV_TREE_NODE_LIST</b>
+		<ul class=square>
+			<li>`find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents.<li>
+			<li>Added `retrive_items_recursively_by_data' and `retrieve_item_recursively_by_data' which allow you to specify a comparison criterion, and due to this addition, `find_item_recursively_by_data' has now been made obsolete.</li>
+		</ul></li>
 	<li><b>EV_DYNAMIC_LIST</b> - Added `retrieve_item_by_data' and `retrieve_items_by_data'.</li>
 	<li><b>EV_ITEM_LIST</b> - Made `item_by_data' obsolete, as you should now use `retrieve_item_by_data' added in EV_DYNAMIC_LIST.</li>
 	<li><b>EV_DIALOG</b> - Added `is_relative' and defined `is_modal' in this class, instead of inheriting it from EV_WINDOW.</li>
@@ -93,16 +100,22 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_CONTAINER</b> - Fixed `propagate_foreground_color' and `propagate_background_color' which failed when one of the children was a descendent of EV_CELL.</li>
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - `drop_actions' was being fired even when the pick and drop was cancelled.</li>
 	<li><b>EV_PIXMAP</b> - Previously, if you were to add an agent to an action sequence of the pixmap, before it was parented, the agent would be removed during the parenting.</li>
-	<li><b>EV_MENU</b> - Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still contained in the menu would cause occasional crashes.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previously, when adding an EV_MENU_SEPARATOR, followed by multiple EV_RADIO_MENU_ITEMS, all the items were being selected.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed bug in `destroy' which was causing postcondition failures.</li>
+	<li><b>EV_MENU</b>
+		<ul>
+		 	<li>Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still contained in the menu would cause occasional crashes.</li>
+			<li>Previously, when adding an EV_MENU_SEPARATOR, followed by multiple EV_RADIO_MENU_ITEMS, all the items were being selected.</li>
+			<li>Fixed bug in `destroy' which was causing postcondition failures.</li>
+		</ul></li>
 	<li><b>EV_TITLED_WINDOW</b> - Fixed a GDI leak, manifesting when a window was destroyed.</li>
-	<li><b>EV_DIALOG</b> - Fixed `is_modal' which was previously always returned `False'.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed bug with `background_color' and `foreground_color' which was not taken into account if the dialog was shown relative or modally to another window.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix bug in `show_relative_to_window' which would cause any associated menus to be removed.
-		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed bug in `show', as if the dialog had already been shown modelessly to a window, then calling `show' did not show it independently, but still modelessly.</li>
-    </ul>
+	<li><b>EV_DIALOG</b>
+		<ul>
+			<li>Fixed `is_modal' which was previously always returned `False'.</li>
+			<li>Fixed bug with `background_color' and `foreground_color' which was not taken into account if the dialog was shown relative or modally to another window.</li>
+			<li>If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.</li>
+			<li>Fix bug in `show_relative_to_window' which would cause any associated menus to be removed.</li>
+			<li>Fixed bug in `show', as if the dialog had already been shown modelessly to a window, then calling `show' did not show it independently, but still modelessly.</li>
+		</ul></li>
+	</ul>
   <li><b>Gtk</b>
     <ul>
       <li><strong>EV_WIDGET</strong>&nbsp;- Focus in/out actions are now
@@ -114,9 +127,17 @@ modifications are relative to the previously released version.</p>
   </li>
 </ul>
 <p>&nbsp;</p>
+
+
+
+
+
+
+
+
 <h2>Eiffel Studio 5.1</h2>
 <p><b>Interface modifications</b></p>
-<ul>
+<ul class=circle>
   <li><b>EV_TEXTABLE and EV_TEXT_COMPONENT</b> - `text' no longer returns Void
     when empty.
   <li><b>EV_WINDOW</b> - `title' no longer returns `Void' when empty.
@@ -133,11 +154,11 @@ modifications are relative to the previously released version.</p>
     and `remove_background_pixmap'. `background_pixmap' will be tessellated to
     cover complete background area.
   <li><b>EV_TREE and EV_TREE_NODE</b> - Added `recursively_do_all'.
-  <li><b>EV_STANDARD_DIALOGS</b> - `ok_actions' have been renamed in descendents
-    where appropriate. e.g. in EV_PRINT_DIALOG, they are renamed to `print_actions'
-    to match the texts of the associated buttons. Where renamed, `ok_actions'
-    are still available but obsolete. Selected button now also returns the
-    correct text of the button (Previously it was always &quot;Ok&quot;).
+  <li><b>EV_STANDARD_DIALOGS</b>
+	<ul class=square>
+		<li>`ok_actions' have been renamed in descendents where appropriate. e.g. in EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the associated buttons. Where renamed, `ok_actions' are still available but obsolete.</li>
+		<li>Selected button now also returns the correct text of the button (Previously it was always &quot;Ok&quot;).</li>
+	</ul>
   <li><b>EV_DIALOG_CONSTANTS</b> - Added new constants required for the above
     change to EV_STANDARD_DIALOGS.
   <li><b>EV_DRAWABLE</b> - `draw_straight_line' now has a precondition to ensure
@@ -174,11 +195,12 @@ modifications are relative to the previously released version.</p>
         32,000. The full range of an INTEGER may now be set.
       <li><b>`focused_widget' from `EV_APPLICATION'</b> - was incorrect if an
         EV_CONTAINER had just received the focus.
-      <li><b>EV_PICK_AND_DROPABLE</b> - Ending a pick and drop on an
-        EV_TOOL_BAR_BUTTON which has a non `void' pebble no longer starts a
-        transport from the button. Reduced flicker on cursor when picking from
-        an EV_TREE_ITEM or EV_LIST_ITEM. `pebble_function' would previously be
-        called twice during a pick and drop.
+      <li><b>EV_PICK_AND_DROPABLE</b>
+	<ul>
+		<li>Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble no longer starts a transport from the button.</li>
+		<li>Reduced flicker on cursor when picking from an EV_TREE_ITEM or EV_LIST_ITEM.</li>
+		<li>`pebble_function' would previously be called twice during a pick and drop.</li>
+	</ul></li>
       <li><b>EV_FIXED</b> - Items contained are now drawn correctly dependent on
         their z order.
       <li><b>EV_DRAWABLE</b>
@@ -190,7 +212,7 @@ modifications are relative to the previously released version.</p>
             would cause postcondition violations in the implementation.
           <li>`draw_pie_slice', `fill_pie_slice' and `draw_arc' now have divide
             by 0 protection in the implementation.</li>
-        </ul>
+        </ul></li>
       <li><b>EV_TEXT</b> - `set_background_color' now correctly sets the color
         of the whole background. Previously only the area containing text was
         modified.

@@ -90,9 +90,18 @@ feature -- Allocation/free
 	memory_alloc (a_size: INTEGER): POINTER is
 			-- Allocated `size' bytes using `malloc'.
 		require
-			valid_size: a_size >= 0
+			valid_size: a_size > 0
 		do
 			Result := c_malloc (a_size)
+		end
+
+	memory_calloc (a_count, a_element_size: INTEGER): POINTER is
+			-- Allocate `a_count' elements of size `a_element_size' bytes using `calloc.
+		require
+			valid_element_count: a_count > 0
+			valid_element_size: a_element_size > 0
+		do
+			Result := c_calloc (a_count, a_element_size)
 		end
 
 	memory_realloc (a_size: INTEGER): POINTER is
@@ -195,6 +204,14 @@ feature {NONE} -- Implementation
 			"C (size_t): EIF_POINTER | <stdlib.h>"
 		alias
 			"malloc"
+		end
+
+	c_calloc (nmemb, size: INTEGER): POINTER is
+			-- C calloc
+		external
+			"C (size_t, size_t): EIF_POINTER | <stdlib.h>"
+		alias
+			"calloc"
 		end
 
 	c_realloc (source: POINTER; size: INTEGER): POINTER is

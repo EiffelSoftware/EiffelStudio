@@ -135,13 +135,13 @@ feature -- Basic operations
 		do
 			if assume_ok then
 				if ok_action /= Void then
-					ok_action.call([])
+					ok_action.call(Void)
 				end
 			elseif assume_cancel then
 				check
 					cancel_action_not_void: cancel_action /= Void
 				end -- `assume_cancel' ensures `cancel_action' /= Void.
-				cancel_action.call([])
+				cancel_action.call(Void)
 			else
 				Precursor (a_window)
 			end

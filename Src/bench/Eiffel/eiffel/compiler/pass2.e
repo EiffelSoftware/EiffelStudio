@@ -180,6 +180,17 @@ end;
 			pass_c.set_deferred_modified
 		end;
 
+	 set_separate_modified (a_class: CLASS_C) is
+			-- The separate status of `a_class' has been modified
+		require
+			good_argument: a_class /= Void
+		local
+			pass_c: PASS2_C;
+		do
+			pass_c ?= controler_of (a_class);
+			pass_c.set_separate_modified
+		end;
+
 	set_supplier_status_modified (a_class: CLASS_C) is
 			-- The status of a supplier has changed
 		require

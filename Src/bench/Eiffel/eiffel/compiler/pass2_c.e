@@ -23,6 +23,9 @@ feature
 	deferred_modified: BOOLEAN;
 		-- The deferred status of the class has been modified
 
+	separate_modified: BOOLEAN;
+		-- The separate status of the class has been modified
+
 	supplier_status_modified: BOOLEAN;
 		-- The status of a supplier has changed
 
@@ -39,6 +42,12 @@ feature
 			-- Set `deferred_modified' to `True'.
 		do
 			deferred_modified := True
+		end;
+
+	set_separate_modified is
+			-- Set `separate_modified' to `True'.
+		do
+			separate_modified := True
 		end;
 
 	set_supplier_status_modified is
@@ -153,7 +162,7 @@ end;
 					-- least the second pass to the direct descendants
 					-- of the class `associated_class'.
 			real_pass2 := (not equivalent_table) or else expanded_modified
-					or else deferred_modified;
+					or else deferred_modified or else separate_modified;
 
 					-- If the propagation is the result of assertion
 					-- modifications, only a `light' pass2 must be done
@@ -171,7 +180,7 @@ end;
 				if do_pass3 then
 					-- Propagation of third pass in order to type check
 					-- clients of the current class
-					propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
+					propagate_pass3 (pass2_control, expanded_modified or deferred_modified or separate_modified);
 				end;
 				associated_class.set_skeleton (resulting_table.skeleton);
 				if not System.freeze then

@@ -16,6 +16,13 @@ inherit
 
 	COMPILER_EXPORTER
 
+feature {AST_VISITOR, EIFFEL_LIST} -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- Visitor feature.
+		deferred
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is

@@ -208,90 +208,126 @@ feature {NONE} -- Implementation
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: visitor /= Void
+		local
+			cecil_function_type, cecil_function_name, cecil_type: STRING
 		do
-			if visitor.is_basic_type or else visitor.is_basic_type_ref then
-				if is_int (visitor.vt_type) or is_integer2 (visitor.vt_type) or is_integer4 (visitor.vt_type) or is_unsigned_int (visitor.vt_type)
-						or is_unsigned_long (visitor.vt_type) or is_unsigned_short (visitor.vt_type) then
-					Result := cecil_function_code (Eif_integer_function, Eif_integer_function_name, function_name)
-				elseif is_character (visitor.vt_type) or is_unsigned_char (visitor.vt_type) then
-					Result := cecil_function_code (Eif_character_function, Eif_character_function_name, function_name)	
+			if 
+				visitor.is_basic_type or
+				visitor.is_enumeration or
+				visitor.vt_type = Vt_bool
+			then
+				cecil_type := visitor.cecil_type
+				if 
+					is_int (visitor.vt_type) or 
+					is_integer2 (visitor.vt_type) or 
+					is_integer4 (visitor.vt_type) or 
+					is_unsigned_int (visitor.vt_type) or 
+					is_unsigned_long (visitor.vt_type) or 
+					is_unsigned_short (visitor.vt_type) 
+				then
+					cecil_function_type := Eif_integer_function
+					cecil_function_name := Eif_integer_function_name
+					
+				elseif 
+					is_character (visitor.vt_type) or 
+					is_unsigned_char (visitor.vt_type) 
+				then
+					cecil_function_type := Eif_character_function
+					cecil_function_name := Eif_character_function_name
+					
 				elseif is_real4 (visitor.vt_type) then
-					Result := cecil_function_code (Eif_real_function, Eif_real_function_name, function_name)
+					cecil_function_type := Eif_real_function
+					cecil_function_name := Eif_real_function_name
+					
 				elseif is_real8 (visitor.vt_type) then
-					Result := cecil_function_code (Eif_double_function, Eif_double_function_name, function_name)
+					cecil_function_type := Eif_double_function
+					cecil_function_name := Eif_double_function_name
+					
+				elseif visitor.vt_type = Vt_bool then
+					cecil_function_type := Eif_boolean_function
+					cecil_function_name := Eif_boolean_function_name
 				end
-				-- 'cecil_type' tmp_value = ('cecil_type')eiffel_function (eif_access (eiffel_object))
-				Result.append (New_line_tab)
-
-				if visitor.is_basic_type then
-					Result.append (visitor.cecil_type)
-				else
-					Result.append (visitor.c_type)
-				end
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-
-				Result.append ("(FUNCTION_CAST (")
-				if visitor.is_basic_type then
-					Result.append (visitor.cecil_type)
-				else
-					Result.append (Eif_reference)
-				end
-				Result.append (Comma_space)
-				Result.append (open_parenthesis)
-				Result.append (Eif_reference)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-
-				Result.append (Eiffel_function_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eiffel_object)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
-				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name, function_name)
-				Result.append (New_line_tab)
-				Result.append (Eif_boolean)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-
-				Result.append ("(FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))")
-
-				Result.append (Eiffel_function_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eiffel_object)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-
 			else
-				Result := cecil_function_code (Eif_reference_function, Eif_reference_function_name, function_name) 
-				Result.append (New_line_tab)
-				Result.append (Eif_reference)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
+				cecil_type := Eif_reference
+				cecil_function_type := Eif_reference_function
+				cecil_function_name := Eif_reference_function_name
+			end
+
+			Result := cecil_function_code (cecil_function_type, cecil_function_name, function_name)
+			Result.append (New_line_tab)
+
+			-- 'cecil_type' tmp_value;
+			
+			Result.append (cecil_type)
+			Result.append (Space)
+			Result.append (Tmp_variable_name)
+			
+			if 
+				not (visitor.is_basic_type or
+				visitor.is_enumeration or
+				visitor.vt_type = Vt_bool)
+			then
 				Result.append (Space_equal_space)
-
-				Result.append ("(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))")
-
-				Result.append (Eiffel_function_variable_name)
-				Result.append (Close_parenthesis)
-
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eiffel_object)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
+				Result.append (Zero)
 			end
 			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			
+			-- if (eiffel_function != NULL)
+			
+			Result.append ("if (eiffel_function != NULL)")
+			Result.append (New_line_tab_tab)
+			
+			-- tmp_value = (`cecil_type')eiffel_function (eif_access (eiffel_object))
+			
+
+			Result.append (Tmp_variable_name)
+			Result.append (Space_equal_space)
+			Result.append ("(FUNCTION_CAST (")
+			Result.append (cecil_type)
+			Result.append (Comma_space)
+			Result.append (open_parenthesis)
+			Result.append (Eif_reference)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+
+			Result.append (Eiffel_function_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eiffel_object)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			
+			-- else
+			
+			Result.append (Else_keyword)
+			Result.append (New_line_tab_tab)
+			
+			-- tmp_value = eif_field (eif_access (eiffel_object), %"`function_name'%", `cecil_type')
+			
+			Result.append (Tmp_variable_name)
+			Result.append (Space_equal_space)
+			Result.append ("eif_field (")
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eiffel_object)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append (function_name)
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (cecil_type)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+		ensure
+			non_void_function: Result /= Void
+			valid_function: not Result.empty
 		end
 
 	cecil_function_code (function_type, function_name, call_func_name: STRING): STRING is
@@ -303,16 +339,18 @@ feature {NONE} -- Implementation
 			not_empty: not function_type.empty and then not function_name.empty
 							and then not call_func_name.empty
 		do
-			-- EIF_type_FUNCTION eiffel_function
+			-- EIF_type_FUNCTION eiffel_function = 0;
 			
 			create Result.make (10000)
 			Result.append (function_type)
 			Result.append (Space)
 			Result.append (Eiffel_function_variable_name)
+			Result.append ("= 0")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- eiffel_function = eif_type_function ("call_func_name", tid)
+			-- eiffel_function = eif_type_function ("call_func_name", tid);
+			
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Space_equal_space)
 
@@ -326,6 +364,9 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+		ensure
+			non_void_code: Result /= Void
+			valid_code: not Result.empty
 		end
 
 	cecil_procedure (function_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -396,6 +437,9 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 			end
+		ensure
+			non_void_procedure: Result /= Void
+			valid_procedure: not Result.empty
 		end
 
 end -- class WIZARD_C_SERVER_PROPERTY_GENERATOR

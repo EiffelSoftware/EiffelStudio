@@ -10,11 +10,13 @@ class
 	EV_GRID_IMP
 	
 inherit
-	
+
 	EV_DRAWING_AREA_IMP
 		rename
 			set_item as wel_set_item,
 			interface as drawing_area_interface
+		redefine
+			initialize
 		end
 	
 	EV_GRID_I
@@ -26,6 +28,14 @@ inherit
 		
 create
 	make
+	
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			initialize_grid	
+		end
 
 feature {EV_ANY_I} -- Implementation
 

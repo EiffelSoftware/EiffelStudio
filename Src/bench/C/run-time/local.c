@@ -151,10 +151,10 @@ public void evpush(va_alist)
 	
 	register1 int n;				/* Number of elements to be pushed */
 	register2 char **top;			/* The current top of the stack */
-#ifndef EIF_WIN32
-	register3 va_list ap;			/* The variable argument list */
-#else
+#ifdef EIF_WINDOWS
 	va_list ap;			/* The variable argument list */
+#else
+	register3 va_list ap;			/* The variable argument list */
 #endif
 	register4 int i;				/* Number of slots until end of chunk */
 	register5 struct stack *stk;	/* The local stack pointer */

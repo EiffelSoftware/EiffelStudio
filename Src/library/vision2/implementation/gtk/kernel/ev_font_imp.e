@@ -128,14 +128,14 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
 		do
-			Result := C.c_gdk_font_ascent (c_object)
+			Result := C.gdk_font_struct_ascent (c_object)
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
 		do
-			Result := C.c_gdk_font_descent (c_object)
+			Result := C.gdk_font_struct_descent (c_object)
 		end
 
 	width: INTEGER is

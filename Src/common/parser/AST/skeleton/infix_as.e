@@ -143,21 +143,24 @@ feature -- Comparison
 			infix_feature: like Current;
 			normal_feature: FEAT_NAME_ID_AS;
 		do
-			normal_feature ?= other;
-			infix_feature ?= other;
+			normal_feature ?= other
+			infix_feature ?= other
+
+			check
+				void_normal_feature: normal_feature = void implies infix_feature /= Void	
+				void_infix_feature: infix_feature = void implies normal_feature /= Void
+			end
+
 			if infix_feature = void then
-				check
-					normal_feature /= Void
-				end;
-				Result := false;
+				Result := False
 			elseif fix_operator = Void then
 				Result := False
 			elseif infix_feature.fix_operator = Void then
 				Result := True
 			else
 				Result := fix_operator < infix_feature.fix_operator				
-			end;
-		end;
+			end
+		end
 
 feature {AST_EIFFEL} -- Output
 

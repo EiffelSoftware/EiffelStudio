@@ -1,0 +1,106 @@
+	<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Containers</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Containers Overview</H1>
+			<P>
+			All Vision2 containers inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A>
+			</P>
+		<H2>What is a container?</h2>
+		<P>
+		A container is a Vision2 widget that may contain other widgets. Some containers such as <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_cell_chart.html">EV_CELL</A>
+		may only hold one widget while containers such as <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_box_chart.html">EV_BOX</A> may hold multiple widgets. As a container is
+		of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, this means that a container may be placed within a container.&nbsp;
+        A list of the classes held within the container cluster can be found <a href="../../../reference/interface/widgets/containers/index.html">here</a>.&nbsp;
+        Windows inherit from <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_cell_chart.html">EV_CELL</A>
+        and are therefore classed as containers
+        also.
+		</P>
+        <P CLASS="note"><B>Note: </B>Containers may only contain other
+        widgets.&nbsp; Items may only be placed in certain primitives.&nbsp; For
+        example, an EV_LIST_ITEM may be contained in an EV_LIST.</P>
+		<H2>Inheritance from Base</h2>
+		<P>
+		Wherever possible, Vision2 containers reuse the container structures
+        provided by Base. This provides three main advantages:
+			<OL>
+				<LI>Familiarity for operations such as access, insertions and removals. Anybody who already uses <A HREF="/libraries/base/index.html">Base</A> should
+				find it easy to adapt to using Vision2 containers.
+				<LI>The underlying structures used have been tried and tested for many years and their design has been proved to be robust and effective.
+				<LI>It provides powerful methods of querying the contents. In the original Vision library, you needed to keep reference to widgets
+				as you could not query the contents of a container.
+			</OL>
+		<P>For example, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> inherits <A CLASS="eclass" HREF="/libraries/base/reference/structures/storage/box_chart.html">BOX</A> and
+		<A CLASS="eclass" HREF="/libraries/base/reference/structures/access/collection_chart.html">COLLECTION</A>. Descendents of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> such as
+		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_box_chart.html">EV_BOX</A> may also inherit other structures from <A HREF="/libraries/base/index.html">Base</A>.
+		<P>&nbsp;
+		<H2>Usage of Containers</H2>
+        <P>The main role of a container is to position its children in a certain
+        way, an <a href="../../../reference/interface/widgets/containers/ev_horizontal_box_chart.html"> EV_HORIZONTAL_BOX</a> for example positions it children side by side
+        along the horizontal axis, to get vertical stacking you would use an <a href="../../../reference/interface/widgets/containers/ev_vertical_box_chart.html">
+        EV_VERTICAL_BOX</a>.<P>&nbsp;<P>An code example of adding widgets to a container
+        is as follows.
+          <blockquote>
+          <P align="left">
+        <A CLASS="code">
+        <SPAN CLASS="efeature">add_to_container</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+        <SPAN CLASS="ecomment">&nbsp;&nbsp;&nbsp;</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
+        <SPAN CLASS="ecomment">-- Add 3 buttons to a hbox and then show in window.</SPAN><BR>
+        <SPAN CLASS="ekeyword">&nbsp;&nbsp;&nbsp; local </SPAN><BR>  
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_window:</SPAN> <SPAN CLASS="eclass">EV_TITLED_WINDOW</SPAN><BR>
+ 		<SPAN CLASS="elocal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a_hbox:</SPAN> <SPAN CLASS="eclass">EV_HORIZONTAL_BOX</SPAN><BR>
+ 		<SPAN CLASS="elocal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a_button:</SPAN> <SPAN CLASS="eclass">EV_BUTTON</SPAN><BR>
+        <SPAN CLASS="ekeyword">&nbsp;&nbsp;&nbsp; do</SPAN><BR>
+ 		<SPAN CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</SPAN> &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">a_window</SPAN>  <BR>      
+ 		<SPAN CLASS="ekeyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create</SPAN> <SPAN CLASS="elocal">a_hbox</SPAN> <BR>
+ 		<SPAN CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</SPAN> &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">a_button.make_with_text</SPAN> (<SPAN CLASS="estring">&quot;Button1&quot;</SPAN>)<BR>
+ <SPAN CLASS="elocal">&nbsp;&nbsp;&nbsp;</SPAN>&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_hbox</SPAN><SPAN CLASS="efeature">.extend </SPAN>(a_button)<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_hbox</SPAN>.extend
+        (<SPAN CLASS="ekeyword">create</SPAN> {<SPAN CLASS="eclass">EV_BUTTON</SPAN>}.<SPAN CLASS="elocal">make_with_text</SPAN> (<SPAN CLASS="estring">&quot;Button2&quot;</SPAN>))<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_hbox</SPAN>.extend
+        (<SPAN CLASS="ekeyword">create</SPAN> {<SPAN CLASS="eclass">EV_BUTTON</SPAN>}.<SPAN CLASS="elocal">make_with_text</SPAN> (<SPAN CLASS="estring">&quot;Button3&quot;</SPAN>))<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_window</SPAN>.extend (<SPAN CLASS="elocal">a_hbox</SPAN>)<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="elocal">a_window</SPAN>.show<BR>
+        <SPAN CLASS="ekeyword"> &nbsp;&nbsp;&nbsp;</SPAN>
+        <SPAN CLASS="ekeyword"> end</SPAN><BR>
+        </A>
+        
+        </blockquote>
+        <P>The mapping of a Vision2 container interface is very close to that of
+        containers in Base, such as a linked list.&nbsp;
+        <ul type="square">
+        <LI>To add a widget to a container call `extend'.</LI>
+        <LI>To remove a widget from the container call `prune'.</LI>
+        <LI>To empty a container call `wipe_out'.</LI>
+        <LI>To traverse the container, you can use features such as start, forth, item and off.</LI>
+        </ul>
+        <P Class="note"><b>Note</b>: When a
+        widget is added to a container, the container is the parent of the
+        widget.&nbsp;<P>
+        <H2>Size of widget within a container</H2><P>The
+        size of a widget in a container is always at least its minimum
+        size.&nbsp; By default, when a&nbsp;widget is added to a container it is
+        expandable.&nbsp; This means that if the container gets bigger, the
+        widget will expand to fit the extra space.&nbsp; This convenient
+        functionality means that you don't have to worry about handling the size
+        of the widget (such as when a user alters the size of a window) as this
+        is all performed automatically.&nbsp; If, on the other hand, you decide
+        you want the widget to remain at a certain size (its minimum size),
+        EV_BOX contains the convenient call disable_item_resize.<P>&nbsp;
+        
+		<H2>Sizing of containers</H2>
+		As <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> is of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, the following
+        facilities are provided for setting the minimum size : <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_width">set_minimum_width</A>, 
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_height">set_minimum_height</A> and <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_size">set_minimum_size</A>.
+		It is important to remember that as a general rule, <B>the current size of a container is always at least the minimum size of all its contents.</B>
+		<P CLASS="note"><B>Note: </B>The exception to this is: <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_fixed_chart.html">EV_FIXED</A>,
+		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport_chart.html">EV_VIEWPORT</A> and <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_scrollable_area_chart.html">EV_SCROLLABLE_AREA</A> which do actually allow
+		their contents to be larger than their current size.</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

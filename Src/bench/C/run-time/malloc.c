@@ -36,6 +36,7 @@
 #include "rt_macros.h"
 #include "rt_garcol.h"			/* For Eiffel flags and function declarations */
 #include "rt_threads.h"
+#include "rt_gen_types.h"
 #include "eif_except.h"			/* For exception raising */
 #include "eif_plug.h"
 #include "x2c.h"			/* For macro LNGPAD */
@@ -395,6 +396,7 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 extern EIF_REFERENCE safe_emalloc (uint32);
 extern EIF_REFERENCE safe_emalloc_size (uint32, uint32, uint32);
 extern EIF_REFERENCE safe_spmalloc (unsigned int, EIF_BOOLEAN);
+extern EIF_REFERENCE safe_tuple_malloc_specific (uint32, uint32, EIF_BOOLEAN);
 
 rt_public EIF_REFERENCE emalloc (uint32 ftype)
 {
@@ -423,11 +425,30 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	return result;
 }
 
+rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
+{
+	EIF_REFERENCE result = NULL;
+	EIF_GC_MUTEX_LOCK;
+	result = safe_tuple_malloc_specific (ftype, count, atomic);
+	EIF_GC_MUTEX_UNLOCK;
+	return result;
+}
+
 #define emalloc safe_emalloc
 #define emalloc_size safe_emalloc_size
 #define spmalloc safe_spmalloc
+#define tuple_malloc_specific safe_tuple_malloc_specific
 #endif
 #endif
+
+rt_public EIF_REFERENCE smart_emalloc (uint32 ftype) {
+	int32 type = (int32) Deif_bid(ftype);
+	if (type == egc_tup_dtype) {
+		return tuple_malloc (ftype);
+	} else {
+		return emalloc_size (ftype, type, EIF_Size(type));
+	}
+}
 
 rt_public EIF_REFERENCE emalloc (uint32 ftype)
 {
@@ -596,6 +617,67 @@ rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF
 		ecopy(exp, obj + OVERHEAD + offset);
 	}
 	RT_GC_WEAN(obj);
+}
+
+rt_public EIF_REFERENCE tuple_malloc (uint32 ftype) {
+	unsigned int i, count;
+	EIF_BOOLEAN is_atomic = EIF_TRUE;
+	int16 dftype = (int16) ftype;
+
+	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
+
+		/* We add + 1 since TUPLE objects have `count + 1' element
+		 * to avoid doing -1 each time we try to access an item at position `pos'.
+		 */
+	count = eif_gen_count_with_dftype (dftype) + 1;
+
+		/* Let's find out if this is a tuple which contains some reference
+		 * when there is no reference then `is_atomic' is True which enables
+		 * us to do some optimization at the level of the GC */
+	for (i = 1; (i < count) && (is_atomic); i++) {
+		if (eif_gen_typecode_with_dftype(dftype, i) == EIF_REFERENCE_CODE) {
+			is_atomic = EIF_FALSE;
+		}
+	}
+
+	return tuple_malloc_specific(ftype, count, is_atomic);
+}
+
+RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
+	/* Allocate memory for a TUPLE instance. TUPLE are allocated through `spmalloc'
+	 * but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_ELEMENT).
+	 */
+{
+	EIF_REFERENCE object;
+	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
+
+	object = spmalloc (count * sizeof(EIF_TYPED_ELEMENT) + LNGPAD_2, atomic);
+
+	if (object == NULL) {
+		eraise ("Tuple allocation", EN_MEM);	/* signals no more memory */
+	} else {
+			/* Initialize TUPLE headers and end of special object */
+		union overhead * zone = HEADER(object);
+		unsigned int i;
+		EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+		EIF_REFERENCE ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		RT_SPECIAL_COUNT_WITH_INFO(ref) = count;
+		RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = sizeof(EIF_TYPED_ELEMENT);
+			/* Mark it is a tuple object */
+		zone->ov_flags |= EO_TUPLE;
+		zone->ov_flags |= ftype;
+		if (!atomic) {
+			zone->ov_flags |= EO_REF;
+		}
+			/* Initialize type information held in TUPLE instance*/
+			/* Don't forget that first element of TUPLE is just a placeholder
+			 * to avoid offset computation from Eiffel code */
+		l_item++;
+		for (i = 1; i < count; i++,l_item++) {
+			l_item->type = eif_gen_typecode_with_dftype((int16)ftype, i);
+		}
+	}
+	return object;
 }
 
 rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)

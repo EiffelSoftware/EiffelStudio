@@ -104,11 +104,11 @@ feature -- Access
 			external_name: "Title"
 		end
 		
-	Warning_text: STRING is "Are you sure you want to remove the assembly and its dependencies?"
-		indexing
-			description: "Warning in case user asks for removal of assembly dependancies"
-			external_name: "WarningText"
-		end
+--	Warning_text: STRING is "Are you sure you want to remove the assembly and its dependencies?"
+--		indexing
+--			description: "Warning in case user asks for removal of assembly dependancies"
+--			external_name: "WarningText"
+--		end
 
 	Window_height: INTEGER is 190
 		indexing

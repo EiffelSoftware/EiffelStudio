@@ -18,8 +18,10 @@ feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies) is
 		indexing
-			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
-					%Set `assembly_dependancies' with `dependancies'.]"
+			description: "[
+						Set `assembly_descriptor' with `an_assembly_descriptor'.
+						Set `assembly_dependancies' with `dependancies'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void

@@ -163,8 +163,10 @@ feature -- Basic Operations
 
 	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		indexing
-			description: "[Search for assembly corresponding to `a_descriptor' in the database.%
-					%Make result available in `found.']"
+			description: "[
+						Search for assembly corresponding to `a_descriptor' in the database.
+						Make result available in `found.'
+					  ]"
 			external_name: "Search"
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -309,8 +311,10 @@ feature -- Retrieval
 			-- | If a read or write lock already exists in the folder access is requested, set `last_read_successful' to False,
 			-- | else call `eiffel_assembly' with xml file name and set `last_read_successful' to True.
 		indexing
-			description: "[Retrieve assembly xml description (by using `a_descriptor' to find file location).%
-					%Generate instance of `EIFFEL_ASSEMBLY' from the xml file.]"
+			description: "[
+						Retrieve assembly xml description (by using `a_descriptor' to find file location).
+						Generate instance of `EIFFEL_ASSEMBLY' from the xml file.
+					  ]"
 			external_name: "Assembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -396,8 +400,10 @@ feature -- Retrieval
 			-- | If a read or write lock already exists in the folder access is requested, set `last_read_successful' to False,
 			-- | else call `eiffel_type' with xml file name and set `last_read_successful' to True.
 		indexing
-			description: "[Retrieve xml file corresponding to `a_type'.%
-					%Generate instance of `EIFFEL_CLASS' from the xml file.]"
+			description: "[	
+						Retrieve xml file corresponding to `a_type'.
+						Generate instance of `EIFFEL_CLASS' from the xml file.
+					  ]"
 			external_name: "Type"
 		require
 			non_void_type: a_type /= Void

@@ -18,11 +18,13 @@ feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies; a_question: like question_label_text; a_caption_text: like caption_text; a_call_back: like call_back) is
 		indexing
-			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
-					%Set `dependancies' with `assembly_dependancies'.%
-					%Set `question_label_text' with `a_question'.%
-					%Set `caption_text' with `a_caption_text'.%
-					%Set `call_back' with `a_call_back'.]"
+			description: "[
+						Set `assembly_descriptor' with `an_assembly_descriptor'.
+						Set `dependancies' with `assembly_dependancies'.
+						Set `question_label_text' with `a_question'.
+						Set `caption_text' with `a_caption_text'.
+						Set `call_back' with `a_call_back'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void

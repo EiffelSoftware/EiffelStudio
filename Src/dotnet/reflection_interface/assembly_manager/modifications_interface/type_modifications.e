@@ -24,8 +24,10 @@ feature {NONE} -- Initialization
 	make_from_info (an_old_name: like old_name) is
 			-- Initialize attributes.
 		indexing
-			description: "[Set `old_name' with `an_old_name'.%
-					%Initialize `features_modifications']"
+			description: "[
+						Set `old_name' with `an_old_name'.
+						Initialize `features_modifications'
+					  ]"
 			external_name: "MakeFromInfo"
 		require
 			non_void_name: an_old_name /= Void
@@ -89,8 +91,10 @@ feature -- Basic Operations
 
 	add_feature_modification (a_feature: ISE_REFLECTION_EIFFELFEATURE; feature_modification: FEATURE_MODIFICATIONS) is
 		indexing
-			description: "[Add `feature_modification' to `features_modifications' with key `a_feature'.%
-					%If `a_feature' is already in table, the existing value will be replaced by `feature_modifications'.]"
+			description: "[
+						Add `feature_modification' to `features_modifications' with key `a_feature'.
+						If `a_feature' is already in table, the existing value will be replaced by `feature_modifications'.
+					  ]"
 			external_name: "AddFeatureModification"
 		require
 			non_void_feature: a_feature /= Void

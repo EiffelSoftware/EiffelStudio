@@ -77,8 +77,10 @@ feature -- Basic Operations
 		
 	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): TYPE_STORER is
 		indexing
-			description: "[Store assembly corresponding to `an_eiffel_assembly': %
-					%Create assembly folder from `an_eiffel_assembly' if it does not exist yet.]"
+			description: "[
+						Store assembly corresponding to `an_eiffel_assembly': 
+						Create assembly folder from `an_eiffel_assembly' if it does not exist yet.
+					  ]"
 			external_name: "StoreAssembly"
 		require
 			non_void_assembly: an_eiffel_assembly /= Void
@@ -97,9 +99,11 @@ feature -- Basic Operations
 
 	commit is
 		indexing
-			description: "[Create assembly description file.%
-					%Set `eiffel_assembly' with Void.%
-					%Set `assembly_descriptor' with Void.]"
+			description: "[
+						Create assembly description file.
+						Set `eiffel_assembly' with Void.
+						Set `assembly_descriptor' with Void.
+					  ]"
 			external_name: "Commit"
 		local
 			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
@@ -124,8 +128,10 @@ feature -- Basic Operations
 	remove_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 			-- | Check for write or read lock before removing the assembly.
 		indexing
-			description: "[Remove assembly corresponding to `a_descriptor' from the Eiffel assembly cache.%
-					%Update `last_removal_successful'.]"
+			description: "[
+						Remove assembly corresponding to `a_descriptor' from the Eiffel assembly cache.
+						Update `last_removal_successful'.
+					  ]"
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -414,8 +420,10 @@ feature {NONE} -- Implementation
 		
 	prepare_assembly_storage is
 		indexing
-			description: "[Prepare type storage: %
-					%Create assembly folder from `assembly_descriptor' if it does not exist yet.]"
+			description: "[
+						Prepare type storage: 
+						Create assembly folder from `assembly_descriptor' if it does not exist yet.
+					  ]"
 			external_name: "PrepareTypeStorage"
 		local
 			dir: SYSTEM_IO_DIRECTORY
@@ -721,8 +729,10 @@ feature {NONE} -- Implementation
 	
 	prepare_type_storage (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		indexing
-			description: "[Prepare type storage:%
-					%Create assembly folder from `assembly_descriptor' if it does not exist yet.]"
+			description: "[
+						Prepare type storage:
+						Create assembly folder from `assembly_descriptor' if it does not exist yet.
+					  ]"
 			external_name: "PrepareTypeStorage"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void

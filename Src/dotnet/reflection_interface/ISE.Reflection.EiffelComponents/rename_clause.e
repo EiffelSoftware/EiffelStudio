@@ -17,8 +17,10 @@ feature {NONE} -- Implementation
 
  	make_from_info (a_source_name: like source_name; a_target_name: like target_name) is 
  		indexing
- 			description: "[Set `source_name' with `a_source_name'.%
- 						%Set `target_name' with `a_target_name'.]"
+ 			description: "[
+ 						Set `source_name' with `a_source_name'.
+ 						Set `target_name' with `a_target_name'.
+ 					  ]"
  			external_name: "MakeFromInfo"
  		require
  			non_void_source_name: a_source_name /= Void

@@ -29,7 +29,7 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 				
-	Eiffel_generation_error: STRING is "An errors occurred during Eiffel code generation. The XML files may be corrupted. Please remove the assembly and import it again: the Eiffel code will be automatically generated at importation."
+	Eiffel_generation_error: STRING is "An error occurred during Eiffel code generation. The XML files may be corrupted. Please remove the assembly and import it again: the Eiffel code will be automatically generated at importation."
 		indexing
 			description: "Error message when Eiffel code generation fails"
 			external_name: "EiffelGenerationError"

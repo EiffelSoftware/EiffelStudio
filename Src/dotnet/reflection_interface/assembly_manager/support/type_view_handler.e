@@ -18,9 +18,11 @@ feature {NONE} -- Initialization
 
 	make (an_eiffel_class: like eiffel_class; a_type_modification: like type_modifications; a_type_view: like type_view) is
 		indexing
-			description: "[Set `eiffel_class' with `an_eiffel_class'.%
-					%Set `type_modifications' with `a_type_modification'.%
-					%Set `type_view' with `a_type_view'.]"
+			description: "[
+						Set `eiffel_class' with `an_eiffel_class'.
+						Set `type_modifications' with `a_type_modification'.
+						Set `type_view' with `a_type_view'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -113,8 +115,10 @@ feature -- Basic Operations
 
 	check_and_update is
 		indexing
-			description: "[Check modifications are valid. Make Result available in `is_valid' and put error messages in `errors_table'.%
-						%If `is_valid' then update `eiffel_class'.]"
+			description: "[
+						Check modifications are valid. Make Result available in `is_valid' and put error messages in `errors_table'.
+						If `is_valid' then update `eiffel_class'.
+					  ]"
 			external_name: "Check_and_update"
 		local
 			features_changes: SYSTEM_COLLECTIONS_HASHTABLE
@@ -178,8 +182,10 @@ feature {NONE} -- Implementation
 
 	update_class is
 		indexing
-			description: "[Check for name clashes and update class name if name is valid.%
-					%Make result of check available in `is_valid'.]"
+			description: "[
+						Check for name clashes and update class name if name is valid.
+						Make result of check available in `is_valid'.
+					  ]"
 			external_name: "UpdateClass"
 		require
 			non_void_new_name: type_modifications.new_name /= Void
@@ -199,8 +205,10 @@ feature {NONE} -- Implementation
 		
 	update_features (a_feature_modifications: FEATURE_MODIFICATIONS; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		indexing
-			description: "[Check for name clashes and update feature name, create clauses and inheritance clauses (if needed) if name is valid. %
-					%Make result of check available in `is_valid'.]"
+			description: "[
+						Check for name clashes and update feature name, create clauses and inheritance clauses (if needed) if name is valid. 
+						Make result of check available in `is_valid'.
+					  ]"
 			external_name: "UpdateFeatures"
 		require
 			non_void_feature_modifications: a_feature_modifications /= Void
@@ -290,8 +298,10 @@ feature {NONE} -- Implementation
 	
 	update_arguments (new_name: STRING; an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		indexing
-			description: "[Check for name clashes with other arguments or feature names and update argument name.%
-					%Make result of check available in `is_valid'.]"
+			description: "[
+						Check for name clashes with other arguments or feature names and update argument name.
+						Make result of check available in `is_valid'.
+					  ]"
 			external_name: "UpdateArguments"
 		require
 			non_void_new_name: new_name /= Void
@@ -678,8 +688,10 @@ feature {NONE} -- Implementation
 		
 	update_children_inheritance_clauses (old_name, new_name: STRING) is
 		indexing
-			description: "[Update children inheritance clauses in case some of them references the renamed feature:%
-					%replace `old_name' by `new_name'.]"
+			description: "[
+						Update children inheritance clauses in case some of them references the renamed feature:
+						replace `old_name' by `new_name'.
+					  ]"
 			external_name: "UpdateChildrenInheritanceClauses"
 		require
 			non_void_old_name: old_name /= Void
@@ -777,8 +789,10 @@ feature {NONE} -- Implementation
 		
 	is_in_list (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
 		indexing
-			description: "[Does `a_feature_name' appear in `a_list'?%
-					%Make index of feature name available in `index_in_list'.]"
+			description: "[
+						Does `a_feature_name' appear in `a_list'?
+						Make index of feature name available in `index_in_list'.
+					  ]"
 			external_name: "IsInList"
 		require
 			non_void_feature_name: a_feature_name /= Void

@@ -22,8 +22,10 @@ feature {NONE} -- Initialization
 
 	make_from_info (an_assembly_description_filename: like assembly_description_filename) is
 		indexing
-			description: "[Set `assembly_description_filename' with `an_assembly_description_filename'.%
-					%Build `eiffel_assembly' from `assembly_description_filename'.]"
+			description: "[
+						Set `assembly_description_filename' with `an_assembly_description_filename'.
+						Build `eiffel_assembly' from `assembly_description_filename'.
+					  ]"
 			external_name: "MakeFromInfo"
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void
@@ -44,8 +46,10 @@ feature {NONE} -- Initialization
 	
 	make_from_info_and_path (an_assembly_description_filename: like assembly_description_filename; new_path: STRING) is
 		indexing
-			description: "[Set `assembly_description_filename' with `an_assembly_description_filename'.%
-					%Build `eiffel_assembly' from `assembly_description_filename'.]"
+			description: "[
+						Set `assembly_description_filename' with `an_assembly_description_filename'.
+						Build `eiffel_assembly' from `assembly_description_filename'.
+					  ]"
 			external_name: "MakeFromInfoAndPath"
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void

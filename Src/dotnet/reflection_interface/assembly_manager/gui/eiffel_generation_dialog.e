@@ -18,8 +18,10 @@ feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; an_eiffel_path: like eiffel_path) is
 		indexing
-			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
-					%Set `eiffel_path' with `an_eiffel_path'.]"
+			description: "[
+						Set `assembly_descriptor' with `an_assembly_descriptor'.
+						Set `eiffel_path' with `an_eiffel_path'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void

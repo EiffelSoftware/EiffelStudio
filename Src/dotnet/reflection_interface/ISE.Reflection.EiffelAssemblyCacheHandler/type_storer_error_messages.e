@@ -30,7 +30,7 @@ feature -- Access
 			external_name: "XmlTypeGenerationFailed"
 		end
 	
-	Xml_type_generation_failed_message: STRING is "The generation of XML description correponding to this type has failed"	
+	Xml_type_generation_failed_message: STRING is "The generation of XML description corresponding to this type has failed"	
 		indexing	
 			description: "Error message when Xml type generation has failed"
 			external_name: "XmlTypeGenerationFailedMessage"

@@ -189,11 +189,194 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			)
 		end
 
+	apply_character_format_to_text_buffer (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION; a_text_buffer, a_start_iter, a_end_iter: POINTER) is
+			-- Apply `Current' to `a_text_buffer' to the region bounded by `a_start_iter' and `a_end_iter'
+		local
+			a_tag_table: POINTER
+			a_text_tag: POINTER
+			a_text_tag_name: EV_GTK_C_STRING
+			prop_value_int: INTEGER
+			prop_value_string: EV_GTK_C_STRING
+			temp_string: STRING
+			a_red, a_green, a_blue: INTEGER
+		do
+			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
+			
+			if applicable_attributes.font_family then
+				a_text_tag_name := name
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+
+			if applicable_attributes.font_height then
+				a_text_tag_name := "fh" + height.out
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, size_string.item, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+			
+			if applicable_attributes.font_shape then
+				if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
+					a_text_tag_name := "fsi"
+					prop_value_int := 2
+				else
+					a_text_tag_name := "fsr"
+					prop_value_int := 0
+				end
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+
+
+			if applicable_attributes.font_weight then
+				inspect
+					weight
+				when
+					feature {EV_FONT_CONSTANTS}.weight_bold
+				then
+					a_text_tag_name := "fwb"
+					prop_value_int := feature {EV_FONT_IMP}.pango_weight_bold
+				when
+					feature {EV_FONT_CONSTANTS}.weight_regular
+				then
+					a_text_tag_name := "fwr"
+					prop_value_int := feature {EV_FONT_IMP}.pango_weight_normal
+				when
+					feature {EV_FONT_CONSTANTS}.weight_thin
+				then
+					a_text_tag_name := "fwt"
+					prop_value_int := feature {EV_FONT_IMP}.pango_weight_ultra_light
+				when
+					feature {EV_FONT_CONSTANTS}.weight_black
+				then
+					a_text_tag_name := "fwb"
+					prop_value_int := feature {EV_FONT_IMP}.pango_weight_heavy
+				end
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+			
+			
+			if applicable_attributes.color then
+				a_text_tag_name := "fg" + fcolor.out
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+--					a_red := (fcolor & 0x000000FF) |<< 16
+--					a_green := (fcolor & 0x0000FF00)
+--					a_blue := fcolor |>> 16
+--					temp_string := (a_red + a_green + a_blue).to_hex_string
+--					temp_string.keep_tail (6)
+--					prop_value_string := "#" +  temp_string
+--					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+--					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, foreground_string.item, prop_value_string.item)
+--					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+
+
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+--					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, background_string.item, prop_value_string.item)
+
+
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((fcolor |<< 24) |>> 24) * 257)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+
+			if applicable_attributes.background_color then
+				a_text_tag_name := "bg" + fcolor.out
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+--					a_red := (bcolor & 0x000000FF) |<< 16
+--					a_green := (bcolor & 0x0000FF00)
+--					a_blue := bcolor |>> 16
+--					temp_string := (a_red + a_green + a_blue).to_hex_string
+--					temp_string.keep_tail (6)
+--					prop_value_string := "#" +  temp_string
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+--					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, background_string.item, prop_value_string.item)
+
+
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)
+					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((bcolor |<< 24) |>> 24) * 257)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+
+			if applicable_attributes.effects_striked_out then
+				if is_striked_out then
+					a_text_tag_name := "sot"
+				else
+					a_text_tag_name := "sof"
+				end
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+
+			if applicable_attributes.effects_underlined then
+				if is_underlined then
+					a_text_tag_name := "ut"
+				else
+					a_text_tag_name := "uf"
+				end
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+	
+			if applicable_attributes.effects_vertical_offset then
+				a_text_tag_name := "vo" + vertical_offset.out
+				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
+				if a_text_tag = default_pointer then
+					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)					
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
+			end
+		end
+		
+
 	new_text_tag_from_applicable_attributes (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION): POINTER is
 			-- Create a new text tag based on state of `Current'
 		local
 			color_struct: POINTER
 			propvalue: EV_GTK_C_STRING
+			a_red, a_green, a_blue: INTEGER
+			temp_string: STRING
 		do
 			
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
@@ -238,18 +421,29 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 
 			color_struct := App_implementation.reusable_color_struct
 			if applicable_attributes.color then
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string.item, color_struct, default_pointer)
+				a_red := (fcolor & 0x000000FF) |<< 16
+				a_green := (fcolor & 0x0000FF00)
+				a_blue := fcolor |>> 16
+				temp_string := (a_red + a_green + a_blue).to_hex_string
+				temp_string.keep_tail (6)
+				propvalue := "#" +  temp_string
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, foreground_string.item, propvalue.item)
+
+				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
+				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
+				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
+				--feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string.item, color_struct, default_pointer)
 							
 			end
 
 			if applicable_attributes.background_color then
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (bcolor |>> 16) * 257)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((bcolor |<< 16) |>> 24) * 257)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((bcolor |<< 24) |>> 24) * 257)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, background_gdk_string.item, color_struct, default_pointer)			
+				a_red := (bcolor & 0x000000FF) |<< 16
+				a_green := (bcolor & 0x0000FF00)
+				a_blue := bcolor |>> 16
+				temp_string := (a_red + a_green + a_blue).to_hex_string
+				temp_string.keep_tail (6)
+				propvalue := "#" +  temp_string
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, background_string.item, propvalue.item)		
 			end	
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
@@ -291,6 +485,18 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- String optimization
 		once
 			create Result.make ("weight")	
+		end
+
+	foreground_string: EV_GTK_C_STRING is
+			-- String optimization
+		once
+			create Result.make ("foreground")	
+		end
+
+	background_string: EV_GTK_C_STRING is
+			-- String optimization
+		once
+			create Result.make ("background")	
 		end
 
 	foreground_gdk_string: EV_GTK_C_STRING is

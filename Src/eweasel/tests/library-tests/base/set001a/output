@@ -1,0 +1,17 @@
+Create set
+reference comparison set
+Filling set with non-disjoint data
+set disjoint: False
+Create set
+reference comparison set
+Filling set with disjoint data
+set disjoint: True
+Create set
+object comparison set
+Filling set with non-disjoint data
+set disjoint: False
+Create set
+object comparison set
+Filling set with disjoint data
+set disjoint: True
+Execution completed

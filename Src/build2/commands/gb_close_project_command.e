@@ -42,9 +42,9 @@ feature {NONE} -- Initialization
 			-- Create `Current'.
 		do
 			Precursor {EB_STANDARD_CMD}
-			set_tooltip ("Close project")
-			set_name ("Close project")
-			set_menu_name ("Close project")
+			set_tooltip ("Close Project")
+			set_name ("Close Project")
+			set_menu_name ("Close Project")
 			disable_sensitive
 			add_agent (agent execute)
 		end

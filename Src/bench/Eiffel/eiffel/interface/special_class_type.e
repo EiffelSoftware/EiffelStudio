@@ -73,7 +73,7 @@ feature
 					buffer.putstring ("%Tlong elem_size;%N")
 				end
 				buffer.putstring ("%
-					%%Tif (arg1 == (char *) 0)%N%
+					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
 			end;
 
@@ -114,9 +114,9 @@ feature
 					buffer.putstring (") + OVERHEAD));%N")
 				else
 					buffer.putstring ("%
-						%%Telem_size = *(long *) %
+						%%Telem_size = *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-							% - LNGPAD(2) + sizeof(long));%N%
+							% - LNGPAD(2) + sizeof(EIF_INTEGER));%N%
 						%%Tecopy(arg1, Current + OVERHEAD + arg2 * elem_size);%N");
 				end
 			else
@@ -219,9 +219,9 @@ feature
 					buffer.putstring (") + OVERHEAD);%N")
 				else
 					buffer.putstring ("%
-						%%Telem_size = *(long *) %
+						%%Telem_size = *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE) %
-							%- LNGPAD(2) + sizeof(long));%N%
+							%- LNGPAD(2) + sizeof(EIF_INTEGER));%N%
 						%%Treturn Current + OVERHEAD + arg1 * elem_size;%N");
 				end
 			else

@@ -65,7 +65,7 @@ feature
 				--		EIF_REFERENCE Current;
 				--		EIF_INTEGER arg1;
 				--		{
-				--			char *ref;
+				--			EIF_REFERENCE ref;
 				--			struct union overhead *zone;
 			buffer.putstring ("/* make_area */%N");
 			encoded_name := feat.body_id.feature_name (id);
@@ -76,14 +76,14 @@ feature
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>)
 
 			buffer.putstring ("%
-				%%Tchar *ref;%N%
+				%%TEIF_REFERENCE ref;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");
 
 				-- Garbage collector hooks
 			buffer.putstring ("%TRTLI(2);%N%
 				%%Tl[0] = Current;%N%
-				%%Tl[1] = (char *) 0;%N%N");
+				%%Tl[1] = (EIF_REFERENCE) 0;%N%N");
 
 			final_mode := byte_context.final_mode;
 			if 	(not final_mode)
@@ -112,7 +112,7 @@ feature
 			end;
 
 				-- Allocation of a special object
-				--		l[1] = spmalloc(arg1 * sizeof(char *) + LNGPAD(2));
+				--		l[1] = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2));
 			buffer.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
 		
 			if is_expanded then
@@ -155,7 +155,7 @@ feature
 			buffer.putstring ("%T*(EIF_INTEGER *) ref = arg1;%N");
 
 				-- Set element size
-			buffer.putstring ("%T*(EIF_INTEGER *) (ref + sizeof(long)) = ");
+			buffer.putstring ("%T*(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER)) = ");
 			if is_expanded then
 				if final_mode then
 					buffer.putstring ("EIF_Size(");
@@ -171,8 +171,8 @@ feature
 
 					buffer.putstring ("%
 						%%T{%N%
-						%%T%Tchar *ref;%N%
-						%%T%Tlong i;%N%
+						%%T%TEIF_REFERENCE ref;%N%
+						%%T%TEIF_INTEGER i;%N%
 						%%T%Tint16 pdtype;");
 
 					buffer.new_line
@@ -270,8 +270,8 @@ feature
 						-- Call initialization routines
 					buffer.putstring ("%
 									%%T{%N%
-									%%T%Tchar *ref;%N%
-									%%T%Tlong i;%N%
+									%%T%TEIF_REFERENCE ref;%N%
+									%%T%TEIF_INTEGER i;%N%
 									%%T%Tfnptr init;%N%
 									%%T%Tint16 pdtype;")
 

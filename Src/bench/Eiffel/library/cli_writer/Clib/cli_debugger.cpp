@@ -473,6 +473,11 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	// since it is supposed to be in the same thread ...
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 3) {
 //<3>---< wait for ec to finish >--------------------------------//
+		if (callback_id == CB_CREATE_PROCESS) {
+				/* Special case here to let EiffelStudio debugger to have time
+				 * to refresh itself before starting debugging. */
+			Sleep (100);
+		}
 #ifdef DBGTRACE_ENABLED	/*D*/
 		if (once_enter_cb == 0) {/*D*/
 			DBGTRACE("1.5 - [Dbg] wait at entrance door");/*D*/
@@ -491,6 +496,11 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #endif	/*D*/
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 1) {
 //<1>---< wait for ec to finish >--------------------------------//
+		if (callback_id == CB_CREATE_PROCESS) {
+				/* Special case here to let EiffelStudio debugger to have time
+				 * to refresh itself before starting debugging. */
+			Sleep (100);
+		}
 		// Dbg wait for the Ec to call back
 		// no sleep for a spinlock (active waiting)
 #ifdef DBGTRACE_ENABLED	/*D*/

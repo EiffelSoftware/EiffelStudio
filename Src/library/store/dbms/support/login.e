@@ -1,0 +1,121 @@
+indexing
+	description: "";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class 
+	LOGIN [G -> DATABASE]
+
+inherit
+	HANDLE_SPEC [G]
+
+creation -- Creation procedure
+
+	make
+
+feature -- Initialization
+
+	make is
+		do
+			!! name.make (1)
+			!! passwd.make (1)
+			!! application.make (1)
+			!! hostname.make (1)
+			!! data_source.make (1)
+			!! roleId.make (1)
+			!! rolePassWd.make (1)
+			!! groupId.make (1)
+		end
+
+feature -- Status setting
+
+	set (uname, upasswd: STRING) is
+			-- Set user name and password before connection becomes possible.
+		require
+			user_name_ok: db_spec.user_name_ok (uname)
+			password_ok: db_spec.password_ok (upasswd)
+		do
+			name := clone (uname)
+	      	passwd := clone (upasswd)
+		ensure
+			password_ensure: db_spec.password_ensure (name, passwd, uname, upasswd)
+		end
+
+	set_application (appname: STRING) is
+			-- Set name of application
+		require
+			argument_not_void: appname /= Void
+		do
+			application := clone (appname)
+		ensure
+			name_set: application.is_equal(appname)
+		end
+
+	set_hostname (uhostname: STRING) is
+		require
+			argument_not_void: uhostname /= Void
+		do
+			hostname := clone (uhostname)
+		ensure
+			name_set: hostname.is_equal(uhostname)
+		end
+
+	set_data_source (udata_source: STRING) is
+			-- Set Data Source of ODBC.
+		require
+			argument_not_void: data_source /= Void
+		do
+			data_source := clone (udata_source)
+		ensure
+			data_source_set: data_source.is_equal(udata_source)
+		end
+
+	set_role (uroleId, urolePassWd: STRING) is
+			-- Set role identifier of data base.
+		require
+			argument_not_void: uroleId /= Void
+		do
+			roleId := clone (uroleId)
+			if (rolePassWd /= Void) then
+				rolePassWd := clone(urolePassWd)
+			end
+		ensure
+			name_set: roleId.is_equal(uroleId)
+		end
+
+	set_group (ugroupId: STRING) is
+		require
+			argument_not_void: ugroupId /= Void
+		do
+			groupId := clone (ugroupId)
+		ensure
+			name_set: groupId.is_equal(ugroupId)
+		end
+
+feature -- Status report
+
+	name: STRING
+			-- User name
+
+	passwd: STRING
+			-- User password
+
+	application: STRING
+			-- Application name.
+
+	hostname: STRING
+			-- Host name
+
+	data_source: STRING
+			-- Data Source.
+
+	roleId: STRING
+			-- Role identifier .
+
+	rolePassWd: STRING
+			-- Role password. 
+
+	groupId: STRING
+			-- Group Identifier.
+
+end -- class LOGIN

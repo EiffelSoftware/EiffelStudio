@@ -1,0 +1,50 @@
+
+This directory contains the upper level classes of EiffelStore
+
+
+
+1. DB_CONTROL
+-------------
+This class provides session control and management primivites: 
+connect, disconnect, commit, rollback, and database status flags.
+
+It uses classes from the $EIFFEL4/library/store/support directory.
+
+
+2. DB_CHANGE
+------------
+This class allows an Eiffel user to modify persistent objects
+(made persistent in DB repository from Eiffel or from any other source).
+Objects can be referred to directly, or through a mapping table. 
+
+
+3. DB_STORE
+-----------
+This class performs standard store operations on Eiffel objects. 
+The way objects are stored varies according to EiffelStore layer used.
+
+
+4. DB_SELECTION
+---------------
+This class performs standard retrieve operations on Eiffel objects.
+The way objects are stored varies according to the EiffelStore layer used.
+
+
+5. DB_REPOSITORY
+----------------
+This class captures the notion of data repository implemented in
+different ways according to the selected data base handle.
+
+
+6. DB_RESULT
+------------
+This class represents the notion of query result, in different
+formats depending on the data base handle used.
+
+7. DB_BYN_CHANGE
+----------------
+This class is quite the same class as DB_CHANGE but with dynamic sql.
+
+8. DB_DYN_STORE
+---------------
+This class is quite the same class as DB_STORE but with dynamic sql.

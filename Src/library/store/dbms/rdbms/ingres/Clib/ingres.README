@@ -1,0 +1,259 @@
+
+                Characteristics of EiffelStore on Ingres
+                ========================================
+
+
+
+    1. The current version of EiffelStore on Ingres is tested on Ingres 6.4/05.
+
+    2. In Ingres, you can create and use different databases, which may 
+contain many tables. So, in EiffelStore on Ingres, we provide a feature 
+to make EiffelStore user be able to tell EiffelStore  to use a special 
+existing Ingres database. If user does not set EiffelStore to a special 
+Ingres database, EiffelStore will use the master database of Ingres(iidbdb).
+
+
+    3. There is no password associated with each data base user in INGRES.
+In order to be compatible with other data base management system,
+we keep the features of login and login_and_connect unchanged, but the 
+passwords inputed in these features are useless to EiffelStore on Ingres. 
+
+
+    4. User can use stored procedure in EiffelStore on Ingres, but can't
+use a stored procedure just like a SELECT statement, because in stored 
+procedure of Ingres, select statement can only put data into local variables 
+of the stored procedure and only one row can be returned by the select 
+statement.
+
+
+    5. Because the columns of a data base table are only associated with the
+table's name and owner, so there is following trade-off:
+
+(1) Only use table name to indicate a column's ownship. In this way, 
+EiffelStore user can access data base tables created by other Eiffel users 
+or data base users if proper privileges have been granted, but if more than 
+one users(both EiffelStore users and database users) created tables with 
+the same in the same data base(e.g., both user A and user B created table 
+'db_book' in database 'test'), error may occur when one user tried to use 
+these data base tables through EiffelStore(e.g, user A used table 'db_book' 
+in database 'test'). The error includes:
+(A) When you use feature generate_class of DB_REPOSITORY, more fields maybe 
+be generated(including some other tables' columns whose table names are the 
+same as that one we are interested).
+(B) When you determine if the table's structure is compatible with an object,
+the answer may be not correct.
+(C) Some other errors.
+
+(2) Use both table name and table owner to indicate a column's ownship. In 
+this way, no error occurs in using such database tables, but an EiffelStore 
+user can only access the tables owned(i.e. created) by himself.
+
+    Our current implementation adopts approach (1), and Mr. Patrice Khawam
+also think this way is better. In fact, current EiffelStore on Sybase and 
+EiffelStore on Oracle all adopt this implementation strategy.
+
+    So, in order to use it correctly, we must guarantee that no two different 
+users create tables with the same name in the same Ingres database.
+
+    Of course, there is a better way to solve the problem which asks another
+information: the owner of the table.
+
+
+    6. EiffelStore on Ingres supports the data types of Eiffel in the way 
+represented by the following mapping table:
+
+===============================================================================
+    Eiffel Data Type                          Ingres Data Types
+    ----------------                    -------------------------------
+    CHARACTER                           C[= C1], CHAR[= CHAR(1)]
+    STRING                              CHAR(_length_of_the_string),
+                                        C_length_of_the_string,
+                                        *VARCHAR(_length_of_the_string),
+                                        *TEXT(_length_of_the_string)
+    INTEGER                             INT[= INTEGER], SMALLINT, INTEGER1
+    REAL                                REAL[= FLOAT4]
+    DOUBLE                              FLOAT[= DOUBLE PRECISION = FLOAT8],
+                                        MONEY
+    ABSOLUTE_DATE                       DATE
+    BOOLEAN                             **TEXT[= TEXT(1)], 
+                                        VARCHAR[= VARCHAR(1)]
+
+    *_length_of_the_string should be greater than 1, otherwise it represents
+BOOLEAN type.
+    **In Ingres, the inner implementation of both TEXT and VARCHAR is VARCHAR,
+so we use TEXT or VARCHAR with length 1 to express Eiffel BOOLEAN in 
+EiffelStore on Ingres.
+===============================================================================
+
+In the Ingres Data Types column of the table, some times we listed more than
+one formats which are sometimes equivalent to or synonyms for each other but
+sometimes not. This mapping table means:
+
+(1) When we map a record(tuple) of an Ingres database table to an Eiffel
+object, we'll map all data types listed in the Ingres Data Types of the table
+to the corresponding Eiffel data type listed in the table.
+    Please pay attention to the expression of Eiffel BOOLEAN in Ingres: we use 
+one byte TEXT field to represent an Eiffel Boolean field, so EiffelStore on
+Ingres will map all TEXT/VARCHAR database fields with length 1 into BOOLEAN 
+data type of Eiffel. So, If you do want to use TEXT data type in Ingres and 
+hope EiffelStore interpret it as Eiffel STRING,  please define its length 
+more than 1. EiffelStore on Ingres interprets '1', 'Y' and 'y' as TRUE and
+other values as FALSE.
+    For example, from the Ingres table created by the following SQL statement:
+     	CREATE TABLE person (
+            name             CHAR(40),
+            birthday         DATE,
+            address          VARCHAR(60),
+            salary           REAL,
+            real_estate      FLOAT,
+            retired          TEXT,
+            spouse           CHAR(40),
+            children_number  INT, 
+            experience       TEXT(200)
+        )
+EiffelStore will generate the following Eiffel class:
+        class PERSON
+        feature
+            name             STRING
+            birthday         ABSOLUTE_DATE
+            address          STRING
+            salary           REAL
+            real_estate      DOUBLE
+            retired          BOOLEAN
+            spouse           STRING
+            children_number  INTEGER
+            experience       STRING
+        end -- class PERSON
+             
+(2) When we map an Eiffel object to a record(tuple) of an Ingres database 
+table, we'll map all data type listed in the Eiffel Data Type column to 
+the first corresponding Ingres data type listed in Ingres Data Types column.
+    For example, from the above Eiffel class, EiffelStore on Ingres will 
+create an Ingres table which is equivalent to the one generated by the 
+following SQL statement:
+     	CREATE TABLE person (
+            name             CHAR(_length),
+            birthday         DATE,
+            address          CHAR(_length),
+            salary           REAL,
+            real_estate      FLOAT, 
+            retired          TEXT,              
+            spouse           CHAR(_length),
+            children_number  INT, 
+            experience       CHAR(_length),
+        )
+where _length is determined by the corresponding Eiffel STRING's count,
+capacity and max string length we defined in system(255 at present).
+    Of course, we can generate the same Eiffel class as the one in (1) 
+from the above Ingres table.
+
+
+    7. Although just like other RDBMS, Ingres provides two execution modes 
+for SQL statements: EXECUTE IMMEDIATE and EXECUTE DYNAMIC(which can be 
+divided into PREPARE and EXECUTE, PREPARE and DESCRIBE furtherly), and 
+EXECUTE DYNAMIC is more efficient than EXECUTE IMMEDIATE for some SQL 
+statement(because the late one interprets the SQL statement and makes 
+execution plan for it every time the same SQL statement is performed), but 
+EiffelStore has not provided any mechanism to let users to tell EiffelStore 
+to repeatly perform a SQL statement executed before, users give EiffelStore 
+a database requirement just by giving a SQL statement, so EiffelStore can't 
+reuse the SQL statement's execution plan prepared before. Some NON_SELECT 
+statements in Ingres, such as CREATE PROCEDURE, can't be performed dynamically
+(can't be prepared). Based on the two reasons, EiffelStore on Ingres only 
+use EXECUTE IMMEDIATE mode in class DB_CHANGE_ING to perform non-select SQL 
+statements. 
+
+   
+    8. EiffelStore on Ingres will cut all tailing BLANKs from a string. For
+example, if you insert a string value "I am a  student...  " into EiffelStore
+on Ingres, and then retrieve it from EiffelStore on Ingres, you will get
+"I am a  student...". 
+    The reason lies in:
+(1) Ingres's implementation: Ingres stores any CHAR string by adding tail 
+blanks to the width of the field. For example, if a field is CHAR(20), and a 
+user tries to insert value 'Good Morning!' into the field, the result 
+inserted in database is 'Good Morning!       '. So, when we retrieve a string 
+from Ingres database with trailing blanks, we can't know if the trailing 
+blanks are inserted by user or appended by Ingres.
+(2) EiffelStore on Ingres's implementation: EiffelStore on Ingres uses CHAR to
+express Eiffel STRING, TEXT or VARCHAR with length 1 to express Eiffel BOOLEAN(
+because in Ingres, the inner implementation of both TEXT and VARCHAR is VARCHAR).
+
+
+    9. The width of an Ingres table can't exceed 2000 bytes, so EiffelStore on
+Ingres can only support such Eiffel objects whose length is not greater than 
+2000 bytes. 
+    In order to be able to include as many fields as possible in a single 
+EiffelStore repository, the EiffelStore on Ingres limits the maximal length of 
+a string field to be equal to or less than 255(Ingres's limitation is 2000).
+
+
+    10. EiffelStore on Ingres assigns a default value to Eiffel object if
+the corresponding data base field's value is NULL. The following table 
+describes the default values:
+   Eiffel Data Type       Default Value if Database Field's Value is NULL
+   ----------------       -----------------------------------------------
+   INTEGER                    0
+   REAL                       0.0
+   DOUBLE                     0.0
+   BOOLEAN                    false
+   STRING                     ""(empty string)
+   CHARACTER                  ' '(space)
+   ABSOLUTE_DATE              1/1/1000 0:0:0(day/month/year h:m:s)
+   
+   In ingres, the result of any expression which contains a NULL value as
+one of its operands is still NULL. So, please pay attention to this fact. 
+   For example, if an INTEGER Eiffel object gets value 0 from a data base 
+field f1, but when you try to use the following SQL statement to increate 
+f1:
+  update db_book set f1 = f1 + 100 
+(assume f1 is a field of database table db_book)
+sometimes you will find that you still get 0 if you get the INTEGER Eiffel
+object's value from the database field f1 again. If this occurs, you should 
+be aware that the value of the corresponding database field is NULL.
+
+
+    11. Some characteristics of Ingres to which user of EiffelStore on
+Ingres should pay attention.
+    (1) Every Database of Ingres has a DBA, which is the creator of
+the database. ONLY the DBA of a database can grant privileges on the
+tables, stored procedures to users, roles or groups, and the DBA can
+do so only for those tables created by himself/herself.
+    For example, if there are user u1, u2 and u3. u1 created database
+TEST, then u1 created table t1 and t2 in TEST, u2 created table t3 in
+TEST, then u1 can grant "select" privilege on t1 to u2 and u3; but u1
+can't do so for t3(because its owner is u2), and u2 also can't grant 
+privileges of t3 to u1 or u3(because u2 is not the DBA of TEST). 
+    (2) It seems that when logged into operating system(eg, UNIX) as a 
+general user(not as ingres, the administrator of the Ingres RDBMS), Ingres 
+requires that the user name used to register to Ingres should be the same 
+as the user's user name in operating system.
+    For example, if user has name u1 in operation system(use u1 to 
+login to operating system), he/she can't use another name, for example,
+"chierry" to connect to Ingres, although "chierry" is a valid Ingres user.
+    (3) Ingres changes the upper case letters in table name, column name and
+procedure name etc. into lower cases.
+    When using EiffelStore on Ingres, please only use lower cases for these
+database identifiers.
+
+                      The Use of EiffelStore on Ingres
+                      ================================
+
+	1. Install EiffelStore on Ingres and Ingres RDBMS properly; set up
+the necessary environment variabler; For example, EIFFEL4, PLATFORM for 
+Eiffel, II_SYSTEM for Ingres. 
+
+    2. In order to run EiffelStore on Ingres, Ingres Server must be started 
+first.  You(must have the run permission) can start Ingres Server by the 
+following command:
+
+            iistartup -s
+    3. When you finish running EiffelStore on Ingres, you can use the 
+following command to shut down Ingres Server(if you are willing to):
+            iishutdown -s
+
+    4. How to use EiffelStore on Ingres in your application program? Just 
+in the same way as EiffelStore on other DBMS(you can refer to the on-line 
+examples).
+
+

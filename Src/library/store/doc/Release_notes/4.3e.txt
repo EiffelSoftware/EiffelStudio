@@ -1,0 +1,57 @@
+ISE EiffelStore 4.3e, July 1998.
+
+Overview
+========
+
+   The EiffelStore library provides a consistent set of 
+classes for writing object oriented Eiffel applications that need 
+to handle persistent objects.
+   EiffelStore 4.3e has currently only been tested with:
+		ISE-Eiffel Release 4.3e
+   		Oracle8 8.0.3
+		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy
+ Version 11.5
+		IngresII
+		ODBC 3.0
+
+Bug fixed
+=========
+ 
+  Many previous bugs were linked to multithreaded running 
+of databases such as Oracle, Sybase or Ingres. It is now fixed, since 
+in every ISE EiffelBench 4.3, a multithreaded application can be found.
+
+  There were plenty bugs regarding the use of stored procedure, only for  
+Ingres and Sybase, since it was not implemented either in the Oracle handle 
+or in the ODBC handle. For instance, using Ingres, due to new release, 
+the execution sql statement was obsolete.
+
+  Generaly, bugs were caused by new release changes.
+
+New functionalities
+===================
+
+  All databases support stored procedure manipulation. 
+
+  There are two new classes, DB_DYN_CHANGE and DB_DYN_SELECTION 
+that are useful for any dynamic sql transaction. Dynamic sql has been tested 
+with Oracle8 and ODBC.
+
+  
+Internal changes
+================
+
+  If you ever had a look into the EiffelStore library, you will see that 
+there is an architecture modification. There is no more effective classes for each 
+handle. Now instead of using the inheritance for retrieving handle specifications, 
+we are using the genericity. Therefore, for each handle there is only one 
+specification file of the name of the database (one instead of 26 files).
+  The pros of using genericity is gain of execution speed, gain of space (less created objects).
+All the specific classes, ORACLE, INGRES, ODBC and SYBASE inherit from the DATABASE class,
+which is deffered. This way it is easier to add a new handle to EiffelStore.
+
+  The use of the date and the time is now done by the EiffelTime library.
+
+  The Oracle and ODBC handles support all stored procedure manipulations.
+   
+

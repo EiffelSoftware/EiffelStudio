@@ -1,0 +1,4 @@
+All the classes of this cluster are generic. The generic parameter
+is of type the name of the database specific file.
+
+The DATABASE class is the template of the database specific file.

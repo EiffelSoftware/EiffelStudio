@@ -1,0 +1,75 @@
+
+July 1998, Release: 4.3e
+
+--|----------------------------------------------------------------
+--| EiffelStore: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+
+The EiffelStore library provides a consistent set of 
+classes for writing object oriented Eiffel applications that need 
+to handle persistent objects.
+
+The library interface consists of two sets:
+
+1) A set of general purpose classes designed regardless of any data 
+ management system used, to be found in directory 
+ $EIFFEL4/library/store/interface, and that you always need in your universe
+
+2) Specific classes, referred to by the interface classes, bridging
+  the application to selected data management systems called ``handles''. 
+  The set of handles may be found:
+
+   * in directory $EIFFEL4/library/store/dbms
+
+   * in the directory $EIFFEL4/library/store/dbms/rdbms/{server_name}   
+   with {server_name} corresponding to a selected relational database 
+   management system.
+
+   Additional support classes are also needed in your universe
+   regardless of the selected handle. They are located in:
+   
+   * directory $EIFFEL4/library/store/support and 
+      $EIFFEL4/library/store/dbms/support
+   
+Example classes are located in $EIFFEL4/examples/store
+
+EiffelStore 4.3e has currently only been tested with:
+		ISE-Eiffel Release 4.3e
+   		Oracle8 8.0.3
+		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy
+ Version 11.5
+		IngresII
+		ODBC 3.0
+
+Documentation
+-------------
+   The user's manual is in Postscript format in directory /doc
+   (cover page + content in US LTR format)
+
+Then, to install EiffelStore external libraries, go to directory 
+$EIFFEL4/library/store/install (a README file provides full instructions).
+
+Then, making sure that you have the requested database (Oracle,
+Sybase, etc) call: 
+   make_Clib 
+from inside this current EiffelStore directory.
+
+In the case of Oracle, make sure you are registered as an Oracle user.
+
+Note
+----
+If you are using EiffelStore with a specific RDBMS, read carefully
+the following file:
+   $EIFFEL4/library/store/install/{basename}.txt

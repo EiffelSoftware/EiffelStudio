@@ -2143,7 +2143,7 @@ int chunk_type;
 	 * no coalescing ever occurred.
 	 */
 	
-	int started_here;
+	int started_here = 0;
 
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */

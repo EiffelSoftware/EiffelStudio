@@ -20,6 +20,16 @@ inherit
 			implementation
 		end
 
+	EV_PND_SOURCE
+		redefine
+			implementation
+		end
+
+	EV_PND_TARGET
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_with_text,
@@ -150,6 +160,32 @@ feature -- Event : command association
 			implementation.add_unselect_command (cmd, arg)		
 		end
 
+	add_button_press_command (mouse_button: INTEGER; 
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.add_button_press_command (mouse_button, cmd, arg)
+		end
+
+	add_button_release_command (mouse_button: INTEGER;
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.add_button_release_command (mouse_button, cmd, arg)
+		end
+
 feature -- Event -- removing command association
 
 	remove_select_commands is
@@ -168,6 +204,28 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_unselect_commands	
+		end
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.remove_button_press_commands (mouse_button)
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.remove_button_release_commands (mouse_button)
 		end
 
 feature {EV_MULTI_COLUMN_LIST_I} -- Implementation

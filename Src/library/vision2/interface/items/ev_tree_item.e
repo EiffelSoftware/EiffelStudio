@@ -24,6 +24,16 @@ inherit
 			implementation
 		end
 
+	EV_PND_SOURCE
+		redefine
+			implementation
+		end
+
+	EV_PND_TARGET
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_with_text
@@ -119,24 +129,50 @@ feature -- Status report
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_activate_command (cmd, arg)
+			implementation.add_select_command (cmd, arg)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unselected.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_unselect_command (cmd, arg)		
+		end
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		obsolete
+			"Will be removed in next week release, %
+			%use add_select_command instead."
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_select_command (cmd, arg)
 		end	
 
 	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unactivated.
+		obsolete
+			"Will be removed in next week release, %
+			%use add_unselect_command instead."
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_deactivate_command (cmd, arg)		
+			implementation.add_unselect_command (cmd, arg)		
 		end
 
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -149,24 +185,74 @@ feature -- Event : command association
 			implementation.add_subtree_command (cmd, arg)
 		end
 
+	add_button_press_command (mouse_button: INTEGER; 
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.add_button_press_command (mouse_button, cmd, arg)
+		end
+
+	add_button_release_command (mouse_button: INTEGER;
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.add_button_release_command (mouse_button, cmd, arg)
+		end
+
 feature -- Event -- removing command association
+
+	remove_select_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is selected.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_unselect_commands			
+		end
+
+	remove_unselect_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is unselected.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_unselect_commands	
+		end
 
 	remove_activate_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is activated.
+		obsolete
+			"Will be removed in next week release, %
+			%use remove_select_commands instead."
 		require
 			exists: not destroyed
 		do
-			implementation.remove_activate_commands			
+			implementation.remove_select_commands			
 		end	
 
 	remove_deactivate_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is deactivated.
+			obsolete
+			"Will be removed in next week release, %
+			%use remove_unselect_commands instead."
 		require
 			exists: not destroyed
 		do
-			implementation.remove_deactivate_commands	
+			implementation.remove_select_commands	
 		end
 
 	remove_subtree_commands is
@@ -176,6 +262,28 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_subtree_commands
+		end
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.remove_button_press_commands (mouse_button)
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		do
+			implementation.remove_button_release_commands (mouse_button)
 		end
 
 feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation

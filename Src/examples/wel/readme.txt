@@ -13,7 +13,8 @@ In each directory you will find two ace files:
   These examples require to have a precompiled library of EiffelBase
   and WEL.
   
-The following examples do not work without C compiler:
+The following examples do not work without a freeze which requires a
+C compiler:
 - commands
 - fontenum
 - fun
@@ -23,6 +24,6 @@ The following examples do not work without C compiler:
 - xcell
 
 -------------------------------------------------------------------------
-NB: Theses examples have been successfully tested under EiffelBench 4.5,
+NB: Theses examples have been successfully tested under EiffelStudio 5.0,
 using the latest WEL and EiffelBase library.
 

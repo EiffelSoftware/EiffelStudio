@@ -2185,7 +2185,7 @@ feature {NONE} -- Finalization implementation
 			class_array: ARRAY [CLASS_C]
 		do
 			Result := private_finalize
-			if not Result and then not il_generation then
+			if not Result then
 				i := classes.count
 				class_array := classes
 				nb := class_counter.count

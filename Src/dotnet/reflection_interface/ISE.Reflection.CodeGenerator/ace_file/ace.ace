@@ -1,0 +1,36 @@
+system 
+	"ISE.Reflection.CodeGenerator"
+
+root
+	GENERATOR (root_cluster): "make"
+
+default
+	assertion (all)
+	line_generation (yes)
+	il_generation ("dll")
+
+cluster
+	root_cluster: "F:\reflection_interface\ISE.Reflection.CodeGenerator"
+	
+	eiffel_components_generated: "F:\reflection_interface\generated\eiffel_components_generated"
+		
+	emitter_generated: "F:\reflection_interface\generated\emitter_generated"
+	
+	eiffel_assembly_cache_generated: "F:\reflection_interface\generated\eiffel_assembly_cache_generated"
+	
+	support_generated: "F:\reflection_interface\generated\support_generated"
+	
+	all dot_net_base: "F:\Eiffel50\library\base.net"
+		exclude
+			"accessbility"; "system_data"; "system_drawing"; "system_web"; "system_web_services"; "system_windows_forms";
+		end
+
+external
+	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
+			"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+			"F:\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
+			"F:\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+			"F:\reflection_interface\generated\emitter_generated\NewEmitterMain.exe"	 		
+	
+end

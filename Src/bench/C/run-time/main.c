@@ -59,6 +59,7 @@
 
 #define null (char *) 0					/* Null pointer */
 
+rt_public int eif_no_reclaim = 0;			/* Call reclaim on termination. */
 #if defined VXWORKS
 	/* when eif_malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
@@ -146,12 +147,12 @@ rt_public void once_init (void)
 
 	/* Allocate room for once values */
 
-	EIF_once_values = (EIF_REFERENCE *) realloc (EIF_once_values, EIF_once_count * REFSIZ);
+	EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 	if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 		enomem();
 
-	bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));
+	memset (EIF_once_values, 0, EIF_once_count * sizeof (char *));
 	
 	EIF_END_GET_CONTEXT
 }
@@ -183,6 +184,11 @@ rt_public void eif_alloc_init(void)
 	static int p_per = 0;				/* full collection period.*/
 	static int thd	= 0;				/* Threshold of allocation.*/
 
+	/* Special options. */
+	env_var = getenv ("EIF_NO_RECLAIM");
+	if (env_var != (char *) 0)
+		eif_no_reclaim = atoi (env_var);
+		
 	/* Set chunk size. */
 	if (!chunk_size) {
 		env_var = getenv ("EIF_MEMORY_CHUNK");

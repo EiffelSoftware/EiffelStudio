@@ -982,7 +982,7 @@ feature -- Element change
 			ext_s: ANY
 		do
 			if s.count /= 0 then
-				ext_s := s.to_c;
+				ext_s := s.area;
 				file_ps (file_pointer, $ext_s, s.count);
 			end;
 		end;

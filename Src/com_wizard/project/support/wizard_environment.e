@@ -98,10 +98,6 @@ feature -- Access
 	compile_c: BOOLEAN
 			-- Should generated c code be compiled?
 
-	clean_destination_folder: BOOLEAN
-			-- Should wizard clean destination folder before
-			-- starting code generation?
-	
 	backup: BOOLEAN
 			-- Should wizard backup existing files?
 
@@ -112,7 +108,7 @@ feature -- Access
 		do
 			Result := error_title (error_code).twin
 			if error_data /= Void then
-				Result.append (":%N")
+				Result.append (":%R%N")
 				Result.append (error_data)
 			end
 		ensure
@@ -362,14 +358,6 @@ feature -- Element Change
 			backup := a_boolean
 		ensure
 			backup_set: backup = a_boolean
-		end
-
-	set_clean_destination_folder (a_boolean: BOOLEAN) is
-			-- Set `clean_destination_folder' with `a_boolean'.
-		do
-			clean_destination_folder := a_boolean
-		ensure
-			clean_destination_folder_set: clean_destination_folder = a_boolean
 		end
 
 feature {NONE} -- Implementation

@@ -75,8 +75,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			{EV_ITEM_LIST_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 
 			real_signal_connect (
 				list_widget,

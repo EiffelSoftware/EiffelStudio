@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to signals.
 		do
 			initialize_pixmaps
-			{EV_NEW_LIST_ITEM_LIST_IMP} Precursor
+			Precursor {EV_NEW_LIST_ITEM_LIST_IMP}
 
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
 			--| adds two extra ones to what ev_list_imp Precursor calls

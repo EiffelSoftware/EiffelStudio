@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			-- `Current' has been activated.
 		do
 			if not ignore_select_actions then
-				{EV_MENU_ITEM_IMP} Precursor
+				Precursor {EV_MENU_ITEM_IMP}
 			end
 		end
 		

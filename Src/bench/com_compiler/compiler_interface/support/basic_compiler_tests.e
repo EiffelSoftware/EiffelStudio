@@ -25,10 +25,12 @@ feature -- Initalization
 			out_row, out_col: INTEGER_REF
 			out_file_name: CELL [STRING]
 		once
-			pm.retrieve_eiffel_project ("E:\overloading_eiffel_test\overloading_eiffel_test.epr")
+			pm.create_eiffel_project ("E:\overloading_eiffel_test\ace.ace", "E:\overloading_eiffel_test")
+			pm.compiler.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.Eif_compilation_mode_workbench)
+			--pm.retrieve_eiffel_project ("E:\overloading_eiffel_test\overloading_eiffel_test.epr")
 			pp ?= pm.project_properties
 			if pp /= Void then
-				test_target_classes
+				test_find_definition
 --				test_target_feature
 --				create out_file_name
 --				create out_row
@@ -80,8 +82,8 @@ feature -- Initalization
 		do
 			create source_file_name
 			create source_row
-			pm.completion_information.find_definition ("my_feture (i: INTEGER): STRING is%N%T%Tdo%N%T%T%Tcreate {STRING}.make_empty", 
-					"E:\overloading_eiffel_test\application.e", 3, 20, source_file_name, source_row)
+			--pm.completion_information.find_definition ("my_feture (i: INTEGER): STRING is%N%T%Tdo%N%T%T%Tcreate {STRING}.make_empty", 
+			--		"E:\overloading_eiffel_test\application.e", 3, 20, source_file_name, source_row)
 		end
 		
 		

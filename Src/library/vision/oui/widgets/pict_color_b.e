@@ -87,6 +87,12 @@ feature -- Status report
 			Result := (a_bar = Void)
 		end; 
 
+	is_pressed: BOOLEAN is
+			-- Is the pict color button pressed?
+		do
+			Result := implementation.is_pressed
+		end
+
 feature -- Element change
 
 	set_pixmap (a_pixmap: PIXMAP) is
@@ -112,7 +118,15 @@ feature -- Element change
 			!!a_pixmap.make;
 			a_pixmap.read_from_file (a_pixmap_name);
 			set_pixmap (a_pixmap);
-		end
+		end;
+
+	set_pressed (b: like is_pressed) is
+			-- Set `is_pressed' to `b'. 
+		do
+			implementation.set_pressed (b)
+		ensure
+			set: b = is_pressed
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 

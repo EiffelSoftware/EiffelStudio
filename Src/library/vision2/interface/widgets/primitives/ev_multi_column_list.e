@@ -28,19 +28,7 @@ inherit
 
 create
 	default_create,
-	make_with_columns,
 	make_for_test
-
-feature {NONE} -- Initialization
-
-	make_with_columns (n_columns: INTEGER) is
-			-- Create with `n_columns'.
-		do
-			default_create
-			set_columns (n_columns)
-		ensure
-			columns_assigned: columns = n_columns
-		end
 
 feature -- Access
 
@@ -98,8 +86,9 @@ feature -- Status report
 
 	column_title (a_column: INTEGER): STRING is
 			-- Title of `a_column'.
+			-- Returns "" if no title given yet.
 		require
-			a_column_within_range: a_column >= 1 and a_column <= columns
+			a_column_positive: a_column >= 1
 		do
 			Result := implementation.column_title (a_column)
 		ensure
@@ -117,17 +106,6 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
-	set_columns (n_columns: INTEGER) is
-			-- Assign `n_columns' to `columns'.
-		require
-			empty: empty
-			n_columns_positive: n_columns > 0
-		do
-			implementation.set_columns (n_columns)
-		ensure
-			columns_assigned: columns = n_columns					
-		end
 
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
@@ -167,7 +145,6 @@ feature -- Status setting
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
-
 		do
 			implementation.disable_multiple_selection
 		ensure
@@ -196,8 +173,7 @@ feature -- Status setting
 		require
 			a_column_withing_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (0, a_column)
-			--|FIXME 0 is a magic number!
+			implementation.align_text_left (a_column)
 		end
 
 	align_text_center (a_column: INTEGER) is
@@ -206,8 +182,7 @@ feature -- Status setting
 		require
 			a_column_within_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (2, a_column)
-			--|FIXME 2 is a magic number!
+			implementation.align_text_center (a_column)
 		end
 	
 	align_text_right (a_column: INTEGER) is
@@ -216,8 +191,7 @@ feature -- Status setting
 		require
 			a_column_within_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (1, a_column)
-			--|FIXME 1 is a magic number!
+			implementation.align_text_right (a_column)
 		end
 
 feature -- Element change
@@ -225,7 +199,7 @@ feature -- Element change
 	set_column_title (a_title: STRING; a_column: INTEGER) is
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
-			a_column_within_range: a_column > 0 and a_column <= columns
+			a_column_positive: a_column > 0
 			a_title_not_void: a_title /= Void
 		do
 			implementation.set_column_title (a_title, a_column)
@@ -237,10 +211,8 @@ feature -- Element change
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
-			titles_count_is_columns: titles.count = columns
 		do
-			implementation.set_columns_title (titles)
-				--|FIXME feature name in _I needs to be updated.
+			implementation.set_column_titles (titles)
 		end
 		--|FIXME This nees a postcondition!
 
@@ -261,20 +233,19 @@ feature -- Element change
 			widths_not_void: widths /= Void
 			widths_count_is_columns: widths.count = columns
 		do
-			implementation.set_columns_width (widths)
-				--|FIXME feature name in _I needs to be updated.
+			implementation.set_column_widths (widths)
 		end
 		--|FIXME This nees a postcondition!
 
 	set_row_height (a_height: INTEGER) is
-			-- Assign `a_height' to ??.
-			--| FIXME to what???
+			-- Set all rows to `a_height'.
 		require
 			height_valid: a_height > 0
 		do
-			implementation.set_rows_height (a_height)
+			implementation.set_row_height (a_height)
+		ensure
+			a_height_assigned: a_height = row_height
 		end
-		--|FIXME This nees a postcondition!
 
 feature -- Event handling
 
@@ -315,7 +286,7 @@ feature -- Contract support
 		local
 			i, j: INTEGER
 		do
-			make_with_columns (4)
+			default_create
 			set_column_titles (<<"Title 1", "Title 2", "Title 3", "Title 4">>)
 			from
 				i := 1
@@ -328,7 +299,8 @@ feature -- Contract support
 				until
 					j > 4
 				loop
---| FIXME					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
+					last.go_i_th (j)
+					last.replace ("Row" + i.out + " Col" + j.out)
 					last.select_actions.extend (~prune (last))
 					last.select_actions.extend (~put_front (last))
 					j := j + 1
@@ -352,7 +324,23 @@ feature -- Obsolete
 		obsolete
 			"use selected_item = Void or selected_items.empty"
 		do
-			Result := implementation.selected
+			Result := implementation.selected_item.empty
+		end
+	
+	set_columns (a_column_count: INTEGER) is
+			-- Assign `a_column_count' to `columns'.
+			-- (Can only be called when empty.)
+		obsolete
+			"Column count is determined by biggest item in list."
+		require
+			empty: empty
+			a_column_count_positive: a_column_count > 0
+		do
+			check
+				inapplicable: False
+			end
+		ensure
+			columns_assigned: columns = a_column_count					
 		end
 
 end -- class EV_MULTI_COLUMN_LIST
@@ -378,6 +366,11 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/03/25 01:12:13  brendel
+--| Revised.
+--| `set_columns' is now obsolete.
+--| `make_with_columns' is removed.
+--|
 --| Revision 1.45  2000/03/24 01:35:42  brendel
 --| Added `row_height'.
 --|

@@ -1,5 +1,6 @@
 indexing
-	description: "EiffelVision static menu bar. Implementation interface."
+	description: "EiffelVision static menu bar. A menu bar that always%
+		%stay on the top of the window."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -15,7 +16,6 @@ inherit
 		end
 
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -30,8 +30,7 @@ feature {NONE} -- Initialization
 --			implementation.test_and_set_parent (par)
 --			implementation.build
 --			managed := par.manager
---			widget_make (par)
-		end	
+		end
 
 feature -- Access
 	
@@ -70,7 +69,7 @@ feature {NONE} -- Implementation
 end -- class EV_MENU_BAR
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision : library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

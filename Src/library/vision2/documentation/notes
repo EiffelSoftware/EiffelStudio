@@ -135,7 +135,7 @@ X   complete but found to have bugs
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *     *     .
-    widgets/primitives/ev_spin_button.e                 *    o 1   *     .
+    widgets/primitives/ev_spin_button.e                 *    *     *     .
     widgets/primitives/ev_progress_bar.e                *    *     *     .
     widgets/primitives/ev_horizontal_progress_bar.e     *    *     *     .
     widgets/primitives/ev_vertical_progress_bar.e       *    *     *     .

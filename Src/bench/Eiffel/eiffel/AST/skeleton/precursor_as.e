@@ -269,7 +269,10 @@ feature -- Type check, byte code and dead code removal
 							-- Check that `current_item' does conform to its `like argument'.
 							-- Once this is done, then type checking is done on the real
 							-- type of the routine, not the anchor.
-						if not current_item.conform_to (l_like_arg_type) then
+						if
+							not current_item.conform_to (l_like_arg_type) and then
+							not current_item.convert_to (context.current_class, l_like_arg_type)
+						then
 							insert_vuar2_error (a_feature, last_id, i, current_item, l_like_arg_type)
 						end
 					end
@@ -280,7 +283,32 @@ feature -- Type check, byte code and dead code removal
 
 						-- Conformance: take care of constrained genericity
 					if not current_item.conform_to (arg_type) then
-						insert_vuar2_error (a_feature, last_class.class_id, i, current_item, arg_type)
+						if current_item.convert_to (context.current_class, arg_type) then
+							if parameters_convert_info = Void then
+								create parameters_convert_info.make (1, count)
+							end
+							parameters_convert_info.put (context.last_conversion_info, i)
+							if context.last_conversion_info.has_depend_unit then
+								context.supplier_ids.extend (
+									context.last_conversion_info.depend_unit)
+							end
+						elseif
+							current_item.is_expanded and then arg_type.is_external and then
+							current_item.is_conformant_to (arg_type)
+						then
+								-- No need for conversion, this is currently done at the code
+								-- generation level to properly handle the generic case.
+								-- If not done at the code generation, we would need the
+								-- following lines.
+--							if parameters_convert_info = Void then
+--								create parameters_convert_info.make (1, count)
+--							end
+--							parameters_convert_info.put (
+--								create {BOX_CONVERSION_INFO}.make (current_item), i)	
+						else
+							insert_vuar2_error (a_feature, last_class.class_id, i,
+								current_item, arg_type)
+						end
 					end
 
 						-- Insert the attachment type in the
@@ -340,19 +368,29 @@ feature -- Type check, byte code and dead code removal
 		local
 			access_line: ACCESS_LINE
 			params: BYTE_LIST [PARAMETER_B]
+			l_info: CONVERSION_INFO
 			p: PARAMETER_B
 			i, nb: INTEGER
+			l_convert_info: like parameters_convert_info
 		do
 			if parameters /= Void then
 				from
 					nb := parameters.count
 					create params.make_filled (nb)
+					l_convert_info := parameters_convert_info
 					i := 1
 				until
 					i > nb
 				loop
 					create p
-					p.set_expression (parameters.i_th (i).byte_node)
+					if l_convert_info /= Void then
+						l_info := l_convert_info.item (i)
+					end
+					if l_info /= Void then
+						p.set_expression (l_info.byte_node (parameters.i_th (i).byte_node))
+					else
+						p.set_expression (parameters.i_th (i).byte_node)
+					end
 					params.put_i_th (p, i)
 					i := i + 1
 				end
@@ -367,6 +405,7 @@ feature -- Type check, byte code and dead code removal
 					Attachments.forth
 					i := i - 1
 				end
+				parameters_convert_info := Void
 			end
 
 			access_line := context.access_line
@@ -570,5 +609,11 @@ feature {NONE} -- Implementation
 				l.forth
 			end
 		end
+
+feature {NONE} -- Implementation: convertibility
+
+	parameters_convert_info: ARRAY [CONVERSION_INFO]
+			-- For each parameters that need a conversion call, we store info used in `byte_node'
+			-- to generate conversion call
 
 end -- class PRECURSOR_AS

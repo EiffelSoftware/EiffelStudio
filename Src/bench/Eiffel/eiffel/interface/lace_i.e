@@ -20,6 +20,10 @@ feature
 	successfull: BOOLEAN;
 			-- Is the last compilation successfull ?
 
+	old_universe: UNIVERSE_I;
+			-- Universe of the previous compilation
+			-- usefull for checking  the removed clusters
+
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		do
@@ -37,11 +41,11 @@ feature
 			ptr := file_name.to_c;
 			new_date := eif_date ($ptr);
 			if new_date /= date then
-				date := new_date;
 				do_recompilation;
+				date := new_date;
 			elseif Universe.cluster_changed then
 					-- Class file has been removed or added
-				do_recompilation;
+				build_universe;
 			end;
 		end;
 
@@ -50,19 +54,29 @@ feature
 
 	do_recompilation is
 			-- Recompile ACE description
-		local
-			old_universe, new_universe: UNIVERSE_I;
-			old_system, new_system: SYSTEM_I;
 		do
-			old_universe := Universe.twin;
-			old_system := System.twin;
-
 				-- Lace parsing
 			root_ast := Void;
 			Parser.parse_file (file_name);
 			root_ast ?= Parser.ast;
+			build_universe;
+		rescue
+			if exception = Programmer_exception then
+					-- Reset `Workbench'
+				successfull := False;
+			end
+		end;
 
+	build_universe is
+			-- Build the universe using the AST
+		local
+			old_system: SYSTEM_I;
+		do
 			if root_ast /= Void then
+				old_universe := Universe.twin;
+				old_system := System.twin;
+
+				Universe.clusters.wipe_out;
 
 					-- Recompilation
 				root_ast.build_universe;
@@ -73,6 +87,8 @@ feature
 					-- Check sum error
 				Error_handler.checksum;
 
+				old_universe := Void;
+
 				successfull := True;
 			end
 		rescue
@@ -80,6 +96,7 @@ feature
 					-- Reset `Workbench'
 				Universe.copy (old_universe);
 				System.copy (old_system);
+				old_universe := Void;
 				successfull := False;
 			end
 		end;

@@ -123,12 +123,8 @@ feature -- Resizing
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
-		local
-			temp_width, temp_height: INTEGER
 		do
-			temp_width := minimum_width.max(new_width)
-			temp_height := minimum_height.max (new_height)
-			wel_window.resize (temp_width, temp_height)
+			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
 		end
 
 
@@ -136,12 +132,14 @@ feature -- Resizing
 			-- Resize the widget and notify the parent of 
 			-- the resize which must be bigger than the
 			-- minimal size or nothing happens
+		local
+			temp_width, temp_height: INTEGER
 		do
-			parent_ask_resize (new_width, new_height)
+			temp_width := minimum_width.max(new_width)
+			temp_height := minimum_height.max (new_height)
+			wel_window.resize (temp_width, temp_height)
 			if parent_imp /= Void then
-				parent_imp.child_has_resized (minimum_width.max(new_width),
-											  minimum_height.max (new_height),
-											  Current)
+				parent_imp.child_has_resized (temp_width, temp_height, Current)
 			end
 		end
 
@@ -195,6 +193,14 @@ feature -- Resizing
                         -- Set `minimum_width' to `min_width'.
 		do
 			minimum_width := min_width		
+		end
+
+	set_minimum_size (min_width, min_height: INTEGER) is
+			-- set `minimum_width' to `min_width'
+			-- set `minimum_height' to `min_height'
+		do
+			set_minimum_width (min_width)
+			set_minimum_height (min_height)
 		end
 
 

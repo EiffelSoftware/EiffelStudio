@@ -487,7 +487,6 @@ feature {NONE} -- Implementation
 			valid_original_ace: original_ace.is_valid
 		local
 			target_clusters: HASH_TABLE [CLUSTER_SD, STRING]
-			a_cluster: CLUSTER_SD
 		do
 				-- Create hash table of clusters that are 
 				-- in target ace file.

@@ -56,7 +56,7 @@ feature -- Creation
 			arguments := a;
 			labels := l;
 			eiffel_text := s;
-			parent_type := p;
+			set_parent_type (p);
 			set_internal_name (in);
 			visual_name := clone (vn)	
 		end;
@@ -110,17 +110,24 @@ feature -- Namable
 				visual_name := Void
 			else
 				visual_name := clone (s);
-				if has_instances then
-					update_instance_names;
-				end;
 			end;
-			command_catalog.update_name_in_editors (Current);
+			update_instance_names;
+			update_text;
+			if edited then
+			 	command_editor.update_title;
+			end;
+			command_catalog.update_icon_stone (Current);
 		end;
 
 	update_instance_names is
+			-- Update the instances name
+			-- Does Current have instances?
 		local
 			s: STATE;
-			b: BEHAVIOR
+			b: BEHAVIOR;
+			found: BOOLEAN;
+			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
+			ed: CMD_INST_EDITOR
 		do
 			from
 				Shared_app_graph.start
@@ -128,32 +135,42 @@ feature -- Namable
 				Shared_app_graph.off
 			loop
 				s ?= Shared_app_graph.key_for_iteration;
-				if not (s = Void) then
+				if s /= Void then
 					from
 						s.start
 					until
 						s.after 
 					loop
+						found := False;
 						b := s.output.data;
 						from
 							b.start
 						until
-							b.after 
+							b.after or else found
 						loop
-							if (b.output.associated_command = Current) then
-								if b.output.edited then
-									b.output.inst_editor.update_title;
-								end;
-							end;
+							found := b.output.associated_command 
+										= Current;	
 							b.forth
+						end;
+						if found then
+							s.input.update_instance_name_in_editor
 						end;
 						s.forth
 					end;
 				end;
 				Shared_app_graph.forth
 			end
+			inst_editors := associated_instance_editors;
+			from
+				inst_editors.start
+			until
+				inst_editors.after
+			loop
+				ed := inst_editors.item;
+				ed.update_title;
+				inst_editors.forth
+			end
 		end;
-
 
 feature -- Editor
 
@@ -221,13 +238,56 @@ feature -- Inheritance
 
 	set_parent_type (c: CMD) is
 			-- Set parent_type to `c'.
+		local
+			user_cmd: USER_CMD
 		do
-			parent_type := c
+			user_cmd ?= parent_type;	
+			if user_cmd /= Void then
+				user_cmd.remove_descendent (Current)
+			end;
+			parent_type := c;
+			user_cmd ?= c;
+			if user_cmd /= Void then
+				user_cmd.add_descendent (Current)
+			end;
 		end;
 
 	parent_type: CMD;
 			-- Parent type of Current user
 			-- command
+
+	descendents: LINKED_LIST [CMD];
+			-- Descendents using Current command
+
+	has_descendents: BOOLEAN is
+		do
+			Result := descendents /= Void and then
+				not descendents.empty
+		end;
+
+	remove_descendent (c: USER_CMD) is
+		require
+			has_c: descendents.has (c);
+			valid_descendents: descendents /= Void
+		do
+			descendents.start;
+			descendents.prune (c);	
+		ensure
+			not_has_c: not descendents.has (c);
+		end;
+
+	add_descendent (c: USER_CMD) is
+		require
+			not_has_c: descendents = Void or else  not descendents.has (c);
+		do
+			if descendents = Void then
+				!! descendents.make
+			end
+			descendents.put_front (c);	
+		ensure
+			valid_descendents: descendents /= Void
+			has_c: descendents.has (c);
+		end;
 
 feature -- Naming
 
@@ -251,6 +311,10 @@ feature -- Naming
 
 feature {NONE} -- Naming
 
+	Command_seed: STRING is "Command";
+
+	Command_seed_to_lower: STRING is  "command";
+
 	arg_entity_namer: LOCAL_NAMER is
 			-- Argument entities namer
 		once
@@ -272,36 +336,11 @@ feature {NONE} -- Naming
 	namer: NAMER is
 			-- User command namer
 		once
-			!!Result.make ("Command");
+			!!Result.make (Command_seed);
 		end;
 
 feature -- Editing
 
-
-	update_instance_editors is
-			-- Update arguments in the instance 
-			-- editors of Current command.
-		local
-			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
-			ed: CMD_INST_EDITOR
-		do
-			inst_editors := window_mgr.instance_editors;
-			from
-				inst_editors.start
-			until
-				inst_editors.after
-			loop
-				ed := inst_editors.item;
-				if 
-					(ed.command_instance.associated_command = Current)
-				then
-					ed.command_instance.update_arguments;
-					ed.update
-				end;
-				inst_editors.forth
-			end
-		end;
- 
 	set_eiffel_text (s: STRING) is
 			-- Set the eiffel text to
 			-- `s'.
@@ -329,6 +368,40 @@ feature -- Editing
 				eiffel_text := clone (command_editor.eiffel_text);
 				command_editor.set_unsaved_application;
 			end;
+		end;
+
+	overwrite_text is
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			!! file.make (associated_file_name)
+			file.open_write
+			file.putstring (eiffel_text)
+			file.close
+		end;
+
+	save_to_disk is
+			-- Save `eiffel_text' to disk.
+		local
+			file: PLAIN_TEXT_FILE
+			fl_nm: STRING
+		do
+			!! file.make (associated_file_name)
+			if file.exists and then file.is_readable then
+				file.open_read
+				file.readstream (file.count)
+				file.close;
+				if not eiffel_text.is_equal (file.last_string) then
+						-- Update if necessary
+					file.open_write
+					file.putstring (eiffel_text)
+					file.close
+				end
+			else
+				file.open_write
+				file.putstring (eiffel_text)
+				file.close
+			end
 		end;
 
 	set_arguments (args: like arguments) is
@@ -393,20 +466,13 @@ feature  -- Generation
 			-- Template of the Eiffel
 			-- command.
 		local
-			parent_name, temp: STRING;
+			parent_name: STRING;
 			inherited_args: LINKED_LIST [STRING];
 			found: BOOLEAN;
 		do
 			!!Result.make (0);
 			Result.append ("class ");
-			temp := clone (eiffel_type);
-			temp.to_upper;
-			Result.append (temp);
-			-- Add this later
-			--if visual_name /= Void and then not visual_name.empty then
-				--Result.append ("%T%T-- ");
-				--Result.append (visual_name);
-			--end;
+			Result.append (eiffel_type_to_upper);
 			Result.append ("%N%Ninherit%N%N%T");
 			if (parent_type = Void) then
 				if undoable then
@@ -451,20 +517,6 @@ feature  -- Generation
 			end;
 			if (parent_type = Void) then
 				Result.append ("%Texecute is%N%T%Tdo%N");
-				if not labels.empty then
-					from
-						labels.start
-					until
-						labels.after or found
-					loop
-						if (labels.item.parent_type = Void) then
-							Result.append ("%T%T%Tset_transition_label (");
-							Result.append (labels.item.label);
-							Result.append ("_label);%N");
-							found := True;
-						end;
-					end;
-				end;
 				Result.append ("%T%Tend;%N%N");
 			else
 				Result.append (parent_type.eiffel_body_text);
@@ -558,7 +610,6 @@ feature -- Arguments
 				!!remove_argument_cmd;
 				remove_argument_cmd.set_index (arguments.index);
 				remove_argument_cmd.execute (Current);
-				update_instance_editors
 			end
 		end;
 
@@ -645,61 +696,168 @@ feature -- Text generation
 
 	old_template: STRING;
 
-	rescued: BOOLEAN;
+	base_file_name_without_dot_e: FILE_NAME is
+			-- Base file name for Current Command without
+			-- the `.e' extension
+		local
+			tmp: STRING;
+		do
+			tmp := eiffel_type_to_lower;
+			tmp.replace_substring_all (Command_seed_to_lower, 
+						Resources.command_file_name)
+			!! Result.make_from_string (tmp);
+		end;
+
+	base_file_name: FILE_NAME is
+			-- Base file name for Current Command
+		do
+			Result := base_file_name_without_dot_e;
+			Result.add_extension ("e")
+		end;
+
+	associated_file_name: FILE_NAME is
+			-- File name path for Current Command 
+			-- in Generated commands directory
+		local
+			tmp: STRING;
+			tmp_to_lower: STRING
+		do
+			!! Result.make_from_string (Environment.commands_directory)
+			Result.set_file_name (base_file_name)
+		end;
+
+	update_text_if_modified is
+		local
+			file: PLAIN_TEXT_FILE
+			fl_nm: STRING
+		do
+			!! file.make (associated_file_name)
+			if file.exists and then file.is_readable and then
+				not file.empty
+			then
+				file.open_read
+				file.readstream (file.count)
+				file.close;
+				if not eiffel_text.is_equal (file.last_string) then
+						-- Update text
+					perform_diff
+				end
+			else
+				file.open_write
+				file.putstring (eiffel_text)
+				file.close
+			end
+		end;
 
 	update_text is
 			-- Update edited eiffel text by applying
 			-- a `diff3' between the current edited text
 			-- the previous template and the new template.
 			-- Then update class text
+		do
+			if edited then
+				eiffel_text := command_editor.text_editor.text
+			end;
+				-- Save user file content
+			save_to_disk;
+			perform_diff;
+		end;
+
+	perform_diff is
+			-- Perform diff and update the class file
+			-- if there is a difference.
 		local
-			doc: EB_DOCUMENT;
+			mp: MOUSE_PTR;
 			merger: MERGER;
 			temp: STRING;
-			mp: MOUSE_PTR;
+			file: PLAIN_TEXT_FILE;
+			old_template_file: FILE_NAME;
+			new_template: STRING
+			tmp_eiffel_text: STRING;
+			pos: INTEGER
 		do
-			if not rescued then
-				!!mp;
-				mp.set_watch_shape;
-				if edited then
-					temp := command_editor.text_editor.text
-				else
-					temp := eiffel_text;
-				end;
-				!!merger;
-				temp := merger.integrate (temp, old_template, template);
-				if temp = Void then
-					error_box.popup (Current, Messages.update_text_er, label)
-				else
-					if edited then
-						command_editor.text_editor.set_text ("");
-						command_editor.text_editor.append (temp);
-					end;
-					old_template := Void;
-					eiffel_text := temp;
-					!!doc;
-					doc.set_directory_name (Environment.commands_directory);
-					doc.set_document_name (eiffel_type);
-					eiffel_text := clone (temp);
-					if temp.item (1) /= '-' and label /= Void 
-					 	and then not label.empty 
-					then
-						temp.prepend ("%N");
-						temp.prepend (label);
-						temp.prepend ("-- ");
-					end;
-					doc.update (temp);
-					doc := Void;
-				end;
-				mp.restore;
-			else
-				rescued := False;
-				error_box.popup (Current, Messages.update_text_er, label)
+			!!mp;
+			mp.set_watch_shape;
+			!!merger;
+			if old_template = Void then
+				save_old_template
 			end
-		rescue
-			mp.restore;
-			rescued := True;
-			retry
+			new_template := template;
+			merger.integrate_command (associated_file_name, 
+					old_template, new_template);
+			if merger.merge_result /= Void then
+				!! tmp_eiffel_text.make (merger.merge_result.count);
+				if visual_name /= Void then
+					!! temp.make (0);
+					temp.append ("-- ");
+					temp.append (visual_name);
+					temp.append ("%N");
+					tmp_eiffel_text.append (temp);
+				end;
+				tmp_eiffel_text.append (merger.merge_result);
+				old_template := Void;
+				if not tmp_eiffel_text.is_equal (eiffel_text) then
+				   	-- Now save to disk if necessary
+					eiffel_text := tmp_eiffel_text;
+					if edited then
+						pos := command_editor.text_editor.top_character_position;
+						command_editor.text_editor.set_text (eiffel_text);
+						if pos > eiffel_text.count then
+							pos := eiffel_text.count
+						end
+						command_editor.text_editor.set_top_character_position (pos)
+					end;
+						-- Update the user file content
+			   		!! file.make (associated_file_name)
+					file.open_write;
+			   		file.putstring (eiffel_text)
+			   		file.close
+						-- Update the template file content for
+						-- further diffs when user modifies
+						-- outside the ebuild environment.
+					!! old_template_file.make_from_string (Environment.templates_directory);
+					old_template_file.set_file_name (base_file_name_without_dot_e);
+			   		!! file.make (old_template_file)
+					file.open_write;
+			   		file.putstring (new_template)
+			   		file.close
+				end
+			end;
+			mp.restore
+		end;
+
+	retrieve_text_from_disk is
+			-- Retrieve `eiffel_text' from disk, if possible,
+			-- otherwise save `eiffel_text' to disk.
+		local
+			file: PLAIN_TEXT_FILE;
+			disk_file: STRING
+			doc: EB_DOCUMENT
+		do
+			!! file.make (associated_file_name)
+			if file.exists then
+				file.open_read
+				file.readstream (file.count)
+				file.close
+				disk_file := file.last_string;
+				if not disk_file.is_equal (eiffel_text) then
+					disk_file := clone (disk_file);
+					!! doc
+					doc.set_directory_name (Environment.commands_directory)
+					doc.set_document_name (base_file_name_without_dot_e)
+					doc.update (template)
+				end;
+				if doc = Void or else not doc.error then
+					file.open_read
+					file.readstream (file.count)
+					file.close
+					set_eiffel_text (clone (file.last_string))
+				end;
+			else
+				file.open_write
+				file.put_string (eiffel_text)
+				file.close
+			end
 		end;
 
 	save_old_template is
@@ -708,20 +866,11 @@ feature -- Text generation
 			old_template := template
 		end;
 
-
 	remove_class is	
 		local
 			class_file: PLAIN_TEXT_FILE;
-			file_name, temp: STRING;
 		do
-			!!file_name.make(50);
-			file_name.append (Environment.commands_directory);
-			file_name.append ("/");
-			temp := clone (eiffel_type);
-			temp.to_lower;
-			file_name.append (temp);
-			file_name.append (".e");
-			!!class_file.make (file_name);
+			!!class_file.make (associated_file_name);
 			if class_file.exists then
 				class_file.delete;
 			end;
@@ -730,24 +879,13 @@ feature -- Text generation
 	recreate_class is		
 		local
 			class_file: PLAIN_TEXT_FILE;
-			file_name, temp: STRING;
 		do
-			!!file_name.make(50);
-			file_name.append (Environment.commands_directory);
-			file_name.append ("/");
-			temp := clone (eiffel_type);
-			temp.to_lower;
-			file_name.append (temp);
-			file_name.append (".e");
-			!!class_file.make (file_name);
+			!!class_file.make (associated_file_name);
 			if not class_file.exists then
 				class_file.open_write;
 				class_file.putstring (eiffel_text);
 				class_file.close;
 			end;
 		end;
-
-
-
 
 end -- class USER_CMD

@@ -112,19 +112,6 @@ feature -- Basic Exportations
 		
 			l_impl := new_marshalled_cache_manager
 			
-			from
-				i := 0
-				nb := l_native_array.count - 1
-			until
-				i > nb
-			loop
-				l_path := l_native_array.item (i)
-				if l_path.length > 0 then
-					l_impl.assembly_resolver.add_resolver_path_from_file_name (l_path)
-				end
-				i := i + 1
-			end
-			
 				-- consume assemblies
 			from
 				i := 0

@@ -131,10 +131,9 @@ feature -- Status setting
 		end
 
 	set_proxy_information (pi: PROXY_INFORMATION) is
-			-- Set proxy information to `pi'
+			-- Set proxy information to `pi'.
 		require
 			proxy_supported: is_proxy_supported
-			proxy_info_exists: pi /= Void
 		do
 			proxy_information := pi
 		ensure

@@ -12,7 +12,8 @@ class
 create
 	make,
 	make_empty,
-	make_by_pointer
+	make_by_pointer,
+	make_by_pointer_and_count
 
 feature --{NONE} -- Initialization
 

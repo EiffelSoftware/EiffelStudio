@@ -401,7 +401,6 @@ feature {NONE} -- Implementation
 			not_a_class_name_is_empty: not a_class_name.is_empty
 		local
 			l_classes: LIST [CLASS_I]
-			l_class: CLASS_I
 		do
 			l_classes := eiffel_universe.classes_with_name (a_class_name)
 			if l_classes /= Void and then not l_classes.is_empty then

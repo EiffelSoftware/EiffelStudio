@@ -442,6 +442,13 @@ EIF_INTEGER cwin_reg_value_number(
 
 }
 
+void cwin_reg_value_destroy(EIF_POINTER reg_value)
+{
+	REG_VALUE* pRV = (REG_VALUE*) reg_value;
+	free (pRV->data);
+	free (pRV);
+}
+
 EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname,
         EIF_INTEGER key)
 {
@@ -459,12 +466,6 @@ EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname,
 
 }
 
-void cwin_reg_value_destroy (EIF_POINTER reg_value)
-{
-	REG_VALUE* pRV = (REG_VALUE*) reg_value;
-	free (pRV->data);
-	free (pRV);
-}
 
 /*
 --|-------------------------------------------------------------------------

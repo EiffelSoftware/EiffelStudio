@@ -34,10 +34,9 @@ feature -- Access
 		do
 		end
 
-	insert_breakpoint: BOOLEAN is
-			-- Super melt doesn't add a breakpoint.
-		do
-		end
+	insert_breakpoint: BOOLEAN is True
+			-- As supermelting is to be supressed,
+			-- insert_breakpoint is made true.
 
 feature -- Execution
 

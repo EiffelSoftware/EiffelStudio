@@ -247,6 +247,16 @@ feature -- Byte code generation
 				-- Type where the feature is written in
 			static_type := byte_context.current_type.type_id - 1;
 			ba.append_short_integer (static_type);
+
+			-- Put class name in file.
+			-- NOTE: May be removed later.
+
+			if System.java_generation then
+				ba.append_raw_string (byte_context.current_type.associated_class_type.associated_class.name)
+				-- Not a special feature
+				ba.append ('%U')
+			end
+
 				-- No rescue
 			ba.append ('%U');
 

@@ -77,7 +77,7 @@ feature -- Access
 			if Result = 0 then
 				Result := eif_gen_param_id (
 					- 1,
-					eif_gen_create ($Current, 2),
+					eif_gen_create (Current, 2),
 					i)
 				open_types.force (Result, i)
 			end
@@ -412,7 +412,7 @@ feature {NONE} -- Externals
 			end
 		end
 
-	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
+	eif_gen_create (obj: ANY; pos: INTEGER): POINTER is
 			-- Adapt `args' for `idx' and `val'.
 		do
 			check

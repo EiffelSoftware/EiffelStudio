@@ -1,203 +1,203 @@
-af 0036 Afrikaans
-af-ZA 0436 Afrikaans (South Africa)
-ar 0001 Arabic
-ar-AE 3801 Arabic (United Arab Emirates)
-ar-BH 3C01 Arabic (Bahrain)
-ar-DZ 1401 Arabic (Algeria)
-ar-EG 0C01 Arabic (Egypt)
-ar-IQ 0801 Arabic (Iraq)
-ar-JO 2C01 Arabic (Jordan)
-ar-KW 3401 Arabic (Kuwait)
-ar-LB 3001 Arabic (Lebanon)
-ar-LY 1001 Arabic (Libya)
-ar-MA 1801 Arabic (Morocco)
-ar-OM 2001 Arabic (Oman)
-ar-QA 4001 Arabic (Qatar)
-ar-SA 0401 Arabic (Saudi Arabia)
-ar-SY 2801 Arabic (Syria)
-ar-TN 1C01 Arabic (Tunisia)
-ar-YE 2401 Arabic (Yemen)
-az 002C Azerbaijani
-az-AZ 042C Azerbaijani, Latin script (Azerbaijan)
-az-AZ2 082C Azerbaijani, Cyrillic script (Azerbaijan)
-be 0023 Belarusian
-be-BY 0423 Belarusian (Belarus)
-bg 0002 Bulgarian
-bg-BG 0402 Bulgarian (Bulgaria)
-ca 0003 Catalan
-ca-ES 0403 Catalan (Spain)
-cs 0005 Czech
-cs-CZ 0405 Czech (Czech Republic)
-da 0006 Danish
-da-DK 0406 Danish (Denmark)
-de 0007 German
-de-AT 0C07 German (Austria)
-de-CH 0807 German (Switzerland)
-de-DE 0407 German (Germany)
-de-LI 1407 German (Liechtenstein)
-de-LU 1007 German (Luxembourg)
-div 0065 Divehi
-div-MV 0465 Divehi (Maldives)
-el 0008 Greek
-el-GR 0408 Greek (Greece)
-en 0009 English
-en-AU 0C09 English (Australia)
-en-BZ 2809 English (Belize)
-en-CA 1009 English (Canada)
-en-CB 2409 English (Caribbean)
-en-GB 0809 English (United Kingdom)
-en-IE 1809 English (Ireland)
-en-JM 2009 English (Jamaica)
-en-NZ 1409 English (New Zealand)
-en-PH 3409 English (Philippines)
-en-TT 2C09 English (Trinidad and Tobago)
-en-US 0409 English (United States)
-en-ZA 1C09 English (South Africa)
-en-ZW 3009 English (Zimbabwe)
-es 000A Spanish
-es-AR 2C0A Spanish (Argentina)
-es-BO 400A Spanish (Bolivia)
-es-CL 340A Spanish (Chile)
-es-CO 240A Spanish (Colombia)
-es-CR 140A Spanish (Costa Rica)
-es-DO 1C0A Spanish (Dominican Republic)
-es-EC 300A Spanish (Ecuador)
-es-ES 040A Spanish, traditional sort (Spain)
-es-ES2 0C0A Spanish, international sort (Spain)
-es-GT 100A Spanish (Guatemala)
-es-HN 480A Spanish (Honduras)
-es-MX 080A Spanish (Mexico)
-es-NI 4C0A Spanish (Nicaragua)
-es-PA 180A Spanish (Panama)
-es-PE 280A Spanish (Peru)
-es-PR 500A Spanish (Puerto Rico)
-es-PY 3C0A Spanish (Paraguay)
-es-SV 440A Spanish (El Salvador)
-es-UY 380A Spanish (Uruguay)
-es-VE 200A Spanish (Venezuela)
-et 0025 Estonian
-et-EE 0425 Estonian (Estonia)
-eu 002D Basque
-eu-ES 042D Basque (Spain)
-fa 0029 Persian
-fa-IR 0429 Persian (Iran)
-fi 000B Finnish
-fi-FI 040B Finnish (Finland)
-fo 0038 Faroese
-fo-FO 0438 Faroese (Faroe Islands)
-fr 000C French
-fr-BE 080C French (Belgium)
-fr-CA 0C0C French (Canada)
-fr-CH 100C French (Switzerland)
-fr-FR 040C French (France)
-fr-LU 140C French (Luxembourg)
-fr-MC 180C French (Monaco)
-gl 0056 Gallegan
-gl-ES 0456 Gallegan (Spain)
-gu 0047 Gujarati
-gu-IN 0447 Gujarati (India)
-he 000D Hebrew
-he-IL 040D Hebrew (Israel)
-hi 0039 Hindi
-hi-IN 0439 Hindi (India)
-hr 001A Croatian
-hr-HR 041A Croatian (Croatia)
-hu 000E Hungarian
-hu-HU 040E Hungarian (Hungary)
-hy 002B Armenian
-hy-AM 042B Armenian (Armenia)
-id 0021 Indonesian
-id-ID 0421 Indonesian (Indonesia)
-is 000F Icelandic
-is-IS 040F Icelandic (Iceland)
-it 0010 Italian
-it-CH 0810 Italian (Switzerland)
-it-IT 0410 Italian (Italy)
-ja 0011 Japanese
-ja-JP 0411 Japanese (Japan)
-ka 0037 Georgian
-ka-GE 0437 Georgian (Georgia)
-kk 003F Kazakh
-kk-KZ 043F Kazakh (Kazakhstan)
-kn 004B Kannada
-kn-IN 044B Kannada (India)
-ko 0012 Korean
-ko-KR 0412 Korean (Korea)
-kok 0057 Konkani
-kok-IN 0457 Konkani (India)
-ky 0040 Kirghiz
-ky-KZ 0440 Kirghiz (Kazakhstan)
-lt 0027 Lithuanian
-lt-LT 0427 Lithuanian (Lithuania)
-lv 0026 Latvian
-lv-LV 0426 Latvian (Latvia)
-mk 002F Macedonian
-mk-MK 042F Macedonian (Former Yugoslav Republic of Macedonia)
-mn 0050 Mongolian
-mn-MN 0450 Mongolian (Mongolia)
-mr 004E Marathi
-mr-IN 044E Marathi (India)
-ms 003E Malay
-ms-BN 083E Malay (Brunei)
-ms-MY 043E Malay (Malaysia)
-nb-NO 0414 Norwegian Bokmål (Norway)
-nl 0013 Dutch
-nl-BE 0813 Dutch (Belgium)
-nl-NL 0413 Dutch (The Netherlands)
-nn-NO 0814 Norwegian Nynorsk (Norway)
-no 0014 Norwegian
-pa 0046 Panjabi
-pa-IN 0446 Panjabi (India)
-pl 0015 Polish
-pl-PL 0415 Polish (Poland)
-pt 0016 Portuguese
-pt-BR 0416 Portuguese (Brazil)
-pt-PT 0816 Portuguese (Portugal)
-ro 0018 Romanian
-ro-RO 0418 Romanian (Romania)
-ru 0019 Russian
-ru-RU 0419 Russian (Russia)
-sa 004F Sanskrit
-sa-IN 044F Sanskrit (India)
-sk 001B Slovak
-sk-SK 041B Slovak (Slovakia)
-sl 0024 Slovenian
-sl-SI 0424 Slovenian (Slovenia)
-sq 001C Albanian
-sq-AL 041C Albanian (Albania)
-sr 081A Serbian
-sr-SP 081A Serbian, Latin script (Serbia)
-sr-SP2 0C1A Serbian, Cyrillic script (Serbia)
-sv 001D Swedish
-sv-FI 081D Swedish (Finland)
-sv-SE 041D Swedish (Sweden)
-sw 0041 Swahili
-sw-KE 0441 Swahili (Kenya)
-syr 005A Syriac
-syr-SY 045A Syriac (Syria)
-ta 0049 Tamil
-ta-IN 0449 Tamil (India)
-te 004A Telugu
-te-IN 044A Telugu (India)
-th 001E Thai
-th-TH 041E Thai (Thailand)
-tr 001F Turkish
-tr-TR 041F Turkish (Turkey)
-tt 0044 Tatar
-tt-TA 0444 Tatar (Tatarstan)
-uk 0022 Ukrainian
-uk-UA 0422 Ukrainian (Ukraine)
-ur 0020 Urdu
-ur-PK 0420 Urdu (Pakistan)
-uz 0043 Uzbek
-uz-UZ 0443 Uzbek, Latin script (Uzbekistan)
-uz-UZ2 0843 Uzbek, Cyrillic script (Uzbekistan)
-vi 002A Vietnamese
-vi-VN 042A Vietnamese (Viet Nam)
-zhs 0004 Simplified Chinese
-zht 7C04 Traditional Chinese
-zh-CN 0804 Chinese (China)
-zh-HK 0C04 Chinese (Hong Kong SAR)
-zh-MO 1404 Chinese (Macau SAR)
-zh-SG 1004 Chinese (Singapore)
-zh-TW 0404 Chinese (Taiwan)
+n/a,Neutral,0x0000
+iv,invariant culture,0x007F
+af,Afrikaans,0x0036
+af-ZA,Afrikaans - South Africa,0x0436
+sq,Albanian,0x001C
+sq-AL,Albanian - Albania,0x041C
+ar,Arabic,0x0001
+ar-DZ,Arabic - Algeria,0x1401
+ar-BH,Arabic - Bahrain,0x3C01
+ar-EG,Arabic - Egypt,0x0C01
+ar-IQ,Arabic - Iraq,0x0801
+ar-JO,Arabic - Jordan,0x2C01
+ar-KW,Arabic - Kuwait,0x3401
+ar-LB,Arabic - Lebanon,0x3001
+ar-LY,Arabic - Libya,0x1001
+ar-MA,Arabic - Morocco,0x1801
+ar-OM,Arabic - Oman,0x2001
+ar-QA,Arabic - Qatar,0x4001
+ar-SA,Arabic - Saudi Arabia,0x0401
+ar-SY,Arabic - Syria,0x2801
+ar-TN,Arabic - Tunisia,0x1C01
+ar-AE,Arabic - United Arab Emirates,0x3801
+ar-YE,Arabic - Yemen,0x2401
+hy,Armenian,0x002B
+hy-AM,Armenian - Armenia,0x042B
+az,Azeri,0x002C
+Cy-az-AZ,Azeri (Cyrillic) - Azerbaijan,0x082C
+Lt-az-AZ,Azeri (Latin) - Azerbaijan,0x042C
+eu,Basque,0x002D
+eu-ES,Basque - Spain,0x042D
+be,Belarusian,0x0023
+be-BY,Belarusian - Belarus,0x0423
+bg,Bulgarian,0x0002
+bg-BG,Bulgarian - Bulgaria,0x0402
+ca,Catalan,0x0003
+ca-ES,Catalan - Spain,0x0403
+zh-HK,Chinese - Hong Kong S.A.R.,0x0C04
+zh-MO,Chinese - Macau S.A.R.,0x1404
+zh-CN,Chinese - China,0x0804
+zh-CHS,Chinese (Simplified),0x0004
+zh-SG,Chinese - Singapore,0x1004
+zh-TW,Chinese - Taiwan,0x0404
+zh-CHT,Chinese (Traditional),0x7C04
+hr,Croatian,0x001A
+hr-HR,Croatian - Croatia,0x041A
+cs,Czech,0x0005
+cs-CZ,Czech - Czech Republic,0x0405
+da,Danish,0x0006
+da-DK,Danish - Denmark,0x0406
+div,Dhivehi,0x0065
+div-MV,Dhivehi - Maldives,0x0465
+nl,Dutch,0x0013
+nl-BE,Dutch - Belgium,0x0813
+nl-NL,Dutch - The Netherlands,0x0413
+en,English,0x0009
+en-AU,English - Australia,0x0C09
+en-BZ,English - Belize,0x2809
+en-CA,English - Canada,0x1009
+en-CB,English - Caribbean,0x2409
+en-IE,English - Ireland,0x1809
+en-JM,English - Jamaica,0x2009
+en-NZ,English - New Zealand,0x1409
+en-PH,English - Philippines,0x3409
+en-ZA,English - South Africa,0x1C09
+en-TT,English - Trinidad and Tobago,0x2C09
+en-GB,English - United Kingdom,0x0809
+en-US,English - United States,0x0409
+en-ZW,English - Zimbabwe,0x3009
+et,Estonian,0x0025
+et-EE,Estonian - Estonia,0x0425
+fo,Faroese,0x0038
+fo-FO,Faroese - Faroe Islands,0x0438
+fa,Farsi,0x0029
+fa-IR,Farsi - Iran,0x0429
+fi,Finnish,0x000B
+fi-FI,Finnish - Finland,0x040B
+fr,French,0x000C
+fr-BE,French - Belgium,0x080C
+fr-CA,French - Canada,0x0C0C
+fr-FR,French - France,0x040C
+fr-LU,French - Luxembourg,0x140C
+fr-MC,French - Monaco,0x180C
+fr-CH,French - Switzerland,0x100C
+gl,Galician,0x0056
+gl-ES,Galician - Spain,0x0456
+ka,Georgian,0x0037
+ka-GE,Georgian - Georgia,0x0437
+de,German,0x0007
+de-AT,German - Austria,0x0C07
+de-DE,German - Germany,0x0407
+de-LI,German - Liechtenstein,0x1407
+de-LU,German - Luxembourg,0x1007
+de-CH,German - Switzerland,0x0807
+el,Greek,0x0008
+el-GR,Greek - Greece,0x0408
+gu,Gujarati,0x0047
+gu-IN,Gujarati - India,0x0447
+he,Hebrew,0x000D
+he-IL,Hebrew - Israel,0x040D
+hi,Hindi,0x0039
+hi-IN,Hindi - India,0x0439
+hu,Hungarian,0x000E
+hu-HU,Hungarian - Hungary,0x040E
+is,Icelandic,0x000F
+is-IS,Icelandic - Iceland,0x040F
+id,Indonesian,0x0021
+id-ID,Indonesian - Indonesia,0x0421
+it,Italian,0x0010
+it-IT,Italian - Italy,0x0410
+it-CH,Italian - Switzerland,0x0810
+ja,Japanese,0x0011
+ja-JP,Japanese - Japan,0x0411
+kn,Kannada,0x004B
+kn-IN,Kannada - India,0x044B
+kk,Kazakh,0x003F
+kk-KZ,Kazakh - Kazakhstan,0x043F
+kok,Konkani,0x0057
+kok-IN,Konkani - India,0x0457
+ko,Korean,0x0012
+ko-KR,Korean - Korea,0x0412
+ky,Kyrgyz,0x0040
+ky-KZ,Kyrgyz - Kazakhstan,0x0440
+lv,Latvian,0x0026
+lv-LV,Latvian - Latvia,0x0426
+lt,Lithuanian,0x0027
+lt-LT,Lithuanian - Lithuania,0x0427
+mk,FYRO Macedonian,0x002F
+mk-MK,FYRO Macedonian - Former Yugoslav Republic of Macedonia,0x042F
+ms,Malay,0x003E
+ms-BN,Malay - Brunei,0x083E
+ms-MY,Malay - Malaysia,0x043E
+mr,Marathi,0x004E
+mr-IN,Marathi - India,0x044E
+mn,Mongolian,0x0050
+mn-MN,Mongolian - Mongolia,0x0450
+no,Norwegian,0x0014
+nb-NO,Norwegian (Bokmål) - Norway,0x0414
+nn-NO,Norwegian (Nynorsk) - Norway,0x0814
+pl,Polish,0x0015
+pl-PL,Polish - Poland,0x0415
+pt,Portuguese,0x0016
+pt-BR,Portuguese - Brazil,0x0416
+pt-PT,Portuguese - Portugal,0x0816
+pa,Punjabi,0x0046
+pa-IN,Punjabi - India,0x0446
+ro,Romanian,0x0018
+ro-RO,Romanian - Romania,0x0418
+ru,Russian,0x0019
+ru-RU,Russian - Russia,0x0419
+sa,Sanskrit,0x004F
+sa-IN,Sanskrit - India,0x044F
+Cy-sr-SP,Serbian (Cyrillic) - Serbia,0x0C1A
+Lt-sr-SP,Serbian (Latin) - Serbia,0x081A
+sk,Slovak,0x001B
+sk-SK,Slovak - Slovakia,0x041B
+sl,Slovenian,0x0024
+sl-SI,Slovenian - Slovenia,0x0424
+es,Spanish,0x000A
+es-AR,Spanish - Argentina,0x2C0A
+es-BO,Spanish - Bolivia,0x400A
+es-CL,Spanish - Chile,0x340A
+es-CO,Spanish - Colombia,0x240A
+es-CR,Spanish - Costa Rica,0x140A
+es-DO,Spanish - Dominican Republic,0x1C0A
+es-EC,Spanish - Ecuador,0x300A
+es-SV,Spanish - El Salvador,0x440A
+es-GT,Spanish - Guatemala,0x100A
+es-HN,Spanish - Honduras,0x480A
+es-MX,Spanish - Mexico,0x080A
+es-NI,Spanish - Nicaragua,0x4C0A
+es-PA,Spanish - Panama,0x180A
+es-PY,Spanish - Paraguay,0x3C0A
+es-PE,Spanish - Peru,0x280A
+es-PR,Spanish - Puerto Rico,0x500A
+es-ES,Spanish - Spain,0x0C0A
+es-UY,Spanish - Uruguay,0x380A
+es-VE,Spanish - Venezuela,0x200A
+sw,Swahili,0x0041
+sw-KE,Swahili - Kenya,0x0441
+sv,Swedish,0x001D
+sv-FI,Swedish - Finland,0x081D
+sv-SE,Swedish - Sweden,0x041D
+syr,Syriac,0x005A
+syr-SY,Syriac - Syria,0x045A
+ta,Tamil,0x0049
+ta-IN,Tamil - India,0x0449
+tt,Tatar,0x0044
+tt-TA,Tatar - Tatarstan,0x0444
+te,Telugu,0x004A
+te-IN,Telugu - India,0x044A
+th,Thai,0x001E
+th-TH,Thai - Thailand,0x041E
+tr,Turkish,0x001F
+tr-TR,Turkish - Turkey,0x041F
+uk,Ukrainian,0x0022
+uk-UA,Ukrainian - Ukraine,0x0422
+ur,Urdu,0x0020
+ur-PK,Urdu - Pakistan,0x0420
+uz,Uzbek,0x0043
+Cy-uz-UZ,Uzbek (Cyrillic) - Uzbekistan,0x0843
+Lt-uz-UZ,Uzbek (Latin) - Uzbekistan,0x0443
+vi,Vietnamese,0x002A
+vi-VN,Vietnamese - Viet Nam,0x042A

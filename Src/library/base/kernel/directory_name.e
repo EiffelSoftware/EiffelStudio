@@ -31,7 +31,7 @@ feature {NONE} -- Externals
 
 	eif_is_directory_valid (p: POINTER): BOOLEAN is
 		external
-			"C"
+			"C | <path_name.h>"
 		end
 
 end -- class DIRECTORY_NAME

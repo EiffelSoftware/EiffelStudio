@@ -90,12 +90,12 @@ feature -- Basic operations
 				command_handler.update
 			end
 			
-		execute_with_object (an_object: GB_OBJECT) is
+		execute_with_object (object_stone: GB_STANDARD_OBJECT_STONE) is
 				-- Execute `Current' directly with object `an_object'.
 			require
-				an_object_not_void: an_object /= Void
+				object_stone_not_void: object_stone /= Void
 			do
-				clipboard.set_object (an_object)
+				clipboard.set_object (object_stone.object)
 				
 				command_handler.update
 			end

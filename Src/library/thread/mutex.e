@@ -53,22 +53,22 @@ feature {NONE} -- Externals
 
 	eif_thr_mutex_create: POINTER is
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		end
 
 	eif_thr_mutex_lock (a_mutex_pointer: POINTER) is
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		end
 
 	eif_thr_mutex_unlock (a_mutex_pointer: POINTER) is
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		end
 
 	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN is
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		end
 
 invariant

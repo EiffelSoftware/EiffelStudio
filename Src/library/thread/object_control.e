@@ -15,7 +15,7 @@ feature -- Basic operations
 		require
 			valid_object: object /= Void
 		do
-			eif_thr_efreeze (object)
+			eif_thr_freeze (object)
 		end
 
 	unfreeze (object: ANY) is
@@ -23,19 +23,21 @@ feature -- Basic operations
 		require
 			valid_object: object /= Void
 		do
-			eif_thr_eufreeze (object)
+			eif_thr_unfreeze (object)
 		end
 
 feature {NONE} -- Externals
 
-	eif_thr_efreeze (object: ANY) is
+	eif_thr_freeze (object: ANY) is
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_eufreeze (object: ANY) is
+	eif_thr_unfreeze (object: ANY) is
 		external
-			"C"
+			"C | %"hector.h%""
+		alias
+			"eufreeze"
 		end
 
 end -- class OBJECT_CONTROL

@@ -10,19 +10,21 @@ class
 inherit
 	BENCH_WIZARD_ERROR_STATE_WINDOW
 
-creation
+	BENCH_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
+
+create
 	make
 
 feature -- basic Operations
 
 	display_state_text is
+			-- Display message text relative to current state.
 		do
-			title.set_text ("Location Error")
-			message.set_text (
-				"The directory you have choosen doesn't exist and%N%
-				%the Wizard cannot create it.%N%
-				%%N%
-				%Click Back and choose another directory.")
+			title.set_text (Interface_names.t_Location_state)
+			message.set_text (Interface_names.m_Location_state)
 		end
 
 	final_message: STRING is

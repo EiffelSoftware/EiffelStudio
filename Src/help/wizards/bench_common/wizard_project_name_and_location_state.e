@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 		
+	BENCH_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 create
 	make
 			
@@ -29,18 +34,18 @@ feature -- Basic Operation
 			-- Build entries.
 		do 
 			create project_name.make (Current)
-			project_name.set_label_string_and_size ("Project name", 10)
+			project_name.set_label_string_and_size (Interface_names.l_Project_name, 10)
 			project_name.set_textfield_string (wizard_information.project_name)
 			project_name.generate
 			project_name.change_actions.extend (agent on_change_name)
 
 			create project_location.make (Current)
-			project_location.set_label_string_and_size ("Project location", 10)
+			project_location.set_label_string_and_size (Interface_names.l_Project_location, 10)
 			project_location.set_textfield_string (wizard_information.project_location)
 			project_location.enable_directory_browse_button
 			project_location.generate
 
-			create to_compile_b.make_with_text ("Compile the generated project")
+			create to_compile_b.make_with_text (Interface_names.l_Compile_project)
 			if wizard_information.compile_project then
 				to_compile_b.enable_select
 			else
@@ -182,16 +187,11 @@ feature {NONE} -- Implementation
 		end
 		
 	display_state_text is
+			-- Display message text relative to current state.
 		do
-			title.set_text ("Project Name and Project location")
-			subtitle.set_text (
-				"You can choose the name of the project and%N%
-				%the directory where the project will be generated.")
-
-			message.set_text (
-				"Please fill in:%N%
-				%%T The name of the project (without space).%N%
-				%%T The directory where you want the eiffel classes to be generated into.")
+			title.set_text (Interface_names.t_Project_name_and_location_state)
+			subtitle.set_text (Interface_names.st_Project_name_and_location_state)
+			message.set_text (Interface_names.m_Project_name_and_location_state)
 		end
 
 	project_location: WIZARD_SMART_TEXT_FIELD

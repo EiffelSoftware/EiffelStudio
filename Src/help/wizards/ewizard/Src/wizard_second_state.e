@@ -14,6 +14,12 @@ inherit
 			proceed_with_current_info,
 			build
 		end
+
+	WIZARD_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -28,14 +34,14 @@ feature -- Basic Operation
 			right_label: EV_LABEL
 		do 
 				-- Label
-			create left_label.make_with_text ("Generate a wizard with ")
+			create left_label.make_with_text (Interface_names.l_Number_of_state1)
 			left_label.align_text_left
 
 				-- ComboBox
 			create number_state
 			fill_number_state
 
-			create right_label.make_with_text (" states.")
+			create right_label.make_with_text (Interface_names.l_Number_of_state2)
 			right_label.align_text_left
 
 				-- Vision2 architechture
@@ -93,7 +99,7 @@ feature -- Basic Operation
 	proceed_with_current_info is 
 		do
 			Precursor
-			proceed_with_new_state(Create {WIZARD_FINAL_STATE}.make (wizard_information))
+			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make (wizard_information))
 		end
 
 	update_state_information is
@@ -109,10 +115,11 @@ feature -- Basic Operation
 feature {NONE} -- Implementation
 
 	display_state_text is
+			-- Display message text relative to current state.
 		do
-			title.set_text ("Number of States")
-			subtitle.set_text ("You can choose the number of states your wizard will have.")
-			message.set_text ("The number of states is limited to 10.")
+			title.set_text (Interface_names.t_Second_state)
+			subtitle.set_text (Interface_names.st_Second_state)
+			message.set_text (Interface_names.m_Second_state)
 		end
 
 	number_state: EV_COMBO_BOX

@@ -9,24 +9,22 @@ class
 
 inherit
 	BENCH_WIZARD_ERROR_STATE_WINDOW
+	
+	BENCH_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
 
-creation
+create
 	make
 
 feature -- basic Operations
 
 	display_state_text is
+			-- Display message text relative to current state.
 		do
-			title.set_text ("Project Name Error")
-			message.set_text (
-				"The project name that you have specified does not conform%N%
-				%the lace specification.%N%
-				%%N%
-				%A valid project name is not empty and only contains letters,%N%
-				%figures, and underscores. Moreover the first character must%N%
-				%be a letter.%N%
-				%%N%
-				%Click Back and choose a valid project name.")
+			title.set_text (Interface_names.t_Project_name_error_state)
+			message.set_text (Interface_names.m_Project_name_error_state)
 		end
 
 	final_message: STRING is

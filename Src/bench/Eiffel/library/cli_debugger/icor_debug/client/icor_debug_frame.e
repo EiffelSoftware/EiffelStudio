@@ -74,8 +74,6 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		ensure
-			success: last_call_success = 0
 		end
 
 	get_function_token: INTEGER is

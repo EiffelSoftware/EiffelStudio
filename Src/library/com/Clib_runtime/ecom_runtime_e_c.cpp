@@ -2155,6 +2155,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2275,6 +2276,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2392,6 +2394,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2511,6 +2514,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2631,6 +2635,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2750,6 +2755,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2869,6 +2875,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -2988,6 +2995,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3107,6 +3115,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3225,6 +3234,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3343,6 +3353,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3461,6 +3472,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3580,6 +3592,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	
@@ -3699,6 +3712,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 
 // Create C SAFEARRAY from Eiffel array
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT eif_safe_array = 0;
 	static EIF_TYPE_ID ecom_array_tid = -1;
 	

@@ -531,8 +531,43 @@ feature -- Function Evaluation
 
 	Internal_make_from_cil_name: STRING is "make_from_cil";
 	
+	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for STRING
+		local
+			ct: CLASS_TYPE
+			l_mod_name: STRING
+			l_token: INTEGER
+			l_icd_module: ICOR_DEBUG_MODULE
+		do
+			ct := Eiffel_system.String_class.compiled_class.types.first
+			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)					
+			l_token := il_debug_info_recorder.class_token (l_mod_name, ct)
+			l_icd_module := icor_debug_module (l_mod_name)
+			Result := l_icd_module.get_class_from_token (l_token)
+		end
+		
+--| FIXME: JFIAT : we do not need to call the default .ctor ()
+--	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
+--			-- ICorDebugFunction for STRING.ctor (void)
+--		local
+--			l_string_class : CLASS_C
+--			l_mod_name: STRING
+--			l_icd_module: ICOR_DEBUG_MODULE
+--			l_feat_ctor : FEATURE_I
+--			l_feat_ctor_tok: INTEGER
+--
+--		do
+--			l_string_class := Eiffel_system.String_class.compiled_class
+--			l_feat_ctor_tok := 0x060000D5 -- .ctor
+--			l_mod_name := il_debug_info_recorder.module_file_name_for_class (l_string_class.types.first)
+--			l_icd_module := icor_debug_module (l_mod_name)
+--			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
+--		ensure
+--			Result /= Void
+--		end		
+
 	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
-			-- 
+			-- ICorDebugFunction for STRING.make_from_cil
 		local
 			l_string_class : CLASS_C
 			l_mod_name: STRING

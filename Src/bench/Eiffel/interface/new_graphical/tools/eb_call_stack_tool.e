@@ -112,6 +112,12 @@ feature {NONE} -- Initialization
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (~save_call_stack)
 			tb.extend (save_call_stack_cmd.new_mini_toolbar_item)
+			create set_stack_depth_cmd.make
+			set_stack_depth_cmd.set_mini_pixmaps (Pixmaps.Icon_set_stack_depth)
+			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
+			set_stack_depth_cmd.add_agent (~set_stack_depth)
+			set_stack_depth_cmd.enable_sensitive
+			tb.extend (set_stack_depth_cmd.new_mini_toolbar_item)
 			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -226,6 +232,9 @@ feature {NONE} -- Implementation
 	save_call_stack_cmd: EB_STANDARD_CMD
 			-- Command that saves the call stack to a file.
 
+	set_stack_depth_cmd: EB_STANDARD_CMD
+			-- Command that alters the displayed depth of the call stack.
+
 	update_agent: PROCEDURE [ANY, TUPLE []]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
@@ -234,11 +243,13 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			stack: EIFFEL_CALL_STACK
+			tmp_list: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		do
 			ev_application.idle_actions.prune_all (update_agent)			
 			if Application.status /= Void then
 				display_stop_cause
 				stack_list.wipe_out
+				create tmp_list.make (Application.status.where.count)
 				stack := Application.status.where
 				if
 					Application.is_stopped and then
@@ -251,10 +262,11 @@ feature {NONE} -- Implementation
 					until
 						stack.after
 					loop
-						stack_list.extend (element_to_row (stack.item, i))
+						tmp_list.extend (element_to_row (stack.item, i))
 						i := i + 1
 						stack.forth
 					end
+					stack_list.append (tmp_list)
 				else
 					save_call_stack_cmd.disable_sensitive
 				end
@@ -480,6 +492,119 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Implementation: set stack depth command
+
+	set_stack_depth is
+			-- Display a dialog that lets the user change the maximum depth of the call stack.
+		local
+			rb2: EV_RADIO_BUTTON
+			l: EV_LABEL
+			okb, cancelb: EV_BUTTON
+			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
+		do
+				-- Create widgets.
+			create dialog
+			create show_all_radio.make_with_text (Interface_names.l_show_all_call_stack)
+			create rb2.make_with_text (Interface_names.l_Show_only_n_elements)
+			create l.make_with_text (Interface_names.l_Elements)
+			create set_as_default.make_with_text (Interface_names.l_Set_as_default)
+			create element_nb.make_with_value_range (1 |..| 500)
+			create okb.make_with_text (Interface_names.b_Ok)
+			create cancelb.make_with_text (Interface_names.b_Cancel)
+			
+				-- Set widget properties.
+			dialog.set_title (Interface_names.t_Set_stack_depth)
+			dialog.disable_user_resize
+			Layout_constants.set_default_size_for_button (okb)
+			Layout_constants.set_default_size_for_button (cancelb)
+			if Debugger_manager.maximum_stack_depth > 500 then
+				element_nb.set_value (500)
+			elseif Debugger_manager.maximum_stack_depth = -1 then
+				element_nb.set_value (50)
+			else
+				element_nb.set_value (Debugger_manager.maximum_stack_depth)
+			end
+			
+				-- Organize widgets.
+			create vb
+			vb.set_border_width (Layout_constants.Default_border_size)
+			vb.set_padding (Layout_constants.Small_padding_size)
+			vb.extend (show_all_radio)
+			vb.extend (rb2)
+			rb2.enable_select
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (element_nb)
+			hb.disable_item_expand (element_nb)
+			hb.extend (l)
+			hb.disable_item_expand (l)
+			hb.extend (create {EV_CELL})
+			vb.extend (hb)
+			vb.extend (set_as_default)
+			
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (create {EV_CELL})
+			hb.extend (okb)
+			hb.disable_item_expand (okb)
+			hb.extend (cancelb)
+			hb.disable_item_expand (cancelb)
+			vb.extend (hb)
+			
+			dialog.extend (vb)
+
+				-- Set up actions.
+			cancelb.select_actions.extend (~close_dialog)
+			okb.select_actions.extend (~accept_dialog)
+			show_all_radio.select_actions.extend (element_nb~disable_sensitive)
+			rb2.select_actions.extend (element_nb~enable_sensitive)
+			dialog.set_default_push_button (okb)
+			dialog.set_default_cancel_button (cancelb)
+			dialog.show_actions.extend (element_nb~set_focus)
+			
+			dialog.show_modal_to_window (Debugger_manager.debugging_window.window)
+		end
+
+	set_as_default: EV_CHECK_BUTTON
+			-- Button that decides whether the chosen stack depth should be saved in the preferences.
+
+	element_nb: EV_SPIN_BUTTON
+			-- Spin button that indicates how many stack elements should be displayed.
+
+	dialog: EV_DIALOG
+			-- Dialog that lets the user choose how many stack elements he wishes to see.
+
+	show_all_radio: EV_RADIO_BUTTON
+			-- Radio button that indicates whether all stack elements should be displayed.
+
+	close_dialog is
+			-- Close `dialog' without doing anything.
+		do
+			dialog.destroy
+			dialog := Void
+			element_nb := Void
+			set_as_default := Void
+			show_all_radio := Void
+		end
+
+	accept_dialog is
+			-- Close `dialog' without doing anything.
+		local
+			nb: INTEGER
+		do
+			if show_all_radio.is_selected then
+				nb := -1
+			else
+				nb := element_nb.value
+			end
+			if set_as_default.is_selected then
+				set_max_stack_depth (nb)
+			end
+			close_dialog
+			debugger_manager.set_maximum_stack_depth (nb)
 		end
 
 end -- class EB_CALL_STACK_TOOL

@@ -40,6 +40,7 @@
 #	define cwel_scroll_caret(_hwnd_) SendMessage ((HWND) _hwnd_, EM_SCROLLCARET, 0, 0)
 #	define cwel_idc_size IDC_SIZEALL
 #	define cwel_idc_icon IDC_ARROW
+#	define cwel_enum_font_families(_hdc_, _fam_, _proc_, _data_) EnumFontFamilies ((HDC) _hdc_, (LPCSTR) _fam_, (FONTENUMPROC) _proc_, (LPARAM) _data_)
 #else
 #	define cwel_is_win32 FALSE
 #	define cwel_menu_item_not_found 0xFFFF
@@ -50,6 +51,7 @@
 #	define cwel_idc_size IDC_SIZE
 #	define cwel_idc_icon IDC_ICON
 #	define WM_NOTIFY 0x004E /* Not defined in `windows.h' version 3.1 */
+#	define cwel_enum_font_families(_hdc_, _fam_, _proc_, _data_) EnumFontFamilies ((HDC) _hdc_, (LPCSTR) _fam_, (FONTENUMPROC) _proc_, (LPSTR) _data_)
 #endif
 
 #endif /* __WEL__ */

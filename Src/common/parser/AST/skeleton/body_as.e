@@ -10,6 +10,9 @@ class BODY_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 	
@@ -41,6 +44,14 @@ feature -- Properties
 		end;
 
 feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			if content /= Void then
+				Result := content.number_of_stop_points
+			end;
+		end;
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this body has instruction `i'?

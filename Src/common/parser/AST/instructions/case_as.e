@@ -10,6 +10,9 @@ class CASE_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,6 +32,17 @@ feature -- Properties
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points
+		do
+			if compound /= Void then
+				Result := compound.number_of_stop_points
+			end;
+			Result := Result + 1
+		end;
 
 feature {AST_EIFFEL} -- Output
 

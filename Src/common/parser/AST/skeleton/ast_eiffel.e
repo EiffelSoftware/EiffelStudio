@@ -13,6 +13,13 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_TEXT_ITEMS
 
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+		end
+
 feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

@@ -10,6 +10,9 @@ class LOOP_AS
 inherit
 
 	INSTRUCTION_AS
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 
@@ -41,6 +44,22 @@ feature -- Properties
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Loop compound
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1;
+			if from_part /= Void then
+				Result := Result + from_part.number_of_stop_points;
+			end;
+			Result := Result + 1;
+			if compound /= Void then
+				Result := Result + compound.number_of_stop_points;
+			end;
+			Result := Result + 1;
+		end
 
 feature -- Comparison
 

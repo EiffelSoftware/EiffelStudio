@@ -87,7 +87,7 @@ feature -- Access
 			bridge_ok: Result = implementation.menu_bar
 		end
 
-	status_bar: EV_STATUS_BAR is
+	status_bar: EV_WIDGET is
 			-- Horizontal bar at bottom of client area that contains
 			-- helpful information for the user.
 		do
@@ -295,7 +295,7 @@ feature -- Status setting
 			void: menu_bar = Void
 		end
 
-	set_status_bar (a_status_bar: EV_STATUS_BAR) is
+	set_status_bar (a_status_bar: EV_WIDGET) is
 			-- Assign `a_status_bar' to `status_bar'.
 		require
 			no_status_bar_assigned: status_bar = Void
@@ -387,6 +387,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/04/28 21:43:32  brendel
+--| Replaced EV_STATUS_BAR with EV_WIDGET.
+--|
 --| Revision 1.53  2000/04/20 18:30:02  brendel
 --| Added note.
 --|

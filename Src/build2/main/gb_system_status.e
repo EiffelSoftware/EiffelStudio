@@ -24,6 +24,9 @@ feature -- Access
 		-- Used to enable/disable the save button and other
 		-- operations dependent on the user having modified something.
 		
+	is_wizard_system: BOOLEAN
+		-- Is Build behaving as a wizard?
+		
 feature -- Status setting
 
 	set_current_project (new_project_settings: GB_PROJECT_SETTINGS) is
@@ -54,5 +57,14 @@ feature -- Status setting
 		do
 			project_modified := False
 		end
+		
+	enable_wizard_system is
+			-- Assign `True' to `is_wizard_system'.
+			-- There is no corresponding `disable', as
+			-- we set the status once at the start.
+		do
+			is_wizard_system := True
+		end
+		
 
 end -- class GB_SYSTEM_STATUS

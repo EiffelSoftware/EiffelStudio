@@ -97,8 +97,30 @@ feature {NONE} -- WEL Implementation
 			-- No need to erase the background because this
 			-- containers has always the same size than the
 			-- tool-bar.
+		local
+			bk_brush: WEL_BRUSH
+			current_height: INTEGER
 		do
+				-- Retreive the internal `height' of `tool_bar'
+				-- computed from `get_max_size'. This is the height that the
+				-- bar is actually displayed as.
+			current_height := toolbar.get_max_size.height
+			if current_height < height then
+						-- In this situation, `tool_bar' has a `height' greater than its minimum.
+						-- This does not actually change the height of `tool_bar', but instead,
+						-- `Current' in which it is parented. Therfore we must clear the background
+						-- of `Current' that is not occupied by `tool_bar'.
+				bk_brush := toolbar.background_brush
+				invalid_rect.set_top (invalid_rect.top + current_height)
+				if bk_brush /= Void then
+					paint_dc.fill_rect (invalid_rect, bk_brush)
+					bk_brush.delete
+				end
+			end
+				--| Disable the default windows processing and return correct
+				--| value to Windows, i.e. nonzero value.
 			disable_default_processing
+			set_message_return_value (1)
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

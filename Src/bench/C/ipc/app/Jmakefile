@@ -9,10 +9,6 @@
 ;# Where shared archive is located (path and name)
 LIB_RUNTIME = $(TOP)/run-time
 LIB_IDRS = $(TOP)/idrs
-LIB_IDRSNAME = libidr.a
-LIB_MTIDRSNAME = libmtidr.a
-LIB_IDRS_ARCH = $(LIB_IDRS)/$(LIB_IDRSNAME)
-LIB_MTIDRS_ARCH = $(LIB_IDRS)/$(LIB_MTIDRSNAME)
 LIB_SHARED = $(TOP)/ipc/shared
 LIB_IPCNAME = libipc.a
 LIB_MTIPCNAME = libmtipc.a
@@ -50,12 +46,10 @@ MT!f:\.c=.o: !f
 
 NormalObjectRule()
 RemoteTargetDependency(network.o,$(LIB_SHARED),$(LIB_IPCNAME))
-RemoteTargetDependency(network.o,$(LIB_IDRS),$(LIB_IDRSNAME))
-PrelinkedRelocatableTarget(network,$(OBJ),$(LIB_IPC_ARCH) $(LIB_IDRS_ARCH))
+PrelinkedRelocatableTarget(network,$(OBJ),$(LIB_IPC_ARCH))
 
 RemoteTargetDependency(MTnetwork.o,$(LIB_SHARED),$(LIB_MTIPCNAME))
-RemoteTargetDependency(MTnetwork.o,$(LIB_IDRS),$(LIB_MTIDRSNAME))
-PrelinkedRelocatableTarget(MTnetwork,$(MT_OBJ),$(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH))
+PrelinkedRelocatableTarget(MTnetwork,$(MT_OBJ),$(LIB_MTIPC_ARCH))
 
 DependTarget()
 LintTarget()

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			maximum_stack_depth := default_maximum_stack_depth
 			init_commands
 			object_split_position := 200
+			create observers.make (10)
 		end
 
 feature -- Access
@@ -508,6 +509,7 @@ feature -- Debugging events
 		require
 --			debugging_window_set: debugging_window /= Void
 		do
+			Window_manager.display_message (Interface_names.E_running)
 			Application.status.set_max_depth (maximum_stack_depth)
 			if debugging_window = Void then
 				debugging_window ?= Window_manager.last_focused_window
@@ -529,6 +531,15 @@ feature -- Debugging events
 			debug_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+			
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				observers.item.on_application_launched
+				observers.forth
+			end
 		end
 
 	on_application_will_stop is
@@ -542,6 +553,7 @@ feature -- Debugging events
 			st: CALL_STACK_STONE
 			stt: STRUCTURED_TEXT
 		do
+			Window_manager.display_message (Interface_names.E_paused)
 			Application.set_current_execution_stack (1)
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
@@ -580,6 +592,15 @@ feature -- Debugging events
 			debug ("debugger_interface")
 				io.putstring ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
 			end
+			
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				observers.item.on_application_stopped
+				observers.forth
+			end
 		end
 
 	on_application_resumed is
@@ -587,6 +608,7 @@ feature -- Debugging events
 		local
 			stt: STRUCTURED_TEXT
 		do
+			Window_manager.display_message (Interface_names.E_running)
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
@@ -603,11 +625,21 @@ feature -- Debugging events
 			stt.add_new_line
 			output_manager.process_text (stt)
 			window_manager.quick_refresh_all
+			
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				observers.item.on_application_launched
+				observers.forth
+			end
 		end
 
 	on_application_quit is
 			-- Application just quit.
 		do
+			Window_manager.display_message (Interface_names.E_not_running)
 				-- Make all debugging tools disappear.
 			unraise
 				-- Make related buttons insensitive.
@@ -622,6 +654,15 @@ feature -- Debugging events
 			debugging_window := Void
 			output_manager.display_system_info
 			kept_objects.wipe_out
+			
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				observers.item.on_application_killed
+				observers.forth
+			end
 		end
 
 feature -- Basic operations
@@ -640,6 +681,11 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 	dotnet_import_cmd: EB_DOTNET_IMPORT_CMD
 			-- Manage .Net assemblies.
+
+feature {EB_DEBUGGER_OBSERVER} -- Manager implementation
+
+	observers: ARRAYED_LIST [EB_DEBUGGER_OBSERVER]
+			-- List of observers of `Current'.
 
 feature {NONE} -- Implementation
 
@@ -762,6 +808,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (system_cmd)
 
 			toolbarable_commands.extend (Melt_project_cmd)
+			toolbarable_commands.extend (Quick_melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
 			toolbarable_commands.extend (Wizard_precompile_cmd)

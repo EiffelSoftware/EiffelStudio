@@ -533,16 +533,38 @@ feature -- Actions on all windows
 			if not Eiffel_project.compilation_modes.is_precompiling then
 				precompilation_cmd.disable_sensitive
 				melt_project_cmd.enable_sensitive
+				Quick_melt_project_cmd.enable_sensitive
 				freeze_project_cmd.enable_sensitive
 				Finalize_project_cmd.enable_sensitive
 			else
 				melt_project_cmd.enable_sensitive
+				Quick_melt_project_cmd.enable_sensitive
 				freeze_project_cmd.disable_sensitive
 				precompilation_cmd.enable_sensitive
 				Finalize_project_cmd.disable_sensitive
 			end
 
 			for_all (~synchronize_action)
+		end
+
+	display_message (m: STRING) is
+			-- Display a message in status bars of all development windows.
+		require
+			one_line_message: m /= Void and then (not m.has ('%N') and not m.has ('%R'))
+		local
+			cv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			from
+				managed_windows.start
+			until
+				managed_windows.after
+			loop
+				cv_dev ?= managed_windows.item
+				if cv_dev /= Void then
+					cv_dev.status_bar.display_message (m)
+				end
+				managed_windows.forth
+			end
 		end
 
 feature {EB_WINDOW} -- Events
@@ -675,15 +697,25 @@ feature -- Events
 			-- Update the display accordingly, ie gray out all forbidden commands.
 		do
 			Melt_project_cmd.disable_sensitive
+			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
+			from
+				managed_windows.start
+			until
+				managed_windows.after
+			loop
+				managed_windows.item.on_compile
+				managed_windows.forth
+			end
 		end
 
 	on_project_created is
 			-- A new project has been created. Update the state of some commands.
 		do
 			Melt_project_cmd.enable_sensitive
+			Quick_melt_project_cmd.enable_sensitive
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
@@ -697,6 +729,7 @@ feature -- Events
 			if Eiffel_project.initialized then
 				if Eiffel_project.compilation_modes.is_precompiling then
 					Melt_project_cmd.disable_sensitive
+					Quick_melt_project_cmd.disable_sensitive
 					Freeze_project_cmd.disable_sensitive
 					Finalize_project_cmd.disable_sensitive
 					Precompilation_cmd.enable_sensitive
@@ -704,6 +737,7 @@ feature -- Events
 					Run_finalized_cmd.disable_sensitive
 				else
 					Melt_project_cmd.enable_sensitive
+					Quick_melt_project_cmd.enable_sensitive
 					Freeze_project_cmd.enable_sensitive
 					Finalize_project_cmd.enable_sensitive
 					Precompilation_cmd.disable_sensitive
@@ -715,6 +749,7 @@ feature -- Events
 				Document_cmd.enable_sensitive
 			else
 				Melt_project_cmd.disable_sensitive
+				Quick_melt_project_cmd.disable_sensitive
 				Precompilation_cmd.disable_sensitive
 				Freeze_project_cmd.disable_sensitive
 				Finalize_project_cmd.disable_sensitive
@@ -735,6 +770,7 @@ feature -- Events
 			save_favorites
 			for_all (~unload_project_action)
 			Melt_project_cmd.disable_sensitive
+			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
@@ -972,7 +1008,6 @@ feature {NONE} -- Implementation
 			end
 			managed_windows.go_to (saved_cursor)
 		end
-
 
 feature {EB_WINDOW_MANAGER_OBSERVER, EB_WINDOW} -- Observer pattern
 

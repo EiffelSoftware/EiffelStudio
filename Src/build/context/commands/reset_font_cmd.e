@@ -17,6 +17,7 @@ feature
 			context ?= editor.edited_context;
 			context_work;
 			context.set_font_named ("");
+			editor.reset_current_form
 		end;
 
 end

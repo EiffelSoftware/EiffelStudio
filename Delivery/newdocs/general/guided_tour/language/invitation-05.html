@@ -8,7 +8,7 @@
 </HEAD>
 <body bgcolor="#faf0e6">
 <DIV>
-<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel" width="109" height="226"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
 
@@ -19,19 +19,19 @@
 <P CLASS="nn-first">
 <A NAME="pgfId-445006"></A>A class, it was said above, is an implementation of an abstract data type. This means that it describes a set of run-time objects, characterized by the <SPAN CLASS="ff-bold">
 features</SPAN>
- (operations) applicable to them, and by the formal properties of these features. 
+ (operations) applicable to them, and by the formal properties of these features.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445011"></A>Such objects are called the <SPAN CLASS="ff-bold">
 direct instances</SPAN>
-<A NAME="marker-445007"></A><A NAME="marker-445008"></A><A NAME="marker-445009"></A><A NAME="marker-445010"></A> of the class. Classes and objects should not be confused: &quot;class&quot; is a compile-time notion, whereas objects only exist at run time. This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type. 
+<A NAME="marker-445007"></A><A NAME="marker-445008"></A><A NAME="marker-445009"></A><A NAME="marker-445010"></A> of the class. Classes and objects should not be confused: &quot;class&quot; is a compile-time notion, whereas objects only exist at run time. This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type.
 <P CLASS="jj-small">
-<A NAME="pgfId-445012"></A>&quot;Object-Oriented&quot; is a misnomer; &quot;Class-Oriented Analysis, Design and Programming&quot; would be a more accurate description of the method. 
+<A NAME="pgfId-445012"></A>&quot;Object-Oriented&quot; is a misnomer; &quot;Class-Oriented Analysis, Design and Programming&quot; would be a more accurate description of the method.
 <P CLASS="nn-first">
 <A NAME="pgfId-445013"></A>To see what a class looks like, let us look at a simple example, <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
 , which describes bank accounts. But before exploring the class itself it is useful to study how it may be used by other classes, called i<A NAME="marker-445014"></A>ts <SPAN CLASS="ff-bold">
 clients</SPAN>
-<A NAME="marker-445015"></A>. 
+<A NAME="marker-445015"></A>.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445017"></A>A class <SPAN CLASS="ee-text">
 X</SPAN>
@@ -46,7 +46,7 @@ ACCOUNT</SPAN>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
-<A NAME="pgfId-491135"></A>acc: ACCOUNT 
+<A NAME="pgfId-491135"></A>acc: ACCOUNT
 </TD>
 </TR>
 </table></ul><p>
@@ -74,7 +74,7 @@ r</SPAN>
 X</SPAN>
  may use a <SPAN CLASS="ff-bold">
 creation instruction</SPAN>
-<A NAME="marker-445055"></A> of the form 
+<A NAME="marker-445055"></A> of the form
 <p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
@@ -90,7 +90,7 @@ create</SPAN>
 ACCOUNT</SPAN>
 , attaches <SPAN CLASS="ee-text">
 acc</SPAN>
- to that instance, and initializes all its fields to default values. A variant of this notation, studied below, makes it possible to override the default initializations. 
+ to that instance, and initializes all its fields to default values. A variant of this notation, studied below, makes it possible to override the default initializations.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445060"></A>Once the client has attached <SPAN CLASS="ee-text">
 acc</SPAN>
@@ -138,7 +138,7 @@ target</SPAN>
 .</SPAN>
 <SPAN CLASS="ee-text">
 feature_name</SPAN>
-, possibly followed by a list of arguments in parentheses. Features are of two kinds: 
+, possibly followed by a list of arguments in parentheses. Features are of two kinds:
 <UL>
 <p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-445074"></A><SPAN CLASS="ff-bold">
@@ -151,11 +151,11 @@ deposit</SPAN>
 may_withdraw</SPAN>
 , <SPAN CLASS="ee-text">
 withdraw</SPAN>
-, represent computations applicable to instances of the class. 
+, represent computations applicable to instances of the class.
 <p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-445077"></A><SPAN CLASS="ff-bold">
 Attributes</SPAN>
-<A NAME="marker-445075"></A> represent data items associated with these <A NAME="marker-445076"></A>instances. 
+<A NAME="marker-445075"></A> represent data items associated with these <A NAME="marker-445076"></A>instances.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-445079"></A>Routines are further divided into <SPAN CLASS="ff-bold">
@@ -243,7 +243,7 @@ is</SPAN>
 <P CLASS="ee-text">
 <A NAME="pgfId-588234"></A>&nbsp;&nbsp;&nbsp;&nbsp;open (who: PERSON) <SPAN CLASS="ee-keyword">
 is</SPAN>
- 
+
 <P CLASS="ee-comment">
 <A NAME="pgfId-588235"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Assign the account to owner who.
 <P CLASS="ee-text">
@@ -329,11 +329,11 @@ do</SPAN>
 <P CLASS="ee-text">
 <A NAME="pgfId-588260"></A><SPAN CLASS="ee-keyword">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
- 
+
 <P CLASS="ee-text">
 <A NAME="pgfId-588261"></A><SPAN CLASS="ee-keyword">
 end</SPAN>
- -- class ACCOUNT 
+ -- class ACCOUNT
 </TD>
 </TR>
 </table></ul><p>
@@ -354,7 +354,7 @@ end</SPAN>
 balance</SPAN>
  as an attribute, although, as noted, a function would also have been acceptable. Feature <SPAN CLASS="ee-text">
 owner</SPAN>
- is also an attribute. 
+ is also an attribute.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445125"></A>The language definition guarantees automatic <A NAME="marker-445124"></A>initialization, so that the initial balance of an account object will be zero after a creation instruction. Each type has a <A NAME="marker-445126"></A>default initial value: zero for <SPAN CLASS="ee-text">
 INTEGER</SPAN>
@@ -364,7 +364,7 @@ REAL</SPAN>
 BOOLEAN</SPAN>
 , null character for <SPAN CLASS="ee-text">
 CHARACTER</SPAN>
-, and a void reference for reference types. The class designer<A NAME="marker-445127"></A> may also provide clients with different initialization options, as will be seen below in a revised version of this example. 
+, and a void reference for reference types. The class designer<A NAME="marker-445127"></A> may also provide clients with different initialization options, as will be seen below in a revised version of this example.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445128"></A>The other public features, <SPAN CLASS="ee-text">
 open, deposit, withdraw</SPAN>
@@ -394,7 +394,7 @@ is</SPAN>
 minimum_balance</SPAN>
  as a constant attribute, which will not occupy any space in instances of the class; in contrast, every <A NAME="marker-445131"></A>instance has a field for every non-constant attribute such as <SPAN CLASS="ee-text">
 balance</SPAN>
-. 
+.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445132"></A>In Eiffel's object-oriented programming style any operation is relative to a certain object. A client invoking the operation specifies this object by writing the corresponding entity on the left of the dot, as <SPAN CLASS="ee-text">
 acc</SPAN>
@@ -418,7 +418,7 @@ deposit</SPAN>
 owner</SPAN>
  attribute or <SPAN CLASS="ee-text">
 add</SPAN>
- routine relative to the current instance&quot;. 
+ routine relative to the current instance&quot;.
 <P CLASS="nn-normal">
 <A NAME="pgfId-491227"></A>If you need to denote the <A NAME="marker-491226"></A>current object explicitly, you may use the special entity <SPAN CLASS="ee-text">
 Current</SPAN>
@@ -430,7 +430,7 @@ Current</SPAN>
 .</SPAN>
 <SPAN CLASS="ee-text">
 add</SPAN>
-. 
+.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445140"></A>I<A NAME="marker-445137"></A>n some cases, <A NAME="marker-445138"></A>infix or <A NAME="marker-445139"></A>prefix notation will be more convenient than dot notation. For example, if a class <SPAN CLASS="ee-text">
 VECTOR</SPAN>
@@ -453,7 +453,7 @@ plus</SPAN>
 <A NAME="pgfId-445142"></A>The above simple example has shown the basic structuring mechanism of the language: the class. A class describes objects accessible to clients through an official interface comprising some of the class features. Features are implemented as attributes or routines; the implementation of exported features may rely on other, secret ones. <A NAME="marker-445143"></A>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-06.html"><area shape="default" nohref></MAP>
 
-<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
 </BODY>

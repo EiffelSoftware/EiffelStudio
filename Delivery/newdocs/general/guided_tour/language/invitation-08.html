@@ -8,7 +8,7 @@
 </HEAD>
 <body bgcolor="#faf0e6">
 <DIV>
-<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel" width="109" height="226"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
 
@@ -17,17 +17,17 @@
 <H1 CLASS="aa-sec2">
 <A NAME="pgfId-445308"></A>7  EXCEPTI<A NAME="marker-445307"></A>ONS </H1>
 <P CLASS="nn-first">
-<A NAME="pgfId-445310"></A>Whenever there is a <A NAME="marker-445309"></A>contract, the risk exists that someone will break it. This is where exceptions come in. 
+<A NAME="pgfId-445310"></A>Whenever there is a <A NAME="marker-445309"></A>contract, the risk exists that someone will break it. This is where exceptions come in.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445311"></A>Exceptions -- contract violations -- may arise from several causes. One is an assertion violation, if you've selected run-time assertion monitoring. Another is a signal triggered by the hardware or operating system to indicate an abnormal condition such as arithmetic overflow, or an attempt to create a new object when there's not enough memory available.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445313"></A>Unless a routine has made specific provision to handle exceptions, it will <SPAN CLASS="ff-bold">
 fail</SPAN>
-<A NAME="marker-445312"></A> if an exception arises during its execution. This in turn provides one more source of exceptions: a routine that fails triggers an exception in its caller. 
+<A NAME="marker-445312"></A> if an exception arises during its execution. This in turn provides one more source of exceptions: a routine that fails triggers an exception in its caller.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445315"></A>A routine may, however, handle an exception through a <SPAN CLASS="ee-keyword">
 rescue</SPAN>
-<A NAME="marker-445314"></A> clause. This optional clause attempts to &quot;patch things up&quot; by bringing the current object to a stable state (one satisfying the class invariant). Then it can terminate in either of two ways: 
+<A NAME="marker-445314"></A> clause. This optional clause attempts to &quot;patch things up&quot; by bringing the current object to a stable state (one satisfying the class invariant). Then it can terminate in either of two ways:
 <UL>
 <p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-445318"></A>The <SPAN CLASS="ee-keyword">
@@ -38,7 +38,7 @@ retry</SPAN>
 rescue</SPAN>
  clause, before the <SPAN CLASS="ee-keyword">
 retry</SPAN>
-, have attempted to correct the cause of the exception. 
+, have attempted to correct the cause of the exception.
 <p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-445319"></A>If the <SPAN CLASS="ee-keyword">
 rescue</SPAN>
@@ -46,12 +46,12 @@ rescue</SPAN>
 retry</SPAN>
 , then the routine fails: it returns to its caller, immediately triggering an exception. (The caller's <SPAN CLASS="ee-keyword">
 rescue</SPAN>
- clause will be executed according to the same rules.) 
+ clause will be executed according to the same rules.)
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-445320"></A>The principle is that <SPAN CLASS="ff-bold">
 a routine must either succeed or fail</SPAN>
-: it either fulfills its contract, or not; in the latter case it must notify its caller by triggering an exception. 
+: it either fulfills its contract, or not; in the latter case it must notify its caller by triggering an exception.
 <P CLASS="nn-normal">
 <A NAME="pgfId-512460"></A>Usually, only a few routines of a system will explicitly include a <SPAN CLASS="ee-keyword">
 rescue</SPAN>
@@ -98,11 +98,11 @@ message</SPAN>
 <P CLASS="ee-comment">
 <A NAME="pgfId-445329"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Set <SPAN CLASS="ee-text">
 successful</SPAN>
- accordingly. 
+ accordingly.
 <P CLASS="ee-text">
 <A NAME="pgfId-445331"></A><SPAN CLASS="ee-keyword">
 &nbsp;&nbsp;&nbsp;&nbsp;local</SPAN>
-<A NAME="marker-445330"></A> 
+<A NAME="marker-445330"></A>
 <P CLASS="ee-text">
 <A NAME="pgfId-445332"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failures: INTEGER
 <P CLASS="ee-text">
@@ -142,14 +142,14 @@ retry</SPAN>
 <P CLASS="ee-text">
 <A NAME="pgfId-445342"></A><SPAN CLASS="ee-keyword">
 &nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
- 
+
 </TD>
 </TR>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-445343"></A>Initialization rules ensure that <SPAN CLASS="ee-text">
 failures</SPAN>
-, a local entity, is set to zero on entry. 
+, a local entity, is set to zero on entry.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445344"></A>This example illustrates the simplicity of the mechanism: the <SPAN CLASS="ee-keyword">
 rescue</SPAN>
@@ -157,12 +157,12 @@ rescue</SPAN>
 do</SPAN>
  clause). The only role of the <SPAN CLASS="ee-keyword">
 rescue</SPAN>
- clause is to clean up the objects involved, and then either to fail or to retry. 
+ clause is to clean up the objects involved, and then either to fail or to retry.
 <P CLASS="nn-normal">
-<A NAME="pgfId-445345"></A>This disciplined exception mechanism is essential for software developers, who need protection against unexpected events, but cannot be expected to sacrifice safety and simplicity to pay for this protection.<A NAME="marker-445346"></A> 
+<A NAME="pgfId-445345"></A>This disciplined exception mechanism is essential for software developers, who need protection against unexpected events, but cannot be expected to sacrifice safety and simplicity to pay for this protection.<A NAME="marker-445346"></A>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-07.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-09.html"><area shape="default" nohref></MAP>
 
-<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
 </BODY>

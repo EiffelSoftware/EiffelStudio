@@ -184,7 +184,7 @@ feature -- Store/Retrieve
 
 				-- Mark override cluster if set.
 			if has_override_cluster then
-				defaults.extend (new_special_option_sd ("override_cluster",
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.override_cluster,
 					override_cluster_name, False))
 			end
 		end
@@ -296,7 +296,7 @@ feature {NONE} -- Filling
 			val := a_opt.value
 			if opt.is_free_option then
 				free_option ?= opt
-				if free_option.code = free_option.override_cluster then
+				if free_option.code = feature {FREE_OPTION_SD}.override_cluster then
 					has_override_cluster := True
 					override_cluster_name := val.value
 					is_item_removable := True
@@ -432,7 +432,7 @@ feature {NONE} -- Cluster display and saving
 		do
 			free_option ?= opt.option
 			val := opt.value
-			if free_option.code = free_option.profile then
+			if free_option.code = feature {FREE_OPTION_SD}.profile then
 				is_item_removable := True
 				enable_select (override_default_profile)
 				set_selected (profile_check, val.is_yes)
@@ -555,7 +555,7 @@ feature {NONE} -- Cluster display and saving
 			store_cluster_assertions (prop)
 
 			if override_default_profile.is_selected then
-				default_options.extend (new_special_option_sd ("profile", Void, profile_check.is_selected))
+				default_options.extend (new_special_option_sd (feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
 			if override_default_trace.is_selected then

@@ -127,11 +127,11 @@ feature -- Store/Retrieve
 
 				-- Store special compilation type
 			if generation_combo.index_of (generation_combo.selected_item, 1) = msil_code then
-				defaults.extend (new_special_option_sd ("msil_generation", Void, True))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation, Void, True))
 --			elseif generation_combo.index_of (generation_combo.selected_item, 1) = java_code then
---				defaults.extend (new_special_option_sd ("java_generation", Void, True))
+--				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.java_generation, Void, True))
 --			else
---				defaults.extend (new_special_option_sd ("java_generation", Void, False))
+--				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.java_generation, Void, False))
 			end
 		end
 
@@ -271,7 +271,7 @@ feature {NONE} -- Filling
 				is_item_removable := True
 			elseif opt.is_free_option then
 				free_option ?= opt
-				if free_option.code = free_option.msil_generation then
+				if free_option.code = feature {FREE_OPTION_SD}.msil_generation then
 					if generation_combo.is_sensitive then
 						enable_select (generation_combo.i_th (msil_code))
 					else
@@ -280,7 +280,7 @@ feature {NONE} -- Filling
 						generation_combo.disable_sensitive
 					end
 					is_item_removable := True
---				elseif free_option.code = free_option.java_generation then
+--				elseif free_option.code = feature {FREE_OPTION_SD}.java_generation then
 --					if generation_combo.is_sensitive then
 --						enable_select (generation_combo.i_th (java_code))
 --					end
@@ -509,9 +509,9 @@ feature {NONE} -- Initialization
 
 				-- As soon as we do a successful compilation we cannot
 				-- change some options.
-			set_only_once_widgets.extend (precompiled_combo)
-			set_only_once_widgets.extend (generation_combo)
-			set_only_once_widgets.extend (compilation_combo)
+			widgets_set_before_has_compilation_started.extend (precompiled_combo)
+			widgets_set_before_has_compilation_started.extend (generation_combo)
+			widgets_set_before_has_compilation_started.extend (compilation_combo)
 		end
 
 	generation_type_frame (st: STRING): EV_FRAME is

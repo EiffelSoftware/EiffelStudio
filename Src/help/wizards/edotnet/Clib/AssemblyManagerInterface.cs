@@ -86,10 +86,11 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 	// Dependencies of local assemblies with filename `Filename'
 	public String [] LocalAssemblyDependencies( String Filename )
 	{
-		Assembly assembly;
+		Assembly assembly, aDependency;
 		ArrayList dependencies;
-		int i;
-		String [] localDependencies;
+		int i, j;
+		String [] localDependencies, assemblyDependencies;
+		String aLocation, aFullName;
 		
 		assembly = Assembly.LoadFrom( Filename );
 		if( assembly != null )
@@ -100,7 +101,23 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 				localDependencies = new String [dependencies.Count];
 				for( i = 0; i < dependencies.Count; i++ )
 					localDependencies [i] = ( ( Assembly )dependencies [i] ).Location;
-				return localDependencies;
+			
+				assemblyDependencies = new String [2 * localDependencies.Length];
+				j = 0;
+				for( i = 0; i < localDependencies.Length; i++ )
+				{
+					aLocation = ( String )localDependencies [i];
+					aDependency = Assembly.LoadFrom( aLocation );
+					aFullName = aDependency.FullName;
+					aFullName = aFullName.Substring( 0, aFullName.IndexOf( "Version" ) );
+					aFullName = aFullName.TrimEnd();
+					aFullName = aFullName.Replace( ",", "" );
+					assemblyDependencies [j] = aFullName;
+
+					assemblyDependencies [j + 1] = aLocation;
+					j = j + 2;
+				}
+				return assemblyDependencies;
 			}
 			else
 				return null;

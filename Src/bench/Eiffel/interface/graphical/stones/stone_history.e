@@ -1,7 +1,7 @@
 indexing
 	description: "Lists of a given number of stones. Stones are added %
-			%to the end and older stones are thrown away.";
-	date: "$Date$";
+			%to the end and older stones are thrown away."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class
@@ -9,14 +9,8 @@ class
 
 inherit
 	TWO_WAY_LIST [STONE]
-		rename
-			extend as twl_extend
-		export
-			{NONE} all;
-			{ANY} item, forth, back, isfirst, islast, wipe_out, empty, go_to;
-			{ANY} after, before, index, go_i_th, start, finish, make, has, cursor
 		redefine
-			make
+			make, extend
 		end
 
 	EB_CONSTANTS
@@ -52,7 +46,7 @@ feature -- Resource Update
 		do
 			if old_res = General_resources.history_size then
 				if new_res.actual_value >= 1 and new_res.actual_value <= 100 then
-					old_res.update_with (new_res);
+					{RESOURCE_USER} precursor (old_res, new_res)
 					rearrange_history
 				end
 			end
@@ -64,7 +58,7 @@ feature -- Status setting
 			-- Set `do_not_update' to `b'.
 		do
 			do_not_update := b
-		end;
+		end
 
 feature -- Element change
 
@@ -74,25 +68,22 @@ feature -- Element change
 			-- Do not insert `v' if it was the last inserted item.
 			-- Move the cursor to the last inserted stone.
 		do
-			if not do_not_update and then v /= Void
-				and then (empty or else not v.same_as (last)
-				or else not equal (v.signature, item.signature))
+			if
+				not do_not_update and then v /= Void and then
+				(empty or else not v.same_as (last) or else
+				not equal (v.signature, last.signature))
 			then
-				if not empty and then not islast then
-					from
-					until
-						islast
-					loop
-						remove_right
-					end
+				if
+					not empty and then
+					not islast and then
+					(not item.same_as (last) or else not equal (item.signature, last.signature))
+				then
+					{TWO_WAY_LIST} precursor (item)
 				end
 
-				twl_extend (v)
+				{TWO_WAY_LIST} precursor (v)
 
-				if count > capacity then
-					start
-					remove
-				end
+				rearrange_history				
 
 				finish
 			end
@@ -103,26 +94,30 @@ feature {NONE} -- Measurement
 	capacity: INTEGER is
 			-- Maximum number of items
 		do
-			Result := General_resources.history_size.actual_value;
+			Result := General_resources.history_size.actual_value
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
 				Result := 20
 			end
-		end;
+		end
 
 feature {NONE} -- Resizing
 
 	rearrange_history is
 			-- Rearrange the history according to the resource value.
+		local
+			c: CURSOR
 		do
 			from
+				c := cursor
 				start
 			until
 				count <= capacity 
 			loop
 				remove
 				start
-			end				
+			end		
+			go_to (c)		
 		end
 
 feature -- Synchronization
@@ -139,20 +134,20 @@ feature -- Synchronization
 			until
 				after
 			loop
-				new_stone := item.synchronized_stone;
+				new_stone := item.synchronized_stone
 				if new_stone /= Void then
 					put (new_stone)
 					forth
 				else
 					remove
-				end;
-			end;
+				end
+			end
 			finish
-		end;
+		end
 	
 invariant
 
-	positive_capacity: capacity > 0;
+	positive_capacity: capacity > 0
 	bounded_count: count <= capacity
 
 end -- class STONE_HISTORY

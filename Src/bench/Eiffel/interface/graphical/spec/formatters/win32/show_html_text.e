@@ -1,6 +1,6 @@
 indexing
-	description: "Command to display text. No warning or watch cursor.";
-	date: "$Date$";
+	description: "Command to display text. No warning or watch cursor."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class SHOW_HTML_TEXT  
@@ -13,6 +13,8 @@ inherit
 
 	EB_CONSTANTS
 
+	WEL_ECO_CONSTANTS
+
 creation
 	make
 
@@ -21,116 +23,115 @@ feature -- format
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
 		local
-			stone_text, class_name: STRING;
-			filed_stone: FILED_STONE;
-			classc_stone: CLASSC_STONE;
-			e_class: E_CLASS;
-			class_tool: CLASS_W;
-			modified_class: BOOLEAN;
-			retried: BOOLEAN;
-			same_stone, error: BOOLEAN;
-			mp: MOUSE_PTR;
-			cur: CURSOR;
+			stone_text, class_name: STRING
+			filed_stone: FILED_STONE
+			classc_stone: CLASSC_STONE
+			e_class: E_CLASS
+			class_tool: CLASS_W
+			modified_class: BOOLEAN
+			retried: BOOLEAN
+			same_stone, error: BOOLEAN
+			mp: MOUSE_PTR
+			cur: CURSOR
 			st: STRUCTURED_TEXT
 		do
-			if not retried then
-				classc_stone ?= stone;
-				if classc_stone /= Void and then classc_stone.is_valid then
-					e_class := classc_stone.e_class;
-					modified_class := not e_class.is_precompiled and then
-						e_class.lace_class.date_has_changed and then	not e_class.has_syntax_error
-				end
-				if
-					do_format or filtered or modified_class or else
-					(tool.last_format.associated_command /= Current or
-					stone /= Void and then not stone.same_as (tool.stone))
-				then
-					if stone /= Void and then stone.is_valid then
-						same_stone := stone.same_as (tool.stone);
-						display_temp_header (stone);
-						!! mp.set_watch_cursor;
-						stone_text := stone.origin_text;
-						if stone_text = Void then
-							stone_text := "";
-							filed_stone ?= stone;
-							if filed_stone /= Void then
-								if filed_stone.file_name /= Void then
-									error := true;
-									warner (popup_parent).gotcha_call 	
-										(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
-								else
-									error := true;
-									warner (popup_parent).gotcha_call 
-										(Warning_messages.w_No_associated_file)
-								end;
-							end			
-						end;
-						class_tool ?= tool;
-						if 
-							class_tool /= Void and then (
-							(same_stone and tool.last_format = class_tool.showclick_frmt_holder) or
-							(do_format and tool.last_format.associated_command = Current))
-						then
-							cur := text_window.cursor
-						end
-
-						text_window.clear_window;
-						tool.set_editable_text;
-						filed_stone ?= stone;
-						if filed_stone = Void then
-							tool.set_file_name (Void);
-						else
-							tool.set_file_name (file_name (filed_stone));
-						end;
-						tool.set_stone (stone);
-						text_window.set_text (stone_text)
-						tool.update_save_symbol;
-						if stone.clickable then
-							if modified_class then
-								if not error and not do_format then
-										-- Do not display the warning message
-										-- if the format has been changed
-										-- internally (resynchronization, ...)
-									class_name := classc_stone.e_class.name;
-									error := true;
-									warner (popup_parent).gotcha_call 
-										(Warning_messages.w_Class_modified (class_name))
-								end
-							elseif st = Void then
-								text_window.update_clickable_from_stone (stone)
+			class_tool ?= tool
+			if class_tool /= Void then
+				if not retried then
+					classc_stone ?= stone
+					if classc_stone /= Void and then classc_stone.is_valid then
+						e_class := classc_stone.e_class
+						modified_class := not e_class.is_precompiled and then
+							e_class.lace_class.date_has_changed and then not e_class.has_syntax_error
+					end
+					if
+						do_format or filtered or modified_class or else
+						(class_tool.last_format.associated_command /= Current or
+						stone /= Void and then not stone.same_as (class_tool.stone))
+					then
+						if stone /= Void and then stone.is_valid then
+							same_stone := stone.same_as (class_tool.stone)
+							display_temp_header (stone)
+							!! mp.set_watch_cursor
+							stone_text := stone.origin_text
+							if stone_text = Void then
+								stone_text := ""
+								filed_stone ?= stone
+								if filed_stone /= Void then
+									error := true
+									if filed_stone.file_name /= Void then
+										warner (popup_parent).gotcha_call 	
+											(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+									else
+										warner (popup_parent).gotcha_call 
+											(Warning_messages.w_No_associated_file)
+									end
+								end			
 							end
-						end;
+							if 
+								(same_stone and class_tool.last_format = class_tool.showclick_frmt_holder)
+								or else (do_format and class_tool.last_format.associated_command = Current)
+							then
+								cur := text_window.cursor
+							end
 
-						text_to_html (text_window)
+							text_window.clear_window
+							class_tool.set_editable_text
+							filed_stone ?= stone
+							if filed_stone = Void then
+								class_tool.set_file_name (Void)
+							else
+								class_tool.set_file_name (file_name (filed_stone))
+							end
+							class_tool.set_stone (stone)
+							text_window.set_text (stone_text)
 
-						if cur /= Void then
-							text_window.go_to (cur)
-						else
-							text_window.set_top_character_position (0)
+							if cur /= Void then
+								text_window.go_to (cur)
+							else
+								text_window.set_top_character_position (0)
+							end
+
+							class_tool.update_save_symbol
+							if stone.clickable then
+								if modified_class then
+									if not error and not do_format then
+											-- Do not display the warning message
+											-- if the format has been changed
+											-- internally (resynchronization, ...)
+										class_name := classc_stone.e_class.name
+										error := true
+										warner (popup_parent).gotcha_call 
+											(Warning_messages.w_Class_modified (class_name))
+									end
+								elseif st = Void then
+									class_tool.update_clickable_format (classc_stone.e_class)
+								end
+							end
+
+							text_to_html (text_window)
+
+							class_tool.set_mode_for_editing
+							class_tool.show_editable_text
+
+							class_tool.set_last_format (holder)
+							display_header (stone)
+							mp.restore
 						end
-
-						tool.set_mode_for_editing;
-						tool.show_editable_text;
-
-						tool.set_last_format (holder);
-						display_header (stone);
-						mp.restore
-					end;
-					filtered := false
+						filtered := false
+					end
+				else
+					warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info)
 				end
-			else
-				!! mp.do_nothing;
-				mp.restore
-				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
 			end
 		rescue
 			if original_exception = Io_exception then
 					-- We probably don't have the read permissions
 					-- on the server files.
-				retried := true;
+				retried := true
 				retry
 			end
-		end;
+		end
 
 feature {NONE}
 
@@ -139,13 +140,14 @@ feature {NONE}
 			-- the names of the features
 		local
 			g_window: GRAPHICAL_TEXT_WINDOW
-			imp: TABBED_TEXT_WINDOWS
+			imp: SCROLLED_TEXT_WINDOWS
 			html_format: WEL_CHARACTER_FORMAT
 			click_item: CLICK_STONE
 			click_array: ARRAY [CLICK_STONE]
 			i: INTEGER
 			count: INTEGER
 			top_position: INTEGER
+			new_options, old_options: INTEGER
 		do
 			if general_resources.browsing_facilities.actual_value then
 				g_window ?= window
@@ -158,19 +160,38 @@ feature {NONE}
 							g_window.set_changed (True)
 							imp := g_window.implementation
 							html_format := g_window.html_format
+
+								--| Prepare the update and save old_values
 							imp.hide_selection
 							top_position := imp.top_character_position
+							
+								--| Get the old options of the window
+								--| in order to put new ones which will makes
+								--| the window not move
+							old_options := imp.options
+							new_options := Eco_selectionbar
+							imp.set_options (Ecoop_set, new_options)
+
+								--| For good looking update reasons, I'm going to the
+								--| end of the text to avoid a anooying flashing
+							imp.set_cursor_position (imp.count)
+
 						until
 							i > count or else click_array.item (i) = Void
 						loop
 							click_item := click_array.item (i)
 							imp.wel_set_selection (click_item.start_position, click_item.end_position)
-							imp.set_character_format_word (html_format);
+							imp.set_character_format_selection (html_format)
 							i := i + 1
 						end
-						imp.set_top_character_position (top_position)
+
+							--| Restore the previous state of the window
 						imp.wel_set_selection (top_position, top_position)
+						imp.move_to_selection
+						imp.set_options (Ecoop_set, old_options)
 						imp.show_selection
+
+							--| Enable updates
 						g_window.set_changed (False)
 					end
 				end

@@ -8,7 +8,7 @@ indexing
 class OBJECT_CATEGORY
 
 inherit
-	RESOURCE_CATEGORY
+	EDITOR_RESOURCE_CATEGORY
 
 creation
 	make
@@ -40,12 +40,5 @@ feature -- Validation
 		do
 			Result := True
 		end
-
-feature -- Resources
-
-	tool_width: INTEGER_RESOURCE;
-	tool_height: INTEGER_RESOURCE;
-	command_bar: BOOLEAN_RESOURCE;
-	format_bar: BOOLEAN_RESOURCE
 
 end -- class OBJECT_CATEGORY

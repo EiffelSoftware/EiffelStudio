@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"Stone that has a file name associated with it.";
-	date: "$Date$";
+	description: "Stone that has a file name associated with it."
+	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class FILED_STONE 
+deferred class
+	FILED_STONE 
 
 inherit
-
 	STONE
 		undefine
 			header
@@ -45,8 +43,10 @@ feature -- Access
 
 feature -- Setting
 
-	set_file_name (s: STRING) is deferred end;
+	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
+		deferred
+		end
 
 feature -- Status report
 
@@ -56,6 +56,6 @@ feature -- Status report
 			Result := file_name /= Void
 		ensure then
 			Result implies file_name /= Void
-		end;
+		end
 
 end -- class FILED_STONE

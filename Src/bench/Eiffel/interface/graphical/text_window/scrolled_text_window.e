@@ -1,47 +1,27 @@
 indexing
-
-	description:	
-		"Notion of a text of some tool. Widget that is able %
-			%to edit text.";
-	date: "$Date$";
+	description: "Notion of a text of some tool. Widget that is able %
+				%to edit text."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class SCROLLED_TEXT_WINDOW 
+class
+	SCROLLED_TEXT_WINDOW 
 
 inherit
-
 	SCROLLED_T
 		rename
-			set_text as st_set_text,
-			make as text_create,
 			cursor as widget_cursor,
-			lower as lower_window,
-			set_background_color as old_set_background_color,
-			set_cursor_position as st_set_cursor_position,
-			set_top_character_position as st_set_top_character_position,
-			set_font as set_text_font
-		export
-			{NONE} st_set_cursor_position, st_set_top_character_position
-		undefine
-			copy, setup, consistent, is_equal
-		end;
-	SCROLLED_T
-		rename
-			set_text as st_set_text,
-			make as text_create,
-			cursor as widget_cursor,
-			set_cursor_position as st_set_cursor_position,
-			set_top_character_position as st_set_top_character_position,
 			lower as lower_window
-		export
-			{NONE} st_set_cursor_position, st_set_top_character_position
 		undefine
-			copy, setup, consistent, is_equal
+			is_equal, copy, consistent, setup
 		redefine
-			set_background_color, set_font
-		select
-			set_background_color, set_font
-		end;
+			make,
+			set_cursor_position,
+			set_text,
+			set_top_character_position,
+			set_background_color
+		end
+
 	CLICK_WINDOW
 		rename
 			hole_target as source,
@@ -49,69 +29,74 @@ inherit
 			text_count as count,
 			widget as source
 		redefine
-			clear_window, display, 
-			update_before_transport, initial_coord,
-			update_after_transport, set_font_to_default
-		end;
+			clear_window,
+			display, 
+			update_before_transport,
+			initial_coord,
+			update_after_transport,
+			set_font_to_default
+		end
+
 	SHARED_APPLICATION_EXECUTION
 		undefine
-			copy, setup, consistent, is_equal
-		end;
+			is_equal, copy, consistent, setup
+		end
+
 	WIDGET_ROUTINES
 		undefine
-			copy, setup, consistent, is_equal
+			is_equal, copy, consistent, setup
 		end
+
 	EB_CONSTANTS
 		undefine
-			copy, setup, consistent, is_equal
+			is_equal, copy, consistent, setup
 		end
 
 creation
-
 	make,
 	make_from_tool
 
 feature -- Initialization
 
-	make_from_tool (a_name: STRING; a_tool: TOOL_W) is
+	make_from_tool (a_name: STRING a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require
 			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
 		do
-			make (a_name, a_tool.global_form);
-			a_tool.init_modify_action (Current);
-		end;
+			make (a_name, a_tool.global_form)
+			a_tool.init_modify_action (Current)
+		end
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING a_parent: COMPOSITE) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
-		require
+		require else
 			valid_parent: a_parent /= Void 
 		do
-			text_create (a_name, a_parent);
-			initialize_transport;
+			{SCROLLED_T} precursor (a_name, a_parent)
+			initialize_transport
 			upper := -1 			-- Init clickable array.
 
-			add_modify_action (Current, modify_event_action);
+			add_modify_action (Current, modify_event_action)
 			set_action ("Ctrl<Btn3Down>", Current, new_tooler_action)
 			set_action ("Ctrl<Btn1Down>", Current, retarget_tooler_action)
 			set_action ("Shift<Btn3Down>", Current, super_melt_action)
 			set_action ("Ctrl Shift<Btn3Down>", Current, insert_breakpoint_action)
-		end;
+		end
 
 	init_resource_values is
 			-- Initialize the resource values.
 		local
 			f: FONT
 		do
-			set_foreground_color (Graphical_resources.text_foreground_color.actual_value);
+			set_foreground_color (Graphical_resources.text_foreground_color.actual_value)
 			set_scrolled_text_background_color (implementation, Graphical_resources.text_background_color.actual_value)
-			f := Graphical_resources.text_font.actual_value;
+			f := Graphical_resources.text_font.actual_value
 			if f /= Void then
-				set_text_font (f)
+				set_font (f)
 			end
-		end;
+		end
 
 feature -- Drag source/Hole properties
 
@@ -119,11 +104,11 @@ feature -- Drag source/Hole properties
 			-- Target widget of hole
 		do
 			Result := Current
-		end;
+		end
 
 feature -- Properties
 
-	last_found_position: INTEGER;
+	last_found_position: INTEGER
 			-- Start position of last successful search 
 
 feature -- Access
@@ -132,43 +117,43 @@ feature -- Access
 			-- Default font
 		once
 			!! Result.put (font)
-		end;
+		end
 
 	cursor: SCROLLED_WINDOW_CURSOR is
 			-- Current cursor position in scrolled text 
 		do
 			!! Result.make (cursor_position, top_character_position)
-		end;
+		end
 
 	current_line: INTEGER is
 			-- Current line in text
 		local
-			text_value: STRING;
+			text_value: STRING
 			text_count, pos, i: INTEGER
 		do
 			from
-				text_value := text;
-				pos := cursor_position;
-				text_count := text_value.count;
-				Result := 1;
+				text_value := text
+				pos := cursor_position
+				text_count := text_value.count
+				Result := 1
 				i := 1
 			until
 				i >= pos or i > text_count
 			loop
 				if text_value.item (i) = '%N' then
 					Result := Result + 1
-				end;
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 feature -- Changing
 
 	set_font_to_default is
 			-- Set font to the default value.
 		do
-			--set_text_font (default_font.item)
-		end;
+			set_font (default_font.item)
+		end
 
 	set_changed (b: BOOLEAN) is
 			-- Set `changed' to b.
@@ -176,44 +161,38 @@ feature -- Changing
 			changed := b
 		ensure then
 			set: changed = b
-		end;
+		end
 
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		do
-			set_editable;
-			changed := True;
-			st_set_text (a_text);
-			changed := False;
+			set_editable
+			changed := True
+			{SCROLLED_T} precursor (a_text)
+			changed := False
 		ensure then
 			not_changed: not changed	
-		end;
+		end
 
 	set_background_color (new_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			old_set_background_color (new_color)
+			{SCROLLED_T} precursor (new_color)
 			set_scrolled_text_background_color (implementation, 
 				Graphical_resources.text_background_color.actual_value)
-		end;
-
-	set_font (a_font: FONT) is
-			-- Set `font' to `a_font'
-			-- Do nothing in this case
-		do
-		end;
+		end
 
 feature -- Displaying
 
 	display is
 			-- Display the `image' to the text window.
 		do
-			set_editable;
-			set_text (image);
+			set_editable
+			set_text (image)
 			set_read_only
 		ensure then
 			up_to_date: not changed
-		end;
+		end
 
 feature -- Search
 
@@ -222,7 +201,7 @@ feature -- Search
 			-- highlight it if found.
 		local
 			click_stone: CLICK_STONE
-			i: INTEGER;
+			i: INTEGER
 			stone_found: BOOLEAN
 		do
 			from
@@ -230,38 +209,38 @@ feature -- Search
 			until
 				stone_found or i > clickable_count
 			loop
-				click_stone := item (i);
+				click_stone := item (i)
 				if a_stone.same_as (click_stone.node) then
 					set_bounds (click_stone.start_position, 
-						click_stone.end_position);
-					highlight_focus;
+						click_stone.end_position)
+					highlight_focus
 					stone_found := true
-				end;
+				end
 				i := i + 1
 			end
-		end;
+		end
 
 feature -- Cursor movement
 
 	go_to (a_cursor: CURSOR) is
 			-- Go to `a_cursor) position
 		local
-			cur: SCROLLED_WINDOW_CURSOR;
-			c: INTEGER;
+			cur: SCROLLED_WINDOW_CURSOR
+			c: INTEGER
 			last_cursor_position, last_top_position: INTEGER
 		do
-			cur ?= a_cursor;
+			cur ?= a_cursor
 			if cur /= Void then
-				last_cursor_position := cur.cursor_position;
-				last_top_position := cur.top_character_position;
-				c := count;
+				last_cursor_position := cur.cursor_position
+				last_top_position := cur.top_character_position
+				c := count
 				if last_cursor_position > c then
 					last_cursor_position := c
-				end;
+				end
 				if last_top_position > c then
 					last_top_position := c
-				end;
-				st_set_cursor_position (last_cursor_position);
+				end
+				set_cursor_position (last_cursor_position)
 				set_top_character_position (last_top_position)
 			end
 		end
@@ -273,7 +252,7 @@ feature -- Text selection
 			if is_selection_active then
 				clear_selection
 			end
-		end;
+		end
 
 feature -- Text manipulation
 
@@ -281,63 +260,54 @@ feature -- Text manipulation
 			-- Copy the highlighted text.
 		do
 			copy_text_from_widget (implementation)
-		end;
+		end
  
 	cut_text is
 			-- Cut the highlighted text.
 		do
 			cut_text_from_widget (implementation)
-		end;
+		end
  
 	paste_text is
 			-- Paste the highlighted text.
 		do
 			paste_text_to_widget (implementation)
-		end;
+		end
  
 	clear_window is
 			-- Erase internal structures of Current.
 		do
-			image.wipe_out;
-			disable_clicking;
-			position := 0;
-			text_position := 0;
-			focus_start := 0;
-			focus_end := 0;
-			changed := True;
-			clear;
-			set_cursor_position (0);
-			set_changed (false);
+			image.wipe_out
+			disable_clicking
+			position := 0
+			text_position := 0
+			focus_start := 0
+			focus_end := 0
+			changed := True
+			clear
+			set_cursor_position (0)
+			set_changed (false)
 		ensure then
-			image.empty;
-			position = 0;
-			clickable_count = 0;
-			focus_start = 0;
-			focus_end = 0;
+			image.empty
+			position = 0
+			clickable_count = 0
+			focus_start = 0
+			focus_end = 0
 			not changed
-		end;
+		end
 
 	clear_text is
 			-- Clear the text structures.
 		do
-			image.wipe_out;
-			clear;
-			disable_clicking;
-			position := 0;
-			text_position := 0;
-			focus_start := 0;
-			focus_end := 0;
-			set_changed (false);
-		end;
-
-feature -- Tabulations
-
-	set_tab_length (new_length: INTEGER) is
-			-- Assign `new_length' to `tab_length'.
-		do
-		ensure then
-			cursor_not_moved: cursor_position = old cursor_position
-		end;
+			image.wipe_out
+			clear
+			disable_clicking
+			position := 0
+			text_position := 0
+			focus_start := 0
+			focus_end := 0
+			set_changed (false)
+		end
 
 feature -- Update
 
@@ -346,20 +316,20 @@ feature -- Update
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				st_set_cursor_position (a_position)
+				{SCROLLED_T} precursor (a_position)
 			end
-		end;
+		end
 
 	set_top_character_position (a_position: INTEGER) is
 			-- Set top_character_position to `a_position' if the new position
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				st_set_top_character_position (a_position)
+				{SCROLLED_T} precursor (a_position)
 			end
-		end;
+		end
 
-	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
+	search_text (s: STRING is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
 		local
 			start_position: INTEGER
@@ -377,9 +347,9 @@ feature -- Update
 			else
 				eif_beep
 			end
-		end;
+		end
 			
-	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
+	replace_text (s, r: STRING replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		local
 			start_position: INTEGER
@@ -425,9 +395,9 @@ feature -- Focus Access
 	initial_coord: COORD_XY is
 			-- Initial coordinate for drag
 		do
-			Result := coordinate (focus_start);
-			Result.set (Result.x + real_x, Result.y + real_y);
-		end;
+			Result := coordinate (focus_start)
+			Result.set (Result.x + real_x, Result.y + real_y)
+		end
 
 feature -- Update
 
@@ -436,7 +406,7 @@ feature -- Update
 			-- before transport using button data `but_data'.
 		do	
 			deselect_all
-		end;
+		end
 
 	update_before_transport (but_data: BUTTON_DATA) is
 			-- Update Current stone and related information
@@ -447,37 +417,37 @@ feature -- Update
 			if clickable_count /= 0 then
 				if last_warner /= Void then
 					last_warner.popdown
-				end;
-				cur_pos := character_position (but_data.absolute_x - real_x, but_data.absolute_y - real_y);
-				update_focus (cur_pos);
-				highlight_focus;
+				end
+				cur_pos := character_position (but_data.absolute_x - real_x, but_data.absolute_y - real_y)
+				update_focus (cur_pos)
+				highlight_focus
 			end
-		end;
+		end
 
-	redisplay_breakable_mark (f: E_FEATURE; index: INTEGER) is
+	redisplay_breakable_mark (f: E_FEATURE index: INTEGER) is
 			-- Redisplay the sign of the `index'-th breakable point.
 		local
-			start_pos, end_pos: INTEGER;
-			was_selection_active: BOOLEAN;
-			status: APPLICATION_STATUS;
-			cb: CLICK_BREAKABLE;
-			bid: BODY_ID;
+			start_pos, end_pos: INTEGER
+			was_selection_active: BOOLEAN
+			status: APPLICATION_STATUS
+			cb: CLICK_BREAKABLE
+			bid: BODY_ID
 			bs: BREAKABLE_STONE
 		do
 			cb := breakable_for (f, index)
 			if cb /= Void then
-				changed := True;
-				bs := cb.breakable;
+				changed := True
+				bs := cb.breakable
 				if is_selection_active then
-					was_selection_active := True;
-					start_pos := begin_of_selection;
-					end_pos := end_of_selection;
+					was_selection_active := True
+					start_pos := begin_of_selection
+					end_pos := end_of_selection
 					clear_selection
-				end;
-				changed := True;
-				replace (cb.start_position, cb.end_position, bs.sign);
-				changed := False;
-				status := Application.status;
+				end
+				changed := True
+				replace (cb.start_position, cb.end_position, bs.sign)
+				changed := False
+				status := Application.status
 				if
 					status /= Void and status.is_stopped and
 					status.is_at (bs.routine, bs.index)
@@ -485,7 +455,7 @@ feature -- Update
 						-- Execution stopped at that breakpoint.
 						-- Show the point on the screen (scroll if
 						-- necessary)
-					set_cursor_position (cb.end_position);
+					set_cursor_position (cb.end_position)
 				elseif was_selection_active then
 					set_selection (start_pos, end_pos)
 				end
@@ -507,36 +477,36 @@ feature -- Execution
 					process_action (argument)
 				end
 			end
-		end;
+		end
 
 feature {TOOL_W} -- Objects in Current text area
 
 	kept_objects: LINKED_SET [STRING] is
 			-- Hector addresses of displayed clickable objects
 		local
-			obj_stone: OBJECT_STONE;
+			obj_stone: OBJECT_STONE
 			i: INTEGER
 		do
-			!! Result.make;
+			!! Result.make
 			from
 				i := 1
 			until
 				i > clickable_count
 			loop
-				obj_stone ?= item (i).node;
+				obj_stone ?= item (i).node
 				if obj_stone /= Void then
 					Result.extend (obj_stone.object_address)
-				end;
+				end
 				i := i + 1
 			end
-		end;
+		end
 
 feature {OBJECT_W} -- Settings
 
 	hang_on is
 			-- Make object addresses unclickable.
 		local
-			obj_stone: OBJECT_STONE;
+			obj_stone: OBJECT_STONE
 			index, last_pos: INTEGER
 		do
 			from
@@ -544,18 +514,18 @@ feature {OBJECT_W} -- Settings
 			until
 				index > clickable_count
 			loop
-				obj_stone ?= item (index).node;
-				-- Remove object stone
+				obj_stone ?= item (index).node
+
+					-- Remove object stone
 				if obj_stone = Void then
-					-- Keep routine and class stones
-					-- clickable.
-					last_pos := last_pos + 1;
+					-- Keep routine and class stones clickable.
+					last_pos := last_pos + 1
 					put (item (index), last_pos)
-				end;
+				end
 				index := index + 1
-			end;
+			end
 			clickable_count := last_pos
-		end;
+		end
 
 feature {NONE}
 

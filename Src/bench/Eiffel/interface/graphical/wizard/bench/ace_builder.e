@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 						!! d_name.make;
 						d_name.extend_from_array (
 							<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
-						d_name.set_directory (standard_precompiles_reverse.item (toggle.text));
+						d_name.extend (standard_precompiles_reverse.item (toggle.text));
 						precomp_lines.append (d_name);
 						precomp_lines.append ("%");%N")
 					end;

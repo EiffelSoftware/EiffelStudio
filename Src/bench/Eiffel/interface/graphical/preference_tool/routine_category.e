@@ -1,14 +1,12 @@
 indexing
-
-	description:
-		"Resource vategory for the feature tool.";
+	description: "Resource vategory for the feature tool.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class ROUTINE_CATEGORY
 
 inherit
-	RESOURCE_CATEGORY
+	EDITOR_RESOURCE_CATEGORY
 
 creation
 	make
@@ -46,10 +44,6 @@ feature -- Validation
 
 feature -- Resources
 
-	tool_width: INTEGER_RESOURCE;
-	tool_height: INTEGER_RESOURCE;
-	command_bar: BOOLEAN_RESOURCE;
-	format_bar: BOOLEAN_RESOURCE
 	show_all_callers: BOOLEAN_RESOURCE;
 	do_flat_in_breakpoints: BOOLEAN_RESOURCE
 

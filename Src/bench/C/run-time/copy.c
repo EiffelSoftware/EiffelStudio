@@ -11,11 +11,14 @@
 */
 
 #include "config.h"
+#include "eiffel.h"
 #include "copy.h"
 #include "traverse.h"		/* For deep copies */
+
+#if ! defined CUSTOM || defined NEED_HASH_H
 #include "hash.h"			/* For deep copies */
-#include "macros.h"			/* For macro LNGPAD */
-#include "eiffel.h"
+#endif
+
 #include "struct.h"
 #include "except.h"
 #include "local.h"

@@ -11,14 +11,15 @@
 */
 
 #include "config.h"
-#include "portable.h"
-#include "boolstr.h"
 
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+
+#include "portable.h"
+#include "boolstr.h"
 
 rt_public char *bl_str_set(char *a1, int s, int n)
          

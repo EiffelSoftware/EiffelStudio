@@ -12,7 +12,16 @@
 	If this file is compiled with -DTEST, it will produce a standalone
 	executable.
 */
+
 #include "config.h"
+
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
+
 #include "garcol.h"
 #include "malloc.h"
 #include "cecil.h"
@@ -22,12 +31,6 @@
 #include "plug.h"
 #include "except.h"
 #include "lmalloc.h"				/* for malloc() */
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 /* Bit shifting */
 rt_private char *b_left_shift(char *bit, long int s);		/* Shift bit field to the left */
@@ -96,6 +99,10 @@ rt_public char *bmalloc(long int size)
 
 	char *object;			/* Pointer to the freshly created bit object */
 	long nbytes;			/* Object's size */
+
+#ifdef DEBUG
+	printf ("bmalloc: %d bits requested.\n", size);
+#endif
 
 	/* A BIT object has a length field (the number of bits in the object), and
 	 * an arena where the bits are stored, from left to right, as an array of

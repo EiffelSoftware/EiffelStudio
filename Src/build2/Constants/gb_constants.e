@@ -81,6 +81,8 @@ feature -- String representations of class names.
 	
 	Ev_titled_window_string: STRING is "EV_TITLED_WINDOW"
 	
+	Ev_dialog_string: STRING is "EV_DIALOG"
+	
 	Ev_menu_bar_string: STRING is "EV_MENU_BAR"
 	
 	Ev_widget_string: STRING is "EV_WIDGET"
@@ -357,7 +359,7 @@ feature -- Generation constants
 		once
 			Result := "create" + indent_less_two + "default_create," + indent_less_two +
 				"make_with_window%N%N" + "feature {NONE} -- Initialization%N" + indent_less_two +
-				"make_with_window (a_window: EV_TITLED_WINDOW) is" + indent + "-- Create `Current' in `a_window'." +
+				"make_with_window (a_window: "+ Ev_titled_window_string + ") is" + indent + "-- Create `Current' in `a_window'." +
 				indent_less_one + "require" + indent + "window_not_void: a_window /= Void" +
 				indent + "window_empty: a_window.is_empty" + indent + "no_menu_bar: a_window.menu_bar = Void" +
 				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + indent_less_one + "end%N" +
@@ -382,14 +384,14 @@ feature -- Generation constants
 	window_inheritance: STRING is
 			-- String used to generate inheritance from window in implementation class.
 		once
-			Result := "inherit" + Indent_less_two + "EV_TITLED_WINDOW" + Indent_less_one + "redefine" + indent +
+			Result := "inherit" + Indent_less_two + Ev_titled_window_string + Indent_less_one + "redefine" + indent +
 			"initialize, is_in_default_state" + Indent_less_one + "end"
 		end
 		
 	window_access: STRING is
 			-- String used to define window when we are a client of window.
 		once
-			Result := "feature -- Access%N" + indent_less_two + "window: EV_TITLED_WINDOW" + indent_less_one +
+			Result := "feature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
 			"-- `Result' is window with which `Current' is implemented"
 		end
 		

@@ -9,10 +9,7 @@ class FILTER_COMMAND
 
 inherit
 
-	ICONED_COMMAND
-		redefine
-			text_window
-		end;
+	ICONED_COMMAND;
 	SHARED_FORMAT_TABLES;
 	SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
@@ -26,12 +23,11 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (a_tool: TOOL_W) is
 			-- Initialize the filter window, and add a 
 			-- button click action for button number 3.
 		do
-			!!filter_window.make (c, Current);
-			init (a_text_window);
+			init_from_tool (a_tool);
 		end;
 
 feature -- Callbacks
@@ -45,7 +41,7 @@ feature -- Callbacks
 			-- been pressed in the warner window
 			-- for text modification.
 		do
-			text_window.last_format.associated_command.filter (filter_name)
+			tool.last_format.associated_command.filter (filter_name)
 		end;
 
 feature -- Properties
@@ -92,8 +88,15 @@ feature -- Properties
 			Result := resources.get_string (r_Filter_command, "")
 		end;
 
-	text_window: CLASS_TEXT;
-			-- Text of the offended class.
+feature -- Closure
+
+	close_filter_window is
+			-- Popdown the filter window.
+		do
+			if filter_window /= Void then
+				filter_window.popdown
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -110,19 +113,22 @@ feature {NONE} -- Implementation
 			!! mp.set_watch_cursor;
 			if argument = Void then
 					-- 3rd button pressed
+				if filter_window = Void then
+					!! filter_window.make (Current);
+				end;
 				filter_window.call 
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				else
-					text_window.last_format.associated_command.filter (filter_name)
+					tool.last_format.associated_command.filter (filter_name)
 				end
-			elseif text_window.root_stone /= Void then
+			elseif tool.stone /= Void then
 					-- Execute the shell command
-				filterable_format ?= text_window.last_format.associated_command;
+				filterable_format ?= tool.last_format.associated_command;
 				if filterable_format = Void then
-					warner (text_window).gotcha_call (w_Not_a_filterable_format)
+					warner (popup_parent).gotcha_call (w_Not_a_filterable_format)
 				else
 					if 
 						filterable_format.filtered and
@@ -130,19 +136,19 @@ feature {NONE} -- Implementation
 					then
 							-- The filtered text is in `text_window'
 						filename := filterable_format.temp_filtered_file_name
-										(text_window.root_stone, filter_name);
+										(tool.stone, filter_name);
 						save_to_file (text_window.text, filename);
 						text_window.set_changed (false)
 					else
 						new_text := filterable_format.filtered_text 
-										(text_window.root_stone, filter_name); 
+										(tool.stone, filter_name); 
 							-- `filtered_text' of FILTERABLE has a side effect
 							-- (i.e. set the suffix to be used to build the
 							-- targetted file name) and as a consequence we
 							-- cannot put the next line outside of the
 							-- if-instruction.
 						filename := filterable_format.temp_filtered_file_name
-										(text_window.root_stone, filter_name);
+										(tool.stone, filter_name);
 						if new_text /= Void then
 							save_to_file (new_text, filename)
 						end
@@ -170,13 +176,13 @@ feature {NONE} -- Implementation
 			if not a_filename.empty then
 				!!new_file.make (a_filename);
 				if new_file.exists and then not new_file.is_plain then
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_a_plain_file (new_file.name))
 				elseif new_file.exists and then not new_file.is_writable then
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_writable (new_file.name))
 				elseif not new_file.exists and then not new_file.is_creatable then
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_creatable (new_file.name))
 				else
 					new_file.open_write;

@@ -55,24 +55,36 @@ feature {EV_RADIO_BUTTON_IMP} -- Access
 			rbg_pointer := new_rbg_pointer
 		end
 	
+feature {EV_CONTAINER, EV_WIDGET_IMP} -- Element change
+	
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite
+		do
+			child := child_imp
+			gtk_container_add (widget, child_imp.widget)
+		end
+	
+
 feature {NONE} -- Implementation
 	
 	rbg_pointer: POINTER
 						
 
-feature {EV_CONTAINER, EV_WIDGET} -- Element change
-	
-	add_child (child_i: EV_WIDGET_I) is
-			-- Add child into composite
---		local
---			child_imp: EV_WIDGET_IMP
-		do
-			child ?= child_i
-			gtk_container_add (widget, child.widget)
-		end
-	
+feature {EV_WIDGET_IMP} -- Implementation
 
-end
+	child_expand_changed (the_child: EV_WIDGET_IMP) is
+		do
+		end
+
+	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
+		do
+		end
+
+	child_horiresize_changed (the_child: EV_WIDGET_IMP) is
+		do
+		end
+
+end -- class EV_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

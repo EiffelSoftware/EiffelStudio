@@ -12,6 +12,7 @@ inherit
 			make as entity_make
 		redefine
 			dotnet_name,
+			dotnet_eiffel_name,
 			has_arguments, arguments, is_public,
 			is_frozen,
 			set_is_public
@@ -58,6 +59,9 @@ feature -- Access
 
 	dotnet_name: STRING is ".ctor"
 			-- Name of a .NET constructor.
+			
+	dotnet_eiffel_name: STRING is "make"
+			-- Eiffelized name of .NET constructor.
 
 feature -- Status report
 

@@ -50,10 +50,10 @@ feature -- Status Report
 			Result := ca = Void or else ca.is_compliant
 		end
 
-	is_public_static_field (a_field: FIELD_INFO): BOOLEAN is
+	is_public_field (a_field: FIELD_INFO): BOOLEAN is
 			-- Is `a_field' public and static?
 		do
-			Result := a_field.is_public and a_field.is_static
+			Result := a_field.is_public and not a_field.is_literal
 		end
 		
 feature {NONE} -- Implementation

@@ -63,10 +63,6 @@ int c_gtk_widget_destroyed (GtkWidget *widget);
 GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
 
 
-/* Return a state of a toggle button */
-int c_gtk_toggle_button_active (GtkWidget *button);
-
-
 /* Set widget flags */
 void c_gtk_widget_set_flags (GtkWidget *widget, int flags);
 
@@ -182,4 +178,9 @@ int c_gtk_get_text_max_length (GtkWidget* text);
 
 /* Show the children of widget recursively */
 void c_gtk_widget_show_children (GtkWidget *widget);
+
+
+/* Return a state of a toggle button */
+EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
+
 

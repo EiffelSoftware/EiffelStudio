@@ -19,6 +19,7 @@ feature {NONE} -- GTK macros for casting types
 	
 feature {NONE} -- GTK C functions
 
+	-- window
 	gtk_window_new (opt: INTEGER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -30,7 +31,8 @@ feature {NONE} -- GTK C functions
 	gtk_window_set_policy (w:POINTER; allow_shrink, allow_grow, auto_shrink: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	--scrolled window
 	gtk_scrolled_window_new (hadj, vadj: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -38,7 +40,8 @@ feature {NONE} -- GTK C functions
 	gtk_scrolled_window_set_policy (w: POINTER; h, v: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	-- widget
 	gtk_widget_show (w: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -79,6 +82,7 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
+	-- general
 	gtk_set_locale is
 		external "C | <gtk/gtk.h>"
 		end
@@ -102,7 +106,8 @@ feature {NONE} -- GTK C functions
 	gtk_signal_disconnect (widget: POINTER; id: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	-- button
 	gtk_button_new_with_label (label: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -111,18 +116,24 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
+	-- toggle button
 	gtk_toggle_button_new_with_label (label: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_toggle_button_set_state (button: POINTER; state: INTEGER) is
+	gtk_toggle_button_set_state (button: POINTER; state: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_toggle_button_toggled (button: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 
 	gtk_toggle_button_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	-- check button
 	gtk_check_button_new_with_label (label: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -130,7 +141,8 @@ feature {NONE} -- GTK C functions
 	gtk_check_button_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	-- radio button
 	gtk_radio_button_new (gp: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -142,7 +154,8 @@ feature {NONE} -- GTK C functions
 	gtk_radio_button_group (gp: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
-
+	
+	-- container
 	gtk_container_add (container, widget: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -400,10 +413,6 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 
-	c_gtk_toggle_button_active (button: POINTER) : BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
-		end
-
 	c_gtk_widget_set_flags (w: POINTER; flags: INTEGER) is
 		external "C | %"gtk_eiffel.h%""
 		end
@@ -472,6 +481,11 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 	
+	-- toggle button
+	c_gtk_toggle_button_active (button: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+
 	-- text
 	c_gtk_get_text_length (text: POINTER): INTEGER is
 		external

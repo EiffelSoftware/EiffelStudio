@@ -33,11 +33,17 @@ feature {NONE} -- Initialization
                         -- Create a push button with, `par' as
                         -- parent
 		do
-			!EV_BUTTON_IMP!implementation.make (par)
-			widget_make (par)
+			make_with_label (par, "")
 		end
 	
-
+	make_with_label (par: EV_CONTAINER; txt: STRING) is
+			-- Button with 'par' as parent and 'txt' as 
+			-- text label
+		do
+			!EV_BUTTON_IMP!implementation.make_with_label (par, txt)
+			widget_make (par)
+		end			
+	
 feature -- Access
 
 --	pixmap: PIXMAP

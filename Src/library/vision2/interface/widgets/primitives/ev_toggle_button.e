@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision toggle button"
+		"EiffelVision toggle button."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -14,18 +14,22 @@ inherit
 
 	EV_BUTTON
 		redefine
-			make
+			make_with_label, implementation
 		end
 	
 creation
-	make
+	make, make_with_label
 	
 feature {NONE} -- Initialization
 
-        make (par: CONTAINER) is
-                        -- Create a push button with, `par' as
-                        -- parent
-
+	make_with_label (par: EV_CONTAINER; txt: STRING) is
+			-- Button with 'par' as parent and 'txt' as 
+			-- text label
+		do
+			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_label (par, txt)
+			widget_make (par)
+		end			
+		
 feature -- Status report
 	
 	pressed: BOOLEAN is
@@ -35,47 +39,33 @@ feature -- Status report
                 do
                         Result := implementation.pressed
                 end 
+	
 feature -- Status setting
 
         set_pressed (button_pressed: BOOLEAN) is
                         -- Set Current toggle on and set
-                        -- state to True.
+                        -- pressed to True.
                 require
                         exists: not destroyed
                 do
                         implementation.set_pressed (button_pressed)
                 ensure
                         correct_state: pressed = button_pressed
-                end;
+                end
 
-        arm is
-                        -- Set `state' to True and call 
-                        -- callback (if set).
-                require
+        toggle is
+			-- Change the state of the toggel button to
+			-- opposite
+		require
                         exists: not destroyed
                 do
-                        implementation.arm
+                        implementation.toggle
                 ensure
-                        state_is_true: state
-                end;
+                        state_is_true: pressed = not old pressed
+                end
 
-        disarm is
-                        -- Set `state' to False and call 
-                        -- callback (if set).
-                require
-                        exists: not destroyed
-                do
-                        implementation.disarm
-                ensure
-                        state_is_false: not state
-                end; 
+feature {NONE} -- Implementation
 
-        set_default is
-                        -- Set default values to current toggle button.
-                do
-                ensure then
-                        not state
-                end;
-
-
+	implementation: EV_TOGGLE_BUTTON_I
+	
 end -- class EV_TOGGLE_BUTTON

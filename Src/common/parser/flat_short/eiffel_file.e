@@ -30,7 +30,8 @@ feature -- Initialization
 			valid_file_name: a_file_name /= Void;
 			positive_end_f_pos: end_f_pos > 0
 		local
-			file: PLAIN_TEXT_FILE;
+			--file: PLAIN_TEXT_FILE;
+			file: RAW_FILE; -- Windows hack
 			line: EIFFEL_LINE;
 			start_pos: INTEGER;
 			end_pos: INTEGER

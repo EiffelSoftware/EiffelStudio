@@ -650,7 +650,8 @@ feature {NONE} -- Implementation
 			args: like arguments;
 			item: BASIC_TEXT;
 			f_name: STRING;
-			adapt: like local_adapt
+			adapt: like local_adapt;
+			c: E_CLASS
 		do
 			if format.dot_needed then
 				text.add (ti_Dot)
@@ -666,9 +667,10 @@ feature {NONE} -- Implementation
 				adapt := local_adapt;
 				feature_i := adapt.target_feature;
 				f_name := adapt.final_name;
+				c := adapt.target_class.e_class;
 				if feature_i /= void and then in_bench_mode then
 					!FEATURE_NAME_TEXT! item.make (f_name, 
-						feature_i.api_feature, adapt.target_class.e_class);
+						feature_i.api_feature (c.id), c);
 				else			
 					!! item.make (f_name)
 				end;
@@ -709,7 +711,8 @@ feature {NONE} -- Implementation
 			ot: OPERATOR_TEXT;
 			f_name: STRING;
 			adapt: like local_adapt;
-			is_key: BOOLEAN
+			is_key: BOOLEAN;
+			c: E_CLASS
 		do
 			adapt := local_adapt;
 			f_name := adapt.final_name;
@@ -719,9 +722,9 @@ feature {NONE} -- Implementation
 				is_key := True
 			end
 			last_was_printed := True;
+			c := adapt.target_class.e_class;
 			if feature_i /= Void and then in_bench_mode then
-				ot.make (f_name, 
-					feature_i.api_feature, adapt.target_class.e_class)
+				ot.make (f_name, feature_i.api_feature (c.id), c)
 				if is_key then
 					ot.set_is_keyword
 				end;
@@ -769,7 +772,8 @@ feature {NONE} -- Implementation
 			f_name: STRING;
 			item: BASIC_TEXT;
 			ot: OPERATOR_TEXT
-			is_key: BOOLEAN
+			is_key: BOOLEAN;
+			c: E_CLASS
 		do
 			f_name := adapt.final_name;
 				-- Use source feature for stone.
@@ -778,8 +782,8 @@ feature {NONE} -- Implementation
 			end;
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				ot.make (f_name, 
-					feature_i.api_feature, adapt.target_class.e_class)
+				c := adapt.target_class.e_class;
+				ot.make (f_name, feature_i.api_feature (c.id), c)
 				if is_key then
 					ot.set_is_keyword
 				end;

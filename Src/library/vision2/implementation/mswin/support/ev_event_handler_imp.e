@@ -114,7 +114,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-feature {EV_ANY_I} -- Basic operation
+feature -- Basic operation
 
 	execute_command (event_id: INTEGER; data: EV_EVENT_DATA) is
 			-- Execute the command that correspond to the event
@@ -138,7 +138,7 @@ feature {EV_ANY_I} -- Basic operation
 			end
 		end
 
-feature {EV_ANY_I} -- Deferred features
+feature -- Deferred features
 
 	command_count: INTEGER is
 			-- Length of the array to store the commands and the arguments.

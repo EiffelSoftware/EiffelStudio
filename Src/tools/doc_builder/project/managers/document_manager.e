@@ -163,7 +163,7 @@ feature -- Document Manipulation
 			end				
 		end
 
-feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR} -- Document Manipulation
+feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation
 
 	add_document (a_doc: DOCUMENT) is
 			-- Add a document

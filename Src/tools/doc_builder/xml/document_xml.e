@@ -47,8 +47,7 @@ feature {DOCUMENT} -- Creation
 			l_xml := deserialize_text (internal_document.text)
 			if l_xml /= Void then
 				set_root_element (l_xml.root_element)
-			else
-				io.put_integer (5)
+				valid := True
 			end				
 		ensure
 			has_document: internal_document /= Void
@@ -61,6 +60,9 @@ feature -- Access
 		do
 			Result := document_text (Current)	
 		end		
+		
+	valid: BOOLEAN
+			-- Valid XML?
 	
 feature {DOCUMENT} -- Status Setting
 

@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	generate_directory (a_dir, target: DIRECTORY) is
 			-- Take XML from `a_dir' and generate HTML in `target' for files in `files'
 		local
-			cnt: INTEGER
+			cnt, l_cnt: INTEGER
 			sub_dir, src_sub_dir: DIRECTORY
 			bin_file, target_bin_file: RAW_FILE
 			doc_file: PLAIN_TEXT_FILE
@@ -110,8 +110,9 @@ feature {NONE} -- Implementation
 				cnt := 0
 				a_dir.open_read
 				a_dir.start								
+				l_cnt := a_dir.count
 			until
-				cnt = a_dir.count
+				cnt = l_cnt
 			loop
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
@@ -128,7 +129,7 @@ feature {NONE} -- Implementation
 								create doc_file.make (l_filename)
 								create l_doc.make_from_file (doc_file)								
 							end
-							if l_doc.can_transform then 
+							if not is_code_document (l_doc) and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
 						elseif file_types.has (file_type (l_filename.string)) then

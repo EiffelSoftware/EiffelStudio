@@ -24,7 +24,7 @@ feature -- Creation
 			is_valid_xml (a_xml)
 		do
 			document := deserialize_text (a_xml)
-			add_hierarchy_links
+			add_hierarchy_links			
 		end	
 		
 feature -- Access

@@ -1,0 +1,42 @@
+//
+//  This is an ODL file for example application of the
+//  MATISSE-Eiffel Binding
+//
+//  File        : example.odl
+//  Created  : July 20 1998
+//
+// 
+//  Persistent classes for the example
+//
+
+
+interface BOOK : persistent {
+	attribute String title
+		mt_make_entry "make-entry";
+	attribute Float price;
+	relationship MT_ARRAY<AUTHOR> written_by 
+		inverse AUTHOR::books;
+	relationship PUBLISHER publisher
+		inverse PUBLISHER::published_books;
+
+	mt_index BookTitleIndex
+		criteria {BOOK::title MT_ASCEND 32};
+};
+
+interface PERSON : persistent {
+	attribute String name
+		mt_make_entry "make-entry";
+	attribute Long birth_year;
+};
+
+interface AUTHOR : PERSON : persistent {
+	relationship List<BOOK> books
+		inverse BOOK::written_by;
+};
+
+interface PUBLISHER : persistent {
+	attribute String name
+		mt_make_entry "make-entry";
+	relationship MT_ARRAYED_LIST<BOOK> published_books
+		inverse BOOK::publisher;
+};

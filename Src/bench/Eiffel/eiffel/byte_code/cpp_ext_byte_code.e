@@ -57,7 +57,7 @@ feature -- Code generation
 				-- Initialize buffer.
 			buf := buffer
 				-- Check for null pointer to C++ object in workbench mode
-			if not Context.final_mode then
+			if not Context.final_mode and not System.il_generation then
 				inspect
 					type
 				when standard, data_member then
@@ -73,6 +73,7 @@ feature -- Code generation
 				else
 				end
 			end
+
 			if not result_type.is_void then
 				buf.putstring ("return ")
 			end

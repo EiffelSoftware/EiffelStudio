@@ -519,10 +519,7 @@ feature -- Actions on all windows
 
 	close_all is
 			-- Close all windows.
-		local
-			saved_cursor: CURSOR
 		do
-			saved_cursor := managed_windows.cursor
 			from
 				managed_windows.start
 			until
@@ -534,7 +531,6 @@ feature -- Actions on all windows
 					managed_windows.forth
 				end
 			end
-			managed_windows.go_to (saved_cursor)
 		end
 
 
@@ -606,7 +602,9 @@ feature -- Actions on all windows
 				end
 				managed_windows.forth
 			end
-			managed_windows.go_to (cur)
+			if managed_windows.valid_cursor (cur) then
+				managed_windows.go_to (cur)
+			end
 		end
 
 feature {EB_WINDOW} -- Events
@@ -1039,7 +1037,9 @@ feature {NONE} -- Implementation
 				action.call ([managed_windows.item])
 				managed_windows.forth
 			end
-			managed_windows.go_to (saved_cursor)
+			if managed_windows.valid_cursor (saved_cursor) then
+				managed_windows.go_to (saved_cursor)
+			end
 		end
 
 feature {EB_WINDOW_MANAGER_OBSERVER, EB_WINDOW} -- Observer pattern

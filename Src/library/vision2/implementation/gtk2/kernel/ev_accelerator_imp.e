@@ -15,11 +15,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		redefine
-			interface
-		end
-
 	EV_GTK_KEY_CONVERSION
 
 create
@@ -31,22 +26,16 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, 0, 0)
 			create key
 		end
 
 	initialize is
+			-- Setup `Current'
 		do
-			real_signal_connect (visual_widget, "activate", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
 			is_initialized := True
 		end
 
-feature {NONE} -- Implementation
-
-	interface: EV_ACCELERATOR
+feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
@@ -72,14 +61,13 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("activate")
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (a_window_imp.vbox, c_object, False, False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
-				visual_widget,
+				a_window_imp.accel_box,
 				a_cs.item,
 				a_window_imp.accel_group,
 				key_code_to_gtk (key.code),
 				modifier_mask,
-				2
+				0
 			)
 		end
 
@@ -88,10 +76,8 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		do
-			feature {EV_GTK_EXTERNALS}.object_ref (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_window_imp.vbox, c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
-				visual_widget,
+				a_window_imp.accel_box,
 				a_window_imp.accel_group,
 				key_code_to_gtk (key.code),
 				modifier_mask
@@ -155,6 +141,20 @@ feature -- Element change
 			-- "Control" is not part of the key combination.
 		do
 			control_required := False
+		end
+
+feature {NONE} -- Implementation
+
+	interface: EV_ACCELERATOR
+		-- Interface object of `Current'
+
+feature {NONE} -- Implementation
+
+	destroy is
+			-- Free resources of `Current'
+		do
+			key := Void
+			is_destroyed := True
 		end
 
 end -- class EV_ACCELERATOR_IMP

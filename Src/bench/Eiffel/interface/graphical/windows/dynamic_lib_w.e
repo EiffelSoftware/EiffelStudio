@@ -173,14 +173,14 @@ feature -- Update
 feature -- Stone process
 
 	process (d_class:CLASS_C; d_creation:E_FEATURE; 
-			 d_routine:E_FEATURE; d_index:INTEGER; d_alias: STRING) is
+			 d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
 		do
 			if d_routine.is_attribute then
 				warner (eb_shell).gotcha_call ("An attribute can not be exported.")
 			elseif d_routine.is_deferred then
 				warner (eb_shell).gotcha_call ("A deferred feature can not be exported.%N")
 			else
-				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias)
+				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias, d_call_type)
 			end
 			synchronize
 		end
@@ -210,9 +210,9 @@ feature -- Stone process
 		do
 			f ?= s
 			if f = Void then
-				process (s.e_class, Void, s.e_feature, 0, Void)
+				process (s.e_class, Void, s.e_feature, 0, Void, Void)
 			else
-				process (s.e_class, Void, s.e_feature, 0, f.alias_name)
+				process (s.e_class, Void, s.e_feature, 0, f.alias_name, Void)
 			end
 		end
 
@@ -242,11 +242,12 @@ feature -- Stone process
 			a_file: PLAIN_TEXT_FILE
 			content:STRING
 		do
-			!!a_file.make_open_read (a_file_name)
-			a_file.readstream (a_file.count)
-
-			if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
-				warner (eb_shell).gotcha_call ("Error in the eiffel def file%N")
+			create a_file.make_open_read (a_file_name)
+			if a_file.count > 0 then
+				a_file.readstream (a_file.count)
+				if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
+					warner (eb_shell).gotcha_call ("Error in the eiffel def file%N")
+				end
 			end
 			a_file.close
 
@@ -281,6 +282,7 @@ feature -- Stone process
 			loop
 				st.add_string( "%N-- CLASS [" )
 
+				dynamic_lib_exports.item_for_iteration.start
 				class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name)
 
 				class_name.to_upper
@@ -288,7 +290,6 @@ feature -- Stone process
 
 				st.add_string( "]%N" )
 				from 
-					dynamic_lib_exports.item_for_iteration.start
 				until
 					dynamic_lib_exports.item_for_iteration.after
 				loop
@@ -309,7 +310,7 @@ feature -- Stone process
 						if (dl_exp.creation_routine /=Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
 							st.add_string (" (")
 							if is_clickable then
---  								st.add_feature_name (dl_exp.creation_routine, dl_exp.creation_routine.name)
+-- 								st.add_feature_name (dl_exp.creation_routine, dl_exp.creation_routine.name)
 								st.add_feature_name (dl_exp.creation_routine.name,dl_exp.compiled_class)
 							else
 								st.add_string (dl_exp.creation_routine.name)
@@ -321,7 +322,7 @@ feature -- Stone process
 						if (dl_exp.routine /= Void) then
 							st.add_string (" : ")
 							if is_clickable then
---  								st.add_exported_feature_name (dl_exp.routine, dl_exp.routine.name, dl_exp.alias_name)
+-- 								st.add_exported_feature_name (dl_exp.routine, dl_exp.routine.name, dl_exp.alias_name)
 								st.add_exported_feature_name (dl_exp.routine.name, dl_exp.compiled_class, dl_exp.alias_name)
 							else
 								st.add_string (dl_exp.routine.name)
@@ -337,6 +338,10 @@ feature -- Stone process
 							st.add_string (dl_exp.alias_name)
 						end
 
+						if dl_exp.call_type /= Void then
+							st.add_string (" call_type ")
+							st.add_string (dl_exp.call_type)
+						end
 						st.add_string ("%N")
 
 						dynamic_lib_exports.item_for_iteration.forth

@@ -173,7 +173,7 @@ feature -- Update
 
 	process_feature (st: FEATURE_STONE) is
 		do
-			if is_dynamic_lib_tool_created or tool = dynamic_lib_tool then
+			if is_dynamic_lib_tool_created and then tool = dynamic_lib_tool then
 				open_dynamic_lib_tool (st)
 			else
 				work(Current)
@@ -231,9 +231,22 @@ feature {NONE} -- Execution
 						end
 
 					else
-						warner (tool.popup_parent).custom_call 
-							(Current, Interface_names.t_Specify_dynamic_lib, Interface_names.b_Browse, 
-							"Default", Interface_names.b_Cancel);
+						if System.dynamic_def_file /= Void then
+							create f.make (System.dynamic_def_file)
+							if f.exists and then f.is_readable and then f.is_plain then
+								eiffel_project.create_dynamic_lib;
+								eiffel_dynamic_lib.set_file_name (System.dynamic_def_file);
+								work (Current)
+							else
+								warner (tool.popup_parent).custom_call 
+									(Current, Interface_names.t_Specify_dynamic_lib,
+									Interface_names.b_Browse, "Default", Interface_names.b_Cancel);
+							end
+						else
+							warner (tool.popup_parent).custom_call 
+								(Current, Interface_names.t_Specify_dynamic_lib,
+								Interface_names.b_Browse, "Default", Interface_names.b_Cancel);
+						end
 					end
 				else
 					if tool = Project_tool then

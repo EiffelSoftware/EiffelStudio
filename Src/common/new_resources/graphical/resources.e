@@ -100,7 +100,7 @@ feature {NONE,RETRIEVE_PROJECT} -- Creation & Re-initialization
 			s: STRING
 			parser: XML_TREE_PARSER
 		do	
-			!! file_name.make_from_string("/home/bonnard/bench.xml")
+			!! file_name.make_from_string("d:\Eiffel45\case\configurable\new_resources\general.xml")
 
 			!! parser.make 
 			!! file.make (file_name)

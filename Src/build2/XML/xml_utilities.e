@@ -167,9 +167,6 @@ feature -- Access
 						not current_element.name.is_equal ("item_text") then
 						create info
 						info.set_name (current_element.name)
-						if info.name.is_equal ("Value") then
-							do_nothing;
-						end
 						info.set_element (current_element)
 						from
 							current_element.start

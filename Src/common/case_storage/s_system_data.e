@@ -72,19 +72,16 @@ feature -- Storing
         local
             system_file: RAW_FILE;
             old_name, new_name: FILE_NAME;
-			temp: STRING
         do
 			!!new_name.make_from_string (path);
 			new_name.set_file_name (System_name);
 
-			temp := clone (System_name);
-			temp.append (Tmp_file_name_ext);
-
 			!!old_name.make_from_string (path);
-			old_name.set_file_name (temp);
+			old_name.set_file_name (System_name);
+			old_name.add_extension (Tmp_file_name_ext);
 
-            !! system_file.make (old_name.path);
-            system_file.change_name (new_name.path);
+            !! system_file.make (old_name);
+            system_file.change_name (new_name);
         end;
 	
 	tmp_store_to_disk (path: STRING) is
@@ -95,19 +92,16 @@ feature -- Storing
 			id_file_name, file_name: FILE_NAME;
 			id_file: PLAIN_TEXT_FILE;
 			system_file: RAW_FILE;
-			temp: STRING
 		do
 			!!id_file_name.make_from_string (path);
 			id_file_name.set_file_name (System_id_name);
-			!!id_file.make_open_write (id_file_name.path);
+			!!id_file.make_open_write (id_file_name);
 			id_file.putstring (EiffelCase_project_type);
 			id_file.close;
 			!!file_name.make_from_string (path);
-			!!temp.make (0);
-			temp.append (System_name);
-			temp.append (Tmp_file_name_ext);
-			file_name.set_file_name (temp);
-			!! system_file.make_open_write (file_name.path);
+			file_name.set_file_name (System_name);
+			file_name.add_extension (Tmp_file_name_ext);
+			!! system_file.make_open_write (file_name);
 			independent_store (system_file);
 			system_file.close;
 		end;

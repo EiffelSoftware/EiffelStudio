@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_equal
 		end;
-	
+
 feature 
 
 	pattern: C_PATTERN;

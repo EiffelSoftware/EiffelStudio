@@ -22,7 +22,6 @@ creation
 
 	make
 
-	
 feature 
 
 	result_type: TYPE_I;
@@ -158,7 +157,7 @@ feature
 			end;
 		end;
 
--- Hash code
+feature -- Hash code
 
 	hash_code: INTEGER is
 			-- Hash code for pattern
@@ -185,9 +184,9 @@ feature
 					i := i + 1;
 				end;
 			end;
-		end; -- hash_code
+		end;
 
--- Debug
+feature -- Debug
 
 	trace is
 			-- Debug purpose
@@ -206,8 +205,8 @@ feature
 			io.error.putchar ('|');
 			result_type.trace;
 			io.error.putstring ("|");
-		end; -- trace
-			
+		end;
+
 invariant
 
 	result_type_exists: result_type /= Void;

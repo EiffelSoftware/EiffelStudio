@@ -22,7 +22,7 @@ creation
 	make
 
 feature
-	
+
 	patterns: SEARCH_TABLE [PATTERN];
 			-- Shared references on patterns
 
@@ -33,7 +33,6 @@ feature
 	last_pattern_id: PATTERN_ID;
 			-- Pattern id processed after last insertion
 
-	
 	c_patterns: SEARCH_TABLE [C_PATTERN_INFO];
 			-- Non formal patterns present already in the system
 
@@ -96,7 +95,7 @@ feature
 				info_array.forth
 			end;
 		end;
-				
+
 	insert (written_in: CLASS_ID; pattern: PATTERN) is
 		require
 			good_argument: pattern /= Void

@@ -40,10 +40,10 @@ feature -- Basic operation
 			-- Add `an_object' to `Current' at position `position'.
 			-- This is redefined in descendents as insertion at position `position'
 			-- is different for each type of container.
-		require
+		require else
 			position_valid: not type_conforms_to (dynamic_type (Current), dynamic_type_from_string ("GB_SPLIT_AREA_OBJECT")) implies position >=1 and position <= object.count + 1
 		do
-		ensure
+		ensure then
 				-- For an EV_TABLE, Count is not the the number of widgets, `widget_count' is the correct measure of this.
 			one_item_added_to_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies object.count = old object.count + 1
 			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies display_object.child.count = old display_object.child.count + 1

@@ -83,7 +83,7 @@ feature {NONE} -- Update
 				when 'c' then
 					Eiffel_project.set_lace_file_name (Void)
 				when 's' then
-					io.putstring ("File name (`Ace' is the default): ");
+					io.putstring ("File name (`Ace.ace' is the default): ");
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.empty then

@@ -33,8 +33,10 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef EIF_OS2
+#if defined EIF_OS2 || defined EIF_WIN32
+	/* <unistd.h> doesn't exist */
 #else
+	/* FIXME: write dummy unit */
 #include <unistd.h>
 #endif
 
@@ -49,7 +51,6 @@
 #endif
 
 #ifdef EIF_WIN32
-#define WIN32
 #include <windows.h>
 #ifndef MAX_PATH
 #define MAX_PATH 255

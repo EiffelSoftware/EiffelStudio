@@ -73,6 +73,8 @@ feature -- Access
 					once_debuggables.has (body_id) or else 
 					sent_debuggables.has (body_id)
 			end
+		ensure
+			has_debugged_feature: Result implies feature_of_body_id (debugged_routines, f.body_id) /= Void
 		end; 
 
 feature -- Element change
@@ -165,14 +167,14 @@ feature -- Breakpoints
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' set?
 		do
-			Result := has_feature (f) and then 
+			Result := feature_of_body_id (debugged_routines, f.body_id) /= Void and then 
 						debuggables (f).first.is_breakpoint_set (i)
 		end;
 
 	has_breakpoint_set (f: E_FEATURE): BOOLEAN is
 			-- Has `f' a breakpoint set to stop?
 		do
-			Result := has_feature (f) and then 
+			Result := feature_of_body_id (debugged_routines, f.body_id) /= Void and then 
 						debuggables (f).first.has_breakpoint_set
 		end;
 
@@ -337,7 +339,7 @@ feature {EWB_REQUEST}
 				Result := Result + new_debuggables.item_for_iteration.count;
 				new_debuggables.forth
 			end
-		end; -- debuggable_count
+		end; 
 
 	new_extension: INTEGER is
 			-- Number of new byte arrays since last transfer
@@ -607,7 +609,7 @@ feature {APPLICATION_EXECUTION, NONE}
 	debuggables (f: E_FEATURE): LINKED_LIST [DEBUGGABLE] is
 			-- List of debuggables corresponding to feature `f'
 		require
-			has_feature: has_feature (f)
+			has_feature: has_feature (f);
 		local
 			body_id: BODY_ID
 		do
@@ -709,8 +711,8 @@ feature {NONE} -- Implementation
 			new_once_debuggables.clear_all
 		end; -- clear_debuggables
 
-	feature_of_body_id (list: LIST [E_FEATURE]; body_id: BODY_ID): E_FEATURE is
-			-- Feature of boyd id `body_id' stored in `list';
+	feature_of_body_id (list: LINKED_LIST [E_FEATURE]; body_id: BODY_ID): E_FEATURE is
+			-- Feature of body id `body_id' stored in `list';
 			-- Void if no such feature exists
 		require
 			list_not_void: list /= Void
@@ -720,7 +722,7 @@ feature {NONE} -- Implementation
 			until
 				Result /= Void or list.after
 			loop
-				if equal (list.item.body_id, body_id) then
+				if body_id.is_equal (list.item.body_id) then
 					Result := list.item
 				end;
 				list.forth

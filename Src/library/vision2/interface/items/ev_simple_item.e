@@ -1,7 +1,7 @@
 indexing	
 	description: 
-		"EiffelVision item. Top class of menu_item, list_item   %
-		% and tree_item. This item isn't a widget, because most %
+		"EiffelVision item. Top class of menu_item, list_item%
+		% and tree_item. This item isn't a widget, because most%
 		% of the features of the widgets are inapplicable  here."
 	status: "See notice at end of class"
 	id: "$$"
@@ -17,12 +17,40 @@ inherit
 			implementation
 		end
 
-	EV_TEXTABLE
-		rename
-			make as wrong_make,
-			make_with_text as wrong_make_with_text
+	EV_PIXMAPABLE
 		redefine
 			implementation
+		end
+
+feature -- Access
+
+	text: STRING is
+			-- Current label of the item
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text
+		end
+
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
+		require
+			exists: not destroyed
+		do
+			Result := implementation.parent_widget
+		end
+
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Make `txt' the new label of the item.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		do
+			implementation.set_text (txt)
+		ensure
+			text_set: text.is_equal (txt)
 		end
 
 feature -- Status settings
@@ -59,14 +87,6 @@ feature -- Event : command association
 			valid_command: cmd /= Void
 		do
 			implementation.add_deactivate_command (cmd, arg)		
-		end
-
-feature {NONE} -- Inapplicable
-
-	wrong_make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Do nothing here because the parent isn't 
-			-- a container but need to be implemented.
-		do
 		end
 
 feature -- Implementation

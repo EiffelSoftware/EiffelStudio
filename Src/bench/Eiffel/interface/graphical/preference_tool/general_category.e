@@ -34,10 +34,14 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! regular_button.make ("regular_button_in_toolbar", rt, False)
+			if Platform_constants.is_windows then
+				!! regular_button.make ("regular_button_in_toolbar", rt, False)
+			end
 			!! close_button.make ("close_button_in_every_tool", rt, False)
 			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
-			!! tab_step.make ("tab_step", rt, 4);
+			if Platform_constants.is_windows then
+				!! tab_step.make ("tab_step", rt, 4);
+			end
 			!! editor.make ("editor", rt, "vi");
 			!! filter_path.make ("filter_directory", rt, clone (env_filter_path));
 			!! profile_path.make ("profile_directory", rt, clone (env_profile_path));

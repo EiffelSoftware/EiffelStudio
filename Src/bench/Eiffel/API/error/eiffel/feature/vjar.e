@@ -41,7 +41,7 @@ feature -- Output
 			st.add_string ("Target type: ");
 			target_type.append_to (st);
 			st.add_new_line;
-			st.add_string ("Source_type: ");
+			st.add_string ("Source type: ");
 			source_type.append_to (st);
 			st.add_new_line
 		end

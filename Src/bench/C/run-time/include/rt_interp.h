@@ -181,6 +181,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_OFFSET			(unsigned char) 4
 #define BC_ZERO				(unsigned char) 5
 #define BC_ONE				(unsigned char) 6
+#define BC_THREE_WAY_COMPARISON	(unsigned char) 7
 #define BC_INT_BIT_OP		(unsigned char) 138
 #define BC_INT_BIT_AND		(unsigned char) 1
 #define BC_INT_BIT_OR		(unsigned char) 2

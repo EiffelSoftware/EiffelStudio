@@ -15,7 +15,7 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_TABS
+	SHARED_CONFIGURE_RESOURCES
 
 	COMMAND
 
@@ -228,11 +228,7 @@ feature {NONE} -- Graphical User Interface
 
 			!! text_label.make (Interface_names.l_Results, text_form);
 			if is_graphics_disabled then
-				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
-				else
-					!TABBED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
-				end
+				!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 			else
 				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 			end;

@@ -12,53 +12,21 @@ indexing
 		   %using the character '\'"
 
 class CHARACTER_SET inherit
+	
+	TO_SPECIAL [BOOLEAN]
+		redefine
+			default_create
+		end
 
-	COMPARATOR_BUILDER
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize `Current'.
+		do
+			make_area (feature {CHARACTER}.Max_value + 1)
+		end
 
 feature -- Access
-
-	set: STRING is
-			-- Current character set
-		require
-			not_empty: not is_empty
-		local
-			old_idx: INTEGER
-		do
-			old_idx := comparators.index
-			create Result.make (10)
-			from
-				comparators.start
-			until
-				comparators.after
-			loop
-				Result.append (comparators.item.character_set)
-				comparators.forth
-			end
-			comparators.go_i_th (old_idx)
-		ensure
-			index_unchanged: comparators.index = old comparators.index
-		end
-
-	has (token: STRING): BOOLEAN is
-			-- Is there a comparator for `token'?
-		require
-			non_empty_token: token /= Void and then not token.is_empty
-		local
-			old_idx: INTEGER
-		do
-			old_idx := comparators.index
-			from
-				comparators.start
-			until
-				comparators.after or Result
-			loop
-				Result := equal (comparators.item.character_set, token)
-				comparators.forth
-			end
-			comparators.go_i_th (old_idx)
-		ensure
-			index_unchanged: comparators.index = old comparators.index
-		end
 
 	contains_string (s: STRING): BOOLEAN is
 			-- Does character set contain string `s'?
@@ -66,25 +34,18 @@ feature -- Access
 			not_empty: not is_empty
 			string_exists: s /= Void
 		local
-			i: INTEGER
-			str: STRING
+			i, cnt: INTEGER
+			str: SPECIAL [CHARACTER]
 		do
-			if not s.is_empty then
-				str := clone (s)
-				remove_duplicate_characters (str)
-				from
-					i := 1
-					Result := True
-				variant
-					str.count + 1 - i
-				until
-					not Result or i = str.count + 1
-				loop
-					Result := contains_character (str.item (i))
-					i := i + 1
-				end
-			else
+			from
+				str := s.area
+				cnt := s.count
 				Result := True
+			until
+				i = cnt or not Result
+			loop
+				Result := area.item (str.item (i).code)
+				i := i + 1
 			end
 		end
 
@@ -92,29 +53,26 @@ feature -- Access
 			-- Does character set contain character `c'?
 		require
 			not_empty: not is_empty
-		local
-			old_idx: INTEGER
 		do
-			old_idx := comparators.index
-			from
-				comparators.start
-			until
-				Result or comparators.after
-			loop
-				Result := comparators.item.contains (c)
-				comparators.forth
-			end
-			comparators.go_i_th (old_idx)
-		ensure
-			index_unchanged: comparators.index = old comparators.index
+			Result := area.item (c.code)
 		end
 
 feature -- Status report
 
 	is_empty: BOOLEAN is
 			-- Is character set empty?
+		local
+			i, cnt: INTEGER
 		do
-			Result := comparators = Void or else comparators.is_empty
+			from
+				cnt := area.count
+			until
+				i = cnt or Result
+			loop
+				Result := area.item (i)
+				i := i + 1
+			end
+			Result := not Result
 		end
 		
 feature -- Status setting
@@ -123,16 +81,22 @@ feature -- Status setting
 			-- Define character set.
 		require
 			string_exists: s /= Void
+			not_open_set: (s.item (1) /= '-') and (s.item (s.count) /= '-')
 		local
-			str: STRING
+			i, cnt: INTEGER
 		do
-			str := clone (s)
-			comparator_builder.define_set (str)
-			comparator_builder.build
-			comparators := clone (comparator_builder.comparators)
-		ensure
-			comparators_set_up: comparators /= Void and then not
-						comparators.is_empty
+				-- First reinitialize the set to an empty set.
+			from
+				cnt := area.count
+			until
+				i = cnt
+			loop
+				area.put (False, i)
+				i := i + 1
+			end
+			if not s.is_empty then
+				process_string (s, True)
+			end
 		end
 
 feature -- Element change
@@ -141,13 +105,9 @@ feature -- Element change
 			-- Add `s' to character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
-			no_such_comparator: not has (s)
+			not_open_set: (s.item (1) /= '-') and (s.item (s.count) /= '-')
 		do
-			comparator_builder.add (s)
-			comparator_builder.build
-			comparators := clone (comparator_builder.comparators)
-		ensure
-			elements_added: comparators.count >= old comparators.count
+			process_string (s, True)
 		end
 		
 feature -- Removal
@@ -156,49 +116,73 @@ feature -- Removal
 			-- Remove `s' from character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
-			has_comparator: has (s)
+			not_open_set: (s.item (1) /= '-') and (s.item (s.count) /= '-')
 		do
-			comparator_builder.remove (s)
-			comparator_builder.build
-			comparators := clone (comparator_builder.comparators)
-		ensure
-			elements_removed: comparators.count <= old comparators.count
+			process_string (s, False)
 		end
 		
 feature {NONE} -- Implementation
 
-	comparators: LINKED_SET[COMPARATOR]
-
-	remove_duplicate_characters (s: STRING) is
-			-- Remove duplicate characters from `s'.
+	process_string (s: STRING; for_addition: BOOLEAN) is
+			-- Add or remove (depending on `for_addition') the characters that `s' defines to/from the set.
 		require
-			string_exists: s /= Void and then not s.is_empty
+			valid_string: s /= Void and not s.is_empty
+			not_open_set: (s.item (1) /= '-') and (s.item (s.count) /= '-')
 		local
-			i: INTEGER
-			newstr: STRING
-			c: CHARACTER
-			ch_set: BINARY_SEARCH_TREE_SET[CHARACTER]
+			escape: BOOLEAN
+			lastc, curc: CHARACTER
+			i, cnt: INTEGER
 		do
 			from
 				i := 1
-				create ch_set.make
-				create newstr.make (s.count)
-			variant
-				s.count + 1 - i
+				lastc := s.item (i)
+				escape := lastc = '\'
+				cnt := s.count
 			until
-				i = s.count + 1
+				i = cnt
 			loop
-				c := s.item (i)
-				if not ch_set.has (c) then
-					newstr.extend (c)
-					ch_set.extend (c)
-				end
 				i := i + 1
+				curc := s.item (i)
+				if escape then
+					escape := False
+				else
+					if curc = '-' then
+						i := i + 1
+						curc := s.item (i)
+						set_characters (lastc, curc, for_addition)
+					elseif curc = '\' then
+						area.put (for_addition, lastc.code)
+						escape := True
+					else
+						area.put (for_addition, lastc.code)
+					end
+				end
+				lastc := curc
 			end
-			s.copy (newstr)
+			if not escape then
+				area.put (for_addition, lastc.code)
+			end
+		end
+
+	set_characters (c1, c2: CHARACTER; for_addition: BOOLEAN) is
+			-- Set or unset (depending on `for_addition') the characters
+			-- between `c1' and `c2' to the set (bounds included).
+			-- Do nothing if c2 is before c1.
+		local
+			i1, i2: INTEGER
+		do
+			from
+				i1 := c1.code
+				i2 := c2.code
+			until
+				i1 > i2
+			loop
+				area.put (for_addition, i1)
+				i1 := i1 + 1
+			end
 		ensure
-			-- no_duplicates: For every `i' in 1 .. s.count, 
-			-- s.occurrences (s.item (i)) 
+			bounds_set: (c1.code >= c2.code) implies ((area.item (c1.code) = for_addition) and
+														(area.item (c2.code) = for_addition))
 		end
 
 end -- class CHARACTER_SET

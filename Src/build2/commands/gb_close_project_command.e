@@ -78,6 +78,7 @@ feature -- Basic operations
 			do
 				object_handler.clear_all_objects
 				system_status.close_current_project
+				system_status.main_window.hide_tools
 				command_handler.update	
 			end
 

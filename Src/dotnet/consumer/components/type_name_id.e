@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 			-- ID associated to `a_type'.
 		require
 			non_void_type: a_type /= Void
-			type_exists: Types.has (a_type)
+			type_exists: internal_id_type.has (a_type)
 		do
 			Result := Internal_id_type.item (a_type)
 		ensure

@@ -169,7 +169,7 @@ end;
 					file.putstring ("#include ");
 					file.putstring (include_set.item);
 				else
-					file.putstring ("/* #include %"eif_eiffel.h%" */");
+					file.putstring ("#include %"eif_eiffel.h%"");
 				end
 				file.putstring ("%N%N");
 				include_set.forth

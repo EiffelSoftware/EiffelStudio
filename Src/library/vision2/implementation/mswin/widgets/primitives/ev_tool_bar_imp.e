@@ -206,7 +206,7 @@ feature -- Element change
 	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; an_index: INTEGER) is
 			-- Insert `button' at the `an_index' position in the tool-bar.
 		local
-			bmp: WEL_TOOL_BAR_BITMAP
+--			bmp: WEL_TOOL_BAR_BITMAP
 			but: WEL_TOOL_BAR_BUTTON
 			num: INTEGER
 			pixmap: EV_PIXMAP_IMP
@@ -293,14 +293,14 @@ feature -- Basic operation
 			num: INTEGER
 		do
 			num := separator_count
-			num := (count - num) * button_width + num * separator_width
+			num := (count - num) * buttons_width + num * separator_width
 			internal_set_minimum_width (num)
 		end
 
 	compute_minimum_height is
 			-- Update the minimum-size of the tool-bar.
 		do
-			internal_set_minimum_height (button_height + 6)
+			internal_set_minimum_height (buttons_height + 6)
 		end
 
 	compute_minimum_size is
@@ -310,8 +310,8 @@ feature -- Basic operation
 			num: INTEGER
 		do
 			num := separator_count
-			num := (count - num) * button_width + num * separator_width
-			internal_set_minimum_size (num, button_height + 6)
+			num := (count - num) * buttons_width + num * separator_width
+			internal_set_minimum_size (num, buttons_height + 6)
 		end
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
@@ -332,11 +332,26 @@ feature -- Basic operation
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the toolbar.
+			-- If there is no button at (`x_pos',`y_pox'), the result is Void.
 		local
 			item_found:BOOLEAN
 			tempx_counter, original_index: INTEGER
 			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			found_item: EV_TOOL_BAR_BUTTON_IMP
+			item_index: INTEGER
 		do
+			--| FIXME ARNAUD
+			--| Refactoring 
+			--|----------------------------------------------------
+			--| New code
+			--|----------------------------------------------------
+			item_index := find_button(x_pos, y_pos)
+			if item_index >= 0 then
+				 Result := ev_children.i_th(item_index)
+			end
+			--|----------------------------------------------------
+			--| Old code, used for validing the new one
+			--|----------------------------------------------------
 			list := ev_children
 			original_index := ev_children.index
 			from
@@ -347,15 +362,21 @@ feature -- Basic operation
 				if list.item.type = 5 then
 					tempx_counter := tempx_counter + separator_width
 				else
-					tempx_counter := tempx_counter + button_width
+					tempx_counter := tempx_counter + buttons_width
 				end
 				if tempx_counter > x_pos then
-					Result := list.item
+					found_item := list.item
 					item_found := True
 				end
 				list.forth
 			end
 			ev_children.go_i_th (original_index)
+			--|----------------------------------------------------
+			--| Validing new code
+			--|----------------------------------------------------
+			check
+				result_ok: Result /= Void implies Result = found_item
+			end
 		end
 
 --	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
@@ -643,6 +664,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/22 01:24:40  pichery
+--| Fixed bug with the minimum size (bug also corrected in WEL)
+--|
 --| Revision 1.30  2000/03/20 23:22:13  pichery
 --| - EV_TOOL_BAR_IMP now inherit from WEL_FLAT_TOOL_BAR
 --|    * ImageList can now be used internally for Comctrl32.dll > 4.70

@@ -196,7 +196,7 @@ feature {NONE}
 			a_list: LINKED_LIST [CONTEXT];
 		do
 			widget.ungrab;
-			context.widget.top.raise;
+			--context.widget.top.raise;
 			ctrl_selected := false;
 			display_rectangle;
 			set_cursor;

@@ -105,7 +105,7 @@ feature -- IL code generation
 			else
 				expr.generate_il
 			end
-			il_generator.convert_to (type)
+			il_generator.convert_to_native_int
 		end
 
 feature -- Byte code generation

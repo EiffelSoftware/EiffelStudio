@@ -239,6 +239,12 @@ feature -- Access
 			Result := status.where.count
 		end
 
+	call_stack_is_empty: BOOLEAN is
+			-- Is Classstack empty ?
+		do
+			Result := number_of_stack_elements = 0
+		end
+
 feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_APPLICATION_EXECUTION} -- Implemenation
 
 	process_termination is

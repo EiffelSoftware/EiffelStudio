@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 			end
 			
 			is_external_type := True
-			string_value := icd_value_info.value_to_string
+			get_truncated_string_value (Application.displayed_string_size)
 
-			is_null := (string_value = Void)
+			is_null := (length = 0)
 			if not is_null then
 				address := icd_value_info.address_as_hex_string
 			end
-			register_dotnet_data			
+			register_dotnet_data
 		ensure
 			value_set: icd_value = a_prepared_value
 		end
@@ -76,6 +76,13 @@ feature {NONE} -- Initialization
 
 feature -- get
 
+	get_truncated_string_value (a_size: INTEGER) is
+			-- Get the `a_size' first character of the full string value
+			-- store this truncated string into `string_value'
+		do
+			string_value := icd_value_info.value_to_truncated_string (a_size)
+		end
+		
 	get_icd_string_value is
 			-- Get `icd_string_value'
 		do

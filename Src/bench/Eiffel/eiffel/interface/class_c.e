@@ -744,6 +744,9 @@ feature -- Expanded rues validity
 			-- (the creators must be up to date)
 		local
 			constraint_type: TYPE_A
+			l_formals: like generic_features
+			l_formal: FORMAL_A
+			l_cursor: CURSOR
 		do
 debug ("CHECK_EXPANDED")
 io.error.putstring ("Checking expanded for: ")
@@ -751,7 +754,25 @@ io.error.putstring (name)
 io.error.new_line
 end
 			feature_table.check_expanded
-			if generics /= Void then
+
+				-- Check validity of all formal generic parameters instantiated
+				-- as expanded types.
+			l_formals := generic_features
+			if l_formals /= Void then
+				from
+					l_cursor := l_formals.cursor
+					l_formals.start
+				until
+					l_formals.after
+				loop
+					l_formals.item_for_iteration.check_expanded (Current)
+					l_formals.forth
+				end
+				l_formals.go_to (l_cursor)
+				Error_handler.checksum
+			end
+
+			if is_generic then
 				from
 					generics.start
 				until
@@ -3440,6 +3461,37 @@ feature -- Meta-type
 			end
 		ensure
 			meta_type_not_void: Result /= Void
+		end
+
+feature -- Type evaluation
+
+	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
+			-- Return CL_TYPE_I instance associated to `current_type' of current class.
+		require
+			valid_implemented_in: implemented_in > 0
+			current_type_not_void: current_type /= Void
+		local
+			cl_type_a: CL_TYPE_A
+			written_class: CLASS_C
+		do
+				-- If it is defined in current class, that's easy and we
+				-- return `current_type'. Otherwise we have to find the
+				-- correct CLASS_TYPE object where it is implemented.
+			if class_id = implemented_in then
+				Result := current_type
+			else
+				written_class := System.class_of_id (implemented_in) 
+					-- We go through the hierarchy only when `written_class'
+					-- is generic, otherwise for the most general case where
+					-- `written_class' is not generic it will take a long
+					-- time to go through the inheritance hierarchy.
+				if generics  = Void then
+					Result := written_class.types.first.type
+				else
+					cl_type_a := current_type.type_a
+					Result := cl_type_a.find_class_type (written_class).type_i
+				end
+			end
 		end
 
 feature -- Validity class

@@ -9,9 +9,9 @@ class OBJECT_HOLE
 
 inherit
 
-	EB_BUTTON_HOLE
+	DEFAULT_HOLE_COMMAND
 		redefine
-			stone_type
+			symbol, full_symbol, icon_symbol, name, stone_type
 		end
 
 creation
@@ -20,10 +20,32 @@ creation
 	
 feature -- Properties
 
-	stone_type: INTEGER is
-			-- Type of compatible stone.
-		do
-			Result := Object_type
+	symbol: PIXMAP is
+			-- Icon for the object tool
+		once
+			Result := bm_Object
 		end;
 
-end -- class OBJECT_CMD
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := bm_Object_dot
+		end;
+
+	icon_symbol: PIXMAP is
+			-- Icon for the object tool
+		once
+			Result := bm_Object_icon
+		end;
+
+	name: STRING is
+		do
+			Result := l_Object
+		end;
+
+    stone_type: INTEGER is
+            -- Type of compatible stone.
+        do
+            Result := Object_type
+        end;
+end -- class OBJECT_HOLE

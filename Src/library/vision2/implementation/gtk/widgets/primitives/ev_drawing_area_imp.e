@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_drawing_area_new)
-			C.gtk_widget_set_events (c_object, C.Gdk_all_events_mask_enum)
+			C.gtk_widget_add_events (c_object, C.Gdk_pointer_motion_mask_enum)
 	
 			gc := C.gdk_gc_new (C.gdk_root_parent)
 			gcvalues := C.c_gdk_gcvalues_struct_allocate
@@ -114,6 +114,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/21 22:38:06  brendel
+--| Fixed bug in event setting.
+--|
 --| Revision 1.8  2000/02/16 18:11:25  bonnard
 --| Added redraw features.
 --|

@@ -1,0 +1,22 @@
+#! /bin/csh -f
+# Copyright Interactive Software Engineering Inc., 1999
+# This software is for the sole use of ISE and ISE distributors.
+# It is not to be distributed to any other party.
+#
+#   make_image: Create an ISO9660 image to be read by a CD-ROM recorder.
+#
+#       6 March 1999
+#
+
+set command = make_image
+
+if ($#argv != 3) then
+    echo "Command $command requires three arguments"
+    echo "Application id, Image file name and source directory"
+    exit
+endif
+
+mkisofs -R -v -T -l -d -D -L \
+-p "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
+-P "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
+-A $1 -o $2 $3

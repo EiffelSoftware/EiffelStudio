@@ -476,7 +476,6 @@ feature {NONE} -- Implementation
 						C.gtk_signal_emit_stop_by_name (c_object, eiffel_to_c ("key-press-event"))
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
-					
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
 						C.gtk_signal_emit_stop_by_name (c_object, eiffel_to_c ("key-release-event"))

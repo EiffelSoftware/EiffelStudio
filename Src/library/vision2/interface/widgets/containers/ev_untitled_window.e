@@ -23,11 +23,21 @@ inherit
 		end
 
 creation
-	make_root,
 	make_top_level,
+	make_root,
 	make
 
 feature {NONE} -- Initialization
+
+	make (par: EV_UNTITLED_WINDOW) is
+			-- Create a window with a parent. Current
+			-- window will be closed when the parent is
+			-- closed. The parent of window is a window 
+			-- (and not any EV_CONTAINER).
+		do
+			create {EV_UNTITLED_WINDOW_IMP} implementation.make_with_owner (par)
+			widget_make (par)
+		end
 
 	make_root is
 			-- Create a root window for the application.
@@ -42,68 +52,6 @@ feature {NONE} -- Initialization
 		do
 			create {EV_UNTITLED_WINDOW_IMP} implementation.make
 			widget_make (Void)
-		end
-
-	make (par: EV_UNTITLED_WINDOW) is
-			-- Create a window with a parent. Current
-			-- window will be closed when the parent is
-			-- closed. The parent of window is a window 
-			-- (and not any EV_CONTAINER).
-		do
-			create {EV_UNTITLED_WINDOW_IMP} implementation.make_with_owner (par)
-			widget_make (par)
-		end
-
-	make_root_with_position (pos: INTEGER) is
-			-- create the untitled window with `pos'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		do
-			create {EV_UNTITLED_WINDOW_IMP} implementation.make_root_with_position (pos)
-			widget_make (Void)
-		end	
-
-	make_top_level_with_position (pos: INTEGER) is
-			-- Create a top level window (a Window 
-			-- without a parent) with `pos'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		do
-			create {EV_UNTITLED_WINDOW_IMP} implementation.make_with_position (pos)
-			widget_make (Void)
-		end
-
-	make_with_position (par: EV_UNTITLED_WINDOW; pos: INTEGER) is
-			-- Create a window with a parent with `pos'
-			-- as the first position.
-			-- choices are:
-			--	WINDOW_POSITION_NONE
-			--	WINDOW_POSITION_CENTER
-			--	WINDOW_POSITION_MOUSE (by default).
-			-- Current window will be closed when the parent is
-			-- closed. The parent of window is a window 
-			-- (and not any EV_CONTAINER).
-		require
-			position_ok: pos = WINDOW_POSITION_NONE
-				or pos = WINDOW_POSITION_CENTER
-				or pos = WINDOW_POSITION_MOUSE
-		do
-			create {EV_UNTITLED_WINDOW_IMP} implementation.make_with_owner_and_position (par, pos)
-			widget_make (par)
 		end
 
 	widget_make (par: EV_CONTAINER) is

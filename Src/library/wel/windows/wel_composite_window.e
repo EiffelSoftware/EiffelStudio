@@ -598,13 +598,13 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			tab: WEL_TAB_CONTROL
+			control: WEL_CONTROL
 		do
 			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_notify (wparam, info)
-			tab ?= info.window_from
-			if tab /= Void and then tab.exists then
-				tab.process_notification (info.code)
+			control ?= info.window_from
+			if control /= Void and then control.exists then
+				control.process_notification (info.code)
 			end
 		end
 

@@ -23,13 +23,8 @@ extern "C" {
 
 #include "file.h"
 
-#ifdef EIF_WINDOWS
-#include "eif_cons.h"	/* extra/mswin/console or extra/win32/console */
-#endif
-
 #ifdef EIF_WIN32
-extern void eif_console_next_line(void);	/* extra/win32/console/econsole.c */
-extern void eif_console_putstring(char *s, long len);	/* extra/win32/console/econsole.c , should be (BYTE, long) */
+#include "econsole.h"
 #else
 extern void eif_console_next_line(void);
 #endif

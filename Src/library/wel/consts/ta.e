@@ -65,6 +65,21 @@ feature -- Access
 			"TA_BASELINE"
 		end
 
+feature -- Status report
+
+	valid_text_alignement_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid text alignment constant?
+		do
+			Result := c = Ta_noupdatecp or else
+				c = Ta_updatecp or else
+				c = Ta_left or else
+				c = Ta_right or else
+				c = Ta_center or else
+				c = Ta_top or else
+				c = Ta_bottom or else
+				c = Ta_baseline
+		end
+
 end -- class WEL_TA_CONSTANTS
 
 --|-------------------------------------------------------------------------

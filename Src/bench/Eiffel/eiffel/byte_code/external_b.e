@@ -316,7 +316,7 @@ feature -- IL code generation
 						not return_type.is_none and then
 						not return_type.is_void
 					then
-						il_generator.generate_check_cast (return_type, return_type)
+						il_generator.generate_check_cast (Void, return_type)
 					end
 				end
 				if invariant_checked then

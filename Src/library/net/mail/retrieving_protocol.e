@@ -4,23 +4,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred
-class
-	RETRIEVING_PROTOCOL
+deferred class RETRIEVING_PROTOCOL inherit
 
-inherit
 	EMAIL_PROTOCOL
 
-create
-	default_create
+feature -- Basic operations
 
-feature -- Initialization
-
-	transfer is 
+	execute_transfer is 
+			-- Do the transfer.
 		deferred
 		end
-
-feature -- Access
-
 
 end -- class RETRIEVING_PROTOCOL

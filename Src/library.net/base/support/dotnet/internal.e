@@ -225,6 +225,12 @@ feature -- Access
 			not_special: not is_special (object)
 		do
 			Result := field_name_of_type (i, dynamic_type (object))
+			check
+				has_dollars: Result /= Void implies (Result.count > 2 and then Result.substring (1, 2).is_equal ("$$"))
+			end
+			if Result /= Void then
+				Result.keep_tail (Result.count - 2)
+			end
 		ensure
 			Result_exists: Result /= Void
 		end

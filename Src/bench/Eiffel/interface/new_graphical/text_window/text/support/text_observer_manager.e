@@ -198,11 +198,14 @@ feature {NONE} -- Updates
 
 	on_cursor_moved is
 			-- Notify observers that the current cursor has moved.
-		require
-			not_in_loop: not is_notifying
+		local
+			cur: CURSOR
+			old_not: BOOLEAN
 		do
+			old_not := is_notifying
 			is_notifying := True
-			from 
+			from
+				cur := cursor_observer_list.cursor
 				cursor_observer_list.start
 			until
 				cursor_observer_list.after
@@ -210,7 +213,8 @@ feature {NONE} -- Updates
 				cursor_observer_list.item.on_cursor_moved
 				cursor_observer_list.forth
 			end
-			is_notifying := False
+			cursor_observer_list.go_to (cur)
+			is_notifying := old_not
 		end
 
 	on_text_back_to_its_last_saved_state is

@@ -99,7 +99,7 @@ feature -- dragging
 			-- (May be Void if not valid anymore. It may also 
 			-- be a classc_stone if the class is compiled now)
 		local
-			new_cluster: CLUSTER_I
+			new_cluster: CLUSTER_I;
 		do
 			if class_i /= Void then
 				new_cluster := Eiffel_Universe.cluster_of_name 
@@ -109,9 +109,9 @@ feature -- dragging
 					new_cluster.classes.has_item (class_i)
 				then
 					if class_i.compiled then
-						Result := class_i.compiled_eclass.stone
+						!CLASSC_STONE! Result.make (class_i.compiled_eclass)
 					else
-						Result := class_i.stone
+						!CLASSI_STONE! Result.make (class_i)
 					end
 				end
 			end

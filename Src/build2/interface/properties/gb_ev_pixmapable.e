@@ -101,15 +101,21 @@ feature {GB_XML_STORE} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			new_pixmap: EV_PIXMAP
+			file_name: FILE_NAME
+			file: RAW_FILE
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)	
 			if element_info /= Void then
 				create new_pixmap
 					--| FIXME error checking!!!!!!!
-				new_pixmap.set_with_named_file (element_info.data)
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
+				create file_name.make_from_string (element_info.data)
+				create file.make (file_name)
+				if file.exists then
+					new_pixmap.set_with_named_file (element_info.data)
+					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
+					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
+				end
 			end
 		end
 

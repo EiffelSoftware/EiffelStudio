@@ -1961,7 +1961,7 @@ feature -- Concurrent Eiffel
 			if System.has_separate then
 				ast_sep_call := Ast_context.separate_calls
 				if not ast_sep_call.is_empty then
-					separate_calls := clone (ast_sep_call)
+					separate_calls := ast_sep_call.twin
 				end
 			end
 		end
